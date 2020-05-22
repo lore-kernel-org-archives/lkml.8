@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5519C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3CB20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A766206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbgEVSaY (ORCPT
+        id S1730926AbgEVSaV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
+        Fri, 22 May 2020 14:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730824AbgEVSaW (ORCPT
+        with ESMTP id S1730809AbgEVSaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:30:22 -0400
+        Fri, 22 May 2020 14:30:20 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494DDC061A0E;
-        Fri, 22 May 2020 11:30:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C812C05BD43;
+        Fri, 22 May 2020 11:30:20 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jcCQz-0002l9-2V; Fri, 22 May 2020 20:30:17 +0200
+        id 1jcCQy-0002kn-1L; Fri, 22 May 2020 20:30:16 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B327F1C0475;
-        Fri, 22 May 2020 20:30:16 +0200 (CEST)
-Date:   Fri, 22 May 2020 18:30:16 -0000
-From:   "tip-bot2 for Punit Agrawal" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 535801C0095;
+        Fri, 22 May 2020 20:30:15 +0200 (CEST)
+Date:   Fri, 22 May 2020 18:30:15 -0000
+From:   tip-bot2 for =?utf-8?q?Lo=C3=AFc?= Yhuel <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi: cper: Add support for printing Firmware Error
- Record Reference
-Cc:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>, linux-acpi@vger.kernel.org,
-        linux-efi@vger.kernel.org, x86 <x86@kernel.org>,
+Subject: [tip: efi/urgent] tpm: check event log version before reading final events
+Cc:     loic.yhuel@gmail.com,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200512045502.3810339-1-punit1.agrawal@toshiba.co.jp>
-References: <20200512045502.3810339-1-punit1.agrawal@toshiba.co.jp>
+In-Reply-To: <20200512040113.277768-1-loic.yhuel@gmail.com>
+References: <20200512040113.277768-1-loic.yhuel@gmail.com>
 MIME-Version: 1.0
-Message-ID: <159017221661.17951.2040359767337422693.tip-bot2@tip-bot2>
+Message-ID: <159017221514.17951.2596829896883867713.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -64,149 +62,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the efi/urgent branch of tip:
 
-Commit-ID:     3d8c11efd528d56972d44ed0de51c4e11a9a4fa9
-Gitweb:        https://git.kernel.org/tip/3d8c11efd528d56972d44ed0de51c4e11a9a4fa9
-Author:        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-AuthorDate:    Tue, 12 May 2020 13:55:02 +09:00
+Commit-ID:     b4f1874c62168159fdb419ced4afc77c1b51c475
+Gitweb:        https://git.kernel.org/tip/b4f1874c62168159fdb419ced4afc77c1b51c475
+Author:        Loïc Yhuel <loic.yhuel@gmail.com>
+AuthorDate:    Tue, 12 May 2020 06:01:13 +02:00
 Committer:     Ard Biesheuvel <ardb@kernel.org>
-CommitterDate: Thu, 14 May 2020 11:11:20 +02:00
+CommitterDate: Sun, 17 May 2020 11:46:50 +02:00
 
-efi: cper: Add support for printing Firmware Error Record Reference
+tpm: check event log version before reading final events
 
-While debugging a boot failure, the following unknown error record was
-seen in the boot logs.
+This fixes the boot issues since 5.3 on several Dell models when the TPM
+is enabled. Depending on the exact grub binary, booting the kernel would
+freeze early, or just report an error parsing the final events log.
 
-    <...>
-    BERT: Error records from previous boot:
-    [Hardware Error]: event severity: fatal
-    [Hardware Error]:  Error 0, type: fatal
-    [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
-    [Hardware Error]:   section length: 0x290
-    [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
-    [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
-    [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
-    [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
-    <...>
+We get an event log in the SHA-1 format, which doesn't have a
+tcg_efi_specid_event_head in the first event, and there is a final events
+table which doesn't match the crypto agile format.
+__calc_tpm2_event_size reads bad "count" and "efispecid->num_algs", and
+either fails, or loops long enough for the machine to be appear frozen.
 
-On further investigation, it was found that the error record with
-UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
-UEFI Specification at least since v2.4 and has recently had additional
-fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
+So we now only parse the final events table, which is per the spec always
+supposed to be in the crypto agile format, when we got a event log in this
+format.
 
-Add support for parsing and printing the defined fields to give users
-a chance to figure out what went wrong.
-
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-efi@vger.kernel.org
-Link: https://lore.kernel.org/r/20200512045502.3810339-1-punit1.agrawal@toshiba.co.jp
+Fixes: c46f3405692de ("tpm: Reserve the TPM final events table")
+Fixes: 166a2809d65b2 ("tpm: Don't duplicate events from the final event log in the TCG2 log")
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1779611
+Signed-off-by: Loïc Yhuel <loic.yhuel@gmail.com>
+Link: https://lore.kernel.org/r/20200512040113.277768-1-loic.yhuel@gmail.com
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Matthew Garrett <mjg59@google.com>
+[ardb: warn when final events table is missing or in the wrong format]
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 62 ++++++++++++++++++++++++++++++++++++-
- include/linux/cper.h        |  9 +++++-
- 2 files changed, 71 insertions(+)
+ drivers/firmware/efi/libstub/tpm.c | 5 +++--
+ drivers/firmware/efi/tpm.c         | 5 ++++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index 9d25129..f564e15 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -407,6 +407,58 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 	}
- }
+diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
+index 1d59e10..e9a6846 100644
+--- a/drivers/firmware/efi/libstub/tpm.c
++++ b/drivers/firmware/efi/libstub/tpm.c
+@@ -54,7 +54,7 @@ void efi_retrieve_tpm2_eventlog(void)
+ 	efi_status_t status;
+ 	efi_physical_addr_t log_location = 0, log_last_entry = 0;
+ 	struct linux_efi_tpm_eventlog *log_tbl = NULL;
+-	struct efi_tcg2_final_events_table *final_events_table;
++	struct efi_tcg2_final_events_table *final_events_table = NULL;
+ 	unsigned long first_entry_addr, last_entry_addr;
+ 	size_t log_size, last_entry_size;
+ 	efi_bool_t truncated;
+@@ -127,7 +127,8 @@ void efi_retrieve_tpm2_eventlog(void)
+ 	 * Figure out whether any events have already been logged to the
+ 	 * final events structure, and if so how much space they take up
+ 	 */
+-	final_events_table = get_efi_config_table(LINUX_EFI_TPM_FINAL_LOG_GUID);
++	if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)
++		final_events_table = get_efi_config_table(LINUX_EFI_TPM_FINAL_LOG_GUID);
+ 	if (final_events_table && final_events_table->nr_events) {
+ 		struct tcg_pcr_event2_head *header;
+ 		int offset;
+diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+index 31f9f0e..0543fbf 100644
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -62,8 +62,11 @@ int __init efi_tpm_eventlog_init(void)
+ 	tbl_size = sizeof(*log_tbl) + log_tbl->size;
+ 	memblock_reserve(efi.tpm_log, tbl_size);
  
-+static const char * const fw_err_rec_type_strs[] = {
-+	"IPF SAL Error Record",
-+	"SOC Firmware Error Record Type1 (Legacy CrashLog Support)",
-+	"SOC Firmware Error Record Type2",
-+};
-+
-+static void cper_print_fw_err(const char *pfx,
-+			      struct acpi_hest_generic_data *gdata,
-+			      const struct cper_sec_fw_err_rec_ref *fw_err)
-+{
-+	void *buf = acpi_hest_get_payload(gdata);
-+	u32 offset, length = gdata->error_data_length;
-+
-+	printk("%s""Firmware Error Record Type: %s\n", pfx,
-+	       fw_err->record_type < ARRAY_SIZE(fw_err_rec_type_strs) ?
-+	       fw_err_rec_type_strs[fw_err->record_type] : "unknown");
-+	printk("%s""Revision: %d\n", pfx, fw_err->revision);
-+
-+	/* Record Type based on UEFI 2.7 */
-+	if (fw_err->revision == 0) {
-+		printk("%s""Record Identifier: %08llx\n", pfx,
-+		       fw_err->record_identifier);
-+	} else if (fw_err->revision == 2) {
-+		printk("%s""Record Identifier: %pUl\n", pfx,
-+		       &fw_err->record_identifier_guid);
+-	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR)
++	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR ||
++	    log_tbl->version != EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
++		pr_warn(FW_BUG "TPM Final Events table missing or invalid\n");
+ 		goto out;
 +	}
-+
-+	/*
-+	 * The FW error record may contain trailing data beyond the
-+	 * structure defined by the specification. As the fields
-+	 * defined (and hence the offset of any trailing data) vary
-+	 * with the revision, set the offset to account for this
-+	 * variation.
-+	 */
-+	if (fw_err->revision == 0) {
-+		/* record_identifier_guid not defined */
-+		offset = offsetof(struct cper_sec_fw_err_rec_ref,
-+				  record_identifier_guid);
-+	} else if (fw_err->revision == 1) {
-+		/* record_identifier not defined */
-+		offset = offsetof(struct cper_sec_fw_err_rec_ref,
-+				  record_identifier);
-+	} else {
-+		offset = sizeof(*fw_err);
-+	}
-+
-+	buf += offset;
-+	length -= offset;
-+
-+	print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, buf, length, true);
-+}
-+
- static void cper_print_tstamp(const char *pfx,
- 				   struct acpi_hest_generic_data_v300 *gdata)
- {
-@@ -494,6 +546,16 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
- 		else
- 			goto err_section_too_small;
- #endif
-+	} else if (guid_equal(sec_type, &CPER_SEC_FW_ERR_REC_REF)) {
-+		struct cper_sec_fw_err_rec_ref *fw_err = acpi_hest_get_payload(gdata);
-+
-+		printk("%ssection_type: Firmware Error Record Reference\n",
-+		       newpfx);
-+		/* The minimal FW Error Record contains 16 bytes */
-+		if (gdata->error_data_length >= SZ_16)
-+			cper_print_fw_err(newpfx, gdata, fw_err);
-+		else
-+			goto err_section_too_small;
- 	} else {
- 		const void *err = acpi_hest_get_payload(gdata);
  
-diff --git a/include/linux/cper.h b/include/linux/cper.h
-index 4f005d9..8537e92 100644
---- a/include/linux/cper.h
-+++ b/include/linux/cper.h
-@@ -521,6 +521,15 @@ struct cper_sec_pcie {
- 	u8	aer_info[96];
- };
- 
-+/* Firmware Error Record Reference, UEFI v2.7 sec N.2.10  */
-+struct cper_sec_fw_err_rec_ref {
-+	u8 record_type;
-+	u8 revision;
-+	u8 reserved[6];
-+	u64 record_identifier;
-+	guid_t record_identifier_guid;
-+};
-+
- /* Reset to default packing */
- #pragma pack()
+ 	final_tbl = early_memremap(efi.tpm_final_log, sizeof(*final_tbl));
  
