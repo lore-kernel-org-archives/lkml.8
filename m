@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C56C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7239C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880CE206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4599206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8Hn3cSX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBVHe+gP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgEVSFd (ORCPT
+        id S1730824AbgEVSHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
+        Fri, 22 May 2020 14:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730674AbgEVSFd (ORCPT
+        with ESMTP id S1730674AbgEVSHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:05:33 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6C0C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:05:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c11so1519439wrn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:05:32 -0700 (PDT)
+        Fri, 22 May 2020 14:07:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDCCC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:07:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id c11so1524027wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HnUAvj8/hcOeu5wap80XKbA2U7OiBYgIef/CmYB0LcE=;
-        b=n8Hn3cSXEhsGcYzPiRk9a13J/yYmoVNORbpdvW9NQCNH6z9492FBfQQulIHSIDwPg5
-         /RuLl/aQv0LTnd1zyykYtcH3rsySaVW0dGkgmb66yMgVL9VjWhT29Sg9eR6QL9CHihc3
-         ZC6ZPAMFqucNMcTvYl3Wasaa3dnmthhWqCOzPvUdBhFd0OUoc6e9znj0JNkb4F9LrYHb
-         LeIN9HXGpwGZBuhEJiunQleQS18juPyCWrOZh50rzawJTiikOa/HHwFdPhIuapqPyUKj
-         9oXhth3/2P682nA1JUyPhYoEQpSHewlsrd5tU4WhiNJKfAcIwxe72HMlBzqvjc5j9AFx
-         er/Q==
+         :cc;
+        bh=93lHuKjSOpUJm9qcBgsEQEeev3s+aLgQZS3xLE3PBVc=;
+        b=NBVHe+gPt5+hwmNSzqlQpXMGvkD6RmLKIwg06tb+MU5Rw/pWZBSt0hO6RbFdOw+0o9
+         GQshyiWpyQD1vL+wXLRCvzo7o7iw0+Zqy85PslvQB8/dQ85zgwGz3hN5tBHoPAMTl+jw
+         0BKSELtB77IkBlLFgjsBl+NyDAPLkYoJ/oM+4/HdZu6FhlwJgVbSr52EfD9EMqb0W919
+         obpgdiML5afToGsMG0AvBHNeH6Ue4SrORP3IJoVOeq55YI2/73fX9sV67CeG5P5Wnqcf
+         4fk4r+ZueA8/Ao7DslGJDfFOyN682Xq7UZCZBGWcSYh2IzNYcrG/Nsn4k9ry1i0g+1me
+         a0fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HnUAvj8/hcOeu5wap80XKbA2U7OiBYgIef/CmYB0LcE=;
-        b=uLTucvgI7D3zwesT9VWlUXi5nrFoNMGfr5J0k6TvvxoWV5+niisyBn7VRv+99nXYMU
-         AHm23x1J3BEONwmhdpJVLvlQrSAsEn5jfDbUGygcpMfjHZ7EXPZ3YpMB96/ozFXArVeY
-         /5v4MpTEgxbI/g6dzrdaCCB0ofreOmBI7qTzzp0z0mfW7uV1EtNvv7wX2Ux4tsi5iNxT
-         1EFSReGS1vQdIxbI1CYGXEkXrbu3dYF9hy3We/XAE3p8o7iIL8yci2nIpFDqPcdAlSDk
-         VF9TSYckRuM+RhybDgsBoB4I+ehf5dtNOiiKp2+sia3hRKg1CxvjP3ua3uRH0Vbsd0li
-         126A==
-X-Gm-Message-State: AOAM532bRu6VTLs81swg6vmOIkTOzOv5bNPVCf+F5egxpF9Dk/R3Im0N
-        A7X+yW6hDzkDgom+e/iytkU5oHpskyZWr/nmzBk=
-X-Google-Smtp-Source: ABdhPJzVEjF74Bvg+XdgYHXOPimWqs5bnL8Tj6Gf7h9YyFb5zQutmPwsVRo8Is5UeRZFmtUyDVFernc7M55zUnleyvY=
-X-Received: by 2002:a5d:400f:: with SMTP id n15mr4569405wrp.419.1590170731715;
- Fri, 22 May 2020 11:05:31 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=93lHuKjSOpUJm9qcBgsEQEeev3s+aLgQZS3xLE3PBVc=;
+        b=H2PIHgV19RfQ4m5ddOPC3Wz4/4KtASeG8s27EzgFWHtjb8/8ZILkA/VR3o94PXzXfr
+         EghX2QNkKDMdDtWOepGqn4nuk98Y4rGReUa4Ps/pshspzsXbVsJMeC++zbxV3NpBZO5Y
+         qHYsTubvYAgaTxsyUrtGg1Cri3CcGKZ2a2Rltz4Lfl0YFFRt2bvs6xoAT2nmuOZIyA1o
+         MKPnJfeB6160a3ZIrW5RUAznbY+hMnf+hkq9vecHGNglD1evXOQJmc81tB+k4OrNrwjr
+         YyBf7okOeR561jb7rCpf2wiPen78vw2p9c0QbdQx41G/ZwgYz9SVy/+c+6tKtRgxzpAO
+         uruA==
+X-Gm-Message-State: AOAM531vcn44d7dVNZupsgdyi2C8+BtTSD4UoZQVfOKEqMukoj0lPbbv
+        mPAXrIVX+tAmjzcqimKCdtSvE7O92DDBTyXpUQXhcA==
+X-Google-Smtp-Source: ABdhPJwIhvF9Fis6pbQ0FJq61OaaurC/QA/KpTpRunMMZ7744HdxYgsYvG6/+mTVj0z6X9bbMCKQnhv3R3Ob7cI0XBA=
+X-Received: by 2002:a5d:4389:: with SMTP id i9mr4481054wrq.374.1590170839532;
+ Fri, 22 May 2020 11:07:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200522173419.GA2297@embeddedor>
-In-Reply-To: <20200522173419.GA2297@embeddedor>
+References: <20200522174355.GA4406@embeddedor>
+In-Reply-To: <20200522174355.GA4406@embeddedor>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 22 May 2020 14:05:20 -0400
-Message-ID: <CADnq5_Ncx8sa5Z_qykbiXVGPJ0WfwHLsCm45mZFYg=-ciBMxdA@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/radeon/dpm: Replace one-element array and use
+Date:   Fri, 22 May 2020 14:07:08 -0400
+Message-ID: <CADnq5_NuDA9tT05B0bDqfCi0v=j3emjxLGxKA6hTTuAjRoM4xA@mail.gmail.com>
+Subject: Re: [PATCH] drm/[radeon|amdgpu]: Replace one-element array and use
  struct_size() helper
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Alex Deucher <alexander.deucher@amd.com>,
@@ -75,13 +75,12 @@ Cc:     Alex Deucher <alexander.deucher@amd.com>,
         amd-gfx list <amd-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 1:29 PM Gustavo A. R. Silva
+On Fri, May 22, 2020 at 1:39 PM Gustavo A. R. Silva
 <gustavoars@kernel.org> wrote:
 >
 > The current codebase makes use of one-element arrays in the following
@@ -94,8 +93,8 @@ On Fri, May 22, 2020 at 1:29 PM Gustavo A. R. Silva
 >
 > struct something *instance;
 >
-> instance =3D kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length =3D size;
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
 > memcpy(instance->data, source, size);
 >
 > but the preferred mechanism to declare variable-length types such as
@@ -113,7 +112,7 @@ On Fri, May 22, 2020 at 1:29 PM Gustavo A. R. Silva
 > the one-element array with a flexible-array member.
 >
 > Also, make use of the new struct_size() helper to properly calculate the
-> size of struct NISLANDS_SMC_SWSTATE.
+> size of struct SISLANDS_SMC_SWSTATE.
 >
 > This issue was found with the help of Coccinelle and, audited and fixed
 > _manually_.
@@ -122,7 +121,6 @@ On Fri, May 22, 2020 at 1:29 PM Gustavo A. R. Silva
 > [2] https://github.com/KSPP/linux/issues/21
 > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 >
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Applied.  Thanks!
@@ -130,55 +128,62 @@ Applied.  Thanks!
 Alex
 
 > ---
-> Changes in v2:
->  - Use type size_t instead of u16 for state_size variable.
+>  drivers/gpu/drm/amd/amdgpu/si_dpm.c       | 5 ++---
+>  drivers/gpu/drm/amd/amdgpu/sislands_smc.h | 2 +-
+>  drivers/gpu/drm/radeon/si_dpm.c           | 5 ++---
+>  3 files changed, 5 insertions(+), 7 deletions(-)
 >
->  drivers/gpu/drm/amd/amdgpu/si_dpm.h | 2 +-
->  drivers/gpu/drm/radeon/ni_dpm.c     | 7 ++++---
->  2 files changed, 5 insertions(+), 4 deletions(-)
+> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.c b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> index c00ba4b23c9a6..0fc56c5bac080 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> @@ -5715,10 +5715,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
+>         int ret;
+>         u32 address = si_pi->state_table_start +
+>                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
+> -       u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
+> -               ((new_state->performance_level_count - 1) *
+> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
+>         SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
+> +       size_t state_size = struct_size(smc_state, levels,
+> +                                       new_state->performance_level_count);
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.h b/drivers/gpu/drm/amd/am=
-dgpu/si_dpm.h
-> index 6b7d292b919f3..bc0be6818e218 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-> @@ -781,7 +781,7 @@ struct NISLANDS_SMC_SWSTATE
+>         memset(smc_state, 0, state_size);
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/sislands_smc.h b/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
+> index d2930eceaf3c8..a089dbf8f7a93 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
+> @@ -186,7 +186,7 @@ struct SISLANDS_SMC_SWSTATE
 >      uint8_t                             levelCount;
 >      uint8_t                             padding2;
 >      uint8_t                             padding3;
-> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-> +    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+> -    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
+> +    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
 >  };
 >
->  typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
-> diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_=
-dpm.c
-> index b57c37ddd164c..abb6345bfae32 100644
-> --- a/drivers/gpu/drm/radeon/ni_dpm.c
-> +++ b/drivers/gpu/drm/radeon/ni_dpm.c
-> @@ -2685,11 +2685,12 @@ static int ni_upload_sw_state(struct radeon_devic=
-e *rdev,
->         struct rv7xx_power_info *pi =3D rv770_get_pi(rdev);
->         u16 address =3D pi->state_table_start +
->                 offsetof(NISLANDS_SMC_STATETABLE, driverState);
-> -       u16 state_size =3D sizeof(NISLANDS_SMC_SWSTATE) +
-> -               ((NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1) * =
-sizeof(NISLANDS_SMC_HW_PERFORMANCE_LEVEL));
-> +       NISLANDS_SMC_SWSTATE *smc_state;
-> +       size_t state_size =3D struct_size(smc_state, levels,
-> +                       NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE);
+>  typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
+> diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
+> index a167e1c36d243..bab01ca864c63 100644
+> --- a/drivers/gpu/drm/radeon/si_dpm.c
+> +++ b/drivers/gpu/drm/radeon/si_dpm.c
+> @@ -5253,10 +5253,9 @@ static int si_upload_sw_state(struct radeon_device *rdev,
 >         int ret;
-> -       NISLANDS_SMC_SWSTATE *smc_state =3D kzalloc(state_size, GFP_KERNE=
-L);
+>         u32 address = si_pi->state_table_start +
+>                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
+> -       u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
+> -               ((new_state->performance_level_count - 1) *
+> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
+>         SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
+> +       size_t state_size = struct_size(smc_state, levels,
+> +                                       new_state->performance_level_count);
 >
-> +       smc_state =3D kzalloc(state_size, GFP_KERNEL);
->         if (smc_state =3D=3D NULL)
->                 return -ENOMEM;
+>         memset(smc_state, 0, state_size);
 >
 > --
 > 2.26.2
 >
 > _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
