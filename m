@@ -2,151 +2,130 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35077C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC65C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5A8206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D9220738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dP0RRZfB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pTQvFN0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgEVSWm (ORCPT
+        id S1730842AbgEVSXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVSWl (ORCPT
+        Fri, 22 May 2020 14:23:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45178 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgEVSXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:22:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D705DC061A0E;
-        Fri, 22 May 2020 11:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=XQonmUw0pCP5G1rBbyKf46q0s3ut4wVacTLv+7V9ltw=; b=dP0RRZfBdGyAK5wkij4bUbE2Wl
-        Xw0GLM/Cyba98UdnXATQkXu3Kzjlte1C3dowkOrBRWWJmfHSDu4LsEFOBSh7L2JtcZZuK/dvZwEnu
-        04U7n/SbJthWU+2E+hqIBRBQWfKJKqRm5GdOWmNYPB/lnZKPlEyOav0zSkTlD+tN5/BiKOhNxZegF
-        /pfQfmrd1yiwarpZDDlVirwuGf0JET3pTOsjDbBN+ykT0OtjvWbSEUUQRnzT0LEJ11Qs8q+OU4oXq
-        o2qC3RSMH6vXDsH0ceK1etckkqp+FwozlNzC32L43IfnTPrk1GDqoJIZz2W21/Sp9nK6QUFgtJxJF
-        CkdIer+g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcCJd-0004Yu-0K; Fri, 22 May 2020 18:22:41 +0000
-Subject: Re: linux-next: Tree for May 18 (input/misc/iqs269a.c & regmap)
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-References: <20200518205725.72eb3148@canb.auug.org.au>
- <60dadc36-daec-2c48-a317-843ce52ae4f5@infradead.org>
- <20200518162058.GA18713@labundy.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e6a56505-b99c-6b22-c35a-3596857fa421@infradead.org>
-Date:   Fri, 22 May 2020 11:22:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 14:23:33 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MIN774009732;
+        Fri, 22 May 2020 13:23:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590171787;
+        bh=7meOCcO9PMV0pe9bY/23KTU7Rz1Q8mk5VlyvR5wCnuc=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=pTQvFN0STMEPQPpZPpmVYr4o6kbNIsw7va17SVHSEGB2jijhOpPHCBpQpble/dVXz
+         Ari1n8V9ilSNJt5irlpBbGjzlhlf9kaKRbj5xfz2Ov7Np+v2ZqFyS30huXNNr5zCtN
+         qJgFGGdnVwiKmkOD1iz8fjnw6u4VW1554DId/mNw=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MIN73n079237
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 13:23:07 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 13:23:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 13:23:06 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MIN6kR049061;
+        Fri, 22 May 2020 13:23:06 -0500
+Date:   Fri, 22 May 2020 23:53:05 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: Re: [PATCH v6 04/19] spi: spi-mem: allow specifying a command's
+ extension
+Message-ID: <20200522182257.wneqsmfm22farzus@ti.com>
+References: <20200520163053.24357-1-p.yadav@ti.com>
+ <20200520163053.24357-5-p.yadav@ti.com>
+ <20200521202256.5816eb32@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518162058.GA18713@labundy.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200521202256.5816eb32@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 9:20 AM, Jeff LaBundy wrote:
-> Hi Randy et al,
-> 
-> On Mon, May 18, 2020 at 08:42:43AM -0700, Randy Dunlap wrote:
->> On 5/18/20 3:57 AM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200515:
->>>
->>
->> on i386:
->>
->>
->> CONFIG_REGMAP_I2C=y
->> CONFIG_I2C=m
->>
->> WARNING: unmet direct dependencies detected for REGMAP_I2C
->>   Depends on [m]: I2C [=m]
->>   Selected by [y]:
->>   - INPUT_IQS269A [=y] && !UML && INPUT [=y] && INPUT_MISC [=y]
->>
->>
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_read':
->> regmap-i2c.c:(.text+0x192): undefined reference to `i2c_smbus_read_byte_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_write':
->> regmap-i2c.c:(.text+0x1d7): undefined reference to `i2c_smbus_write_byte_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_read':
->> regmap-i2c.c:(.text+0x202): undefined reference to `i2c_smbus_read_word_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_read_swapped':
->> regmap-i2c.c:(.text+0x242): undefined reference to `i2c_smbus_read_word_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_write_swapped':
->> regmap-i2c.c:(.text+0x2a1): undefined reference to `i2c_smbus_write_word_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_write':
->> regmap-i2c.c:(.text+0x2d7): undefined reference to `i2c_smbus_write_word_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read_reg16':
->> regmap-i2c.c:(.text+0x310): undefined reference to `i2c_smbus_write_byte_data'
->> ld: regmap-i2c.c:(.text+0x323): undefined reference to `i2c_smbus_read_byte'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write_reg16':
->> regmap-i2c.c:(.text+0x39c): undefined reference to `i2c_smbus_write_i2c_block_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write':
->> regmap-i2c.c:(.text+0x3db): undefined reference to `i2c_smbus_write_i2c_block_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read':
->> regmap-i2c.c:(.text+0x427): undefined reference to `i2c_smbus_read_i2c_block_data'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_read':
->> regmap-i2c.c:(.text+0x49f): undefined reference to `i2c_transfer'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_gather_write':
->> regmap-i2c.c:(.text+0x524): undefined reference to `i2c_transfer'
->> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_write':
->> regmap-i2c.c:(.text+0x56c): undefined reference to `i2c_transfer_buffer_flags'
->> ld: drivers/input/misc/iqs269a.o: in function `iqs269_i2c_driver_init':
->> iqs269a.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
->> ld: drivers/input/misc/iqs269a.o: in function `iqs269_i2c_driver_exit':
->> iqs269a.c:(.exit.text+0x9): undefined reference to `i2c_del_driver'
->>
->>
->>
->> Full randconfig file is attached.
-> 
-> A complete oversight on my part; during my testing I did not realize
-> another module was selecting I2C for me. Valuable lesson learned :)
-> 
-> The kbuild test robot set off the alarm bells earlier today and I've
-> sent a patch [1] already. Many apologies for all of the noise.
-> 
->>
->> -- 
->> ~Randy
->> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> [1] https://patchwork.kernel.org/patch/11555469/
-> 
-> Kind regards,
-> Jeff LaBundy
+Hi Boris,
 
+On 21/05/20 08:22PM, Boris Brezillon wrote:
+> On Wed, 20 May 2020 22:00:38 +0530
+> Pratyush Yadav <p.yadav@ti.com> wrote:
+> 
+> As mentioned in one of my previous review, you should patch the mxic
+> driver before extending the opcode field:
+> 
+> --->8---
+> diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
+> index 69491f3a515d..c3f4136a7c1d 100644
+> --- a/drivers/spi/spi-mxic.c
+> +++ b/drivers/spi/spi-mxic.c
+> @@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+>         int nio = 1, i, ret;
+>         u32 ss_ctrl;
+>         u8 addr[8];
+> +       u8 cmd[2];
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Regarding your comment about bisect-ability, how about I change this to:
+  
+  u8 cmd[sizeof(op->cmd.opcode)];
 
+and put this patch before the change to 2-byte opcodes. This should also 
+make it resistent to further changes in opcode size. Does that sound 
+like a sane idea?
+  
+>         ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
+>         if (ret)
+> @@ -393,7 +394,10 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+>         writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
+>                mxic->regs + HC_CFG);
+>  
+> -       ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
+> +       for (i = 0; i < op->cmd.nbytes; i++)
+> +               cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 1));
+> +
+> +       ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
+>         if (ret)
+>                 goto out;
+>  
 
-This build error still happens in linux-next 20200522.
-Perhaps we can have this patch merged & pushed out so that
-linux-next can pick it up, please?
-
-thanks
 -- 
-~Randy
-
+Regards,
+Pratyush Yadav
+Texas Instruments India
