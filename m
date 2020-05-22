@@ -2,132 +2,183 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89140C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C56C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8B220663
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880CE206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:05:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8Hn3cSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgEVSEK (ORCPT
+        id S1730838AbgEVSFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:04:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59224 "EHLO
+        Fri, 22 May 2020 14:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730674AbgEVSEK (ORCPT
+        with ESMTP id S1730674AbgEVSFd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:04:10 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF2BC061A0E;
-        Fri, 22 May 2020 11:04:10 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jcC1c-0002Ke-4Y; Fri, 22 May 2020 20:04:04 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AF4F61C0095;
-        Fri, 22 May 2020 20:04:03 +0200 (CEST)
-Date:   Fri, 22 May 2020 18:04:03 -0000
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/unwind/orc: Fix unwind_get_return_address_ptr()
- for inactive tasks
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200522135435.vbxs7umku5pyrdbk@treble>
-References: <20200522135435.vbxs7umku5pyrdbk@treble>
+        Fri, 22 May 2020 14:05:33 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6C0C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:05:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c11so1519439wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HnUAvj8/hcOeu5wap80XKbA2U7OiBYgIef/CmYB0LcE=;
+        b=n8Hn3cSXEhsGcYzPiRk9a13J/yYmoVNORbpdvW9NQCNH6z9492FBfQQulIHSIDwPg5
+         /RuLl/aQv0LTnd1zyykYtcH3rsySaVW0dGkgmb66yMgVL9VjWhT29Sg9eR6QL9CHihc3
+         ZC6ZPAMFqucNMcTvYl3Wasaa3dnmthhWqCOzPvUdBhFd0OUoc6e9znj0JNkb4F9LrYHb
+         LeIN9HXGpwGZBuhEJiunQleQS18juPyCWrOZh50rzawJTiikOa/HHwFdPhIuapqPyUKj
+         9oXhth3/2P682nA1JUyPhYoEQpSHewlsrd5tU4WhiNJKfAcIwxe72HMlBzqvjc5j9AFx
+         er/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HnUAvj8/hcOeu5wap80XKbA2U7OiBYgIef/CmYB0LcE=;
+        b=uLTucvgI7D3zwesT9VWlUXi5nrFoNMGfr5J0k6TvvxoWV5+niisyBn7VRv+99nXYMU
+         AHm23x1J3BEONwmhdpJVLvlQrSAsEn5jfDbUGygcpMfjHZ7EXPZ3YpMB96/ozFXArVeY
+         /5v4MpTEgxbI/g6dzrdaCCB0ofreOmBI7qTzzp0z0mfW7uV1EtNvv7wX2Ux4tsi5iNxT
+         1EFSReGS1vQdIxbI1CYGXEkXrbu3dYF9hy3We/XAE3p8o7iIL8yci2nIpFDqPcdAlSDk
+         VF9TSYckRuM+RhybDgsBoB4I+ehf5dtNOiiKp2+sia3hRKg1CxvjP3ua3uRH0Vbsd0li
+         126A==
+X-Gm-Message-State: AOAM532bRu6VTLs81swg6vmOIkTOzOv5bNPVCf+F5egxpF9Dk/R3Im0N
+        A7X+yW6hDzkDgom+e/iytkU5oHpskyZWr/nmzBk=
+X-Google-Smtp-Source: ABdhPJzVEjF74Bvg+XdgYHXOPimWqs5bnL8Tj6Gf7h9YyFb5zQutmPwsVRo8Is5UeRZFmtUyDVFernc7M55zUnleyvY=
+X-Received: by 2002:a5d:400f:: with SMTP id n15mr4569405wrp.419.1590170731715;
+ Fri, 22 May 2020 11:05:31 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159017064350.17951.16969339378626322681.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200522173419.GA2297@embeddedor>
+In-Reply-To: <20200522173419.GA2297@embeddedor>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 22 May 2020 14:05:20 -0400
+Message-ID: <CADnq5_Ncx8sa5Z_qykbiXVGPJ0WfwHLsCm45mZFYg=-ciBMxdA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/radeon/dpm: Replace one-element array and use
+ struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, May 22, 2020 at 1:29 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> The current codebase makes use of one-element arrays in the following
+> form:
+>
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
+>
+> struct something *instance;
+>
+> instance =3D kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length =3D size;
+> memcpy(instance->data, source, size);
+>
+> but the preferred mechanism to declare variable-length types such as
+> these ones is a flexible array member[1][2], introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on. So, replace
+> the one-element array with a flexible-array member.
+>
+> Also, make use of the new struct_size() helper to properly calculate the
+> size of struct NISLANDS_SMC_SWSTATE.
+>
+> This issue was found with the help of Coccinelle and, audited and fixed
+> _manually_.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Commit-ID:     187b96db5ca79423618dfa29a05c438c34f9e1f0
-Gitweb:        https://git.kernel.org/tip/187b96db5ca79423618dfa29a05c438c34f9e1f0
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Fri, 22 May 2020 08:54:35 -05:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 22 May 2020 19:55:17 +02:00
+Applied.  Thanks!
 
-x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
+Alex
 
-Normally, show_trace_log_lvl() scans the stack, looking for text
-addresses to print.  In parallel, it unwinds the stack with
-unwind_next_frame().  If the stack address matches the pointer returned
-by unwind_get_return_address_ptr() for the current frame, the text
-address is printed normally without a question mark.  Otherwise it's
-considered a breadcrumb (potentially from a previous call path) and it's
-printed with a question mark to indicate that the address is unreliable
-and typically can be ignored.
-
-Since the following commit:
-
-  f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-
-... for inactive tasks, show_trace_log_lvl() prints *only* unreliable
-addresses (prepended with '?').
-
-That happens because, for the first frame of an inactive task,
-unwind_get_return_address_ptr() returns the wrong return address
-pointer: one word *below* the task stack pointer.  show_trace_log_lvl()
-starts scanning at the stack pointer itself, so it never finds the first
-'reliable' address, causing only guesses to being printed.
-
-The first frame of an inactive task isn't a normal stack frame.  It's
-actually just an instance of 'struct inactive_task_frame' which is left
-behind by __switch_to_asm().  Now that this inactive frame is actually
-exposed to callers, fix unwind_get_return_address_ptr() to interpret it
-properly.
-
-Fixes: f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200522135435.vbxs7umku5pyrdbk@treble
----
- arch/x86/kernel/unwind_orc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index fa79e42..7f969b2 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -320,12 +320,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_address);
- 
- unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
- {
-+	struct task_struct *task = state->task;
-+
- 	if (unwind_done(state))
- 		return NULL;
- 
- 	if (state->regs)
- 		return &state->regs->ip;
- 
-+	if (task != current && state->sp == task->thread.sp) {
-+		struct inactive_task_frame *frame = (void *)task->thread.sp;
-+		return &frame->ret_addr;
-+	}
-+
- 	if (state->sp)
- 		return (unsigned long *)state->sp - 1;
- 
+> ---
+> Changes in v2:
+>  - Use type size_t instead of u16 for state_size variable.
+>
+>  drivers/gpu/drm/amd/amdgpu/si_dpm.h | 2 +-
+>  drivers/gpu/drm/radeon/ni_dpm.c     | 7 ++++---
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.h b/drivers/gpu/drm/amd/am=
+dgpu/si_dpm.h
+> index 6b7d292b919f3..bc0be6818e218 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.h
+> @@ -781,7 +781,7 @@ struct NISLANDS_SMC_SWSTATE
+>      uint8_t                             levelCount;
+>      uint8_t                             padding2;
+>      uint8_t                             padding3;
+> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
+> +    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+>  };
+>
+>  typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
+> diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_=
+dpm.c
+> index b57c37ddd164c..abb6345bfae32 100644
+> --- a/drivers/gpu/drm/radeon/ni_dpm.c
+> +++ b/drivers/gpu/drm/radeon/ni_dpm.c
+> @@ -2685,11 +2685,12 @@ static int ni_upload_sw_state(struct radeon_devic=
+e *rdev,
+>         struct rv7xx_power_info *pi =3D rv770_get_pi(rdev);
+>         u16 address =3D pi->state_table_start +
+>                 offsetof(NISLANDS_SMC_STATETABLE, driverState);
+> -       u16 state_size =3D sizeof(NISLANDS_SMC_SWSTATE) +
+> -               ((NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1) * =
+sizeof(NISLANDS_SMC_HW_PERFORMANCE_LEVEL));
+> +       NISLANDS_SMC_SWSTATE *smc_state;
+> +       size_t state_size =3D struct_size(smc_state, levels,
+> +                       NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE);
+>         int ret;
+> -       NISLANDS_SMC_SWSTATE *smc_state =3D kzalloc(state_size, GFP_KERNE=
+L);
+>
+> +       smc_state =3D kzalloc(state_size, GFP_KERNEL);
+>         if (smc_state =3D=3D NULL)
+>                 return -ENOMEM;
+>
+> --
+> 2.26.2
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
