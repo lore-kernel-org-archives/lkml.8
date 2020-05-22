@@ -2,130 +2,123 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B59BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4801620878
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA622078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HBT+Hm9o"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KMBRLvBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgEVBEY (ORCPT
+        id S1726925AbgEVBEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:04:24 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:35484 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVBEY (ORCPT
+        Thu, 21 May 2020 21:04:49 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2925 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgEVBEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:04:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590109467; x=1621645467;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gD0Mmp36tWWvKenJoMmkqjxvUYivz3GgCXTadY4Oz8w=;
-  b=HBT+Hm9oV6Cz+xEpVqOlnkRNduxZKu1F2pJ20c2pI2b8ZbDTpOE4hjtK
-   V+ezsKv/ct3wJN+DG+djxEWczfUIuUsLuohwFeXuGO5S4l/kAHo29m8Fv
-   TDZj0n+Zyp+fyBY6IzszvB9uR011u7HM7Nk30uWtrGXlwWbOYS460Ca4Q
-   EJ2Q6YsvPFx/myTvJ9Q6CNLrxC3nyl5z4BPisB0PSLkl/V5h8kn9a0b9+
-   8YTK9L4+rQHAzoUtPq5hMqFMz2/PE9mxfEqG6cJbYzsd4piKqgsOK9QQu
-   ninOxUy03BELBq5DwBC/afCXIxMnZfXm7Wl8N2q/JdIFm9bnIWgItB+xy
-   A==;
-IronPort-SDR: B44ijviYw1v1QuWJwGXqWJJooYnMdAYdXte37IjfXtzPeN2gZCv+oZrTaGkzbPi8mZApJMal1d
- Kox9oo5c4F09yYDkExlHF2ksVSo9J54N1qte/xOsFIVoY3vLdDci0ObPVvW9usLOlTpwoW/C/7
- s9Nxf+JPOQ03UH+2etv5u1UIiTr6S2ZkiW3R/Zt35amdHAv7LtF4VYnGb+w31dfqLnnUT/jNQ0
- fIT+Fvb8Yj0zszeHQnPtnOAzPmRjZHRfOZsQOJCEefpNbxxCO0KPaihHsxXC3sViKv4IieVZE9
- Xdc=
-X-IronPort-AV: E=Sophos;i="5.73,419,1583164800"; 
-   d="scan'208";a="241029128"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 09:04:37 +0800
-IronPort-SDR: h//N3R+ZbkPdMBVbJ3azzyazXQ6IXamfjYGys/E4IT1UBptKjQ9V3LxBoa7r/eVswNF1Knnh6M
- 4qHoB2ti0Qdc2VIsOuTkfK/7EycqRlTWA=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 17:54:12 -0700
-IronPort-SDR: AACqdndHAWEilkfGYIKngoypr3umi5vbJCaRoPmbK0qkzwOsO4+CjnpVaXW/N0fP5JJqCfwOGj
- Ul2DoX96QPaw==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 18:04:11 -0700
-Date:   Fri, 22 May 2020 02:04:06 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Paul Burton <paulburton@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: piix4-poweroff.c I/O BAR usage
-In-Reply-To: <20200520135708.GA1086370@bjorn-Precision-5520>
-Message-ID: <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
-References: <20200520135708.GA1086370@bjorn-Precision-5520>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 21 May 2020 21:04:48 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec724e00000>; Thu, 21 May 2020 18:03:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 21 May 2020 18:04:48 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 21 May 2020 18:04:48 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+ 2020 01:04:48 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 May 2020 01:04:47 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.48.182]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec7252e0002>; Thu, 21 May 2020 18:04:47 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, <jgg@ziepe.ca>
+CC:     <Liam.Howlett@oracle.com>, <daniel.m.jordan@oracle.com>,
+        <dave@stgolabs.net>, <hughd@google.com>, <jglisse@redhat.com>,
+        <jhubbard@nvidia.com>, <ldufour@linux.ibm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <peterz@infradead.org>, <rientjes@google.com>, <vbabka@suse.cz>,
+        <walken@google.com>, <willy@infradead.org>, <yinghan@google.com>
+Subject: [PATCH] mm/gup: might_lock_read(mmap_sem) in get_user_pages_fast()
+Date:   Thu, 21 May 2020 18:04:43 -0700
+Message-ID: <20200522010443.1290485-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590109408; bh=orFrUSfsuRLARmy9U5y3S0SO6hDyarPkvJhx+oK/0Hs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=KMBRLvBLyYyTvaxnVcV1qu9rFMZ92Jbco7/6QV/Z/phN5ZTLDHOGl9Ki3m6a2DcSD
+         BpKmHS6l2KQY8LakU8ItjBIyfIaInKVAaqH5FwPdk7TKjpu7o8L1SANr+YDWBmwOyS
+         lcxd4dM7iMfyPp77XEwOOh4/I9EA4SJ2eAo5nuReCE/PYstFfoaoIMdZK060pjQsty
+         Rkljf7hCsLVq9Cky/GdawmLzJt/3w9D5ImKkECpevqNFbylyEP6TWumchnsHZ+DLc9
+         Z0c+kwjayDs8wrvy1wtXGy4VRQspw27xGF89S5+NRdeGxPFAt67RVu3XGlLH9J/eE0
+         wL6Nt0UeiR8Zw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Instead of scattering these assertions across the drivers,
+do this assertion inside the core of get_user_pages_fast*()
+functions. That also includes pin_user_pages_fast*()
+routines.
 
- Paul may or may not be reachable anymore, so I'll step in.
+Add a might_lock_read(mmap_sem) call to internal_get_user_pages_fast().
 
-> This looks like it might be a bug:
-> 
->   static const int piix4_pm_io_region = PCI_BRIDGE_RESOURCES;
-> 
->   static int piix4_poweroff_probe(struct pci_dev *dev,
->                                   const struct pci_device_id *id)
->   {
->           ...
->           /* Request access to the PIIX4 PM IO registers */
->           res = pci_request_region(dev, piix4_pm_io_region,
->                                    "PIIX4 PM IO registers");
-> 
-> pci_request_region() takes a BAR number (0-5), but here we're passing
-> PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
-> the bridge I/O window.
-> 
-> I don't think this device ([8086:7113]) is a bridge, so that resource
-> should be empty.
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Cc: Michel Lespinasse <walken@google.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
- Hmm, isn't the resource actually set up by `quirk_piix4_acpi' though?
+Hi Andrew,
 
-> Based on this spec:
-> https://www.intel.com/Assets/PDF/datasheet/290562.pdf,
-> it looks like it should be the PIIX4 power management function at
-> function 3, which has no standard PCI BARs but does have a PMBA (Power
-> Management Base Address) at 0x40 and an SMBBA (SMBus Base Address) at
-> 0x90 in config space.
+This applies on top of [1], which in turn applies to
+today's (20200521) linux-next.
 
- Correct, this is what Malta firmware reports for this function:
+As noted in the discussion [2], this will need changing from
+mmap_sem to mmap_lock, after Michel Lespinasse's patchset
+arrives.
 
-Bus = 0x00, Dev = 0x0a, Function = 0x03
-Vendor Id = 0x8086 (Intel), Dev ID = 0x7113 (PIIX4 Power)
- Min Gnt = 0x00, Max Lat = 0x00, Lat Tim = 0x20
- Int Pin = None, Int Line = 0x09
- BAR count = 0x02
-  IO:  Pos = 0x40, Base(CPU/PCI) = 0x18001000/0x00001000, Size = 0x00000100
-  IO:  Pos = 0x90, Base(CPU/PCI) = 0x18001100/0x00001100, Size = 0x00000100
+[1]
+https://lore.kernel.org/r/20200521233841.1279742-1-jhubbard@nvidia.com
 
-I'm somewhat familiar with this southbridge, although this was looong ago.
+[2] https://lore.kernel.org/linux-mm/20200520124817.GG31189@ziepe.ca/
 
-> I suppose on an ACPI system the regions described by PMBA and SMBBA
-> might be described via ACPI, since they're not discoverable by
-> standard PCI enumeration?  Pretty sure you don't have ACPI on MIPS
-> though.
-> 
-> Maybe the driver should read PMBA and SMBBA and reserve those regions
-> by hand with request_region()?
+thanks,
+John Hubbard
+NVIDIA
 
- Well, I think `quirk_piix4_acpi' covers it.  It dates back to 2.3.49 
-AFAICT.  I can try to boot my Malta system over the weekend to see if 
-there are any issues with it, but I'm fairly sure there is none here.
+ mm/gup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-  Maciej
+diff --git a/mm/gup.c b/mm/gup.c
+index ada6aa79576dc..3462c076e8ecf 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2728,6 +2728,9 @@ static int internal_get_user_pages_fast(unsigned long=
+ start, int nr_pages,
+ 				       FOLL_FAST_ONLY)))
+ 		return -EINVAL;
+=20
++	if (!(gup_flags & FOLL_FAST_ONLY))
++		might_lock_read(&current->mm->mmap_sem);
++
+ 	start =3D untagged_addr(start) & PAGE_MASK;
+ 	addr =3D start;
+ 	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
+--=20
+2.26.2
+
