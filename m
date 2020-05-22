@@ -2,90 +2,128 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1979CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96558C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B14206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590171208;
-	bh=990VpNbmnJRTKTRrlUlARO0pDj6MiynA5eE1JHvdWfo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=W91ZdR2c8P/3U1xpZh0zq+QGfZTMq8N6xiralBPvJFwH1YTbdSMmwnl5iUsaEi1c9
-	 daKv4rrRWJw5DKxKahgibjngYo46vbzg86loOomN0qHpBC7BiGmP44wcgTR8PfZ1o9
-	 qPePE5hKpedVwVF/JdfgelsXMx5+ydcfU49PHvhM=
+	by mail.kernel.org (Postfix) with ESMTP id 818DC206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730821AbgEVSN1 (ORCPT
+        id S1730869AbgEVSO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 14:14:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16615 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgEVSN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:13:26 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCCC206F6;
-        Fri, 22 May 2020 18:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590171206;
-        bh=990VpNbmnJRTKTRrlUlARO0pDj6MiynA5eE1JHvdWfo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=xqeqkVfANeqiwiXzYLYE2CoP+19RFUGgr549v01CAaPqlYAs2GY6NpM5wf0LEcsXN
-         A+MbqJrgKpsrhwaHpaaWFE96ijxeUhICm62vM2/Y0rrflsDVA60nLj0AThqMU033yo
-         JjdEtKinwXv9tt4W0spOirczax9mLclGaSUVNVfg=
-Subject: Re: [PATCH v3 0/3] selftests: vdso: Add a selftest for vDSO getcpu()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20200522162139.44380-1-broonie@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <24b15074-7135-38d7-d491-76087d949498@kernel.org>
-Date:   Fri, 22 May 2020 12:13:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726373AbgEVSO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 14:14:27 -0400
+IronPort-SDR: zs3tfRokZdk+ATDN2LSr9q1q9gdwxRkgbeIk3iSJCFvAaFKmBJlIX6TUX3VB8qwKHdIPJK0W06
+ 9Uk66Zkeie2g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 11:14:27 -0700
+IronPort-SDR: aNLuuOBLKjBvftxy5qfpXMw6yOA2vhLrKyOrglZqkDbI7Hj9AGX9tpQ4FYAEQKDJvCsu3KCEid
+ u8YjDgm1J7Hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="467369306"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga006.fm.intel.com with ESMTP; 22 May 2020 11:14:26 -0700
+Message-ID: <676f710b9747b091783aed38fb07259af3ca5b43.camel@intel.com>
+Subject: Re: [PATCH v10 26/26] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>, mtk.manpages@gmail.com
+Date:   Fri, 22 May 2020 11:13:24 -0700
+In-Reply-To: <20200522172934.GI12341@asgard.redhat.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+         <20200429220732.31602-27-yu-cheng.yu@intel.com>
+         <202005211528.A12B4AD@keescook>
+         <c9c9314374c7db0bf9b6e39670855afe5b0d4014.camel@intel.com>
+         <20200522172934.GI12341@asgard.redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20200522162139.44380-1-broonie@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 10:21 AM, Mark Brown wrote:
-> This series does a bit of a cleanup of the existing tests for the vDSO
-> in kselftest and then adds a new test for getcpu().
+On Fri, 2020-05-22 at 19:29 +0200, Eugene Syromiatnikov wrote:
+> On Fri, May 22, 2020 at 10:17:43AM -0700, Yu-cheng Yu wrote:
+> > On Thu, 2020-05-21 at 15:42 -0700, Kees Cook wrote:
+> > > On Wed, Apr 29, 2020 at 03:07:32PM -0700, Yu-cheng Yu wrote:
+> > [...]
+> > > > +
+> > > > +int prctl_cet(int option, u64 arg2)
+> > > > +{
+> > > > +	struct cet_status *cet;
+> > > > +
+> > > > +	if (!IS_ENABLED(CONFIG_X86_INTEL_CET))
+> > > > +		return -EINVAL;
+> > > 
+> > > Using -EINVAL here means userspace can't tell the difference between an
+> > > old kernel and a kernel not built with CONFIG_X86_INTEL_CET. Perhaps
+> > > -ENOTSUPP?
+> > 
+> > Looked into this.  The kernel and GLIBC are not in sync.  So maybe we still use
+> > EINVAL here?
+> > 
+> > Yu-cheng
+> > 
+> > 
+> > 
+> > In kernel:
+> > ----------
+> > 
+> > #define EOPNOTSUPP	95
+> > #define ENOTSUPP 	524
+> > 
+> > In GLIBC:
+> > ---------
+> > 
+> > printf("ENOTSUP=%d\n", ENOTSUP);
+> > printf("EOPNOTSUPP=%d\n", EOPNOTSUPP);
+> > printf("%s=524\n", strerror(524));
+> >  
+> > ENOTSUP=95
+> > EOPNOTSUPP=95
+> > Unknown error 524=524
 > 
-> v3: Remove some extern keywords.
-> v2: Silence checkpatch
-> 
-> Mark Brown (3):
->    selftests: vdso: Rename vdso_test to vdso_test_gettimeofday
->    selftests: vdso: Use a header file to prototype parse_vdso API
->    selftests: vdso: Add a selftest for vDSO getcpu()
-> 
->   tools/testing/selftests/vDSO/.gitignore       |  2 +
->   tools/testing/selftests/vDSO/Makefile         |  5 +-
->   tools/testing/selftests/vDSO/parse_vdso.c     | 24 +--------
->   tools/testing/selftests/vDSO/parse_vdso.h     | 31 +++++++++++
->   .../selftests/vDSO/vdso_standalone_test_x86.c |  4 +-
->   .../testing/selftests/vDSO/vdso_test_getcpu.c | 54 +++++++++++++++++++
->   .../{vdso_test.c => vdso_test_gettimeofday.c} | 10 ++--
->   7 files changed, 96 insertions(+), 34 deletions(-)
->   create mode 100644 tools/testing/selftests/vDSO/parse_vdso.h
->   create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
->   rename tools/testing/selftests/vDSO/{vdso_test.c => vdso_test_gettimeofday.c} (84%)
-> 
+> EOPNOTSUPP/ENOTSUP/ENOTSUPP is actually a mess, it's summarized recently
+> by Michael Kerrisk[1].  From the kernel's point of view, I think it
+> would be reasonable to return EOPNOTSUPP, and expect that the userspace
+> would use ENOTSUP to match against it.
 
-Thanks for the cleaning this up and the rework.
+Ok, use EOPNOTSUPP and add a comment why.
 
-Applied to linux-kselftest next for Linux 5.8-rc1
+Yu-cheng
 
-thanks,
--- Shuah
