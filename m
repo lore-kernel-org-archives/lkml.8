@@ -2,103 +2,129 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED11CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A372EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF3220812
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QWQc1utn"
+	by mail.kernel.org (Postfix) with ESMTP id 8A4CC207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgEVHhy (ORCPT
+        id S1728738AbgEVHiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgEVHhx (ORCPT
+        Fri, 22 May 2020 03:38:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727839AbgEVHiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:37:53 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06DEAC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:52 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g12so7968130wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OoldvHVpRxJWz04Wv0lGmaRnV3/coogwvzF6ciZCusk=;
-        b=QWQc1utngkxkmgE3Q2u4PTwJqopYWiCbwEsGAWquR85cj0X8RjK1xI8yGXqbI7jcyZ
-         A7I2kbn65YVRKjJSF/AFeyA4vxnoWX09E1TmCoJFPJnDI1loZx5j4NMh70Df8bXEz0ue
-         vTJx15lf1ZYaGAvc4aMYciz4SovxxdQAWHTuEm2oHIXADiPVf3cSpVfQGhuoA5CDtx/S
-         OgsJgjynh6wi3beJ5Oa85dFoie+UnAIF5cMSTj2A3m8d5UTVPLX/Od6NZ47RLKMKD49l
-         be+/5eFuDjHwPfJ4doYfPk/M5s6VjxS1iBiYXGnfc85uZIUTLhi+4N/SNM+uWfGAe8rj
-         geyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OoldvHVpRxJWz04Wv0lGmaRnV3/coogwvzF6ciZCusk=;
-        b=lacpbDpVkYx+FlH1H92Ru0Hnrvm1qMOAMP3OTx9mFTxEHK69J4NuXmKlr5aVdI0e1d
-         oXTDGbGXT3E9+ZFrHXk40bmy4zUwW443jCHFA8BsxNzgNl6LMEUzxesTfJcerAVNAb9S
-         0SoEnb9xYlM8kOHuCcv7Dk/w+2gs/UeJDRSd/WwiKPi53Nxxy7bz1hulxmqrgJ9S/SU1
-         Sz2NHp5Ryb/L3gxYHXH0UBEhQFlukfI0CwIlcwI/bTevpuoOjWHLti/tt705bvaQ+ZEz
-         RXTQAqZ8gfkEKLVbGb/Bbb/n0FTgIFhXV9HgI43nwKydCsmNg2cQPxbFrLlBEFXCp7GC
-         dNOw==
-X-Gm-Message-State: AOAM531zI7LOCNxC5MlW1Gfm/3u03gAkz7PCf96IpMO//dCwHWr4ajYy
-        6Nzu2982EnU3IuBzrVV5F/xkHuY4E5Q=
-X-Google-Smtp-Source: ABdhPJy+uDhQ+H8wIBCHXhrT0yMPXls7Yet6TUSGGzWvvHeOOpFgwvBPP6gqkrxYEzHQ+kF+ppxoFA==
-X-Received: by 2002:adf:e441:: with SMTP id t1mr2452196wrm.347.1590133070748;
-        Fri, 22 May 2020 00:37:50 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id y8sm82930wmc.37.2020.05.22.00.37.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 00:37:50 -0700 (PDT)
-Date:   Fri, 22 May 2020 08:37:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     matthias.bgg@kernel.org
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: mfd: mediatek: Add MT6397 Pin Controller
-Message-ID: <20200522073748.GQ271301@dell>
-References: <20200110145952.9720-1-matthias.bgg@kernel.org>
+        Fri, 22 May 2020 03:38:54 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M7V8Vw046770;
+        Fri, 22 May 2020 03:38:14 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31659tfr9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 03:38:14 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04M7adhL007546;
+        Fri, 22 May 2020 07:38:12 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 313xas755h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 07:38:12 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04M7cAwO6619602
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 May 2020 07:38:10 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C48F4C04A;
+        Fri, 22 May 2020 07:38:10 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F20FC4C062;
+        Fri, 22 May 2020 07:38:06 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.80.144])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri, 22 May 2020 07:38:06 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 22 May 2020 13:08:05 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Ira Weiny <ira.weiny@intel.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, linux-nvdimm@lists.01.org
+Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm, uapi: Add support for PAPR nvdimm specific methods
+In-Reply-To: <87367t941j.fsf@mpe.ellerman.id.au>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-5-vaibhav@linux.ibm.com> <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com> <87367t941j.fsf@mpe.ellerman.id.au>
+Date:   Fri, 22 May 2020 13:08:05 +0530
+Message-ID: <87ftbswhb6.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200110145952.9720-1-matthias.bgg@kernel.org>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_04:2020-05-21,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=974 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015 spamscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005220052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020, matthias.bgg@kernel.org wrote:
+Michael Ellerman <mpe@ellerman.id.au> writes:
 
-> From: Matthias Brugger <matthias.bgg@gmail.com>
-> 
-> The MT6397 mfd includes a pin controller. Add binding
-> a description for it.
-> 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> 
-> ---
-> 
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> Ira Weiny <ira.weiny@intel.com> writes:
+>> On Wed, May 20, 2020 at 12:30:57AM +0530, Vaibhav Jain wrote:
+>>> Introduce support for Papr nvDimm Specific Methods (PDSM) in papr_scm
+>>> modules and add the command family to the white list of NVDIMM command
+>>> sets. Also advertise support for ND_CMD_CALL for the dimm
+>>> command mask and implement necessary scaffolding in the module to
+>>> handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+> ...
+>>> + *
+>>> + * Payload Version:
+>>> + *
+>>> + * A 'payload_version' field is present in PDSM header that indicates a specific
+>>> + * version of the structure present in PDSM Payload for a given PDSM command.
+>>> + * This provides backward compatibility in case the PDSM Payload structure
+>>> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
+>>> + *
+>>> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
+>>> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
+>>> + * module when servicing the PDSM envelope checks the 'payload_version' and then
+>>> + * uses 'payload struct version' == MIN('payload_version field',
+>>> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
+>>> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
+>>> + * struct in returned 'payload_version' field.
+>>
+>> FWIW many people believe using a size rather than version is more sustainable.
+>> It is expected that new payload structures are larger (more features) than the
+>> previous payload structure.
+>>
+>> I can't find references at the moment through.
+>
+> I think clone_args is a good modern example:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/sched.h#n88
+>
+> cheers
 
-Applied, thanks.
+Thank Ira and Mpe for pointing this out. I looked into how clone3 sycall
+handles clone_args and few differences came out:
 
+* Unlike clone_args that are always transferred in one direction from
+  user-space to kernel, payload contents of pdsms are transferred in both
+  directions. Having a single version number makes it easier for
+  user-space and kernel to determine what data will be exchanged.
+
+* For PDSMs, the version number is negotiated between libndctl and
+  kernel. For example in case kernel only supports an older version of
+  a structure, its free to send a lower version number back to
+  libndctl. Such negotiations doesnt happen with clone3 syscall.
+  
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Cheers
+~ Vaibhav
