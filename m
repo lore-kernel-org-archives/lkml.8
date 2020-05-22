@@ -2,407 +2,406 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A435D206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2192820738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WvhN8BFg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSABV6DX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgEVMNN (ORCPT
+        id S1729332AbgEVMOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:13:13 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:36312 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgEVMNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:13:11 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec7c1ce0000>; Fri, 22 May 2020 20:13:04 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 05:13:04 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Fri, 22 May 2020 05:13:04 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 12:13:01 +0000
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.54) by
- HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 22 May 2020 12:13:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kRhkLp2ScwvtkLF2b1RtzoEwASnICdnzlco9gaFjup0OZFUHwSwSNDxyfc2bvnm7MGjaDVGmOgTWVvU4a2LIn8EYbYI/JW/iUJVT2Hokm1OvbSYcYK8yLJZwT89PDtbkadVdGDAsIoMeOKlhC0NrwJx8oU6W1E8MDy9rS08d2/ea+yN6rkBC2WOdWooHpTjohROxqHovnpmpWBqtsZKxm20lClx8of0eAa8pTlLPh97W/0POG59+t+u74nOKnuFUSDgJqpfiHCTW6yrUMjSrBNeWk0goi3cpdvvzjH8iLJ83iF4X4cmBuzJ1H1gTuK79+F4xMSFiElXDsfFj2/RAsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8n9H0gwsAdRY75tWca334c/7D7AZHmfHF9bb3ezXi3I=;
- b=ipOK2MLHq9e0OCvV5ojgjorc/xugZjPuNmfAcJROHjOa2d5pKZfbyvIsCpGKUPMiAmmYb1Crx0vRVwogPUMxgnJUzUlVSZdenl8XkzbcsCrQuOr1POEJsQ83WGPHpij4zwZWOfYxStZrTT+CjqAbJjK2RbCSaOe7mR8/xNDB7fyVTcLH7fJJzytCBVOK//B+YbiChLBn9Mns6V5E6igDzorZA8X74MIAAeax5vx+K0Q1ww7kmAgtAp2KocicuEQOTAyv2mwO0VzUdXp3GP12axB/hazpHNNfAAUFn1O6xNwClLQACrk6kIh1gcFzra6xG1iDtfbnmv5Y1rixPkyjVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB3014.namprd12.prod.outlook.com (2603:10b6:a03:d8::11)
- by BYAPR12MB2888.namprd12.prod.outlook.com (2603:10b6:a03:137::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Fri, 22 May
- 2020 12:12:59 +0000
-Received: from BYAPR12MB3014.namprd12.prod.outlook.com
- ([fe80::ad7c:1862:e032:66f6]) by BYAPR12MB3014.namprd12.prod.outlook.com
- ([fe80::ad7c:1862:e032:66f6%7]) with mapi id 15.20.3021.027; Fri, 22 May 2020
- 12:12:59 +0000
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-CC:     Bibek Basu <bbasu@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-Thread-Topic: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-Thread-Index: AQHWFyvoq08xOVZ7CEyiLUoNVdLvP6i0F7sAgAAAmUCAABeYgIAAANlQ
-Date:   Fri, 22 May 2020 12:12:58 +0000
-Message-ID: <BYAPR12MB30149CEB64B1BC3F9727AA68ADB40@BYAPR12MB3014.namprd12.prod.outlook.com>
-References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
- <34ae18f5-494c-7bc7-0f30-2d1455bbcb55@nvidia.com>
- <BYAPR12MB3014B051AD088B42001A8132ADB40@BYAPR12MB3014.namprd12.prod.outlook.com>
- <21428954-41cc-c01a-bca2-7eb19f444272@nvidia.com>
-In-Reply-To: <21428954-41cc-c01a-bca2-7eb19f444272@nvidia.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=spatra@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-05-22T12:12:55.7482796Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=aad9f5cc-c9f6-498f-8fd8-82a710eca505;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [115.114.90.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e558c26-650d-4f2e-9c92-08d7fe4977b0
-x-ms-traffictypediagnostic: BYAPR12MB2888:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB2888D22EBDB8DC52495050B4ADB40@BYAPR12MB2888.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 04111BAC64
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CHp0NWTvmsq3lHM8grx0r++aKgWQHSdat3LIkF5EkoWyxFJp72iVmUwoSRjte5OjdvVZnMBvS60KmlwW0s+2zJOD//EwNXGs4eRteZa5ppgJkIg6KBRVPXh0QUo7vX/l2MotwaEtk2B71hQ52jzfRlLtnFKp3+0NTQu+pBFMIGZ3CXJ47GqCNvTbne7df/M0ytnZnDczMvDQDBI5jiLsLAFTq+paaXrLkGld3nPmj6V3CS0bjJZTCs4zAz58rgGkfp5dAhYzdSrECdAmrNoY7ssG1V1JOd+ICN8bwZyH7IZhQrsPnall3W+dQmMj6sVza1P6KlUbQmtJNIC3yditMT8wvJhjFF9mpFhr1GR03qj/zaYCFeGVGbRWfXN87i7JiLZl00HPR1IRyKC4azO4a4D2QCjj0atshSSaUujwS0/7KFT8g+07seJ/dpnool+6
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3014.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(366004)(346002)(396003)(376002)(66556008)(86362001)(5660300002)(2906002)(6506007)(30864003)(66446008)(52536014)(66946007)(8936002)(55236004)(8676002)(7696005)(26005)(71200400001)(64756008)(4326008)(186003)(53546011)(66476007)(478600001)(76116006)(9686003)(55016002)(33656002)(110136005)(54906003)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: vRJsMEDg18+Tc7e8+X/qbcrCFzrCSrcCFnhGJfhhkG6EPgR/vKWElWTCr5iQ97lVmUjXBCaV1zKf/hXrV+By6yggoT7zZA6zE+CWj7zaw/nqHP671+AB4D3Uku0l1rzN0UOsPO/5Jh4njfMBU1Y53erZCioPXDXBCsxDxtUXJkl14hHFURomoWfWvVFFeDUv+UbZlr55MyzlWctyNrL5xcPCCaKqW+NLWYRUIfKQr7alLvkK5GlHofz5l1w8YNWztDwXz54VEG5GzYudKe1JNp6WyFsT9lMLvwPMBdE/p9Jg7jXt73S3f2tHuhLyOKR2fg1HrsOgXXqL4bxPb56VmRT+NHeph31s74NHdt3/ZvncIF+tikKxZ89ozOjumykRPZgoLzL0zh+zXAo3+5/wNMgehp5JPL1Q7A9DAk0meBeMXQJanOTusZeJV4JwXBzQCZvHvwb0jRqmGGpicSnSmWZHBbCbKf9ks0wGvYf8neg=
+        Fri, 22 May 2020 08:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbgEVMOB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:14:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C17C061A0E;
+        Fri, 22 May 2020 05:14:01 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id se13so12730913ejb.9;
+        Fri, 22 May 2020 05:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=os9WQmn1qrpdmVBGkeADZsQPHxlWfFLl+eux4dNoAs8=;
+        b=gSABV6DXQqzu70QpOyNlkhNzKmME+lbWwLoNc5C6ijrydbxDcDV/fXHhmCBUe+irI6
+         iS9S7RY3wSQskedRoHUmyE1vsn/wi1OEXY00uthdw4Vx22s2kE8GwXzrrXgWJxO2iNCP
+         IayVMFkGuV2PEn9dHuwe7c/vLaY96a+KsuYbgS0njD+pVrYMw0Ez1DagJ/dtvidXTisP
+         XIrv9jZKi6m7rx48Ik/vzFTw4MbmhkJMecQbrEDGhYQqvDSLZeDFzFVbTWhsSrH3iwEn
+         iaEhlDJh+YNEihbYArYcC/i90Hb80lYhmV2nZuCXbUvWXQrfebP0r686KMfTyYSCXE0d
+         ZEnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=os9WQmn1qrpdmVBGkeADZsQPHxlWfFLl+eux4dNoAs8=;
+        b=sbxR5lPUjb9W8jJa6W+e9Pa1NU7+Lt577FqrdQ33i+m+eq2KuVUA8qQzVVIJd6GfJy
+         YSFQlsULs2xdvx75D1b2JQAdHVGMXYr8jqBEPlvjSaseoAphLd4J7OAdmYPys2oaAUe5
+         mXoUyRG05Jtm931W/kstgCQdRpMxdM4v09D0dJ/UOieUdQ/zQEjz/sYfXYulnV40sra7
+         YfCHZgJPxaZbj/P+0qh0Ze4NaL4p19ln11X+mYwYOVIZ1VRi9tBs1X1/fSJuWrr/V448
+         k7LYd1AKyNWYS7bgKjBs3xLU8K9fYsjIaU8RoeIZPajpu0reaGE2opbo9lkS59hP6Q65
+         HHmQ==
+X-Gm-Message-State: AOAM532grTk69bQm+lZMdog44eWUQbwzGOGAbsxH5Ig7flTj25ePL8YB
+        i+Drr2bQgx1ukZPFnb2czew=
+X-Google-Smtp-Source: ABdhPJzvoz6pt4MwPMVoieKOo47vdCLImqSLWt9LwEXw+vprrY67/R4hbKcMrqhuBNHgGTHSOcNswQ==
+X-Received: by 2002:a17:906:3b4f:: with SMTP id h15mr8359387ejf.408.1590149639503;
+        Fri, 22 May 2020 05:13:59 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id df21sm7060697edb.27.2020.05.22.05.13.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 05:13:57 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:13:57 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
+ device-tree properties
+Message-ID: <20200522121357.GD2163848@ulmo>
+References: <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
+ <20200519162444.GD2113674@ulmo>
+ <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com>
+ <11c93dac-f5ba-2193-6f44-63af27fdce09@nvidia.com>
+ <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
+ <c7469c16-f6f1-f9c0-566f-3b1d3774f130@nvidia.com>
+ <c712de1d-cfa4-2746-ec6b-54f318aeaac2@nvidia.com>
+ <d2c71267-e696-c459-fbd6-dbb5fd312ed3@gmail.com>
+ <CAPDyKFqdeGyQpXpM+xynd_rWbi0S6hCeQS1Dyiy6Hd2E_yfHpg@mail.gmail.com>
+ <96f917a3-d822-1c36-d088-3e4a322c1761@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e558c26-650d-4f2e-9c92-08d7fe4977b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 12:12:58.8926
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tghEyJAqv9MTfbPoXbvKwrv4OuG9oKh4axwpDGpMJy/AOlSVz3O/JgzPT0nmcUKGedTEzysT37pxWPSBObUCxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2888
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590149584; bh=8n9H0gwsAdRY75tWca334c/7D7AZHmfHF9bb3ezXi3I=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=WvhN8BFgYusE7mTBFQ4S8YdfLQUPPmRpKJgA/Kte4XhO0f/bo1+ky1sSIPXFA4Liw
-         W8VhcG2yxhm+mrqB2+EGlEEqVOFMA/Z4SE2heowt68Uaffat850MNN4tHXB4I+10ff
-         29ZAsqDITBAgYZaj4zN4MGRYSBNGg+n/r9iAGaz9BYvwaIhps/RYoeQqoLr+bNmmAr
-         /MzHEq4r5wowA/LtJ5gX0B6KWHKgCySiRheMvRFHwDS/vu6vjMyL6efwhpYPxbZMLb
-         u/Xra5uSCHOHJCc6hiiZrJ5jmfsHnXUfQOt38zJN2wK5gOXppgw0Z/jVpYopd/lWjL
-         8pKt4lUHXphog==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jL2BoiuKMElzg3CS"
+Content-Disposition: inline
+In-Reply-To: <96f917a3-d822-1c36-d088-3e4a322c1761@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9uLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSm9uYXRo
-YW4gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT4NCj4gU2VudDogRnJpZGF5LCBNYXkgMjIs
-IDIwMjAgNToyMCBQTQ0KPiBUbzogU2FuZGlwYW4gUGF0cmEgPHNwYXRyYUBudmlkaWEuY29tPjsg
-VGhpZXJyeSBSZWRpbmcNCj4gPHRyZWRpbmdAbnZpZGlhLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgdS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlDQo+IENjOiBCaWJlayBCYXN1IDxiYmFz
-dUBudmlkaWEuY29tPjsgTGF4bWFuIERld2FuZ2FuDQo+IDxsZGV3YW5nYW5AbnZpZGlhLmNvbT47
-IGxpbnV4LXB3bUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC10ZWdyYUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
-ZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjJdIHB3bTogdGVncmE6IGR5bmFtaWMgY2xr
-IGZyZXEgY29uZmlndXJhdGlvbiBieSBQV00NCj4gZHJpdmVyDQo+IA0KPiANCj4gDQo+IE9uIDIy
-LzA1LzIwMjAgMTI6MDEsIFNhbmRpcGFuIFBhdHJhIHdyb3RlOg0KPiA+IFRoYW5rcyBKb25hdGhh
-biwNCj4gPiBQbGVhc2UgaGVscCByZXZpZXdpbmcgZnVydGhlciB3aXRoIG15IHJlcGxpZXMgaW5s
-aW5lLg0KPiA+DQo+ID4NCj4gPiBUaGFua3MgJiBSZWdhcmRzLA0KPiA+IFNhbmRpcGFuDQo+ID4N
-Cj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogSm9uYXRoYW4gSHVu
-dGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT4NCj4gPj4gU2VudDogRnJpZGF5LCBNYXkgMjIsIDIw
-MjAgMzo1NCBQTQ0KPiA+PiBUbzogU2FuZGlwYW4gUGF0cmEgPHNwYXRyYUBudmlkaWEuY29tPjsg
-VGhpZXJyeSBSZWRpbmcNCj4gPj4gPHRyZWRpbmdAbnZpZGlhLmNvbT47IHJvYmgrZHRAa2VybmVs
-Lm9yZzsNCj4gPj4gdS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlDQo+ID4+IENjOiBCaWJl
-ayBCYXN1IDxiYmFzdUBudmlkaWEuY29tPjsgTGF4bWFuIERld2FuZ2FuDQo+ID4+IDxsZGV3YW5n
-YW5AbnZpZGlhLmNvbT47IGxpbnV4LXB3bUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC10ZWdyYUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
-PiA+PiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjJd
-IHB3bTogdGVncmE6IGR5bmFtaWMgY2xrIGZyZXEgY29uZmlndXJhdGlvbiBieQ0KPiA+PiBQV00g
-ZHJpdmVyDQo+ID4+DQo+ID4+DQo+ID4+IE9uIDIwLzA0LzIwMjAgMTY6NTQsIFNhbmRpcGFuIFBh
-dHJhIHdyb3RlOg0KPiA+Pj4gQWRkZWQgc3VwcG9ydCBmb3IgZHluYW1pYyBjbG9jayBmcmVxIGNv
-bmZpZ3VyYXRpb24gaW4gcHdtIGtlcm5lbCBkcml2ZXIuDQo+ID4+PiBFYXJsaWVyIHRoZSBwd20g
-ZHJpdmVyIHVzZWQgdG8gY2FjaGUgYm9vdCB0aW1lIGNsb2NrIHJhdGUgYnkgcHdtDQo+ID4+PiBj
-bG9jayBwYXJlbnQgZHVyaW5nIHByb2JlLiBIZW5jZSBkeW5hbWljYWxseSBjaGFuZ2luZyBwd20g
-ZnJlcXVlbmN5DQo+ID4+PiB3YXMgbm90IHBvc3NpYmxlIGZvciBhbGwgdGhlIHBvc3NpYmxlIHJh
-bmdlcy4gV2l0aCB0aGlzIGNoYW5nZSwNCj4gPj4+IGR5bmFtaWMgY2FsY3VsYXRpb24gaXMgZW5h
-YmxlZCBhbmQgaXQgaXMgYWJsZSB0byBzZXQgdGhlIHJlcXVlc3RlZA0KPiA+Pj4gcGVyaW9kIGZy
-b20gc3lzZnMga25vYiBwcm92aWRlZCB0aGUgdmFsdWUgaXMgc3VwcG9ydGVkIGJ5IGNsb2NrIHNv
-dXJjZS4NCj4gPj4+DQo+ID4+PiBDaGFuZ2VzIG1haW5seSBoYXZlIDIgcGFydHM6DQo+ID4+PiAg
-IC0gVDE4NiBhbmQgbGF0ZXIgY2hpcHMgWzFdDQo+ID4+PiAgIC0gVDIxMCBhbmQgcHJpb3IgY2hp
-cHMgWzJdDQo+ID4+Pg0KPiA+Pj4gRm9yIFsxXSAtIENoYW5nZXMgaW1wbGVtZW50ZWQgdG8gc2V0
-IHB3bSBwZXJpb2QgZHluYW1pY2FsbHkgYW5kDQo+ID4+PiAgICAgICAgICAgYWxzbyBjaGVja3Mg
-YWRkZWQgdG8gYWxsb3cgb25seSBpZiByZXF1ZXN0ZWQgcGVyaW9kKG5zKSBpcw0KPiA+Pj4gICAg
-ICAgICAgIGJlbG93IG9yIGVxdWFscyB0byBoaWdoZXIgcmFuZ2UuDQo+ID4+Pg0KPiA+Pj4gRm9y
-IFsyXSAtIE9ubHkgY2hlY2tzIGlmIHRoZSByZXF1ZXN0ZWQgcGVyaW9kKG5zKSBpcyBiZWxvdyBv
-ciBlcXVhbHMNCj4gPj4+ICAgICAgICAgICB0byBoaWdoZXIgcmFuZ2UgZGVmaW5lZCBieSBtYXgg
-Y2xvY2sgbGltaXQuIFRoZSBsaW1pdGF0aW9uDQo+ID4+PiAgICAgICAgICAgaW4gVDIxMCBvciBw
-cmlvciBjaGlwcyBhcmUgZHVlIHRvIHRoZSByZWFzb24gb2YgaGF2aW5nIG9ubHkNCj4gPj4+ICAg
-ICAgICAgICBvbmUgcHdtLWNvbnRyb2xsZXIgc3VwcG9ydGluZyBtdWx0aXBsZSBjaGFubmVscy4g
-QnV0IGxhdGVyDQo+ID4+PiAgICAgICAgICAgY2hpcHMgaGF2ZSBtdWx0aXBsZSBwd20gY29udHJv
-bGxlciBpbnN0YW5jZXMgZWFjaCBoYXZpbmcNCj4gPj4+IAkgIHNpbmdsZSBjaGFubmVsIHN1cHBv
-cnQuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogU2FuZGlwYW4gUGF0cmEgPHNwYXRyYUBu
-dmlkaWEuY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiBWMjoNCj4gPj4+IDEuIE1pbiBwZXJpb2RfbnMg
-Y2FsY3VsYXRpb24gaXMgbW92ZWQgdG8gcHJvYmUuDQo+ID4+PiAyLiBBZGRlZCBkZXNjcmlwdGlv
-aW5zIGZvciBQV00gcmVnaXN0ZXIgYml0cyBhbmQgcmVnYXJkaW5nIGJlaGF2aW91cg0KPiA+Pj4g
-ICAgb2YgdGhlIGNvbnRyb2xsZXIgd2hlbiBuZXcgY29uZmlndXJhdGlvbiBpcyBhcHBsaWVkIG9y
-IHB3bSBpcyBkaXNhYmxlZC4NCj4gPj4+IDMuIFNldHRpbmcgcGVyaW9kIHdpdGggcG9zc2libGUg
-dmFsdWUgd2hlbiBzdXBwbGllZCBwZXJpb2QgaXMgYmVsb3cgbGltaXQuDQo+ID4+PiA0LiBDb3Jy
-ZWN0ZWQgdGhlIGVhcmxpZXIgY29kZSBjb21tZW50Og0KPiA+Pj4gICAgcGx1cyAxIGluc3RlYWQg
-b2YgbWludXMgMSBkdXJpbmcgcHdtIGNhbGN1bGF0aW9uDQo+ID4+Pg0KPiA+Pj4gIGRyaXZlcnMv
-cHdtL3B3bS10ZWdyYS5jIHwgMTEwDQo+ID4+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0tLS0tLS0NCj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwgOTQgaW5zZXJ0aW9u
-cygrKSwgMTYgZGVsZXRpb25zKC0pDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cHdtL3B3bS10ZWdyYS5jIGIvZHJpdmVycy9wd20vcHdtLXRlZ3JhLmMgaW5kZXgNCj4gPj4+IGQy
-NmVkOGYuLjdhMzYzMjUgMTAwNjQ0DQo+ID4+PiAtLS0gYS9kcml2ZXJzL3B3bS9wd20tdGVncmEu
-Yw0KPiA+Pj4gKysrIGIvZHJpdmVycy9wd20vcHdtLXRlZ3JhLmMNCj4gPj4+IEBAIC00LDggKzQs
-MzkgQEANCj4gPj4+ICAgKg0KPiA+Pj4gICAqIFRlZ3JhIHB1bHNlLXdpZHRoLW1vZHVsYXRpb24g
-Y29udHJvbGxlciBkcml2ZXINCj4gPj4+ICAgKg0KPiA+Pj4gLSAqIENvcHlyaWdodCAoYykgMjAx
-MCwgTlZJRElBIENvcnBvcmF0aW9uLg0KPiA+Pj4gLSAqIEJhc2VkIG9uIGFyY2gvYXJtL3BsYXQt
-bXhjL3B3bS5jIGJ5IFNhc2NoYSBIYXVlcg0KPiA+Pj4gPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+
-DQo+ID4+PiArICogQ29weXJpZ2h0IChjKSAyMDEwLTIwMjAsIE5WSURJQSBDb3Jwb3JhdGlvbi4N
-Cj4gPj4+ICsgKg0KPiA+Pj4gKyAqIE92ZXJ2aWV3IG9mIFRlZ3JhIFB1bHNlIFdpZHRoIE1vZHVs
-YXRvciBSZWdpc3RlcjoNCj4gPj4+ICsgKiAxLiAxMy1iaXQ6IEZyZXF1ZW5jeSBkaXZpc2lvbiAo
-U0NBTEUpDQo+ID4+PiArICogMi4gOC1iaXQgOiBQdWxzIGRpdmlzaW9uIChEVVRZKQ0KPiA+Pj4g
-KyAqIDMuIDEtYml0IDogRW5hYmxlIGJpdA0KPiA+Pj4gKyAqDQo+ID4+PiArICogVGhlIFBXTSBj
-bG9jayBmcmVxdWVuY3kgaXMgZGl2aWRlZCBieSAyNTYgYmVmb3JlIHN1YmRpdmlkaW5nIGl0DQo+
-ID4+PiArIGJhc2VkDQo+ID4+PiArICogb24gdGhlIHByb2dyYW1tYWJsZSBmcmVxdWVuY3kgZGl2
-aXNpb24gdmFsdWUgdG8gZ2VuZXJhdGUgdGhlDQo+ID4+PiArIHJlcXVpcmVkDQo+ID4+PiArICog
-ZnJlcXVlbmN5IGZvciBQV00gb3V0cHV0LiBUaGUgbWF4aW11bSBvdXRwdXQgZnJlcXVlbmN5IHRo
-YXQgY2FuDQo+ID4+PiArIGJlDQo+ID4+PiArICogYWNoaWV2ZWQgaXMgKG1heCByYXRlIG9mIHNv
-dXJjZSBjbG9jaykgLyAyNTYuDQo+ID4+PiArICogaS5lLiBpZiBzb3VyY2UgY2xvY2sgcmF0ZSBp
-cyA0MDggTUh6LCBtYXhpbXVtIG91dHB1dCBmcmVxdWVuY3kgY2FiIGJlOg0KPiA+Pj4gKyAqIDQw
-OCBNSHovMjU2ID0gMS42IE1Iei4NCj4gPj4+ICsgKiBUaGlzIDEuNiBNSHogZnJlcXVlbmN5IGNh
-biBmdXJ0aGVyIGJlIGRpdmlkZWQgdXNpbmcgU0NBTEUgdmFsdWUgaW4NCj4gUFdNLg0KPiA+Pj4g
-KyAqDQo+ID4+PiArICogUFdNIHB1bHNlIHdpZHRoOiA4IGJpdHMgYXJlIHVzYWJsZSBbMjM6MTZd
-IGZvciB2YXJ5aW5nIHB1bHNlIHdpZHRoLg0KPiA+Pj4gKyAqIFRvIGFjaGlldmUgMTAwJSBkdXR5
-IGN5Y2xlLCBwcm9ncmFtIEJpdCBbMjRdIG9mIHRoaXMgcmVnaXN0ZXIgdG8NCj4gPj4+ICsgKiAx
-4oCZYjEuIEluIHdoaWNoIGNhc2UgdGhlIG90aGVyIGJpdHMgWzIzOjE2XSBhcmUgc2V0IHRvIGRv
-bid0IGNhcmUuDQo+ID4+PiArICoNCj4gPj4+ICsgKiBMaW1pdGF0aW9ucyBhbmQga25vd24gZmFj
-dHM6DQo+ID4+PiArICogLQlXaGVuIFBXTSBpcyBkaXNhYmxlZCwgdGhlIG91dHB1dCBpcyBkcml2
-ZW4gdG8gMC4NCj4gPj4+ICsgKiAtCUl0IGRvZXMgbm90IGFsbG93IHRoZSBjdXJyZW50IFBXTSBw
-ZXJpb2QgdG8gY29tcGxldGUgYW5kDQo+ID4+PiArICoJc3RvcHMgYWJydXB0bHkuDQo+ID4+PiAr
-ICoNCj4gPj4+ICsgKiAtCUlmIHRoZSByZWdpc3RlciBpcyByZWNvbmZpZ3VyZWQgd2hpbGUgcHdt
-IGlzIHJ1bm5pbmcsDQo+ID4+PiArICoJSXQgZG9lcyBub3QgbGV0IHRoZSBjdXJyZW50bHkgcnVu
-bmluZyBwZXJpb2QgdG8gY29tcGxldGUuDQo+ID4+PiArICoNCj4gPj4+ICsgKiAtCVB1bHNlIHdp
-ZHRoIG9mIHRoZSBwd20gY2FuIG5ldmVyIGJlIG91dCBvZiBib3VuZC4NCj4gPj4+ICsgKglJdCdz
-IHRha2VuIGNhcmUgYXQgSFcgYW5kIFNXDQo+ID4+PiArICogLQlJZiB0aGUgdXNlciBpbnB1dCBk
-dXR5IGlzIGJlbG93IGxpbWl0LCB0aGVuIGRyaXZlciBzZXRzIGl0IHRvDQo+ID4+PiArICoJbWlu
-aW11bSBwb3NzaWJsZSB2YWx1ZS4NCj4gPj4+ICsgKiAtCUlmIGFueXRoaW5nIGVsc2UgZ29lcyB3
-cm9uZyBmb3Igc2V0dGluZyBkdXR5IG9yIHBlcmlvZCwNCj4gPj4+ICsgKgktRUlOVkFMIGlzIHJl
-dHVybmVkLg0KPiA+Pj4gICAqLw0KPiA+Pj4NCj4gPj4+ICAjaW5jbHVkZSA8bGludXgvY2xrLmg+
-DQo+ID4+PiBAQCAtNDEsNiArNzIsNyBAQCBzdHJ1Y3QgdGVncmFfcHdtX2NoaXAgew0KPiA+Pj4g
-IAlzdHJ1Y3QgcmVzZXRfY29udHJvbCpyc3Q7DQo+ID4+Pg0KPiA+Pj4gIAl1bnNpZ25lZCBsb25n
-IGNsa19yYXRlOw0KPiA+Pj4gKwl1bnNpZ25lZCBsb25nIG1pbl9wZXJpb2RfbnM7DQo+ID4+Pg0K
-PiA+Pj4gIAl2b2lkIF9faW9tZW0gKnJlZ3M7DQo+ID4+Pg0KPiA+Pj4gQEAgLTY3LDggKzk5LDkg
-QEAgc3RhdGljIGludCB0ZWdyYV9wd21fY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwNCj4g
-Pj4gc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCj4gPj4+ICAJCQkgICAgaW50IGR1dHlfbnMsIGlu
-dCBwZXJpb2RfbnMpDQo+ID4+PiAgew0KPiA+Pj4gIAlzdHJ1Y3QgdGVncmFfcHdtX2NoaXAgKnBj
-ID0gdG9fdGVncmFfcHdtX2NoaXAoY2hpcCk7DQo+ID4+PiAtCXVuc2lnbmVkIGxvbmcgbG9uZyBj
-ID0gZHV0eV9ucywgaHo7DQo+ID4+PiAtCXVuc2lnbmVkIGxvbmcgcmF0ZTsNCj4gPj4+ICsJdW5z
-aWduZWQgbG9uZyBsb25nIHBfd2lkdGggPSBkdXR5X25zLCBwZXJpb2RfaHo7DQo+ID4+PiArCXVu
-c2lnbmVkIGxvbmcgcmF0ZSwgcmVxdWlyZWRfY2xrX3JhdGU7DQo+ID4+PiArCXVuc2lnbmVkIGxv
-bmcgcGZtOyAvKiBGcmVxdWVuY3kgZGl2aWRlciAqLw0KPiA+Pg0KPiA+PiBJZiBpdCBpcyBub3Qg
-bmVjZXNzYXJ5IHRvIGNoYW5nZSB0aGUgdmFyaWFibGUgbmFtZXMsIHRoZW4gSSB3b3VsZA0KPiA+
-PiBwcmVmZXIgd2Uga2VlcCB0aGVtIGFzIGlzIGFzIHRoZW4gY2hhbmdlcyB3b3VsZCBiZSBsZXNz
-Lg0KPiA+DQo+ID4gVGhlIGVhcmxpZXIgbmFtZSB3YXMgbWlzbGVhZGluZyBzbyB0aG91Z2h0IHRv
-IHVzZSBhIHNwZWNpZmljIG5hbWUgZm9yDQo+ID4gd2hpY2ggaXQgY2FuIGJlIGhlbHBmdWwgdG8g
-Zm9sbG93IHVwIHdpdGggdGhlIFRSTS4gU2luY2UgaXRzDQo+ID4gcmVjb21tZW5kZWQgdG8gcmV0
-YWluIHRoZSB2YXJpYWJsZSBuYW1lcywgSSB3aWxsIGNoYW5nZSB0aGlzIGluIG5leHQgcGF0Y2gu
-DQo+IA0KPiBJIHdhcyBqdXN0IHdvbmRlcmluZyBpZiB3YXMgbmVjZXNzYXJ5IHRvIGNoYW5nZSAn
-YycgdG8gJ3Bfd2lkdGgnLiBUaGlzIGNvdWxkDQo+IHJlZHVjZSB0aGUgZGlmZiBhIGJpdC4NCg0K
-WWVzLCBub3RlZCB0byByZXZlcnQgYmFjayBib3RoIHRoZSB2YXJpYWJsZXMgbmFtZSBjaGFuZ2Uu
-DQoNCj4gDQo+ID4+DQo+ID4+PiAgCXUzMiB2YWwgPSAwOw0KPiA+Pj4gIAlpbnQgZXJyOw0KPiA+
-Pj4NCj4gPj4+IEBAIC03NywzNyArMTEwLDc3IEBAIHN0YXRpYyBpbnQgdGVncmFfcHdtX2NvbmZp
-ZyhzdHJ1Y3QgcHdtX2NoaXANCj4gPj4+ICpjaGlwLA0KPiA+PiBzdHJ1Y3QgcHdtX2RldmljZSAq
-cHdtLA0KPiA+Pj4gIAkgKiBwZXIgKDEgPDwgUFdNX0RVVFlfV0lEVEgpIGN5Y2xlcyBhbmQgbWFr
-ZSBzdXJlIHRvIHJvdW5kIHRvIHRoZQ0KPiA+Pj4gIAkgKiBuZWFyZXN0IGludGVnZXIgZHVyaW5n
-IGRpdmlzaW9uLg0KPiA+Pj4gIAkgKi8NCj4gPj4+IC0JYyAqPSAoMSA8PCBQV01fRFVUWV9XSURU
-SCk7DQo+ID4+PiAtCWMgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoYywgcGVyaW9kX25zKTsNCj4g
-Pj4+ICsJcF93aWR0aCAqPSAoMSA8PCBQV01fRFVUWV9XSURUSCk7DQo+ID4+PiArCXBfd2lkdGgg
-PSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwocF93aWR0aCwgcGVyaW9kX25zKTsNCj4gPj4+DQo+ID4+
-PiAtCXZhbCA9ICh1MzIpYyA8PCBQV01fRFVUWV9TSElGVDsNCj4gPj4+ICsJdmFsID0gKHUzMilw
-X3dpZHRoIDw8IFBXTV9EVVRZX1NISUZUOw0KPiA+Pj4gKw0KPiA+Pj4gKwkvKg0KPiA+Pj4gKwkg
-KiAgUGVyaW9kIGluIG5hbm8gc2Vjb25kIGhhcyB0byBiZSA8PSBoaWdoZXN0IGFsbG93ZWQgcGVy
-aW9kDQo+ID4+PiArCSAqICBiYXNlZCBvbiBtYXggY2xvY2sgcmF0ZSBvZiB0aGUgcHdtIGNvbnRy
-b2xsZXIuDQo+ID4+PiArCSAqDQo+ID4+PiArCSAqICBoaWdoZXIgbGltaXQgPSBtYXggY2xvY2sg
-bGltaXQgPj4gUFdNX0RVVFlfV0lEVEgNCj4gPj4+ICsJICogIGxvd2VyIGxpbWl0ID0gbWluIGNs
-b2NrIGxpbWl0ID4+IFBXTV9EVVRZX1dJRFRIID4+DQo+ID4+IFBXTV9TQ0FMRV9XSURUSA0KPiA+
-Pj4gKwkgKi8NCj4gPj4+ICsJaWYgKHBlcmlvZF9ucyA8IHBjLT5taW5fcGVyaW9kX25zKSB7DQo+
-ID4+PiArCQlwZXJpb2RfbnMgPSBwYy0+bWluX3BlcmlvZF9uczsNCj4gPj4+ICsJCXByX3dhcm4o
-IlBlcmlvZCBpcyBhZGp1c3RlZCB0byBhbGxvd2VkIHZhbHVlICglZCBucylcbiIsDQo+ID4+PiAr
-CQkJCXBlcmlvZF9ucyk7DQo+ID4+DQo+ID4+IEkgc2VlIHRoYXQgb3RoZXIgZHJpdmVycyAocHdt
-LWltZy5jKSBjb25zaWRlciB0aGlzIHRvIGJlIGFuIGVycm9yIGFuZA0KPiA+PiByZXR1cm4gYW4g
-ZXJyb3IuIEkgd29uZGVyIGlmIGFkanVzdGluZyB0aGUgcGVyaW9kIG1ha2VzIHNlbnNlIGhlcmU/
-DQo+ID4+DQo+ID4+IEkgd29uZGVyIGlmIHRoZSBoYW5kbGluZyBvZiB0aGUgbWluX3BlcmlvZCwg
-c2hvdWxkIGJlIGEgc2VwYXJhdGUgY2hhbmdlPw0KPiA+DQo+ID4gSSB0aGluayBJIG1pc3VuZGVy
-c3Rvb2Qgb25lIG9mIHRoZSBkaXNjdXNzaW9ucyBpbiBpbml0aWFsIHBhdGNoIGFuZA0KPiA+IGFk
-ZGVkIHRoaXMgY2hhbmdlIHRvIGFwcGx5IHRoZSBtaW5pbXVtIHBvc3NpYmxlIHZhbHVlLiBVbmRl
-cnN0b29kIGFuZA0KPiA+IHdpbGwgcmV2ZXJ0IHRoaXMgY2hhbmdlIHdpdGggcmV0dXJuaW5nIGVy
-cm9yIGluIHN1Y2ggY2FzZS4NCj4gPg0KPiA+Pg0KPiA+Pj4gKwl9DQo+ID4+Pg0KPiA+Pj4gIAkv
-Kg0KPiA+Pj4gIAkgKiBDb21wdXRlIHRoZSBwcmVzY2FsZXIgdmFsdWUgZm9yIHdoaWNoICgxIDw8
-IFBXTV9EVVRZX1dJRFRIKQ0KPiA+Pj4gIAkgKiBjeWNsZXMgYXQgdGhlIFBXTSBjbG9jayByYXRl
-IHdpbGwgdGFrZSBwZXJpb2RfbnMgbmFub3NlY29uZHMuDQo+ID4+PiAgCSAqLw0KPiA+Pj4gLQly
-YXRlID0gcGMtPmNsa19yYXRlID4+IFBXTV9EVVRZX1dJRFRIOw0KPiA+Pj4gKwlpZiAocGMtPnNv
-Yy0+bnVtX2NoYW5uZWxzID09IDEpIHsNCj4gPj4NCj4gPj4gQXJlIHlvdSB1c2luZyBudW1fY2hh
-bm5lbHMgdG8gZGV0ZXJtaW5lIGlmIFRlZ3JhIHVzZXMgdGhlIEJQTVA/IElmIHNvDQo+ID4+IHRo
-ZW4gdGhlIGFib3ZlIGlzIG5vdCByZWFsbHkgY29ycmVjdCwgYmVjYXVzZSBudW1fY2hhbm5lbHMg
-aXMgbm90DQo+ID4+IHJlYWxseSByZWxhdGVkIHRvIHdoYXQgaXMgYmVpbmcgZG9uZSBoZXJlLiBT
-byBtYXliZSB5b3UgbmVlZCBhIG5ldyBTb0MNCj4gYXR0cmlidXRlIGluIHRoZSBzb2MgZGF0YS4N
-Cj4gPg0KPiA+IEhlcmUsIGl0IHRyaWVzIHRvIGZpbmQgaWYgcHdtIGNvbnRyb2xsZXIgdXNlcyBt
-dWx0aXBsZSBjaGFubmVscyAobGlrZQ0KPiA+IGluIFRlZ3JhMjEwIG9yIG9sZGVyKSBvciBzaW5n
-bGUgY2hhbm5lbCBmb3IgZXZlcnkgcHdtIGluc3RhbmNlIChpLmUuDQo+ID4gVDE4NiwgVDE5NCku
-IElmIGZvdW5kIG11bHRpcGxlIGNoYW5uZWxzIG9uIGEgc2luZ2xlIGNvbnRyb2xsZXIgdGhlbiBp
-dA0KPiA+IGlzIG5vdCBjb3JyZWN0IHRvIGNvbmZpZ3VyZSBzZXBhcmF0ZSBjbG9jayByYXRlcyB0
-byBlYWNoIG9mIHRoZSBjaGFubmVscy4gU28gdG8NCj4gZGlzdGluZ3Vpc2ggdGhlIGNvbnRyb2xs
-ZXIgYW5kIGNoYW5uZWwgdHlwZSwgbnVtX2NoYW5uZWxzIGlzIHJlZmVycmVkLg0KPiANCj4gT0ss
-IHRoZW4gdGhhdCBtYWtlcyBzZW5zZS4gTWF5YmUgYWRkIHRoaXMgZGV0YWlsIHRvIHRoZSBjb21t
-ZW50IGFib3V0IHdoeQ0KPiBudW1fY2hhbm5lbHMgaXMgdXNlZC4NCg0KT2suIFdpbGwgdXBkYXRl
-IGNvbW1lbnQuDQogDQo+IA0KPiA+Pg0KPiA+Pj4gKwkJLyoNCj4gPj4+ICsJCSAqIFJhdGUgaXMg
-bXVsdGlwbGllZCB3aXRoIDJeUFdNX0RVVFlfV0lEVEggc28gdGhhdCBpdA0KPiA+PiBtYXRjaGVz
-DQo+ID4+PiArCQkgKiB3aXRoIHRoZSBoaWVnaGVzdCBhcHBsaWNhYmxlIHJhdGUgdGhhdCB0aGUg
-Y29udHJvbGxlciBjYW4NCj4gPj4NCj4gPj4gcy9oaWVnaGVzdC9oaWdoZXN0Lw0KPiA+DQo+ID4g
-R290IGl0Lg0KPiA+DQo+ID4+DQo+ID4+PiArCQkgKiBwcm92aWRlLiBBbnkgZnVydGhlciBsb3dl
-ciB2YWx1ZSBjYW4gYmUgZGVyaXZlZCBieSBzZXR0aW5nDQo+ID4+PiArCQkgKiBQRk0gYml0c1sw
-OjEyXS4NCj4gPj4+ICsJCSAqIEhpZ2hlciBtYXJrIGlzIHRha2VuIHNpbmNlIEJQTVAgaGFzIHJv
-dW5kLXVwIG1lY2hhbmlzbQ0KPiA+Pj4gKwkJICogaW1wbGVtZW50ZWQuDQo+ID4+PiArCQkgKi8N
-Cj4gPj4+ICsJCXJlcXVpcmVkX2Nsa19yYXRlID0NCj4gPj4+ICsJCQkoTlNFQ19QRVJfU0VDIC8g
-cGVyaW9kX25zKSA8PCBQV01fRFVUWV9XSURUSDsNCj4gPj4+ICsNCj4gPj4NCj4gPj4gU2hvdWxk
-IGJlIHdlIGNoZWNraW5nIHRoZSByYXRlIGFnYWluc3QgdGhlIG1heCByYXRlIHN1cHBvcnRlZD8N
-Cj4gPg0KPiA+IElmIHRoZSByZXF1ZXN0IHJhdGUgaXMgYmV5b25kIG1heCBzdXBwb3J0ZWQgcmF0
-ZSwgdGhlbiB0aGUNCj4gPiBjbGtfc2V0X3JhdGUgd2lsbCBiZSBmYWlsaW5nIGFuZCBjYW4gZ2V0
-IGNhdWdodCB3aXRoIGVycm9yIGNoZWNrDQo+ID4gZm9sbG93ZWQgYnkuIE90aGVyd2lzZSBpdCB3
-aWxsIGZhaWwgdGhyb3VnaCBmaXR0aW5nIGluIHRoZSByZWdpc3RlcidzIGZyZXF1ZW5jeQ0KPiBk
-aXZpZGVyIGZpbGVkLiBTbyBJIHRoaW5rIGl0IGlzIG5vdCByZXF1aXJlZCB0byBjaGVjayBhZ2Fp
-bnN0IG1heCByYXRlLg0KPiA+IFBsZWFzZSBhZHZpc2UgaWYgSSBhbSBub3QgYWJsZSB0byBmb2xs
-b3cgd2l0aCB3aGF0IHlvdSBhcmUgc3VnZ2VzdGluZy4NCj4gDQo+IEkgdGhpbmsgdGhhdCBpdCB3
-b3VsZCBiZSBiZXR0ZXIgdG8gdXBkYXRlIHRoZSBjYWNoZWQgdmFsdWUgc28gdGhhdCBpdCBpcyBu
-b3QNCj4gaW5jb3JyZWN0bHkgdXNlZCBlbHNlIHdoZXJlIGJ5IGFueSBmdXR1cmUgY2hhbmdlLiBG
-dXJ0aGVybW9yZSwgdGhpcyBzaW1wbGlmaWVzDQo+IG1hdHRlcnMgYSBiaXQgYmVjYXVzZSB5b3Ug
-Y2FuIGRvIHRoZSBmb2xsb3dpbmcgZm9yIGFsbCBkZXZpY2VzLCBidXQgb25seSB1cGRhdGUNCj4g
-dGhlIGNsa19yYXRlIGZvciB0aG9zZSB5b3Ugd2lzaCB0byAuLi4NCj4gDQo+ICAgICByYXRlID0g
-cGMtPmNsa19yYXRlID4+IFBXTV9EVVRZX1dJRFRIOw0KPiANCldoYXQgSSB1bmRlcnN0b29kIGZy
-b20gYWJvdmUgaXMsIHdlIHdpbGwgYWx3YXlzIHVzZSBtYXggcmF0ZSBmb3IgYW55IGZ1cnRoZXIg
-Y29uZmlndXJhdGlvbnMuDQpJZiB0aGlzIGlzIHRoZSBzdWdnZXN0aW9uIGFib3ZlLCB0aGVuIEkg
-dGhpbmsgaXRzIG5vdCB0aGUgcmlnaHQgd2F5Lg0KSWYgd2UgY29uc2lkZXIgb25seSBtYXggcmF0
-ZSB0aGVuIHRoZSBwd20gb3V0cHV0IGNhbiBvbmx5IGJlIHJhbmdpbmcgZnJvbToNClBvc3NpYmxl
-IG1heCBvdXRwdXQgcmF0ZTogcmF0ZQ0KUG9zc2libGUgbWluIG91dHB1dCByYXRlOiByYXRlLzJe
-MTMgKDEzIGJpdHMgZnJlcXVlbmN5IGRpdmlzb3IpDQoNCkJ1dCBpZiB3ZSBjb25zaWRlciB0aGUg
-bWluIHJhdGUgc3VwcG9ydGVkIGJ5IHRoZSBzb3VyY2UgY2xvY2sgdGhlbiwNCm1pbiBvdXRwdXQg
-cmF0ZSBjYW4gZ28gYmV5b25kIHRoZSBjdXJyZW50IG1pbiBwb3NzaWJsZSBhbmQgDQp0aGF0IHNo
-b3VsZCBiZSBjb25zaWRlcmVkIGZvciBmaW5kaW5nIGFjdHVhbCBsaW1pdCBvZiBtaW4gb3V0cHV0
-IHJhdGUuDQoNCkJhc2VkIG9uIHRoaXMsIGluIHRoZSBkcml2ZXIgaXQgdHJpZXMgdG8gZmluZCBh
-IHN1aXRhYmxlIGNsb2NrIHJhdGUgdG8gYWNoaWV2ZQ0KcmVxdWVzdGVkIG91dHB1dCByYXRlLg0K
-UGxlYXNlIHN1Z2dlc3QgaWYgeW91IHRoaW5rIHdlIGNhbiBzdGlsbCBpbXByb3ZlIHRoaXMgZnVy
-dGhlci4NCg0KPiA+Pg0KPiA+Pj4gKwkJZXJyID0gY2xrX3NldF9yYXRlKHBjLT5jbGssIHJlcXVp
-cmVkX2Nsa19yYXRlKTsNCj4gPj4+ICsJCWlmIChlcnIgPCAwKQ0KPiA+Pj4gKwkJCXJldHVybiAt
-RUlOVkFMOw0KPiA+Pj4gKw0KPiA+Pj4gKwkJcmF0ZSA9IGNsa19nZXRfcmF0ZShwYy0+Y2xrKSA+
-PiBQV01fRFVUWV9XSURUSDsNCj4gPj4NCj4gPj4gRG8gd2UgbmVlZCB0byB1cGRhdGUgdGhlIHB3
-bS0+Y2xrX3JhdGUgaGVyZT8NCj4gPg0KPiA+IFRoaXMgcmV0dXJuIHJhdGUgaXMgYmFzaWNhbGx5
-IGZyb20gdGhlIGZhY3RvciB0aGF0IHJlcXVlc3RlZA0KPiA+IGNsa19zZXRfcmF0ZSBhbmQgdGhl
-IGFjdHVhbCByYXRlIHNldCBtb3N0bHkgd2lsbCBoYXZlIGEgbGl0dGxlDQo+ID4gZGV2aWF0aW9u
-IGJhc2VkIG9uIHRoZSBjbG9jayBkaXZpZGVyIGFuZCBvdGhlciBmYWN0b3JzIHdoaWxlIHNldHRp
-bmcgYSBuZXcNCj4gcmF0ZS4gU28gY2FwdHVyaW5nIHRoZSBhY3R1YWwgcmF0ZSBmb3IgZnVydGhl
-ciBjYWxjdWxhdGlvbiBhbmQgY29udmVyc2lvbiB0byBIei4NCj4gPiBXaGVuZXZlciBpdCBpcyBy
-ZXF1aXJlZCB0byB1c2UgcHdtLT5jbGtfcmF0ZSB3ZSBhcmUgbm8gbG9uZ2VyDQo+ID4gZGVwZW5k
-aW5nIHVwb24gdGhlIGNhY2hlZCB2YWx1ZSBmb3IgbnVtX2NoYW5uZWxzID09IDEuIFNvIGluIG15
-DQo+ID4gb3BpbmlvbiBpdCBkb2VzIG5vdCBuZWVkIHRvIGJlIGNhY2hlZC4gSG93ZXZlciBpdCBp
-cyBrZXB0IHN0b3JlZCBmb3IgdGhlIFNvQ3MNCj4gaGF2aW5nIG51bV9jaGFubmVscyA+IDEuDQo+
-ID4gUGxlYXNlIHN1Z2dlc3QgaWYgSSBhbSBtaXNzaW5nIGFueSBjYXNlIHdoZXJlIHdlIG5lZWQg
-dG8ga2VlcCB0aGUgdmFsdWUNCj4gc3RvcmVkLg0KPiANCj4gT0sgc291bmRzIGZpbmUuDQo+IA0K
-PiA+Pg0KPiA+Pj4gKwl9IGVsc2Ugew0KPiA+Pj4gKwkJLyoNCj4gPj4+ICsJCSAqIFRoaXMgaXMg
-dGhlIGNhc2UgZm9yIFNvQ3Mgd2hvIHN1cHBvcnQgbXVsdGlwbGUgY2hhbm5lbHM6DQo+ID4+PiAr
-CQkgKg0KPiA+Pj4gKwkJICogY2xrX3NldF9yYXRlKCkgY2FuIG5vdCBiZSBjYWxsZWQgYWdhaW4g
-aW4gY29uZmlnIGJlY2F1c2UNCj4gPj4+ICsJCSAqIFQyMTAgb3IgYW55IHByaW9yIGNoaXAgc3Vw
-cG9ydHMgb25lIHB3bS1jb250cm9sbGVyIGFuZA0KPiA+Pj4gKwkJICogbXVsdGlwbGUgY2hhbm5l
-bHMuIEhlbmNlIGluIHRoaXMgY2FzZSBjYWNoZWQgY2xvY2sgcmF0ZQ0KPiA+Pj4gKwkJICogd2ls
-bCBiZSBjb25zaWRlcmVkIHdoaWNoIHdhcyBzdG9yZWQgZHVyaW5nIHByb2JlLg0KPiA+Pj4gKwkJ
-ICovDQo+ID4+PiArCQlyYXRlID0gcGMtPmNsa19yYXRlID4+IFBXTV9EVVRZX1dJRFRIOw0KPiA+
-Pj4gKwl9DQo+ID4+Pg0KPiA+Pj4gIAkvKiBDb25zaWRlciBwcmVjaXNpb24gaW4gUFdNX1NDQUxF
-X1dJRFRIIHJhdGUgY2FsY3VsYXRpb24gKi8NCj4gPj4+IC0JaHogPSBESVZfUk9VTkRfQ0xPU0VT
-VF9VTEwoMTAwVUxMICogTlNFQ19QRVJfU0VDLCBwZXJpb2RfbnMpOw0KPiA+Pj4gLQlyYXRlID0g
-RElWX1JPVU5EX0NMT1NFU1RfVUxMKDEwMFVMTCAqIHJhdGUsIGh6KTsNCj4gPj4+ICsJcGVyaW9k
-X2h6ID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKDEwMFVMTCAqIE5TRUNfUEVSX1NFQywNCj4gPj4g
-cGVyaW9kX25zKTsNCj4gPj4+ICsJcGZtID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKDEwMFVMTCAq
-IHJhdGUsIHBlcmlvZF9oeik7DQo+ID4+Pg0KPiA+Pj4gIAkvKg0KPiA+Pj4gIAkgKiBTaW5jZSB0
-aGUgYWN0dWFsIFBXTSBkaXZpZGVyIGlzIHRoZSByZWdpc3RlcidzIGZyZXF1ZW5jeSBkaXZpZGVy
-DQo+ID4+PiAtCSAqIGZpZWxkIG1pbnVzIDEsIHdlIG5lZWQgdG8gZGVjcmVtZW50IHRvIGdldCB0
-aGUgY29ycmVjdCB2YWx1ZSB0bw0KPiA+Pj4gKwkgKiBmaWVsZCBwbHVzIDEsIHdlIG5lZWQgdG8g
-ZGVjcmVtZW50IHRvIGdldCB0aGUgY29ycmVjdCB2YWx1ZSB0bw0KPiA+Pj4gIAkgKiB3cml0ZSB0
-byB0aGUgcmVnaXN0ZXIuDQo+ID4+PiAgCSAqLw0KPiA+Pj4gLQlpZiAocmF0ZSA+IDApDQo+ID4+
-PiAtCQlyYXRlLS07DQo+ID4+PiArCWlmIChwZm0gPiAwKQ0KPiA+Pj4gKwkJcGZtLS07DQo+ID4+
-Pg0KPiA+Pj4gIAkvKg0KPiA+Pj4gLQkgKiBNYWtlIHN1cmUgdGhhdCB0aGUgcmF0ZSB3aWxsIGZp
-dCBpbiB0aGUgcmVnaXN0ZXIncyBmcmVxdWVuY3kNCj4gPj4+ICsJICogTWFrZSBzdXJlIHRoYXQg
-cGZtIHdpbGwgZml0IGluIHRoZSByZWdpc3RlcidzIGZyZXF1ZW5jeQ0KPiA+Pj4gIAkgKiBkaXZp
-ZGVyIGZpZWxkLg0KPiA+Pj4gIAkgKi8NCj4gPj4+IC0JaWYgKHJhdGUgPj4gUFdNX1NDQUxFX1dJ
-RFRIKQ0KPiA+Pj4gKwlpZiAocGZtID4+IFBXTV9TQ0FMRV9XSURUSCkNCj4gPj4+ICAJCXJldHVy
-biAtRUlOVkFMOw0KPiA+Pj4NCj4gPj4+IC0JdmFsIHw9IHJhdGUgPDwgUFdNX1NDQUxFX1NISUZU
-Ow0KPiA+Pj4gKwl2YWwgfD0gcGZtIDw8IFBXTV9TQ0FMRV9TSElGVDsNCj4gPj4+DQo+ID4+PiAg
-CS8qDQo+ID4+PiAgCSAqIElmIHRoZSBQV00gY2hhbm5lbCBpcyBkaXNhYmxlZCwgbWFrZSBzdXJl
-IHRvIHR1cm4gb24gdGhlIGNsb2NrDQo+ID4+PiBAQA0KPiA+Pj4gLTIwNSw2ICsyNzgsMTAgQEAg
-c3RhdGljIGludCB0ZWdyYV9wd21fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiA+PiAq
-cGRldikNCj4gPj4+ICAJICovDQo+ID4+PiAgCXB3bS0+Y2xrX3JhdGUgPSBjbGtfZ2V0X3JhdGUo
-cHdtLT5jbGspOw0KPiA+Pj4NCj4gPj4+ICsJLyogU2V0IG1pbmltdW0gbGltaXQgb2YgUFdNIHBl
-cmlvZCBmb3IgdGhlIElQICovDQo+ID4+PiArCXB3bS0+bWluX3BlcmlvZF9ucyA9DQo+ID4+PiAr
-CSAgICAoTlNFQ19QRVJfU0VDIC8gKHB3bS0+c29jLT5tYXhfZnJlcXVlbmN5ID4+DQo+ID4+IFBX
-TV9EVVRZX1dJRFRIKSkgKw0KPiA+Pj4gKzE7DQo+ID4+PiArDQo+ID4+PiAgCXB3bS0+cnN0ID0g
-ZGV2bV9yZXNldF9jb250cm9sX2dldF9leGNsdXNpdmUoJnBkZXYtPmRldiwgInB3bSIpOw0KPiA+
-Pj4gIAlpZiAoSVNfRVJSKHB3bS0+cnN0KSkgew0KPiA+Pj4gIAkJcmV0ID0gUFRSX0VSUihwd20t
-PnJzdCk7DQo+ID4+PiBAQCAtMzEzLDQgKzM5MCw1IEBAIG1vZHVsZV9wbGF0Zm9ybV9kcml2ZXIo
-dGVncmFfcHdtX2RyaXZlcik7DQo+ID4+Pg0KPiA+Pj4gIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsN
-Cj4gPj4+ICBNT0RVTEVfQVVUSE9SKCJOVklESUEgQ29ycG9yYXRpb24iKTsNCj4gPj4+ICtNT0RV
-TEVfQVVUSE9SKCJTYW5kaXBhbiBQYXRyYSA8c3BhdHJhQG52aWRpYS5jb20+Iik7DQo+ID4+PiAg
-TU9EVUxFX0FMSUFTKCJwbGF0Zm9ybTp0ZWdyYS1wd20iKTsNCj4gPj4+DQo+ID4+DQo+ID4+IC0t
-DQo+ID4+IG52cHVibGljDQo+IA0KPiAtLQ0KPiBudnB1YmxpYw0K
+
+--jL2BoiuKMElzg3CS
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 20, 2020 at 09:09:33AM -0700, Sowjanya Komatineni wrote:
+>=20
+> On 5/20/20 4:26 AM, Ulf Hansson wrote:
+> > On Wed, 20 May 2020 at 04:00, Dmitry Osipenko <digetx@gmail.com> wrote:
+> > > 19.05.2020 23:44, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > > On 5/19/20 12:07 PM, Sowjanya Komatineni wrote:
+> > > > > On 5/19/20 11:41 AM, Sowjanya Komatineni wrote:
+> > > > > > On 5/19/20 11:34 AM, Sowjanya Komatineni wrote:
+> > > > > > > On 5/19/20 9:33 AM, Dmitry Osipenko wrote:
+> > > > > > > > 19.05.2020 19:24, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+> > > > > > > > > On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko=
+ wrote:
+> > > > > > > > > > 19.05.2020 10:28, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+> > > > > > > > > > > On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx=
+@gmail.com>
+> > > > > > > > > > > wrote:
+> > > > > > > > > > > > Several people asked me about the MMC warnings in t=
+he KMSG log and
+> > > > > > > > > > > > I had to tell to ignore them because these warning =
+are
+> > > > > > > > > > > > irrelevant to
+> > > > > > > > > > > > pre-Tegra210 SoCs.
+> > > > > > > > > > > Why are the warnings irrelevant?
+> > > > > > > > > > That's what the DT binding doc says [1].
+> > > > > > > > > >=20
+> > > > > > > > > > [1]
+> > > > > > > > > > https://www.kernel.org/doc/Documentation/devicetree/bin=
+dings/mmc/nvidia%2Ctegra20-sdhci.txt
+> > > > > > > > > >=20
+> > > > > > > > > >=20
+> > > > > > > > > > Although, looking at the driver's code and TRM docs, it=
+ seems
+> > > > > > > > > > that all
+> > > > > > > > > > those properties are really irrelevant only to the olde=
+r Terga20
+> > > > > > > > > > SoC. So
+> > > > > > > > > > the binding doc is a bit misleading.
+> > > > > > > > > >=20
+> > > > > > > > > > Nevertheless, the binding explicitly says that the prop=
+erties are
+> > > > > > > > > > optional, which is correct.
+> > > > > > > > > Optional only means that drivers must not fail if these p=
+roperties
+> > > > > > > > > aren't found, it doesn't mean that the driver can't warn =
+that they
+> > > > > > > > > are missing.
+> > > > > > > > >=20
+> > > > > > > > > Quite possibly the only reason why they were made optiona=
+l is because
+> > > > > > > > > they weren't part of the bindings since the beginning. An=
+ything added
+> > > > > > > > > to a binding after the first public release has to be opt=
+ional by
+> > > > > > > > > definition, otherwise DT ABI wouldn't be stable.
+> > > > > > > > >=20
+> > > > > > > > > I think these warnings were added on purpose, though I al=
+so see that
+> > > > > > > > > there are only values for these in device tree for Tegra1=
+86 and
+> > > > > > > > > Tegra194
+> > > > > > > > > but not Tegra210 where these should also be necessary.
+> > > > > > > dt binding doc we have is common for MMC, SD and SDIO of all =
+Tegras.
+> > > > > > > Its not mandatory to have both 3v3 and 1v8 in device tree as =
+based
+> > > > > > > on signal mode.
+> > > > > > >=20
+> > > > > > > As these driver strengths are SoC specific, they are part of =
+Tegra
+> > > > > > > SoC specific device tree where same values will be applicable=
+ to all
+> > > > > > > Tegra SoC specific platforms.
+> > > > > > >=20
+> > > > > > > Based on interface usage on platform, we use one or both of t=
+hem
+> > > > > > > like sdcard supports dual voltage and we use both 3V3 and 1V8=
+ but if
+> > > > > > > same interface is used for WIFI SD we use 1V8 only.
+> > > > > > >=20
+> > > > > > > So made these dt properties as optional.
+> > > > > > >=20
+> > > > > > > Other reason they are optional is, Tegra210 and prior has dri=
+ve
+> > > > > > > strength settings part of apb_misc and Tegra186 and later has=
+ driver
+> > > > > > > strengths part of SDMMC controller. So,
+> > > > > > >=20
+> > > > > > > - Pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" for driver str=
+engths
+> > > > > > > are applicable for Tegra210 and prior.
+> > > > > > > - dt properties pad-autocal-pull-up/down-offset-1v8/3v3-timeo=
+ut are
+> > > > > > > for T186 onwards for driver strengths
+> > > > > > >=20
+> > > > > > > Looks like dt binding doc need fix to clearly document these =
+based
+> > > > > > > on SoC or agree with Yaml we can conditionally specify pinctr=
+l or dt
+> > > > > > > properties based on SoC dependent.
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > > > Adding Sowjanya who wrote this code. Perhaps she can clar=
+ify why the
+> > > > > > > > > warnings were added. If these values /should/ be there on=
+ a subset of
+> > > > > > > > > Tegra, then I think we should keep them, or add them agai=
+n, but
+> > > > > > > > > perhaps
+> > > > > > > > > add a better way of identifying when they are necessary a=
+nd when
+> > > > > > > > > it is
+> > > > > > > > > safe to work without them.
+> > > > > > > > >=20
+> > > > > > > > > That said, looking at those checks I wonder if they are p=
+erhaps just
+> > > > > > > > > wrong. Or at the very least they seem redundant. It looks=
+ to me like
+> > > > > > > > > they can just be:
+> > > > > > > > >=20
+> > > > > > > > >      if (tegra_host->pinctrl_state_XYZ =3D=3D NULL) {
+> > > > > > > > >          ...
+> > > > > > > > >      }
+> > > > > > > > >=20
+> > > > > > > > > That !IS_ERR(...) doesn't seem to do anything. But in tha=
+t case, it's
+> > > > > > > > > also obvious why we're warning about them on platforms wh=
+ere these
+> > > > > > > > > properties don't exist in DT.
+> > > > > > > As drive strengths are through dt properties for T186 and lat=
+er and
+> > > > > > > thru pinctrl for T210 and prior, driver first checks for dt a=
+utocal
+> > > > > > > timeout pull-up/down properties and if they are not found, it=
+ then
+> > > > > > > checks for presence of pinctrl_state_xyx_drv only when valid
+> > > > > > > pinctrl_state_xyz is present.
+> > > > > > >=20
+> > > > > > > Driver expects either pinctrl or dt properties and shows warn=
+ing
+> > > > > > > when neither of them are present as its mandatory to use fixed
+> > > > > > > driver strengths when auto calibration fails.
+> > > > > > >=20
+> > > > > > >      err =3D device_property_read_u32(host->mmc->parent,
+> > > > > > >              "nvidia,pad-autocal-pull-down-offset-3v3-timeout=
+",
+> > > > > > >              &autocal->pull_down_3v3_timeout);
+> > > > > > >      if (err) {
+> > > > > > >          if (!IS_ERR(tegra_host->pinctrl_state_3v3) &&
+> > > > > > >              (tegra_host->pinctrl_state_3v3_drv =3D=3D NULL))
+> > > > > > >              pr_warn("%s: Missing autocal timeout 3v3-pad drv=
+s\n",
+> > > > > > >                  mmc_hostname(host->mmc));
+> > > > > > >          autocal->pull_down_3v3_timeout =3D 0;
+> > > > > > >      }
+> > > > > > >=20
+> > > > > > > > > So I think we either need to add those values where appro=
+priate so
+> > > > > > > > > that
+> > > > > > > > > the warning doesn't show, or we need to narrow down where=
+ they are
+> > > > > > > > > really needed and add a corresponding condition.
+> > > > > > > > >=20
+> > > > > > > > > But again, perhaps Sowjanya can help clarify if these rea=
+lly are only
+> > > > > > > > > needed on Tegra210 and later or if these also apply to ol=
+der chips.
+> > > > > > > > Either way will be cleaner to convert the DT binding to YAM=
+L rather
+> > > > > > > > than
+> > > > > > > > clutter the driver, IMO.
+> > > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > Auto calibration is present from Tegra30 onward and looking into
+> > > > > > change where autocalibration was added to sdhci driver somehow =
+it was
+> > > > > > enabled only for T30/T210/T186/T194.
+> > > > > >=20
+> > > > > > tegra_sdhci_parse_pad_autocal_dt() was added when auto-calibrat=
+ion
+> > > > > > was added to driver and I see this dt parse is being done
+> > > > > > irrespective of NVQUIRK_HAS_PADCALIB quirk so even on platforms
+> > > > > > without auto cal enabled in driver, these messages shows up.
+> > > > > >=20
+> > > > > > This should be fixed in driver to allow
+> > > > > > tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCAL=
+IB is
+> > > > > > set to avoid dt parsing to happen on platforms that don't have =
+auto
+> > > > > > cal enabled.
+> > > > > Warning on missing drive strengths when auto cal is enabled shoul=
+d be
+> > > > > present as we should switch to fixed recommended drive strengths =
+when
+> > > > > auto cal fails.
+> > > > >=20
+> > > > > So probably proper fix should be
+> > > > >=20
+> > > > > - allow tegra_sdhci_parse_pad_autocal_dt() only when
+> > > > > NVQUIRK_HAS_PADCALIB is set
+> > > > >=20
+> > > > > - current driver sets NVQUIRK_HAS_PADCALIB for T30 as well so nee=
+d to
+> > > > > add pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" to Tegra30 devic=
+e tree.
+> > > > [Correction] T30 has same drive strengths to use irrespective of si=
+gnal
+> > > > voltage and it doesn't have pad control. So for T3- we can update d=
+evice
+> > > > tree to specify "default" pinctrl with drvup/dn settings.
+> > > > > - Keep warning message of missing auto cal timeouts as its mandat=
+ory
+> > > > > to use fixed recommended driver strengths when auto cal fails.
+> > > > >=20
+> > > > Regarding warnings, I guess simpler and easy fix is to remove warni=
+ng
+> > > > message on missing 3v3/1v8 drive strengths as pinctrl/dt properties=
+ were
+> > > > already added for T210/186/194 where we need and old device tree do=
+n't
+> > > > have them but the case where auto cal can fail is very rare.
+> > > >=20
+> > > > Otherwise should update driver to allow
+> > > > tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB i=
+s set
+> > > > and also within tegra_sdhci_parse_pad_autocal_dt() show warning of
+> > > > missing 3v3/1v8 settings only when NVQUIRK_NEEDS_PAD_CONTROL is set.
+> > > >=20
+> > > > Thierry, please suggest if you prefer to removing warnings or fix d=
+river
+> > > > to show warning based on PADCALIB and PAD_CONTROL quirks.
+> > > The SDIO PINCTRL drive-strengths are usually a part of the board's
+> > > default PINCTRL state, which is either preset by bootloader or by
+> > > PINCTRL driver early at a boot time.
+> > >=20
+> > > The SDIO drive-strengths values should be board-specific and not
+> > > SoC-specific because they should depend on the electrical properties =
+of
+> > > the board, IIUC.
+>=20
+> Drive strengths we program here when auto calibration fails are recommend=
+ed
+> values based on pre-SI circuit analysis and characterized across PVT.
+>=20
+> So,=C2=A0 these fail safe values are same for all boards of specific SoC =
+as all
+> platform designs follow the design guidelines.
+>=20
+> > > If the SDIO PINCTRL states are mandatory for the SDHCI nodes in the
+> > > device-trees, then the DT binding is wrong since it says that all
+> > > properties are optional. But I think that the current binding is okay,
+> > > since today SDHCI PINCTRL drive-strengths are specified implicitly in
+> > > the device-trees, and thus, there is no real need to emit the noisy
+> > > warnings in this case.
+> > For now I will keep $subject patch applied, but please tell me if I
+> > should drop it so we can start over.
+> >=20
+> > In any case, I would appreciate it if someone could have a stab at
+> > converting sdhci and tegra DT bindings to yaml.
+> >=20
+> > Kind regards
+> > Uffe
+>=20
+> HI Uffe,
+>=20
+> Please drop $subject patch. Will send patch that allows parsing for these
+> properties only for SoC where auto cal is enabled as that's where driver
+> needs these properties.
+>=20
+> So with this fix, warning will not show up on systems where autocal is not
+> enabled.
+
+Yes, I think that's a better option. Have we ensured that on all systems
+where autocal is enabled these values are part of the device tree? Just
+making sure that we're not going to have some generation still spit out
+these warnings because we forgot to update the device tree.
+
+For example I see that we set NVQUIRK_HAS_PADCALIB but I don't see these
+properties being set in arch/arm/boot/dts/tegra30.dtsi. Can you add a
+patch that also adds the properties for Tegra30?
+
+Thierry
+
+--jL2BoiuKMElzg3CS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7HwgQACgkQ3SOs138+
+s6H5GxAAmYFXr8kq7oo6X8YNNskQQ9eLjm7/WRUfvXeivx/Ulll/PxRKO5QjK8aM
+VJJFCUM6KZqZJWr8PXUMsby5ilIdCFTaausG1yNi3QuWmNtEX+XzYDUmjgEaxqQo
+VV5UkAWv0zIFKmkA1mULmTXsFgR3wDP7PUsGzgjvruhBXpL7E1LEbBC1/tQ5YvKK
+nimCkRKhldKHCRjUPrXJxqCyApTnas3VwsMbjNRmDr745YdyDrC/kR0X3louehwO
+QDnTpI1o6yZHwnfYa/ybz6JHROQ0n+PVcJW1TA7cvD7/uLHlX1GqhnW5T55QCLhA
+EEfvYUsFjDr8GAx4z1/Gp4BKBM4Nvsa/dXt+RBGPdxpX2bBLm9vHEGonAHe6rVLR
+tALAmEF1TLTzuj25TW5UL0aFiVqjGY2fRsDJzIZdagKu3ywSFpywA4AVgRPTP7CM
+hJnt0k25z64Um+SE37yq1XghpdfaebRSC6XgcSDqN+pSPooeKhWFv0BLcQlb74lX
+Pi/hkfoBhAmNp4SBzdVPzPIuC2Ba4dqbHv9ld/qICB11ngr1+nyzR4aY76ycsFMx
+dPsuEht8f9DE+9Qz6DjasYIhYJDLhJ6bi4arJVcxYVXdEoqenWsV812pDYRGR7dL
+dCVB0vF0Xs8LeGTrBM6s6TiNkTbGsChbs1DcDSIDDkCcTSURZ6w=
+=3lj/
+-----END PGP SIGNATURE-----
+
+--jL2BoiuKMElzg3CS--
