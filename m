@@ -2,112 +2,236 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9582CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E281206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fs1eckSU"
+	by mail.kernel.org (Postfix) with ESMTP id 7AA10206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgEVL7Z (ORCPT
+        id S1728918AbgEVMDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:59:25 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:15525 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728853AbgEVL7Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:59:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590148764; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qGzkd9q/kRUvHdHEx2YNsWgNzPbVwMgN6G1JnaxM+Dw=; b=fs1eckSUDYaigj5WNLtbj3j1wZsEXjgqvq+MPjnNEXGb78PTLDg/bN1EVJTVVH8FjO+7SU/G
- BlFTvf8b4PstDo1GsiuyyHId7BIz17xDpboD6mDEDZdMgOWWnx3ue1F3/T29KXisG0plCoqb
- pmzdG7pfscdlJljxNPyg3RaBEJY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec7be9b40528fe39497defe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 11:59:23
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2D845C433CB; Fri, 22 May 2020 11:59:23 +0000 (UTC)
-Received: from [192.168.1.102] (unknown [157.44.159.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D0DCC433C8;
-        Fri, 22 May 2020 11:59:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D0DCC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-Subject: Re: [PATCH V4 5/5] iio: adc: Clean up ADC code common to PMIC5 and
- PMIC7
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        Fri, 22 May 2020 08:03:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:12137 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728356AbgEVMDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:03:34 -0400
+IronPort-SDR: eEP/43Ndiq1XK8snWMpDu1sTBeNS56MScz667DsdDa/wOD+TO148VILTq/ByhAg615Rhey1GZN
+ IF+GAAn0SjqQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:03:32 -0700
+IronPort-SDR: /h3DSGO6paMzHkNaivRt1u0iTn5ADxk6HVIsHYAxWrMqYlcwnGceAf2X4k72aU4O1g0p9dz+LK
+ pa6i65pghZxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
+   d="scan'208";a="374745868"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by fmsmga001.fm.intel.com with ESMTP; 22 May 2020 05:03:26 -0700
+Date:   Fri, 22 May 2020 20:03:25 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org>
- <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
- <CAHp75Vf-bFfrZ7uCOnXuzT+p+itkcmkE61=ezZzN8yDFQHABdw@mail.gmail.com>
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <ab1d038c-5ad0-4c3b-0537-6e6512432de3@codeaurora.org>
-Date:   Fri, 22 May 2020 17:29:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200522120325.GD12568@shbuild999.sh.intel.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+ <20200521030924.GA12568@shbuild999.sh.intel.com>
+ <20200521114736.b2azyfvym372vkdl@mobilestation>
+ <20200521145520.GB12568@shbuild999.sh.intel.com>
+ <20200521153317.7wjp2r47q75fm6ge@mobilestation>
+ <20200522075844.GC12568@shbuild999.sh.intel.com>
+ <20200522113235.miz6m7u7gs7lsq6n@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf-bFfrZ7uCOnXuzT+p+itkcmkE61=ezZzN8yDFQHABdw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522113235.miz6m7u7gs7lsq6n@mobilestation>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Fri, May 22, 2020 at 02:32:35PM +0300, Serge Semin wrote:
+> On Fri, May 22, 2020 at 03:58:44PM +0800, Feng Tang wrote:
+> > Hi Serge,
+> > 
+> > On Thu, May 21, 2020 at 06:33:17PM +0300, Serge Semin wrote:
+> > > > > > > +	dw_spi_dma_wait_rx_done(dws);
+> > > > > > 
+> > > > > > I can understand the problem about TX, but I don't see how RX
+> > > > > > will get hurt, can you elaborate more? thanks
+> > > > > > 
+> > > > > > - Feng
+> > > > > 
+> > > > > Your question is correct. You are right with your hypothesis. Ideally upon the
+> > > > > dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
+> > > > > commit log signifies the error being mostly related with Tx FIFO. But
+> > > > > practically there are many reasons why Rx FIFO might be left with data:
+> > > > > DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
+> > > > > messed something up), controller hanging up, and so on. It's better to catch
+> > > > > an error at this stage while propagating it up to the SPI device drivers.
+> > > > > Especially seeing the wait-check implementation doesn't gives us much of the
+> > > > > execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
+> > > > > we make sure that all the data has been fetched and we may freely get the
+> > > > > buffers back to the client driver.
+> > > > 
+> > > > I see your point about checking RX. But I still don't think checking
+> > > > RX FIFO level is the right way to detect error. Some data left in
+> > > > RX FIFO doesn't always mean a error, say for some case if there is
+> > > > 20 words in RX FIFO, and the driver starts a DMA request for 16
+> > > > words, then after a sucessful DMA transaction, there are 4 words
+> > > > left without any error.
+> > > 
+> > > Neither Tx nor Rx FIFO should be left with any data after transaction is
+> > > finished. If they are then something has been wrong.
+> > > 
+> > > See, every SPI transfer starts with FIFO clearance since we disable/enable the
+> > > SPI controller by means of the SSIENR (spi_enable_chip(dws, 0) and
+> > > spi_enable_chip(dws, 1) called in the dw_spi_transfer_one() callback). Here is the
+> > > SSIENR register description: "It enables and disables all SPI Controller operations.
+> > > When disabled, all serial transfers are halted immediately. Transmit and receive
+> > > FIFO buffers are cleared when the device is disabled. It is impossible to program
+> > > some of the SPI Controller control registers when enabled"
+> > > 
+> > > No mater whether we start DMA request or perform the normal IRQ-based PIO, we
+> > > request as much data as we need and neither Tx nor Rx FIFO are supposed to
+> > > be left with any data after the request is finished. If data is left, then
+> > > either we didn't push all of the necessary data to the SPI bus, or we didn't
+> > > pull all the data from the FIFO, and this could have happened only due to some
+> > > component mulfunction (drivers, DMA engine, SPI device). In any case the SPI
+> > > device driver should be notified about the problem.
+> > 
+> > Data left in TX FIFO and Data left in RX FIFO are 2 different stories. The
+> > former in dma case means the dma hw/driver has done its job, and spi hw/driver
+> > hasn't done its job of pushing out the data to spi slave devices,
+> 
+> Agreed.
+> 
+> > while the
+> > latter means the spi hw/driver has done its job, while the dma hw/driver hasn't.
+> 
+> In this particular case agreed, that the data left in the Rx FIFO means DMA
+> hw/driver hasn't done its work right. Though SPI hw could be also a reason of
+> the data left in FIFO (though this only a theoretical consideration).
 
-On 5/13/2020 3:21 PM, Andy Shevchenko wrote:
-> On Wed, May 13, 2020 at 12:24 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
->> This commit includes the following changes:
->> Add a common function used for read_raw callback for
->> both PMIC5 and PMIC7 ADCs.
->> Add exit function for ADC.
->> Add info_property under adc_data to more efficiently
->> distinguish PMIC5 and PMIC7 ADCs.
-> Something happened to the editor settings. We have lines up to 72
-> (recommended) characters.
-In this case, I just meant to put each change on a different line. I'll 
-fix it in the next post.
->
-> ...
->
->> @@ -512,6 +518,7 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->>                          &adc5_prescale_ratios[prop->prescale],
->>                          adc->data,
->>                          adc_code_volt, val);
->> +
->>                  if (ret)
->>                          return ret;
->>
-> Unrelated.
-I'll remove it in the next post.
->
+Right, that's why I was initially very curious about this RX FIFO thing,
+and if possible, please give some details in commit log about the data
+left in TX FIFO problem, which will help future developers when they
+met simliar bugs.
+
+And I'm fine with adding the rx check, no matter the problem is in
+dma side or spi side.
+
+> > 
+> > And the code is called inside the dma rx channel callback, which means the
+> > dma driver is saying "hey, I've done my job", but apparently it hasn't if
+> > there is data left.
+> 
+> Right, either it hasn't, or the DMA engine claimed it has, but still is doing
+> something (asynchronously or something, depending on the hardware implementation),
+> or it think it has, but in fact it hasn't due to whatever problem happened
+> (software/hardware/etc.). In anyway we have to at least check whether it's
+> really done with fetching data and to be on a safe side give it some time to
+> make sure that the Rx FIFO isn't going to be emptied. Whatever problem it is
+> having a non empty Rx FIFO at the stage of calling spi_finalize_current_transfer()
+> means a certain error.
+> 
+> > 
+> > As for the wait time
+> > 
+> > +	nents = dw_readl(dws, DW_SPI_RXFLR);
+> > +	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
+> > +	     BITS_PER_BYTE;
+> > 
+> > Using this formula for checking TX makes sense, but it doesn't for RX.
+> > Because the time of pushing data in TX FIFO to spi device depends on
+> > the clk, but the time of transferring RX FIFO to memory is up to
+> > the DMA controller and peripheral bus. 
+> 
+> On this I agree with you. That formulae doesn't describe exactly the time left
+> before the Rx FIFO gets empty. But at least it provides an upper limit on the
+> time needed for the peripheral bus to fetch the data from FIFO. If for some
+> reason the internal APB bus is slower than the SPI bus, then the hardware
+> engineers screwed, since the CPU/DMA won't keep up with pulling data from Rx
+> FIFO on time so the FIFO may get overflown. Though in this case CPU/DMA won't
+> be able to push data to the Tx FIFO fast enough to cause the Rx FIFO overflown,
+> so the problem might be unnoticeable until we enable the EEPROM-read or Rx-only
+> modes of the DW APB SSI controller. Anyway I am pretty much sure all the systems
+> have the internal bus much faster than the external SPI bus.
+> 
+> Getting back to the formulae. I was thinking of how to make it better and here
+> is what we can do. We can't predict neither the DMA controller performance,
+> nor the performance of its driver. In this case we have no choice but to add
+> some assumption to clarify the task. Let's assume that the reason why Rx FIFO is
+> non-empty is that even though we are at the DMA completion callback, but the
+> DMA controller is still fetching data in background (any other reason might be
+> related with a bug, so we'll detect it here anyway). In this case we need to
+> give it a time to finish its work. As far as I can see the DW_apb_ssi interface
+> doesn't use PREADY APB signal, which means the IO access cycle will take 4
+> reference clock periods for each read and write accesses. Thus taking all of
+> these into account we can create the next formulae to measure the time needed to
+> read all the data from the Rx FIFO:
+> 
+> -	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
+> -	     BITS_PER_BYTE;
+> +	ns = (NSEC_PER_SEC / dws->max_freq) * nents * 4;
+> 
+> By doing several busy-wait loop iteration we'll cover the DMA controller and
+> it's driver possible latency. 
+> 
+> Feng, does it now makes sense for you now? If so, I'll replace the delay
+> calculation formulae in the patch.
+
+Frankly I don't have a good idea, if it really happens which means
+something is abnormal, explicitly waiting for some micro-seconds may
+also be acceptable?
+
+> > 
+> > Also for the
+> > 
+> > +	while (dw_spi_dma_rx_busy(dws) && retry--)
+> > +		ndelay(ns);
+> > +
+> > 
+> > the rx busy bit is cleared after this rx/tx checking, and it should
+> > be always true at this point. Am I mis-reading the code?
+> 
+> Sorry I don't get your logic here. I am not checking the Rx busy bit here,
+> but the Rx FIFO non-empty bit. Also SR register bits aren't cleared on read,
+> so the status bits are left pending until the reason is cleared. In our case
+> until Rx FIFO gets empty, which will happen eventually either at the point of
+> all data finally being extracted from it or when the controller is disabled
+> by means of the SSIENR register.
+
+I did misread the code, I thought it is checking the busy bits, sorry
+for that. Though the dw_spi_dma_rx_busy() name is a little confusing,
+as checking the emptiness of RX FIFO is not dma bound.
+
+Thanks,
+Feng
