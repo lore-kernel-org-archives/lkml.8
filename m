@@ -2,128 +2,85 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE81C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F83C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1BC20825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gmp/auXv"
+	by mail.kernel.org (Postfix) with ESMTP id 77E3C20814
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgEVJns (ORCPT
+        id S1729334AbgEVJoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgEVJnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:43:47 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910FBC061A0E;
-        Fri, 22 May 2020 02:43:47 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 90B6824D;
-        Fri, 22 May 2020 11:43:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1590140622;
-        bh=EkHjxtlh1KP3U50OHeGsUjNHBBOhkFleoo6/23Q62n8=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gmp/auXve1lV5ElNd608Z05rQUVyqOlwtkILQzd29qG+vgUbdIWz3Bw0TFW085w29
-         +HO7h1JxsOnfhMDd00y+mW8pFj2SSZIeFlvbcVXJBj1qfs0h03ZbnSN+Yjj8LICXqj
-         dBn7ckx6I3sPkGR/STzPEU8XeYmgvYc85YYRjLaI=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH] drm: rcar-du: Fix build error
-To:     Daniel Gomez <dagmcr@gmail.com>, daniel@ffwll.ch, airlied@linux.ie,
-        laurent.pinchart@ideasonboard.com
-Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200518201646.48312-1-dagmcr@gmail.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <73d98905-930d-3549-1a85-293f4d213716@ideasonboard.com>
-Date:   Fri, 22 May 2020 10:43:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200518201646.48312-1-dagmcr@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Fri, 22 May 2020 05:44:01 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:55788 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729047AbgEVJoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:44:01 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgBXYD3MnsdeplUAAg--.62841S4;
+        Fri, 22 May 2020 17:43:44 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] can: flexcan: Fix runtime PM imbalance on error
+Date:   Fri, 22 May 2020 17:43:40 +0800
+Message-Id: <20200522094340.18059-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgBXYD3MnsdeplUAAg--.62841S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW7uFy5KFy5JrWkJr48tFb_yoW3Crb_Kr
+        9a9Fn7WFnIgrnrKw1jkr43Zr93uFyDZF1kXrnaqry3W3yUArn8GrW5ZFsxCr45Ww48uFn5
+        C3sF9FyxCrW8AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+        GwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfUOsjjDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUIBlZdtOQgrAAEsa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+When register_flexcandev() returns an error code, a
+pairing runtime PM usage counter decrement is needed
+to keep the counter balanced.
 
-On 18/05/2020 21:16, Daniel Gomez wrote:
-> Select DRM_KMS_HELPER dependency.
-> 
-> Build error when DRM_KMS_HELPER is not selected:
-> 
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
-> 
+Also, call pm_runtime_disable() when register_flexcandev()
+returns an error code.
 
-Looking at the files in rcar_du that utilise drm_atomic_helpers...
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/net/can/flexcan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-git grep -l drm_atomic_helper_ drivers/gpu/drm/rcar-du/
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c
- drivers/gpu/drm/rcar-du/rcar_du_kms.c
- drivers/gpu/drm/rcar-du/rcar_du_plane.c
- drivers/gpu/drm/rcar-du/rcar_du_vsp.c
- drivers/gpu/drm/rcar-du/rcar_du_writeback.c
- drivers/gpu/drm/rcar-du/rcar_lvds.c
-
-of those, these are configurable:
-
- rcar_du_vsp.c		# DRM_RCAR_VSP
- rcar_du_writeback.c	# DRM_RCAR_WRITEBACK
- rcar_lvds.c		# DRM_RCAR_LVDS
-
-But VSP and WRITEBACK are already implicitly dependant upon DRM_RCAR_DU
-because they get built into the DU module.
-
-So indeed, only the RCAR_LVDS is a separate module, using those helpers,
-so I think a select is a reasonable fix.
-
-I would also ask whether DRM_RCAR_LVDS should depend upon DRM_RCAR_DU
-though as well.
-
-There is no linkage requirement, as it's a standalone bridge driver from
-what I can see, but I don't think it serves much purpose without the DU?
-
-Anyway, even if it's just for compile testing maybe, the select here
-should be fine.
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-> ---
->  drivers/gpu/drm/rcar-du/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> index 0919f1f159a4..f65d1489dc50 100644
-> --- a/drivers/gpu/drm/rcar-du/Kconfig
-> +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> @@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
->  config DRM_RCAR_LVDS
->  	tristate "R-Car DU LVDS Encoder Support"
->  	depends on DRM && DRM_BRIDGE && OF
-> +	select DRM_KMS_HELPER
->  	select DRM_PANEL
->  	select OF_FLATTREE
->  	select OF_OVERLAY
-> 
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 94d10ec954a0..ea193426e5ae 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -1666,6 +1666,8 @@ static int flexcan_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+  failed_register:
++	pm_runtime_put_noidle(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
+ 	free_candev(dev);
+ 	return err;
+ }
+-- 
+2.17.1
 
