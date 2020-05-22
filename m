@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD90E205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9F7207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159466;
-	bh=SSr626oosF3ax4S4mvuIs1Z3CkLSI8JeRhlwsAREDNo=;
+	s=default; t=1590159468;
+	bh=dFnDNSHS2+OAHO0LGMtY8LKC5e1OPYAD0D0Dw5/i9t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2D8dUWjirxvSw6wD0Ux0jgNi69I05EhwSnMh+wVOpPG2k+xIYVaRhun35aDP19rHk
-	 5DVblA7QcVEjwj1WBwkI/4GRPr3MMxvoMRxEevpTGMWQHLlRt1xQRar2CXU7tofRHs
-	 vrndZ6QuMqvON0CS7sW4WXas/U68O63lfHGBQdoE=
+	b=pFInqc/mihUi+vYWmXXEFCvZyUFuln6X/AjnuRk1P7FnDxio9kZpYKFXW1tQBMfLO
+	 vozQ0/Bc6JVmx2z4wRvoL+Ys9hMPi5Li9Ma5Vu1Cry3O24ZXl0cX8ZyZbokeFpTMFW
+	 8oASVgOf511ZOyFQpbQxkiG1YEuz8Hf4w9huWMuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbgEVOuf (ORCPT
+        id S1730669AbgEVO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51824 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730722AbgEVOuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:32 -0400
+        id S1730744AbgEVOuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF2922254;
-        Fri, 22 May 2020 14:50:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A779022248;
+        Fri, 22 May 2020 14:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159032;
-        bh=SSr626oosF3ax4S4mvuIs1Z3CkLSI8JeRhlwsAREDNo=;
+        s=default; t=1590159035;
+        bh=dFnDNSHS2+OAHO0LGMtY8LKC5e1OPYAD0D0Dw5/i9t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiKeZBO/cZUgpeGVryo7owc0OpolwnODK2C6rhEovApjO5fLOdw8agK/Xfys/HuDy
-         OAATnKgP3ab9rDv9r0FxkRcgPyRZj9pDiMSGqxB8prkCDFbQHwYm6ASNVbFSjpiYZ3
-         /M1iP+ntAc7NWohKkQxHmRp/Pm9JE3gkF7RleOyM=
+        b=EsOQ1GTAJpxvNtaSaR1aamNI8/+/63EX3vvLgQtEgfwX50movQ89QQ4PNrv4gvVXv
+         C9GsbjxTKWfK9MDkwH7UUUIhiZfRBP2Frr3cSOgehx81QDgOZQC8F0dMJvgEuSs050
+         6s732rFcW/PwdpPbUDS4JSU9nG/ByUx5u+fnEEW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+Cc:     Liu Yibin <jiulong@linux.alibaba.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 29/41] riscv: stacktrace: Fix undefined reference to `walk_stackframe'
-Date:   Fri, 22 May 2020 10:49:46 -0400
-Message-Id: <20200522144959.434379-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 32/41] csky: Fixup msa highest 3 bits mask
+Date:   Fri, 22 May 2020 10:49:49 -0400
+Message-Id: <20200522144959.434379-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -60,35 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Liu Yibin <jiulong@linux.alibaba.com>
 
-[ Upstream commit 0502bee37cdef755d63eee60236562e5605e2480 ]
+[ Upstream commit 165f2d2858013253042809df082b8df7e34e86d7 ]
 
-Drop static declaration to fix following build error if FRAME_POINTER disabled,
-  riscv64-linux-ld: arch/riscv/kernel/perf_callchain.o: in function `.L0':
-  perf_callchain.c:(.text+0x2b8): undefined reference to `walk_stackframe'
+Just as comment mentioned, the msa format:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+ cr<30/31, 15> MSA register format:
+ 31 - 29 | 28 - 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
+   BA     Reserved  SH  WA  B   SO SEC  C   D   V
+
+So we should shift 29 bits not 28 bits for mask
+
+Signed-off-by: Liu Yibin <jiulong@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/stacktrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/csky/abiv1/inc/abi/entry.h | 4 ++--
+ arch/csky/abiv2/inc/abi/entry.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 0940681d2f68..19e46f4160cc 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -63,7 +63,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index 5056ebb902d1..61d94ec7dd16 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -167,8 +167,8 @@
+ 	 *   BA     Reserved  C   D   V
+ 	 */
+ 	cprcr	r6, cpcr30
+-	lsri	r6, 28
+-	lsli	r6, 28
++	lsri	r6, 29
++	lsli	r6, 29
+ 	addi	r6, 0xe
+ 	cpwcr	r6, cpcr30
  
- #else /* !CONFIG_FRAME_POINTER */
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 111973c6c713..9023828ede97 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -225,8 +225,8 @@
+ 	 */
+ 	mfcr	r6, cr<30, 15> /* Get MSA0 */
+ 2:
+-	lsri	r6, 28
+-	lsli	r6, 28
++	lsri	r6, 29
++	lsli	r6, 29
+ 	addi	r6, 0x1ce
+ 	mtcr	r6, cr<30, 15> /* Set MSA0 */
  
--static void notrace walk_stackframe(struct task_struct *task,
-+void notrace walk_stackframe(struct task_struct *task,
- 	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
- {
- 	unsigned long sp, pc;
 -- 
 2.25.1
 
