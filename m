@@ -2,111 +2,120 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7CE2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479762072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:18:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bCOGh4IB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgEVBRd (ORCPT
+        id S1727056AbgEVBSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:17:33 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:55446 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbgEVBRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:17:30 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgCHFAgMKMdex2b4AQ--.49116S4;
-        Fri, 22 May 2020 09:17:04 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] hwrng: exynos - Fix runtime PM imbalance on error
-Date:   Fri, 22 May 2020 09:16:59 +0800
-Message-Id: <20200522011659.26727-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgCHFAgMKMdex2b4AQ--.49116S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fury5tFWrXr43Jrb_yoW8GFy3pa
-        y8uF13Cr4xZ3y8AFyUta1DZas5u3y3ta4xK3yxC34kZrn8XFy0qa1rtFyjqFy8AFWkCw45
-        tr13J3y8AFyY9aUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9q1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6w4l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJbIYCTnIWIevJa73UjIFyTuYvjfUOMKZDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgwIBlZdtOP3rQABsH
+        Thu, 21 May 2020 21:18:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726737AbgEVBSm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 21:18:42 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA6FC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:18:40 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id m44so7136602qtm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Puv1BV91r6SjZkjuOU7H5cmGIu56s9jB/MY9elYkgSk=;
+        b=bCOGh4IBnzxtvHN6uHYYXFvOkvGLA05aypKg9VveLlImf/EjhsiWQEZqEaDxx0hFBw
+         oS/O9Js/qJmDaoEi1Vf9HnVAjgflpNI5PzXwdpd0f6UqWPphMZ8DSMUZPdUd0fnSf90a
+         G6H4rG0ew2DZu7LNTTIOriEl4v0aZi3QI5AXLz2PZxxszXiGSBiS4g+L56Yr0QIrKuLw
+         ezr/H1TDBLZi3n/LG/7H206p26KCSI3+wsjmT5k/IRnUlDysOU1c57Hxfe/Cbyzp/jd7
+         5t8GNCOgNNYyprLix4KNSCg3rmb8EzxhGaqXe6iqofMcf/RxC6yGeoL1L4pqHcthN8+k
+         i3jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Puv1BV91r6SjZkjuOU7H5cmGIu56s9jB/MY9elYkgSk=;
+        b=NrShtHJU6q7eWUtDNJWusVb7TzVchkHXalJiZ6RdBTTvTP53xb/7FsEuIuODBJsmpH
+         3uFaP+gnsdnKGIWfWx3F978Iv/ifiTA8jYCWHxtEfPx9m3uRtNWFqn4faymAx9/RjtiG
+         NwO6oCm0bIrCbjmpYTZo4sym/ccq8yw60/xmm02w3lqQu2a4SKMQQg11w9YoXkFeTOg2
+         61x3ukRoADKYGz5TptWu2kSCZx4VHzOPWVOnSZEYP3tG7L/g6XIaD0yo7qt6Axxc2Pb9
+         CScXjy7Efuq00boyA8vuCbSuyPCKB7mm0KM5vtBxlAn+aZiguuHPq10avq3H0fbF7sZa
+         J+nQ==
+X-Gm-Message-State: AOAM533mxfMTMJ3SaIUQzfK4+gevzXC7RUjvHvbg34fFGbjcSlGcQ4gW
+        oSai5bDd3JZOGv5RS1EQ4YCAAg==
+X-Google-Smtp-Source: ABdhPJwMoUeBYjRzyp9R0VCrKxKw3AszW5mQi04RCM1s4y0bzosHq3N+Y/7dGmnHCVVDXVF3pf9Tqw==
+X-Received: by 2002:ac8:b48:: with SMTP id m8mr13649501qti.206.1590110319843;
+        Thu, 21 May 2020 18:18:39 -0700 (PDT)
+Received: from ovpn-112-192.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id f43sm60212qte.58.2020.05.21.18.18.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 May 2020 18:18:39 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     alex.williamson@redhat.com
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] vfio/pci: fix a null-ptr-deref in vfio_config_free()
+Date:   Thu, 21 May 2020 21:18:29 -0400
+Message-Id: <20200522011829.17301-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+It is possible vfio_config_init() does not call vfio_cap_len(), and then
+vdev->msi_perm == NULL. Later, in vfio_config_free(), it could trigger a
+null-ptr-deref.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+ BUG: kernel NULL pointer dereference, address: 0000000000000000
+ RIP: 0010:vfio_config_free+0x7a/0xe0 [vfio_pci]
+ vfio_config_free+0x7a/0xe0:
+ free_perm_bits at drivers/vfio/pci/vfio_pci_config.c:340
+ (inlined by) vfio_config_free at drivers/vfio/pci/vfio_pci_config.c:1760
+ Call Trace:
+  vfio_pci_release+0x3a4/0x9e0 [vfio_pci]
+  vfio_device_fops_release+0x50/0x80 [vfio]
+  __fput+0x200/0x460
+  ____fput+0xe/0x10
+  task_work_run+0x127/0x1b0
+  do_exit+0x782/0x10d0
+  do_group_exit+0xc7/0x1c0
+  __x64_sys_exit_group+0x2c/0x30
+  do_syscall_64+0x64/0x350
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: bea890bdb161 ("vfio/pci: fix memory leaks in alloc_perm_bits()")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
+ drivers/vfio/pci/vfio_pci_config.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Changelog:
-
-v2: -- Remove unnecessary 'err_clock' label
----
- drivers/char/hw_random/exynos-trng.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
-index 8e1fe3f8dd2d..8393b898a50e 100644
---- a/drivers/char/hw_random/exynos-trng.c
-+++ b/drivers/char/hw_random/exynos-trng.c
-@@ -142,13 +142,13 @@ static int exynos_trng_probe(struct platform_device *pdev)
- 	if (IS_ERR(trng->clk)) {
- 		ret = PTR_ERR(trng->clk);
- 		dev_err(&pdev->dev, "Could not get clock.\n");
--		goto err_clock;
-+		goto err_pm_get;
- 	}
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index d127a0c50940..8746c943247a 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1757,9 +1757,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
+ 	vdev->vconfig = NULL;
+ 	kfree(vdev->pci_config_map);
+ 	vdev->pci_config_map = NULL;
+-	free_perm_bits(vdev->msi_perm);
+-	kfree(vdev->msi_perm);
+-	vdev->msi_perm = NULL;
++	if (vdev->msi_perm) {
++		free_perm_bits(vdev->msi_perm);
++		kfree(vdev->msi_perm);
++		vdev->msi_perm = NULL;
++	}
+ }
  
- 	ret = clk_prepare_enable(trng->clk);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not enable the clk.\n");
--		goto err_clock;
-+		goto err_pm_get;
- 	}
- 
- 	ret = devm_hwrng_register(&pdev->dev, &trng->rng);
-@@ -164,10 +164,8 @@ static int exynos_trng_probe(struct platform_device *pdev)
- err_register:
- 	clk_disable_unprepare(trng->clk);
- 
--err_clock:
--	pm_runtime_put_sync(&pdev->dev);
--
- err_pm_get:
-+	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 
- 	return ret;
+ /*
 -- 
-2.17.1
+2.17.2 (Apple Git-113)
 
