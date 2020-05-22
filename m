@@ -2,91 +2,66 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C449BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF08C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C4D206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590190365;
-	bh=u0mkeekhT7H4kvo0f/18YnuEmDkDZm6GrdqhYSj0Abw=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=sWcLUubH1kGHmOO5bnMANGym6FQp4QDB64b4GRgfGhFN1wPgx2K2rqV/nf7DjrHT4
-	 lwcnWOZPk96MXMJPM+ofjdYa5jCNf4olPjPjAhBZF+nDtzWAckAvvolBfn/kbrW4Jw
-	 OFaa3VpFDZY+M0sVqRRB0xsLlTghGCU3ykfUWorY=
+	by mail.kernel.org (Postfix) with ESMTP id 36AF1206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbgEVXco (ORCPT
+        id S2387417AbgEVXdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:32:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgEVXco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:32:44 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C27206B6;
-        Fri, 22 May 2020 23:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590190364;
-        bh=u0mkeekhT7H4kvo0f/18YnuEmDkDZm6GrdqhYSj0Abw=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=UNVy7Q40ku/I6kDg1MJqnO4It3D0bR6jrRy2EglrTzAlteZEk13Lpsu6gfQPk1TEd
-         lRH0mEEm5HbDZG16XTF+bCos8E4dPnWChBwjTJjuPikuJjFuTODB/Csya2pBOht59z
-         M+WZyLayiKurgB1ZDN3Z5Y7oXlBJAaiUdf1hQ6Lg=
-Date:   Fri, 22 May 2020 16:32:43 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [PATCH] f2fs: avoid inifinite loop to wait for flushing node
- pages at cp_error
-Message-ID: <20200522233243.GA94020@google.com>
-References: <20200522144752.216197-1-jaegeuk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522144752.216197-1-jaegeuk@kernel.org>
+        Fri, 22 May 2020 19:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgEVXdN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 19:33:13 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9382C061A0E;
+        Fri, 22 May 2020 16:33:13 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4D11712751C5A;
+        Fri, 22 May 2020 16:33:11 -0700 (PDT)
+Date:   Fri, 22 May 2020 16:33:10 -0700 (PDT)
+Message-Id: <20200522.163310.591969005159684961.davem@davemloft.net>
+To:     dhowells@redhat.com
+Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/3] rxrpc: Fix retransmission timeout and ACK
+ discard
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <997165.1590190006@warthog.procyon.org.uk>
+References: <20200522.155418.406408375053374516.davem@davemloft.net>
+        <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
+        <997165.1590190006@warthog.procyon.org.uk>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 22 May 2020 16:33:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shutdown test is somtimes hung, since it keeps trying to flush dirty node pages
-in an inifinite loop. Let's drop dirty pages at umount in that case.
+From: David Howells <dhowells@redhat.com>
+Date: Sat, 23 May 2020 00:26:46 +0100
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
-v2:
- - fix typos
+> David Miller <davem@davemloft.net> wrote:
+> 
+>> Pulled, thanks David.
+> 
+> Thanks.  I'll rebase my two extra patches I've just sent you a pull request
+> for when you've updated the branch.
 
- fs/f2fs/node.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Please respin and fix the Subject line of patch #2 to have a correct
+rxrpc: prefix.
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index e632de10aedab..8c63964a82fd0 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1520,8 +1520,15 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 
- 	trace_f2fs_writepage(page, NODE);
- 
--	if (unlikely(f2fs_cp_error(sbi)))
-+	if (unlikely(f2fs_cp_error(sbi))) {
-+		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
-+			dec_page_count(sbi, F2FS_DIRTY_NODES);
-+			up_read(&sbi->node_write);
-+			unlock_page(page);
-+			return 0;
-+		}
- 		goto redirty_out;
-+	}
- 
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
- 		goto redirty_out;
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+Thanks.
