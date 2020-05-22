@@ -2,192 +2,124 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0257CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9A820884
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D170F207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:56:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TJWMmnVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgEVCzs (ORCPT
+        id S1727956AbgEVC4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 22:55:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4836 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727770AbgEVCzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 22:55:47 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 158A475D5FA2F00C5850;
-        Fri, 22 May 2020 10:55:45 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 10:55:41 +0800
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, <bhelgaas@google.com>
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
- <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
- <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
-CC:     <jay.vosburgh@canonical.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
-Date:   Fri, 22 May 2020 10:56:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 21 May 2020 22:56:17 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8294 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbgEVC4Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 22:56:16 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec73f000000>; Thu, 21 May 2020 19:54:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 21 May 2020 19:56:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 21 May 2020 19:56:16 -0700
+Received: from [10.2.48.182] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+ 2020 02:56:15 +0000
+Subject: Re: [PATCH] mm/gup: fixup gup.c for "mm/gup: refactor and
+ de-duplicate gup_fast() code"
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+References: <20200521233841.1279742-1-jhubbard@nvidia.com>
+ <159011561851.32320.15372940900085926477@build.alporthouse.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <19baba24-1f05-9497-2d23-36c2af09d080@nvidia.com>
+Date:   Thu, 21 May 2020 19:56:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <159011561851.32320.15372940900085926477@build.alporthouse.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590116096; bh=ZAaG0RT29C3mMCelcOYrNPFdgL+X0u5fdvmv/XTgbkc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TJWMmnVXno2KwLrQrVCBptO62ixYJXrnhmGBvfspnNjIVECJQuuUtf1JeHSN6fv7P
+         XwX/TlqcFZ6qoSxl/wadKFem1hPdciMiZTSzHaO8MPq6/UTnri7pGV+AQForDp/6Gp
+         Xql98VL2kl7HJMdj/zhWZ4H18Mb+pTQZ3KM57Zh7dgSJVV5g0qswajsa4oLSTqUAmv
+         zc/evDP3vS7BHBsJrkNzolR2q/x3MiEtqy3esU26QF5FXHmR/qj1bCBtKO+sfUtfJz
+         eDnXjhUNbzvLztmlFWeBo5JQrKOUPA+JDHBf59Vnrrdx3AcmX+yFVQjh7k0UJlcipA
+         8OOcXDtb3wVVQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
->
->
-> On 5/21/20 3:58 AM, Yicong Yang wrote:
->> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
->>>
->>>
->>> On 5/20/20 1:28 AM, Yicong Yang wrote:
->>>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>
->>>>> If there are non-hotplug capable devices connected to a given
->>>>> port, then during the fatal error recovery(triggered by DPC or
->>>>> AER), after calling reset_link() function, we cannot rely on
->>>>> hotplug handler to detach and re-enumerate the device drivers
->>>>> in the affected bus. Instead, we will have to let the error
->>>>> recovery handler call report_slot_reset() for all devices in
->>>>> the bus to notify about the reset operation. Although this is
->>>>> only required for non hot-plug capable devices, doing it for
->>>>> hotplug capable devices should not affect the functionality.
->>>>>
->>>>> Along with above issue, this fix also applicable to following
->>>>> issue.
->>>>>
->>>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->>>>> reset_link()") added support to store status of reset_link()
->>>>> call. Although this fixed the error recovery issue observed if
->>>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->>>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->>>>> result from report_frozen_detected. This can cause a failure to
->>>>> recover if _NEED_RESET is returned by report_frozen_detected and
->>>>> report_slot_reset is not invoked.
->>>>>
->>>>> Such an event can be induced for testing purposes by reducing the
->>>>> Max_Payload_Size of a PCIe bridge to less than that of a device
->>>>> downstream from the bridge, and then initiating I/O through the
->>>>> device, resulting in oversize transactions.  In the presence of DPC,
->>>>> this results in a containment event and attempted reset and recovery
->>>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->>>>> invoked, and the device does not recover.
->>>>>
->>>>> [original patch is from jay.vosburgh@canonical.com]
->>>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->>>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>> ---
->>>>>    drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>>>>    1 file changed, 15 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>>> index 14bb8f54723e..db80e1ecb2dc 100644
->>>>> --- a/drivers/pci/pcie/err.c
->>>>> +++ b/drivers/pci/pcie/err.c
->>>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>>>        pci_dbg(dev, "broadcast error_detected message\n");
->>>>>        if (state == pci_channel_io_frozen) {
->>>>>            pci_walk_bus(bus, report_frozen_detected, &status);
->>>>> -        status = reset_link(dev);
->>>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>> +        status = PCI_ERS_RESULT_NEED_RESET;
->>>>> +    } else {
->>>>> +        pci_walk_bus(bus, report_normal_detected, &status);
->>>>> +    }
->>>>> +
->>>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>>> +        if (reset_link) {
->>>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->>>>
->>>> we'll call reset_link() only if link is frozen. so it may have problem here.
->>> you mean before this change right?
->>> After this change, reset_link() will be called as long as status is
->>> PCI_ERS_RESULT_NEED_RESET.
+On 2020-05-21 19:46, Chris Wilson wrote:
+> Quoting John Hubbard (2020-05-22 00:38:41)
+>> Include FOLL_FAST_ONLY in the list of flags to *not* WARN()
+>> on, in internal_get_user_pages_fast().
 >>
->> Yes. I think we should reset the link only if the io is blocked as before. There's
->> no reason to reset a normal link.
-> Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
-> possible reset_link options are dpc_reset_link() and aer_root_reset().
->
-> In dpc_reset_link() case, the link is already disabled and hence we
-> don't need to do another reset. In case of aer_root_reset() it
-> uses pci_bus_error_reset() to reset the slot.
-
-Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
-hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
-reset for the bridge. That's what I think is unnecessary for a normal link,
-and that's what reset link indicates us to do. The slot reset is introduced
-in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
-
-PCI_ERS_RESULT_NEED_RESET indicates that the driver
-wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
-I don't think it's same as slot reset mentioned above, which is only for hotpluggable
-ones.
-
-Previously, if link is normal and the driver reports PCI_ERS_RESULT_NEED_RESET,
-we'll only call ->slot_reset() without slot reset in reset_link(). Maybe it's better
-to perform just like before.
-
-Thanks.
-
-
+>> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+>> Cc: Daniel Vetter <daniel@ffwll.ch>
+>> Cc: David Airlie <airlied@linux.ie>
+>> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+>> Cc: "Joonas Lahtinen" <joonas.lahtinen@linux.intel.com>
+>> Cc: Matthew Auld <matthew.auld@intel.com>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>> Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>> ---
 >>
->> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
->> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
->> We decide whether to do a link reset only by the io state.
+>> Hi Andrew, Chris,
 >>
->> Thanks,
->> Yicong
+>> Andrew: This is a fixup that applies to today's (20200521) linux-next.
+>> In that tree, this fixes up:
 >>
+>> commit dfb8dfe80808 ("mm/gup: refactor and de-duplicate gup_fast() code")
 >>
->>>>
->>>> Thanks,
->>>> Yicong
->>>>
->>>>
->>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>>> +        } else {
->>>>> +            if (pci_bus_error_reset(dev))
->>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>>> +        }
->>>>> +
->>>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
->>>>>                pci_warn(dev, "link reset failed\n");
->>>>>                goto failed;
->>>>>            }
->>>>> -    } else {
->>>>> -        pci_walk_bus(bus, report_normal_detected, &status);
->>>>>        }
->>>>>          if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>>
->>> .
->>>
->>
-> .
->
+>> Chris: I'd like to request another CI run for the drm/i915 changes, so
+>> for that, would you prefer that I post a v2 of the series [1], or
+>> is it easier for you to just apply this patch here, on top of [2]?
+> 
+> If you post your series again with this patch included to intel-gfx, CI
+> will pick it up. Or I'll do that in the morning.
+> -Chris
+> 
 
+OK, perfect. I'll post a version for linux.git in a moment here.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
