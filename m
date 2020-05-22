@@ -2,123 +2,192 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56318C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B6D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="plFrMTP4"
+	by mail.kernel.org (Postfix) with ESMTP id DC9A820884
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgEVCvz (ORCPT
+        id S1727914AbgEVCzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 22:51:55 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56730 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728225AbgEVCvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 22:51:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590115913; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=/spZUbMcHFpFa8xuD1dtKESImTnlvU6Br+Qr4Hw+ZRU=; b=plFrMTP4hpuUVoysFFz3IneafpSfgbLioOu5NaoIY6S39t2tN48TotLH9Tw32q5eRyFGi0wc
- 8+rh4VgpBPq92nzVn2qMTH6iJglVvuYXygHhkw48LzzqBlhiYKZP0++r5G4ryxHOoqob68R5
- picy1xtc1YSD9C1xFDzrFunOgoI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ec73e3a7522fe8b08261457 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 02:51:38
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CE968C43395; Fri, 22 May 2020 02:51:37 +0000 (UTC)
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA172C433CB;
-        Fri, 22 May 2020 02:51:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA172C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-From:   Hemant Kumar <hemantk@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org,
-        Hemant Kumar <hemantk@codeaurora.org>
-Subject: [PATCH v2 1/3] bus: mhi: core: Add helper API to return number of free TREs
-Date:   Thu, 21 May 2020 19:51:28 -0700
-Message-Id: <1590115890-12278-2-git-send-email-hemantk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590115890-12278-1-git-send-email-hemantk@codeaurora.org>
-References: <1590115890-12278-1-git-send-email-hemantk@codeaurora.org>
+        Thu, 21 May 2020 22:55:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4836 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727770AbgEVCzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 22:55:47 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 158A475D5FA2F00C5850;
+        Fri, 22 May 2020 10:55:45 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
+ 10:55:41 +0800
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, <bhelgaas@google.com>
+References: <18609.1588812972@famine>
+ <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
+ <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
+ <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+CC:     <jay.vosburgh@canonical.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
+Date:   Fri, 22 May 2020 10:56:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce mhi_get_no_free_descriptors() API to return number
-of TREs available to queue buffer. MHI clients can use this
-API to know before hand if ring is full without calling queue
-API.
 
-Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
----
- drivers/bus/mhi/core/main.c | 12 ++++++++++++
- include/linux/mhi.h         |  9 +++++++++
- 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index d25f321..1bd3b1e 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -258,6 +258,18 @@ int mhi_destroy_device(struct device *dev, void *data)
- 	return 0;
- }
- 
-+int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
-+				enum dma_data_direction dir)
-+{
-+	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-+	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ?
-+		mhi_dev->ul_chan : mhi_dev->dl_chan;
-+	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
-+
-+	return get_nr_avail_ring_elements(mhi_cntrl, tre_ring);
-+}
-+EXPORT_SYMBOL_GPL(mhi_get_no_free_descriptors);
-+
- void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
- {
- 	struct mhi_driver *mhi_drv;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index 6af6bd6..a39b77d 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -602,6 +602,15 @@ void mhi_set_mhi_state(struct mhi_controller *mhi_cntrl,
- void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason);
- 
- /**
-+ * mhi_get_no_free_descriptors - Get transfer ring length
-+ * Get # of TD available to queue buffers
-+ * @mhi_dev: Device associated with the channels
-+ * @dir: Direction of the channel
-+ */
-+int mhi_get_no_free_descriptors(struct mhi_device *mhi_dev,
-+				enum dma_data_direction dir);
-+
-+/**
-  * mhi_prepare_for_power_up - Do pre-initialization before power up.
-  *                            This is optional, call this before power up if
-  *                            the controller does not want bus framework to
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
+>
+>
+> On 5/21/20 3:58 AM, Yicong Yang wrote:
+>> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
+>>>
+>>>
+>>> On 5/20/20 1:28 AM, Yicong Yang wrote:
+>>>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>
+>>>>> If there are non-hotplug capable devices connected to a given
+>>>>> port, then during the fatal error recovery(triggered by DPC or
+>>>>> AER), after calling reset_link() function, we cannot rely on
+>>>>> hotplug handler to detach and re-enumerate the device drivers
+>>>>> in the affected bus. Instead, we will have to let the error
+>>>>> recovery handler call report_slot_reset() for all devices in
+>>>>> the bus to notify about the reset operation. Although this is
+>>>>> only required for non hot-plug capable devices, doing it for
+>>>>> hotplug capable devices should not affect the functionality.
+>>>>>
+>>>>> Along with above issue, this fix also applicable to following
+>>>>> issue.
+>>>>>
+>>>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>>>>> reset_link()") added support to store status of reset_link()
+>>>>> call. Although this fixed the error recovery issue observed if
+>>>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>>>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>>>>> result from report_frozen_detected. This can cause a failure to
+>>>>> recover if _NEED_RESET is returned by report_frozen_detected and
+>>>>> report_slot_reset is not invoked.
+>>>>>
+>>>>> Such an event can be induced for testing purposes by reducing the
+>>>>> Max_Payload_Size of a PCIe bridge to less than that of a device
+>>>>> downstream from the bridge, and then initiating I/O through the
+>>>>> device, resulting in oversize transactions.  In the presence of DPC,
+>>>>> this results in a containment event and attempted reset and recovery
+>>>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>>>>> invoked, and the device does not recover.
+>>>>>
+>>>>> [original patch is from jay.vosburgh@canonical.com]
+>>>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>>>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>>>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>> ---
+>>>>>    drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>>>>>    1 file changed, 15 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>>>> index 14bb8f54723e..db80e1ecb2dc 100644
+>>>>> --- a/drivers/pci/pcie/err.c
+>>>>> +++ b/drivers/pci/pcie/err.c
+>>>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>>        pci_dbg(dev, "broadcast error_detected message\n");
+>>>>>        if (state == pci_channel_io_frozen) {
+>>>>>            pci_walk_bus(bus, report_frozen_detected, &status);
+>>>>> -        status = reset_link(dev);
+>>>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>>>>> +        status = PCI_ERS_RESULT_NEED_RESET;
+>>>>> +    } else {
+>>>>> +        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>> +    }
+>>>>> +
+>>>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
+>>>>> +        if (reset_link) {
+>>>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>>>>
+>>>> we'll call reset_link() only if link is frozen. so it may have problem here.
+>>> you mean before this change right?
+>>> After this change, reset_link() will be called as long as status is
+>>> PCI_ERS_RESULT_NEED_RESET.
+>>
+>> Yes. I think we should reset the link only if the io is blocked as before. There's
+>> no reason to reset a normal link.
+> Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
+> possible reset_link options are dpc_reset_link() and aer_root_reset().
+>
+> In dpc_reset_link() case, the link is already disabled and hence we
+> don't need to do another reset. In case of aer_root_reset() it
+> uses pci_bus_error_reset() to reset the slot.
+
+Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
+hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
+reset for the bridge. That's what I think is unnecessary for a normal link,
+and that's what reset link indicates us to do. The slot reset is introduced
+in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
+
+PCI_ERS_RESULT_NEED_RESET indicates that the driver
+wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
+I don't think it's same as slot reset mentioned above, which is only for hotpluggable
+ones.
+
+Previously, if link is normal and the driver reports PCI_ERS_RESULT_NEED_RESET,
+we'll only call ->slot_reset() without slot reset in reset_link(). Maybe it's better
+to perform just like before.
+
+Thanks.
+
+
+>>
+>> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
+>> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
+>> We decide whether to do a link reset only by the io state.
+>>
+>> Thanks,
+>> Yicong
+>>
+>>
+>>>>
+>>>> Thanks,
+>>>> Yicong
+>>>>
+>>>>
+>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>> +        } else {
+>>>>> +            if (pci_bus_error_reset(dev))
+>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>> +        }
+>>>>> +
+>>>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
+>>>>>                pci_warn(dev, "link reset failed\n");
+>>>>>                goto failed;
+>>>>>            }
+>>>>> -    } else {
+>>>>> -        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>>        }
+>>>>>          if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>>>>
+>>> .
+>>>
+>>
+> .
+>
 
