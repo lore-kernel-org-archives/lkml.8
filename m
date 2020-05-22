@@ -2,163 +2,103 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34325C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B07C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D58D2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590164516;
-	bh=Stxmy5bjtizNU8Nx6Mslgp2T+FmzRshtXGRDcZodBIc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hCYAk8qTrc6uRJA9GO03TuUjJzX+aA4L+mSc07i9CiGMEZF1KkZhORfW+sPrhUmEe
-	 VtX3dAOQ/dAY8hNZbYYZFv9kbn5oqTaCkEjpQ+lBHF+rKj595BedEv2vJA7xKKRe4l
-	 AaYXn+5ztcyVvzY6a1iuWakuqD2ZadiIxKnCGJtw=
+	by mail.kernel.org (Postfix) with ESMTP id EB6E92070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GrI9SuZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbgEVQVz (ORCPT
+        id S1730284AbgEVQY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730537AbgEVQVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:21:52 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Fri, 22 May 2020 12:24:28 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43084 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729040AbgEVQY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:24:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kkN05n8AwCXofpqby7bmdZ4Wpf27jnFTOS+pMiMfGAc=; b=GrI9SuZZySt1tElKW+7wdSmUym
+        jsPk8svSB7JtRPm767hAejK6eW134ekobve4Zk5UYQV9RuFV+Ba/4DaXh3Q/j5S6dPaZ0VL9Qbdya
+        TfblH5j8eA/r3WmSUMq6UJLrfsfbFEyALZQZCSq4IIPoKV9xHiIPZCMsSbe1WbIFJEz03rl3Soa8n
+        QmaOWP66+wtIyMPkBhiBZeK3TFcZl6N27s5njC525N6gI1zcmm6P50GSkyUDFF5ZHeoHEg5Lx9LVj
+        UIFE/9ZBMDqpb3Zds+L8WifHgImjKDz7e3nw2jQOJ/1becU2Qm0c8nN7aslucQUE1IT5KQ39lhZZw
+        jObs8Cfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jcASF-0005wj-FZ; Fri, 22 May 2020 16:23:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641E820756;
-        Fri, 22 May 2020 16:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590164512;
-        bh=Stxmy5bjtizNU8Nx6Mslgp2T+FmzRshtXGRDcZodBIc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nC4Fjt+V7HSlwjlv0oD9X6Q57rCFAoKe3tDUwZ/ilw9ZqYEeo4MQvTQUKfqltWNZU
-         ZvlSMpOgOBOdSkyaGvbU2DCc/mOPKbpIA38cIkaphdqCnNy8ek0wD/1Z2edlJoZpQI
-         yopvNB09RWTBE/0xHkUwmO81x8Su1mx4f4KM5nFQ=
-From:   Mark Brown <broonie@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH v3 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
-Date:   Fri, 22 May 2020 17:21:39 +0100
-Message-Id: <20200522162139.44380-4-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200522162139.44380-1-broonie@kernel.org>
-References: <20200522162139.44380-1-broonie@kernel.org>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D785C306102;
+        Fri, 22 May 2020 18:23:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6E72C20B5D17E; Fri, 22 May 2020 18:23:18 +0200 (CEST)
+Date:   Fri, 22 May 2020 18:23:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Sebastian A. Siewior" <bigeasy@linutronix.de>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v1 02/25] mm/swap: Don't abuse the seqcount latching API
+Message-ID: <20200522162318.GV317569@hirez.programming.kicks-ass.net>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200519214547.352050-3-a.darwish@linutronix.de>
+ <20200522145707.GO325280@hirez.programming.kicks-ass.net>
+ <20200522151705.vwfua5a4lhzcagea@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522151705.vwfua5a4lhzcagea@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a very basic selftest for getcpu() which similarly to our existing
-test for gettimeofday() looks up the function in the vDSO and prints the
-results it gets if the function exists and succeeds.
+On Fri, May 22, 2020 at 05:17:05PM +0200, Sebastian A. Siewior wrote:
+> On 2020-05-22 16:57:07 [+0200], Peter Zijlstra wrote:
+> > > @@ -725,21 +735,48 @@ void lru_add_drain_all(void)
+> > >  	if (WARN_ON(!mm_percpu_wq))
+> > >  		return;
+> > >  
+> > 
+> > > +	this_gen = READ_ONCE(lru_drain_gen);
+> > > +	smp_rmb();
+> > 
+> > 	this_gen = smp_load_acquire(&lru_drain_gen);
+> > >  
+> > >  	mutex_lock(&lock);
+> > >  
+> > >  	/*
+> > > +	 * (C) Exit the draining operation if a newer generation, from another
+> > > +	 * lru_add_drain_all(), was already scheduled for draining. Check (A).
+> > >  	 */
+> > > +	if (unlikely(this_gen != lru_drain_gen))
+> > >  		goto done;
+> > >  
+> > 
+> > > +	WRITE_ONCE(lru_drain_gen, lru_drain_gen + 1);
+> > > +	smp_wmb();
+> > 
+> > You can leave this smp_wmb() out and rely on the smp_mb() implied by
+> > queue_work_on()'s test_and_set_bit().
+> 
+> This is to avoid smp_store_release() ?
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/vDSO/.gitignore       |  1 +
- tools/testing/selftests/vDSO/Makefile         |  3 +-
- .../testing/selftests/vDSO/vdso_test_getcpu.c | 54 +++++++++++++++++++
- 3 files changed, 57 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
-
-diff --git a/tools/testing/selftests/vDSO/.gitignore b/tools/testing/selftests/vDSO/.gitignore
-index 74f49bd5f6dd..5eb64d41e541 100644
---- a/tools/testing/selftests/vDSO/.gitignore
-+++ b/tools/testing/selftests/vDSO/.gitignore
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- vdso_test
- vdso_test_gettimeofday
-+vdso_test_getcpu
- vdso_standalone_test_x86
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index ae15d700b62e..0069f2f83f86 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -4,7 +4,7 @@ include ../lib.mk
- uname_M := $(shell uname -m 2>/dev/null || echo not)
- ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
--TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday
-+TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday $(OUTPUT)/vdso_test_getcpu
- ifeq ($(ARCH),x86)
- TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
- endif
-@@ -18,6 +18,7 @@ endif
- 
- all: $(TEST_GEN_PROGS)
- $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
-+$(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
- $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
- 	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
- 		vdso_standalone_test_x86.c parse_vdso.c \
-diff --git a/tools/testing/selftests/vDSO/vdso_test_getcpu.c b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
-new file mode 100644
-index 000000000000..fc25ede131b8
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * vdso_test_getcpu.c: Sample code to test parse_vdso.c and vDSO getcpu()
-+ *
-+ * Copyright (c) 2020 Arm Ltd
-+ */
-+
-+#include <stdint.h>
-+#include <elf.h>
-+#include <stdio.h>
-+#include <sys/auxv.h>
-+#include <sys/time.h>
-+
-+#include "../kselftest.h"
-+#include "parse_vdso.h"
-+
-+const char *version = "LINUX_2.6";
-+const char *name = "__vdso_getcpu";
-+
-+struct getcpu_cache;
-+typedef long (*getcpu_t)(unsigned int *, unsigned int *,
-+			 struct getcpu_cache *);
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned long sysinfo_ehdr;
-+	unsigned int cpu, node;
-+	getcpu_t get_cpu;
-+	long ret;
-+
-+	sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
-+	if (!sysinfo_ehdr) {
-+		printf("AT_SYSINFO_EHDR is not present!\n");
-+		return KSFT_SKIP;
-+	}
-+
-+	vdso_init_from_sysinfo_ehdr(getauxval(AT_SYSINFO_EHDR));
-+
-+	get_cpu = (getcpu_t)vdso_sym(version, name);
-+	if (!get_cpu) {
-+		printf("Could not find %s\n", name);
-+		return KSFT_SKIP;
-+	}
-+
-+	ret = get_cpu(&cpu, &node, 0);
-+	if (ret == 0) {
-+		printf("Running on CPU %u node %u\n", cpu, node);
-+	} else {
-+		printf("%s failed\n", name);
-+		return KSFT_FAIL;
-+	}
-+
-+	return 0;
-+}
--- 
-2.20.1
-
+store_release would have the barrier on the other end. If you read the
+comments (I so helpfully cut out) you'll see it wants to order against
+later stores, not ealier.
