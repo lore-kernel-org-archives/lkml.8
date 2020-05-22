@@ -2,116 +2,141 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 256052073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE03220759
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbgEVTjM (ORCPT
+        id S1730995AbgEVTjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:39:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39742 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730894AbgEVTjM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:39:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id q129so3436199iod.6;
-        Fri, 22 May 2020 12:39:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X8n27llGBeVRgfd979EvYTTRTeep7XY/1kt8A/YmuXc=;
-        b=hCAebyAUbE8DZwFiN3wWkIW2exfkDrv89JhSn/eHGnSFikemNEU6nXsHTLg7jeLIhL
-         r/xLXT3mh7sZWl3MoBSeaDkCdBG7FOkCnCYDHhMO2e/gJpBBH4HihCOnUkAB4pN43d3g
-         Tt5gx0mPwaSg6RNlC1SK+4i0560xBSQykmO76RQihvvlRtscWH49sF0Xm/gId5XVnYYZ
-         KwPZ53eOef0hXy4rKs9HH8k9V4UfYUS2yB4KezCx6AbznQth4r4lEJ5QsncKIRyv4RkH
-         3prxpH0s/WVzoNR8NLrS0bzp89YNOhKwVVApUevxbo3TuZKUpN3cmIUWCnlDoxaRbVu6
-         q5bQ==
-X-Gm-Message-State: AOAM532UWtLMZRGIR0g03M8mrpxK9q78Tj1QCb906uqdMjhkqd7gOFdX
-        y2sk+nKLCyivK2kLsOhYCUa9qTfT
-X-Google-Smtp-Source: ABdhPJwB9KGA8IFLJiCDzBO67AJ49jL9ehoxyoQUUr7/LFEDadS344KBn077HMRzIZKQtLYuY5jAHA==
-X-Received: by 2002:a05:6602:2c88:: with SMTP id i8mr4522773iow.74.1590176350736;
-        Fri, 22 May 2020 12:39:10 -0700 (PDT)
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com. [209.85.166.180])
-        by smtp.gmail.com with ESMTPSA id x13sm4907320ilq.48.2020.05.22.12.39.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 12:39:10 -0700 (PDT)
-Received: by mail-il1-f180.google.com with SMTP id j2so11817091ilr.5;
-        Fri, 22 May 2020 12:39:10 -0700 (PDT)
-X-Received: by 2002:a05:6e02:f:: with SMTP id h15mr14323365ilr.90.1590176350216;
- Fri, 22 May 2020 12:39:10 -0700 (PDT)
+        Fri, 22 May 2020 15:39:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9245 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730894AbgEVTjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 15:39:21 -0400
+IronPort-SDR: P2Y0hb8PPAMIyFWVmjBjH/RiAjYEW2AmMogTRKNyRHa7o93+TWWF0j4LJIQYD1Uk7YFbWxkNeI
+ a7CCLmW8a7Qg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 12:39:20 -0700
+IronPort-SDR: Fd3haaiMcR6epj6Lwf0RAO7Vcu6h11rUPXWFv2XUJk3PogUpO/jRlywthEyJ5C35P2jd0uuh/G
+ 2Z4tRHj71yAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="440966479"
+Received: from rpurrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.58.10])
+  by orsmga005.jf.intel.com with ESMTP; 22 May 2020 12:39:14 -0700
+Date:   Fri, 22 May 2020 22:39:14 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Seth Moore <sethmo@google.com>
+Subject: Re: [PATCH v30 10/20] x86/sgx: Linux Enclave Driver
+Message-ID: <20200522193914.GF10319@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-11-jarkko.sakkinen@linux.intel.com>
+ <20200521191236.GA23043@linux.intel.com>
 MIME-Version: 1.0
-References: <20200520040221.10536-1-qiang.zhao@nxp.com> <20200520040221.10536-2-qiang.zhao@nxp.com>
-In-Reply-To: <20200520040221.10536-2-qiang.zhao@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 22 May 2020 14:38:47 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQEA1R6Ef=2r1w+KhUsKi2=_aJtFqrKO+Nj+b0WAyEVeQ@mail.gmail.com>
-Message-ID: <CADRPPNQEA1R6Ef=2r1w+KhUsKi2=_aJtFqrKO+Nj+b0WAyEVeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: Add ds26522 node to dts to ls1043ardb
-To:     Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521191236.GA23043@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 11:08 PM Qiang Zhao <qiang.zhao@nxp.com> wrote:
->
-> From: Zhao Qiang <qiang.zhao@nxp.com>
+On Thu, May 21, 2020 at 12:12:36PM -0700, Sean Christopherson wrote:
+> On Fri, May 15, 2020 at 03:44:00AM +0300, Jarkko Sakkinen wrote:
+> > +long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+> > +{
+> > +	struct sgx_encl *encl = filep->private_data;
+> > +	int ret, encl_flags;
+> > +
+> > +	encl_flags = atomic_fetch_or(SGX_ENCL_IOCTL, &encl->flags);
+> > +	if (encl_flags & SGX_ENCL_IOCTL)
+> > +		return -EBUSY;
+> > +
+> > +	if (encl_flags & SGX_ENCL_DEAD)
+> > +		return -EFAULT;
+> 
+> Returning immediately is wrong as it leaves SGX_ENCL_IOCTL set.  This results
+> in the application seeing -EBUSY on future ioctls() instead of -EFAULT.  Can be
+> fixed as below.  Do you want me to send a formal patch on linux-sgx?
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+> index 77757a74644d..df35a79e915c 100644
+> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
+> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+> @@ -751,8 +751,10 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+>         if (encl_flags & SGX_ENCL_IOCTL)
+>                 return -EBUSY;
+> 
+> -       if (encl_flags & SGX_ENCL_DEAD)
+> -               return -EFAULT;
+> +       if (encl_flags & SGX_ENCL_DEAD) {
+> +               ret = -EFAULT;
+> +               goto out;
+> +       }
+> 
+>         switch (cmd) {
+>         case SGX_IOC_ENCLAVE_CREATE:
+> @@ -772,6 +774,7 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+>                 break;
+>         }
+> 
+> +out:
+>         atomic_andnot(SGX_ENCL_IOCTL, &encl->flags);
+> 
+>         return ret;
+> 
+> 
+> > +
+> > +	switch (cmd) {
+> > +	case SGX_IOC_ENCLAVE_CREATE:
+> > +		ret = sgx_ioc_enclave_create(encl, (void __user *)arg);
+> > +		break;
+> > +	case SGX_IOC_ENCLAVE_ADD_PAGES:
+> > +		ret = sgx_ioc_enclave_add_pages(encl, (void __user *)arg);
+> > +		break;
+> > +	case SGX_IOC_ENCLAVE_INIT:
+> > +		ret = sgx_ioc_enclave_init(encl, (void __user *)arg);
+> > +		break;
+> > +	default:
+> > +		ret = -ENOIOCTLCMD;
+> > +		break;
+> > +	}
+> > +
+> > +	atomic_andnot(SGX_ENCL_IOCTL, &encl->flags);
+> > +
+> > +	return ret;
+> > +}
 
-Maybe remove the duplicated dts in the title?
+Thanks. Fixed in my tree:
 
->
-> Add ds26522 node to fsl-ls1043a-rdb.dts
->
-> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
-> ---
-> v3:
->  - use "arm64: dts:" format for subject
->
-> arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> index 44d9343..1cb265f 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> @@ -94,6 +94,22 @@
->                 reg = <0>;
->                 spi-max-frequency = <1000000>; /* input clock */
->         };
-> +
-> +       slic@2 {
+v31:
+* Unset SGX_ENCL_IOCTL in the error path of checking encl->flags in order
+  to prevent leaving it set, and thus block any further ioctl calls.
+* Added missing cleanup_srcu_struct() call to sgx_encl_release().
+* Take encl->lock in sgx_encl_add_page() in order to prevent races with
+  the page reclaimer.
 
-If this is a plugin card for the board, will this cause any problem
-when the card is not plugged in?
-
-> +               compatible = "maxim,ds26522";
-> +               reg = <2>;
-> +               spi-max-frequency = <2000000>;
-> +               fsl,spi-cs-sck-delay = <100>;
-> +               fsl,spi-sck-cs-delay = <50>;
-> +       };
-> +
-> +       slic@3 {
-> +               compatible = "maxim,ds26522";
-> +               reg = <3>;
-> +               spi-max-frequency = <2000000>;
-> +               fsl,spi-cs-sck-delay = <100>;
-> +               fsl,spi-sck-cs-delay = <50>;
-> +       };
->  };
->
->  &duart0 {
-> --
-> 2.7.4
->
+ /Jarkko
