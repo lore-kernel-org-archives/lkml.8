@@ -2,99 +2,137 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9643CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB703C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B11207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65FA207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lYXoHpwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgEVHqJ (ORCPT
+        id S1728544AbgEVHtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:46:09 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:41942 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728230AbgEVHqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:46:08 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 15:45:58
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Fri, 22 May 2020 15:45:58 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Cc:     "Kangjie Lu" <kjlu@umn.edu>,
-        "Laxman Dewangan" <ldewangan@nvidia.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        "Jonathan Hunter" <jonathanh@nvidia.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on
- error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
-References: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
- <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Fri, 22 May 2020 03:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbgEVHtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:49:50 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71485C061A0E;
+        Fri, 22 May 2020 00:49:50 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SzCt48Xqz9sSW;
+        Fri, 22 May 2020 17:49:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590133787;
+        bh=vq9L6SID6J7jzdJ5f+G1Nl4QAlI00mXh+3ZjRT0D/MQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lYXoHpwbHRC5wZ1X4aTm2nIhxp2rvY9+ZlQN7X/HxPPDS20Yn7lUULZ/9BTMFk9WW
+         dPZuU/2cgpJNC8Tj4FSd/V4AEvy24DUk1s0Mr9LhBGJJxfVrHMQbRf/sEsa19KM+Qc
+         W+L/20DwitIFmRir+aBjJKmfcqyrHxGE0XTlyAWEAyMW08eIA4vJoqx6cQXdKMfUax
+         xQxpGF0aciJ4bZyUpmAgGs3gIX8dIwY2ZXpt3TWu1loxBHNIAfEuTMc9e7IGYZF8kc
+         c3XBF9oODsHFzb+OxWNOGyj31LKwIEF2d0A7DOwVg2S29O5D3L3+yn2/h6vdk0HBpY
+         WNaDzzOmRLOwg==
+Date:   Fri, 22 May 2020 17:49:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        elver@google.com, bp@alien8.de,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200522174944.1a1732fa@canb.auug.org.au>
+In-Reply-To: <20200522171708.5f392fde@canb.auug.org.au>
+References: <20200522033119.1bbd99c5@canb.auug.org.au>
+        <20200521173520.GL6608@willie-the-truck>
+        <20200522171708.5f392fde@canb.auug.org.au>
 MIME-Version: 1.0
-Message-ID: <5a8a6e7b.bef25.1723b588c7f.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgBHkD42g8dem0b+AQ--.40491W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgAIBlZdtOQZ8wAAs9
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r4j6F4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r4xMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
-        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
-        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
-        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
-        0EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvEx4A2jsIE14v26r4j6F4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUU==
+Content-Type: multipart/signed; boundary="Sig_/eh=D+yNo=dsM9t+J0nOsqNZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5keSwKClRoYW5rIHlvdSBmb3IgeW91ciBhZHZpY2UhCgpZb3VyIHN1Z2dlc3Rpb24gaXMg
-dG8gdXNlIHBtX3J1bnRpbWVfcHV0X25vaWRsZSgpLCByaWdodD8gClRoZSBvbmx5IGRpZmZlcmVu
-Y2UgYmV0d2VlbiBwbV9ydW50aW1lX3B1dCgpIGFuZCB0aGlzIGZ1bmN0aW9uCmlzIHRoYXQgcG1f
-cnVudGltZV9wdXQoKSB3aWxsIHJ1biBhbiBleHRyYSBwbV9yZXF1ZXN0X2lkbGUoKS4KIApJIGNo
-ZWNrZWQgdGhpcyBwYXRjaGVkIGZ1bmN0aW9uIGFnYWluIGFuZCBmb3VuZCB0aGVyZSBpcyBhCnBt
-X3J1bnRpbWVfcHV0KCkgaW4gdGhlIG5vcm1hbCBicmFuY2ggb2YgcG1fcnVudGltZV9nZXRfc3lu
-YygpLgpEb2VzIHRoaXMgbWVhbiB0aGUgb3JpZ2luYWwgcHJvZ3JhbSBsb2dpYyBuZWVkIHRvIGV4
-ZWN1dGUgaWRsZQpjYWxsYmFjaz8KCkFjY29yZGluZyB0byBydW50aW1lIFBNJ3MgZG9jLCB0aGUg
-cG1fcnVudGltZV9nZXRfc3luYygpIGNhbGwKcGFpcmVkIHdpdGggYSBwbV9ydW50aW1lX3B1dCgp
-IGNhbGwgd2lsbCBiZSBhcHByb3ByaWF0ZSB0byBlbnN1cmUKdGhhdCB0aGUgZGV2aWNlIGlzIG5v
-dCBwdXQgYmFjayB0byBzbGVlcCBkdXJpbmcgdGhlIHByb2JlLiBUaGVyZWZvcmUKSSB0aGluayBw
-bV9ydW50aW1lX3B1dCgpIGlzIG1vcmUgYXBwcm9wcmlhdGUgaGVyZS4gRG8geW91IGhhdmUgCm1v
-cmUgZGV0YWlsZWQgc3VnZ2VzdGlvbiBmb3Igd2h5IHdlIHNob3VsZCB1c2UgX3B1dF9ub2lkbGUo
-KT8KClJlZ2FyZHMsCkRpbmdoYW8gCj4gT24gVGh1LCBNYXkgMjEsIDIwMjAgYXQgMTA6NTAgQU0g
-RGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+IHdyb3RlOgo+ID4KPiA+IHBtX3J1
-bnRpbWVfZ2V0X3N5bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIg
-ZXZlbgo+ID4gd2hlbiBpdCByZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRl
-Y3JlbWVudCBpcyBuZWVkZWQgb24KPiA+IHRoZSBlcnJvciBoYW5kbGluZyBwYXRoIHRvIGtlZXAg
-dGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4gCj4gLi4uCj4gCj4gPiAgICAgICAgIHJldCA9IHBtX3J1
-bnRpbWVfZ2V0X3N5bmMoJnBkZXYtPmRldik7Cj4gPiAgICAgICAgIGlmIChyZXQgPCAwKSB7Cj4g
-PiAgICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAicG0gcnVudGltZSBnZXQgZmFp
-bGVkLCBlID0gJWRcbiIsIHJldCk7Cj4gCj4gPiArICAgICAgICAgICAgICAgcG1fcnVudGltZV9w
-dXQoJnBkZXYtPmRldik7Cj4gCj4gRm9yIGFsbCB5b3VyIHBhdGNoZXMsIHBsZWFzZSwgZG91Ymxl
-IGNoZWNrIHdoYXQgeW91IGFyZSBwcm9wb3NpbmcuCj4gCj4gSGVyZSwgSSBiZWxpZXZlLCB0aGUg
-Y29ycmVjdCBvbmUgd2lsbCBiZSBfcHV0X25vaWRsZSgpLgo+IAo+IEFGQUlVIHlvdSBhcmUgbm90
-IHN1cHBvc2VkIHRvIGFjdHVhbGx5IHN1c3BlbmQgdGhlIGRldmljZSBpbiBjYXNlIG9mIGVycm9y
-Lgo+IEJ1dCBJIG1pZ2h0IGJlIG1pc3Rha2VuLCB0aHVzIHNlZSBhYm92ZS4KPiAKPiA+ICAgICAg
-ICAgICAgICAgICBnb3RvIGV4aXRfcG1fZGlzYWJsZTsKPiA+ICAgICAgICAgfQo+IAo+IC0tIAo+
-IFdpdGggQmVzdCBSZWdhcmRzLAo+IEFuZHkgU2hldmNoZW5rbwo=
+--Sig_/eh=D+yNo=dsM9t+J0nOsqNZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Fri, 22 May 2020 17:17:08 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Thu, 21 May 2020 18:35:22 +0100 Will Deacon <will@kernel.org> wrote:
+> >
+> > [+Marco and Boris]
+> >=20
+> > On Fri, May 22, 2020 at 03:31:19AM +1000, Stephen Rothwell wrote: =20
+> > > After merging the tip tree, all my linux-next builds took signficantly
+> > > longer and used much more memory.  In some cases, builds would seg fa=
+ult
+> > > due to running out of memory :-(
+> > >=20
+> > > I have eventaully bisected it to commit
+> > >=20
+> > >   cdd28ad2d811 ("READ_ONCE: Use data_race() to avoid KCSAN instrument=
+ation")
+> > >=20
+> > > For my (e.g.) x86_64 allmodconfig builds (cross compiled on PowerPC l=
+e,
+> > > -j80) the elapsed time went from around 9 minutes to over 17 minutes
+> > > and the maximum resident size (as reported by /usr/bin/time) from aro=
+und
+> > > 500M to around 2G (I saw lots of cc1 processes over 2G in size).
+> > >=20
+> > > For tomorrow's linux-next (well, later today :-() I will revert that
+> > > commit (and its child) when I merge the tip tree.   =20
+> >=20
+> > Sorry about that, seems we can't avoid running into compiler problems w=
+ith
+> > this lot. The good news is that there's a series to fix this here:
+> >=20
+> > https://lore.kernel.org/r/20200521142047.169334-1-elver@google.com
+> >=20
+> > so hopefully this be fixed in -tip soon (but I agree that reverting the
+> > thing in -next in the meantime makes sense). =20
+>=20
+> Unfortunately, the revert didn't work, so instead I have used the tip
+> tree from next-20200518 for today (hopefully this will all be sorted
+> out by Monday).
+
+And the rcu tree has merged part of the tip tree that contains the
+offending commits, so I have used the version fo the rcu tree from
+next-20200519 for today.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/eh=D+yNo=dsM9t+J0nOsqNZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HhBkACgkQAVBC80lX
+0GyBZwf/eP5pmzk52tkvFe6/zdU2wiaUPFpW9VQgO3X8cug27JSUGiBVj/vDEA0a
+W/SrpF0X7TPgbI7/PAEXFQ7qBH1C+33BE0jxHHVtvDhkoK1URM4naTs5/bGsQ1Cv
+XvswxAyz4U4TDsgg37JbcA93AJvk9qTv6wXC+I0dRKo+fT42HGT0HgquFEpIaaUu
+C4sAxZ4ruE5DRbXrrBpy2mNvCyyBVucWoBon78GauaNDeeS5SRhJuR7BjSNKf2kY
+F+uZMtlxDmU/QiAwRFsP2KfClftmtmxjzwee3TxDeqjdLBzPfDD1jQ34xr3Fi30p
+wNEPym+6hrHFzfWCKWFMR4ZMfoy2QA==
+=2LQB
+-----END PGP SIGNATURE-----
+
+--Sig_/eh=D+yNo=dsM9t+J0nOsqNZ--
