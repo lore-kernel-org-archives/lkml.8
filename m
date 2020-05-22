@@ -2,82 +2,74 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F49C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3AFB20825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OMXeKQ+l"
+	by mail.kernel.org (Postfix) with ESMTP id 918BC207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgEVNkL (ORCPT
+        id S1730038AbgEVNky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:40:11 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53156 "EHLO mail.skyhub.de"
+        Fri, 22 May 2020 09:40:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:35854 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbgEVNkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:40:11 -0400
-Received: from zn.tnic (p200300ec2f0d4900a503efeda57d2ecc.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4900:a503:efed:a57d:2ecc])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 07B341EC02DD;
-        Fri, 22 May 2020 15:40:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590154810;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Pw4qZddkN9GARxEt8dEIB/8bXHBWj3ikGLqk4GalsDI=;
-        b=OMXeKQ+lA5i44nvFQReQLVYF4u5t5YzXL+c9LW740nPyR9rd7bNT752oRFxrmq05fHnm2y
-        A9KklmoK6nbusEHZtzVRcWBa0d3ekTrHXUuDyYWz2tdqkDbspvDnn6VIGQfWFDiyKWoZML
-        Y1XxO57yR1hRM37VQwpeYIjqI92mO5c=
-Date:   Fri, 22 May 2020 15:40:04 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Dave Young <dyoung@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lenny Szubowicz <lszubowi@redhat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Loic Yhuel <loic.yhuel@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
-Message-ID: <20200522134004.GF28750@zn.tnic>
-References: <20200517125754.8934-1-ardb@kernel.org>
- <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
+        id S1729399AbgEVNkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 09:40:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BF121063;
+        Fri, 22 May 2020 06:40:53 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 385DD3F68F;
+        Fri, 22 May 2020 06:40:51 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:40:48 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200522134048.GG11785@e121166-lin.cambridge.arm.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-2-jiaxun.yang@flygoat.com>
+ <AC29D474-D846-41AF-9900-759CE430A744@flygoat.com>
+ <20200522131018.GE11785@e121166-lin.cambridge.arm.com>
+ <7FE3D498-D293-407C-A70C-5E763151477C@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7FE3D498-D293-407C-A70C-5E763151477C@flygoat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:06:20PM +0200, Ard Biesheuvel wrote:
-> Ping?
+On Fri, May 22, 2020 at 09:32:10PM +0800, Jiaxun Yang wrote:
 
-Did you want to make your tags unique from the next pull request onwards
-and I were supposed to pull this one as is?
+[...]
 
-Thx.
+> >> Is it possible to let this series go into next tree soon?
+> >> 
+> >> As LS7A dts patch would depend on this series, and I want to
+> >> make the whole LS7A basic support as a part of 5.8 release.
+> >
+> >I think you have all necessary tags to take this in the MIPS
+> >tree, please let me know if that's the way we want this to go
+> >upstream - I would not pull MIPS/dts changes into the PCI tree
+> >and I don't think it is needed for this series.
+> 
+> Please pull all PCI changes [1~3] into PCI tree.
 
--- 
-Regards/Gruss,
-    Boris.
+Pulled [1,2,3] into pci/mips, thanks !
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Lorenzo
