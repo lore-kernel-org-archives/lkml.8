@@ -2,236 +2,286 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9582CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A581C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA10206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A64206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:07:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7LuZnZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgEVMDe (ORCPT
+        id S1728802AbgEVMHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:03:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12137 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728356AbgEVMDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:03:34 -0400
-IronPort-SDR: eEP/43Ndiq1XK8snWMpDu1sTBeNS56MScz667DsdDa/wOD+TO148VILTq/ByhAg615Rhey1GZN
- IF+GAAn0SjqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:03:32 -0700
-IronPort-SDR: /h3DSGO6paMzHkNaivRt1u0iTn5ADxk6HVIsHYAxWrMqYlcwnGceAf2X4k72aU4O1g0p9dz+LK
- pa6i65pghZxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
-   d="scan'208";a="374745868"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga001.fm.intel.com with ESMTP; 22 May 2020 05:03:26 -0700
-Date:   Fri, 22 May 2020 20:03:25 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200522120325.GD12568@shbuild999.sh.intel.com>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
- <20200521030924.GA12568@shbuild999.sh.intel.com>
- <20200521114736.b2azyfvym372vkdl@mobilestation>
- <20200521145520.GB12568@shbuild999.sh.intel.com>
- <20200521153317.7wjp2r47q75fm6ge@mobilestation>
- <20200522075844.GC12568@shbuild999.sh.intel.com>
- <20200522113235.miz6m7u7gs7lsq6n@mobilestation>
+        Fri, 22 May 2020 08:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbgEVMHC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:07:02 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED99DC061A0E;
+        Fri, 22 May 2020 05:07:00 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id x1so12717327ejd.8;
+        Fri, 22 May 2020 05:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VNdpRkFTwiDTQMMCQPHbyrhP0paOadRy+XLIjTBXbwk=;
+        b=C7LuZnZr+eKUkyIe1DvB/Sg5Ld8us1op3+Dfn93EKWMsq8AcL9PisAQjNFVeLfqc/l
+         mrtT06+SjIgQNQE0I2gGm4XtmOWIucB1wUap7qeKBNGuaYZWyBNP3BoQqmij8YboD20E
+         P4s8Dbq9Dp5aTOdnHRHQLX4W8boIYIOXkdzxwWycjg04IhuIPMpOk8BTaTS+D8d8ZyDh
+         0aggVZDKAdO++52xzvChURG5FzyWRwYLXB7Z6dXgQocL62thgwH7nhVW9IFzgPlKxMZ9
+         TvRMTH9ZlM6eCAf5sCarAZKKDZT3ExUKfsK/LVV0DPLnXKFSrvVnKcAjAM9xpIHExqSV
+         O1dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VNdpRkFTwiDTQMMCQPHbyrhP0paOadRy+XLIjTBXbwk=;
+        b=aXD0AyHUQLNXDUde2BJXl/Dmj/wIB3QjBxg4Mt8x56+mEcpRxBtUcmXs8AYs+tOibp
+         itWU2YXQNN7lofES9K9W9QgG5kXI7zWNx148ocLTXQrneC8+aoNmvmgWjc3ulMryxsSw
+         V/HMJFrPOKkkr9n9ZKq4ih3lGnIMg9h7Fw7zIs0TZD9RcFE5T7DCU64HmlyS4Jtxa74Z
+         zPXmt3vjZK5z7uNbaYWNEMHm8RFKq8bThmspHz3OUQ+cTHV1+llcGSB0hV3UjT1xpnKI
+         I5h1+8zT0QWioSj4PsWr8u3mkgQjCZr/mdCQGEanYHbixpP5O3Uwty6V2DfFi2xiiT6m
+         rezA==
+X-Gm-Message-State: AOAM5313BDVxL2lrOnlE0ZBnV9HLegaCj2vXr93M6vD47AJH8XFnyKiy
+        PWqnmSLxjZypCvjk6weWHN4=
+X-Google-Smtp-Source: ABdhPJxatryhBKs0cHNecpMtBSmDsYusMfueAuEuWlnXRLTXDzKvuZU/dbHtBsFQau2JhzEQ6+UBPA==
+X-Received: by 2002:a17:906:ae88:: with SMTP id md8mr7521606ejb.119.1590149219435;
+        Fri, 22 May 2020 05:06:59 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id c12sm7732851ejm.36.2020.05.22.05.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 05:06:56 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:06:55 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Alan Mikhak <alan.mikhak@sifive.com>
+Subject: Re: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory
+ resource size >4GB
+Message-ID: <20200522120655.GC2163848@ulmo>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+ <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+ <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <20200520111717.GB2141681@ulmo>
+ <b1a72abe-6da0-b782-0269-65388f663e26@nvidia.com>
+ <20200520224816.GA739245@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
 Content-Disposition: inline
-In-Reply-To: <20200522113235.miz6m7u7gs7lsq6n@mobilestation>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200520224816.GA739245@bogus>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 02:32:35PM +0300, Serge Semin wrote:
-> On Fri, May 22, 2020 at 03:58:44PM +0800, Feng Tang wrote:
-> > Hi Serge,
-> > 
-> > On Thu, May 21, 2020 at 06:33:17PM +0300, Serge Semin wrote:
-> > > > > > > +	dw_spi_dma_wait_rx_done(dws);
-> > > > > > 
-> > > > > > I can understand the problem about TX, but I don't see how RX
-> > > > > > will get hurt, can you elaborate more? thanks
-> > > > > > 
-> > > > > > - Feng
-> > > > > 
-> > > > > Your question is correct. You are right with your hypothesis. Ideally upon the
-> > > > > dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
-> > > > > commit log signifies the error being mostly related with Tx FIFO. But
-> > > > > practically there are many reasons why Rx FIFO might be left with data:
-> > > > > DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
-> > > > > messed something up), controller hanging up, and so on. It's better to catch
-> > > > > an error at this stage while propagating it up to the SPI device drivers.
-> > > > > Especially seeing the wait-check implementation doesn't gives us much of the
-> > > > > execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
-> > > > > we make sure that all the data has been fetched and we may freely get the
-> > > > > buffers back to the client driver.
-> > > > 
-> > > > I see your point about checking RX. But I still don't think checking
-> > > > RX FIFO level is the right way to detect error. Some data left in
-> > > > RX FIFO doesn't always mean a error, say for some case if there is
-> > > > 20 words in RX FIFO, and the driver starts a DMA request for 16
-> > > > words, then after a sucessful DMA transaction, there are 4 words
-> > > > left without any error.
-> > > 
-> > > Neither Tx nor Rx FIFO should be left with any data after transaction is
-> > > finished. If they are then something has been wrong.
-> > > 
-> > > See, every SPI transfer starts with FIFO clearance since we disable/enable the
-> > > SPI controller by means of the SSIENR (spi_enable_chip(dws, 0) and
-> > > spi_enable_chip(dws, 1) called in the dw_spi_transfer_one() callback). Here is the
-> > > SSIENR register description: "It enables and disables all SPI Controller operations.
-> > > When disabled, all serial transfers are halted immediately. Transmit and receive
-> > > FIFO buffers are cleared when the device is disabled. It is impossible to program
-> > > some of the SPI Controller control registers when enabled"
-> > > 
-> > > No mater whether we start DMA request or perform the normal IRQ-based PIO, we
-> > > request as much data as we need and neither Tx nor Rx FIFO are supposed to
-> > > be left with any data after the request is finished. If data is left, then
-> > > either we didn't push all of the necessary data to the SPI bus, or we didn't
-> > > pull all the data from the FIFO, and this could have happened only due to some
-> > > component mulfunction (drivers, DMA engine, SPI device). In any case the SPI
-> > > device driver should be notified about the problem.
-> > 
-> > Data left in TX FIFO and Data left in RX FIFO are 2 different stories. The
-> > former in dma case means the dma hw/driver has done its job, and spi hw/driver
-> > hasn't done its job of pushing out the data to spi slave devices,
-> 
-> Agreed.
-> 
-> > while the
-> > latter means the spi hw/driver has done its job, while the dma hw/driver hasn't.
-> 
-> In this particular case agreed, that the data left in the Rx FIFO means DMA
-> hw/driver hasn't done its work right. Though SPI hw could be also a reason of
-> the data left in FIFO (though this only a theoretical consideration).
 
-Right, that's why I was initially very curious about this RX FIFO thing,
-and if possible, please give some details in commit log about the data
-left in TX FIFO problem, which will help future developers when they
-met simliar bugs.
+--DIOMP1UsTsWJauNi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And I'm fine with adding the rx check, no matter the problem is in
-dma side or spi side.
+On Wed, May 20, 2020 at 04:48:16PM -0600, Rob Herring wrote:
+> On Wed, May 20, 2020 at 11:16:32PM +0530, Vidya Sagar wrote:
+> >=20
+> >=20
+> > On 20-May-20 4:47 PM, Thierry Reding wrote:
+> > > On Tue, May 19, 2020 at 10:08:54PM +0000, Gustavo Pimentel wrote:
+> > > > On Tue, May 19, 2020 at 15:58:16, Lorenzo Pieralisi
+> > > > <lorenzo.pieralisi@arm.com> wrote:
+> > > >=20
+> > > > > On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
+> > > > > >=20
+> > > > > >=20
+> > > > > > On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+> > > > > > > External email: Use caution opening links or attachments
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > [+cc Alan; please cc authors of relevant commits,
+> > > > > > > > updated Andrew's email address]
+> > > > > > > >=20
+> > > > > > > > On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+> > > > > > > > > commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource siz=
+e exceeds max for
+> > > > > > > > > 32-bits") enables warning for MEM resources of size >4GB =
+but prefetchable
+> > > > > > > > >    memory resources also come under this category where s=
+izes can go beyond
+> > > > > > > > > 4GB. Avoid logging a warning for prefetchable memory reso=
+urces.
+> > > > > > > > >=20
+> > > > > > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > > > > > > ---
+> > > > > > > > >    drivers/pci/controller/dwc/pcie-designware-host.c | 3 =
+++-
+> > > > > > > > >    1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > > >=20
+> > > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-h=
+ost.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > > index 42fbfe2a1b8f..a29396529ea4 100644
+> > > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_por=
+t *pp)
+> > > > > > > > >                       pp->mem =3D win->res;
+> > > > > > > > >                       pp->mem->name =3D "MEM";
+> > > > > > > > >                       mem_size =3D resource_size(pp->mem);
+> > > > > > > > > -                   if (upper_32_bits(mem_size))
+> > > > > > > > > +                   if (upper_32_bits(mem_size) &&
+> > > > > > > > > +                       !(win->res->flags & IORESOURCE_PR=
+EFETCH))
+> > > > > > > > >                               dev_warn(dev, "MEM resource=
+ size exceeds max for 32 bits\n");
+> > > > > > > > >                       pp->mem_size =3D mem_size;
+> > > > > > > > >                       pp->mem_bus_addr =3D pp->mem->start=
+ - win->offset;
+> > > > > > >=20
+> > > > > > > That warning was added for a reason - why should not we log l=
+egitimate
+> > > > > > > warnings ? AFAIU having resources larger than 4GB can lead to=
+ undefined
+> > > > > > > behaviour given the current ATU programming API.
+> > > > > > Yeah. I'm all for a warning if the size is larger than 4GB in c=
+ase of
+> > > > > > non-prefetchable window as one of the ATU outbound translation
+> > > > > > channels is being used,
+> > > > >=20
+> > > > > Is it true for all DWC host controllers ? Or there may be another
+> > > > > exception whereby we would be forced to disable this warning alto=
+gether
+> > > > > ?
+> > > > >=20
+> > > > > > but, we are not employing any ATU outbound translation channel =
+for
+> > > > >=20
+> > > > > What does this mean ? "we are not employing any ATU outbound...",=
+ is
+> > > > > this the tegra driver ? And what guarantees that this warning is =
+not
+> > > > > legitimate on DWC host controllers that do use the ATU outbound
+> > > > > translation for prefetchable windows ?
+> > > > >=20
+> > > > > Can DWC maintainers chime in and clarify please ?
+> > > >=20
+> > > > Before this code section, there is the following function call
+> > > > pci_parse_request_of_pci_ranges(), which performs a simple validati=
+on for
+> > > > the IORESOURCE_MEM resource type.
+> > > > This validation checks if the resource is marked as prefetchable, i=
+f so,
+> > > > an error message "non-prefetchable memory resource required" is giv=
+en and
+> > > > a return code with the -EINVAL value.
+> > >=20
+> > > That's not what the code is doing. pci_parse_request_of_pci_range() w=
+ill
+> > > traverse over the whole list of resources that it can find for the gi=
+ven
+> > > host controller and checks whether one of the resources defines prefe=
+tch
+> > > memory (note the res_valid |=3D ...). The error will only be returned=
+ if
+> > > no prefetchable memory region was found.
+> > >=20
+> > > dw_pcie_host_init() will then again traverse the list of resources and
+> > > it will typically encounter two resource of type IORESOURCE_MEM, one =
+for
+> > > non-prefetchable memory and another for prefetchable memory.
+> > >=20
+> > > Vidya's patch is to differentiate between these two resources and all=
+ow
+> > > prefetchable memory regions to exceed sizes of 4 GiB.
+> > >=20
+> > > That said, I wonder if there isn't a bigger problem at hand here. From
+> > > looking at the code it doesn't seem like the DWC driver makes any
+> > > distinction between prefetchable and non-prefetchable memory. Or at
+> > > least it doesn't allow both to be stored in struct pcie_port.
+> > >=20
+> > > Am I missing something? Or can anyone explain how we're programming t=
+he
+> > > apertures for prefetchable vs. non-prefetchable memory? Perhaps this =
+is
+> > > what Vidya was referring to when he said: "we are not using an outbou=
+nd
+> > > ATU translation channel for prefetchable memory".
+> > >=20
+> > > It looks to me like we're also getting partially lucky, or perhaps th=
+at
+> > > is by design, in that Tegra194 defines PCI regions in the following
+> > > order: I/O, prefetchable memory, non-prefetchable memory. That means
+> > > that the DWC core code will overwrite prefetchable memory data with t=
+hat
+> > > of non-prefetchable memory and hence the non-prefetchable region ends=
+ up
+> > > stored in struct pcie_port and is then used to program the ATU outbou=
+nd
+> > > channel.
+> > Well,it is by design. I mean, since the code is not differentiating bet=
+ween
+> > prefetchable and non-prefetchable regions, I ordered the entries in 'ra=
+nges'
+> > property in such a way that 'prefetchable' comes first followed by
+> > 'non-prefetchable' entry so that ATU region is used for generating the
+> > translation required for 'non-prefetchable' region (which is a non 1-to=
+-1
+> > mapping)
+>=20
+> You are getting lucky with your 'design'. Relying on order is fragile=20
+> (except of course in the places in DT where order is defined, but ranges=
+=20
+> is not one of them).
 
-> > 
-> > And the code is called inside the dma rx channel callback, which means the
-> > dma driver is saying "hey, I've done my job", but apparently it hasn't if
-> > there is data left.
-> 
-> Right, either it hasn't, or the DMA engine claimed it has, but still is doing
-> something (asynchronously or something, depending on the hardware implementation),
-> or it think it has, but in fact it hasn't due to whatever problem happened
-> (software/hardware/etc.). In anyway we have to at least check whether it's
-> really done with fetching data and to be on a safe side give it some time to
-> make sure that the Rx FIFO isn't going to be emptied. Whatever problem it is
-> having a non empty Rx FIFO at the stage of calling spi_finalize_current_transfer()
-> means a certain error.
-> 
-> > 
-> > As for the wait time
-> > 
-> > +	nents = dw_readl(dws, DW_SPI_RXFLR);
-> > +	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
-> > +	     BITS_PER_BYTE;
-> > 
-> > Using this formula for checking TX makes sense, but it doesn't for RX.
-> > Because the time of pushing data in TX FIFO to spi device depends on
-> > the clk, but the time of transferring RX FIFO to memory is up to
-> > the DMA controller and peripheral bus. 
-> 
-> On this I agree with you. That formulae doesn't describe exactly the time left
-> before the Rx FIFO gets empty. But at least it provides an upper limit on the
-> time needed for the peripheral bus to fetch the data from FIFO. If for some
-> reason the internal APB bus is slower than the SPI bus, then the hardware
-> engineers screwed, since the CPU/DMA won't keep up with pulling data from Rx
-> FIFO on time so the FIFO may get overflown. Though in this case CPU/DMA won't
-> be able to push data to the Tx FIFO fast enough to cause the Rx FIFO overflown,
-> so the problem might be unnoticeable until we enable the EEPROM-read or Rx-only
-> modes of the DW APB SSI controller. Anyway I am pretty much sure all the systems
-> have the internal bus much faster than the external SPI bus.
-> 
-> Getting back to the formulae. I was thinking of how to make it better and here
-> is what we can do. We can't predict neither the DMA controller performance,
-> nor the performance of its driver. In this case we have no choice but to add
-> some assumption to clarify the task. Let's assume that the reason why Rx FIFO is
-> non-empty is that even though we are at the DMA completion callback, but the
-> DMA controller is still fetching data in background (any other reason might be
-> related with a bug, so we'll detect it here anyway). In this case we need to
-> give it a time to finish its work. As far as I can see the DW_apb_ssi interface
-> doesn't use PREADY APB signal, which means the IO access cycle will take 4
-> reference clock periods for each read and write accesses. Thus taking all of
-> these into account we can create the next formulae to measure the time needed to
-> read all the data from the Rx FIFO:
-> 
-> -	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
-> -	     BITS_PER_BYTE;
-> +	ns = (NSEC_PER_SEC / dws->max_freq) * nents * 4;
-> 
-> By doing several busy-wait loop iteration we'll cover the DMA controller and
-> it's driver possible latency. 
-> 
-> Feng, does it now makes sense for you now? If so, I'll replace the delay
-> calculation formulae in the patch.
+Yeah, I think the DWC core should be improved to differentiate between
+the two types of memory resources. There shouldn't be a need to encode
+any ordering because the type is already part of the value in the
+ranges property.
 
-Frankly I don't have a good idea, if it really happens which means
-something is abnormal, explicitly waiting for some micro-seconds may
-also be acceptable?
+Thierry
 
-> > 
-> > Also for the
-> > 
-> > +	while (dw_spi_dma_rx_busy(dws) && retry--)
-> > +		ndelay(ns);
-> > +
-> > 
-> > the rx busy bit is cleared after this rx/tx checking, and it should
-> > be always true at this point. Am I mis-reading the code?
-> 
-> Sorry I don't get your logic here. I am not checking the Rx busy bit here,
-> but the Rx FIFO non-empty bit. Also SR register bits aren't cleared on read,
-> so the status bits are left pending until the reason is cleared. In our case
-> until Rx FIFO gets empty, which will happen eventually either at the point of
-> all data finally being extracted from it or when the controller is disabled
-> by means of the SSIENR register.
+--DIOMP1UsTsWJauNi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I did misread the code, I thought it is checking the busy bits, sorry
-for that. Though the dw_spi_dma_rx_busy() name is a little confusing,
-as checking the emptiness of RX FIFO is not dma bound.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Feng
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7HwF0ACgkQ3SOs138+
+s6FGAQ//UkChqmNoKeWSkMmPsJLkILoXpcxJseYWbu7s1ZyT3k/ltG+t52aTHmtM
+Ka8GvgHiN0ryhm+fh+ErdFhgkzUthIDzfzpwEpiTwEjGu+/wCVwWRRjFz8RJpYeU
+zvLRcQXhFSzoV0gjhPWX9wXXHcvRMNTg5Lo1MTausUIonrO0FuvV6J+qw+QSDCcv
+Zy5ycSsY1YRlx3nQ+RA3twQKMMa3V8E8WykpMDzrpcoHHFsXwXQHON1bcxaKlMCW
+iUhaT7oejlvApFd46sO+f3ZCXWeQDD2n9vpTB/Kv/GRRfaMZgf47GytEIgDXpvGC
+3fDrGijA8LjD7m0sygE4RzrmiVVS39hDUb8pQk/tjGZJEa1iJySDDChitunRIIr5
+ue/N14WbgvsrOjJVNB+ghfUJ0rCGFzHjDYvi9tbDa4HpDBHDG0USZntFCIeRtA/D
+oVfMzCsvaalu7sJEnpbzrcL2ATkWqY0WlV7ft03cGTjWG23eHR7eIc12wx/09qK9
+dmmIZaFsliJPOjAEtDnL0tfa/E1a3PBwNdgSMKAy2xuU3fEENSJNpkEC4zuCLZqs
+vRVh1LCOWCoZv2ZK/eSTU9SiyzMhuM+6hK2k3Q8wIkVPW1Sfc73pn0hbaEvXdx0D
+xhkob/OfovNgmdHH9/sVymTCL2k2ES9kQHK7Wc5wpqP1Jg9WLBY=
+=rE4G
+-----END PGP SIGNATURE-----
+
+--DIOMP1UsTsWJauNi--
