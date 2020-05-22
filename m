@@ -2,84 +2,177 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0978C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26057C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEC7206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E529320814
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCMCJEh9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FDdPgOIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgEVS21 (ORCPT
+        id S1730918AbgEVS3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:28:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21479 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730829AbgEVS20 (ORCPT
+        Fri, 22 May 2020 14:29:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60264 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730904AbgEVS3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:28:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590172105;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z4chmSB75rF+W6Vhce5T0ZL8XsgMA5Bsyqy3UVYUZsc=;
-        b=XCMCJEh9YiI1RdS8w3gUU2KRxtR7vTFSVAgxTw8g8jg5K8h3Nxp+hJGr90OTpZ2PSrm5d0
-        BuJOcpKbm7rOUrgvdXGwgyWflUGcRY1zSm1QP+QoXvjLusD/ooHuTIKnSX0FeWg7gk74y4
-        a9OZf3BeZv5UXfpUzGgnXa/RumcFIj0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-M1BE3uvePMSB6PMXTwcLKw-1; Fri, 22 May 2020 14:28:21 -0400
-X-MC-Unique: M1BE3uvePMSB6PMXTwcLKw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7C2E1855A00;
-        Fri, 22 May 2020 18:28:19 +0000 (UTC)
-Received: from treble (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D8159CB9;
-        Fri, 22 May 2020 18:28:17 +0000 (UTC)
-Date:   Fri, 22 May 2020 13:28:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
-        michal.lkml@markovi.net, mingo@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
-Message-ID: <20200522182815.ezanmvbemhzq2fmm@treble>
-References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+        Fri, 22 May 2020 14:29:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MIHqY9089651;
+        Fri, 22 May 2020 18:29:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=obEvZ/H7PmoKjhzmT9MX3mkfA+fX0+O5yN3D+7XaHGI=;
+ b=FDdPgOIxynFIH4KxkHZ2jAXL5uyC9v0/hK++HLRmqtwsBcmXOuwJM9Emxrwz4dM3OuHW
+ AVgGhSwhHHozVHKCX4WrTFyD5riZZih1syNfigx9P3cjHfGFCBsP7PR3t2X78tn+kwxR
+ z8sbXRBDceHUWLv2K/NKyb8k/z3XV5+KAdEeLNFdrpP+jLh8ZHHMOVHXgVszJWd8uS9f
+ ZF8IQzkhVGVybX23aYKE2PE023rUpTRK3jxdjgsYNy1/s+fFP59kjLQt1nXapoz40fa5
+ PZ1VAMv8KcRQiP105K5xjDcZR78PrpBiTkwopJzI5Aw16JlbIakQdFo/CdGyDie94XDU lQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 3127krq7mr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 18:29:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MIJIuk192805;
+        Fri, 22 May 2020 18:29:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 312t3f9e29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 May 2020 18:29:06 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04MIT5Hf031272;
+        Fri, 22 May 2020 18:29:05 GMT
+Received: from [10.39.212.182] (/10.39.212.182)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 May 2020 11:29:04 -0700
+Subject: Re: [PATCH 08/10] swiotlb-xen: introduce phys_to_dma/dma_to_phys
+ translations
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     jgross@suse.com, konrad.wilk@oracle.com,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+References: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
+ <20200520234520.22563-8-sstabellini@kernel.org>
+ <7aab1c00-c115-b989-61e5-fd7d28fa0d07@oracle.com>
+ <alpine.DEB.2.21.2005221033180.27502@sstabellini-ThinkPad-T480s>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ xsFNBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
+ PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
+ MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
+ C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
+ d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
+ woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
+ FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
+ SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
+ Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
+ 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABzTNCb3JpcyBPc3Ry
+ b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT7CwXgEEwECACIFAlH8
+ CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
+ 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
+ JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
+ VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
+ jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
+ qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
+ tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
+ kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
+ m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
+ nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
+ hWwveNeRTkxh+2x1Qb3GT46uzsFNBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
+ Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
+ yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
+ kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
+ KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
+ BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
+ gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
+ XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
+ 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
+ kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
+ SQARAQABwsFfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
+ jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
+ 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
+ PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
+ u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
+ qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
+ t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
+ ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
+ Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
+ 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
+ Jg6OxFYd01z+a+oL
+Message-ID: <bf29c0a5-9933-a20e-d37e-4ed44ac7df84@oracle.com>
+Date:   Fri, 22 May 2020 14:29:02 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.2005221033180.27502@sstabellini-ThinkPad-T480s>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 malwarescore=0 suspectscore=2 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005220147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=2 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005220147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 02:46:24PM +0800, Huaixin Chang wrote:
-> Move building of fast lookup table from boot to sorttable tool. This saves us
-> 6380us boot time on Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz with cores.
-> 
-> Huaixin Chang (2):
->   scripts/sorttable: Build orc fast lookup table via sorttable tool
->   x86/unwind/orc: Remove unwind_init() from x86 boot
-> 
->  arch/x86/include/asm/unwind.h |  2 -
->  arch/x86/kernel/setup.c       |  2 -
->  arch/x86/kernel/unwind_orc.c  | 51 ----------------------
->  scripts/sorttable.h           | 99 ++++++++++++++++++++++++++++++++++++++++---
->  4 files changed, 92 insertions(+), 62 deletions(-)
+On 5/22/20 1:34 PM, Stefano Stabellini wrote:
+> On Thu, 21 May 2020, Boris Ostrovsky wrote:
+>> On 5/20/20 7:45 PM, Stefano Stabellini wrote:
+>>> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
+>>>
+>>> Call dma_to_phys in is_xen_swiotlb_buffer.
+>>> Call phys_to_dma in xen_phys_to_bus.
+>>> Call dma_to_phys in xen_bus_to_phys.
+>>>
+>>> Everything is taken care of by these changes except for
+>>> xen_swiotlb_alloc_coherent and xen_swiotlb_free_coherent, which need a
+>>> few explicit phys_to_dma/dma_to_phys calls.
+>>>
+>>> Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+>>> ---
+>>>  drivers/xen/swiotlb-xen.c | 20 ++++++++++++--------
+>>>  1 file changed, 12 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+>>> index c50448fd9b75..d011c4c7aa72 100644
+>>> --- a/drivers/xen/swiotlb-xen.c
+>>> +++ b/drivers/xen/swiotlb-xen.c
+>>> @@ -64,14 +64,16 @@ static inline dma_addr_t xen_phys_to_bus(struct device *dev, phys_addr_t paddr)
+>>>  
+>>>  	dma |= paddr & ~XEN_PAGE_MASK;
+>>>  
+>>> -	return dma;
+>>> +	return phys_to_dma(dev, dma);
+>>>  }
+>>>  
+>>> -static inline phys_addr_t xen_bus_to_phys(struct device *dev, dma_addr_t baddr)
+>>> +static inline phys_addr_t xen_bus_to_phys(struct device *dev,
+>>> +					  dma_addr_t dma_addr)
+>>
+>> Since now dma address != bus address this is no longer
+>> xen_bus_to_phys(). (And I guess the same is rue for xen_phys_to_bus()).
+> Should I rename them to xen_dma_to_phys and xen_phys_to_dma?
 
-I tested this (rebased on tip/master), it seems to break ORC
-completely... e.g. /proc/self/stack is empty.
 
--- 
-Josh
+Yes, please.
+
+
+-boris
+
 
