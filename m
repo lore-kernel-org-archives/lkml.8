@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63272C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3779EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3213A205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03858206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159414;
-	bh=w2pSz6sSKuZ1uwjqUAGFQHWs2ZIfFkdSdsug/JB3dAU=;
+	s=default; t=1590159421;
+	bh=RXpBZvAf8tWQvaArUagbRvUq9c28m3SZV6o+muKSNDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEDRknVtjaIdBv0A/IviSp9IBRKEPbZwhubCw+KYqNYttJ9iTpKg1wrYV4L/VPb58
-	 axiigvVlUK7tFO91wpEIYwtYa8ux3qVbyQWb2BjBgmwXNSqIn9GnYmQV6zStM+1d0d
-	 keQb4aIvkvo2c/Xpoq98iaK068kLAv39hScoq0Ts=
+	b=bqTwp/oXFmg8jyfLVYYLl7nofyimSY/N1mf7HhnNk+Mpf98d993b1muddh3c9a8/8
+	 j1g1OM0wRAyYTPf4jGxxPDJ31i8jHKnsPFavCdEXegWPEUzRGd+HrFeR27+pikn+2L
+	 3fJHYmTb3ENNOVk5yoykoCePA8XRSwGtGTDVmt0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgEVO4x (ORCPT
+        id S1731397AbgEVO47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbgEVOux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:53 -0400
+        id S1730493AbgEVOuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C63222E7;
-        Fri, 22 May 2020 14:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B3622256;
+        Fri, 22 May 2020 14:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159052;
-        bh=w2pSz6sSKuZ1uwjqUAGFQHWs2ZIfFkdSdsug/JB3dAU=;
+        s=default; t=1590159050;
+        bh=RXpBZvAf8tWQvaArUagbRvUq9c28m3SZV6o+muKSNDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKKidpoPysim0EJe4Yrbk8TyVRcWAVlRsiXPNZFdyuLoPPJriw5b31sSTCcpwuYc3
-         GaHG5Fbb2rCnLNMeeHEVHXY2ELEFc8jE9CaTd3RQuarQKDwrcWgqODNgRcfCdtmKPY
-         1rfy+d54ge4PKyM9idv1pK7D3jDWxDIl1XnCwSiw=
+        b=SPJPas5t33+egQlBxXrdTDw056CoHw3qG4oo/sr5iZc3RMf99AdBhwPtZfGQTy0EK
+         //S+lIDLIhWDFQi+RkXQy0QYh36CtYxs8R+9aVA6MxcEJL+R0C7O8530FPaLuHn1mZ
+         FSAb0mxfZw0OqW62Ktlz3c1UsJjBSAAAJWsZ6XFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/32] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
-Date:   Fri, 22 May 2020 10:50:18 -0400
-Message-Id: <20200522145044.434677-6-sashal@kernel.org>
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 04/32] arm64: dts: rockchip: swap interrupts interrupt-names rk3399 gpu node
+Date:   Fri, 22 May 2020 10:50:16 -0400
+Message-Id: <20200522145044.434677-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
 References: <20200522145044.434677-1-sashal@kernel.org>
@@ -62,57 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
+[ Upstream commit c604fd810bda667bdc20b2c041917baa7803e0fb ]
 
-A test with the command below gives these errors:
+Dts files with Rockchip rk3399 'gpu' nodes were manually verified.
+In order to automate this process arm,mali-midgard.txt
+has been converted to yaml. In the new setup dtbs_check with
+arm,mali-midgard.yaml expects interrupts and interrupt-names values
+in the same order. Fix this for rk3399.
 
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
-'#address-cells' is a required property
-
-The $nodename pattern for spi nodes is
-"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
-'spi-0' and 'spi-1' pinctrl sub nodenames to
-'spi0' and 'spi1' in 'rk322x.dtsi'.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/
+arm,mali-midgard.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
+Link: https://lore.kernel.org/r/20200425143837.18706-1-jbx6244@gmail.com
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index c60784f3aa75..6bb78b19c555 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -1033,7 +1033,7 @@
- 			};
- 		};
- 
--		spi-0 {
-+		spi0 {
- 			spi0_clk: spi0-clk {
- 				rockchip,pins = <0 RK_PB1 2 &pcfg_pull_up>;
- 			};
-@@ -1051,7 +1051,7 @@
- 			};
- 		};
- 
--		spi-1 {
-+		spi1 {
- 			spi1_clk: spi1-clk {
- 				rockchip,pins = <0 RK_PC7 2 &pcfg_pull_up>;
- 			};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index cd97016b7c18..c5d8d1c58291 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1881,10 +1881,10 @@
+ 	gpu: gpu@ff9a0000 {
+ 		compatible = "rockchip,rk3399-mali", "arm,mali-t860";
+ 		reg = <0x0 0xff9a0000 0x0 0x10000>;
+-		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
+-			     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
+-			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
+-		interrupt-names = "gpu", "job", "mmu";
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "job", "mmu", "gpu";
+ 		clocks = <&cru ACLK_GPU>;
+ 		power-domains = <&power RK3399_PD_GPU>;
+ 		status = "disabled";
 -- 
 2.25.1
 
