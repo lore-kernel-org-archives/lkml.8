@@ -2,91 +2,223 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD364C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32832C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2EAE20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AFA2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590163883;
-	bh=0JTmKNCOSVfFXsp/l6r6vK0A1aX62Wnt1tZs/rKDZpY=;
+	s=default; t=1590163930;
+	bh=R59cUYW3Ha3KLw5PXqkDBOkdnIWleGz6gNM8BKfqTcM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DUumYKbsJvOnDKkkdVbLJ4iuBFdBERMMX0eJAcMZJ+vXqzSMxOKgXXWZU7t4L4kLM
-	 sVMzvkJbXQyZ6w76c8NzT+N8XcmTjaUilsqpyc02XuMMXPLMRIgLAs9cmYlenpUc5J
-	 1rkBCTZ9/frRIOM89NdLOifURyMaaEkeoP61mnMQ=
+	b=CRs24UDFNTjwQFTUIO9ID27LNUV20mbV70c6hU4nwZsFOJR0tqQD0UfuKRThj7Ie6
+	 3LhZbW6cKwRe8Ady4VTQc1gtRaV1aATny6H6xLpl99pyKA6cf3ISxCmhaGBF6Rzh9l
+	 i9jRV0SA10PvsoW3KfwM4snORzSOsAHlW/uqldeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgEVQLX (ORCPT
+        id S1730702AbgEVQMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 12:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgEVQLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:11:22 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        id S1730627AbgEVQMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:12:08 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5112520756;
-        Fri, 22 May 2020 16:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D072520756;
+        Fri, 22 May 2020 16:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590163881;
-        bh=0JTmKNCOSVfFXsp/l6r6vK0A1aX62Wnt1tZs/rKDZpY=;
+        s=default; t=1590163927;
+        bh=R59cUYW3Ha3KLw5PXqkDBOkdnIWleGz6gNM8BKfqTcM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=anRopDlSy27Vri+GchbA7goiaVkxcLQzgTGILyAL2Y3RvkT5TtlBC7txjMwEYL6j7
-         XTGXoWBzRR7Aalhez7WPQA9Skc44AlXum58TyP+6N6k3pksrurLP+rSsrIRRZw5T6e
-         6izbOEHyZyXCnZ4Rmk5yWEfz84A5oy/Qv/baUiVE=
-Received: by mail-ot1-f44.google.com with SMTP id d7so8613586ote.6;
-        Fri, 22 May 2020 09:11:21 -0700 (PDT)
-X-Gm-Message-State: AOAM532k5UsPAP40VoevnSouJirLWONZSKcU0RR+ItZoco7PQHrGXGfc
-        1t4fXEmfNwx9h5JxkCfGcCmhuYHHl5dhzigjfg==
-X-Google-Smtp-Source: ABdhPJyquhMrY30oX4gcFNMGczIxMx6fthKgRqhOMu6BhGxOOW96NQ9jbvSWH8PRVc5mb4SegKMvgChoFfZrDVUK/ys=
-X-Received: by 2002:a9d:51ca:: with SMTP id d10mr5587167oth.129.1590163880607;
- Fri, 22 May 2020 09:11:20 -0700 (PDT)
+        b=AO9qkDijy+/QpvQyUdhvvalRuM2tpx+02TzDKtqMO0gH7z18Eb1snh0XE5vE8KWrj
+         hbYVjCB3SX3KcbmHbY1F7G54LL4xE+Zk13jknSAtLE5ippU2g/0smTj181D93mOCsX
+         2sHWml+cfTgYa0I7Pu1qClwihXESGfrohrTGYRQ0=
+Received: by mail-io1-f53.google.com with SMTP id q129so2766689iod.6;
+        Fri, 22 May 2020 09:12:07 -0700 (PDT)
+X-Gm-Message-State: AOAM530GJlKG7K6ljTWZwVvO1NLUfGpCwJD+cRTCRfzNzJX/SN/1r9HV
+        Gt1i6iJQUe3thDWwv57s47UqDaKRCFOQlpI4Ozw=
+X-Google-Smtp-Source: ABdhPJzhZAuWLzvk5xzi4pfi5gTZ4zMh21usi2qU/LWlmyJTwrCc0zjV85RtQcDY04Up7BcXqbFxIz7SIY1JqFm1Y/Q=
+X-Received: by 2002:a5d:9b8a:: with SMTP id r10mr3759689iom.171.1590163927170;
+ Fri, 22 May 2020 09:12:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200514145927.17555-1-kishon@ti.com>
-In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 22 May 2020 10:11:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
-Message-ID: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
-Subject: Re: [PATCH 00/19] Implement NTB Controller using multiple PCI EP
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-ntb@googlegroups.com
+References: <20200512141113.18972-1-nicolas.toromanoff@st.com> <20200512141113.18972-6-nicolas.toromanoff@st.com>
+In-Reply-To: <20200512141113.18972-6-nicolas.toromanoff@st.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 22 May 2020 18:11:56 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGs6UgkKb5+tH2B-+26=tbjHq3UUY2gxfcRfMb1nGVuFA@mail.gmail.com>
+Message-ID: <CAMj1kXGs6UgkKb5+tH2B-+26=tbjHq3UUY2gxfcRfMb1nGVuFA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
+To:     Nicolas Toromanoff <nicolas.toromanoff@st.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 8:59 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Tue, 12 May 2020 at 16:13, Nicolas Toromanoff
+<nicolas.toromanoff@st.com> wrote:
 >
-> This series is about implementing SW defined NTB using
-> multiple endpoint instances. This series has been tested using
-> 2 endpoint instances in J7 connected to two DRA7 boards. However there
-> is nothing platform specific for the NTB functionality.
+> Protect STM32 CRC device from concurrent accesses.
 >
-> This was presented in Linux Plumbers Conference. The presentation
-> can be found @ [1]
+> As we create a spinlocked section that increase with buffer size,
+> we provide a module parameter to release the pressure by splitting
+> critical section in chunks.
+>
+> Size of each chunk is defined in burst_size module parameter.
+> By default burst_size=0, i.e. don't split incoming buffer.
+>
+> Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
 
-I'd like to know why putting this into DT is better than configfs.
-Does it solve some problem? Doing things in userspace is so much
-easier and more flexible than modifying and updating a DT.
+Would you mind explaining the usage model here? It looks like you are
+sharing a CRC hardware accelerator with a synchronous interface
+between different users by using spinlocks? You are aware that this
+will tie up the waiting CPUs completely during this time, right? So it
+would be much better to use a mutex here. Or perhaps it would make
+more sense to fall back to a s/w based CRC routine if the h/w is tied
+up working for another task?
 
-I don't really think the PCI endpoint stuff is mature enough to be
-putting into DT either.
+Using spinlocks for this is really not acceptable.
 
-Rob
+
+
+> ---
+>  drivers/crypto/stm32/stm32-crc32.c | 47 ++++++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/crypto/stm32/stm32-crc32.c b/drivers/crypto/stm32/stm32-crc32.c
+> index 413415c216ef..3ba41148c2a4 100644
+> --- a/drivers/crypto/stm32/stm32-crc32.c
+> +++ b/drivers/crypto/stm32/stm32-crc32.c
+> @@ -35,11 +35,16 @@
+>
+>  #define CRC_AUTOSUSPEND_DELAY  50
+>
+> +static unsigned int burst_size;
+> +module_param(burst_size, uint, 0644);
+> +MODULE_PARM_DESC(burst_size, "Select burst byte size (0 unlimited)");
+> +
+>  struct stm32_crc {
+>         struct list_head list;
+>         struct device    *dev;
+>         void __iomem     *regs;
+>         struct clk       *clk;
+> +       spinlock_t       lock;
+>  };
+>
+>  struct stm32_crc_list {
+> @@ -109,6 +114,7 @@ static int stm32_crc_init(struct shash_desc *desc)
+>         struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+>         struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+>         struct stm32_crc *crc;
+> +       unsigned long flags;
+>
+>         crc = stm32_crc_get_next_crc();
+>         if (!crc)
+> @@ -116,6 +122,8 @@ static int stm32_crc_init(struct shash_desc *desc)
+>
+>         pm_runtime_get_sync(crc->dev);
+>
+> +       spin_lock_irqsave(&crc->lock, flags);
+> +
+>         /* Reset, set key, poly and configure in bit reverse mode */
+>         writel_relaxed(bitrev32(mctx->key), crc->regs + CRC_INIT);
+>         writel_relaxed(bitrev32(mctx->poly), crc->regs + CRC_POL);
+> @@ -125,18 +133,21 @@ static int stm32_crc_init(struct shash_desc *desc)
+>         /* Store partial result */
+>         ctx->partial = readl_relaxed(crc->regs + CRC_DR);
+>
+> +       spin_unlock_irqrestore(&crc->lock, flags);
+> +
+>         pm_runtime_mark_last_busy(crc->dev);
+>         pm_runtime_put_autosuspend(crc->dev);
+>
+>         return 0;
+>  }
+>
+> -static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+> -                           unsigned int length)
+> +static int burst_update(struct shash_desc *desc, const u8 *d8,
+> +                       size_t length)
+>  {
+>         struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+>         struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+>         struct stm32_crc *crc;
+> +       unsigned long flags;
+>
+>         crc = stm32_crc_get_next_crc();
+>         if (!crc)
+> @@ -144,6 +155,8 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+>
+>         pm_runtime_get_sync(crc->dev);
+>
+> +       spin_lock_irqsave(&crc->lock, flags);
+> +
+>         /*
+>          * Restore previously calculated CRC for this context as init value
+>          * Restore polynomial configuration
+> @@ -182,12 +195,40 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+>         /* Store partial result */
+>         ctx->partial = readl_relaxed(crc->regs + CRC_DR);
+>
+> +       spin_unlock_irqrestore(&crc->lock, flags);
+> +
+>         pm_runtime_mark_last_busy(crc->dev);
+>         pm_runtime_put_autosuspend(crc->dev);
+>
+>         return 0;
+>  }
+>
+> +static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+> +                           unsigned int length)
+> +{
+> +       const unsigned int burst_sz = burst_size;
+> +       unsigned int rem_sz;
+> +       const u8 *cur;
+> +       size_t size;
+> +       int ret;
+> +
+> +       if (!burst_sz)
+> +               return burst_update(desc, d8, length);
+> +
+> +       /* Digest first bytes not 32bit aligned at first pass in the loop */
+> +       size = min(length,
+> +                  burst_sz + (unsigned int)d8 - ALIGN_DOWN((unsigned int)d8,
+> +                                                           sizeof(u32)));
+> +       for (rem_sz = length, cur = d8; rem_sz;
+> +            rem_sz -= size, cur += size, size = min(rem_sz, burst_sz)) {
+> +               ret = burst_update(desc, cur, size);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int stm32_crc_final(struct shash_desc *desc, u8 *out)
+>  {
+>         struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+> @@ -300,6 +341,8 @@ static int stm32_crc_probe(struct platform_device *pdev)
+>         pm_runtime_irq_safe(dev);
+>         pm_runtime_enable(dev);
+>
+> +       spin_lock_init(&crc->lock);
+> +
+>         platform_set_drvdata(pdev, crc);
+>
+>         spin_lock(&crc_list.lock);
+> --
+> 2.17.1
+>
