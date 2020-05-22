@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB26C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4290FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E9322AAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177DE2145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159163;
-	bh=bHFNpJmKmHKprftzIGOaRHADYjg7o8+IY4OvdCrstTs=;
+	s=default; t=1590159166;
+	bh=rRFUb/wbJRkRGlyUCAj7rEc44u/e82cJaNwDolypntk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6pByp2le2Yzib7IaP66/1MuL7GcxLVTlWK5faHGN+f4X+2tU26udMranehdG75on
-	 oFao1397q4CvHH6xaq9+vzuF28NI+KtHgqmABoBoK+KG3oHysNKeew5B53bo12opao
-	 o2ndQv14txJz8Fl62JPgrl11Bool1tYDne5MMxDg=
+	b=NRuyNbxTWLNCAciFhr3R7teKlbqgEhSw5PSjhiXvzMHmjjXGtBt7aSKGdSXPb5nWl
+	 QQeIM94ZrUsshvTeSjR/ikbCsWWcCUNnMPPAHQnNb+OLupwsC5VItb7v6hODTU20TD
+	 kSKzBx3D3V54xJNmx9dnKWqiy0g8ZJy0D7wwvASM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731225AbgEVOwO (ORCPT
+        id S1730635AbgEVOwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbgEVOv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:56 -0400
+        id S1731220AbgEVOwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:52:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D392072C;
-        Fri, 22 May 2020 14:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52D0022472;
+        Fri, 22 May 2020 14:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159116;
-        bh=bHFNpJmKmHKprftzIGOaRHADYjg7o8+IY4OvdCrstTs=;
+        s=default; t=1590159132;
+        bh=rRFUb/wbJRkRGlyUCAj7rEc44u/e82cJaNwDolypntk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KNXL0oMD9uh+HNJbXQ1nqy09QPQVGiCNgaLlPuSYTUSLJDCVeJx/a8Zuujp0c/E0I
-         eUxTll7y6/VvivYHx52C6blwHyiodcARAnxI2dYc4TjBdZctapz3EKKLo5BmrTsAiy
-         Ex9ZUwOXdLqVDh4zcjduZD1z+llty4CX5US7xUv4=
+        b=dgxQQYRw+dqUSCDDbQ4+vaYhWeohs2MR9vaJlUu06yxi16VC8rYJizn/UpUMVIUYD
+         Bh+awTPMGBYXm25ZysWIlFvoXa3r4UwPcruUdCrVPlbL0rn07i7RgcpBdYLYt8Cqk0
+         tTwMs/akXa8BRIWiKGza4ffOoUQ3PmXGjKCnRsFw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Coverity <scan-admin@coverity.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.14 12/13] cifs: Fix null pointer check in cifs_read
-Date:   Fri, 22 May 2020 10:51:41 -0400
-Message-Id: <20200522145142.435086-12-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 4/5] usb: gadget: legacy: fix redundant initialization warnings
+Date:   Fri, 22 May 2020 10:52:06 -0400
+Message-Id: <20200522145207.435314-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145142.435086-1-sashal@kernel.org>
-References: <20200522145142.435086-1-sashal@kernel.org>
+In-Reply-To: <20200522145207.435314-1-sashal@kernel.org>
+References: <20200522145207.435314-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
+[ Upstream commit d13cce757954fa663c69845611957396843ed87a ]
 
-Coverity scan noted a redundant null check
+Fix the following cppcheck warnings:
 
-Coverity-id: 728517
-Reported-by: Coverity <scan-admin@coverity.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
+drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
+ int    value = -EOPNOTSUPP;
+              ^
+drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EINVAL;
+       ^
+drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
+ ssize_t   value = len, length = len;
+                 ^
+drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
+ value = -EINVAL;
+       ^
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/legacy/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 662977b8d6ae..72e7cbfb325a 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3496,7 +3496,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
- 			 * than it negotiated since it will refuse the read
- 			 * then.
- 			 */
--			if ((tcon->ses) && !(tcon->ses->capabilities &
-+			if (!(tcon->ses->capabilities &
- 				tcon->ses->server->vals->cap_large_files)) {
- 				current_read_size = min_t(uint,
- 					current_read_size, CIFSMaxBufSize);
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index 81f3c9cb333c..b95900168a6b 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1360,7 +1360,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
+ 
+ 	req->buf = dev->rbuf;
+ 	req->context = NULL;
+-	value = -EOPNOTSUPP;
+ 	switch (ctrl->bRequest) {
+ 
+ 	case USB_REQ_GET_DESCRIPTOR:
+@@ -1806,7 +1805,7 @@ static ssize_t
+ dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ {
+ 	struct dev_data		*dev = fd->private_data;
+-	ssize_t			value = len, length = len;
++	ssize_t			value, length = len;
+ 	unsigned		total;
+ 	u32			tag;
+ 	char			*kbuf;
 -- 
 2.25.1
 
