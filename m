@@ -2,146 +2,176 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA91120738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="MtLePMPE"
+	by mail.kernel.org (Postfix) with ESMTP id A8F2A207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbgEVWaq (ORCPT
+        id S1731172AbgEVWeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:30:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731130AbgEVWap (ORCPT
+        Fri, 22 May 2020 18:34:19 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:39697 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731029AbgEVWeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:30:45 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E62CC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:30:45 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n11so6835590qkn.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:30:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+SSfZ9IdBClHLXK3pfg1yXkNX5wz/8jpNFyfhF/pEsw=;
-        b=MtLePMPE37iKUqsdbm0WI0hZpMobQwNowF1YqzxZnkYGg8jCoFbmpzz0//yIRCnLGN
-         w46JzPzlw6YLUbAFhFo3jYibwkOrEugtULj1tlH7wBQjj/NoLByH3rRDMOhpf4QCu2OC
-         7vZXitKqyXM/mbgU713y0LHxjS4tP93m47sM+O6mfGxVs/2uyN9A2Ag1pVMtPZjy+lXY
-         jJ/z2rxdpJI7w0vjRkHx03Qav8Pi1+S2eNs84TeqOaWV90KpnNUapsPnmu7bsV++CVgR
-         bWGaiVyay3ePM2ReDShlAmJb6wnY5Og1MZXP0CKM0vAoYvJDIG5AYA7ZS7UfkSu/uhCf
-         ppqg==
+        Fri, 22 May 2020 18:34:19 -0400
+Received: by mail-io1-f70.google.com with SMTP id d10so8284924iod.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:34:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+SSfZ9IdBClHLXK3pfg1yXkNX5wz/8jpNFyfhF/pEsw=;
-        b=lQUt4+FnSu9RQSUxFETX2Bt1gBKQUHErBmcvlJesVxZj2KjIz/2RPef/73xO0zRdpU
-         ElP1uFyaO0J/KbFidPBy9jmr+TKQBGP7EbxR+nfPT54ePr0q4cI0Vz18INbw+guQ+Wka
-         FXTMJkXrQ9u85nU+PJ+jEkUk/UDsPEZYDhcfrA8lTheCh5WxPf2NtqY1aGbZkgSI2LUb
-         8NLHUX+P6Q0OtmUbclQrbmtS9uAXTu+D7OnvQ3lUN8mIJr+HRroXgsDbplFTkRuZWzko
-         QKAZ03hHvUN1gFLQWTfE1C6VKwAppMXum2htWgL9rSKk+NdJaBemTpKIswij32TN1imB
-         gjRQ==
-X-Gm-Message-State: AOAM531dCAtCl6vAABiY91TFon7JFOVhZBdVeHoVqXptQL89HULVwrVv
-        /7h61q4PL28SAdsH5JLYbBiaNg==
-X-Google-Smtp-Source: ABdhPJzAnLLFpegQtoCoMHFW91a6ZzaBMIso6a0e2wpumt9qbPxo0WGAnu7uCpmn8mWsPKd33gg68Q==
-X-Received: by 2002:a37:b3c7:: with SMTP id c190mr16615709qkf.466.1590186644182;
-        Fri, 22 May 2020 15:30:44 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id l184sm8416876qkf.84.2020.05.22.15.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 15:30:43 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedreno.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] drm/msm/a6xx: skip HFI set freq if GMU is powered down
-Date:   Fri, 22 May 2020 18:29:08 -0400
-Message-Id: <20200522222909.27260-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200522221159.GA20960@jcrouse1-lnx.qualcomm.com>
-References: <20200522221159.GA20960@jcrouse1-lnx.qualcomm.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=EmYxmb/2U/RTfwJJW/3aPZNZUUDia3Ov8JpdgmvmdCY=;
+        b=HjwN8XOD/2lnQx9euypUIqquUunvzSMQWgeTlosi2F1/U8vBMNl3ooJJ/We84i8CHU
+         WnWq5OJ/Cmj+rO8ghcBcqrwK/G115JcPxGpZfknl+k/M04HE3+KDnjLfsU9VrkGGnCVn
+         8f8kUGht1pieazrHFle6PUEP/vi0nLoxZVV4EsF6wBMz3ZSONYQn6amdD1yl12ut6hL3
+         fXN7Q+lNjthVYrlQgPnXdtBCta6vo7KERml1SzNEO16WgwKzFr3APwop2bMlP4UypIgS
+         oXg1Bm6e5dLIvUtqZbEI4Uxp2Qi55D/6ewWQ/4kOWqcQ/pl6RJ0Di9TBXmYfKhECLcwx
+         OFbg==
+X-Gm-Message-State: AOAM5322HwGUnodyA39B9gJWnfW/wEMPZqx/Ia7O5UwIEnAtphZzuybO
+        CQJ2YTrdEcPAINNN49xvNO15H5eX1Z80kWxMUwV4JWbIcQD2
+X-Google-Smtp-Source: ABdhPJwVI3flKwNkODBtZnDXhXTNdA9AAqawT88DmykccDomzO7SI1EgmdzxV2BXnwYG3a/m2AKt34E4AegarawB7pNZATH3KQdt
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:f4e:: with SMTP id y14mr15622360ilj.165.1590186856825;
+ Fri, 22 May 2020 15:34:16 -0700 (PDT)
+Date:   Fri, 22 May 2020 15:34:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ba47b705a6443a0d@google.com>
+Subject: KASAN: use-after-free Read in uif_close
+From:   syzbot <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also skip the newly added HFI set freq path if the GMU is powered down,
-which was missing because of patches crossing paths.
+Hello,
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+syzbot found the following crash on:
+
+HEAD commit:    c11d28ab Add linux-next specific files for 20200522
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1089b706100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
+dashboard link: https://syzkaller.appspot.com/bug?extid=0ce97ea45b008ba3b8bd
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15044ee2100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com
+
+ubi0: attaching mtd0
+ubi0: scanning is finished
+ubi0: empty MTD device detected
+ubi0 error: ubi_attach_mtd_dev: cannot spawn "ubi_bgt0d", error -4
+==================================================================
+BUG: KASAN: use-after-free in uif_close+0x15e/0x190 drivers/mtd/ubi/build.c:502
+Read of size 4 at addr ffff888097fe49e8 by task syz-executor.0/7033
+
+CPU: 0 PID: 7033 Comm: syz-executor.0 Not tainted 5.7.0-rc6-next-20200522-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ uif_close+0x15e/0x190 drivers/mtd/ubi/build.c:502
+ ubi_attach_mtd_dev+0x157e/0x27c0 drivers/mtd/ubi/build.c:1036
+ ctrl_cdev_ioctl+0x229/0x2b0 drivers/mtd/ubi/cdev.c:1043
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl fs/ioctl.c:760 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca29
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd94dd97c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004e1080 RCX: 000000000045ca29
+RDX: 0000000000742508 RSI: 0000000040186f40 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000209 R14: 00000000004c44c1 R15: 00007fd94dd986d4
+
+Allocated by task 7033:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ ubi_attach_mtd_dev+0x2e7/0x27c0 drivers/mtd/ubi/build.c:901
+ ctrl_cdev_ioctl+0x229/0x2b0 drivers/mtd/ubi/cdev.c:1043
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl fs/ioctl.c:760 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 7033:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ device_release+0x71/0x200 drivers/base/core.c:1541
+ kobject_cleanup lib/kobject.c:701 [inline]
+ kobject_release lib/kobject.c:732 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1c8/0x2f0 lib/kobject.c:749
+ cdev_device_del+0x69/0x80 fs/char_dev.c:575
+ uif_close+0xea/0x190 drivers/mtd/ubi/build.c:501
+ ubi_attach_mtd_dev+0x157e/0x27c0 drivers/mtd/ubi/build.c:1036
+ ctrl_cdev_ioctl+0x229/0x2b0 drivers/mtd/ubi/cdev.c:1043
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl fs/ioctl.c:760 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff888097fe4000
+ which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 2536 bytes inside of
+ 8192-byte region [ffff888097fe4000, ffff888097fe6000)
+The buggy address belongs to the page:
+page:ffffea00025ff900 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00025ff900 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea000267f108 ffffea0002460708 ffff8880aa0021c0
+raw: 0000000000000000 ffff888097fe4000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888097fe4880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888097fe4900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888097fe4980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                          ^
+ ffff888097fe4a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888097fe4a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 67c58345b26a..9851367a88cd 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -110,13 +110,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	struct msm_gpu *gpu = &adreno_gpu->base;
- 	int ret;
- 
--	/*
--	 * This can get called from devfreq while the hardware is idle. Don't
--	 * bring up the power if it isn't already active
--	 */
--	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
--		return;
--
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
- 
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
-@@ -141,7 +134,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	 * for now leave it at max so that the performance is nominal.
- 	 */
- 	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
--	pm_runtime_put(gmu->dev);
- }
- 
- void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-@@ -159,13 +151,21 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
- 			break;
- 
- 	gmu->current_perf_index = perf_index;
-+	gmu->freq = gmu->gpu_freqs[perf_index];
-+
-+	/*
-+	 * This can get called from devfreq while the hardware is idle. Don't
-+	 * bring up the power if it isn't already active
-+	 */
-+	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
-+		return;
- 
- 	if (gmu->legacy)
- 		__a6xx_gmu_set_freq(gmu, perf_index);
- 	else
- 		a6xx_hfi_set_freq(gmu, perf_index);
- 
--	gmu->freq = gmu->gpu_freqs[perf_index];
-+	pm_runtime_put(gmu->dev);
- }
- 
- unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
--- 
-2.26.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
