@@ -2,145 +2,212 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BD8206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD01206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Un+f+jIU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbEymPjK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgEVLQW (ORCPT
+        id S1729351AbgEVLRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:16:22 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:51524 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgEVLPQ (ORCPT
+        Fri, 22 May 2020 07:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgEVLRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:15:16 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200522111512euoutp0107b61a564fff31b9aaaf46f04886d891~RVXbtWG5F1178811788euoutp01e
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:15:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200522111512euoutp0107b61a564fff31b9aaaf46f04886d891~RVXbtWG5F1178811788euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590146112;
-        bh=g7lofStAEXI4rDBNDclmyeYgluSumM2150lwAjjqFGM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Un+f+jIUmk8Z5599psC7Yb7eNknrtoyvtxiHz3/YuXympaCqIfxzfyDVLpFI/EzRZ
-         QliYDYN+TKL/RN29YC/d9n+Dt0IgE5ZpaNBqDqP3duySJ7VFllF14lzaKwPd2owl87
-         1u/5iuV8BzPloamQ+sxGSenMdjLt71hchHTIoNu0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200522111512eucas1p23793e88546caa1e9bbd836fcfa32eedb~RVXbZe0le1441014410eucas1p2J;
-        Fri, 22 May 2020 11:15:12 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id F9.96.60698.044B7CE5; Fri, 22
-        May 2020 12:15:12 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200522111512eucas1p17edeeea548dd59170c84c49ec650bd8a~RVXbFw97l0775607756eucas1p1Z;
-        Fri, 22 May 2020 11:15:12 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200522111512eusmtrp27b43e87159fec26f306e1ffa4579c921~RVXbFEdvK1476214762eusmtrp2k;
-        Fri, 22 May 2020 11:15:12 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-fa-5ec7b440f52a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3D.92.07950.F34B7CE5; Fri, 22
-        May 2020 12:15:11 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200522111511eusmtip1251a3e0431392af017466d40c4deba33~RVXadmGHQ2677026770eusmtip1W;
-        Fri, 22 May 2020 11:15:11 +0000 (GMT)
-Subject: Re: [PATCH] i2c: core: fix NULL pointer dereference in
- suspend/resume callbacks
-To:     linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        srv_heupstream@mediatek.com,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-samsung-soc@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <34736047-3fc8-385b-cdea-79b061deb7b4@samsung.com>
-Date:   Fri, 22 May 2020 13:15:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+        Fri, 22 May 2020 07:17:04 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68B2C061A0E;
+        Fri, 22 May 2020 04:17:02 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e2so12508560eje.13;
+        Fri, 22 May 2020 04:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8mDupXnMdjL2i3nNZADOY8IyLaz3yGEmor/u0CUEwWY=;
+        b=JbEymPjK5O3AVTzEVaqX/PIDSlIN46uOZW4vWKVQ79CxsRZ9W35q2r37H6h1okT7jA
+         WS/EpLBB4B8ZbkU5GhPN1t9TAkKIWkGzSipyID8ksk5ErjNM2CcODBBiDibBYQ5FPk6W
+         kv2WJ9Yv+7v11VrbVJRC5POWE9duDOs2DX/uYVnUpckeO204vBZSg6r5iQAG5qcllAVa
+         VJSRkGIhh84VYj+0PNTY9IeTkCJ3t4LcA8RNDJ4ZPBURRyUN8LmJ0Pf6zEACMMQnf21Y
+         m4N7ViQoxV4EGDnGz+3tNcivEarlUekRoq1iG7IJo5Js2Ol/B9fwQFMR/ddOtgSMyjfA
+         bcfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8mDupXnMdjL2i3nNZADOY8IyLaz3yGEmor/u0CUEwWY=;
+        b=lolHn0aibGHCZgaAGxOvQNzUQO/LIEpqRvAcyrOU9oNgsL3wmk93KhcVj4/aX4v1qN
+         E/ZQrdqDn3iVoWOoXTAahRBqfMJSFPgFjqIPAaXulZZv5GcG//63Iol2H0qbziLtFCGk
+         Vv28/pSgHFebDVjMvMNOw+kVYiPs5zkeQFMSkWu5rQ7fzxRAFULjG8Qk5IlFdT+DpZPa
+         Uxttk0sHFp+wnjscD2KNvbQ2nLigZokaNdcblqpg8XM2K5T53yAV3PcnjFgDM4ihhaa1
+         LQNNy6DDvKJ99pMEyz5F9We6QwtyWBmG33E9FbfPYLqZeiFRhEZcdvwFSleZ15wjFCeX
+         HrTQ==
+X-Gm-Message-State: AOAM532tsb4mr7cMEeJD+AG+fWOe2vaRuWNgJSH+O+q7CM+7Y37kNK+U
+        s3I+SlewwCEEYIrULOYsrkgIQUA8
+X-Google-Smtp-Source: ABdhPJw8xdDqRHsPx8q4UtFi22HTNMKWc0t2E7LzLrC8zUuup8wdbruT6OoPFcnZYZQmkbSmzYxxgA==
+X-Received: by 2002:a17:906:3943:: with SMTP id g3mr7523858eje.454.1590146221236;
+        Fri, 22 May 2020 04:17:01 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id v6sm7822719ejv.120.2020.05.22.04.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 04:16:58 -0700 (PDT)
+Date:   Fri, 22 May 2020 13:16:57 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v13 00/11] Convert PWM period and duty cycle to u64
+Message-ID: <20200522111657.GA2163848@ulmo>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+ <20200423114857.GG3612@dell>
+ <20200423215306.GA8670@codeaurora.org>
+ <20200424064303.GJ3612@dell>
+ <20200424221422.GA31118@codeaurora.org>
+ <20200427064434.GA3559@dell>
+ <20200520231508.GA29437@codeaurora.org>
+ <20200521071505.GL271301@dell>
 MIME-Version: 1.0
-In-Reply-To: <20200522101327.13456-1-m.szyprowski@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3b3eXYfT16n5tKJolGGQJhpe+xCVgkERkVEh6Fp5U8tN29Rl
-        IfmdrGw1DHVqZVGm5WdDS0JzTZdKfmaIWiBZoGRim0EfWs6r5b/znHOe9zkHXpoQvXAQ03HK
-        JFallMdLKAHZ2PGjZ3uI0RK1w/jBg6kvqnVgbGVdJFNcV0QyefM2xAw2l1KMNd+MmKLeFh5T
-        +F7EWHMWKKbytYEIEUhnhnP40pL0flKa3dlKSq8bq5C0s2uClFobNhymIgR7otn4uBRW5Rt8
-        UhCbYSkkE4eoC7daX5HpqMFBixxpwAEw0p9BapGAFuFHCD625iMtohcHGwIDj+OtCPJ6p4iV
-        BZO2nc8JFQjq+mwEN8wgeDM3SNm33XAEmGed7Qvu+DjYhkcpu4fAZTxoG5hBdoHCfqCd1lJ2
-        LMTB0P9Jx7NjEm+Br7pc0o49cCR033+KOI8rdBZPLPGOi/5fZQVLiQi8EZqmS5exJ4xM3FmK
-        DbiDDzfND3j2QID3QXY/cA3cYMpi5HN4Pfx5vuLPQjDeU83nhmsIBjOLEOfaDWM9P5eaEdgb
-        apt9OToUGubfEtz7zjA87cplcAZ9Y+EyLYS8XBHn9gKDpebf2ba+AeIGkhhWNTOsamNY1cbw
-        /+5dRFYhTzZZrYhh1f5KVuOjlivUycoYn9MJiga0+Ke6Fyxzz1DL71MmhGkkcRIyZzqiRA7y
-        FHWqwoSAJiTuwnKX9iiRMFqeepFVJchUyfGs2oTW0aTEU+h/bzJShGPkSew5lk1kVSsqj3YU
-        p6MCL75VH47FYfsfBycqdDUxcsUh2execU181eiVte/Kn5wN/7z5YGCKo/hy7CDrplwTMJ4G
-        wqA0vyZ+tm6niyyMNzk/9vBIp/Kq3mJgv/DaS445nTdfkh3VDAVpd5V/q7+t1M8cqJ5zzjyx
-        KQBrFgr0FZrvgcGhlS+js7yJrRkSUh0r99tGqNTyv1/9JB1PAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xu7r2W47HGRyYaWmxccZ6Vosvc0+x
-        WMzcMIPFouPvF0aLy7vmsFl87j3CaDHj/D4mi+l3hSw+t/5js1h5YhazA5fH+xut7B6zGy6y
-        eLSc3M/i0bdlFaPHyVNPWDw+b5ILYIvSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
-        tTIyVdK3s0lJzcksSy3St0vQy2g8Pp2l4CpbxdT9h1kaGDexdjFyckgImEgc6jrK3sXIxSEk
-        sJRRYuGJC2wQCRmJk9MaoIqEJf5c6wKLCwm8ZZQ4sDEWxBYWiJKYfuAAO4gtIhAucfXca0YQ
-        m1lgPpNEx99siKETGSWmTP0PVsQmYCjR9RZiEK+AncTFp/1MIDaLgKrEu/42FhBbVCBWYvW1
-        VkaIGkGJkzOfgMU5gep/z53CDLHATGLe5odQtrzE9rdzoGxxiVtP5jNNYBSahaR9FpKWWUha
-        ZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwNrcd+7llB2PXu+BDjAIcjEo8vA+S
-        j8UJsSaWFVfmHmKU4GBWEuFdyH80Tog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgWkjryTe
-        0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QD4z7jKDvFz/Fl6xUeO6lM
-        fvF169ll68SezjhTPue/XPD2Pa8XLpg4yeR6VauY35THxUpmMoV1nW+/nFttZ+QQe5xHsO2V
-        b6rQwZX3XmjGsrNnrjkxfYYgZ2GkY7Nos9VzX89zH4Xllou9iCt5+kw2admLpU1OpjybSyQz
-        OnJzTaov9e8q7mT3UmIpzkg01GIuKk4EAIlRpMnjAgAA
-X-CMS-MailID: 20200522111512eucas1p17edeeea548dd59170c84c49ec650bd8a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7
-References: <CGME20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7@eucas1p1.samsung.com>
-        <20200522101327.13456-1-m.szyprowski@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <20200521071505.GL271301@dell>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
 
-On 22.05.2020 12:13, Marek Szyprowski wrote:
-> Commit 6fe12cdbcfe3 ("i2c: core: support bus regulator controlling in
-> adapter") added generic suspend and resume functions for i2c devices.
-> Those functions unconditionally access an i2c_client structure assigned
-> to the given i2c device. However, there exist i2c devices in the system
-> without a valid i2c_client. Add the needed check before accessing the
-> i2c_client.
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just one more comment. The devices without i2c_client structure are the 
-i2c 'devices' associated with the respective i2c bus. They are visible 
-in /sys:
+On Thu, May 21, 2020 at 08:15:05AM +0100, Lee Jones wrote:
+> On Wed, 20 May 2020, Guru Das Srinagesh wrote:
+>=20
+> > On Mon, Apr 27, 2020 at 07:44:34AM +0100, Lee Jones wrote:
+> > > On Fri, 24 Apr 2020, Guru Das Srinagesh wrote:
+> > >=20
+> > > > On Fri, Apr 24, 2020 at 07:43:03AM +0100, Lee Jones wrote:
+> > > > > A great deal of mailing lists contain numerous protections against
+> > > > > things like flooding and spamming.  One of those protections is a
+> > > > > check for "Too many recipients to the message".  Most of the time=
+ this
+> > > > > simply requires moderator intervention by way of review and appro=
+val,
+> > > > > but this ultimately depends on the ML's configuration.
+> > > > >=20
+> > > > > The first thing to ascertain is why your recipients list is so la=
+rge.
+> > > > > Have you added every reviewer, subsystem-maintainer, maintainer a=
+nd
+> > > > > contributor suggested by get-maintainer.pl?  If so, consider prun=
+ing
+> > > > > that a little.  Contributors do not tend to care about subsequent
+> > > > > changes to a file.  As someone who receives a lot of patches, I t=
+end
+> > > > > to get fed-up when receiving patches simply because I made a chan=
+ge X
+> > > > > years ago.  Stick to listed maintainers/reviewers in the first
+> > > > > instance and see how far that takes you.
+> > > >=20
+> > > > Thank you for the detailed reply. I did this in the first few patch=
+sets
+> > > > and then when a few patches didn't get any attention, expanded the
+> > > > audience thus. Still, around 50% of the patches in this series rema=
+in
+> > > > unreviewed by anyone.
+> > >=20
+> > > This isn't a reason to add more recipients (who are likely to care
+> > > even less than your original group).  However it *is* a good argument
+> > > for including all of the specified maintainers/reviewers in on all of
+> > > the patches.
+> > >=20
+> > > > > If your recipients list is as succinct as reasonably possible, ma=
+ybe
+> > > > > just accept that every version isn't going to be archived by every
+> > > > > ML.  It's still much more useful for the correct people to have
+> > > > > visibility into the set than for it to be archived multiple times.
+> > > >=20
+> > > > Thank you, will prune the list and remove past contributors from the
+> > > > Cc-list and add all parties to all patches.
+> > >=20
+> > > Great.  Once you've done that, we can start to help you acquire the
+> > > Acks you need on your remaining patches.
+> >=20
+> > Hi Lee, Thierry, Uwe,
+> >=20
+> > In v14 of this patchset I've pruned the list of contributors, removed
+> > past contributors from the cc-list, and added all parties to all patches
+> > (except for the patches that are yet to reviewed, for which I've added
+> > what get_maintainer.pl showed me). I've also resent v14 a couple of
+> > times already, with around a week's time interval between resends, and
+> > somehow it seems like this set has lost traction.
+> >=20
+> > Could you please indicate what next steps I should take to have more
+> > eyes on the unreviewed patches? Only 4 out of 11 patches remain
+> > unreviewed.
+>=20
+> Looks like we're waiting on Thierry (again).
+>=20
+> This has been a common theme over the past few months.
+>=20
+> Perhaps he has changed employer/project?
 
-ls -l /sys/bus/i2c/devices/i2c-*
+My work on PWM is purely done in my spare time. I don't get paid for any
+of it. I currently have two kids that need home-schooling, as many
+others probably do, and I have a full time job doing non-PWM related
+things. As a result my spare time is close to nil these days.
 
-I wonder if this patch has been ever tested with system suspend/resume, 
-as those devices are always available in the system...
+I very much appreciate all the effort that others have spent in getting
+this reviewed. I haven't been able to keep a very close eye on this, but
+even the latest versions have some comments, so I didn't consider this
+ready yet. If that's changed and everybody's okay with the changes, then
+I can apply this to for-next. We haven't got all that much time left
+before the merge window and I had hoped this would be ready earlier so
+that we'd have more time for this in linux-next. But I'd be willing to
+at least give it a try. If it starts to look like there are going to be
+issues with this I can always back them out and we can have another go
+next release.
 
-> ...
+Thierry
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7HtKYACgkQ3SOs138+
+s6H5ZBAAoAqPDYAGotFEMnwiD82oNJe0dIuG+OV4t35cMTn1xEo2mpKWDYfKV0Hv
+6aDWw/ZacV/jAG+4jjyPgLVyFiMZTvS57rpfwaVGPMzfjiEB1Y+3+J+QSCRlpOvL
+jFd8a7rBGk3DdpYOzxM2HsQSmkcYJe/AAoG+XIHzuEBTafAl+DkLonWdBrDyMYD2
+JDl07OJz7cVPptsOw2OosYDWLaQ7iHffxvzTvpPZ9hp8FDR6ryB9xCdbPYgjzuD+
+bqUpCuqvPQmgTOSIxYZwS4km0ezXbSPP0Z27Df5f3GgXx+S1bn4rNrKG/lkgWwib
+Ph8xbFRR1okONXRvoWTltWWDsgfAO9/aTV4rTjTEeg8C8siYTGspLkK/Elvgiftn
+GYpSBtNA0ayIXGjYym8Jx67wNOp0J2tKFCtxNh31Viy5wGLExocaYgAcL3+Y6iAT
+7cy5hKG2L83J79pXh05Ld2ge4qeqgGLKTYbBsS71IoLTKWTo08Cn/vdiAlbp3yQO
+ucSeTCqJ4/vvZA4JE7TOJG1Y+XeZ41FMDCPgiVokW+KIrtpn+m+Tc7YYSdOO49eZ
+/xUBwhn1RX+Lqg0eQN8WhgWAGpIvHSSHxPiGv3EwXfCzBNvnXSdMVf8eDCSU1kkg
+x2DxGuTh90Kly/FX8hCgLRARx0GH/sAFCzSBJ2ntZnjVEshKC5A=
+=b2vB
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
