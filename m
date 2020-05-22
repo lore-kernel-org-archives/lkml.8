@@ -2,97 +2,116 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D223DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC273C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D7B206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF4B206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDNPawQa"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ub12prvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbgEVTHT (ORCPT
+        id S1730966AbgEVTHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730857AbgEVTHS (ORCPT
+        Fri, 22 May 2020 15:07:25 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:54180 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730857AbgEVTHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:07:18 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0074DC061A0E;
-        Fri, 22 May 2020 12:07:17 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id yc10so14140203ejb.12;
-        Fri, 22 May 2020 12:07:17 -0700 (PDT)
+        Fri, 22 May 2020 15:07:24 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49TGFl49WYz9vYjT
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 19:07:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nUk9-tLoXUGz for <linux-kernel@vger.kernel.org>;
+        Fri, 22 May 2020 14:07:23 -0500 (CDT)
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49TGFl2bJNz9vYj4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:07:23 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49TGFl2bJNz9vYj4
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49TGFl2bJNz9vYj4
+Received: by mail-il1-f198.google.com with SMTP id v87so9309065ill.23
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 12:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xmNwanKC++U+27ahip8lbbEDLlHHtUnV6HgVgvFbfDM=;
-        b=GDNPawQaeob9K+mNF5FNjW5o7K97gJjg59+CeSgpNELRpu58JHl52mCtCCNck1pEvb
-         HeMZ58GjcMB+3JZnPZjNGFu50ZDhiU05fcSRiSQrFSXBCJ5aO517JMVOHzoDFbBO3T60
-         qnlzDbf5s7Br0/5RInsVsW1RA7uhRp1mzgyUGrAFjOIAaV9g0pC8U0e9WQbXzCXZwYet
-         DqrLVQL6ZhVlh+lICfs24zODMFqTJ0SSF7aT4xVhXt8oxVKEvCjTjVq4eOjlnJT6xm25
-         F41FFU4KAnVVQTZT1cdv+ze1DN1EPzyRpSTRK8C2V0/wIYNvJnYk969MPWkiE6ykVs9U
-         B4Nw==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=GqvlCL3YCiisEEkN1nE+zCOiLTKK/vy+pKY1F1obogc=;
+        b=Ub12prvPt5LliMcyXiag9XYSLrX8M4XDcymjJKBntdT4cjbA48Iob+DQdcEyhyL4YM
+         GN2meZemz5wENrjSAdEjGRpuT6LBIwG55KeA3mKcF7GPr1XVytpcqswbegK+bPVZPTe6
+         Ca4Xdp9uNRZYjEAurkBDwhumC2rNpc4nwwIwUYTX5bX70pTHUu1TUSPExhRwsUDNr01p
+         xM7EQdLMT0Q6rRxMBvhpDWFogSoohx7RDaan2A7iwEXv8eneZDeaIiQHfOxWyM21Ei/F
+         QBaY1JprIoXC0SYSSwGu4T8GpPyxAMmUjY8oKxEyVlzGRDRl0xZUPYNc6ueZ+B3/wOUZ
+         CqIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=xmNwanKC++U+27ahip8lbbEDLlHHtUnV6HgVgvFbfDM=;
-        b=TzADA+jg38Ees1sydxc+QWscyd8YTRIjPRienrglREpFwoy6utxpRlCOiaZAzCHTJh
-         eqWruwPG5ZEDIUKtYtdnnuMHkOJBW2+38zMHsVY812X1nVNfom4ERQhq2kxpS6XNXoCZ
-         4FEJL/j/atXtYZ3B9uOWTqosQ23o/fGllvysAA+I1/6uMdwotDphOFAdpVwnQ0XgaSNa
-         f9ahFeyhTo3uba4nL9+Eiyblla8Xfr8G9e9mDWwRYMCzs0kxSURU/SyqakN8Qcp8xsjA
-         Yo2u4BY9qXjl/RySq75e7Hu+XNAcDNLvU2n0ZRyyuRpl13I2Ag62/gzmVtR/V4R1dB/i
-         06sw==
-X-Gm-Message-State: AOAM5307ZsnPzo/LQoxYhSBQH+W8CmEELQXIOXZakXFhrIiw90dvIaxy
-        RHshVIyGKoJ7SmPK0GwacLU=
-X-Google-Smtp-Source: ABdhPJwPJ0lh6giMCZwg2jnCxoteCi2ar0Wm0YeibZi4QG8ZQHgHqxFG/zwgNygvQ7Y4qWoDWBhNzw==
-X-Received: by 2002:a17:906:f74c:: with SMTP id jp12mr9871203ejb.490.1590174436607;
-        Fri, 22 May 2020 12:07:16 -0700 (PDT)
-Received: from x230 ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id df21sm7827794edb.27.2020.05.22.12.07.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GqvlCL3YCiisEEkN1nE+zCOiLTKK/vy+pKY1F1obogc=;
+        b=k91vbp5/EYJtu/mIHkMc/kRPVDx7+F+cJhPbm8YerRlojoFIs6u3hNrIN4y+1JWsN4
+         m/BgNQXja7L+z4bLI83CLjkbPXuNVXkEH8CzU/QWDENvDk2mKYjNLCz6ToiF6YgKvrU+
+         VhqVl02HYFzeWximDShP94ATcJtRICu/IfcB/kUMRABdVPeodk8zsrcIbyTk8nbM7R5C
+         nObM0C7HuzOkNplI9T89O28qEA8bHa8x+S7cc5l8WmJOi1lDngUPYDXS0SO86tP3vPOU
+         xrXWQQmq+mcjSJ+jVQPxDwCbvwSTeYKATaUxKvRI0dJLYueJTbfv9e0Ymrw7rAFBWD8T
+         rSpg==
+X-Gm-Message-State: AOAM533lB889ZAGmZU14XEP8n8gEm+jbQeMqKr62PpCbg0Sv62epCwo5
+        UJttXpZUC/MWVZq52qGoENm4CBpCTxACMEEmY48aNExojMhPe3hdg3XMZuqD1xjcKdwX7A3rUIj
+        2qp0ZUHJxr+Ru7k2NFyBgFx7MgWkp
+X-Received: by 2002:a02:cc45:: with SMTP id i5mr9861772jaq.28.1590174442902;
+        Fri, 22 May 2020 12:07:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwIFFNlgaU/eThYhW9DqhVOj6LZHR21fL4hjoeIBf5EJwZulCvNJ6ZQz7PbPCf047iwbuPoJw==
+X-Received: by 2002:a02:cc45:: with SMTP id i5mr9861736jaq.28.1590174442518;
+        Fri, 22 May 2020 12:07:22 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id a17sm4939092ilr.68.2020.05.22.12.07.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 12:07:16 -0700 (PDT)
-Date:   Fri, 22 May 2020 21:07:14 +0200
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Subject: Re: [PATCH v3] Kernel selftests: Add check if TPM devices are
- supported
-Message-ID: <20200522190714.GB90663@x230>
-Reply-To: Petr Vorel <petr.vorel@gmail.com>
-References: <20200521144344.1886-1-Nikita.Sobolev@synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521144344.1886-1-Nikita.Sobolev@synopsys.com>
+        Fri, 22 May 2020 12:07:21 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kuba@kernel.org
+Cc:     tariqt@mellanox.com, davem@davemloft.net,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH v2] net/mlx4_core: fix a memory leak bug.
+Date:   Fri, 22 May 2020 14:07:15 -0500
+Message-Id: <20200522190715.29022-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Qiushi Wu <wu000273@umn.edu>
 
-> TPM2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
-> are available. In case, when these devices are not available test
-> fails, but expected behaviour is skipped test.
+In function mlx4_opreq_action(), pointer "mailbox" is not released,
+when mlx4_cmd_box() return and error, causing a memory leak bug.
+Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
+free this pointer.
 
-Reviewed-by: Petr Vorel <petr.vorel@gmail.com>
+Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/net/ethernet/mellanox/mlx4/fw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kind regards,
-Petr
+diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
+index 6e501af0e532..f6ff9620a137 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/fw.c
++++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
+@@ -2734,7 +2734,7 @@ void mlx4_opreq_action(struct work_struct *work)
+ 		if (err) {
+ 			mlx4_err(dev, "Failed to retrieve required operation: %d\n",
+ 				 err);
+-			return;
++			goto out;
+ 		}
+ 		MLX4_GET(modifier, outbox, GET_OP_REQ_MODIFIER_OFFSET);
+ 		MLX4_GET(token, outbox, GET_OP_REQ_TOKEN_OFFSET);
+-- 
+2.17.1
+
