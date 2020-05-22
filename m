@@ -2,79 +2,57 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E00C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E7020723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFC620723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NpqBOWpw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FGnXSraH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbgEVQpr (ORCPT
+        id S1730709AbgEVQp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:45:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
+        Fri, 22 May 2020 12:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730306AbgEVQpr (ORCPT
+        with ESMTP id S1726862AbgEVQpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:45:47 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF16AC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:45:46 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k13so10828438wrx.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6GR7HmOw0vXex6U/cofpWanbE4mJ+fAlXyaVxc3rmoo=;
-        b=NpqBOWpwojM3LZTZCer6cwQuU9Dfk1PLl0mrthDrget8CeNH7MzEpwyyOdNyQN4oLh
-         tt3nB1FEWebWGLUxl8I+9w+zng9TfV9LUoju/5OVWAjc/5uyhpFcRydeEmUUL7oKHw5M
-         qJ7bW4Zh4BRJjnlFgneqd+Su1h+XvhUlO8pqnOGjhHvOaupupW1ce079blAkO9epqZnE
-         TjYBIlEcsq3pkRNUxW1idDro7u9J+BugJFpw/X0okhleEiuVTdbQT6RMbmii0ubjd0YM
-         9FkmN497bB8UNU7GmqJMHmxidVRaML5jJmA1nRkCeLtd4cI8TIDVEFJrYSJ3revpk8X6
-         K+wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6GR7HmOw0vXex6U/cofpWanbE4mJ+fAlXyaVxc3rmoo=;
-        b=EeR2ZheUNKeZMx1exCEk+/e8QEDWE0JDb9L2v5CSurEd6XfF/ffW96arRQem0h76ES
-         rhcJW1hw1Eefx+MbrXkmr2m0sIrBnm5atWdpNMdviVPdEBhlbPmfuRJVV3PpDVuF4G3l
-         0ciCrlS5oo+mSHZf22KzCKp+75zj9J3yZDetW116Ynu27QAUgv8IiwCHitd0kSPwdcRu
-         Xs/ADSCK7l6DACRFv4qbdx3XRrNXKMa+mBeM0CCXbKUWT9W6cMGDhCCYSEin1lDjxo0b
-         uxHtY6GCXLiwb6tcReuestwJQ7sCczP2xV9ZS2Pe7AmeGgEzUF1ofJYjBA5CTlJWvSoh
-         RnwQ==
-X-Gm-Message-State: AOAM530hb33BgctfceCyG8a2cZ6SOk6Syg4RFppmBZlPdnGpLO1i4Tj+
-        lZNeLxeR9nyFBmlLYdSN2ls5Lp2ugio=
-X-Google-Smtp-Source: ABdhPJyLiO4hYgR2VrqVwoiZ28msGE7VhjnrrBlGyww3F4/QoNednCytSwz5z9BFpSWThz5DUcBoZA==
-X-Received: by 2002:a5d:4b04:: with SMTP id v4mr4369245wrq.182.1590165945140;
-        Fri, 22 May 2020 09:45:45 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id h137sm16308123wme.0.2020.05.22.09.45.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 09:45:44 -0700 (PDT)
-Subject: Re: [PATCH] thermal: imx8mm: Replace zero-length array with
- flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200507192517.GA16557@embeddedor>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <9d0df1d5-cbe9-9ddd-2b1c-81298506c28f@linaro.org>
-Date:   Fri, 22 May 2020 18:45:43 +0200
+        Fri, 22 May 2020 12:45:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C23C061A0E;
+        Fri, 22 May 2020 09:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=yEhxxNKQdXzNMNpK5iqG9C1DffsR37ivyTpx1Xe3wbw=; b=FGnXSraHPDQnO69j4hl1rx+Ld7
+        I4n4aU10HslG/DXrV+AYXXONhOIEGLFn4Mi8JV3qvtFLYkq01cFD8Uht3CQRtU4kaBifBXyUDnOBQ
+        bF8EDhddAk/Lq3nXddzdio1euQw2TsYlfU8DUaCp31t7aAB25T15yCYUxf4bRKZ9kJkFvS9D4qaZb
+        ncqtyXXtLFqayEGlH/IEB1pdvHQaSndxz3dDstFpGDPl3aD3QKs6/xkIciWBgOv33+2/DN/bIeC9Z
+        K24lWwvxIKvxWomUbRoIrjou472NSndM+JjGDmv/XvxPzmPmWqur7Yf9oD46F3c2WFblstbmsAAtW
+        KPUkwo5Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jcAnz-0002dd-K1; Fri, 22 May 2020 16:45:55 +0000
+Subject: Re: linux-next: Tree for May 22 (net/psample/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yotam Gigi <yotam.gi@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20200522225236.33ce1e69@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d216867a-8a52-3d62-05ce-628440f21c64@infradead.org>
+Date:   Fri, 22 May 2020 09:45:54 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200507192517.GA16557@embeddedor>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200522225236.33ce1e69@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,52 +60,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/2020 21:25, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On 5/22/20 5:52 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> Changes since 20200521:
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/thermal/imx8mm_thermal.c |    2 +-
 
-Applied, thanks
+
+on i386:
+
+../net/psample/psample.c: In function ‘__psample_ip_tun_to_nlattr’:
+../net/psample/psample.c:216:25: error: implicit declaration of function ‘ip_tunnel_info_opts’; did you mean ‘ip_tunnel_info_opts_set’? [-Werror=implicit-function-declaration]
+  const void *tun_opts = ip_tunnel_info_opts(tun_info);
+                         ^~~~~~~~~~~~~~~~~~~
+                         ip_tunnel_info_opts_set
+../net/psample/psample.c:216:25: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
 
 
 -- 
-<http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
