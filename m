@@ -2,241 +2,124 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD86C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A15C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E4F206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152E0206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:29:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=oppoglobal.onmicrosoft.com header.i=@oppoglobal.onmicrosoft.com header.b="ZWCbH8qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgEVJ0b (ORCPT
+        id S1729492AbgEVJ3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:26:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31596 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729432AbgEVJ0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:26:30 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M93GrI108994;
-        Fri, 22 May 2020 05:26:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31659tjfyg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 May 2020 05:26:00 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04M93QBs109888;
-        Fri, 22 May 2020 05:25:59 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31659tjfxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 May 2020 05:25:59 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04M9KssD002767;
-        Fri, 22 May 2020 09:25:58 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 314wxpp392-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 May 2020 09:25:58 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04M9PuRG44564940
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 May 2020 09:25:57 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA96B6E054;
-        Fri, 22 May 2020 09:25:56 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 651216E04C;
-        Fri, 22 May 2020 09:25:48 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.79.190.254])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 22 May 2020 09:25:48 +0000 (GMT)
-Subject: Re: [PATCH v2 0/7] Share events between metrics
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-References: <20200520182011.32236-1-irogers@google.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <3e8f12d8-0c56-11e9-e557-e384210f15c1@linux.ibm.com>
-Date:   Fri, 22 May 2020 14:55:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 22 May 2020 05:29:32 -0400
+Received: from mail-eopbgr1300053.outbound.protection.outlook.com ([40.107.130.53]:14789
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728068AbgEVJ33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:29:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BrP0VoZ1HCbY5j+4UDmQnsMroBQ5LQzvkMQAnFc73C6rl7yN1XYXqrJbzfJJpez+ktBtHQUvNkPQxzk6dW3emTZIwAtDG7vyVMBo8jn/3S74OX0VjSyEVWcw58Zax3kjVxmCD3ipiWqh9M2VsgWHjucHyZ1Hyq0KCAWhRL+tBpHXpXseOmIHhUonP6Ps6TZxx/u+6ndWDt/R9Q0T57bwlSXccd8MSJGM1MO+hKf0sZ7MAGFOkK8r87+f5JXHPcEQNfF3RixGOx5EU+a8aBDTaZGgUmpbrgN0QkZLXKKmUTK3DKg6/bvBsxV9GEdwQO0SajbBH7VD8vhR2B+g7Vg7Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uhq+khHEA+fj62144fFShpEsHFBA1gaRwwrk3lr0k1w=;
+ b=EyNPKV23g4SPXQdZ3cERWZ5tpojInj1ptWVPLlDD1ovAEP8Rw+expFb3wf/RUSzOfilWv6DEGm2sfD69enTW8Cg/AbNJuiqTGNomx0FtvbuT8kHv4pknfrLaOBU+w3RQwQzGJvHY3c98XTL65LlFxnIBcWgCLCded38tfZ3pwo1dIzI0dyEed0jE+NBzfO8woBk6oOw5ry2fC7A51FJUw+VwvKRyuhHkYEjMihtW9mIBbim9KYuXVarNBPjzRHYp0f7yEUcdHmm6wF8i91WHRwbnlzToZCy9EnKTf3n4os/BJXK2h/cPSqKq/euemZ3y3IV5obhLku8faF4sxYd2iA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
+ dkim=pass header.d=oppo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uhq+khHEA+fj62144fFShpEsHFBA1gaRwwrk3lr0k1w=;
+ b=ZWCbH8qmR28av3dNymCQuKV35CSF441u/A2LVDb3kIFKdOXJU9RANYlZaa8YTn5tINq8itPGJYb38czu99lIPsznD/ghVLWOfFI2BIh9PDnv7gq7EBuZnN+43UyZtaq/VBFgCaZTB/9+iw9AZYXORE7kfPqYl9o2cV4sJo9g5mw=
+Received: from HKAPR02MB4291.apcprd02.prod.outlook.com (2603:1096:203:d3::12)
+ by HKAPR02MB4340.apcprd02.prod.outlook.com (2603:1096:203:d4::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Fri, 22 May
+ 2020 09:29:25 +0000
+Received: from HKAPR02MB4291.apcprd02.prod.outlook.com
+ ([fe80::80ca:c698:988e:a999]) by HKAPR02MB4291.apcprd02.prod.outlook.com
+ ([fe80::80ca:c698:988e:a999%5]) with mapi id 15.20.3021.020; Fri, 22 May 2020
+ 09:29:25 +0000
+From:   =?gb2312?B?xe26xihSaWNoYXJkKQ==?= <richard.peng@oppo.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Markus.Elfring@web.de" <Markus.Elfring@web.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: [PATCH v2] mmc: fix use-after-free issue
+Thread-Topic: [PATCH v2] mmc: fix use-after-free issue
+Thread-Index: AdYwG1QOySHOrR48TpmU8O/k4aVGOA==
+Date:   Fri, 22 May 2020 09:29:25 +0000
+Message-ID: <HKAPR02MB429107D62F3E9F86E76AD550E0B40@HKAPR02MB4291.apcprd02.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=oppo.com;
+x-originating-ip: [58.252.5.70]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d83f458e-ebc4-493d-8583-08d7fe329e80
+x-ms-traffictypediagnostic: HKAPR02MB4340:
+x-microsoft-antispam-prvs: <HKAPR02MB4340D280F448DC3CCA41F406E0B40@HKAPR02MB4340.apcprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:628;
+x-forefront-prvs: 04111BAC64
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kcu6bDNZk+RTPb5SmNRsCdb+C5itBAPBOybgy7GpkK1Z+XJK07OGMkpYh3TBRZPI3iPMb1m50eY16pfdGeddzwZ+XCt1r+l31B0s5PlJvn5qKx9LxLgj/XxRlNgBwKcfvaTfiKBw6nBMQZd1gZDBPkebvl8E8ZjnUgjgKTScEBa6IMOs/7EbMkiKUtET09u9/tIxd/tql5HTMnuiKFRFFeGRrobVwnaiGDHP1AlFouUtyUB658IoZr2UE5b6Zu11UHT52gdBMwtGEXLcVf4jgWevVbFecMbP0/mxJuqBFlusKkkJMytgV300NTEoMuvoGoehingBDUZMttobBD9qq+DmJnIgw8ReWu5lhOlozEbs1bZzHkVuyF/ieoMF07HC
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HKAPR02MB4291.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(396003)(376002)(346002)(39860400002)(4326008)(86362001)(110136005)(2906002)(54906003)(316002)(5660300002)(64756008)(186003)(26005)(52536014)(7696005)(478600001)(8936002)(71200400001)(9686003)(66556008)(66476007)(76116006)(66446008)(8676002)(6506007)(66946007)(33656002)(55016002)(85182001)(11606004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: s3wvG4nA/eYNd79i6HRDMmQFi/G8uFeomFJ2Qef15sns9ggti3oH0k8fFH7Lh15NlxGyc7skGhfKTc+AbU0HydzTWR3j4/cHq5OXGc6/bYS2fA3lVoJVyxmPLK1F/VhjlGUxsyhuhlYEYfH3Ue1hohIiqv/B8QCfQlZYzTZ5udJs7rIj356DA+yhbHrJ7/ZbatiJvTCOArm6uboy8UwlaVe3H3p/IsA7YeAI+rYi0qe9L6X0F2wwOUKchenmlEu2sOU1aV16l2QJYq1Lu5ntqsWWo+wQt7OFakV9/V7zL2ATSxg1ZW80JTJvODW0Q2zKPrGc1vZ0G5x8IkCDyKw2Sl3zRtq4K40DCKJnjxUqe54c1fttfx1CGrHGbEC+e1r8f+MDXgHg9Df21F+wH92+of376hpWwtaWKiEPEb49wtoibxhxkhMkcgLS56DH6ADIK41ajLuUiS9qUFqiZlzLHU/Nud7iv50MhWfPUAfVF+Q=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200520182011.32236-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-22_05:2020-05-21,2020-05-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011 spamscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005220070
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d83f458e-ebc4-493d-8583-08d7fe329e80
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 09:29:25.6699
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0Rzf6c/8JlUB4HWOCyX6sb5gmDbgJQmQ0jWosjo6FLgqNeg+HQhXCjmc5ne39EBVrpKUy2+PZzzlM98LiATmfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR02MB4340
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/20/20 11:50 PM, Ian Rogers wrote:
-> Metric groups contain metrics. Metrics create groups of events to
-> ideally be scheduled together. Often metrics refer to the same events,
-> for example, a cache hit and cache miss rate. Using separate event
-> groups means these metrics are multiplexed at different times and the
-> counts don't sum to 100%. More multiplexing also decreases the
-> accuracy of the measurement.
-> 
-> This change orders metrics from groups or the command line, so that
-> the ones with the most events are set up first. Later metrics see if
-> groups already provide their events, and reuse them if
-> possible. Unnecessary events and groups are eliminated.
-> 
-> The option --metric-no-group is added so that metrics aren't placed in
-> groups. This affects multiplexing and may increase sharing.
-> 
-> The option --metric-mo-merge is added and with this option the
-> existing grouping behavior is preserved.
-> 
-> Using skylakex metrics I ran the following shell code to count the
-> number of events for each metric group (this ignores metric groups
-> with a single metric, and one of the duplicated TopdownL1 and
-> TopDownL1 groups):
-> 
-> for i in all Branches BrMispredicts Cache_Misses FLOPS Instruction_Type Memory_BW Pipeline Power SMT Summary TopdownL1 TopdownL1_SMT
-> do
->   echo Metric group: $i
->   echo -n " - No merging (old default, now --metric-no-merge): "
->   /tmp/perf/perf stat -a --metric-no-merge -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]" | wc -l
->   echo -n " - Merging over metrics (new default)             : "
->   /tmp/perf/perf stat -a -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
->   echo -n " - No event groups and merging (--metric-no-group): "
->   /tmp/perf/perf stat -a --metric-no-group -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
-> done
-> 
-> Metric group: all
->  - No merging (old default, now --metric-no-merge): 193
->  - Merging over metrics (new default)             : 142
->  - No event groups and merging (--metric-no-group): 84
-> Metric group: Branches
->  - No merging (old default, now --metric-no-merge): 8
->  - Merging over metrics (new default)             : 8
->  - No event groups and merging (--metric-no-group): 4
-> Metric group: BrMispredicts
->  - No merging (old default, now --metric-no-merge): 11
->  - Merging over metrics (new default)             : 11
->  - No event groups and merging (--metric-no-group): 10
-> Metric group: Cache_Misses
->  - No merging (old default, now --metric-no-merge): 11
->  - Merging over metrics (new default)             : 9
->  - No event groups and merging (--metric-no-group): 6
-> Metric group: FLOPS
->  - No merging (old default, now --metric-no-merge): 18
->  - Merging over metrics (new default)             : 10
->  - No event groups and merging (--metric-no-group): 10
-> Metric group: Instruction_Type
->  - No merging (old default, now --metric-no-merge): 6
->  - Merging over metrics (new default)             : 6
->  - No event groups and merging (--metric-no-group): 4
-> Metric group: Pipeline
->  - No merging (old default, now --metric-no-merge): 6
->  - Merging over metrics (new default)             : 6
->  - No event groups and merging (--metric-no-group): 5
-> Metric group: Power
->  - No merging (old default, now --metric-no-merge): 16
->  - Merging over metrics (new default)             : 16
->  - No event groups and merging (--metric-no-group): 10
-> Metric group: SMT
->  - No merging (old default, now --metric-no-merge): 11
->  - Merging over metrics (new default)             : 8
->  - No event groups and merging (--metric-no-group): 7
-> Metric group: Summary
->  - No merging (old default, now --metric-no-merge): 19
->  - Merging over metrics (new default)             : 17
->  - No event groups and merging (--metric-no-group): 17
-> Metric group: TopdownL1
->  - No merging (old default, now --metric-no-merge): 16
->  - Merging over metrics (new default)             : 7
->  - No event groups and merging (--metric-no-group): 7
-> Metric group: TopdownL1_SMT
->  - No merging (old default, now --metric-no-merge): 24
->  - Merging over metrics (new default)             : 7
->  - No event groups and merging (--metric-no-group): 7
-> 
-> There are 5 out of 12 metric groups where no events are shared, such
-> as Power, however, disabling grouping of events always reduces the
-> number of events.
-> 
-> The result for Memory_BW needs explanation:
-> 
-> Metric group: Memory_BW
->  - No merging (old default, now --metric-no-merge): 9
->  - Merging over metrics (new default)             : 5
->  - No event groups and merging (--metric-no-group): 11
-> 
-> Both with and without merging the groups fail to be set up and so the
-> event counts here are for broken metrics. The --metric-no-group number
-> is accurate as all the events are scheduled. Ideally a constraint
-> would be added for these metrics in the json code to avoid grouping.
-> 
-> v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
-> missing comma with metric lists (reported-by Jiri Olsa
-> <jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
-> (suggested-by Jiri Olsa).
-> 
-> v1. was prepared on kernel/git/acme/linux.git branch tmp.perf/core
-> 
-> Compared to RFC v3: fix a bug where unnecessary commas were passed to
-> parse-events and were echoed. Fix a bug where the same event could be
-> matched more than once with --metric-no-group, causing there to be
-> events missing.
-> https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-> 
-> Ian Rogers (7):
->   perf metricgroup: Always place duration_time last
->   perf metricgroup: Use early return in add_metric
->   perf metricgroup: Delay events string creation
->   perf metricgroup: Order event groups by size
->   perf metricgroup: Remove duped metric group events
->   perf metricgroup: Add options to not group or merge
->   perf metricgroup: Remove unnecessary ',' from events
-> 
-
-Reviewd-By: Kajol Jain <kjain@linux.ibm.com>
-Tested-By: Kajol Jain <kjain@linux.ibm.com> ( Tested it to see behavior with some metric groups in both x86 and Power machine)
-
-Thanks,
-Kajol Jain
-
->  tools/perf/Documentation/perf-stat.txt |  19 ++
->  tools/perf/builtin-stat.c              |  11 +-
->  tools/perf/util/metricgroup.c          | 239 ++++++++++++++++++-------
->  tools/perf/util/metricgroup.h          |   6 +-
->  tools/perf/util/stat.h                 |   2 +
->  5 files changed, 207 insertions(+), 70 deletions(-)
-> 
+IFRoZSBkYXRhIHN0cnVjdHVyZSBtZW1iZXIgobBycG1iLT5tZKGxIHdhcyBwYXNzZWQgdG8gYSBj
+YWxsIG9mDQogdGhlIGZ1bmN0aW9uIKGwbW1jX2Jsa19wdXShsSBhZnRlciBhIGNhbGwgb2YgdGhl
+IGZ1bmN0aW9uIKGwcHV0X2RldmljZaGxLg0KIFJlb3JkZXIgdGhlc2UgZnVuY3Rpb24gY2FsbHMg
+dG8ga2VlcCB0aGUgZGF0YSBhY2Nlc3NlcyBjb25zaXN0ZW50Lg0KDQpGaXhlczogMWM4N2Y3MzU3
+ODQ5ICgibW1jOiBibG9jazogRml4IGJ1ZyB3aGVuIHJlbW92aW5nIFJQTUIgY2hhcmRldiAiKQ0K
+U2lnbmVkLW9mZi1ieTogUGVuZyBIYW8gPHJpY2hhcmQucGVuZ0BvcHBvLmNvbT4NCi0tLQ0KIGRy
+aXZlcnMvbW1jL2NvcmUvYmxvY2suYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
+b24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2NvcmUvYmxv
+Y2suYyBiL2RyaXZlcnMvbW1jL2NvcmUvYmxvY2suYw0KaW5kZXggODQ5OWI1Ni4uZTZlMDI1YyAx
+MDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1jL2NvcmUvYmxvY2suYw0KKysrIGIvZHJpdmVycy9tbWMv
+Y29yZS9ibG9jay5jDQpAQCAtMjQ4Myw4ICsyNDgzLDggQEAgc3RhdGljIGludCBtbWNfcnBtYl9j
+aHJkZXZfcmVsZWFzZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkNCiBz
+dHJ1Y3QgbW1jX3JwbWJfZGF0YSAqcnBtYiA9IGNvbnRhaW5lcl9vZihpbm9kZS0+aV9jZGV2LA0K
+ICAgc3RydWN0IG1tY19ycG1iX2RhdGEsIGNocmRldik7DQoNCi1wdXRfZGV2aWNlKCZycG1iLT5k
+ZXYpOw0KIG1tY19ibGtfcHV0KHJwbWItPm1kKTsNCitwdXRfZGV2aWNlKCZycG1iLT5kZXYpOw0K
+DQogcmV0dXJuIDA7DQogfQ0KLS0NCjIuNy40DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXw0KT1BQTw0KDQqxvrXn19PTyrz+vLDG5Li9vP66rNPQT1BQT7mry761xLGjw9zQxc+io6y9
+9s/e09rTyrz+1rjD97XEytW8/sjLyrnTw6OosPy6rLj2yMu8sMi61+mjqaGjvfvWucjOus7Iy9Ta
+zrS+rcrayKi1xMfpv/bPwtLUyM66ztDOyr3KudPDoaPI57n7xPq07crVwcuxvtPKvP6jrMfrwaK8
+tNLUtefX09PKvP7NqNaqt6K8/sjLsqLJvrP9sb7Tyrz+vLDG5Li9vP6how0KDQpUaGlzIGUtbWFp
+bCBhbmQgaXRzIGF0dGFjaG1lbnRzIGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGZy
+b20gT1BQTywgd2hpY2ggaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbiBvciBlbnRpdHkg
+d2hvc2UgYWRkcmVzcyBpcyBsaXN0ZWQgYWJvdmUuIEFueSB1c2Ugb2YgdGhlIGluZm9ybWF0aW9u
+IGNvbnRhaW5lZCBoZXJlaW4gaW4gYW55IHdheSAoaW5jbHVkaW5nLCBidXQgbm90IGxpbWl0ZWQg
+dG8sIHRvdGFsIG9yIHBhcnRpYWwgZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBvciBkaXNzZW1p
+bmF0aW9uKSBieSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJlY2lwaWVudChzKSBp
+cyBwcm9oaWJpdGVkLiBJZiB5b3UgcmVjZWl2ZSB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNl
+IG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHBob25lIG9yIGVtYWlsIGltbWVkaWF0ZWx5IGFuZCBkZWxl
+dGUgaXQhDQo=
