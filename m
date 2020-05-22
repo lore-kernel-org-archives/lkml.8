@@ -2,66 +2,96 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E091206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CB3206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbgEVWg4 (ORCPT
+        id S1731219AbgEVWh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731029AbgEVWg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:36:56 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513D6C061A0E;
-        Fri, 22 May 2020 15:36:56 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B0F6412738EE0;
-        Fri, 22 May 2020 15:36:54 -0700 (PDT)
-Date:   Fri, 22 May 2020 15:36:53 -0700 (PDT)
-Message-Id: <20200522.153653.998395486877096103.davem@davemloft.net>
-To:     brgl@bgdev.pl
-Cc:     corbet@lwn.net, matthias.bgg@gmail.com, john@phrozen.org,
-        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
-        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
-        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
-        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
-Subject: Re: [PATCH 0/5] net: provide a devres variant of register_netdev()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200520114415.13041-1-brgl@bgdev.pl>
-References: <20200520114415.13041-1-brgl@bgdev.pl>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 22 May 2020 15:36:55 -0700 (PDT)
+        Fri, 22 May 2020 18:37:27 -0400
+Received: from elvis.franken.de ([193.175.24.41]:34928 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731029AbgEVWh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 18:37:27 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jcGI0-00019h-00; Sat, 23 May 2020 00:37:16 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 9BF9CC0183; Sat, 23 May 2020 00:36:56 +0200 (CEST)
+Date:   Sat, 23 May 2020 00:36:56 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Message-ID: <20200522223656.GA22313@alpha.franken.de>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
+ <20200522142550.GB15261@alpha.franken.de>
+ <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 20 May 2020 13:44:10 +0200
+On Fri, May 22, 2020 at 04:22:11PM +0100, Lorenzo Pieralisi wrote:
+> On Fri, May 22, 2020 at 04:25:50PM +0200, Thomas Bogendoerfer wrote:
+> > On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
+> > > We can now enable generic PCI driver in Kconfig, and remove legacy
+> > > PCI driver code.
+> > > 
+> > > Radeon vbios quirk is moved to the platform folder to fit the
+> > > new structure.
+> > > 
+> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > > --
+> > > v9: Fix licenses tag
+> > > ---
+> > >  arch/mips/Kconfig                  |   1 +
+> > >  arch/mips/loongson64/Makefile      |   2 +-
+> > >  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
+> > >  arch/mips/pci/Makefile             |   1 -
+> > >  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
+> > >  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
+> > >  6 files changed, 31 insertions(+), 189 deletions(-)
+> > >  create mode 100644 arch/mips/loongson64/vbios_quirk.c
+> > >  delete mode 100644 arch/mips/pci/fixup-loongson3.c
+> > >  delete mode 100644 arch/mips/pci/ops-loongson3.c
+> > 
+> > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> 
+> This patch (so the series) does not apply to v5.7-rc1 which is our
+> baseline. I reiterate the point, isn't it better to take the whole
+> series through the MIPS tree ?
 
->   net: ethernet: mtk_eth_mac: use devm_register_netdev()
+sounds better then
 
-This patch doesn't apply to net-next.
+> Failing that, the series has to
+> be rebased (or split differently so that it can be taken through
+> different trees), just let me know.
 
-Neither the source file drivers/net/ethernet/mediatek/mtk_eth_mac.c,
-nor the function mtk_mac_probe() even exist in the net-next GIT
-tree.
+so let's take via mips-next. So can I add your Acked-by to the
+first three patches ?
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
