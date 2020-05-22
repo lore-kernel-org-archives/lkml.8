@@ -2,139 +2,88 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7686C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D31C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85F5E206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:58:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OLb77ixa"
+	by mail.kernel.org (Postfix) with ESMTP id CC466206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgEVE6z (ORCPT
+        id S1728031AbgEVE74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 00:58:55 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35929 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgEVE6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 00:58:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SvQh69xKz9sSw;
-        Fri, 22 May 2020 14:58:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590123533;
-        bh=wuYb1sX37vHFVdmyCg4PaEL1k5oiP0hxC6qXjytIdmk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OLb77ixay1fhSslwQCM486sCBoDdGT2ItQfr/DNeVOia0rRGOMc2BvCW9+Tgb5BYW
-         RKBby7HTAY8RhiUqhhlL7xTb55HXMRouKCz8ut5n9Z528hQCKCWI4oAkwQwUFoGihI
-         WIU9uZGf92V0NSHaCLuMFvFFgNFhS7+6T/IFX8BWr5fO+pLy+hNLnfsDmi4WygD6AK
-         ae7wL9ODtsUJxkiIGmgSfm+qokAj2Ctf+TcUwJ6Bjsj6V3I+MQq7IDNeQU+2hFEZ2M
-         LtMfo5tVp5CNLcHjMi18gYK0Nz/C5SJ52jFlTI9FRBu2LVmmdQS8SRcu90hgvx/KuR
-         158CRbmbDF/zA==
-Date:   Fri, 22 May 2020 14:58:48 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@android.com>
-Subject: linux-next: manual merge of the block tree with the djw-vfs tree
-Message-ID: <20200522145848.38cdcf54@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MMnPKzbj/uTil22hI.HFc+/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 22 May 2020 00:59:56 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:21240 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726338AbgEVE74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 00:59:56 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgCXOQQ1XMde4RvvAA--.40693S4;
+        Fri, 22 May 2020 12:59:36 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ufs-bsg: Fix runtime PM imbalance on error
+Date:   Fri, 22 May 2020 12:59:29 +0800
+Message-Id: <20200522045932.31795-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgCXOQQ1XMde4RvvAA--.40693S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWDWF4DAry3Xr1kKF1UAwb_yoW3tFg_Wr
+        Wkur13Jw1UWryxJr1qgw17ury2vFZ8Xwn2kr40ya4fZ3yqv3Z3Wr4DJFykuw47JrZrXr1r
+        J340qFn3Ar1qyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+        JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r45MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU4WlkUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0IBlZdtOQJOQADsp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MMnPKzbj/uTil22hI.HFc+/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When ufs_bsg_alloc_desc_buffer() returns an error code,
+a pairing runtime PM usage counter decrement is needed
+to keep the counter balanced.
 
-Hi all,
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/scsi/ufs/ufs_bsg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Today's linux-next merge of the block tree got a conflict in:
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index 53dd87628cbe..516a7f573942 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -106,8 +106,10 @@ static int ufs_bsg_request(struct bsg_job *job)
+ 		desc_op = bsg_request->upiu_req.qr.opcode;
+ 		ret = ufs_bsg_alloc_desc_buffer(hba, job, &desc_buff,
+ 						&desc_len, desc_op);
+-		if (ret)
++		if (ret) {
++			pm_runtime_put_sync(hba->dev);
+ 			goto out;
++		}
+ 
+ 		/* fall through */
+ 	case UPIU_TRANSACTION_NOP_OUT:
+-- 
+2.17.1
 
-  drivers/block/loop.c
-
-between commit:
-
-  efbe3c2493d2 ("fs: Remove unneeded IS_DAX() check in io_is_direct()")
-
-from the djw-vfs tree and commit:
-
-  3448914e8cc5 ("loop: Add LOOP_CONFIGURE ioctl")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/block/loop.c
-index 14372df0f354,a565c5aafa52..000000000000
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@@ -1022,21 -1146,20 +1146,21 @@@ static int loop_configure(struct loop_d
-  	lo->old_gfp_mask =3D mapping_gfp_mask(mapping);
-  	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
- =20
-- 	if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
-+ 	if (!(lo->lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
-  		blk_queue_write_cache(lo->lo_queue, true, false);
- =20
-- 	if ((lo->lo_backing_file->f_flags & O_DIRECT) && inode->i_sb->s_bdev) {
-+ 	if (config->block_size)
-+ 		bsize =3D config->block_size;
- -	else if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev)
-++	else if ((lo->lo_backing_file->f_flags & O_DIRECT) &&
-++		 inode->i_sb->s_bdev)
-  		/* In case of direct I/O, match underlying block size */
-- 		unsigned short bsize =3D bdev_logical_block_size(
-- 			inode->i_sb->s_bdev);
-+ 		bsize =3D bdev_logical_block_size(inode->i_sb->s_bdev);
-+ 	else
-+ 		bsize =3D 512;
- =20
-- 		blk_queue_logical_block_size(lo->lo_queue, bsize);
-- 		blk_queue_physical_block_size(lo->lo_queue, bsize);
-- 		blk_queue_io_min(lo->lo_queue, bsize);
-- 	}
-+ 	blk_queue_logical_block_size(lo->lo_queue, bsize);
-+ 	blk_queue_physical_block_size(lo->lo_queue, bsize);
-+ 	blk_queue_io_min(lo->lo_queue, bsize);
- =20
-  	loop_update_rotational(lo);
-  	loop_update_dio(lo);
-
---Sig_/MMnPKzbj/uTil22hI.HFc+/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HXAgACgkQAVBC80lX
-0GzeFAf/fY5J5fcK8zcIFdxuKQ+uNvac1S9vL3mhcOClQeS1LoUcgBDNsXLlRVbq
-UECXDRuSzs1u78/unXBOn8Prqa8AxUcKk8rl34tYgU0pPkFxeQOSrwQzrUqKpyaw
-xNSoGzKpSUfdvYgkmzayhrp3mfN1H++8ApqSyue6jgrwyB3M0icZ+DLLra7mEqdb
-gsgpPxFh8YDCLjgt1aaygKFL75vCVZfcaU41tfzq9cOiD3HcZPvon9gIl+1zjT5h
-3i4TSQbucbJA0cSeu22Ws50S3sonYi+uOQnuvg2W++uYxfMyatGPoUGsfC1g+u6L
-QbR2ly1rqIUrZKA2qxp2pkTNlgA2Ug==
-=zrFK
------END PGP SIGNATURE-----
-
---Sig_/MMnPKzbj/uTil22hI.HFc+/--
