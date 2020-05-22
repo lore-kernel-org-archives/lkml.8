@@ -2,118 +2,76 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3561EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC7AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05D8C20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD820207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWpewjZW"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XLRi9by/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgEVMPd (ORCPT
+        id S1729446AbgEVMSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729422AbgEVMPb (ORCPT
+        Fri, 22 May 2020 08:18:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42410 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728544AbgEVMSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:15:31 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC25C061A0E;
-        Fri, 22 May 2020 05:15:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l11so10001286wru.0;
-        Fri, 22 May 2020 05:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hhBfaAImjH2UVNRp7gKxiak61uswGVZG6aVigHmQNUc=;
-        b=sWpewjZWkT+NsuGQ9V+NV3Ou/yoW5k8zRfTnkglOttebJ5WzHRM7uiYYMn7snG5wyj
-         r+lq3QRljMG9Ia07D8Gb/x2i/yiAZ2tFBzG+LO5NnBSoDxAwVlCEnA7Qc5aQqPGae2oo
-         0jnuAvYjsnG03rRJgj48v5OXKWkuSRS80s6PmGz0/tKqaUJe2DEg/Po0OtnsoGvXwtzP
-         BrbUPNhzqvhSJX2gwm/Kw2i4k9oZNgx7Nya+Vz8+g9nQZ7S1KENQyxF6vL/8DgK8RlIQ
-         9CvdMRL3BQTqBbeleKeuHdDiSqI3S4rTqoY3lfjDvQiDeBw2SsiT+p+voIsLZzADZr3A
-         Ip8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hhBfaAImjH2UVNRp7gKxiak61uswGVZG6aVigHmQNUc=;
-        b=GtuuMxreib4KQTtyhQKEC3tRDn7bNKlhnrXj0qmyLgvjTRxywn+t2lgSJ4QpJK62kC
-         vYnDhaMdL0kUqPF9IoNCCSncu/2kzt9//Q5/fD7QYbhwgYgv14ktF869i37aAXls40r5
-         1bNxu/gLkJdnvY1HJx5r/aVX9qL32bCUiqXMaXIgAgckoBHXOjw8Ovcv1Xi2BPGkMK7K
-         oC2899WUmTR69EflG7nZIbxdLI85UqnLi8kY0m63/mspWqw543dley5LwnoMgjtVsrAN
-         NjvhbfV2puUmJ9MQl03pYq2fKYx8ByO74DsHduzVcvFRbJ0KGV1qs6mEUx6uaf/FDuzn
-         b77w==
-X-Gm-Message-State: AOAM5322KWrfjbQj1iIizTBWx0UYu3JdsIfyo7+dLIem5xn5aB0KEcwx
-        jRD8FPixyds0N8e5vLP5iFY=
-X-Google-Smtp-Source: ABdhPJxuqavo8Zcw+Zlj4qPhljdlh+JK+KhGZ1yZnzVuNPR33zxb13loGaNaVUMz36J0YlmudwFSOQ==
-X-Received: by 2002:adf:decb:: with SMTP id i11mr3485439wrn.172.1590149729304;
-        Fri, 22 May 2020 05:15:29 -0700 (PDT)
-Received: from skynet.lan (159.red-83-44-12.dynamicip.rima-tde.net. [83.44.12.159])
-        by smtp.gmail.com with ESMTPSA id g6sm9293784wrp.75.2020.05.22.05.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 05:15:28 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v4 2/5] mtd: rawnand: brcmnand: fix CS0 layout
-Date:   Fri, 22 May 2020 14:15:21 +0200
-Message-Id: <20200522121524.4161539-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522121524.4161539-1-noltari@gmail.com>
-References: <20200522072525.3919332-1-noltari@gmail.com>
- <20200522121524.4161539-1-noltari@gmail.com>
+        Fri, 22 May 2020 08:18:23 -0400
+X-UUID: e4e428a023904e49a502d2f6531881e9-20200522
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=kQDziwgP0hgrh7T+hQAa+vHSi/RDRfa4EIfd/mEUOpk=;
+        b=XLRi9by/dY/LSjDXfILlZsNEn2E7XYx1Rq+2gfTMocFjLUnlzj7TaJTjOvWoTywM18XGTzyf+P67saTUdDbEpbcSFWj3MKDHvKd/AfZp91uCXINrkeq3sxw/RS48nQfh+YfnkfhIOiMNb6DCY0ZDaErJeDLS3uPX6iloxFrRfAU=;
+X-UUID: e4e428a023904e49a502d2f6531881e9-20200522
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1596963198; Fri, 22 May 2020 20:18:19 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 22 May 2020 20:18:15 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 22 May 2020 20:18:15 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
+        <chaotian.jing@mediatek.com>, <pengshun.zhao@mediatek.com>,
+        Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1 0/3] scsi: ufs-mediatek: Fix clk-gating and introduce low-power mode for vccq2
+Date:   Fri, 22 May 2020 20:18:11 +0800
+Message-ID: <20200522121814.9100-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only v3.3-v5.0 have a different CS0 layout.
-Controllers before v3.3 use the same layout for every CS.
-
-Fixes: 27c5b17cd1b1 ("mtd: nand: add NAND driver "library" for Broadcom STB NAND controller")
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v4: no changes.
- v3: no changes.
- v2: fix commit log.
-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 6a08dd07b058..72b268d8e3a4 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -606,8 +606,9 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
- 	} else {
- 		ctrl->cs_offsets = brcmnand_cs_offsets;
- 
--		/* v5.0 and earlier has a different CS0 offset layout */
--		if (ctrl->nand_version <= 0x0500)
-+		/* v3.3-5.0 have a different CS0 offset layout */
-+		if (ctrl->nand_version >= 0x0303 &&
-+		    ctrl->nand_version <= 0x0500)
- 			ctrl->cs0_offsets = brcmnand_cs_offsets_cs0;
- 	}
- 
--- 
-2.26.2
+SGksDQpUaGlzIHBhdGNoc2V0IGZpeGVzIGEgY2xrLWdhdGluZyBpc3N1ZSBhbmQgaW50cm9kdWNl
+cyBsb3ctcG93ZXIgbW9kZSBmb3IgdmNjcTIgaW4gTWVkaWFUZWsgcGxhdGZvcm1zLg0KDQpTdGFu
+bGV5IENodSAoMyk6DQogIHNjc2k6IHVmcy1tZWRpYXRlazogRml4IGltcHJlY2lzZSB3YWl0aW5n
+IHRpbWUgZm9yIHJlZi1jbGsgY29udHJvbA0KICBzY3NpOiB1ZnMtbWVkaWF0ZWs6IERvIG5vdCBn
+YXRlIGNsb2NrcyBpZiBhdXRvLWhpYmVybjggaXMgbm90IGVudGVyZWQNCiAgICB5ZXQNCiAgc2Nz
+aTogdWZzLW1lZGlhdGVrOiBJbnRyb2R1Y2UgbG93LXBvd2VyIG1vZGUgZm9yIGRldmljZSBwb3dl
+ciBzdXBwbHkNCg0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMgfCA2NCArKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRl
+ay5oIHwgIDIgKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDEzIGRlbGV0
+aW9ucygtKQ0KDQotLSANCjIuMTguMA0K
 
