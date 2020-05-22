@@ -2,99 +2,83 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08796C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD007206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FDC20812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgEVIIe (ORCPT
+        id S1729055AbgEVIIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:08:34 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:55977 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgEVIIe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:08:34 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MMoKq-1jJPul2jRM-00IkLg; Fri, 22 May 2020 10:08:31 +0200
-Received: by mail-qk1-f170.google.com with SMTP id 190so9991908qki.1;
-        Fri, 22 May 2020 01:08:31 -0700 (PDT)
-X-Gm-Message-State: AOAM531TopgningbtZJAEr0sfJj/fg7FtsqwtwZp3vnpmtV7vBLt3SEi
-        46vpnZTRc5m2PLc2vMlCHehnlwBsu6lgJgujkd0=
-X-Google-Smtp-Source: ABdhPJxvCN5ckqOsRHgJtAQbB9IOx9DfaplnfBWTHN4WldKZGpHGw1jQyX3CgSCcu6TNJ4bB5ueanJiINGKzx+D9eUA=
-X-Received: by 2002:a37:434b:: with SMTP id q72mr14547426qka.352.1590134910369;
- Fri, 22 May 2020 01:08:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522160313.09cb2b7e@canb.auug.org.au>
-In-Reply-To: <20200522160313.09cb2b7e@canb.auug.org.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 May 2020 10:08:14 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1H43KuLbQ0mPNjSCoWbqT2P_kx93zsdYtQXv2nw2WdvQ@mail.gmail.com>
-Message-ID: <CAK8P3a1H43KuLbQ0mPNjSCoWbqT2P_kx93zsdYtQXv2nw2WdvQ@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the devicetree tree with the arm-soc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Rob Herring <robherring2@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dShZ1qXd4jHuP4xFgkiv2xNaEHWhAnlm0xjGh5Z7VY7bZ3ip9BK
- megMSIPIHKIp/OhHs3XXHxcDX8UZhPxIW5NvZnIMHKUBylHwp2fIPgRMM3dc0JxLNdyKN9y
- DF725uGY89GcQpmoC1URNqwUhhWT3ktgD1fs7FaGu5Q92N4RZTnZcEJebVFeLuDyMcMN/RE
- 8r18XDC2Nlm6kZiJJCLRw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QHiGbz+iv2U=:DchdaCXz9WiGoUcniA4zfa
- Gdgq4NjVmRZ0ZN1SV8iusKvRHnF4PCFMrhcagkmDvZ6Z+r0ftqS/ShoDx2eJ2qphL30SxXxPY
- V4o+lkMKxDBDHg+NhjTW9HebPwZIbaRImODup5ZsF5AVShf+SblD8ykYjA0IxEBkqncYEmlFM
- 1zmC1QtXMTpNaNzdvap+cbYE9EWml+vNV217s+zuTHPcp8bblPo4OcDVTMbC8eCFpTFO4RqMm
- djko3POKzhYJ0b0RIuEz6TyrmksCkbODvrAIxLukKyavXLx+hlaLFhN3oLTe9lSGDgfbkooII
- iM2/F0mCY1+dAL4DFeHq5pnJ/mifsgq6ML9yZVSU+eb5GSnl98CrDsPCE8uGe0cVZ9PrO6tg9
- OEGiuIb2sImx7igOrikW4VE4G7cEBNy0+ieLqIm4AkE8JgZt5Kpb/5FNDpa6+3njiS0nLa0VU
- Ziq5uQHsuR0IPVOO6qwlnThu8nN1bbjiUzTS2hsnQ3nWqurebpuMrNmg14fW2AhKz4P5vgiT6
- Zbgqdd2PVKa/rCYUvwO3ixXR4QYmCjCRpzYZeiIwxqLhLOqBgAy0kKNZVNmo7UF5oxzSgt9L4
- 828njk0Kqxdzqjb0oborIZkghlL4YZWOLWsqAJDEIskYq7ljinuRVczBe/+zz+7W8+phkqtd+
- lIXqnIW1c0uLmyVnXgd6HDbym4QdJwPGMq06+Gz5unuZk7SM13fvdYi3l701V5zmBAuiZ+eGl
- g9Ozk7AohtgD7MeaAh/wY8FCWUYhdweiBtrkMSoLM6qQa/tGJoTRyDroXKvN+JQtWAj962bpB
- BiCwzFLjr8O5PXam3nKrnypgfvMmphwDZCQ52kke30WLnvjRHE=
+        Fri, 22 May 2020 04:08:54 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:45006 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728152AbgEVIIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:08:53 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgD3_3uHiMde5av+AQ--.53706S4;
+        Fri, 22 May 2020 16:08:43 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: rcar: Fix runtime PM imbalance on error
+Date:   Fri, 22 May 2020 16:08:38 +0800
+Message-Id: <20200522080839.32612-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgD3_3uHiMde5av+AQ--.53706S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoW3tFg_GF
+        naq3srWr15KryDX3y7Za1avryIvFn8WF18ur4ktF4ayw42v3yDury8Zr95Zr4fXw4UJ34D
+        tFn3JryxZrsxCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l
+        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWU
+        twCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
+        wI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUsF4iUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEIBlZdtOQbggAFsK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 8:03 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
-> diff --cc Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> index 10a7f0752281,113f93b9ae55..000000000000
-> --- a/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> +++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> @@@ -51,9 -51,8 +51,9 @@@ properties
->         - description: LD20 SoC boards
->           items:
->             - enum:
-> -             - socionext,uniphier-ld20-akebi96
-> -             - socionext,uniphier-ld20-global
-> -             - socionext,uniphier-ld20-ref
-> ++              - socionext,uniphier-ld20-akebi96
-> +               - socionext,uniphier-ld20-global
-> +               - socionext,uniphier-ld20-ref
->             - const: socionext,uniphier-ld20
->         - description: PXs3 SoC boards
->           items:
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Ok, thanks! I think can let Linus handle this in the merge window.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/gpio/gpio-rcar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-      Arnd
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 7284473c9fe3..eac1582c70da 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -250,8 +250,10 @@ static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
+ 	int error;
+ 
+ 	error = pm_runtime_get_sync(p->dev);
+-	if (error < 0)
++	if (error < 0) {
++		pm_runtime_put(p->dev);
+ 		return error;
++	}
+ 
+ 	error = pinctrl_gpio_request(chip->base + offset);
+ 	if (error)
+-- 
+2.17.1
+
