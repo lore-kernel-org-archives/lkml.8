@@ -2,311 +2,162 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381D620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28DB20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:54:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AYQq070J"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="JT1BLyDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgEVFyM (ORCPT
+        id S1728192AbgEVFyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:54:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53008 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgEVFyM (ORCPT
+        Fri, 22 May 2020 01:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgEVFyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:54:12 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M5rquC068318;
-        Fri, 22 May 2020 00:53:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590126832;
-        bh=NshuB9n7qwMmk0C1n2A19PvAX8raMBe1CgqKMTbZRv8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AYQq070JKTsfBEbKIFPWTxHq9qYSEOhjzxZ3Uh0/ZFEQhzAlRCGREtpRYFpOuQD7C
-         hz5I9YZjggvNCMFBCl+j4TeytsHzxqUrCpn1kYYnCFV8wUJADIu63T37pCnTrC7ZPc
-         6jQYM955cFR1cjcIWEpdNo/l2HHSi0F0JHHkvZtI=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M5rqub091641
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 00:53:52 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 00:53:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 00:53:51 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M5rlfU114971;
-        Fri, 22 May 2020 00:53:47 -0500
-Subject: Re: [PATCH 01/19] dt-bindings: PCI: Endpoint: Add DT bindings for PCI
- EPF NTB Device
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>
-References: <20200514145927.17555-1-kishon@ti.com>
- <20200514145927.17555-2-kishon@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <73193475-5244-554d-df71-df600f70c0d9@ti.com>
-Date:   Fri, 22 May 2020 11:23:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 01:54:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B69C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 22:54:20 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u188so8671656wmu.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 22:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aIk25yXFBXzVd2JD01BBzYOv1Gg6yn56UGtgn996fw0=;
+        b=JT1BLyDzBfEuLHxkQaZ3XLCFkoZmRsT1N912PHah3lVhoqoq8JLyx4QkKZsoPUywUl
+         E8PjWS0l/TEp1xK0mrl7UoiGv0RIkC4oZIhGYEYhQwMuD2/uXOdMLL2IkSjV5JEGLgEu
+         hj4YoPe4YprgbTbrKfT1Nu4aNFpoW8dgf0B3kbjxNFXc4BsbKku9MqU5Q1RXnbJtzvI5
+         xk7NFC/3TEqxST4kdWTIpy40xEPajjPX9ncrzUYWfeR0bEFQS+jRN5+P16lXMnvzUr41
+         awxZth5SCE6kzfOWGlFHf1t/Wjx8G4cPS2di/vbxuQSFpkN9iBmP1ZYvg94K/83Lijpl
+         Y6Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aIk25yXFBXzVd2JD01BBzYOv1Gg6yn56UGtgn996fw0=;
+        b=A4Dmmzj9EmSAYY7eOVPdqCvrZckOiEzSLskobc3lOsLotgCbsKVErMBZId5JQyiC8e
+         ybDrsVHPjmMtNxzOQnZqlO0bgFuTD1YXtBPrmxeu0D//weA+uxRO100hvfX9Ndxwrbvs
+         F6fsCssMIBzOMQzCUshIlDWT/Szz1X4B0uKrMoVweS4apE+IyMuDP4+4SGRBHG0MK2CY
+         kfpdjgdqc69sQ4UNFbgzZOkVnDV7GybUknK9nC6WaVwDe+6GE+mYmCYC/+k7q3ieZovA
+         R0TXkLEt3AgYw8ToYrFm9gBPkECIz+xtZkwnQTWtv1cz64M4gqknYa3DP4SU6FkdDmeZ
+         8zgw==
+X-Gm-Message-State: AOAM532kfMyu5d0S3qkyA9bEdfXvk46EkVX2GTkIrQh4kHG1blfX7KSp
+        8DV6eD+ubl4+g3O5PAyY/+462HdSJLxaM3t9PVSvEg==
+X-Google-Smtp-Source: ABdhPJynY0OTAvvIBrM+2Ad3FdHSwp7eR2/+LIesoKwApFshfRqfP2uvsUvf/GyYJKsRhjNqdIuaVpXMiLoV/07JSRc=
+X-Received: by 2002:a7b:c4da:: with SMTP id g26mr11532873wmk.3.1590126858584;
+ Thu, 21 May 2020 22:54:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200514145927.17555-2-kishon@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200521134544.816918-1-anup.patel@wdc.com> <20200521134544.816918-6-anup.patel@wdc.com>
+ <2aec08b7-7197-4b60-89d9-c3b0d5a8a258@gmail.com>
+In-Reply-To: <2aec08b7-7197-4b60-89d9-c3b0d5a8a258@gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 22 May 2020 11:24:07 +0530
+Message-ID: <CAAhSdy0OuxCwMVPBrvPpYMfVrhUuY3pONysk75yognOM5-0U+g@mail.gmail.com>
+Subject: Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
+To:     Sean Anderson <seanga2@gmail.com>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi RobH,
+On Fri, May 22, 2020 at 1:35 AM Sean Anderson <seanga2@gmail.com> wrote:
+>
+> On 5/21/20 9:45 AM, Anup Patel wrote:
+> > We add DT bindings documentation for CLINT device.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > ---
+> >  .../bindings/timer/sifive,clint.txt           | 33 +++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > new file mode 100644
+> > index 000000000000..cae2dad1223a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > @@ -0,0 +1,33 @@
+> > +SiFive Core Local Interruptor (CLINT)
+> > +-------------------------------------
+> > +
+> > +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
+> > +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
+> > +
+> > +It directly connects to the timer and inter-processor interrupt lines of
+> > +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
+> > +controller is the parent interrupt controller for CLINT device.
+> > +
+> > +The clock frequency of CLINT is specified via "timebase-frequency" DT
+> > +property of "/cpus" DT node. The "timebase-frequency" DT property is
+> > +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
+> > +
+> > +Required properties:
+> > +- compatible : "sifive,clint-1.0.0" and a string identifying the actual
+> > +  detailed implementation in case that specific bugs need to be worked around.
+>
+> Should the "riscv,clint0" compatible string be documented here? This
 
-On 5/14/2020 8:29 PM, Kishon Vijay Abraham I wrote:
-> Add device tree schema for PCI endpoint function bus to which
-> endpoint function devices should be attached. Then add device tree
-> schema for PCI endpoint function device to include bindings thats
-> generic to all endpoint functions. Finally add device tree schema
-> for PCI endpoint NTB function device by including the generic
-> device tree schema for PCIe endpoint function.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../bindings/pci/endpoint/pci-epf-bus.yaml    | 42 +++++++++++
->  .../bindings/pci/endpoint/pci-epf-device.yaml | 69 +++++++++++++++++++
->  .../bindings/pci/endpoint/pci-epf-ntb.yaml    | 68 ++++++++++++++++++
->  3 files changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
-> new file mode 100644
-> index 000000000000..1c504f2e85e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/endpoint/pci-epf-bus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCI Endpoint Function Bus
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: pci-epf-bus
-> +
-> +patternProperties:
-> +  "^func@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      PCI Endpoint Function Bus node should have subnodes for each of
-> +      the implemented endpoint function. It should follow the bindings
-> +      specified for endpoint function in
-> +      Documentation/devicetree/bindings/pci/endpoint/
-> +
-> +examples:
-> +  - |
-> +    epf_bus {
-> +      compatible = "pci-epf-bus";
-> +
-> +      func@0 {
-> +        compatible = "pci-epf-ntb";
-> +        epcs = <&pcie0_ep>, <&pcie1_ep>;
-> +        epc-names = "primary", "secondary";
-> +        reg = <0>;
+Yes, I forgot to add this compatible string. I will add in v2.
 
-I'm not sure how to represent "reg" property properly for cases like this where
-it represents ID and not a memory resource. I seem to get warning for
-"reg_format" even after adding address-cells and size-cells property in
-epf_bus. Can you give some hints here please?
+> peripheral is not really specific to sifive, as it is present in most
+> rocket-chip cores.
 
-> +        epf,vendor-id = /bits/ 16 <0x104c>;
+I agree that CLINT is present in a lot of non-SiFive RISC-V SOCs and
+FPGAs but this IP is only documented as part of SiFive FU540 SOC.
+(Refer, https://static.dev.sifive.com/FU540-C000-v1.0.pdf)
 
-I want to make vendor-id and device-id as 16 bits from the beginning at-least
-for PCIe endpoint. So I'm prefixing these properties with "epf,". However I get
-this "do not match any of the regexes:". Can we add "epf" as a standard prefix?
+The RISC-V foundation should host the CLINT spec independently
+under https://github.com/riscv and make CLINT spec totally open.
 
-Thanks
-Kishon
-> +        epf,device-id = /bits/ 16 <0xb00d>;
-> +        num-mws = <4>;
-> +        mws-size = <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>;
-> +      };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
-> new file mode 100644
-> index 000000000000..cee72864c8ca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-device.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/endpoint/pci-epf-device.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCI Endpoint Function Device
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: pci-epf-bus
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^func@"
-> +
-> +  epcs:
-> +    description:
-> +      Phandle to the endpoint controller device. Should have "2" entries for
-> +      NTB endpoint function and "1" entry for others.
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  epc-names:
-> +    description:
-> +      Must contain an entry for each entry in "epcs" when "epcs" have more than
-> +      one entry.
-> +
-> +  reg:
-> +    maxItems: 0
-> +    description: Must contain the index number of the function.
-> +
-> +  epf,vendor-id:
-> +    description:
-> +      The PCI vendor ID
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint16
-> +
-> +  epf,device-id:
-> +    description:
-> +      The PCI device ID
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint16
-> +
-> +  epf,baseclass-code:
-> +    description: Code to classify the type of operation the function performs
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint8
-> +
-> +  epf,subclass-code:
-> +    description:
-> +      Specifies a base class sub-class, which identifies more specifically the
-> +      operation of the Function
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint8
-> +
-> +  epf,subsys-vendor-id:
-> +    description: Code to identify vendor of the add-in card or subsystem
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint16
-> +
-> +  epf,subsys-id:
-> +    description: Code to specify an id that is specific to a vendor
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint16
-> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
-> new file mode 100644
-> index 000000000000..92c2e522b9e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/endpoint/pci-epf-ntb.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCI Endpoint NTB Function Device
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +allOf:
-> +  - $ref: "pci-epf-device.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    const: pci-epf-ntb
-> +
-> +  epcs:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  epc-names:
-> +    items:
-> +      - const: primary
-> +      - const: secondary
-> +
-> +  num-mws:
-> +    description:
-> +      Specify the number of memory windows
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint8
-> +    minimum: 1
-> +    maximum: 4
-> +
-> +  mws-size:
-> +    description:
-> +      List of 'num-mws' entries containing size of each memory window.
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +required:
-> +  - compatible
-> +  - epcs
-> +  - epc-names
-> +  - epf,vendor-id
-> +  - epf,device-id
-> +  - num-mws
-> +  - mws-size
-> +
-> +examples:
-> +  - |
-> +    epf_bus {
-> +      compatible = "pci-epf-bus";
-> +
-> +      func@0 {
-> +        compatible = "pci-epf-ntb";
-> +        reg = <0>;
-> +        epcs = <&pcie0_ep>, <&pcie1_ep>;
-> +        epc-names = "primary", "secondary";
-> +        epf,vendor-id = /bits/ 16 <0x104c>;
-> +        epf,device-id = /bits/ 16 <0xb00d>;
-> +        num-mws = <4>;
-> +        mws-size = <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>;
-> +      };
-> +    };
-> +...
-> 
+For now, I have documented it just like PLIC DT bindings found at:
+Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+
+If RISC-V maintainers agree then I will document it as "RISC-V CLINT".
+
+@Palmer ?? @Paul ??
+
+>
+> > +- reg : Should contain 1 register range (address and length).
+> > +- interrupts-extended : Specifies which HARTs (or CPUs) are connected to
+> > +  the CLINT.  Each node pointed to should be a riscv,cpu-intc node, which
+> > +  has a riscv node as parent.
+> > +
+> > +Example:
+> > +
+> > +     clint@2000000 {
+> > +             compatible = "sifive,clint-1.0.0", "sifive,fu540-c000-clint";
+> > +             interrupts-extended = <
+> > +                     &cpu1-intc 3 &cpu1-intc 7
+> > +                     &cpu2-intc 3 &cpu2-intc 7
+> > +                     &cpu3-intc 3 &cpu3-intc 7
+> > +                     &cpu4-intc 3 &cpu4-intc 7>;
+> > +             reg = <0x2000000 0x4000000>;
+> > +     };
+> >
+>
+> --Sean
+
+Regards,
+Anup
