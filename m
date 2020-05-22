@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372C1221FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7139020756
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159105;
-	bh=r5rg1nGnucOa2iRYlF9dUzXK01fGwqiUSa2wE439b6Q=;
+	s=default; t=1590159107;
+	bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYeiKMK6T5fkFdYaXZzzHvuco8FPJOD88k6wKf5pjuPzxQIQ7EnRnrN/a+K7y2gyX
-	 e/VF7Cyn7n2ofZPZB+jOQCJKq9MVbgtMyzQ3HM1lIgNa3qRFpdn6HnZowxQzOwTmEH
-	 03pOMcalQ8kca58EnN7OjA7TRmw/8pibwmPSKfAI=
+	b=wTKEvfJ9cZ/z1SgtkDXtDSnI2Mrqkm5hGkzCXSp3939a/eywG51lEVZiNlsoU+GdS
+	 FKMZu8Ko1Nza2RrIC2zRuIzNp//J/Bj5n696UiSlx/IATBBEEkt6NVO0yDzh+89QLk
+	 E3JcZbTw9IAD6qKOlortF4YiBksSnuwL/5rG0fzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbgEVOvn (ORCPT
+        id S1731093AbgEVOvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbgEVOv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:28 -0400
+        id S1731011AbgEVOva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 418CD2253A;
-        Fri, 22 May 2020 14:51:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69A12223E0;
+        Fri, 22 May 2020 14:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159088;
-        bh=r5rg1nGnucOa2iRYlF9dUzXK01fGwqiUSa2wE439b6Q=;
+        s=default; t=1590159090;
+        bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=omkpVjC9gHcYeqMHOfswiJJj9x0WVrUZgtx3T6y55PxZ/j9ZBdsqG4Gw4CtcJ4enD
-         mZEGCNnD4pXno4rnmDWwzFyiZCG3PqtYEf1rI4K1AOhqNsQcJ/8pq/44vME4xGcqhg
-         heAJzDzIpU5Im+PgRW0g0CkFjkNdPmWAr5lTDjRA=
+        b=ScY6wNB+F8PnKPdG0ZpKcVGALQpMBwIPxOI0nanQwuKEyBXCvaJ0TP5O+Xa32ws2N
+         FNovSOV8NsQFtLHLYO3TFBXK13wSQ2jOpuq67yGNsHSAQA4NFlgynFCX8xfV8oFuLO
+         EcbbM8raFPzbAtvJ+tcHbggHyHrI3dcH6Nq1cok8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Warren <swarren@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/19] gpio: tegra: mask GPIO IRQs during IRQ shutdown
-Date:   Fri, 22 May 2020 10:51:07 -0400
-Message-Id: <20200522145120.434921-6-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/19] net: microchip: encx24j600: add missed kthread_stop
+Date:   Fri, 22 May 2020 10:51:09 -0400
+Message-Id: <20200522145120.434921-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
 References: <20200522145120.434921-1-sashal@kernel.org>
@@ -60,36 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 0cf253eed5d2bdf7bb3152457b38f39b012955f7 ]
+[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
 
-The driver currently leaves GPIO IRQs unmasked even when the GPIO IRQ
-client has released the GPIO IRQ. This allows the HW to raise IRQs, and
-SW to process them, after shutdown. Fix this by masking the IRQ when it's
-shut down. This is usually taken care of by the irqchip core, but since
-this driver has a custom irq_shutdown implementation, it must do this
-explicitly itself.
+This driver calls kthread_run() in probe, but forgets to call
+kthread_stop() in probe failure and remove.
+Add the missed kthread_stop() to fix it.
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Link: https://lore.kernel.org/r/20200427232605.11608-1-swarren@wwwdotorg.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 47dbd19751d0..57903501821e 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -357,6 +357,7 @@ static void tegra_gpio_irq_shutdown(struct irq_data *d)
- 	struct tegra_gpio_info *tgi = bank->tgi;
- 	unsigned int gpio = d->hwirq;
+diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
+index f831238d9793..84b6ad76f5bc 100644
+--- a/drivers/net/ethernet/microchip/encx24j600.c
++++ b/drivers/net/ethernet/microchip/encx24j600.c
+@@ -1075,7 +1075,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 	if (unlikely(ret)) {
+ 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
+ 			  ret);
+-		goto out_free;
++		goto out_stop;
+ 	}
  
-+	tegra_gpio_irq_mask(d);
- 	gpiochip_unlock_as_irq(&tgi->gc, gpio);
- }
+ 	eidled = encx24j600_read_reg(priv, EIDLED);
+@@ -1093,6 +1093,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 
+ out_unregister:
+ 	unregister_netdev(priv->ndev);
++out_stop:
++	kthread_stop(priv->kworker_task);
+ out_free:
+ 	free_netdev(ndev);
+ 
+@@ -1105,6 +1107,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
+ 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
+ 
+ 	unregister_netdev(priv->ndev);
++	kthread_stop(priv->kworker_task);
+ 
+ 	free_netdev(priv->ndev);
  
 -- 
 2.25.1
