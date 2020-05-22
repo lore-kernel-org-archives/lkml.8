@@ -2,89 +2,165 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D184C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1C4120663
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590162881;
-	bh=wGRZvt3Z+867keqt3QAT0Chc0raT1nG9Wgs/nGQRLbY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nXvmvzXjSv06o6VPh/z+cIglBbQFdW0FiWlR77QrW8WE9DapG6WXGX5zxnV6e/D14
-	 xwksHQ8i2DRWAvH5p1r2dy+bVxvZFEH7Ip9F80f9wnuzXIjDhsNPDgC1medoQseZ0h
-	 WQtlvMi9AoMw3zQqWWwU8VwFl6pYa0Ao6Ltf5UTM=
+	by mail.kernel.org (Postfix) with ESMTP id 1ACA120663
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgEVPyl (ORCPT
+        id S1730533AbgEVP4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbgEVPyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:54:39 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83134207F9;
-        Fri, 22 May 2020 15:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590162879;
-        bh=wGRZvt3Z+867keqt3QAT0Chc0raT1nG9Wgs/nGQRLbY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n/tqVDm2zEEQ4mU7pMZXNvqNl/+Y8L81dHXFkDfcoI4SgD9+fXk86fQkSXltNzcNk
-         B+hEJas5BrQkR05xveBENPvtkW8Vgasbvs5S7fZw37eVL4MaZRqM3KXMXDZ7hqr4Vy
-         n9WATdimBm1rfvbvcAe1tYeVUt6edphAX4TkYLsg=
-Received: by mail-oi1-f175.google.com with SMTP id 23so8471991oiq.8;
-        Fri, 22 May 2020 08:54:39 -0700 (PDT)
-X-Gm-Message-State: AOAM530V0mN0of4VjGyclDDNiSKcoWpJwB86rcP4HSu5l0DLDU3HZW23
-        MR1zGIyFessWFUf4DNf0OdV01SytntOtd52WqA==
-X-Google-Smtp-Source: ABdhPJzQ8I+vECFyhVYyk2x4i27BUXmDXS2vlHoGkAessFkDVhzp1YCya/jmMWgspVusAE/rNHggVAYEsM+awFHIX9U=
-X-Received: by 2002:a05:6808:7cb:: with SMTP id f11mr3196684oij.152.1590162878837;
- Fri, 22 May 2020 08:54:38 -0700 (PDT)
+        Fri, 22 May 2020 11:56:18 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:55025 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730195AbgEVP4R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:56:17 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 36BA940008;
+        Fri, 22 May 2020 15:56:15 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v2] net: phy: mscc: fix initialization of the MACsec protocol mode
+Date:   Fri, 22 May 2020 17:55:45 +0200
+Message-Id: <20200522155545.881263-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200522033631.32574-1-kishon@ti.com> <20200522033631.32574-4-kishon@ti.com>
-In-Reply-To: <20200522033631.32574-4-kishon@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 22 May 2020 09:54:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
-Message-ID: <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
-> 32-bit accesses for reading or writing to Cadence registers. Convert all
-> read and write accesses to 32-bit in Cadence PCIe driver in preparation
-> for adding PCIe support in TI's J721E SoC.
+At the very end of the MACsec block initialization in the MSCC PHY
+driver, the MACsec "protocol mode" is set. This setting should be set
+based on the PHY id within the package, as the bank used to access the
+register used depends on this. This was not done correctly, and only the
+first bank was used leading to the two upper PHYs being unstable when
+using the VSC8584. This patch fixes it.
 
-Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
-with this and never can be given the PCI_COMMAND and PCI_STATUS
-registers are in the same word (IIRC, that's the main reason 32-bit
-config space accesses are broken). So this isn't going to work at
-least for EP accesses. And maybe you need a custom .raise_irq() hook
-to minimize any problems (such as making the RMW atomic at least from
-the endpoint's perspective).
+Fixes: 1bbe0ecc2a1a ("net: phy: mscc: macsec initialization")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
 
-Rob
+Since v1:
+  - Resent to net.
+
+ drivers/net/phy/mscc/mscc.h        |  2 ++
+ drivers/net/phy/mscc/mscc_mac.h    |  6 +++---
+ drivers/net/phy/mscc/mscc_macsec.c | 16 ++++++++++------
+ drivers/net/phy/mscc/mscc_macsec.h |  3 ++-
+ drivers/net/phy/mscc/mscc_main.c   |  4 ++++
+ 5 files changed, 21 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+index 030bf8b600df..414e3b31bb1f 100644
+--- a/drivers/net/phy/mscc/mscc.h
++++ b/drivers/net/phy/mscc/mscc.h
+@@ -354,6 +354,8 @@ struct vsc8531_private {
+ 	u64 *stats;
+ 	int nstats;
+ 	bool pkg_init;
++	/* PHY address within the package. */
++	u8 addr;
+ 	/* For multiple port PHYs; the MDIO address of the base PHY in the
+ 	 * package.
+ 	 */
+diff --git a/drivers/net/phy/mscc/mscc_mac.h b/drivers/net/phy/mscc/mscc_mac.h
+index fcb5ba5e5d03..59b6837c60b3 100644
+--- a/drivers/net/phy/mscc/mscc_mac.h
++++ b/drivers/net/phy/mscc/mscc_mac.h
+@@ -152,8 +152,8 @@
+ #define MSCC_MAC_PAUSE_CFG_STATE_PAUSE_STATE			BIT(0)
+ #define MSCC_MAC_PAUSE_CFG_STATE_MAC_TX_PAUSE_GEN		BIT(4)
+ 
+-#define MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL			0x2
+-#define MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE(x)	(x)
+-#define MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE_M	GENMASK(2, 0)
++#define MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL			0x2
++#define MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE(x)	(x)
++#define MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE_M	GENMASK(2, 0)
+ 
+ #endif /* _MSCC_PHY_LINE_MAC_H_ */
+diff --git a/drivers/net/phy/mscc/mscc_macsec.c b/drivers/net/phy/mscc/mscc_macsec.c
+index e99e2cd72a0c..b4d3dc4068e2 100644
+--- a/drivers/net/phy/mscc/mscc_macsec.c
++++ b/drivers/net/phy/mscc/mscc_macsec.c
+@@ -316,6 +316,8 @@ static void vsc8584_macsec_mac_init(struct phy_device *phydev,
+ /* Must be called with mdio_lock taken */
+ static int __vsc8584_macsec_init(struct phy_device *phydev)
+ {
++	struct vsc8531_private *priv = phydev->priv;
++	enum macsec_bank proc_bank;
+ 	u32 val;
+ 
+ 	vsc8584_macsec_block_init(phydev, MACSEC_INGR);
+@@ -351,12 +353,14 @@ static int __vsc8584_macsec_init(struct phy_device *phydev)
+ 	val |= MSCC_FCBUF_ENA_CFG_TX_ENA | MSCC_FCBUF_ENA_CFG_RX_ENA;
+ 	vsc8584_macsec_phy_write(phydev, FC_BUFFER, MSCC_FCBUF_ENA_CFG, val);
+ 
+-	val = vsc8584_macsec_phy_read(phydev, IP_1588,
+-				      MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL);
+-	val &= ~MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE_M;
+-	val |= MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE(4);
+-	vsc8584_macsec_phy_write(phydev, IP_1588,
+-				 MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL, val);
++	proc_bank = (priv->addr < 2) ? PROC_0 : PROC_2;
++
++	val = vsc8584_macsec_phy_read(phydev, proc_bank,
++				      MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL);
++	val &= ~MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE_M;
++	val |= MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE(4);
++	vsc8584_macsec_phy_write(phydev, proc_bank,
++				 MSCC_PROC_IP_1588_TOP_CFG_STAT_MODE_CTL, val);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/phy/mscc/mscc_macsec.h b/drivers/net/phy/mscc/mscc_macsec.h
+index d0783944d106..d751f2946b79 100644
+--- a/drivers/net/phy/mscc/mscc_macsec.h
++++ b/drivers/net/phy/mscc/mscc_macsec.h
+@@ -64,7 +64,8 @@ enum macsec_bank {
+ 	FC_BUFFER   = 0x04,
+ 	HOST_MAC    = 0x05,
+ 	LINE_MAC    = 0x06,
+-	IP_1588     = 0x0e,
++	PROC_0      = 0x0e,
++	PROC_2      = 0x0f,
+ 	MACSEC_INGR = 0x38,
+ 	MACSEC_EGR  = 0x3c,
+ };
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index acddef79f4e8..c8aa6d905d8e 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1347,6 +1347,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 	else
+ 		vsc8531->base_addr = phydev->mdio.addr - addr;
+ 
++	vsc8531->addr = addr;
++
+ 	/* Some parts of the init sequence are identical for every PHY in the
+ 	 * package. Some parts are modifying the GPIO register bank which is a
+ 	 * set of registers that are affecting all PHYs, a few resetting the
+@@ -1771,6 +1773,8 @@ static int vsc8514_config_init(struct phy_device *phydev)
+ 	else
+ 		vsc8531->base_addr = phydev->mdio.addr - addr;
+ 
++	vsc8531->addr = addr;
++
+ 	/* Some parts of the init sequence are identical for every PHY in the
+ 	 * package. Some parts are modifying the GPIO register bank which is a
+ 	 * set of registers that are affecting all PHYs, a few resetting the
+-- 
+2.26.2
+
