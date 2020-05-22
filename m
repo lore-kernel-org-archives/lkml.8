@@ -2,137 +2,164 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B357EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93682206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E0D20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+CAw6eA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptf99yRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbgEVR36 (ORCPT
+        id S1730698AbgEVRdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:29:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48907 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730762AbgEVR34 (ORCPT
+        Fri, 22 May 2020 13:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730636AbgEVRdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:29:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590168595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=15giI7Twfyx23sQ419l43txLDRcgrhknS5eEDxlCs+4=;
-        b=Z+CAw6eAZh88LC2ZGa2pc83KNjAjl7tSp4ifykksF/PTYj9lVj5USHgvLRpPlLSiw8G4AK
-        JQ1EVCi3Z+qLXz7Cp3v7hjVN5u3/RTlNCrE5hCnaKmNwfVK/GHXFcUX53s/vz0M5A+pQwy
-        DRHUvqShfghGRjAsTNLAI/E5upbHHjs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-6A89GSQQPGGX5UbHzh4Dqg-1; Fri, 22 May 2020 13:29:51 -0400
-X-MC-Unique: 6A89GSQQPGGX5UbHzh4Dqg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D890460;
-        Fri, 22 May 2020 17:29:47 +0000 (UTC)
-Received: from asgard.redhat.com (unknown [10.36.110.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7219E75262;
-        Fri, 22 May 2020 17:29:36 +0000 (UTC)
-Date:   Fri, 22 May 2020 19:29:34 +0200
-From:   Eugene Syromiatnikov <esyr@redhat.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>, mtk.manpages@gmail.com
-Subject: Re: [PATCH v10 26/26] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-Message-ID: <20200522172934.GI12341@asgard.redhat.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
- <20200429220732.31602-27-yu-cheng.yu@intel.com>
- <202005211528.A12B4AD@keescook>
- <c9c9314374c7db0bf9b6e39670855afe5b0d4014.camel@intel.com>
+        Fri, 22 May 2020 13:33:14 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53B4C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:33:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id g12so9725500wrw.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VLbtYmWmQJbiFJ2E3A6qyIEbqWJ+t8w0WcuXKvFftBM=;
+        b=ptf99yRrw4EIojq7DT7XBDmqVK3BXlNklUP+YLMzHqL9DxIWWzT112sAOKqee3nSRn
+         QUFCueS41OH+yUGAj8gAo4vfU1shdTCVKxxjH2JGeEMqbu8qaTe1mkEK+POyDPJF6X0O
+         6GzrTuu2uCQ1tSS8OsCTDnqsFkxDmnNirxW1x1NmNgro481PJr/aUsJpyixsdU3uDLqy
+         3l6ZQ++xMuHYXJXJ3eoXs6veh+0m6QfvZOo5N8Rl26/bSaYxgtupN427Z345+slPvbo8
+         JgwpKw7kT96xeTJ0b10F4kVepUjw2nKaQdhuCgq5jIZQ990Y07uGjssycHTt0B01fcVn
+         4Apw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VLbtYmWmQJbiFJ2E3A6qyIEbqWJ+t8w0WcuXKvFftBM=;
+        b=PtiZxmkIbgRtboN8nphcy2CM6v29+I42OY/r/JvInk7v+4p9tzSrdvDQjYvOrd0x1B
+         k00UlNGBR+/aDp2mZx7DjF/QmVMOfdCYre6FReRTjbeOYUIT9LmssazAA0IjZMhSQc3o
+         aWr/cAExtYoQjS+66RAdbHUCzMzXAvNYJEQ4ZNafsk7cEbcbqLlAsL7WlpEbIZSgIijz
+         AgoK9V085lQhXxjAdejZC7STr8vcV9PxZMoMcPsgXdFoIFdQ8IEvqaklMXNwzCwVeN+n
+         91ZV3niR3j4du3nG9JuiO6TuJbDgxH6uCdxZlz4e6+64tD8sWXR8htFd7ieY44Z7kU/B
+         o3mQ==
+X-Gm-Message-State: AOAM532QHTk0g1Ckh9TYKqapITF42ch0/mnN0TerEI3jT8nW/rkCoKLG
+        riDKPZHlOppjVX+unAAde+ibUA==
+X-Google-Smtp-Source: ABdhPJwFuU20ErMvBhjnpeWy50ODfZq0wx6XE5USegDcr9gAnvfvgAu8t++gYGjZrIdQJ6pCG8K/Eg==
+X-Received: by 2002:a5d:4390:: with SMTP id i16mr1540564wrq.186.1590168792082;
+        Fri, 22 May 2020 10:33:12 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
+        by smtp.googlemail.com with ESMTPSA id i6sm11436865wmb.41.2020.05.22.10.33.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 10:33:11 -0700 (PDT)
+Subject: Re: [PATCH] thermal: imx8mm: Add get_trend ops
+To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
+Date:   Fri, 22 May 2020 19:33:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9c9314374c7db0bf9b6e39670855afe5b0d4014.camel@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:17:43AM -0700, Yu-cheng Yu wrote:
-> On Thu, 2020-05-21 at 15:42 -0700, Kees Cook wrote:
-> > On Wed, Apr 29, 2020 at 03:07:32PM -0700, Yu-cheng Yu wrote:
-> [...]
-> > > +
-> > > +int prctl_cet(int option, u64 arg2)
-> > > +{
-> > > +	struct cet_status *cet;
-> > > +
-> > > +	if (!IS_ENABLED(CONFIG_X86_INTEL_CET))
-> > > +		return -EINVAL;
-> > 
-> > Using -EINVAL here means userspace can't tell the difference between an
-> > old kernel and a kernel not built with CONFIG_X86_INTEL_CET. Perhaps
-> > -ENOTSUPP?
+On 13/05/2020 04:58, Anson Huang wrote:
+> Add get_trend ops for i.MX8MM thermal to apply fast cooling
+> mechanism, when temperature exceeds passive trip point, the
+> highest cooling action will be applied, and when temperature
+> drops to lower than the margin below passive trip point, the
+> lowest cooling action will be applied.
+
+You are not describing what is the goal of this change.
+
+IIUC, the resulting change will be an on/off action. The thermal zone is
+mitigated with the highest cooling effect, so the lowest OPP, then the
+temperature trend is stable until it goes below the trip - margin where
+the mitigation is stopped.
+
+Except, I'm missing something, setting a trip point with a 10000
+hysteresis and a cooling map min/max set to the highest opp will result
+on the same.
+
+
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/thermal/imx8mm_thermal.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> Looked into this.  The kernel and GLIBC are not in sync.  So maybe we still use
-> EINVAL here?
-> 
-> Yu-cheng
-> 
-> 
-> 
-> In kernel:
-> ----------
-> 
-> #define EOPNOTSUPP	95
-> #define ENOTSUPP 	524
-> 
-> In GLIBC:
-> ---------
-> 
-> printf("ENOTSUP=%d\n", ENOTSUP);
-> printf("EOPNOTSUPP=%d\n", EOPNOTSUPP);
-> printf("%s=524\n", strerror(524));
+> diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+> index e6061e2..8f6a0b8 100644
+> --- a/drivers/thermal/imx8mm_thermal.c
+> +++ b/drivers/thermal/imx8mm_thermal.c
+> @@ -38,6 +38,8 @@
+>  #define TMU_VER1		0x1
+>  #define TMU_VER2		0x2
 >  
-> ENOTSUP=95
-> EOPNOTSUPP=95
-> Unknown error 524=524
+> +#define IMX_TEMP_COOL_MARGIN	10000
+> +
+>  struct thermal_soc_data {
+>  	u32 num_sensors;
+>  	u32 version;
+> @@ -103,8 +105,33 @@ static int tmu_get_temp(void *data, int *temp)
+>  	return tmu->socdata->get_temp(data, temp);
+>  }
+>  
+> +static int tmu_get_trend(void *p, int trip, enum thermal_trend *trend)
+> +{
+> +	struct tmu_sensor *sensor = p;
+> +	int trip_temp, temp, ret;
+> +
+> +	if (!sensor->tzd)
+> +		return -EINVAL;
+> +
+> +	ret = sensor->tzd->ops->get_trip_temp(sensor->tzd, trip, &trip_temp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	temp = READ_ONCE(sensor->tzd->temperature);
+> +
+> +	if (temp > trip_temp)
+> +		*trend = THERMAL_TREND_RAISE_FULL;
+> +	else if (temp < (trip_temp - IMX_TEMP_COOL_MARGIN))
+> +		*trend = THERMAL_TREND_DROP_FULL;
+> +	else
+> +		*trend = THERMAL_TREND_STABLE;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct thermal_zone_of_device_ops tmu_tz_ops = {
+>  	.get_temp = tmu_get_temp,
+> +	.get_trend = tmu_get_trend,
+>  };
+>  
+>  static void imx8mm_tmu_enable(struct imx8mm_tmu *tmu, bool enable)
+> 
 
-EOPNOTSUPP/ENOTSUP/ENOTSUPP is actually a mess, it's summarized recently
-by Michael Kerrisk[1].  From the kernel's point of view, I think it
-would be reasonable to return EOPNOTSUPP, and expect that the userspace
-would use ENOTSUP to match against it.
 
-[1] https://lore.kernel.org/linux-man/cb4c685b-6c5d-9c16-aade-0c95e57de4b9@gmail.com/
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
