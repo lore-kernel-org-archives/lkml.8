@@ -2,197 +2,82 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7215620738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="YUdG876P"
+	by mail.kernel.org (Postfix) with ESMTP id C983820663
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgEVEvT (ORCPT
+        id S1728134AbgEVExv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 00:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgEVEvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 00:51:18 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A253C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 21:51:18 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id d7so7336210ote.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 21:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k2vrBoOQ9EETAdJub3TPOSyUEEBeAVV+/1nPCZoKSCA=;
-        b=YUdG876PBuoWeuTwZEzqf5Q4iudaCv0TLlfWhk+qMWvqkLW/cyTPwaPEXSCHnUaRte
-         pqqxOexa01y7orMgoydT8OLYzm6Jnt9aCaPV8ccQw7tonhT5b7nY8saHYgm6Zz7ZaPkS
-         /PGE3v6jfnkEl5WmfW3hCIIXtGxEQfqic8sOmuDnhd0YD+YZtVguqKwslNB7SnFmovzc
-         1C5xC6JE9bu2U3EEQ8dHyqq1y2Pia3vMvx21LLgND67asnZSWqlGfRb2aXSIWAmxvhv0
-         y1yZk+Bu79IaX1jmXOqDkuz1tY+wtwI2TC8pARdarguH2mpqqVcTdOc0qGW7koZkN+MB
-         YuHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k2vrBoOQ9EETAdJub3TPOSyUEEBeAVV+/1nPCZoKSCA=;
-        b=rVcHBEA2JMBLtsGCsVDMieYIl74pekSmh2xQzH3puMxoTPKq/8GWmxnXI5rTI4hrW7
-         qUGXFdSn+e42AZ/OlEXpzxmjO8t9iHCAZucBNrkyKlfmuooyCZcCNZtyVO/TvztlG9so
-         NchOQh41oxUBvnPUiik+lWpALacWMyYsm85uh7v0VueJz+OkhNmPJ3J9WCpCOYfNG32G
-         fAtxWsvkdLgnYv6msHHSFMrF5u2o94lfvIib3VAWtTWdBIQOEOap/pdPZitgZZYBGBiz
-         zK9dJUBFv9feW7EGjHojw3vXYoP2V97ZaMZ6t1iMSpiLHJvYf/YrTjn2Iiq128VeQJRL
-         7p6Q==
-X-Gm-Message-State: AOAM533cj22PafUgtJ4OMtH8/3xUqfip3XWVL80FOhJqQWeRp2AsGFJD
-        W+LboYPiP1gn62zIOQNJ8SSKiA==
-X-Google-Smtp-Source: ABdhPJzkecxfonQTZASI2btg19lTvEFVD3+S1qpuQDgodr0t8yksLVLLZyT9CIvBtnHoK2Ch3kApVQ==
-X-Received: by 2002:a05:6830:100a:: with SMTP id a10mr10480942otp.244.1590123077647;
-        Thu, 21 May 2020 21:51:17 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id f3sm2200191otq.20.2020.05.21.21.51.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 21:51:16 -0700 (PDT)
-Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
- <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net>
- <874ksaioc6.fsf@x220.int.ebiederm.org>
- <fc2cf2a7-e1a7-3170-32c9-43e593636799@landley.net>
- <87r1vcd4wo.fsf@x220.int.ebiederm.org>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <6ce125fd-4fb1-8c39-a9a9-098391f2016a@landley.net>
-Date:   Thu, 21 May 2020 23:51:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <87r1vcd4wo.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 22 May 2020 00:53:51 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:20744 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726404AbgEVExv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 00:53:51 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgDHz4vQWsdeKw_vAA--.20370S4;
+        Fri, 22 May 2020 12:53:40 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ufs: Fix runtime PM imbalance on error
+Date:   Fri, 22 May 2020 12:53:31 +0800
+Message-Id: <20200522045335.30556-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgDHz4vQWsdeKw_vAA--.20370S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw4UCw4UCF45tFyfCF1UAwb_yoW3WFc_uw
+        47ury7WryrGan2qw1UtF13uryYvFWUur1kKanYqr4fA3y8uFykKrZ8XryDur43Z3y8tryD
+        G34qqF9xZrnayjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbI8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r45MxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AK
+        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+        fUnHqcUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0IBlZdtOQJOQABsr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/20 10:28 PM, Eric W. Biederman wrote:
-> 
-> Rob Landley <rob@landley.net> writes:
-> 
->> On 5/20/20 11:05 AM, Eric W. Biederman wrote:
-> 
->> Toybox would _like_ proc mounted, but can't assume it. I'm writing a new
->> bash-compatible shell with nommu support, which means in order to do subshell
->> and background tasks if (!CONFIG_FORK) I need to create a pipe pair, vfork(),
->> have the child exec itself to unblock the parent, and then read the context data
->> that just got discarded through the pipe from the parent. ("Wheee." And you can
->> quote me on that.)
-> 
-> Do you have clone(CLONE_VM) ?  If my quick skim of the kernel sources is
-> correct that should be the same as vfork except without causing the
-> parent to wait for you.  Which I think would remove the need to reexec
-> yourself.
+When devm_clk_get() returns an error code, a pairing
+runtime PM usage counter decrement is needed to keep
+the counter balanced.
 
-As with perpetual motion, that only seems like it would work if you don't
-understand what's going on.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/scsi/ufs/ti-j721e-ufs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-A nommu system uses physical addresses, not virtual ones, so every process sees
-the same addresses. So if I allocate a new block of memory and memcpy the
-contents of the old one into the new one, any pointers in the copy point back
-into the ORIGINAL block of memory. Trying to adjust the pointers in the copy is
-the exact same problem as trying to do garbage collection in C: it's an AI
-complete problem.
+diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
+index 5216d228cdd9..f3f212f6f9a9 100644
+--- a/drivers/scsi/ufs/ti-j721e-ufs.c
++++ b/drivers/scsi/ufs/ti-j721e-ufs.c
+@@ -39,6 +39,7 @@ static int ti_j721e_ufs_probe(struct platform_device *pdev)
+ 	clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(clk)) {
+ 		dev_err(dev, "Cannot claim MPHY clock.\n");
++		pm_runtime_put_sync(dev);
+ 		return PTR_ERR(clk);
+ 	}
+ 	clk_rate = clk_get_rate(clk);
+-- 
+2.17.1
 
-Any attempt to "implement a full fork" on nommu hits this problem: copying an
-existing mapping to a new address range means any address values in the new
-mapping point into the OLD mapping. Things like fdpic fix this up at exec time
-(traversing elf tables and relocating), but not at runtime. If you can solve the
-"relocate at runtime all addresses within an existing mapping, and all other
-mappings that might point to this mapping, including local variables on the
-stack that point to a structure member or halfway into a string rather than the
-start of an allocation, without adjusting unrelated values coincidentally within
-RANGE of a mapping" problem, THEN you can fork on a nommu system.
-
-What vfork() does is pause the parent and have the child continue AS the parent
-for a bit (with the system call returning 0). The child starts with all the same
-memory mappings the parent has (usually not even a new stack). The child has a
-new PID and new resources like its own file descriptor table so close() and
-open() don't affect the parent, but if you change a global that's visible to the
-parent when it resumes (ant often local variables too: don't return from the
-function that called vfork() because if you DON'T have a new stack it'll stomp
-the return address the parent needs when IT does it). If the child calls
-malloc() the parent needs to free it because it's same heap (because same
-mapping of the same physical memory).
-
-Then when the child is ready to discard all those mappings (due to calling
-either execve() or _exit(), those are the only two options), the parent resumes
-from where it left off with the PID of the child as the system call return value.
-
-The reason the child pauses the parent is so only one process is ever using
-those mappings at a given time. Otherwise they're acting like threads without
-locking, and usually both are sharing a stack.
-
-P.S. You can use threads _instead_ of fork for some stuff on nommu, but that's
-its own can of worms. You still need to vfork() when you do create a child
-process you're going to exec, so it doesn't go away, you're just requiring
-multiple techniques simultaneously to handle a special case.
-
-P.P.S. vfork() is useful on mmu systems to solve the "don't fork from a thread"
-problem. You can vfork() from a thread cheaply and reliably and it only pauses
-the one thread you forked from, not every thread in the whole process. If you
-fork() from a heavily threadded process you can cause a multi-milisecond latency
-spike because even with an mmu the copy on write "keep track of what's shared by
-what" generally can't handle the "threads AND processes sharing mappings" case,
-so it just gives up and copies it all at fork time, in one go, holding a big
-lock while doing so. This causes a large latency spike which vfork() avoids.
-(And can cause a large wasteful allocation and memory dirtying which is
-immediately freed.)
-
->>> The file descriptor is stored in mm->exe_file.
->>> Probably the most straight forward implementation is to allow
->>> execveat(AT_EXE_FILE, ...).
->>
->> Cool, that works.
->>
->>> You can look at binfmt_misc for how to reopen an open file descriptor.
->>
->> Added to the todo heap.
-> 
-> Yes I don't think it would be a lot of code.
-> 
-> I think you might be better served with clone(CLONE_VM) as it doesn't
-> block so you don't need to feed yourself your context over a pipe.
-
-Except that doesn't fix it.
-
-Yes I could use threads instead, but the cure is worse than the disease and the
-result is your shell background processes are threads rather than independent
-processes (is $$ reporting PID or TID, I really don't want to go there).
-
-> Eric
-
-Rob
