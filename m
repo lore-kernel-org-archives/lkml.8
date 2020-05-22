@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6503BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41A5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35787206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD90E205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159462;
-	bh=h18zp+cWiinCTN71tzoeaw/HPvo6f+dnoFyWsFESrDk=;
+	s=default; t=1590159466;
+	bh=SSr626oosF3ax4S4mvuIs1Z3CkLSI8JeRhlwsAREDNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LuWkaZRiCWDiohwSOlPVRUCplvgjuHTIhN2un+KOFeuOs/ULKLPL/C/RqvOdDy+cx
-	 zXfRi9aAJURQ4Ov8tIh0GJ2KQ5WcuIN2Z49Ze5I8/8uk9uisOQcPpi8nzLg3+gf2mB
-	 ZmVUIwO5H7bbT7GAzCOr5LM/8itlIc97c5oRj/fM=
+	b=2D8dUWjirxvSw6wD0Ux0jgNi69I05EhwSnMh+wVOpPG2k+xIYVaRhun35aDP19rHk
+	 5DVblA7QcVEjwj1WBwkI/4GRPr3MMxvoMRxEevpTGMWQHLlRt1xQRar2CXU7tofRHs
+	 vrndZ6QuMqvON0CS7sW4WXas/U68O63lfHGBQdoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbgEVO5l (ORCPT
+        id S1730745AbgEVOuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:57:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730727AbgEVOuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:37 -0400
+        id S1730722AbgEVOuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747702072C;
-        Fri, 22 May 2020 14:50:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EF2922254;
+        Fri, 22 May 2020 14:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159037;
-        bh=h18zp+cWiinCTN71tzoeaw/HPvo6f+dnoFyWsFESrDk=;
+        s=default; t=1590159032;
+        bh=SSr626oosF3ax4S4mvuIs1Z3CkLSI8JeRhlwsAREDNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEw0alQCoNtKw8iOdMODXyJ2fkquNC8mcmHXPNjmsTr1/THukNobUiHJblCZ4gbfx
-         0wdrQ5zHQtF0KMocj79Ak3WZKMRp4PYmyAf4plUK+lej3JTqG4dEvAgtJH4R86+LfI
-         42aA0+b/tVcQuzHvtLIGpq53+m+u9y1x6EaoAZgk=
+        b=oiKeZBO/cZUgpeGVryo7owc0OpolwnODK2C6rhEovApjO5fLOdw8agK/Xfys/HuDy
+         OAATnKgP3ab9rDv9r0FxkRcgPyRZj9pDiMSGqxB8prkCDFbQHwYm6ASNVbFSjpiYZ3
+         /M1iP+ntAc7NWohKkQxHmRp/Pm9JE3gkF7RleOyM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liu Yibin <jiulong@linux.alibaba.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 34/41] csky: Fixup remove duplicate irq_disable
-Date:   Fri, 22 May 2020 10:49:51 -0400
-Message-Id: <20200522144959.434379-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 29/41] riscv: stacktrace: Fix undefined reference to `walk_stackframe'
+Date:   Fri, 22 May 2020 10:49:46 -0400
+Message-Id: <20200522144959.434379-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -59,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yibin <jiulong@linux.alibaba.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit 6633a5aa8eb6bda70eb3a9837efd28a67ccc6e0a ]
+[ Upstream commit 0502bee37cdef755d63eee60236562e5605e2480 ]
 
-Interrupt has been disabled in __schedule() with local_irq_disable()
-and enabled in finish_task_switch->finish_lock_switch() with
-local_irq_enabled(), So needn't to disable irq here.
+Drop static declaration to fix following build error if FRAME_POINTER disabled,
+  riscv64-linux-ld: arch/riscv/kernel/perf_callchain.o: in function `.L0':
+  perf_callchain.c:(.text+0x2b8): undefined reference to `walk_stackframe'
 
-Signed-off-by: Liu Yibin <jiulong@linux.alibaba.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/kernel/entry.S | 2 --
- 1 file changed, 2 deletions(-)
+ arch/riscv/kernel/stacktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index 007706328000..9718388448a4 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -318,8 +318,6 @@ ENTRY(__switch_to)
+diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+index 0940681d2f68..19e46f4160cc 100644
+--- a/arch/riscv/kernel/stacktrace.c
++++ b/arch/riscv/kernel/stacktrace.c
+@@ -63,7 +63,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
  
- 	mfcr	a2, psr			/* Save PSR value */
- 	stw	a2, (a3, THREAD_SR)	/* Save PSR in task struct */
--	bclri	a2, 6			/* Disable interrupts */
--	mtcr	a2, psr
+ #else /* !CONFIG_FRAME_POINTER */
  
- 	SAVE_SWITCH_STACK
- 
+-static void notrace walk_stackframe(struct task_struct *task,
++void notrace walk_stackframe(struct task_struct *task,
+ 	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
+ {
+ 	unsigned long sp, pc;
 -- 
 2.25.1
 
