@@ -2,124 +2,117 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD1F2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4908520757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s2XwS2bD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgEVHgd (ORCPT
+        id S1728648AbgEVHh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:36:33 -0400
-Received: from ppsw-31.csi.cam.ac.uk ([131.111.8.131]:52194 "EHLO
-        ppsw-31.csi.cam.ac.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgEVHgd (ORCPT
+        Fri, 22 May 2020 03:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgEVHh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:36:33 -0400
-X-Greylist: delayed 930 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 May 2020 03:36:32 EDT
-X-Cam-AntiVirus: no malware found
-X-Cam-ScannerInfo: http://help.uis.cam.ac.uk/email-scanner-virus
-Received: from 88-109-182-220.dynamic.dsl.as9105.com ([88.109.182.220]:33852 helo=[192.168.1.219])
-        by ppsw-31.csi.cam.ac.uk (smtp.hermes.cam.ac.uk [131.111.8.157]:465)
-        with esmtpsa (PLAIN:amc96) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        id 1jc1ya-000pAW-LG (Exim 4.92.3)
-        (return-path <amc96@hermes.cam.ac.uk>); Fri, 22 May 2020 08:20:16 +0100
-Subject: Re: [patch V9 00/39] x86/entry: Rework leftovers (was part V)
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20200521200513.656533920@linutronix.de>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <5e68aa83-feac-2aa7-10ee-aebebc60c83e@citrix.com>
-Date:   Fri, 22 May 2020 08:20:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 03:37:28 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4F6C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u188so8881819wmu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=FxhyYotOdsb3Prsxlw/PCmLh9cDfCT3MjS19m7K8Q5o=;
+        b=s2XwS2bDg3iy2QFTSYYUp2zSt1XfNkCltyHI70cuooryTjTrmQxbyoYtC7EKyK4J/A
+         CMELJ8ZUfGTSxOg6AYlN57glArOF+Ly3LjBs501uqsGcZR+l5Ibxqj5DBoVL8XlApo+b
+         atG2eMn0WIvN4x1PzdTxcIHXw7mmI8zyZgEqdH4lRMCpbTWYzhSglv9A05yWl0+Rvm4o
+         a1TeQChSuAktfp1bMBydXDruT0T7jEQlllRF0IEpKC1x+j4OCj2MCcDtMbvOQOrfVMww
+         V3l5bx0/GQmy7oWXfKlljrEXIicKaJzqGjj0q/1VOv2DQAj2EGtyTx5RDElE8IrTsPbQ
+         hSlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=FxhyYotOdsb3Prsxlw/PCmLh9cDfCT3MjS19m7K8Q5o=;
+        b=YSl9yMPo6I8SSlfsF8D9xGjId4lk46YzwlSVu8ePfNhMm7u1O/YmN88krY8MdnZtmu
+         eovmTQ5KHs7rd69BrC5CtV12WldE/mENJ6U5hp1E2IPDdk+qLLti995tIk9bcwYGzwdz
+         zmaMiIbFbjaVsceIsIDkfhvL1ls5pUTuMV/xDD33+Hfcq4IFr2923g+Tf4IyRy5/gdGm
+         EbcJwY6OErnRLLOvqiNw28xH5WJp9zpquDOhegy+pXLms6Z3X0Y2ODJqWAOEiZ/AuGls
+         InrOaRk9BJg3H1U9pp82RwEv2hfJ2VwpwriAdSA7ghzorjjFIYI8H1efISlmSQ1aBZUE
+         jzrg==
+X-Gm-Message-State: AOAM532NGqW8SO4oC1xe8lw/lVL6bBT4d4P0DOvFZ17PDCbh7TMTqZuE
+        /ws/fmmeMEkrV4tU0EG4RxtXQg==
+X-Google-Smtp-Source: ABdhPJxs2hJYnfDm6N4+o9/p+SF/UJ8IDcPxC+ZnYoNz7e9Bj+uhDyIZoQpHZd769I0Jckb0UavO0Q==
+X-Received: by 2002:a1c:6042:: with SMTP id u63mr12028802wmb.65.1590133045474;
+        Fri, 22 May 2020 00:37:25 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id l19sm9221775wmj.14.2020.05.22.00.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 00:37:24 -0700 (PDT)
+Date:   Fri, 22 May 2020 08:37:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     matthias.bgg@kernel.org, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: mfd: mediatek: Add MT6397 Pin Controller
+Message-ID: <20200522073722.GP271301@dell>
+References: <20200110145952.9720-1-matthias.bgg@kernel.org>
+ <20200115151938.GA8182@bogus>
+ <ce3747e5-41db-a168-0602-37337d8530f2@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521200513.656533920@linutronix.de>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <ce3747e5-41db-a168-0602-37337d8530f2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2020 21:05, Thomas Gleixner wrote:
-> Folks!
->
-> This is V9 of the rework series. V7 and V8 were never posted but I used the
-> version numbers for tags while fixing up 0day complaints. The last posted
-> version was V6 which can be found here:
->
->   https://lore.kernel.org/r/20200515234547.710474468@linutronix.de
->
-> The V9 leftover series is based on:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
->
-> That branch contains the merged part 1-4 of the original 5 part series.
->
-> V9 has the following changes vs. V6:
->
->    - Rebase on tip x86/entry
+On Thu, 21 May 2020, Matthias Brugger wrote:
 
-Apologies for opening a related can of worms.
+> Hi Lee,
+> 
+> On 15/01/2020 16:19, Rob Herring wrote:
+> > On Fri, 10 Jan 2020 15:59:51 +0100, matthias.bgg@kernel.org wrote:
+> >> From: Matthias Brugger <matthias.bgg@gmail.com>
+> >>
+> >> The MT6397 mfd includes a pin controller. Add binding
+> >> a description for it.
+> >>
+> >> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> >>
+> >> ---
+> >>
+> >>  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> > 
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > 
+> 
+> It looks like this fall through the cracks.
+> Would you consider to queue it or do you have further comments?
 
-The new debug_enter() has propagated a pre-existing issue forward,
-ultimately caused by bad advice in the SDM.
+There is a current issue where Rob and I are both taking patches.
+Sometimes we both assume the other will take the patch.
 
-Because the RTM status bit in DR6 has inverted polarity, writing DR6 to
-0 causes RTM to appear asserted to any logic which cares, despite RTM
-debugging not being enabled.  The same is true in principle for what is
-handed to userspace via u_debugreg[DR_STATUS].
+Apologies.
 
-On the subject of DR6, the SDM now reads:
-
-"Certain debug exceptions may clear bits 0-3. The remaining contents of
-the DR6 register are never cleared by the processor. To avoid confusion
-in identifying debug exceptions, debug handlers should clear the
-register (except bit 16, which they should set) before returning to the
-interrupted task."
-
-First of all, that should read "are never de-asserted by the processor"
-rather than "cleared", but the advice has still failed to learn from its
-first mistake.  The forward-compatible way to fix this is to set
-DR6_DEFAULT (0xffff0ff0) which also covers future inverted polarity bits.
-
-As for what to do about userspace, that is harder.  One approach is to
-express everything in terms of positive polarity (i.e. pass on dr6 ^
-DR6_DEFAULT), so DR6_RTM only appears set when RTM debugging is
-enabled.  This approach is already taken with the VMCS PENDING_DBG
-field, so there is at least previous form.
-
-I realise that "do nothing" might be acceptable at this point, given the
-lack of support for RTM debugging.
-
-Thanks,
-
-~Andrew
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
