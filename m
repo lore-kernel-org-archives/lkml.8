@@ -2,114 +2,130 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC63C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B59BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA5120825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4801620878
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsGRWs81"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HBT+Hm9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgEVArp (ORCPT
+        id S1726862AbgEVBEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgEVAro (ORCPT
+        Thu, 21 May 2020 21:04:24 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:35484 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgEVBEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:47:44 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB308C061A0E;
-        Thu, 21 May 2020 17:47:44 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id g79so3775992ybf.0;
-        Thu, 21 May 2020 17:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o1achSWEeCebePnmfJCefzRB6hhApcsEC43Uj0PfEdo=;
-        b=WsGRWs81ne4GiEIj2AuIqikvp+lAWF+9c6fBO/yPPFiOxIHXJ/DrPBIMsGpTFaITpu
-         9i9UhHdmI5Avjonw3yqrBGbpCzvnrNWyoWx8wJl5tCPlriDkngednvKIudKH2d+WfEQw
-         h55ECOkkfEaKHhzsJVUDKS8uWQ4x4Js4Qwy1kvRuhBvMr2bYe9N168YuA0OuiyR28BGT
-         mG4pSBmtdc24n52sGqwScHBmyYhwYqVrp16anD7tQUJb178QRxctfifFkBt/dgG8F+5f
-         837fbBybst4L3Xxia67k5YB+sNG2kr+a7vmpGCs+Xw/FAV0rtV7r4hiPw3ZsgNa8UeKP
-         VvpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o1achSWEeCebePnmfJCefzRB6hhApcsEC43Uj0PfEdo=;
-        b=areGP3zWowwAnDd6KrlLOOS1LyKnlz2+CD1nrxCAUEKznfa+4mhBcSfv61I40lJGAK
-         c4QAvpkOsVNAJZyMPM6JRU0PI5npOTeGkfY+rp6maDPOlQrXstYMxNiwUb8Xd4aBqGZP
-         NjAyMnGGQiN0OVJHQT1V/QyChgighBODpmBeqmQlqGXV/5bgD+kv+ZkArvJq7XfSacTP
-         8LF4Uo+/GsRFjvGnncQe0UPwkKdrYRR1Bw8+Jg2Xlv+DZcUAX8Fncq51ChUjut+jtwDy
-         xRnNTeiXcHJXv+nT+ChSJ7w++yayUuuBmRVlcgmHTh3w+3HfpjaIvgOks7wNhZs+tBiZ
-         IoKQ==
-X-Gm-Message-State: AOAM532IkaXhhDg2nmhIXARbWExHRNx+S/Cc+qbWWOPPib4hy5M3sPS2
-        8Whz99uNa2vnlPuioksE12+coWFsueqMJ1t4g5Y=
-X-Google-Smtp-Source: ABdhPJzz46XpCwc5jovLm8lmHQ+AD9jyCkktAnl9vTJWUtMKYfZSqeYdgJlRvpqDlK57+i71ZO4Zm6KzcwysMIEomd0=
-X-Received: by 2002:a25:9d82:: with SMTP id v2mr19502909ybp.268.1590108463933;
- Thu, 21 May 2020 17:47:43 -0700 (PDT)
+        Thu, 21 May 2020 21:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1590109467; x=1621645467;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gD0Mmp36tWWvKenJoMmkqjxvUYivz3GgCXTadY4Oz8w=;
+  b=HBT+Hm9oV6Cz+xEpVqOlnkRNduxZKu1F2pJ20c2pI2b8ZbDTpOE4hjtK
+   V+ezsKv/ct3wJN+DG+djxEWczfUIuUsLuohwFeXuGO5S4l/kAHo29m8Fv
+   TDZj0n+Zyp+fyBY6IzszvB9uR011u7HM7Nk30uWtrGXlwWbOYS460Ca4Q
+   EJ2Q6YsvPFx/myTvJ9Q6CNLrxC3nyl5z4BPisB0PSLkl/V5h8kn9a0b9+
+   8YTK9L4+rQHAzoUtPq5hMqFMz2/PE9mxfEqG6cJbYzsd4piKqgsOK9QQu
+   ninOxUy03BELBq5DwBC/afCXIxMnZfXm7Wl8N2q/JdIFm9bnIWgItB+xy
+   A==;
+IronPort-SDR: B44ijviYw1v1QuWJwGXqWJJooYnMdAYdXte37IjfXtzPeN2gZCv+oZrTaGkzbPi8mZApJMal1d
+ Kox9oo5c4F09yYDkExlHF2ksVSo9J54N1qte/xOsFIVoY3vLdDci0ObPVvW9usLOlTpwoW/C/7
+ s9Nxf+JPOQ03UH+2etv5u1UIiTr6S2ZkiW3R/Zt35amdHAv7LtF4VYnGb+w31dfqLnnUT/jNQ0
+ fIT+Fvb8Yj0zszeHQnPtnOAzPmRjZHRfOZsQOJCEefpNbxxCO0KPaihHsxXC3sViKv4IieVZE9
+ Xdc=
+X-IronPort-AV: E=Sophos;i="5.73,419,1583164800"; 
+   d="scan'208";a="241029128"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 09:04:37 +0800
+IronPort-SDR: h//N3R+ZbkPdMBVbJ3azzyazXQ6IXamfjYGys/E4IT1UBptKjQ9V3LxBoa7r/eVswNF1Knnh6M
+ 4qHoB2ti0Qdc2VIsOuTkfK/7EycqRlTWA=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 17:54:12 -0700
+IronPort-SDR: AACqdndHAWEilkfGYIKngoypr3umi5vbJCaRoPmbK0qkzwOsO4+CjnpVaXW/N0fP5JJqCfwOGj
+ Ul2DoX96QPaw==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 18:04:11 -0700
+Date:   Fri, 22 May 2020 02:04:06 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Paul Burton <paulburton@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: piix4-poweroff.c I/O BAR usage
+In-Reply-To: <20200520135708.GA1086370@bjorn-Precision-5520>
+Message-ID: <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
+References: <20200520135708.GA1086370@bjorn-Precision-5520>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200520183652.21633-1-rcampbell@nvidia.com> <20200520192045.GH24561@mellanox.com>
- <0ef69e08-7f5d-7a3d-c657-55b3a8df1dfe@nvidia.com>
-In-Reply-To: <0ef69e08-7f5d-7a3d-c657-55b3a8df1dfe@nvidia.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Fri, 22 May 2020 10:47:32 +1000
-Message-ID: <CACAvsv6TYCaChfsp4LNcVUZ6b0f6F5vDiKqfpzRTVRnRM7373g@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] nouveau/hmm: fix migrate zero page to GPU
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>, linux-rdma@vger.kernel.org,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>, Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 at 07:05, Ralph Campbell <rcampbell@nvidia.com> wrote:
->
->
-> On 5/20/20 12:20 PM, Jason Gunthorpe wrote:
-> > On Wed, May 20, 2020 at 11:36:52AM -0700, Ralph Campbell wrote:
-> >> When calling OpenCL clEnqueueSVMMigrateMem() on a region of memory that
-> >> is backed by pte_none() or zero pages, migrate_vma_setup() will fill the
-> >> source PFN array with an entry indicating the source page is zero.
-> >> Use this to optimize migration to device private memory by allocating
-> >> GPU memory and zero filling it instead of failing to migrate the page.
-> >>
-> >> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> >>
-> >> This patch applies cleanly to Jason's Gunthorpe's hmm tree plus two
-> >> patches I posted earlier. The first is queued in Ben Skegg's nouveau
-> >> tree and the second is still pending review/not queued.
-> >> [1] ("nouveau/hmm: map pages after migration")
-> >> https://lore.kernel.org/linux-mm/20200304001339.8248-5-rcampbell@nvidia.com/
-> >> [2] ("nouveau/hmm: fix nouveau_dmem_chunk allocations")
-> >> https://lore.kernel.org/lkml/20200421231107.30958-1-rcampbell@nvidia.com/
-> >
-> > It would be best if it goes through Ben's tree if it doesn't have
-> > conflicts with the hunks I have in the hmm tree.. Is it the case?
-> >
-> > Jason
->
-> I think there might be some merge conflicts even though it is semantically
-> independent of the other changes. I guess since we are at 5.7-rc6 and not
-> far from the merge window, I can rebase after 5.8-rc1 and resend.
-> I posted this mostly to get some review and as a "heads up" of the issue.
-Both look alright to me, and apply cleanly on top of my tree already,
-so I've got them locally.
+Hi Bjorn,
 
-Ben.
+ Paul may or may not be reachable anymore, so I'll step in.
 
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+> This looks like it might be a bug:
+> 
+>   static const int piix4_pm_io_region = PCI_BRIDGE_RESOURCES;
+> 
+>   static int piix4_poweroff_probe(struct pci_dev *dev,
+>                                   const struct pci_device_id *id)
+>   {
+>           ...
+>           /* Request access to the PIIX4 PM IO registers */
+>           res = pci_request_region(dev, piix4_pm_io_region,
+>                                    "PIIX4 PM IO registers");
+> 
+> pci_request_region() takes a BAR number (0-5), but here we're passing
+> PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
+> the bridge I/O window.
+> 
+> I don't think this device ([8086:7113]) is a bridge, so that resource
+> should be empty.
+
+ Hmm, isn't the resource actually set up by `quirk_piix4_acpi' though?
+
+> Based on this spec:
+> https://www.intel.com/Assets/PDF/datasheet/290562.pdf,
+> it looks like it should be the PIIX4 power management function at
+> function 3, which has no standard PCI BARs but does have a PMBA (Power
+> Management Base Address) at 0x40 and an SMBBA (SMBus Base Address) at
+> 0x90 in config space.
+
+ Correct, this is what Malta firmware reports for this function:
+
+Bus = 0x00, Dev = 0x0a, Function = 0x03
+Vendor Id = 0x8086 (Intel), Dev ID = 0x7113 (PIIX4 Power)
+ Min Gnt = 0x00, Max Lat = 0x00, Lat Tim = 0x20
+ Int Pin = None, Int Line = 0x09
+ BAR count = 0x02
+  IO:  Pos = 0x40, Base(CPU/PCI) = 0x18001000/0x00001000, Size = 0x00000100
+  IO:  Pos = 0x90, Base(CPU/PCI) = 0x18001100/0x00001100, Size = 0x00000100
+
+I'm somewhat familiar with this southbridge, although this was looong ago.
+
+> I suppose on an ACPI system the regions described by PMBA and SMBBA
+> might be described via ACPI, since they're not discoverable by
+> standard PCI enumeration?  Pretty sure you don't have ACPI on MIPS
+> though.
+> 
+> Maybe the driver should read PMBA and SMBBA and reserve those regions
+> by hand with request_region()?
+
+ Well, I think `quirk_piix4_acpi' covers it.  It dates back to 2.3.49 
+AFAICT.  I can try to boot my Malta system over the weekend to see if 
+there are any issues with it, but I'm fairly sure there is none here.
+
+  Maciej
