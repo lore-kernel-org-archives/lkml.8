@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F356FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C96002145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBF222AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159308;
-	bh=EttFuyWUsVA2+0so7dutokKTLb7us68VFKlExgm5ag4=;
+	s=default; t=1590159312;
+	bh=J2jIe6HbveuMkncJ1bisbe9ib21+twXrpFHhdmfVG6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7IWT3azLYJlsYQggJZk4XBTQf1DfyjQK5K1DEByTAQslfRBBIExM5+LZ7D24X0V1
-	 iZkOOwX2hHkLkzt1ne7HpBSA4jsZ9wDMhfkQa022JfBo7GmD/2PY/PAj+2hITOPuXZ
-	 +YuHfKlQqXeb0mvA1x1p7R2yCcz0VeOfm9rEeIjM=
+	b=Rersl9TM9BVacI5OYWyZJb27g0I1vHq2MBhqGaT/agmYatie2BO1yXFBzidLk6TxO
+	 lqtHASf1Xf2epTRY1ln3yElPHsbcGwY6CR4cFRWg/O1QdwcwP9mBpnBaNWf4j1bNW5
+	 ApV/jZAoN2VVvcVmi7PDMX+aKY4pJbkRYCIcimcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbgEVOzE (ORCPT
+        id S1730955AbgEVOvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730046AbgEVOvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:20 -0400
+        id S1730929AbgEVOvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE4D72240A;
-        Fri, 22 May 2020 14:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F1C22259;
+        Fri, 22 May 2020 14:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159079;
-        bh=EttFuyWUsVA2+0so7dutokKTLb7us68VFKlExgm5ag4=;
+        s=default; t=1590159071;
+        bh=J2jIe6HbveuMkncJ1bisbe9ib21+twXrpFHhdmfVG6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a9UwBPSMflr2b4itKqsI9BSq9fTI9jPkJUrPbCyx6Vpup0IwDn+gM4CB9vb9yQmIr
-         dzcLAEd1uPk5OUgulFnQZPRO60KOSMDTc7+Mu+qN/55ybfz81nTdI+ICMFBW2mblY6
-         MrYkkiBM6//zEYs787mCdNROWrPw7GMWVosqWHIo=
+        b=y4H7DK6uNwoa92K9UzjeUJl+qxCWRcy9yHPoVWAZz3I3NM2r7EwuoyBzgSwGl8vdW
+         RSU/FJU+7oFO/9Fb03jw+GFlbkDwoEDsiZW2132jSjCyO48nhZxPdOFYsjT9aAZ3g6
+         2Dpl5SKNIhAZqTNnFMWG4iXejyBPBkFapV98I5PU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 32/32] drivers: net: hamradio: Fix suspicious RCU usage warning in bpqether.c
-Date:   Fri, 22 May 2020 10:50:44 -0400
-Message-Id: <20200522145044.434677-32-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 24/32] clk: ti: am33xx: fix RTC clock parent
+Date:   Fri, 22 May 2020 10:50:36 -0400
+Message-Id: <20200522145044.434677-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
 References: <20200522145044.434677-1-sashal@kernel.org>
@@ -60,41 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 95f59bf88bb75281cc626e283ecefdd5d5641427 ]
+[ Upstream commit dc6dbd51009fc412729c307161f442c0a08618f4 ]
 
-This patch fixes the following warning:
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
------------------------------
-drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader section!!
+Right now, trying to use RTC purely with the ti-sysc / clkctrl framework
+fails to enable the RTC module properly. Based on experimentation, this
+appears to be because RTC is sourced from the clkdiv32k optional clock.
+TRM is not very clear on this topic, but fix the RTC to use the proper
+source clock nevertheless.
 
-Since rtnl lock is held, pass this cond in list_for_each_entry_rcu().
-
-Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Link: https://lkml.kernel.org/r/20200424152301.4018-1-t-kristo@ti.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/bpqether.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/ti/clk-33xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/bpqether.c b/drivers/net/hamradio/bpqether.c
-index fbea6f232819..e2ad3c2e8df5 100644
---- a/drivers/net/hamradio/bpqether.c
-+++ b/drivers/net/hamradio/bpqether.c
-@@ -127,7 +127,8 @@ static inline struct net_device *bpq_get_ax25_dev(struct net_device *dev)
- {
- 	struct bpqdev *bpq;
+diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
+index a360d3109555..73f567d8022f 100644
+--- a/drivers/clk/ti/clk-33xx.c
++++ b/drivers/clk/ti/clk-33xx.c
+@@ -212,7 +212,7 @@ static const struct omap_clkctrl_reg_data am3_mpu_clkctrl_regs[] __initconst = {
+ };
  
--	list_for_each_entry_rcu(bpq, &bpq_devices, bpq_list) {
-+	list_for_each_entry_rcu(bpq, &bpq_devices, bpq_list,
-+				lockdep_rtnl_is_held()) {
- 		if (bpq->ethdev == dev)
- 			return bpq->axdev;
- 	}
+ static const struct omap_clkctrl_reg_data am3_l4_rtc_clkctrl_regs[] __initconst = {
+-	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk_32768_ck" },
++	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk-24mhz-clkctrl:0000:0" },
+ 	{ 0 },
+ };
+ 
 -- 
 2.25.1
 
