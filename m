@@ -2,123 +2,202 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A494C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F6E20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590141293;
-	bh=DCQ3NMcTqqopex6iSiJfvzZ3g8OEAM5c3grbH9qm1NE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=WX9X4U/9P88x/9aV5TUMo/MbjI+jDUKxVaKDnkFQOVOnGHhvNmeG6ge2blhyeq74a
-	 4sf17OJtgQnrnl51l2KKS5TCqS7zZ9Qf9CanZXVjVvJnx7Kd8yaq2pRq25Hi0Y0Gzz
-	 4TXgmMdsAd0NpC2xzdW/N8IXUlmrpXzqC8we4OK8=
+	by mail.kernel.org (Postfix) with ESMTP id 3293E20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="SwpRkcvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgEVJyw (ORCPT
+        id S1728588AbgEVJ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
+        Fri, 22 May 2020 05:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgEVJyv (ORCPT
+        with ESMTP id S1728362AbgEVJ5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:54:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FFDC061A0E;
-        Fri, 22 May 2020 02:54:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v16so11913291ljc.8;
-        Fri, 22 May 2020 02:54:50 -0700 (PDT)
+        Fri, 22 May 2020 05:57:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7E0C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:57:55 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id l15so11540796lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=XzN7vQSAeKD/eMd3BXZFqaFdo1S/tdrEDVtMr2FGnLU=;
-        b=Og7+X8GsBOfeJA3VJxO9QrF+eNA1WImqglo1OAStxYRp8TU5PGXrQmNtGmN0qlyp34
-         RaxDZmB5YkfLP3SlmIT6TNWFSnle76nSJBo4/fwN8LgyJXBjkfPFCieho97KHlfsf1iM
-         mdbPjltolPJBj6iROxZsLe7NtGT37gpt6jsIgbGVYgonW2hN1Wy3V9EuZaU2iQ61t0lo
-         OAvVy7v3ekVESgM1gcZZ/fglsARr2nC4a5Qni0+5BI467TUO23O0cxWPCNgOWO0VBEH+
-         uOzLY+dAnO5mKK8l2wQ32FuDjQrLZXbLh9J311jODurfsqOzjMrSQ3yWJxZzRW38uoP2
-         5+gg==
+        d=android.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=zTT4v84DbNJrNGuRg9j5/ODbFJsAM/aU00CkLjhVRhU=;
+        b=SwpRkcvJmno5jAejAy/rhvSBb67O1fb5ck7ZPITWACBKuY9dpmznRXbj6jV1lekY2q
+         N3y3TEcMQaTRCUQd0wMizTnCZ/W0jJmaumg9DQSv1B7GhIOA3frDFwUSdnwO/ib//uEV
+         gfXFaoyRbDESPUPkeH8vag9sW6FMD7WBTuNAVpJlfTik7ZlJdJo5uNm0yHjzQrCZrjl7
+         3JnPblH7u3dStOMDUYpN4H+DDqKdw5ghXFIKrkn3Jw+/cNNvKOGSv4ShhU5Y6T50nkwF
+         CaPntV9EMDk2coTroj+KBdScfrKZKVFDI1m9iKxOxfERt0u/vRmiy8BW5uaYlHF8pj+v
+         UV2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=XzN7vQSAeKD/eMd3BXZFqaFdo1S/tdrEDVtMr2FGnLU=;
-        b=O0C/8HTIl5JXNT4S5KnIgKZafH3qzuFh4Yw8+2VJ5h9TUmnF/czN8zQfIWtKBfNpF2
-         H3Dk3AU8PXgGj7daazYcbyIFkmnCiRL2LySj15FyK9qYbvuvO9E463GKS6WTYy+Wrb8l
-         G2yiuoCYzDEgt/JWEJPorbVzOrnxotgMVtQ+m6CuoXqxApW1E4wQ+wTfEW8ChHkiNbyb
-         wdOcUOT5ujAg3mn+8Yj3Zm3vtfqkqerDrCAVWNhpIKPDg4wNxIgpgOb17W9yp8XdWWb5
-         +Oms7UTD2eYIEwucn22qlfDY0sO1unqPGf4IgBNSrnijQvUd1vqlWwt86iJsgVgg9SQ/
-         NhwQ==
-X-Gm-Message-State: AOAM530OO+KeFxgd0dXHumim5mLGsEBbIRe1GFRB9x4jvCjgOmsdTWbZ
-        6N0zbo8Mwyt4g7LPP6zvuOs=
-X-Google-Smtp-Source: ABdhPJxls6sqBFx9as0rTD7ea7wRBsOpMahmM8dx899ivTV953sT8LrHdqpRnsVfBCHXJSWevqBg9Q==
-X-Received: by 2002:a2e:980d:: with SMTP id a13mr7372013ljj.277.1590141288728;
-        Fri, 22 May 2020 02:54:48 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id o23sm2655294lfg.0.2020.05.22.02.54.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 02:54:47 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
-In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-Date:   Fri, 22 May 2020 12:54:25 +0300
-Message-ID: <87o8qgwazy.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=zTT4v84DbNJrNGuRg9j5/ODbFJsAM/aU00CkLjhVRhU=;
+        b=O5zXkWmrY9Vt6FNDroVzz5jsHH1jagBZnGmexQY4FFN5j4TgjKfEaQPRJ7tCorxxtV
+         Sf/PY7ufNlOkFTUw4N9OByfU6peJm528WUs8uB+/0pdqfPz33RBXKH2W91m/qwC23g2t
+         seO9mN1ZwaBB0AZwv0+ylW+3JXn/3hEdHWbKA7dJWa/+cdNOMQf7pPduwW5fFVsLK0uz
+         j4JEcZxNUBa7NP32yS685eM2+b1QVBsyX7+vYrGefTfDKWmgorC7CsYNSbi5gp8Igq60
+         amBKdAZ9D0mtN9rHiKmWrWkbvp9SNMwsu9/JrBmz1jd1Uxq7d5PiPYE6aowbOCjlTcc7
+         jpEA==
+X-Gm-Message-State: AOAM531eWJ+eAH1a2g2zmNhnidt+UU1t7LwyEY4n0Ss6hRS8ytbaArj9
+        q6HB/8EuPnnHcP+6hlhnR6A8rctMZFnRNDHDCTZwqA==
+X-Google-Smtp-Source: ABdhPJwvWpHdh12TXJb5Ol2McEEtJCHFS5m/5WUTO909JKTAY8DS+sYl6Sva05hNjkBeAQy4DdsXOSk/koy0cqXwe7I=
+X-Received: by 2002:a05:651c:2046:: with SMTP id t6mr6908884ljo.227.1590141473342;
+ Fri, 22 May 2020 02:57:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+From:   Martijn Coenen <maco@android.com>
+Date:   Fri, 22 May 2020 11:57:42 +0200
+Message-ID: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
+Subject: Writeback bug causing writeback stalls
+To:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        android-storage-core@google.com, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Wesley Cheng <wcheng@codeaurora.org> writes:
+We've been working on implementing a FUSE filesystem in Android, and have
+run into what appears to be a bug in the kernel writeback code. The problem
+that we observed is that an inode in the filesystem is on the b_dirty_time list,
+but its i_state field does have I_DIRTY_PAGES set, which I think means that
+the inode is on the wrong list. This condition doesn't appear to fix itself even
+as new pages are dirtied, because __mark_inode_dirty() has this check:
 
-> Changes in V2:
->  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
->    FIFO.
->  - Removed dev_dbg() prints and fixed typos from patches
->  - Added some more description on the dt-bindings commit message
->
-> Reviewed-by: Felipe Balbi <balbi@kernel.org>
+    if ((inode->i_state & flags) != flags) {
 
-I don't remember giving you a Reviewed-by, did I?
+before considering moving the inode to another list. Since the inode already
+has I_DIRTY_PAGES set, we're not going to move it to the dirty list. I *think*
+the only way the inode gets out of this condition is whenever we handle the
+b_dirty_time list, which can take a while.
 
-=2D-=20
-balbi
+The reason we even noticed this bug in the first place is that FUSE has a very
+low wb max_ratio by default (1), and so at some point processes get stuck in
+balance_dirty_pages_ratelimited(), waiting for pages to be written. They hold
+the inode's write lock, and when other processes try to acquire it, they get
+stuck. We have a watchdog that reboots the device after ~10 mins of a task
+being stuck in D state, and this triggered regularly in some tests.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+After careful studying of the kernel code, I found a reliable repro scenario
+for this condition, which is described in more detail below. But essentially
+what I think is happening is this:
 
------BEGIN PGP SIGNATURE-----
+__mark_inode_dirty() has an early return condition for when a sync is in
+progress, where it updates the inode i_state but not the writeback list:
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7HoVEACgkQzL64meEa
-mQZY/hAAobcsEW4IFsU2bxTrcCRnV6RQNz20bIfxZRKcyKquzoBrV66YyGxsyE+t
-egAiLviJmCxwGdOzOSdHETrrG6HequyOGzwoux/HrGre/OCJqmrh6WnJPunPIqg3
-hzYN9Jos3yFDZUUi8KPoYeS88Ke//VKXXKEwKdAyKFrB1BO2+elWtfMexyDluxlk
-oZggbGmDVlenHL2/IUrxs6EvkL1ry1ogAa5U97hwwAJApJhjqKDTswoJJvvnm+e5
-01pkLPgvD+GWOHKV+zMQ5CnjVc+cVtpTqcQJ3FY+7cbkHgzOcnb2ANgn0gygK68w
-ljUf0kopym3Y3uAuEnRzIUdrLZMjwiDepXQb2Q1hoC6sS0ptO3Qso1SFRwGsCiNR
-9ocFjCios7dA8obaELDLXMwS3B0dfMW7HR2SFgeVQ9btB00ZYNMyAqE0yMcnhdHv
-Er+5fCcHy9ObwYoXbhI30eA64rn1+KBpyJo1UMh1XLoo3Z3ON/nuI/ozaBs7xexb
-4OPsf5E4CnkPSSqBpHG1ukGU7uHyEla/lwKCIBteb0iuX2LO+kn5G3tkcd0vBrua
-ceZmOk7UDMcYFN8jGNpitKqtrCuhiMn1UpGqdEySJYh40hI92lkAv3/brvouU8Pz
-C5R4GNwFrHqYHozr+39cQAX7BKDKoJ7hvzAjIllw4t2Lzum6OEc=
-=pWoV
------END PGP SIGNATURE-----
---=-=-=--
+    inode->i_state |= flags;
+
+    /*
+    * If the inode is being synced, just update its dirty state.
+    * The unlocker will place the inode on the appropriate
+    * superblock list, based upon its state.
+    */
+    if (inode->i_state & I_SYNC)
+        goto out_unlock_inode;
+
+now this comment is true for the generic flusher threads, which run
+writeback_sb_inodes(), which calls requeue_inode() to move the inode back to the
+correct wb list when the sync is done. However, there is another
+function that uses
+I_SYNC: writeback_single_inode(). This function has some comments saying it
+prefers not to touch writeback lists, and in fact only removes it if the inode
+is clean:
+
+    /*
+    * Skip inode if it is clean and we have no outstanding writeback in
+    * WB_SYNC_ALL mode. We don't want to mess with writeback lists in this
+    * function since flusher thread may be doing for example sync in
+    * parallel and if we move the inode, it could get skipped. So here we
+    * make sure inode is on some writeback list and leave it there unless
+    * we have completely cleaned the inode.
+    */
+
+writeback_single_inode() is called from a few functions, in particular
+write_inode_now(). write_inode_now() is called by FUSE's flush() f_ops.
+
+So, the sequence of events is something like this. Let's assume the inode is
+already on b_dirty_time for valid reasons. Then:
+
+CPU1                                          CPU2
+fuse_flush()
+  write_inode_now()
+    writeback_single_inode()
+      sets I_SYNC
+        __writeback_single_inode()
+          writes back data
+          clears inode dirty flags
+          unlocks inode
+          calls mark_inode_dirty_sync()
+            sets I_DIRTY_SYNC, but doesn't
+            update wb list because I_SYNC is
+            still set
+                                              write() // somebody else writes
+                                              mark_inode_dirty(I_DIRTY_PAGES)
+                                              sets I_DIRTY_PAGES on i_state
+                                              doesn't update wb list,
+                                              because I_SYNC set
+      locks inode again
+      sees inode is still dirty,
+      doesn't touch WB list
+      clears I_SYNC
+
+So now we have an inode on b_dirty_time with I_DIRTY_PAGES | I_DIRTY_SYNC set,
+and subsequent calls to mark_inode_dirty() with either I_DIRTY_PAGES or
+I_DIRTY_SYNC will do nothing to change that. The flusher won't touch
+the inode either,
+because it's not on a b_dirty or b_io list.
+
+The easiest way to fix this, I think, is to call requeue_inode() at the end of
+writeback_single_inode(), much like it is called from writeback_sb_inodes().
+However, requeue_inode() has the following ominous warning:
+
+/*
+ * Find proper writeback list for the inode depending on its current state and
+ * possibly also change of its state while we were doing writeback.  Here we
+ * handle things such as livelock prevention or fairness of writeback among
+ * inodes. This function can be called only by flusher thread - noone else
+ * processes all inodes in writeback lists and requeueing inodes behind flusher
+ * thread's back can have unexpected consequences.
+ */
+
+Obviously this is very critical code both from a correctness and a performance
+point of view, so I wanted to run this by the maintainers and folks who have
+contributed to this code first.
+
+The way I got to reproduce this reliably was by using what is pretty much a
+pass-through FUSE filesystem, and the following two commands run in parallel:
+
+[1] fio --rw=write --size=5G -blocksize=80000 --name=test --directory=/sdcard/
+
+[2] while true; do echo flushme >> /sdcard/test.0.0; sleep 0.1; done
+
+I doubt the blocksize matters, it's just the blocksize that I observed being
+used in one of our testruns that hit this. [2] essentially calls fuse_flush()
+every 100ms, which is often enough to reproduce this problem within seconds;
+FIO will stall and enter balance_dirty_pages_ratelimited(), and [2] will hang
+because it needs the inode write lock.
+
+Other filesystems may hit the same problem, though write_inode_now() is usually
+only used when no more dirty pages are expected (eg in final iput()). There are
+some other functions that call writeback_single_inode() that are more
+widely used,
+like sync_inode() and sync_inode_metadata().
+
+Curious to hear your thoughts on this. I'm happy to provide more info
+or traces if
+needed.
+
+Thanks,
+Martijn
