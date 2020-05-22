@@ -2,171 +2,98 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AFAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A89AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67731206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590147146;
-	bh=btO8dneIHmfPGOmIgBvqxryNd/NmrdBoDkXLictJqrk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UdfKjP58L7m2zX+O+7BNr9ItZFcnca5HJV0vORs51b9+pHA+DJ01w5FRI6hFcky9d
-	 qYfCrpgvwkqxzQ0GjPRCt2NpQPsInlF64BG9j2aziOvKw40cesQ2ZAAOHSKWoLH5zk
-	 +3Ffv4KXMnwpc2wBOmuIaavnRbEWgipQekA6Z4Cc=
+	by mail.kernel.org (Postfix) with ESMTP id 385D2206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbgEVLcZ (ORCPT
+        id S1729751AbgEVLcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:32:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgEVLcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:32:24 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A756420825;
-        Fri, 22 May 2020 11:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590147143;
-        bh=btO8dneIHmfPGOmIgBvqxryNd/NmrdBoDkXLictJqrk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Rfh4SEbAEPtCnYXpk3OHCC/o+2FL9NyR+ypO4n1PpNFyghj99NyQgvlG0klOuTppN
-         sKe3uLE3Kz5n12u4Ni0xxikCCePD6wLj+NKO76W71TNMm0wbTCJJNdkiGIqjmd9Dr/
-         m0YsyCiXUxEUxbPEDwpSMKbnZ+40SMwiFOPeXDSw=
-Received: by mail-io1-f50.google.com with SMTP id d5so1478475ios.9;
-        Fri, 22 May 2020 04:32:23 -0700 (PDT)
-X-Gm-Message-State: AOAM530FMj5UZFelj7Un0Vlv2tFXurdDubcQlXJ3Z/zgdGNKANG1wLkP
-        EvEiLGYOzRNWU0f6y9gd2OeuQl8/eDxxYZqoxSg=
-X-Google-Smtp-Source: ABdhPJziirz1xLPrEZkdc4B9jJ2JPP+w7tJOZ9gU38sn1sSwxAM61EfRS+w88yUqIIEfub5x40aA+oT5SbrTfmAr6fI=
-X-Received: by 2002:a5d:81d7:: with SMTP id t23mr1676129iol.142.1590147142933;
- Fri, 22 May 2020 04:32:22 -0700 (PDT)
+        Fri, 22 May 2020 07:32:33 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:54570 "HELO
+        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1728281AbgEVLcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:32:32 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 19:32:10
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Fri, 22 May 2020 19:32:10 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jon Hunter" <jonathanh@nvidia.com>
+Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance
+ on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <e2274ef7-2c33-cd3a-319f-45c5c27cff3e@nvidia.com>
+References: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
+ <967c17d2-6b57-27f0-7762-cd0835caaec9@nvidia.com>
+ <45d18e3c.bfdab.1723c07b7d3.Coremail.dinghao.liu@zju.edu.cn>
+ <e2274ef7-2c33-cd3a-319f-45c5c27cff3e@nvidia.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
- <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
- <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com> <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
- <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com> <e8850c9b-965a-9ed4-fb22-f41de5f72b60@nvidia.com>
-In-Reply-To: <e8850c9b-965a-9ed4-fb22-f41de5f72b60@nvidia.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 22 May 2020 13:32:11 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGFM020jUTh+D4dcyy2jxoDBB=FHgozRC4R3w_mpHETJQ@mail.gmail.com>
-Message-ID: <CAMj1kXGFM020jUTh+D4dcyy2jxoDBB=FHgozRC4R3w_mpHETJQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
-To:     Nikhil Mahale <nmahale@nvidia.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <1b580492.bff38.1723c27a5e8.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCXPxw6uMdeTRQCAg--.32364W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoIBlZdtOQpEQAFsg
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbW0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWxJVW8Jr1lV2xY6cvjeVCFs4IE7xkEbVWU
+        JVW8JwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14v_Gw4lV2xY6xkI7II2jI8vz4vEwIxGrw
+        CS07vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E
+        4IkC6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4
+        vE14v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE
+        14v26r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42
+        xK8VAvwI8IcIk0rVWrJr0_WFyUJwCS07vEIxAIcVC2z280aVAFwI0_Gr0_Cr1lV2xY6IIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 13:15, Nikhil Mahale <nmahale@nvidia.com> wrote:
->
-> On 5/18/20 6:21 PM, Ard Biesheuvel wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > On Mon, 18 May 2020 at 06:25, Nikhil Mahale <nmahale@nvidia.com> wrote:
-> >>
-> >> On 5/13/20 7:56 PM, Nikhil Mahale wrote:
-> >>> On 3/20/20 3:16 AM, Michael Kelley wrote:
-> >>>> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
-> >>>>>
-> >>>>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
-> >>>>>> From: Arnd Bergmann <arnd@arndb.de>
-> >>>>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
-> >>>>>>>>
-> >>>>>>>> The Hyper-V frame buffer driver may be built as a module, and
-> >>>>>>>> it needs access to screen_info. So export screen_info.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> >>>>>>>
-> >>>>>>> Is there any chance of using a more modern KMS based driver for the screen
-> >>>>>>> than the old fbdev subsystem? I had hoped to one day completely remove
-> >>>>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
-> >>>>>>> architectures.
-> >>>>>>>
-> >>>>>>
-> >>>>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
-> >>>>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
-> >>>>>>
-> >>>>>> I'm not knowledgeable about video/graphics drivers, but when you
-> >>>>>> say "a more modern KMS based driver", are you meaning one based on
-> >>>>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
-> >>>>>> Are there any drivers that would be a good pattern to look at?
-> >>>>>
-> >>>>> It used to be a lot harder to write a DRM driver compared to an fbdev
-> >>>>> driver, but this has changed to the opposite over the years.
-> >>>>>
-> >>>>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
-> >>>>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
-> >>>>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
-> >>>>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
-> >>>>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
-> >>>>>
-> >>>>
-> >>>> Thanks for the pointers, especially for the other hypervisors.
-> >>>>
-> >>> Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
-> >>> I had configured by email client incorrectly to reply.
-> >>>
-> >>> screen_info is still useful with a modern KMS-based driver.  It exposes
-> >>> the mode parameters that the GOP driver chose.  This information is
-> >>> needed to implement seamless or glitchless boot, by both ensuring that
-> >>> the scanout parameters don't change and being able to read back the
-> >>> scanout image to populate the initial contents of the new surface.
-> >>>
-> >>> This works today on arches which implement (U)EFI and export
-> >>> screen_info, including x86 and powerpc, but doesn't work on arm or
-> >>> arm64.  As arm64 systems that implement UEFI with real GOP drivers
-> >>> become more prevalent, it would be nice to be have these features there
-> >>> as well.
-> >>
-> >> In addition to this, even if a driver doesn't implement a framebuffer
-> >> console, or if it does but has an option to disable it, the driver still
-> >> needs to know whether the EFI console is using resources on the GPU so
-> >> it can avoid clobbering them. For example screen_info provides information
-> >> like offset and size of EFI console, using this information driver can
-> >> reserve memory used by console and prevent corruption on it.
-> >>
-> >> I think arm64 should export screen_info.
-> >>
-> >
-> > If there are reasons why KMS or fbdev drivers may need to access the
-> > information in screen_info, it should be exported. I don't think that
-> > is under debate here.
-> >
->
-> Hi Ard, thanks for your feedback. If my understanding is correct,
-> you are agree to export screen_info. Can you provide guidance on how can
-> we proceed here? are you willing to accept this current patch as-is or
-> would you like me to re-submit the patch with the additional rationale
-> provided?
->
-
-Please (re-)submit it along with the code that actually makes use of it.
+PiAKPiBPbiAyMi8wNS8yMDIwIDExOjU3LCBkaW5naGFvLmxpdUB6anUuZWR1LmNuIHdyb3RlOgo+
+ID4+Cj4gPj4gT24gMjIvMDUvMjAyMCAwODo1OCwgRGluZ2hhbyBMaXUgd3JvdGU6Cj4gPj4+IHBt
+X3J1bnRpbWVfZ2V0X3N5bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNvdW50
+ZXIgZXZlbgo+ID4+PiB3aGVuIGl0IHJldHVybnMgYW4gZXJyb3IgY29kZS4gVGh1cyBhIHBhaXJp
+bmcgZGVjcmVtZW50IGlzIG5lZWRlZCBvbgo+ID4+PiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0
+byBrZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLgo+ID4+Pgo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBE
+aW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+Pj4gLS0tCj4gPj4+ICBkcml2
+ZXJzL2RtYS90ZWdyYTIxMC1hZG1hLmMgfCAxICsKPiA+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKQo+ID4+Pgo+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvdGVncmEyMTAt
+YWRtYS5jIGIvZHJpdmVycy9kbWEvdGVncmEyMTAtYWRtYS5jCj4gPj4+IGluZGV4IGM0Y2U1ZGZi
+MTQ5Yi4uODAzZTFmNGQ1ZGFjIDEwMDY0NAo+ID4+PiAtLS0gYS9kcml2ZXJzL2RtYS90ZWdyYTIx
+MC1hZG1hLmMKPiA+Pj4gKysrIGIvZHJpdmVycy9kbWEvdGVncmEyMTAtYWRtYS5jCj4gPj4+IEBA
+IC02NTgsNiArNjU4LDcgQEAgc3RhdGljIGludCB0ZWdyYV9hZG1hX2FsbG9jX2NoYW5fcmVzb3Vy
+Y2VzKHN0cnVjdCBkbWFfY2hhbiAqZGMpCj4gPj4+ICAKPiA+Pj4gIAlyZXQgPSBwbV9ydW50aW1l
+X2dldF9zeW5jKHRkYzJkZXYodGRjKSk7Cj4gPj4+ICAJaWYgKHJldCA8IDApIHsKPiA+Pj4gKwkJ
+cG1fcnVudGltZV9wdXRfc3luYyh0ZGMyZGV2KHRkYykpOwo+ID4+PiAgCQlmcmVlX2lycSh0ZGMt
+PmlycSwgdGRjKTsKPiA+Pj4gIAkJcmV0dXJuIHJldDsKPiA+Pj4gIAl9Cj4gPj4+Cj4gPj4KPiA+
+Pgo+ID4+IFRoZXJlIGlzIGFub3RoZXIgcGxhY2UgaW4gcHJvYmUgdGhhdCBuZWVkcyB0byBiZSBm
+aXhlZCBhcyB3ZWxsLiBDYW4geW91Cj4gPj4gY29ycmVjdCB0aGlzIHdoaWxlIHlvdSBhcmUgYXQg
+aXQ/Cj4gPj4KPiA+PiBUaGFua3MKPiA+PiBKb24KPiA+Pgo+ID4+IC0tIAo+ID4+IG52cHVibGlj
+Cj4gPiAKPiA+IFN1cmUuIEkgaGF2ZSBzZW50IGEgcGF0Y2ggdG8gZml4IFBNIGltYmFsYW5jZSBp
+biB0ZWdyYV9hZG1hX3Byb2JlKCkuCj4gCj4gCj4gWW91IHNob3VsZCBvbmx5IHNlbmQgb25lIHBh
+dGNoIHRvIGZpeCBib3RoIGluc3RhbmNlcyBhcyBpdCBpcyB0aGUgc2FtZQo+IGRyaXZlci4gSXQg
+aXMgaW1wb3NzaWJsZSB0byBmaWd1cmUgb3V0IHRoYXQgdHdvIHBhdGNoZXMgd2l0aCB0aGUgc2Ft
+ZQo+ICRzdWJqZWN0IGFyZSBkaWZmZXJlbnQuCj4gCj4gSm9uCj4gCj4gLS0gCj4gbnZwdWJsaWMK
+Ck9LLiBJIHdpbGwgZml4IHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbiBvZiBwYXRjaC4KClJlZ2Fy
+ZHMsCkRpbmdoYW8K
