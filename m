@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE96C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4599120723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0653A20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730767AbgEVQJT (ORCPT
+        id S1730471AbgEVQIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41096 "EHLO
+        Fri, 22 May 2020 12:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730511AbgEVQIw (ORCPT
+        with ESMTP id S1730025AbgEVQIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:08:52 -0400
+        Fri, 22 May 2020 12:08:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2B8C061A0E;
-        Fri, 22 May 2020 09:08:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45A1C05BD43;
+        Fri, 22 May 2020 09:08:50 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jcAE3-00009v-QX; Fri, 22 May 2020 18:08:47 +0200
+        id 1jcAE2-00008p-29; Fri, 22 May 2020 18:08:46 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2316D1C0095;
-        Fri, 22 May 2020 18:08:47 +0200 (CEST)
-Date:   Fri, 22 May 2020 16:08:47 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A690B1C0475;
+        Fri, 22 May 2020 18:08:45 +0200 (CEST)
+Date:   Fri, 22 May 2020 16:08:45 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Update Documentation to change supported
- compilers
+Subject: [tip: locking/kcsan] compiler.h: Move function attributes to compiler_types.h
 Cc:     Marco Elver <elver@google.com>, Borislav Petkov <bp@suse.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200521142047.169334-8-elver@google.com>
-References: <20200521142047.169334-8-elver@google.com>
+In-Reply-To: <20200521142047.169334-11-elver@google.com>
+References: <20200521142047.169334-11-elver@google.com>
 MIME-Version: 1.0
-Message-ID: <159016372701.17951.14792231377616807344.tip-bot2@tip-bot2>
+Message-ID: <159016372557.17951.5764184811583862261.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,52 +60,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     345043266de282a4059bc8336e2bcdd3680cc8f0
-Gitweb:        https://git.kernel.org/tip/345043266de282a4059bc8336e2bcdd3680cc8f0
+Commit-ID:     9a4e6db6161cc3b31c6202f8d7a9495e0c2ecda7
+Gitweb:        https://git.kernel.org/tip/9a4e6db6161cc3b31c6202f8d7a9495e0c2ecda7
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Thu, 21 May 2020 16:20:43 +02:00
+AuthorDate:    Thu, 21 May 2020 16:20:46 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 22 May 2020 15:13:45 +02:00
+CommitterDate: Fri, 22 May 2020 15:27:32 +02:00
 
-kcsan: Update Documentation to change supported compilers
+compiler.h: Move function attributes to compiler_types.h
 
-Document change in required compiler version for KCSAN, and remove the
-now redundant note about __no_kcsan and inlining problems with older
-compilers.
+Cleanup and move the KASAN and KCSAN related function attributes to
+compiler_types.h, where the rest of the same kind live.
+
+No functional change intended.
 
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/20200521142047.169334-8-elver@google.com
+Link: https://lkml.kernel.org/r/20200521142047.169334-11-elver@google.com
 ---
- Documentation/dev-tools/kcsan.rst |  9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ include/linux/compiler.h       | 29 -----------------------------
+ include/linux/compiler_types.h | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
-index f4b5766..ce4bbd9 100644
---- a/Documentation/dev-tools/kcsan.rst
-+++ b/Documentation/dev-tools/kcsan.rst
-@@ -8,8 +8,7 @@ approach to detect races. KCSAN's primary purpose is to detect `data races`_.
- Usage
- -----
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 379a507..652aee0 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -250,35 +250,6 @@ do {									\
+ 	__WRITE_ONCE(x, val);						\
+ } while (0)
  
--KCSAN is supported in both GCC and Clang. With GCC it requires version 7.3.0 or
--later. With Clang it requires version 7.0.0 or later.
-+KCSAN requires Clang version 11 or later.
- 
- To enable KCSAN configure the kernel with::
- 
-@@ -121,12 +120,6 @@ the below options are available:
-     static __no_kcsan_or_inline void foo(void) {
-         ...
- 
--  Note: Older compiler versions (GCC < 9) also do not always honor the
--  ``__no_kcsan`` attribute on regular ``inline`` functions. If false positives
--  with these compilers cannot be tolerated, for small functions where
--  ``__always_inline`` would be appropriate, ``__no_kcsan_or_inline`` should be
--  preferred instead.
+-#ifdef CONFIG_KASAN
+-/*
+- * We can't declare function 'inline' because __no_sanitize_address conflicts
+- * with inlining. Attempt to inline it may cause a build failure.
+- *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
+- * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
+- */
+-# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
+-# define __no_sanitize_or_inline __no_kasan_or_inline
+-#else
+-# define __no_kasan_or_inline __always_inline
+-#endif
 -
- * To disable data race detection for a particular compilation unit, add to the
-   ``Makefile``::
+-#define __no_kcsan __no_sanitize_thread
+-#ifdef __SANITIZE_THREAD__
+-/*
+- * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
+- * compilation units where instrumentation is disabled.
+- */
+-# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
+-# define __no_sanitize_or_inline __no_kcsan_or_inline
+-#else
+-# define __no_kcsan_or_inline __always_inline
+-#endif
+-
+-#ifndef __no_sanitize_or_inline
+-#define __no_sanitize_or_inline __always_inline
+-#endif
+-
+ static __no_sanitize_or_inline
+ unsigned long __read_once_word_nocheck(const void *addr)
+ {
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 6ed0612..b190a12 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -167,6 +167,35 @@ struct ftrace_likely_data {
+  */
+ #define noinline_for_stack noinline
  
++#ifdef CONFIG_KASAN
++/*
++ * We can't declare function 'inline' because __no_sanitize_address conflicts
++ * with inlining. Attempt to inline it may cause a build failure.
++ *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
++ * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
++ */
++# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
++# define __no_sanitize_or_inline __no_kasan_or_inline
++#else
++# define __no_kasan_or_inline __always_inline
++#endif
++
++#define __no_kcsan __no_sanitize_thread
++#ifdef __SANITIZE_THREAD__
++/*
++ * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
++ * compilation units where instrumentation is disabled.
++ */
++# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
++# define __no_sanitize_or_inline __no_kcsan_or_inline
++#else
++# define __no_kcsan_or_inline __always_inline
++#endif
++
++#ifndef __no_sanitize_or_inline
++#define __no_sanitize_or_inline __always_inline
++#endif
++
+ #endif /* __KERNEL__ */
+ 
+ #endif /* __ASSEMBLY__ */
