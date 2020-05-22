@@ -2,167 +2,141 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E367C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6A320679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rj4s/cH9"
+	by mail.kernel.org (Postfix) with ESMTP id 53C5B20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590165935;
+	bh=gWcAx6dytA0EAxqcY3HTX1YnP6kIv4ty1exXdCROqww=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YchBem1h1jGy6C8FLByJEjb5icVIxlh/ePj/Sq6fY3XGaGuEfzB8mexFNhRh/9W2r
+	 Kn0wv2vTwkOETpkqlhuLz/23Z74zwP/juo9TNnNnwEQJpg3BwFEXXPWwOs2Ov8sIOI
+	 Dcsby9y7/LeuQ5un1F+i+7gECrWJ4DjOWXhHIFO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgEVQoo (ORCPT
+        id S1730593AbgEVQpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730387AbgEVQon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:44:43 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F48C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:44:42 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g12so9589650wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jD3qtCbQBfxkGztEcewlFtFpSycVMkWT5K4Cw3TN4rk=;
-        b=rj4s/cH9LimVn2JVzIq9fCumTNw917XQ/+Y5qPVhj6ff1QiCqfh7oa8SvU9bNx+bn2
-         4yA0enZBjJRl/l9pgiQ2Xud3NnPGZeqGKj5H2AdYkMDHwqFsdnEkU6tvpN4KcwPj93c+
-         P6OgDMHaJSM1UrLfFyGNI9V+fOc6bBMA5Z6etJwu8m19lOW/3MV5kHnwxvRQCyOERv38
-         /8QYAn1kSOlEAWzo2E5r3PvngIwAv8ksx9yqUbfiFRfClp/qlJeAxOt9zhZ0QEIO9A//
-         F2zhXcqPkx9CIi14YLcYnVcflSOsMIEzZN6OW14rncrxYyADaajQgvhSaNgvo2mc5lrO
-         ohyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jD3qtCbQBfxkGztEcewlFtFpSycVMkWT5K4Cw3TN4rk=;
-        b=cedE+GXNoMEhIIc9jkk6sC9cxrCMsOcVdXjSgVKzefwg2enRB2JqcHNGCm5MwaZo4N
-         aggZN3VoxfwPHitlT7Le3zAwqEo5qtF23NKOP4s1f+jFspB3fQZ+CEsStbT2GJPNnk9e
-         3rwqdGGWkezRn9xht08kIgk6VRDoP60kgO1eHW1E4YrWTd9gTMoEIhptrCAoMWuF6wBx
-         D3y5x2oGdbnT1XYQl+yE1aSXkoEGj3N/iaNhceQ5afFKKr+cyOxxPjZ9yVoiaq1vAhUc
-         veD1WGW+H1lDnN5J2es19yqYp6M2CV2rzt9uhAOhv6UcEQddZTP0fNjgJLTtTZkh6GPp
-         tcDw==
-X-Gm-Message-State: AOAM530mQcIXq23omasYEdD3zHVmTphGxuaJdCT/CHIMLGUlm9kIutUR
-        UQ2Ty9X/gY8KPr/XT/eYUPIkMFdxnNg=
-X-Google-Smtp-Source: ABdhPJwdyoxgDONWtdqkOGyQhEcgpc7Y2fAWk4C27dWlQ6JsTIkNK4sjU0bO71T2XZ5tU8e4R8oE1w==
-X-Received: by 2002:a5d:6943:: with SMTP id r3mr3966974wrw.113.1590165881375;
-        Fri, 22 May 2020 09:44:41 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id n4sm9346454wmc.31.2020.05.22.09.44.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 09:44:40 -0700 (PDT)
-Subject: Re: [PATCH v2] thermal: qoriq: Update the settings for TMUv2
-To:     Yuantian Tang <andy.tang@nxp.com>, rui.zhang@intel.com,
-        edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200416093940.34371-1-andy.tang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <7fa1d7c2-e967-926b-772a-a2025a391aab@linaro.org>
-Date:   Fri, 22 May 2020 18:44:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 12:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730306AbgEVQpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:45:34 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFD09206B6;
+        Fri, 22 May 2020 16:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590165933;
+        bh=gWcAx6dytA0EAxqcY3HTX1YnP6kIv4ty1exXdCROqww=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tGki03yjNbya2Lh/bCN9h0iri/nzH+Vq4KqH3d9PtZz1S0Agw4aarziU175F+WuYY
+         gI+uyvvHJRZg/Yw410lxNK6x004ZGodzg1huJUcmElYKAaTxMIy+T6DRQANn0wZluY
+         LqHXKHCeIKAn7ZWwsLaqgyF096FGeQWKEXA9fu9Y=
+Received: by mail-oi1-f169.google.com with SMTP id j145so9857345oib.5;
+        Fri, 22 May 2020 09:45:33 -0700 (PDT)
+X-Gm-Message-State: AOAM531FQQtpE+G40OhFVWJ5pJsZi/rIKToLXpTlcnI4xUBgB2RUqUvY
+        2yA89eQQzyRtEdQKnIdD83ijaT7ENAW/ysJHlg==
+X-Google-Smtp-Source: ABdhPJyOIimoTTwn+DzTuswuMPzoMXeeAcfiCDmfEtU2Ls/bR0MREniW3isAwKRLWPh6rvnW8cASk2bhta+/P+05dzU=
+X-Received: by 2002:aca:f084:: with SMTP id o126mr3346182oih.106.1590165933079;
+ Fri, 22 May 2020 09:45:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200416093940.34371-1-andy.tang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200506151429.12255-1-kishon@ti.com> <20200506151429.12255-8-kishon@ti.com>
+ <20200520213434.GA583923@bogus> <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
+In-Reply-To: <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 May 2020 10:45:21 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
+Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/2020 11:39, Yuantian Tang wrote:
-> For TMU v2, TMSAR registers need to be set properly to get the
-> accurate temperature values.
-> Also temperature reading needs to convert to degree Celsius
-> since it is in degrees Kelvin.
+On Thu, May 21, 2020 at 5:35 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 5/21/2020 3:04 AM, Rob Herring wrote:
+> > On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
+> >> Cadence driver uses "mem" memory resource to obtain the offset of
+> >> configuration space address region, memory space address region and
+> >> message space address region. The obtained offset is used to program
+> >> the Address Translation Unit (ATU). However certain platforms like TI's
+> >> J721E SoC require the absolute address to be programmed in the ATU and not
+> >> just the offset.
+> >
+> > Once again, Cadence host binding is broken (or at least the example is).
+> > The 'mem' region shouldn't even exist. It is overlapping the config
+> > space and 'ranges':
+> >
+> >             reg = <0x0 0xfb000000  0x0 0x01000000>,
+> >                   <0x0 0x41000000  0x0 0x00001000>,
+> >                   <0x0 0x40000000  0x0 0x04000000>;
+> >             reg-names = "reg", "cfg", "mem";
+> >
+> >             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+> >                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
+> >
+> >
+> > 16M of registers looks a bit odd. I guess it doesn't matter
+> > unless you have a 32-bit platform and care about your virtual
+> > space. Probably should have been 3 regions for LM, RP, and AT looking
+> > at the driver.
+>
+> The "mem" region in never ioremapped. However $patch removes requiring to add
+> "mem" memory resource.
 
-Please have a look at units.h for celsius <-> kelvin conversion
+I was referring to ioremapping 'reg' region.
 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
-> v2:
-> 	- change the temp in millicelsius
-> 
->  drivers/thermal/qoriq_thermal.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> index 028a6bbf75dc..f6371127f707 100644
-> --- a/drivers/thermal/qoriq_thermal.c
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -23,6 +23,7 @@
->  #define TMTMIR_DEFAULT	0x0000000f
->  #define TIER_DISABLE	0x0
->  #define TEUMR0_V2		0x51009c00
-> +#define TMSARA_V2		0xe
->  #define TMU_VER1		0x1
->  #define TMU_VER2		0x2
->  
-> @@ -50,6 +51,9 @@
->  					    * Site Register
->  					    */
->  #define TRITSR_V	BIT(31)
-> +#define REGS_V2_TMSAR(n)	(0x304 + 16 * (n))	/* TMU monitoring
-> +						* site adjustment register
-> +						*/
->  #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
->  					   * Control Register
->  					   */
-> @@ -100,7 +104,11 @@ static int tmu_get_temp(void *p, int *temp)
->  				     10 * USEC_PER_MSEC))
->  		return -ENODATA;
->  
-> -	*temp = (val & 0xff) * 1000;
-> +	/* For TMUv2, temperature reading in degrees Kelvin */
-> +	if (qdata->ver == TMU_VER1)
-> +		*temp = (val & 0xff) * 1000;
-> +	else
-> +		*temp = ((val & 0x1ff) - 273) * 1000;
->  
->  	return 0;
->  }
-> @@ -192,6 +200,8 @@ static int qoriq_tmu_calibration(struct device *dev,
->  
->  static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
->  {
-> +	int i;
-> +
->  	/* Disable interrupt, using polling instead */
->  	regmap_write(data->regmap, REGS_TIER, TIER_DISABLE);
->  
-> @@ -202,6 +212,8 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
->  	} else {
->  		regmap_write(data->regmap, REGS_V2_TMTMIR, TMTMIR_DEFAULT);
->  		regmap_write(data->regmap, REGS_V2_TEUMR(0), TEUMR0_V2);
-> +		for (i = 0; i < 7; i++)
-> +			regmap_write(data->regmap, REGS_V2_TMSAR(i), TMSARA_V2);
->  	}
->  
->  	/* Disable monitoring */
-> @@ -212,6 +224,7 @@ static const struct regmap_range qoriq_yes_ranges[] = {
->  	regmap_reg_range(REGS_TMR, REGS_TSCFGR),
->  	regmap_reg_range(REGS_TTRnCR(0), REGS_TTRnCR(3)),
->  	regmap_reg_range(REGS_V2_TEUMR(0), REGS_V2_TEUMR(2)),
-> +	regmap_reg_range(REGS_V2_TMSAR(0), REGS_V2_TMSAR(15)),
->  	regmap_reg_range(REGS_IPBRR(0), REGS_IPBRR(1)),
->  	/* Read only registers below */
->  	regmap_reg_range(REGS_TRITSR(0), REGS_TRITSR(15)),
-> 
+> >
+> > Whatever outbound address translation you need should be based on
+> > 'ranges'.
+>
+> You mean we don't need to add "new *ops* for CPU addr fixup"?. The issue is
+> ranges provides CPU address and PCI address. The CPU will access whatever is
+> populated in ranges to access the PCI bus. However while programming the ATU,
+> we cannot use the CPU address provided in ranges directly (in some platforms)
+> because the controller does not see the full address and only the lower 28bits.
 
+Okay, that is clearer as to what the difference is. I think this
+should be 2 patches. One dropping 'mem' usage and using a mask and the
+2nd making the mask per platform.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Really, the parent node of the PCI controller should probably have
+'ranges' and you could extract a mask from that. Looks like that is
+what you had for DRA7... I'm not sure if ABI stability is important
+for the Cadence platform. I'd assume that's just some IP eval system
+and probably not?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Why do you need an ops here? All you need is a mask value.
+
+> This similar restriction was there with Designware (mostly an integration
+> issue) and we used *ops* to fixup the address that has to be programmed in ATU.
+> The Designware initially used a wrapper so that ranges property can be directly
+> used [1]. However this approach was later removed in [2]
+>
+> [1] -> https://lore.kernel.org/patchwork/patch/468523/
+> [2] -> https://lkml.org/lkml/2015/10/16/232
+
+So while you had the data for a mask in DT, the driver now hardcodes it?
+
+Rob
