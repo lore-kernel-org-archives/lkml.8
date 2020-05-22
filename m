@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F100C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EADC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E24221FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADE0221FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159289;
-	bh=AXktdaq6qusCwkIlE8IbXlzDBcusFAALLlJY+OqpiM0=;
+	s=default; t=1590159293;
+	bh=hu3+Cu1mobOMU0osGTqGMIyMafxT7FTy0kESiJ1M/lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6/iyftQeS9nxRWHqfXG4wycQm70Htao/Z1ZK/5fC2c4j6unfsf/WTs4Oi44LohgV
-	 jrUxSf6d/BKA4d/g6CCfzkp3w0qRCbsxsP1F5QCu/quoHPnSf7paJFthqECmD78FWy
-	 IHXWej3hZbJXE0NaV8y+VFvl3KjZ8IEbPt7S0gKY=
+	b=E7sBbhBXfE2PYuXeoQycPJrb3OidWsQ4rjsRSfXVUshsT+VQLRIkTWztnxcT4ecFl
+	 am08uz890/+tDsUVrXU8uS6ZL73W9D8um3mfwX4sEfSpYiP25YVVE3MzWOIdF9VKPg
+	 tvqDrZ8FzgsMlvzxbg2LnvfqJ63MOEgll2+v2z7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbgEVOys (ORCPT
+        id S1730987AbgEVOvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:51:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731005AbgEVOv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:27 -0400
+        id S1730951AbgEVOvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EBDA2247F;
-        Fri, 22 May 2020 14:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAEC722409;
+        Fri, 22 May 2020 14:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159086;
-        bh=AXktdaq6qusCwkIlE8IbXlzDBcusFAALLlJY+OqpiM0=;
+        s=default; t=1590159075;
+        bh=hu3+Cu1mobOMU0osGTqGMIyMafxT7FTy0kESiJ1M/lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cD1jtg/QhIH6mfGQHEtFEbtHCtUbFAz4na5IsOK3wQ6C0xIhUpY9mIpMiTdJsvDzo
-         yFWk+S3CStPWN/gDCwn4ot6240EppFZwZyy2aDfXOOiImTAT7UgZwLavVx2kqBGgpO
-         Eb3tshhuNtiLATr3ZMc2cLShQTJajyl6gY3LzIno=
+        b=EkPHO2k4e2bXlRR9qq6KARoWbQ7DXt84iE6cXl973pOg55CD6fysbbSjE/ZOy9xbC
+         lu3MbG2jCPHchjyxR61Yiqk6Xy2rkWJG6L0tYuQft6OcdbJk44Cb0r4N2AhBwG+xVq
+         VM0T/JmfmxjBzZiZ5Vi73tzuToJoovya1LONvSds=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/19] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
-Date:   Fri, 22 May 2020 10:51:06 -0400
-Message-Id: <20200522145120.434921-5-sashal@kernel.org>
+Cc:     Amy Shih <amy.shih@advantech.com.tw>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 28/32] hwmon: (nct7904) Fix incorrect range of temperature limit registers
+Date:   Fri, 22 May 2020 10:50:40 -0400
+Message-Id: <20200522145044.434677-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
-References: <20200522145120.434921-1-sashal@kernel.org>
+In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
+References: <20200522145044.434677-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,59 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Amy Shih <amy.shih@advantech.com.tw>
 
-[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
+[ Upstream commit 7b2fd270af27edaf02acb41a7babe805a9441914 ]
 
-A test with the command below gives these errors:
+The format of temperature limitation registers are 8-bit 2's complement
+and the range is -128~127.
+Converts the reading value to signed char to fix the incorrect range
+of temperature limitation registers.
 
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
-'#address-cells' is a required property
-
-The $nodename pattern for spi nodes is
-"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
-'spi-0' and 'spi-1' pinctrl sub nodenames to
-'spi0' and 'spi1' in 'rk322x.dtsi'.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hwmon/nct7904.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index bada942ef38d..2aa74267ae51 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -944,7 +944,7 @@
- 			};
- 		};
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index 281c81edabc6..dfb122b5e1b7 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -356,6 +356,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+ 	struct nct7904_data *data = dev_get_drvdata(dev);
+ 	int ret, temp;
+ 	unsigned int reg1, reg2, reg3;
++	s8 temps;
  
--		spi-0 {
-+		spi0 {
- 			spi0_clk: spi0-clk {
- 				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
- 			};
-@@ -962,7 +962,7 @@
- 			};
- 		};
+ 	switch (attr) {
+ 	case hwmon_temp_input:
+@@ -461,7 +462,8 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
  
--		spi-1 {
-+		spi1 {
- 			spi1_clk: spi1-clk {
- 				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
- 			};
+ 	if (ret < 0)
+ 		return ret;
+-	*val = ret * 1000;
++	temps = ret;
++	*val = temps * 1000;
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
