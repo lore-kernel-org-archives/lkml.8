@@ -2,216 +2,181 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D64C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D335C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00975206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E993206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kT0kNKEy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Kgum6m4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgEVL5O (ORCPT
+        id S1728988AbgEVL6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728356AbgEVL5M (ORCPT
+        Fri, 22 May 2020 07:58:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:27950 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728506AbgEVL6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:57:12 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AA1C061A0E;
-        Fri, 22 May 2020 04:57:12 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d5so1541386ios.9;
-        Fri, 22 May 2020 04:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=vVgEQoaZGULeKq6mOVsxabUK+ok8IXX8M0Wjc4JGWnw=;
-        b=kT0kNKEyfZ38yYc5SMmwx2T1Oqc7KZL+SmsXED9fGxtRFFN5O2vDyvZNYu7XSJ9GwW
-         RcNCYxCREvtCl6/clhzOl34+HzXvNp2k9CvhUXIbMi4LX18DtIHATmKBaa7GIuoQTwEg
-         jWsr1xZDq6eQQTI4ubZDgKcPQdMTb4gZGIAVhDxKobIlRzY9QejjZ+oKtWJO/kU08fSS
-         mskf/7ilGlBOTt3HE9XGEbpw5fDdYPzrnyYDJeWWFRAAUn+hiPwWrCPNhxrrA7ZIHye7
-         cD3UgVB6A8suBUv3J+Gur4C72D0Ppeiou0Cfu3zhX4XKYCn8Lxy9QdM/B30EU5W0TH42
-         0jEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=vVgEQoaZGULeKq6mOVsxabUK+ok8IXX8M0Wjc4JGWnw=;
-        b=GLqe3EcifULKfm5lNNbl+u79PYVq3KJieWzBBL9t+ZOMxu4XN1ta6Pk808euDzvVlD
-         VfTZYx0/znRCn46BE+bxip/bEZZtE6T8fmO+rLS8pQyck8o49GOmr4Z6EYsz7lCVQq6Z
-         xlsj8QY9qPyyC1/pRjHzvpvjooDNaZMWXe1jWnrFfKc7hokzIANNNQ0QcznmHoIYNKIS
-         +qT8MO60VszPDwSLbQEiMITM/mMXM1RRSYA2T9/TEG1xjZmUtDThPSXeISYEK/2gAgkc
-         bOqBK7Fb2zKELcHhkEz0mrwA36L5t+nMIpbIdqecuwnHkexqJCkqfqXWu59KlMZjh/YW
-         /lfA==
-X-Gm-Message-State: AOAM532wzgdozRcPHUzGgB+FKwaUpqv2IEJrkf89edu95rBWpINjkrZK
-        qEj84xO7m6qVBjzHhnetV3Ocz7jxT2+yLzbM0MQ=
-X-Google-Smtp-Source: ABdhPJxk5boNaYi9U3g95woHOFJGThEaM55bar9NM4pJy+F3Dzt+kO44UvNhnafLo77t8khyVSERsO2VQQna9aGqhpk=
-X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr2690450iov.80.1590148631440;
- Fri, 22 May 2020 04:57:11 -0700 (PDT)
+        Fri, 22 May 2020 07:58:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590148715; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=2bSS0nFqBz4iySfZO6bq+1InBVAHc8QrH0Hb9FnE1kw=; b=Kgum6m4YDKk83CYZ7iJ+of0+2Jb2QicoU/Cl55nzL1PPj9RsoM/DCY+Ye9DOuaqlSrn6Ulfl
+ 4/b08hkGkHftLIc2J9gwIdK47EEaEjsgjoeySccxnjT/CKUAgVE6QKt8ZMO6ogWRisicqBb3
+ G0UAK4i1QUr1Fp/yMeNpZz+PwJs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ec7be5d7171b6d7e4df89f4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 11:58:21
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 32A51C43387; Fri, 22 May 2020 11:58:21 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [157.44.159.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4C8B9C433C6;
+        Fri, 22 May 2020 11:58:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4C8B9C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+Subject: Re: [PATCH V4 3/5] iio: adc: Add support for PMIC7 ADC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org>
+ <1589361736-816-4-git-send-email-jprakash@codeaurora.org>
+ <CAHp75VedM+=+m8WF=zPpUcizgCGareYuBzUfjKwesozVSY_gKg@mail.gmail.com>
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+Message-ID: <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
+Date:   Fri, 22 May 2020 17:28:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
- <20200521220041.87368-1-ndesaulniers@google.com>
-In-Reply-To: <20200521220041.87368-1-ndesaulniers@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 22 May 2020 13:56:59 +0200
-Message-ID: <CA+icZUWGB8bp1UZHQpB_W8YL7SeN23h5V9NTq-p3jeUqO4MK+w@mail.gmail.com>
-Subject: Re: [PATCH v3] Makefile: support compressed debug info
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Nick Clifton <nickc@redhat.com>,
-        David Blaikie <blaikie@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75VedM+=+m8WF=zPpUcizgCGareYuBzUfjKwesozVSY_gKg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 12:00 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> As debug information gets larger and larger, it helps significantly save
-> the size of vmlinux images to compress the information in the debug
-> information sections. Note: this debug info is typically split off from
-> the final compressed kernel image, which is why vmlinux is what's used
-> in conjunction with GDB. Minimizing the debug info size should have no
-> impact on boot times, or final compressed kernel image size.
->
-> All of the debug sections will have a `C` flag set.
-> $ readelf -S <object file>
->
-> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
->     vmlinux.gcc75.uncompressed.dwarf4
->
->     FILE SIZE        VM SIZE
->  --------------  --------------
->   +0.0%     +18  [ = ]       0    [Unmapped]
->  -73.3%  -114Ki  [ = ]       0    .debug_aranges
->  -76.2% -2.01Mi  [ = ]       0    .debug_frame
->  -73.6% -2.89Mi  [ = ]       0    .debug_str
->  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
->  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
->  -70.5% -9.04Mi  [ = ]       0    .debug_line
->  -79.3% -10.9Mi  [ = ]       0    .debug_loc
->  -39.5% -88.6Mi  [ = ]       0    .debug_info
->  -18.2%  -123Mi  [ = ]       0    TOTAL
->
-> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
->     vmlinux.clang11.uncompressed.dwarf4
->
->     FILE SIZE        VM SIZE
->  --------------  --------------
->   +0.0%     +23  [ = ]       0    [Unmapped]
->  -65.6%    -871  [ = ]       0    .debug_aranges
->  -77.4% -1.84Mi  [ = ]       0    .debug_frame
->  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
->  -73.1% -2.43Mi  [ = ]       0    .debug_str
->  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
->  -65.9% -8.62Mi  [ = ]       0    .debug_line
->  -86.2% -40.0Mi  [ = ]       0    .debug_loc
->  -42.0% -64.1Mi  [ = ]       0    .debug_info
->  -22.1%  -122Mi  [ = ]       0    TOTAL
->
-> For x86_64 defconfig + LLVM=1 (before):
-> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
-> Maximum resident set size (kbytes): 43856
->
-> For x86_64 defconfig + LLVM=1 (after):
-> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
-> Maximum resident set size (kbytes): 1566776
->
-> Suggested-by: David Blaikie <blaikie@google.com>
-> Suggested-by: Nick Clifton <nickc@redhat.com>
-> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Hi Andy,
 
-Re-tested V3 on top of Linux v5.7-rc6+ with Clang/LLD v10.0.1-rc1.
+On 5/13/2020 3:18 PM, Andy Shevchenko wrote:
+> On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+>> major change from PMIC5 is that all SW communication to ADC goes through
+>> PMK8350, which communicates with other PMICs through PBS when the ADC
+>> on PMK8350 works in master mode. The SID register is used to identify the
+>> PMICs with which the PBS needs to communicate. Add support for the same.
+>> +#define ADC7_CONV_TIMEOUT                      msecs_to_jiffies(10)
+> ...
+>
+>> +       ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
+>> +       if (ret < 0)
+> Is ' < 0' part necessary?
+> Ditto for same cases in other places in the code.
+I'll fix this at all required locations in this patch in the next post.
+>
+>> +               return ret;
+> ...
+>
+>> +       switch (mask) {
+>> +       case IIO_CHAN_INFO_PROCESSED:
+>> +               ret = adc7_do_conversion(adc, prop, chan,
+>> +                                       &adc_code_volt, &adc_code_cur);
+>> +               if (ret)
+>> +                       return ret;
+>> +
+>> +               ret = qcom_adc5_hw_scale(prop->scale_fn_type,
+>> +                       &adc5_prescale_ratios[prop->prescale],
+>> +                       adc->data,
+>> +                       adc_code_volt, val);
+>> +
+>> +               if (ret)
+>> +                       return ret;
+>> +
+>> +               return IIO_VAL_INT;
+>> +       default:
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       return 0;
+> Dead code?
+Right, I'll remove it in the next post.
+>
+> ...
+>
+>> +static int qcom_vadc7_scale_hw_calib_die_temp(
+>> +                               const struct vadc_prescale_ratio *prescale,
+>> +                               const struct adc5_data *data,
+>> +                               u16 adc_code, int *result_mdec)
+>> +{
+>> +
+>> +       int voltage, vtemp0, temp, i = ARRAY_SIZE(adcmap7_die_temp) - 1;
+> How assignment to i is useful?
 
-- Sedat -
 
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V2 -> V3:
-> * Fix blaikie@'s email addr.
-> * Fix Fangrui's Reviewed-by tag as per Masahiro.
-> * Fix help text as per Masahiro.
-> * Fix -Wa$(comma)foo as per Masahiro.
+I'm using it in adcmap7_die_temp[i] below, to keep it within the 
+character limit per line. I think it's more readable that way.
+
 >
-> Changes V1 -> V2:
-> * rebase on linux-next.
-> * Add assembler flags as per Fangrui.
-> * Add note about KDEB_COMPRESS+scripts/package/builddeb
->   as per Sedat and Masahiro.
-> * Add note about bintutils version requirements as per Nick C.
-> * Add note about measured increased build time and max RSS.
->  Makefile          |  6 ++++++
->  lib/Kconfig.debug | 17 +++++++++++++++++
->  2 files changed, 23 insertions(+)
+>> +       voltage = qcom_vadc_scale_code_voltage_factor(adc_code,
+>> +                               prescale, data, 1);
+>> +
+>> +       if (adcmap7_die_temp[0].x > voltage) {
+>> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
+>> +               return 0;
+>> +       } else if (adcmap7_die_temp[i].x <= voltage) {
+> Redundant 'else'.
+The expression is different, it's adcmap7_die_temp[i] here, not 
+adcmap7_die_temp[0].
+
 >
-> diff --git a/Makefile b/Makefile
-> index 71687bfe1cd9..be8835296754 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -822,6 +822,12 @@ DEBUG_CFLAGS       += $(call cc-option, -femit-struct-debug-baseonly) \
->                    $(call cc-option,-fno-var-tracking)
->  endif
+>> +               *result_mdec = DIE_TEMP_ADC7_MAX;
+>> +               return 0;
+>> +       }
+>> +
+>> +       for (i = 0; i < ARRAY_SIZE(adcmap7_die_temp); i++)
+>> +               if (adcmap7_die_temp[i].x > voltage)
+>> +                       break;
+>> +
+>> +       vtemp0 = adcmap7_die_temp[i - 1].x;
+>> +       voltage = voltage - vtemp0;
+>> +       temp = div64_s64(voltage * DIE_TEMP_ADC7_SCALE_FACTOR,
+>> +               adcmap7_die_temp[i - 1].y);
+>> +       temp += DIE_TEMP_ADC7_SCALE_1 + (DIE_TEMP_ADC7_SCALE_2 * (i - 1));
+>> +       *result_mdec = temp;
+>> +
+>> +       return 0;
+>> +}
+> ...
 >
-> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
-> +DEBUG_CFLAGS   += -gz=zlib
-> +KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
-> +KBUILD_LDFLAGS += --compress-debug-sections=zlib
-> +endif
-> +
->  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
->  export DEBUG_CFLAGS
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index b8f023e054b9..7fc82dcf814b 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -225,6 +225,23 @@ config DEBUG_INFO_REDUCED
->           DEBUG_INFO build and compile times are reduced too.
->           Only works with newer gcc versions.
->
-> +config DEBUG_INFO_COMPRESSED
-> +       bool "Compressed debugging information"
-> +       depends on DEBUG_INFO
-> +       depends on $(cc-option,-gz=zlib)
-> +       depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
-> +       depends on $(ld-option,--compress-debug-sections=zlib)
-> +       help
-> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-> +         5.0+, binutils 2.26+, and zlib.
-> +
-> +         Users of dpkg-deb via scripts/package/builddeb may find an increase in
-> +         size of their debug .deb packages with this config set, due to the
-> +         debug info being compressed with zlib, then the object files being
-> +         recompressed with a different compression scheme. But this is still
-> +         preferable to setting $KDEB_COMPRESS to "none" which would be even
-> +         larger.
-> +
->  config DEBUG_INFO_SPLIT
->         bool "Produce split debuginfo in .dwo files"
->         depends on DEBUG_INFO
-> --
-> 2.27.0.rc0.183.gde8f92d652-goog
+>> +#define RATIO_MAX_ADC7         0x4000
+> Hmm... Why the last is in hex? Is it related to amount of bits in the
+> hardware? Then probably better to use BIT().
+It is the upper limit reading for a ratiometric calibration measurement, 
+which is reported as a 14 bit reading. I'll change this in the next post.
 >
