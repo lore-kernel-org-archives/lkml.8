@@ -2,123 +2,111 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC37C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B025D206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqA7xGFH"
+	by mail.kernel.org (Postfix) with ESMTP id E6BB3206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbgEVXLN (ORCPT
+        id S1731286AbgEVXLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731117AbgEVXLN (ORCPT
+        Fri, 22 May 2020 19:11:48 -0400
+Received: from mail-il1-f175.google.com ([209.85.166.175]:46683 "EHLO
+        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731161AbgEVXLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:11:13 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495A1C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:11:12 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so4995880plq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XwLJSYwASLEYgULcmxjHMYHm0gclCEZFExWcoADNDfk=;
-        b=iqA7xGFH7nRzZSARF8J/6I87gXVGh2PeDk3JEKv2iZubsvfzUBXuI4+LMaQN/t5r73
-         GxdIq3VmZYudQHfuCUBKXnoOEGklNrGsoBld+BCQJuSPZ5puYurVTAtOvqGVEizDcfnO
-         dKZUzJA5p+9vV8xarJqChzjMdOUsTQnJzK3J9QWkk54jp7awFsugw4+nAjBNMkZT1rOp
-         RAxAprQIszHXmayLMUAMIb7XqpQYhRwbqmJR69p7VJ56HF3l4Eoa4NSFxfSeS7TSjcHp
-         4jMlmdQt34zQIhx5j8tuLcqneY31xwXOV+gzEpToqFrpH5koOfnGUMO/ZhzDvR6bv94X
-         XJBA==
+        Fri, 22 May 2020 19:11:47 -0400
+Received: by mail-il1-f175.google.com with SMTP id w18so12358106ilm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:11:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XwLJSYwASLEYgULcmxjHMYHm0gclCEZFExWcoADNDfk=;
-        b=Blqg8lYeU7VXqudaj+wx5UDG5dw73KQHpUTo6dLSNlDc91WXSe4LtL5ePEJn5aOd20
-         5goY4a+t2QhY1KxZvhelQN76oKgxVg1v4Rv4vMntoqfbBtBSPbHFcMLv9GpXQ6YAvW6d
-         ABjeuXDn1kHKzqscxOlGn07+EXKwHj3/rK+4LKKEZMZ3j62fGntAt44FByHs7NtI17cX
-         P/oXy51nSRHT7bMxkRXwLhRLiBRPRUuRHN/mZKU2Pb8222U7z6s7N0UNDISSgnY3UKyA
-         AqpPHntDClXdelOhdlT8F5qLT0D2XPQS+HG/WQXsgtnMZZk3uIHgrCV84pohZAbNeCAM
-         Ikzg==
-X-Gm-Message-State: AOAM533iBPt2qLHi1tAqgYCdWdo/xW/Kf+uaSID63fSQ6W0uXJI8pU5L
-        vFO8B9zn8VQR7TWquvT9tRzKoyvk
-X-Google-Smtp-Source: ABdhPJzWH+H30rB22gfRPrtAIbrZkJvP48IdUiW2B/+G2yBfRKCZi6tlnmd0/ESwRg3CPpeax+pm0Q==
-X-Received: by 2002:a17:90a:ce17:: with SMTP id f23mr7495181pju.51.1590189071893;
-        Fri, 22 May 2020 16:11:11 -0700 (PDT)
-Received: from octofox.hsd1.ca.comcast.net ([2601:641:400:e00:d0d2:96ff:22ac:b8e6])
-        by smtp.gmail.com with ESMTPSA id b24sm7454401pfi.4.2020.05.22.16.11.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 16:11:11 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH] xtensa: fix error paths in __get_user_{check,size}
-Date:   Fri, 22 May 2020 16:10:56 -0700
-Message-Id: <20200522231056.27879-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TtCZ0bOQ8dVl/wcwOWZuf6hM21Yr4PMWRA6hQoilBR4=;
+        b=ssKCViwGI10xMFimejxaLm2JwV6AocTCVbzRTJ0QFSBgxSJF9udN23Ax5MH4f5XTS5
+         5UH8LdzYojpfdrM0emN0rD8RrW+WNnx4OFFVXhU4SNJQo3tMYU/+i3V4wMA9byQlsD06
+         UPK21Orx/syhLmbjk1zMV76gkkhqXNe3ZoTcInz4fioca25QnXOODo0IJsv5B3aQrV1B
+         corWD4JE0n4SrkFDaESYxkia0hNnqWoopD/31qNrezQ7GnpuMGE1g0FyfAEvclSErWAO
+         9x54mRoVkeuPkzkbUEyFddiWpVIGr28MVDOjCaxJOBHvuKL2uNknSXIFEPxgx/Qjx0qn
+         rXqg==
+X-Gm-Message-State: AOAM531vqLbj4yA1z0KyLQHf/3J1g8eoBRgM2mJbGAWWSe4mnAB7hkuA
+        1n1ELsLTw9ZfAbCiWxAp+slxaqao6bs=
+X-Google-Smtp-Source: ABdhPJxmPpgG43M6EuaNhJAGmDeek45laGM9UoGXlEwRvSw1vk/2cqdxuTIQab8X0DKV8GeMTtSXfQ==
+X-Received: by 2002:a92:b001:: with SMTP id x1mr14298920ilh.18.1590189105903;
+        Fri, 22 May 2020 16:11:45 -0700 (PDT)
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
+        by smtp.gmail.com with ESMTPSA id v13sm5377183ili.15.2020.05.22.16.11.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 16:11:45 -0700 (PDT)
+Received: by mail-io1-f48.google.com with SMTP id r2so2925316ioo.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:11:45 -0700 (PDT)
+X-Received: by 2002:a6b:1505:: with SMTP id 5mr5062071iov.198.1590189105156;
+ Fri, 22 May 2020 16:11:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200508140947.28712-1-yuehaibing@huawei.com>
+In-Reply-To: <20200508140947.28712-1-yuehaibing@huawei.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 22 May 2020 18:11:21 -0500
+X-Gmail-Original-Message-ID: <CADRPPNRfS1LTeCPtyfMzDUBvf871v=Vs2rpYGCevvX08OuN-Mw@mail.gmail.com>
+Message-ID: <CADRPPNRfS1LTeCPtyfMzDUBvf871v=Vs2rpYGCevvX08OuN-Mw@mail.gmail.com>
+Subject: Re: [PATCH -next] soc: fsl: dpio: Remove unused inline function qbman_write_eqcr_am_rt_register
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Roy Pledge <Roy.Pledge@nxp.com>,
+        Youri Querry <youri.querry_1@nxp.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Error paths in __get_user_check and __get_user_size directly assing 0 to
-the result. It causes the following sparse warnings:
+On Fri, May 8, 2020 at 9:13 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> There's no callers in-tree anymore since commit
+> 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-  sparse: warning: Using plain integer as NULL pointer
+Applied to next.  Thanks.
 
-Convert 0 to the type pointed to by the user pointer before assigning it.
-
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
- arch/xtensa/include/asm/uaccess.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index 445bb4cf3c28..0fd9b4086ae2 100644
---- a/arch/xtensa/include/asm/uaccess.h
-+++ b/arch/xtensa/include/asm/uaccess.h
-@@ -184,7 +184,7 @@ __asm__ __volatile__(					\
- 	if (access_ok(__gu_addr, size))					\
- 		__get_user_size((x), __gu_addr, (size), __gu_err);	\
- 	else								\
--		(x) = 0;						\
-+		(x) = (__typeof__(*(ptr)))0;				\
- 	__gu_err;							\
- })
- 
-@@ -202,13 +202,15 @@ do {									\
- 		u64 __x;						\
- 		if (unlikely(__copy_from_user(&__x, ptr, 8))) {		\
- 			retval = -EFAULT;				\
--			(x) = 0;					\
-+			(x) = (__typeof__(*(ptr)))0;			\
- 		} else {						\
- 			(x) = *(__force __typeof__(*(ptr)) *)&__x;	\
- 		}							\
- 		break;							\
- 	}								\
--	default: (x) = 0; __get_user_bad();				\
-+	default:							\
-+		(x) = (__typeof__(*(ptr)))0;				\
-+		__get_user_bad();					\
- 	}								\
- } while (0)
- 
--- 
-2.20.1
-
+Regards,
+Leo
+> ---
+>  drivers/soc/fsl/dpio/qbman-portal.c | 12 ------------
+>  1 file changed, 12 deletions(-)
+>
+> diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
+> index 804b8ba9bf5c..e2e9fbb58a72 100644
+> --- a/drivers/soc/fsl/dpio/qbman-portal.c
+> +++ b/drivers/soc/fsl/dpio/qbman-portal.c
+> @@ -572,18 +572,6 @@ void qbman_eq_desc_set_qd(struct qbman_eq_desc *d, u32 qdid,
+>  #define EQAR_VB(eqar)      ((eqar) & 0x80)
+>  #define EQAR_SUCCESS(eqar) ((eqar) & 0x100)
+>
+> -static inline void qbman_write_eqcr_am_rt_register(struct qbman_swp *p,
+> -                                                  u8 idx)
+> -{
+> -       if (idx < 16)
+> -               qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT + idx * 4,
+> -                                    QMAN_RT_MODE);
+> -       else
+> -               qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT2 +
+> -                                    (idx - 16) * 4,
+> -                                    QMAN_RT_MODE);
+> -}
+> -
+>  #define QB_RT_BIT ((u32)0x100)
+>  /**
+>   * qbman_swp_enqueue_direct() - Issue an enqueue command
+> --
+> 2.17.1
+>
+>
