@@ -2,160 +2,95 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D87C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2707720679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F155E20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgEVNZJ (ORCPT
+        id S1729903AbgEVN0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:25:09 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:14382 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729399AbgEVNZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:25:09 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 21:23:59
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Fri, 22 May 2020 21:23:59 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Steven Price" <steven.price@arm.com>
-Cc:     kjlu@umn.edu, "Rob Herring" <robh@kernel.org>,
-        "Tomeu Vizoso" <tomeu.vizoso@collabora.com>,
-        "Alyssa Rosenzweig" <alyssa.rosenzweig@collabora.com>,
-        "David Airlie" <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] drm/panfrost: fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <272650ba-2c44-9084-7829-b04023eba723@arm.com>
-References: <20200520110504.24388-1-dinghao.liu@zju.edu.cn>
- <73a1dc37-f862-f908-4c9f-64e256283857@arm.com>
- <1986c141.ba6f5.172360851d6.Coremail.dinghao.liu@zju.edu.cn>
- <272650ba-2c44-9084-7829-b04023eba723@arm.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Fri, 22 May 2020 09:26:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbgEVN0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 09:26:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE5EC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 06:26:42 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jc7h3-000574-6R; Fri, 22 May 2020 15:26:33 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jc7h1-0000Rm-DT; Fri, 22 May 2020 15:26:31 +0200
+Date:   Fri, 22 May 2020 15:26:31 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v13 11/11] pwm: core: Convert period and duty cycle to u64
+Message-ID: <20200522132631.sazoyq2d3krdvg6o@pengutronix.de>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+ <0ff7cc052b38411cba050d7066f17c9062a9101a.1587523702.git.gurus@codeaurora.org>
 MIME-Version: 1.0
-Message-ID: <5f12c70e.c0426.1723c8e0549.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgBHf3hv0sdeTYkDAg--.39818W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgIIBlZdtOQq2QAGsg
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXCS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWxJVW8Jr1lV2xY6cvjeVCFs4IE7xkEbVWU
-        JVW8JwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14v_Xr4lV2xY6xkI7II2jI8vz4vEwIxGrw
-        CS07vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E
-        4IkC6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4
-        vE14v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE
-        14v26r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42
-        xK8VAvwI8IcIk0rVWrZr1j6s0DMIAIbVCI42IY6I8E87Iv67AKxVW8JVWxJwCS07vEIxAI
-        cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0ff7cc052b38411cba050d7066f17c9062a9101a.1587523702.git.gurus@codeaurora.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ClRoYW5rIHlvdSBmb3IgeW91ciBmdXJ0aGVyIGV4cGxhbmF0aW9uISBJdCdzIGFsbCBjbGVhciBm
-b3IgbWUgYW5kIEkgCndpbGwgd3JpdGUgYSBuZXcgcGF0Y2ggdG8gZml4IHRoaXMgaW1iYWxhbmNl
-LgoKUmVnYXJkcywKRGluZ2hhbwo+IE9uIDIxLzA1LzIwMjAgMDg6MDAsIGRpbmdoYW8ubGl1QHpq
-dS5lZHUuY24gd3JvdGU6Cj4gPiBIaSBTdGV2ZSwKPiA+IAo+ID4gVGhlcmUgYXJlIHR3byBiYWls
-aW5nIG91dCBwb2ludHMgaW4gcGFuZnJvc3Rfam9iX2h3X3N1Ym1pdCgpOiBvbmUgaXMKPiA+IHRo
-ZSBlcnJvciBwYXRoIGJlZ2lubmluZyBmcm9tIHBtX3J1bnRpbWVfZ2V0X3N5bmMoKSwgdGhlIG90
-aGVyIG9uZSBpcwo+ID4gdGhlIGVycm9yIHBhdGggYmVnaW5uaW5nIGZyb20gV0FSTl9PTigpIGlu
-IHRoZSBpZiBzdGF0ZW1lbnQuIFRoZSBwbQo+ID4gaW1iYWxhbmNlIGZpeGVkIGluIHRoaXMgcGF0
-Y2ggaXMgYmV0d2VlbiB0aGVzZSB0d28gcGF0aHMuIEkgdGhpbmsgdGhlCj4gPiBjYWxsZXIgb2Yg
-cGFuZnJvc3Rfam9iX2h3X3N1Ym1pdCgpIGNhbm5vdCBkaXN0aW5ndWlzaCB0aGlzIGltYmFsYW5j
-ZQo+ID4gb3V0c2lkZSB0aGlzIGZ1bmN0aW9uLgo+IAo+IE15IHBvaW50IGlzIHRoZSBjYWxsZXIg
-ZXhwZWN0cyBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KCkgdG8gaW5jcmVhc2UgdGhlIAo+IFBNIHJl
-ZmVyZW5jZSBjb3VudC4gU2luY2UgcGFuZnJvc3Rfam9iX2h3X3N1Ym1pdCgpIGNhbm5vdCByZXR1
-cm4gYW4gCj4gZXJyb3IgKGl0J3Mgdm9pZCByZXR1cm4pIHdlIGNhbm5vdCBzaWduYWwgdG8gdGhl
-IGNhbGxlciB0aGF0IHRoZSAKPiByZWZlcmVuY2UgaGFzbid0IGJlZW4gdGFrZW4uCj4gCj4gPiBw
-YW5mcm9zdF9qb2JfdGltZWRvdXQoKSBjYWxscyBwbV9ydW50aW1lX3B1dF9ub2lkbGUoKSBmb3Ig
-ZXZlcnkgam9iIGl0Cj4gPiBmaW5kcywgYnV0IGFsbCBqb2JzIGFyZSBhZGRlZCB0byB0aGUgcGZk
-ZXYtPmpvYnMganVzdCBiZWZvcmUgY2FsbGluZwo+ID4gcGFuZnJvc3Rfam9iX2h3X3N1Ym1pdCgp
-LiBUaGVyZWZvcmUgSSB0aGluayB0aGUgaW1iYWxhbmNlIHN0aWxsIGV4aXN0cy4KPiAKPiBNeSBw
-b2ludCdzIGV4YWN0bHkgdGhhdCAtIHRoZSAiam9icyBhcmUgYWRkZWQgdG8gcGZkZXYtPmpvYnMg
-anVzdCBiZWZvcmUgCj4gY2FsbGluZyBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KCkiLiBTaW5jZSB3
-ZSBkb24ndCBoYXZlIGEgd2F5IGZvciAKPiBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KCkgdG8gZmFp
-bCBpdCBtdXN0IHVuY29uZGl0aW9uYWxseSB0YWtlIGFueSAKPiByZWZlcmVuY2VzIHRoYXQgd2ls
-bCB0aGVuIGJlIGZyZWVkIGxhdGVyIG9uLgo+IAo+ID4gQnV0IEknbSBub3QgdmVyeSBzdXJlIGlm
-IHdlIHNob3VsZCBhZGQgcG1fcnVudGltZV9wdXQgb24gdGhlIGVycm9yIHBhdGgKPiA+IGFmdGVy
-IHBtX3J1bnRpbWVfZ2V0X3N5bmMoKSwgb3IgcmVtb3ZlIHBtX3J1bnRpbWVfcHV0IG9uZSB0aGUg
-ZXJyb3IgcGF0aAo+ID4gYWZ0ZXIgV0FSTl9PTigpLgo+IAo+IFRoZSBwbV9ydW50aW1lX3B1dCBh
-ZnRlciB0aGUgV0FSTl9PTigpIGlzIGEgYnVnLiBTb3JyeSB0aGlzIGlzIHByb2JhYmx5IAo+IHdo
-YXQgY29uZnVzZWQgeW91IC0gY2xlYXJseSB0aGUgV0FSTl9PTigpIHNpdHVhdGlvbiBpcyBuZXZl
-ciBtZWFudCB0byAKPiBoYXBwZW4gaW4gdGhlIGZpcnN0IHBsYWNlLCBzbyBob3BlZnVsbHkgdGhp
-cyBpc24ndCBhY3R1YWxseSBwb3NzaWJsZS4KPiAKPiBGZWVsIGZyZWUgdG8gc2VuZCBhIHBhdGNo
-IHJlbW92aW5nIGl0ISA7KQo+IAo+ID4gQXMgZm9yIHRoZSBwcm9ibGVtIGFib3V0IHBhbmZyb3N0
-X2RldmZyZXFfcmVjb3JkX2J1c3koKSwgdGhpcyBtYXkgYmUgYQo+ID4gbmV3IGJ1ZyBhbmQgcmVx
-dWlyZXMgaW5kZXBlbmRlbnQgcGF0Y2ggdG8gZml4IGl0Lgo+IAo+IEluZGVlZCwgSSdsbCBwb3N0
-IGEgcHJvcGVyIHBhdGNoIGZvciB0aGF0IGxhdGVyIC0gSSBqdXN0IHNwb3R0ZWQgaXQgCj4gd2hp
-bGUgbG9va2luZyBhdCB0aGUgY29kZS4KPiAKPiBUaGFua3MsCj4gCj4gU3RldmUKPiAKPiA+IFJl
-Z2FyZHMsCj4gPiBEaW5naGFvCj4gPiAKPiA+IAo+ID4+IE9uIDIwLzA1LzIwMjAgMTI6MDUsIERp
-bmdoYW8gTGl1IHdyb3RlOgo+ID4+PiBwbV9ydW50aW1lX2dldF9zeW5jKCkgaW5jcmVtZW50cyB0
-aGUgcnVudGltZSBQTSB1c2FnZSBjb3VudGVyIGV2ZW4KPiA+Pj4gdGhlIGNhbGwgcmV0dXJucyBh
-biBlcnJvciBjb2RlLiBUaHVzIGEgcGFpcmluZyBkZWNyZW1lbnQgaXMgbmVlZGVkCj4gPj4+IG9u
-IHRoZSBlcnJvciBoYW5kbGluZyBwYXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4g
-Pj4+Cj4gPj4+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1
-LmNuPgo+ID4+Cj4gPj4gQWN0dWFsbHkgSSB0aGluayB3ZSBoYXZlIHRoZSBvcHBvc2l0ZSBwcm9i
-bGVtLiBUbyBiZSBob25lc3Qgd2UgZG9uJ3QKPiA+PiBoYW5kbGUgdGhpcyBzaXR1YXRpb24gdmVy
-eSB3ZWxsLiBCeSB0aGUgdGltZSBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KCkgaXMKPiA+PiBjYWxs
-ZWQgdGhlIGpvYiBoYXMgYWxyZWFkeSBiZWVuIGFkZGVkIHRvIHRoZSBwZmRldi0+am9icyBhcnJh
-eSwgc28gaXQncwo+ID4+IGNvbnNpZGVyZWQgc3VibWl0dGVkIGV2ZW4gaWYgaXQgbmV2ZXIgYWN0
-dWFsbHkgbGFuZHMgb24gdGhlIGhhcmR3YXJlLiBTbwo+ID4+IGluIHRoZSBjYXNlIG9mIHRoaXMg
-ZnVuY3Rpb24gYmFpbGluZyBvdXQgZWFybHkgd2Ugd2lsbCB0aGVuIChldmVudHVhbGx5KQo+ID4+
-IGhpdCBhIHRpbWVvdXQgYW5kIHRyaWdnZXIgYSBHUFUgcmVzZXQuCj4gPj4KPiA+PiBwYW5mcm9z
-dF9qb2JfdGltZWRvdXQoKSBpdGVyYXRlcyB0aHJvdWdoIHRoZSBwZmRldi0+am9icyBhcnJheSBh
-bmQgY2FsbHMKPiA+PiBwbV9ydW50aW1lX3B1dF9ub2lkbGUoKSBmb3IgZWFjaCBqb2IgaXQgZmlu
-ZHMuIFNvIHRoZXJlJ3Mgbm8gaW5iYWxhbmNlCj4gPj4gaGVyZSB0aGF0IEkgY2FuIHNlZS4KPiA+
-Pgo+ID4+IEhhdmUgeW91IGFjdHVhbGx5IG9ic2VydmVkIHRoZSBzaXR1YXRpb24gd2hlcmUgcG1f
-cnVudGltZV9nZXRfc3luYygpCj4gPj4gcmV0dXJucyBhIGZhaWx1cmU/Cj4gPj4KPiA+PiBIT1dF
-VkVSLCBpdCBhcHBlYXJzIHRoYXQgYnkgYmFpbGluZyBvdXQgZWFybHkgdGhlIGNhbGwgdG8KPiA+
-PiBwYW5mcm9zdF9kZXZmcmVxX3JlY29yZF9idXN5KCkgaXMgbmV2ZXIgbWFkZSwgd2hpY2ggYXMg
-ZmFyIGFzIEkgY2FuIHNlZQo+ID4+IG1lYW5zIHRoYXQgdGhlcmUgbWF5IGJlIGFuIGV4dHJhIGNh
-bGwgdG8gcGFuZnJvc3RfZGV2ZnJlcV9yZWNvcmRfaWRsZSgpCj4gPj4gd2hlbiB0aGUgam9icyBo
-YXZlIHRpbWVkIG91dC4gV2hpY2ggY291bGQgdW5kZXJmbG93IHRoZSBjb3VudGVyLgo+ID4+Cj4g
-Pj4gQnV0IGVxdWFsbHkgbG9va2luZyBhdCBwYW5mcm9zdF9qb2JfdGltZWRvdXQoKSwgd2Ugb25s
-eSBjYWxsCj4gPj4gcGFuZnJvc3RfZGV2ZnJlcV9yZWNvcmRfaWRsZSgpICpvbmNlKiBldmVuIHRo
-b3VnaCBtdWx0aXBsZSBqb2JzIG1pZ2h0IGJlCj4gPj4gcHJvY2Vzc2VkLgo+ID4+Cj4gPj4gVGhl
-cmUncyBhIGNvbXBsZXRlbHkgdW50ZXN0ZWQgcGF0Y2ggYmVsb3cgd2hpY2ggaW4gdGhlb3J5IHNo
-b3VsZCBmaXggdGhhdC4uLgo+ID4+Cj4gPj4gU3RldmUKPiA+Pgo+ID4+IC0tLS04PC0tLQo+ID4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3Rfam9iLmMKPiA+
-PiBiL2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9qb2IuYwo+ID4+IGluZGV4IDc5
-MTRiMTU3MDg0MS4uZjk1MTlhZmNhMjlkIDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5mcm9zdC9wYW5mcm9zdF9qb2IuYwo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5m
-cm9zdC9wYW5mcm9zdF9qb2IuYwo+ID4+IEBAIC0xNDUsNiArMTQ1LDggQEAgc3RhdGljIHZvaWQg
-cGFuZnJvc3Rfam9iX2h3X3N1Ym1pdChzdHJ1Y3QKPiA+PiBwYW5mcm9zdF9qb2IgKmpvYiwgaW50
-IGpzKQo+ID4+ICAgIAl1NjQgamNfaGVhZCA9IGpvYi0+amM7Cj4gPj4gICAgCWludCByZXQ7Cj4g
-Pj4KPiA+PiArCXBhbmZyb3N0X2RldmZyZXFfcmVjb3JkX2J1c3kocGZkZXYpOwo+ID4+ICsKPiA+
-PiAgICAJcmV0ID0gcG1fcnVudGltZV9nZXRfc3luYyhwZmRldi0+ZGV2KTsKPiA+PiAgICAJaWYg
-KHJldCA8IDApCj4gPj4gICAgCQlyZXR1cm47Cj4gPj4gQEAgLTE1NSw3ICsxNTcsNiBAQCBzdGF0
-aWMgdm9pZCBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KHN0cnVjdAo+ID4+IHBhbmZyb3N0X2pvYiAq
-am9iLCBpbnQganMpCj4gPj4gICAgCX0KPiA+Pgo+ID4+ICAgIAljZmcgPSBwYW5mcm9zdF9tbXVf
-YXNfZ2V0KHBmZGV2LCAmam9iLT5maWxlX3ByaXYtPm1tdSk7Cj4gPj4gLQlwYW5mcm9zdF9kZXZm
-cmVxX3JlY29yZF9idXN5KHBmZGV2KTsKPiA+Pgo+ID4+ICAgIAlqb2Jfd3JpdGUocGZkZXYsIEpT
-X0hFQURfTkVYVF9MTyhqcyksIGpjX2hlYWQgJiAweEZGRkZGRkZGKTsKPiA+PiAgICAJam9iX3dy
-aXRlKHBmZGV2LCBKU19IRUFEX05FWFRfSEkoanMpLCBqY19oZWFkID4+IDMyKTsKPiA+PiBAQCAt
-NDEwLDEyICs0MTEsMTIgQEAgc3RhdGljIHZvaWQgcGFuZnJvc3Rfam9iX3RpbWVkb3V0KHN0cnVj
-dAo+ID4+IGRybV9zY2hlZF9qb2IgKnNjaGVkX2pvYikKPiA+PiAgICAJZm9yIChpID0gMDsgaSA8
-IE5VTV9KT0JfU0xPVFM7IGkrKykgewo+ID4+ICAgIAkJaWYgKHBmZGV2LT5qb2JzW2ldKSB7Cj4g
-Pj4gICAgCQkJcG1fcnVudGltZV9wdXRfbm9pZGxlKHBmZGV2LT5kZXYpOwo+ID4+ICsJCQlwYW5m
-cm9zdF9kZXZmcmVxX3JlY29yZF9pZGxlKHBmZGV2KTsKPiA+PiAgICAJCQlwZmRldi0+am9ic1tp
-XSA9IE5VTEw7Cj4gPj4gICAgCQl9Cj4gPj4gICAgCX0KPiA+PiAgICAJc3Bpbl91bmxvY2tfaXJx
-cmVzdG9yZSgmcGZkZXYtPmpzLT5qb2JfbG9jaywgZmxhZ3MpOwo+ID4+Cj4gPj4gLQlwYW5mcm9z
-dF9kZXZmcmVxX3JlY29yZF9pZGxlKHBmZGV2KTsKPiA+PiAgICAJcGFuZnJvc3RfZGV2aWNlX3Jl
-c2V0KHBmZGV2KTsKPiA+Pgo+ID4+ICAgIAlmb3IgKGkgPSAwOyBpIDwgTlVNX0pPQl9TTE9UUzsg
-aSsrKQo=
+On Tue, Apr 21, 2020 at 07:57:23PM -0700, Guru Das Srinagesh wrote:
+> Because period and duty cycle are defined as ints with units of
+> nanoseconds, the maximum time duration that can be set is limited to
+> ~2.147 seconds. Change their definitions to u64 in the structs of the
+> PWM framework so that higher durations may be set.
+> 
+> Also use the right format specifiers in debug prints in both core.c as
+> well as pwm-stm32-lp.c.
+> 
+> Cc: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Joe Perches <joe@perches.com>
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+
+I like this change in general. I didn't check all the prepatory patches
+in detail but the few I glanced over looked ok.
+
+I think we have to prepare for having to fix a few fallouts but consider
+it ok to expose this in next (but wouldn't send it for 5.8-rc1 yet).
+
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
