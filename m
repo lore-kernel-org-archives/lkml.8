@@ -2,147 +2,99 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF315C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE0820679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF282070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:33:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hka3Aj+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgEVPdB (ORCPT
+        id S1730611AbgEVPdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:33:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
+        Fri, 22 May 2020 11:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgEVPdA (ORCPT
+        with ESMTP id S1726909AbgEVPdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:33:00 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E149C061A0E;
-        Fri, 22 May 2020 08:33:00 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2744D2A3A00;
-        Fri, 22 May 2020 16:32:58 +0100 (BST)
-Date:   Fri, 22 May 2020 17:32:54 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>,
-        Richard Weinberger <richard@nod.at>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: Re: [PATCH v7 02/20] spi: spi-mem: allow specifying a command's
- extension
-Message-ID: <20200522173254.05316d47@collabora.com>
-In-Reply-To: <20200522101301.26909-3-p.yadav@ti.com>
-References: <20200522101301.26909-1-p.yadav@ti.com>
-        <20200522101301.26909-3-p.yadav@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 22 May 2020 11:33:03 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79869C061A0E;
+        Fri, 22 May 2020 08:33:03 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n15so5126306pjt.4;
+        Fri, 22 May 2020 08:33:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=3ilcLhqdRQ8Z/PzvBN+C3JsIPM0TNycFGq2+m/w7rOY=;
+        b=hka3Aj+j1wlh/rLYg8FbS4/ueTrez8GlaFwP/YGgw5ZNFu81qO806MX6Ij/1TPJdfz
+         Mfb1ctOvSjC8e1xnS7o8R4MrH6jCXI3v+kjNs6UWxGLt3m0libyHJeXu6EdJa1QePbJu
+         25VKGQp4ERnmPqVlNGWuQIDRKg5EnuJORc0nC0buiCQwD4elhTHs7JXxN76m13KjIOgF
+         26LDDzamoEfv6cBf45scUoFCT0tGOhInqL7qZpjKlr4rlutTkYHVQAW/c5Pmpf0O+a/k
+         m0CtX/z7KDJ4uMy8lyKBPpxGbEYlaMBfcjD73FMyFE09o5z1uuwP4xbSfyzzjluK8kr2
+         SJmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3ilcLhqdRQ8Z/PzvBN+C3JsIPM0TNycFGq2+m/w7rOY=;
+        b=BXQYeTNDv7PXDKR3RT+DzTZlK2a3d1eTplXrE4kJ+ozxCTgyeOlk7gCT1mrDSBSrNN
+         ySpuCRwB2LkonDd9rj39OtZjE+gpBntLibzc4m9xyWftRDuVBh/0B6vDvxB6XaFdmanG
+         2wCTWynOtafQEkF++FD+T+ztnUSYbEQTfQNqMQOTl1uiDGPQ8Wp3Z3Q5M0h9FO25whHT
+         09FLyj0GPMnibDm77hpTgD42b9tg8MKJrroivR1rm+jdJPcucbq2gcKxOhN+jeXtYW7O
+         VnXl57W71J1Qo7OijiA7TOvhoon34pLTIKb6wWhu6Uq+V5b5n0dHomSO3jR+dtkj8dZb
+         ungA==
+X-Gm-Message-State: AOAM5336k5elkROmypxzl/bKEbi3xwVeclO9DeirtnJxZ4zm13SA+yh0
+        6VmLOC8jDd8oMw7bo5eBJ30=
+X-Google-Smtp-Source: ABdhPJyBraQCp8grS+tg/y4C3LTcYKbBhKGr0X+WyySmbzdjk7B6wNgnWH0ZKj2fWGtRGzVtdLo4Dg==
+X-Received: by 2002:a17:90a:248:: with SMTP id t8mr5568531pje.67.1590161582985;
+        Fri, 22 May 2020 08:33:02 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z16sm6650992pfq.125.2020.05.22.08.33.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 08:33:02 -0700 (PDT)
+Subject: Re: [PATCH v4 1/5] mtd: rawnand: brcmnand: rename v4 registers
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20200522072525.3919332-1-noltari@gmail.com>
+ <20200522121524.4161539-1-noltari@gmail.com>
+ <20200522121524.4161539-2-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <9568caad-9ac2-44be-d492-3e03f719b0d6@gmail.com>
+Date:   Fri, 22 May 2020 08:33:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200522121524.4161539-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 15:42:43 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
 
-> In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
-> the "command extension". There can be 3 types of extensions in xSPI:
-> repeat, invert, and hex. When the extension type is "repeat", the same
-> opcode is sent twice. When it is "invert", the second byte is the
-> inverse of the opcode. When it is "hex" an additional opcode byte based
-> is sent with the command whose value can be anything.
+
+On 5/22/2020 5:15 AM, Álvaro Fernández Rojas wrote:
+> These registers are also used on v3.3.
 > 
-> So, make opcode a 16-bit value and add a 'nbytes', similar to how
-> multiple address widths are handled.
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-A slightly different version of patch 5 should go before this patch,
-otherwise your series is not bisectable. By slightly different, I mean
-that you should only write one byte, but put this byte in a temporary
-var. Or maybe you can squash patch 5 in this one and mention why you do
-so in your commit message.
-
-> 
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> ---
->  drivers/spi/spi-mem.c       | 5 ++++-
->  include/linux/spi/spi-mem.h | 6 +++++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-> index 93e255287ab9..29dcd1d62710 100644
-> --- a/drivers/spi/spi-mem.c
-> +++ b/drivers/spi/spi-mem.c
-> @@ -159,6 +159,9 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
->  	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
->  		return false;
->  
-> +	if (op->cmd.nbytes != 1)
-> +		return false;
-> +
->  	return true;
->  }
->  EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
-> @@ -173,7 +176,7 @@ static bool spi_mem_buswidth_is_valid(u8 buswidth)
->  
->  static int spi_mem_check_op(const struct spi_mem_op *op)
->  {
-> -	if (!op->cmd.buswidth)
-> +	if (!op->cmd.buswidth || !op->cmd.nbytes)
->  		return -EINVAL;
->  
->  	if ((op->addr.nbytes && !op->addr.buswidth) ||
-> diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-> index e3dcb956bf61..159463cc659c 100644
-> --- a/include/linux/spi/spi-mem.h
-> +++ b/include/linux/spi/spi-mem.h
-> @@ -17,6 +17,7 @@
->  	{							\
->  		.buswidth = __buswidth,				\
->  		.opcode = __opcode,				\
-> +		.nbytes = 1,					\
->  	}
->  
->  #define SPI_MEM_OP_ADDR(__nbytes, __val, __buswidth)		\
-> @@ -69,6 +70,8 @@ enum spi_mem_data_dir {
->  
->  /**
->   * struct spi_mem_op - describes a SPI memory operation
-> + * @cmd.nbytes: number of opcode bytes (only 1 or 2 are valid). The opcode is
-> + *		sent MSB-first.
->   * @cmd.buswidth: number of IO lines used to transmit the command
->   * @cmd.opcode: operation opcode
->   * @cmd.dtr: whether the command opcode should be sent in DTR mode or not
-> @@ -94,9 +97,10 @@ enum spi_mem_data_dir {
->   */
->  struct spi_mem_op {
->  	struct {
-> +		u8 nbytes;
->  		u8 buswidth;
->  		u8 dtr : 1;
-> -		u8 opcode;
-> +		u16 opcode;
->  	} cmd;
->  
->  	struct {
-
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
