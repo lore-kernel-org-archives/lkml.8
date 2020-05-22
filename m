@@ -2,175 +2,244 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13910C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C78C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC44D20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A8B2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QqEMPO5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgEVGaj (ORCPT
+        id S1728261AbgEVGap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:30:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49278 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbgEVGag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:30:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0F000ABBE;
-        Fri, 22 May 2020 06:30:37 +0000 (UTC)
-Subject: Re: [PATCH] drm/vblank: Fix -Wformat compile warnings on some arches
-To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-References: <20200521204647.2578479-1-lyude@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <951f6bcc-49f5-ceae-c3a3-7b0a52f9fa2d@suse.de>
-Date:   Fri, 22 May 2020 08:30:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 02:30:45 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:33642 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbgEVGan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 02:30:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590129043; x=1621665043;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xNKNBXliT9IaYCIFmyg2+Tw4otdxx+qtzW56Ci2KiNA=;
+  b=QqEMPO5QrelyGJKoA0RzZ3KGfBjUWJolRymj4PhhsBkKj0cR8R4xUusH
+   MkJdM+aX6dAmNFXvxP8a+6/4PJ184uUlL1aMIOY/O8vxZ4pmPfeWmROfS
+   zEHT3H/ggkJ76y+zsWFf/eL40a4PGveyPW/g7L47qq8m396zmrljzJ+qJ
+   c=;
+IronPort-SDR: yoBQ2n0N4EqS8ZKXRmuKdxaFcyeC45AH0GZ0/E6edd8z2HWMkZEQSv/uqfRArPdwBioEEHPZ07
+ TjNn1KWUITRg==
+X-IronPort-AV: E=Sophos;i="5.73,420,1583193600"; 
+   d="scan'208";a="36944277"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 May 2020 06:30:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id D7CC7A2504;
+        Fri, 22 May 2020 06:30:39 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 22 May 2020 06:30:10 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.175) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 22 May 2020 06:30:01 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v2 01/18] nitro_enclaves: Add ioctl interface definition
+Date:   Fri, 22 May 2020 09:29:29 +0300
+Message-ID: <20200522062946.28973-2-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200522062946.28973-1-andraprs@amazon.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521204647.2578479-1-lyude@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="qXvrIStwO1M2q642iYF63eAzxDoe7fvSk"
+X-Originating-IP: [10.43.161.175]
+X-ClientProxiedBy: EX13D20UWC004.ant.amazon.com (10.43.162.41) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qXvrIStwO1M2q642iYF63eAzxDoe7fvSk
-Content-Type: multipart/mixed; boundary="vO0ySq7Bw8jBAuXnAOrNHBRiJXDIaFxBS";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: Dave Airlie <airlied@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
- Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Message-ID: <951f6bcc-49f5-ceae-c3a3-7b0a52f9fa2d@suse.de>
-Subject: Re: [PATCH] drm/vblank: Fix -Wformat compile warnings on some arches
-References: <20200521204647.2578479-1-lyude@redhat.com>
-In-Reply-To: <20200521204647.2578479-1-lyude@redhat.com>
+The Nitro Enclaves driver handles the enclave lifetime management. This
+includes enclave creation, termination and setting up its resources such
+as memory and CPU.
 
---vO0ySq7Bw8jBAuXnAOrNHBRiJXDIaFxBS
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+An enclave runs alongside the VM that spawned it. It is abstracted as a
+process running in the VM that launched it. The process interacts with
+the NE driver, that exposes an ioctl interface for creating an enclave
+and setting up its resources.
+
+Include part of the KVM ioctls in the provided ioctl interface, with
+additional NE ioctl commands that e.g. triggers the enclave run.
+
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+---
+ .../userspace-api/ioctl/ioctl-number.rst      |  5 +-
+ include/linux/nitro_enclaves.h                | 23 ++++++
+ include/uapi/linux/nitro_enclaves.h           | 77 +++++++++++++++++++
+ 3 files changed, 104 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/nitro_enclaves.h
+ create mode 100644 include/uapi/linux/nitro_enclaves.h
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index f759edafd938..8a19b5e871d3 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -325,8 +325,11 @@ Code  Seq#    Include File                                           Comments
+ 0xAC  00-1F  linux/raw.h
+ 0xAD  00                                                             Netfilter device in development:
+                                                                      <mailto:rusty@rustcorp.com.au>
+-0xAE  all    linux/kvm.h                                             Kernel-based Virtual Machine
++0xAE  00-1F  linux/kvm.h                                             Kernel-based Virtual Machine
+                                                                      <mailto:kvm@vger.kernel.org>
++0xAE  40-FF  linux/kvm.h                                             Kernel-based Virtual Machine
++                                                                     <mailto:kvm@vger.kernel.org>
++0xAE  20-3F  linux/nitro_enclaves.h                                  Nitro Enclaves
+ 0xAF  00-1F  linux/fsl_hypervisor.h                                  Freescale hypervisor
+ 0xB0  all                                                            RATIO devices in development:
+                                                                      <mailto:vgo@ratio.de>
+diff --git a/include/linux/nitro_enclaves.h b/include/linux/nitro_enclaves.h
+new file mode 100644
+index 000000000000..7e593a9fbf8c
+--- /dev/null
++++ b/include/linux/nitro_enclaves.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _LINUX_NITRO_ENCLAVES_H_
++#define _LINUX_NITRO_ENCLAVES_H_
++
++#include <uapi/linux/nitro_enclaves.h>
++
++#endif /* _LINUX_NITRO_ENCLAVES_H_ */
+diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nitro_enclaves.h
+new file mode 100644
+index 000000000000..98ba59f15b52
+--- /dev/null
++++ b/include/uapi/linux/nitro_enclaves.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
++#define _UAPI_LINUX_NITRO_ENCLAVES_H_
++
++#include <linux/kvm.h>
++#include <linux/types.h>
++
++/* Nitro Enclaves (NE) Kernel Driver Interface */
++
++/**
++ * The command is used to get information needed for in-memory enclave image
++ * loading e.g. offset in enclave memory to start placing the enclave image.
++ *
++ * The image load metadata is an in / out data structure. It includes info
++ * provided by the caller - flags - and returns the offset in enclave memory
++ * where to start placing the enclave image.
++ */
++#define NE_GET_IMAGE_LOAD_METADATA _IOWR(0xAE, 0x20, struct image_load_metadata)
++
++/**
++ * The command is used to trigger enclave start after the enclave resources,
++ * such as memory and CPU, have been set.
++ *
++ * The enclave start metadata is an in / out data structure. It includes info
++ * provided by the caller - enclave cid and flags - and returns the slot uid
++ * and the cid (if input cid is 0).
++ */
++#define NE_START_ENCLAVE _IOWR(0xAE, 0x21, struct enclave_start_metadata)
++
++/* Metadata necessary for in-memory enclave image loading. */
++struct image_load_metadata {
++	/**
++	 * Flags to determine the enclave image type e.g. Enclave Image Format
++	 * (EIF) (in).
++	 */
++	__u64 flags;
++
++	/**
++	 * Offset in enclave memory where to start placing the enclave image
++	 * (out).
++	 */
++	__u64 memory_offset;
++};
++
++/* Setup metadata necessary for enclave start. */
++struct enclave_start_metadata {
++	/* Flags for the enclave to start with (e.g. debug mode) (in). */
++	__u64 flags;
++
++	/**
++	 * Context ID (CID) for the enclave vsock device. If 0 as input, the
++	 * CID is autogenerated by the hypervisor and returned back as output
++	 * by the driver (in/out).
++	 */
++	__u64 enclave_cid;
++
++	/* Slot unique id mapped to the enclave to start (out). */
++	__u64 slot_uid;
++};
++
++#endif /* _UAPI_LINUX_NITRO_ENCLAVES_H_ */
+-- 
+2.20.1 (Apple Git-117)
 
 
 
-Am 21.05.20 um 22:46 schrieb Lyude Paul:
-> On some architectures like ppc64le and aarch64, compiling with
-> -Wformat=3D1 will throw the following warnings:
->=20
->   In file included from drivers/gpu/drm/drm_vblank.c:33:
->   drivers/gpu/drm/drm_vblank.c: In function 'drm_update_vblank_count':
->   drivers/gpu/drm/drm_vblank.c:273:16: warning: format '%llu' expects
->   argument of type 'long long unsigned int', but argument 4 has type
->   'long int' [-Wformat=3D]
->     DRM_DEBUG_VBL("updating vblank count on crtc %u:"
->                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   ./include/drm/drm_print.h:407:22: note: in definition of macro
->   'DRM_DEBUG_VBL'
->     drm_dbg(DRM_UT_VBL, fmt, ##__VA_ARGS__)
->                         ^~~
->   drivers/gpu/drm/drm_vblank.c:274:22: note: format string is defined h=
-ere
->            " current=3D%llu, diff=3D%u, hw=3D%u hw_last=3D%u\n",
->                      ~~~^
->                      %lu
->=20
-> So, fix that with a typecast.
->=20
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Co-developed-by: Dave Airlie <airlied@redhat.com>
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
-Thanks!
-
-> ---
->  drivers/gpu/drm/drm_vblank.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.=
-c
-> index acb3c3f65b579..1a96db2dd16fa 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -342,7 +342,7 @@ static void drm_update_vblank_count(struct drm_devi=
-ce *dev, unsigned int pipe,
-> =20
->  	DRM_DEBUG_VBL("updating vblank count on crtc %u:"
->  		      " current=3D%llu, diff=3D%u, hw=3D%u hw_last=3D%u\n",
-> -		      pipe, atomic64_read(&vblank->count), diff,
-> +		      pipe, (unsigned long long)atomic64_read(&vblank->count), diff,=
-
->  		      cur_vblank, vblank->last);
-> =20
->  	if (diff =3D=3D 0) {
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---vO0ySq7Bw8jBAuXnAOrNHBRiJXDIaFxBS--
-
---qXvrIStwO1M2q642iYF63eAzxDoe7fvSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7HcYkACgkQaA3BHVML
-eiNIBAgAi4NqxVlu1Y6OH32hzo33lnkALwxIFbzsPWKpxCbB/ignVxYdDpdsnhL9
-FW4+NfXnnROvZ2zGiKjwB5D6/RI+vM6d7KhB5ivlT7lYsRBZCA4lPrJ6bRzJKLuD
-OZXAFFeBEXjWlqc3PmyMIbpn9gCK/7pMMybfmWhQn7jxakMDMHDoyMITSXPWoESy
-Kpf0ICh6ypxPYfy1f+cUj0FBqeQb7MiesQHG4lFOfhT9UY6NBFZyWVNGLFb3wcyh
-+E1jwRwei/dP4yMldPoUQFqS1xuIi8/IK212UbCzFg58mRHRTW9cp6Vr+B4BK8fA
-iKdo1xnFrNUsksZ9Ew7X2OgR2k/+qw==
-=n6OO
------END PGP SIGNATURE-----
-
---qXvrIStwO1M2q642iYF63eAzxDoe7fvSk--
