@@ -2,114 +2,109 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B872C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5CD206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE93D206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xc5YNUMi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJJ/rQAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgEVPmJ (ORCPT
+        id S1730669AbgEVPmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        Fri, 22 May 2020 11:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729040AbgEVPmH (ORCPT
+        with ESMTP id S1729040AbgEVPmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:42:07 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628EAC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:42:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w10so13224623ljo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:42:06 -0700 (PDT)
+        Fri, 22 May 2020 11:42:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197ADC061A0E;
+        Fri, 22 May 2020 08:42:11 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w20so140963pga.6;
+        Fri, 22 May 2020 08:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oOYVOHpaIS+oIho1dCUDLjlIT96AiPQqcbd2UVpV+2w=;
-        b=xc5YNUMinAG4CGXABpBRi7fN1jT3RAq5g34Fsehb7FeGfXYItR+jv9zdzFUbWBZgED
-         LmniBIdug9ZVwtsM86rfNB4Ym0c53ixm9EKzBW+98lrn+8iymUA1pl2rPFTIORF5gQ62
-         S7DQ9GAYdIyD0+h/PDFxltIl+vny9nvjNZwtDFWooA9AaFqDP1f1M3b8WEMP5ciTcCjp
-         W9NaNLJ0XScz6f3UhpDiAU5ZGmdgvxMde4+OxowuByFtU+aSTB2XW+29FZ21ruR/AtlZ
-         X2z7XizfkhRaPFBSCM5YrIriiEQ/BuEbJkBwj+XeDUcSN1pBzeruIIxoHJrH2wvAAVgG
-         WYVA==
+        bh=Sv9pvfwqBcoNP+skkNSWNXJEe0eEqSbnxl5w+lZkjdQ=;
+        b=CJJ/rQAmyH5meit7+76N2Fxm9Keswf6rHFRTDvyuMbB/TXK86HDjZqaA/a3t657MxK
+         fK82vSBrD/bS+kKEeE8kLng+spPeEqmL7ZYgP0Kw8sPOD9txTjhSXs+WxAgxDg0b/XB4
+         ghfRrCFCfXI/+a05B4LVXB/LruDVNfhrcBgzC1cAEfSKceA/cG2PT/L7g338We+R2lUp
+         9/ekq9tSCRdQMHWpUY+Vd0/rI6/+mJjIJuQvKDfWw8SFqPiqx+DI0zysTc0MJtNyP+nG
+         QWKbY0+S+mG5liXwUo/lPIk76easwGgn1bssO+OXAzs4Td/FP4i1IiW1Lp8RERlO/TlG
+         4LJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oOYVOHpaIS+oIho1dCUDLjlIT96AiPQqcbd2UVpV+2w=;
-        b=liPhdbl/A2wNlvvVdchUhSpA9zYM/jxl/x1s39GCGRZtYGp42KU+mTKhln/HR4DaT/
-         xZclwvpRWbSosqEWy9G16VFHoiwwbE1vV83LgkjJ+PDN8/SZutUK1WjmNlI1FQ5FaWQe
-         f3/92/OJcHAMuFN4/a+Z+2XfBpe2m2wEkciXiAM2+Ru51LscGnCOS7pbkIo/4Wn6L4Xm
-         I4RCsp/BePO66jbkrMFRswzeaqC6p0kUNtTnr3x80hd0iS6blbzMJQQrk0dnl7hKUa7Z
-         +z9rTcv5jDQ4JNMb6rXjQpCPqOzMOURnFAJZ+9KWFbNq+Ow4OVpWfDqIKGiAKR2aod9r
-         t/dg==
-X-Gm-Message-State: AOAM530l7skN7KhTqoh7x+Cp6VdxkrIRjSaBKcr4qV+AGHN+ogDBdWSv
-        dDeOSJbWKxPpZfWTRXDTpXBAZwdh4RUYhmdawq39NQ==
-X-Google-Smtp-Source: ABdhPJxRJSZJBv5r7tYd2u0AUqK3zkVLdXL1DZDbhQE8M+i8GAUoeEfr4zqO0vZ1A56dhmdh581qQsP3Tbtb1mlvNY0=
-X-Received: by 2002:a2e:150f:: with SMTP id s15mr7582617ljd.102.1590162124742;
- Fri, 22 May 2020 08:42:04 -0700 (PDT)
+        bh=Sv9pvfwqBcoNP+skkNSWNXJEe0eEqSbnxl5w+lZkjdQ=;
+        b=Oye84nLFuSCgzG3vvOS74VW2Oi/62JysmNiOrJpS8K7S2iC0E3aMfzbVwPvPKu4yEh
+         pOw6sdFWYlMqxvRKJ7dig4e3EqSumbFgTtBO74BJUq9dQUZTKKmS8Ua5AvJu9rPjJUKm
+         sJdUXJCJsvsN66r6X6p+jCmSyL55zod3xO2lF5IM0GH0b6ILnU55uaAw9IP6eF7zf7+3
+         G+UslFw+yB8dM8w/fNzcekkVH3W9vVJsaLYxYBomyOBd9QTleMjtXCTcWz6zP+5UOS+w
+         a6amlg3kcCudn6ogufzLQvKkfuXYGkFi+yZcA6jKLjo64ehgyFWDNalA/UZ1IF7g/q7y
+         gNxg==
+X-Gm-Message-State: AOAM533XDpe0Q90bIQ1je6oykaLm+0jsYzpvKG9bDC1rI3rHkhHXcf2j
+        VCBbprvCqsaImecGiSuf47S3eIrLuAZ+povWzWw=
+X-Google-Smtp-Source: ABdhPJyP3SHIJcjXhymTa/izkoVLtzQWvpcKPRnmcp/2hlYw/Kzosnk76+L+Mq2CZkqLOs+/GYZNzzrG4kobRmJ31/o=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr13730040pgb.74.1590162130668;
+ Fri, 22 May 2020 08:42:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505084127.12923-1-laoar.shao@gmail.com> <20200505084127.12923-3-laoar.shao@gmail.com>
- <CA+G9fYseWc_7yq0M5Onju_HxbFid6DbuuaEFf-KUpqfxdF-QTg@mail.gmail.com> <20200522114544.GA1112005@chrisdown.name>
-In-Reply-To: <20200522114544.GA1112005@chrisdown.name>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 22 May 2020 21:11:53 +0530
-Message-ID: <CA+G9fYvw+oY-EK1+FYCUAD5-UGD4MhBGJHasjF+L5nLtzL2GLQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] mm, memcg: Decouple e{low,min} state mutations
- from protection checks
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
+References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
+ <1590157452-27179-4-git-send-email-jprakash@codeaurora.org> <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
+In-Reply-To: <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 May 2020 18:41:59 +0300
+Message-ID: <CAHp75VcyUtPz5GVPw16i8Jn5tGYwVnwVt-uBTMD0NuJ=TZvXjg@mail.gmail.com>
+Subject: Re: [PATCH V5 3/5] iio: adc: Add support for PMIC7 ADC
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 17:15, Chris Down <chris@chrisdown.name> wrote:
+On Fri, May 22, 2020 at 6:37 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Naresh Kamboju writes:
-> >This patch is causing oom-killer while running mkfs -t ext4 on i386 kernel
-> >running on x86_64 machine version linux-next 5.7.0-rc6-next-20200521.
+> On Fri, May 22, 2020 at 5:25 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+> >
+> > The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+> > major change from PMIC5 is that all SW communication to ADC goes through
+> > PMK8350, which communicates with other PMICs through PBS when the ADC
+> > on PMK8350 works in master mode. The SID register is used to identify the
+> > PMICs with which the PBS needs to communicate. Add support for the same.
 >
-> I think I see what's wrong here -- if we bail out early, memory.e{min,low}
-> might be uninitialised.
->
-> Does this patch fix it, by any chance?
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index d3b23c57bed4..aa902b9cbb79 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -5046,6 +5046,9 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
->                         memory_cgrp_subsys.broken_hierarchy = true;
->         }
->
-> +       memcg->memory.emin = 0;
-> +       memcg->memory.elow = 0;
-> +
->         /* The following stuff does not apply to the root */
->         if (!parent) {
->   #ifdef CONFIG_MEMCG_KMEM
+> Below should be in a separate patch, but it's a bikeshedding. So, I
+> left it to maintainers to decide.
 
-This patch did not fix the problem.
-The test log showing oom-killer link,
-https://lkft.validation.linaro.org/scheduler/job/1445128#L1194
+> Fine with me
 
-Build images:
-https://builds.tuxbuild.com/YqW37GVsCHf8ndxOT2z1iQ/
+Fine with me *after* addressing some issues below (besides ' < 0' part).
 
-- Naresh
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
