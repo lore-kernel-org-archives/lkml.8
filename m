@@ -2,188 +2,148 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7239C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02007C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4599206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1D92072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBVHe+gP"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RyzbX7u1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbgEVSHW (ORCPT
+        id S1730830AbgEVSHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
+        Fri, 22 May 2020 14:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730674AbgEVSHW (ORCPT
+        with ESMTP id S1726373AbgEVSHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:07:22 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDCCC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:07:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c11so1524027wrn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:07:20 -0700 (PDT)
+        Fri, 22 May 2020 14:07:47 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27668C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:07:47 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n11so6125232qkn.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=93lHuKjSOpUJm9qcBgsEQEeev3s+aLgQZS3xLE3PBVc=;
-        b=NBVHe+gPt5+hwmNSzqlQpXMGvkD6RmLKIwg06tb+MU5Rw/pWZBSt0hO6RbFdOw+0o9
-         GQshyiWpyQD1vL+wXLRCvzo7o7iw0+Zqy85PslvQB8/dQ85zgwGz3hN5tBHoPAMTl+jw
-         0BKSELtB77IkBlLFgjsBl+NyDAPLkYoJ/oM+4/HdZu6FhlwJgVbSr52EfD9EMqb0W919
-         obpgdiML5afToGsMG0AvBHNeH6Ue4SrORP3IJoVOeq55YI2/73fX9sV67CeG5P5Wnqcf
-         4fk4r+ZueA8/Ao7DslGJDfFOyN682Xq7UZCZBGWcSYh2IzNYcrG/Nsn4k9ry1i0g+1me
-         a0fg==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vH0SIRcdqBYbo5IszVfrP4ZKKcMviAZ2YJGSIx16SXk=;
+        b=RyzbX7u17MqvWljynr1irwnhoX2xj5sHr4obj1QC7hBUAsn6OSaMLxAATctxuNkf1w
+         QNKWKb4z8S4id5TNIoOdFzMXBPFEdNpSy8V9jUOM5DbDYZQ1HWt5G0ihQ+vmnwSSn9ZU
+         P7kOgQhCdEDqDAd7wbqn9vy6TLDwrXGnlt17JrCk0Z8V7YsLGnNlqzHkyCK/hUa1cS/M
+         bLG0eKX6ZiPix8hrPx/JxFa+CdcnCj0XrKMHcYVsWdOFo9CuLxMmFCZrWlzrxWYdLBGD
+         wSaCe9+dzqTk/UI0hjP8Ue6gUUv5Ypj76z9F0Z6esFFTZ4qbCKAK0hlb4EZT5XEwr/gF
+         sckA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=93lHuKjSOpUJm9qcBgsEQEeev3s+aLgQZS3xLE3PBVc=;
-        b=H2PIHgV19RfQ4m5ddOPC3Wz4/4KtASeG8s27EzgFWHtjb8/8ZILkA/VR3o94PXzXfr
-         EghX2QNkKDMdDtWOepGqn4nuk98Y4rGReUa4Ps/pshspzsXbVsJMeC++zbxV3NpBZO5Y
-         qHYsTubvYAgaTxsyUrtGg1Cri3CcGKZ2a2Rltz4Lfl0YFFRt2bvs6xoAT2nmuOZIyA1o
-         MKPnJfeB6160a3ZIrW5RUAznbY+hMnf+hkq9vecHGNglD1evXOQJmc81tB+k4OrNrwjr
-         YyBf7okOeR561jb7rCpf2wiPen78vw2p9c0QbdQx41G/ZwgYz9SVy/+c+6tKtRgxzpAO
-         uruA==
-X-Gm-Message-State: AOAM531vcn44d7dVNZupsgdyi2C8+BtTSD4UoZQVfOKEqMukoj0lPbbv
-        mPAXrIVX+tAmjzcqimKCdtSvE7O92DDBTyXpUQXhcA==
-X-Google-Smtp-Source: ABdhPJwIhvF9Fis6pbQ0FJq61OaaurC/QA/KpTpRunMMZ7744HdxYgsYvG6/+mTVj0z6X9bbMCKQnhv3R3Ob7cI0XBA=
-X-Received: by 2002:a5d:4389:: with SMTP id i9mr4481054wrq.374.1590170839532;
- Fri, 22 May 2020 11:07:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vH0SIRcdqBYbo5IszVfrP4ZKKcMviAZ2YJGSIx16SXk=;
+        b=uKkCKxUFFWJLBEdnOEjODyeEPbR3lQ2jNenD5wfmRyDrbd//7U2eNElUKPG9dfPldV
+         ZyyCpwLRimUBKHFkfGtmVL26SB/1das/cHODGegTk3bz/xRIhVaMcmPSrf/K8unHjQEC
+         3snZXtm1r1sEjvc5f9d6vVhJKQBUAN7b0DlTFJR9gG/EmPr0mgnLtwGvAoyR2CP7BS2R
+         QEh7DD+Yfntd1ZutF0hB6oJXrd2cbhth3Uln0/LtgBq7XuHi7bGxn9PWyYP3yMiQyG8+
+         ABWEy2vFyMHTZ9IuPw5I4wHHkCUu0+r6AnzX69OffoT7IwNBM1k1yC99IHbBk+aF54Cq
+         EJ0g==
+X-Gm-Message-State: AOAM531Rk4oB7JjDQ+FWmIbEd5V8csVEjkhMT9T0ccIjA5wWNF6vos9m
+        YR4pQXmU81OUrsn2u4gZGzeRoQ==
+X-Google-Smtp-Source: ABdhPJzcMplqsdtBfyt+v8k9hymlCaZTzBqkLl6Rzb6R/qsAwn2XxJPwfexutgUU06YGyGAmpl7rWQ==
+X-Received: by 2002:a05:620a:15f8:: with SMTP id p24mr3519262qkm.227.1590170866332;
+        Fri, 22 May 2020 11:07:46 -0700 (PDT)
+Received: from Qians-MacBook-Air.local (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d18sm1245753qkb.99.2020.05.22.11.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 11:07:45 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:07:41 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Jan Beulich <jbeulich@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/2] x86: mm: ptdump: Calculate effective permissions
+ correctly
+Message-ID: <20200522180741.GB1337@Qians-MacBook-Air.local>
+References: <20200521152308.33096-1-steven.price@arm.com>
+ <20200521152308.33096-2-steven.price@arm.com>
 MIME-Version: 1.0
-References: <20200522174355.GA4406@embeddedor>
-In-Reply-To: <20200522174355.GA4406@embeddedor>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 22 May 2020 14:07:08 -0400
-Message-ID: <CADnq5_NuDA9tT05B0bDqfCi0v=j3emjxLGxKA6hTTuAjRoM4xA@mail.gmail.com>
-Subject: Re: [PATCH] drm/[radeon|amdgpu]: Replace one-element array and use
- struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521152308.33096-2-steven.price@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 1:39 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> The current codebase makes use of one-element arrays in the following
-> form:
->
-> struct something {
->     int length;
->     u8 data[1];
-> };
->
-> struct something *instance;
->
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
->
-> but the preferred mechanism to declare variable-length types such as
-> these ones is a flexible array member[1][2], introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on. So, replace
-> the one-element array with a flexible-array member.
->
-> Also, make use of the new struct_size() helper to properly calculate the
-> size of struct SISLANDS_SMC_SWSTATE.
->
-> This issue was found with the help of Coccinelle and, audited and fixed
-> _manually_.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Thu, May 21, 2020 at 04:23:07PM +0100, Steven Price wrote:
+> --- a/arch/x86/mm/dump_pagetables.c
+> +++ b/arch/x86/mm/dump_pagetables.c
+> @@ -249,10 +249,22 @@ static void note_wx(struct pg_state *st, unsigned long addr)
+> @@ -270,16 +282,10 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+>  	struct seq_file *m = st->seq;
+>  
+>  	new_prot = val & PTE_FLAGS_MASK;
+> +	new_eff = st->prot_levels[level];
 
-Applied.  Thanks!
+This will trigger,
 
-Alex
+.config (if ever matters):
+https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config 
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/si_dpm.c       | 5 ++---
->  drivers/gpu/drm/amd/amdgpu/sislands_smc.h | 2 +-
->  drivers/gpu/drm/radeon/si_dpm.c           | 5 ++---
->  3 files changed, 5 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.c b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
-> index c00ba4b23c9a6..0fc56c5bac080 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
-> @@ -5715,10 +5715,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
->         int ret;
->         u32 address = si_pi->state_table_start +
->                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> -       u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
-> -               ((new_state->performance_level_count - 1) *
-> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
->         SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
-> +       size_t state_size = struct_size(smc_state, levels,
-> +                                       new_state->performance_level_count);
->
->         memset(smc_state, 0, state_size);
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/sislands_smc.h b/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
-> index d2930eceaf3c8..a089dbf8f7a93 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
-> @@ -186,7 +186,7 @@ struct SISLANDS_SMC_SWSTATE
->      uint8_t                             levelCount;
->      uint8_t                             padding2;
->      uint8_t                             padding3;
-> -    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-> +    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->  };
->
->  typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
-> diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
-> index a167e1c36d243..bab01ca864c63 100644
-> --- a/drivers/gpu/drm/radeon/si_dpm.c
-> +++ b/drivers/gpu/drm/radeon/si_dpm.c
-> @@ -5253,10 +5253,9 @@ static int si_upload_sw_state(struct radeon_device *rdev,
->         int ret;
->         u32 address = si_pi->state_table_start +
->                 offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> -       u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
-> -               ((new_state->performance_level_count - 1) *
-> -                sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
->         SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
-> +       size_t state_size = struct_size(smc_state, levels,
-> +                                       new_state->performance_level_count);
->
->         memset(smc_state, 0, state_size);
->
-> --
-> 2.26.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+[  104.532621] UBSAN: array-index-out-of-bounds in arch/x86/mm/dump_pagetables.c:284:27
+[  104.542620] index -1 is out of range for type 'pgprotval_t [5]'
+[  104.552624] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc6-next-20200522+ #5
+[  104.560865] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+[  104.562604] Call Trace:
+[  104.562604]  dump_stack+0xa7/0xea
+[  104.562604]  ubsan_epilogue+0x9/0x45
+[  104.562604]  __ubsan_handle_out_of_bounds.cold.12+0x2b/0x36
+[  104.562604]  ? __kasan_check_write+0x14/0x20
+[  104.562604]  note_page+0x91f/0xa00
+[  104.562604]  ? down_read_non_owner+0x330/0x330
+[  104.562604]  ? match_held_lock+0x20/0x250
+[  104.562604]  ptdump_walk_pgd+0xa1/0xb0
+[  104.562604]  ptdump_walk_pgd_level_core+0x19f/0x200
+[  104.562604]  ? up+0x46/0x60
+[  104.562604]  ? hugetlb_get_unmapped_area+0x590/0x590
+[  104.562604]  ? lock_downgrade+0x3e0/0x3e0
+[  104.562604]  ? _raw_spin_unlock_irqrestore+0x44/0x50
+[  104.562604]  ? ptdump_walk_pgd_level_debugfs+0x80/0x80
+[  104.562604]  ? ptdump_walk_pgd_level_core+0x200/0x200
+[  104.562604]  ? virt_efi_set_variable_nonblocking+0xf1/0x110
+[  104.562604]  ptdump_walk_pgd_level+0x32/0x40
+[  104.562604]  efi_dump_pagetable+0x17/0x19
+[  104.562604]  efi_enter_virtual_mode+0x3e5/0x3f5
+[  104.562604]  start_kernel+0x848/0x8f6
+[  104.562604]  ? __early_make_pgtable+0x2cb/0x314
+[  104.562604]  ? thread_stack_cache_init+0xb/0xb
+[  104.562604]  ? early_make_pgtable+0x21/0x23
+[  104.562604]  ? early_idt_handler_common+0x35/0x4c
+[  104.562604]  x86_64_start_reservations+0x24/0x26
+[  104.562604]  x86_64_start_kernel+0xf4/0xfb
+[  104.562604]  secondary_startup_64+0xb6/0xc0
+
+>  
+> -	if (level > 0) {
+> -		new_eff = effective_prot(st->prot_levels[level - 1],
+> -					 new_prot);
+> -	} else {
+> -		new_eff = new_prot;
+> -	}
+> -
+> -	if (level >= 0)
+> -		st->prot_levels[level] = new_eff;
+> +	if (!val)
+> +		new_eff = 0;
+>  
+>  	/*
+>  	 * If we have a "break" in the series, we need to flush the state that
