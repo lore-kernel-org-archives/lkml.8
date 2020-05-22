@@ -2,136 +2,213 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABABC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C6E20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590136639;
-	bh=j6qtTP5kv+N7sEEXX9Q96Y4lswh83lQW35iSocg99dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fY3jfw6JG+k98tTeNFTHtM6DBKMGKwmHNTWuzHhMcayKmmISsnPFhQ+GgrxmF72as
-	 Ag/uUGWShXboxoxDoTlZvDi1aF6qQHOuanlZ43FAQyYi0zzJ3KxTx3PRs/qztQ/kae
-	 T/LYcONNK4CN7VsxhEB3qTiJRhztkdHegwB0W2i4=
+	by mail.kernel.org (Postfix) with ESMTP id 7278220823
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgEVIhS (ORCPT
+        id S1729619AbgEVIhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 04:37:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:59234 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728959AbgEVIhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:37:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F235920814;
-        Fri, 22 May 2020 08:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590136637;
-        bh=j6qtTP5kv+N7sEEXX9Q96Y4lswh83lQW35iSocg99dY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xgbRAsgTMT3V2eFlfwqVTRSD5KsXdqwPZntM7v++sw+uUuiHNsIvx6ZaaosN/xCpF
-         MK+GLjxzYzyPDUSWac6bAu0laPUywevioKUxlHJC2dKNQicn8x1eRyNR4PJygBvOae
-         pPSbjsAqOS74g7BaFQVGQn5z0Oso0r8rvK0v0yKM=
-Date:   Fri, 22 May 2020 10:37:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     gengcixi@gmail.com
-Cc:     jslaby@suse.com, oberpar@linux.ibm.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        Cixi Geng <cixi.geng1@unisoc.com>
-Subject: Re: [RFC][PATCH V3] GCOV: profile by modules
-Message-ID: <20200522083715.GD1078778@kroah.com>
-References: <20200522071917.17163-1-gengcixi@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522071917.17163-1-gengcixi@gmail.com>
+        id S1728959AbgEVIhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:37:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DFB455D;
+        Fri, 22 May 2020 01:37:39 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B55613F52E;
+        Fri, 22 May 2020 01:37:32 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v12 0/11] Enable ptp_kvm for arm64
+Date:   Fri, 22 May 2020 16:37:13 +0800
+Message-Id: <20200522083724.38182-1-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:19:17PM +0800, gengcixi@gmail.com wrote:
-> From: Cixi Geng <cixi.geng1@unisoc.com>
-> 
-> The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
-> kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
-> to control part of the kernel modules to open gcov.
-> 
-> Only add SERIAL_GCOV for an example.
-> 
-> Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
-> ---
->  drivers/tty/serial/Kconfig  |  7 +++++++
->  drivers/tty/serial/Makefile |  1 +
->  kernel/gcov/Kconfig         | 13 +++++++++++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index adf9e80e7dc9..6df002370f18 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1566,3 +1566,10 @@ endmenu
->  
->  config SERIAL_MCTRL_GPIO
->  	tristate
-> +
-> +config SERIAL_GCOV
-> +	bool "Enable profile gcov for serial directory"
-> +	depends on GCOV_PROFILE_PREREQS
-> +	help
-> +	  The SERIAL_GCOV will add Gcov profiling flags when kernel compiles.
-> +	  Say 'Y' here if you want the gcov data for the serial directory,
-> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> index d056ee6cca33..17272733db95 100644
-> --- a/drivers/tty/serial/Makefile
-> +++ b/drivers/tty/serial/Makefile
-> @@ -3,6 +3,7 @@
->  # Makefile for the kernel serial device drivers.
->  #
->  
-> +GCOV_PROFILE := $(CONFIG_SERIAL_GCOV)
->  obj-$(CONFIG_SERIAL_CORE) += serial_core.o
->  
->  obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
-> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-> index 3941a9c48f83..4d75fa158726 100644
-> --- a/kernel/gcov/Kconfig
-> +++ b/kernel/gcov/Kconfig
-> @@ -51,6 +51,19 @@ config GCOV_PROFILE_ALL
->  	larger and run slower. Also be sure to exclude files from profiling
->  	which are not linked to the kernel image to prevent linker errors.
->  
-> +config GCOV_PROFILE_PREREQS
-> +	bool "Profile Kernel subsytem"
-> +	depends on !COMPILE_TEST
-> +	depends on GCOV_KERNEL
-> +	help
-> +	  This options activates profiling for the specified kernel modules.
-> +
-> +	  When some modules need Gcov data, enable this config, then configure
-> +	  with gcov on the corresponding modules,The directories or files of
-> +	  these modules will be added profiling flags after kernel compile.
-> +
-> +	  If unsure, say N.
-> +
->  choice
->  	prompt "Specify GCOV format"
->  	depends on GCOV_KERNEL
+Currently, we offen use ntp (sync time with remote network clock)
+to sync time in VM. But the precision of ntp is subject to network delay
+so it's difficult to sync time in a high precision.
 
+kvm virtual ptp clock (ptp_kvm) offers another way to sync time in VM,
+as the remote clock locates in the host instead of remote network clock.
+It targets to sync time between guest and host in virtualization
+environment and in this way, we can keep the time of all the VMs running
+in the same host in sync. In general, the delay of communication between
+host and guest is quiet small, so ptp_kvm can offer time sync precision
+up to in order of nanosecond. Please keep in mind that ptp_kvm just
+limits itself to be a channel which transmit the remote clock from
+host to guest and leaves the time sync jobs to an application, eg. chrony,
+in usersapce in VM.
 
-I understand the goal here, but don't you need to have the main GCov
-option depend on your new Kconfig option here?  You have it switched
-around here, so what keeps all code from being built with gcov support
-at the moment?
+How ptp_kvm works:
+After ptp_kvm initialized, there will be a new device node under
+/dev called ptp%d. A guest userspace service, like chrony, can use this
+device to get host walltime, sometimes also counter cycle, which depends
+on the service it calls. Then this guest userspace service can use those
+data to do the time sync for guest.
+here is a rough sketch to show how kvm ptp works.
 
-thanks,
+|----------------------------|              |--------------------------|
+|       guest userspace      |              |        host              |
+|ioctl -> /dev/ptp%d         |              |                          |
+|       ^   |                |              |                          |
+|----------------------------|              |                          |
+|       |   | guest kernel   |              |                          | 
+|       |   V      (get host walltime/counter cycle)                   |
+|  kvm ptp API (hypercall)- -|- - - - - - - - - ->hypercall service    |
+|                         <- - - - - - - - - - - -                     |              
+|----------------------------|              |--------------------------|
 
-greg k-h
+1. time sync service in guest userspace call ptp device using ioctl.
+2. guest kernel ptp_kvm API get this request then invoke hypercall to request
+host walltime/counter cycle to host kernel.
+3. ptp_kvm host hypercall service response to the request and send back data
+4. ptp copy the data to userspace.
+This ptp_kvm implemetation focuses itself to step 2 and 3 and step 2 works
+in guest comparing step 3 works in host kernel.
+
+change log:
+from v11 to v12:
+        (1) rebase code on 5.7_rc6 and rebase 2 patches from Will Decon
+including 1/11 and 2/11. as these patches introduce discover mechanism of
+vendor smccc service.
+        (2) rebase ptp_kvm hypercall service from standard smccc to vendor
+smccc and add ptp_kvm to vendor smccc service discover mechanism.
+        (3) add detail of why we need ptp_kvm and how ptp_kvm works in cover
+letter.
+
+from v10 to v11:
+        (1) rebase code on 5.7_rc2.
+        (2) remove support for arm32, as kvm support for arm32 will be
+removed [1]
+        (3) add error report in ptp_kvm initialization.
+
+from v11 to v10:
+        (1) change code base to v5.5.
+	(2) enable ptp_kvm both for arm32 and arm64.
+        (3) let user choose which of virtual counter or physical counter
+should return when using crosstimestamp mode of ptp_kvm for arm/arm64.
+        (4) extend input argument for getcrosstimestamp API.
+
+from v8 to v9:
+        (1) move ptp_kvm.h to driver/ptp/
+        (2) replace license declaration of ptp_kvm.h the same with other
+header files in the same directory.
+
+from v7 to v8:
+        (1) separate adding clocksource id for arm_arch_counter as a
+single patch.
+        (2) update commit message for patch 4/8.
+        (3) refine patch 7/8 and patch 8/8 to make them more independent.
+
+from v6 to v7:
+        (1) include the omitted clocksource_id.h in last version.
+        (2) reorder the header file in patch.
+        (3) refine some words in commit message to make it more impersonal.
+
+from v5 to v6:
+        (1) apply Mark's patch[4] to get SMCCC conduit.
+        (2) add mechanism to recognize current clocksource by add
+clocksouce_id value into struct clocksource instead of method in patch-v5.
+        (3) rename kvm_arch_ptp_get_clock_fn into
+kvm_arch_ptp_get_crosststamp.
+
+from v4 to v5:
+        (1) remove hvc delay compensasion as it should leave to userspace.
+        (2) check current clocksource in hvc call service.
+        (3) expose current clocksource by adding it to
+system_time_snapshot.
+        (4) add helper to check if clocksource is arm_arch_counter.
+        (5) rename kvm_ptp.c to ptp_kvm_common.c
+
+from v3 to v4:
+        (1) fix clocksource of ptp_kvm to arch_sys_counter.
+        (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
+        (3) subtract cntvoff before return cycles from host.
+        (4) use ktime_get_snapshot instead of getnstimeofday and
+get_current_counterval to return time and counter value.
+        (5) split ktime and counter into two 32-bit block respectively
+to avoid Y2038-safe issue.
+        (6) set time compensation to device time as half of the delay of
+hvc call.
+        (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for
+arm64.
+
+from v2 to v3:
+        (1) fix some issues in commit log.
+        (2) add some receivers in send list.
+
+from v1 to v2:
+        (1) move arch-specific code from arch/ to driver/ptp/
+        (2) offer mechanism to inform userspace if ptp_kvm service is
+available.
+        (3) separate ptp_kvm code for arm64 into hypervisor part and
+guest part.
+        (4) add API to expose monotonic clock and counter value.
+        (5) refine code: remove no necessary part and reconsitution.
+
+[1] https://patchwork.kernel.org/cover/11373351/
+
+Jianyong Wu (8):
+  psci: export psci conduit get helper.
+  ptp: Reorganize ptp_kvm modules to make it arch-independent.
+  clocksource: Add clocksource id for arm arch counter
+  psci: Add hypercall service for ptp_kvm.
+  ptp: arm64: Enable ptp_kvm for arm/arm64
+  ptp: extend input argument for getcrosstimestamp API
+  arm64: add mechanism to let user choose which counter to return
+  arm64: Add kvm capability check extension for ptp_kvm
+
+Thomas Gleixner (1):
+  time: Add mechanism to recognize clocksource in time_get_snapshot
+
+ drivers/clocksource/arm_arch_timer.c        | 33 ++++++++
+ drivers/firmware/psci/psci.c                |  1 +
+ drivers/net/ethernet/intel/e1000e/ptp.c     |  3 +-
+ drivers/ptp/Kconfig                         |  2 +-
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_chardev.c                   |  8 +-
+ drivers/ptp/ptp_kvm.h                       | 11 +++
+ drivers/ptp/ptp_kvm_arm64.c                 | 53 ++++++++++++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 85 ++++++--------------
+ drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
+ include/linux/arm-smccc.h                   | 21 +++++
+ include/linux/clocksource.h                 |  6 ++
+ include/linux/clocksource_ids.h             | 12 +++
+ include/linux/ptp_clock_kernel.h            |  3 +-
+ include/linux/timekeeping.h                 | 12 +--
+ include/uapi/linux/kvm.h                    |  1 +
+ include/uapi/linux/ptp_clock.h              |  4 +-
+ kernel/time/clocksource.c                   |  3 +
+ kernel/time/timekeeping.c                   |  1 +
+ virt/kvm/arm/arm.c                          |  1 +
+ virt/kvm/arm/hypercalls.c                   | 44 +++++++++-
+ 21 files changed, 322 insertions(+), 72 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm.h
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (60%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
+ create mode 100644 include/linux/clocksource_ids.h
+
+-- 
+2.17.1
+
