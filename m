@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4688C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C17E82073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802A420679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hLHCGOoT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="idCvMhTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgEVUuE (ORCPT
+        id S1731065AbgEVUuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 22 May 2020 16:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730967AbgEVUuD (ORCPT
+        with ESMTP id S1730946AbgEVUuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 May 2020 16:50:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A137C05BD43
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77307C061A0E
         for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=POcE9Zsqk5Wj8pYWDoycnkQXPDgA8x0UIJc1wCvh6Cg=; b=hLHCGOoTHozoeyt1KML5u/pIX7
-        5XNaQKLnOviptdOFxpOyf03mprgK6usaaLarhEWnDneQb4ay5whBH2Ddb5afEP3bWph2UGsPErRxC
-        /o6WBbNvjitXSKJY26ktamCuQl8/PWtdZf7Fv3lzJzzY7jX82kzek3n3KtaL0fea+PGBNwrU1dYFP
-        30/gn7mjVKh9sQ8DJpIDsH/N9bEDleBPmfYJNRu7gda/pKj+B8ZsrRsljGfHaVZeeKmhOPKze/vx5
-        ei9CkZmMDYSxcAbSEUP40icKfQ30kM//LxvlQalR9D1JvJBY8898wYmfi6ecB8Ws93rxvUMWHXHQK
-        uFGMvl8Q==;
+        bh=nJ/ki0NGSa1gL1hmSLbJ87X8HrWKXY+hthWtCDB5YPo=; b=idCvMhTApPfRhcWPcV0AgaC3cb
+        jlM9IQC4w00I3KscaUDyPr1hgAJMxQ4LktAWP0WQO2Vb10DfidQSDQTsYmv6iY0Mv/Zpl/w92qlvp
+        VMV2VHXUYEncpO2d6xtIZ33zVHhBy+OqjG1Gz7FZgwF7/97DacFyzA9hUPZM8G/Cq8L8Ytv5dVZcW
+        yxwuipe3IivmnoNV1TSzoRvUBmrPMDMstPVeQCjS7jOP2ZZ4yU1lsWyA/Ztdc+IYhHNGbdx+yYtw7
+        OoWynBAmznZi162zKOmG2dva2GCLmAFiASCoViS2wdOVE3hlboBVvBNTvhms3wNQCuYOk/hX5EGIi
+        QICJtF3g==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcEcA-0000lO-PM; Fri, 22 May 2020 20:49:58 +0000
+        id 1jcEcA-0000lP-Pr; Fri, 22 May 2020 20:49:58 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CF95B3060FC;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CE37A30604B;
         Fri, 22 May 2020 22:49:56 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id B05DC2B4213E7; Fri, 22 May 2020 22:49:56 +0200 (CEST)
-Message-ID: <20200522204943.293321207@infradead.org>
+        id AE42021462C59; Fri, 22 May 2020 22:49:56 +0200 (CEST)
+Message-ID: <20200522204943.236748823@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 22 May 2020 22:47:40 +0200
+Date:   Fri, 22 May 2020 22:47:39 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, luto@amacapital.net, peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [RFC][PATCH 2/4] x86/entry, nmi: Disable #DB
+Subject: [RFC][PATCH 1/4] x86/entry: Introduce local_db_{rave,restore}()
 References: <20200522204738.645043059@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,95 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of playing stupid games with IST stacks, fully disallow #DB
-during NMIs. There is absolutely no reason to allow them, and killing
-this saves a heap of trouble.
-
-We already disallow #BD on noinstr and CEA, so we can't get #DB before
-this, and this ensures we can't get it after this either.
+In order to allow other exceptions than #DB to disable breakpoints,
+provide a common helper.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kernel/nmi.c |   55 ++------------------------------------------------
- 1 file changed, 3 insertions(+), 52 deletions(-)
+ arch/x86/include/asm/debugreg.h |   23 +++++++++++++++++++++++
+ arch/x86/kernel/traps.c         |   18 ++----------------
+ 2 files changed, 25 insertions(+), 16 deletions(-)
 
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -478,40 +478,7 @@ enum nmi_states {
- };
- static DEFINE_PER_CPU(enum nmi_states, nmi_state);
- static DEFINE_PER_CPU(unsigned long, nmi_cr2);
--
--#ifdef CONFIG_X86_64
--/*
-- * In x86_64, we need to handle breakpoint -> NMI -> breakpoint.  Without
-- * some care, the inner breakpoint will clobber the outer breakpoint's
-- * stack.
-- *
-- * If a breakpoint is being processed, and the debug stack is being
-- * used, if an NMI comes in and also hits a breakpoint, the stack
-- * pointer will be set to the same fixed address as the breakpoint that
-- * was interrupted, causing that stack to be corrupted. To handle this
-- * case, check if the stack that was interrupted is the debug stack, and
-- * if so, change the IDT so that new breakpoints will use the current
-- * stack and not switch to the fixed address. On return of the NMI,
-- * switch back to the original IDT.
-- */
--static DEFINE_PER_CPU(int, update_debug_stack);
--
--static noinstr bool is_debug_stack(unsigned long addr)
--{
--	struct cea_exception_stacks *cs = __this_cpu_read(cea_exception_stacks);
--	unsigned long top = CEA_ESTACK_TOP(cs, DB);
--	unsigned long bot = CEA_ESTACK_BOT(cs, DB1);
--
--	if (__this_cpu_read(debug_stack_usage))
--		return true;
--	/*
--	 * Note, this covers the guard page between DB and DB1 as well to
--	 * avoid two checks. But by all means @addr can never point into
--	 * the guard page.
--	 */
--	return addr >= bot && addr < top;
--}
--#endif
-+static DEFINE_PER_CPU(unsigned long, nmi_dr7);
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -113,6 +113,29 @@ static inline void debug_stack_usage_inc
+ static inline void debug_stack_usage_dec(void) { }
+ #endif /* X86_64 */
  
- DEFINE_IDTENTRY_NMI(exc_nmi)
++static __always_inline void local_db_save(unsigned long *dr7)
++{
++	get_debugreg(*dr7, 7);
++	set_debugreg(0, 7);
++	/*
++	 * Ensure the compiler doesn't lower the above statements into
++	 * the critical section; disabling breakpoints late would not
++	 * be good.
++	 */
++	barrier();
++}
++
++static __always_inline void local_db_restore(unsigned long dr7)
++{
++	/*
++	 * Ensure the compiler doesn't raise this statement into
++	 * the critical section; enabling breakpoints early would
++	 * not be good.
++	 */
++	barrier();
++	set_debugreg(dr7, 7);
++}
++
+ #ifdef CONFIG_CPU_SUP_AMD
+ extern void set_dr_addr_mask(unsigned long mask, int dr);
+ #else
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -727,15 +727,7 @@ static __always_inline void debug_enter(
+ 	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
+ 	 * includes the entry stack is excluded for everything.
+ 	 */
+-	get_debugreg(*dr7, 7);
+-	set_debugreg(0, 7);
+-
+-	/*
+-	 * Ensure the compiler doesn't lower the above statements into
+-	 * the critical section; disabling breakpoints late would not
+-	 * be good.
+-	 */
+-	barrier();
++	local_db_save(dr7);
+ 
+ 	/*
+ 	 * The Intel SDM says:
+@@ -756,13 +748,7 @@ static __always_inline void debug_enter(
+ 
+ static __always_inline void debug_exit(unsigned long dr7)
  {
-@@ -526,18 +493,7 @@ DEFINE_IDTENTRY_NMI(exc_nmi)
- 	this_cpu_write(nmi_cr2, read_cr2());
- nmi_restart:
- 
--#ifdef CONFIG_X86_64
 -	/*
--	 * If we interrupted a breakpoint, it is possible that
--	 * the nmi handler will have breakpoints too. We need to
--	 * change the IDT such that breakpoints that happen here
--	 * continue to use the NMI stack.
+-	 * Ensure the compiler doesn't raise this statement into
+-	 * the critical section; enabling breakpoints early would
+-	 * not be good.
 -	 */
--	if (unlikely(is_debug_stack(regs->sp))) {
--		debug_stack_set_zero();
--		this_cpu_write(update_debug_stack, 1);
--	}
--#endif
-+	local_db_save(this_cpu_ptr(&nmi_dr7));
+-	barrier();
+-	set_debugreg(dr7, 7);
++	local_db_restore(dr7);
+ }
  
- 	nmi_enter();
- 
-@@ -548,12 +504,7 @@ DEFINE_IDTENTRY_NMI(exc_nmi)
- 
- 	nmi_exit();
- 
--#ifdef CONFIG_X86_64
--	if (unlikely(this_cpu_read(update_debug_stack))) {
--		debug_stack_reset();
--		this_cpu_write(update_debug_stack, 0);
--	}
--#endif
-+	local_db_restore(*this_cpu_ptr(&nmi_dr7));
- 
- 	if (unlikely(this_cpu_read(nmi_cr2) != read_cr2()))
- 		write_cr2(this_cpu_read(nmi_cr2));
+ /*
 
 
