@@ -2,133 +2,146 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70066C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C17F21475
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590186613;
-	bh=eXM3PcUa8Z6NYOXnYGqP85DPJkxxQ0kZ1AmFc6ApY+U=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Lzjl7fV5U+mhes4pf8owg+P9in6wru/lH/guwVIbgPLl/LYelD+fFUqpgOyH1L7wr
-	 miUiySDrqwAtfAeYGURrTT9e635vTAkdp732UIfaJUgUo4jkE6iq6Re13W9SgBVQ9X
-	 PfYsd+15DQQF9zdGjLbfhothPKWtpeiWcVo3Z420=
+	by mail.kernel.org (Postfix) with ESMTP id EA91120738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="MtLePMPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbgEVWaM (ORCPT
+        id S1731166AbgEVWaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731029AbgEVWaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:30:12 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E282100A;
-        Fri, 22 May 2020 22:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590186611;
-        bh=eXM3PcUa8Z6NYOXnYGqP85DPJkxxQ0kZ1AmFc6ApY+U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=squkeIozChxV0J8tB12vRoXPp0siq+uCkLE+1A5HZ3ttOPgaKrkhPa9c6ldtUqyH4
-         AFPtN6w/gbBblWVEymuAnIDadQI+PEF1ZKiB/MxZTat5cK/jAu+vx6suAjdRXNWbnq
-         qBWGT0YXTY++uFXq7SJIlhmnz94M8ob9CZzUCkU8=
-Subject: Re: [PATCH v7 0/5] KUnit-KASAN Integration
-To:     Alan Maguire <alan.maguire@oracle.com>,
-        David Gow <davidgow@google.com>, brendanhiggins@google.com
-Cc:     trishalfonso@google.com, aryabinin@virtuozzo.com,
-        dvyukov@google.com, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20200424061342.212535-1-davidgow@google.com>
- <alpine.LRH.2.21.2005031101130.20090@localhost>
-From:   shuah <shuah@kernel.org>
-Message-ID: <26d96fb9-392b-3b20-b689-7bc2c6819e7b@kernel.org>
-Date:   Fri, 22 May 2020 16:30:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 18:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731130AbgEVWap (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 18:30:45 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E62CC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:30:45 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n11so6835590qkn.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+SSfZ9IdBClHLXK3pfg1yXkNX5wz/8jpNFyfhF/pEsw=;
+        b=MtLePMPE37iKUqsdbm0WI0hZpMobQwNowF1YqzxZnkYGg8jCoFbmpzz0//yIRCnLGN
+         w46JzPzlw6YLUbAFhFo3jYibwkOrEugtULj1tlH7wBQjj/NoLByH3rRDMOhpf4QCu2OC
+         7vZXitKqyXM/mbgU713y0LHxjS4tP93m47sM+O6mfGxVs/2uyN9A2Ag1pVMtPZjy+lXY
+         jJ/z2rxdpJI7w0vjRkHx03Qav8Pi1+S2eNs84TeqOaWV90KpnNUapsPnmu7bsV++CVgR
+         bWGaiVyay3ePM2ReDShlAmJb6wnY5Og1MZXP0CKM0vAoYvJDIG5AYA7ZS7UfkSu/uhCf
+         ppqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+SSfZ9IdBClHLXK3pfg1yXkNX5wz/8jpNFyfhF/pEsw=;
+        b=lQUt4+FnSu9RQSUxFETX2Bt1gBKQUHErBmcvlJesVxZj2KjIz/2RPef/73xO0zRdpU
+         ElP1uFyaO0J/KbFidPBy9jmr+TKQBGP7EbxR+nfPT54ePr0q4cI0Vz18INbw+guQ+Wka
+         FXTMJkXrQ9u85nU+PJ+jEkUk/UDsPEZYDhcfrA8lTheCh5WxPf2NtqY1aGbZkgSI2LUb
+         8NLHUX+P6Q0OtmUbclQrbmtS9uAXTu+D7OnvQ3lUN8mIJr+HRroXgsDbplFTkRuZWzko
+         QKAZ03hHvUN1gFLQWTfE1C6VKwAppMXum2htWgL9rSKk+NdJaBemTpKIswij32TN1imB
+         gjRQ==
+X-Gm-Message-State: AOAM531dCAtCl6vAABiY91TFon7JFOVhZBdVeHoVqXptQL89HULVwrVv
+        /7h61q4PL28SAdsH5JLYbBiaNg==
+X-Google-Smtp-Source: ABdhPJzAnLLFpegQtoCoMHFW91a6ZzaBMIso6a0e2wpumt9qbPxo0WGAnu7uCpmn8mWsPKd33gg68Q==
+X-Received: by 2002:a37:b3c7:: with SMTP id c190mr16615709qkf.466.1590186644182;
+        Fri, 22 May 2020 15:30:44 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id l184sm8416876qkf.84.2020.05.22.15.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 15:30:43 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedreno.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm/msm/a6xx: skip HFI set freq if GMU is powered down
+Date:   Fri, 22 May 2020 18:29:08 -0400
+Message-Id: <20200522222909.27260-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200522221159.GA20960@jcrouse1-lnx.qualcomm.com>
+References: <20200522221159.GA20960@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2005031101130.20090@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/20 4:09 AM, Alan Maguire wrote:
-> On Thu, 23 Apr 2020, David Gow wrote:
-> 
->> This patchset contains everything needed to integrate KASAN and KUnit.
->>
->> KUnit will be able to:
->> (1) Fail tests when an unexpected KASAN error occurs
->> (2) Pass tests when an expected KASAN error occurs
->>
->> Convert KASAN tests to KUnit with the exception of copy_user_test
->> because KUnit is unable to test those.
->>
->> Add documentation on how to run the KASAN tests with KUnit and what to
->> expect when running these tests.
->>
->> This patchset depends on:
->> - "[PATCH v3 kunit-next 0/2] kunit: extend kunit resources API" [1]
->> - "[PATCH v3 0/3] Fix some incompatibilites between KASAN and
->>    FORTIFY_SOURCE" [2]
->>
->> Changes from v6:
->>   - Rebased on top of kselftest/kunit
->>   - Rebased on top of Daniel Axtens' fix for FORTIFY_SOURCE
->>     incompatibilites [2]
->>   - Removed a redundant report_enabled() check.
->>   - Fixed some places with out of date Kconfig names in the
->>     documentation.
->>
-> 
-> Sorry for the delay in getting to this; I retested the
-> series with the above patchsets pre-applied; all looks
-> good now, thanks!  Looks like Daniel's patchset has a v4
-> so I'm not sure if that will have implications for applying
-> your changes on top of it (haven't tested it yet myself).
-> 
-> For the series feel free to add
-> 
-> Tested-by: Alan Maguire <alan.maguire@oracle.com>
-> 
-> I'll try and take some time to review v7 shortly, but I wanted
-> to confirm the issues I saw went away first in case you're
-> blocked.  The only remaining issue I see is that we'd need the
-> named resource patchset to land first; it would be good
-> to ensure the API it provides is solid so you won't need to
-> respin.
-> 
-> Thanks!
-> 
-> Alan
->   
->> Changes from v5:
->>   - Split out the panic_on_warn changes to a separate patch.
->>   - Fix documentation to fewer to the new Kconfig names.
->>   - Fix some changes which were in the wrong patch.
->>   - Rebase on top of kselftest/kunit (currently identical to 5.7-rc1)
->>
->
+Also skip the newly added HFI set freq path if the GMU is powered down,
+which was missing because of patches crossing paths.
 
-Hi Brendan,
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Is this series ready to go inot Linux 5.8-rc1? Let me know.
-Probably needs rebase on top of kselftest/kunit. I applied
-patches from David and Vitor
-
-thanks,
--- Shuah
-
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 67c58345b26a..9851367a88cd 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -110,13 +110,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+ 	struct msm_gpu *gpu = &adreno_gpu->base;
+ 	int ret;
+ 
+-	/*
+-	 * This can get called from devfreq while the hardware is idle. Don't
+-	 * bring up the power if it isn't already active
+-	 */
+-	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
+-		return;
+-
+ 	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
+ 
+ 	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
+@@ -141,7 +134,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+ 	 * for now leave it at max so that the performance is nominal.
+ 	 */
+ 	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+-	pm_runtime_put(gmu->dev);
+ }
+ 
+ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+@@ -159,13 +151,21 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+ 			break;
+ 
+ 	gmu->current_perf_index = perf_index;
++	gmu->freq = gmu->gpu_freqs[perf_index];
++
++	/*
++	 * This can get called from devfreq while the hardware is idle. Don't
++	 * bring up the power if it isn't already active
++	 */
++	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
++		return;
+ 
+ 	if (gmu->legacy)
+ 		__a6xx_gmu_set_freq(gmu, perf_index);
+ 	else
+ 		a6xx_hfi_set_freq(gmu, perf_index);
+ 
+-	gmu->freq = gmu->gpu_freqs[perf_index];
++	pm_runtime_put(gmu->dev);
+ }
+ 
+ unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+-- 
+2.26.1
 
