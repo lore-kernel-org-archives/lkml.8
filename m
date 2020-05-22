@@ -2,151 +2,107 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B5820723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:46:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aG7YxhTr"
+	by mail.kernel.org (Postfix) with ESMTP id 99BE420723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgEVLq6 (ORCPT
+        id S1729204AbgEVLsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:46:58 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15206 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729740AbgEVLqz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:46:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590148014; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ioG91ONt67Thh3+++IhEIy7PrY5ruyU1b97zWmsYRzM=; b=aG7YxhTrByn1IwJKz+2vkAZFWhI76uXAdZkh+1iPVIdCBUjp/P2BqkYXmAi59jqEOINqh/gP
- 2E6nNmC/NCi6jAhiYp/8ak3qpujcFmON5rjnKLP7+qFqCFFfccwfUDtGyY8hlHVjxWbkksE+
- xiKQ487T9iBWnxz1KUOrQdN+T3o=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec7bbae.7f14944eb570-smtp-out-n01;
- Fri, 22 May 2020 11:46:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 96367C43395; Fri, 22 May 2020 11:46:54 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: manafm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DD86C433C6;
-        Fri, 22 May 2020 11:46:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9DD86C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=manafm@codeaurora.org
-From:   Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-Subject: [PATCH v3 2/2] dt-bindings: thermal: tsens: Add cold interrupt support in yaml
-Date:   Fri, 22 May 2020 17:16:26 +0530
-Message-Id: <20200522114626.28834-3-manafm@codeaurora.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522114626.28834-1-manafm@codeaurora.org>
-References: <20200522114626.28834-1-manafm@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 22 May 2020 07:48:41 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:6674 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728495AbgEVLsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:48:40 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgC3GTwJvMde1lICAg--.3119S4;
+        Fri, 22 May 2020 19:48:29 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
+Date:   Fri, 22 May 2020 19:48:24 +0800
+Message-Id: <20200522114824.8554-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgC3GTwJvMde1lICAg--.3119S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fury5tFWrWr4rXwb_yoW8GFWDpr
+        48Wa4YkFW0qa1fKFyUZw1DZFy5u34aq3yfKrW8C3Zxuan8AFyUtr1rXry2vF48ZFWkAF47
+        Aas8A3y3AF10vFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9C1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+        AKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Av
+        z4vE14v_Gw4l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s
+        026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+        JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+        v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+        j40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxV
+        W8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdxhLUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgIIBlZdtOQq2AAAsn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cold interrupt support for tsens in yaml.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- .../bindings/thermal/qcom-tsens.yaml          | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-index 2ddd39d96766..3592322fe172 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-@@ -52,12 +52,14 @@ properties:
-     items:
-       - description: Combined interrupt if upper or lower threshold crossed
-       - description: Interrupt if critical threshold crossed
-+      - description: Interrupt if cold threshold is crossed
+Changelog:
+
+v2: - Merge two patches that fix runtime PM imbalance in
+      tegra_adma_probe() and tegra_adma_alloc_chan_resources()
+      respectively.
+---
+ drivers/dma/tegra210-adma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index c4ce5dfb149b..2d6e419b6eac 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
  
-   interrupt-names:
-     minItems: 1
-     items:
-       - const: uplow
-       - const: critical
-+      - const: cold
+ 	ret = pm_runtime_get_sync(tdc2dev(tdc));
+ 	if (ret < 0) {
++		pm_runtime_put_sync(tdc2dev(tdc));
+ 		free_irq(tdc->irq, tdc);
+ 		return ret;
+ 	}
+@@ -870,7 +871,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
  
-   nvmem-cells:
-     minItems: 1
-@@ -109,8 +111,10 @@ allOf:
-       properties:
-         interrupts:
-           minItems: 2
-+          maxItems: 3
-         interrupt-names:
-           minItems: 2
-+          maxItems: 3
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0)
+-		goto rpm_disable;
++		goto rpm_put;
  
- required:
-   - compatible
-@@ -174,4 +178,42 @@ examples:
-            #qcom,sensors = <13>;
-            #thermal-sensor-cells = <1>;
-     };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    // Example 4 (for any platform containing v2.6+ of the TSENS IP)
-+    //           (with thermal-zone):
-+    tsens4: thermal-sensor@c265000 {
-+           compatible = "qcom,sc7180-tsens", "qcom,tsens-v2";
-+           reg = <0xc265000 0x1ff>,
-+                 <0xc223000 0x1ff>;
-+
-+           interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>,
-+                        <GIC_SPI 501 IRQ_TYPE_EDGE_RISING>;
-+           interrupt-names = "uplow", "critical", "cold";
-+
-+           #qcom,sensors = <15>;
-+           #thermal-sensor-cells = <1>;
-+    };
-+
-+    thermal-zones {
-+            cold_thermal: cold-thermal {
-+                    polling-delay-passive = <0>;
-+                    polling-delay = <0>;
-+
-+                    thermal-sensors = <&tsens4 128>;
-+
-+                    trips {
-+                            cold-trip {
-+                                    temperature = <1>;
-+                                    hysteresis = <1>;
-+                                    type = "passive";
-+                            };
-+                    };
-+
-+                    cooling-maps {
-+                    };
-+            };
-+    };
- ...
+ 	ret = tegra_adma_init(tdma);
+ 	if (ret)
+@@ -921,7 +922,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ rpm_put:
+ 	pm_runtime_put_sync(&pdev->dev);
+-rpm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ irq_dispose:
+ 	while (--i >= 0)
 -- 
-2.26.2
+2.17.1
+
