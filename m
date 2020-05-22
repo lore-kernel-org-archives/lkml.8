@@ -2,140 +2,150 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E238AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5A2206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA87E206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plNTg+ex"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zNgoSJA3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbgEVPo1 (ORCPT
+        id S1730536AbgEVPo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:44:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
+        Fri, 22 May 2020 11:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729040AbgEVPo1 (ORCPT
+        with ESMTP id S1730375AbgEVPo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:44:27 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C106FC061A0E;
-        Fri, 22 May 2020 08:44:26 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id v79so1045015qkb.10;
-        Fri, 22 May 2020 08:44:26 -0700 (PDT)
+        Fri, 22 May 2020 11:44:59 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1782C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:44:58 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y17so2212722wrn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k+FQlGAsd5VwEJukC1oxrls/cl2Y99ctG3ZXp8hKvbs=;
-        b=plNTg+exkS5PfQQDNXUATtwZYGgHoTdkhQZWtd25vuTwvleATu2u0VuG0sGNdt3LTq
-         sG2OZhvz6cGw/LA3RwHGeyoH5h3xVGh55FoK9r6XOBmWtM/mgznK6i2SHUhRt8b5Ek7C
-         JkVOmjfhZ1McUGkaovz3V4nPl/v+ZjqGdw8nW0H0pEhfzW+bblaI8Xcnd9l0DA3Hojfc
-         Qu+As385wBdNTSDY5qm6USyAgOfMxEN2ES7eVYPE7NHSyGjftitcUD8kSObmT5IXWVmh
-         W/HYAixQCLNmp+NnmFITCh0SpQdqCUe70Z+Q3y8b3eli1AHSR5n76m7+kwKKQfdA+SjL
-         Mnnw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=f8Z+hxs1X/S2M8k2cqePawSWLAhOwu4fpNACrp7ZjZc=;
+        b=zNgoSJA3+FdcMg8X+KX3OfOeSA4paEreX+zUg2FjL7Ho+6FDp1qcfYTCq4oPme7Iwu
+         TXn2q4lEJ1+Li5urdXDjy2KySJF0ekNd5/3OPcZCesI+WSu6NQlRqIitb9iYSVyXuLTM
+         rBE9SnsnmnHawwCdzB+YGT5JWMnZvMcxD5gluIZqzQf2j4qS34+P9cyVYJLFAqX2kcZB
+         66YKrqpiQiIdDI3wYTtTUmI7mOldidCF2gehSYJqeg0IRScXW8uB83tmB5JEetagln19
+         Bj94QsWdFxEGGb7mnrxgKIJE0TTsT0Z3JboIWeUHIDSZGCzteAquP4d4X+Xvqg6mE8XK
+         8mJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k+FQlGAsd5VwEJukC1oxrls/cl2Y99ctG3ZXp8hKvbs=;
-        b=JND0030KVvuaO4TSxl5xUEZjbl41sHj04BHXSpYCuDP99nA46Lw/UZXZARvY85USyf
-         65p/E63M/oo4S8oSALhmry8pyuxB2YJEkMuIvPN+ZRARz/v7E4+njfLvPRbzWOx9Ofy4
-         dxykOBinZ0bpktTrPTghT1ybMD9UtRpM72aF/8Ysm3OvzwpvNw8y6Gz7OlMfsd61zQAC
-         E3ZU698il1X/eGqrdERVi590eQ3nM1KIWIz6aN62HhSJJVn7xGztiOkBQmqB9b47GuiB
-         19NGrhE28G/j3/4rz0/ejdHlH+F6NU8N1NqxFumEU7amUYakLmavQTWeSmf8R/UDVhPh
-         kEtw==
-X-Gm-Message-State: AOAM531ZehkMLjHOtNiDOJBFWwN/W5mEAGCbkeo83aScmROjjiC3KLY/
-        l+VeFPVoR6Esu1wdpBSsBm0=
-X-Google-Smtp-Source: ABdhPJwZ0ZdrTAQgQSMVyLAxZPwmco9HBD9BC5MVcgMoLCa24NcJUqNR/TMxCYF6cqdT9TGSotWeGA==
-X-Received: by 2002:a37:644d:: with SMTP id y74mr8288509qkb.477.1590162265826;
-        Fri, 22 May 2020 08:44:25 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id h188sm7692281qke.82.2020.05.22.08.44.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 08:44:25 -0700 (PDT)
-Date:   Fri, 22 May 2020 17:44:21 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
- to yaml
-Message-ID: <20200522154421.GB21655@ict14-OptiPlex-980>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-2-jonathan.albrieux@gmail.com>
- <20200519184933.00003f00@Huawei.com>
- <20200520072423.GF3361@ict14-OptiPlex-980>
- <20200521192736.4818f17b@archlinux>
- <20200522082208.GB19742@ict14-OptiPlex-980>
- <134f419f-de85-f14e-0331-49b8bb72625c@nxp.com>
- <20200522142633.GA21655@ict14-OptiPlex-980>
- <2cb64245-a3ec-b6c0-5f64-b2fdf6cd3689@nxp.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f8Z+hxs1X/S2M8k2cqePawSWLAhOwu4fpNACrp7ZjZc=;
+        b=TfaTWYRFgBbOcFbesttXCk2pewl7WKAlHBi7+prXREany0P/zHvCKGNt1UIIvkb/mj
+         PnkV8TdTzmJB6NFGJCzVnM6lpwHbU/ljroQuFgS40aZ1af4iuJcT2n+hjH8IqGVN+lch
+         flmGTyvXcN8zXS+uG2NXv0tbET1oLxMWW3mOo6F+lCOKn9Dd/PLZdV0K09z3XIMD8FVZ
+         4CTqYoBfukzf94R8Qq7Rv3xI4lbrEimDAmj8oYnyNwWkte83HcMlEHBSmIYwtC1hptK9
+         RGcXEUTX/yMtFM7xsZDG0edXusxi1FbM0vgQVw7stU0ZtR//WERQ57VAG0VJ95Uhsrbc
+         B32g==
+X-Gm-Message-State: AOAM532C0TPtGNguGazFrCQ8BNoA21ju22r3jHFF/bH2hWl0I0/1rIAO
+        9WccENlzo64OxFzsvxmRGW7Eq1z25/8=
+X-Google-Smtp-Source: ABdhPJzUj4jfq6gavH91iYN31THYLzeIvwole2JFPhFx7X2JfwqWxZ7loWGwMLM/oL84y/F1CdI/Sg==
+X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr4187102wrx.124.1590162297341;
+        Fri, 22 May 2020 08:44:57 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
+        by smtp.googlemail.com with ESMTPSA id e5sm9609409wro.3.2020.05.22.08.44.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 08:44:56 -0700 (PDT)
+Subject: Re: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for
+ Baikal-T1 SoC support
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
+ <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
+ <20200522154105.6gkutlgi2hxqjjzc@mobilestation>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <0bbed067-f588-ef3e-a98a-c4b291810e4f@linaro.org>
+Date:   Fri, 22 May 2020 17:44:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cb64245-a3ec-b6c0-5f64-b2fdf6cd3689@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200522154105.6gkutlgi2hxqjjzc@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 05:59:11PM +0300, Daniel Baluta wrote:
+On 22/05/2020 17:41, Serge Semin wrote:
+> On Fri, May 22, 2020 at 05:28:42PM +0200, Daniel Lezcano wrote:
+>> On 21/05/2020 22:48, Serge Semin wrote:
+>>> As for all Baikal-T1 SoC related patchsets, which need this, we replaced
+>>> the DW APB Timer legacy plain text-based dt-binding file with DT schema.
+>>> Similarly the MIPS GIC bindings file is also converted to DT schema seeing
+>>> it also defines the MIPS GIC Timer binding.
+>>>
+>>> Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
+>>> functionality of two another timers: embedded into the MIPS GIC timer and
+>>> three external DW timers available over APB bus. But we can't use them
+>>> before the corresponding drivers are properly fixed. First of all DW APB
+>>> Timer shouldn't be bound to a single CPU, since as being accessible over
+>>> APB they are external with respect to all possible CPUs. Secondly there
+>>> might be more than just two DW APB Timers in the system (Baikal-T1 has
+>>> three of them), so permit the driver to use one of them as a clocksource
+>>> and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
+>>> timer as a clocksource so register it in the corresponding subsystem
+>>> (the patch has been found in the Paul Burton MIPS repo so I left the
+>>> original Signed-off-by attribute). Finally in the same way as r4k timer
+>>> the MIPS GIC timer should be used with care when CPUFREQ config is enabled
+>>> since in case of CM2 the timer counting depends on the CPU reference clock
+>>> frequency while the clocksource subsystem currently doesn't support the
+>>> timers with non-stable clock.
+>>>
+>>> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+>>> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+>>> tag: v5.7-rc4
+>>
+>> Applied patch 1,2,4,5,6,7,8
+>>
+>> Thanks!
 > 
-> On 22.05.2020 17:26, Jonathan Albrieux wrote:
-> > On Fri, May 22, 2020 at 01:47:21PM +0300, Daniel Baluta wrote:
-> > > > > > > > +
-> > > > > > > > +maintainers:
-> > > > > > > > +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
-> > > > > > > Daniel is still active in the kernel, just not at Intel any more. +CC
-> > > > > > Oh ok thank you! Daniel are you still maintaining this driver?
-> > > I can do reviews if requested but I'm not actively maintaining this driver.
-> > > If anyone wants
-> > > 
-> > > to take this over, will be more than happy.
-> > > 
-> > > 
-> > > Other than that we can add my gmail address: Daniel Baluta
-> > > <daniel.baluta@gmail.com>
-> > > 
-> > > 
-> > > 
-> > Well if you'd like to review this patch I'd really appreciate :-)
-> > Forgive me for not having understood your answer regarding the maintainer
-> > field, can I add you to this binding as maintainer or are you saying to
-> > not add you? Thank you and sorry for the repeated question,
-> > 
-> > 
-> 
-> OK, so I think would be better not to add me as a maintainer because
-> 
-> this would set some expecation from people, and I most likely won't
-> 
-> have time to met them.
-> 
-> 
-> Can you instead add the linux-iio mailing list as a maintainer, not sure
-> 
-> if this is a common practice though.
-> 
-> 
+> Great! Thanks. Am I right to expect the series in: git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+> at the branch timers/core?
 
-Ok thank you! I don't know, maybe someone else could point out
-the right direction to take, it would be sad to drop yaml documentation
-format just for this.
+The series first goes to:
 
-Best regards,
-Jonathan Albrieux
+https://git.linaro.org/people/daniel.lezcano/linux.git/log/?h=timers/drivers/next
+
+, then I send the PR to Thomas, who send in turn a PR at the merge
+windows to Linus for the entire tip tree.
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
