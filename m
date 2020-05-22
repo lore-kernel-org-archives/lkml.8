@@ -2,332 +2,301 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F43C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3359720759
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B8620757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MBVTOqMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgEVVpO (ORCPT
+        id S1731162AbgEVVrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:45:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:1829 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731036AbgEVVpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:45:14 -0400
-IronPort-SDR: wyNlP05v2QZgCvQiL+nDBe4njUr9hZDGH4BFkDyykCRtfx8e/a8KRl+szQHU8J30US+zBqMpU0
- OvyeH8YiREbg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 14:45:13 -0700
-IronPort-SDR: iQVFDAqkKs0sASnlwzGZJkhDLcy8EYTFt0TNSJj2HV00g62mhL7SHX1Ogh6l+EzTeGLYqg65ko
- F4TrOwyHdSQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,423,1583222400"; 
-   d="scan'208";a="283523359"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.254.101.173])
-  by orsmga002.jf.intel.com with ESMTP; 22 May 2020 14:45:13 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] ACPI / DPTF: Add DPTF battery participant driver
-Date:   Fri, 22 May 2020 14:45:09 -0700
-Message-Id: <20200522214509.1003362-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 22 May 2020 17:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731072AbgEVVrU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 17:47:20 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21031C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:47:20 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j21so5606902pgb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=80cOC3Q1C1nh3jgT7bLdfn6QXwRHWrLiSMAc5u1N5Mg=;
+        b=MBVTOqMsRRDOXwqDeh3TlHhCVuQINpecjzEWi2sbZjFC2s+fi8libuvJoKMdyiA93j
+         HjxXahYGwB2EeBTPt5THAGJtXNUS1blvwgSzxXsV7iD7yKk/idl5N09duhj4GIrn1ZiN
+         dFdhnMRbAksUe0m8/f+9BUDtxd165NCjk74ME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=80cOC3Q1C1nh3jgT7bLdfn6QXwRHWrLiSMAc5u1N5Mg=;
+        b=qgGej3obtpDaNCn6E7XtFq00Qi32LdRBITn9phVBwdU+YUazm5CKDaarB2a6qb9aKi
+         y0PwS4xUlBuF+WZrufDDTw/k56adIYOf34ViZ02Mvu6kTmQP79CE/hA5BLuEpUXqPuO5
+         w2WnE7WsTPpRtbfPYn5RH8oAtjy97Co+UdZ2cdUMPfYcEZZvpIXd46o0bi7JRSOAR7Ld
+         l8NjZ0g0ncD80QiYtp8nAAj/68UiZ1uZmp0A2o4z3HI9uses31YdvhdSyxLpTEOWCM9h
+         a+6yeMWFket9bcBZfiyHGCX+csoo1wLbW7GlEsXB9kK2vqQOM7g4MjMDAAf+cdAhcxbS
+         EcNw==
+X-Gm-Message-State: AOAM530oBrY6iWGcfnYexQQ/Gz+/+JRhUc58VLho3MG4SoxUyuhBMGUY
+        VEgnQoDYfLcUQ5w9oClSwX+g6w==
+X-Google-Smtp-Source: ABdhPJwCvSRp3cNpgT+cHxazKcMuvzWV+0gormNW+/FlbLyRW0Hkd2BGV2aYYNTI+c6UjR+ZCLaIdA==
+X-Received: by 2002:a63:5864:: with SMTP id i36mr15433327pgm.231.1590184039358;
+        Fri, 22 May 2020 14:47:19 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id w1sm6889502pgh.53.2020.05.22.14.47.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 14:47:18 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH] firmware_loader: change enum fw_opt to u32
+Date:   Fri, 22 May 2020 14:46:58 -0700
+Message-Id: <20200522214658.12722-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver adds support for Dynamic Platform and Thermal Framework
-battery participant device support.
+"enum fw_opt" is not used as an enum.
+Change fw_opt to a u32 and the FW_OPT_* values inside the enum to defines.
 
-These attributes are presented via sysfs interface under the platform
-device for the battery participant:
-$ls /sys/bus/platform/devices/INT3532:00/dptf_battery
-	current_discharge_capbility_ma
-	max_platform_power_mw
-	no_load_voltage_mv
-	high_freq_impedance_mohm
-	max_steady_state_power_mw
-
-Refer to the documentation at
-Documentation/ABI/testing/sysfs-platform-dptf
-for details.
-
-Here the implementation reuses existing dptf-power.c as the motivation and
-processing is same. It also shares one ACPI method. Here this change is
-using participant type, "PTYP" method to identify and do different
-processing. By using participant type, create/delete either "dptf_power"
-or "dptf_battery" attribute group and send notifications.
-
-The particpant type for for the battery participant is 0x0C.
-
-ACPI methods description:
-
-PMAX (Intel(R) Dynamic Tuning Platform Max Power Supplied by Battery):
-This object evaluates to the maximum platform power that can be supported
-by the battery in milli watts.
-
-PBSS (Intel(R) Dynamic Tuning Power Battery Steady State):
-This object returns the max sustained power for battery in milli watts.
-
-RBHF (Intel(R) Dynamic Tuning High Frequency Impedance):
-This object returns high frequency impedance value that can be obtained
-from battery fuel gauge.
-
-VBNL (Intel(R) Dynamic Tuning No-Load Voltage)
-This object returns battery instantaneous no-load voltage that can be
-obtained from battery fuel gauge in milli volts
-
-CMPP (Intel(R) Dynamic Tuning Current Discharge Capability)
-This object returns battery discharge current capability obtained from
-battery fuel gauge milli amps.
-
-Notifications:
-
-0x80: PMAX change. Used to notify Intel(R)Dynamic Tuning Battery
-participant driver when the PMAX has changed by 250mw.
-0x83: PBSS change. Used to notify Intel(R) Dynamic Tuning Battery
-participant driver when the power source has changed.
-0x85: RBHF change. Used to notify Intel(R)Dynamic Tuning Battery
-participant driver when the RBHF has changed over a threshold by
-5mOhm.
-0x86: Battery Capability change. Used to notify Intel(R)Dynamic Tuning
-Battery participant driver when the battery capability has changed.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
-Comment
-	I know this is close to merge window, so it can be differed to 5.9
-	if this is a problem.
+ drivers/base/firmware_loader/fallback.c       | 12 +++++------
+ drivers/base/firmware_loader/fallback.h       |  8 +++----
+ .../base/firmware_loader/fallback_platform.c  |  2 +-
+ drivers/base/firmware_loader/firmware.h       | 21 ++++++++-----------
+ drivers/base/firmware_loader/main.c           | 11 +++++-----
+ 5 files changed, 25 insertions(+), 29 deletions(-)
 
- Documentation/ABI/testing/sysfs-platform-dptf | 38 +++++++++
- drivers/acpi/dptf/dptf_power.c                | 82 ++++++++++++++++---
- 2 files changed, 110 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
-index e83a9d208849..ef923958c750 100644
---- a/Documentation/ABI/testing/sysfs-platform-dptf
-+++ b/Documentation/ABI/testing/sysfs-platform-dptf
-@@ -54,3 +54,41 @@ KernelVersion:	v5.8
- Contact:	linux-acpi@vger.kernel.org
- Description:
- 		(WO) Confirm embedded controller about a prochot notification.
-+
-+What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/max_platform_power_mw
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(RO) The maximum platform power that can be supported by the battery in milli watts.
-+
-+What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/max_steady_state_power_mw
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(RO) The maximum sustained power for battery in milli watts.
-+
-+What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/high_freq_impedance_mohm
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(RO) The high frequency impedance value that can be obtained from battery
-+		fuel gauge in milli Ohms.
-+
-+What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/no_load_voltage_mv
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(RO) The no-load voltage that can be obtained from battery fuel gauge in
-+		milli volts.
-+
-+What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/current_discharge_capbility_ma
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(RO) The battery discharge current capability obtained from battery fuel gauge in
-+		milli Amps.
-diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-index abe99039af74..5fab7e350db8 100644
---- a/drivers/acpi/dptf/dptf_power.c
-+++ b/drivers/acpi/dptf/dptf_power.c
-@@ -10,13 +10,19 @@
- #include <linux/platform_device.h>
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 1e9c96e3ed63..af1aa3d69920 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -460,7 +460,7 @@ static const struct attribute_group *fw_dev_attr_groups[] = {
  
- /*
-- * Presentation of attributes which are defined for INT3407. They are:
-+ * Presentation of attributes which are defined for INT3407 and INT3532.
-+ * They are:
-  * PMAX : Maximum platform powe
-  * PSRC : Platform power source
-  * ARTG : Adapter rating
-  * CTYP : Charger type
-  * PBSS : Battery steady power
-  * PROP : Rest of worst case platform Power
-+ * PBSS : Power Battery Steady State
-+ * PBSS : Power Battery Steady State
-+ * RBHF : High Frequency Impedance
-+ * VBNL : Instantaneous No-Load Voltage
-+ * CMPP : Current Discharge Capability
+ static struct fw_sysfs *
+ fw_create_instance(struct firmware *firmware, const char *fw_name,
+-		   struct device *device, enum fw_opt opt_flags)
++		   struct device *device, u32 opt_flags)
+ {
+ 	struct fw_sysfs *fw_sysfs;
+ 	struct device *f_dev;
+@@ -493,7 +493,7 @@ fw_create_instance(struct firmware *firmware, const char *fw_name,
+  * In charge of constructing a sysfs fallback interface for firmware loading.
+  **/
+ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+-				  enum fw_opt opt_flags, long timeout)
++				  u32 opt_flags, long timeout)
+ {
+ 	int retval = 0;
+ 	struct device *f_dev = &fw_sysfs->dev;
+@@ -547,7 +547,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+ 
+ static int fw_load_from_user_helper(struct firmware *firmware,
+ 				    const char *name, struct device *device,
+-				    enum fw_opt opt_flags)
++				    u32 opt_flags)
+ {
+ 	struct fw_sysfs *fw_sysfs;
+ 	long timeout;
+@@ -588,7 +588,7 @@ static int fw_load_from_user_helper(struct firmware *firmware,
+ 	return ret;
+ }
+ 
+-static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
++static bool fw_force_sysfs_fallback(u32 opt_flags)
+ {
+ 	if (fw_fallback_config.force_sysfs_fallback)
+ 		return true;
+@@ -597,7 +597,7 @@ static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
+ 	return true;
+ }
+ 
+-static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
++static bool fw_run_sysfs_fallback(u32 opt_flags)
+ {
+ 	int ret;
+ 
+@@ -640,7 +640,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+  **/
+ int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 			    struct device *device,
+-			    enum fw_opt opt_flags,
++			    u32 opt_flags,
+ 			    int ret)
+ {
+ 	if (!fw_run_sysfs_fallback(opt_flags))
+diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firmware_loader/fallback.h
+index 06f4577733a8..2afdb6adb23f 100644
+--- a/drivers/base/firmware_loader/fallback.h
++++ b/drivers/base/firmware_loader/fallback.h
+@@ -33,7 +33,7 @@ struct firmware_fallback_config {
+ #ifdef CONFIG_FW_LOADER_USER_HELPER
+ int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 			    struct device *device,
+-			    enum fw_opt opt_flags,
++			    u32 opt_flags,
+ 			    int ret);
+ void kill_pending_fw_fallback_reqs(bool only_kill_custom);
+ 
+@@ -45,7 +45,7 @@ void unregister_sysfs_loader(void);
+ #else /* CONFIG_FW_LOADER_USER_HELPER */
+ static inline int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 					  struct device *device,
+-					  enum fw_opt opt_flags,
++					  u32 opt_flags,
+ 					  int ret)
+ {
+ 	/* Keep carrying over the same error */
+@@ -67,10 +67,10 @@ static inline void unregister_sysfs_loader(void)
+ #endif /* CONFIG_FW_LOADER_USER_HELPER */
+ 
+ #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+-int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags);
++int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags);
+ #else
+ static inline int firmware_fallback_platform(struct fw_priv *fw_priv,
+-					     enum fw_opt opt_flags)
++					     u32 opt_flags)
+ {
+ 	return -ENOENT;
+ }
+diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
+index c88c745590fe..cdd2c9a9f38a 100644
+--- a/drivers/base/firmware_loader/fallback_platform.c
++++ b/drivers/base/firmware_loader/fallback_platform.c
+@@ -8,7 +8,7 @@
+ #include "fallback.h"
+ #include "firmware.h"
+ 
+-int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags)
++int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
+ {
+ 	const u8 *data;
+ 	size_t size;
+diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
+index 25836a6afc9f..cf6dc96a84a2 100644
+--- a/drivers/base/firmware_loader/firmware.h
++++ b/drivers/base/firmware_loader/firmware.h
+@@ -12,7 +12,7 @@
+ #include <generated/utsrelease.h>
+ 
+ /**
+- * enum fw_opt - options to control firmware loading behaviour
++ * fw_opt - options to control firmware loading behaviour
+  *
+  * @FW_OPT_UEVENT: Enables the fallback mechanism to send a kobject uevent
+  *	when the firmware is not found. Userspace is in charge to load the
+@@ -33,15 +33,13 @@
+  *	the platform's main firmware. If both this fallback and the sysfs
+  *      fallback are enabled, then this fallback will be tried first.
   */
- #define DPTF_POWER_SHOW(name, object) \
- static ssize_t name##_show(struct device *dev,\
-@@ -41,6 +47,10 @@ DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
- DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
- DPTF_POWER_SHOW(charger_type, CTYP)
- DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
-+DPTF_POWER_SHOW(max_steady_state_power_mw, PBSS)
-+DPTF_POWER_SHOW(high_freq_impedance_mohm, RBHF)
-+DPTF_POWER_SHOW(no_load_voltage_mv, VBNL)
-+DPTF_POWER_SHOW(current_discharge_capbility_ma, CMPP);
+-enum fw_opt {
+-	FW_OPT_UEVENT			= BIT(0),
+-	FW_OPT_NOWAIT			= BIT(1),
+-	FW_OPT_USERHELPER		= BIT(2),
+-	FW_OPT_NO_WARN			= BIT(3),
+-	FW_OPT_NOCACHE			= BIT(4),
+-	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
+-	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
+-};
++#define FW_OPT_UEVENT			BIT(0)
++#define FW_OPT_NOWAIT			BIT(1)
++#define FW_OPT_USERHELPER		BIT(2)
++#define FW_OPT_NO_WARN			BIT(3)
++#define FW_OPT_NOCACHE			BIT(4)
++#define FW_OPT_NOFALLBACK_SYSFS		BIT(5)
++#define FW_OPT_FALLBACK_PLATFORM	BIT(6)
  
- static DEVICE_ATTR_RO(max_platform_power_mw);
- static DEVICE_ATTR_RO(platform_power_source);
-@@ -48,6 +58,10 @@ static DEVICE_ATTR_RO(adapter_rating_mw);
- static DEVICE_ATTR_RO(battery_steady_power_mw);
- static DEVICE_ATTR_RO(charger_type);
- static DEVICE_ATTR_RO(rest_of_platform_power_mw);
-+static DEVICE_ATTR_RO(max_steady_state_power_mw);
-+static DEVICE_ATTR_RO(high_freq_impedance_mohm);
-+static DEVICE_ATTR_RO(no_load_voltage_mv);
-+static DEVICE_ATTR_RO(current_discharge_capbility_ma);
- 
- static ssize_t prochot_confirm_store(struct device *dev,
- 				     struct device_attribute *attr,
-@@ -85,8 +99,38 @@ static const struct attribute_group dptf_power_attribute_group = {
- 	.name = "dptf_power"
- };
- 
-+static struct attribute *dptf_battery_attrs[] = {
-+	&dev_attr_max_platform_power_mw.attr,
-+	&dev_attr_max_steady_state_power_mw.attr,
-+	&dev_attr_high_freq_impedance_mohm.attr,
-+	&dev_attr_no_load_voltage_mv.attr,
-+	&dev_attr_current_discharge_capbility_ma.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group dptf_battery_attribute_group = {
-+	.attrs = dptf_battery_attrs,
-+	.name = "dptf_battery"
-+};
-+
-+#define MAX_POWER_CHANGED		0x80
- #define POWER_STATE_CHANGED		0x81
-+#define STEADY_STATE_POWER_CHANGED	0x83
- #define POWER_PROP_CHANGE_EVENT	0x84
-+#define IMPEDANCED_CHNGED		0x85
-+#define VOLTAGE_CURRENT_CHANGED	0x86
-+
-+static long long dptf_participant_type(acpi_handle handle)
-+{
-+	unsigned long long ptype;
-+	acpi_status status;
-+
-+	status = acpi_evaluate_integer(handle, "PTYP", NULL, &ptype);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
-+	return ptype;
-+}
- 
- static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
- {
-@@ -100,6 +144,15 @@ static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
- 	case POWER_PROP_CHANGE_EVENT:
- 		attr = "rest_of_platform_power_mw";
- 		break;
-+	case MAX_POWER_CHANGED:
-+		attr = "max_platform_power_mw";
-+		break;
-+	case STEADY_STATE_POWER_CHANGED:
-+		attr = "max_steady_state_power_mw";
-+		break;
-+	case VOLTAGE_CURRENT_CHANGED:
-+		attr = "no_load_voltage_mv";
-+		break;
- 	default:
- 		dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
- 		return;
-@@ -109,13 +162,16 @@ static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
- 	 * Notify that an attribute is changed, so that user space can read
- 	 * again.
- 	 */
--	sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
-+	if (dptf_participant_type(handle) == 0x0CULL)
-+		sysfs_notify(&pdev->dev.kobj, "dptf_battery", attr);
-+	else
-+		sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
+ enum fw_status {
+ 	FW_STATUS_UNKNOWN,
+@@ -136,8 +134,7 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
+ 	__fw_state_set(fw_priv, FW_STATUS_DONE);
  }
  
- static int dptf_power_add(struct platform_device *pdev)
+-int assign_fw(struct firmware *fw, struct device *device,
+-	      enum fw_opt opt_flags);
++int assign_fw(struct firmware *fw, struct device *device, u32 opt_flags);
+ 
+ #ifdef CONFIG_FW_LOADER_PAGED_BUF
+ void fw_free_paged_buf(struct fw_priv *fw_priv);
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 76f79913916d..2ca6b4735979 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -210,7 +210,7 @@ static struct fw_priv *__lookup_fw_priv(const char *fw_name)
+ static int alloc_lookup_fw_priv(const char *fw_name,
+ 				struct firmware_cache *fwc,
+ 				struct fw_priv **fw_priv, void *dbuf,
+-				size_t size, enum fw_opt opt_flags)
++				size_t size, u32 opt_flags)
  {
-+	const struct attribute_group *attr_group;
- 	struct acpi_device *acpi_dev;
--	acpi_status status;
- 	unsigned long long ptype;
- 	int result;
+ 	struct fw_priv *tmp;
  
-@@ -123,11 +179,12 @@ static int dptf_power_add(struct platform_device *pdev)
- 	if (!acpi_dev)
- 		return -ENODEV;
- 
--	status = acpi_evaluate_integer(acpi_dev->handle, "PTYP", NULL, &ptype);
--	if (ACPI_FAILURE(status))
--		return -ENODEV;
--
--	if (ptype != 0x11)
-+	ptype = dptf_participant_type(acpi_dev->handle);
-+	if (ptype == 0x11)
-+		attr_group = &dptf_power_attribute_group;
-+	else if (ptype == 0x0C)
-+		attr_group = &dptf_battery_attribute_group;
-+	else
- 		return -ENODEV;
- 
- 	result = acpi_install_notify_handler(acpi_dev->handle,
-@@ -138,7 +195,7 @@ static int dptf_power_add(struct platform_device *pdev)
- 		return result;
- 
- 	result = sysfs_create_group(&pdev->dev.kobj,
--				    &dptf_power_attribute_group);
-+				    attr_group);
- 	if (result) {
- 		acpi_remove_notify_handler(acpi_dev->handle,
- 					   ACPI_DEVICE_NOTIFY,
-@@ -158,13 +215,18 @@ static int dptf_power_remove(struct platform_device *pdev)
- 	acpi_remove_notify_handler(acpi_dev->handle,
- 				   ACPI_DEVICE_NOTIFY,
- 				   dptf_power_notify);
--	sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
-+
-+	if (dptf_participant_type(acpi_dev->handle) == 0x0CULL)
-+		sysfs_remove_group(&pdev->dev.kobj, &dptf_battery_attribute_group);
-+	else
-+		sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
- 
- 	return 0;
+@@ -635,8 +635,7 @@ static int fw_add_devm_name(struct device *dev, const char *name)
  }
+ #endif
  
- static const struct acpi_device_id int3407_device_ids[] = {
- 	{"INT3407", 0},
-+	{"INT3532", 0},
- 	{"INTC1047", 0},
- 	{"", 0},
+-int assign_fw(struct firmware *fw, struct device *device,
+-	      enum fw_opt opt_flags)
++int assign_fw(struct firmware *fw, struct device *device, u32 opt_flags)
+ {
+ 	struct fw_priv *fw_priv = fw->priv;
+ 	int ret;
+@@ -687,7 +686,7 @@ int assign_fw(struct firmware *fw, struct device *device,
+ static int
+ _request_firmware_prepare(struct firmware **firmware_p, const char *name,
+ 			  struct device *device, void *dbuf, size_t size,
+-			  enum fw_opt opt_flags)
++			  u32 opt_flags)
+ {
+ 	struct firmware *firmware;
+ 	struct fw_priv *fw_priv;
+@@ -753,7 +752,7 @@ static void fw_abort_batch_reqs(struct firmware *fw)
+ static int
+ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 		  struct device *device, void *buf, size_t size,
+-		  enum fw_opt opt_flags)
++		  u32 opt_flags)
+ {
+ 	struct firmware *fw = NULL;
+ 	int ret;
+@@ -990,7 +989,7 @@ struct firmware_work {
+ 	struct device *device;
+ 	void *context;
+ 	void (*cont)(const struct firmware *fw, void *context);
+-	enum fw_opt opt_flags;
++	u32 opt_flags;
  };
+ 
+ static void request_firmware_work_func(struct work_struct *work)
 -- 
-2.25.4
+2.17.1
 
