@@ -2,96 +2,149 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DF8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 072D0207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AA5206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GS7WZ35r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgEVJgO (ORCPT
+        id S1729850AbgEVJgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:36:14 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:20154 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728424AbgEVJgN (ORCPT
+        Fri, 22 May 2020 05:36:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40164 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbgEVJgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:36:13 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 22 May 2020 15:06:09 +0530
-Received: from minint-dvc2thc.qualcomm.com (HELO sartgarg-linux.qualcomm.com) ([10.206.24.245])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 22 May 2020 15:06:09 +0530
-Received: by sartgarg-linux.qualcomm.com (Postfix, from userid 2339771)
-        id B6EBB179E; Fri, 22 May 2020 15:06:07 +0530 (IST)
-From:   Sarthak Garg <sartgarg@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     vbadigan@codeaurora.org, stummala@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH V2 2/8] dt-bindings: mmc: Add information for DLL register properties
-Date:   Fri, 22 May 2020 15:02:24 +0530
-Message-Id: <1590139950-7288-3-git-send-email-sartgarg@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590139950-7288-1-git-send-email-sartgarg@codeaurora.org>
-References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
- <1590139950-7288-1-git-send-email-sartgarg@codeaurora.org>
+        Fri, 22 May 2020 05:36:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=c7wce+6/DBIYjkCyqWElBhrfpiCn+9+Nidad9WAJ8xQ=; b=GS7WZ35rrw0FFrzlc9tBdIUrEc
+        AC2C2hlrz0cbztdEX4e2704LmbeAVy9pVGEPBw33HfOWw08qBCBsFN0bCz8z+oo2ai1Q4hju/u5kC
+        tw+XLZ4f0z0bp/Kjy+0wnCvH/76psO0MEjhDNjeeRD2lrS00xG8UJzaByqHXOhfh5KN+DsoVq6Dd2
+        s1fM00t3BMT8n1ZTxUZVwC7wzHtxDNL7RT9cy7pE1wzgY/alhkhOLrT4mRCQLSfjr90gEwqGb7Plc
+        7JebFJB3UubdvwK8Zw34xPkJJ3vNBbm/yr1X2BeCRF8NYlRwlnDLHMgOP6bZZJIJ85kgE9dGQVfg2
+        v3FyyN+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jc3z8-0004uu-Qs; Fri, 22 May 2020 09:28:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C481530018B;
+        Fri, 22 May 2020 11:28:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B428D212820ED; Fri, 22 May 2020 11:28:48 +0200 (CEST)
+Date:   Fri, 22 May 2020 11:28:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [RFC PATCH 5/5] selftest/x86: Add CET quick test
+Message-ID: <20200522092848.GJ325280@hirez.programming.kicks-ass.net>
+References: <20200521211720.20236-1-yu-cheng.yu@intel.com>
+ <20200521211720.20236-6-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521211720.20236-6-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add information regarding DLL register properties for getting board
-specific configurations. These DLL register settings may vary from
-board to board.
+On Thu, May 21, 2020 at 02:17:20PM -0700, Yu-cheng Yu wrote:
 
-Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> +#pragma GCC push_options
+> +#pragma GCC optimize ("O0")
+> +void ibt_violation(void)
+> +{
+> +#ifdef __i386__
+> +	asm volatile("lea 1f, %eax");
+> +	asm volatile("jmp *%eax");
+> +#else
+> +	asm volatile("lea 1f, %rax");
+> +	asm volatile("jmp *%rax");
+> +#endif
+> +	asm volatile("1:");
+> +	result[test_id] = -1;
+> +	test_id++;
+> +	setcontext(&ucp);
+> +}
+> +
+> +void shstk_violation(void)
+> +{
+> +#ifdef __i386__
+> +	unsigned long x = 0;
+> +
+> +	((unsigned long *)&x)[2] = (unsigned long)stack_hacked;
+> +#else
+> +	unsigned long long x = 0;
+> +
+> +	((unsigned long long *)&x)[2] = (unsigned long)stack_hacked;
+> +#endif
+> +}
+> +#pragma GCC pop_options
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 481f692f..b8e1d2b 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -47,6 +47,13 @@ Required properties:
- 	"cal"	- reference clock for RCLK delay calibration (optional)
- 	"sleep"	- sleep clock for RCLK delay calibration (optional)
- 
-+- qcom,ddr-config: Certain chipsets and platforms require particular settings
-+	for the DDR_CONFIG register. Use this field to specify the register
-+	value as per the Hardware Programming Guide.
-+
-+- qcom,dll-config: Chipset and Platform specific value. Use this field to
-+	specify the DLL_CONFIG register value as per Hardware Programming Guide.
-+
- Example:
- 
- 	sdhc_1: sdhci@f9824900 {
-@@ -64,6 +71,9 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+
-+		qcom,dll-config = <0x000f642c>;
-+		qcom,ddr-config = <0x80040868>;
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
-@@ -81,4 +91,7 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
- 		clock-names = "core", "iface";
-+
-+		qcom,dll-config = <0x0007642c>;
-+		qcom,ddr-config = <0x80040868>;
- 	};
--- 
-2.7.4
+This is absolutely atrocious.
+
+The #pragma like Kees already said just need to go. Also, there's
+absolutely no clue what so ever what it attempts to achieve.
+
+The __i386__ ifdeffery is horrible crap. Splitting an asm with #ifdef
+like that is also horrible crap.
+
+This is not how you write code.
+
+Get asm/asm.h into userspace and then write something like:
+
+
+void ibt_violation(void)
+{
+	asm volatile("lea  1f, %" _ASM_AX "\n\t"
+		     "jmp  *%" _ASM_AX "\n\t"
+		     "1:\n\t" ::: "a");
+
+	WRITE_ONCE(result[test_id], -1);
+	WRITE_ONCE(test_id, test_id+1);
+
+	setcontext(&ucp);
+}
+
+void shstk_violation(void)
+{
+	unsigned long x = 0;
+
+	WRITE_ONCE(x[2], stack_hacked);
+}
+
 
