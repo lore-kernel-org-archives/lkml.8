@@ -6,94 +6,181 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D345DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77805206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA94C206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgEVNOC (ORCPT
+        id S1729922AbgEVNPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:14:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35245 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgEVNOB (ORCPT
+        Fri, 22 May 2020 09:15:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44684 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgEVNPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:14:01 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jc7Uq-00072T-CU; Fri, 22 May 2020 13:13:56 +0000
-Date:   Fri, 22 May 2020 15:13:55 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matthew Blecker <matthewb@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Mike Frysinger <vapier@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        vineethrp@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH RFC] sched/headers: Fix sched_setattr userspace
- compilation issues
-Message-ID: <20200522131355.f4bdc2f4h2zyqbku@wittgenstein>
-References: <20200521155346.168413-1-joel@joelfernandes.org>
- <CAEXW_YTj83gO0STovrOuL9zgDwEYWRJusUZ3ebVw_jOG6yJxTg@mail.gmail.com>
+        Fri, 22 May 2020 09:15:35 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5A558803087B;
+        Fri, 22 May 2020 13:15:31 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2SinbSvoL-v6; Fri, 22 May 2020 16:15:30 +0300 (MSK)
+Date:   Fri, 22 May 2020 16:15:26 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Huacai Chen <chenhc@lemote.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
+        Zou Wei <zou_wei@huawei.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 03/13] mips: Add MIPS Release 5 support
+Message-ID: <20200522131526.pmqtpmreq6ly3kou@mobilestation>
+References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521140725.29571-4-Sergey.Semin@baikalelectronics.ru>
+ <20200522072743.GA7331@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEXW_YTj83gO0STovrOuL9zgDwEYWRJusUZ3ebVw_jOG6yJxTg@mail.gmail.com>
+In-Reply-To: <20200522072743.GA7331@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:55:21AM -0400, Joel Fernandes wrote:
-> On Thu, May 21, 2020 at 11:53 AM Joel Fernandes (Google)
-> <joel@joelfernandes.org> wrote:
-> >
-> > On a modern Linux distro, compiling the following program fails:
-> >  #include<stdlib.h>
-> >  #include<stdint.h>
-> >  #include<pthread.h>
-> >  #include<linux/sched/types.h>
-> >
-> >  void main() {
-> >          struct sched_attr sa;
-> >
-> >          return;
-> >  }
-> >
-> > with:
-> > /usr/include/linux/sched/types.h:8:8: \
-> >                         error: redefinition of ‘struct sched_param’
-> >     8 | struct sched_param {
-> >       |        ^~~~~~~~~~~
-> > In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
-> >                  from /usr/include/sched.h:43,
-> >                  from /usr/include/pthread.h:23,
-> >                  from /tmp/s.c:4:
-> > /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
-> > note: originally defined here
-> >    23 | struct sched_param
-> >       |        ^~~~~~~~~~~
-> >
-> > This is also causing a problem on using sched_attr Chrome. The issue is
-> > sched_param is already provided by glibc.
-> >
-> > Guard the kernel's UAPI definition of sched_param with __KERNEL__ so
-> > that userspace can compile.
-> >
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Fri, May 22, 2020 at 09:27:43AM +0200, Thomas Bogendoerfer wrote:
+> On Thu, May 21, 2020 at 05:07:14PM +0300, Serge Semin wrote:
+> > There are five MIPS32/64 architecture releases currently available:
+> > from 1 to 6 except fourth one, which was intentionally skipped.
+> > Three of them can be called as major: 1st, 2nd and 6th, that not only
+> > have some system level alterations, but also introduced significant
+> > core/ISA level updates. The rest of the MIPS architecture releases are
+> > minor.
+> > 
+> > Even though they don't have as much ISA/system/core level changes
+> > as the major ones with respect to the previous releases, they still
+> > provide a set of updates (I'd say they were intended to be the
+> > intermediate releases before a major one) that might be useful for the
+> > kernel and user-level code, when activated by the kernel or compiler.
+> > In particular the following features were introduced or ended up being
+> > available at/after MIPS32/64 Release 5 architecture:
+> > + the last release of the misaligned memory access instructions,
+> > + virtualisation - VZ ASE - is optional component of the arch,
+> > + SIMD - MSA ASE - is optional component of the arch,
+> > + DSP ASE is optional component of the arch,
+> > + CP0.Status.FR=1 for CP1.FIR.F64=1 (pure 64-bit FPU general registers)
+> >   must be available if FPU is implemented,
+> > + CP1.FIR.Has2008 support is required so CP1.FCSR.{ABS2008,NAN2008} bits
+> >   are available.
+> > + UFR/UNFR aliases to access CP0.Status.FR from user-space by means of
+> >   ctc1/cfc1 instructions (enabled by CP0.Config5.UFR),
+> > + CP0.COnfig5.LLB=1 and eretnc instruction are implemented to without
+> >   accidentally clearing LL-bit when returning from an interrupt,
+> >   exception, or error trap,
+> > + XPA feature together with extended versions of CPx registers is
+> >   introduced, which needs to have mfhc0/mthc0 instructions available.
+> > 
+> > So due to these changes GNU GCC provides an extended instructions set
+> > support for MIPS32/64 Release 5 by default like eretnc/mfhc0/mthc0. Even
+> > though the architecture alteration isn't that big, it still worth to be
+> > taken into account by the kernel software. Finally we can't deny that
+> > some optimization/limitations might be found in future and implemented
+> > on some level in kernel or compiler. In this case having even
+> > intermediate MIPS architecture releases support would be more than
+> > useful.
+> > 
+> > So the most of the changes provided by this commit can be split into
+> > either compile- or runtime configs related. The compile-time related
+> > changes are caused by adding the new CONFIG_CPU_MIPS32_R5/CONFIG_CPU_MIPSR5
+> > configs and concern the code activating MIPSR2 or MIPSR6 already
+> > implemented features (like eretnc/LLbit, mthc0/mfhc0). In addition
+> > CPU_HAS_MSA can be now freely enabled for MIPS32/64 release 5 based
+> > platforms as this is done for CPU_MIPS32_R6 CPUs. The runtime changes
+> > concerns the features which are handled with respect to the MIPS ISA
+> > revision detected at run-time by means of CP0.Config.{AT,AR} bits. Alas
+> > these fields can be used to detect either r1 or r2 or r6 releases.
+> > But since we know which CPUs in fact support the R5 arch, we can manually
+> > set MIPS_CPU_ISA_M32R5/MIPS_CPU_ISA_M64R5 bit of c->isa_level and then
+> > use cpu_has_mips32r5/cpu_has_mips64r5 where it's appropriate.
+> > 
+> > Since XPA/EVA provide too complex alterationss and to have them used with
+> > MIPS32 Release 2 charged kernels (for compatibility with current platform
+> > configs) they are left to be setup as a separate kernel configs.
+> > 
+> > Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >  arch/mips/Kconfig                    | 56 +++++++++++++++++++++++++---
+> >  arch/mips/Makefile                   |  2 +
+> >  arch/mips/include/asm/asmmacro.h     | 18 +++++----
+> >  arch/mips/include/asm/compiler.h     |  5 +++
+> >  arch/mips/include/asm/cpu-features.h | 27 ++++++++++----
+> >  arch/mips/include/asm/cpu-info.h     |  2 +-
+> >  arch/mips/include/asm/cpu-type.h     |  7 +++-
+> >  arch/mips/include/asm/cpu.h          | 10 +++--
+> >  arch/mips/include/asm/fpu.h          |  4 +-
+> >  arch/mips/include/asm/hazards.h      |  8 ++--
+> >  arch/mips/include/asm/module.h       |  4 ++
+> >  arch/mips/include/asm/stackframe.h   |  2 +-
+> >  arch/mips/include/asm/switch_to.h    |  8 ++--
+> >  arch/mips/kernel/cpu-probe.c         | 17 +++++++++
+> >  arch/mips/kernel/entry.S             |  6 +--
+> >  arch/mips/kernel/proc.c              |  4 ++
+> >  arch/mips/kernel/r4k_fpu.S           | 14 +++----
+> >  arch/mips/kvm/vz.c                   |  6 +--
+> >  arch/mips/lib/csum_partial.S         |  6 ++-
+> >  arch/mips/mm/c-r4k.c                 |  7 ++--
+> >  arch/mips/mm/sc-mips.c               |  7 ++--
+> >  21 files changed, 163 insertions(+), 57 deletions(-)
 > 
-> If it is more preferable, another option is to move sched_param to
-> include/linux/sched/types.h
+> applied to mips-next. I've changed the two /* fall through */ by fallthrough;
+> while appliny. Running checkpatch would have caught that ;-)
 
-Might it be worth Ccing libc-alpha here? Seems like one of those classic
-header conflicts.
+Good. Thanks. Actually I've seen that warning, but just didn't know what way to
+choose.) So I've decided to leave the comment-based Fall-through fixup seeing
+the rest of the file is using the older way. By doing so I've kept the locally
+implemented coding style. Though I've heard the explicit attribute "fallthrough;"
+utilization is a preferred way of marking combined case statements.
 
-Christian
+-Sergey
+
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
