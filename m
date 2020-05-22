@@ -2,104 +2,120 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94D620C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:44:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590155074;
-	bh=uJcG2OQ2rSI4SuWWuLzjgm2Ceju6BKG1zcJBZTzbQ8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WRRRSLjF/fX+Po78H7cMRKH8kMaxNcXh2trGVqNgeGxGcYx7Vk6L0yUQCh+4pusbe
-	 2FUK/mRUWv/GAOeQWijWYcdv7klpc/c27jnp+eMxx6wAunZ3iNa9ZDkO06d1o4OQyl
-	 xVZ1DN+tUS11do0kqZJhaKK9DboBVnPxLndDbXdU=
+	by mail.kernel.org (Postfix) with ESMTP id CD3D920885
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgEVNoe (ORCPT
+        id S1729947AbgEVNqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729399AbgEVNod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:44:33 -0400
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C07207D8;
-        Fri, 22 May 2020 13:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590155073;
-        bh=uJcG2OQ2rSI4SuWWuLzjgm2Ceju6BKG1zcJBZTzbQ8Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Lw24PK1kRgyDaZ0ciGSyLQ/QWtRXiiAHFW6rlKtsogEp3Tat4AnELfuXBDpiCTP0V
-         aCdwu+mGw1W7icZlD9oxFmBRSqWIGRxjmi92ia5Zxmmn4ASsYuA3bBk201wu6fAvc9
-         o3uDJyV1B7QJSQJ5DK+ISNPv19wIs921sVCNq2w8=
-Received: by mail-il1-f177.google.com with SMTP id w18so10651521ilm.13;
-        Fri, 22 May 2020 06:44:33 -0700 (PDT)
-X-Gm-Message-State: AOAM5323MKaZ64Svb5I6igjMMrnJEGko9WTP/VuWoNIWth9ucpik+NPV
-        XVIu/8wCr9wy3wLQlW3O2HBnpiLKCWjf6Ctwa4k=
-X-Google-Smtp-Source: ABdhPJzbGhgU2FO1RXLapvTMCcL+3fVf/Gte05lXmIm8Z1k+ZjyZdMHtkgAqfkOyO6a0rnF/fPLfTlqqhi07lUxOhN0=
-X-Received: by 2002:a92:5ec1:: with SMTP id f62mr10773461ilg.80.1590155072870;
- Fri, 22 May 2020 06:44:32 -0700 (PDT)
+        Fri, 22 May 2020 09:46:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36161 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729406AbgEVNqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 09:46:53 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jc80g-0001Cc-Mb; Fri, 22 May 2020 13:46:50 +0000
+Date:   Fri, 22 May 2020 15:46:49 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Matthew Blecker <matthewb@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Mike Frysinger <vapier@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        vineethrp@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH RFC] sched/headers: Fix sched_setattr userspace
+ compilation issues
+Message-ID: <20200522134649.lcqgwbgbnqxebcng@wittgenstein>
+References: <20200521155346.168413-1-joel@joelfernandes.org>
+ <CAEXW_YTj83gO0STovrOuL9zgDwEYWRJusUZ3ebVw_jOG6yJxTg@mail.gmail.com>
+ <20200522131355.f4bdc2f4h2zyqbku@wittgenstein>
+ <20200522133816.GB210175@google.com>
 MIME-Version: 1.0
-References: <20200517125754.8934-1-ardb@kernel.org> <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
- <20200522134004.GF28750@zn.tnic>
-In-Reply-To: <20200522134004.GF28750@zn.tnic>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 22 May 2020 15:44:21 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHogO=3wAyZPi9WtHP9++N5KH6OjNgY_CQ_o8nZJ5jjVA@mail.gmail.com>
-Message-ID: <CAMj1kXHogO=3wAyZPi9WtHP9++N5KH6OjNgY_CQ_o8nZJ5jjVA@mail.gmail.com>
-Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Dave Young <dyoung@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lenny Szubowicz <lszubowi@redhat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Loic Yhuel <loic.yhuel@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200522133816.GB210175@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 15:40, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, May 22, 2020 at 03:06:20PM +0200, Ard Biesheuvel wrote:
-> > Ping?
->
-> Did you want to make your tags unique from the next pull request onwards
-> and I were supposed to pull this one as is?
->
+On Fri, May 22, 2020 at 09:38:16AM -0400, Joel Fernandes wrote:
+> On Fri, May 22, 2020 at 03:13:55PM +0200, Christian Brauner wrote:
+> > On Thu, May 21, 2020 at 11:55:21AM -0400, Joel Fernandes wrote:
+> > > On Thu, May 21, 2020 at 11:53 AM Joel Fernandes (Google)
+> > > <joel@joelfernandes.org> wrote:
+> > > >
+> > > > On a modern Linux distro, compiling the following program fails:
+> > > >  #include<stdlib.h>
+> > > >  #include<stdint.h>
+> > > >  #include<pthread.h>
+> > > >  #include<linux/sched/types.h>
+> > > >
+> > > >  void main() {
+> > > >          struct sched_attr sa;
+> > > >
+> > > >          return;
+> > > >  }
+> > > >
+> > > > with:
+> > > > /usr/include/linux/sched/types.h:8:8: \
+> > > >                         error: redefinition of ‘struct sched_param’
+> > > >     8 | struct sched_param {
+> > > >       |        ^~~~~~~~~~~
+> > > > In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
+> > > >                  from /usr/include/sched.h:43,
+> > > >                  from /usr/include/pthread.h:23,
+> > > >                  from /tmp/s.c:4:
+> > > > /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
+> > > > note: originally defined here
+> > > >    23 | struct sched_param
+> > > >       |        ^~~~~~~~~~~
+> > > >
+> > > > This is also causing a problem on using sched_attr Chrome. The issue is
+> > > > sched_param is already provided by glibc.
+> > > >
+> > > > Guard the kernel's UAPI definition of sched_param with __KERNEL__ so
+> > > > that userspace can compile.
+> > > >
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > 
+> > > If it is more preferable, another option is to move sched_param to
+> > > include/linux/sched/types.h
+> > 
+> > Might it be worth Ccing libc-alpha here? Seems like one of those classic
+> > header conflicts.
+> 
+> sched_param is defined by POSIX from my reading of the manpage. Is the kernel
+> supposed to define it in the UAPI at all? I guarded it with __KERNEL__ as you
+> can see.
 
-What usually happens is that Ingo applies the patches piecemeal,
-ignoring the tag altogether, so without any coordination between you
-as x86 maintainers or communication back to me, that is what i was
-expecting to happen this time as well.
+Your patch is fine of course. :) It's just that conflicts like this
+have happened before. Another conflict is e.g. in wait.h where the
+kernel has #define P_* and libc has an enum for P_* and it's not at all
+guaranteed that they are identical. Plus, sometimes the order of header
+inclusion matters because of things like this (or something like this).
+That's why having it seen on libc-alpha might help prevent accidentaly
+causing bugs where you now include a header that gives you a different
+definition than you expected.
 
-Note that I have another PR pending since two weeks ago [0].
+> 
+> Resent with libc-alpha CC'd per your suggestion.
 
-So if you want to start dealing with the EFI trees in a different way
-from now on, that is perfectly fine with me, but please align with
-Ingo and Thomas first.
+Thanks!
 
-Thanks,
-Ard.
-
-
-
-[0] https://lore.kernel.org/linux-efi/20200508180157.1816-1-ardb@kernel.org/
+Christian
