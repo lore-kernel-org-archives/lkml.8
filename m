@@ -2,166 +2,330 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B56C520757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LCwSPwdX"
+	by mail.kernel.org (Postfix) with ESMTP id 7151C20826
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbgEVIiJ (ORCPT
+        id S1729772AbgEVIiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:38:09 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50460 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729746AbgEVIiD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:38:03 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M8bcmh118407;
-        Fri, 22 May 2020 03:37:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590136658;
-        bh=yF4xwwVycaty1YYtrvz7tn0azR2eb+OYgNKHjKytnkc=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=LCwSPwdXFLyyOmJwtl+CdoShpJ5fp9tEao2X9/zf2kbnHkrfB6daeZc+naZsHvv10
-         kiw+7ivb0aZ9ids8iQc7RtWrDqU/qMfeuR0E1icglIzgqW8EySon+4xkhX8cnKfZl5
-         zCPoF810ubD13ZCtI79ERZZo13Wjwa8lPZlnB+gI=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M8bc0U071990
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 03:37:38 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 03:37:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 03:37:38 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M8baqV054658;
-        Fri, 22 May 2020 03:37:37 -0500
-Date:   Fri, 22 May 2020 14:07:36 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     <masonccyang@mxic.com.tw>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mark Brown <broonie@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v5 05/19] mtd: spi-nor: add support for DTR protocol
-Message-ID: <20200522083734.hs4wmfplch7icecv@ti.com>
-References: <20200519142642.24131-1-p.yadav@ti.com>
- <20200519142642.24131-6-p.yadav@ti.com>
- <OFAC48157A.F337A12A-ON48258570.0021F23B-48258570.0023CB62@mxic.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <OFAC48157A.F337A12A-ON48258570.0021F23B-48258570.0023CB62@mxic.com.tw>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 22 May 2020 04:38:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:59348 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729759AbgEVIiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:38:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09CF61042;
+        Fri, 22 May 2020 01:38:06 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0EFF43F52E;
+        Fri, 22 May 2020 01:37:59 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v12 04/11] ptp: Reorganize ptp_kvm modules to make it arch-independent.
+Date:   Fri, 22 May 2020 16:37:17 +0800
+Message-Id: <20200522083724.38182-5-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200522083724.38182-1-jianyong.wu@arm.com>
+References: <20200522083724.38182-1-jianyong.wu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/05/20 02:30PM, masonccyang@mxic.com.tw wrote:
-> 
-> Hi Pratyush,
-> 
-> 
-> > +/**
-> > + * spi_nor_spimem_setup_op() - Set up common properties of a spi-mem 
-> op.
-> > + * @nor:      pointer to a 'struct spi_nor'
-> > + * @op:         pointer to the 'struct spi_mem_op' whose properties
-> > + *         need to be initialized.
-> > + * @proto:      the protocol from which the properties need to be set.
-> > + */
-> > +void spi_nor_spimem_setup_op(const struct spi_nor *nor,
-> > +              struct spi_mem_op *op,
-> > +              const enum spi_nor_protocol proto)
-> > +{
-> > +   u8 ext;
-> > +
-> > +   op->cmd.buswidth = spi_nor_get_protocol_inst_nbits(proto);
-> > +
-> > +   if (op->addr.nbytes)
-> > +      op->addr.buswidth = spi_nor_get_protocol_addr_nbits(proto);
-> > +
-> > +   if (op->dummy.nbytes)
-> > +      op->dummy.buswidth = spi_nor_get_protocol_addr_nbits(proto);
-> > +
-> > +   if (op->data.nbytes)
-> > +      op->data.buswidth = spi_nor_get_protocol_data_nbits(proto);
-> > +
-> > +   if (spi_nor_protocol_is_dtr(proto)) {
-> 
-> As mentioned before that I am also patching mx25* which supports 8S-8S-8S 
-> and 
-> 8D-8D-8D mode.
-> 
-> please patch to spi_nor_protocol_is_8_8_8(proto) for 8S-8S-8S mode 
-> support.
+Currently, ptp_kvm modules implementation is only for x86 which includs
+large part of arch-specific code.  This patch move all of those code
+into new arch related file in the same directory.
 
-Like I said before, we should try to avoid creeping up the scope of this 
-series. This series aims to add 8D support. Once this lands, I don't see 
-why you can't 8S support on top. Unless we make a fundamental change 
-that makes it impossible to add 8S support, it should stay as-is.
+Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+---
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_kvm.h                       | 11 +++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 80 +++++-------------
+ drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
+ 4 files changed, 122 insertions(+), 59 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm.h
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
 
-All that said, I fail to see why 8S would have any problems with this 
-function. We just fill in the buswidths from the protocol, and adjust 
-the op if it is DTR. So in case of 8S mode, this function as it is will 
-fill in the buswidths to 8 for all phases. And it won't hit the if block 
-here so this code is of no concern to 8S mode.
+diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+index 7aff75f745dc..baac6f5b243b 100644
+--- a/drivers/ptp/Makefile
++++ b/drivers/ptp/Makefile
+@@ -4,6 +4,7 @@
+ #
  
-> > +      /*
-> > +       * spi-mem supports mixed DTR modes, but right now we can only
-> > +       * have all phases either DTR or STR. IOW, spi-mem can have
-> > +       * something like 4S-4D-4D, but spi-nor can't. So, set all 4
-> > +       * phases to either DTR or STR.
-> > +       */
-> 
->         if (spi_nor_protocol_is_8D_8D_8D(proto) {
-
-No. The adjustments below apply to _all_ DTR ops, not just 8D-8D-8D 
-ones. So in case someone wants to use 4D-4D-4D mode, they won't have to 
-touch this code at all.
+ ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o
++ptp_kvm-y				:= ptp_kvm_$(ARCH).o ptp_kvm_common.o
+ obj-$(CONFIG_PTP_1588_CLOCK)		+= ptp.o
+ obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
+ obj-$(CONFIG_PTP_1588_CLOCK_INES)	+= ptp_ines.o
+diff --git a/drivers/ptp/ptp_kvm.h b/drivers/ptp/ptp_kvm.h
+new file mode 100644
+index 000000000000..4bf1802bbeb8
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Virtual PTP 1588 clock for use with KVM guests
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
++
++int kvm_arch_ptp_init(void);
++int kvm_arch_ptp_get_clock(struct timespec64 *ts);
++int kvm_arch_ptp_get_crosststamp(unsigned long *cycle,
++		struct timespec64 *tspec, void *cs);
+diff --git a/drivers/ptp/ptp_kvm.c b/drivers/ptp/ptp_kvm_common.c
+similarity index 63%
+rename from drivers/ptp/ptp_kvm.c
+rename to drivers/ptp/ptp_kvm_common.c
+index fc7d0b77e118..4fdd8ab11a28 100644
+--- a/drivers/ptp/ptp_kvm.c
++++ b/drivers/ptp/ptp_kvm_common.c
+@@ -8,15 +8,16 @@
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
++#include <linux/slab.h>
+ #include <linux/module.h>
+ #include <uapi/linux/kvm_para.h>
+ #include <asm/kvm_para.h>
+-#include <asm/pvclock.h>
+-#include <asm/kvmclock.h>
+ #include <uapi/asm/kvm_para.h>
  
-> > +      op->cmd.dtr = op->addr.dtr = op->dummy.dtr
-> > +                = op->data.dtr = true;
-> > +
-> > +      /* 2 bytes per clock cycle in DTR mode. */
-> > +      op->dummy.nbytes *= 2;
-> 
->         }
-> 
-> > +
-> > +      ext = spi_nor_get_cmd_ext(nor, op);
-> > +      op->cmd.opcode = (op->cmd.opcode << 8) | ext;
-> > +      op->cmd.nbytes = 2;
-> > +   }
-> > +}
-> > +
-
+ #include <linux/ptp_clock_kernel.h>
+ 
++#include "ptp_kvm.h"
++
+ struct kvm_ptp_clock {
+ 	struct ptp_clock *ptp_clock;
+ 	struct ptp_clock_info caps;
+@@ -24,56 +25,29 @@ struct kvm_ptp_clock {
+ 
+ DEFINE_SPINLOCK(kvm_ptp_lock);
+ 
+-static struct pvclock_vsyscall_time_info *hv_clock;
+-
+-static struct kvm_clock_pairing clock_pair;
+-static phys_addr_t clock_pair_gpa;
+-
+ static int ptp_kvm_get_time_fn(ktime_t *device_time,
+ 			       struct system_counterval_t *system_counter,
+ 			       void *ctx)
+ {
+-	unsigned long ret;
++	unsigned long ret, cycle;
+ 	struct timespec64 tspec;
+-	unsigned version;
+-	int cpu;
+-	struct pvclock_vcpu_time_info *src;
++	struct clocksource *cs;
+ 
+ 	spin_lock(&kvm_ptp_lock);
+ 
+ 	preempt_disable_notrace();
+-	cpu = smp_processor_id();
+-	src = &hv_clock[cpu].pvti;
+-
+-	do {
+-		/*
+-		 * We are using a TSC value read in the hosts
+-		 * kvm_hc_clock_pairing handling.
+-		 * So any changes to tsc_to_system_mul
+-		 * and tsc_shift or any other pvclock
+-		 * data invalidate that measurement.
+-		 */
+-		version = pvclock_read_begin(src);
+-
+-		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+-				     clock_pair_gpa,
+-				     KVM_CLOCK_PAIRING_WALLCLOCK);
+-		if (ret != 0) {
+-			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
+-			spin_unlock(&kvm_ptp_lock);
+-			preempt_enable_notrace();
+-			return -EOPNOTSUPP;
+-		}
+-
+-		tspec.tv_sec = clock_pair.sec;
+-		tspec.tv_nsec = clock_pair.nsec;
+-		ret = __pvclock_read_cycles(src, clock_pair.tsc);
+-	} while (pvclock_read_retry(src, version));
++	ret = kvm_arch_ptp_get_crosststamp(&cycle, &tspec, &cs);
++	if (ret != 0) {
++		pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
++		spin_unlock(&kvm_ptp_lock);
++		preempt_enable_notrace();
++		return -EOPNOTSUPP;
++	}
+ 
+ 	preempt_enable_notrace();
+ 
+-	system_counter->cycles = ret;
+-	system_counter->cs = &kvm_clock;
++	system_counter->cycles = cycle;
++	system_counter->cs = cs;
+ 
+ 	*device_time = timespec64_to_ktime(tspec);
+ 
+@@ -116,17 +90,13 @@ static int ptp_kvm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ 
+ 	spin_lock(&kvm_ptp_lock);
+ 
+-	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+-			     clock_pair_gpa,
+-			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	ret = kvm_arch_ptp_get_clock(&tspec);
+ 	if (ret != 0) {
+ 		pr_err_ratelimited("clock offset hypercall ret %lu\n", ret);
+ 		spin_unlock(&kvm_ptp_lock);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	tspec.tv_sec = clock_pair.sec;
+-	tspec.tv_nsec = clock_pair.nsec;
+ 	spin_unlock(&kvm_ptp_lock);
+ 
+ 	memcpy(ts, &tspec, sizeof(struct timespec64));
+@@ -166,21 +136,13 @@ static void __exit ptp_kvm_exit(void)
+ 
+ static int __init ptp_kvm_init(void)
+ {
+-	long ret;
+-
+-	if (!kvm_para_available())
+-		return -ENODEV;
+-
+-	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
+-	hv_clock = pvclock_get_pvti_cpu0_va();
++	int ret;
+ 
+-	if (!hv_clock)
+-		return -ENODEV;
+-
+-	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
+-			KVM_CLOCK_PAIRING_WALLCLOCK);
+-	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
+-		return -ENODEV;
++	ret = kvm_arch_ptp_init();
++	if (ret) {
++		pr_err("fail to initialize ptp_kvm");
++		return -EOPNOTSUPP;
++	}
+ 
+ 	kvm_ptp_clock.caps = ptp_kvm_caps;
+ 
+diff --git a/drivers/ptp/ptp_kvm_x86.c b/drivers/ptp/ptp_kvm_x86.c
+new file mode 100644
+index 000000000000..aabed1b08a0d
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm_x86.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Virtual PTP 1588 clock for use with KVM guests
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
++
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <asm/pvclock.h>
++#include <asm/kvmclock.h>
++#include <linux/module.h>
++#include <uapi/asm/kvm_para.h>
++#include <uapi/linux/kvm_para.h>
++#include <linux/ptp_clock_kernel.h>
++
++phys_addr_t clock_pair_gpa;
++struct kvm_clock_pairing clock_pair;
++struct pvclock_vsyscall_time_info *hv_clock;
++
++int kvm_arch_ptp_init(void)
++{
++	int ret;
++
++	if (!kvm_para_available())
++		return -ENODEV;
++
++	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
++	hv_clock = pvclock_get_pvti_cpu0_va();
++	if (!hv_clock)
++		return -ENODEV;
++
++	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
++			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
++		return -ENODEV;
++
++	return 0;
++}
++
++int kvm_arch_ptp_get_clock(struct timespec64 *ts)
++{
++	long ret;
++
++	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
++			     clock_pair_gpa,
++			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	if (ret != 0)
++		return -EOPNOTSUPP;
++
++	ts->tv_sec = clock_pair.sec;
++	ts->tv_nsec = clock_pair.nsec;
++
++	return 0;
++}
++
++int kvm_arch_ptp_get_crosststamp(unsigned long *cycle, struct timespec64 *tspec,
++			      struct clocksource **cs)
++{
++	unsigned long ret;
++	unsigned int version;
++	int cpu;
++	struct pvclock_vcpu_time_info *src;
++
++	cpu = smp_processor_id();
++	src = &hv_clock[cpu].pvti;
++
++	do {
++		/*
++		 * We are using a TSC value read in the hosts
++		 * kvm_hc_clock_pairing handling.
++		 * So any changes to tsc_to_system_mul
++		 * and tsc_shift or any other pvclock
++		 * data invalidate that measurement.
++		 */
++		version = pvclock_read_begin(src);
++
++		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
++				     clock_pair_gpa,
++				     KVM_CLOCK_PAIRING_WALLCLOCK);
++		tspec->tv_sec = clock_pair.sec;
++		tspec->tv_nsec = clock_pair.nsec;
++		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
++	} while (pvclock_read_retry(src, version));
++
++	*cs = &kvm_clock;
++
++	return 0;
++}
 -- 
-Regards,
-Pratyush Yadav
-Texas Instruments India
+2.17.1
+
