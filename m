@@ -2,103 +2,110 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECCE206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="m6pBle2o"
+	by mail.kernel.org (Postfix) with ESMTP id E98A12065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgEVKeb (ORCPT
+        id S1729334AbgEVKfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:34:31 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:14546 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728362AbgEVKe3 (ORCPT
+        Fri, 22 May 2020 06:35:04 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:54847 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728362AbgEVKfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:34:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590143669; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=re0ym4TtgaTt3T7R6eYWSsdnKHzfzFMDeaeUuE8IlSA=; b=m6pBle2oS6E5LGzMIXMLNOPhBY/2O+I8M9ZuDrU7wq9cr9F4EaufQnLOKShMuSRMLfl5Zcmw
- d0TI5iTZNCvkweDZUqP1Ywh3VZDebx1WcyoxpjNj7Iojwj/t8pX33KGsHN8HyNcP0mzzLTAt
- zRAGhkFHYSyOYuRz+HSUwBpeZnI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec7aab1.7faa326c2e30-smtp-out-n02;
- Fri, 22 May 2020 10:34:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 56121C43387; Fri, 22 May 2020 10:34:25 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D6CDC433C8;
-        Fri, 22 May 2020 10:34:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D6CDC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "\<netdev\@vger.kernel.org\>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
-References: <20190906185931.19288-1-navid.emamdoost@gmail.com>
-        <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
-        <878shwtiw3.fsf@kamboji.qca.qualcomm.com>
-        <CA+ASDXOgechejxzN4-xPcuTW-Ra7z9Z6EeiQ4wMrEowZc-p+uA@mail.gmail.com>
-        <CA+ASDXM6w-t85hZWcbTqTBA8aye0oka3Nw5YYZH2LqixO-PJzg@mail.gmail.com>
-Date:   Fri, 22 May 2020 13:34:18 +0300
-In-Reply-To: <CA+ASDXM6w-t85hZWcbTqTBA8aye0oka3Nw5YYZH2LqixO-PJzg@mail.gmail.com>
-        (Brian Norris's message of "Wed, 20 May 2020 13:59:20 -0700")
-Message-ID: <87sgfs9s2d.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 22 May 2020 06:35:02 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MRTEr-1jNb3x49Dh-00NPcK for <linux-kernel@vger.kernel.org>; Fri, 22 May
+ 2020 12:35:01 +0200
+Received: by mail-qk1-f174.google.com with SMTP id w3so4673975qkb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:35:00 -0700 (PDT)
+X-Gm-Message-State: AOAM5301fMTLXCscwIgj5zmqD8NvVhUDld8pEXrBE9p1szdln3iqVBr7
+        R35dckFaHIvzvOCe7mRd19Vl7z1k07vHcN3quPg=
+X-Google-Smtp-Source: ABdhPJw02PN89jQLaghKhRZTtfY6WsfKzDAL+DXC4ThLX3EU4DLyXZpzZP+4lu/INdppa9h1Ex+aEXLdggZRZcql5jY=
+X-Received: by 2002:a37:bc7:: with SMTP id 190mr14053233qkl.286.1590143699835;
+ Fri, 22 May 2020 03:34:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200505150722.1575-1-geert+renesas@glider.be>
+ <20200505150722.1575-7-geert+renesas@glider.be> <20200522181118.36de5dd9@xhacker.debian>
+In-Reply-To: <20200522181118.36de5dd9@xhacker.debian>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 22 May 2020 12:34:43 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1qu-E8XKPiaBF0PqgGfBjNHbcONz-tgby3jt1X1X8Ymw@mail.gmail.com>
+Message-ID: <CAK8P3a1qu-E8XKPiaBF0PqgGfBjNHbcONz-tgby3jt1X1X8Ymw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/15] ARM: berlin: Drop unneeded select of HAVE_SMP
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        SoC Team <soc@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wScuWOB3lDpbSmWnmsciaTQZtZSH2TcEz2dX/aED0fMTllLJ4N1
+ 8OevsIeq5i37Oa/5cqGGoXFX1t/H2IJuV1I+0nVaWbYaHqRcAW+Qsil7PBp9+ro2TTyVOHH
+ LScdqfENR2rFGuHTds3bfWNMJUg+wkPli8L7K7Mb2BiT+PVH2STym11wIhfJPcN2UJWrXEX
+ KkBmh20dmuJ+oc0cAQ7Iw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s9QqT+9x2M4=:f3R4KM+Xo3eqcFymP1DzbD
+ KSo5VjkLWTKHmNGiwn8Hf51KEYW2sOP08Mo6p8JPake5UJ0+7h53CEYXq+UFPJjydBsHIOcgU
+ 0tuhgNfCCYTQ83sKIqvUeHgCuiDyteowAeVD+sBeT48fumc5apS8OVvZe4NvQDf1BvO3Qyk/j
+ O3fUwAOMcU8oqhj6Ev1sXgXj4zbdWh8bej6d3Ui5cG05b9x2rJtRyzg8TIUPZl3EBjJ5kGhey
+ UOveyocGLOdHSQCvBoJ3NesQDXfRlaI88eGOy7PJmbvT+fKxewA/NufrsxJPVwg/IV0p6EJt6
+ LBPCMpmdlisMg1o32C+w9ouF0dtBRdgSwfyhI1cQ3b3O8zKE44l0bqr8ndLPXNu5BikebCFCH
+ m7buhXVBUm8mQ4vWitP5eCyFnpGWSUlVhkwtuknpCqvXsKzoA9MkIBRW7tuc5N3F51BhfJMce
+ Zzxo9dc9VCAB/b6oql/srkptG4uPqBvGi0IM5V0deeeMDFUsRieq/OPVxLwRulnuaeTJJSHXi
+ eifQshig4UIkgcshIHEXiMmlXre3K378HT5KD1rCo7kGBXEckMx1Mv3WDkTh5+tNmOFw6VCU1
+ kWjyY3JN2bxdGnyr625idpBGnYn1d3HLIdAOoee5HfmmXxsAy3quhfmkPXrOQjKyvxzSe+ZnB
+ 11bfYrvLQ9tWXFvst5XRIMUt7erdMr/x+TJBjBcxUwxErVHJHOPSwcuxpNi7z28kD7eGpLrbC
+ FCgU25jJ1qDyMnZ0A5D4okCwKh8xspRYZRiCu+SLCgfW5dk4lY2puDP3AFUbWYETG5XO4Osrw
+ 2m3NYWmulXa6DfXC+HMVcM7WLkovDQUoyIbfByPAjHjnFa/OnU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
-
-> On Wed, May 13, 2020 at 12:02 PM Brian Norris <briannorris@chromium.org> wrote:
->>
->> On Wed, May 13, 2020 at 12:05 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->> > Actually it's already reverted in -next, nobody just realised that it's
->> > a regression from commit 728c1e2a05e4:
->> >
->> > ced21a4c726b ath9k: Fix use-after-free Read in htc_connect_service
->>
->> Nice.
->>
->> > v5.8-rc1 should be the first release having the fix.
->>
->> So I guess we have to wait until 5.8-rc1 (when this lands in mainline)
->> to send this manually to stable@vger.kernel.org?
-
-Yeah, following Option 2:
-
-https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-
-> For the record, there are more reports of this, if I'm reading them right:
+On Fri, May 22, 2020 at 12:13 PM Jisheng Zhang
+<Jisheng.Zhang@synaptics.com> wrote:
 >
-> https://bugzilla.kernel.org/show_bug.cgi?id=207797
+> Hi Arnd, Kevin, Olof,
+>
+> On Tue,  5 May 2020 17:07:13 +0200 Geert Uytterhoeven wrote:
+>
+> >
+> >
+> > Support for Marvell Berlin SoCs depends on ARCH_MULTI_V7.
+> > As the latter selects HAVE_SMP, there is no need for MACH_BERLIN_BG2 to
+> > select HAVE_SMP.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+>
+> The patch looks good to me. I want to know what will be the mainline
+> path of this series. SoC maintainers take it then send A PR to arm-soc?
+> Or each SoC maintainers ack it, arm-soc will take the whole series?
+> If later, then
+>
+> Acked-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>
+>
+> This is the first time I see a series touch different SoC platforms.
 
-Thanks for the followup, this case is a good example why small cleanup
-patches are not always that simple and easy as some people claim :)
+I have already merged it. The normal way we do this is that platform
+maintainers can choose to merge individual patches when they
+are happy with them on the early review, or provide an Ack for
+them to get merged as a branch.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+I picked up v2 of the series as there seemed to be a sufficient
+number of Acks and everyone that commented had agreed
+in principle.
+
+      Arnd
