@@ -2,49 +2,72 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D937206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D407F20812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgEVIsn (ORCPT
+        id S1729353AbgEVItS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:48:43 -0400
-Received: from fgw20-4.mail.saunalahti.fi ([62.142.5.107]:24063 "EHLO
-        fgw20-4.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728152AbgEVIsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:48:43 -0400
-X-Greylist: delayed 963 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 May 2020 04:48:41 EDT
-Received: from imac.makisara.private (85-131-115-176.bb.dnainternet.fi [85.131.115.176])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTPSA
-        id ca2c9ed3-9c06-11ea-ba22-005056bd6ce9;
-        Fri, 22 May 2020 11:32:36 +0300 (EEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] scsi: st: convert convert get_user_pages() -->
- pin_user_pages()
-From:   =?utf-8?B?IkthaSBNw6RraXNhcmEgKEtvbHVtYnVzKSI=?= 
-        <kai.makisara@kolumbus.fi>
-In-Reply-To: <494478b6-9a8c-5271-fc9f-fd758af850c0@acm.org>
-Date:   Fri, 22 May 2020 11:32:36 +0300
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
+        Fri, 22 May 2020 04:49:18 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47412 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728152AbgEVItS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:49:18 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2nskcdex8U3AA--.97S3;
+        Fri, 22 May 2020 16:48:45 +0800 (CST)
+Subject: Re: [PATCH v5 2/4] mm/memory.c: Update local TLB if PTE entry exists
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <1590031837-9582-1-git-send-email-maobibo@loongson.cn>
+ <1590031837-9582-2-git-send-email-maobibo@loongson.cn>
+ <20200521122211.7450025a41865a67df6a7303@linux-foundation.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <a04b7a67-6e1c-9568-a23e-f033191b5d32@loongson.cn>
+Date:   Fri, 22 May 2020 16:48:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <20200521122211.7450025a41865a67df6a7303@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Message-Id: <C1CFE522-CEA6-4130-9433-73243BC00782@kolumbus.fi>
-References: <20200519045525.2446851-1-jhubbard@nvidia.com>
- <494478b6-9a8c-5271-fc9f-fd758af850c0@acm.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-CM-TRANSID: AQAAf9Dxf2nskcdex8U3AA--.97S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWryfKr1rGrWUGF4kCF13twb_yoW5GrWDpF
+        W2ka1fJF4vgryxCF4xXw1jvF4fZ34rKF4DJryFkr90k390gw4SyryUJ3y8Zry5Cwn3ta12
+        vF4jgFZ5WayDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvKb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
+        Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+        17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
+        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+        VjvjDU0xZFpf9x07b5sjbUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -52,46 +75,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On 21. May 2020, at 22.47, Bart Van Assche <bvanassche@acm.org> wrote:
+On 05/22/2020 03:22 AM, Andrew Morton wrote:
+> On Thu, 21 May 2020 11:30:35 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
 > 
-> On 2020-05-18 21:55, John Hubbard wrote:
->> This code was using get_user_pages*(), in a "Case 2" scenario
->> (DMA/RDMA), using the categorization from [1]. That means that it's
->> time to convert the get_user_pages*() + put_page() calls to
->> pin_user_pages*() + unpin_user_pages() calls.
->> 
->> There is some helpful background in [2]: basically, this is a small
->> part of fixing a long-standing disconnect between pinning pages, and
->> file systems' use of those pages.
->> 
->> Note that this effectively changes the code's behavior as well: it now
->> ultimately calls set_page_dirty_lock(), instead of SetPageDirty().This
->> is probably more accurate.
->> 
->> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
->> dealing with a file backed page where we have reference on the inode it
->> hangs off." [3]
->> 
->> Also, this deletes one of the two FIXME comments (about refcounting),
->> because there is nothing wrong with the refcounting at this point.
->> 
->> [1] Documentation/core-api/pin_user_pages.rst
->> 
->> [2] "Explicit pinning of user-space pages":
->>    https://lwn.net/Articles/807108/
->> 
->> [3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+>> If two threads concurrently fault at the same address, the thread that
+>> won the race updates the PTE and its local TLB. For now, the other
+>> thread gives up, simply does nothing, and continues.
+>>
+>> It could happen that this second thread triggers another fault, whereby
+>> it only updates its local TLB while handling the fault. Instead of
+>> triggering another fault, let's directly update the local TLB of the
+>> second thread.
+>>
+>> It is only useful to architectures where software can update TLB, it may
+>> bring out some negative effect if update_mmu_cache is used for other
+>> purpose also. It seldom happens where multiple threads access the same
+>> page at the same time, so the negative effect is limited on other arches.
+>>
+>> With specjvm2008 workload, smp-race pgfault counts is about 3% to 4%
+>> of the total pgfault counts by watching /proc/vmstats information
+>>
 > 
-> Kai, why is the st driver calling get_user_pages_fast() directly instead
-> of calling blk_rq_map_user()? blk_rq_map_user() is already used in
-> st_scsi_execute(). I think that the blk_rq_map_user() implementation is
-> also based on get_user_pages_fast(). See also iov_iter_get_pages_alloc()
-> in lib/iov_iter.c.
+> I'm sorry to keep thrashing this for so long, but I'd really prefer not
+> to add any overhead to architectures which don't need it.  However,
+> we're getting somewhere!
 > 
-The reason is that the blk_ functions were not available when that part
-of the code was done. Nobody has converted that to use the more
-modern functions because the old method still works.
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -2436,10 +2436,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+>>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+>>  			/*
+>>  			 * Other thread has already handled the fault
+>> -			 * and we don't need to do anything. If it's
+>> -			 * not the case, the fault will be triggered
+>> -			 * again on the same address.
+>> +			 * and update local tlb only
+>>  			 */
+>> +			update_mmu_cache(vma, addr, vmf->pte);
+> 
+> Now, all the patch does is to add new calls to update_mmu_cache().
+> 
+> So can we replace all these with a call to a new
+> update_mmu_cache_sw_tlb() (or whatever) which is a no-op on
+> architectures which don't need the additional call?
+> 
+> Also, I wonder about the long-term maintainability.  People who
+> regularly work on this code won't be thinking of this MIPS peculiarity
+> and it's likely that any new calls to update_mmu_cache_sw_tlb() won't
+> be added where they should have been.  Hopefully copy-and-paste from
+> the existing code will serve us well.  Please do ensure that the
+> update_mmu_cache_sw_tlb() implementation is carefully commented so
+> that people can understand where they should (and shouldn't) include
+> this call.
+Well, I will do that. MIPS is actually somewhat different with generic
+architectures, and old MIPS system does not support hardware page walk,
+it requires software to update TLB entry.
 
-Thanks,
-Kai
+regards
+bibo, mao
+
+ 
 
