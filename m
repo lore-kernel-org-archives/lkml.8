@@ -4,142 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC9CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A0C20897
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F129920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iX98S1WG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VwHlaoAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgEVP7r (ORCPT
+        id S1730778AbgEVQAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:59:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39672 "EHLO
+        Fri, 22 May 2020 12:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730197AbgEVP7q (ORCPT
+        with ESMTP id S1730416AbgEVQAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:59:46 -0400
+        Fri, 22 May 2020 12:00:01 -0400
 Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF5AC061A0E;
-        Fri, 22 May 2020 08:59:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id o5so11836826iow.8;
-        Fri, 22 May 2020 08:59:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F03AC061A0E;
+        Fri, 22 May 2020 09:00:01 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id k18so11913544ion.0;
+        Fri, 22 May 2020 09:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jtPsqd22g3xbib6xneI+Ag2OgkbCbIH9D8ABYL46yvQ=;
-        b=iX98S1WGX0zPid+2GXhESW1748JtgtC//+o9Z1F8m/xa5JKbz+Xyp5/HEm3s+HscxF
-         PgYK8FIamFK3CI58sGojA9grfQvJZFnP9ya0ZoF5K4tTa6/xzRJMIdxyTCENI3GdOoDh
-         5zW/tbDQNIHSibqa3CRDg6aEZXrK2m+DmkHRGip9WLbfKWWeEuesPxQup+wQDdzGHCtX
-         FX5w21SF6Ba8f/5juYPYHOwSoy7ijAt1xiGYhc1ZavjgL8/W2sP8mvOHKjwEMav5S+D+
-         WHwQ5eKEygwvlcO26ca3Ir7ykZ1XlL1DRq2jZ/p6dmIyE2Cy7ofcSXkZvqFLg3hwYr77
-         nDmA==
+        bh=FHIFAWUYDhJ80n0eXg0z7nTHf0/vDwtgn87D1kTvKZw=;
+        b=VwHlaoAfnE0jrQI4ME3ZjZ87Fl8fMiI7FOB/65iDK32jeXJ0r6Bf6SnfYRIVEO6k6m
+         DzlctHIuvMnhbnvAziB3ubyH4olRzONZWriz82tW84id41d+G0aaZsGJzAQD9SqY6STl
+         U+KIXtBjUhXfneehG1qd35VDkYmEVKk7k7U5Q0d9nJw20AfuQV3MvWXVSY1liADEoJS7
+         FgJEadNiBp+b7li6e5pXHsRL5ssVBlR672GS1Q9jDnRZiYAnpONVjiZRHjbbr9FFH8d8
+         W/7kM258Bwcm/cHTYm/kHaSY9DU3wWohGjofhiEvbcNCowmRsk2+eu46fBFd/xkb9Pl+
+         kx/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jtPsqd22g3xbib6xneI+Ag2OgkbCbIH9D8ABYL46yvQ=;
-        b=IQ5Z/PadTVSGtkA9whMgjLLZpQI+Zje2FfMa7ORqcSY4oJHnDw8TTHU+gweps6Sl7/
-         OCt8hGqB7ORYRAQdtHmEW3lh4oamGbXd/CFSH12CY6jpfSIhQ/95iZYWlAcAOPg2jEkI
-         OJEODy5aNg5z8wTB2PmViQfzAzDRt+jg2+RRafH0J9eGEzOiFfjtzM3MUmL1iyxITcOZ
-         oduK/1iPkeeP5OCxfJsmHj0mk2ARBHtQD6YmUZvgRT1xvq2tmuU+RA+4M4bPKHN4oJfs
-         GfgEmNfS//zGmIWVRgKZmh4SDzjKOzXcsy/qgIn5Ug0M/s/EJrPR7AE5CbEsRtCz2PIU
-         fGIQ==
-X-Gm-Message-State: AOAM530eMg6yXLnbLv/W8ItzZmfiVBEkDPQ5ol4hE5yYA0gRS2Cppqix
-        1PTWMSSkrc2DFNu1a9dacXBBphOcbuXmKfGg9c4=
-X-Google-Smtp-Source: ABdhPJwEADjPyPpOhtgfkIVLI9+BWB8R/8zf8Ln6JidFocTsi9UCdU026PUhwWp0FEIDIdvlr24GL48qnx64PVlZdiY=
-X-Received: by 2002:a02:212c:: with SMTP id e44mr8556443jaa.109.1590163185281;
- Fri, 22 May 2020 08:59:45 -0700 (PDT)
+        bh=FHIFAWUYDhJ80n0eXg0z7nTHf0/vDwtgn87D1kTvKZw=;
+        b=A+yNY/YXKJ6E9VflmGi2yzcNMcGYRk8ULZrbxPRdk9Rxt1TSv4XA+NW9MZsR7t9sUZ
+         Oikc+TKegcjZoGLfF2fG05y2JbGuZEQJA2eEPHuy6ooD5J+81pdxFuI8S65rqRD82BeL
+         IBz4r2vB7OTxRO0A6vTz08ngBHG7i028l9TiVVOuDH1hppRf72Kke1JdjMcibvagaXUl
+         MoaQZKDhzXF0wDERXCyMclhTbGWPo+4mwpLYmvNzoiTIMpAFg+jRX/5+lZg5dDFT/xLh
+         fptOD0p9lDhRtqjQC/AU1Mz6C/o7KHjl5+kJvYsD3kseM5Q9uBDi0hh5D3KTHdETv85D
+         nzCg==
+X-Gm-Message-State: AOAM532SrHLahFWbAEx/PeWgngUZGGCOOO5JFcq+kXQjGxjJdV3W16O3
+        PU9XpubBQfVg5h5e2x3jMRGTMVDs+AOnvqpDDeU=
+X-Google-Smtp-Source: ABdhPJzAQJiDrgeJy7rhfX0pAkio1uuxAwG3849yDdBeiLJsJGxodT7NQRbXZ/oKCcFCwEsCtRUE249ryL/Lt2qOMyI=
+X-Received: by 2002:a05:6638:631:: with SMTP id h17mr2552012jar.137.1590163200792;
+ Fri, 22 May 2020 09:00:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505084127.12923-1-laoar.shao@gmail.com> <20200505084127.12923-3-laoar.shao@gmail.com>
- <CA+G9fYseWc_7yq0M5Onju_HxbFid6DbuuaEFf-KUpqfxdF-QTg@mail.gmail.com>
- <CALOAHbBTt1pMo0kwheWqPfU7RTXcDHWJ-x8=5mpw327uiy2qzA@mail.gmail.com> <CA+G9fYtmpjunUetTmf2yquB1rwZA+nnWOiueWbAMx483c0wUvQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYtmpjunUetTmf2yquB1rwZA+nnWOiueWbAMx483c0wUvQ@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 22 May 2020 23:59:09 +0800
-Message-ID: <CALOAHbCdXrU1AeLd4pWubutuG6HP4xKvxRkXeOv=sd_MMW58rg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] mm, memcg: Decouple e{low,min} state mutations
- from protection checks
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Down <chris@chrisdown.name>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
+References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
+ <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
+ <20200522113634.GE5801@sirena.org.uk> <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
+In-Reply-To: <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Fri, 22 May 2020 23:59:25 +0800
+Message-ID: <CAL9mu0JZ4Qy+m2oF9TSTRqA_mM0J89huCt3t_Gs7qHa=3LxhBw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:52 PM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
+On Fri, May 22, 2020 at 10:57 PM dillon min <dillon.minfei@gmail.com> wrote:
 >
-> On Fri, 22 May 2020 at 17:49, Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > On Fri, May 22, 2020 at 7:01 PM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > On Tue, 5 May 2020 at 14:12, Yafang Shao <laoar.shao@gmail.com> wrote:
-> > > >
-> > > > From: Chris Down <chris@chrisdown.name>
-> > > >
-> > > > mem_cgroup_protected currently is both used to set effective low and min
-> > > > and return a mem_cgroup_protection based on the result.  As a user, this
-> > > > can be a little unexpected: it appears to be a simple predicate function,
-> > > > if not for the big warning in the comment above about the order in which
-> > > > it must be executed.
-> > > >
-> > > > This change makes it so that we separate the state mutations from the
-> > > > actual protection checks, which makes it more obvious where we need to be
-> > > > careful mutating internal state, and where we are simply checking and
-> > > > don't need to worry about that.
-> > >
-> > > This patch is causing oom-killer while running mkfs -t ext4 on i386 kernel
-> > > running on x86_64 machine version linux-next 5.7.0-rc6-next-20200521.
-> > >
-> >
-> > Hi Narash,
-> >
-> > Thanks for your report.
-> > My suggestion to the issue found by you is reverting this bad commit.
+> hi Mark,
 >
-> Thanks for giving details on this problem.
-> I am not sure who will propose reverting this patch on the linux-next tree.
-> Please add Reported-by if it is sane.
+> Thanks for reviewing.
 >
-
-I will do it.
-If no one has objection to my proposal, I will send it tomorrow.
-
+> On Fri, May 22, 2020 at 7:36 PM Mark Brown <broonie@kernel.org> wrote:
 > >
-> > As I have explained earlier in another mail thread [1] that the usage
-> > around memcg->{emin, elow} is very buggy.
-> > We shouldn't use memcg->{emin, elow} in the reclaim context directly,
-> > because  these two values can be modified by many reclaimers, so the
-> > good usage of it is storing the protection value into the
-> > scan_control. IOW, different reclaimers have different protection.
-> > But unfortunately my suggestion is ignored.
+> > On Mon, May 18, 2020 at 07:09:20PM +0800, dillon.minfei@gmail.com wrote:
 > >
-> > We can set them to 0 before using them to workaround the issue found
-> > by you, but the fact is that we will introduce a new issue once we fix
-> > an old issue.
+> > > 2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
+> > > null, we must add dummy data sent out before read data.
+> > > so, add stm32f4_spi_tx_dummy() to handle this situation.
 > >
-> > [1]. https://lore.kernel.org/linux-mm/20200425152418.28388-1-laoar.shao@gmail.com/
+> > There are flags SPI_CONTROLLER_MUST_TX and SPI_CONTROLLER_MUST_RX flags
+> > that the driver can set if it needs to, no need to open code this in the
+> > driver.
 >
+> Yes, after check SPI_CONTROLLER_MUST_TX in drivers/spi/spi.c , it's
+> indeed to meet
+> this situation,  i will try it and sumbmit a new patch.
 >
-> - Naresh
+> thanks.
+>
+> best regards
+>
+> Dillon
 
+Hi Mark,
 
+There might be a conflict with 'SPI_CONTROLLER_MUST_TX' and 'SPI_3WIRE' mode,
+i need to know the SPI_3WIRE direction,  currently i get this
+information from 'struct spi_device'
+and 'struct spi_transfer'
+if ((spi_device->mode & SPI_3WIRE) && (spi_transfer->tx_buf == NULL)
+&& (spi_transfer->rx_buf != NULL))
+    this is a SPI_3WIRE_RX transfer
+if ((spi_device->mode & SPI_3WIRE) && (spi_transfer->tx_buf != NULL)
+&& (spi_transfer->rx_buf == NULL))
+    this is a SPI_3WIRE_TX transfer
 
--- 
-Thanks
-Yafang
+but, after spi-core create a dummy tx_buf or rx_buf, then i can't get
+the correct spi_3wire direction.
+actually, this dummy tx_buf is useless for SPI_3WIRE. it's has meaning
+for SPI_SIMPLE_RX mode,
+simulate SPI_FULL_DUMPLEX
+
+how do you think?
+
+thanks
+
+best regards
+
+Dillon
