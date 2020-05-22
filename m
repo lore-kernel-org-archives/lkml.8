@@ -2,136 +2,111 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85319C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6392720738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="clV4Tc1E"
+	by mail.kernel.org (Postfix) with ESMTP id AABD32073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731330AbgEVWtT (ORCPT
+        id S1731233AbgEVWwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731254AbgEVWtS (ORCPT
+        Fri, 22 May 2020 18:52:08 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36681 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731029AbgEVWwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:49:18 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB06C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:49:17 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t7so5004534plr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=5Niesz+2MAyLragVp6DehMUQoLdj3CSU9Zt3Gj3FZgA=;
-        b=clV4Tc1EUrpbmdlkOwp9Wqgo/P+RrtzAqyiBFRgmTC2+VaIklkFaWnVYOb9yytjlAB
-         BulBPRmlvjlGei3ckNGeX2wlknWoMlQT+cyUkjqnYa5t+kqpJ2/0vmhYkNnIfzhTwXHN
-         w4WMZhUpzH+IPlUgR8oEKOUisnTq7wpWMPPm8=
+        Fri, 22 May 2020 18:52:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id c16so13209429iol.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:52:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=5Niesz+2MAyLragVp6DehMUQoLdj3CSU9Zt3Gj3FZgA=;
-        b=WadGBVzG9iluN8SIR7tuMz6nzB9k1mCYvHYw4mcBJHH4DofsbPoHoGwBBjMBx3ncrF
-         O2/hI3oLsDIk9GIUDuynSu6v1lYRF9HUCaGj32ozuVdqw7sM1hMfyXHje+zaG8cy4IqQ
-         kZ/pgWEB1a4GeT+8zh4rgDawt856Lvj49tUCEu6cBMHi7kgS4hMUDvEHAWhJK6d3HmIz
-         nr2fffY8/29LA6HjvfpIY/tNxbTTZpyJ5sn3eubMJquYtfCOvBIuFbnkPRC1HMeEfySq
-         ea4KXR9vt9FdnIE7/lZGrBZHX3W22UjSDjrbGhPKShRBbbg80uMSNnaTCCHRtD/T836u
-         4w1A==
-X-Gm-Message-State: AOAM531lDVjg9yExxLuafCnDYNheBmMW0bSGDwuuQh4RVIaMgckfJpzK
-        krLjoMc+IUh3Dgb3jFKihhBd4Q==
-X-Google-Smtp-Source: ABdhPJy/3Z+8W3/h6QRK7NWHSKVeWfJ0+rwlb37Q0sp37fUTStq6KXecUdx34b/Znd6BtcfLNZMcvg==
-X-Received: by 2002:a17:90a:c004:: with SMTP id p4mr7433745pjt.170.1590187757163;
-        Fri, 22 May 2020 15:49:17 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id z18sm7049152pgi.68.2020.05.22.15.49.08
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uexahIfrZLo1jpnIRsbB+Nwjv1OAdXGD5qQT3+o+NlA=;
+        b=JiZgeZnRXwnJKdphzmTGw3f2hbl70ilRh3mSMGtFItWtXewZc0KIJfenhAIHQ1tImo
+         EDlmpKd0JOpC39ZA7Iq1q8c/KcmIJVSs/xlwH3nhVEe/wYTpfA5kdk6yKV1/BmBLOkm7
+         mzIH1jyg2P7iaKprvtubCybXFCPTt3fpkcMAwsw2R7qR9RnsudlvxpEBfwupHTEWSBl1
+         izyldGWo8MPmqFpgOoI4HINN4eZVGUTcNwfUkbzFSdOFqt3nfcg0ZBhsV1T8n2IIcn1d
+         6zh9D5yzhB2GrdCKyFYesi/L4CX0LuMZiIpLyNnImEb840lsPpET0QHrEb6psYrtObWy
+         cBoA==
+X-Gm-Message-State: AOAM533PNlIKrBmjhef0JzDBvLLBI6qsGpu4fn5dw5D7efJwrIvAKEVM
+        zIolKAo6csdYZl0SwTJf80OLRhvXZ30=
+X-Google-Smtp-Source: ABdhPJz3mNLbeaPEjcaL/bT7ZdZiT930CNrg8YpncGTaKfrHvz8iTqvMI1NyVN/bCeYKpwvTH2SGsA==
+X-Received: by 2002:a5e:8413:: with SMTP id h19mr5188110ioj.140.1590187927312;
+        Fri, 22 May 2020 15:52:07 -0700 (PDT)
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com. [209.85.166.51])
+        by smtp.gmail.com with ESMTPSA id t189sm1064640iod.16.2020.05.22.15.52.07
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 15:49:16 -0700 (PDT)
-Subject: Re: [PATCH] firmware_loader: change enum fw_opt to u32
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-References: <20200522214658.12722-1-scott.branden@broadcom.com>
- <20200522224508.GE11244@42.do-not-panic.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <d87aabd0-1195-64ae-d871-b0771be832a8@broadcom.com>
-Date:   Fri, 22 May 2020 15:49:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 15:52:07 -0700 (PDT)
+Received: by mail-io1-f51.google.com with SMTP id f4so13147441iov.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:52:07 -0700 (PDT)
+X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr5149773iow.70.1590187926885;
+ Fri, 22 May 2020 15:52:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200522224508.GE11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200424115112.22437-1-ioana.ciornei@nxp.com>
+In-Reply-To: <20200424115112.22437-1-ioana.ciornei@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 22 May 2020 17:51:43 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ28r188FFfrJXBUTiGnFh43Y8Z-vi_dJKg3WLh0cr7rA@mail.gmail.com>
+Message-ID: <CADRPPNQ28r188FFfrJXBUTiGnFh43Y8Z-vi_dJKg3WLh0cr7rA@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: dpio: Prefer the CPU affine DPIO
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Roy Pledge <roy.pledge@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+On Fri, Apr 24, 2020 at 6:52 AM Ioana Ciornei <ioana.ciornei@nxp.com> wrote:
+>
+> From: Roy Pledge <roy.pledge@nxp.com>
+>
+> Use the cpu affine DPIO unless there isn't one which can happen
+> if less DPIOs than cores are assign to the kernel.
+>
+> Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-On 2020-05-22 3:45 p.m., Luis Chamberlain wrote:
-> On Fri, May 22, 2020 at 02:46:58PM -0700, Scott Branden wrote:
->>   
->>   /**
->> - * enum fw_opt - options to control firmware loading behaviour
->> + * fw_opt - options to control firmware loading behaviour
->>    *
->>    * @FW_OPT_UEVENT: Enables the fallback mechanism to send a kobject uevent
->>    *	when the firmware is not found. Userspace is in charge to load the
->> @@ -33,15 +33,13 @@
->>    *	the platform's main firmware. If both this fallback and the sysfs
->>    *      fallback are enabled, then this fallback will be tried first.
->>    */
->> -enum fw_opt {
->> -	FW_OPT_UEVENT			= BIT(0),
->> -	FW_OPT_NOWAIT			= BIT(1),
->> -	FW_OPT_USERHELPER		= BIT(2),
->> -	FW_OPT_NO_WARN			= BIT(3),
->> -	FW_OPT_NOCACHE			= BIT(4),
->> -	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
->> -	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
->> -};
->> +#define FW_OPT_UEVENT			BIT(0)
->> +#define FW_OPT_NOWAIT			BIT(1)
->> +#define FW_OPT_USERHELPER		BIT(2)
->> +#define FW_OPT_NO_WARN			BIT(3)
->> +#define FW_OPT_NOCACHE			BIT(4)
->> +#define FW_OPT_NOFALLBACK_SYSFS		BIT(5)
->> +#define FW_OPT_FALLBACK_PLATFORM	BIT(6)
-> Everything looked good up to here. The enum defines each flag.
-> We just want to use an enum for *one* flag represetnation, not
-> a bundle.
-I do not know exactly what you are looking for then.  The FW_OPT_* 
-values are OR'd
-together in the code.  You still want the fw_opt enum above left in 
-place entirely
-and then the values used in OR'd together?
+Applied for next.  Thanks.
 
->    Luis
+Regards,
+Leo
 
+> ---
+>  drivers/soc/fsl/dpio/dpio-service.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
+> index cd4f6410e8c2..f1080c7a3fe1 100644
+> --- a/drivers/soc/fsl/dpio/dpio-service.c
+> +++ b/drivers/soc/fsl/dpio/dpio-service.c
+> @@ -58,7 +58,7 @@ static inline struct dpaa2_io *service_select_by_cpu(struct dpaa2_io *d,
+>          * If cpu == -1, choose the current cpu, with no guarantees about
+>          * potentially being migrated away.
+>          */
+> -       if (unlikely(cpu < 0))
+> +       if (cpu < 0)
+>                 cpu = smp_processor_id();
+>
+>         /* If a specific cpu was requested, pick it up immediately */
+> @@ -70,6 +70,10 @@ static inline struct dpaa2_io *service_select(struct dpaa2_io *d)
+>         if (d)
+>                 return d;
+>
+> +       d = service_select_by_cpu(d, -1);
+> +       if (d)
+> +               return d;
+> +
+>         spin_lock(&dpio_list_lock);
+>         d = list_entry(dpio_list.next, struct dpaa2_io, node);
+>         list_del(&d->node);
+> --
+> 2.17.1
+>
