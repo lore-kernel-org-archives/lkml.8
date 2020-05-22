@@ -2,107 +2,111 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1996CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99BE420723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FD920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgEVLsl (ORCPT
+        id S1729393AbgEVLsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:48:41 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:6674 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728495AbgEVLsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:48:40 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgC3GTwJvMde1lICAg--.3119S4;
-        Fri, 22 May 2020 19:48:29 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
+        Fri, 22 May 2020 07:48:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35406 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEVLsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:48:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 18949AE41;
+        Fri, 22 May 2020 11:48:53 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 7834A1E126B; Fri, 22 May 2020 13:48:48 +0200 (CEST)
+Date:   Fri, 22 May 2020 13:48:48 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Fri, 22 May 2020 19:48:24 +0800
-Message-Id: <20200522114824.8554-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgC3GTwJvMde1lICAg--.3119S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fury5tFWrWr4rXwb_yoW8GFWDpr
-        48Wa4YkFW0qa1fKFyUZw1DZFy5u34aq3yfKrW8C3Zxuan8AFyUtr1rXry2vF48ZFWkAF47
-        Aas8A3y3AF10vFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9C1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-        AKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Av
-        z4vE14v_Gw4l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s
-        026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-        JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-        v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-        j40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxV
-        W8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdxhLUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgIIBlZdtOQq2AAAsn
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 7/8] fs/ext4: Introduce DAX inode flag
+Message-ID: <20200522114848.GC14199@quack2.suse.cz>
+References: <20200521191313.261929-1-ira.weiny@intel.com>
+ <20200521191313.261929-8-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521191313.261929-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Thu 21-05-20 12:13:12, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> 
+> Set the flag to be user visible and changeable.  Set the flag to be
+> inherited.  Allow applications to change the flag at any time with the
+> exception of if VERITY or ENCRYPT is set.
+> 
+> Disallow setting VERITY or ENCRYPT if DAX is set.
+> 
+> Finally, on regular files, flag the inode to not be cached to facilitate
+> changing S_DAX on the next creation of the inode.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+...
 
-Changelog:
+> @@ -303,6 +318,16 @@ static int ext4_ioctl_setflags(struct inode *inode,
+>  	unsigned int jflag;
+>  	struct super_block *sb = inode->i_sb;
+>  
+> +	if (ext4_test_inode_flag(inode, EXT4_INODE_DAX)) {
+> +		if (ext4_test_inode_flag(inode, EXT4_INODE_VERITY) ||
+> +		    ext4_test_inode_flag(inode, EXT4_INODE_ENCRYPT) ||
+> +		    ext4_test_inode_state(inode,
+> +					  EXT4_STATE_VERITY_IN_PROGRESS)) {
+> +			err = -EOPNOTSUPP;
+> +			goto flags_out;
+> +		}
+> +	}
 
-v2: - Merge two patches that fix runtime PM imbalance in
-      tegra_adma_probe() and tegra_adma_alloc_chan_resources()
-      respectively.
----
- drivers/dma/tegra210-adma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The way this check is implemented wouldn't IMO do what we need... It
+doesn't check the flags that are being set but just the current inode
+state. I think it should rather be:
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index c4ce5dfb149b..2d6e419b6eac 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
- 
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_sync(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -870,7 +871,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0)
--		goto rpm_disable;
-+		goto rpm_put;
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
-@@ -921,7 +922,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	dma_async_device_unregister(&tdma->dma_dev);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
--rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
- irq_dispose:
- 	while (--i >= 0)
+	if ((flags ^ oldflags) & EXT4_INODE_DAX_FL) {
+		...
+	}
+
+And perhaps move this to a place in ext4_ioctl_setflags() where we check
+other similar conflicts.
+
+And then we should check conflicts with the journal flag as well, as I
+mentioned in reply to the first patch. There it is more complicated by the
+fact that we should disallow setting of both EXT4_INODE_DAX_FL and
+EXT4_JOURNAL_DATA_FL at the same time so the checks will be somewhat more
+complicated.
+
+								Honza
+
+> +
+>  	/* Is it quota file? Do not allow user to mess with it */
+>  	if (ext4_is_quota_file(inode))
+>  		goto flags_out;
 -- 
-2.17.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
