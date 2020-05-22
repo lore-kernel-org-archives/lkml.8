@@ -2,150 +2,151 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4333EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35077C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F3B206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5A8206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/T4KpRY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dP0RRZfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbgEVSSc (ORCPT
+        id S1730828AbgEVSWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:18:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52029 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726373AbgEVSSb (ORCPT
+        Fri, 22 May 2020 14:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgEVSWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:18:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590171509;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=m/geKcYtEm6APQ5LEp/KOQcykz/wDN18PTkCVCHlSm8=;
-        b=Y/T4KpRYUlP7KuBDjm5nVEG6x8I/I4EOZObbN0dEw4l9/Q62a2Y+M8jKTX/kx4zfLe+qZo
-        O/Ecn7QYuY54qePkcf6vTAPVz5a2JA1yFxoDdW9sJGBAMtePjLBfPVy5DFF4vR+YkR6XwG
-        /FJKeUdMALyM/6LI3lNu0Th2OTjb8ps=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-ICFmdUvZOSWzvJxQDKLV9w-1; Fri, 22 May 2020 14:18:24 -0400
-X-MC-Unique: ICFmdUvZOSWzvJxQDKLV9w-1
-Received: by mail-qk1-f197.google.com with SMTP id j83so11914736qke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:18:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=m/geKcYtEm6APQ5LEp/KOQcykz/wDN18PTkCVCHlSm8=;
-        b=dpt9SEHCE3DDjjfkUFpgWCeM7ImoqlAAZhrOG+33ZSujmdiHgysKCyNxL4cR6etV7Y
-         vr+biQFCVFX1AYIOf7AbPexcI4cEa6l+4rkFXHHKy3HdYrAHZOx/WBE4DHObouEGLtkG
-         4FNt1aEdzdyexBTEYd3oTOrQBSGKeMPMAyWiraT6JyY8qvR8hSeLCP4mOgaasDLCs31X
-         jIYNaTR4AYvc7f3q+NmcfimjE5fAZx3jEXRdYuCTlYgI+IgnI8fBEDhzub43S334KYLc
-         AhCAXlGmUtyOX+qzrBedz0pkJL9XX4l354HwPZ9VfWoe6EnCTwXqjJH2tEPoqMEqqNke
-         AeIg==
-X-Gm-Message-State: AOAM532pYgTd4OUyvYBoZpDqJ5GDkdtnxPLVim8U3cPvqmtEsYEcSbRE
-        E3FXapoUIxOzUiye82ywzJdqmNqh9f1OhR4+sUqpr+JqaE7bsHDJqvpe03KH1e5AxaIgRDDARwk
-        48iA/Nquf9b6OFwJsPpKuKvht
-X-Received: by 2002:a37:8705:: with SMTP id j5mr14768893qkd.233.1590171503878;
-        Fri, 22 May 2020 11:18:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzHR3ERTZmvM/CSJPNLHMaIrwwjp4k68hXtLxCPVvFuYCfjYWDQPH4SgEGssR0Gdrz1RwJcHQ==
-X-Received: by 2002:a37:8705:: with SMTP id j5mr14768875qkd.233.1590171503633;
-        Fri, 22 May 2020 11:18:23 -0700 (PDT)
-Received: from Whitewolf.lyude.net (static-173-76-190-23.bstnma.ftas.verizon.net. [173.76.190.23])
-        by smtp.gmail.com with ESMTPSA id x144sm8508643qka.53.2020.05.22.11.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 11:18:22 -0700 (PDT)
-Message-ID: <7db8ff3ee32bddfb6f82760468caa86388bee9bd.camel@redhat.com>
-Subject: Re: [PATCH] drm/vblank: Fix -Wformat compile warnings on some arches
-From:   Lyude Paul <lyude@redhat.com>
-Reply-To: lyude@redhat.com
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Dave Airlie <airlied@redhat.com>
-Date:   Fri, 22 May 2020 14:18:21 -0400
-In-Reply-To: <20200521210924.GA1056842@ravnborg.org>
-References: <20200521204647.2578479-1-lyude@redhat.com>
-         <20200521210924.GA1056842@ravnborg.org>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Fri, 22 May 2020 14:22:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D705DC061A0E;
+        Fri, 22 May 2020 11:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=XQonmUw0pCP5G1rBbyKf46q0s3ut4wVacTLv+7V9ltw=; b=dP0RRZfBdGyAK5wkij4bUbE2Wl
+        Xw0GLM/Cyba98UdnXATQkXu3Kzjlte1C3dowkOrBRWWJmfHSDu4LsEFOBSh7L2JtcZZuK/dvZwEnu
+        04U7n/SbJthWU+2E+hqIBRBQWfKJKqRm5GdOWmNYPB/lnZKPlEyOav0zSkTlD+tN5/BiKOhNxZegF
+        /pfQfmrd1yiwarpZDDlVirwuGf0JET3pTOsjDbBN+ykT0OtjvWbSEUUQRnzT0LEJ11Qs8q+OU4oXq
+        o2qC3RSMH6vXDsH0ceK1etckkqp+FwozlNzC32L43IfnTPrk1GDqoJIZz2W21/Sp9nK6QUFgtJxJF
+        CkdIer+g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jcCJd-0004Yu-0K; Fri, 22 May 2020 18:22:41 +0000
+Subject: Re: linux-next: Tree for May 18 (input/misc/iqs269a.c & regmap)
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+References: <20200518205725.72eb3148@canb.auug.org.au>
+ <60dadc36-daec-2c48-a317-843ce52ae4f5@infradead.org>
+ <20200518162058.GA18713@labundy.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e6a56505-b99c-6b22-c35a-3596857fa421@infradead.org>
+Date:   Fri, 22 May 2020 11:22:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200518162058.GA18713@labundy.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-21 at 23:09 +0200, Sam Ravnborg wrote:
-> On Thu, May 21, 2020 at 04:46:47PM -0400, Lyude Paul wrote:
-> > On some architectures like ppc64le and aarch64, compiling with
-> > -Wformat=1 will throw the following warnings:
-> > 
-> >   In file included from drivers/gpu/drm/drm_vblank.c:33:
-> >   drivers/gpu/drm/drm_vblank.c: In function 'drm_update_vblank_count':
-> >   drivers/gpu/drm/drm_vblank.c:273:16: warning: format '%llu' expects
-> >   argument of type 'long long unsigned int', but argument 4 has type
-> >   'long int' [-Wformat=]
-> >     DRM_DEBUG_VBL("updating vblank count on crtc %u:"
-> >                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >   ./include/drm/drm_print.h:407:22: note: in definition of macro
-> >   'DRM_DEBUG_VBL'
-> >     drm_dbg(DRM_UT_VBL, fmt, ##__VA_ARGS__)
-> >                         ^~~
-> >   drivers/gpu/drm/drm_vblank.c:274:22: note: format string is defined here
-> >            " current=%llu, diff=%u, hw=%u hw_last=%u\n",
-> >                      ~~~^
-> >                      %lu
-> > 
-> > So, fix that with a typecast.
-> > 
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > Co-developed-by: Dave Airlie <airlied@redhat.com>
-> > ---
-> >  drivers/gpu/drm/drm_vblank.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> > index acb3c3f65b579..1a96db2dd16fa 100644
-> > --- a/drivers/gpu/drm/drm_vblank.c
-> > +++ b/drivers/gpu/drm/drm_vblank.c
-> > @@ -342,7 +342,7 @@ static void drm_update_vblank_count(struct drm_device
-> > *dev, unsigned int pipe,
-> >  
-> >  	DRM_DEBUG_VBL("updating vblank count on crtc %u:"
-> >  		      " current=%llu, diff=%u, hw=%u hw_last=%u\n",
-> > -		      pipe, atomic64_read(&vblank->count), diff,
-> > +		      pipe, (unsigned long long)atomic64_read(&vblank->count),
-> > diff,
-> >  		      cur_vblank, vblank->last);
+On 5/18/20 9:20 AM, Jeff LaBundy wrote:
+> Hi Randy et al,
 > 
-> While touching this you could consider introducing drm_dbg_vbl().
-> An maybe as a follow-up patch replace all logging in this file with the drm_*
-> variants.
+> On Mon, May 18, 2020 at 08:42:43AM -0700, Randy Dunlap wrote:
+>> On 5/18/20 3:57 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200515:
+>>>
+>>
+>> on i386:
+>>
+>>
+>> CONFIG_REGMAP_I2C=y
+>> CONFIG_I2C=m
+>>
+>> WARNING: unmet direct dependencies detected for REGMAP_I2C
+>>   Depends on [m]: I2C [=m]
+>>   Selected by [y]:
+>>   - INPUT_IQS269A [=y] && !UML && INPUT [=y] && INPUT_MISC [=y]
+>>
+>>
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_read':
+>> regmap-i2c.c:(.text+0x192): undefined reference to `i2c_smbus_read_byte_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_write':
+>> regmap-i2c.c:(.text+0x1d7): undefined reference to `i2c_smbus_write_byte_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_read':
+>> regmap-i2c.c:(.text+0x202): undefined reference to `i2c_smbus_read_word_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_read_swapped':
+>> regmap-i2c.c:(.text+0x242): undefined reference to `i2c_smbus_read_word_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_write_swapped':
+>> regmap-i2c.c:(.text+0x2a1): undefined reference to `i2c_smbus_write_word_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_write':
+>> regmap-i2c.c:(.text+0x2d7): undefined reference to `i2c_smbus_write_word_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read_reg16':
+>> regmap-i2c.c:(.text+0x310): undefined reference to `i2c_smbus_write_byte_data'
+>> ld: regmap-i2c.c:(.text+0x323): undefined reference to `i2c_smbus_read_byte'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write_reg16':
+>> regmap-i2c.c:(.text+0x39c): undefined reference to `i2c_smbus_write_i2c_block_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write':
+>> regmap-i2c.c:(.text+0x3db): undefined reference to `i2c_smbus_write_i2c_block_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read':
+>> regmap-i2c.c:(.text+0x427): undefined reference to `i2c_smbus_read_i2c_block_data'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_read':
+>> regmap-i2c.c:(.text+0x49f): undefined reference to `i2c_transfer'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_gather_write':
+>> regmap-i2c.c:(.text+0x524): undefined reference to `i2c_transfer'
+>> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_write':
+>> regmap-i2c.c:(.text+0x56c): undefined reference to `i2c_transfer_buffer_flags'
+>> ld: drivers/input/misc/iqs269a.o: in function `iqs269_i2c_driver_init':
+>> iqs269a.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
+>> ld: drivers/input/misc/iqs269a.o: in function `iqs269_i2c_driver_exit':
+>> iqs269a.c:(.exit.text+0x9): undefined reference to `i2c_del_driver'
+>>
+>>
+>>
+>> Full randconfig file is attached.
+> 
+> A complete oversight on my part; during my testing I did not realize
+> another module was selecting I2C for me. Valuable lesson learned :)
+> 
+> The kbuild test robot set off the alarm bells earlier today and I've
+> sent a patch [1] already. Many apologies for all of the noise.
+> 
+>>
+>> -- 
+>> ~Randy
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> [1] https://patchwork.kernel.org/patch/11555469/
+> 
+> Kind regards,
+> Jeff LaBundy
 
-ok - no promises when I can actually get to this though, I've got a lot on my
-plate ATM
-> 
-> 	Sam
-> 
-> >  
-> >  	if (diff == 0) {
-> > -- 
-> > 2.26.2
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+
+This build error still happens in linux-next 20200522.
+Perhaps we can have this patch merged & pushed out so that
+linux-next can pick it up, please?
+
+thanks
+-- 
+~Randy
 
