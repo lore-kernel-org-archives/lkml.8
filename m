@@ -7,48 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA89DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03C42072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327492072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbgEVQIx (ORCPT
+        id S1730700AbgEVQJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41088 "EHLO
+        Fri, 22 May 2020 12:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730505AbgEVQIv (ORCPT
+        with ESMTP id S1730548AbgEVQIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:08:51 -0400
+        Fri, 22 May 2020 12:08:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7524AC061A0E;
-        Fri, 22 May 2020 09:08:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94391C061A0E;
+        Fri, 22 May 2020 09:08:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jcAE2-00009B-KG; Fri, 22 May 2020 18:08:46 +0200
+        id 1jcAE5-0000BK-8v; Fri, 22 May 2020 18:08:49 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3DA951C0095;
-        Fri, 22 May 2020 18:08:46 +0200 (CEST)
-Date:   Fri, 22 May 2020 16:08:46 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DD33B1C0475;
+        Fri, 22 May 2020 18:08:48 +0200 (CEST)
+Date:   Fri, 22 May 2020 16:08:48 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] compiler.h: Avoid nested statement expression in
- data_race()
-Cc:     Borislav Petkov <bp@suse.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Marco Elver <elver@google.com>,
+Subject: [tip: locking/kcsan] kcsan: Restrict supported compilers
+Cc:     Marco Elver <elver@google.com>, Borislav Petkov <bp@suse.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200520221712.GA21166@zn.tnic>
-References: <20200520221712.GA21166@zn.tnic>
+        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+References: <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <159016372608.17951.9895221205213759335.tip-bot2@tip-bot2>
+Message-ID: <159016372876.17951.8987293985119856596.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,52 +60,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     aa7d8a2ee1e9b80e36ce2aa0d817c14ab3e23157
-Gitweb:        https://git.kernel.org/tip/aa7d8a2ee1e9b80e36ce2aa0d817c14ab3e23157
+Commit-ID:     0d473b1d6e5c240f8ffed02715c718024802d0fa
+Gitweb:        https://git.kernel.org/tip/0d473b1d6e5c240f8ffed02715c718024802d0fa
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Thu, 21 May 2020 16:20:45 +02:00
+AuthorDate:    Thu, 21 May 2020 16:20:42 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 22 May 2020 15:24:21 +02:00
+CommitterDate: Fri, 22 May 2020 14:46:02 +02:00
 
-compiler.h: Avoid nested statement expression in data_race()
+kcsan: Restrict supported compilers
 
-It appears that compilers have trouble with nested statement
-expressions. Therefore, remove one level of statement expression nesting
-from the data_race() macro. This will help avoiding potential problems
-in the future as its usage increases.
+The first version of Clang that supports -tsan-distinguish-volatile will
+be able to support KCSAN. The first Clang release to do so, will be
+Clang 11. This is due to satisfying all the following requirements:
 
-Reported-by: Borislav Petkov <bp@suse.de>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+1. Never emit calls to __tsan_func_{entry,exit}.
+
+2. __no_kcsan functions should not call anything, not even
+   kcsan_{enable,disable}_current(), when using __{READ,WRITE}_ONCE => Requires
+   leaving them plain!
+
+3. Support atomic_{read,set}*() with KCSAN, which rely on
+   arch_atomic_{read,set}*() using __{READ,WRITE}_ONCE() => Because of
+   #2, rely on Clang 11's -tsan-distinguish-volatile support. We will
+   double-instrument atomic_{read,set}*(), but that's reasonable given
+   it's still lower cost than the data_race() variant due to avoiding 2
+   extra calls (kcsan_{en,dis}able_current() calls).
+
+4. __always_inline functions inlined into __no_kcsan functions are never
+   instrumented.
+
+5. __always_inline functions inlined into instrumented functions are
+   instrumented.
+
+6. __no_kcsan_or_inline functions may be inlined into __no_kcsan functions =>
+   Implies leaving 'noinline' off of __no_kcsan_or_inline.
+
+7. Because of #6, __no_kcsan and __no_kcsan_or_inline functions should never be
+   spuriously inlined into instrumented functions, causing the accesses of the
+   __no_kcsan function to be instrumented.
+
+Older versions of Clang do not satisfy #3. The latest GCC currently
+doesn't support at least #1, #3, and #7.
+
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Will Deacon <will@kernel.org>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200520221712.GA21166@zn.tnic
-Link: https://lkml.kernel.org/r/20200521142047.169334-10-elver@google.com
+Link: https://lkml.kernel.org/r/CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com
+Link: https://lkml.kernel.org/r/20200521142047.169334-7-elver@google.com
 ---
- include/linux/compiler.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ lib/Kconfig.kcsan |  9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 7444f02..379a507 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -211,12 +211,12 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  */
- #define data_race(expr)							\
- ({									\
--	__kcsan_disable_current();					\
--	({								\
--		__unqual_scalar_typeof(({ expr; })) __v = ({ expr; });	\
--		__kcsan_enable_current();				\
--		__v;							\
-+	__unqual_scalar_typeof(({ expr; })) __v = ({			\
-+		__kcsan_disable_current();				\
-+		expr;							\
- 	});								\
-+	__kcsan_enable_current();					\
-+	__v;								\
- })
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index b5d88ac..5ee88e5 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -3,6 +3,12 @@
+ config HAVE_ARCH_KCSAN
+ 	bool
  
- /*
++config HAVE_KCSAN_COMPILER
++	def_bool CC_IS_CLANG && $(cc-option,-fsanitize=thread -mllvm -tsan-distinguish-volatile=1)
++	help
++	  For the list of compilers that support KCSAN, please see
++	  <file:Documentation/dev-tools/kcsan.rst>.
++
+ config KCSAN_KCOV_BROKEN
+ 	def_bool KCOV && CC_HAS_SANCOV_TRACE_PC
+ 	depends on CC_IS_CLANG
+@@ -15,7 +21,8 @@ config KCSAN_KCOV_BROKEN
+ 
+ menuconfig KCSAN
+ 	bool "KCSAN: dynamic data race detector"
+-	depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
++	depends on HAVE_ARCH_KCSAN && HAVE_KCSAN_COMPILER
++	depends on DEBUG_KERNEL && !KASAN
+ 	depends on !KCSAN_KCOV_BROKEN
+ 	select STACKTRACE
+ 	help
