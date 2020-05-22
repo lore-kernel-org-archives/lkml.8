@@ -2,190 +2,200 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E54C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50441C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 516BD2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1C620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xtzAyZHX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W08j67Tq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgEVHAV (ORCPT
+        id S1728263AbgEVHBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:00:21 -0400
-Received: from mail-eopbgr690043.outbound.protection.outlook.com ([40.107.69.43]:23367
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728165AbgEVHAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:00:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kyNcH2HPgbv/YwmboDBrRjMWgJ3TCCOB6blbxaODW7dJa2M5h2ZAmsluG0S2Cmi9Uutr/NPWvR7uiPy7IelQUKio0wdR8w2Z0bxQbLhnDalabKwuc9sET7bSk6Y3kGk5fLhJoAdPCKe2Fn2pXmHSzbxqftGDaLFZSnBSNd4VJkBlDa6FtEZrQ40L/+UyWKtF2M4EI42+AKrpHveV1CHCp721IAFIqZQR5147YNsos2wUslI4tYVFzCe+RebTlnd45G6g1rzs4inqY8XKck8vj+By61IN3G58ild5+2X3zi7IDSxenNV02mfKVi4RuPOj65MMuw/5UTO+oSkd6WW9SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2WY7kKAIRxZ4uBFSi5YVnCtvERdF4rl1OUr2az84vs4=;
- b=c1T/89Vqa8ghPm9eB0VoSsL6FZMNLkbGMqoAb6HdMYaD8ibk94H/pwdGO7dG+HqaLbbgfz+4naSGEsHNgoXDWNvl+STt/A/XVpowsSZ1rW3Ryzoz+pkHvEWxrK4FKRRv82TzqPvQisBKMu8jeLOIhTYw54we7dGkhsagCgevFkRV/kRGY62FAKSVDXMD+pn9ZYF7b+D+GbBg+a3/1wHWvEe7HWhGL8nk89VXejr78tbIyTf8NXn4LfQVBlwuPLPDENS7BXYDHuNtuHnrPGgfTivsTN+kIkJcBXXm9Lpj4bBsnXEw5WdOWLFMWveY63mlGhso+CxTFpNYoyCe7tTETg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2WY7kKAIRxZ4uBFSi5YVnCtvERdF4rl1OUr2az84vs4=;
- b=xtzAyZHXDe8FlZAYZqABWrUtYQToBrpOZ1t6p7QrsFciEoOJRXeefgXAxchviXwyJXUZpShItELQ7tkp1foVQluJBPVUno5ppROlIAkrLauoYXjVVQYBJ5ztcaSpPj8f/OXiClG0aM9STIGkpTVNxuyX3Y9izM8ldI6pDLf8A20=
-Authentication-Results: embeddedor.com; dkim=none (message not signed)
- header.d=none;embeddedor.com; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB3018.namprd12.prod.outlook.com (2603:10b6:5:118::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Fri, 22 May
- 2020 07:00:17 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.3021.026; Fri, 22 May 2020
- 07:00:16 +0000
-Subject: Re: [PATCH] drm/radeon/dpm: Replace one-element array and use
- struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200522012547.GA6783@embeddedor>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <753faa45-247c-536c-d85a-5c1385ed0049@amd.com>
-Date:   Fri, 22 May 2020 09:00:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200522012547.GA6783@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR04CA0064.eurprd04.prod.outlook.com
- (2603:10a6:208:1::41) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
+        Fri, 22 May 2020 03:01:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53979 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728181AbgEVHB3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:01:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590130887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sFWr7gpjYD9ttIAQ8TkDqEXM7t/nar6Qf5F2iEybFdM=;
+        b=W08j67TqczEdPp8I2TD1HjPewrjCGDLSi0Mu3KmMXW6cS6JouY4/tr1XKMGhSfV74Jfqgf
+        pEsiCiCON5EJrlnc0H+WhQ5EeqOC2LFBFVgmf6T35iECRRzAGCMwVBboxpo27iB+j6DA+C
+        lTrVoUekoUEVHi9Hwe5E1E1dGZdJlwE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-5QCcVnr6NtmIXnocHMvyEA-1; Fri, 22 May 2020 03:01:22 -0400
+X-MC-Unique: 5QCcVnr6NtmIXnocHMvyEA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6205A1853C61;
+        Fri, 22 May 2020 07:01:21 +0000 (UTC)
+Received: from localhost (ovpn-12-170.pek2.redhat.com [10.72.12.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D304E6E9F3;
+        Fri, 22 May 2020 07:01:17 +0000 (UTC)
+Date:   Fri, 22 May 2020 15:01:14 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, cai@lca.pw, mhocko@kernel.org
+Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
+ fast_isolate_freepages()
+Message-ID: <20200522070114.GE26955@MiWiFi-R3L-srv>
+References: <20200521014407.29690-1-bhe@redhat.com>
+ <20200521092612.GP1059226@linux.ibm.com>
+ <20200521155225.GA20045@MiWiFi-R3L-srv>
+ <20200521171836.GU1059226@linux.ibm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR04CA0064.eurprd04.prod.outlook.com (2603:10a6:208:1::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Fri, 22 May 2020 07:00:15 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8e2398c8-9037-4d51-9ebb-08d7fe1dc83a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3018:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3018316F918F3123E2C9446883B40@DM6PR12MB3018.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 04111BAC64
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QxTHWGULV7kL1Feb5ViRjI+lrbhTXlPPDerJ/3o3OMyhVhx7NHTiXbIi/agE28LFaSFZKpMUg1H92ar4XLJJ/JcdU7D6ApNSHtAoaUbRS6S1KuIGkHGZRFvzYP7fVxduA0vU8bTB5mj/YUPE4zZ4gLSCfZf3sfTMeDhlgr/ZFC9RMVcDVmyYjqWFh6rIcwTRxNxdzkaxwEFeBqY6zT8WjJuKYq6K7ASpVobLBMV4CcWVDxFs7zDqu7M+im+zcnRq4KxCf/IMdiGShRyWHScpkUTUmqKWa6/4y68ZP4jmMutKrc8UQmpIWLIYAcETFWjTJcLLwm4vIWWI5y+VqAVC/YTkJYZCrtQuwL0LbZ48zRqTP2ZQeC9fBlO7PKxdYtIRHmCPnC84WUONrpLz1t8nQiXYUcGjD1InLCz2Zsr8OoC2cZjbNULuI5VTgnmv3hwBvKVMucf19yrv7xqmPqNTLQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(8936002)(52116002)(4326008)(66946007)(31686004)(186003)(478600001)(45080400002)(6486002)(966005)(5660300002)(110136005)(6666004)(316002)(66556008)(36756003)(2616005)(86362001)(66476007)(8676002)(16526019)(2906002)(31696002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: aRieqpZkmH7awNiz5I91NP5emv5KuugQnA2Ppupt/bV483dZomvBH9x5pdSGx7nBPcuPldkJQtq0H3VK3q9MV1aJW2y2xDP4BvN0KLGuTjr6rndqnKzLGrPV3lvZnVb8bQO0pgZ/bwO9VS2KTlHYufVwEsXBDoApT02OPm6yi3HdEdw7saAJUwn+T4mnvmHTsrPneApECe86CZa6Nv1BbGtsNX+YvFIcFMKMP7zdrNXKBDEw4ARfNlvqZfJC/nztZ9DpnW76AwTHjTIpP3tyyMFmSeORixTzcuObIuIkk8FlieBs3hhvP4CeI/eRFC47Cqtk9CfwhvwgDHaqfoydak3tMSPyjf882cXiPWo/aKmUNvx269kaUA2MH7+K7fhp/6z+efukOJGr6qBMwU3BD86kUDPsoPxv/fHsDtnYOA00CS6Jzr75o9uT7Me/c2iwkxzeBYDoxXbm1j0Mum7fCp7QmatT39jmD4jokCDv2wqoIGwlkvLzTHlSRm826Mx5VX3T6TGmr6+k58gsGvIJozBG4LplM3VLH+8oZkVDNAGvfmCHbNPe2jEHwOhkPHfA
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e2398c8-9037-4d51-9ebb-08d7fe1dc83a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2020 07:00:16.8402
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 76GUGOH56uL7sM2ZaNKWk7/hDa7Mv2vON+oK2LyNn7xBrBBTwWG1rb5ybopm2h5n
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3018
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521171836.GU1059226@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 22.05.20 um 03:25 schrieb Gustavo A. R. Silva:
-> The current codebase makes use of one-element arrays in the following
-> form:
->
-> struct something {
->      int length;
->      u8 data[1];
-> };
->
-> struct something *instance;
->
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
->
-> but the preferred mechanism to declare variable-length types such as
-> these ones is a flexible array member[1][2], introduced in C99:
->
-> struct foo {
->          int stuff;
->          struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on. So, replace
-> the one-element array with a flexible-array member.
->
-> Also, make use of the new struct_size() helper to properly calculate the
-> size of struct NISLANDS_SMC_SWSTATE.
->
-> This issue was found with the help of Coccinelle and, audited and fixed
-> _manually_.
->
-> [1] https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgcc.gnu.org%2Fonlinedocs%2Fgcc%2FZero-Length.html&amp;data=02%7C01%7Cchristian.koenig%40amd.com%7C7dd54e944eff4d17178008d7fdee62d7%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637257072615411745&amp;sdata=fQHnbXZpsgiMjHOr%2By0Uq12jpCYEYbdX5K26iNkwyeM%3D&amp;reserved=0
-> [2] https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2FKSPP%2Flinux%2Fissues%2F21&amp;data=02%7C01%7Cchristian.koenig%40amd.com%7C7dd54e944eff4d17178008d7fdee62d7%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637257072615411745&amp;sdata=gg20YupmqsaW%2Bg3VyJL%2BkjE3kFwnWF1RD1D2QP04OLk%3D&amp;reserved=0
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/gpu/drm/amd/amdgpu/si_dpm.h | 2 +-
->   drivers/gpu/drm/radeon/ni_dpm.c     | 7 ++++---
->   2 files changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.h b/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-> index 6b7d292b919f3..bc0be6818e218 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-> @@ -781,7 +781,7 @@ struct NISLANDS_SMC_SWSTATE
->       uint8_t                             levelCount;
->       uint8_t                             padding2;
->       uint8_t                             padding3;
-> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-> +    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
->   };
->   
->   typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
-> diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
-> index b57c37ddd164c..7d81dde509dc9 100644
-> --- a/drivers/gpu/drm/radeon/ni_dpm.c
-> +++ b/drivers/gpu/drm/radeon/ni_dpm.c
-> @@ -2685,11 +2685,12 @@ static int ni_upload_sw_state(struct radeon_device *rdev,
->   	struct rv7xx_power_info *pi = rv770_get_pi(rdev);
->   	u16 address = pi->state_table_start +
->   		offsetof(NISLANDS_SMC_STATETABLE, driverState);
-> -	u16 state_size = sizeof(NISLANDS_SMC_SWSTATE) +
-> -		((NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1) * sizeof(NISLANDS_SMC_HW_PERFORMANCE_LEVEL));
-> +	NISLANDS_SMC_SWSTATE *smc_state;
-> +	u16 state_size = struct_size(smc_state, levels,
-> +			NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE);
+On 05/21/20 at 08:18pm, Mike Rapoport wrote:
+> On Thu, May 21, 2020 at 11:52:25PM +0800, Baoquan He wrote:
+> > On 05/21/20 at 12:26pm, Mike Rapoport wrote:
+> > > > For this kind of e820 reserved range, it won't be added to memblock allocator.
+> > > > However, init_unavailable_mem() will initialize to add them into node 0,
+> > > > zone 0. Before that commit, later, memmap_init() will add e820 reserved
+> > > > ranges into the zone where they are contained, because it can pass
+> > > > the checking of early_pfn_valid() and early_pfn_in_nid(). In this case,
+> > > > the e820 reserved range where fault page 0x2a800000 is located is added
+> > > > into DMA32 zone. After that commit, the e820 reserved rgions are kept
+> > > > in node 0, zone 0, since we iterate over memblock regions to iniatialize
+> > > > in memmap_init() instead, their node and zone won't be changed.
+> > > 
+> > > I wonder why woudn't we add the reserved memory to memblock from the
+> > > very beginning...
+> > > I've tried to undestand why this was not done, but I couldn't find the
+> > > reasoning behind that.
+> > 
+> > I have added some explanation when reply to Mel. Please check that in
+> > that thread.
+> 
+> What I meant was that I've tried to find an explanation in the kernel logs
+> for why the reserved areas are not added to memblock.memory on x86. I
+> didn't mean that the your patch description lacks this explanation :)
 
-Probably better to use size_t instead of u16 here. With that fixed feel 
-free to stick my rb on the patch.
+Ah, I misunderstood it, sorry about that.
 
-Regards,
-Christian.
+> 
+> > As I said, the unavailable range includes firmware reserved ranges, and
+> > holes inside one boot memory section, if that boot memory section haves
+> > useable memory range, and firmware reserved ranges, and holes. Adding
+> > them all into memblock seems a little unreasonable, since they are never
+> > used by system in memblock, buddy or high level memory allocator. But I
+> > can see that adding them into memblock may have the same effect as the
+> > old code which is beofre your your patchset applied. Let's see if Mel or
+> > other people have some saying. I pesonally would not suggest doing it
+> > like this though.
+> 
+> Adding reserved regions to memblock.memory will not have the same effect
+> as the old code. We anyway have to initialize struct page for these
+> areas, but unlike the old code we don't need to run them by the
+> early_pfn_in_nid() checks and we still get rid the
+> CONFIG_NODES_SPAN_OTHER_NODES option.
 
->   	int ret;
-> -	NISLANDS_SMC_SWSTATE *smc_state = kzalloc(state_size, GFP_KERNEL);
->   
-> +	smc_state = kzalloc(state_size, GFP_KERNEL);
->   	if (smc_state == NULL)
->   		return -ENOMEM;
->   
+Hmm, I mean adding them to memblock will let us have the same result,
+they are added into the node, zone where they should be, and marked as
+reserved, just as the old code did.
+
+Rethink about this, seems adding them into memblock is doable. But
+we may not need to add them from e820 reserved range, since that will
+skip hole range which share the same section with usable range, and may
+need to change code in different ARCHes. How about this:
+
+We add them into memblock in init_unavailable_range(), memmap_init() will
+add them into the right node and zone, reserve_bootmem_region() will
+initialize them and mark them as Reserved.
+
+
+From d019d0f9e7c958542dfcb142f93d07fcce6c7c22 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 22 May 2020 14:36:13 +0800
+Subject: [PATCH] mm/page_alloc.c: Add unavailable ranges into memblock
+
+These unavailable ranges shares the same section with the usable range
+in boot memory, e.g the firmware reserved ranges, and holes.
+
+Previously, they are added into node 0, zone 0 in function
+init_unavailable_range(), and marked as Reserved. Later, in function
+memmap_init(), they will be added to appropriate node and zone, where
+they are covered.
+
+However, after the patchset ("mm: rework free_area_init*() funcitons")
+is applied, we change to iterate over memblock regions. These unavailable
+ranges are skipped, and the node and zone adjustment won't be done any
+more as the old code did. This cause a crash in compaction which is triggered
+by VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn)).
+
+So let's add these unavailable ranges into memblock and reserve them
+in init_unavailable_range() instead. With this change, they will be added
+into appropriate node and zone in memmap_init(), and initialized in
+reserve_bootmem_region() just like any other memblock reserved regions.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ mm/page_alloc.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 603187800628..3973b5fdfe3f 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6925,7 +6925,7 @@ static u64 __init init_unavailable_range(unsigned long spfn, unsigned long epfn)
+ static void __init init_unavailable_mem(void)
+ {
+ 	phys_addr_t start, end;
+-	u64 i, pgcnt;
++	u64 i, pgcnt, size;
+ 	phys_addr_t next = 0;
+ 
+ 	/*
+@@ -6934,9 +6934,11 @@ static void __init init_unavailable_mem(void)
+ 	pgcnt = 0;
+ 	for_each_mem_range(i, &memblock.memory, NULL,
+ 			NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL) {
+-		if (next < start)
+-			pgcnt += init_unavailable_range(PFN_DOWN(next),
+-							PFN_UP(start));
++		if (next < start) {
++			size = PFN_UP(start) - PFN_DOWN(next);
++			memblock_add(PFN_DOWN(next), size);
++			memblock_reserve(PFN_DOWN(next), size);
++		}
+ 		next = end;
+ 	}
+ 
+@@ -6947,8 +6949,11 @@ static void __init init_unavailable_mem(void)
+ 	 * considered initialized. Make sure that memmap has a well defined
+ 	 * state.
+ 	 */
+-	pgcnt += init_unavailable_range(PFN_DOWN(next),
+-					round_up(max_pfn, PAGES_PER_SECTION));
++	size = round_up(max_pfn, PAGES_PER_SECTION) - PFN_DOWN(next);
++	if (size) {
++		memblock_add(PFN_DOWN(next), size);
++		memblock_reserve(PFN_DOWN(next), size);
++	}
+ 
+ 	/*
+ 	 * Struct pages that do not have backing memory. This could be because
+-- 
+2.17.2
 
