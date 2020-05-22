@@ -2,94 +2,141 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC908206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590145748;
-	bh=akm9w9vUGMm1OZtMoY9+dDiEUBKGQg7DabJxbnXOXDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sdLg3egciubdByRMD5bsHMhf3/gAXADGUGxDcpb7VwVBf42l2PJWSiIdI4uYI/vYq
-	 bP5D6DkRNWlnc+1qn5a/sGK0IwGTnHdhxUA84oTq91+l6tzjOH2HFgLD+OYoK6TR2h
-	 o9Ltg1HX2MEgdYVx5CiBxFgEU7BSPrsK5F4An/rQ=
+	by mail.kernel.org (Postfix) with ESMTP id A8EAE206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgEVLJI (ORCPT
+        id S1729056AbgEVLNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60338 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 07:13:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:35945 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgEVLJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:09:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDBEF206B6;
-        Fri, 22 May 2020 11:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590145746;
-        bh=akm9w9vUGMm1OZtMoY9+dDiEUBKGQg7DabJxbnXOXDY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jrMoWA3nOKs2MGjrLolal+vz6NUhgpGFJzvHoE/v9U3gXwsd7UVDpQNjCRJh3RRa0
-         0q90IBErHUS/9YGzSoj2wGN02Si616FepPxOKgt3xUZPQjgEY8KS/rwSl9ynOi3mM1
-         eFY+PXz4pJ5vT7Ld/aSDfVHhIjo5AnFOHEJWQmOM=
-Date:   Fri, 22 May 2020 12:09:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 1/3] regulator: max14577: Add proper dt-compatible
- strings
-Message-ID: <20200522110903.GC5801@sirena.org.uk>
-References: <CGME20200522102452eucas1p17c18de8f79e27de96474e5fcad6db5fa@eucas1p1.samsung.com>
- <20200522102448.30209-1-m.szyprowski@samsung.com>
+        id S1728657AbgEVLNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:13:45 -0400
+IronPort-SDR: 5nZ6cGtJpu/BqelmJBVFY6bt9IHwuHcrWXWe1b4R4/q5eYWaJ+ll01tsjkT64o/6KfTGJeCoUJ
+ EA2hc9+FpRNA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 04:13:43 -0700
+IronPort-SDR: YuqBZU0ak8gcKa2K2aEEyKTccCzb7sOYyacUb1SqLSzh8LYIUXnWK4lETim8E4sIZVi9AL7hlA
+ RTx0hq4s9PVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
+   d="scan'208";a="467149192"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 22 May 2020 04:13:38 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jc5cS-008Dbm-I2; Fri, 22 May 2020 14:13:40 +0300
+Date:   Fri, 22 May 2020 14:13:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Alan Cox <alan@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200522111340.GX1634618@smile.fi.intel.com>
+References: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
+ <20200522000806.7381-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522102448.30209-1-m.szyprowski@samsung.com>
-X-Cookie: C for yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200522000806.7381-2-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 22, 2020 at 03:07:50AM +0300, Serge Semin wrote:
+> Since DMA transfers are performed asynchronously with actual SPI
+> transaction, then even if DMA transfers are finished it doesn't mean
+> all data is actually pushed to the SPI bus. Some data might still be
+> in the controller FIFO. This is specifically true for Tx-only
+> transfers. In this case if the next SPI transfer is recharged while
+> a tail of the previous one is still in FIFO, we'll loose that tail
+> data. In order to fix this lets add the wait procedure of the Tx/Rx
+> SPI transfers completion after the corresponding DMA transactions
+> are finished.
 
---5QAgd0e35j3NYeGe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Fri, May 22, 2020 at 12:24:46PM +0200, Marek Szyprowski wrote:
-> Add device tree compatible strings and create proper modalias structures
-> to let this driver load automatically if compiled as module, because
-> max14577 MFD driver creates MFD cells with such compatible strings.
+> Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
 
-Same issue as before, you're putting the current Linux model into DT
-without adding any additional description of the hardware.
+Usually we put this before any other tags.
 
---5QAgd0e35j3NYeGe
-Content-Type: application/pgp-signature; name="signature.asc"
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
------BEGIN PGP SIGNATURE-----
+> Cc: Rob Herring <robh+dt@kernel.org>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Hss8ACgkQJNaLcl1U
-h9DIJgf7BpDKzpW22MjREOy/41/5TdMCG7vybW18iFY8cHBhBjkkP/8J24jCBWS4
-9MQsT4JKH4gJyZANrjPM79ARiUiSH2GIpfBieUoMVEqcoHF2IsQobLgVbji2BXHH
-m8CZooQ9v5ayNjkIvXUvnJE6Dm4ynGcoeOnyQ5xoV+o2QJlcXkdARQgYll1DQsgj
-QO0iqLxLGzRM3VkNlZkQ7d3dz8i8ZTnwotJesCoLL1f0dm318aHCLZPC8bAyUI6w
-r7A6uxjbo05r0q8JApVUc5MoavmnIsT3samcO+RsNqh5VvfLkWoc4kDNey92eJ86
-hdvteo+Qp9VPvmvdlDTfvCtdfVV89w==
-=IFlK
------END PGP SIGNATURE-----
+Are you sure Rob needs this to see?
+You really need to shrink Cc lists of the patches to send them on common sense basis.
 
---5QAgd0e35j3NYeGe--
+> Cc: linux-mips@vger.kernel.org
+
+> Cc: devicetree@vger.kernel.org
+
+Ditto.
+
+...
+
+> Changelog v4:
+> - Get back ndelay() method to wait for an SPI transfer completion.
+>   spi_delay_exec() isn't suitable for the atomic context.
+
+OTOH we may teach spi_delay_exec() to perform atomic sleeps.
+
+...
+
+> +	while (dw_spi_dma_tx_busy(dws) && retry--)
+> +		ndelay(ns);
+
+I might be mistaken, but I think I told that this one misses to keep power
+management in mind.
+
+Have you read Documentation/process/volatile-considered-harmful.rst ?
+
+...
+
+> +	while (dw_spi_dma_rx_busy(dws) && retry--)
+> +		ndelay(ns);
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
