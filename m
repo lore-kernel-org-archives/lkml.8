@@ -2,88 +2,96 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E402C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0719A206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072D0207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgEVJfS (ORCPT
+        id S1729755AbgEVJgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:35:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35900 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728424AbgEVJfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:35:17 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6EEB8BA3EB6C87F79A13;
-        Fri, 22 May 2020 17:35:14 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 17:35:06 +0800
-Subject: Re: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
-To:     David Miller <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>
-References: <1590061105-36478-1-git-send-email-tanhuazhong@huawei.com>
- <20200521121707.6499ca6b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200521.143726.481524442371246082.davem@davemloft.net>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
-Date:   Fri, 22 May 2020 17:35:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
-MIME-Version: 1.0
-In-Reply-To: <20200521.143726.481524442371246082.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+        Fri, 22 May 2020 05:36:14 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:20154 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728424AbgEVJgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:36:13 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 22 May 2020 15:06:09 +0530
+Received: from minint-dvc2thc.qualcomm.com (HELO sartgarg-linux.qualcomm.com) ([10.206.24.245])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 22 May 2020 15:06:09 +0530
+Received: by sartgarg-linux.qualcomm.com (Postfix, from userid 2339771)
+        id B6EBB179E; Fri, 22 May 2020 15:06:07 +0530 (IST)
+From:   Sarthak Garg <sartgarg@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     vbadigan@codeaurora.org, stummala@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sarthak Garg <sartgarg@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH V2 2/8] dt-bindings: mmc: Add information for DLL register properties
+Date:   Fri, 22 May 2020 15:02:24 +0530
+Message-Id: <1590139950-7288-3-git-send-email-sartgarg@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1590139950-7288-1-git-send-email-sartgarg@codeaurora.org>
+References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
+ <1590139950-7288-1-git-send-email-sartgarg@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add information regarding DLL register properties for getting board
+specific configurations. These DLL register settings may vary from
+board to board.
 
+Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-On 2020/5/22 5:37, David Miller wrote:
-> From: Jakub Kicinski <kuba@kernel.org>
-> Date: Thu, 21 May 2020 12:17:07 -0700
-> 
->> On Thu, 21 May 2020 19:38:23 +0800 Huazhong Tan wrote:
->>> This patchset adds two new VLAN feature.
->>>
->>> [patch 1] adds a new dynamic VLAN mode.
->>> [patch 2] adds support for 'QoS' field to PVID.
->>>
->>> Change log:
->>> V1->V2: modifies [patch 1]'s commit log, suggested by Jakub Kicinski.
->>
->> I don't like the idea that FW is choosing the driver behavior in a way
->> that's not observable via standard Linux APIs. This is the second time
->> a feature like that posted for a driver this week, and we should
->> discourage it.
-> 
-> Agreed, this is an unacceptable approach to driver features.
-> 
-
-Hi, Jakub & David.
-
-As decribed in patch #1, there is a scenario which needs the dynamic
-mode(port VLAN filter is always disabled, andVF VLAN filter is keep
-disable until a non-zero VLAN ID being used for the function).
-
-Is this mode selection provided through "ethtool --set-priv-flags"
-more acceptable? Or is there any other better suggestion for this?
-
-Thanks.
-
-> .
-> 
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 481f692f..b8e1d2b 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -47,6 +47,13 @@ Required properties:
+ 	"cal"	- reference clock for RCLK delay calibration (optional)
+ 	"sleep"	- sleep clock for RCLK delay calibration (optional)
+ 
++- qcom,ddr-config: Certain chipsets and platforms require particular settings
++	for the DDR_CONFIG register. Use this field to specify the register
++	value as per the Hardware Programming Guide.
++
++- qcom,dll-config: Chipset and Platform specific value. Use this field to
++	specify the DLL_CONFIG register value as per Hardware Programming Guide.
++
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+@@ -64,6 +71,9 @@ Example:
+ 
+ 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+ 		clock-names = "core", "iface";
++
++		qcom,dll-config = <0x000f642c>;
++		qcom,ddr-config = <0x80040868>;
+ 	};
+ 
+ 	sdhc_2: sdhci@f98a4900 {
+@@ -81,4 +91,7 @@ Example:
+ 
+ 		clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
+ 		clock-names = "core", "iface";
++
++		qcom,dll-config = <0x0007642c>;
++		qcom,ddr-config = <0x80040868>;
+ 	};
+-- 
+2.7.4
 
