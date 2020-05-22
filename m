@@ -2,112 +2,110 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3805B20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPttV3u5"
+	by mail.kernel.org (Postfix) with ESMTP id 0D49920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbgEVV3J (ORCPT
+        id S1731124AbgEVV3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731027AbgEVV3I (ORCPT
+        Fri, 22 May 2020 17:29:35 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40104 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731027AbgEVV3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:29:08 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8305C061A0E;
-        Fri, 22 May 2020 14:29:08 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b6so12122783qkh.11;
-        Fri, 22 May 2020 14:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YnkleiRVR9Tj35XAzzQB+JDWcUaygxu/Dj+0wqS0CKM=;
-        b=JPttV3u5QsPhDrtKcc0NrtTsbNyfJR1LAVv5omshDRvz1FF7apALqHYBHEVw6nyP4D
-         /WzbfMGHjCfLdqCoVmtcE7WgrybJdsIJD8y3Ki1CXDVl3L8MYc4m94m7eqsoLv/3l96V
-         sMZ8jjI9Nb+y9i4l9DtZpAssuVaxP4hKpf1saHGJQHYaG9k+Efwd/aCdBPr86+09Bkss
-         HRuMymlB/k7JzTaJraErrn9NP739ovEQteAfjVOZ3UEDdpR/pMw9nW9It6QbKJ84R+0L
-         4nIV/aNF16qMk5c8c/I+HaWFXJI9pIgREM6XbiMN1mwRaDCWYcqIu0C2Bo3dcXPKmjBC
-         QFyw==
+        Fri, 22 May 2020 17:29:34 -0400
+Received: by mail-il1-f194.google.com with SMTP id m6so12131460ilq.7;
+        Fri, 22 May 2020 14:29:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YnkleiRVR9Tj35XAzzQB+JDWcUaygxu/Dj+0wqS0CKM=;
-        b=NepddcnGPgZPzEXlD3AXNwFwG5kLQhTtNUOjNL4qF4w9wTVbTisX4aX0GF++YgGebx
-         YHrFElwfidTeJfr5WdufgxBNjtd9h1Vd34RhQIGxvGojK8VjsTJ662cu58GJjOox3dHD
-         ikbde2S9CIkh2Rju5KLGqwqkMUxTVDT1+CtH0yx9SF9ezP1CKcsuujsSanBv0Kq0H+yw
-         wXhfeKCOxgb6i+RJarj7cHN34qn4zFexe9PqB9o/0LNLcLlb6a68XlIhOT6qh9pA8Ue9
-         U8LYhuW1tRKgsyI5xpWVDWMWpzu0O3uFeBVK2VdGBg1f6U/dlvK+LOUCI3+lZv8pOGQ+
-         pTIA==
-X-Gm-Message-State: AOAM530uz0CyHJQyAL11AKrl6vVwIbOX+CkMDzfg36M/BnB85zy7hJ//
-        JMixAYL9kKAX+uhyZw2Vobw=
-X-Google-Smtp-Source: ABdhPJw8nCgBxKaNZJCtODgdJNJvWFVRgtgmeHTbcnalvmD8hqFpF4/HGZFaMe3+Sb4IdQya2xS8kg==
-X-Received: by 2002:a37:ad02:: with SMTP id f2mr16427574qkm.486.1590182947862;
-        Fri, 22 May 2020 14:29:07 -0700 (PDT)
-Received: from localhost.localdomain ([71.219.209.197])
-        by smtp.gmail.com with ESMTPSA id w94sm2357779qte.19.2020.05.22.14.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 14:29:07 -0700 (PDT)
-From:   Ethan Edwards <ethancarteredwards@gmail.com>
-To:     clm@fb.com
-Cc:     linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        Ethan Edwards <ethancarteredwards@gmail.com>
-Subject: [PATCH] FS: BTRFS: ulist.c: Fixed a brace coding style and space before tab
-Date:   Fri, 22 May 2020 17:29:02 -0400
-Message-Id: <20200522212902.20994-1-ethancarteredwards@gmail.com>
-X-Mailer: git-send-email 2.18.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FEKPVDTqZYdkry/gHcCWAwnNiWnV8DNS7HV5f1GoQI=;
+        b=TPJIde6dEdsLcs1LdhvEyhOySzeUOZ1CiNJG4he1j98yAbJ8gV8W+ArPh8Ipnd37Vz
+         pXZi1nqHmj4C550599w3TQs77ZV4/Xwl79pxGSHNv8lwI3IAKVzpR2cql4Znyt+C+mFB
+         Imnk7SQFcQFg8vX+Y8+0Q8Pkszu6NF27mazBbP/K50ws/A3rkAfXBJK2XRN42qCSxRDD
+         M+2S3vDO2ATKV9vYtb7LHdpQtdx5zXfkcH6hdwwj1ePj17F0Ua8EECTQZwt93FjQcotY
+         uFBjYJR8DsUE6c5uUYffGoWVMc7zLkMAHENqhtwjMAdCKUIZIj7CUa7SroRjphJNProC
+         C1Cg==
+X-Gm-Message-State: AOAM533ODoUo1KGWCL203aK17phDpKpoay+y02m8aT0FSAyOvkrZwKit
+        /wvc5ByijjaWv7k8A7wlK3s5+4SRUks=
+X-Google-Smtp-Source: ABdhPJzgfC3yWWqO9UdDXOUNAhppP8mwrfKJ+jxYsbjhm0H4TYVYNN8ckWDxtItweG5bQSkvVk7kvQ==
+X-Received: by 2002:a92:4909:: with SMTP id w9mr15370034ila.302.1590182973671;
+        Fri, 22 May 2020 14:29:33 -0700 (PDT)
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
+        by smtp.gmail.com with ESMTPSA id f15sm5252270ill.58.2020.05.22.14.29.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 14:29:32 -0700 (PDT)
+Received: by mail-io1-f48.google.com with SMTP id r2so2621462ioo.4;
+        Fri, 22 May 2020 14:29:32 -0700 (PDT)
+X-Received: by 2002:a5e:8b4b:: with SMTP id z11mr4708967iom.78.1590182972502;
+ Fri, 22 May 2020 14:29:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200507112955.23520-1-geert+renesas@glider.be> <20200507112955.23520-2-geert+renesas@glider.be>
+In-Reply-To: <20200507112955.23520-2-geert+renesas@glider.be>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 22 May 2020 16:29:09 -0500
+X-Gmail-Original-Message-ID: <CADRPPNSwEv_SV4jQk-gOj6+WhAX1jVQk2szgPN=o2JVqV0yjLw@mail.gmail.com>
+Message-ID: <CADRPPNSwEv_SV4jQk-gOj6+WhAX1jVQk2szgPN=o2JVqV0yjLw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ahci: qoriq: Add platform dependencies
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ethan Edwards <ethancarteredwards@gmail.com
+On Thu, May 7, 2020 at 6:30 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> The Freescale QorIQ AHCI SATA controller is only present on Freescale
+> Layerscape SoCs.  Add platform dependencies to the AHCI_QORIQ config
+> symbol, to avoid asking the user about it when configuring a kernel
+> without Layerscape support.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Fixed coding style
+Hi Jens,
 
-Signed-off-by: Ethan Edwards <ethancarteredwards@gmail.com>
----
- fs/btrfs/ulist.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Are you applying this patches?  I can also apply it with your ACK.
 
-diff --git a/fs/btrfs/ulist.c b/fs/btrfs/ulist.c
-index 3374c9e9be67..1e0484c8d244 100644
---- a/fs/btrfs/ulist.c
-+++ b/fs/btrfs/ulist.c
-@@ -22,7 +22,7 @@
-  * ULIST_ITER_INIT(&uiter);
-  *
-  * while ((elem = ulist_next(ulist, &uiter)) {
-- * 	for (all child nodes n in elem)
-+ *	for (all child nodes n in elem)
-  *		ulist_add(ulist, n);
-  *	do something useful with the node;
-  * }
-@@ -266,11 +266,11 @@ struct ulist_node *ulist_next(struct ulist *ulist, struct ulist_iterator *uiter)
- 		return NULL;
- 	if (uiter->cur_list && uiter->cur_list->next == &ulist->nodes)
- 		return NULL;
--	if (uiter->cur_list) {
-+	if (uiter->cur_list)
- 		uiter->cur_list = uiter->cur_list->next;
--	} else {
-+	else
- 		uiter->cur_list = ulist->nodes.next;
--	}
-+
- 	node = list_entry(uiter->cur_list, struct ulist_node, list);
- 	return node;
- }
--- 
-2.26.2
-
+Regards,
+Leo
+> ---
+>  drivers/ata/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+> index 05ecdce1b702cf8b..d9e66b37acd1862a 100644
+> --- a/drivers/ata/Kconfig
+> +++ b/drivers/ata/Kconfig
+> @@ -264,6 +264,7 @@ config AHCI_XGENE
+>  config AHCI_QORIQ
+>         tristate "Freescale QorIQ AHCI SATA support"
+>         depends on OF
+> +       depends on SOC_LS1021A || ARCH_LAYERSCAPE || COMPILE_TEST
+>         select SATA_HOST
+>         help
+>           This option enables support for the Freescale QorIQ AHCI SoC's
+> --
+> 2.17.1
+>
