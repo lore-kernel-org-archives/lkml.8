@@ -2,99 +2,179 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD44C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F82C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9EE20823
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0595820823
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="of6/20nR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIUzpkXU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgEVPh7 (ORCPT
+        id S1730765AbgEVPiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36264 "EHLO
+        Fri, 22 May 2020 11:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbgEVPh6 (ORCPT
+        with ESMTP id S1728433AbgEVPiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:37:58 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFE0C061A0E;
-        Fri, 22 May 2020 08:37:58 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d10so5168629pgn.4;
-        Fri, 22 May 2020 08:37:58 -0700 (PDT)
+        Fri, 22 May 2020 11:38:07 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3155C061A0E;
+        Fri, 22 May 2020 08:38:06 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v2so276529pfv.7;
+        Fri, 22 May 2020 08:38:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=+fdIAJRjmy/rRR+RCbZVMEUtca3wMVBf5rN50QMs3So=;
-        b=of6/20nR4qUZHgnavujGqmJRI1sCVIF8UQic9SqHgWtJ6xKMPVtzRsFzCtVpXSjYWZ
-         Ky7pYD/Wws7A57tCGkRyQYXfdainh/VVp4nem55oyyuqIxHzQRM0C0Bq7aCM79Px3P6O
-         s4qJ0iGWyMY8DfmDJxdmT514qEQBx9moXcxPeSj22Iw0rqcOKu5Ad41EEIi0oZN0tZKX
-         h71o6hsLvzLZLkU0h8HxbRDQZ3/bM4tYYtvNo49QzoxQ9w5d2HBMD5ERA+hYbAueQD28
-         r65WU58ZSNYdriAz6HFBk+Z8qA8iHxeAvK7cpfUB93lcnc5FWwc00qnmwDFg8uuGromN
-         rhVQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7d6Zc97NBhItvRjzjZUUc48PU79OtYvfEiPWCQjEB6k=;
+        b=XIUzpkXUgXN4ekr2pr/QNKfYS+PLoKi359Ap1UqdXIlLp2VLZLP+DChRBbloXHl0qO
+         7pNz+EDhJdaOAG3SBQX5U3/dN+YB1sQa0HdCt5J2s1B0HrHYpKVp2tLLJq48Iht761yU
+         NA/IisBLdmx2Il5HfI+POLJpXfBwCWybjm6VBBYXLc6VDccfvTEQoO7SYWnwjeoTtrMj
+         XYTaU5NnSpXZvafqavsy+bqAVU2O2at+nFSf9Rw8i/DpnOX2jdcm2t9SAKeRZ1OkZV0C
+         pATE1NvYIirBQtPJX5wmj7xsloZD+ypOl8NbhFDzBv5KvlUJzhiC4qt0v2Vw+YGVcnSL
+         o0jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+fdIAJRjmy/rRR+RCbZVMEUtca3wMVBf5rN50QMs3So=;
-        b=oVbbxRinhCdJK3yRypiMVWkca8k0wyVfzDKQjYzfH5rDST1O7fQsqZ0V2zwuuu5x8i
-         lxB8kk+CghdoOsoyAxL7NRhw7L/DcrrdcoAjD+EXRfO4E4gR1v56iUI3Dm1tStdekdIO
-         KP36Q8mBoYo5XTzCeKJ80xf9JRrOLxJKgdLqS9+Jbe4sy5wZH4rGc8krwGgm8PV23vqL
-         EshxUDDaP/Q4+OCSdN36p8SaFq9gApADTzSrp12r+dlT19rz9t07vE+hdQMmEVWIEIXp
-         jPMNLZVObBT2Tz0dzFEoeZHuTzWtla08d0FJPo9HEfKikJBHaVWhdmWJVPOt2K/OoIjJ
-         bZXg==
-X-Gm-Message-State: AOAM533DymywekGrtNCsyaoGl7McDuR+QobhcQmTFiQvLakjf+8hpGhs
-        U4Jvb7C0WSs2M2XOd2cN8VdKLQdo
-X-Google-Smtp-Source: ABdhPJw7osy8VN0SR5WZS9ScPFqC3cP54TjG/bI/cqK0VsExF/NxvIMn/kzCXpkqssM0ilra1PLL8A==
-X-Received: by 2002:a62:80ca:: with SMTP id j193mr4242287pfd.41.1590161877344;
-        Fri, 22 May 2020 08:37:57 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h4sm8086838pje.29.2020.05.22.08.37.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 08:37:56 -0700 (PDT)
-Subject: Re: [PATCH v4 5/5] mtd: rawnand: brcmnand: support v2.1-v2.2
- controllers
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-References: <20200522072525.3919332-1-noltari@gmail.com>
- <20200522121524.4161539-1-noltari@gmail.com>
- <20200522121524.4161539-6-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <47f870ef-55d8-54b3-97df-2bdab8f1d77c@gmail.com>
-Date:   Fri, 22 May 2020 08:37:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7d6Zc97NBhItvRjzjZUUc48PU79OtYvfEiPWCQjEB6k=;
+        b=uddXLMzVsi2o/QpvfGI31LgPkHQ7bwfxVqZot09Y4mwDXJtN9RYzNbpcj+aW63q99m
+         rZDbTPMGqTlMuJ8kzQ89Id9Z9gYKhtXvWLRPL0cdOTLgqhkEp3ZXurkN8ahgchyXBA9j
+         2aJ/l6jmmF8OY+5bO9Tf86E+6V4V+ZvTnx8yDJ6Za0hx9fItgoBUJ10MnDRi4fzttyWc
+         zLNomW4+nbRX+1NnRzCRYyZB3d4nAbSdhM47GHO+jHVP7dgSnerZ01Ja7HH02fQuhmqf
+         2OiaxuTdWITBXA2ApxTLxGh3eddC9ZAMl9I3qt/JetSAj4yoONGsp7dSSvBZcL078nvm
+         o83g==
+X-Gm-Message-State: AOAM532DIhcOBHtF0FHyFoC6h9bDzRebjQRMhN0vsO0HdkaY48t+SiiK
+        qbU6hxPtKksL9duZSPvwlRnMHSRGnQ81RWoCCso=
+X-Google-Smtp-Source: ABdhPJwO/L4Ya2h25wEeCWkhoA3A5fiVzMxVAIXSecKUCGMRueGRPQ/S/bLQTN0mYfvxRnBjkDvp1YOcgWg9UMIA/lo=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr14554351pgb.203.1590161886488;
+ Fri, 22 May 2020 08:38:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200522121524.4161539-6-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org> <1590157452-27179-4-git-send-email-jprakash@codeaurora.org>
+In-Reply-To: <1590157452-27179-4-git-send-email-jprakash@codeaurora.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 May 2020 18:37:55 +0300
+Message-ID: <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
+Subject: Re: [PATCH V5 3/5] iio: adc: Add support for PMIC7 ADC
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 22, 2020 at 5:25 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
+> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+> major change from PMIC5 is that all SW communication to ADC goes through
+> PMK8350, which communicates with other PMICs through PBS when the ADC
+> on PMK8350 works in master mode. The SID register is used to identify the
+> PMICs with which the PBS needs to communicate. Add support for the same.
+
+Below should be in a separate patch, but it's a bikeshedding. So, I
+left it to maintainers to decide.
+Fine with me
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+...
+
+> @@ -285,7 +304,7 @@ static int adc5_configure(struct adc5_chip *adc,
+>
+>         /* Read registers 0x42 through 0x46 */
+>         ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
+> -       if (ret < 0)
+> +       if (ret)
+>                 return ret;
+>
+>         /* Digital param selection */
+
+...
+
+> @@ -331,7 +391,7 @@ static int adc5_do_conversion(struct adc5_chip *adc,
+>
+>         if (adc->poll_eoc) {
+>                 ret = adc5_poll_wait_eoc(adc);
+> -               if (ret < 0) {
+> +               if (ret) {
+>                         pr_err("EOC bit not set\n");
+>                         goto unlock;
+>                 }
+> @@ -341,7 +401,7 @@ static int adc5_do_conversion(struct adc5_chip *adc,
+>                 if (!ret) {
+>                         pr_debug("Did not get completion timeout.\n");
+>                         ret = adc5_poll_wait_eoc(adc);
+> -                       if (ret < 0) {
+> +                       if (ret) {
+>                                 pr_err("EOC bit not set\n");
+>                                 goto unlock;
+>                         }
+
+...
+
+> @@ -406,8 +519,38 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>         default:
+>                 return -EINVAL;
+>         }
+> +}
+>
+> -       return 0;
+
+(this one looks like standalone change from above)
+
+...
+
+> @@ -570,7 +762,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
+>
+>                 ret = adc5_read(adc, ADC5_USR_REVISION1, dig_version,
+>                                                         sizeof(dig_version));
+> -               if (ret < 0) {
+> +               if (ret) {
+>                         dev_err(dev, "Invalid dig version read %d\n", ret);
+>                         return ret;
+>                 }
+
+...
+
+> +       if (of_device_is_compatible(node, "qcom,spmi-adc7"))
+> +               indio_dev->info = &adc7_info;
+> +       else
+> +               indio_dev->info = &adc5_info;
+
+Can we use driver_data?
+
+...
+
+> +       if (adcmap7_die_temp[0].x > voltage) {
+> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
+> +               return 0;
+
+> +       } else if (adcmap7_die_temp[i].x <= voltage) {
+
+As per previous comment, redundant 'else' and please use value of i
+directly here.
 
 
-On 5/22/2020 5:15 AM, Álvaro Fernández Rojas wrote:
-> v2.1: tested on Netgear DGND3700v1 (BCM6368)
-> v2.2: tested on Netgear DGND3700v2 (BCM6362)
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
