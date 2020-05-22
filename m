@@ -2,128 +2,241 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0226C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD86C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8A18206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E4F206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgEVJ0R (ORCPT
+        id S1729750AbgEVJ0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:26:17 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:41899 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbgEVJ0P (ORCPT
+        Fri, 22 May 2020 05:26:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31596 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729432AbgEVJ0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:26:15 -0400
-Received: by mail-io1-f70.google.com with SMTP id d3so6798881iob.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:26:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=lnDnkHH8eIGRot84QQm9EkjYLwd2UTiQf0hCf63v5y0=;
-        b=ieIlq9lrwbYT77F2XBzQRcy7ev1U/7oOW0YaLzRstVzXQqooafuTMPzfCXoinVQIsf
-         Seq8YJwFCP8JGqCog+4IM4CeGKo91N5mkypGAppdnsyh4M2+2AhFPpYwtWBafiua8BaE
-         qNcmzruArpxWnP6Kv2vOg3Vt+rX4PTvPdCGtyFj9l521cA/ay6GLmTyyLXF1Vb5C3kKk
-         hwvy/SFj5QvcKYVxGtgtvFG3JTPQCIHVc9NliffWITxHgXVtnV9ytWDRKufhfqrKUXns
-         hqK3zHdj92R+hQpHWUJ44ES2B4d3N73XLr6bqxtZ9DMyDNFEGREEuv9dH9J/HYEPe2G+
-         J9Zg==
-X-Gm-Message-State: AOAM533wAkZa2oBqBm3ym0Fk8uqPqKH9UPD2CcP7Fiai7eYIkbCVye8h
-        Pr/X7CRxlhZDZ7QRnuvcrt8Uu7/NJsBKKiSJuKJpUF4a8F3S
-X-Google-Smtp-Source: ABdhPJy5UwqNw5v0J/MMiDXS19aWx4ShtWQFpiylMBDvCxAMBOYoglvvPQiKE4Lo8qNgPNjryfgLvwpjiZrZwhEMDuvrVsReB4Ef
+        Fri, 22 May 2020 05:26:30 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M93GrI108994;
+        Fri, 22 May 2020 05:26:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31659tjfyg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 05:26:00 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04M93QBs109888;
+        Fri, 22 May 2020 05:25:59 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31659tjfxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 05:25:59 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04M9KssD002767;
+        Fri, 22 May 2020 09:25:58 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 314wxpp392-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 09:25:58 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04M9PuRG44564940
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 May 2020 09:25:57 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA96B6E054;
+        Fri, 22 May 2020 09:25:56 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 651216E04C;
+        Fri, 22 May 2020 09:25:48 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.79.190.254])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 22 May 2020 09:25:48 +0000 (GMT)
+Subject: Re: [PATCH v2 0/7] Share events between metrics
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+References: <20200520182011.32236-1-irogers@google.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <3e8f12d8-0c56-11e9-e557-e384210f15c1@linux.ibm.com>
+Date:   Fri, 22 May 2020 14:55:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:8c4a:: with SMTP id o71mr12894641ild.130.1590139574866;
- Fri, 22 May 2020 02:26:14 -0700 (PDT)
-Date:   Fri, 22 May 2020 02:26:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000080db0d05a639389e@google.com>
-Subject: WARNING in __queue_work (2)
-From:   syzbot <syzbot+8ceb187b741280aa5611@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520182011.32236-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_05:2020-05-21,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011 spamscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005220070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    ac935d22 Add linux-next specific files for 20200415
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13666a22100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bc498783097e9019
-dashboard link: https://syzkaller.appspot.com/bug?extid=8ceb187b741280aa5611
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8ceb187b741280aa5611@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 20232 at kernel/workqueue.c:1412 __queue_work+0xe4e/0x1280 kernel/workqueue.c:1412
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 20232 Comm: syz-executor.4 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:__queue_work+0xe4e/0x1280 kernel/workqueue.c:1412
-Code: 03 38 d0 7c 09 84 d2 74 05 e8 9e c3 65 00 8b 5b 24 31 ff 83 e3 20 89 de e8 6f a4 27 00 85 db 0f 85 ce 00 00 00 e8 c2 a2 27 00 <0f> 0b e9 33 f7 ff ff e8 b6 a2 27 00 0f 0b e9 ac f6 ff ff e8 aa a2
-RSP: 0018:ffffc90006e67a08 EFLAGS: 00010012
-RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc900115d4000
-RDX: 00000000000001e4 RSI: ffffffff814b91ce RDI: 0000000000000005
-RBP: 0000000000000040 R08: ffff88804de08480 R09: fffffbfff191fae9
-R10: ffffffff8c8fd743 R11: fffffbfff191fae8 R12: ffff88804c7d4aa0
-R13: ffff88809c6f3000 R14: ffff88809c6f3000 R15: 0000000000000040
- queue_work_on+0x18b/0x200 kernel/workqueue.c:1517
- queue_work include/linux/workqueue.h:507 [inline]
- hci_sock_sendmsg+0x1339/0x2020 net/bluetooth/hci_sock.c:1812
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- sock_write_iter+0x289/0x3c0 net/socket.c:1004
- call_write_iter include/linux/fs.h:1907 [inline]
- new_sync_write+0x4a2/0x700 fs/read_write.c:484
- __vfs_write+0xc9/0x100 fs/read_write.c:497
- vfs_write+0x268/0x5d0 fs/read_write.c:559
- ksys_write+0x1ee/0x250 fs/read_write.c:612
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f776510fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000000000050d580 RCX: 000000000045ca29
-RDX: 0000000000000004 RSI: 0000000020000100 RDI: 000000000000000b
-RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000d1d R14: 00000000004cf706 R15: 00007f77651106d4
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 5/20/20 11:50 PM, Ian Rogers wrote:
+> Metric groups contain metrics. Metrics create groups of events to
+> ideally be scheduled together. Often metrics refer to the same events,
+> for example, a cache hit and cache miss rate. Using separate event
+> groups means these metrics are multiplexed at different times and the
+> counts don't sum to 100%. More multiplexing also decreases the
+> accuracy of the measurement.
+> 
+> This change orders metrics from groups or the command line, so that
+> the ones with the most events are set up first. Later metrics see if
+> groups already provide their events, and reuse them if
+> possible. Unnecessary events and groups are eliminated.
+> 
+> The option --metric-no-group is added so that metrics aren't placed in
+> groups. This affects multiplexing and may increase sharing.
+> 
+> The option --metric-mo-merge is added and with this option the
+> existing grouping behavior is preserved.
+> 
+> Using skylakex metrics I ran the following shell code to count the
+> number of events for each metric group (this ignores metric groups
+> with a single metric, and one of the duplicated TopdownL1 and
+> TopDownL1 groups):
+> 
+> for i in all Branches BrMispredicts Cache_Misses FLOPS Instruction_Type Memory_BW Pipeline Power SMT Summary TopdownL1 TopdownL1_SMT
+> do
+>   echo Metric group: $i
+>   echo -n " - No merging (old default, now --metric-no-merge): "
+>   /tmp/perf/perf stat -a --metric-no-merge -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]" | wc -l
+>   echo -n " - Merging over metrics (new default)             : "
+>   /tmp/perf/perf stat -a -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
+>   echo -n " - No event groups and merging (--metric-no-group): "
+>   /tmp/perf/perf stat -a --metric-no-group -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
+> done
+> 
+> Metric group: all
+>  - No merging (old default, now --metric-no-merge): 193
+>  - Merging over metrics (new default)             : 142
+>  - No event groups and merging (--metric-no-group): 84
+> Metric group: Branches
+>  - No merging (old default, now --metric-no-merge): 8
+>  - Merging over metrics (new default)             : 8
+>  - No event groups and merging (--metric-no-group): 4
+> Metric group: BrMispredicts
+>  - No merging (old default, now --metric-no-merge): 11
+>  - Merging over metrics (new default)             : 11
+>  - No event groups and merging (--metric-no-group): 10
+> Metric group: Cache_Misses
+>  - No merging (old default, now --metric-no-merge): 11
+>  - Merging over metrics (new default)             : 9
+>  - No event groups and merging (--metric-no-group): 6
+> Metric group: FLOPS
+>  - No merging (old default, now --metric-no-merge): 18
+>  - Merging over metrics (new default)             : 10
+>  - No event groups and merging (--metric-no-group): 10
+> Metric group: Instruction_Type
+>  - No merging (old default, now --metric-no-merge): 6
+>  - Merging over metrics (new default)             : 6
+>  - No event groups and merging (--metric-no-group): 4
+> Metric group: Pipeline
+>  - No merging (old default, now --metric-no-merge): 6
+>  - Merging over metrics (new default)             : 6
+>  - No event groups and merging (--metric-no-group): 5
+> Metric group: Power
+>  - No merging (old default, now --metric-no-merge): 16
+>  - Merging over metrics (new default)             : 16
+>  - No event groups and merging (--metric-no-group): 10
+> Metric group: SMT
+>  - No merging (old default, now --metric-no-merge): 11
+>  - Merging over metrics (new default)             : 8
+>  - No event groups and merging (--metric-no-group): 7
+> Metric group: Summary
+>  - No merging (old default, now --metric-no-merge): 19
+>  - Merging over metrics (new default)             : 17
+>  - No event groups and merging (--metric-no-group): 17
+> Metric group: TopdownL1
+>  - No merging (old default, now --metric-no-merge): 16
+>  - Merging over metrics (new default)             : 7
+>  - No event groups and merging (--metric-no-group): 7
+> Metric group: TopdownL1_SMT
+>  - No merging (old default, now --metric-no-merge): 24
+>  - Merging over metrics (new default)             : 7
+>  - No event groups and merging (--metric-no-group): 7
+> 
+> There are 5 out of 12 metric groups where no events are shared, such
+> as Power, however, disabling grouping of events always reduces the
+> number of events.
+> 
+> The result for Memory_BW needs explanation:
+> 
+> Metric group: Memory_BW
+>  - No merging (old default, now --metric-no-merge): 9
+>  - Merging over metrics (new default)             : 5
+>  - No event groups and merging (--metric-no-group): 11
+> 
+> Both with and without merging the groups fail to be set up and so the
+> event counts here are for broken metrics. The --metric-no-group number
+> is accurate as all the events are scheduled. Ideally a constraint
+> would be added for these metrics in the json code to avoid grouping.
+> 
+> v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
+> missing comma with metric lists (reported-by Jiri Olsa
+> <jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
+> (suggested-by Jiri Olsa).
+> 
+> v1. was prepared on kernel/git/acme/linux.git branch tmp.perf/core
+> 
+> Compared to RFC v3: fix a bug where unnecessary commas were passed to
+> parse-events and were echoed. Fix a bug where the same event could be
+> matched more than once with --metric-no-group, causing there to be
+> events missing.
+> https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
+> 
+> Ian Rogers (7):
+>   perf metricgroup: Always place duration_time last
+>   perf metricgroup: Use early return in add_metric
+>   perf metricgroup: Delay events string creation
+>   perf metricgroup: Order event groups by size
+>   perf metricgroup: Remove duped metric group events
+>   perf metricgroup: Add options to not group or merge
+>   perf metricgroup: Remove unnecessary ',' from events
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reviewd-By: Kajol Jain <kjain@linux.ibm.com>
+Tested-By: Kajol Jain <kjain@linux.ibm.com> ( Tested it to see behavior with some metric groups in both x86 and Power machine)
+
+Thanks,
+Kajol Jain
+
+>  tools/perf/Documentation/perf-stat.txt |  19 ++
+>  tools/perf/builtin-stat.c              |  11 +-
+>  tools/perf/util/metricgroup.c          | 239 ++++++++++++++++++-------
+>  tools/perf/util/metricgroup.h          |   6 +-
+>  tools/perf/util/stat.h                 |   2 +
+>  5 files changed, 207 insertions(+), 70 deletions(-)
+> 
