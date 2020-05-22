@@ -2,114 +2,102 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42186C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D05821534
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2137721534
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgEVOEO (ORCPT
+        id S1729997AbgEVOEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:04:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:36140 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729399AbgEVOEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:04:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94A22D6E;
-        Fri, 22 May 2020 07:04:13 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F8B13F68F;
-        Fri, 22 May 2020 07:04:10 -0700 (PDT)
-Date:   Fri, 22 May 2020 15:04:07 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Alan Mikhak <alanmikhak@gmail.com>
-Cc:     gustavo.pimentel@synopsys.com, alan.mikhak@sifive.com,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
-        helgaas@kernel.org, jingoohan1@gmail.com, jonathanh@nvidia.com,
-        kthota@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com,
-        sagar.tv@gmail.com, thierry.reding@gmail.com, vidyas@nvidia.com,
-        Alan Mikhak <amikhak@wirelessfabric.com>
-Subject: Re: PCI: dwc: Warn only for non-prefetchable memory resource size
- >4GB
-Message-ID: <20200522140406.GH11785@e121166-lin.cambridge.arm.com>
-References: <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
- <20200520023304.14348-1-amikhak@wirelessfabric.com>
+        Fri, 22 May 2020 10:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729399AbgEVOEh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:04:37 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAB5C061A0E;
+        Fri, 22 May 2020 07:04:37 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jc8He-0005Uc-Qj; Fri, 22 May 2020 16:04:22 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 0C755100F17; Fri, 22 May 2020 16:04:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Dave Young <dyoung@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Lenny Szubowicz <lszubowi@redhat.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Loic Yhuel <loic.yhuel@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
+In-Reply-To: <CAMj1kXHogO=3wAyZPi9WtHP9++N5KH6OjNgY_CQ_o8nZJ5jjVA@mail.gmail.com>
+References: <20200517125754.8934-1-ardb@kernel.org> <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com> <20200522134004.GF28750@zn.tnic> <CAMj1kXHogO=3wAyZPi9WtHP9++N5KH6OjNgY_CQ_o8nZJ5jjVA@mail.gmail.com>
+Date:   Fri, 22 May 2020 16:04:21 +0200
+Message-ID: <87mu60rrq2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520023304.14348-1-amikhak@wirelessfabric.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:33:04PM -0700, Alan Mikhak wrote:
-> Hi Lorenzo,
-> 
-> I came across this issue when implementing a Linux NVMe endpoint function
-> driver under the Linux PCI Endpoint Framework:
-> https://lwn.net/Articles/804369/
-> 
-> I needed to map up to 128GB of host memory using a single ATU window
-> from the endpoint side because NVMe PRPs can be scattered all over host
-> memory. In the process, I came across this 4GB limitation where the
-> maximum size of memory that can be mapped is limited by what a u32 value
-> can represent.
-> 
-> I submitted a separate patch to fix an undefined behavior that may also
-> happen in dw_pcie_prog_outbound_atu_unroll() under some circumstances
-> when the size of the memory being mapped is greater than what a u32 value
-> can represent.
-> https://patchwork.kernel.org/patch/11469701/
-> 
-> The above patch has been accepted. However, the variable pp->mem_size
-> in dw_pcie_host_init() is still a u32 whereas the value returned by
-> resource_size() is u64. If the resource size has non-zero upper 32-bits,
-> those upper 32-bits will be lost when assigning:
->  pp->mem_size = resource_size(pp->mem).
-> 
-> Since current callers seem happy with the existing 4GB implementation
-> and fixing the u32 limit is beyond my available resources and has a long
-> high-impact tail, a warning seemed to be a good choice to highlight
-> this issue in case someone else decides to map a MEM region that is
-> greater than 4GB.
-> 
-> Removing the warning will avoid such discussions. Without this warning,
-> this limitation will go unnoticed and will only impact whoever has to
-> deal with it. It cost me time to figure it out when I had an application
-> that needed a region larger than 4GB. I figured the most I could do about
-> it is to raise the issue by adding a warning.
+Ard,
 
-You did the right thing (and you helped me unearth some major
-deficiencies in current DWC code). Unfortunately I have to drop:
+Ard Biesheuvel <ardb@kernel.org> writes:
+> On Fri, 22 May 2020 at 15:40, Borislav Petkov <bp@alien8.de> wrote:
+>>
+>> On Fri, May 22, 2020 at 03:06:20PM +0200, Ard Biesheuvel wrote:
+>> > Ping?
+>>
+>> Did you want to make your tags unique from the next pull request onwards
+>> and I were supposed to pull this one as is?
+>
+> What usually happens is that Ingo applies the patches piecemeal,
+> ignoring the tag altogether, so without any coordination between you
+> as x86 maintainers or communication back to me, that is what i was
+> expecting to happen this time as well.
+>
+> Note that I have another PR pending since two weeks ago [0].
+>
+> So if you want to start dealing with the EFI trees in a different way
+> from now on, that is perfectly fine with me, but please align with
+> Ingo and Thomas first.
 
-9e73fa02aa00 ("PCI: dwc: Warn if MEM resource size exceeds max for 32-bits")
+/me dons managerial hat
 
-because it triggers regressions (and it is still not in the mainline,
-IMO there would be more if we send it upstream).
+Yes, please. Your pull request really do not need any special handling.
 
-I will keep:
+Please add a unique signed tag to each pull request and stick the
+description, e.g.
 
-e1fc129219a8 ("PCI: dwc: Program outbound ATU upper limit register")
+ " EFI fixes for v5.7-rcX:
+   - fix EFI framebuffer earlycon for wide fonts
+   - avoid filling screen_info with garbage...."
+   
+into the tag which gives us the merge commit message automagically.
 
-because it is a step in the right direction and makes sense on its own.
+Thanks
 
-Thanks for all the effort you put into this.
+        tglx
 
-Lorenzo
-
-> Regards,
-> Alan
-> 
-> 
-> 
-> 
-> 
-> 
