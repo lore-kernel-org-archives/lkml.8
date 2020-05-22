@@ -2,124 +2,124 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 908382073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/q40vuv"
+	by mail.kernel.org (Postfix) with ESMTP id 0BD1F2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgEVHd0 (ORCPT
+        id S1728618AbgEVHgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:33:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58276 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728214AbgEVHdZ (ORCPT
+        Fri, 22 May 2020 03:36:33 -0400
+Received: from ppsw-31.csi.cam.ac.uk ([131.111.8.131]:52194 "EHLO
+        ppsw-31.csi.cam.ac.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbgEVHgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:33:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590132804;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6EtbHbZKdks/ocBUdzOilBq6OTiCmy87fOc1ctWzSB8=;
-        b=J/q40vuvSBdOCkpqSMXBqVOQNJFyj+BZBrKXfED6n6Jfg8b6LHGivW3Roa9lq2JL7T5331
-        dCRHFugb4f5CNLrtYo3rJlSpPPoVeeOaxC1er95QHFBujVzdRZrBZQpwRF2qKDli0kWWmo
-        zL8NZ2ajwefdZD7uZalG00q2d4jAads=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-S600NW0GOlKzgecVSm4Teg-1; Fri, 22 May 2020 03:33:21 -0400
-X-MC-Unique: S600NW0GOlKzgecVSm4Teg-1
-Received: by mail-wr1-f70.google.com with SMTP id p8so4033210wrj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:33:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6EtbHbZKdks/ocBUdzOilBq6OTiCmy87fOc1ctWzSB8=;
-        b=NctEqcptSFYdc0DsIc67dhmyOGGeN633Yl/Jm+NVoA4GVyxFYerLfWUWnSrnG8dZsW
-         mJwtIfpKopzKpZprDeooAICXBJvliIqKFyBm1p4TjqFyPGalCmf6mbf1KVD+C7I35Bc9
-         46E3ewNSKXqRzIzbo8N/s86Jx2TFtRTe3qPurP+/YBbiw+n+Vgfej2KZS75q+C2sclzy
-         Fl5Zj7Bs/qbNLIF/WDDybxOw43Kc3h5o7iLXZ2JEaUp8XpqLa0mFhMFkospG0M46FGl6
-         TZo6/rrzNZxK1UOg0lAGXceAxJ+0jJtDn8cGtq60+1zBJGLYDVvDPwFZzU2HCTD+uWtG
-         PxmQ==
-X-Gm-Message-State: AOAM533Fd5rpWQLElKlKDDk4VZCHbBuJ9buRZF05vW2z1zc8kGDsb6jT
-        RV3YSBpi2Is7UrjepLYsy7GK5Xj3qxWhz7w69xehtuVKqnsyCB5DVptaNohOw97BoLTJUSWbkbr
-        VnuXCYTyumKkH3v2uOjMLzFiP
-X-Received: by 2002:adf:82c3:: with SMTP id 61mr2352148wrc.326.1590132800742;
-        Fri, 22 May 2020 00:33:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxHE+96FYxJjwlkKncGlD0w505R5oIT+cQodzUqCD8Ml+XOl1XFdP5KV9lsIxGty7UQKdEwtQ==
-X-Received: by 2002:adf:82c3:: with SMTP id 61mr2352119wrc.326.1590132800484;
-        Fri, 22 May 2020 00:33:20 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:71e6:9616:7fe3:7a17? ([2001:b07:6468:f312:71e6:9616:7fe3:7a17])
-        by smtp.gmail.com with ESMTPSA id l13sm8583790wrm.55.2020.05.22.00.33.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 00:33:19 -0700 (PDT)
-Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
- <20200511164752.2158645-3-vkuznets@redhat.com>
- <20200512152709.GB138129@redhat.com> <87o8qtmaat.fsf@vitty.brq.redhat.com>
- <20200512155339.GD138129@redhat.com> <20200512175017.GC12100@linux.intel.com>
- <20200513125241.GA173965@redhat.com>
- <0733213c-9514-4b04-6356-cf1087edd9cf@redhat.com>
- <20200515184646.GD17572@linux.intel.com>
- <d84b6436-9630-1474-52e5-ffcc4d2bd70a@redhat.com>
- <20200515204341.GF17572@linux.intel.com>
- <943cfc2f-5b18-e00a-f5a2-4577472a1ff5@redhat.com>
- <87y2plqqpa.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e79fe0d3-0a73-ed84-7021-150d03a80f93@redhat.com>
-Date:   Fri, 22 May 2020 09:33:13 +0200
+        Fri, 22 May 2020 03:36:33 -0400
+X-Greylist: delayed 930 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 May 2020 03:36:32 EDT
+X-Cam-AntiVirus: no malware found
+X-Cam-ScannerInfo: http://help.uis.cam.ac.uk/email-scanner-virus
+Received: from 88-109-182-220.dynamic.dsl.as9105.com ([88.109.182.220]:33852 helo=[192.168.1.219])
+        by ppsw-31.csi.cam.ac.uk (smtp.hermes.cam.ac.uk [131.111.8.157]:465)
+        with esmtpsa (PLAIN:amc96) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        id 1jc1ya-000pAW-LG (Exim 4.92.3)
+        (return-path <amc96@hermes.cam.ac.uk>); Fri, 22 May 2020 08:20:16 +0100
+Subject: Re: [patch V9 00/39] x86/entry: Rework leftovers (was part V)
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200521200513.656533920@linutronix.de>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <5e68aa83-feac-2aa7-10ee-aebebc60c83e@citrix.com>
+Date:   Fri, 22 May 2020 08:20:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <87y2plqqpa.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20200521200513.656533920@linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/20 16:59, Vitaly Kuznetsov wrote:
->> However, interrupts for 'page ready' do have a bunch of advantages (more
->> control on what can be preempted by the notification, a saner check for
->> new page faults which is effectively a bug fix) so it makes sense to get
->> them in more quickly (probably 5.9 at this point due to the massive
->> cleanups that are being done around interrupt vectors).
->>
-> Actually, I have almost no feedback to address in v2 :-) Almost all
-> discussion are happening around #VE. Don't mean to rush or anything but
-> if the 'cleanups' are finalized I can hopefully rebase and retest very
-> quickly as it's only the KVM guest part which intersects with them, the
-> rest should be KVM-only. But 5.9 is good too)
+On 21/05/2020 21:05, Thomas Gleixner wrote:
+> Folks!
+>
+> This is V9 of the rework series. V7 and V8 were never posted but I used the
+> version numbers for tags while fixing up 0day complaints. The last posted
+> version was V6 which can be found here:
+>
+>   https://lore.kernel.org/r/20200515234547.710474468@linutronix.de
+>
+> The V9 leftover series is based on:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+>
+> That branch contains the merged part 1-4 of the original 5 part series.
+>
+> V9 has the following changes vs. V6:
+>
+>    - Rebase on tip x86/entry
 
-Yeah, going for 5.9 would only be due to the conflicts.  Do send v2
-anyway now, so that we can use a merge commit to convert the interrupt
-vector to the 5.8 style.
+Apologies for opening a related can of worms.
 
-Paolo
+The new debug_enter() has propagated a pre-existing issue forward,
+ultimately caused by bad advice in the SDM.
 
+Because the RTM status bit in DR6 has inverted polarity, writing DR6 to
+0 causes RTM to appear asserted to any logic which cares, despite RTM
+debugging not being enabled.  The same is true in principle for what is
+handed to userspace via u_debugreg[DR_STATUS].
+
+On the subject of DR6, the SDM now reads:
+
+"Certain debug exceptions may clear bits 0-3. The remaining contents of
+the DR6 register are never cleared by the processor. To avoid confusion
+in identifying debug exceptions, debug handlers should clear the
+register (except bit 16, which they should set) before returning to the
+interrupted task."
+
+First of all, that should read "are never de-asserted by the processor"
+rather than "cleared", but the advice has still failed to learn from its
+first mistake.  The forward-compatible way to fix this is to set
+DR6_DEFAULT (0xffff0ff0) which also covers future inverted polarity bits.
+
+As for what to do about userspace, that is harder.  One approach is to
+express everything in terms of positive polarity (i.e. pass on dr6 ^
+DR6_DEFAULT), so DR6_RTM only appears set when RTM debugging is
+enabled.  This approach is already taken with the VMCS PENDING_DBG
+field, so there is at least previous form.
+
+I realise that "do nothing" might be acceptable at this point, given the
+lack of support for RTM debugging.
+
+Thanks,
+
+~Andrew
