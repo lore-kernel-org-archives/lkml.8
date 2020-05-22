@@ -2,111 +2,97 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD39C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B63BA207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A102078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mFSTO+U1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r1TPvPcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgEVDB5 (ORCPT
+        id S1727914AbgEVDFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 23:01:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
+        Thu, 21 May 2020 23:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgEVDB4 (ORCPT
+        with ESMTP id S1727024AbgEVDFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 23:01:56 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE21C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 20:01:56 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n11so4297497pgl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 20:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=11dG9PEoV3wf+UvltnJpE6YCCFo+AkuBxx0Uh1epyW8=;
-        b=mFSTO+U1AdIXstE4FPu4IrX9krnbPJI1UwEd/NFyHQEkjp0NWzPjPYMF+bJUa/DdQE
-         Y9oenRABP+tyS0RQg/M+SBckFv+C8AM/gT9vwTj5E59CLzW4B0emNS4yz3c5R7gLEJ19
-         f9snByrZJlD04TkBLOe+sGplhsPTzhM8aMtw0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=11dG9PEoV3wf+UvltnJpE6YCCFo+AkuBxx0Uh1epyW8=;
-        b=ennbGz/O3bcChjQQJK4HsB5z4AlWpPMej9KEfgLZzlyfWaN7JV4qVaYwdIIXkQ1NeV
-         ecH8+0nyUby79l0GtKhnB1YFIrcgPrE0KdhmYvdtPq/WA/24akKOK8rVgniR++KiZTbX
-         7XO3U9KxR8zPZZbw3T3ajdLbZzxVVCp0PiqZLvBQLkF/Fw60y13mQMmX3QWoS3AmHWRv
-         qL6UB79pSnyXPCL2SWghxeAfq3vFu4/tSFuVsio3K1pSavjX6FTFb8jdGmqL5WP2s7lb
-         OgvDAQFlKBUlxoLOnxHVtPotx8jOwdTHLx84jyOz5K3dEHlDZmM9G0UMFLQDb2Otb6Wx
-         +/tA==
-X-Gm-Message-State: AOAM5307yGdWNt9pFzxco56FngM4zYCN2Qh8HuvfefA1y2uCFXgQXAJr
-        aAUwrn8EvrjxA7slUOWNNgwApQ==
-X-Google-Smtp-Source: ABdhPJx1U5V5Jfl/NgxmZJ7wtt8+x1uXW6sBJMURJZobe+S6nyjAMFyIFihw3HhmWAk18QXkuf6chA==
-X-Received: by 2002:aa7:9532:: with SMTP id c18mr1800933pfp.255.1590116515654;
-        Thu, 21 May 2020 20:01:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n23sm5151785pjq.18.2020.05.21.20.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 20:01:54 -0700 (PDT)
-Date:   Thu, 21 May 2020 20:01:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     gregkh@linuxfoundation.org, Arnd Bergmann <arnd@arndb.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4] /dev/mem: Revoke mappings when a driver claims the
- region
-Message-ID: <202005211950.D56130B81@keescook>
-References: <159009507306.847224.8502634072429766747.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Thu, 21 May 2020 23:05:53 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90899C061A0E;
+        Thu, 21 May 2020 20:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ws6mDxugOw83qz5FboXgcXuaCjucqwgfP3Opy1/y+PY=; b=r1TPvPcKm6UjpoPKi+DHen5TkY
+        k+zurUJXCvxxY2EgM5d4d9FupeUVTQgwynYkyz8enzjLl/Y41f8GErtba8gKz65bpYWavA93CFNAv
+        AQUU7Sh1I/37q0MOaI991ahUqolotpfnTG95vjPMA9u1KB9SGaXdwDctjQ98JqGkE1mrvkrM/mKz/
+        kW9JOMO7N99CiJN/mNgDHT828oBacfWCuGU8PtadNymmnhJfWikEy9POSK42Huod1QNl8DkycGvRc
+        KaEhdvfsVDYE6GIg7iCEgByW1Oi+CnzlxY4+UwwR7mMdKp9f5goyWIWIDax3vfH4N5ikgs5BO65Tr
+        sx524syQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jby0P-0005xG-D0; Fri, 22 May 2020 03:05:53 +0000
+Date:   Thu, 21 May 2020 20:05:53 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/36] Large pages in the page cache
+Message-ID: <20200522030553.GK28818@bombadil.infradead.org>
+References: <20200515131656.12890-1-willy@infradead.org>
+ <20200521224906.GU2005@dread.disaster.area>
+ <20200522000411.GI28818@bombadil.infradead.org>
+ <20200522025751.GX2005@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159009507306.847224.8502634072429766747.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <20200522025751.GX2005@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:06:17PM -0700, Dan Williams wrote:
-> The typical usage of unmap_mapping_range() is part of
-> truncate_pagecache() to punch a hole in a file, but in this case the
-> implementation is only doing the "first half" of a hole punch. Namely it
-> is just evacuating current established mappings of the "hole", and it
-> relies on the fact that /dev/mem establishes mappings in terms of
-> absolute physical address offsets. Once existing mmap users are
-> invalidated they can attempt to re-establish the mapping, or attempt to
-> continue issuing read(2) / write(2) to the invalidated extent, but they
-> will then be subject to the CONFIG_IO_STRICT_DEVMEM checking that can
-> block those subsequent accesses.
+On Fri, May 22, 2020 at 12:57:51PM +1000, Dave Chinner wrote:
+> On Thu, May 21, 2020 at 05:04:11PM -0700, Matthew Wilcox wrote:
+> > On Fri, May 22, 2020 at 08:49:06AM +1000, Dave Chinner wrote:
+> > > Ok, so the main issue I have with the filesystem/iomap side of
+> > > things is that it appears to be adding "transparent huge page"
+> > > awareness to the filesysetm code, not "large page support".
+> > > 
+> > > For people that aren't aware of the difference between the
+> > > transparent huge and and a normal compound page (e.g. I have no idea
+> > > what the difference is), this is likely to cause problems,
+> > > especially as you haven't explained at all in this description why
+> > > transparent huge pages are being used rather than bog standard
+> > > compound pages.
+> > 
+> > The primary reason to use a different name from compound_*
+> > is so that it can be compiled out for systems that don't enable
+> > CONFIG_TRANSPARENT_HUGEPAGE.  So THPs are compound pages, as they always
+> > have been, but for a filesystem, using thp_size() will compile to either
+> > page_size() or PAGE_SIZE depending on CONFIG_TRANSPARENT_HUGEPAGE.
+> 
+> Again, why is this dependent on THP? We can allocate compound pages
+> without using THP, so why only allow the page cache to use larger
+> pages when THP is configured?
 
-Nice!
+We have too many CONFIG options.  My brain can't cope with adding
+CONFIG_LARGE_PAGES because then we might have neither THP nor LP, LP and
+not THP, THP and not LP or both THP and LP.  And of course HUGETLBFS,
+which has its own special set of issues that one has to think about when
+dealing with the page cache.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+So, either large pages becomes part of the base kernel and you
+always get them, or there's a CONFIG option to enable them and it's
+CONFIG_TRANSPARENT_HUGEPAGE.  I chose the latter.
 
-And a thread hijack...   ;)
+I suppose what I'm saying is that a transparent hugepage can now be any
+size [1], not just PMD size.
 
-I think this is very close to providing a way to solve another issue
-I've had with /dev/mem, which is to zero the view of the first 1MB of
-/dev/mem via mmap. I only fixed the read/write accesses:
-a4866aa81251 ("mm: Tighten x86 /dev/mem with zeroing reads")
-I.e. the low 1MB range should be considered allowed, but any reads will see
-zeros.
-
-> +	unmap_mapping_range(inode->i_mapping, res->start, resource_size(res), 1);
-
-Is unmap_mapping_range() sufficient for this? Would it need to happen
-once during open_port() or something more special during mmap_mem()?
-
--- 
-Kees Cook
+[1] power of two that isn't 1 because we use the third page for
+something-or-other.
