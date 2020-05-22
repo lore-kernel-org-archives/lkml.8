@@ -2,112 +2,122 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60503C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40627206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749D4206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590125011;
-	bh=3erwWfXhHpydL8QbJqRSSSXRI6IDvqHdCa9320UWjzc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=av7FoRQ+OmSpfA+MgIokcs2e6aaqxkUuHWpAgVHj+rjW4KXzaj4sJ+Q7Pdvc9vOtA
-	 OKMVxgfjs9PMX0NtJa8f5ZowKw6pmdCpp64ArIt04jgt4GChFDLID9T1rXV6Ar6Qf/
-	 C/8+nmaEYcI/E6UuQXApET3b8Zn6u2dALh0dHBOU=
+	s=default; t=1590125040;
+	bh=7C2RfCAHa7SmbRwU1MS+j8BluilnbDj4oXQ9OGtNJ8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j81YMADKBZtuZZjZnDBE+ctvZfdZERpRx7Zc+CYzSNcN37+OhQMgZnxQS8WFTf7sC
+	 UAbbR+9rPTCaR3mUi7ByRTYkJ1c/qq4exI6zJv7WElqd6m4ArTKarSzcrfktMhh2Zp
+	 X6F/wa39UBC0fnUkOToOowpKg/74exMGH984Cm6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgEVFXa (ORCPT
+        id S1728210AbgEVFX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:23:30 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43160 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgEVFXa (ORCPT
+        Fri, 22 May 2020 01:23:59 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:32996 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgEVFX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:23:30 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i14so9620079qka.10;
-        Thu, 21 May 2020 22:23:29 -0700 (PDT)
+        Fri, 22 May 2020 01:23:58 -0400
+Received: by mail-pj1-f68.google.com with SMTP id z15so1894920pjb.0;
+        Thu, 21 May 2020 22:23:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2yxPyGEr8MWT1pOhw2naOgT5hnh4gm8Tc6BN4m/HHiM=;
-        b=bCCLyKSeW4SYOYrbtsqw6DILi56i7Uac+owfIoq7gkPlZYMCc5AMLJg6ALFMtt/ZFU
-         85l9AsZlNzsWffhunnDhXHD65+bTavwvK2VKPNJQ7qq8L81cew49XuKFs3kqI1uZbJRY
-         kBCVU9YC67H1A6iwDwaVN2j3RrX3EKheewLbF6fST4c5ptGtOF6JRcRF7/cxYM4rS9vX
-         4iVEVGxzW2oxAUTZVgLc2p3O8HaVDy3IMBxr5Rir8xOk3FC1KFK6n3ilkO1hDY4jdBUm
-         wA2HO/LAdKUil0zkWaMXpqGrw9NLopibbvvJr2IjhUhySQ9/302rNcOggte/kWtM1KvD
-         0VoA==
-X-Gm-Message-State: AOAM5316eoku9k7S8h/fxUdNU2US/aPNNzLmAeqeTVJ2zRCglktpvwxw
-        23o5dnvntJgmPlOy0+YtTnPCzcaUZVA=
-X-Google-Smtp-Source: ABdhPJz2rrQCfIvELxNSTJrc0Tjmiw7rfECQd4FSIecU9g/XagoyPem06C+zwUQD6IymbXzTyvRuQw==
-X-Received: by 2002:a37:a1cb:: with SMTP id k194mr13115064qke.501.1590125008229;
-        Thu, 21 May 2020 22:23:28 -0700 (PDT)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
-        by smtp.gmail.com with ESMTPSA id m7sm6624847qti.6.2020.05.21.22.23.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 22:23:28 -0700 (PDT)
-Received: by mail-qk1-f169.google.com with SMTP id m11so9689569qka.4;
-        Thu, 21 May 2020 22:23:27 -0700 (PDT)
-X-Received: by 2002:a05:620a:6da:: with SMTP id 26mr13060082qky.196.1590125007554;
- Thu, 21 May 2020 22:23:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tIS20nIVD3N2tOP8HqpGQTGvTajJC3k9skSycjshVvo=;
+        b=OelwsbVASVPz58GDVNV3N1pIB8GrBLnDJHUL4Si4vNutNwlrFbz+RI8ICE+COFq2pv
+         pfRSNrgtB5HdKh7G8zInrPyTAsCwy4olC9ZqqAAiXOscUwSB5jXU1VxkZhy7xn5He/eW
+         Py3ArJHCpGfKE4qnWZ0Rx78hZNSTxaPWLHUGdXPYuqgO+Ndy2y3m18dtAQ89UtKUOCU/
+         hqmsSRQL7wiYjT73W8TSB1ndHiviZ1Yy/ojsu2WSCv9XKaZN1c4AhmUe3jAFm1By0v34
+         HAJ+XOKPhQGdcLEcml5M1zofNNwLDtNxGj9NxpGreAj3+O1pkqH6YVajz+8SODR5EsoH
+         Z/fQ==
+X-Gm-Message-State: AOAM5305Od7L5F6Zk75Rmut+VrFm1ZS6uBD5wmMF4dc8UgQV6+67DHXp
+        D7zYFo8fCvA1ork8VrAlVXA=
+X-Google-Smtp-Source: ABdhPJwrA8Ug/bhBlMQocPIWph3Tg+gvIO2vU/EDcU5VOBbAHGT6IBZ5MccngBHWe4I5el1EFY91Dw==
+X-Received: by 2002:a17:90a:150:: with SMTP id z16mr2536283pje.37.1590125037470;
+        Thu, 21 May 2020 22:23:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id l3sm5931550pjb.39.2020.05.21.22.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 22:23:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 531AD4088B; Fri, 22 May 2020 05:23:55 +0000 (UTC)
+Date:   Fri, 22 May 2020 05:23:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Emmanuel Grumbach <egrumbach@gmail.com>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        aquini@redhat.com, peterz@infradead.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        mchehab+samsung@kernel.org, will@kernel.org, bhe@redhat.com,
+        ath10k@lists.infradead.org, Takashi Iwai <tiwai@suse.de>,
+        mingo@redhat.com, dyoung@redhat.com, pmladek@suse.com,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, gpiccoli@canonical.com,
+        Steven Rostedt <rostedt@goodmis.org>, cai@lca.pw,
+        tglx@linutronix.de,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        schlad@suse.de, Linux Kernel <linux-kernel@vger.kernel.org>,
+        jeyu@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+Message-ID: <20200522052355.GZ11244@42.do-not-panic.com>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+ <20200515212846.1347-13-mcgrof@kernel.org>
+ <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+ <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
+ <CA+ASDXOg9oKeMJP1Mf42oCMMM3sVe0jniaWowbXVuaYZ=ZpDjQ@mail.gmail.com>
+ <20200519140212.GT11244@42.do-not-panic.com>
+ <CA+ASDXMUHOcvJ_7UWgyANMxSz15Ji7TcLDXVCtSPa+fOr=+FGA@mail.gmail.com>
+ <CANUX_P1pnV46gOo0aL6QV0b+49ubB7C5nuUOuOfoT7aOM+ye9w@mail.gmail.com>
+ <CA+ASDXPAVJwyThAXRQT0_ao4s1nDYOEQifxMc+JsEMa=cTEGJA@mail.gmail.com>
+ <CANUX_P2thzh9oB4KkrAoyT6H-E6MDFUNQ_p0e9QZtScgMuKm7Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200520135708.GA1086370@bjorn-Precision-5520> <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
-In-Reply-To: <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
-From:   Paul Burton <paulburton@kernel.org>
-Date:   Thu, 21 May 2020 22:23:14 -0700
-X-Gmail-Original-Message-ID: <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
-Message-ID: <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
-Subject: Re: piix4-poweroff.c I/O BAR usage
-To:     "Maciej W. Rozycki" <macro@wdc.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANUX_P2thzh9oB4KkrAoyT6H-E6MDFUNQ_p0e9QZtScgMuKm7Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Thu, May 21, 2020 at 6:04 PM Maciej W. Rozycki <macro@wdc.com> wrote:
->  Paul may or may not be reachable anymore, so I'll step in.
-
-I'm reachable but lacking free time & with no access to Malta hardware
-I can't claim to be too useful here, so thanks for responding :)
-
-Before being moved to a driver (which was mostly driven by a desire to
-migrate Malta to a multi-platform/generic kernel using DT) this code
-was part of arch/mips/mti-malta/ where I added it in commit
-b6911bba598f ("MIPS: Malta: add suspend state entry code"). My main
-motivation at the time was to make QEMU exit after running poweroff,
-but I did ensure it worked on real Malta boards too (at least Malta-R
-with CoreFPGA6). Over the years since then it shocked a couple of
-hardware people to see software power off a Malta - if the original
-hardware designers had intended that to work then the knowledge had
-been lost over time :)
-
-I suspect the code was based on visws_machine_power_off():
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/platform/visws/visws_quirks.c?h=v3.10#n125
-
-> > pci_request_region() takes a BAR number (0-5), but here we're passing
-> > PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
-> > the bridge I/O window.
+On Fri, May 22, 2020 at 08:12:59AM +0300, Emmanuel Grumbach wrote:
 > >
-> > I don't think this device ([8086:7113]) is a bridge, so that resource
-> > should be empty.
->
->  Hmm, isn't the resource actually set up by `quirk_piix4_acpi' though?
+> > On Tue, May 19, 2020 at 10:37 PM Emmanuel Grumbach <egrumbach@gmail.com> wrote:
+> > > So I believe we already have this uevent, it is the devcoredump. All
+> > > we need is to add the unique id.
+> >
+> > I think there are a few reasons that devcoredump doesn't satisfy what
+> > either Luis or I want.
+> >
+> > 1) it can be disabled entirely [1], for good reasons (e.g., think of
+> > non-${CHIP_VENDOR} folks, who can't (and don't want to) do anything
+> > with the opaque dumps provided by closed-source firmware)
+> 
+> Ok, if all you're interested into is the information that this event
+> happen (as opposed to report a bug and providing the data), then I
+> agree. 
 
-I agree that the region used is meant to match that set up by
-quirk_piix4_acpi(), which also refers to it using the
-PCI_BRIDGE_RESOURCES macro.
+I've now hit again a firmware crash with ath10k with the latest firwmare
+and kernel and the *only* thing that helped recovery was a full reboot,
+so that is a crystal clear case that this needs to taint the kernel, and
+yes we do want to inform users too, so I've just added uevent support
+for a few panic / taint events in the kernel now and rolled into my
+series. I'll run some final tests and then post this as a follow up.
 
-Thanks,
-    Paul
+devlink didn't cut it, its networking specific.
+
+  Luis
