@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A574BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF12C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865B8207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F186212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159478;
-	bh=otPiUuOD4KPszx0jfuOEfJp3SN2g/6T5J0y2DSIW3mY=;
+	s=default; t=1590159481;
+	bh=tVHUbJrmSj5WwA+U33l2RkVyEQK1iFhc957Equ35Qzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6pgNzTVmqmFr0ikF89N/xPN7y9eYgTMvtBa1I9znXicgeALvFJYU2wfqBTw1fHCo
-	 PVHiKwFXOCW9K7GVKJswkvRwmXqyZ+C5Qi2G3mjD4mjC2Ax6o/+vqxun+977C/ReZ9
-	 DEcxF55al84oIgDjVOaUDFpSjQ4MPhn4WanXkjNM=
+	b=khwsVBx6ilYx76kH+0EbdMGeyrl+Uqj1Pd45cwmfEsYFo/ugkkn3lQ0hfun8d57WP
+	 4mJonTYj3OEs1SfvY9sYUwpvGXxzTGxET9EUqDFP8L5He3ClDCr1PKFrHBoOlg3/Zc
+	 Xct+7SB9A6wElzoYUJRpbFEFNMsT+SLnQYusMIKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730554AbgEVO55 (ORCPT
+        id S1730728AbgEVOud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730734AbgEVOue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:34 -0400
+        id S1730699AbgEVOub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C9DE221FF;
-        Fri, 22 May 2020 14:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8435A2072C;
+        Fri, 22 May 2020 14:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159034;
-        bh=otPiUuOD4KPszx0jfuOEfJp3SN2g/6T5J0y2DSIW3mY=;
+        s=default; t=1590159031;
+        bh=tVHUbJrmSj5WwA+U33l2RkVyEQK1iFhc957Equ35Qzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4tdXRDlMTqUDy1a2SdOuXyS3702VGXoPE/+zcetxAhOFOkiQlnCF4bO3QbX3yVPt
-         fIkFzFH5Wrv5ffLxo6z+4aGlcnppaLi1RBVY5QfatupXTT2avc+5G6Zhpmi7PCHrO2
-         FLSD0pAcj6XDVnCgJ1iYe+5lEyI35PfyFXqOMNl4=
+        b=XAKVLotiH1WRVL1hgHt2Ub9i+GoGDQu9CYifV55rPWe5dN0PJJsludwlyPUrzjRlB
+         ih9//fUcK8vRuNNkSonEi6NEMWjP0wahN58O5Br3jTc4pzpWK0JpuOHuv8RVWBqG2l
+         xJSsnDlVSGY2aGLvIwQ3crpmMdqJEYF+sSbQvfKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 31/41] clk: ti: am33xx: fix RTC clock parent
-Date:   Fri, 22 May 2020 10:49:48 -0400
-Message-Id: <20200522144959.434379-31-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 28/41] riscv: Fix unmet direct dependencies built based on SOC_VIRT
+Date:   Fri, 22 May 2020 10:49:45 -0400
+Message-Id: <20200522144959.434379-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -60,39 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit dc6dbd51009fc412729c307161f442c0a08618f4 ]
+[ Upstream commit ab7fbad0c7d7a4f9b320a059a171a92a34b6d409 ]
 
-Right now, trying to use RTC purely with the ti-sysc / clkctrl framework
-fails to enable the RTC module properly. Based on experimentation, this
-appears to be because RTC is sourced from the clkdiv32k optional clock.
-TRM is not very clear on this topic, but fix the RTC to use the proper
-source clock nevertheless.
+Fix unmet direct dependencies Warning and fix Kconfig indent.
 
-Reported-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200424152301.4018-1-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+WARNING: unmet direct dependencies detected for POWER_RESET_SYSCON
+  Depends on [n]: POWER_RESET [=n] && OF [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - SOC_VIRT [=y]
+
+WARNING: unmet direct dependencies detected for POWER_RESET_SYSCON_POWEROFF
+  Depends on [n]: POWER_RESET [=n] && OF [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - SOC_VIRT [=y]
+
+WARNING: unmet direct dependencies detected for RTC_DRV_GOLDFISH
+  Depends on [n]: RTC_CLASS [=n] && OF [=y] && HAS_IOMEM [=y] && (GOLDFISH [=y] || COMPILE_TEST [=n])
+  Selected by [y]:
+  - SOC_VIRT [=y]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clk-33xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/Kconfig.socs | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
-index e001b9bcb6bf..7dc30dd6c8d5 100644
---- a/drivers/clk/ti/clk-33xx.c
-+++ b/drivers/clk/ti/clk-33xx.c
-@@ -212,7 +212,7 @@ static const struct omap_clkctrl_reg_data am3_mpu_clkctrl_regs[] __initconst = {
- };
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index a131174a0a77..f310ad8ffcf7 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -11,13 +11,14 @@ config SOC_SIFIVE
+ 	  This enables support for SiFive SoC platform hardware.
  
- static const struct omap_clkctrl_reg_data am3_l4_rtc_clkctrl_regs[] __initconst = {
--	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk_32768_ck" },
-+	{ AM3_L4_RTC_RTC_CLKCTRL, NULL, CLKF_SW_SUP, "clk-24mhz-clkctrl:0000:0" },
- 	{ 0 },
- };
+ config SOC_VIRT
+-       bool "QEMU Virt Machine"
+-       select POWER_RESET_SYSCON
+-       select POWER_RESET_SYSCON_POWEROFF
+-       select GOLDFISH
+-       select RTC_DRV_GOLDFISH
+-       select SIFIVE_PLIC
+-       help
+-         This enables support for QEMU Virt Machine.
++	bool "QEMU Virt Machine"
++	select POWER_RESET
++	select POWER_RESET_SYSCON
++	select POWER_RESET_SYSCON_POWEROFF
++	select GOLDFISH
++	select RTC_DRV_GOLDFISH if RTC_CLASS
++	select SIFIVE_PLIC
++	help
++	  This enables support for QEMU Virt Machine.
  
+ endmenu
 -- 
 2.25.1
 
