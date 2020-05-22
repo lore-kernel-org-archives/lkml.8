@@ -2,100 +2,88 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B204C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A4F206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590145021;
-	bh=Lh7d7fjKNY7SzfKndVpbX94Aqe2UUFTEu4zvw1niz+o=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=k1Gi0UbqiNk6hCslJlP0HNcQYsfepfYLfpz/HjZIuPozAuUYcZoTTJYo58SKjLAcy
-	 skIvWrK4aTW8mwo2SqcUD5PITpUwuynIJMCg4b/jsOKHpyZYqm/YdcK8+so9T31DSV
-	 5Z/U2cPGtqPmJbFX8mr3l7ZeU4ngf/ZgCJxxUReI=
+	by mail.kernel.org (Postfix) with ESMTP id E29DC20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgEVK5A (ORCPT
+        id S1729072AbgEVK5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgEVK5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:57:00 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A0020679;
-        Fri, 22 May 2020 10:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590145019;
-        bh=Lh7d7fjKNY7SzfKndVpbX94Aqe2UUFTEu4zvw1niz+o=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=S5BAtuOqFeMMeXX6M2mkB76V1Iyu66qYTRsNdlNuNl4VhAbwmtMe7+wmYggLrdEQ8
-         lg+uMd/4lEJwbuCjRJT/hQU9v2sFiAgQnL9jBi0Uviqv0SuH69OewBruLrEhajMcmL
-         Phhh0XdHAXukgp1qpLC9s40OnMa8UpuINo4Kstc0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8170A3520C6D; Fri, 22 May 2020 03:56:59 -0700 (PDT)
-Date:   Fri, 22 May 2020 03:56:59 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
-        dlustig@nvidia.com, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        andriin@fb.com
-Subject: Re: Some -serious- BPF-related litmus tests
-Message-ID: <20200522105659.GH2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
- <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+        Fri, 22 May 2020 06:57:31 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:62450 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728371AbgEVK5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 06:57:30 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 18:57:18
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Fri, 22 May 2020 18:57:18 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jon Hunter" <jonathanh@nvidia.com>
+Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance
+ on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <967c17d2-6b57-27f0-7762-cd0835caaec9@nvidia.com>
+References: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
+ <967c17d2-6b57-27f0-7762-cd0835caaec9@nvidia.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522094407.GK325280@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <45d18e3c.bfdab.1723c07b7d3.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgDn7z8OsMdeRoYBAg--.44085W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUIBlZdtOQgrAASsM
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbW0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_JrI_JrylV2xY6cIj6I8E87Iv67AKxVWxJVW8Jr1lV2xY6cvjeVCFs4IE7xkEbVWU
+        JVW8JwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14v_Gw1lV2xY6xkI7II2jI8vz4vEwIxGrw
+        CS07vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E
+        4IkC6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4
+        vE14v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE
+        14v26r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lV2xY6IIF0xvE42
+        xK8VAvwI8IcIk0rVWrJr0_WFyUJwCS07vEIxAIcVC2z280aVAFwI0_Gr0_Cr1lV2xY6IIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
-> On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > Just wanted to call your attention to some pretty cool and pretty serious
-> > litmus tests that Andrii did as part of his BPF ring-buffer work:
-> > 
-> > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
-> > 
-> > Thoughts?
-> 
-> I find:
-> 
-> 	smp_wmb()
-> 	smp_store_release()
-> 
-> a _very_ weird construct. What is that supposed to even do?
-
-Indeed, and I asked about that in my review of the patch containing the
-code.  It -could- make sense if there is a prior read and a later store:
-
-	r1 = READ_ONCE(a);
-	WRITE_ONCE(b, 1);
-	smp_wmb();
-	smp_store_release(&c, 1);
-	WRITE_ONCE(d, 1);
-
-So a->c and b->c is smp_store_release() and b->d is smp_wmb().  But if
-there were only stores, the smp_wmb() would suffice.  And if there wasn't
-the trailing store, smp_store_release() would suffice.
-
-But that would at least want a comment, in my opinion.  ;-)
-
-							Thanx, Paul
+PiAKPiBPbiAyMi8wNS8yMDIwIDA4OjU4LCBEaW5naGFvIExpdSB3cm90ZToKPiA+IHBtX3J1bnRp
+bWVfZ2V0X3N5bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZXZl
+bgo+ID4gd2hlbiBpdCByZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3Jl
+bWVudCBpcyBuZWVkZWQgb24KPiA+IHRoZSBlcnJvciBoYW5kbGluZyBwYXRoIHRvIGtlZXAgdGhl
+IGNvdW50ZXIgYmFsYW5jZWQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxk
+aW5naGFvLmxpdUB6anUuZWR1LmNuPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9kbWEvdGVncmEyMTAt
+YWRtYS5jIHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gPiAKPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS90ZWdyYTIxMC1hZG1hLmMgYi9kcml2ZXJzL2RtYS90
+ZWdyYTIxMC1hZG1hLmMKPiA+IGluZGV4IGM0Y2U1ZGZiMTQ5Yi4uODAzZTFmNGQ1ZGFjIDEwMDY0
+NAo+ID4gLS0tIGEvZHJpdmVycy9kbWEvdGVncmEyMTAtYWRtYS5jCj4gPiArKysgYi9kcml2ZXJz
+L2RtYS90ZWdyYTIxMC1hZG1hLmMKPiA+IEBAIC02NTgsNiArNjU4LDcgQEAgc3RhdGljIGludCB0
+ZWdyYV9hZG1hX2FsbG9jX2NoYW5fcmVzb3VyY2VzKHN0cnVjdCBkbWFfY2hhbiAqZGMpCj4gPiAg
+Cj4gPiAgCXJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmModGRjMmRldih0ZGMpKTsKPiA+ICAJaWYg
+KHJldCA8IDApIHsKPiA+ICsJCXBtX3J1bnRpbWVfcHV0X3N5bmModGRjMmRldih0ZGMpKTsKPiA+
+ICAJCWZyZWVfaXJxKHRkYy0+aXJxLCB0ZGMpOwo+ID4gIAkJcmV0dXJuIHJldDsKPiA+ICAJfQo+
+ID4gCj4gCj4gCj4gVGhlcmUgaXMgYW5vdGhlciBwbGFjZSBpbiBwcm9iZSB0aGF0IG5lZWRzIHRv
+IGJlIGZpeGVkIGFzIHdlbGwuIENhbiB5b3UKPiBjb3JyZWN0IHRoaXMgd2hpbGUgeW91IGFyZSBh
+dCBpdD8KPiAKPiBUaGFua3MKPiBKb24KPiAKPiAtLSAKPiBudnB1YmxpYwoKU3VyZS4gSSBoYXZl
+IHNlbnQgYSBwYXRjaCB0byBmaXggUE0gaW1iYWxhbmNlIGluIHRlZ3JhX2FkbWFfcHJvYmUoKS4K
+ClJlZ2FyZHMsCkRpbmdoYW8=
