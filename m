@@ -2,147 +2,176 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA22C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE35206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB1D2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S1svQmb7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BYFX+3fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbgEVKOk (ORCPT
+        id S1729750AbgEVKOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:14:40 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37453 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729408AbgEVKOf (ORCPT
+        Fri, 22 May 2020 06:14:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59114 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbgEVKOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:14:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590142474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FOU53/GKhFSDCFEqcsdErGmhyqCkF6RPDSEV44rw+e0=;
-        b=S1svQmb7GbeElQZWCweru8nj3EaeQNQaWhwbbDm1Je6LbCOFIjvG+FAhRBlKqO69Zo/ApS
-        2uPfqIht6edm52pDuWqMDlyhv0Kvry2IlNRlH4dVQDHyZrnWyaS4pSKQKBnnQFyF4K4i47
-        xWqEqiA1ZTvxie3hjVvK2dKdIGtUebo=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-rgnwcaO-OR--Qhh4H6OJSw-1; Fri, 22 May 2020 06:14:32 -0400
-X-MC-Unique: rgnwcaO-OR--Qhh4H6OJSw-1
-Received: by mail-ej1-f70.google.com with SMTP id s13so4356105ejc.18
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:14:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FOU53/GKhFSDCFEqcsdErGmhyqCkF6RPDSEV44rw+e0=;
-        b=toIrih+oIVT50mDiMuW3QqkJRe7RtJ/VM4oUZwySTVHs3jX00sKgUrRi8bfot/O8RA
-         pIirBLg0GzTo25Eic6BVidHNMlxtb7kE3A2D2rzdL5PxGI1nwA6+dGZdNrPRrtdCTi1d
-         PMcisJkuFb3GAE5vbjzIM8vUS+S5YdnQPqeyJBLZ8UQdl6952eSFVMODq8hSCYtx83UF
-         9hL2rttV5uKDRCREXjSPl+BSUWxTDqzZTn107yd3RACu3Ai7l96GzZXyJW9qWC2s0nwD
-         1xF/JHx4gR4kNfhDGVbh2Nan6Xp4Ao6c0jQJnQImE4I6wBT0LsKk3OhasmPseozF08sw
-         MSdA==
-X-Gm-Message-State: AOAM530i6BPuMWmG5wmwJlBaWdTQLmI577WJRO7u9WeEWPUPhmBqYxYb
-        6HmMhgvpzqQk5jqtUZOs5NmsIyNBBdvdHosp4BzX1XqwuGgEI9urRUqtfKaZwCFYQWqgUxHzCKQ
-        7XfesTlcDtaZYFSOGZ/4ymRV7
-X-Received: by 2002:a05:6402:6c1:: with SMTP id n1mr2369037edy.199.1590142471174;
-        Fri, 22 May 2020 03:14:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwfC34MCbCH6URcwA7zYGRshQKEBRWb6nEZHBKVgIxEDOg1wtlGa9fvkmr/88CXVhHVgbeeAw==
-X-Received: by 2002:a05:6402:6c1:: with SMTP id n1mr2369020edy.199.1590142470804;
-        Fri, 22 May 2020 03:14:30 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id fi9sm7342293ejb.5.2020.05.22.03.14.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 03:14:29 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: asus_wmi: Reserve more space for struct
- bias_args
-To:     Chris Chiu <chiu@endlessm.com>, dvhart@infradead.org,
-        andy@infradead.org, gregkh@linuxfoundation.org,
-        gayatri.kammela@intel.com, mika.westerberg@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com
-References: <20200522074424.54264-1-chiu@endlessm.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <370d5f70-cb37-3ac8-7a7e-97f215b0ad8a@redhat.com>
-Date:   Fri, 22 May 2020 12:14:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 06:14:44 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MAEUU0009182;
+        Fri, 22 May 2020 05:14:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590142470;
+        bh=ZfUbh82N6QxYzzf9GICZYBFd0OVcUih5gJ0g44AGOsU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=BYFX+3fnKWFqRaDS44aUxAD3zFtXltR1urt6B6ZbPQOHheIoFc+j2B3uTyhyDRX+R
+         1LVzBMfZUNSeb2S3QH/2REWz4FyHTr5qND5oRpM6c0PvvczIH52y7tXGkTix27Q2EA
+         3a02uOSCqPSxq9DVoe2N/g9kpj9EW77vTr99bLLU=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MAEUqM082702
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 05:14:30 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 05:14:30 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 05:14:30 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAD1aH041179;
+        Fri, 22 May 2020 05:14:25 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v7 16/20] mtd: spi-nor: core: perform a Soft Reset on shutdown
+Date:   Fri, 22 May 2020 15:42:57 +0530
+Message-ID: <20200522101301.26909-17-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200522101301.26909-1-p.yadav@ti.com>
+References: <20200522101301.26909-1-p.yadav@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200522074424.54264-1-chiu@endlessm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Perform a Soft Reset on shutdown on flashes that support it so that the
+flash can be reset to its initial state and any configurations made by
+spi-nor (given that they're only done in volatile registers) will be
+reset. This will hand back the flash in pristine state for any further
+operations on it.
 
-On 5/22/20 9:44 AM, Chris Chiu wrote:
-> On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
-> working due to the ASUS WMI driver fails to be loaded. The ACPI error
-> as follows leads to the failure of asus_wmi_evaluate_method.
->    ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
->    No Local Variables are initialized for Method [WMNB]
->    ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
-> 
-> The DSDT for the WMNB part shows that 5 DWORD required for local
-> variables and the 3rd variable IIA3 hit the buffer limit.
-> 
-> Method (WMNB, 3, Serialized)
-> { ..
->      CreateDWordField (Arg2, Zero, IIA0)
->      CreateDWordField (Arg2, 0x04, IIA1)
->      CreateDWordField (Arg2, 0x08, IIA2)
->      CreateDWordField (Arg2, 0x0C, IIA3)
->      CreateDWordField (Arg2, 0x10, IIA4)
->      Local0 = (Arg1 & 0xFFFFFFFF)
->      If ((Local0 == 0x54494E49))
->    ..
-> }
-> 
-> The limitation is determined by the input acpi_buffer size passed
-> to the wmi_evaluate_method. Since the struct bios_args is the data
-> structure used as input buffer by default for all ASUS WMI calls,
-> the size needs to be expanded to fix the problem.
-> 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/mtd/spi-nor/core.c  | 42 +++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/spi-nor.h |  2 ++
+ 2 files changed, 44 insertions(+)
 
-Thank you, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->   drivers/platform/x86/asus-wmi.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index bb7c529d7d16..cd212ee210e2 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -116,6 +116,8 @@ struct bios_args {
->   	u32 arg0;
->   	u32 arg1;
->   	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
-> +	u32 arg4;
-> +	u32 arg5;
->   } __packed;
->   
->   /*
-> 
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index a94376344be5..68559386f6f8 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -40,6 +40,9 @@
+ 
+ #define SPI_NOR_MAX_ADDR_WIDTH	4
+ 
++#define SPI_NOR_SRST_SLEEP_MIN 200
++#define SPI_NOR_SRST_SLEEP_MAX 400
++
+ /**
+  * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
+  *			   extension type.
+@@ -3201,6 +3204,41 @@ static int spi_nor_init(struct spi_nor *nor)
+ 	return 0;
+ }
+ 
++static void spi_nor_soft_reset(struct spi_nor *nor)
++{
++	struct spi_mem_op op;
++	int ret;
++
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_SRSTEN, 8),
++			SPI_MEM_OP_NO_DUMMY,
++			SPI_MEM_OP_NO_ADDR,
++			SPI_MEM_OP_NO_DATA);
++	spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret) {
++		dev_warn(nor->dev, "Software reset failed: %d\n", ret);
++		return;
++	}
++
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_SRST, 8),
++			SPI_MEM_OP_NO_DUMMY,
++			SPI_MEM_OP_NO_ADDR,
++			SPI_MEM_OP_NO_DATA);
++	spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret) {
++		dev_warn(nor->dev, "Software reset failed: %d\n", ret);
++		return;
++	}
++
++	/*
++	 * Software Reset is not instant, and the delay varies from flash to
++	 * flash. Looking at a few flashes, most range somewhere below 100
++	 * microseconds. So, sleep for a range of 200-400 us.
++	 */
++	usleep_range(SPI_NOR_SRST_SLEEP_MIN, SPI_NOR_SRST_SLEEP_MAX);
++}
++
+ /* mtd resume handler */
+ static void spi_nor_resume(struct mtd_info *mtd)
+ {
+@@ -3220,6 +3258,10 @@ void spi_nor_restore(struct spi_nor *nor)
+ 	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES) &&
+ 	    nor->flags & SNOR_F_BROKEN_RESET)
+ 		nor->params->set_4byte_addr_mode(nor, false);
++
++	if (nor->info->flags & SPI_NOR_OCTAL_DTR_READ &&
++	    nor->flags & SNOR_F_SOFT_RESET)
++		spi_nor_soft_reset(nor);
+ }
+ EXPORT_SYMBOL_GPL(spi_nor_restore);
+ 
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index d251a5d02be2..06884a188315 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -51,6 +51,8 @@
+ #define SPINOR_OP_CLFSR		0x50	/* Clear flag status register */
+ #define SPINOR_OP_RDEAR		0xc8	/* Read Extended Address Register */
+ #define SPINOR_OP_WREAR		0xc5	/* Write Extended Address Register */
++#define SPINOR_OP_SRSTEN	0x66	/* Software Reset Enable */
++#define SPINOR_OP_SRST		0x99	/* Software Reset */
+ 
+ /* 4-byte address opcodes - used on Spansion and some Macronix flashes. */
+ #define SPINOR_OP_READ_4B	0x13	/* Read data bytes (low frequency) */
+-- 
+2.26.2
 
