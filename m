@@ -2,133 +2,190 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F16C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1550FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2132920825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF1220825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WPC8+ucV"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LoLmQVuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgEVCAq (ORCPT
+        id S1728015AbgEVCBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 22:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVCAo (ORCPT
+        Thu, 21 May 2020 22:01:09 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:1131 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726335AbgEVCBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 22:00:44 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1C4C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:00:44 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g185so9343281qke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7VXhRvEZ7AZfj1IqAb7ZWt33FE0XL8kfxx31Yf9Ecuw=;
-        b=WPC8+ucVfXY+1tpUgjR07S2UMMPw8h0/8LAGLBS8Znu29ayxkCmGkQpm2rNlHp681Y
-         iEFsGHCj5SpuQl0hdoK/kk1vRohCokt3UVU3OzqsF9AVFV7syE3vg5b9x7AtbqhMBOFh
-         9VEPHONSG6IIavPXa3Wew7CX9MQHd+PzBOqQTKrZ2ej1Ok4DN3jqMad6rxuXVfI+tVvY
-         VXONL7CzMbE6YarfqQ5be2TdAMby/zZXM2bF4ErdDFiS7uZMST40ntdFNm6UnAmd11qW
-         YEWD8OXyEjMIgKs0hTUa13Sm+ogq/8Y9p1nmkbUBzUBUQr0L6zcqsHdfPakA4caM8sR5
-         /AvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7VXhRvEZ7AZfj1IqAb7ZWt33FE0XL8kfxx31Yf9Ecuw=;
-        b=hkDa0LCNaENfRj5Jey+4Q/Amc3IW7V5uQMEajTPUqOsqJ0VXARExYOJcaIq8pJz53b
-         aQmVPp9Vw2JD3DJ8riQfXNRMbZZH8obEds4PhqIGL7Xq70zkw8PPqgzeJ+cOOAEHhT8a
-         SctsBSBSUqtBZftOR1tEtMo5O48mY3CFOIR85uuxfLwvFJ0qreKMFw1IxsfsBI+QLvga
-         0kyyIIQ3QQpbwsw6zmR7VsBUMu3dJ7YvMbfFZ8UIoqn71Yqt04jiZDr270xSFB8lbK2Y
-         Xm6xjymApAzuhvWH0yKQi37KlieEZI6MnLLVBehe5wbtTAQ70xnG7WMqtMmuHg17Aepf
-         WPHw==
-X-Gm-Message-State: AOAM530krcYxecwwuzOdyA2V8Ml9xun5rOrBsntRd1F2Sbd6MzEhKG9s
-        bQXJo+DSOIeYyE/lOM/DoEAA1FcKuElvkw==
-X-Google-Smtp-Source: ABdhPJxQxaBQ20712JGspAdfjSIEw8SaV9KRIZqgplkYJhLE0+UteD9xq8e8wbquN7K3Y9bym+aY+Q==
-X-Received: by 2002:a05:620a:a53:: with SMTP id j19mr13148335qka.183.1590112843194;
-        Thu, 21 May 2020 19:00:43 -0700 (PDT)
-Received: from ovpn-112-192.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s201sm949467qka.8.2020.05.21.19.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 19:00:42 -0700 (PDT)
-Date:   Thu, 21 May 2020 22:00:33 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: Endless soft-lockups for compiling workload since next-20200519
-Message-ID: <20200522020033.GA17093@ovpn-112-192.phx2.redhat.com>
-References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
- <20200520125056.GC325280@hirez.programming.kicks-ass.net>
- <20200521004035.GA15455@lenoir>
- <20200521093938.GG325280@hirez.programming.kicks-ass.net>
+        Thu, 21 May 2020 22:01:08 -0400
+X-UUID: 9f0f0c40d8e54e41b1d7ff79c117022a-20200522
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=kry6DzLo7jc9925L70T8XcjXeiprwsgXtu1B1gyF3lw=;
+        b=LoLmQVuP6IERnuIk0LvDmZmXKcgPWDRbk22QO6VPGhwtGOdUQ+NoFB92HEVanjnXShVNTzX+EP1e/elGzZMtMDyQytUvxuT1LXMrhzdqJ+fMIh6SWaFZDc89Wd0lkkb0ZBeqHlv+7+al4By9yZEro0RW6JmQc5D/EUqqkiUArvw=;
+X-UUID: 9f0f0c40d8e54e41b1d7ff79c117022a-20200522
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 121922522; Fri, 22 May 2020 10:01:02 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 22 May 2020 10:01:00 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 22 May 2020 10:00:59 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v6 1/4] rcu/kasan: record and print call_rcu() call stack
+Date:   Fri, 22 May 2020 10:00:59 +0800
+Message-ID: <20200522020059.22332-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521093938.GG325280@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 2AC2276E087F6D73DD4AF33E2264B3F334C3BE3B77DDB36EB8CAFEB4B585EE532000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:39:38AM +0200, Peter Zijlstra wrote:
-> On Thu, May 21, 2020 at 02:40:36AM +0200, Frederic Weisbecker wrote:
-> > On Wed, May 20, 2020 at 02:50:56PM +0200, Peter Zijlstra wrote:
-> > > On Tue, May 19, 2020 at 11:58:17PM -0400, Qian Cai wrote:
-> > > > Just a head up. Repeatedly compiling kernels for a while would trigger
-> > > > endless soft-lockups since next-20200519 on both x86_64 and powerpc.
-> > > > .config are in,
-> > > 
-> > > Could be 90b5363acd47 ("sched: Clean up scheduler_ipi()"), although I've
-> > > not seen anything like that myself. Let me go have a look.
-> > > 
-> > > 
-> > > In as far as the logs are readable (they're a wrapped mess, please don't
-> > > do that!), they contain very little useful, as is typical with IPIs :/
-> > > 
-> > > > [ 1167.993773][    C1] WARNING: CPU: 1 PID: 0 at kernel/smp.c:127
-> > > > flush_smp_call_function_queue+0x1fa/0x2e0
-> > 
-> > So I've tried to think of a race that could produce that and here is
-> > the only thing I could come up with. It's a bit complicated unfortunately:
-> 
-> This:
-> 
-> >         smp_call_function_single_async() {             smp_call_function_single_async() {
-> >             // verified csd->flags != CSD_LOCK             // verified csd->flags != CSD_LOCK
-> >             csd->flags = CSD_LOCK                          csd->flags = CSD_LOCK
-> 
-> concurrent smp_call_function_single_async() using the same csd is what
-> I'm looking at as well. Now in the ILB case there is an easy cure:
-> 
-> (because there is only a single ilb target)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 01f94cf52783..b6d8a7b991f0 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10033,7 +10033,7 @@ static void kick_ilb(unsigned int flags)
->  	 * is idle. And the softirq performing nohz idle load balance
->  	 * will be run before returning from the IPI.
->  	 */
-> -	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
-> +	smp_call_function_single_async(ilb_cpu, &this_rq()->nohz_csd);
->  }
->  
->  /*
-> 
-> Qian, can you give that a spin?
+VGhpcyBmZWF0dXJlIHdpbGwgcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3Rh
+Y2tzIGFuZA0KcHJpbnRzIHVwIHRvIDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiBLQVNBTiBy
+ZXBvcnQuDQoNCldoZW4gY2FsbF9yY3UoKSBpcyBjYWxsZWQsIHdlIHN0b3JlIHRoZSBjYWxsX3Jj
+dSgpIGNhbGwgc3RhY2sgaW50bw0Kc2x1YiBhbGxvYyBtZXRhLWRhdGEsIHNvIHRoYXQgdGhlIEtB
+U0FOIHJlcG9ydCBjYW4gcHJpbnQgcmN1IHN0YWNrLg0KDQpbMV1odHRwczovL2J1Z3ppbGxhLmtl
+cm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0KWzJdaHR0cHM6Ly9ncm91cHMuZ29vZ2xl
+LmNvbS9mb3J1bS8jIXNlYXJjaGluL2thc2FuLWRldi9iZXR0ZXIkMjBzdGFjayQyMHRyYWNlcyQy
+MGZvciQyMHJjdSU3Q3NvcnQ6ZGF0ZS9rYXNhbi1kZXYvS1FzalRfODhoREUvN3JOVVpwclJCZ0FK
+DQoNClNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4N
+ClN1Z2dlc3RlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KQWNrZWQt
+Ynk6IFBhdWwgRS4gTWNLZW5uZXkgPHBhdWxtY2tAa2VybmVsLm9yZz4NCkNjOiBBbmRyZXkgUnlh
+YmluaW4gPGFyeWFiaW5pbkB2aXJ0dW96em8uY29tPg0KQ2M6IERtaXRyeSBWeXVrb3YgPGR2eXVr
+b3ZAZ29vZ2xlLmNvbT4NCkNjOiBBbGV4YW5kZXIgUG90YXBlbmtvIDxnbGlkZXJAZ29vZ2xlLmNv
+bT4NCkNjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KQ2M6IEpv
+c2ggVHJpcGxldHQgPGpvc2hAam9zaHRyaXBsZXR0Lm9yZz4NCkNjOiBNYXRoaWV1IERlc25veWVy
+cyA8bWF0aGlldS5kZXNub3llcnNAZWZmaWNpb3MuY29tPg0KQ2M6IExhaSBKaWFuZ3NoYW4gPGpp
+YW5nc2hhbmxhaUBnbWFpbC5jb20+DQpDYzogSm9lbCBGZXJuYW5kZXMgPGpvZWxAam9lbGZlcm5h
+bmRlcy5vcmc+DQpDYzogQW5kcmV5IEtvbm92YWxvdiA8YW5kcmV5a252bEBnb29nbGUuY29tPg0K
+LS0tDQogaW5jbHVkZS9saW51eC9rYXNhbi5oIHwgIDIgKysNCiBrZXJuZWwvcmN1L3RyZWUuYyAg
+ICAgfCAgMiArKw0KIG1tL2thc2FuL2NvbW1vbi5jICAgICB8ICA0ICsrLS0NCiBtbS9rYXNhbi9n
+ZW5lcmljLmMgICAgfCAyMSArKysrKysrKysrKysrKysrKysrKysNCiBtbS9rYXNhbi9rYXNhbi5o
+ICAgICAgfCAxMCArKysrKysrKysrDQogbW0va2FzYW4vcmVwb3J0LmMgICAgIHwgMjggKysrKysr
+KysrKysrKysrKysrKysrKystLS0tLQ0KIDYgZmlsZXMgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygr
+KSwgNyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgva2FzYW4uaCBi
+L2luY2x1ZGUvbGludXgva2FzYW4uaA0KaW5kZXggMzEzMTRjYTdjNjM1Li4yM2I3ZWUwMDU3MmQg
+MTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCisrKyBiL2luY2x1ZGUvbGludXgv
+a2FzYW4uaA0KQEAgLTE3NCwxMSArMTc0LDEzIEBAIHN0YXRpYyBpbmxpbmUgc2l6ZV90IGthc2Fu
+X21ldGFkYXRhX3NpemUoc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKSB7IHJldHVybiAwOyB9DQog
+DQogdm9pZCBrYXNhbl9jYWNoZV9zaHJpbmsoc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCiB2
+b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSk7DQordm9p
+ZCBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKnB0cik7DQogDQogI2Vsc2UgLyogQ09ORklH
+X0tBU0FOX0dFTkVSSUMgKi8NCiANCiBzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fY2FjaGVfc2hy
+aW5rKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30NCiBzdGF0aWMgaW5saW5lIHZvaWQga2Fz
+YW5fY2FjaGVfc2h1dGRvd24oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKSB7fQ0KK3N0YXRpYyBp
+bmxpbmUgdm9pZCBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKnB0cikge30NCiANCiAjZW5k
+aWYgLyogQ09ORklHX0tBU0FOX0dFTkVSSUMgKi8NCiANCmRpZmYgLS1naXQgYS9rZXJuZWwvcmN1
+L3RyZWUuYyBiL2tlcm5lbC9yY3UvdHJlZS5jDQppbmRleCAwNjU0OGUyZWJiNzIuLjM2YTRmZjdm
+MzIwYiAxMDA2NDQNCi0tLSBhL2tlcm5lbC9yY3UvdHJlZS5jDQorKysgYi9rZXJuZWwvcmN1L3Ry
+ZWUuYw0KQEAgLTU3LDYgKzU3LDcgQEANCiAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KICNpbmNs
+dWRlIDxsaW51eC9zY2hlZC9pc29sYXRpb24uaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvY2xv
+Y2suaD4NCisjaW5jbHVkZSA8bGludXgva2FzYW4uaD4NCiAjaW5jbHVkZSAiLi4vdGltZS90aWNr
+LWludGVybmFsLmgiDQogDQogI2luY2x1ZGUgInRyZWUuaCINCkBAIC0yNjY4LDYgKzI2NjksNyBA
+QCBfX2NhbGxfcmN1KHN0cnVjdCByY3VfaGVhZCAqaGVhZCwgcmN1X2NhbGxiYWNrX3QgZnVuYykN
+CiAJaGVhZC0+ZnVuYyA9IGZ1bmM7DQogCWhlYWQtPm5leHQgPSBOVUxMOw0KIAlsb2NhbF9pcnFf
+c2F2ZShmbGFncyk7DQorCWthc2FuX3JlY29yZF9hdXhfc3RhY2soaGVhZCk7DQogCXJkcCA9IHRo
+aXNfY3B1X3B0cigmcmN1X2RhdGEpOw0KIA0KIAkvKiBBZGQgdGhlIGNhbGxiYWNrIHRvIG91ciBs
+aXN0LiAqLw0KZGlmZiAtLWdpdCBhL21tL2thc2FuL2NvbW1vbi5jIGIvbW0va2FzYW4vY29tbW9u
+LmMNCmluZGV4IDI5MDYzNThlNDJmMC4uOGJjNjE4Mjg5YmIxIDEwMDY0NA0KLS0tIGEvbW0va2Fz
+YW4vY29tbW9uLmMNCisrKyBiL21tL2thc2FuL2NvbW1vbi5jDQpAQCAtNDEsNyArNDEsNyBAQA0K
+ICNpbmNsdWRlICJrYXNhbi5oIg0KICNpbmNsdWRlICIuLi9zbGFiLmgiDQogDQotc3RhdGljIGlu
+bGluZSBkZXBvdF9zdGFja19oYW5kbGVfdCBzYXZlX3N0YWNrKGdmcF90IGZsYWdzKQ0KK2RlcG90
+X3N0YWNrX2hhbmRsZV90IGthc2FuX3NhdmVfc3RhY2soZ2ZwX3QgZmxhZ3MpDQogew0KIAl1bnNp
+Z25lZCBsb25nIGVudHJpZXNbS0FTQU5fU1RBQ0tfREVQVEhdOw0KIAl1bnNpZ25lZCBpbnQgbnJf
+ZW50cmllczsNCkBAIC01NCw3ICs1NCw3IEBAIHN0YXRpYyBpbmxpbmUgZGVwb3Rfc3RhY2tfaGFu
+ZGxlX3Qgc2F2ZV9zdGFjayhnZnBfdCBmbGFncykNCiBzdGF0aWMgaW5saW5lIHZvaWQgc2V0X3Ry
+YWNrKHN0cnVjdCBrYXNhbl90cmFjayAqdHJhY2ssIGdmcF90IGZsYWdzKQ0KIHsNCiAJdHJhY2st
+PnBpZCA9IGN1cnJlbnQtPnBpZDsNCi0JdHJhY2stPnN0YWNrID0gc2F2ZV9zdGFjayhmbGFncyk7
+DQorCXRyYWNrLT5zdGFjayA9IGthc2FuX3NhdmVfc3RhY2soZmxhZ3MpOw0KIH0NCiANCiB2b2lk
+IGthc2FuX2VuYWJsZV9jdXJyZW50KHZvaWQpDQpkaWZmIC0tZ2l0IGEvbW0va2FzYW4vZ2VuZXJp
+Yy5jIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQppbmRleCA1NmZmODg4NWZlMmUuLjhhY2Y0ODg4MmJh
+MiAxMDA2NDQNCi0tLSBhL21tL2thc2FuL2dlbmVyaWMuYw0KKysrIGIvbW0va2FzYW4vZ2VuZXJp
+Yy5jDQpAQCAtMzI1LDMgKzMyNSwyNCBAQCBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGYyKTsNCiBE
+RUZJTkVfQVNBTl9TRVRfU0hBRE9XKGYzKTsNCiBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGY1KTsN
+CiBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGY4KTsNCisNCit2b2lkIGthc2FuX3JlY29yZF9hdXhf
+c3RhY2sodm9pZCAqYWRkcikNCit7DQorCXN0cnVjdCBwYWdlICpwYWdlID0ga2FzYW5fYWRkcl90
+b19wYWdlKGFkZHIpOw0KKwlzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGU7DQorCXN0cnVjdCBrYXNh
+bl9hbGxvY19tZXRhICphbGxvY19pbmZvOw0KKwl2b2lkICpvYmplY3Q7DQorDQorCWlmICghKHBh
+Z2UgJiYgUGFnZVNsYWIocGFnZSkpKQ0KKwkJcmV0dXJuOw0KKw0KKwljYWNoZSA9IHBhZ2UtPnNs
+YWJfY2FjaGU7DQorCW9iamVjdCA9IG5lYXJlc3Rfb2JqKGNhY2hlLCBwYWdlLCBhZGRyKTsNCisJ
+YWxsb2NfaW5mbyA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBvYmplY3QpOw0KKw0KKwkvKg0KKwkg
+KiByZWNvcmQgdGhlIGxhc3QgdHdvIGNhbGxfcmN1KCkgY2FsbCBzdGFja3MuDQorCSAqLw0KKwlh
+bGxvY19pbmZvLT5hdXhfc3RhY2tbMV0gPSBhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF07DQorCWFs
+bG9jX2luZm8tPmF1eF9zdGFja1swXSA9IGthc2FuX3NhdmVfc3RhY2soR0ZQX05PV0FJVCk7DQor
+fQ0KZGlmZiAtLWdpdCBhL21tL2thc2FuL2thc2FuLmggYi9tbS9rYXNhbi9rYXNhbi5oDQppbmRl
+eCBlOGYzNzE5OWQ4ODUuLmE3MzkxYmM4MzA3MCAxMDA2NDQNCi0tLSBhL21tL2thc2FuL2thc2Fu
+LmgNCisrKyBiL21tL2thc2FuL2thc2FuLmgNCkBAIC0xMDQsNyArMTA0LDE1IEBAIHN0cnVjdCBr
+YXNhbl90cmFjayB7DQogDQogc3RydWN0IGthc2FuX2FsbG9jX21ldGEgew0KIAlzdHJ1Y3Qga2Fz
+YW5fdHJhY2sgYWxsb2NfdHJhY2s7DQorI2lmZGVmIENPTkZJR19LQVNBTl9HRU5FUklDDQorCS8q
+DQorCSAqIGNhbGxfcmN1KCkgY2FsbCBzdGFjayBpcyBzdG9yZWQgaW50byBzdHJ1Y3Qga2FzYW5f
+YWxsb2NfbWV0YS4NCisJICogVGhlIGZyZWUgc3RhY2sgaXMgc3RvcmVkIGludG8gc3RydWN0IGth
+c2FuX2ZyZWVfbWV0YS4NCisJICovDQorCWRlcG90X3N0YWNrX2hhbmRsZV90IGF1eF9zdGFja1sy
+XTsNCisjZWxzZQ0KIAlzdHJ1Y3Qga2FzYW5fdHJhY2sgZnJlZV90cmFja1tLQVNBTl9OUl9GUkVF
+X1NUQUNLU107DQorI2VuZGlmDQogI2lmZGVmIENPTkZJR19LQVNBTl9TV19UQUdTX0lERU5USUZZ
+DQogCXU4IGZyZWVfcG9pbnRlcl90YWdbS0FTQU5fTlJfRlJFRV9TVEFDS1NdOw0KIAl1OCBmcmVl
+X3RyYWNrX2lkeDsNCkBAIC0xNTksNiArMTY3LDggQEAgdm9pZCBrYXNhbl9yZXBvcnRfaW52YWxp
+ZF9mcmVlKHZvaWQgKm9iamVjdCwgdW5zaWduZWQgbG9uZyBpcCk7DQogDQogc3RydWN0IHBhZ2Ug
+Kmthc2FuX2FkZHJfdG9fcGFnZShjb25zdCB2b2lkICphZGRyKTsNCiANCitkZXBvdF9zdGFja19o
+YW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNrKGdmcF90IGZsYWdzKTsNCisNCiAjaWYgZGVmaW5lZChD
+T05GSUdfS0FTQU5fR0VORVJJQykgJiYgXA0KIAkoZGVmaW5lZChDT05GSUdfU0xBQikgfHwgZGVm
+aW5lZChDT05GSUdfU0xVQikpDQogdm9pZCBxdWFyYW50aW5lX3B1dChzdHJ1Y3Qga2FzYW5fZnJl
+ZV9tZXRhICppbmZvLCBzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpOw0KZGlmZiAtLWdpdCBhL21t
+L2thc2FuL3JlcG9ydC5jIGIvbW0va2FzYW4vcmVwb3J0LmMNCmluZGV4IDgwZjIzYzlkYTZiMC4u
+MjQyMWE0YmQ5MjI3IDEwMDY0NA0KLS0tIGEvbW0va2FzYW4vcmVwb3J0LmMNCisrKyBiL21tL2th
+c2FuL3JlcG9ydC5jDQpAQCAtMTA1LDE1ICsxMDUsMjAgQEAgc3RhdGljIHZvaWQgZW5kX3JlcG9y
+dCh1bnNpZ25lZCBsb25nICpmbGFncykNCiAJa2FzYW5fZW5hYmxlX2N1cnJlbnQoKTsNCiB9DQog
+DQorc3RhdGljIHZvaWQgcHJpbnRfc3RhY2soZGVwb3Rfc3RhY2tfaGFuZGxlX3Qgc3RhY2spDQor
+ew0KKwl1bnNpZ25lZCBsb25nICplbnRyaWVzOw0KKwl1bnNpZ25lZCBpbnQgbnJfZW50cmllczsN
+CisNCisJbnJfZW50cmllcyA9IHN0YWNrX2RlcG90X2ZldGNoKHN0YWNrLCAmZW50cmllcyk7DQor
+CXN0YWNrX3RyYWNlX3ByaW50KGVudHJpZXMsIG5yX2VudHJpZXMsIDApOw0KK30NCisNCiBzdGF0
+aWMgdm9pZCBwcmludF90cmFjayhzdHJ1Y3Qga2FzYW5fdHJhY2sgKnRyYWNrLCBjb25zdCBjaGFy
+ICpwcmVmaXgpDQogew0KIAlwcl9lcnIoIiVzIGJ5IHRhc2sgJXU6XG4iLCBwcmVmaXgsIHRyYWNr
+LT5waWQpOw0KIAlpZiAodHJhY2stPnN0YWNrKSB7DQotCQl1bnNpZ25lZCBsb25nICplbnRyaWVz
+Ow0KLQkJdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQotDQotCQlucl9lbnRyaWVzID0gc3RhY2tf
+ZGVwb3RfZmV0Y2godHJhY2stPnN0YWNrLCAmZW50cmllcyk7DQotCQlzdGFja190cmFjZV9wcmlu
+dChlbnRyaWVzLCBucl9lbnRyaWVzLCAwKTsNCisJCXByaW50X3N0YWNrKHRyYWNrLT5zdGFjayk7
+DQogCX0gZWxzZSB7DQogCQlwcl9lcnIoIihzdGFjayBpcyBub3QgYXZhaWxhYmxlKVxuIik7DQog
+CX0NCkBAIC0xOTIsNiArMTk3LDE5IEBAIHN0YXRpYyB2b2lkIGRlc2NyaWJlX29iamVjdChzdHJ1
+Y3Qga21lbV9jYWNoZSAqY2FjaGUsIHZvaWQgKm9iamVjdCwNCiAJCWZyZWVfdHJhY2sgPSBrYXNh
+bl9nZXRfZnJlZV90cmFjayhjYWNoZSwgb2JqZWN0LCB0YWcpOw0KIAkJcHJpbnRfdHJhY2soZnJl
+ZV90cmFjaywgIkZyZWVkIik7DQogCQlwcl9lcnIoIlxuIik7DQorDQorI2lmZGVmIENPTkZJR19L
+QVNBTl9HRU5FUklDDQorCQlpZiAoYWxsb2NfaW5mby0+YXV4X3N0YWNrWzBdKSB7DQorCQkJcHJf
+ZXJyKCJMYXN0IGNhbGxfcmN1KCk6XG4iKTsNCisJCQlwcmludF9zdGFjayhhbGxvY19pbmZvLT5h
+dXhfc3RhY2tbMF0pOw0KKwkJCXByX2VycigiXG4iKTsNCisJCX0NCisJCWlmIChhbGxvY19pbmZv
+LT5hdXhfc3RhY2tbMV0pIHsNCisJCQlwcl9lcnIoIlNlY29uZCB0byBsYXN0IGNhbGxfcmN1KCk6
+XG4iKTsNCisJCQlwcmludF9zdGFjayhhbGxvY19pbmZvLT5hdXhfc3RhY2tbMV0pOw0KKwkJCXBy
+X2VycigiXG4iKTsNCisJCX0NCisjZW5kaWYNCiAJfQ0KIA0KIAlkZXNjcmliZV9vYmplY3RfYWRk
+cihjYWNoZSwgb2JqZWN0LCBhZGRyKTsNCi0tIA0KMi4xOC4wDQo=
 
-Running for a few hours now. It works fine.
