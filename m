@@ -2,169 +2,122 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B13207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A632207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KeXNSTZQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gz6gfc6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEVB0U (ORCPT
+        id S1727024AbgEVB0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:26:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45032 "EHLO
+        Thu, 21 May 2020 21:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVB0U (ORCPT
+        with ESMTP id S1726335AbgEVB0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:26:20 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30555C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:26:20 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id p12so7131542qtn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8sldq0pMkWDsxQ4+5VF7/Xl+EYi91SNnCVeh6ANVjMA=;
-        b=KeXNSTZQPmytCRtDQ2bBN4aRS4A7Lnla+lbYVhJRu96GSy3NoAEdP2e09RVS91IKS8
-         8647xtQUd4Fu5B3mXQrkoo2d6hTGL6p/1Aj7XTtHeMIUUQD0g6ofMD6R3bHXCRiJll75
-         bw8dvhnz2tqzKf3p+HGcqjuQkWOOzNzpAeygGXUd/kehm3/OI9qfUk9rnggFxi7UkVZK
-         GT4Hj7HGnLSZIzdE+aVjQ5QVGsMso3sNnSK1EasjReTTMxal4JkHgrdwgbDWisSIg5x+
-         A7MLrkQSRVdrfdgiG2S9zW/pYMtysOPV2yovy9Z9WKl7kofjJFHVUIn0+Lm+cvTt/aey
-         60sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8sldq0pMkWDsxQ4+5VF7/Xl+EYi91SNnCVeh6ANVjMA=;
-        b=r7ClYCb9nK43NTzsNHvYYQRwpoID59U7aRcTwBjlxqJi6hxMfE07qIj3YVmWiCwQrI
-         7tME/MuUVTRr55BGMgYj0mBNWQZU8jLIu1WozCtXuxxOzqhZ6l0/YglKfZsi5ATSPep4
-         k1b/xW/DLgzYVidEgI0fj7jkrGR80+HVHyS1aYRK5xeakQtUZzHnr4QtZOV84dctm2tM
-         FOID81GP4KflwRTSHzvLuYfYfW5oFx/c8CUpZ/5cxgyUhLvUNj3Q9q7DlXUGAgde4xo7
-         pauZwI6KFzFgEeF8fDtHPGyhgkyccfWt1MqzWIKNizcgqnu7aaC2c5/ObITsxaGfEem6
-         Lt2w==
-X-Gm-Message-State: AOAM533Tu9XIZpTSxnRtqBWJDZ/WmR0GQcHBG/33IfmQHUBvfu+B3SAI
-        3myozM1oL1kWbLlvw1T0zZ3UqANjoyAmQX8ILhjyfQ==
-X-Google-Smtp-Source: ABdhPJxFgxrb/KqPSe2SjIw5HgVTkYN54u4PTLazRZxD6RstWtydGYuJE8M75QHUR22jaA/ErjKnA6xapmrOjN4YOWs=
-X-Received: by 2002:ac8:1c67:: with SMTP id j36mr13503048qtk.34.1590110778831;
- Thu, 21 May 2020 18:26:18 -0700 (PDT)
+        Thu, 21 May 2020 21:26:42 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45293C061A0E;
+        Thu, 21 May 2020 18:26:42 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Spjq3Wgsz9sSW;
+        Fri, 22 May 2020 11:26:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590110799;
+        bh=YODjtNZ3rwmpRl6sJUoNkBjHr72zwfvG/cj7A1RWpJo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gz6gfc6MaJX0JcgtZnAwtge0yGju6zY+bdBkfEinyZHDLc/1j8qd7eXngSLsveVVY
+         846ejSbBE+IQC5fUO3lWMeqYw7/oxVbhUDR3J6VPwXOgRV8AnGeSyT7BKsPg3N5G8Z
+         CmXiSM7SDa3dhSHgX74ujMvrFJ7DbIJq2+qqS5oZvM9W4XvDe+UKIdTZJBFiHg0B1y
+         zxfrBi3iBjCfTXk0A69/6/DZLIXdqgRtt9bRa2+UN6FFIjNLVFuj/VV0wHJVpcx5lo
+         oRNC+dmrtlvliy9ihWNu9d1oR5Es0RRntmwGgSqyD3ceGR3FScYT40qLtADWkgMHLQ
+         7z0UCvEzyp5CQ==
+Date:   Fri, 22 May 2020 11:26:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Theodore Ts'o <tytso@mit.edu>, Eric Biggers <ebiggers@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the ext4 tree with the fscrypt tree
+Message-ID: <20200522112638.577ec8b5@canb.auug.org.au>
 MIME-Version: 1.0
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200520224818.78930-1-joel@joelfernandes.org> <20200521225202.GD2869@paulmck-ThinkPad-P72>
-In-Reply-To: <20200521225202.GD2869@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Thu, 21 May 2020 21:26:05 -0400
-Message-ID: <CAJWu+opfReuX=uEV+2yhor81yjzSe1O0JP9=TxPd2O-mxxFyyw@mail.gmail.com>
-Subject: Re: [PATCH RFC] sched: Use sched-RCU in core-scheduling balancing logic
-To:     paulmck@kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        vpillai <vpillai@digitalocean.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Cc: Frederic Weisbecker" <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/TsrLHyJYATXjLv3am2_WHJv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 6:52 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Wed, May 20, 2020 at 06:48:18PM -0400, Joel Fernandes (Google) wrote:
-> > rcu_read_unlock() can incur an infrequent deadlock in
-> > sched_core_balance(). Fix this by using sched-RCU instead.
-> >
-> > This fixes the following spinlock recursion observed when testing the
-> > core scheduling patches on PREEMPT=y kernel on ChromeOS:
-> >
-> > [    3.240891] BUG: spinlock recursion on CPU#2, swapper/2/0
-> > [    3.240900]  lock: 0xffff9cd1eeb28e40, .magic: dead4ead, .owner: swapper/2/0, .owner_cpu: 2
-> > [    3.240905] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.4.22htcore #4
-> > [    3.240908] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
-> > [    3.240910] Call Trace:
-> > [    3.240919]  dump_stack+0x97/0xdb
-> > [    3.240924]  ? spin_bug+0xa4/0xb1
-> > [    3.240927]  do_raw_spin_lock+0x79/0x98
-> > [    3.240931]  try_to_wake_up+0x367/0x61b
-> > [    3.240935]  rcu_read_unlock_special+0xde/0x169
-> > [    3.240938]  ? sched_core_balance+0xd9/0x11e
-> > [    3.240941]  __rcu_read_unlock+0x48/0x4a
-> > [    3.240945]  __balance_callback+0x50/0xa1
-> > [    3.240949]  __schedule+0x55a/0x61e
-> > [    3.240952]  schedule_idle+0x21/0x2d
-> > [    3.240956]  do_idle+0x1d5/0x1f8
-> > [    3.240960]  cpu_startup_entry+0x1d/0x1f
-> > [    3.240964]  start_secondary+0x159/0x174
-> > [    3.240967]  secondary_startup_64+0xa4/0xb0
-> > [   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
-> >
-> > Cc: vpillai <vpillai@digitalocean.com>
-> > Cc: Aaron Lu <aaron.lwe@gmail.com>
-> > Cc: Aubrey Li <aubrey.intel@gmail.com>
-> > Cc: peterz@infradead.org
-> > Cc: paulmck@kernel.org
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Change-Id: I1a4bf0cd1426b3c21ad5de44719813ad4ee5805e
->
-> With some luck, the commit removing the need for this will hit
-> mainline during the next merge window.  Fingers firmly crossed...
+--Sig_/TsrLHyJYATXjLv3am2_WHJv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sounds good, thank you Paul :-)
+Hi all,
 
- - Joel
+Today's linux-next merge of the ext4 tree got a conflict in:
 
+  fs/ext4/super.c
 
->
->                                                 Thanx, Paul
->
-> > ---
-> >  kernel/sched/core.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 780514d03da47..b8ca6fcaaaf06 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -4897,7 +4897,7 @@ static void sched_core_balance(struct rq *rq)
-> >       struct sched_domain *sd;
-> >       int cpu = cpu_of(rq);
-> >
-> > -     rcu_read_lock();
-> > +     rcu_read_lock_sched();
-> >       raw_spin_unlock_irq(rq_lockp(rq));
-> >       for_each_domain(cpu, sd) {
-> >               if (!(sd->flags & SD_LOAD_BALANCE))
-> > @@ -4910,7 +4910,7 @@ static void sched_core_balance(struct rq *rq)
-> >                       break;
-> >       }
-> >       raw_spin_lock_irq(rq_lockp(rq));
-> > -     rcu_read_unlock();
-> > +     rcu_read_unlock_sched();
-> >  }
-> >
-> >  static DEFINE_PER_CPU(struct callback_head, core_balance_head);
-> > --
-> > 2.26.2.761.g0e0b3e54be-goog
-> >
+between commit:
+
+  ed318a6cc0b6 ("fscrypt: support test_dummy_encryption=3Dv2")
+
+from the fscrypt tree and commit:
+
+  e0198aff3ae3 ("ext4: reject mount options not supported when remounting i=
+n handle_mount_opt()")
+
+from the ext4 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/ext4/super.c
+index 4a3d21972011,62e6ebc0c0ae..000000000000
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@@ -1819,8 -1817,8 +1820,8 @@@ static const struct mount_opts=20
+  	{Opt_jqfmt_vfsv0, QFMT_VFS_V0, MOPT_QFMT},
+  	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
+  	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
+ -	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
+ +	{Opt_test_dummy_encryption, 0, MOPT_STRING},
+- 	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
++ 	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
+  	{Opt_err, 0, 0}
+  };
+ =20
+
+--Sig_/TsrLHyJYATXjLv3am2_WHJv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HKk4ACgkQAVBC80lX
+0GzDZQgAphOOzunXU+74dZOBQrG3J2PRBQbGMF3H1B37IEtT8NIR8onnAF2iRw6n
+gdYPGQclYqc/7KC8U/l2glhfB/Rp7h8I0j5qLFKMEo4Pwl47HbjrCc07Kc5evIiz
+l7WW9GZrM5RB4Fw0ovkN4dUECuEDgGy8VNiply8eFtNoEKAFdHNsnlnoxeI3xLUg
+Bkyr6KtFKiUeJa/pX+JSzZCSC+OEo5gWBl7FXfapWvjuIxCygdhSRb0zAIoWou1l
+jpRvzTnbh6yaIqpK9uwTsDxZ1gxggzM1d8wl8+udbfj4r3Lbp6/tKZlhJ72oD/65
+PPzLdGErswGiffDlQARCJA2YG5bX/g==
+=truN
+-----END PGP SIGNATURE-----
+
+--Sig_/TsrLHyJYATXjLv3am2_WHJv--
