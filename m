@@ -2,112 +2,88 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57223C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218362083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:09:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FVd2BM88"
+	by mail.kernel.org (Postfix) with ESMTP id 3556920812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgEVEJg (ORCPT
+        id S1726482AbgEVENB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 00:09:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:19013 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725859AbgEVEJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 00:09:36 -0400
-X-UUID: 7e1934e4550544c9bae55ec3f79a7dc8-20200522
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=X47htdhmQH4NMD8VYo9Wr+NebWgg/Igukck/NyzLjDY=;
-        b=FVd2BM88NwlDWXM+H49UDz6JLO63itSZEJExahDZlDYS0b8yVRQI8pi9r/iJ/JlkIUNluCjiqRYEgh3f5dRNnnLu6210C/X35dGCHp5jzAjlixfjpjucvBHg9j6i5gSgIxGewVpQ41Dj0QAQHDh/Q8m9e8wiedFjo8LEbk9lEO0=;
-X-UUID: 7e1934e4550544c9bae55ec3f79a7dc8-20200522
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2103569283; Fri, 22 May 2020 12:09:33 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 22 May 2020 12:09:30 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 22 May 2020 12:09:30 +0800
-Message-ID: <1590120571.22249.25.camel@mtksdccf07>
-Subject: Re: [v4,0/7] Add Mediatek thermal dirver and dtsi
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <hsinyi@chromium.org>,
-        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 22 May 2020 12:09:31 +0800
-In-Reply-To: <7e205390-c7a7-b8c9-3ba2-344a04dc6696@gmail.com>
-References: <20200323121537.22697-1-michael.kao@mediatek.com>
-         <7e205390-c7a7-b8c9-3ba2-344a04dc6696@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 22 May 2020 00:13:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56830 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725928AbgEVENB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 00:13:01 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxZuolUcdeFrA3AA--.1237S3;
+        Fri, 22 May 2020 12:12:22 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 2/3] gpio: pxa: Fix return value of pxa_gpio_probe()
+Date:   Fri, 22 May 2020 12:12:19 +0800
+Message-Id: <1590120740-22912-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9AxZuolUcdeFrA3AA--.1237S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykAF4fKr4fAFb_yoWfWrg_Gw
+        48ZrZ2qryvkF1qvwnFyayakry2vFnY9Fn7ursayayay34UX347uryUZrn3XFWUur47Gr98
+        GF1UAr4Ivr4akjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbh8FF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gryl42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1E_MUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTIxIGF0IDE0OjUxICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiBIaSBNaWNoYWVsLA0KPiANCj4gT24gMjMvMDMvMjAyMCAxMzoxNSwgTWljaGFlbCBLYW8g
-d3JvdGU6DQo+ID4gVGhpcyBwYXRjaHNldCBzdXBwb3J0cyBmb3IgTVQ4MTgzIGNoaXAgdG8gbXRr
-X3RoZXJtYWwuYy4NCj4gPiBBZGQgdGhlcm1hbCB6b25lIG9mIGFsbCB0aGUgdGhlcm1hbCBzZW5z
-b3IgaW4gU29DIGZvcg0KPiA+IGFub3RoZXIgZ2V0IHRlbXBlcmF0cnVlLiBUaGV5IGRvbid0IG5l
-ZWQgdG8gdGhlcm1hbCB0aHJvdHRsZS4NCj4gPiBBbmQgd2UgYmluZCBjb29sZXJzIGZvciB0aGVy
-bWFsIHpvbmUgbm9kZXMgb2YgY3B1X3RoZXJtYWwuDQo+ID4gDQo+ID4gUmViYXNlIHRvIGtlcm5l
-bC01LjYtcmMxLg0KPiA+IA0KPiA+IFVwZGF0ZSBjb250ZW50Og0KPiA+IA0KPiA+IFsxLzddDQo+
-ID4gICAgIC0gU3F1YXNoIHRoZXJtYWwgem9uZSBzZXR0aW5ncyBpbiB0aGUgZHRzaSBmcm9tIFt2
-Myw1LzhdDQo+ID4gICAgICAgYXJtNjQ6IGR0czogbXQ4MTgzOiBJbmNyZWFzZSBwb2xsaW5nIGZy
-ZXF1ZW5jeSBmb3IgQ1BVIHRoZXJtYWwgem9uZQ0KPiA+IA0KPiA+ICAgICAtIFJlbW92ZSB0aGUg
-cHJvcGVydHkgb2YgaW50ZXJydXB0cyBhbmQgbWVkaWF0ZWssaHctcmVzZXQtdGVtcA0KPiA+IA0K
-PiA+IFsyLzddDQo+ID4gICAgIC0gQ29ycmVjdCBjb21taXQgbWVzc2FnZQ0KPiA+IA0KPiA+IFs0
-LzddDQo+ID4gICAgIC0gQ2hhbmdlIHRoZSB0YXJnZXQgdGVtcGVyYXR1cmUgdG8gdGhlIDgwQyBh
-bmQgY2hhbmdlIHRoZSBjb21taXQgbWVzc2FnZQ0KPiA+IA0KPiA+IFs2LzddDQo+ID4gICAgIC0g
-QWRqdXN0IG5ld2xpbmUgYWxpZ25tZW50DQo+ID4gDQo+ID4gICAgIC0gRml4IHRoZSBqdWRnZW1l
-bnQgb24gdGhlIHJldHVybiB2YWx1ZSBvZiByZWdpc3RlcmluZyB0aGVybWFsIHpvbmUNCj4gPiAN
-Cj4gPiBUaGlzIHBhdGNoIHNlcmllcyBiYXNlIG9uIHRoZXNlIHBhdGNoZXMgWzFdLg0KPiA+IA0K
-PiA+IFt2NywzLzNdIFBNIC8gQVZTOiBTVlM6IEludHJvZHVjZSBTVlMgZW5naW5lIChodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExNDM5ODI5LykNCj4gPiANCj4gPiBNYXR0aGlh
-cyBLYWVobGNrZSAoMSk6DQo+ID4gICBhcm02NDogZHRzOiBtdDgxODM6IENvbmZpZ3VyZSBDUFUg
-Y29vbGluZw0KPiA+IA0KPiA+IE1pY2hhZWwgS2FvICg2KToNCj4gPiAgIGFybTY0OiBkdHM6IG10
-ODE4MzogYWRkIHRoZXJtYWwgem9uZSBub2RlDQo+ID4gICBhcm02NDogZHRzOiBtdDgxODM6IGFk
-ZCBkeW5hbWljIHBvd2VyIGNvZWZmaWNpZW50cw0KPiA+ICAgYXJtNjQ6IGR0czogbXQ4MTgzOiBB
-ZGQgI2Nvb2xpbmctY2VsbHMgdG8gQ1BVIG5vZGVzDQo+ID4gICB0aGVybWFsOiBtZWRpYXRlazog
-bXQ4MTgzOiBmaXggYmFuayBudW1iZXIgc2V0dGluZ3MNCj4gDQo+IERvIEkgdW5kZXJzdGFuZCBj
-b3JyZWN0bHkgdGhhdCB3ZSBuZWVkIHRvIGZpeCB0aGUgYmFuayBudW1iZXIgYmVmb3JlIHdlIGNh
-biBhZGQNCj4gdGhlIGRldmljZSB0cmVlIGNoYW5nZXMuIEFuZCB0aGF0IHRoZSBsYXN0IHR3byBw
-YXRjaGVzIGFyZSBlbmhhbmNlbWVudHMgZm9yIHRoZQ0KPiBkcml2ZXIgYnV0IG5lZWRlZCB0byBn
-ZXQgYSB3b3JraW5nIHZlcnNpb24/DQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCkhp
-IE1hdHRoaWFzLA0KDQpUaGVyZSBpcyBvbmUgYmFuayBzZXR0aW5nIG9mIG10ODE4MyBjb25maWcu
-DQpJZiB0aGUgZGV2aWNlIHRyZWUgbWVyZ2VkIGZpcnN0LiBJIHdvcnJ5IHRoYXQgaXQgd2lsbCBj
-cmFzaCB3aGVuIHRoZQ0KdGhlcm1hbCB6b25lIHJlYWQgdGVtcGVyYXR1cmUuDQpJdCB3aWxsIGFj
-Y2VzcyB0aGUgaW52YWxpZCBpbmRleCBvZiBiYW5rLg0KU28gcGxlYXNlIHdhaXQgdGhlIHBhdGNo
-ICJmaXggYmFuayBudW1iZXIgc2V0dGluZ3MgIiBtZXJnZWQgZmlyc3QuDQpUaGFua3MhDQoNCi8q
-IE1UODE4MyB0aGVybWFsIHNlbnNvciBkYXRhICovDQpzdGF0aWMgY29uc3QgaW50IG10ODE4M19i
-YW5rX2RhdGFbTVQ4MTgzX05VTV9TRU5TT1JTXSA9IHsNCglNVDgxODNfVFMxLCBNVDgxODNfVFMy
-LCBNVDgxODNfVFMzLCBNVDgxODNfVFM0LCBNVDgxODNfVFM1LA0KTVQ4MTgzX1RTQUJCDQp9OyAN
-Cg0KQmVzdCBSZWdhcmRzLA0KTWljaGFlbA0KDQoNCj4gPiAgIHRoZXJtYWw6IG1lZGlhdGVrOiBh
-ZGQgYW5vdGhlciBnZXRfdGVtcCBvcHMgZm9yIHRoZXJtYWwgc2Vuc29ycw0KPiA+ICAgdGhlcm1h
-bDogbWVkaWF0ZWs6IHVzZSBzcGlubG9jayB0byBwcm90ZWN0IFBUUENPUkVTRUwNCj4gPiANCj4g
-PiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSB8IDE1NiArKysrKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICBkcml2ZXJzL3RoZXJtYWwvbXRrX3RoZXJtYWwuYyAgICAg
-ICAgICAgIHwgIDg4ICsrKysrKysrKysrLS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMzEgaW5z
-ZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pDQo+ID4gDQoNCg==
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
+
+Fixes: 542c25b7a209 ("drivers: gpio: pxa: use devm_platform_ioremap_resource()")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/gpio/gpio-pxa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index 1361270..0cb6600 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -660,8 +660,8 @@ static int pxa_gpio_probe(struct platform_device *pdev)
+ 	pchip->irq1 = irq1;
+ 
+ 	gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!gpio_reg_base)
+-		return -EINVAL;
++	if (IS_ERR(gpio_reg_base))
++		return PTR_ERR(gpio_reg_base);
+ 
+ 	clk = clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+-- 
+2.1.0
 
