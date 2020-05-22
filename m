@@ -2,128 +2,119 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24613C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1120520723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB895206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgEVMjN (ORCPT
+        id S1729719AbgEVMkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:39:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44662 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728801AbgEVMjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:39:12 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BD1C4D07CA8F9E8D14A0;
-        Fri, 22 May 2020 20:39:09 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 20:39:05 +0800
-Subject: Re: [PATCH v2] xfrm: policy: Fix xfrm policy match
-To:     Xin Long <lucien.xin@gmail.com>
-References: <20200421143149.45108-1-yuehaibing@huawei.com>
- <20200422125346.27756-1-yuehaibing@huawei.com>
- <0015ec4c-0e9c-a9d2-eb03-4d51c5fbbe86@huawei.com>
- <20200519085353.GE13121@gauss3.secunet.de>
- <CADvbK_eXW24SkuLUOKkcg4JPa8XLcWpp6RNCrQT+=okaWe+GDA@mail.gmail.com>
- <550a82f1-9cb3-2392-25c6-b2a84a00ca33@huawei.com>
- <CADvbK_cpXOxbWzHzonrzzrrb+Vh3q8NhXnapz0yc9h4H4gN02A@mail.gmail.com>
-CC:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        davem <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-        network dev <netdev@vger.kernel.org>,
+        Fri, 22 May 2020 08:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728717AbgEVMkl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:40:41 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F506C061A0E;
+        Fri, 22 May 2020 05:40:41 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jc6yV-00046F-3h; Fri, 22 May 2020 14:40:31 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B42D31C0095;
+        Fri, 22 May 2020 14:40:28 +0200 (CEST)
+Date:   Fri, 22 May 2020 12:40:28 -0000
+From:   "tip-bot2 for Fangrui Song" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/boot: Discard .discard.unreachable for
+ arch/x86/boot/compressed/vmlinux
+Cc:     kbuild test robot <lkp@intel.com>,
+        Fangrui Song <maskray@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Sedat Dilek <sedat.dilek@gmail.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <1c4c5d40-1e35-f9bb-3f17-01bb4675f3aa@huawei.com>
-Date:   Fri, 22 May 2020 20:39:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+In-Reply-To: <20200520182010.242489-1-maskray@google.com>
+References: <20200520182010.242489-1-maskray@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CADvbK_cpXOxbWzHzonrzzrrb+Vh3q8NhXnapz0yc9h4H4gN02A@mail.gmail.com>
+Message-ID: <159015122855.17951.18280741242752343331.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/22 13:49, Xin Long wrote:
-> On Fri, May 22, 2020 at 9:45 AM Yuehaibing <yuehaibing@huawei.com> wrote:
->>
->> On 2020/5/21 14:49, Xin Long wrote:
->>> On Tue, May 19, 2020 at 4:53 PM Steffen Klassert
->>> <steffen.klassert@secunet.com> wrote:
->>>>
->>>> On Fri, May 15, 2020 at 04:39:57PM +0800, Yuehaibing wrote:
->>>>>
->>>>> Friendly ping...
->>>>>
->>>>> Any plan for this issue?
->>>>
->>>> There was still no consensus between you and Xin on how
->>>> to fix this issue. Once this happens, I consider applying
->>>> a fix.
->>>>
->>> Sorry, Yuehaibing, I can't really accept to do: (A->mark.m & A->mark.v)
->>> I'm thinking to change to:
->>>
->>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>                                    struct xfrm_policy *pol)
->>>  {
->>> -       u32 mark = policy->mark.v & policy->mark.m;
->>> -
->>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>> -               return true;
->>> -
->>> -       if ((mark & pol->mark.m) == pol->mark.v &&
->>> -           policy->priority == pol->priority)
->>> +       if (policy->mark.v == pol->mark.v &&
->>> +           (policy->mark.m == pol->mark.m ||
->>> +            policy->priority == pol->priority))
->>>                 return true;
->>>
->>>         return false;
->>>
->>> which means we consider (the same value and mask) or
->>> (the same value and priority) as the same one. This will
->>> cover both problems.
->>
->>   policy A (mark.v = 0x1011, mark.m = 0x1011, priority = 1)
->>   policy B (mark.v = 0x1001, mark.m = 0x1001, priority = 1)
-> I'd think these are 2 different policies.
-> 
->>
->>   when fl->flowi_mark == 0x12341011, in xfrm_policy_match() do check like this:
->>
->>         (fl->flowi_mark & pol->mark.m) != pol->mark.v
->>
->>         0x12341011 & 0x1011 == 0x00001011
->>         0x12341011 & 0x1001 == 0x00001001
->>
->>  This also match different policy depends on the order of policy inserting.
-> Yes, this may happen when a user adds 2  policies like that.
-> But I think this's a problem that the user doesn't configure it well,
-> 'priority' should be set.
-> and this can not be avoided, also such as:
-> 
->    policy A (mark.v = 0xff00, mark.m = 0x1000, priority = 1)
->    policy B (mark.v = 0x00ff, mark.m = 0x0011, priority = 1)
-> 
->    try with 0x12341011
-> 
-> So just be it, let users decide.
+The following commit has been merged into the x86/build branch of tip:
 
-Ok, this make sense.
+Commit-ID:     d6ee6529436a15a0541aff6e1697989ee7dc2c44
+Gitweb:        https://git.kernel.org/tip/d6ee6529436a15a0541aff6e1697989ee7dc2c44
+Author:        Fangrui Song <maskray@google.com>
+AuthorDate:    Wed, 20 May 2020 11:20:10 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 22 May 2020 12:42:07 +02:00
 
-> 
-> .
-> 
+x86/boot: Discard .discard.unreachable for arch/x86/boot/compressed/vmlinux
 
+With commit
+
+  ce5e3f909fc0 ("efi/printf: Add 64-bit and 8-bit integer support")
+
+arch/x86/boot/compressed/vmlinux may have an undesired .discard.unreachable
+section coming from drivers/firmware/efi/libstub/vsprintf.stub.o. That section
+gets generated from unreachable() annotations when CONFIG_STACK_VALIDATION is
+enabled.
+
+.discard.unreachable contains an R_X86_64_PC32 relocation which will be
+warned about by LLD: a non-SHF_ALLOC section (.discard.unreachable) is
+not part of the memory image, thus conceptually the distance between a
+non-SHF_ALLOC and a SHF_ALLOC is not a constant which can be resolved at
+link time:
+
+  % ld.lld -m elf_x86_64 -T arch/x86/boot/compressed/vmlinux.lds ... -o arch/x86/boot/compressed/vmlinux
+  ld.lld: warning: vsprintf.c:(.discard.unreachable+0x0): has non-ABS relocation R_X86_64_PC32 against symbol ''
+
+Reuse the DISCARDS macro which includes .discard.* to drop
+.discard.unreachable.
+
+ [ bp: Massage and complete the commit message. ]
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Link: https://lkml.kernel.org/r/20200520182010.242489-1-maskray@google.com
+---
+ arch/x86/boot/compressed/vmlinux.lds.S | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 508cfa6..1031af1 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -73,4 +73,6 @@ SECTIONS
+ #endif
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
++
++	DISCARDS
+ }
