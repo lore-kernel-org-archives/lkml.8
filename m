@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE28C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9475720756
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B8B22255
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159114;
-	bh=dcISaO5ZIf/Q0SbY++gUBhKTdgN9apg2neVbPtJy5wo=;
+	s=default; t=1590159121;
+	bh=g09hXy47/1XVzK6Vin5sJf0cHvyIpJ2DR/LHGM3UeX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lglI6aURXiYjCgFwFbebKlxKgd1RaAb/HJXOeMlWyT9wp+c8GERV4ic9lf3NA1Mcw
-	 SFfsXL4QSoLJ/QoHYufx47r8n92bSloMpDgYI1tRiiP4A5fPeGytoAySlcsGvMhnbh
-	 2XKccPcuSkYLj+6ko8LXtc47tjcpwyTWPMD+Wns4=
+	b=xPPVakwbpEl+szxCIRkXod58oBzWVsh7ZEvzBKwCAhVSDATyTOw6nLUU6MdY/WOmX
+	 SG0fHwkui7QFrDUe1h5SRqh7tV+6vEKeyw9ESTB26LofPgY4HQqCQ6XLiFAwkH/JzY
+	 dYOmASI31OdtkpLBrY3VGLrnFRzxAMS8yjARUFSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbgEVOvx (ORCPT
+        id S1731154AbgEVOv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:51:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731058AbgEVOvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:37 -0400
+        id S1731091AbgEVOvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFC5A223E0;
-        Fri, 22 May 2020 14:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75FA722225;
+        Fri, 22 May 2020 14:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159097;
-        bh=dcISaO5ZIf/Q0SbY++gUBhKTdgN9apg2neVbPtJy5wo=;
+        s=default; t=1590159105;
+        bh=g09hXy47/1XVzK6Vin5sJf0cHvyIpJ2DR/LHGM3UeX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QQRhKv57zYBNVLJPzlNmoAodtUvw+lTWrfN1A9C5X4tEutDR9TfrlOJaiOPEYn88Y
-         kzyALQEIcN21zUTETi/12RpQZbeMpizbNiNthj5ZauH71bFnC8ImdnP4hLvtRNh+vS
-         LD5lkS9E9FNlEajQBDVLcIGDTPw9I3jg49KaQc8o=
+        b=G58REJ4sGIliU7PYgiXSMNLUUeg4LDRbfIycpXLLYRIUIG5tLHSfrHAcwHF0WabOg
+         lE+bB9gvpJ6qSJT5uqVEBqi/4nsS8b/sofmtzLr2SvDFyTpSWHoA4ugFERekNlY7dj
+         1M3vSQ3QsXy4BxVclq4JQehfskeDw+MTSKNq17NY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/19] net: freescale: select CONFIG_FIXED_PHY where needed
-Date:   Fri, 22 May 2020 10:51:16 -0400
-Message-Id: <20200522145120.434921-15-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 02/13] arm64: dts: rockchip: swap interrupts interrupt-names rk3399 gpu node
+Date:   Fri, 22 May 2020 10:51:31 -0400
+Message-Id: <20200522145142.435086-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
-References: <20200522145120.434921-1-sashal@kernel.org>
+In-Reply-To: <20200522145142.435086-1-sashal@kernel.org>
+References: <20200522145142.435086-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,64 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 99352c79af3e5f2e4724abf37fa5a2a3299b1c81 ]
+[ Upstream commit c604fd810bda667bdc20b2c041917baa7803e0fb ]
 
-I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-and CONFIG_GIANFAR=y:
+Dts files with Rockchip rk3399 'gpu' nodes were manually verified.
+In order to automate this process arm,mali-midgard.txt
+has been converted to yaml. In the new setup dtbs_check with
+arm,mali-midgard.yaml expects interrupts and interrupt-names values
+in the same order. Fix this for rk3399.
 
-x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/
+arm,mali-midgard.yaml
 
-It seems the same thing can happen with dpaa and ucc_geth, so change
-all three to do an explicit 'select FIXED_PHY'.
-
-The fixed-phy driver actually has an alternative stub function that
-theoretically allows building network drivers when fixed-phy is
-disabled, but I don't see how that would help here, as the drivers
-presumably would not work then.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200425143837.18706-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/Kconfig      | 2 ++
- drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
- 2 files changed, 3 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
-index a580a3dcbe59..e9f4326a0afa 100644
---- a/drivers/net/ethernet/freescale/Kconfig
-+++ b/drivers/net/ethernet/freescale/Kconfig
-@@ -76,6 +76,7 @@ config UCC_GETH
- 	depends on QUICC_ENGINE
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	---help---
- 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
- 	  which is available on some Freescale SOCs.
-@@ -89,6 +90,7 @@ config GIANFAR
- 	depends on HAS_DMA
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	select CRC32
- 	---help---
- 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
-diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
-index a654736237a9..8fec41e57178 100644
---- a/drivers/net/ethernet/freescale/dpaa/Kconfig
-+++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
-@@ -2,6 +2,7 @@ menuconfig FSL_DPAA_ETH
- 	tristate "DPAA Ethernet"
- 	depends on FSL_DPAA && FSL_FMAN
- 	select PHYLIB
-+	select FIXED_PHY
- 	select FSL_FMAN_MAC
- 	---help---
- 	  Data Path Acceleration Architecture Ethernet driver,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index ff8df7fd44a7..b63d9653ff55 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1691,10 +1691,10 @@
+ 	gpu: gpu@ff9a0000 {
+ 		compatible = "rockchip,rk3399-mali", "arm,mali-t860";
+ 		reg = <0x0 0xff9a0000 0x0 0x10000>;
+-		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
+-			     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
+-			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
+-		interrupt-names = "gpu", "job", "mmu";
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "job", "mmu", "gpu";
+ 		clocks = <&cru ACLK_GPU>;
+ 		power-domains = <&power RK3399_PD_GPU>;
+ 		status = "disabled";
 -- 
 2.25.1
 
