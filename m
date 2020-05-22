@@ -2,155 +2,174 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F246CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBDBC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC0062073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4509D2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEVG4W (ORCPT
+        id S1728322AbgEVG6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:56:22 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:61248 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728390AbgEVG4S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:56:18 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M6lIcE026832;
-        Fri, 22 May 2020 02:56:17 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 312d364vk9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 May 2020 02:56:17 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04M6uGwp020352
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 22 May 2020 02:56:16 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 22 May 2020 02:56:15 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 22 May 2020 02:56:14 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 22 May 2020 02:56:14 -0400
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04M6uB79024790;
-        Fri, 22 May 2020 02:56:12 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <lorenzo.bianconi83@gmail.com>, <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: humidity: hts221: remove usage of iio_priv_to_dev()
-Date:   Fri, 22 May 2020 09:56:16 +0300
-Message-ID: <20200522065616.10901-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 22 May 2020 02:58:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42451 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgEVG6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 02:58:03 -0400
+IronPort-SDR: oCM9akwUFKwx6rIyt+qmXcQfF63CBXxz679A3q8tZWNPwE8ASRNL/Y73onzhPo4apWbSs2VZ3V
+ 0u+mBgqeg+xg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 23:58:02 -0700
+IronPort-SDR: 8415cHuEaH0PHAeVc9B5qr4u66DcLGdB1irTEIoID0pcEQk2DOfsyVivI35zxTv/T88F9xFOII
+ KmQT9wO/e2aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,420,1583222400"; 
+   d="scan'208";a="301031849"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga008.jf.intel.com with ESMTP; 21 May 2020 23:58:02 -0700
+Date:   Thu, 21 May 2020 23:58:02 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-mm@kvack.org, Jethro Beekman <jethro@fortanix.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Seth Moore <sethmo@google.com>
+Subject: Re: [PATCH v30 12/20] x86/sgx: Add a page reclaimer
+Message-ID: <20200522065802.GC23459@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-13-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-22_02:2020-05-21,2020-05-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 cotscore=-2147483648
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- clxscore=1011 adultscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005220054
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515004410.723949-13-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We may want to get rid of the iio_priv_to_dev() helper. That's a bit
-uncertain at this point. The reason is that we will hide some of the
-members of the iio_dev structure (to prevent drivers from accessing them
-directly), and that will also mean hiding the implementation of the
-iio_priv_to_dev() helper inside the IIO core.
+On Fri, May 15, 2020 at 03:44:02AM +0300, Jarkko Sakkinen wrote:
+> +/**
+> + * sgx_reclaim_pages() - Reclaim EPC pages from the consumers
+> + *
+> + * Take a fixed number of pages from the head of the active page pool and
+> + * reclaim them to the enclave's private shmem files. Skip the pages, which
+> + * have been accessed since the last scan. Move those pages to the tail of
+> + * active page pool so that the pages get scanned in LRU like fashion.
+> + */
+> +void sgx_reclaim_pages(void)
+> +{
+> +	struct sgx_epc_page *chunk[SGX_NR_TO_SCAN];
+> +	struct sgx_backing backing[SGX_NR_TO_SCAN];
+> +	struct sgx_epc_section *section;
+> +	struct sgx_encl_page *encl_page;
+> +	struct sgx_epc_page *epc_page;
+> +	int cnt = 0;
+> +	int ret;
+> +	int i;
+> +
+> +	spin_lock(&sgx_active_page_list_lock);
+> +	for (i = 0; i < SGX_NR_TO_SCAN; i++) {
+> +		if (list_empty(&sgx_active_page_list))
+> +			break;
+> +
+> +		epc_page = list_first_entry(&sgx_active_page_list,
+> +					    struct sgx_epc_page, list);
+> +		list_del_init(&epc_page->list);
+> +		encl_page = epc_page->owner;
+> +
+> +		if (kref_get_unless_zero(&encl_page->encl->refcount) != 0)
+> +			chunk[cnt++] = epc_page;
+> +		else
+> +			/* The owner is freeing the page. No need to add the
+> +			 * page back to the list of reclaimable pages.
+> +			 */
+> +			epc_page->desc &= ~SGX_EPC_PAGE_RECLAIMABLE;
+> +	}
+> +	spin_unlock(&sgx_active_page_list_lock);
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		epc_page = chunk[i];
+> +		encl_page = epc_page->owner;
+> +
+> +		if (!sgx_reclaimer_age(epc_page))
+> +			goto skip;
+> +
+> +		ret = sgx_encl_get_backing(encl_page->encl,
+> +					   SGX_ENCL_PAGE_INDEX(encl_page),
+> +					   &backing[i]);
+> +		if (ret)
+> +			goto skip;
+> +
+> +		mutex_lock(&encl_page->encl->lock);
+> +		encl_page->desc |= SGX_ENCL_PAGE_RECLAIMED;
+> +		mutex_unlock(&encl_page->encl->lock);
+> +		continue;
+> +
+> +skip:
+> +		kref_put(&encl_page->encl->refcount, sgx_encl_release);
+> +
+> +		spin_lock(&sgx_active_page_list_lock);
+> +		list_add_tail(&epc_page->list, &sgx_active_page_list);
+> +		spin_unlock(&sgx_active_page_list_lock);
 
-Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
-may not be fast anymore, so a general idea is to try to get rid of the
-iio_priv_to_dev() altogether.
+Ugh, this is wrong.  If the above kref_put() drops the last reference and
+releases the enclave, adding the page to the active page list will result
+in a use-after-free as the enclave will have been freed.  It also leaks the
+EPC page because sgx_encl_destroy() skips pages that are in the process of
+being reclaimed (as detected by list_empty()).
 
-For this driver, removing the iio_priv_to_dev() helper means passing the
-iio_dev object on hts221_allocate_buffers() & hts221_allocate_trigger().
+The "original" code did the put() after list_add_tail(), but was moved in
+v15 to fix a bug where the put() could drop a reference to the wrong enclave
+if the page was freed and reallocated by a different CPU between
+list_add_tail() and put().  But, that particular bug only occurred because
+the code at the time was:
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/humidity/hts221.h        | 4 ++--
- drivers/iio/humidity/hts221_buffer.c | 7 +++----
- drivers/iio/humidity/hts221_core.c   | 4 ++--
- 3 files changed, 7 insertions(+), 8 deletions(-)
+	sgx_encl_page_put(epc_page);
 
-diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
-index 7d6771f7cf47..569146910885 100644
---- a/drivers/iio/humidity/hts221.h
-+++ b/drivers/iio/humidity/hts221.h
-@@ -46,7 +46,7 @@ extern const struct dev_pm_ops hts221_pm_ops;
- int hts221_probe(struct device *dev, int irq, const char *name,
- 		 struct regmap *regmap);
- int hts221_set_enable(struct hts221_hw *hw, bool enable);
--int hts221_allocate_buffers(struct hts221_hw *hw);
--int hts221_allocate_trigger(struct hts221_hw *hw);
-+int hts221_allocate_buffers(struct hts221_hw *hw, struct iio_dev *iio_dev);
-+int hts221_allocate_trigger(struct hts221_hw *hw, struct iio_dev *iio_dev);
- 
- #endif /* HTS221_H */
-diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-index 9fb3f33614d4..48d469eeb0e6 100644
---- a/drivers/iio/humidity/hts221_buffer.c
-+++ b/drivers/iio/humidity/hts221_buffer.c
-@@ -72,10 +72,9 @@ static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
- 	return IRQ_HANDLED;
- }
- 
--int hts221_allocate_trigger(struct hts221_hw *hw)
-+int hts221_allocate_trigger(struct hts221_hw *hw, struct iio_dev *iio_dev)
- {
- 	struct st_sensors_platform_data *pdata = dev_get_platdata(hw->dev);
--	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
- 	bool irq_active_low = false, open_drain = false;
- 	unsigned long irq_type;
- 	int err;
-@@ -190,9 +189,9 @@ static irqreturn_t hts221_buffer_handler_thread(int irq, void *p)
- 	return IRQ_HANDLED;
- }
- 
--int hts221_allocate_buffers(struct hts221_hw *hw)
-+int hts221_allocate_buffers(struct hts221_hw *hw, struct iio_dev *iio_dev)
- {
--	return devm_iio_triggered_buffer_setup(hw->dev, iio_priv_to_dev(hw),
-+	return devm_iio_triggered_buffer_setup(hw->dev, iio_dev,
- 					NULL, hts221_buffer_handler_thread,
- 					&hts221_buffer_ops);
- }
-diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-index 9003671f14fb..77dfa65df841 100644
---- a/drivers/iio/humidity/hts221_core.c
-+++ b/drivers/iio/humidity/hts221_core.c
-@@ -621,11 +621,11 @@ int hts221_probe(struct device *dev, int irq, const char *name,
- 	}
- 
- 	if (hw->irq > 0) {
--		err = hts221_allocate_buffers(hw);
-+		err = hts221_allocate_buffers(hw, iio_dev);
- 		if (err < 0)
- 			return err;
- 
--		err = hts221_allocate_trigger(hw);
-+		err = hts221_allocate_trigger(hw, iio_dev);
- 		if (err)
- 			return err;
- 	}
--- 
-2.25.1
+I.e. the backpointer in epc_page was consumed after dropping the spin lock.
+So long as epc_page->owner (well, epc_page in general) isn't dereferenced,
+I'm 99% certain this can be fixed simply by doing kref_put() after moving
+the page back to the active page list.
 
+> +
+> +		chunk[i] = NULL;
+> +	}
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		epc_page = chunk[i];
+> +		if (epc_page)
+> +			sgx_reclaimer_block(epc_page);
+> +	}
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		epc_page = chunk[i];
+> +		if (!epc_page)
+> +			continue;
+> +
+> +		encl_page = epc_page->owner;
+> +		sgx_reclaimer_write(epc_page, &backing[i]);
+> +		sgx_encl_put_backing(&backing[i], true);
+> +
+> +		kref_put(&encl_page->encl->refcount, sgx_encl_release);
+> +		epc_page->desc &= ~SGX_EPC_PAGE_RECLAIMABLE;
+> +
+> +		section = sgx_epc_section(epc_page);
+> +		spin_lock(&section->lock);
+> +		list_add_tail(&epc_page->list, &section->page_list);
+> +		section->free_cnt++;
+> +		spin_unlock(&section->lock);
+> +	}
+> +}
