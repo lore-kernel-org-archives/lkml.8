@@ -2,109 +2,84 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A37C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE93D206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJJ/rQAm"
+	by mail.kernel.org (Postfix) with ESMTP id D20612070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbgEVPmN (ORCPT
+        id S1730469AbgEVPnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729040AbgEVPmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:42:11 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197ADC061A0E;
-        Fri, 22 May 2020 08:42:11 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w20so140963pga.6;
-        Fri, 22 May 2020 08:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sv9pvfwqBcoNP+skkNSWNXJEe0eEqSbnxl5w+lZkjdQ=;
-        b=CJJ/rQAmyH5meit7+76N2Fxm9Keswf6rHFRTDvyuMbB/TXK86HDjZqaA/a3t657MxK
-         fK82vSBrD/bS+kKEeE8kLng+spPeEqmL7ZYgP0Kw8sPOD9txTjhSXs+WxAgxDg0b/XB4
-         ghfRrCFCfXI/+a05B4LVXB/LruDVNfhrcBgzC1cAEfSKceA/cG2PT/L7g338We+R2lUp
-         9/ekq9tSCRdQMHWpUY+Vd0/rI6/+mJjIJuQvKDfWw8SFqPiqx+DI0zysTc0MJtNyP+nG
-         QWKbY0+S+mG5liXwUo/lPIk76easwGgn1bssO+OXAzs4Td/FP4i1IiW1Lp8RERlO/TlG
-         4LJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sv9pvfwqBcoNP+skkNSWNXJEe0eEqSbnxl5w+lZkjdQ=;
-        b=Oye84nLFuSCgzG3vvOS74VW2Oi/62JysmNiOrJpS8K7S2iC0E3aMfzbVwPvPKu4yEh
-         pOw6sdFWYlMqxvRKJ7dig4e3EqSumbFgTtBO74BJUq9dQUZTKKmS8Ua5AvJu9rPjJUKm
-         sJdUXJCJsvsN66r6X6p+jCmSyL55zod3xO2lF5IM0GH0b6ILnU55uaAw9IP6eF7zf7+3
-         G+UslFw+yB8dM8w/fNzcekkVH3W9vVJsaLYxYBomyOBd9QTleMjtXCTcWz6zP+5UOS+w
-         a6amlg3kcCudn6ogufzLQvKkfuXYGkFi+yZcA6jKLjo64ehgyFWDNalA/UZ1IF7g/q7y
-         gNxg==
-X-Gm-Message-State: AOAM533XDpe0Q90bIQ1je6oykaLm+0jsYzpvKG9bDC1rI3rHkhHXcf2j
-        VCBbprvCqsaImecGiSuf47S3eIrLuAZ+povWzWw=
-X-Google-Smtp-Source: ABdhPJyP3SHIJcjXhymTa/izkoVLtzQWvpcKPRnmcp/2hlYw/Kzosnk76+L+Mq2CZkqLOs+/GYZNzzrG4kobRmJ31/o=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr13730040pgb.74.1590162130668;
- Fri, 22 May 2020 08:42:10 -0700 (PDT)
+        Fri, 22 May 2020 11:43:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:38248 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729040AbgEVPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:43:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B4E555D;
+        Fri, 22 May 2020 08:43:08 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 901663F305;
+        Fri, 22 May 2020 08:43:00 -0700 (PDT)
+Date:   Fri, 22 May 2020 16:42:55 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
+        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v2 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
+Message-ID: <20200522154254.GD26492@gaia>
+References: <20200423135656.2712-1-yezhenyu2@huawei.com>
+ <20200423135656.2712-6-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
- <1590157452-27179-4-git-send-email-jprakash@codeaurora.org> <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
-In-Reply-To: <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 22 May 2020 18:41:59 +0300
-Message-ID: <CAHp75VcyUtPz5GVPw16i8Jn5tGYwVnwVt-uBTMD0NuJ=TZvXjg@mail.gmail.com>
-Subject: Re: [PATCH V5 3/5] iio: adc: Add support for PMIC7 ADC
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423135656.2712-6-yezhenyu2@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 6:37 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, May 22, 2020 at 5:25 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
-> >
-> > The ADC architecture on PMIC7 is changed as compared to PMIC5. The
-> > major change from PMIC5 is that all SW communication to ADC goes through
-> > PMK8350, which communicates with other PMICs through PBS when the ADC
-> > on PMK8350 works in master mode. The SID register is used to identify the
-> > PMICs with which the PBS needs to communicate. Add support for the same.
->
-> Below should be in a separate patch, but it's a bikeshedding. So, I
-> left it to maintainers to decide.
+On Thu, Apr 23, 2020 at 09:56:55PM +0800, Zhenyu Ye wrote:
+> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> index 3d7c01e76efc..3eff199d3507 100644
+> --- a/mm/pgtable-generic.c
+> +++ b/mm/pgtable-generic.c
+> @@ -101,6 +101,28 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  
+> +#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+> +
+> +#define FLUSH_Pxx_TLB_RANGE(_pxx)					\
+> +void flush_##_pxx##_tlb_range(struct vm_area_struct *vma,		\
+> +			      unsigned long addr, unsigned long end)	\
+> +{									\
+> +		struct mmu_gather tlb;					\
+> +									\
+> +		tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);		\
+> +		tlb_start_vma(&tlb, vma);				\
+> +		tlb_flush_##_pxx##_range(&tlb, addr, end - addr);	\
+> +		tlb_end_vma(&tlb, vma);					\
+> +		tlb_finish_mmu(&tlb, addr, end);			\
+> +}
 
-> Fine with me
-
-Fine with me *after* addressing some issues below (besides ' < 0' part).
-
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+I may have confused myself (flush_p??_tlb_* vs. tlb_flush_p??_*) but do
+actually need this whole tlb_gather thing here? IIUC (by grep'ing),
+flush_p?d_tlb_range() is only called on huge pages, so we should know
+the level already.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Catalin
