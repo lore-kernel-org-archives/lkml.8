@@ -2,132 +2,126 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B81C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8110207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDEB207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:03:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZG5OHkrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgEVAAh (ORCPT
+        id S1730328AbgEVADs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:00:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:44298 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730105AbgEVAAg (ORCPT
+        Thu, 21 May 2020 20:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730067AbgEVADr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:00:36 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbv75-0000b1-1y; Fri, 22 May 2020 01:00:35 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbv74-007Lb0-Lt; Fri, 22 May 2020 01:00:34 +0100
-Message-ID: <f7eea57f1bab1b9f321e1c52d9bfc6103b9a45a5.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 00/99] 3.16.84-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Fri, 22 May 2020 01:00:24 +0100
-In-Reply-To: <c170c353-9fe1-a849-d062-74e42f22661c@roeck-us.net>
-References: <lsq.1589984008.673931885@decadent.org.uk>
-         <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
-         <c01feeb17ecceeca18c852008bf0227079fbb38a.camel@decadent.org.uk>
-         <c170c353-9fe1-a849-d062-74e42f22661c@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-5mtijeWolg70nhqPo19T"
-User-Agent: Evolution 3.36.2-1 
+        Thu, 21 May 2020 20:03:47 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5562BC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:03:46 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q9so4198866pjm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aimWUItgOf1Mo4eNsHUlIg6Ef9QsJNRTVwtUqNdOH6M=;
+        b=ZG5OHkrzAxL75jV4jI9yyW41kOusvleLyaT+i8cXJZTdBo4cdW390NE0CHkuK+u3LO
+         fDKPFO2iZtkgAZiMCfDuY55LTfhIfRiRndLQAueqXhmcGEf39qGrCQ7t6E3ey/8iHkPB
+         u5b+B3Q/Qh9sjOAdFaqtjj5BmQm0OHNyWS1fCXnBZyGLeI4SJTkHHpHryB0jNrdpeTZr
+         o4T05BzrOHJeIyRDsXnJFDkfj/elgR+viOPFpX5fYs5ciwuhRwT+YsNaZGDIDqQ+npYl
+         dOA87DruowRnaDWivlA5TMnS2E9Zh3f3ipIFxpt7oCHj/kR6a56Fdex4r241Zevm+UmH
+         ABRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aimWUItgOf1Mo4eNsHUlIg6Ef9QsJNRTVwtUqNdOH6M=;
+        b=GHZTo2OK+g+jv8uddKfnnuyzJZ2A2s7QzxSX4z8y3Hu4+gC6lPGJXI7En4ensgYa3P
+         uV/OY5JAI24My0iMjwtV78Biop6w6BRRxuDVC53KxdAqfqf4dU+rQ/QsbQm+eVgrPgaR
+         GOW9mbvfSesV9hqxvOrxdnEUPsWvjgNaXYCsHipAbxYEkeVS4BFHmPXmArGATTE/Sgwl
+         iqhdy41tU3bmjJp6SzjA2bh3S6HhFXZ7FlF5xRsNRCXem/xannahPtiMx+BUkGl5EdP3
+         IYr1AsBBttpsoohR0iphw6fqtS3UPnrXN9O2HnjAsv+apITZ0ez3U6ZA2miWc+c6JLTp
+         CFww==
+X-Gm-Message-State: AOAM530wKo3EB6F0PVtoiaiheyF2pSGtdAHsLXHjkEPXDg6JzNs1qpB+
+        2lNsUEd3Doe/SU81tYs/S5wzFA==
+X-Google-Smtp-Source: ABdhPJymXguid2RaAquptSVy3PCyyF4zQrru0krE8vDzueEdGjOYVT72JC4TiSto94bPhX23JXSexQ==
+X-Received: by 2002:a17:90b:10f:: with SMTP id p15mr1059980pjz.99.1590105825570;
+        Thu, 21 May 2020 17:03:45 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o11sm5259985pfd.195.2020.05.21.17.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 17:03:44 -0700 (PDT)
+Date:   Thu, 21 May 2020 17:03:42 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suman Anna <s-anna@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] TI K3 DSP remoteproc driver for C66x DSPs
+Message-ID: <20200522000342.GG11847@yoga>
+References: <20200521001006.2725-1-s-anna@ti.com>
+ <5f84465e-8f63-51b4-4758-59c85d3ad597@ti.com>
+ <20200521190141.GN408178@builder.lan>
+ <20200521222334.GA11366@xps15>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521222334.GA11366@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 21 May 15:23 PDT 2020, Mathieu Poirier wrote:
 
---=-5mtijeWolg70nhqPo19T
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Gents,
+> 
+> On Thu, May 21, 2020 at 12:01:41PM -0700, Bjorn Andersson wrote:
+> > On Thu 21 May 11:59 PDT 2020, Suman Anna wrote:
+> > 
+> > > Hi Bjorn,
+> > > 
+> > > On 5/20/20 7:10 PM, Suman Anna wrote:
+> > > > Hi All,
+> > > > 
+> > > > The following is v2 of the K3 DSP remoteproc driver supporting the C66x DSPs
+> > > > on the TI K3 J721E SoCs. The patches are based on the latest commit on the
+> > > > rproc-next branch, 7dcef3988eed ("remoteproc: Fix an error code in
+> > > > devm_rproc_alloc()").
+> > > 
+> > > I realized I also had the R5F patches on my branch, so the third patch won't
+> > > apply cleanly (conflict on Makefile). Let me know if you want a new revision
+> > > posted for you to pick up the series.
+> > > 
+> > 
+> > That should be fine, thanks for the heads up!
+> > 
+> > Will give Mathieu a day or two to take a look as well.
+> 
+> I don't see having the time to review this set before the middle/end of next
+> week.  I also understand we are crunched by time if we want to get this in
+> for the upcoming merge window.
+> 
+> If memory serves me well there wasn't anything controversial about this work.
+> Under normal circumstances I'd give it a final look but I trust Suman to have
+> carried out what we agreed on.
+> 
+> Bjorn - if you are happy with this set then go ahead and queue it.
+> 
 
-On Thu, 2020-05-21 at 15:37 -0700, Guenter Roeck wrote:
-> On 5/21/20 1:20 PM, Ben Hutchings wrote:
-> > On Wed, 2020-05-20 at 14:23 -0700, Guenter Roeck wrote:
-> > > On 5/20/20 7:13 AM, Ben Hutchings wrote:
-> > > > This is the start of the stable review cycle for the 3.16.84 releas=
-e.
-> > > > There are 99 patches in this series, which will be posted as respon=
-ses
-> > > > to this one.  If anyone has any issues with these being applied, pl=
-ease
-> > > > let me know.
-> > > >=20
-> > > > Responses should be made by Fri May 22 20:00:00 UTC 2020.
-> > > > Anything received after that time might be too late.
-> > > >=20
-> > > Build results:
-> > > 	total: 135 pass: 135 fail: 0
-> > > Qemu test results:
-> > > 	total: 230 pass: 227 fail: 3
-> > > Failed tests:
-> > > 	arm:cubieboard:multi_v7_defconfig:mem512:sun4i-a10-cubieboard:initrd
-> > > 	arm:cubieboard:multi_v7_defconfig:usb:mem512:sun4i-a10-cubieboard:ro=
-otfs
-> > > 	arm:cubieboard:multi_v7_defconfig:sata:mem512:sun4i-a10-cubieboard:r=
-ootfs
-> > >=20
-> > > The arm tests fail due to a compile error.
-> > >=20
-> > > drivers/clk/tegra/clk-tegra-periph.c:524:65: error: 'CLK_IS_CRITICAL'=
- undeclared here (not in a function); did you mean 'CLK_IS_BASIC'?
-> >=20
-> > I already looked at your first test results and dropped the patch that
-> > uses CLK_IS_CRITICAL, so there's something else going wrong there...
-> >=20
->=20
-> Ah yes. Sorry, I didn't notice that there was a rebuild.
->=20
-> Images are fine; the three failing tests should not have been
-> tested in the first place (they never did, but I didn't update
-> the blacklist when I increased the qemu memory size to 512MB).
+Thanks Mathieu.
 
-OK, thanks for checking.
+I looked through the patches again and saw that we're still waiting for
+a ack on the dt binding, so I guess I need to hold off on this a little
+bit longer.
 
-Ben.
-
---=20
-Ben Hutchings
-Logic doesn't apply to the real world. - Marvin Minsky
-
-
-
---=-5mtijeWolg70nhqPo19T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl7HFhkACgkQ57/I7JWG
-EQkNChAAjUcgcmENb90PVJ0bJsxKyHeJnxly8pVNVQAqGtJhn9nwQbV/MKM9jfQU
-9qOIDdTePFA8gcwqaogaBPcPsViJ/7FsT0Rx7nhMZlAmpibtl5TSTfBc6jWeU/8E
-/swZNgIdpGWi/j8b3IEJLuRjqSZPvYC0FaLmvSTLC5DbAPZkrv+RenQ/7hkLkVrp
-t8yuxtPL9RNb/E+e644EkwkgMpBiF5W8VoM4Sur330FIaM3CbpvH6OTWtqdOfroj
-+Vig3xFwqzKosco1rSbd/aS7gyDjy02zmz9x8ZMgYa3+CzGbHghbSCbzfqPkbHcT
-aSnNEWWdyMd9uv8Yh5D4Ai673kW+lHYk6fcc+ncXW/A/ZiRvCsGSwkTEEq+M8xNy
-OVHdUWVMT5C+xEwG6g6HnCbc9ivcgTGmxDkMTlJzkZ5wsIA9A+r92U15KkR/xMZQ
-5ODnn9/qCNK0qH/1nc3U7ZvzrCWkXsOcY1GRNqXuxWi5O1qT5YLhykWwljTWA3qM
-ksoGXQBIgQgCelJWHhcf5/pVVVKDdlViD4K2WqsuEX4YKaC9zj8aiH0WRns5sVyh
-7WLI72JR+xl9xQw9gUMtw1gx1aWOWzTS4vx3BUthEUKGq2uS17C9Rq/WQPj1Mt88
-7JP/9Pw4i6tjDYXE1kQV2Fou3FB6oqWnTl97L0Zhslni+9Uskxg=
-=Cy5J
------END PGP SIGNATURE-----
-
---=-5mtijeWolg70nhqPo19T--
+Regards,
+Bjorn
