@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4297C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00866207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F34206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgEVJdE (ORCPT
+        id S1729728AbgEVJdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 22 May 2020 05:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35926 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729619AbgEVJdC (ORCPT
+        with ESMTP id S1729517AbgEVJc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:33:02 -0400
+        Fri, 22 May 2020 05:32:59 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D90C05BD43;
-        Fri, 22 May 2020 02:33:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D13FC05BD43;
+        Fri, 22 May 2020 02:32:59 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jc42z-0001Pq-BR; Fri, 22 May 2020 11:32:57 +0200
+        id 1jc42x-0001OT-S0; Fri, 22 May 2020 11:32:56 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C33151C0475;
-        Fri, 22 May 2020 11:32:56 +0200 (CEST)
-Date:   Fri, 22 May 2020 09:32:56 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6F2051C0095;
+        Fri, 22 May 2020 11:32:55 +0200 (CEST)
+Date:   Fri, 22 May 2020 09:32:55 -0000
 From:   "tip-bot2 for Balbir Singh" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/kvm: Refactor L1D flush operations
-Cc:     Balbir Singh <sblbir@amazon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+Subject: [tip: x86/mm] x86/mm: Optionally flush L1D on context switch
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Balbir Singh <sblbir@amazon.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200510014803.12190-3-sblbir@amazon.com>
-References: <20200510014803.12190-3-sblbir@amazon.com>
+In-Reply-To: <20200516103430.26527-2-sblbir@amazon.com>
+References: <20200516103430.26527-2-sblbir@amazon.com>
 MIME-Version: 1.0
-Message-ID: <159013997669.17951.10091686973701417401.tip-bot2@tip-bot2>
+Message-ID: <159013997534.17951.18218280416222743933.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,156 +59,171 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     e3efae20ec69e9a8c9db1ad81b37de629219bbc4
-Gitweb:        https://git.kernel.org/tip/e3efae20ec69e9a8c9db1ad81b37de629219bbc4
+Commit-ID:     20fc9f6f9f2fefefb694c9e447f80b4772021e0a
+Gitweb:        https://git.kernel.org/tip/20fc9f6f9f2fefefb694c9e447f80b4772021e0a
 Author:        Balbir Singh <sblbir@amazon.com>
-AuthorDate:    Sun, 10 May 2020 11:47:59 +10:00
+AuthorDate:    Sat, 16 May 2020 20:34:28 +10:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 13 May 2020 18:12:19 +02:00
+CommitterDate: Fri, 22 May 2020 10:36:48 +02:00
 
-x86/kvm: Refactor L1D flush operations
+x86/mm: Optionally flush L1D on context switch
 
-Move the L1D flush functions into builtin code so they can be reused for
-L1D flush on context switch.
+Implement a mechanism to selectively flush the L1D cache. The goal is to
+allow tasks that are paranoid due to the recent snoop assisted data sampling
+vulnerabilites, to flush their L1D on being switched out.  This protects
+their data from being snooped or leaked via side channels after the task
+has context switched out.
 
-Split them up into:
-   - Hardware L1D flush
-   - TLB pre-populating of L1D pages for software based flushing
-   - Software based L1D flush
+There are two scenarios we might want to protect against, a task leaving
+the CPU with data still in L1D (which is the main concern of this patch),
+the second scenario is a malicious task coming in (not so well trusted)
+for which we want to clean up the cache before it starts. Only the case
+for the former is addressed.
 
-Adjust the KVM code accordingly.
+A new thread_info flag TIF_SPEC_L1D_FLUSH is added to track tasks which
+opt-into L1D flushing. cpu_tlbstate.last_user_mm_spec is used to convert
+the TIF flags into mm state (per cpu via last_user_mm_spec) in
+cond_mitigation(), which then used to do decide when to flush the
+L1D cache.
 
-[ tglx: Massaged changelog ]
-
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Balbir Singh <sblbir@amazon.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20200510014803.12190-3-sblbir@amazon.com
+Link: https://lkml.kernel.org/r/20200516103430.26527-2-sblbir@amazon.com
 
 ---
- arch/x86/include/asm/cacheflush.h |  3 ++-
- arch/x86/kernel/l1d_flush.c       | 49 ++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.c            | 29 +-----------------
- 3 files changed, 55 insertions(+), 26 deletions(-)
+ arch/x86/include/asm/thread_info.h |  9 +++++--
+ arch/x86/mm/tlb.c                  | 40 ++++++++++++++++++++++++++---
+ 2 files changed, 44 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
-index bac56fc..21cc3b2 100644
---- a/arch/x86/include/asm/cacheflush.h
-+++ b/arch/x86/include/asm/cacheflush.h
-@@ -8,7 +8,10 @@
+diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+index 8de8cec..1655347 100644
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -84,7 +84,7 @@ struct thread_info {
+ #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
+ #define TIF_SECCOMP		8	/* secure computing */
+ #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
+-#define TIF_SPEC_FORCE_UPDATE	10	/* Force speculation MSR update in context switch */
++#define TIF_SPEC_L1D_FLUSH	10	/* Flush L1D on mm switches (processes) */
+ #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
+ #define TIF_UPROBE		12	/* breakpointed or singlestepping */
+ #define TIF_PATCH_PENDING	13	/* pending live patching update */
+@@ -96,6 +96,7 @@ struct thread_info {
+ #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
+ #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
+ #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
++#define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
+ #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
+ #define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
+ #define TIF_LAZY_MMU_UPDATES	27	/* task is updating the mmu lazily */
+@@ -114,7 +115,7 @@ struct thread_info {
+ #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
+ #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+ #define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
+-#define _TIF_SPEC_FORCE_UPDATE	(1 << TIF_SPEC_FORCE_UPDATE)
++#define _TIF_SPEC_L1D_FLUSH	(1 << TIF_SPEC_L1D_FLUSH)
+ #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+ #define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
+@@ -125,6 +126,7 @@ struct thread_info {
+ #define _TIF_SLD		(1 << TIF_SLD)
+ #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
+ #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
++#define _TIF_SPEC_FORCE_UPDATE	(1 << TIF_SPEC_FORCE_UPDATE)
+ #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
+ #define _TIF_BLOCKSTEP		(1 << TIF_BLOCKSTEP)
+ #define _TIF_LAZY_MMU_UPDATES	(1 << TIF_LAZY_MMU_UPDATES)
+@@ -235,6 +237,9 @@ static inline int arch_within_stack_frames(const void * const stack,
+ 			   current_thread_info()->status & TS_COMPAT)
+ #endif
  
- #define L1D_CACHE_ORDER 4
- void clflush_cache_range(void *addr, unsigned int size);
-+void l1d_flush_populate_tlb(void *l1d_flush_pages);
- void *l1d_flush_alloc_pages(void);
- void l1d_flush_cleanup_pages(void *l1d_flush_pages);
-+void l1d_flush_sw(void *l1d_flush_pages);
-+int l1d_flush_hw(void);
++extern int enable_l1d_flush_for_task(struct task_struct *tsk);
++extern int disable_l1d_flush_for_task(struct task_struct *tsk);
++
+ extern void arch_task_cache_init(void);
+ extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
+ extern void arch_release_task_struct(struct task_struct *tsk);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 35017a0..c8524c5 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -13,6 +13,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/cache.h>
++#include <asm/cacheflush.h>
+ #include <asm/apic.h>
+ #include <asm/uv/uv.h>
  
- #endif /* _ASM_X86_CACHEFLUSH_H */
-diff --git a/arch/x86/kernel/l1d_flush.c b/arch/x86/kernel/l1d_flush.c
-index 4f298b7..32119ee 100644
---- a/arch/x86/kernel/l1d_flush.c
-+++ b/arch/x86/kernel/l1d_flush.c
-@@ -37,3 +37,52 @@ void l1d_flush_cleanup_pages(void *l1d_flush_pages)
- 	free_pages((unsigned long)l1d_flush_pages, L1D_CACHE_ORDER);
- }
- EXPORT_SYMBOL_GPL(l1d_flush_cleanup_pages);
-+
-+void l1d_flush_populate_tlb(void *l1d_flush_pages)
-+{
-+	int size = PAGE_SIZE << L1D_CACHE_ORDER;
-+
-+	asm volatile(
-+		/* First ensure the pages are in the TLB */
-+		"xorl	%%eax, %%eax\n"
-+		".Lpopulate_tlb:\n\t"
-+		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-+		"addl	$4096, %%eax\n\t"
-+		"cmpl	%%eax, %[size]\n\t"
-+		"jne	.Lpopulate_tlb\n\t"
-+		"xorl	%%eax, %%eax\n\t"
-+		"cpuid\n\t"
-+		:: [flush_pages] "r" (l1d_flush_pages),
-+		    [size] "r" (size)
-+		: "eax", "ebx", "ecx", "edx");
-+}
-+EXPORT_SYMBOL_GPL(l1d_flush_populate_tlb);
-+
-+int l1d_flush_hw(void)
-+{
-+	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
-+		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-+		return 0;
-+	}
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(l1d_flush_hw);
-+
-+void l1d_flush_sw(void *l1d_flush_pages)
-+{
-+	int size = PAGE_SIZE << L1D_CACHE_ORDER;
-+
-+	asm volatile(
-+			/* Fill the cache */
-+			"xorl	%%eax, %%eax\n"
-+			".Lfill_cache:\n"
-+			"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-+			"addl	$64, %%eax\n\t"
-+			"cmpl	%%eax, %[size]\n\t"
-+			"jne	.Lfill_cache\n\t"
-+			"lfence\n"
-+			:: [flush_pages] "r" (l1d_flush_pages),
-+			[size] "r" (size)
-+			: "eax", "ecx");
-+}
-+EXPORT_SYMBOL_GPL(l1d_flush_sw);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 225aa82..786d161 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5983,8 +5983,6 @@ unexpected_vmexit:
+@@ -43,13 +44,19 @@
   */
- static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
+ 
+ /*
+- * Bits to mangle the TIF_SPEC_IB state into the mm pointer which is
++ * Bits to mangle the TIF_SPEC_* state into the mm pointer which is
+  * stored in cpu_tlb_state.last_user_mm_spec.
+  */
+ #define LAST_USER_MM_IBPB	0x1UL
+-#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB)
++#define LAST_USER_MM_L1D_FLUSH	0x2UL
++#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB | LAST_USER_MM_L1D_FLUSH)
+ 
+-/* Bits to set when tlbstate and flush is (re)initialized */
++/*
++ * Bits to set when tlbstate and flush is (re)initialized
++ *
++ * Don't add LAST_USER_MM_L1D_FLUSH to the init bits as the initializaion
++ * is done during early boot and l1d_flush_pages are not yet allocated.
++ */
+ #define LAST_USER_MM_INIT	LAST_USER_MM_IBPB
+ 
+ /*
+@@ -311,6 +318,23 @@ void leave_mm(int cpu)
+ }
+ EXPORT_SYMBOL_GPL(leave_mm);
+ 
++int enable_l1d_flush_for_task(struct task_struct *tsk)
++{
++	int ret = l1d_flush_init_once();
++
++	if (ret < 0)
++		return ret;
++
++	set_ti_thread_flag(&tsk->thread_info, TIF_SPEC_L1D_FLUSH);
++	return ret;
++}
++
++int disable_l1d_flush_for_task(struct task_struct *tsk)
++{
++	clear_ti_thread_flag(&tsk->thread_info, TIF_SPEC_L1D_FLUSH);
++	return 0;
++}
++
+ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	       struct task_struct *tsk)
  {
--	int size = PAGE_SIZE << L1D_CACHE_ORDER;
--
- 	/*
- 	 * This code is only executed when the the flush mode is 'cond' or
- 	 * 'always'
-@@ -6013,32 +6011,11 @@ static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
+@@ -354,6 +378,8 @@ static inline unsigned long mm_mangle_tif_spec_bits(struct task_struct *next)
+ 	unsigned long next_tif = task_thread_info(next)->flags;
+ 	unsigned long spec_bits = (next_tif >> TIF_SPEC_IB) & LAST_USER_MM_SPEC_MASK;
  
- 	vcpu->stat.l1d_flush++;
- 
--	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
--		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-+	if (!l1d_flush_hw())
- 		return;
--	}
- 
--	asm volatile(
--		/* First ensure the pages are in the TLB */
--		"xorl	%%eax, %%eax\n"
--		".Lpopulate_tlb:\n\t"
--		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
--		"addl	$4096, %%eax\n\t"
--		"cmpl	%%eax, %[size]\n\t"
--		"jne	.Lpopulate_tlb\n\t"
--		"xorl	%%eax, %%eax\n\t"
--		"cpuid\n\t"
--		/* Now fill the cache */
--		"xorl	%%eax, %%eax\n"
--		".Lfill_cache:\n"
--		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
--		"addl	$64, %%eax\n\t"
--		"cmpl	%%eax, %[size]\n\t"
--		"jne	.Lfill_cache\n\t"
--		"lfence\n"
--		:: [flush_pages] "r" (vmx_l1d_flush_pages),
--		    [size] "r" (size)
--		: "eax", "ebx", "ecx", "edx");
-+	l1d_flush_populate_tlb(vmx_l1d_flush_pages);
-+	l1d_flush_sw(vmx_l1d_flush_pages);
++	BUILD_BUG_ON(TIF_SPEC_L1D_FLUSH != TIF_SPEC_IB + 1);
++
+ 	return (unsigned long)next->mm | spec_bits;
  }
  
- static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
+@@ -431,6 +457,14 @@ static void cond_mitigation(struct task_struct *next)
+ 			indirect_branch_prediction_barrier();
+ 	}
+ 
++	if (prev_mm & LAST_USER_MM_L1D_FLUSH) {
++		/*
++		 * Don't populate the TLB for the software fallback flush.
++		 * Populate TLB is not needed for this use case.
++		 */
++		arch_l1d_flush(0);
++	}
++
+ 	this_cpu_write(cpu_tlbstate.last_user_mm_spec, next_mm);
+ }
+ 
