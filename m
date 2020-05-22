@@ -2,149 +2,180 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE56DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1010BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2F52078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E207A20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OPrHO9fr"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fEGc3xK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgEVFRt (ORCPT
+        id S1728169AbgEVFTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgEVFRt (ORCPT
+        Fri, 22 May 2020 01:19:31 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44338 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgEVFTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:17:49 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6CCC061A0E;
-        Thu, 21 May 2020 22:17:49 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SvrT31pgz9sRW;
-        Fri, 22 May 2020 15:17:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590124666;
-        bh=faS4nLFZfFTVQGtxXn47idEsA6wHtJuwJj8xWrJUg3I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OPrHO9frmWfmFnL+UBxKH5VtTeChrP+LRXfXSccXX92h772IlR9psx3PpSDmCYJFI
-         hT97stn/o8H/EYHmVT5jC8D0E2P1p+oof++k9QLug0kjKCf5dof5j24cEaMXi2PQnC
-         ixkoNMpJQM7XFj6b+mNZr4F89g2tn4AsKxCKSfZI4O+iJjvw+q74ro8OACcxpMvwBB
-         ZCY8zbW6PPw6iMkMhscE01RITYiZy2qI3c1iaqs/YAhyHMQyfCUrwd508ZKkjupjtn
-         BSjCFz7Z22RMOhedV4KHlvQGubiEiMqUasl90H5EFAZBhrPpHC7//phVWG/v7LLgr3
-         XOLM7ADcunjnQ==
-Date:   Fri, 22 May 2020 15:17:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alasdair G Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>
-Subject: linux-next: manual merge of the device-mapper tree with the block
- tree
-Message-ID: <20200522151743.5c3cdbbf@canb.auug.org.au>
+        Fri, 22 May 2020 01:19:30 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200522051928euoutp02bdb25ff7e8b69ebb25e890de6ecb44ca~RQg1fplHF2205622056euoutp024
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:19:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200522051928euoutp02bdb25ff7e8b69ebb25e890de6ecb44ca~RQg1fplHF2205622056euoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590124768;
+        bh=bDBvRfRwXpfJfQj2KXHjRFIv2OKEmKMJBjpkDpCPm3o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=fEGc3xK//4xmizDC3Lwt/WL6Lc1RO1I1CCKcjMXmd9E9cCATyEKAGwHBOJ3uqbVVS
+         P/c5qSS7wMONMPJ8euUOxN0FJRNs8dsOqCfCUH8q41izHujPPR9qDJyCr4paUEBzjw
+         GtEnDGARkdGqjIAvwaBiYnpPCO8oQ6l+UIKTXoHk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200522051928eucas1p2ae7e6d0237f73826f0ec5fe6346314be~RQg1IgnGu1567415674eucas1p2Q;
+        Fri, 22 May 2020 05:19:28 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1F.78.61286.0E067CE5; Fri, 22
+        May 2020 06:19:28 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200522051927eucas1p107f4aae8f0f47043f067d7d6b58efd19~RQg04aWgR3127431274eucas1p1H;
+        Fri, 22 May 2020 05:19:27 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200522051927eusmtrp132203103fb852f9fbbbdaf357a54095b~RQg030OQj2136521365eusmtrp1n;
+        Fri, 22 May 2020 05:19:27 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-53-5ec760e0572c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B5.BE.08375.FD067CE5; Fri, 22
+        May 2020 06:19:27 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200522051927eusmtip2f7fc78fc9283057109a1d9cdb3fa9efd~RQg0cUKZL3144231442eusmtip2O;
+        Fri, 22 May 2020 05:19:27 +0000 (GMT)
+Subject: Re: [PATCH] PM: runtime: clk: Fix clk_pm_runtime_get() error path
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <e9130ce8-fd22-c871-c089-585585c7133f@samsung.com>
+Date:   Fri, 22 May 2020 07:19:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/F=h_zdAYkN/C=9r=7aVTu2e";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <5127441.yGvM1JjtLk@kreacher>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7oPEo7HGUw5zGexccZ6Vovz5zew
+        W1zeNYfN4nPvEUaLi6dcLc6cvsRqcXxtuAO7x/sbrewem1Z1snncubaHzWPL1XYWj74tqxg9
+        Pm+SC2CL4rJJSc3JLEst0rdL4MqYtWcbW8Fq/oqPl+6wNDAu4Oli5OSQEDCRWLngGVMXIxeH
+        kMAKRokt66ZBOV8YJc4tOsIG4XxmlLjzaw9rFyMHWMvvkwYQ8eWMEmtmLGGEcN4zSnz7/YQd
+        ZK6wgJfEh95mVhBbRCBIYu3cWWwgNrPAXUaJM/s4QWw2AUOJrrddYHFeATuJR3fbmEBsFgFV
+        iT+HZjCC2KICsRKnF29mhKgRlDg58wkLiM0poCWx7ekRVoiZ8hLb385hhrDFJW49mQ/2goTA
+        PnaJtrn3mSGudpE42p8K8bOwxKvjW9ghbBmJ05N7WCDqmxklHp5byw7h9DBKXG6CuEJCwFri
+        zrlfbCCDmAU0Jdbv0ocIO0rsunGEHWI+n8SNt4IQN/BJTNo2HWotr0RHmxBEtZrErOPr4NYe
+        vHCJeQKj0iwkn81C8s0sJN/MQti7gJFlFaN4amlxbnpqsWFearlecWJucWleul5yfu4mRmAi
+        Ov3v+KcdjF8vJR1iFOBgVOLhfZB8LE6INbGsuDL3EKMEB7OSCO9C/qNxQrwpiZVVqUX58UWl
+        OanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTBa/w8tPTJbp+v17y0ckt0yHVZb
+        Voq4TAiWUVTe/K/RsChMTEXPeOad96u/HVN+knLrVr/HG6k9T5skTaX/bFAtOab2Immixsyz
+        Fb/vhvS9qiys0q0/cH7PHaEwXkG/GlOdxPUib/cosGXzTbt0MVzPyJZvykM5UcGNTvZKPjGs
+        czMdd76SzFFiKc5INNRiLipOBAC1zfHdQAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsVy+t/xe7r3E47HGUxcYGGxccZ6Vovz5zew
+        W1zeNYfN4nPvEUaLi6dcLc6cvsRqcXxtuAO7x/sbrewem1Z1snncubaHzWPL1XYWj74tqxg9
+        Pm+SC2CL0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL
+        0MuYtWcbW8Fq/oqPl+6wNDAu4Oli5OCQEDCR+H3SoIuRi0NIYCmjxPoXZ9m7GDmB4jISJ6c1
+        sELYwhJ/rnWxQRS9ZZQ4sfkXE0hCWMBL4kNvM1iRiECQxP15f1hAipgF7jJK/Dw/ESwhJFAr
+        cfXsQ7CpbAKGEl1vQSZxcvAK2Ek8utsGNohFQFXiz6EZjCC2qECsxOprrYwQNYISJ2c+YQGx
+        OQW0JLY9PQI2k1nATGLe5ofMELa8xPa3c6BscYlbT+YzTWAUmoWkfRaSlllIWmYhaVnAyLKK
+        USS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMPa2Hfu5eQfjpY3BhxgFOBiVeHgfJB+LE2JNLCuu
+        zD3EKMHBrCTCu5D/aJwQb0piZVVqUX58UWlOavEhRlOg5yYyS4km5wPTQl5JvKGpobmFpaG5
+        sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsaEnM0vvP7rpJpPf9dxI2d3lu9+uY1i
+        U3wtsu3WzqqtPDDz+pt9XiGeD6TyD9yfqFbp7vN8Q8OT/R5+QcvzNdukMsqauDoWcB/NTN5z
+        8+Av3XuHbpyyyZY/vXn9Iv6gm1qf3q2weriUJ17xoVFL2jKLf/5iIf0zre4utPu02Cyx5mSQ
+        cRnf1a9KLMUZiYZazEXFiQCOKI8Y0wIAAA==
+X-CMS-MailID: 20200522051927eucas1p107f4aae8f0f47043f067d7d6b58efd19
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200521170817eucas1p13d9477a0a5d13d2df876134cf41131d8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200521170817eucas1p13d9477a0a5d13d2df876134cf41131d8
+References: <CGME20200521170817eucas1p13d9477a0a5d13d2df876134cf41131d8@eucas1p1.samsung.com>
+        <5127441.yGvM1JjtLk@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/F=h_zdAYkN/C=9r=7aVTu2e
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Rafael,
 
-Hi all,
+On 21.05.2020 19:08, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> clk_pm_runtime_get() assumes that the PM-runtime usage counter will
+> be dropped by pm_runtime_get_sync() on errors, which is not the case,
+> so PM-runtime references to devices acquired by the former are leaked
+> on errors returned by the latter.
+>
+> Fix this by modifying clk_pm_runtime_get() to drop the reference if
+> pm_runtime_get_sync() returns an error.
+>
+> Fixes: 9a34b45397e5 clk: Add support for runtime PM
+> Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Today's linux-next merge of the device-mapper tree got a conflict in:
+Frankly, I would rather fix the runtime_get_sync() instead of fixing the 
+return path everywhere in the kernel. The current behavior of the 
+pm_runtime_get_sync() is completely counter-intuitive then. I bet that 
+in the 99% of the places where it is being called assume that no special 
+fixup is needed in case of failure. This is one of the most common 
+runtime PM related function and it is really a common pattern in the 
+drivers to call:
 
-  drivers/md/dm-zoned-metadata.c
+pm_runtime_get_sync()
 
-between commit:
+do something with the hardware
 
-  c64644ce363b ("block: remove the error_sector argument to blkdev_issue_fl=
-ush")
+pm_runtime_put()
 
-from the block tree and commit:
+Do you really want to fix the error paths of the all such calls?
 
-  bf28a3ba0986 ("dm zoned: store device in struct dmz_sb")
 
-from the device-mapper tree.
+> ---
+>   drivers/clk/clk.c |    6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> Index: linux-pm/drivers/clk/clk.c
+> ===================================================================
+> --- linux-pm.orig/drivers/clk/clk.c
+> +++ linux-pm/drivers/clk/clk.c
+> @@ -114,7 +114,11 @@ static int clk_pm_runtime_get(struct clk
+>   		return 0;
+>   
+>   	ret = pm_runtime_get_sync(core->dev);
+> -	return ret < 0 ? ret : 0;
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(core->dev);
+> +		return ret;
+> +	}
+> +	return 0;
+>   }
+>   
+>   static void clk_pm_runtime_put(struct clk_core *core)
+>
+>
+>
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/md/dm-zoned-metadata.c
-index bf2245370305,db0dc2b5d44d..000000000000
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@@ -659,9 -816,10 +816,10 @@@ static int dmz_write_sb(struct dmz_meta
-  	sb->crc =3D 0;
-  	sb->crc =3D cpu_to_le32(crc32_le(sb_gen, (unsigned char *)sb, DMZ_BLOCK_=
-SIZE));
- =20
-- 	ret =3D dmz_rdwr_block(zmd, REQ_OP_WRITE, block, mblk->page);
-+ 	ret =3D dmz_rdwr_block(dev, REQ_OP_WRITE, zmd->sb[set].block,
-+ 			     mblk->page);
-  	if (ret =3D=3D 0)
-- 		ret =3D blkdev_issue_flush(zmd->dev->bdev, GFP_NOIO);
- -		ret =3D blkdev_issue_flush(dev->bdev, GFP_NOIO, NULL);
-++		ret =3D blkdev_issue_flush(dev->bdev, GFP_NOIO);
- =20
-  	return ret;
-  }
-@@@ -703,7 -862,7 +862,7 @@@ static int dmz_write_dirty_mblocks(stru
- =20
-  	/* Flush drive cache (this will also sync data) */
-  	if (ret =3D=3D 0)
-- 		ret =3D blkdev_issue_flush(zmd->dev->bdev, GFP_NOIO);
- -		ret =3D blkdev_issue_flush(dev->bdev, GFP_NOIO, NULL);
-++		ret =3D blkdev_issue_flush(dev->bdev, GFP_NOIO);
- =20
-  	return ret;
-  }
-@@@ -772,7 -933,7 +933,7 @@@ int dmz_flush_metadata(struct dmz_metad
- =20
-  	/* If there are no dirty metadata blocks, just flush the device cache */
-  	if (list_empty(&write_list)) {
-- 		ret =3D blkdev_issue_flush(zmd->dev->bdev, GFP_NOIO);
- -		ret =3D blkdev_issue_flush(dev->bdev, GFP_NOIO, NULL);
-++		ret =3D blkdev_issue_flush(dev->bdev, GFP_NOIO);
-  		goto err;
-  	}
- =20
-
---Sig_/F=h_zdAYkN/C=9r=7aVTu2e
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HYHcACgkQAVBC80lX
-0GzQYAf/RA0QQH9qR/2M7JY9NJfYSPnDdqBa44exCQbx/k9vSlKK0Wvuuyt2dsmF
-kC3E29mNGb67PfA4ZAQ75F98BYjf07xafRgkVIrCogYcMhwx3/EeMdfri8RCgYhq
-9jQq0NkVTCFViqFff8Ae/VFUmFQsoGtCS9LZHp+XgM1XJdHusii7bzyPqkRmg1uQ
-I/CbCDitdq0nAKaSRcq84eRNvh+8XJa9e3G8RI5B9nvUt7gQteOmdy4QLh0ODKcd
-z3ubh3bgFBuO8hr6DJFw30lVzAUQ0iffWGzhOiG/E7AyGbdpz9wvaC2NxQVb3jBE
-gDPRPtomd0LtAMYsHnBZFEeHBf7UiQ==
-=HgIy
------END PGP SIGNATURE-----
-
---Sig_/F=h_zdAYkN/C=9r=7aVTu2e--
