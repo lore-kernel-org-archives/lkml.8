@@ -2,101 +2,154 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3794C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD35420738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF7F20870
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:24:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLPAj5Cq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lvPtxQHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgEVKYs (ORCPT
+        id S1728816AbgEVKY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgEVKYr (ORCPT
+        Fri, 22 May 2020 06:24:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47254 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbgEVKYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:24:47 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB7EC061A0E;
-        Fri, 22 May 2020 03:24:47 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c21so6230479lfb.3;
-        Fri, 22 May 2020 03:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fKfCBTr3t9MLCQ0J7OL7a+qWvpib5l9QLHxm5yO1R5w=;
-        b=DLPAj5CqPOJrt06enKB1ajI2NDFv9SufvT/yTgLAfjpMrZr6oFlggLT8lcqC29rl9t
-         GZUftu34UAAOMb7Rg8sQqIRMQW86faW04AVGbmaN+KNh+aHKolxikQ3th4gwg6fAX5cp
-         4JSk2b201knvWxlgX9KV57jVas0yhJVfYR/1H1HrbrSScxOCbvx+WBZ2XWJAzrSiQxHC
-         qG6ALBdMJSMtjAP59+7gOVZSwtKNFqbI3aEXEOT9urqfWaAOcOuTs9NUVhgUp0awvr2n
-         LtS3rbyGNcMspVITcsFZLgoRx41zfo6QMAZSgygb3FZ8xDvdfCbbTEx0LrZJmn8DUYjU
-         t0yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fKfCBTr3t9MLCQ0J7OL7a+qWvpib5l9QLHxm5yO1R5w=;
-        b=KzQERF02HdGBhNyUZ82jEGyZq6xP2k3sb3ikz5yo7W2Nnf3uVCeyXT6QfOzXCib1z5
-         2kmE7qoyZ+kdt7yS6fpQW+JTD83cIZg9DibIdmD83fpeY4pbXTHJgoZw2ht8/7yyvl9K
-         JyXzyiE7Imx/CHEFS7EKp2tvvpKuJcbyMeKLMu+B7rprDRoZlr0n3c+LZ1LA/cIyy6ol
-         0u8uA+qum/ImGNllLU1GV44VKdsEBulMZTNif3GwCpDdpVA1mJ1Xqz96PP2cuK0kd+qM
-         eXfpUUtOaDmkgV9KecVdu3SCmV8Qse1attoVzWC0ulqN1Hc5GTbNpmqtnKgmUv0K8euK
-         tbwg==
-X-Gm-Message-State: AOAM5301dkjS7yJSR7z183Y8XWMuGxHS+s9JNUTTu8g2hEBzzxD41i+X
-        NoXVutfJt3Tg/e+PZWAORQr7PFVCq/X2Jt8nfB36K6mn
-X-Google-Smtp-Source: ABdhPJzAE9qHyplI74KdB5AD6oGUghscmd0IOe8zTZzcr+h2CPvEAwzkjjnL5jblpWGxXa2/Me9+fgzuIQyHXzThdww=
-X-Received: by 2002:a19:6141:: with SMTP id m1mr7281542lfk.7.1590143085555;
- Fri, 22 May 2020 03:24:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com>
-In-Reply-To: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 22 May 2020 07:24:33 -0300
-Message-ID: <CAOMZO5AgAYgxb9djwGXdpMme4aREYiGPXVa=x0Hb5vo-KJGrug@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage range
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Yongcai Huang <anson.huang@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 22 May 2020 06:24:55 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200522102453euoutp02732b7396192559bae49ada776a415388~RUrf99wTq1699016990euoutp02C
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:24:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200522102453euoutp02732b7396192559bae49ada776a415388~RUrf99wTq1699016990euoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590143093;
+        bh=yuGCISGtXXxk6Kjio358dgLlQzOgYeCxLlP5RCiJcTI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=lvPtxQHRGm0UQNAxNaTOiiHJDFc98wPpB1X2Ux25vfu4l2rBO2TonOHkLkVa8ai0Y
+         V2+S/7y4Q8u+0+KzboWS53Nku/TYpoDdLfi/IfM0VFp6NuYJusk8gxYShDvnYb/bBp
+         JbZa+z11/aqDdejVO0OdoTj/BzPkAzhudFX7Msvk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200522102453eucas1p2e01a743f877ded1d3cf5c0ca6f29258b~RUrfqX0B41398613986eucas1p2u;
+        Fri, 22 May 2020 10:24:53 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 79.60.60698.578A7CE5; Fri, 22
+        May 2020 11:24:53 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200522102452eucas1p17c18de8f79e27de96474e5fcad6db5fa~RUrfSQnq13204332043eucas1p1A;
+        Fri, 22 May 2020 10:24:52 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200522102452eusmtrp17c082c7b0eaf39af67b0c9a15b5384b2~RUrfRneKU3174731747eusmtrp1g;
+        Fri, 22 May 2020 10:24:52 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-cf-5ec7a875664b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3E.BC.07950.478A7CE5; Fri, 22
+        May 2020 11:24:52 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200522102452eusmtip286193654d8815aef3f5bc3f03cdc76d8~RUreqrkO90298302983eusmtip2q;
+        Fri, 22 May 2020 10:24:52 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH v3 1/3] regulator: max14577: Add proper dt-compatible
+ strings
+Date:   Fri, 22 May 2020 12:24:46 +0200
+Message-Id: <20200522102448.30209-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsWy7djP87qlK47HGeyZz2exccZ6VoupD5+w
+        WVz/8pzV4vz5DewWl3fNYbP43HuE0WLtkbvsFrcbV7BZnN5d4sDpsWlVJ5tH35ZVjB6fN8kF
+        MEdx2aSk5mSWpRbp2yVwZbye8IO94At3xc7LZg2M/VxdjJwcEgImEjNOLWQCsYUEVjBKrL0c
+        1sXIBWR/YZTY+3Y6E4TzmVFiUd9eVpiOtkUvWSESyxkldl1cyA7Xcn3eWrBZbAKGEl1vu9hA
+        bBEBK4nT/zuYQYqYBVYwSXz8/QmsSFjAX+LX2dfsIDaLgKpEw6MVjCA2r4CtxOJ7n5kh1slL
+        rN5wAKxZQuA6m8TVFUuhEi4SP2augLpJWOLV8S3sELaMxOnJPSwQDc2MEg/PrWWHcHoYJS43
+        zWCEqLKWuHPuF9B9HEA3aUqs36UPEXaUePn4CDtIWEKAT+LGW0GQMDOQOWnbdGaIMK9ER5sQ
+        RLWaxKzj6+DWHrxwCeo0D4l/h6aygpQLCcRKLN4QO4FRbhbCqgWMjKsYxVNLi3PTU4uN81LL
+        9YoTc4tL89L1kvNzNzECE8Hpf8e/7mDc9yfpEKMAB6MSD69F2rE4IdbEsuLK3EOMEhzMSiK8
+        C/mPxgnxpiRWVqUW5ccXleakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXAuL4z
+        +lPy2Z0iKjtX9Tv/DxS9WeO9T91R+UfAnUbf1x96u0X5dM83nKntffj12yvts4f1ZzmICt78
+        eSB2V4vxmrvd+x00az+08vhOkUrXmbbmatQijbAVf062Bq9PVLv5fFtN8urXa9RU/802k29a
+        +WHqaealGvIC2lW94j93y/VujpoS+zmWQ4mlOCPRUIu5qDgRALZSyS8AAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsVy+t/xe7olK47HGTxv0LXYOGM9q8XUh0/Y
+        LK5/ec5qcf78BnaLy7vmsFl87j3CaLH2yF12i9uNK9gsTu8uceD02LSqk82jb8sqRo/Pm+QC
+        mKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Ml5P
+        +MFe8IW7YudlswbGfq4uRk4OCQETibZFL1m7GLk4hASWMkrM+LKdHSIhI3FyWgMrhC0s8eda
+        FxtE0SdGiVeN71lAEmwChhJdb0ESnBwiAjYSdxdfYwEpYhZYwyTR8PAjE0hCWMBX4uq7WWCT
+        WARUJRoerWAEsXkFbCUW3/vMDLFBXmL1hgPMExh5FjAyrGIUSS0tzk3PLTbSK07MLS7NS9dL
+        zs/dxAgMwW3Hfm7Zwdj1LvgQowAHoxIP74PkY3FCrIllxZW5hxglOJiVRHgX8h+NE+JNSays
+        Si3Kjy8qzUktPsRoCrR8IrOUaHI+MD7ySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGan
+        phakFsH0MXFwSjUwurZs2tPadF9I1FNoEo95zeH8qU7SLJMeWO3YcrWv6OXD1wxnG/fO/POs
+        +tL0/EWaE6UOdrqcNYtrmKmgdZ9rpsGCR2Jxy5IYTrF1BB5exrrq8VNO7Ut2FT/fTtgZNZl9
+        w8df4ipfLkt0168NTuaSe9R8g7VdiXGpXbvltbVSSQ+dciQrN7jMVmIpzkg01GIuKk4EAFdD
+        eIdXAgAA
+X-CMS-MailID: 20200522102452eucas1p17c18de8f79e27de96474e5fcad6db5fa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200522102452eucas1p17c18de8f79e27de96474e5fcad6db5fa
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200522102452eucas1p17c18de8f79e27de96474e5fcad6db5fa
+References: <CGME20200522102452eucas1p17c18de8f79e27de96474e5fcad6db5fa@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:44 PM Robin Gong <yibin.gong@nxp.com> wrote:
->
-> Correct ldo1 voltage range from wrong high group(3.0V~3.3V) to low group
-> (1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
-> have been supported at bd718x7-regulator driver, hence, just corrrect the
-> voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
-> Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mm
-> datasheet as the below warning log in kernel:
->
-> [    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
-> [    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
->
-> Fixes: 78cc25fa265d ("arm64: dts: imx8mm-evk: Add BD71847 PMIC")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Add device tree compatible strings and create proper modalias structures
+to let this driver load automatically if compiled as module, because
+max14577 MFD driver creates MFD cells with such compatible strings.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v3:
+- sorted of_max14577_regulator_dt_match
+v2:
+- added .of_match_table pointer
+---
+ drivers/regulator/max14577-regulator.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/regulator/max14577-regulator.c b/drivers/regulator/max14577-regulator.c
+index 07a150c9bbf2..4c9ae52b9e87 100644
+--- a/drivers/regulator/max14577-regulator.c
++++ b/drivers/regulator/max14577-regulator.c
+@@ -238,10 +238,20 @@ static const struct platform_device_id max14577_regulator_id[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, max14577_regulator_id);
+ 
++static const struct of_device_id of_max14577_regulator_dt_match[] = {
++	{ .compatible = "maxim,max14577-regulator",
++	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
++	{ .compatible = "maxim,max77836-regulator",
++	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_max14577_regulator_dt_match);
++
+ static struct platform_driver max14577_regulator_driver = {
+ 	.driver = {
+-		   .name = "max14577-regulator",
+-		   },
++		.name = "max14577-regulator",
++		.of_match_table = of_max14577_regulator_dt_match,
++	},
+ 	.probe		= max14577_regulator_probe,
+ 	.id_table	= max14577_regulator_id,
+ };
+-- 
+2.17.1
+
