@@ -2,249 +2,164 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A94C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4944C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7B042072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DFB2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oP4sXPeD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jq1hVcNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgEVBuM (ORCPT
+        id S1727050AbgEVB5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:50:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40816 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726940AbgEVBuL (ORCPT
+        Thu, 21 May 2020 21:57:39 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55470 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726335AbgEVB5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:50:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590112210; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=NuvH0/XX4SUkUG7dpvDQbID3uIFUKkkCKc2S5KVLPWM=; b=oP4sXPeD1ZEtZQcjPGVb6/wK0UGLH39XfKCwLpdBTJkp5JHjAMn4vWPr15lwisZQKP5jVJmC
- fk3fvmp7zkSaYouuY7KUmRzAFh0kuTUjJbpawRRGvQ9Je7aSwwsXPqXx+ViFDiDHs5C4wVvf
- fNIAb7yBOOC8z2+qFF97NTYWjQE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec72fce4110e147180c7d9e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 01:50:06
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 22B80C433CA; Fri, 22 May 2020 01:50:06 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 21 May 2020 21:57:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590112658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+wDdNyvkCFMdN0Oe8Nl6A+nCz6R/E6o7nQrNSLAaN6Y=;
+        b=Jq1hVcNFqC/jps1reMom+hgCSSEMytcEfBMEx8YjL45JwhfCm9oel2bSxYRVW5MteL4/Xv
+        jY8n5SpRfXcH9FR1DYbrZEsQ/U5Fd8cjNyOwPF+4o4B6brr5y0mRNyqgUHq5fA7DL9qh/u
+        39I96B6dgqwlIcKVY8MfbgQZYE8MhR8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-93omiG20O--1Yrc9dX2vLA-1; Thu, 21 May 2020 21:57:34 -0400
+X-MC-Unique: 93omiG20O--1Yrc9dX2vLA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9FE5C433C6;
-        Fri, 22 May 2020 01:50:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9FE5C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        vkoul@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v2] phy: qcom-snps: Add runtime suspend and resume handlers
-Date:   Thu, 21 May 2020 18:50:00 -0700
-Message-Id: <1590112200-1110-1-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A36C41005510;
+        Fri, 22 May 2020 01:57:32 +0000 (UTC)
+Received: from T590 (ovpn-13-78.pek2.redhat.com [10.72.13.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BBDD795A9;
+        Fri, 22 May 2020 01:57:23 +0000 (UTC)
+Date:   Fri, 22 May 2020 09:57:19 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
+ data->ctx and data->hctx in blk_mq_alloc_request_hctx
+Message-ID: <20200522015719.GB755458@T590>
+References: <20200520080357.GA4197@lst.de>
+ <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
+ <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
+ <87tv0av1gu.fsf@nanos.tec.linutronix.de>
+ <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
+ <87eereuudh.fsf@nanos.tec.linutronix.de>
+ <20200521022746.GA730422@T590>
+ <87367tvh6g.fsf@nanos.tec.linutronix.de>
+ <20200521092340.GA751297@T590>
+ <87pnaxt9nv.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pnaxt9nv.fsf@nanos.tec.linutronix.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow for the PHY to be put into a powered down state when possible.
-Add the required suspend and resume callbacks, which will determine
-what resources can be turned off depending on the cable status.
+On Thu, May 21, 2020 at 08:39:16PM +0200, Thomas Gleixner wrote:
+> Ming,
+> 
+> Ming Lei <ming.lei@redhat.com> writes:
+> > On Thu, May 21, 2020 at 10:13:59AM +0200, Thomas Gleixner wrote:
+> >> Ming Lei <ming.lei@redhat.com> writes:
+> >> > On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
+> >> > - otherwise, the kthread just retries and retries to allocate & release,
+> >> > and sooner or later, its time slice is consumed, and migrated out, and the
+> >> > cpu hotplug handler will get chance to run and move on, then the cpu is
+> >> > shutdown.
+> >> 
+> >> 1) This is based on the assumption that the kthread is in the SCHED_OTHER
+> >>    scheduling class. Is that really a valid assumption?
+> >
+> > Given it is unlikely path, we can add msleep() before retrying when INACTIVE bit
+> > is observed by current thread, and this way can avoid spinning and should work
+> > for other schedulers.
+> 
+> That should work, but pretty is something else
+> 
+> >> 
+> >> 2) What happens in the following scenario:
+> >> 
+> >>    unplug
+> >> 
+> >>      mq_offline
+> >>        set_ctx_inactive()
+> >>        drain_io()
+> >>        
+> >>    io_kthread()
+> >>        try_queue()
+> >>        wait_on_ctx()
+> >> 
+> >>    Can this happen and if so what will wake up that thread?
+> >
+> > drain_io() releases all tag of this hctx, then wait_on_ctx() will be waken up
+> > after any tag is released.
+> 
+> drain_io() is already done ...
+> 
+> So looking at that thread function:
+> 
+> static int io_sq_thread(void *data)
+> {
+> 	struct io_ring_ctx *ctx = data;
+> 
+>         while (...) {
+>               ....
+> 	      to_submit = io_sqring_entries(ctx);
+> 
+> --> preemption
+> 
+> hotplug runs
+>    mq_offline()
+>       set_ctx_inactive();
+>       drain_io();
+>       finished();
+> 
+> --> thread runs again
+> 
+>       mutex_lock(&ctx->uring_lock);
+>       ret = io_submit_sqes(ctx, to_submit, NULL, -1, true);
+>       mutex_unlock(&ctx->uring_lock);
+> 
+>       ....
+> 
+>       if (!to_submit || ret == -EBUSY)
+>           ...
+>       	  wait_on_ctx();
+> 
+> Can this happen or did drain_io() already take care of the 'to_submit'
+> items and the call to io_submit_sqes() turns into a zero action ?
+> 
+> If the above happens then nothing will wake it up because the context
+> draining is done and finished.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+As Jens replied, you mixed the ctx from io uring and blk-mq, both are in
+two worlds.
 
----
-Changes in v2:
- - Addressed checkpatch alignment/line length warnings.
- - Removed superfluous init in qcom_snps_hsphy_resume().
+Any wait in this percpu kthread should just wait for generic resource,
+not directly related with blk-mq's inactive hctx. Once this thread is
+migrated to other online cpu, it will move on.
 
- drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 100 ++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-index 4d74045..0a4e77af 100644
---- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-@@ -76,7 +76,9 @@
-  * @iface_clk: phy interface clock
-  * @phy_reset: phy reset control
-  * @vregs: regulator supplies bulk data
-+ * @suspended: PHY is in the suspended state
-  * @phy_initialized: if PHY has been initialized correctly
-+ * @mode: contains the current mode the PHY is in
-  */
- struct qcom_snps_hsphy {
- 	struct phy *phy;
-@@ -87,7 +89,9 @@ struct qcom_snps_hsphy {
- 	struct reset_control *phy_reset;
- 	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
- 
-+	bool suspended;
- 	bool phy_initialized;
-+	enum phy_mode mode;
- };
- 
- static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
-@@ -104,6 +108,84 @@ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
- 	readl_relaxed(base + offset);
- }
- 
-+static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
-+{
-+	if (hsphy->suspended)
-+		return 0;
-+
-+	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode:%d\n",
-+		hsphy->mode);
-+
-+	if (hsphy->mode == PHY_MODE_USB_HOST) {
-+		/* Enable auto-resume to meet remote wakeup timing */
-+		qcom_snps_hsphy_write_mask(hsphy->base,
-+						USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+						USB2_AUTO_RESUME,
-+						USB2_AUTO_RESUME);
-+		usleep_range(500, 1000);
-+		qcom_snps_hsphy_write_mask(hsphy->base,
-+						USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+						0, USB2_AUTO_RESUME);
-+	}
-+
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+	hsphy->suspended = true;
-+
-+	return 0;
-+}
-+
-+static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
-+{
-+	int ret;
-+
-+	if (!hsphy->suspended)
-+		return 0;
-+
-+	dev_dbg(&hsphy->phy->dev, "Resume QCOM SNPS PHY, mode:%d\n",
-+		hsphy->mode);
-+
-+	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
-+	if (ret) {
-+		dev_err(&hsphy->phy->dev,
-+			"failed to enable cfg ahb clock, %d\n", ret);
-+		return ret;
-+	}
-+
-+	hsphy->suspended = false;
-+	return 0;
-+}
-+
-+static int __maybe_unused qcom_snps_hsphy_runtime_suspend(struct device *dev)
-+{
-+	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
-+
-+	if (!hsphy->phy_initialized)
-+		return 0;
-+
-+	qcom_snps_hsphy_suspend(hsphy);
-+	return 0;
-+}
-+
-+static int __maybe_unused qcom_snps_hsphy_runtime_resume(struct device *dev)
-+{
-+	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
-+
-+	if (!hsphy->phy_initialized)
-+		return 0;
-+
-+	qcom_snps_hsphy_resume(hsphy);
-+	return 0;
-+}
-+
-+static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode,
-+					int submode)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+
-+	hsphy->mode = mode;
-+	return 0;
-+}
-+
- static int qcom_snps_hsphy_init(struct phy *phy)
- {
- 	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-@@ -175,6 +257,7 @@ static int qcom_snps_hsphy_init(struct phy *phy)
- 					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
- 
- 	hsphy->phy_initialized = true;
-+	hsphy->suspended = false;
- 
- 	return 0;
- 
-@@ -201,6 +284,7 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
- static const struct phy_ops qcom_snps_hsphy_gen_ops = {
- 	.init		= qcom_snps_hsphy_init,
- 	.exit		= qcom_snps_hsphy_exit,
-+	.set_mode	= qcom_snps_hsphy_set_mode,
- 	.owner		= THIS_MODULE,
- };
- 
-@@ -212,6 +296,11 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
- };
- MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
- 
-+static const struct dev_pm_ops qcom_snps_hsphy_pm_ops = {
-+	SET_RUNTIME_PM_OPS(qcom_snps_hsphy_runtime_suspend,
-+			   qcom_snps_hsphy_runtime_resume, NULL)
-+};
-+
- static int qcom_snps_hsphy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -255,6 +344,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+	/*
-+	 * Prevent runtime pm from being ON by default. Users can enable
-+	 * it using power/control in sysfs.
-+	 */
-+	pm_runtime_forbid(dev);
-+
- 	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
- 	if (IS_ERR(generic_phy)) {
- 		ret = PTR_ERR(generic_phy);
-@@ -269,6 +366,8 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
- 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
- 	if (!IS_ERR(phy_provider))
- 		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
-+	else
-+		pm_runtime_disable(dev);
- 
- 	return PTR_ERR_OR_ZERO(phy_provider);
- }
-@@ -277,6 +376,7 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
- 	.probe		= qcom_snps_hsphy_probe,
- 	.driver = {
- 		.name	= "qcom-snps-hs-femto-v2-phy",
-+		.pm = &qcom_snps_hsphy_pm_ops,
- 		.of_match_table = qcom_snps_hsphy_of_match_table,
- 	},
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+Ming
 
