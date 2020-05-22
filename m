@@ -2,182 +2,142 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63709C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D364C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 308B3206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00D92078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V2uiblw2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGloSf/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgEVM2R (ORCPT
+        id S1729667AbgEVM2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:28:17 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17473 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEVM2R (ORCPT
+        Fri, 22 May 2020 08:28:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbgEVM2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:28:17 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec7c5530001>; Fri, 22 May 2020 05:28:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 05:28:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 22 May 2020 05:28:15 -0700
-Received: from [10.26.74.233] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 12:28:12 +0000
-Subject: Re: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-To:     Sandipan Patra <spatra@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-CC:     Bibek Basu <bbasu@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
- <34ae18f5-494c-7bc7-0f30-2d1455bbcb55@nvidia.com>
- <BYAPR12MB3014B051AD088B42001A8132ADB40@BYAPR12MB3014.namprd12.prod.outlook.com>
- <21428954-41cc-c01a-bca2-7eb19f444272@nvidia.com>
- <BYAPR12MB30149CEB64B1BC3F9727AA68ADB40@BYAPR12MB3014.namprd12.prod.outlook.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ed46ffb7-87ef-8bfb-46f0-005042041658@nvidia.com>
-Date:   Fri, 22 May 2020 13:28:10 +0100
+        Fri, 22 May 2020 08:28:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F6CC061A0E;
+        Fri, 22 May 2020 05:28:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id c11so10239897ljn.2;
+        Fri, 22 May 2020 05:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yaJggxw2oIQGUD00rImm8KRBGAMLEQqQBPoYb1Fa4Ck=;
+        b=EGloSf/UXkcsDMqaZec3Xpo3n4+fWfy9h5AHdSyfXZGqdXD7TSQxqSxWhr4BEDq1tx
+         v47DvPaelw68pGvGgRPH/QMhFs27pW4jfbDthNLAo2nzjiAwzR/g5H8IvEAQV8v7x0/F
+         gJgLcq8K7aVqEuMPf4jdmD1DjcLk1s9ctWmIi/PHjobQXFUwQojNcE6544NRkzO1h9vD
+         McI51YamolIvZCXbbA/L/jugPJQC5B8k5z74LeJUn3VgYDn187kiA+bSzgmrgv/qyKoI
+         Hj2vix0I+ZXYhr5OSG5pmi5yJqoexDkZVqCVUT2eWegoR6vzGi+KHmBp2H/9XR4IiEJg
+         PwkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yaJggxw2oIQGUD00rImm8KRBGAMLEQqQBPoYb1Fa4Ck=;
+        b=g5U8E41JhxQmxZQzZQB7q7I3zuts8+bQvYNY0RxXtX1GhVztFhjzCO6P+lYE2fPauS
+         ohwPE/yL1njRXiOQ4lNr5kQBx6ibP9/9uL9NDV0Bf2oSfyMfYZFyNTmrcKA4HcyqFwy6
+         qgnZyzJRwEzrOrvrUzfnYwrfk4K2fgHCbAzw4tCMvAiI/+MVaoVzCV4L1ecbYgrlw8Y5
+         JkzTVkg6ZmG7pSOb64GlWOS39NTypXVac6fej7kB84UHg5SpxKcLaAXEYbkiyTBRUhMm
+         l6Z7sa+pxxtzEIfXEdEBsGmfBD65zuqrh4/YafFZuZ7ngfuh07WLQFddakJqZ5jDdwxV
+         CwLg==
+X-Gm-Message-State: AOAM5337jZpnSSTzp+n5v/JUuSW8ps1gy0vplrBoJ7we2AbGsY5OC4Vo
+        ZI/Hf+LMTr44jzOI9ANxrIwlDdUk
+X-Google-Smtp-Source: ABdhPJxaY4jza3ZNZHABNZueKZfGSk2n7W6UQwcam6yrwTDmNtnh24IG6raE2jyRxPm4rdZfoO8r+w==
+X-Received: by 2002:a2e:88d5:: with SMTP id a21mr4507777ljk.31.1590150513669;
+        Fri, 22 May 2020 05:28:33 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-17-204.pppoe.mtu-net.ru. [91.76.17.204])
+        by smtp.googlemail.com with ESMTPSA id s2sm2303961ljs.39.2020.05.22.05.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 05:28:32 -0700 (PDT)
+Subject: Re: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when
+ not applicable
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+References: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4ac18003-e855-43d1-91d2-b4fa7904dba4@gmail.com>
+Date:   Fri, 22 May 2020 15:28:32 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB30149CEB64B1BC3F9727AA68ADB40@BYAPR12MB3014.namprd12.prod.outlook.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590150483; bh=CgXFXHPH5kgfQyubxW7dV8GHkKx0zBOWtAsR0yOSWuI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=V2uiblw2yPFXm92/pXH60MbO6zNffGXJ6PyNWxUMyTPuQbLt4zobqbjbFe/u4Lwc8
-         8f5JZItaBq9KainsZ/j5R9PbvwKJMbE1snS4AJEJqB2r9vIsZFaD/KAOLz5xWcJc4U
-         E83DayLRfmei32RmAozkQZ2J7EVc7i9VXy16BRMOhCKY9RHWwHRp/0gn9jTOo3G2hg
-         sT/JLHRS6woOQK3lVQzikLOGOK0Pq5yt9VxERecMJpFSTr3eRUULoUuxkhw9C8Q8fR
-         dKhchx21h3IhHugF1m94BIlfEXY+mZZkhAriX3414O3eBkH0rBr7oO/pSubhvlVFq9
-         EJb9ORsScZB/Q==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 22/05/2020 13:12, Sandipan Patra wrote:
-
-...
-
->>>>>  	/*
->>>>>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
->>>>>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
->>>>>  	 */
->>>>> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
->>>>> +	if (pc->soc->num_channels == 1) {
->>>>
->>>> Are you using num_channels to determine if Tegra uses the BPMP? If so
->>>> then the above is not really correct, because num_channels is not
->>>> really related to what is being done here. So maybe you need a new SoC
->> attribute in the soc data.
->>>
->>> Here, it tries to find if pwm controller uses multiple channels (like
->>> in Tegra210 or older) or single channel for every pwm instance (i.e.
->>> T186, T194). If found multiple channels on a single controller then it
->>> is not correct to configure separate clock rates to each of the channels. So to
->> distinguish the controller and channel type, num_channels is referred.
->>
->> OK, then that makes sense. Maybe add this detail to the comment about why
->> num_channels is used.
+20.05.2020 23:08, Sowjanya Komatineni пишет:
+> When auto calibration timeouts, calibration is disabled and fail-safe
+> drive strength values are programmed based on the signal voltage.
 > 
-> Ok. Will update comment.
+> Different fail-safe drive strength values based on voltage are
+> applicable only for SoCs supporting 3V3 and 1V8 pad controls.
+> 
+> So, this patch avoids reading these properties from the device tree
+> for SoCs not using pad controls and the warning of missing properties
+> will not show up on these SoC platforms.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++------------------
+>  1 file changed, 33 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 3e2c510..141b49b 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -605,6 +605,39 @@ static void tegra_sdhci_parse_pad_autocal_dt(struct sdhci_host *host)
+>  		autocal->pull_down_1v8 = 0;
 >  
->>
->>>>
->>>>> +		/*
->>>>> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it
->>>> matches
->>>>> +		 * with the hieghest applicable rate that the controller can
->>>>
->>>> s/hieghest/highest/
->>>
->>> Got it.
->>>
->>>>
->>>>> +		 * provide. Any further lower value can be derived by setting
->>>>> +		 * PFM bits[0:12].
->>>>> +		 * Higher mark is taken since BPMP has round-up mechanism
->>>>> +		 * implemented.
->>>>> +		 */
->>>>> +		required_clk_rate =
->>>>> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
->>>>> +
->>>>
->>>> Should be we checking the rate against the max rate supported?
->>>
->>> If the request rate is beyond max supported rate, then the
->>> clk_set_rate will be failing and can get caught with error check
->>> followed by. Otherwise it will fail through fitting in the register's frequency
->> divider filed. So I think it is not required to check against max rate.
->>> Please advise if I am not able to follow with what you are suggesting.
->>
->> I think that it would be better to update the cached value so that it is not
->> incorrectly used else where by any future change. Furthermore, this simplifies
->> matters a bit because you can do the following for all devices, but only update
->> the clk_rate for those you wish to ...
->>
->>     rate = pc->clk_rate >> PWM_DUTY_WIDTH;
->>
-> What I understood from above is, we will always use max rate for any further configurations.
-> If this is the suggestion above, then I think its not the right way.
+>  	err = device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-up-offset-sdr104",
+> +			&autocal->pull_up_sdr104);
+> +	if (err)
+> +		autocal->pull_up_sdr104 = autocal->pull_up_1v8;
+> +
+> +	err = device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-down-offset-sdr104",
+> +			&autocal->pull_down_sdr104);
+> +	if (err)
+> +		autocal->pull_down_sdr104 = autocal->pull_down_1v8;
+> +
+> +	err = device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-up-offset-hs400",
+> +			&autocal->pull_up_hs400);
+> +	if (err)
+> +		autocal->pull_up_hs400 = autocal->pull_up_1v8;
+> +
+> +	err = device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-down-offset-hs400",
+> +			&autocal->pull_down_hs400);
+> +	if (err)
+> +		autocal->pull_down_hs400 = autocal->pull_down_1v8;
+> +
+> +	/*
+> +	 * Different fail-safe drive strength values based on the signaling
+> +	 * voltage are applicable for SoCs supporting 3V3 and 1V8 pad controls.
+> +	 * So, avoid reading below device tree properies for SoCs that don't
 
-I am not saying that.
+typo s/properies/properties/                      ^^^
 
-> If we consider only max rate then the pwm output can only be ranging from:
-> Possible max output rate: rate
-> Possible min output rate: rate/2^13 (13 bits frequency divisor)
-> 
-> But if we consider the min rate supported by the source clock then,
-> min output rate can go beyond the current min possible and 
-> that should be considered for finding actual limit of min output rate.
-> 
-> Based on this, in the driver it tries to find a suitable clock rate to achieve
-> requested output rate.
-> Please suggest if you think we can still improve this further.
-
-What I am suggesting is you ...
-
- if (pc->soc->num_channels == 1) {
-         required_clk_rate = (NSEC_PER_SEC / period_ns) <<
-                              PWM_DUTY_WIDTH;
-
-         err = clk_set_rate(pc->clk, required_clk_rate);
-         if (err < 0)
-                return -EINVAL;
-
-         pc->clk_rate = clk_get_rate(pc->clk);
- }
-
- rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
-
-That's all. I think this is simpler.
-
-Jon
--- 
-nvpublic
+> +	 * have NVQUIRK_NEEDS_PAD_CONTROL.
+> +	 */
+...
