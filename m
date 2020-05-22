@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F44D2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E84D2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RH3hJubU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CmyoV4Da"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbgEVOzW (ORCPT
+        id S1731250AbgEVOza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57798 "EHLO
+        Fri, 22 May 2020 10:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730797AbgEVOzR (ORCPT
+        with ESMTP id S1731360AbgEVOzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:55:17 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B79C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:55:17 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y17so2052830wrn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:55:17 -0700 (PDT)
+        Fri, 22 May 2020 10:55:18 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D03BC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:55:18 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f5so1844910wmh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z2JTvHuqFiAH+e0uHvAv7QUdItZgp1++hBsH29TGAGE=;
-        b=RH3hJubUWGtSNW24GhTx6ufaJ6TRraOrbbB6edaZ1SxjVy3F3fER9ye7M9DV2/koq2
-         WolLZoTDKPlKaRDouJvsUsCVShp5GvsPjxVf/vBlD/kFDBl2QP/5obzIUP+C/DliXKFe
-         vWBbx3oaBCHHqGyG00lPrlsfgZua0ucfU7gneN0OBBm88TXXdm3WRzT32ng9qk+9ZzFh
-         UvzEk05phTl5Vurl2f8gX/swSGoyVuEc8AtTZnZIAfWIo53XvjMUP16u91mtv7nQ5Dsd
-         C/dtaKrFdXg8UuWpnXiR/uEA3LADGd0mTIdfzp1TkIHIRHLFSVWLPTxxG9wU5PP1z82f
-         I9EA==
+        bh=kkTz4sTk7s012DbHMp3X0LwsnQSwOjg9lEMirTJ/PWk=;
+        b=CmyoV4DakSUdEOfu7cjPJzdTIPnJ6TKlRfsXiilcn49CqPDcUOzFGX9DBib2tD3/pm
+         QApEtLdvp6Fa4KNTp/oT0fEOwbQWtU5CZ3x2SCCeUD/WspsDejdt5xibpZ3dKW+8N9vd
+         wpMgNvOZId9/GA5XVtZF4Lq5us4bbMV8sDPJ0/XlIQLKxCHSnelKR8n1Ie62Om5LxWUl
+         EQYUU91KChW8wkfIxjdDK6WH+98E07MH6kLCa43YRIb/FcPg4qpXBzBKU46RZRSX/jmR
+         1g6SynQVCCRNNQZhm8gmkXSfMar3NbaV1LuIrwazVbgceNf5GLdXyLQ2URJ4NKjQlMdB
+         t4LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z2JTvHuqFiAH+e0uHvAv7QUdItZgp1++hBsH29TGAGE=;
-        b=fWLXLCyYEOox8KisfBOwWGyPKCOpA5r43dFuEVPjRSLMxqOLE1lBOZUFm9Uxq9I7PO
-         AboCivmhZwsoICOGzdJnKqygfJhAbh3EtLpVilc6BYj2GAHuUEc0NEeZ/JaUgnocoWlV
-         zcy9YXIaiPzSJjyTtWF665nlHxJkfwezzh6YmyPS1DMrtkTiQGW+vLf82oCJTVT3z4xf
-         ymRvMqPTEmM91QM2+rbTir1Cqq8be/LwoiRzXAAdC3g/U2zTAXa5WotAxSkuqfuUeQiT
-         zO9W0xoit/WNoF2yvS+e7dyZKba1YJAZytpdyZVs+geWhwcM7gdY9TMkvMDQoj9SSozH
-         DIqQ==
-X-Gm-Message-State: AOAM531H/I3M6XYc01ieub1ff3ZjmHlFmQTKWfBZkUauhaKO4nKxoaoX
-        k/COzbfZFSZ1jSHhlJPxTjVTOg==
-X-Google-Smtp-Source: ABdhPJzVBNmBWWvQ9nOtr1g+uNGIt9/otWbCh5kkWpEi6Kn9nuax/sD2PRXbA3VTqgPQqIPvlzBrKA==
-X-Received: by 2002:adf:eb08:: with SMTP id s8mr3721175wrn.361.1590159315732;
-        Fri, 22 May 2020 07:55:15 -0700 (PDT)
+        bh=kkTz4sTk7s012DbHMp3X0LwsnQSwOjg9lEMirTJ/PWk=;
+        b=AYHmIh0qK4ui/TFtklMBS+EfINQ1+XhJQ3E7Sj3pKv/prYNNylz140DlWxjFER/Csr
+         MXBNDmo+n9m9wfzPd/2oUIKO0pBefSi72kYSWX9Pk8E2xp9Vwc9deAyHmo2Pnwfny9Ep
+         X05QvarfH0MOf6XYdSbs4x4XoSRFIqLwJW3zX02xuRIE9/nzNz18zlkYUwEnFG61no0F
+         FrIAo0kUrchpHSdS/iPSMpcwb3+xUTyb9w6j/GcNGU+qUMm5xPAxKrwdbDz/GS5IB9jG
+         m8VcHJaDP+lpyS5Bm7eoVfb4ZfVyVFeucvsCyN/6CXFtL1PN04eBHveJTgOWwkSIseQr
+         gIvQ==
+X-Gm-Message-State: AOAM533xUwgNuuqquGhIGG+WVETn40r+B4+A+rneu6S6+v0+zNF6GWCG
+        9V9iJPHJ5T1DQZEQ1rDOhMqtY6UzqdU=
+X-Google-Smtp-Source: ABdhPJxQXqSFq49qzrvg5dJHfbQcmZrcW5ufJyiYOXZjrM7OJFBvSL22Ako9KERokDxGdIZxZR7/nA==
+X-Received: by 2002:a1c:25c3:: with SMTP id l186mr13757890wml.103.1590159316931;
+        Fri, 22 May 2020 07:55:16 -0700 (PDT)
 Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id i21sm9746911wml.5.2020.05.22.07.55.14
+        by smtp.gmail.com with ESMTPSA id i21sm9746911wml.5.2020.05.22.07.55.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 07:55:15 -0700 (PDT)
+        Fri, 22 May 2020 07:55:16 -0700 (PDT)
 From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     sumit.garg@linaro.org, jason.wessel@windriver.com,
         dianders@chromium.org
@@ -67,9 +67,9 @@ Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         patches@linaro.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 1/2] debug: Convert dbg_slave_lock to an atomic
-Date:   Fri, 22 May 2020 15:55:09 +0100
-Message-Id: <20200522145510.2109799-2-daniel.thompson@linaro.org>
+Subject: [RFC PATCH 2/2] locking/spinlock/debug: Add checks for kgdb trap safety
+Date:   Fri, 22 May 2020 15:55:10 +0100
+Message-Id: <20200522145510.2109799-3-daniel.thompson@linaro.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200522145510.2109799-1-daniel.thompson@linaro.org>
 References: <20200522145510.2109799-1-daniel.thompson@linaro.org>
@@ -80,66 +80,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the debug core takes and releases dbg_slave_lock, knowing it to
-be uncontended, as a means to set and clear a flag that it uses to herd
-the other cores in to or out of a holding pen.
+In general it is not safe to call spin_lock() whilst executing in the
+kgdb trap handler. The trap can be entered from all sorts of execution
+context (NMI, IRQ, irqs disabled, etc) and the kgdb/kdb needs to be
+as resillient as possible.
 
-Let's convert this to a regular atomic instead. This change is worthwhile
-simply for the subtle increase in clarity in a very tangled bit of code.
-It is also useful because it removes a raw_spin_lock() from within the
-debug trap, which will make it easier to introduce spin lock debugging
-code for the debug trap handler.
+Currently it is difficult to spot mistakes in the kgdb/kdb logic
+(especially so for kdb because it uses more kernel features than
+pure-kgdb). Let's provide a means to bring attention to deadlock
+risks in the debug code.
 
 Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
- kernel/debug/debug_core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/kgdb.h            | 16 ++++++++++++++++
+ kernel/locking/spinlock_debug.c |  4 ++++
+ lib/Kconfig.kgdb                | 11 +++++++++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 2b7c9b67931d..8f43171ddeac 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -121,12 +121,12 @@ static struct kgdb_bkpt		kgdb_break[KGDB_MAX_BREAKPOINTS] = {
- atomic_t			kgdb_active = ATOMIC_INIT(-1);
- EXPORT_SYMBOL_GPL(kgdb_active);
- static DEFINE_RAW_SPINLOCK(dbg_master_lock);
--static DEFINE_RAW_SPINLOCK(dbg_slave_lock);
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index b072aeb1fd78..de30ce8078cf 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -332,4 +332,20 @@ extern void kgdb_panic(const char *msg);
+ #define dbg_late_init()
+ static inline void kgdb_panic(const char *msg) {}
+ #endif /* ! CONFIG_KGDB */
++
++#ifdef CONFIG_KGDB_DEBUG_SPINLOCK
++/**
++ * check_kgdb_context_before() - Check whether to issue a spinlock warning
++ *
++ * Currently this only reports when the master processor violates the
++ * locking rules (because we are using the in_dbg_master() macro since
++ * we are confident that will avoid false positives).
++ *
++ * Return: True if we are executing in the debug trap
++ */
++static inline int check_kgdb_context_before(void) { return in_dbg_master(); }
++#else
++static inline int check_kgdb_context_before(void) { return 0; }
++#endif
++
+ #endif /* _KGDB_H_ */
+diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
+index b9d93087ee66..b49789e0fed8 100644
+--- a/kernel/locking/spinlock_debug.c
++++ b/kernel/locking/spinlock_debug.c
+@@ -12,6 +12,7 @@
+ #include <linux/debug_locks.h>
+ #include <linux/delay.h>
+ #include <linux/export.h>
++#include <linux/kgdb.h>
  
- /*
-  * We use NR_CPUs not PERCPU, in case kgdb is used to debug early
-  * bootup code (which might not have percpu set up yet):
-  */
-+static atomic_t			slaves_must_spin;
- static atomic_t			masters_in_kgdb;
- static atomic_t			slaves_in_kgdb;
- static atomic_t			kgdb_break_tasklet_var;
-@@ -615,7 +615,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 			dump_stack();
- 			kgdb_info[cpu].exception_state &= ~DCPU_WANT_BT;
- 		} else if (kgdb_info[cpu].exception_state & DCPU_IS_SLAVE) {
--			if (!raw_spin_is_locked(&dbg_slave_lock))
-+			if (!atomic_read(&slaves_must_spin))
- 				goto return_normal;
- 		} else {
- return_normal:
-@@ -677,7 +677,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	 * CPU in a spin state while the debugger is active
- 	 */
- 	if (!kgdb_single_step)
--		raw_spin_lock(&dbg_slave_lock);
-+		atomic_set(&slaves_must_spin, 1);
+ void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
+ 			  struct lock_class_key *key, short inner)
+@@ -84,6 +85,7 @@ debug_spin_lock_before(raw_spinlock_t *lock)
+ 	SPIN_BUG_ON(READ_ONCE(lock->owner) == current, lock, "recursion");
+ 	SPIN_BUG_ON(READ_ONCE(lock->owner_cpu) == raw_smp_processor_id(),
+ 							lock, "cpu recursion");
++	SPIN_BUG_ON(check_kgdb_context_before(), lock, "in debug trap");
+ }
  
- #ifdef CONFIG_SMP
- 	/* If send_ready set, slaves are already waiting */
-@@ -741,7 +741,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		dbg_io_ops->post_exception();
+ static inline void debug_spin_lock_after(raw_spinlock_t *lock)
+@@ -174,6 +176,7 @@ int do_raw_read_trylock(rwlock_t *lock)
+ void do_raw_read_unlock(rwlock_t *lock)
+ {
+ 	RWLOCK_BUG_ON(lock->magic != RWLOCK_MAGIC, lock, "bad magic");
++	RWLOCK_BUG_ON(check_kgdb_context_before(), lock, "in debug trap");
+ 	arch_read_unlock(&lock->raw_lock);
+ }
  
- 	if (!kgdb_single_step) {
--		raw_spin_unlock(&dbg_slave_lock);
-+		atomic_set(&slaves_must_spin, 0);
- 		/* Wait till all the CPUs have quit from the debugger. */
- 		while (kgdb_do_roundup && atomic_read(&slaves_in_kgdb))
- 			cpu_relax();
+@@ -183,6 +186,7 @@ static inline void debug_write_lock_before(rwlock_t *lock)
+ 	RWLOCK_BUG_ON(lock->owner == current, lock, "recursion");
+ 	RWLOCK_BUG_ON(lock->owner_cpu == raw_smp_processor_id(),
+ 							lock, "cpu recursion");
++	RWLOCK_BUG_ON(check_kgdb_context_before(), lock, "in debug trap");
+ }
+ 
+ static inline void debug_write_lock_after(rwlock_t *lock)
+diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
+index 933680b59e2d..4d57900d6c53 100644
+--- a/lib/Kconfig.kgdb
++++ b/lib/Kconfig.kgdb
+@@ -29,6 +29,17 @@ config KGDB_SERIAL_CONSOLE
+ 	  Share a serial console with kgdb. Sysrq-g must be used
+ 	  to break in initially.
+ 
++config KGDB_DEBUG_SPINLOCK
++	bool "KGDB: Check for spin lock usage when system is halted"
++	select DEBUG_SPINLOCK
++	default n
++	help
++	  Say Y here to catch spin lock waiting when we are running
++	  in the kgdb trap handler and report it. When the trap handler
++	  is executing all other system activity is halted and spin lock
++	  contention will lead to deadlock. This makes any spin lock wait
++	  from this execution context risky.
++
+ config KGDB_TESTS
+ 	bool "KGDB: internal test suite"
+ 	default n
 -- 
 2.25.4
 
