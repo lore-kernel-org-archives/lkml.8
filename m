@@ -2,155 +2,148 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB29C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78065204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6B82065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vd4VYINY"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="CgxfAEaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgEVKg4 (ORCPT
+        id S1728820AbgEVKh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgEVKg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:36:56 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3292C061A0E;
-        Fri, 22 May 2020 03:36:55 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id m6so10206038ilq.7;
-        Fri, 22 May 2020 03:36:55 -0700 (PDT)
+        Fri, 22 May 2020 06:37:27 -0400
+Received: from mail-mw2nam10on2049.outbound.protection.outlook.com ([40.107.94.49]:17944
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728703AbgEVKhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 06:37:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k6Eo1VLd8ile22mqyhB/6sYRvMSXEHQAsA+vxGYnWkpv63bFCXsP9Bd+5noJeA2ehb7t5mYn6bkMm769gl+YxPxDvRiBYq0raH4u8tcECwt0iwGrIJ2PGf4SFSO/iAUu7sYiVtW6jS2lCWhRBVNu/7k+eqvh5nIND5aSn62umsQ4H0q76sXpEoGt7uriFg2RIBAT950DLT74ranFmfUO6oWHjrAHncLN6YOZfR7KFFa0c+CMh/q5e+ju4lYYK8mreC8Ab597nWC2C+CRCmWwHJlCg6b0bi/YxBLtKyphD+NGGKxoGuMagtBkx0C+lUfFbdixG9VEIdFLjBgK7Brlxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h/QxymufbDVtZ0PoPhOAfXWG/yRGzJqXA6PeBwTA5no=;
+ b=njXC15gNhFr0+4LgQNY+fXe8xw6T4VBxh/bmynf1GI0Ks3B081BfK1rgOxa3lCI4tRKH15kN9cm/uDVhHhDc4Itg3jNkbiEONVp0Pn4cnsT+bZEEL897AiTxBcBQ7n10Ph0XNbwKqcpGzjrC2DCkr1uPiqwgqH/mSUGHStThu1sMLKjRR2lx2swRb7ej2aOoviKan+JmEW3iQjnmX9mQJ8rgf2DRs0Hb3bu6FwFhTQ2YJIiFe2n5vkacQsWcZoU7hlI/X+ynZWIxQuHkeYuV30n+nQ2UzF6s9wBs5YO/We4H47jorWflYaDK7OVk6sFiBbrp99PsO9/Pa/G4flDi0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S9mNXQGxYRI6qULQw9Ylvem2CGTTDqLbr/fEXVEpF4U=;
-        b=vd4VYINYuEVdmUQvHlTA9KXdDm9DE/zeNAYpOQv75fwt4OmH/SIAObjGaEBV4RxvZz
-         q6i66VQgCbwB2DJnpkEs3CNS44zpx0/PzCDxw+TMIy0QqPe/1Vb9Qtz+UKk3APYhG57W
-         0iTd/hJBqukptHPRhJKJwFSc7T8wM0FpEmbg6I6kTzq+aeXPRSzbG/9VmyhLf821lJYv
-         r3xmT/IG4xyoBXd8AFUfyLhmGkOuqCvdk90pwWNRlm08GL4a15VsChynvxCw55pjfyQo
-         wbiCGX/jvpdtkVcZHfD2F6GQ+KJBLXyqJ7b3XSsKGprTz+kBwt26Bme5bvOjKtZPhW2q
-         gqZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S9mNXQGxYRI6qULQw9Ylvem2CGTTDqLbr/fEXVEpF4U=;
-        b=b7GjcjFB72QqWBYVJyLpGixUwi7R7wY604c+wrCfUFm56HL4HV3tzdZ94D/pQ2Dbg/
-         3mN/vVlsaS+jG8JLdr2TtVfYmy7AWVQztZuQ+ooj4BKT5cwpH2CrV3fND9cxENnIlq0W
-         oezIOPDcUEO/YIm8tgoULpGM9+loiB9A66ctMCcwQ38Kdh1ZJUT7+TrUMi2cRvf0qYX6
-         kfCPeW9iPe6/bcglQwxSRzwpOP3LoPNGzyvjgcUweW2t9AdCYNp0u0esWTuoOqC2pTgt
-         hEehaverP17cKYeIuGBBMYarObujkQv/jOzorRvJ9Ifs+yx3kbS22pLAPigLe8QN2gUP
-         pVug==
-X-Gm-Message-State: AOAM533Gb4MxEnYmqSZBxVeBKR8z3YJMS8sNE2JAn8ruaghYGbICo4wH
-        Ix+3tIrt/kCMfjjfMZSyPVxJtk3pJP9G3wjtJYzIdkRL
-X-Google-Smtp-Source: ABdhPJx0XAiW7gALipTyOEYHcUb8snFaOYG31JH89mxDkIvzBtiW7XAO+lC0bUVICWp15csuijP3fwq29n6skZcb3/g=
-X-Received: by 2002:a92:ca84:: with SMTP id t4mr10176899ilo.276.1590143815240;
- Fri, 22 May 2020 03:36:55 -0700 (PDT)
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h/QxymufbDVtZ0PoPhOAfXWG/yRGzJqXA6PeBwTA5no=;
+ b=CgxfAEaYggsgxcgExmKFxM8WjhVrS7msuyBvBTBBz3zwa417ST/rXmOw9voOldEqUdaW4fuU9w/dxWj/UADX1sgTbGkMajm5bRFBQpcl5e3df+FEVh4h9VdgWVM7ci4aD0uSlB/QjgyoJF8eKyx6EZB+TQkTpnmndjhQJDHUkXA=
+Authentication-Results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB4151.namprd03.prod.outlook.com (2603:10b6:a03:77::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Fri, 22 May
+ 2020 10:37:21 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3021.026; Fri, 22 May 2020
+ 10:37:21 +0000
+Date:   Fri, 22 May 2020 18:36:57 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        SoC Team <soc@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 06/15] ARM: berlin: Drop unneeded select of HAVE_SMP
+Message-ID: <20200522183657.00b33079@xhacker.debian>
+In-Reply-To: <CAK8P3a1qu-E8XKPiaBF0PqgGfBjNHbcONz-tgby3jt1X1X8Ymw@mail.gmail.com>
+References: <20200505150722.1575-1-geert+renesas@glider.be>
+        <20200505150722.1575-7-geert+renesas@glider.be>
+        <20200522181118.36de5dd9@xhacker.debian>
+        <CAK8P3a1qu-E8XKPiaBF0PqgGfBjNHbcONz-tgby3jt1X1X8Ymw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR02CA0063.apcprd02.prod.outlook.com
+ (2603:1096:404:e2::27) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-References: <20200518201646.48312-1-dagmcr@gmail.com> <73d98905-930d-3549-1a85-293f4d213716@ideasonboard.com>
-In-Reply-To: <73d98905-930d-3549-1a85-293f4d213716@ideasonboard.com>
-From:   Daniel G <dagmcr@gmail.com>
-Date:   Fri, 22 May 2020 12:36:44 +0200
-Message-ID: <CAPsT6hk=3Z2nwGW=WdxB7UVwvOVMdiZ1oVdR_Xb4kqXpQ8jC5w@mail.gmail.com>
-Subject: Re: [PATCH] drm: rcar-du: Fix build error
-To:     kieran.bingham+renesas@ideasonboard.com
-Cc:     Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TY2PR02CA0063.apcprd02.prod.outlook.com (2603:1096:404:e2::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26 via Frontend Transport; Fri, 22 May 2020 10:37:17 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f4491e6b-14f7-4e9c-fc49-08d7fe3c1b5b
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4151:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB4151A9EEB0D7151F8E348EB8EDB40@BYAPR03MB4151.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 04111BAC64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fFqFxdON/HrZk6dSD/f7Dn1R9qf5SC2WMt6dCI8P5jYNe0LXqE7Worwnd6djAR1GXk0bZGwRsF8wU5cOZj2K3UAERiJn2WLGH2qKuicGlbPF2SkXzLQEi0xHoHWcNWSA0DZq9lYfxEPrMTaTzQNQ0xEvlrtWaIxoo6KVsDI2a/S+GP+39eDbH4kV921f7EhJm4jFNtf9BHyM3hE3wTjyvqPx2hiMegdNdSxhdQq5t/72EPoAnuKc11ZPigH10NZXjxqH7e4QCYUIT88AEhFSywEcAZj7QMkUT8CcO1GxgOhbKuhxH3JEqV8HauriyBSiQ7MHyDROI1RW9Onj4mpBNK6F+E88J984HuJwN+IyzNcwmG8JyO8sdYaiYxGi4RX/7IYXLtGJQOgd5SMHQ3YCQQ9HWPq2qb72oXSkjM1wGh9OxcS+LeduLA7Hoiw8aMEV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(366004)(396003)(376002)(346002)(6666004)(54906003)(8936002)(55016002)(8676002)(53546011)(4326008)(6506007)(6916009)(52116002)(9686003)(7696005)(2906002)(16526019)(1076003)(26005)(5660300002)(316002)(66556008)(86362001)(66946007)(956004)(186003)(66476007)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hKKZeWuO49Z/OIKdQlB8X2ZnR4GHYhKSIcP+nthcipnL70RfwKasyMdjttoTQwshy/5kTAFSW1Q/F0uNOueE389Jam69cY36yGhYddHInHnYObyfI7mZ1uAMhAZ+VBp34FT2kT4swG14opPS9SJVfNXJNVL0XUQ/VTvBeix/yV0FoDPCvp/KnzYmyLB0smx87ZbmDqsUPpn7uUaM38w0dLWPGwsVqrw0jvm8CpJ+xbOQHESTX1/m0MU85gFI4aii8+enk+Lt25nrAE6nUCuI8NhDEGZttZi7TeJ7uO27DOEI1pLXHMneECMcmv64KY8rJMcfn+TniSN61FfAmIIjyZ/HZzPmRX4Q7YcpUbBBG46WRzcZinwQ6XLmphOTzZT68OXCyp3lpoiwINg6kLhUs2gINM+KVZJr9rNRuIK1W3nlakf5E6+8YiXSBabtBwkgY9QrfjhBVK7zIV2HCIaFkrlcNjGHBO6NLPBimBOPuIy+R/skrdoyb+NXsQYxuj5d
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4491e6b-14f7-4e9c-fc49-08d7fe3c1b5b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2020 10:37:21.0848
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rz3KnTyyjNEKHy7P2qVtTNUXnirvAsCZrOVcQEGkbrZfuZ9sZ2l8f2EBovo+zap/9C3U/4jzd+Lv7ys+uM9Ylw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran and Emil,
+On Fri, 22 May 2020 12:34:43 +0200 Arnd Bergmann wrote:
 
-On Fri, 22 May 2020 at 11:43, Kieran Bingham
-<kieran.bingham+renesas@ideasonboard.com> wrote:
->
-> Hi Daniel,
->
-> On 18/05/2020 21:16, Daniel Gomez wrote:
-> > Select DRM_KMS_HELPER dependency.
-> >
-> > Build error when DRM_KMS_HELPER is not selected:
-> >
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
-> >
->
-> Looking at the files in rcar_du that utilise drm_atomic_helpers...
->
-> git grep -l drm_atomic_helper_ drivers/gpu/drm/rcar-du/
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c
->  drivers/gpu/drm/rcar-du/rcar_du_plane.c
->  drivers/gpu/drm/rcar-du/rcar_du_vsp.c
->  drivers/gpu/drm/rcar-du/rcar_du_writeback.c
->  drivers/gpu/drm/rcar-du/rcar_lvds.c
->
-> of those, these are configurable:
->
->  rcar_du_vsp.c          # DRM_RCAR_VSP
->  rcar_du_writeback.c    # DRM_RCAR_WRITEBACK
->  rcar_lvds.c            # DRM_RCAR_LVDS
->
-> But VSP and WRITEBACK are already implicitly dependant upon DRM_RCAR_DU
-> because they get built into the DU module.
->
-> So indeed, only the RCAR_LVDS is a separate module, using those helpers,
-> so I think a select is a reasonable fix.
->
-> I would also ask whether DRM_RCAR_LVDS should depend upon DRM_RCAR_DU
-> though as well.
->
-> There is no linkage requirement, as it's a standalone bridge driver from
-> what I can see, but I don't think it serves much purpose without the DU?
 
-I have actually spotted when using arch/arm/configs/multi_v7_defconfig where
-DRM_RCAR_DU is built as module. But when I was reviewing it I was able to
-compile RCAR_LVDS=y with DRM_RCAR_DU=n. Also, according to
-https://patchwork.kernel.org/patch/10159063/, the LVDS encoders used to be
-described as part of the DU but not after the patch. So, I assume it can
-be used without the DU but not completely sure.
+> 
+> 
+> On Fri, May 22, 2020 at 12:13 PM Jisheng Zhang
+> <Jisheng.Zhang@synaptics.com> wrote:
+> >
+> > Hi Arnd, Kevin, Olof,
+> >
+> > On Tue,  5 May 2020 17:07:13 +0200 Geert Uytterhoeven wrote:
+> >  
+> > >
+> > >
+> > > Support for Marvell Berlin SoCs depends on ARCH_MULTI_V7.
+> > > As the latter selects HAVE_SMP, there is no need for MACH_BERLIN_BG2 to
+> > > select HAVE_SMP.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > > Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> > > Acked-by: Arnd Bergmann <arnd@arndb.de>  
+> >
+> > The patch looks good to me. I want to know what will be the mainline
+> > path of this series. SoC maintainers take it then send A PR to arm-soc?
+> > Or each SoC maintainers ack it, arm-soc will take the whole series?
+> > If later, then
+> >
+> > Acked-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> >
+> >
+> > This is the first time I see a series touch different SoC platforms.  
+> 
+> I have already merged it. The normal way we do this is that platform
+> maintainers can choose to merge individual patches when they
+> are happy with them on the early review, or provide an Ack for
+> them to get merged as a branch.
+> 
+> I picked up v2 of the series as there seemed to be a sufficient
+> number of Acks and everyone that commented had agreed
+> in principle.
+> 
 
->
-> Anyway, even if it's just for compile testing maybe, the select here
-> should be fine.
->
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->
-> > Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-> > ---
-> >  drivers/gpu/drm/rcar-du/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> > index 0919f1f159a4..f65d1489dc50 100644
-> > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > @@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
-> >  config DRM_RCAR_LVDS
-> >       tristate "R-Car DU LVDS Encoder Support"
-> >       depends on DRM && DRM_BRIDGE && OF
-> > +     select DRM_KMS_HELPER
-> >       select DRM_PANEL
-> >       select OF_FLATTREE
-> >       select OF_OVERLAY
-> >
->
+Nice. Thanks a lot
+
