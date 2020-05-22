@@ -2,67 +2,66 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0BAC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C102088E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA4C20756
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="T5hCoobM"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="vMXewvZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgEVMwa (ORCPT
+        id S1729700AbgEVMwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        Fri, 22 May 2020 08:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729563AbgEVMwV (ORCPT
+        with ESMTP id S1729832AbgEVMwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:52:21 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D401CC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:20 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l15so12122323lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:20 -0700 (PDT)
+        Fri, 22 May 2020 08:52:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918FEC08C5C5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:21 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id k5so12452144lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QDGQlabqNdXWT8KYXiZwEeKnt25k8ILFDWxwAiuz/rs=;
-        b=T5hCoobMWtJ7Xzo20ohRf6NdcQ3ttgHexOKNzdWduVQbkLxApAPl+W+t7qaQWvvPaL
-         szS1ESDyCBl8nxotiDX/fMAWiyPnn53Y573QSOYSRIKxkWL0hFikT7PbX/xhc6GpbupH
-         Jx3l5SbaTAsfUfZ10CSxgW0gxp6Cm2E9v82GsvCLwFYiFiZkeS2r0a/IwAaNcT0g776C
-         7W0DJCCofxJ5gED2yaCZ/LqHet1TQUSlADKixI+VvxGE2mHgUd5Dkn1QmrHHAhn68P+f
-         a2mkP4+qpHJmX+8ZpqpZJ8eyw6wwk1TMtgSBnlxvgDuZ5J/XSH61k5FXpKubBlHpB7A+
-         tHsA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IOgcgqCC9vufVEgLRTCCT+A1CAPen8qYhFRvNF11ibo=;
+        b=vMXewvZJmoyM5SCaX0XPqphO76VM6cnHn4hgVTCNei/lbdbji5H020LlhgziS01FVk
+         ui5fyTE3DN5SOMpjPlwpWJF4T1T3myaBBhvJeF6BRkO3VJUQ5ttcYVF95alvXnzFByf7
+         rDpU+4IPZBJctELqc8dGxXmK/qF+NC5YUkBb5cMJNI6M3M5hixgVKzguPSNqk3VuZqhb
+         6VrNy2Zoq11WU8ahhL9La7ztP+rWpfG+9/L7y9GQ+cSMnhN2HPU/3hJ1fP/S7+BYJQbv
+         /+M8HSXsrs6hXmUlvEfejiIAM68rokLuTLh5Uef098bQbtCAN45TllRqnvi7HHdCIe/a
+         cyig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QDGQlabqNdXWT8KYXiZwEeKnt25k8ILFDWxwAiuz/rs=;
-        b=iwwNcZrufq5rZylj6+np56cdfOyxXP2twL0L3mq4W3D0m+O0b75gv2/v8aY444jIYO
-         m1xnDMeWfNWAcvksiK+iho6xKQwoXkCbgiTiqKbdfyz5hq+Ooo7AdsX/6b1PLfmtDxXa
-         XeBrvWSyM6djqEeXDkGZznd1N0popSDfCkKd1gwRcApvnf5K6bGFMu1vEug8Gq2Eg5nM
-         zWqVyzqDsIyifU/WS7K41BU+FO1/0TEiZqilFJZwP2PjGnbkFhkXsVebrKKpErmbyapf
-         KgzLspfOb77xKNn1/EILzduR3AI0fql6jVMJVDTND41UdCsLGNABGpiCXUUPxeOnAekV
-         lHPg==
-X-Gm-Message-State: AOAM532RVQs1PHjHeCG2rqpBXX76ancBeatB0V9+MH1tPk3RKC4B2Cle
-        BBASKAHtZocwd014hM7ltW52KA==
-X-Google-Smtp-Source: ABdhPJzbEgynOtDCfmMokHSL9w+mx6+aIeiKdBvwClE9qAMTx107s9z4ayxTSo/aYXpRjHq4p8yErA==
-X-Received: by 2002:a2e:9ada:: with SMTP id p26mr7407068ljj.14.1590151939171;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IOgcgqCC9vufVEgLRTCCT+A1CAPen8qYhFRvNF11ibo=;
+        b=KWgxWOarQAcGwVcirYgifwq0/xxDK5RHdzsLl9Ax0B8KsfF7P0xbLm0WEIyJ+pHKEZ
+         ziV6KzgCmMJGj+gA7PoMqRcSL7AZeEw6dp0JWAEQZpth0soXowUuaWrG4ZI0rrL/1hvR
+         rJgueSnAjL0+GcuJxvITd5+ixTC1sNB1rl2gi31e2iRCWx79lWX7Zi12B6be7Krl6sCO
+         e7GyAkqDcSNpeWs85LC7gMY6ykXdA4RH2TNB2vlYV9LhjB/8fhsSs008Lc828H56YX8Y
+         iYCnrJlcOC1LH7RcOyJJKWQZA4u+zQ2sxdD2NpxoH3oCFgtowNof6qoZyWZmNR1osU3O
+         x9IQ==
+X-Gm-Message-State: AOAM5327m9NYZPuqHEJEgdy17Tr3Qkhyc12HW5tX3X7j5j89GLgQND4/
+        VhoQ6mpvJ4VjyBcPHgsJbSLE0g==
+X-Google-Smtp-Source: ABdhPJzNiybuIasKohIXnOzjLVrsbYy2l+tBimVTV+0SYU6i5hzbDixvDlvvzsJNADlHrv/M1vY0gg==
+X-Received: by 2002:a05:651c:2046:: with SMTP id t6mr7212112ljo.227.1590151939895;
         Fri, 22 May 2020 05:52:19 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id e18sm343134lja.55.2020.05.22.05.52.17
+        by smtp.gmail.com with ESMTPSA id t22sm2303742ljk.11.2020.05.22.05.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 22 May 2020 05:52:17 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id B92F7102051; Fri, 22 May 2020 15:52:19 +0300 (+03)
+        id 9C992102046; Fri, 22 May 2020 15:52:19 +0300 (+03)
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -81,142 +80,195 @@ Cc:     David Rientjes <rientjes@google.com>,
         kvm@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [RFC 04/16] x86/kvm: Use bounce buffers for KVM memory protection
-Date:   Fri, 22 May 2020 15:52:02 +0300
-Message-Id: <20200522125214.31348-5-kirill.shutemov@linux.intel.com>
+Subject: [RFC 00/16] KVM protected memory extension
+Date:   Fri, 22 May 2020 15:51:58 +0300
+Message-Id: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mirror SEV, use SWIOTLB always if KVM memory protection is enabled.
+== Background / Problem ==
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/Kconfig                 |  1 +
- arch/x86/kernel/kvm.c            |  2 ++
- arch/x86/kernel/pci-swiotlb.c    |  3 ++-
- arch/x86/mm/mem_encrypt.c        | 20 --------------------
- arch/x86/mm/mem_encrypt_common.c | 23 +++++++++++++++++++++++
- 5 files changed, 28 insertions(+), 21 deletions(-)
+There are a number of hardware features (MKTME, SEV) which protect guest
+memory from some unauthorized host access. The patchset proposes a purely
+software feature that mitigates some of the same host-side read-only
+attacks.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 86c012582f51..58dd44a1b92f 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -800,6 +800,7 @@ config KVM_GUEST
- 	select PARAVIRT_CLOCK
- 	select ARCH_CPUIDLE_HALTPOLL
- 	select X86_MEM_ENCRYPT_COMMON
-+	select SWIOTLB
- 	default y
- 	---help---
- 	  This option enables various optimizations for running under the KVM
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index bda761ca0d26..f50d65df4412 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -24,6 +24,7 @@
- #include <linux/debugfs.h>
- #include <linux/nmi.h>
- #include <linux/swait.h>
-+#include <linux/swiotlb.h>
- #include <asm/timer.h>
- #include <asm/cpu.h>
- #include <asm/traps.h>
-@@ -742,6 +743,7 @@ static void __init kvm_init_platform(void)
- 		}
- 
- 		mem_protected = true;
-+		swiotlb_force = SWIOTLB_FORCE;
- 	}
- }
- 
-diff --git a/arch/x86/kernel/pci-swiotlb.c b/arch/x86/kernel/pci-swiotlb.c
-index c2cfa5e7c152..814060a6ceb0 100644
---- a/arch/x86/kernel/pci-swiotlb.c
-+++ b/arch/x86/kernel/pci-swiotlb.c
-@@ -13,6 +13,7 @@
- #include <asm/dma.h>
- #include <asm/xen/swiotlb-xen.h>
- #include <asm/iommu_table.h>
-+#include <asm/kvm_para.h>
- 
- int swiotlb __read_mostly;
- 
-@@ -49,7 +50,7 @@ int __init pci_swiotlb_detect_4gb(void)
- 	 * buffers are allocated and used for devices that do not support
- 	 * the addressing range required for the encryption mask.
- 	 */
--	if (sme_active())
-+	if (sme_active() || kvm_mem_protected())
- 		swiotlb = 1;
- 
- 	return swiotlb;
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 112304a706f3..35c748ee3fcb 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -370,23 +370,3 @@ void __init mem_encrypt_free_decrypted_mem(void)
- 
- 	free_init_pages("unused decrypted", vaddr, vaddr_end);
- }
--
--void __init mem_encrypt_init(void)
--{
--	if (!sme_me_mask)
--		return;
--
--	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
--	swiotlb_update_mem_attributes();
--
--	/*
--	 * With SEV, we need to unroll the rep string I/O instructions.
--	 */
--	if (sev_active())
--		static_branch_enable(&sev_enable_key);
--
--	pr_info("AMD %s active\n",
--		sev_active() ? "Secure Encrypted Virtualization (SEV)"
--			     : "Secure Memory Encryption (SME)");
--}
--
-diff --git a/arch/x86/mm/mem_encrypt_common.c b/arch/x86/mm/mem_encrypt_common.c
-index a878e7f246d5..7900f3788010 100644
---- a/arch/x86/mm/mem_encrypt_common.c
-+++ b/arch/x86/mm/mem_encrypt_common.c
-@@ -37,3 +37,26 @@ bool force_dma_unencrypted(struct device *dev)
- 
- 	return false;
- }
-+
-+void __init mem_encrypt_init(void)
-+{
-+	if (!sme_me_mask && !kvm_mem_protected())
-+		return;
-+
-+	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
-+	swiotlb_update_mem_attributes();
-+
-+	/*
-+	 * With SEV, we need to unroll the rep string I/O instructions.
-+	 */
-+	if (sev_active())
-+		static_branch_enable(&sev_enable_key);
-+
-+	if (sme_me_mask) {
-+		pr_info("AMD %s active\n",
-+			sev_active() ? "Secure Encrypted Virtualization (SEV)"
-+			: "Secure Memory Encryption (SME)");
-+	} else {
-+		pr_info("KVM memory protection enabled\n");
-+	}
-+}
+
+== What does this set mitigate? ==
+
+ - Host kernel ”accidental” access to guest data (think speculation)
+
+ - Host kernel induced access to guest data (write(fd, &guest_data_ptr, len))
+
+ - Host userspace access to guest data (compromised qemu)
+
+== What does this set NOT mitigate? ==
+
+ - Full host kernel compromise.  Kernel will just map the pages again.
+
+ - Hardware attacks
+
+
+The patchset is RFC-quality: it works but has known issues that must be
+addressed before it can be considered for applying.
+
+We are looking for high-level feedback on the concept.  Some open
+questions:
+
+ - This protects from some kernel and host userspace read-only attacks,
+   but does not place the host kernel outside the trust boundary. Is it
+   still valuable?
+
+ - Can this approach be used to avoid cache-coherency problems with
+   hardware encryption schemes that repurpose physical bits?
+
+ - The guest kernel must be modified for this to work.  Is that a deal
+   breaker, especially for public clouds?
+
+ - Are the costs of removing pages from the direct map too high to be
+   feasible?
+
+== Series Overview ==
+
+The hardware features protect guest data by encrypting it and then
+ensuring that only the right guest can decrypt it.  This has the
+side-effect of making the kernel direct map and userspace mapping
+(QEMU et al) useless.  But, this teaches us something very useful:
+neither the kernel or userspace mappings are really necessary for normal
+guest operations.
+
+Instead of using encryption, this series simply unmaps the memory. One
+advantage compared to allowing access to ciphertext is that it allows bad
+accesses to be caught instead of simply reading garbage.
+
+Protection from physical attacks needs to be provided by some other means.
+On Intel platforms, (single-key) Total Memory Encryption (TME) provides
+mitigation against physical attacks, such as DIMM interposers sniffing
+memory bus traffic.
+
+The patchset modifies both host and guest kernel. The guest OS must enable
+the feature via hypercall and mark any memory range that has to be shared
+with the host: DMA regions, bounce buffers, etc. SEV does this marking via a
+bit in the guest’s page table while this approach uses a hypercall.
+
+For removing the userspace mapping, use a trick similar to what NUMA
+balancing does: convert memory that belongs to KVM memory slots to
+PROT_NONE: all existing entries converted to PROT_NONE with mprotect() and
+the newly faulted in pages get PROT_NONE from the updated vm_page_prot.
+The new VMA flag -- VM_KVM_PROTECTED -- indicates that the pages in the
+VMA must be treated in a special way in the GUP and fault paths. The flag
+allows GUP to return the page even though it is mapped with PROT_NONE, but
+only if the new GUP flag -- FOLL_KVM -- is specified. Any userspace access
+to the memory would result in SIGBUS. Any GUP access without FOLL_KVM
+would result in -EFAULT.
+
+Any anonymous page faulted into the VM_KVM_PROTECTED VMA gets removed from
+the direct mapping with kernel_map_pages(). Note that kernel_map_pages() only
+flushes local TLB. I think it's a reasonable compromise between security and
+perfromance.
+
+Zapping the PTE would bring the page back to the direct mapping after clearing.
+At least for now, we don't remove file-backed pages from the direct mapping.
+File-backed pages could be accessed via read/write syscalls. It adds
+complexity.
+
+Occasionally, host kernel has to access guest memory that was not made
+shared by the guest. For instance, it happens for instruction emulation.
+Normally, it's done via copy_to/from_user() which would fail with -EFAULT
+now. We introduced a new pair of helpers: copy_to/from_guest(). The new
+helpers acquire the page via GUP, map it into kernel address space with
+kmap_atomic()-style mechanism and only then copy the data.
+
+For some instruction emulation copying is not good enough: cmpxchg
+emulation has to have direct access to the guest memory. __kvm_map_gfn()
+is modified to accommodate the case.
+
+The patchset is on top of v5.7-rc6 plus this patch:
+
+https://lkml.kernel.org/r/20200402172507.2786-1-jimmyassarsson@gmail.com
+
+== Open Issues ==
+
+Unmapping the pages from direct mapping bring a few of issues that have
+not rectified yet:
+
+ - Touching direct mapping leads to fragmentation. We need to be able to
+   recover from it. I have a buggy patch that aims at recovering 2M/1G page.
+   It has to be fixed and tested properly
+
+ - Page migration and KSM is not supported yet.
+
+ - Live migration of a guest would require a new flow. Not sure yet how it
+   would look like.
+
+ - The feature interfere with NUMA balancing. Not sure yet if it's
+   possible to make them work together.
+
+ - Guests have no mechanism to ensure that even a well-behaving host has
+   unmapped its private data.  With SEV, for instance, the guest only has
+   to trust the hardware to encrypt a page after the C bit is set in a
+   guest PTE.  A mechanism for a guest to query the host mapping state, or
+   to constantly assert the intent for a page to be Private would be
+   valuable.
+Kirill A. Shutemov (16):
+  x86/mm: Move force_dma_unencrypted() to common code
+  x86/kvm: Introduce KVM memory protection feature
+  x86/kvm: Make DMA pages shared
+  x86/kvm: Use bounce buffers for KVM memory protection
+  x86/kvm: Make VirtIO use DMA API in KVM guest
+  KVM: Use GUP instead of copy_from/to_user() to access guest memory
+  KVM: mm: Introduce VM_KVM_PROTECTED
+  KVM: x86: Use GUP for page walk instead of __get_user()
+  KVM: Protected memory extension
+  KVM: x86: Enabled protected memory extension
+  KVM: Rework copy_to/from_guest() to avoid direct mapping
+  x86/kvm: Share steal time page with host
+  x86/kvmclock: Share hvclock memory with the host
+  KVM: Introduce gfn_to_pfn_memslot_protected()
+  KVM: Handle protected memory in __kvm_map_gfn()/__kvm_unmap_gfn()
+  KVM: Unmap protected pages from direct mapping
+
+ arch/powerpc/kvm/book3s_64_mmu_hv.c    |   2 +-
+ arch/powerpc/kvm/book3s_64_mmu_radix.c |   2 +-
+ arch/x86/Kconfig                       |  11 +-
+ arch/x86/include/asm/io.h              |   6 +-
+ arch/x86/include/asm/kvm_para.h        |   5 +
+ arch/x86/include/asm/pgtable_types.h   |   1 +
+ arch/x86/include/uapi/asm/kvm_para.h   |   3 +-
+ arch/x86/kernel/kvm.c                  |  24 +-
+ arch/x86/kernel/kvmclock.c             |   2 +-
+ arch/x86/kernel/pci-swiotlb.c          |   3 +-
+ arch/x86/kvm/cpuid.c                   |   3 +
+ arch/x86/kvm/mmu/mmu.c                 |   6 +-
+ arch/x86/kvm/mmu/paging_tmpl.h         |  10 +-
+ arch/x86/kvm/x86.c                     |   9 +
+ arch/x86/mm/Makefile                   |   2 +
+ arch/x86/mm/ioremap.c                  |  16 +-
+ arch/x86/mm/mem_encrypt.c              |  50 ----
+ arch/x86/mm/mem_encrypt_common.c       |  62 ++++
+ arch/x86/mm/pat/set_memory.c           |   8 +
+ drivers/virtio/virtio_ring.c           |   4 +
+ include/linux/kvm_host.h               |  14 +-
+ include/linux/mm.h                     |  12 +
+ include/uapi/linux/kvm_para.h          |   5 +-
+ mm/gup.c                               |  20 +-
+ mm/huge_memory.c                       |  29 +-
+ mm/ksm.c                               |   3 +
+ mm/memory.c                            |  16 +
+ mm/mmap.c                              |   3 +
+ mm/mprotect.c                          |   1 +
+ mm/rmap.c                              |   4 +
+ virt/kvm/async_pf.c                    |   4 +-
+ virt/kvm/kvm_main.c                    | 390 +++++++++++++++++++++++--
+ 32 files changed, 627 insertions(+), 103 deletions(-)
+ create mode 100644 arch/x86/mm/mem_encrypt_common.c
+
 -- 
 2.26.2
 
