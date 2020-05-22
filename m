@@ -2,128 +2,150 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA144C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4333EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DDC2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590171465;
-	bh=5sm5AYmWV9mWrN3CXxji+zYrj9CAOWdQtOxPPpby3TQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XTzhC/o7NEiGQWLqJbb4F8HzZGtW+a10bDcG59C7za3kqzYS6CpHkCBVlSCQA0+ck
-	 2hlUl6sW+F8K/ojXkVPK79iKvTIqEaD9Gg9qxKedKf8x3eOKRA9rn1Ph2L7wF82qLT
-	 +JFQq+DJmnnyoPcjO+FOq6koS91e+RhvhHYR9J8M=
+	by mail.kernel.org (Postfix) with ESMTP id 18F3B206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/T4KpRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgEVSRo (ORCPT
+        id S1730869AbgEVSSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:17:44 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:27085 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVSRo (ORCPT
+        Fri, 22 May 2020 14:18:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52029 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726373AbgEVSSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:17:44 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 04MIHPFT017391;
-        Sat, 23 May 2020 03:17:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04MIHPFT017391
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590171446;
-        bh=K3rGYVbuX5itC10Uy7MCO78NVqbVQ6AyydvbG4IPunc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dhexHP4r5UqBuJyFcetL7gZMMeLBW26NawGnk14bzmlelLVztkIDN1E0gLMszC8iN
-         LfNAqpZeYKV+IeNfOaLaqZvhSN3mqfXxrGu5xsfzdnHN5Zo6ZCY0xBV+wP/5n2E1JK
-         KjVIkJSMIO8yTKTRjacARUmWXPShANGo/FvPtKiJ45Z/qz/o4G2zqbdaz0hm8NjcDJ
-         lVVgK1Xfu8Kc4G8M12/SabtFxb8ZlMw0eyEF1uNRTe5iT31KoNOJVzAMEgwrt8HPq6
-         p0tfWgoGNNeKesnh5O7g9PBkxtcVthZrEZERBCLHkt+9bpTQmI/mZ1YZxgfQsYwon9
-         hkwaiuS8woBfA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id w65so6555458vsw.11;
-        Fri, 22 May 2020 11:17:26 -0700 (PDT)
-X-Gm-Message-State: AOAM533oGn99TT1pavUP+Sf44Nf1QwSo/v0bJfEiVd8xSVYQKEH+aBHY
-        40ZrXEb0voCmCwmW+vL/gv+8yvHA00Wnhk1BVtQ=
-X-Google-Smtp-Source: ABdhPJyegX+5hSC8vQtFsfk2gsG8jhLEllAduD0C3D9DpxotRifsVoWTIhA0Kp06+8I7BRCrvI4FLB9S1OKqCcRKAk4=
-X-Received: by 2002:a05:6102:3231:: with SMTP id x17mr250058vsf.181.1590171445169;
- Fri, 22 May 2020 11:17:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521202716.193316-1-samitolvanen@google.com> <202005211506.2700F86@keescook>
-In-Reply-To: <202005211506.2700F86@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 23 May 2020 03:16:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ1HTTSq-yp0t6Z4V-Z9PHg+O2n=NC89FJJFNQnhaOcSA@mail.gmail.com>
-Message-ID: <CAK7LNAQ1HTTSq-yp0t6Z4V-Z9PHg+O2n=NC89FJJFNQnhaOcSA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 22 May 2020 14:18:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590171509;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m/geKcYtEm6APQ5LEp/KOQcykz/wDN18PTkCVCHlSm8=;
+        b=Y/T4KpRYUlP7KuBDjm5nVEG6x8I/I4EOZObbN0dEw4l9/Q62a2Y+M8jKTX/kx4zfLe+qZo
+        O/Ecn7QYuY54qePkcf6vTAPVz5a2JA1yFxoDdW9sJGBAMtePjLBfPVy5DFF4vR+YkR6XwG
+        /FJKeUdMALyM/6LI3lNu0Th2OTjb8ps=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-ICFmdUvZOSWzvJxQDKLV9w-1; Fri, 22 May 2020 14:18:24 -0400
+X-MC-Unique: ICFmdUvZOSWzvJxQDKLV9w-1
+Received: by mail-qk1-f197.google.com with SMTP id j83so11914736qke.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:18:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=m/geKcYtEm6APQ5LEp/KOQcykz/wDN18PTkCVCHlSm8=;
+        b=dpt9SEHCE3DDjjfkUFpgWCeM7ImoqlAAZhrOG+33ZSujmdiHgysKCyNxL4cR6etV7Y
+         vr+biQFCVFX1AYIOf7AbPexcI4cEa6l+4rkFXHHKy3HdYrAHZOx/WBE4DHObouEGLtkG
+         4FNt1aEdzdyexBTEYd3oTOrQBSGKeMPMAyWiraT6JyY8qvR8hSeLCP4mOgaasDLCs31X
+         jIYNaTR4AYvc7f3q+NmcfimjE5fAZx3jEXRdYuCTlYgI+IgnI8fBEDhzub43S334KYLc
+         AhCAXlGmUtyOX+qzrBedz0pkJL9XX4l354HwPZ9VfWoe6EnCTwXqjJH2tEPoqMEqqNke
+         AeIg==
+X-Gm-Message-State: AOAM532pYgTd4OUyvYBoZpDqJ5GDkdtnxPLVim8U3cPvqmtEsYEcSbRE
+        E3FXapoUIxOzUiye82ywzJdqmNqh9f1OhR4+sUqpr+JqaE7bsHDJqvpe03KH1e5AxaIgRDDARwk
+        48iA/Nquf9b6OFwJsPpKuKvht
+X-Received: by 2002:a37:8705:: with SMTP id j5mr14768893qkd.233.1590171503878;
+        Fri, 22 May 2020 11:18:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzHR3ERTZmvM/CSJPNLHMaIrwwjp4k68hXtLxCPVvFuYCfjYWDQPH4SgEGssR0Gdrz1RwJcHQ==
+X-Received: by 2002:a37:8705:: with SMTP id j5mr14768875qkd.233.1590171503633;
+        Fri, 22 May 2020 11:18:23 -0700 (PDT)
+Received: from Whitewolf.lyude.net (static-173-76-190-23.bstnma.ftas.verizon.net. [173.76.190.23])
+        by smtp.gmail.com with ESMTPSA id x144sm8508643qka.53.2020.05.22.11.18.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 11:18:22 -0700 (PDT)
+Message-ID: <7db8ff3ee32bddfb6f82760468caa86388bee9bd.camel@redhat.com>
+Subject: Re: [PATCH] drm/vblank: Fix -Wformat compile warnings on some arches
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>
+Date:   Fri, 22 May 2020 14:18:21 -0400
+In-Reply-To: <20200521210924.GA1056842@ravnborg.org>
+References: <20200521204647.2578479-1-lyude@redhat.com>
+         <20200521210924.GA1056842@ravnborg.org>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 7:08 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, May 21, 2020 at 01:27:16PM -0700, Sami Tolvanen wrote:
-> > Instead of linking all compilation units again each time vmlinux_link is
-> > called, reuse vmlinux.o from modpost_link.
-> >
-> > With x86_64 allyesconfig, vmlinux_link is called three times and reusing
-> > vmlinux.o reduces the build time ~38 seconds on my system (59% reduction
-> > in the time spent in vmlinux_link).
->
-> Nice! Any time savings at final link is a big cumulative win.
->
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Thu, 2020-05-21 at 23:09 +0200, Sam Ravnborg wrote:
+> On Thu, May 21, 2020 at 04:46:47PM -0400, Lyude Paul wrote:
+> > On some architectures like ppc64le and aarch64, compiling with
+> > -Wformat=1 will throw the following warnings:
+> > 
+> >   In file included from drivers/gpu/drm/drm_vblank.c:33:
+> >   drivers/gpu/drm/drm_vblank.c: In function 'drm_update_vblank_count':
+> >   drivers/gpu/drm/drm_vblank.c:273:16: warning: format '%llu' expects
+> >   argument of type 'long long unsigned int', but argument 4 has type
+> >   'long int' [-Wformat=]
+> >     DRM_DEBUG_VBL("updating vblank count on crtc %u:"
+> >                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >   ./include/drm/drm_print.h:407:22: note: in definition of macro
+> >   'DRM_DEBUG_VBL'
+> >     drm_dbg(DRM_UT_VBL, fmt, ##__VA_ARGS__)
+> >                         ^~~
+> >   drivers/gpu/drm/drm_vblank.c:274:22: note: format string is defined here
+> >            " current=%llu, diff=%u, hw=%u hw_last=%u\n",
+> >                      ~~~^
+> >                      %lu
+> > 
+> > So, fix that with a typecast.
+> > 
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > Co-developed-by: Dave Airlie <airlied@redhat.com>
 > > ---
-> >  scripts/link-vmlinux.sh | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> >
-> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> > index d09ab4afbda4..c6cc4305950c 100755
-> > --- a/scripts/link-vmlinux.sh
-> > +++ b/scripts/link-vmlinux.sh
-> > @@ -77,11 +77,8 @@ vmlinux_link()
-> >
-> >       if [ "${SRCARCH}" != "um" ]; then
-> >               objects="--whole-archive                        \
-> > -                     ${KBUILD_VMLINUX_OBJS}                  \
-> > +                     vmlinux.o                               \
-> >                       --no-whole-archive                      \
-> > -                     --start-group                           \
-> > -                     ${KBUILD_VMLINUX_LIBS}                  \
-> > -                     --end-group                             \
-> >                       ${@}"
-> >
-> >               ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
->
-> I think the "um" case can be updated as well too, yes?
+> >  drivers/gpu/drm/drm_vblank.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+> > index acb3c3f65b579..1a96db2dd16fa 100644
+> > --- a/drivers/gpu/drm/drm_vblank.c
+> > +++ b/drivers/gpu/drm/drm_vblank.c
+> > @@ -342,7 +342,7 @@ static void drm_update_vblank_count(struct drm_device
+> > *dev, unsigned int pipe,
+> >  
+> >  	DRM_DEBUG_VBL("updating vblank count on crtc %u:"
+> >  		      " current=%llu, diff=%u, hw=%u hw_last=%u\n",
+> > -		      pipe, atomic64_read(&vblank->count), diff,
+> > +		      pipe, (unsigned long long)atomic64_read(&vblank->count),
+> > diff,
+> >  		      cur_vblank, vblank->last);
+> 
+> While touching this you could consider introducing drm_dbg_vbl().
+> An maybe as a follow-up patch replace all logging in this file with the drm_*
+> variants.
 
-I agree.
+ok - no promises when I can actually get to this though, I've got a lot on my
+plate ATM
+> 
+> 	Sam
+> 
+> >  
+> >  	if (diff == 0) {
+> > -- 
+> > 2.26.2
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-I changed the um part, then ARCH=um build is successful.
-
-
-
-
-
-
-
-> Also, I think the comment above modpost_link() needs to be updated now
-> to reflect the nature of how vmlinux.o gets used after this patch.
->
-> --
-> Kees Cook
-
-
-
--- 
-Best Regards
-Masahiro Yamada
