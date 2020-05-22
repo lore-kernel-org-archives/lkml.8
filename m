@@ -2,336 +2,217 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB76C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B99CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218D620757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1890120759
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXM6lU7h"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DoicN+vf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgEVFzY (ORCPT
+        id S1727942AbgEVF4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:55:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22520 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726798AbgEVFzY (ORCPT
+        Fri, 22 May 2020 01:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgEVF4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:55:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590126921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=rLKxeVDwjfxiw38I4xWn7gigjYTT0PUzgJGXylCWNk8=;
-        b=DXM6lU7hLmCtEQo7LO05uHeocdPu33gQ8/OXPfV2BHssu6oD/2KapJuFUQhvJK7l97ZZAM
-        UlUy6KNpdYOLcxkiIJy7bgXsmBjbali5Eyn7w72uv8La6doxhi6ysH819ERQARqGedplvf
-        kGXvMmTu0B72Wgu+zTwwNxSwUTfwby8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-TieoHGhBNBeZcN6oR4X9RA-1; Fri, 22 May 2020 01:55:17 -0400
-X-MC-Unique: TieoHGhBNBeZcN6oR4X9RA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30836EC1A0;
-        Fri, 22 May 2020 05:55:14 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-112-157.ams2.redhat.com [10.36.112.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB8166248F;
-        Fri, 22 May 2020 05:54:59 +0000 (UTC)
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?UTF-8?q?Micha=C5=82=20C=C5=82api=C5=84ski?= 
-        <mclapinski@google.com>, Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Adrian Reber <areber@redhat.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>
-Subject: [PATCH] capabilities: Introduce CAP_RESTORE
-Date:   Fri, 22 May 2020 07:53:50 +0200
-Message-Id: <20200522055350.806609-1-areber@redhat.com>
+        Fri, 22 May 2020 01:56:39 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A840C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 22:56:39 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 63so7420301oto.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 22:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=xuMkRmj7HE1TUvvSzA0QEvz2ex2xVPIDBfTSJuTOfeM=;
+        b=DoicN+vf5RhMplKcLT6Q88DGW2yRh2mPk5cdDgjAhGMTK0/qjr+Im1t6vFCyxp6nlk
+         aaCqtH6peZqvmRbNxpNCrkEdjbZ3400UA67sK79laJCnob5U9hYXowk2Sj7r9FNrh5Ak
+         DCMwtt50NogFtmaDdYVDQrJytC57uIZulPFtxNwBIsTG8CEhcQfi1DrnV7qtG/gRVV6z
+         42++D8/WRiQ0NmxYrY7tZJiaztrgt2Lm8Saycau9jIQE8b86ABAue2LWTPBp/z+C0i0P
+         TJ9SoGBwzJd1ZMR9CKaBhF28RQtNbpjQo0V5JLPoHs+E3DXL8bH2wt0tAOcjrgfX9y55
+         VBZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=xuMkRmj7HE1TUvvSzA0QEvz2ex2xVPIDBfTSJuTOfeM=;
+        b=jQgWDQAw58NO1Qqf27/RZRIClAUG7tEZw6r3hajtC8T4bGAne1tQTdPPUlEbNW2sJt
+         KkhrGCEglWECjFxGIvzHs5a8Ai20X0XF+QdXrLqdKXciJJ/llM7Ob+y9f13IZInPHDRe
+         H4EC6PxUV1fjUGv9F+BO/cYcqZvGjcPHBJW9882VqtW5toVyNcGZMHHSJnhWO63TEHt5
+         Zycw7UfClNjKRlnTg+0MFLlzS0iVo38G5yDVl/XRfHDV0R3dUFo6Dgl2cdpd0vu3kVN3
+         8ov+zZnFJ7cGrORsBISOZ8roCFvoey32enutBU6t3Ij4yMf5x7pfbNaPjI3grzMGEa3p
+         xT9w==
+X-Gm-Message-State: AOAM533zXWABDWAuUi1kL1pL692YlD6QWqPCQgAZoLHOh2zMON/ylqmv
+        M2+IeDFaRe6LhR/MQLbInR3SPQ==
+X-Google-Smtp-Source: ABdhPJzCalQObzgSFGb19GhNEMR5QmicKyzdXqH+w02qvkfyMP6HhEUzFPOl66qMcsTFeD0Vy+CjrA==
+X-Received: by 2002:a9d:6645:: with SMTP id q5mr9424059otm.211.1590126998592;
+        Thu, 21 May 2020 22:56:38 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id y23sm2225479otk.10.2020.05.21.22.56.36
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 21 May 2020 22:56:37 -0700 (PDT)
+Date:   Thu, 21 May 2020 22:56:20 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH mmotm] mm/swap: fix livelock in __read_swap_cache_async()
+Message-ID: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables CRIU to checkpoint and restore a process as non-root.
+I've only seen this livelock on one machine (repeatably, but not to
+order), and not fully analyzed it - two processes seen looping around
+getting -EEXIST from swapcache_prepare(), I guess a third (at lower
+priority? but wanting the same cpu as one of the loopers? preemption
+or cond_resched() not enough to let it back in?) set SWAP_HAS_CACHE,
+then went off into direct reclaim, scheduled away, and somehow could
+not get back to add the page to swap cache and let them all complete.
 
-Over the last years CRIU upstream has been asked a couple of time if it
-is possible to checkpoint and restore a process as non-root. The answer
-usually was: 'almost'.
+Restore the page allocation in __read_swap_cache_async() to before
+the swapcache_prepare() call: "mm: memcontrol: charge swapin pages
+on instantiation" moved it outside the loop, which indeed looks much
+nicer, but exposed this weakness.  We used to allocate new_page once
+and then keep it across all iterations of the loop: but I think that
+just optimizes for a rare case, and complicates the flow, so go with
+the new simpler structure, with allocate+free each time around (which
+is more considerate use of the memory too).
 
-The main blocker to restore a process was that selecting the PID of the
-restored process, which is necessary for CRIU, is guarded by CAP_SYS_ADMIN.
+Fix the comment on the looping case, which has long been inaccurate:
+it's not a racing get_swap_page() that's the problem here.
 
-In the last two years the questions about checkpoint/restore as non-root
-have increased and especially in the last few months we have seen
-multiple people inventing workarounds.
+Fix the add_to_swap_cache() and mem_cgroup_charge() error recovery:
+not swap_free(), but put_swap_page() to undo SWAP_HAS_CACHE, as was
+done before; but delete_from_swap_cache() already includes it.
 
-The use-cases so far and their workarounds:
+And one more nit: I don't think it makes any difference in practice,
+but remove the "& GFP_KERNEL" mask from the mem_cgroup_charge() call:
+add_to_swap_cache() needs that, to convert gfp_mask from user and page
+cache allocation (e.g. highmem) to radix node allocation (lowmem), but
+we don't need or usually apply that mask when charging mem_cgroup.
 
- * Checkpoint/Restore in an HPC environment in combination with
-   a resource manager distributing jobs. Users are always running
-   as non root, but there was the desire to provide a way to
-   checkpoint and restore long running jobs.
-   Workaround: setuid wrapper to start CRIU as root as non-root
-   https://github.com/FredHutch/slurm-examples/blob/master/checkpointer/lib/checkpointer/checkpointer-suid.c
- * Another use case to checkpoint/restore processes as non-root
-   uses as workaround a non privileged process which cycles through
-   PIDs by calling fork() as fast as possible with a rate of
-   100,000 pids/s instead of writing to ns_last_pid
-   https://github.com/twosigma/set_ns_last_pid
- * Fast Java startup using checkpoint/restore.
-   We have been in contact with JVM developers who are integrating
-   CRIU into a JVM to decrease the startup time.
-   Workaround so far: patch out CAP_SYS_ADMIN checks in the kernel
- * Container migration as non root. There are people already
-   using CRIU to migrate containers as non-root. The solution
-   there is to run it in a user namespace. So if you are able
-   to carefully setup your environment with the namespaces
-   it is already possible to restore a container/process as non-root.
-   Unfortunately it is not always possible to setup an environment
-   in such a way and for easier access to non-root based container
-   migration this patch is also required.
-
-There are probably a few more things guarded by CAP_SYS_ADMIN required
-to run checkpoint/restore as non-root, but by applying this patch I can
-already checkpoint and restore processes as non-root. As there are
-already multiple workarounds I would prefer to do it correctly in the
-kernel to avoid that CRIU users are starting to invent more workarounds.
-
-I have used the following tests to verify that this change works as
-expected by setting the new capability CAP_RESTORE on the two resulting
-test binaries:
-
-$ cat ns_last_pid.c
- // http://efiop-notes.blogspot.com/2014/06/how-to-set-pid-using-nslastpid.html
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <sys/file.h>
- #include <sys/types.h>
- #include <unistd.h>
-
-int main(int argc, char *argv[])
-{
-	pid_t pid, new_pid;
-	char buf[32];
-	int fd;
-
-	if (argc != 2)
-		return 1;
-
-	printf("Opening ns_last_pid...\n");
-	fd = open("/proc/sys/kernel/ns_last_pid", O_RDWR | O_CREAT, 0644);
-	if (fd < 0) {
-		perror("Cannot open ns_last_pid");
-		return 1;
-	}
-
-	printf("Locking ns_last_pid...\n");
-	if (flock(fd, LOCK_EX)) {
-		close(fd);
-		printf("Cannot lock ns_last_pid\n");
-		return 1;
-	}
-
-	pid = atoi(argv[1]);
-	snprintf(buf, sizeof(buf), "%d", pid - 1);
-	printf("Writing pid-1 to ns_last_pid...\n");
-	if (write(fd, buf, strlen(buf)) != strlen(buf)) {
-		printf("Cannot write to buf\n");
-		return 1;
-	}
-
-	printf("Forking...\n");
-	new_pid = fork();
-	if (new_pid == 0) {
-		printf("I am the child!\n");
-		exit(0);
-	} else if (new_pid == pid)
-		printf("I am the parent. My child got the pid %d!\n", new_pid);
-	else
-		printf("pid (%d) does not match expected pid (%d)\n", new_pid, pid);
-
-	printf("Cleaning up...\n");
-	if (flock(fd, LOCK_UN))
-		printf("Cannot unlock\n");
-	close(fd);
-	return 0;
-}
-$ id -u; /home/libcap/ns_last_pid 300000
-1001
-Opening ns_last_pid...
-Locking ns_last_pid...
-Writing pid-1 to ns_last_pid...
-Forking...
-I am the parent. My child got the pid 300000!
-I am the child!
-Cleaning up...
-
-For the clone3() based approach:
-$ cat clone3_set_tid.c
- #define _GNU_SOURCE
- #include <linux/sched.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <sys/syscall.h>
- #include <unistd.h>
-
- #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-
-int main(int argc, char *argv[])
-{
-	struct clone_args c_args = { };
-	pid_t pid, new_pid;
-
-	if (argc != 2)
-		return 1;
-
-	pid = atoi(argv[1]);
-	c_args.set_tid = ptr_to_u64(&pid);
-	c_args.set_tid_size = 1;
-
-	printf("Forking...\n");
-	new_pid = syscall(__NR_clone3, &c_args, sizeof(c_args));
-	if (new_pid == 0) {
-		printf("I am the child!\n");
-		exit(0);
-	} else if (new_pid == pid)
-		printf("I am the parent. My child got the pid %d!\n", new_pid);
-	else
-		printf("pid (%d) does not match expected pid (%d)\n", new_pid, pid);
-	printf("Done\n");
-
-	return 0;
-}
-$ id -u; /home/libcap/clone3_set_tid 300000
-1001
-Forking...
-I am the parent. My child got the pid 300000!
-Done
-I am the child!
-
-Signed-off-by: Adrian Reber <areber@redhat.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
 ---
- include/linux/capability.h          | 5 +++++
- include/uapi/linux/capability.h     | 9 ++++++++-
- kernel/pid.c                        | 2 +-
- kernel/pid_namespace.c              | 2 +-
- security/selinux/include/classmap.h | 5 +++--
- 5 files changed, 18 insertions(+), 5 deletions(-)
+Mostly fixing mm-memcontrol-charge-swapin-pages-on-instantiation.patch
+but now I see that mm-memcontrol-delete-unused-lrucare-handling.patch
+made a further change here (took an arg off the mem_cgroup_charge call):
+as is, this patch is diffed to go on top of both of them, and better
+that I get it out now for Johannes look at; but could be rediffed for
+folding into blah-instantiation.patch later.
 
-diff --git a/include/linux/capability.h b/include/linux/capability.h
-index b4345b38a6be..1278313cb2bc 100644
---- a/include/linux/capability.h
-+++ b/include/linux/capability.h
-@@ -261,6 +261,11 @@ static inline bool bpf_capable(void)
- 	return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
- }
+Earlier in the day I promised two patches to __read_swap_cache_async(),
+but find now that I cannot quite justify the second patch: it makes a
+slight adjustment in swapcache_prepare(), then removes the redundant
+__swp_swapcount() && swap_slot_cache_enabled business from blah_async().
+
+I'd still like to do that, but this patch here brings back the
+alloc_page_vma() in between them, and I don't have any evidence to
+reassure us that I'm not then pessimizing a readahead case by doing
+unnecessary allocation and free. Leave it for some other time perhaps.
+
+ mm/swap_state.c |   52 +++++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 23 deletions(-)
+
+--- 5.7-rc6-mm1/mm/swap_state.c	2020-05-20 12:21:56.149694170 -0700
++++ linux/mm/swap_state.c	2020-05-21 20:17:50.188773901 -0700
+@@ -392,56 +392,62 @@ struct page *__read_swap_cache_async(swp
+ 			return NULL;
  
-+static inline bool restore_ns_capable(struct user_namespace *ns)
-+{
-+	return ns_capable(ns, CAP_RESTORE) || ns_capable(ns, CAP_SYS_ADMIN);
-+}
+ 		/*
++		 * Get a new page to read into from swap.  Allocate it now,
++		 * before marking swap_map SWAP_HAS_CACHE, when -EEXIST will
++		 * cause any racers to loop around until we add it to cache.
++		 */
++		page = alloc_page_vma(gfp_mask, vma, addr);
++		if (!page)
++			return NULL;
 +
- /* audit system wants to get cap info from files as well */
- extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
++		/*
+ 		 * Swap entry may have been freed since our caller observed it.
+ 		 */
+ 		err = swapcache_prepare(entry);
+ 		if (!err)
+ 			break;
  
-diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-index c7372180a0a9..4bcc4e3d41ff 100644
---- a/include/uapi/linux/capability.h
-+++ b/include/uapi/linux/capability.h
-@@ -406,7 +406,14 @@ struct vfs_ns_cap_data {
-  */
- #define CAP_BPF			39
+-		if (err == -EEXIST) {
+-			/*
+-			 * We might race against get_swap_page() and stumble
+-			 * across a SWAP_HAS_CACHE swap_map entry whose page
+-			 * has not been brought into the swapcache yet.
+-			 */
+-			cond_resched();
+-			continue;
+-		}
++		put_page(page);
++		if (err != -EEXIST)
++			return NULL;
  
--#define CAP_LAST_CAP         CAP_BPF
-+
-+/* Allow checkpoint/restore related operations */
-+/* Allow PID selection during clone3() */
-+/* Allow writing to ns_last_pid */
-+
-+#define CAP_RESTORE		40
-+
-+#define CAP_LAST_CAP         CAP_RESTORE
- 
- #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 3122043fe364..bbc26f2bcff6 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -198,7 +198,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 			if (tid != 1 && !tmp->child_reaper)
- 				goto out_free;
- 			retval = -EPERM;
--			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-+			if (!restore_ns_capable(tmp->user_ns))
- 				goto out_free;
- 			set_tid_size--;
- 		}
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 0e5ac162c3a8..f58186b31ce6 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -269,7 +269,7 @@ static int pid_ns_ctl_handler(struct ctl_table *table, int write,
- 	struct ctl_table tmp = *table;
- 	int ret, next;
- 
--	if (write && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
-+	if (write && !restore_ns_capable(pid_ns->user_ns))
- 		return -EPERM;
+-		return NULL;
++		/*
++		 * We might race against __delete_from_swap_cache(), and
++		 * stumble across a swap_map entry whose SWAP_HAS_CACHE
++		 * has not yet been cleared.  Or race against another
++		 * __read_swap_cache_async(), which has set SWAP_HAS_CACHE
++		 * in swap_map, but not yet added its page to swap cache.
++		 */
++		cond_resched();
+ 	}
  
  	/*
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 98e1513b608a..f8b8f12a6ebd 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -27,9 +27,10 @@
- 	    "audit_control", "setfcap"
+-	 * The swap entry is ours to swap in. Prepare a new page.
++	 * The swap entry is ours to swap in. Prepare the new page.
+ 	 */
  
- #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
--		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf"
-+		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf", \
-+		"restore"
+-	page = alloc_page_vma(gfp_mask, vma, addr);
+-	if (!page)
+-		goto fail_free;
+-
+ 	__SetPageLocked(page);
+ 	__SetPageSwapBacked(page);
  
--#if CAP_LAST_CAP > CAP_BPF
-+#if CAP_LAST_CAP > CAP_RESTORE
- #error New capability defined, please update COMMON_CAP2_PERMS.
- #endif
+ 	/* May fail (-ENOMEM) if XArray node allocation failed. */
+-	if (add_to_swap_cache(page, entry, gfp_mask & GFP_KERNEL))
++	if (add_to_swap_cache(page, entry, gfp_mask & GFP_KERNEL)) {
++		put_swap_page(page, entry);
+ 		goto fail_unlock;
++	}
  
-
-base-commit: e8f3274774b45b5f4e9e3d5cad7ff9f43ae3add5
--- 
-2.26.2
-
+-	if (mem_cgroup_charge(page, NULL, gfp_mask & GFP_KERNEL))
+-		goto fail_delete;
++	if (mem_cgroup_charge(page, NULL, gfp_mask)) {
++		delete_from_swap_cache(page);
++		goto fail_unlock;
++	}
+ 
+-	/* Initiate read into locked page */
++	/* Caller will initiate read into locked page */
+ 	SetPageWorkingset(page);
+ 	lru_cache_add_anon(page);
+ 	*new_page_allocated = true;
+ 	return page;
+ 
+-fail_delete:
+-	delete_from_swap_cache(page);
+ fail_unlock:
+ 	unlock_page(page);
+ 	put_page(page);
+-fail_free:
+-	swap_free(entry);
+ 	return NULL;
+ }
+ 
