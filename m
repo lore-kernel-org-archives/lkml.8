@@ -2,118 +2,168 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E34D620723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Hjb4bMhd"
+	by mail.kernel.org (Postfix) with ESMTP id EDED720738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590169537;
+	bh=CY9Z+C6jpkHLQsA3R1Q2wFKzhZg5yYNuZ3t61NMz0x4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CuO2OMp/Nspnk80VzOupi560qBPFRTn89PRtMGY0IZOIQsSn8DQhVySPc+4mcGgeN
+	 csXC6ISKHtkgqxcidt4QrRl0fmsdetOFWya4xESSTX6BYGrr0eMQGVSes7YJ7P+Klr
+	 WRU9BkagQbnyUmFzLDDO16n+wxaBKvvZAzEXo21U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgEVRpF (ORCPT
+        id S1730810AbgEVRpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:45:05 -0400
-Received: from mout.gmx.net ([212.227.15.15]:56431 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgEVRpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:45:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590169391;
-        bh=7erRvSoNhA31wmPB9BbJ7P0hKnwItvhoaIS4kuMC6eU=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Hjb4bMhdlR7sHNtV5d99R1eTX76MUX6R8s19tj8FxXmSqZm7UWLO3ZUNpjUo7IH2o
-         h3bW8Xfb9O/dq0ewfIpoSfoDR+iULVdTEEaTuQpdOJgDNJ6zlv1k1v82zqJHSwKDCf
-         aEtdaMHfhJenrWaYH8+6zqeH1tUdh9Y8OTnWl+/c=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MEUzA-1jnmHF0YFG-00G09d; Fri, 22
- May 2020 19:43:11 +0200
-Date:   Fri, 22 May 2020 19:43:08 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        "Lev R . Oshvang ." <levonshe@gmail.com>
-Subject: Re: [PATCH v2] firewire: Remove function callback casts
-Message-ID: <20200522174308.GB3059@ubuntu>
-References: <20200519173425.4724-1-oscar.carter@gmx.com>
- <20200520061624.GA25690@workstation>
+        Fri, 22 May 2020 13:45:36 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:42791 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgEVRpf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:45:35 -0400
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 04MHjCZp006529;
+        Sat, 23 May 2020 02:45:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 04MHjCZp006529
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590169513;
+        bh=rLsdMRfeyuDHWZtXBc09c+5yI+XIy6MzzofNEb/odbw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zBTBGk+O+hyiLzZsF+Q0X+nbbIz2KqTdlyhC/mNZT55Z+cORFp/A5D4mv9OxwL0yc
+         NJFIvCN8oBf4MCSGXRhnLJK9kgbzQ2YccpuYtpGog4lbqeuRt2ZRwtSizIKSecAmK/
+         8bnrV+0MU0jXoAOc6c6wusKnu26MiusDLCMAipVtuXMU3JnS3nG09apay6FxOPXaBR
+         g+9xI+1CjmHL80OiprmxondHmdqQ7nqMJGvIF6NTq97MnSFR5MmTjmeVFuiYsn3mDo
+         9kvFg89x500tvJDYb3j53M+Rd0g3jbUG3RPtEtHiML9s14xje8mtlimlzgwT1kPZuY
+         3460j2tbJDOzg==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id w188so2780220vkf.0;
+        Fri, 22 May 2020 10:45:13 -0700 (PDT)
+X-Gm-Message-State: AOAM5335BaVSD/zaNMVjajizNRU2R3fybcvIzG7t1G3AxSyWcAsRrLrw
+        lp9QH/RqvWGHME3mJsevEsSOS/teiioRA3bEwvs=
+X-Google-Smtp-Source: ABdhPJyOlAJ/aga5nvnqTOhe/Z0ZcHj8m7VZKlrl4mv6P2/AltNmsoqN1pIH2MyR9G1brNqjN++8ASQrq4QTgorz0f8=
+X-Received: by 2002:a1f:b2c9:: with SMTP id b192mr10171152vkf.73.1590169512338;
+ Fri, 22 May 2020 10:45:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520061624.GA25690@workstation>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:jDAMWBN6i5llv7LuCYMCYADueBSFhw0jntdkKB6FtXgQAyx1hJ0
- UK/B3pkqK3wWld06+HtcL3GkrxXPNbPMNAqzx2IiY12Voy7K4SX+svFljoBoq5qXh/T7Rig
- z25dmI8qQlmwS63YSWgzLAI0IC/I/rDgLrfpj7LYiKY5vHVkg4mYH0yBuPPN1gBnQLtb+F/
- AguVGShVfnafJ5CncWSSg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GoeMsB1jtDE=:f9abdmhLj0xQdohvGCIalV
- RRr72hC0sw4q03hwh9q6iZsJqgjZL+erf6n/hPv891ZNZ0EmrMajxwVeV1piFHMEQ1PNxe9ZO
- R0CO+94Jkk6VaWfPzxD9WWVfMD1U4o4Q60bshu6W94Eb+DpNjgwzqbt8XaiXgu4xF/kxgi6AD
- jTnjNbZ/5YXPsL+VKZk7f1eEjyeJ49Vml8+aKYzKc+M+z1hMOIQFbTZcDK+2E0UPmx6rT7A5V
- 6DxS0MTInOhwCEMAldomHIUzDTGkCVGqLc7uqYH0u/t6ctXaoMXNdKVGyjKqDbjcHkYwdoenv
- 7Rlz1ho0CewPY8rdpdsRPCVNzQ3yAk63kjdEmJTlvK76723QOu8KuVG9KSjL85dCi0y1i0Up6
- mfUX8KdAyBqk3hf8STiJ6E9lf5bbWiGgN8BYDG3QvaaMi2YVbNqjbG/NgU2HZBBuo+2JZXKk/
- /RO6puoh0Woykd4I2glBIzHgoAn4Lm8BDBi1OY5/Chx1sKBTxYAqtmFW7KmNyq9zg7QSAKSze
- Lzdw+ZUtuDWpZgNWftZur8yIMd24KzXcT5VM26Vq4dwIFzYkbhyvr1d2Ui2z/8b4bV8rohOfW
- 32F+csIz3oVjEsS3MF0Qzd7nW6mBKSaQSPJ817BPh8aWgtqfx6jt2fbCPTNZR4xHli8rF2Kxc
- 4Z8cJSGrGyeUIw1GpWX1isqAVFz9P1kQBAgWPf1gg9o6gEJY01D49F5OJdOWBpOYV0MiRQP+j
- QGddvUqdWnbHx0kBirh/xHbESmUmMoWcnfCWBZF7Yxq89CSxY3NaFO8H/EIdn4wjyK5BMIM/o
- 6fFodZTD9HBhh7mJA0xto2tGLlexg1gcOxdERLm9d/idYGQz4D1847at8QQoHSjofFSlTJnIo
- TGv4kc770h463ljQXj5ail7euijbHEgqol3fyuxrS5r5ss4S8qDIgxVF0pjjKXvWauJ02QfFj
- m/9N/VKLX+uuZfnzAcDwFI0KxrH/Wf8m3KGiO16g5Jt+5tnbkKagWmBFtzL+s7fSGlC/bNXMx
- FfaAaWscHhBfqIf7OKdh4iagaUAftDCCttPxJuTLv7kgQsiN3VcrhMVZw+WWDVgo0bxORmirk
- Y0VTuutuRLEuSNhnNz0XNqyeNiKTtJ+lptB3svnF70r/OsHJYeypP3rd69hSDygUEhgAHpjVX
- K8/xowWz3py24xUVPm8BaobxgIuMgGrnIOw1/BGo/XnGZ4MM2390yOLpjMIepLDJ1bccAq4uj
- eatIuI5MNkUo7Kj9P
-Content-Transfer-Encoding: quoted-printable
+References: <20200521202716.193316-1-samitolvanen@google.com> <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
+In-Reply-To: <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 23 May 2020 02:44:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
+Message-ID: <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
++ Michael, and PPC ML.
 
-On Wed, May 20, 2020 at 03:16:24PM +0900, Takashi Sakamoto wrote:
-> Hi,
->
-> I'm an author of ALSA firewire stack and thanks for the patch. I agree w=
-ith
-> your intention to remove the cast of function callback toward CFI build.
->
-> Practically, the isochronous context with FW_ISO_CONTEXT_RECEIVE_MULTICH=
-ANNEL
-> is never used by in-kernel drivers. Here, I propose to leave current
-> kernel API (fw_iso_context_create() with fw_iso_callback_t) as is.
-> Alternatively, a new kernel API for the context (e.g.
-> fw_iso_mc_context_create() with fw_iso_mc_callback_t). This idea leaves
-> current drivers as is and the change is done inner firewire-core driver,
-> therefore existent kernel API is not changed.
->
-It sounds good to me.
+They may know something about the reason of failure.
 
-> Later I post two patches for the proposal. I'd like you to review it and
-> I'm glad to receive your comments.
->
-I will take a look at your proposal. Thanks for your time and work.
->
-> Regards
->
-> Takashi Sakamoto
 
-Thanks,
-Oscar Carter
+On Sat, May 23, 2020 at 2:41 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Fri, May 22, 2020 at 5:27 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > Instead of linking all compilation units again each time vmlinux_link is
+> > called, reuse vmlinux.o from modpost_link.
+> >
+> > With x86_64 allyesconfig, vmlinux_link is called three times and reusing
+> > vmlinux.o reduces the build time ~38 seconds on my system (59% reduction
+> > in the time spent in vmlinux_link).
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  scripts/link-vmlinux.sh | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> > index d09ab4afbda4..c6cc4305950c 100755
+> > --- a/scripts/link-vmlinux.sh
+> > +++ b/scripts/link-vmlinux.sh
+> > @@ -77,11 +77,8 @@ vmlinux_link()
+> >
+> >         if [ "${SRCARCH}" != "um" ]; then
+> >                 objects="--whole-archive                        \
+> > -                       ${KBUILD_VMLINUX_OBJS}                  \
+> > +                       vmlinux.o                               \
+> >                         --no-whole-archive                      \
+> > -                       --start-group                           \
+> > -                       ${KBUILD_VMLINUX_LIBS}                  \
+> > -                       --end-group                             \
+> >                         ${@}"
+> >
+> >                 ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
+> >
+> > base-commit: b85051e755b0e9d6dd8f17ef1da083851b83287d
+> > --
+> > 2.27.0.rc0.183.gde8f92d652-goog
+> >
+>
+>
+> I like this patch irrespective of CLANG_LTO, but
+> unfortunately, my build test failed.
+>
+>
+> ARCH=powerpc failed to build as follows:
+>
+>
+>
+>   MODPOST vmlinux.o
+>   MODINFO modules.builtin.modinfo
+>   GEN     modules.builtin
+>   LD      .tmp_vmlinux.kallsyms1
+> vmlinux.o:(__ftr_alt_97+0x20): relocation truncated to fit:
+> R_PPC64_REL14 against `.text'+4b1c
+> vmlinux.o:(__ftr_alt_97+0x164): relocation truncated to fit:
+> R_PPC64_REL14 against `.text'+1cf78
+> vmlinux.o:(__ftr_alt_97+0x288): relocation truncated to fit:
+> R_PPC64_REL14 against `.text'+1dac4
+> vmlinux.o:(__ftr_alt_97+0x2f0): relocation truncated to fit:
+> R_PPC64_REL14 against `.text'+1e254
+> make: *** [Makefile:1125: vmlinux] Error 1
+>
+>
+>
+> I used powerpc-linux-gcc
+> available at
+> https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/
+>
+>
+> Build command:
+>
+> make -j24 ARCH=powerpc  CROSS_COMPILE=powerpc-linux-  defconfig all
+>
+>
+> Could you check it please?
+>
+>
+>
+> I will apply it to my test branch.
+> Perhaps, 0-day bot may find more failure cases.
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
