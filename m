@@ -2,150 +2,107 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D642065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D02207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="RWcaDjP7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jfK/zDIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbgEVP05 (ORCPT
+        id S1730384AbgEVP1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:26:57 -0400
-Received: from mail-eopbgr760059.outbound.protection.outlook.com ([40.107.76.59]:61262
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729929AbgEVP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:26:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NGSm/1i5r7yHTLtnVl7umnYRipEl1qI5GGVb+doPC/x+14XKK9zm8JHWDwqKlli0+V7sYyG2y1CA/jUEtQ4DPvfEmfgrBp6KCE+LnDiQuRhsOWPAeKGs3ScZyECV9WMD0cl/zz3lJCOO+QZGAB6e5FeK8YvbulbHy1RJB6MXJqUF5lLBkOoArYv3kqRv7qOGDv7FEpEibXW8TXcl/WVGo2tBx9d+tdmw/42iaBBj2F9K0Ba0rWyjfOw4coiRjqeRkzmcMD3JVroaXIjYgz1NqH6GJL/tkAuVnpeKoHCO3Y6GklSZTnI5y2kcD9Exy0dWhXN9NTWwbIuhTh/9EGbPWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hY/YVVI+cvmvAy2NzIrGqCGLuJFLj56binIFiW/GK74=;
- b=Eg3MbjHavTVK+IH0PT/8LJ161hLx39vOz63zKL4yVq3hoOmnpoIZBs3IndZGG1udBJvKKTBvVu8rDSIkTwm3FGk7hfybRcgBjaCeV+SDps6bL14U2PTcPKVadLFmWsQeVL7QwgaqckhAAbc7AvnHS7DIU+roWVbyXHRrHfqiKB3O8omNpVky0HocLOzjk4vlQqRsHr1lqBa5qshla9DUKNKed0rH/jpyvmNEP03rEcQhFT2ZvtQIAZhSTX970oQpOAOLLzatfrfp7VLkIGgaG0Px3101kWNOkKYfsTwgVgvRyLhjx3FCX4Ar0AebK56wCCYk5/Yzfn6rycY6j4nRJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=the-dreams.de smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 22 May 2020 11:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729929AbgEVP1L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:27:11 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D57AC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:27:11 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id v4so8580981qte.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:27:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hY/YVVI+cvmvAy2NzIrGqCGLuJFLj56binIFiW/GK74=;
- b=RWcaDjP7ytgkLr8k3eNylu7076lkcQHwP+Al54qdcJKMaL5scABvoggXnFODYCbks2gJC8TNALTOFVTI6c2BNBxB1OFfmF9SM5LSxzdce8lzbH93gISTU1ml3oy1xk3IfaqjSCKAHSyET5rfcodvLHcHRFr8DVMAVXSonxEcmLk=
-Received: from BL0PR02CA0120.namprd02.prod.outlook.com (2603:10b6:208:35::25)
- by DM6PR02MB6731.namprd02.prod.outlook.com (2603:10b6:5:222::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Fri, 22 May
- 2020 15:26:53 +0000
-Received: from BL2NAM02FT041.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:35:cafe::3c) by BL0PR02CA0120.outlook.office365.com
- (2603:10b6:208:35::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
- Transport; Fri, 22 May 2020 15:26:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; the-dreams.de; dkim=none (message not signed)
- header.d=none;the-dreams.de; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT041.mail.protection.outlook.com (10.152.77.122) with Microsoft SMTP
- Server id 15.20.3021.23 via Frontend Transport; Fri, 22 May 2020 15:26:52
- +0000
-Received: from [149.199.38.66] (port=59868 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jc9Z0-0000sR-LN; Fri, 22 May 2020 08:26:22 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jc9ZU-0005l3-Cd; Fri, 22 May 2020 08:26:52 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 04MFQgSS010609;
-        Fri, 22 May 2020 08:26:42 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jc9ZK-0005Wv-G4; Fri, 22 May 2020 08:26:42 -0700
-Subject: Re: [PATCH v2] i2c: cadence: Add an error handling for
- platform_get_irq()
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>, harinik@xilinx.com,
-        soren.brinkmann@xilinx.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200520144821.8069-1-zhengdejin5@gmail.com>
- <2d99f043-f854-8975-86ee-2f0ba1382275@xilinx.com>
- <20200522151459.GK5670@ninjato>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <7763d79e-3a44-2dbe-a4d3-45d40a3a1e02@xilinx.com>
-Date:   Fri, 22 May 2020 17:26:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SRsdOjWWL+ErLjyMojixNVl7s3eXgVVstDINvK3dtXg=;
+        b=jfK/zDIFzAwRiPF5rSe1xq8YO+ZE0VL+EQPe6K4YPFRj9xXRozQLQi0tJM2zyK91BM
+         w6Q6wyRRRq4Qq46NUYu/kcCX1f78ojBrzaVsc9LDiIYA/RuUiiX8vfA7GBkol9Finv11
+         mQ7Ox5f4M3JlcOOKELjHlwqAPzd7yc/GQhYmlEdYOXV+xnBdH0/HrN2sD/BWNxqHT91u
+         rAo5gUjweaCu8QoaGEUC5QVe8xt2NF2nAQIlJ5w++VFJJpSUf/6ig5/aEe3d+a7IVzuF
+         82wUAcK7HdnhoZthoiL4FwdoJXIAvTjfiqfV6kii/d5yWsSktVexR4BbOAqcqg9hjBrg
+         Vgdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SRsdOjWWL+ErLjyMojixNVl7s3eXgVVstDINvK3dtXg=;
+        b=JWA4M9S/BypIn3+9ec2qrTFddPvmB3isEZhj3jri9qsgZPjuG9EL77gjtKRucsi+Wx
+         HX+3jHUM7NKaTBoLhLRv63NppIfqI3OO64vBZDmA58xozQEAqqxgHNJmjh8QK0DlYdUm
+         0g3Lk/GGxmf2NhKGV3GnadLQ+CmwWwXDL5Ag0NDe1fYSBE9Ezd2BYKWBGjIp0qt7rJcU
+         c2vhAyUw/JNjV2aa1L2ayZ+FMXIu2NRRRRdjhIq0Byx4WJxjL8iBvNL5aa+aFQjWTN3F
+         k6xtP0TDioxlFX6Oz/QGz+krPWYRo+amDtGmofRGmzIQv1eVB8Szsw5De9ge8S0GIpaV
+         Q18w==
+X-Gm-Message-State: AOAM530iFS2KFxzCr0T60N/TME8SgsbeQx/Uu553DvBF7rLsbbZ/LT8B
+        EbtS1q/rm6HHA9AS3aN0ZF77az2mTChncgzzCBXIqA==
+X-Google-Smtp-Source: ABdhPJy8zE09hP3ssAEXIS8PrMxrdtczpkONJnriZwX1UvQjiBseW1fjfukwynTIX1jUsud00Bk+uIw6wPtBlxqVO3Q=
+X-Received: by 2002:aed:37e7:: with SMTP id j94mr16165439qtb.57.1590161230357;
+ Fri, 22 May 2020 08:27:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200522151459.GK5670@ninjato>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(136003)(39860400002)(396003)(376002)(46966005)(47076004)(4326008)(8676002)(316002)(110136005)(36756003)(9786002)(82740400003)(478600001)(81166007)(8936002)(70206006)(70586007)(82310400002)(186003)(31686004)(5660300002)(2616005)(426003)(31696002)(356005)(4744005)(2906002)(336012)(44832011)(26005)(43740500002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7ac8933c-37bb-4a77-030a-08d7fe648ded
-X-MS-TrafficTypeDiagnostic: DM6PR02MB6731:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB673156169B3426B51AC27FFDC6B40@DM6PR02MB6731.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 04111BAC64
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +E0WtiPIhtvVXpxdDAAhYYflHvSQTqclXp0dqer4ZbRBr05wVjYnaSzIy5YqxMjUvCgk/i+lliTavJx+1JMsjJwnEwSV9pfuuEnaeLdWlc6TpRMFBmkrCLywCAcs0mvKM27dmwxqDcKckuLXLZXn3u8kAUpacuu/QyXn4qpen4bFuV0VlPbtE7wjM69Sc3E7Iz2RIy4BFs3OF406Z6DKT38SBxOl2QJX39Na6Q1P9DTYokbES0lMixiSncbqUsquAIMmYQD8vfqNbWkE9tMjWO/9GKFqWjzF2FH7DQ70GoD0pnjO5gHAZqIljtlrk/I8dUNqDsSnj+KQUAKkF7csEi2wiCEpn8a2t813Ed80pw2fVV+oP06LEGZIvkpnvRwY4BttZ1VDb/VIwn+gc93UimYWujmRe3ORIyajPWYSqCVwrTxFYNFkz+ioxJzI7h/P
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2020 15:26:52.7459
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ac8933c-37bb-4a77-030a-08d7fe648ded
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6731
+References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
+ <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
+In-Reply-To: <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 22 May 2020 17:26:59 +0200
+Message-ID: <CAMpxmJVCE0RBNqBQw03bT5uqnCk3vDi1ncbNeWj=VvcN1wEaZg@mail.gmail.com>
+Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22. 05. 20 17:14, Wolfram Sang wrote:
-> 
->> The change is valid but the question is if make sense to do it in this
->> way. Some drivers are using devm_request_irq to do do job.
->>
->> For example:
->>  	id->irq = platform_get_irq(pdev, 0);
->>         ret = devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
->>                                   DRIVER_NAME, id);
->>         if (ret)
->> 		return ret;
-> 
-> I like this version better. Maybe we should simply move the
-> platform_get_irq() line to the devm_request_irq() call?
+pt., 22 maj 2020 o 17:06 Matthias Brugger <matthias.bgg@gmail.com> napisa=
+=C5=82(a):
+>
+> On 22/05/2020 14:06, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This adds the driver for the MediaTek STAR Ethernet MAC currently used
+> > on the MT8* SoC family. For now we only support full-duplex.
+>
+> MT85** SoC family, AFAIU it's not used on MT81** devices. Correct?
+>
 
-You know about
-devm_platform_get_and_ioremap_resource()
-usage.
- Maybe that's the way to go. Because as of today there is no way to pass
-position of irq resource.
+MT81** and MT85** are very closely related. This IP is currently used
+on MT85**, MT81** and MT83**. It may be used in new designs in the
+future too.
 
-But I expect it will come in near future.
-
-Thanks,
-Michal
-
+Bart
