@@ -2,178 +2,303 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F025DC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9632078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cdQD/956"
+	by mail.kernel.org (Postfix) with ESMTP id CBFC2206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590124850;
+	bh=c7zC7EA3mQReU2VW0OEdj7Rn03qmDP+qZWkV4bh49hg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B7OzAketaDjJpVYPnmb6gsFIrj11brnCFY/GmsgdR4ZnrbMhZP2bBSe4L881tOqge
+	 3jf78Y8d8HiZqaeJ6JfmAmyuxDvFc58y6IzKvSHXqBU08roq2mFUzx3dmu8Qa3HnXs
+	 SNVHrzJi87sY2g3boDpY4Y5Lez2SSmlns08q9WR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgEVFTp (ORCPT
+        id S1727906AbgEVFUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:19:45 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6855 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbgEVFTe (ORCPT
+        Fri, 22 May 2020 01:20:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36558 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgEVFUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:19:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec760540000>; Thu, 21 May 2020 22:17:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 21 May 2020 22:19:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 21 May 2020 22:19:33 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 05:19:33 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 22 May 2020 05:19:33 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.182]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec760e40006>; Thu, 21 May 2020 22:19:32 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2 4/4] drm/i915: convert get_user_pages() --> pin_user_pages()
-Date:   Thu, 21 May 2020 22:19:31 -0700
-Message-ID: <20200522051931.54191-5-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522051931.54191-1-jhubbard@nvidia.com>
-References: <20200522051931.54191-1-jhubbard@nvidia.com>
+        Fri, 22 May 2020 01:20:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id e11so3738141pfn.3;
+        Thu, 21 May 2020 22:20:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XV4g1eLH5eU7HQYN5ExRZo8EC66pHuJWFUL/99/5lUQ=;
+        b=gFbQMEjRb7A24eeSJRIuIVrRw4JUzk3SvHJVe3WKu/NK4nYIE7JPs0nHHHcUM/2cx2
+         F1yCFskosT0QQE4/oo9eb+nphQSUMlVrqgL3uwUfCDY0KOcdDiW9PactfsYrKnmmyyBU
+         hooJ68XUAdCfaVzrjy6IGB/ysC+4UaNvIeXiNDECLBcyNyiUjOqvn83eYsVXb0QZOhW4
+         T7jqDbPMHyOmdSfKrO6JgvFThHiEE+1nr6sfFxVq6uSUdKmZ2RJrWGxJYZZJ+sst7SJ1
+         ZipKwYemU3L7zuQYyicPErRhUbYvMU81k04Hn7nn+nHf/XhTJvaKnLqBrSrebR64LRFN
+         tlsg==
+X-Gm-Message-State: AOAM531JJIwq+xjviidwlz0rzcOGZ/b6ufo1I5L8U6qtUJCxpVqQb3DQ
+        YDb/pvJlreTvu2tIAAiCiDs=
+X-Google-Smtp-Source: ABdhPJzQMULwCgw2xtMvegjYDudMSTpjW6Ghu7LwHLqK8H2+SLu0p3ctbuD5WXVwcIhChmgssYsjgQ==
+X-Received: by 2002:a63:d318:: with SMTP id b24mr11236491pgg.403.1590124848774;
+        Thu, 21 May 2020 22:20:48 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d126sm5897716pfc.81.2020.05.21.22.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 22:20:47 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 929FA4088B; Fri, 22 May 2020 05:20:46 +0000 (UTC)
+Date:   Fri, 22 May 2020 05:20:46 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     johannes@sipsolutions.net, derosier@gmail.com,
+        greearb@candelatech.com, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, jiri@resnulli.us,
+        briannorris@chromium.org
+Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
+Message-ID: <20200522052046.GY11244@42.do-not-panic.com>
+References: <20200519010530.GS11244@42.do-not-panic.com>
+ <20200519211531.3702593-1-kuba@kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590124628; bh=TYbuD5RgYulyxagO4AixT7wa6RlCT1nu+LHkKhXb+U4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=cdQD/956Uj8zxDJX68I1226jheY/giN2cXc6YxoAkGojYMIBjBOSqti8tVihqaU8i
-         BCOupIc0lXwedQahSpEzQE1ix2Kj1kcWB4TQb4jOVT0dsYvmU9pHYmMGflUDi5zLOJ
-         MUP7yHkx62FunLJL1KNYmaCjdBJlPsN3RITnu93V+Bjv2pyXhc9e6NTAMhFJB9DNIS
-         QusxrgD/Z+P0Jc3MxV75GT4AHYNMMMoOHg02W8SaKfxJc/P68yWnawozzsRqT0XAOA
-         DK5/ZVmsUIHnTkKX1kV+yjA0WZzt1IdEC6Ua6UjmYPzGcSRlkD3Qle1ZOJSUJKeCEb
-         V+sYLIJrxDZOQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519211531.3702593-1-kuba@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
+On Tue, May 19, 2020 at 02:15:30PM -0700, Jakub Kicinski wrote:
+> Add infra for creating devlink instances for a device to report
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+Thanks for doing this series as a PoC, counter to the module_firmware_crash()
+which I proposed to taint the kernel with a firmware crash flag to the kernel
+and module.
 
-[1] Documentation/core-api/pin_user_pages.rst
+For those not famliar about devlink:
 
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
+https://lwn.net/Articles/677967/
+https://www.kernel.org/doc/html/latest/networking/devlink/index.html
 
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c | 22 ++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+The github page also is now 404 as Jiri merged that stuff into iproute2:
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/=
-i915/gem/i915_gem_userptr.c
-index 7ffd7afeb7a5..b55ac7563189 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-@@ -471,7 +471,7 @@ __i915_gem_userptr_get_pages_worker(struct work_struct =
-*_work)
- 					down_read(&mm->mmap_sem);
- 					locked =3D 1;
- 				}
--				ret =3D get_user_pages_remote
-+				ret =3D pin_user_pages_remote
- 					(work->task, mm,
- 					 obj->userptr.ptr + pinned * PAGE_SIZE,
- 					 npages - pinned,
-@@ -507,7 +507,7 @@ __i915_gem_userptr_get_pages_worker(struct work_struct =
-*_work)
- 	}
- 	mutex_unlock(&obj->mm.lock);
-=20
--	release_pages(pvec, pinned);
-+	unpin_user_pages(pvec, pinned);
- 	kvfree(pvec);
-=20
- 	i915_gem_object_put(obj);
-@@ -564,6 +564,7 @@ static int i915_gem_userptr_get_pages(struct drm_i915_g=
-em_object *obj)
- 	struct sg_table *pages;
- 	bool active;
- 	int pinned;
-+	unsigned int gup_flags =3D 0;
-=20
- 	/* If userspace should engineer that these pages are replaced in
- 	 * the vma between us binding this page into the GTT and completion
-@@ -598,11 +599,14 @@ static int i915_gem_userptr_get_pages(struct drm_i915=
-_gem_object *obj)
- 				      GFP_KERNEL |
- 				      __GFP_NORETRY |
- 				      __GFP_NOWARN);
--		if (pvec) /* defer to worker if malloc fails */
--			pinned =3D __get_user_pages_fast(obj->userptr.ptr,
--						       num_pages,
--						       !i915_gem_object_is_readonly(obj),
--						       pvec);
-+		/* defer to worker if malloc fails */
-+		if (pvec) {
-+			if (!i915_gem_object_is_readonly(obj))
-+				gup_flags |=3D FOLL_WRITE;
-+			pinned =3D pin_user_pages_fast_only(obj->userptr.ptr,
-+							  num_pages, gup_flags,
-+							  pvec);
-+		}
- 	}
-=20
- 	active =3D false;
-@@ -620,7 +624,7 @@ static int i915_gem_userptr_get_pages(struct drm_i915_g=
-em_object *obj)
- 		__i915_gem_userptr_set_active(obj, true);
-=20
- 	if (IS_ERR(pages))
--		release_pages(pvec, pinned);
-+		unpin_user_pages(pvec, pinned);
- 	kvfree(pvec);
-=20
- 	return PTR_ERR_OR_ZERO(pages);
-@@ -675,7 +679,7 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *=
-obj,
- 		}
-=20
- 		mark_page_accessed(page);
--		put_page(page);
-+		unpin_user_page(page);
- 	}
- 	obj->mm.dirty =3D false;
-=20
---=20
-2.26.2
+git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 
+> fw crashes. This patch expects the devlink instance to be registered
+> at probe time. I belive to be the cleanest. We can also add a devm
+> version of the helpers, so that we don't have to do the clean up.
+> Or we can go even further and register the devlink instance only
+> once error has happened (for the first time, then we can just
+> find out if already registered by traversing the list like we
+> do here).
+> 
+> With the patch applied and a sample driver converted we get:
+> 
+> $ devlink dev
+> pci/0000:07:00.0
+> 
+> Then monitor for errors:
+> 
+> $ devlink mon health
+> [health,status] pci/0000:07:00.0:
+>   reporter fw
+>     state error error 1 recover 0
+> [health,status] pci/0000:07:00.0:
+>   reporter fw
+>     state error error 2 recover 0
+> 
+> These are the events I triggered on purpose. One can also inspect
+> the health of all devices capable of reporting fw errors:
+> 
+> $ devlink health
+> pci/0000:07:00.0:
+>   reporter fw
+>     state error error 7 recover 0
+> 
+> Obviously drivers may upgrade to the full devlink health API
+> which includes state dump, state dump auto-collect and automatic
+> error recovery control.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+>  include/linux/devlink.h               |  11 +++
+>  net/core/Makefile                     |   2 +-
+>  net/core/devlink_simple_fw_reporter.c | 101 ++++++++++++++++++++++++++
+>  3 files changed, 113 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/devlink.h
+>  create mode 100644 net/core/devlink_simple_fw_reporter.c
+> 
+> diff --git a/include/linux/devlink.h b/include/linux/devlink.h
+> new file mode 100644
+> index 000000000000..2b73987eefca
+> --- /dev/null
+> +++ b/include/linux/devlink.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _LINUX_DEVLINK_H_
+> +#define _LINUX_DEVLINK_H_
+> +
+> +struct device;
+> +
+> +void devlink_simple_fw_reporter_prepare(struct device *dev);
+> +void devlink_simple_fw_reporter_cleanup(struct device *dev);
+> +void devlink_simple_fw_reporter_report_crash(struct device *dev);
+> +
+> +#endif
+> diff --git a/net/core/Makefile b/net/core/Makefile
+> index 3e2c378e5f31..6f1513781c17 100644
+> --- a/net/core/Makefile
+> +++ b/net/core/Makefile
+> @@ -31,7 +31,7 @@ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
+>  obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
+>  obj-$(CONFIG_DST_CACHE) += dst_cache.o
+>  obj-$(CONFIG_HWBM) += hwbm.o
+> -obj-$(CONFIG_NET_DEVLINK) += devlink.o
+> +obj-$(CONFIG_NET_DEVLINK) += devlink.o devlink_simple_fw_reporter.o
+
+This was looking super sexy up to here. This is networking specific.
+We want something generic for *anything* that requests firmware.
+
+I'm afraid this won't work for something generic. I don't think its
+throw-away work though, the idea to provide a generic interface to
+dump firmware through netlink might be nice for networking, or other
+things.
+
+But I have a feeling we'll want something still more generic than this.
+
+So networking may want to be aware that a firmware crash happened as
+part of this network device health thing, but firmware crashing is a
+generic thing.
+
+I have now extended my patch set to include uvents and I am more set on
+that we need the taint now more than ever.
+
+  Luis
+
+>  obj-$(CONFIG_GRO_CELLS) += gro_cells.o
+>  obj-$(CONFIG_FAILOVER) += failover.o
+>  obj-$(CONFIG_BPF_SYSCALL) += bpf_sk_storage.o
+> diff --git a/net/core/devlink_simple_fw_reporter.c b/net/core/devlink_simple_fw_reporter.c
+> new file mode 100644
+> index 000000000000..48dde9123c3c
+> --- /dev/null
+> +++ b/net/core/devlink_simple_fw_reporter.c
+> @@ -0,0 +1,101 @@
+> +#include <linux/devlink.h>
+> +#include <linux/list.h>
+> +#include <linux/mutex.h>
+> +#include <net/devlink.h>
+> +
+> +struct devlink_simple_fw_reporter {
+> +	struct list_head list;
+> +	struct devlink_health_reporter *reporter;
+> +};
+> +
+> +
+> +static LIST_HEAD(devlink_simple_fw_reporters);
+> +static DEFINE_MUTEX(devlink_simple_fw_reporters_mutex);
+> +
+> +static const struct devlink_health_reporter_ops simple_devlink_health = {
+> +	.name = "fw",
+> +};
+> +
+> +static const struct devlink_ops simple_devlink_ops = {
+> +};
+> +
+> +static struct devlink_simple_fw_reporter *
+> +devlink_simple_fw_reporter_find_for_dev(struct device *dev)
+> +{
+> +	struct devlink_simple_fw_reporter *simple_devlink, *ret = NULL;
+> +	struct devlink *devlink;
+> +
+> +	mutex_lock(&devlink_simple_fw_reporters_mutex);
+> +	list_for_each_entry(simple_devlink, &devlink_simple_fw_reporters,
+> +			    list) {
+> +		devlink = priv_to_devlink(simple_devlink);
+> +		if (devlink->dev == dev) {
+> +			ret = simple_devlink;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&devlink_simple_fw_reporters_mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +void devlink_simple_fw_reporter_report_crash(struct device *dev)
+> +{
+> +	struct devlink_simple_fw_reporter *simple_devlink;
+> +
+> +	simple_devlink = devlink_simple_fw_reporter_find_for_dev(dev);
+> +	if (!simple_devlink)
+> +		return;
+> +
+> +	devlink_health_report(simple_devlink->reporter, "firmware crash", NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(devlink_simple_fw_reporter_report_crash);
+> +
+> +void devlink_simple_fw_reporter_prepare(struct device *dev)
+> +{
+> +	struct devlink_simple_fw_reporter *simple_devlink;
+> +	struct devlink *devlink;
+> +
+> +	devlink = devlink_alloc(&simple_devlink_ops,
+> +				sizeof(struct devlink_simple_fw_reporter));
+> +	if (!devlink)
+> +		return;
+> +
+> +	if (devlink_register(devlink, dev))
+> +		goto err_free;
+> +
+> +	simple_devlink = devlink_priv(devlink);
+> +	simple_devlink->reporter =
+> +		devlink_health_reporter_create(devlink, &simple_devlink_health,
+> +					       0, NULL);
+> +	if (IS_ERR(simple_devlink->reporter))
+> +		goto err_unregister;
+> +
+> +	mutex_lock(&devlink_simple_fw_reporters_mutex);
+> +	list_add_tail(&simple_devlink->list, &devlink_simple_fw_reporters);
+> +	mutex_unlock(&devlink_simple_fw_reporters_mutex);
+> +
+> +	return;
+> +
+> +err_unregister:
+> +	devlink_unregister(devlink);
+> +err_free:
+> +	devlink_free(devlink);
+> +}
+> +EXPORT_SYMBOL_GPL(devlink_simple_fw_reporter_prepare);
+> +
+> +void devlink_simple_fw_reporter_cleanup(struct device *dev)
+> +{
+> +	struct devlink_simple_fw_reporter *simple_devlink;
+> +	struct devlink *devlink;
+> +
+> +	simple_devlink = devlink_simple_fw_reporter_find_for_dev(dev);
+> +	if (!simple_devlink)
+> +		return;
+> +
+> +	devlink = priv_to_devlink(simple_devlink);
+> +	devlink_health_reporter_destroy(simple_devlink->reporter);
+> +	devlink_unregister(devlink);
+> +	devlink_free(devlink);
+> +}
+> +EXPORT_SYMBOL_GPL(devlink_simple_fw_reporter_cleanup);
+> -- 
+> 2.25.4
+> 
