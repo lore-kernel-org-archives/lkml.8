@@ -2,28 +2,29 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68D0C2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9818820812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgEVDIO (ORCPT
+        id S1728087AbgEVDI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 23:08:14 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:59167 "EHLO
+        Thu, 21 May 2020 23:08:27 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:50923 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727123AbgEVDIN (ORCPT
+        by vger.kernel.org with ESMTP id S1727876AbgEVDI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 23:08:13 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.106233|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0832929-0.000859812-0.915847;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.HbxBGFJ_1590116882;
+        Thu, 21 May 2020 23:08:26 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2008003|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.101682-0.00181878-0.8965;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.HbxBGFJ_1590116882;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HbxBGFJ_1590116882)
           by smtp.aliyun-inc.com(10.147.41.178);
-          Fri, 22 May 2020 11:08:08 +0800
+          Fri, 22 May 2020 11:08:22 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
         mturquette@baylibre.com, sboyd@kernel.org,
@@ -33,10 +34,12 @@ To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH 0/4] Allwinner A100 Initial support
-Date:   Fri, 22 May 2020 11:07:39 +0800
-Message-Id: <20200522030743.10204-1-frank@allwinnertech.com>
+Subject: [PATCH 4/4] arm64: allwinner: A100: add support for Allwinner Perf1 board
+Date:   Fri, 22 May 2020 11:07:43 +0800
+Message-Id: <20200522030743.10204-5-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200522030743.10204-1-frank@allwinnertech.com>
+References: <20200522030743.10204-1-frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -45,46 +48,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds initial support for allwinner a100 soc,
-which is a 64-bit tablet chip.
+A100 perf1 is an Allwinner A100-based SBC, with the following features:
 
-Frank Lee (4):
-  clk: sunxi-ng: add support for the Allwinner A100 CCU
-  pinctrl: sunxi: add support for the Allwinner A100 pin controller
-  arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
-  arm64: allwinner: A100: add support for Allwinner Perf1 board
+- 1GiB DDR3 DRAM
+- AXP803 PMIC
+- 2 USB 2.0 ports
+- MicroSD slot and on-board eMMC module
+- on-board Nand flash
+- ···
 
- arch/arm64/boot/dts/allwinner/Makefile        |    1 +
- .../allwinner/sun50i-a100-allwinner-perf1.dts |   27 +
- .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  173 +++
- drivers/clk/sunxi-ng/Kconfig                  |   10 +
- drivers/clk/sunxi-ng/Makefile                 |    2 +
- drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  206 +++
- drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   14 +
- drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1255 +++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   14 +
- drivers/pinctrl/sunxi/Kconfig                 |   10 +
- drivers/pinctrl/sunxi/Makefile                |    2 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
- drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  710 ++++++++++
- include/dt-bindings/clock/sun50i-a100-ccu.h   |  141 ++
- include/dt-bindings/clock/sun50i-a100-r-ccu.h |   25 +
- include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
- include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
- 17 files changed, 2781 insertions(+)
+Adds initial support for it, including the UART.
+
+Signed-off-by: Frank Lee <frank@allwinnertech.com>
+---
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../allwinner/sun50i-a100-allwinner-perf1.dts | 27 +++++++++++++++++++
+ 2 files changed, 28 insertions(+)
  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
- create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
- create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
- create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
- create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
 
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e4d3cd0ac5bb..ab780dbdd17b 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+new file mode 100644
+index 000000000000..32c9986920ed
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
++ */
++
++/dts-v1/;
++
++#include "sun50i-a100.dtsi"
++
++/{
++	model = "A100 perf1";
++	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
 -- 
 2.24.0
 
