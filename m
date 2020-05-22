@@ -2,182 +2,75 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0992C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7748420812
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXTVhy4z"
+	by mail.kernel.org (Postfix) with ESMTP id 055E42087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590132516;
+	bh=a+GWZTXoEmAqJ588Ld4QrK6+dfifuM37WVBYkefXSgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xr8Az50GxDEmAyZ7ELmEj83pdk/K6JFilTAf1eqn0ZXQQaA1M+/KkpCBrdtdWyokn
+	 Z99EXtuJGcstn4KjJBjoI8WiEaWus9fo64qCoxGCGDI1zdGRQkU3hhYXXgzpu1XYYj
+	 hcP76efEs4gtLU6CMvTFE8hGDa5FfY6ksmxzn7cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgEVHZq (ORCPT
+        id S1728481AbgEVH2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:25:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22245 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728800AbgEVHZp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:25:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590132343;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HrXzaU1D+L/hYoY5vmL3woDQWDBITRObLiwmxim3cFY=;
-        b=RXTVhy4zhUMEAhZHfdD5qEHU386H4tRDZhknBuNP6vq23aZKiG7ixtuIb1a407Lo9l0HoD
-        XaY1HzJ12NL2Txjkw31Z5Nu2LJEkwNSFZJ0b2B6melB11vg9o8bqRoJN11RCDxA3TLPrfU
-        +pe7aggoxCNYfFfhgbn7CKAQDgfigds=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-vOjMLDpBNLCpFG1wfj5FjA-1; Fri, 22 May 2020 03:25:41 -0400
-X-MC-Unique: vOjMLDpBNLCpFG1wfj5FjA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 22 May 2020 03:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgEVH2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:28:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7685E80183C;
-        Fri, 22 May 2020 07:25:39 +0000 (UTC)
-Received: from localhost (ovpn-12-170.pek2.redhat.com [10.72.12.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 64EFA60CCC;
-        Fri, 22 May 2020 07:25:37 +0000 (UTC)
-Date:   Fri, 22 May 2020 15:25:24 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, cai@lca.pw, mhocko@kernel.org
-Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
- fast_isolate_freepages()
-Message-ID: <20200522072524.GF26955@MiWiFi-R3L-srv>
-References: <20200521014407.29690-1-bhe@redhat.com>
- <20200521092612.GP1059226@linux.ibm.com>
- <20200521155225.GA20045@MiWiFi-R3L-srv>
- <20200521171836.GU1059226@linux.ibm.com>
- <20200522070114.GE26955@MiWiFi-R3L-srv>
+        by mail.kernel.org (Postfix) with ESMTPSA id 94223206DD;
+        Fri, 22 May 2020 07:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590132514;
+        bh=a+GWZTXoEmAqJ588Ld4QrK6+dfifuM37WVBYkefXSgA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=quDWI+OJ7MZQgBlI9ukwhi9CNgoNFN6Y9tPAex3fnyo7GLU8VnsHkTa7ArhP2vU4v
+         6Gul75XflD0bDuPoiv4fGUh+EGcWwuDr8oQkFpY/ulcP2N4/GKtIGR0A2xqdIdA8lG
+         j+IdQd3iTsR9e3UpBG8Zzoaljfcvwbw7+g0fvjZ8=
+Date:   Fri, 22 May 2020 09:27:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
+Subject: Re: [GIT PULL] soundwire updates for v5.8-rc1
+Message-ID: <20200522072751.GA853066@kroah.com>
+References: <20200521142739.GB374218@vkoul-mobl.Dlink>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522070114.GE26955@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200521142739.GB374218@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22/20 at 03:01pm, Baoquan He wrote:
-> > > As I said, the unavailable range includes firmware reserved ranges, and
-> > > holes inside one boot memory section, if that boot memory section haves
-> > > useable memory range, and firmware reserved ranges, and holes. Adding
-> > > them all into memblock seems a little unreasonable, since they are never
-> > > used by system in memblock, buddy or high level memory allocator. But I
-> > > can see that adding them into memblock may have the same effect as the
-> > > old code which is beofre your your patchset applied. Let's see if Mel or
-> > > other people have some saying. I pesonally would not suggest doing it
-> > > like this though.
-> > 
-> > Adding reserved regions to memblock.memory will not have the same effect
-> > as the old code. We anyway have to initialize struct page for these
-> > areas, but unlike the old code we don't need to run them by the
-> > early_pfn_in_nid() checks and we still get rid the
-> > CONFIG_NODES_SPAN_OTHER_NODES option.
+On Thu, May 21, 2020 at 07:57:39PM +0530, Vinod Koul wrote:
+> Hi Greg,
 > 
-> Hmm, I mean adding them to memblock will let us have the same result,
-> they are added into the node, zone where they should be, and marked as
-> reserved, just as the old code did.
+> Please pull to receive updates for soundwire. The big news the
+> sdw_master_device getting completed along with sysfs attributes for
+> master and slave devices. That closes the long cleanup work done by
+> Pierre and Bard for the devices.
 > 
-> Rethink about this, seems adding them into memblock is doable. But
-> we may not need to add them from e820 reserved range, since that will
-> skip hole range which share the same section with usable range, and may
-> need to change code in different ARCHes. How about this:
+> The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 > 
-> We add them into memblock in init_unavailable_range(), memmap_init() will
-> add them into the right node and zone, reserve_bootmem_region() will
-> initialize them and mark them as Reserved.
+>   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 > 
+> are available in the Git repository at:
 > 
-> From d019d0f9e7c958542dfcb142f93d07fcce6c7c22 Mon Sep 17 00:00:00 2001
-> From: Baoquan He <bhe@redhat.com>
-> Date: Fri, 22 May 2020 14:36:13 +0800
-> Subject: [PATCH] mm/page_alloc.c: Add unavailable ranges into memblock
-> 
-> These unavailable ranges shares the same section with the usable range
-> in boot memory, e.g the firmware reserved ranges, and holes.
-> 
-> Previously, they are added into node 0, zone 0 in function
-> init_unavailable_range(), and marked as Reserved. Later, in function
-> memmap_init(), they will be added to appropriate node and zone, where
-> they are covered.
-> 
-> However, after the patchset ("mm: rework free_area_init*() funcitons")
-> is applied, we change to iterate over memblock regions. These unavailable
-> ranges are skipped, and the node and zone adjustment won't be done any
-> more as the old code did. This cause a crash in compaction which is triggered
-> by VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn)).
-> 
-> So let's add these unavailable ranges into memblock and reserve them
-> in init_unavailable_range() instead. With this change, they will be added
-> into appropriate node and zone in memmap_init(), and initialized in
-> reserve_bootmem_region() just like any other memblock reserved regions.
+>   git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/soundwire-5.8-rc1
 
-Seems this is not right. They can't get nid in init_unavailable_range().
-Adding e820 ranges may let them get nid. But the hole range won't be
-added to memblock, and still has the issue.
+Pulled and pushed out, thanks.
 
-Nack this one for now, still considering.
-
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  mm/page_alloc.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 603187800628..3973b5fdfe3f 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -6925,7 +6925,7 @@ static u64 __init init_unavailable_range(unsigned long spfn, unsigned long epfn)
->  static void __init init_unavailable_mem(void)
->  {
->  	phys_addr_t start, end;
-> -	u64 i, pgcnt;
-> +	u64 i, pgcnt, size;
->  	phys_addr_t next = 0;
->  
->  	/*
-> @@ -6934,9 +6934,11 @@ static void __init init_unavailable_mem(void)
->  	pgcnt = 0;
->  	for_each_mem_range(i, &memblock.memory, NULL,
->  			NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL) {
-> -		if (next < start)
-> -			pgcnt += init_unavailable_range(PFN_DOWN(next),
-> -							PFN_UP(start));
-> +		if (next < start) {
-> +			size = PFN_UP(start) - PFN_DOWN(next);
-> +			memblock_add(PFN_DOWN(next), size);
-> +			memblock_reserve(PFN_DOWN(next), size);
-> +		}
->  		next = end;
->  	}
->  
-> @@ -6947,8 +6949,11 @@ static void __init init_unavailable_mem(void)
->  	 * considered initialized. Make sure that memmap has a well defined
->  	 * state.
->  	 */
-> -	pgcnt += init_unavailable_range(PFN_DOWN(next),
-> -					round_up(max_pfn, PAGES_PER_SECTION));
-> +	size = round_up(max_pfn, PAGES_PER_SECTION) - PFN_DOWN(next);
-> +	if (size) {
-> +		memblock_add(PFN_DOWN(next), size);
-> +		memblock_reserve(PFN_DOWN(next), size);
-> +	}
->  
->  	/*
->  	 * Struct pages that do not have backing memory. This could be because
-> -- 
-> 2.17.2
-> 
-
+greg k-h
