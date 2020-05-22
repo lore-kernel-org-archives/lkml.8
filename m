@@ -2,85 +2,68 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3705C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D8B2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3238B20759
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590125573;
+	bh=6pR+6XGvDD997W518VAgh1BZ5r0RWs9xZoUSBvMkuZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WdltY2CjEFH4jfvQGIk3vBABx624DXIMzG++r7amiAYeF7iRFD30/eD1VQpNHn5rK
+	 +Cn+8WhRVeAe5K/dUkxPA0e9u7WvGDbfV9/JqST5bkSK8hnvLjn6jD89HU0Jd9WEX5
+	 R5rNQwsG0kRMWTR+dSfidCqqYi1PFHjh8SYVzpLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgEVFcM (ORCPT
+        id S1728169AbgEVFcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:32:12 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:24072 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726421AbgEVFcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:32:11 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgD3_4vLY8deAmnvAA--.23586S4;
-        Fri, 22 May 2020 13:32:02 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Fri, 22 May 2020 01:32:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgEVFcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 01:32:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B7842073B;
+        Fri, 22 May 2020 05:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590125571;
+        bh=6pR+6XGvDD997W518VAgh1BZ5r0RWs9xZoUSBvMkuZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YHnnUGPrz1+U3I6Lolea82Y4C969Op1xLSprKUmCC+Gf7DJKr5kvWVfReIZMh1vRJ
+         YUxzgOuduqxKTQ/UMc3N20WNCqvga8eXIXEXQJFCOefe1aNfpOS8xJkmF6vQHYT1nh
+         ewafJ/Pod1VFONkWlJ/0frgNJ4W/4wLv+oY7Z/Ck=
+Date:   Fri, 22 May 2020 07:32:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     dinghao.liu@zju.edu.cn
+Cc:     kjlu@umn.edu, Bin Liu <b-liu@ti.com>, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: dw-axi-dmac: Fix runtime PM imbalance on error
-Date:   Fri, 22 May 2020 13:31:53 +0800
-Message-Id: <20200522053154.5951-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgD3_4vLY8deAmnvAA--.23586S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw4UCw4UCF45tr1xAFWrXwb_yoWfXrb_Cw
-        1UWF43WrsYq3WkKw4YyFnxZrWS9r95WFs2gr4xtFZIy3y5Wr1DJ3ykZrWkJw13Z3yUCFWD
-        CFsrXrW3CF43AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-        Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
-        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUh6pPUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoIBlZdtOQLzwABsY
+Subject: Re: Re: [PATCH] [v2] usb: musb: Fix runtime PM imbalance on error
+Message-ID: <20200522053249.GA616391@kroah.com>
+References: <20200522025902.11516-1-dinghao.liu@zju.edu.cn>
+ <20200522051222.GA523130@kroah.com>
+ <2ca9a5fc.be29f.1723ad51c1d.Coremail.dinghao.liu@zju.edu.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ca9a5fc.be29f.1723ad51c1d.Coremail.dinghao.liu@zju.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When axi_dma_resume() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep the
-counter balanced.
+On Fri, May 22, 2020 at 01:22:24PM +0800, dinghao.liu@zju.edu.cn wrote:
+> Sorry, it's my carelessness. In v1 I added pm_runtime_put_autosuspend()
+> after copy_from_user() to fix this problem. Since copy_from_user() is
+> moved to the beginning now, we need not to add PM decrement. 
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+THat's fine, please put that information in a v3 and resend it.
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 14c1ac26f866..a368d01170f1 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -924,8 +924,10 @@ static int dw_probe(struct platform_device *pdev)
- 	 */
- 	pm_runtime_get_noresume(chip->dev);
- 	ret = axi_dma_resume(chip);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(chip->dev);
- 		goto err_pm_disable;
-+	}
- 
- 	axi_dma_hw_init(chip);
- 
--- 
-2.17.1
+thanks,
 
+greg k-h
