@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B399BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C77F206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808D3206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DINCmV2a"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="GtiEZ4n1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbgEVMxk (ORCPT
+        id S1729851AbgEVMx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38570 "EHLO
+        Fri, 22 May 2020 08:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729853AbgEVMwY (ORCPT
+        with ESMTP id S1729847AbgEVMwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:52:24 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1DEC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:23 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u16so4680271lfl.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:23 -0700 (PDT)
+        Fri, 22 May 2020 08:52:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B049C08C5C7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:22 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z18so12439362lji.12
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OC110xasR+GTk4uxI41+0arGy8rv1X+JHVBAtK64k7Q=;
-        b=DINCmV2aZlY4JnnPCopM4LgQCUWBheVG7kwiY1wVek04AAz6tE+2VQMpV7bu6lmZqF
-         0jh3mFvw0V7/oxUHvVwm/T6VOC0xmMbvGcg90XXh+J4zuYyWOqQxFAggr5YLDELpvvXx
-         UrVe1p9EpqMd5uoiOA4U7S73PN7iZ0i29Tahu4ktBsbkFkiLShZ3UzAMG/Slnu8VVW+V
-         SWH92LSWWdocDdDjrE7Rw7qJde4opaiV2xmFBHM1cYM3aCXnsJvU6fX8a84z3k0bBTlF
-         L6geZ1hV7k8f/H80wvI+b+bxthM5QDsSWl1c1ikg+E9FBlRqF9A50NARmUYmW8Ibnomm
-         eyvg==
+        bh=TRTK9a5mpqTDY5ZfccpPpqg6MJ7UvrTh0xOAXZSLOT0=;
+        b=GtiEZ4n19ouyAizgKUR7+QtiVY5GOsdnqMTjHrIb62L5xETehoiRwghxpTXWAFsud/
+         mzMElUVEBDDRWzoET4wNfdBr+wjaqzM/XIt1wcZOSbxfJkSXPhaXh78G/xODWbBkjHWI
+         Ml2DHUVIQJ87N1mWdC9TF590bqRjFqLm61X3ZvCMq8khw6tLBA9ohicbe26vEv2hL8U5
+         4F9TmwyGNQDDzBo+XOMmQUHnWmvDEW6nCGxTzjxiqD3j423EdCtU2NM74RLdpHP02Q1T
+         BbVYwG/7tf+sGDZcMWGVGYeXypePS7/N7EB2aXkxTZ+AwJIqmQ4ZMG6MMGqCPisBllWD
+         ayxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OC110xasR+GTk4uxI41+0arGy8rv1X+JHVBAtK64k7Q=;
-        b=JwpPAi8sAi5unx0FpgQTN9xX2D5bqWJ5RMEFovhVggcTE9dhm50hEU2QNW8h02NTNf
-         bkEsNG3zwLsziZCtrYOIoE5C0YcMVfUzlRtajvUVC1IskiRThHwNrHnwID/oZgQm4LyU
-         6dXCc9aIAjYfdpMjqBFoW7pAVhiALwf4xN3nHaNqRJZgJ4y8/Fx3V2ON6roqv4Oe4OSb
-         x5wHSlkImWvrmhtin18Gw4K+LM18g/IbwchNueRKGow9CFNvP6+rqlZzHbsXNxeTe/8/
-         Gz+pjrAA5GqgjwZwgKAXVSw+jttAVrYcOwcmD6D0xHAGXXZRWqOpvconPoxeKN+cSNIp
-         xmZg==
-X-Gm-Message-State: AOAM533pben+9FC4bztM1jytLcDM0L9lj4lHwlvLca5Ux5gE365AfcNO
-        BOzpMTium0CXmAce5rx40nBaEg==
-X-Google-Smtp-Source: ABdhPJzP9UaxWq9turrXCg6xZaiwqG/RivqdrtCbCfxbVzjv8F2JanBpprUM2BRBlHfmWRoh2x4YkQ==
-X-Received: by 2002:a19:3855:: with SMTP id d21mr7581245lfj.156.1590151942236;
-        Fri, 22 May 2020 05:52:22 -0700 (PDT)
+        bh=TRTK9a5mpqTDY5ZfccpPpqg6MJ7UvrTh0xOAXZSLOT0=;
+        b=MTSoSNimbQK8Wcni7qRf/FelS9DWJaycefL+gRYuuf9gyBrQF8lXT0bCq93Y9QCh0S
+         BzGuzCOjkoCtLUimvWZ5RpFjBAfHyzlonIRBi4qeIVQgfHD6RSi1PBDmqPIS+Xnm4Oam
+         C4Tg1r6IiM7wr386z7dfpoIE+2pTr6VieAUvIRpKDt3R41NkrZ6VB5xWaU7coVOuFFRd
+         KlvExuq9PMo2lU+X1yNmEZoC4v7CxjIQgr4/g/WZtK6dK09QNj0QQUoO9Pw7PM/DAZbd
+         aZcUlqGf4BPObmc/9YMGU1N+2l/ye7jMUVsUgf4Iy+l2NlV5vI9+HopPhzHvs5ArLv0y
+         iumA==
+X-Gm-Message-State: AOAM533gwiciOqQ6fTvfYUQCBaJmP83IX/s4BHsUkS73UwfiJz2sFUon
+        0h+PXL5Vtq/0vBIvSKxsDDC0wA==
+X-Google-Smtp-Source: ABdhPJxgD8Uk4BEWMvgEPW1VD/uD+DbfKpa/h/WYtV9wQd/dZu3w9fynzecAsTLspWi1RmapCaP6QQ==
+X-Received: by 2002:a2e:9f43:: with SMTP id v3mr7757905ljk.285.1590151940948;
+        Fri, 22 May 2020 05:52:20 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id m4sm2307279ljb.46.2020.05.22.05.52.19
+        by smtp.gmail.com with ESMTPSA id n8sm2401340lfb.20.2020.05.22.05.52.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 22 May 2020 05:52:20 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id D0C22102055; Fri, 22 May 2020 15:52:19 +0300 (+03)
+        id C0A1C102053; Fri, 22 May 2020 15:52:19 +0300 (+03)
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -81,9 +81,9 @@ Cc:     David Rientjes <rientjes@google.com>,
         kvm@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [RFC 07/16] KVM: mm: Introduce VM_KVM_PROTECTED
-Date:   Fri, 22 May 2020 15:52:05 +0300
-Message-Id: <20200522125214.31348-8-kirill.shutemov@linux.intel.com>
+Subject: [RFC 05/16] x86/kvm: Make VirtIO use DMA API in KVM guest
+Date:   Fri, 22 May 2020 15:52:03 +0300
+Message-Id: <20200522125214.31348-6-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
 References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
@@ -94,232 +94,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new VMA flag that indicate a VMA that is not accessible to userspace
-but usable by kernel with GUP if FOLL_KVM is specified.
+VirtIO for KVM is a primary way to provide IO. All memory that used for
+communication with the host has to be marked as shared.
 
-The FOLL_KVM is only used in the KVM code. The code has to know how to
-deal with such pages.
+The easiest way to archive that is to use DMA API that already knows how
+to deal with shared memory.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- include/linux/mm.h  |  8 ++++++++
- mm/gup.c            | 20 ++++++++++++++++----
- mm/huge_memory.c    | 20 ++++++++++++++++----
- mm/memory.c         |  3 +++
- mm/mmap.c           |  3 +++
- virt/kvm/async_pf.c |  4 ++--
- virt/kvm/kvm_main.c |  9 +++++----
- 7 files changed, 53 insertions(+), 14 deletions(-)
+ drivers/virtio/virtio_ring.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index e1882eec1752..4f7195365cc0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -329,6 +329,8 @@ extern unsigned int kobjsize(const void *objp);
- # define VM_MAPPED_COPY	VM_ARCH_1	/* T if mapped copy of data (nommu mmap) */
- #endif
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 58b96baa8d48..bd9c56160107 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -12,6 +12,7 @@
+ #include <linux/hrtimer.h>
+ #include <linux/dma-mapping.h>
+ #include <xen/xen.h>
++#include <asm/kvm_para.h>
  
-+#define VM_KVM_PROTECTED 0
-+
- #ifndef VM_GROWSUP
- # define VM_GROWSUP	VM_NONE
- #endif
-@@ -646,6 +648,11 @@ static inline bool vma_is_accessible(struct vm_area_struct *vma)
- 	return vma->vm_flags & VM_ACCESS_FLAGS;
- }
+ #ifdef DEBUG
+ /* For development, we want to crash whenever the ring is screwed. */
+@@ -255,6 +256,9 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+ 	if (xen_domain())
+ 		return true;
  
-+static inline bool vma_is_kvm_protected(struct vm_area_struct *vma)
-+{
-+	return vma->vm_flags & VM_KVM_PROTECTED;
-+}
-+
- #ifdef CONFIG_SHMEM
- /*
-  * The vma_is_shmem is not inline because it is used only by slow
-@@ -2773,6 +2780,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
- #define FOLL_LONGTERM	0x10000	/* mapping lifetime is indefinite: see below */
- #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
- #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
-+#define FOLL_KVM	0x80000 /* access to VM_KVM_PROTECTED VMAs */
- 
- /*
-  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
-diff --git a/mm/gup.c b/mm/gup.c
-index 87a6a59fe667..bd7b9484b35a 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -385,10 +385,19 @@ static int follow_pfn_pte(struct vm_area_struct *vma, unsigned long address,
-  * FOLL_FORCE can write to even unwritable pte's, but only
-  * after we've gone through a COW cycle and they are dirty.
-  */
--static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
-+static inline bool can_follow_write_pte(struct vm_area_struct *vma,
-+					pte_t pte, unsigned int flags)
- {
--	return pte_write(pte) ||
--		((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte));
-+	if (pte_write(pte))
++	if (kvm_mem_protected())
 +		return true;
 +
-+	if ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte))
-+		return true;
-+
-+	if (!vma_is_kvm_protected(vma) || !(vma->vm_flags & VM_WRITE))
-+		return false;
-+
-+	return (vma->vm_flags & VM_SHARED) || page_mapcount(pte_page(pte)) == 1;
+ 	return false;
  }
  
- static struct page *follow_page_pte(struct vm_area_struct *vma,
-@@ -431,7 +440,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 	}
- 	if ((flags & FOLL_NUMA) && pte_protnone(pte))
- 		goto no_page;
--	if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags)) {
-+	if ((flags & FOLL_WRITE) && !can_follow_write_pte(vma, pte, flags)) {
- 		pte_unmap_unlock(ptep, ptl);
- 		return NULL;
- 	}
-@@ -751,6 +760,9 @@ static struct page *follow_page_mask(struct vm_area_struct *vma,
- 
- 	ctx->page_mask = 0;
- 
-+	if (vma_is_kvm_protected(vma) && (flags & FOLL_KVM))
-+		flags &= ~FOLL_NUMA;
-+
- 	/* make this handle hugepd */
- 	page = follow_huge_addr(mm, address, flags & FOLL_WRITE);
- 	if (!IS_ERR(page)) {
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 6ecd1045113b..c3562648a4ef 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1518,10 +1518,19 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
-  * FOLL_FORCE can write to even unwritable pmd's, but only
-  * after we've gone through a COW cycle and they are dirty.
-  */
--static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags)
-+static inline bool can_follow_write_pmd(struct vm_area_struct *vma,
-+					pmd_t pmd, unsigned int flags)
- {
--	return pmd_write(pmd) ||
--	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pmd_dirty(pmd));
-+	if (pmd_write(pmd))
-+		return true;
-+
-+	if ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pmd_dirty(pmd))
-+		return true;
-+
-+	if (!vma_is_kvm_protected(vma) || !(vma->vm_flags & VM_WRITE))
-+		return false;
-+
-+	return (vma->vm_flags & VM_SHARED) || page_mapcount(pmd_page(pmd)) == 1;
- }
- 
- struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
-@@ -1534,7 +1543,7 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
- 
- 	assert_spin_locked(pmd_lockptr(mm, pmd));
- 
--	if (flags & FOLL_WRITE && !can_follow_write_pmd(*pmd, flags))
-+	if (flags & FOLL_WRITE && !can_follow_write_pmd(vma, *pmd, flags))
- 		goto out;
- 
- 	/* Avoid dumping huge zero page */
-@@ -1609,6 +1618,9 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	bool was_writable;
- 	int flags = 0;
- 
-+	if (vma_is_kvm_protected(vma))
-+		return VM_FAULT_SIGBUS;
-+
- 	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
- 	if (unlikely(!pmd_same(pmd, *vmf->pmd)))
- 		goto out_unlock;
-diff --git a/mm/memory.c b/mm/memory.c
-index f703fe8c8346..d7228db6e4bf 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4013,6 +4013,9 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 	bool was_writable = pte_savedwrite(vmf->orig_pte);
- 	int flags = 0;
- 
-+	if (vma_is_kvm_protected(vma))
-+		return VM_FAULT_SIGBUS;
-+
- 	/*
- 	 * The "pte" at this point cannot be used safely without
- 	 * validation through pte_unmap_same(). It's of NUMA type but
-diff --git a/mm/mmap.c b/mm/mmap.c
-index f609e9ec4a25..d56c3f6efc99 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -112,6 +112,9 @@ pgprot_t vm_get_page_prot(unsigned long vm_flags)
- 				(VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]) |
- 			pgprot_val(arch_vm_get_page_prot(vm_flags)));
- 
-+	if (vm_flags & VM_KVM_PROTECTED)
-+		ret = PAGE_NONE;
-+
- 	return arch_filter_pgprot(ret);
- }
- EXPORT_SYMBOL(vm_get_page_prot);
-diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-index 15e5b037f92d..7663e962510a 100644
---- a/virt/kvm/async_pf.c
-+++ b/virt/kvm/async_pf.c
-@@ -60,8 +60,8 @@ static void async_pf_execute(struct work_struct *work)
- 	 * access remotely.
- 	 */
- 	down_read(&mm->mmap_sem);
--	get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE, NULL, NULL,
--			&locked);
-+	get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE | FOLL_KVM, NULL,
-+			      NULL, &locked);
- 	if (locked)
- 		up_read(&mm->mmap_sem);
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 033471f71dae..530af95efdf3 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1727,7 +1727,7 @@ unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *w
- 
- static inline int check_user_page_hwpoison(unsigned long addr)
- {
--	int rc, flags = FOLL_HWPOISON | FOLL_WRITE;
-+	int rc, flags = FOLL_HWPOISON | FOLL_WRITE | FOLL_KVM;
- 
- 	rc = get_user_pages(addr, 1, flags, NULL, NULL);
- 	return rc == -EHWPOISON;
-@@ -1771,7 +1771,7 @@ static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
- static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
- 			   bool *writable, kvm_pfn_t *pfn)
- {
--	unsigned int flags = FOLL_HWPOISON;
-+	unsigned int flags = FOLL_HWPOISON | FOLL_KVM;
- 	struct page *page;
- 	int npages = 0;
- 
-@@ -2255,7 +2255,7 @@ int copy_from_guest(void *data, unsigned long hva, int len)
- 	int npages, seg;
- 
- 	while ((seg = next_segment(len, offset)) != 0) {
--		npages = get_user_pages_unlocked(hva, 1, &page, 0);
-+		npages = get_user_pages_unlocked(hva, 1, &page, FOLL_KVM);
- 		if (npages != 1)
- 			return -EFAULT;
- 		memcpy(data, page_address(page) + offset, seg);
-@@ -2275,7 +2275,8 @@ int copy_to_guest(unsigned long hva, const void *data, int len)
- 	int npages, seg;
- 
- 	while ((seg = next_segment(len, offset)) != 0) {
--		npages = get_user_pages_unlocked(hva, 1, &page, FOLL_WRITE);
-+		npages = get_user_pages_unlocked(hva, 1, &page,
-+						 FOLL_WRITE | FOLL_KVM);
- 		if (npages != 1)
- 			return -EFAULT;
- 		memcpy(page_address(page) + offset, data, seg);
 -- 
 2.26.2
 
