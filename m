@@ -2,126 +2,216 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B12C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D64C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DEA20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00975206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BOclQh3k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kT0kNKEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgEVLz3 (ORCPT
+        id S1728827AbgEVL5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
+        Fri, 22 May 2020 07:57:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbgEVLz3 (ORCPT
+        with ESMTP id S1728356AbgEVL5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:55:29 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B20C061A0E;
-        Fri, 22 May 2020 04:55:28 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49T4gJ3t4fz9sPK;
-        Fri, 22 May 2020 21:55:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590148525;
-        bh=69rczOgogyh6sfiXEO8yNDt+ClD5m3GoNda6QblSqXs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BOclQh3kCP2dhXE0MpuUWMT1/JLWo4S7BJEqqBkKFv5FfE4mUauHbuLldiRWvLT/H
-         SXPNWbnWOz+xfzynLevukV2EAbFFQsifOxppath4iN8tNyTURvdU1KGxk0he5Q6647
-         MvqmqGOVIprmSqgMLbSRnennkqey5I/W0x69w8J6/4vT+0M/W1voqpqUof4u3MklYQ
-         NmVLB7E+diJ/p2nJjLOGA0l0+jdcXBsUQHQ8bIQ8vDkB5F4LAC/Og0bPdqZlXSXENk
-         5mJGViu2xRndB7o1lt8Yn6P/7xWaCItUuwpJ13NudW8D0SBurr7wjhruRZHOLj8FXt
-         ZAzKntvkCKByQ==
-Date:   Fri, 22 May 2020 21:55:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the akpm-current tree with the userns
- tree
-Message-ID: <20200522215522.2e448b3e@canb.auug.org.au>
+        Fri, 22 May 2020 07:57:12 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AA1C061A0E;
+        Fri, 22 May 2020 04:57:12 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d5so1541386ios.9;
+        Fri, 22 May 2020 04:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=vVgEQoaZGULeKq6mOVsxabUK+ok8IXX8M0Wjc4JGWnw=;
+        b=kT0kNKEyfZ38yYc5SMmwx2T1Oqc7KZL+SmsXED9fGxtRFFN5O2vDyvZNYu7XSJ9GwW
+         RcNCYxCREvtCl6/clhzOl34+HzXvNp2k9CvhUXIbMi4LX18DtIHATmKBaa7GIuoQTwEg
+         jWsr1xZDq6eQQTI4ubZDgKcPQdMTb4gZGIAVhDxKobIlRzY9QejjZ+oKtWJO/kU08fSS
+         mskf/7ilGlBOTt3HE9XGEbpw5fDdYPzrnyYDJeWWFRAAUn+hiPwWrCPNhxrrA7ZIHye7
+         cD3UgVB6A8suBUv3J+Gur4C72D0Ppeiou0Cfu3zhX4XKYCn8Lxy9QdM/B30EU5W0TH42
+         0jEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=vVgEQoaZGULeKq6mOVsxabUK+ok8IXX8M0Wjc4JGWnw=;
+        b=GLqe3EcifULKfm5lNNbl+u79PYVq3KJieWzBBL9t+ZOMxu4XN1ta6Pk808euDzvVlD
+         VfTZYx0/znRCn46BE+bxip/bEZZtE6T8fmO+rLS8pQyck8o49GOmr4Z6EYsz7lCVQq6Z
+         xlsj8QY9qPyyC1/pRjHzvpvjooDNaZMWXe1jWnrFfKc7hokzIANNNQ0QcznmHoIYNKIS
+         +qT8MO60VszPDwSLbQEiMITM/mMXM1RRSYA2T9/TEG1xjZmUtDThPSXeISYEK/2gAgkc
+         bOqBK7Fb2zKELcHhkEz0mrwA36L5t+nMIpbIdqecuwnHkexqJCkqfqXWu59KlMZjh/YW
+         /lfA==
+X-Gm-Message-State: AOAM532wzgdozRcPHUzGgB+FKwaUpqv2IEJrkf89edu95rBWpINjkrZK
+        qEj84xO7m6qVBjzHhnetV3Ocz7jxT2+yLzbM0MQ=
+X-Google-Smtp-Source: ABdhPJxk5boNaYi9U3g95woHOFJGThEaM55bar9NM4pJy+F3Dzt+kO44UvNhnafLo77t8khyVSERsO2VQQna9aGqhpk=
+X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr2690450iov.80.1590148631440;
+ Fri, 22 May 2020 04:57:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dLbKeFQca2jmBRt+C=c7IZ_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
+ <20200521220041.87368-1-ndesaulniers@google.com>
+In-Reply-To: <20200521220041.87368-1-ndesaulniers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 22 May 2020 13:56:59 +0200
+Message-ID: <CA+icZUWGB8bp1UZHQpB_W8YL7SeN23h5V9NTq-p3jeUqO4MK+w@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: support compressed debug info
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blaikie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dLbKeFQca2jmBRt+C=c7IZ_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 22, 2020 at 12:00 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> As debug information gets larger and larger, it helps significantly save
+> the size of vmlinux images to compress the information in the debug
+> information sections. Note: this debug info is typically split off from
+> the final compressed kernel image, which is why vmlinux is what's used
+> in conjunction with GDB. Minimizing the debug info size should have no
+> impact on boot times, or final compressed kernel image size.
+>
+> All of the debug sections will have a `C` flag set.
+> $ readelf -S <object file>
+>
+> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+>     vmlinux.gcc75.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +18  [ = ]       0    [Unmapped]
+>  -73.3%  -114Ki  [ = ]       0    .debug_aranges
+>  -76.2% -2.01Mi  [ = ]       0    .debug_frame
+>  -73.6% -2.89Mi  [ = ]       0    .debug_str
+>  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+>  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+>  -70.5% -9.04Mi  [ = ]       0    .debug_line
+>  -79.3% -10.9Mi  [ = ]       0    .debug_loc
+>  -39.5% -88.6Mi  [ = ]       0    .debug_info
+>  -18.2%  -123Mi  [ = ]       0    TOTAL
+>
+> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+>     vmlinux.clang11.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +23  [ = ]       0    [Unmapped]
+>  -65.6%    -871  [ = ]       0    .debug_aranges
+>  -77.4% -1.84Mi  [ = ]       0    .debug_frame
+>  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+>  -73.1% -2.43Mi  [ = ]       0    .debug_str
+>  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+>  -65.9% -8.62Mi  [ = ]       0    .debug_line
+>  -86.2% -40.0Mi  [ = ]       0    .debug_loc
+>  -42.0% -64.1Mi  [ = ]       0    .debug_info
+>  -22.1%  -122Mi  [ = ]       0    TOTAL
+>
+> For x86_64 defconfig + LLVM=1 (before):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
+> Maximum resident set size (kbytes): 43856
+>
+> For x86_64 defconfig + LLVM=1 (after):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
+> Maximum resident set size (kbytes): 1566776
+>
+> Suggested-by: David Blaikie <blaikie@google.com>
+> Suggested-by: Nick Clifton <nickc@redhat.com>
+> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
-Hi all,
+Re-tested V3 on top of Linux v5.7-rc6+ with Clang/LLD v10.0.1-rc1.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+- Sedat -
 
-  fs/binfmt_script.c
-
-between commit:
-
-  ccbb18b67323 ("exec/binfmt_script: Don't modify bprm->buf and then return=
- -ENOEXEC")
-
-from the userns tree and commit:
-
-  e20ecf0e2723 ("exec: simplify the copy_strings_kernel calling convention")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/binfmt_script.c
-index 0e8b953d12cf,c4fb7f52a46e..000000000000
---- a/fs/binfmt_script.c
-+++ b/fs/binfmt_script.c
-@@@ -110,10 -121,8 +110,10 @@@ static int load_script(struct linux_bin
-  	if (retval < 0)
-  		return retval;
-  	bprm->argc++;
- +	*((char *)i_end) =3D '\0';
-  	if (i_arg) {
- +		*((char *)i_sep) =3D '\0';
-- 		retval =3D copy_strings_kernel(1, &i_arg, bprm);
-+ 		retval =3D copy_string_kernel(i_arg, bprm);
-  		if (retval < 0)
-  			return retval;
-  		bprm->argc++;
-
---Sig_/dLbKeFQca2jmBRt+C=c7IZ_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HvaoACgkQAVBC80lX
-0GwnQAf/UxvyX7h4LoxgQbZ4ysBN8FX/G7vSAzh5GedpxcFfVinniKO3mQDVrn+a
-J4t1rFv9mh3Zwj8D8Nr83RSbgnZn0uPAiCbl84ylab9iVWvWm2JVhSfwjif+iS52
-h2m/sr4aACe/9uONJ0ocry1YVSouGNo71CF1UGp+2Fpgi60v1qfxHBmjm6iFTM9V
-4WMU4F5yYLeGTGmCfxShszDC9CTwifVSf15aimZI8J4/7cOMI8chvExBcatHKpmU
-qwYpQnCPp2nSjXhXIsZ+ggfJZhzS8EL43YGqIq7AVcdqzhBnsRQl6FbliMe9QJml
-N/YsYH9spfrXaBHrgG8XMUF1TPVA8Q==
-=jnQ2
------END PGP SIGNATURE-----
-
---Sig_/dLbKeFQca2jmBRt+C=c7IZ_--
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Changes V2 -> V3:
+> * Fix blaikie@'s email addr.
+> * Fix Fangrui's Reviewed-by tag as per Masahiro.
+> * Fix help text as per Masahiro.
+> * Fix -Wa$(comma)foo as per Masahiro.
+>
+> Changes V1 -> V2:
+> * rebase on linux-next.
+> * Add assembler flags as per Fangrui.
+> * Add note about KDEB_COMPRESS+scripts/package/builddeb
+>   as per Sedat and Masahiro.
+> * Add note about bintutils version requirements as per Nick C.
+> * Add note about measured increased build time and max RSS.
+>  Makefile          |  6 ++++++
+>  lib/Kconfig.debug | 17 +++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/Makefile b/Makefile
+> index 71687bfe1cd9..be8835296754 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -822,6 +822,12 @@ DEBUG_CFLAGS       += $(call cc-option, -femit-struct-debug-baseonly) \
+>                    $(call cc-option,-fno-var-tracking)
+>  endif
+>
+> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
+> +DEBUG_CFLAGS   += -gz=zlib
+> +KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
+> +KBUILD_LDFLAGS += --compress-debug-sections=zlib
+> +endif
+> +
+>  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+>  export DEBUG_CFLAGS
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index b8f023e054b9..7fc82dcf814b 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -225,6 +225,23 @@ config DEBUG_INFO_REDUCED
+>           DEBUG_INFO build and compile times are reduced too.
+>           Only works with newer gcc versions.
+>
+> +config DEBUG_INFO_COMPRESSED
+> +       bool "Compressed debugging information"
+> +       depends on DEBUG_INFO
+> +       depends on $(cc-option,-gz=zlib)
+> +       depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
+> +       depends on $(ld-option,--compress-debug-sections=zlib)
+> +       help
+> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
+> +         5.0+, binutils 2.26+, and zlib.
+> +
+> +         Users of dpkg-deb via scripts/package/builddeb may find an increase in
+> +         size of their debug .deb packages with this config set, due to the
+> +         debug info being compressed with zlib, then the object files being
+> +         recompressed with a different compression scheme. But this is still
+> +         preferable to setting $KDEB_COMPRESS to "none" which would be even
+> +         larger.
+> +
+>  config DEBUG_INFO_SPLIT
+>         bool "Produce split debuginfo in .dwo files"
+>         depends on DEBUG_INFO
+> --
+> 2.27.0.rc0.183.gde8f92d652-goog
+>
