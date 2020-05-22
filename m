@@ -2,142 +2,115 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41379C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1FB2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PrjvHlWo"
+	by mail.kernel.org (Postfix) with ESMTP id 2CD1F207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbgEVNiT (ORCPT
+        id S1730003AbgEVNjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729922AbgEVNiS (ORCPT
+        Fri, 22 May 2020 09:39:01 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:34864 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729406AbgEVNjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:38:18 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438E8C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 06:38:18 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f13so10716449qkh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 06:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YBx0QmgBlhkPaubO0vtt6QDHFJk7HKYLiMKXWU9gGLs=;
-        b=PrjvHlWoGx0tOv0xWyqyUec5LfWVpFdXT95xXV2W7uO6uczntwzYivL0XfeTSyxKOJ
-         rbS28lT8ArAQ3vl6VS9se8TLJFiS/+VqDagHUXwvaY6okiRqnr4r7mqZYeA6/3rhZrMG
-         f9jVGK3EDVQgrJYwc+PXdgKKGw7FOdxNKC/pg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YBx0QmgBlhkPaubO0vtt6QDHFJk7HKYLiMKXWU9gGLs=;
-        b=e/k26ejN9JfrttHfmdgI8a8G9HN2dLGLyl4Tar6s3q1fOuQGlCrxbUY595D10/jvd+
-         Z47Ir9f2KwdHSsmbMCpJF8POu1MnmscXoJm/MnskWDKzmwzXtZ54ljuVGXGNlu9chBpB
-         6+/U0F+qW4ybNPox9soYMi56AcjsWUjtLX13Zni4HrAcJJyc2rUFRgpRs2mK7WMktKIR
-         7Db5P2NNZMAtlgxv9ygkT/k3zXi95bknNkmRFeVJg0Mwbdlx+NizoQGjax9nFX0CZysc
-         0szb14H/GUb9Q57Ro2kVacYLHL2TXNRE/Lqz4lEROzO/z7jMkqfQvS6ERtzPTryfwPJp
-         2bjg==
-X-Gm-Message-State: AOAM530MgyWiJobZmmaYWGShCh6NN2xAjhVvqSxyI0sFromchhMJOq03
-        uLbFuBzJTzY2JzvlmMRbbjaP5g==
-X-Google-Smtp-Source: ABdhPJwIySgd5FjYEb2seaX5kyI0Ej2bREBDLCoGNYAWJMUC5WkeYKNtC90051dOURxepwzIcfAp0Q==
-X-Received: by 2002:a05:620a:6b7:: with SMTP id i23mr14461310qkh.156.1590154697354;
-        Fri, 22 May 2020 06:38:17 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id m33sm7675398qte.17.2020.05.22.06.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 06:38:16 -0700 (PDT)
-Date:   Fri, 22 May 2020 09:38:16 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matthew Blecker <matthewb@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Mike Frysinger <vapier@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        vineethrp@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH RFC] sched/headers: Fix sched_setattr userspace
- compilation issues
-Message-ID: <20200522133816.GB210175@google.com>
-References: <20200521155346.168413-1-joel@joelfernandes.org>
- <CAEXW_YTj83gO0STovrOuL9zgDwEYWRJusUZ3ebVw_jOG6yJxTg@mail.gmail.com>
- <20200522131355.f4bdc2f4h2zyqbku@wittgenstein>
+        Fri, 22 May 2020 09:39:00 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jc7sy-0003j6-TB; Fri, 22 May 2020 07:38:53 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jc7sx-0000zH-CV; Fri, 22 May 2020 07:38:52 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Rob Landley <rob@landley.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
+        <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net>
+        <874ksaioc6.fsf@x220.int.ebiederm.org>
+        <fc2cf2a7-e1a7-3170-32c9-43e593636799@landley.net>
+        <87r1vcd4wo.fsf@x220.int.ebiederm.org>
+        <6ce125fd-4fb1-8c39-a9a9-098391f2016a@landley.net>
+Date:   Fri, 22 May 2020 08:35:06 -0500
+In-Reply-To: <6ce125fd-4fb1-8c39-a9a9-098391f2016a@landley.net> (Rob Landley's
+        message of "Thu, 21 May 2020 23:51:20 -0500")
+Message-ID: <871rnccctx.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200522131355.f4bdc2f4h2zyqbku@wittgenstein>
+Content-Type: text/plain
+X-XM-SPF: eid=1jc7sx-0000zH-CV;;;mid=<871rnccctx.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+mSrIOE54/VQp+XUfD3u/JlfcpgUct7Ko=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:13:55PM +0200, Christian Brauner wrote:
-> On Thu, May 21, 2020 at 11:55:21AM -0400, Joel Fernandes wrote:
-> > On Thu, May 21, 2020 at 11:53 AM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > On a modern Linux distro, compiling the following program fails:
-> > >  #include<stdlib.h>
-> > >  #include<stdint.h>
-> > >  #include<pthread.h>
-> > >  #include<linux/sched/types.h>
-> > >
-> > >  void main() {
-> > >          struct sched_attr sa;
-> > >
-> > >          return;
-> > >  }
-> > >
-> > > with:
-> > > /usr/include/linux/sched/types.h:8:8: \
-> > >                         error: redefinition of ‘struct sched_param’
-> > >     8 | struct sched_param {
-> > >       |        ^~~~~~~~~~~
-> > > In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
-> > >                  from /usr/include/sched.h:43,
-> > >                  from /usr/include/pthread.h:23,
-> > >                  from /tmp/s.c:4:
-> > > /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
-> > > note: originally defined here
-> > >    23 | struct sched_param
-> > >       |        ^~~~~~~~~~~
-> > >
-> > > This is also causing a problem on using sched_attr Chrome. The issue is
-> > > sched_param is already provided by glibc.
-> > >
-> > > Guard the kernel's UAPI definition of sched_param with __KERNEL__ so
-> > > that userspace can compile.
-> > >
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > If it is more preferable, another option is to move sched_param to
-> > include/linux/sched/types.h
-> 
-> Might it be worth Ccing libc-alpha here? Seems like one of those classic
-> header conflicts.
+Rob Landley <rob@landley.net> writes:
 
-sched_param is defined by POSIX from my reading of the manpage. Is the kernel
-supposed to define it in the UAPI at all? I guarded it with __KERNEL__ as you
-can see.
+> On 5/21/20 10:28 PM, Eric W. Biederman wrote:
+>> 
+>> Rob Landley <rob@landley.net> writes:
+>> 
+>>> On 5/20/20 11:05 AM, Eric W. Biederman wrote:
+>> 
+>>>> The file descriptor is stored in mm->exe_file.
+>>>> Probably the most straight forward implementation is to allow
+>>>> execveat(AT_EXE_FILE, ...).
+>>>
+>>> Cool, that works.
+>>>
+>>>> You can look at binfmt_misc for how to reopen an open file descriptor.
+>>>
+>>> Added to the todo heap.
+>> 
+>> Yes I don't think it would be a lot of code.
+>> 
+>> I think you might be better served with clone(CLONE_VM) as it doesn't
+>> block so you don't need to feed yourself your context over a pipe.
+>
+> Except that doesn't fix it.
+>
+> Yes I could use threads instead, but the cure is worse than the disease and the
+> result is your shell background processes are threads rather than independent
+> processes (is $$ reporting PID or TID, I really don't want to go
+> there).
 
-Resent with libc-alpha CC'd per your suggestion.
+I was just suggesting clone(CLONE_VM) because it creates a thread in a
+separate process.  Which on nommu sounds like it could be almost exactly
+what you want.
 
-thanks,
+If you need the separate copies of all of your global variables etc,
+re-exec'ing your self could be the easier way to go.
 
- - Joel
-
+Eric
 
