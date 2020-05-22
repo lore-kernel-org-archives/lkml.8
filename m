@@ -2,105 +2,157 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03127C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4AED20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ir6xPMv9"
+	by mail.kernel.org (Postfix) with ESMTP id 2769420723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbgEVQte (ORCPT
+        id S1730709AbgEVQtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbgEVQtd (ORCPT
+        Fri, 22 May 2020 12:49:49 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34734 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbgEVQtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:49:33 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17974C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:49:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w7so10753131wre.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CHmt5En+DFO/DuBHKWsIxBf0v+xGme/FyBgyiiEFXXs=;
-        b=Ir6xPMv9mrnspy3tVQXUJZtsY3vGrInCmlHrvQktRVS8HdjNwmhztgnzWKN3kEEQNK
-         45gbMbWW89VWRfHJS71ORURcXjtguVKtmsZg3vjQZaulCx++nEKPBPO3UJ7tHi/x32n3
-         xePjXyNVu80hEp1ibwJ8/J/+t7/NEP1h6lMd5MDasnAeJx5Bz3KXdK8gZZCnW8iUMav/
-         ENqNO4J2RYDWboR535xH9HSh2nHAk10pRpPlVo6JK1mJ6IJ9KStSIwl6hJ+qi+Ao7f16
-         3DfSqE7ZI8qoR1aYsed6kqOOredsgU6sjf8yaIa3VAYC5Tsv31TnzinHTVYDa5bBhSG4
-         WMIA==
+        Fri, 22 May 2020 12:49:49 -0400
+Received: by mail-pj1-f66.google.com with SMTP id l73so2372226pjb.1;
+        Fri, 22 May 2020 09:49:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CHmt5En+DFO/DuBHKWsIxBf0v+xGme/FyBgyiiEFXXs=;
-        b=hyfIaCXpxAWEg370l14vfmoagUWUmPGFEiqthRDqkDxBeDwHMkmrtZQnqaAcD/RSgo
-         aWlHT4C8yjgum3wap0Vd9nnoTwOsVyVvWaBu+gVk0bS4s74nKpyY8/UO452Zq3zTPbCi
-         i069zm4VNZGcj0ozgQx6wg/WyfhBw1Nq3bWGUxMnEYu/whz/hnnVqCmNqBX24FxJwdvq
-         PeZdUKu/b9yiy2vy8YLYdBgmShV+mk0kFLIpyhpbNEIW2nuVfQlWVQAIH2olyBYeFMq/
-         rNV1mYHFhF0a1NV7KYYrXt1qdaKGPILtGSGCuPbl/V7wtoq+5Bqklz1IdD3pJPGm2N6B
-         htDg==
-X-Gm-Message-State: AOAM5309awsrnP4etX6pYtkESr1rA4bgvvPZIvoNy3I3ywMwpi2+c0JW
-        rqyDy5gyXzLHQMNERb2ujcbYyw==
-X-Google-Smtp-Source: ABdhPJyq1cxtEc5HKwBxuhAsQAlPiFMzVMQB8y7RX31DLlCEjUdWW54j7m4nsSoZhC+Ye3nryhPyXQ==
-X-Received: by 2002:adf:9f48:: with SMTP id f8mr4094993wrg.228.1590166171626;
-        Fri, 22 May 2020 09:49:31 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id p1sm1549793wrx.44.2020.05.22.09.49.30
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pe3U2Pc1R5aAAvHcpLLKtfeeYNZhxpfWB/nI2dXUKTo=;
+        b=OMN21QpBu3Y+HgKC/8YrB7BqYvGfAfoWQWslGszGh2v/13AUUmpkYHAMGvmOI43xbY
+         6CC5XOAknG9ZbCcK/J0Lj+zDmkMNnx3INvnxPSo43njOnPwS1gH3vxVvZodBQgS/EZD3
+         yIygLFdnDEyWarxo3czQ66JBODKz8Beop/LHqFNuL51LtJYO9nsICmaVdPFFQMag8gBG
+         E8h91HIVWD//HhUtxQXQXiLCJE26eAc2uZkFmRLrLWUu052SJodFWUHSjbrCRXjDMgL/
+         xYVWbHnsJN9ouVIdkQwpG7Mhi1f4O3IKrx53l9lyb60ZSoBdsH/TwkZf3fUHIzUVr+hK
+         46/A==
+X-Gm-Message-State: AOAM532C1rVFdVK9VGkosvXsxyAA1PJuYsd9g5OPP0RKse4rl4N8pznm
+        Y7DW1stAYRdVWuiYvO6qzkg=
+X-Google-Smtp-Source: ABdhPJxVeW2HY3x3447XCgvX+Lp7tGkdpIlaSOHG8Pt7Eg0yxtQApkFapH1xSLqYoqhM2Gs2+Tw5Dg==
+X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr16286450ply.55.1590166187500;
+        Fri, 22 May 2020 09:49:47 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:2d21:38e:755:9ae8? ([2601:647:4000:d7:2d21:38e:755:9ae8])
+        by smtp.gmail.com with ESMTPSA id b5sm7268911pju.50.2020.05.22.09.49.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 09:49:31 -0700 (PDT)
-Subject: Re: [PATCH 00/14] thermal core include cleanups
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org
-References: <cover.1589199124.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <2c065bae-06a5-e63c-4e01-be62dabe8890@linaro.org>
-Date:   Fri, 22 May 2020 18:49:30 +0200
+        Fri, 22 May 2020 09:49:46 -0700 (PDT)
+Subject: Re: Another approach of UFSHPB
+To:     ymhungry.lee@samsung.com, Avri Altman <Avri.Altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+References: <835c57b9-f792-2460-c3cc-667031969d63@acm.org>
+ <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+ <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
+ <SN6PR04MB46408050B71E3A6225D6C495FCBA0@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <CGME20200516171420epcas2p108c570904c5117c3654d71e0a2842faa@epcms2p7>
+ <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <aaf130c2-27bd-977b-55df-e97859f4c097@acm.org>
+Date:   Fri, 22 May 2020 09:49:43 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
+In-Reply-To: <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/05/2020 14:24, Amit Kucheria wrote:
-> I noticed some remnants from when thermal core could be modular. While
-> cleaning that up, I fixed up the includes to be sorted alphabetically and
-> included export.h in files that were using EXPORT_SYMBOL* or THIS_MODULE
-> while at the same time removing inclusion of module.h from core files.
+On 2020-05-19 15:31, yongmyung lee wrote:
+> Currently, UFS driver (usually ufshcd.c) has become bulky and complex.
+> So, I would like to split these codes into layers 
+> like the works of Bean Huo and Avril Altman.
+> Especially, I suggest the UFS-Feature Driver model based on Linux Bus-Driver Model,
+> which is suitable to manage all Extended UFS-Feature drivers like the Figure as below:
 > 
-> Finally, the names of the source files for the governors and core have some
-> inconsistencies and the last couple of patches rename them.
 > 
-> Build and boot tested on some ARM boards.
+> UFS Driver data structure (struct ufs_hba)
+>    |
+>    |    -----------------------    -- ufshpb driver -- <- attach ufshpb device driver (it can be loadable)
+>    |---| ufs-ext feature layer |   -- ufs-wb driver -- <- attach ufswb device driver
+>    |   |                       |   -- ...           -- <- ...
+>    |    -----------------------    -- next ufs feature driver  -- <- attach ufs-next feature driver
+> 
+> * wb : write-booster
 
-Series applied, thanks !
+Splitting the UFS driver into multiple modules would be great if the
+interface between these modules can be kept small and elegant. However,
+I'm not sure that this approach should be based on Linux device driver
+bus concept. Devices can be unbound at any time from their driver by
+writing into the "unbind" sysfs attribute. I don't think we want the UFS
+core functionality ever to be unbound while any other UFS functionality
+is still active. Has it been considered to implement each feature as a
+loadable module without relying on the bus model? The existing kernel
+module infrastructure already prevents to unload modules (e.g. the UFS
+core) that are in use by a kernel module that depends on it (e.g. UFS HPB).
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> Furthermore, each ufs-ext feature driver will be written as a loadable kernel module.
+> Vendors (e.g., Android Phone manufacturer) could optionally load and remove each module.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+What will happen if a feature module is unloaded (e.g. HPB) while I/O is
+ongoing that relies on HPB?
+
+> Also they can customize the parameters of ufs-ext feature drivers
+> while each module is being loaded.
+> (For example, vendor would set the maximum memory size
+>  that can be reclaimed in the Host Control mode in HPB)
+
+Should these parameters be per module or per UFS device?
+
+> In addition, we plan to provide QEMU with UFS-simulator
+> for a test environment for UFS driver development.
+
+A UFS simulator for QEMU support would definitely be welcome.
+
+Thanks,
+
+Bart.
