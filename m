@@ -2,75 +2,106 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B474DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 821FB20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0670320723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nMZvLC6f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfm2XyuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbgEVQ1Z (ORCPT
+        id S1730510AbgEVQ2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:27:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43360 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730058AbgEVQ1Z (ORCPT
+        Fri, 22 May 2020 12:28:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730031AbgEVQ2B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:27:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wI/8yAenaDAQU5DV7y4CbiIHIuujya3ynkD2vjkagqs=; b=nMZvLC6fLSante1sWCqNxhJUD1
-        GSiy6bd/m+oLFuoZpwlaUTwT24yM+MwWbdD1XFr9FtVj3Yvf/NxbVutHbSs/VZh+Zjq/g+y9TOEIk
-        SKIy+cDisaTdZbfUQejVOt/x/CYD3GkgsWoTylE3LujM/nrxNJsqFPJ5NUpilmay//m3FxsSgbPO9
-        zk0U5gmLhqbwRZ6Mb7XO4DHmVY091Y1ZBHY/Yx4beCE1uM8kwMTumt2JNZRbalTmsZlblKXaHUaI7
-        MPa3ptw0XCzTix/4vwPBTwOn39SWuGsD5QjaHYbKA/UHeDF1yQl/24wa3eydhcegjYnQirSPWQ2X6
-        /uZnMzPw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcAVV-00061K-5c; Fri, 22 May 2020 16:26:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 62512301EFB;
-        Fri, 22 May 2020 18:26:47 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4CC9620B5D17E; Fri, 22 May 2020 18:26:47 +0200 (CEST)
-Date:   Fri, 22 May 2020 18:26:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     sumit.garg@linaro.org, jason.wessel@windriver.com,
-        dianders@chromium.org, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, patches@linaro.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [RFC PATCH 1/2] debug: Convert dbg_slave_lock to an atomic
-Message-ID: <20200522162647.GW317569@hirez.programming.kicks-ass.net>
-References: <20200522145510.2109799-1-daniel.thompson@linaro.org>
- <20200522145510.2109799-2-daniel.thompson@linaro.org>
+        Fri, 22 May 2020 12:28:01 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE15C061A0E;
+        Fri, 22 May 2020 09:28:01 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id j2so11258681ilr.5;
+        Fri, 22 May 2020 09:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TysnkmOIkLeX9KxlHLPL4xK1JYCC9XQVpNTteD8sJWI=;
+        b=lfm2XyuLMBYBEMicKkNUBvKtTqemJXPbmFBeN/eDLNIxq1Id68/49Ne+gIoDwSCuxt
+         PeZotFigJ3ZPSD9p6jTGhATFunfQ9qsPYh76th8MHBQeNDElh3K4ig7cWIiYTF1beD9I
+         ZhK/eAXZzgrN6Zfj6BDIp8VMQbVyI5viIJjrVpBW/BnSbFVqqUN0n3+xKKdukU2d4JTt
+         ocbVEWftg/opspRtHbRTG3DtRVxzVSXWHlF/bgAKDT0g/A+frfgtgjGZZy2+xfX+Hu+f
+         3xn7ErM5jt3GoVN0OtIsP+1x1V9o3ktTP2HTuxHEsbtjlbdMByZrDzBW/vFnZKr6Qwz8
+         CEfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TysnkmOIkLeX9KxlHLPL4xK1JYCC9XQVpNTteD8sJWI=;
+        b=RNcWtUyzQu0dAIV3mrUoCPA0+jEL+CzEvqkXcEgaQdgvzFMnXy38/hYPyn6SL1ugT4
+         8lmPf/bNpchpCJ3E4F0pdhIpylR6iifBWmXCBDf0KMr/jNerjIM29IbzN3w3tMb5SV0b
+         1S6CuevfmpPwmA1ITWXFSYR4TiQKwIBy4Zk9kmP7UbiKdoERUfpqePY16q+x02rKHGOD
+         K+rc/cum0CCTL+CfPtgax255iydtZTZZTwiPhy8H2bedaPWAWIqwjn4j8W1gSb78pA/0
+         tA/OB0xQ7KSH5/KpIj01fgIgdLxXx3jqHdSsA3xSHzrRZlOEmQoCUVEaZ5AHHzIWttPT
+         basw==
+X-Gm-Message-State: AOAM530fGigfXKBXFpasQBoZwda9SC3gGpItA7CvVm3EYAix3Io+4qHi
+        VvQ3DcLa7ZqRHFVL73P9BOPdDFR1cqYEf13cLX8=
+X-Google-Smtp-Source: ABdhPJygTKEZ0/3slz2Qencuk56A3Fa5sc0tQiWlaV/GUulZeY6LWuJ4x6zRNvb/rdBY6V2nkBUTiyiv1Exd1hFGk1E=
+X-Received: by 2002:a92:10a:: with SMTP id 10mr14145774ilb.203.1590164880781;
+ Fri, 22 May 2020 09:28:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522145510.2109799-2-daniel.thompson@linaro.org>
+References: <20200505084127.12923-1-laoar.shao@gmail.com> <20200505084127.12923-3-laoar.shao@gmail.com>
+ <CA+G9fYseWc_7yq0M5Onju_HxbFid6DbuuaEFf-KUpqfxdF-QTg@mail.gmail.com>
+ <CALOAHbBTt1pMo0kwheWqPfU7RTXcDHWJ-x8=5mpw327uiy2qzA@mail.gmail.com>
+ <CA+G9fYtmpjunUetTmf2yquB1rwZA+nnWOiueWbAMx483c0wUvQ@mail.gmail.com>
+ <CALOAHbCdXrU1AeLd4pWubutuG6HP4xKvxRkXeOv=sd_MMW58rg@mail.gmail.com>
+ <20200522160626.GB1112005@chrisdown.name> <20200522160709.GC1112005@chrisdown.name>
+In-Reply-To: <20200522160709.GC1112005@chrisdown.name>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Sat, 23 May 2020 00:27:24 +0800
+Message-ID: <CALOAHbArZ3NsuR3mCnx_kbSF8ktpjhUF2kaaTa7Mb7ocJajsQg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] mm, memcg: Decouple e{low,min} state mutations
+ from protection checks
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:55:09PM +0100, Daniel Thompson wrote:
+On Sat, May 23, 2020 at 12:07 AM Chris Down <chris@chrisdown.name> wrote:
+>
+> Chris Down writes:
+> >Yafang Shao writes:
+> >>I will do it.
+> >>If no one has objection to my proposal, I will send it tomorrow.
+> >
+> >If the fixup patch works, just send that. Otherwise, sure.
+>
+> Oh, I see the other reply from Naresh now saying it didn't help.
+>
+> Sure, feel free to do that for now then while we work out what the real problem
+> is.
 
-> +static atomic_t			slaves_must_spin;
+Regarding the root cause, my guess is it makes a similar mistake that
+I tried to fix in the previous patch that the direct reclaimer read a
+stale protection value.  But I don't think it is worth to add another
+fix. The best way is to revert this commit.
 
-> +			if (!atomic_read(&slaves_must_spin))
-
-> +		atomic_set(&slaves_must_spin, 1);
-
-> +		atomic_set(&slaves_must_spin, 0);
-
-There is no atomic operation there; this is pointless use of atomic_t.
+-- 
+Thanks
+Yafang
