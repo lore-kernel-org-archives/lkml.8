@@ -2,112 +2,216 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5342F207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5B2207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="N0ytCQTl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0ajaNou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgEVIVC (ORCPT
+        id S1729345AbgEVIWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:21:02 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:29413 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728976AbgEVIVB (ORCPT
+        Fri, 22 May 2020 04:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729035AbgEVIWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:21:01 -0400
+        Fri, 22 May 2020 04:22:14 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5084BC061A0E;
+        Fri, 22 May 2020 01:22:14 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id o19so7644606qtr.10;
+        Fri, 22 May 2020 01:22:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590135661; x=1621671661;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=LWu6AqypUnxnEO7+yo7F6s9apxZuEsZjVsJR8ns2boc=;
-  b=N0ytCQTlcVTHflQOtvMzmqs3mCoO3ndirLHWcWipIFCebMoiXG70l/2m
-   jAu+r45XQ7WrpntgD5PPtSmFRVWxNFNpFXqrbEXtZIRr1ntZW+KGe8znI
-   zYvt+PhIyvnoeZMJr8mgcEEczcMQ+Q6FYf7BvNHiHYnSXrEsZIJrQRs/Z
-   g=;
-IronPort-SDR: d+GIndiAjtTYBqBbiFIYH6KqsOmMn/3NmsdYWLx39MLy7UEpIKRzK4YGhWoCo7TcdUmqF21o6a
- 4EXKGWGETOGg==
-X-IronPort-AV: E=Sophos;i="5.73,420,1583193600"; 
-   d="scan'208";a="31787155"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 May 2020 08:21:00 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id B0E1CA17B7;
-        Fri, 22 May 2020 08:20:58 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 22 May 2020 08:20:58 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.175) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 22 May 2020 08:20:49 +0000
-Subject: Re: [PATCH v2 18/18] MAINTAINERS: Add entry for the Nitro Enclaves
- driver
-To:     Joe Perches <joe@perches.com>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-19-andraprs@amazon.com>
- <e4847d1f25a1fd29ea3f8f8930ba5ae5ccc41f30.camel@perches.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <52fcc55d-4007-03e1-2af0-c4d8dd210b22@amazon.com>
-Date:   Fri, 22 May 2020 11:20:45 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qaSTpI+hoKbcDh1IJSe4IFX4jlP4yvAzkKXCdtDTr4o=;
+        b=b0ajaNouQvAMtjCixmjNfc52hEaKiDEB4Jvjoj8DxK398h+j0xbvYCInbPEUHWQ0nU
+         jV/cjX1jSXXULD/upDhTnRB7AIfmAk2IC0spuad+yxWJwvDsxsCSPYsLC+WltoVsKEo0
+         MLAB9emLf2j1hAj5Nd6OLG1gayVQIR+aMYK0e8WuuULbwgPMAAHExV3j0kNjigqPkkga
+         5s+MV4u5/qKUfWZv4civronFw+zf33XOdE1R9/2cGxWf6S3S1iMJV7HpK+yYx+CBHFmB
+         GPSXVupRzX1l7sNAJ+055AIoIxOCY8wuIZdPaUxVmRaR0DaAattTFdpG4y+yBhJmFCVd
+         mi+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qaSTpI+hoKbcDh1IJSe4IFX4jlP4yvAzkKXCdtDTr4o=;
+        b=k19annX4tc9wHZjpG51QhEd+fIGwyr8Kh+Wpro/zmx1GEQaOcRmdacslRyBPNDYj6j
+         1iJ4jRnjzZvnyqKsFIk6Sj/w0IuqJfOKL2UD3vVeVuPkAPa+sMdTDjHCaF2IUa8mGq9E
+         zeV9ExYcWipNScn6TVUpEK2exXAn1/ZoQD5zzPdhr9GQZh9wqonR8cWVZNauEcgmVTOZ
+         vP11+pgNNygRzqdx7fpWQLRijmrVgkERqJqWpevmwkzZBkLWG8JFCoxanoHn2BhZKiQy
+         QFUmvlLXQFQwz+gCEa+Rcg4orYQXoByxuHitL0bReIOgvCCLwfB5MobW8Rs6HpWGCNQV
+         YuZg==
+X-Gm-Message-State: AOAM53322p+enVupOiDnjpGOLIqzfcpXbvosDfvJN4dbueZNPLs4LZsE
+        uj7yEjm++ID7wzLJZrL082U=
+X-Google-Smtp-Source: ABdhPJw7rbep+3/HLbSGIL/XIM433BRRMgPkIPWQm7t0hxdPxucenhrj7Pk8aBzO6cQCZGnwN7SXhw==
+X-Received: by 2002:ac8:7659:: with SMTP id i25mr3153642qtr.270.1590135733261;
+        Fri, 22 May 2020 01:22:13 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id i41sm7734348qte.15.2020.05.22.01.22.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 May 2020 01:22:12 -0700 (PDT)
+Date:   Fri, 22 May 2020 10:22:08 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
+ to yaml
+Message-ID: <20200522082208.GB19742@ict14-OptiPlex-980>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+ <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+ <20200519184933.00003f00@Huawei.com>
+ <20200520072423.GF3361@ict14-OptiPlex-980>
+ <20200521192736.4818f17b@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <e4847d1f25a1fd29ea3f8f8930ba5ae5ccc41f30.camel@perches.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.175]
-X-ClientProxiedBy: EX13D03UWC002.ant.amazon.com (10.43.162.160) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521192736.4818f17b@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMi8wNS8yMDIwIDEwOjAzLCBKb2UgUGVyY2hlcyB3cm90ZToKPiBPbiBGcmksIDIwMjAt
-MDUtMjIgYXQgMDk6MjkgKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPgo+IHRyaXZpYToK
-Pgo+PiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwo+IFtdCj4+IEBAIC0x
-MTk1Niw2ICsxMTk1NiwxOSBAQCBTOglNYWludGFpbmVkCj4+ICAgVDoJZ2l0IGdpdDovL2dpdC5r
-ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9sZnRhbi9uaW9zMi5naXQKPj4gICBG
-OglhcmNoL25pb3MyLwo+PiAgIAo+PiArTklUUk8gRU5DTEFWRVMgKE5FKQo+PiArTToJQW5kcmEg
-UGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+PiArTToJQWxleGFuZHJ1IFZhc2lsZSA8
-bGV4bnZAYW1hem9uLmNvbT4KPj4gK006CUFsZXhhbmRydSBDaW9ib3RhcnUgPGFsY2lvYUBhbWF6
-b24uY29tPgo+PiArTDoJbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+PiArUzoJU3VwcG9y
-dGVkCj4+ICtXOglodHRwczovL2F3cy5hbWF6b24uY29tL2VjMi9uaXRyby9uaXRyby1lbmNsYXZl
-cy8KPj4gK0Y6CWluY2x1ZGUvbGludXgvbml0cm9fZW5jbGF2ZXMuaAo+PiArRjoJaW5jbHVkZS91
-YXBpL2xpbnV4L25pdHJvX2VuY2xhdmVzLmgKPj4gK0Y6CWRyaXZlcnMvdmlydC9uaXRyb19lbmNs
-YXZlcy8KPj4gK0Y6CXNhbXBsZXMvbml0cm9fZW5jbGF2ZXMvCj4+ICtGOglEb2N1bWVudGF0aW9u
-L25pdHJvX2VuY2xhdmVzLwo+IFBsZWFzZSBrZWVwIHRoZSBGOiBlbnRyaWVzIGluIGNhc2Ugc2Vu
-c2l0aXZlIGFscGhhYmV0aWMgb3JkZXIKPgo+IEY6CURvY3VtZW50YXRpb24vbml0cm9fZW5jbGF2
-ZXMvCj4gRjoJZHJpdmVycy92aXJ0L25pdHJvX2VuY2xhdmVzLwo+IEY6CWluY2x1ZGUvbGludXgv
-bml0cm9fZW5jbGF2ZXMuaAo+IEY6CWluY2x1ZGUvdWFwaS9saW51eC9uaXRyb19lbmNsYXZlcy5o
-Cj4gRjoJc2FtcGxlcy9uaXRyb19lbmNsYXZlcy8KCkRvbmUsIEkgdXBkYXRlZCB0aGUgZW50cnkg
-aW4gdjMuCgpUaGFuayB5b3UsIEpvZS4KCkFuZHJhCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50
-ZXIgKFJvbWFuaWEpIFMuUi5MLiByZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJl
-ZXQsIFVCQzUsIGZsb29yIDIsIElhc2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJl
-Z2lzdGVyZWQgaW4gUm9tYW5pYS4gUmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
+On Thu, May 21, 2020 at 07:27:36PM +0100, Jonathan Cameron wrote:
+> On Wed, 20 May 2020 09:24:23 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > On Tue, May 19, 2020 at 06:49:33PM +0100, Jonathan Cameron wrote:
+> > > On Tue, 19 May 2020 09:50:57 +0200
+> > > Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> > >   
+> > > > Converts documentation from txt format to yaml 
+> > > > 
+> > > > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > > > ---
+> > > >  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
+> > > >  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
+> > > >  2 files changed, 84 insertions(+), 37 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > > > deleted file mode 100644
+> > > > index 900c169de00f..000000000000
+> > > > --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > > > +++ /dev/null
+> > > > @@ -1,37 +0,0 @@
+> > > > -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
+> > > > -and externally connectable Magnetometer
+> > > > -
+> > > > -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> > > > -
+> > > > -Required properties:
+> > > > - - compatible : should be "bosch,bmi160"
+> > > > - - reg : the I2C address or SPI chip select number of the sensor
+> > > > - - spi-max-frequency : set maximum clock frequency (only for SPI)
+> > > > -
+> > > > -Optional properties:
+> > > > - - interrupts : interrupt mapping for IRQ
+> > > > - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
+> > > > -   input, set to "INT2" if INT2 pin should be used instead
+> > > > - - drive-open-drain : set if the specified interrupt pin should be configured as
+> > > > -   open drain. If not set, defaults to push-pull.
+> > > > -
+> > > > -Examples:
+> > > > -
+> > > > -bmi160@68 {
+> > > > -	compatible = "bosch,bmi160";
+> > > > -	reg = <0x68>;
+> > > > -
+> > > > -	interrupt-parent = <&gpio4>;
+> > > > -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+> > > > -	interrupt-names = "INT1";
+> > > > -};
+> > > > -
+> > > > -bmi160@0 {
+> > > > -	compatible = "bosch,bmi160";
+> > > > -	reg = <0>;
+> > > > -	spi-max-frequency = <10000000>;
+> > > > -
+> > > > -	interrupt-parent = <&gpio2>;
+> > > > -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+> > > > -	interrupt-names = "INT2";
+> > > > -};
+> > > > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..6b464ce5ed0b
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > > > @@ -0,0 +1,84 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/iio/imu/bmi160.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Bosch BMI160
+> > > > +
+> > > > +maintainers:
+> > > > +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>  
+> > > 
+> > > Daniel is still active in the kernel, just not at Intel any more. +CC
+> > >   
+> > 
+> > Oh ok thank you! Daniel are you still maintaining this driver?
+> > 
+> > > > +
+> > > > +description: |
+> > > > +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
+> > > > +  connectable Magnetometer
+> > > > +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: bosch,bmi160
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +    description: the I2C address or SPI chip select number of the sensor  
+> > > 
+> > > As standard for i2c and spi, usually no need to have a description line for
+> > > this element.
+> > >   
+> > 
+> > Thank you, will remove the description then.
+> > 
+> > > > +
+> > > > +  spi-max-frequency:
+> > > > +    maxItems: 1
+> > > > +    description: set maximum clock frequency (required only for SPI)  
+> > > 
+> > > Standard spi binding.  Probably doesn't need to be included here.
+> > >   
+> > 
+> > So should I completely remove it from properties?
+> 
+> Yes
+> 
+> 
+> Thanks,
+> 
+> Jonathan
 
+Ok I will remove it completely in next patch,
+Thank you,
+
+Best regards,
+Jonathan Albrieux
