@@ -2,125 +2,104 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B06CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93405206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KM9eNhY7"
+	by mail.kernel.org (Postfix) with ESMTP id F071A206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgEVMeJ (ORCPT
+        id S1729729AbgEVMec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEVMeJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:34:09 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731FBC061A0E;
-        Fri, 22 May 2020 05:34:08 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w10so12471132ljo.0;
-        Fri, 22 May 2020 05:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eL8Nvkl6Jqd505Lrrd1U/0zX/XLAbGUHnr3EvdpPX9Y=;
-        b=KM9eNhY7gC7xlUELLqQ8ozhDetqCIUE0C9ZTdvsHPEn2bL0AQYYOSP//1eWA0U3ouo
-         A/NHKeKen202i2uIlPczj6xfOAi8lCAgqLrSBf05C7Do4TNDgc9usZGxAEKfI28OpetR
-         Xt/jjYyyDD7PTXna4AekrLyo++xfXRo6Qp40PNujlxU7ik4g3f8TIP5yq/lKCmWeqjB4
-         5toL8Q8jsmubnl5SE2yiioU7rom71w+yuMEx7Z7HkZCjskYgG6ogkk4Wtu7WVb35MynS
-         0QGpLErRTWZZE4zY0nITVocl2QQSCA7YvWKe6d/UkBJpMme/U6q26HRfL174QF2s6Bo0
-         8Uew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eL8Nvkl6Jqd505Lrrd1U/0zX/XLAbGUHnr3EvdpPX9Y=;
-        b=P02et84XkQOyyYO3c85QvOtjmTIL0Tyyw9J6u30zhIK6WZ1T8uh+MBjI72pbCdbPf6
-         LCjCrJhVJtq19CEExUSIRyaPdY+xR8ndyc9eLdBMgcIqm3ryi9CMfAl0Z2F3h+nYjJVB
-         FsuIhOK9phxMdnXOHhFIUfjPnc3QsHArKS+gBCmYf19D3puCEawskMEIBqvIP/tbHbf5
-         ++vNIu0FO3lktZ205GfKQn4sCa0xyq0s44Zs1IdXKvec/OWv7RC96FlMQ8J7WQBpLIc7
-         OnP0Ci3M33OfyR6famj3/6pAko64+ZsTYJ4sATt31bCiQXwBPlAWNNWphcpD12e7wdgC
-         vMLQ==
-X-Gm-Message-State: AOAM5308ocn7tGfsKUDrX5MDR3SncyQVNhphnpla9FDffCC3cVb0iQjS
-        5Ake3RY+XUFMaaOU+jTPPs6EHWjY7ilrj+nsw4w=
-X-Google-Smtp-Source: ABdhPJy0qbrKFhq2DTmr289nXFw7VgMAGyKyRIGU7V2kjdEOSEEAVwYnGjNg8RSoz66oTuirsQTEuDWTLA3AZQJEjrk=
-X-Received: by 2002:a2e:8347:: with SMTP id l7mr7457609ljh.243.1590150846890;
- Fri, 22 May 2020 05:34:06 -0700 (PDT)
+        Fri, 22 May 2020 08:34:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:13814 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEVMec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:34:32 -0400
+IronPort-SDR: Oe1m4sbpjZDoODj/9r1ak+ASjqO2TZLU0JtUcoAQllzC4fd4bORjNRseYu0RJuZaKcFkjXgow/
+ tSZAK53/yXAQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:34:30 -0700
+IronPort-SDR: whq9lJbDeCB6C/JwWqiv1Tp+i4S6K+d96mtgVT7fTnrcVC1bP62MThrNxmR9SkVKGz5T7AeVCA
+ vXS+M7GHyzUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
+   d="scan'208";a="265417271"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 22 May 2020 05:34:25 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jc6sd-008EJi-Ae; Fri, 22 May 2020 15:34:27 +0300
+Date:   Fri, 22 May 2020 15:34:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Alan Cox <alan@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200522123427.GD1634618@smile.fi.intel.com>
+References: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
+ <20200522000806.7381-2-Sergey.Semin@baikalelectronics.ru>
+ <20200522111340.GX1634618@smile.fi.intel.com>
+ <20200522115235.rt3ay7lveimrgooa@mobilestation>
+ <20200522121221.GA1634618@smile.fi.intel.com>
+ <20200522121820.GG5801@sirena.org.uk>
 MIME-Version: 1.0
-References: <20200522065243.19590-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200522065243.19590-1-dinghao.liu@zju.edu.cn>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Fri, 22 May 2020 20:33:50 +0800
-Message-ID: <CADBw62oUW7-f05nHX1-cQM+tqyAVVt-knihmiPvekU93L=bLjA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: sprd: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522121820.GG5801@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 2:53 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
->
-> Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
-> an error code.
+On Fri, May 22, 2020 at 01:18:20PM +0100, Mark Brown wrote:
+> On Fri, May 22, 2020 at 03:12:21PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 22, 2020 at 02:52:35PM +0300, Serge Semin wrote:
+> 
+> > > Please, see it's implementation. It does atomic delay when the delay value
+> > > is less than 10us. But selectively gets to the usleep_range() if value is
+> > > greater than that.
+> 
+> > Oh, than it means we may do a very long busy loop here which is not good at
+> > all. If we have 10Hz clock, it might take seconds of doing nothing!
+> 
+> Realistically it seems unlikely that the clock will be even as slow as
+> double digit kHz though, and if we do I'd not be surprised to see other
+> problems kicking in.  It's definitely good to handle such things if we
+> can but so long as everything is OK for realistic use cases I'm not sure
+> it should be a blocker.
 
-Good catch. Thanks.
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-
->
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/dma/sprd-dma.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> index 0ef5ca81ba4d..275d83768d0d 100644
-> --- a/drivers/dma/sprd-dma.c
-> +++ b/drivers/dma/sprd-dma.c
-> @@ -1210,7 +1210,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
->         ret = dma_async_device_register(&sdev->dma_dev);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "register dma device failed:%d\n", ret);
-> -               goto err_register;
-> +               goto err_rpm;
->         }
->
->         sprd_dma_info.dma_cap = sdev->dma_dev.cap_mask;
-> @@ -1224,10 +1224,9 @@ static int sprd_dma_probe(struct platform_device *pdev)
->
->  err_of_register:
->         dma_async_device_unregister(&sdev->dma_dev);
-> -err_register:
-> +err_rpm:
->         pm_runtime_put_noidle(&pdev->dev);
->         pm_runtime_disable(&pdev->dev);
-> -err_rpm:
->         sprd_dma_disable(sdev);
->         return ret;
->  }
-> --
-> 2.17.1
->
-
+Perhaps some kind of warning? Funny that using spi_delay_exec() will issue such
+a warning as a side effect of its implementation.
 
 -- 
-Baolin Wang
+With Best Regards,
+Andy Shevchenko
+
+
