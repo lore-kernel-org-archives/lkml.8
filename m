@@ -2,85 +2,109 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F56C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B233C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 285A620723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fQ7//IUJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8684D2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgEVTsz (ORCPT
+        id S1731007AbgEVTuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730689AbgEVTsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:48:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02383C061A0E;
-        Fri, 22 May 2020 12:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Z6TL3xB3sEMCJ9LTRXR3MO+IKHZXgyi31lHXd2yxQts=; b=fQ7//IUJHaDwbkjSiM04uebhl1
-        aNqXz9brV3nB9Y6jaTPGwb9ctnHw2ICGtN1UbNqZmBgZ5SAHTA6C+YPATxBrFOVJZ75j33qGBTHgS
-        X0MLThoWkskD34zSn/RqpyIL3jwUzGFb15tz+fNFeN5GehXmVnvU+YqI+RTv/e/gk5VlWLQXK9rCo
-        yZgByZbUN3vbFyYrEBJ9b5UKaQE2PLMSVTXaYCKhodFv0O6x4mcoLwJXopLNkN1oiNReWfxiD2cHS
-        w/zTCdGLsRASI1eyEou841FEpAeIcNES8KUODpJ228XjrX4An0E1RE6nf2pFk6K/k4MgGUdv+yo9q
-        e5KFF/LQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcDf1-0006wR-3N; Fri, 22 May 2020 19:48:51 +0000
-Subject: Re: [PATCH -net-next] net: psample: depends on INET
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Yotam Gigi <yotam.gi@gmail.com>
-References: <3c51bea5-b7f5-f64d-eaf2-b4dcba82ce16@infradead.org>
- <CAM_iQpV62Vt2yXS9oYrkP-_e1wViYRQ05ASEu4hnB0BsLxEp4w@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6c1c6fec-a3fa-f368-ae40-189a8f062068@infradead.org>
-Date:   Fri, 22 May 2020 12:48:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 15:50:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42954 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730689AbgEVTuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 15:50:22 -0400
+IronPort-SDR: LJZLoxAzy9G0ke2lwAAgbXMjo3Vt6bSMYVx223lgF64g2Ujpy+SRVbnw5cZBfz0NAe8h+Thfvj
+ slKpKe/BXFIw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 12:50:21 -0700
+IronPort-SDR: McQFZ+HU6pS6AMx8kgnQoBmj2AbLEYkA16e3Ed5j+rhddu+/mKXrtp5Fp6g5pJqYnWqUzhp1Xs
+ p9egGDJLKkGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="300769217"
+Received: from rpurrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.58.10])
+  by fmsmga002.fm.intel.com with ESMTP; 22 May 2020 12:50:17 -0700
+Date:   Fri, 22 May 2020 22:50:17 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 04/20] x86/sgx: Add SGX microarchitectural data
+ structures
+Message-ID: <20200522195017.GA121470@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-5-jarkko.sakkinen@linux.intel.com>
+ <20200520184745.GJ1457@zn.tnic>
+ <20200522155405.GA8377@linux.intel.com>
+ <20200522161326.GC25128@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpV62Vt2yXS9oYrkP-_e1wViYRQ05ASEu4hnB0BsLxEp4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522161326.GC25128@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 12:17 PM, Cong Wang wrote:
-> On Fri, May 22, 2020 at 12:03 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix psample build error when CONFIG_INET is not set/enabled.
->> PSAMPLE should depend on INET instead of NET since
->> ip_tunnel_info_opts() is only present for CONFIG_INET.
->>
->> ../net/psample/psample.c: In function ‘__psample_ip_tun_to_nlattr’:
->> ../net/psample/psample.c:216:25: error: implicit declaration of function ‘ip_tunnel_info_opts’; did you mean ‘ip_tunnel_info_opts_set’? [-Werror=implicit-function-declaration]
+On Fri, May 22, 2020 at 09:13:26AM -0700, Sean Christopherson wrote:
+> On Fri, May 22, 2020 at 06:54:05PM +0300, Jarkko Sakkinen wrote:
+> > On Wed, May 20, 2020 at 08:47:45PM +0200, Borislav Petkov wrote:
+> > > On Fri, May 15, 2020 at 03:43:54AM +0300, Jarkko Sakkinen wrote:
+> > > > +/**
+> > > > + * struct sgx_sigstruct_header -  defines author of the enclave
+> > > > + * @header1:		constant byte string
+> > > > + * @vendor:		must be either 0x0000 or 0x8086
+> > > 
+> > > Out of pure curiosity: what is that about?
+> > > 
+> > > Nothing in the patchset enforces this, so hw does? If so, why?
+> > > 
+> > > Are those vendor IDs going to be assigned by someone or what's up?
+> > > 
+> > > Thx.
+> > 
+> > In SGX1 world 0x8086 was used to mark architectural enclaves and 0x0000
+> > user run enclaves. In SGX2 world they are irrelevant.
 > 
-> Or just make this tunnel support optional. psample does not
-> require it to function correctly.
+> That's not accurate, the vendor is irrelevant in all SGX eras, e.g. enclaves
+> signed by someone other than Intel can use 0x8086 on SGX1 hardware and even
+> pre-LC hardware.  0x8086 is/was used as an _informal_ "this is an
+> Intel-signed enclave", but in no way was it mandatory or reliable.
+> 
+> > In order to retain compatiblity I'd add an explicit check to:
+> > 
+> > 1. Allow vendor ID of 0x0000 or 0x8086.
+> > 2. Reject other vendor ID's (-EINVAL).
+> 
+> Unless we also check the reserved fields in sigstruct, I don't see the
+> point.  Even then, I don't understand what the kernel gains from enforcing
+> anything with respect to sigstruct.  Enforcing the SECS makes sense as we
+> don't want to allow userspace to enable some unknown future feature.  But
+> sigstruct is purely for verification, we (Intel) have far bigger problems
+> if Intel is enabling new behavior via sigstruct.
+> 
+> That being said, I'm not dead set against sanity checking sigstruct, I just
+> think it'd be a waste of cycles.
 
-Sure, I thought of that, but it's not clear to me which bits of it
-to make optional, so I'll leave it for its maintainer to handle.
+If other values except two are never going to be used it is more than a
+legit point to validate this field.
 
-thanks.
--- 
-~Randy
+It also the potential to use ~0x8086 bits to be defined later if ever
+needed lets say for some kernel specific purpose.
 
+/Jarkko
