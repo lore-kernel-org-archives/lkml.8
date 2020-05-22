@@ -2,133 +2,103 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2556206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECCE206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:34:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r+p4rL6d"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="m6pBle2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgEVKeO (ORCPT
+        id S1729306AbgEVKeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgEVKeN (ORCPT
+        Fri, 22 May 2020 06:34:31 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14546 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728362AbgEVKe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:34:13 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50B0C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:34:12 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id i9so2069206ool.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5ktmTy4SBF1rMKSXisJeFl7NM4HKoH9GRsdYqKi4Yhk=;
-        b=r+p4rL6dIfZka9/kOM/z/qvR8koTdip9r+Ida4SrydWrQbMAl/U17vCfvc9dV+1HKP
-         nPSQgCHjHTfLBNCNuq2OQjost52ETQWbL27CpfyFIPkKXg/V4Ssrg7u8Fs37ksLv5L5d
-         N29orFGlaibmiszJnkHCqKo1DuLTdJ2bTAU/dyIUvVKqQVM26qB9BhRVHedyu19dWnKa
-         G7GkPigV/ud9N8tv64tgALtAIgYuWSRQhpVfPFDy946hqW4gWjLrQdtJk4hmi8ZDEM3C
-         kzvV41BvVGYvSZSIKg/porkInfmkPxxvkokGw29B9JWPwWp/Or9Wq1oOIBVDEVq75GuP
-         G30g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5ktmTy4SBF1rMKSXisJeFl7NM4HKoH9GRsdYqKi4Yhk=;
-        b=UFNMoSwysHPTMbj/3xzo2Vced0xOqgRa6vfPhLsO01HSuJ51MPfrLWqs78zDdwjW8n
-         qoJa1FVWJScmwpQqPQfP1PwrFors3XBNSq9aT3NCgaruZxGS4VfiPopyXAFmP/m5dHPU
-         oeZKvfARf8mdNqImzu3nXE88jDLl6wXe3uej7J0ge+QmSgAa0MspkKVWxDMp2g+YGQzG
-         w905M/BfdwLheyIG3ndPkH7932SfRdRIfdj373Nw0Fze6M2Y85hV39rTKVMy7plDv3Pm
-         PV2XpuHs5fTyfVpzzyFu/CK8tgo4Fzg0TOmbWj5SG5CIbSVSjd46pDoEYZuWgBKAiPY1
-         +Jlw==
-X-Gm-Message-State: AOAM532AKEG33Dxr5cyMjn15FREhMSavvecU7yFxAR9ucyl9bPprmL0K
-        ie4fvoWeK3LW0w+KdroNzfu3tafBEc8qnhMdIOES5Q==
-X-Google-Smtp-Source: ABdhPJwrhxKMFtD7P+RI0CQDAjknGBuZPr69lWCEuIfEcpoVvW6AvyTUoQvMfPMIjwqV4k4JmQ36BgVFa7vwpTZEZ2E=
-X-Received: by 2002:a4a:e836:: with SMTP id d22mr2501899ood.54.1590143652013;
- Fri, 22 May 2020 03:34:12 -0700 (PDT)
+        Fri, 22 May 2020 06:34:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590143669; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=re0ym4TtgaTt3T7R6eYWSsdnKHzfzFMDeaeUuE8IlSA=; b=m6pBle2oS6E5LGzMIXMLNOPhBY/2O+I8M9ZuDrU7wq9cr9F4EaufQnLOKShMuSRMLfl5Zcmw
+ d0TI5iTZNCvkweDZUqP1Ywh3VZDebx1WcyoxpjNj7Iojwj/t8pX33KGsHN8HyNcP0mzzLTAt
+ zRAGhkFHYSyOYuRz+HSUwBpeZnI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec7aab1.7faa326c2e30-smtp-out-n02;
+ Fri, 22 May 2020 10:34:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 56121C43387; Fri, 22 May 2020 10:34:25 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D6CDC433C8;
+        Fri, 22 May 2020 10:34:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D6CDC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "\<netdev\@vger.kernel.org\>" <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
+References: <20190906185931.19288-1-navid.emamdoost@gmail.com>
+        <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
+        <878shwtiw3.fsf@kamboji.qca.qualcomm.com>
+        <CA+ASDXOgechejxzN4-xPcuTW-Ra7z9Z6EeiQ4wMrEowZc-p+uA@mail.gmail.com>
+        <CA+ASDXM6w-t85hZWcbTqTBA8aye0oka3Nw5YYZH2LqixO-PJzg@mail.gmail.com>
+Date:   Fri, 22 May 2020 13:34:18 +0300
+In-Reply-To: <CA+ASDXM6w-t85hZWcbTqTBA8aye0oka3Nw5YYZH2LqixO-PJzg@mail.gmail.com>
+        (Brian Norris's message of "Wed, 20 May 2020 13:59:20 -0700")
+Message-ID: <87sgfs9s2d.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20200521142047.169334-1-elver@google.com> <20200521142047.169334-4-elver@google.com>
- <20200522102630.GC28750@zn.tnic>
-In-Reply-To: <20200522102630.GC28750@zn.tnic>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 22 May 2020 12:34:00 +0200
-Message-ID: <CANpmjNM=aHuTWFk45j8BwRFoTQxc-ovghjfwQr5m4K3kVP8r0w@mail.gmail.com>
-Subject: Re: [PATCH -tip v3 03/11] kcsan: Support distinguishing volatile accesses
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 12:26, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Thu, May 21, 2020 at 04:20:39PM +0200, Marco Elver wrote:
-> > diff --git a/scripts/Makefile.kcsan b/scripts/Makefile.kcsan
-> > index 20337a7ecf54..75d2942b9437 100644
-> > --- a/scripts/Makefile.kcsan
-> > +++ b/scripts/Makefile.kcsan
-> > @@ -9,7 +9,10 @@ else
-> >  cc-param =3D --param -$(1)
-> >  endif
-> >
-> > +# Keep most options here optional, to allow enabling more compilers if=
- absence
-> > +# of some options does not break KCSAN nor causes false positive repor=
-ts.
-> >  CFLAGS_KCSAN :=3D -fsanitize=3Dthread \
-> > -     $(call cc-option,$(call cc-param,tsan-instrument-func-entry-exit=
-=3D0) -fno-optimize-sibling-calls)
-> > +     $(call cc-option,$(call cc-param,tsan-instrument-func-entry-exit=
-=3D0) -fno-optimize-sibling-calls) \
-> > +     $(call cc-param,tsan-distinguish-volatile=3D1)
->
-> gcc 9 doesn't like this:
->
-> cc1: error: invalid --param name =E2=80=98-tsan-distinguish-volatile=E2=
-=80=99
-> make[1]: *** [scripts/Makefile.build:100: scripts/mod/devicetable-offsets=
-.s] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> cc1: error: invalid --param name =E2=80=98-tsan-distinguish-volatile=E2=
-=80=99
-> make[1]: *** [scripts/Makefile.build:267: scripts/mod/empty.o] Error 1
-> make: *** [Makefile:1141: prepare0] Error 2
-> make: *** Waiting for unfinished jobs....
->
-> git grep "tsan-distinguish-volatile" in gcc's git doesn't give anything.
->
-> Hmm.
+Brian Norris <briannorris@chromium.org> writes:
 
-Yeah, my patch for GCC is still pending. But we probably need more
-fixes for GCC, before we can re-enable it.
+> On Wed, May 13, 2020 at 12:02 PM Brian Norris <briannorris@chromium.org> wrote:
+>>
+>> On Wed, May 13, 2020 at 12:05 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>> > Actually it's already reverted in -next, nobody just realised that it's
+>> > a regression from commit 728c1e2a05e4:
+>> >
+>> > ced21a4c726b ath9k: Fix use-after-free Read in htc_connect_service
+>>
+>> Nice.
+>>
+>> > v5.8-rc1 should be the first release having the fix.
+>>
+>> So I guess we have to wait until 5.8-rc1 (when this lands in mainline)
+>> to send this manually to stable@vger.kernel.org?
 
-We restrict supported compilers later in the series:
-https://lore.kernel.org/lkml/20200521142047.169334-7-elver@google.com/
+Yeah, following Option 2:
 
-More background is also in the cover letter:
-https://lore.kernel.org/lkml/20200521142047.169334-1-elver@google.com/
+https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
 
-Thanks,
--- Marco
+> For the record, there are more reports of this, if I'm reading them right:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=207797
+
+Thanks for the followup, this case is a good example why small cleanup
+patches are not always that simple and easy as some people claim :)
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
