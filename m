@@ -2,204 +2,167 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF09AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E962207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5803A2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTgvXMwV"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T+kZWPqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbgEVAKY (ORCPT
+        id S1728225AbgEVAQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbgEVAKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:10:24 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D3AC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:10:24 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id e11so3366463pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LxJBUDh7pIk7wevtghR6V6BanARnmm04Ny6FWkU1Tdk=;
-        b=nTgvXMwV0MVMm4Yul1nXwML0h6r6yP1iDZvpkJ8CUFgS/Liv8JT8huhcVjfpGKWAF4
-         Uh7mTIilvObSbBeNNI9tYYhHV34FSJiHxZ3E5YvZL7/Oyd5vpI/AO5IX34ewdXy9FvzQ
-         BaxSr+O0jY+4XC3T2qFNgJ7cVjt3d9Ztw55O/WPThh1myymkSeqzC6dQa/7QxPw0swfd
-         Y7jd0n2zQbsf+vyyguwQgZ4AsLH6b5KuMM4Zn0zSMyV3viOco70Wd7DJ5vbpU/icvTM6
-         4RGOUBbPvjgV44d3WqdFck5oRgpXnGJ4074EVoEu30G6R3haw7vg7JV3LL6PmIdg4hZb
-         r2cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LxJBUDh7pIk7wevtghR6V6BanARnmm04Ny6FWkU1Tdk=;
-        b=AdsdBjo5UqqcCVyihlL/NdTWl98pNGumS8hvXQBIa6l5eMZBc7+n6y07FYcWuMVD9g
-         D/GXKE4UI197NYEfJTRepEajNpFdMz40CbnmF/ntjzgMRrRFiuUad+bRhlE1L3kRhe0+
-         iquYMCOhpA89SpVvJHlx5aBB6pBH0RbNaxplwAIUFHrHZK60uXcf4BOJ5SoZucRrhsj+
-         cV/g60DUMcNd6O0jsy9qlZd9Bc3U/xJu1hVnCoytcMDOE3MyTqykgaNK7LO3gSyXk575
-         p/t/LNVtUtCw1pR5VmYKNxRbggwWo6XrhGRttpmjWhshsl8QKKlNqMRud/1x6XkTkes/
-         8ITA==
-X-Gm-Message-State: AOAM532XD1bcLVHGaeZh04OkLSJtCq0ittXFqKEKlO0ivMSOcWsQTbOz
-        mfsRM5NY/W6sD1vGP07vluE=
-X-Google-Smtp-Source: ABdhPJzoe65AGyLc6b1ml4flukCZZLYowWbn6SZ26RtXpasGQn9PJbjoNL+fwiBEWarKMavKqq326A==
-X-Received: by 2002:a05:6a00:14d5:: with SMTP id w21mr1192249pfu.53.1590106223610;
-        Thu, 21 May 2020 17:10:23 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id m12sm5267634pjs.41.2020.05.21.17.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 17:10:22 -0700 (PDT)
-Date:   Thu, 21 May 2020 17:10:20 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Kyungtae Kim <kt0755@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>,
-        syzkaller <syzkaller@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Tian <dave.jing.tian@gmail.com>
-Subject: Re: [PATCH] vt: keyboard: avoid integer overflow in k_ascii
-Message-ID: <20200522001020.GA89269@dtor-ws>
-References: <20200521013400.GA2240@pizza01>
- <20200521063602.GZ89269@dtor-ws>
- <20200521233138.GA5469@pizza01>
+        Thu, 21 May 2020 20:16:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34685 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbgEVAQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 20:16:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Sn936fsnz9sSc;
+        Fri, 22 May 2020 10:16:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590106600;
+        bh=l28u3l9eD1XulIm/Ob3VyL9n6/znFRgaPoWiwdYuchM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T+kZWPqIDh1yLruVXvjSA0aAcEUeQfBa9mbmwsY0cTnpt9QxbzPW+V+DOjjJj8W9w
+         QnGbExnmF6+8LPuS01E2FhHCTK1b4OEucxX9CSCGYg0mvRNytU8MYPlDOYFusIr1i6
+         b9G8tAwipE+fVmbYdzsgOpnRz1ZE99N/oHq1QJ9aGZgnYzWbADH+4YGVdboZKV2d6p
+         sc/OUgjH0EROstM6Xk4lKImI6oyqADzhQS2bzIA0mXSyp2xhzas/TH/EIX9aAsaVEi
+         kuOKleNXpeB/NrzyKWi/+O15u85EwuMb6il1PpdBawFdBZcEz6IzDY+xnpBHVKUdPc
+         hV3bv0maYoTMg==
+Date:   Fri, 22 May 2020 10:16:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Vijay Khemka <vkhemka@fb.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+Message-ID: <20200522101638.052bd0a2@canb.auug.org.au>
+In-Reply-To: <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
+References: <20200507091008.1bd38185@canb.auug.org.au>
+        <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+        <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com>
+        <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
+        <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521233138.GA5469@pizza01>
+Content-Type: multipart/signed; boundary="Sig_/DcFF.Emc/VDOSRZyZQaAlh_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:31:39PM +0000, Kyungtae Kim wrote:
-> On Wed, May 20, 2020 at 11:36:02PM -0700, Dmitry Torokhov wrote:
-> > Hi,
-> > 
-> > On Thu, May 21, 2020 at 01:34:08AM +0000, Kyungtae Kim wrote:
-> > > FuzzUSB (a variant of syzkaller) found an integer overflow 
-> > > while processing keycode value.
-> > > 
-> > > Reference: https://lkml.org/lkml/2020/3/22/482
-> > > 
-> > > This bug occurs because of no validity check when operating keycode values.
-> > > By executing k_ascii() multiple times, npadch can have a large value 
-> > > close to the max of int type e.g., 1111111111. 
-> > > In the following, its muliplication causes an integer overflow.
-> > > 
-> > > This fix prevents the overflow by checking npadch using check_mul_overflow() 
-> > > ahead of its operation.
-> > > 
-> > > 
-> > > UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19
-> > > signed integer overflow:
-> > > 10 * 1111111111 cannot be represented in type 'int'
-> > > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
-> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-> > > Call Trace:
-> > >  <IRQ>
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0xce/0x128 lib/dump_stack.c:118
-> > >  ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
-> > >  handle_overflow+0xdc/0xf0 lib/ubsan.c:184
-> > >  __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
-> > >  k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
-> > >  kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
-> > >  kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
-> > >  input_to_handler+0x3a9/0x4b0 drivers/input/input.c:118
-> > >  input_pass_values.part.8+0x25e/0x690 drivers/input/input.c:145
-> > >  input_pass_values drivers/input/input.c:193 [inline]
-> > >  input_repeat_key+0x1f8/0x2c0 drivers/input/input.c:194
-> > >  call_timer_fn+0x20e/0x770 kernel/time/timer.c:1404
-> > >  expire_timers kernel/time/timer.c:1449 [inline]
-> > >  __run_timers kernel/time/timer.c:1773 [inline]
-> > >  run_timer_softirq+0x63f/0x13c0 kernel/time/timer.c:1786
-> > >  __do_softirq+0x262/0xb46 kernel/softirq.c:292
-> > >  invoke_softirq kernel/softirq.c:373 [inline]
-> > >  irq_exit+0x161/0x1b0 kernel/softirq.c:413
-> > >  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-> > >  smp_apic_timer_interrupt+0x137/0x500 arch/x86/kernel/apic/apic.c:1146
-> > >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-> > >  </IRQ>
-> > > RIP: 0010:default_idle+0x2d/0x2e0 arch/x86/kernel/process.c:696
-> > > Code: e5 41 57 41 56 65 44 8b 35 30 9d 5d 7a 41 55 41 54 53 0f 1f 44 00 00 e8 11 42 a4 fb e9 07 00 00 00 0f 00 2d d5 29 5e 00 fb f4 <65> 44 8b 35 0b 9d 5d 7a 0f 1f 44 00 00 5b 41 5c 41 5d 41 5e 41 5f
-> > > RSP: 0018:ffffffff87007ce8 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
-> > > RAX: 0000000000000007 RBX: ffffffff87032900 RCX: 0000000000000000
-> > > RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff87033154
-> > > RBP: ffffffff87007d10 R08: fffffbfff0e06521 R09: 0000000000000000
-> > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > > R13: ffffffff88c99c00 R14: 0000000000000000 R15: 0000000000000000
-> > >  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:686
-> > >  default_idle_call+0x50/0x70 kernel/sched/idle.c:94
-> > >  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-> > >  do_idle+0x332/0x530 kernel/sched/idle.c:269
-> > >  cpu_startup_entry+0x18/0x20 kernel/sched/idle.c:361
-> > >  rest_init+0x240/0x3d0 init/main.c:660
-> > >  arch_call_rest_init+0xe/0x1b
-> > >  start_kernel+0x7f6/0x81e init/main.c:997
-> > >  x86_64_start_reservations+0x2a/0x2c arch/x86/kernel/head64.c:490
-> > >  x86_64_start_kernel+0x77/0x7a arch/x86/kernel/head64.c:471
-> > >  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-> > > 
-> > > 
-> > > Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
-> > > Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
-> > > 
-> > > ---
-> > >  drivers/tty/vt/keyboard.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-> > > index 15d33fa0c925..f7e1bb21bd9c 100644
-> > > --- a/drivers/tty/vt/keyboard.c
-> > > +++ b/drivers/tty/vt/keyboard.c
-> > > @@ -869,6 +869,7 @@ static void k_meta(struct vc_data *vc, unsigned char value, char up_flag)
-> > >  static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
-> > >  {
-> > >  	int base;
-> > > +	int bytes;
-> > >  
-> > >  	if (up_flag)
-> > >  		return;
-> > > @@ -884,6 +885,8 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
-> > >  
-> > >  	if (npadch == -1)
-> > >  		npadch = value;
-> > > +	else if (check_mul_overflow(npadch, base, &bytes) || check_add_overflow(bytes, value, &bytes))
-> > > +		return;
-> > 
-> > Why do we discard the result of calculation and repeat it again below?
-> > Can we say
-> > 
-> > 	else if (check_mul_overflow(npadch, base, &new_npadch) ||
-> > 			check_add_overflow(new_npadch, value, &new_npadch))
+--Sig_/DcFF.Emc/VDOSRZyZQaAlh_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, this should have been
+Hi all,
 
-	!check...() && !check_(...)
+On Wed, 20 May 2020 07:56:36 +0000 Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Mon, 11 May 2020 at 15:19, Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, May 8, 2020 at 1:40 AM Joel Stanley <joel@jms.id.au> wrote: =20
+> > >
+> > > On Wed, 6 May 2020 at 23:13, Joel Stanley <joel@jms.id.au> wrote: =20
+> > > >
+> > > > Hi Rob,
+> > > >
+> > > > On Wed, 6 May 2020 at 23:10, Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote: =20
+> > > > >
+> > > > > After merging the aspeed tree, today's linux-next build (arm
+> > > > > multi_v7_defconfig) produced this warning: =20
+> > > >
+> > > > Thanks Stephen.
+> > > > =20
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus=
+ unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C add=
+ress must be less than 10-bits, got "0x40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bu=
+s unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C ad=
+dress must be less than 10-bits, got "0x40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bu=
+s unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C ad=
+dress must be less than 10-bits, got "0x40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4=
+: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bu=
+s unit address format error, expected "40000010"
+> > > > > arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Wa=
+rning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C ad=
+dress must be less than 10-bits, got "0x40000010" =20
+> > > >
+> > > > These are IPMB nodes with the SLAVE_ADDRESS bit set:
+> > > >
+> > > > +&i2c5 {
+> > > > +       //Host3 IPMB bus
+> > > > +       status =3D "okay";
+> > > > +       multi-master;
+> > > > +       ipmb5@10 {
+> > > > +               compatible =3D "ipmb-dev";
+> > > > +               reg =3D <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> > > > +               i2c-protocol;
+> > > > +       };
+> > > >
+> > > > This is a correct entry, so dtc should not warn about it. =20
+> > >
+> > > I sent a patch for dtc here:
+> > > https://lore.kernel.org/lkml/20200508063904.60162-1-joel@jms.id.au/ =
+=20
+> >
+> > Patches for dtc need to be against upstream dtc. There's already a
+> > similar patch posted for it which I commented on and never saw a
+> > respin. =20
+>=20
+> Can I suggest some instructions in scsripts/dtc explaining that you
+> don't take patches in the kernel tree for this code?
+>=20
+> I've sent the patch so it applies to the dtc tree. It would be good to
+> see that change propagate over to -next as others have reported this
+> warning.
 
-> > 		npadch = new_npadch;
-> > 
-> > Thanks.
-> > 
-> > -- 
-> > Dmitry
-> 
-> Yes. This looks better. 
-> 
-> Thanks,
-> Kyungtae Kim
+These warnings now appear in the arm-soc tree.
 
-Thanks.
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-Dmitry
+--Sig_/DcFF.Emc/VDOSRZyZQaAlh_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HGeYACgkQAVBC80lX
+0Gwm/gf/UiP3XqMc4FaiRIxc5sp/aEjFR3Yms5szHXC52VDyyQAv8DBKcjV6wFbC
+6tANr+Lqsuu7loczGa7pvqcY7VdBlgk7dLKMDpQdVkgT0qcjiXYLp4w6hDJQO8vk
++9ajzo1pJTIzTRV+b2AOOguhqsZyD/KzRqvkIU7EJW7WwKRFzPpQ9es70thQmSbG
+dMNZovADYWZEFGo/hpfnKlEmcdo0X3B5yzB4atAqrlaI4Y9JPDSaUiPney+V8uTP
+8bjHyyk9Q9COdJOLqb5NPbK1WUWpXPWnqwTQI1fO7hRqaBx8Zopw8rc1DdW1NDbQ
+dmsqJlupAoog2jtPrusX7Ok7b7s8bA==
+=Gt6l
+-----END PGP SIGNATURE-----
+
+--Sig_/DcFF.Emc/VDOSRZyZQaAlh_--
