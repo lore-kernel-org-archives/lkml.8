@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44916C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA95C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 128E02145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B3821D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159153;
-	bh=GXXj6hQz+sGwSms1JwSKF7z36WZ+ep/aZfuObAE5nbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DhS0HCDWBehWsRB/yu2S2i+1bOLRHzgBvalpXb9YdhLvb5dsm0LMvq+d9VhdT+cFW
-	 tMFm9WywEaTVEMwKwb0xoernWU2fvW/IK9vu2OytTc4nTnJKFLaalbAcPJtDdP9mgv
-	 6DNqv7VDYc1/MmoQQZgvIkEZ8akv+3A1n394m0GY=
+	s=default; t=1590159155;
+	bh=3XN0dCs4ELVpk+KvkOC2xhVH8DurHvnfoxL0UtPiEI0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=J2vD1sJt0vRO38pQPYtFskXEEQf5DIpXtywqxMaQ/dZT0XZS4I4H90DCkfDDZu3SQ
+	 ILVm/PlEFrVBwicJL1GVxWWsSoOVvUZrXtuiZtcbnVTfVNfgpCqHkYa16yyeFzqCVE
+	 qfw/Z2AxfXDquI9gBqYbT7ma6P84Dulxn2MXMB1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbgEVOwc (ORCPT
+        id S1731268AbgEVOwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54782 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbgEVOwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:52:13 -0400
+        id S1730848AbgEVOwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:52:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7625320756;
-        Fri, 22 May 2020 14:52:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 458C020756;
+        Fri, 22 May 2020 14:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159133;
-        bh=GXXj6hQz+sGwSms1JwSKF7z36WZ+ep/aZfuObAE5nbM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SB/+8pWGLGFHhc+UrPdIZbJDz1T41O88voLp8zwpNnNBrfseS5Mfc5Umg7xiDTjJG
-         xCb8KTbMn8RA2EiYyB/XdEDRaf75vcXRHX46f+2AgbSo3LAqGjuDmgW4XtJUb41ZB9
-         EU68TOXtLnKyOtmbIZqFmVRe0fYDxK8KpD/Qa8Fk=
+        s=default; t=1590159128;
+        bh=3XN0dCs4ELVpk+KvkOC2xhVH8DurHvnfoxL0UtPiEI0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FcJnA0kBuW6+/gELb59Q/gLzJpfOt9dPCngcaOjxk9mVpp0JH0HknpoKkf/Q3nlzI
+         2Nu0GafocT0Mlcwsofsnf6jxLjWl/9ExTU6MZGb/m8Hm9wjWl8aNPJZ3enXXQbF3pU
+         2YjIdaDfEkLdB8BS9bsJM7AIEPq58P8zt2kfZE5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Coverity <scan-admin@coverity.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.4 5/5] cifs: Fix null pointer check in cifs_read
-Date:   Fri, 22 May 2020 10:52:07 -0400
-Message-Id: <20200522145207.435314-5-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.4 1/5] gfs2: don't call quota_unhold if quotas are not locked
+Date:   Fri, 22 May 2020 10:52:03 -0400
+Message-Id: <20200522145207.435314-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145207.435314-1-sashal@kernel.org>
-References: <20200522145207.435314-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +57,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
+[ Upstream commit c9cb9e381985bbbe8acd2695bbe6bd24bf06b81c ]
 
-Coverity scan noted a redundant null check
+Before this patch, function gfs2_quota_unlock checked if quotas are
+turned off, and if so, it branched to label out, which called
+gfs2_quota_unhold. With the new system of gfs2_qa_get and put, we
+no longer want to call gfs2_quota_unhold or we won't balance our
+gets and puts.
 
-Coverity-id: 728517
-Reported-by: Coverity <scan-admin@coverity.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/gfs2/quota.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 2ffdaedca7e9..b5a05092f862 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3230,7 +3230,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
- 			 * than it negotiated since it will refuse the read
- 			 * then.
- 			 */
--			if ((tcon->ses) && !(tcon->ses->capabilities &
-+			if (!(tcon->ses->capabilities &
- 				tcon->ses->server->vals->cap_large_files)) {
- 				current_read_size = min_t(uint,
- 					current_read_size, CIFSMaxBufSize);
+diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
+index 3a31226531ea..4af00ed4960a 100644
+--- a/fs/gfs2/quota.c
++++ b/fs/gfs2/quota.c
+@@ -1080,7 +1080,7 @@ void gfs2_quota_unlock(struct gfs2_inode *ip)
+ 	int found;
+ 
+ 	if (!test_and_clear_bit(GIF_QD_LOCKED, &ip->i_flags))
+-		goto out;
++		return;
+ 
+ 	for (x = 0; x < ip->i_res->rs_qa_qd_num; x++) {
+ 		struct gfs2_quota_data *qd;
+@@ -1117,7 +1117,6 @@ void gfs2_quota_unlock(struct gfs2_inode *ip)
+ 			qd_unlock(qda[x]);
+ 	}
+ 
+-out:
+ 	gfs2_quota_unhold(ip);
+ }
+ 
 -- 
 2.25.1
 
