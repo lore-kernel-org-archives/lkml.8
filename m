@@ -2,116 +2,85 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC273C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF4B206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ub12prvP"
+	by mail.kernel.org (Postfix) with ESMTP id 4CCB0206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbgEVTHZ (ORCPT
+        id S1730974AbgEVTHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:07:25 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:54180 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730857AbgEVTHY (ORCPT
+        Fri, 22 May 2020 15:07:51 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:56664 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730925AbgEVTHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:07:24 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49TGFl49WYz9vYjT
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 19:07:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nUk9-tLoXUGz for <linux-kernel@vger.kernel.org>;
-        Fri, 22 May 2020 14:07:23 -0500 (CDT)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49TGFl2bJNz9vYj4
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:07:23 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49TGFl2bJNz9vYj4
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49TGFl2bJNz9vYj4
-Received: by mail-il1-f198.google.com with SMTP id v87so9309065ill.23
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 12:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=GqvlCL3YCiisEEkN1nE+zCOiLTKK/vy+pKY1F1obogc=;
-        b=Ub12prvPt5LliMcyXiag9XYSLrX8M4XDcymjJKBntdT4cjbA48Iob+DQdcEyhyL4YM
-         GN2meZemz5wENrjSAdEjGRpuT6LBIwG55KeA3mKcF7GPr1XVytpcqswbegK+bPVZPTe6
-         Ca4Xdp9uNRZYjEAurkBDwhumC2rNpc4nwwIwUYTX5bX70pTHUu1TUSPExhRwsUDNr01p
-         xM7EQdLMT0Q6rRxMBvhpDWFogSoohx7RDaan2A7iwEXv8eneZDeaIiQHfOxWyM21Ei/F
-         QBaY1JprIoXC0SYSSwGu4T8GpPyxAMmUjY8oKxEyVlzGRDRl0xZUPYNc6ueZ+B3/wOUZ
-         CqIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GqvlCL3YCiisEEkN1nE+zCOiLTKK/vy+pKY1F1obogc=;
-        b=k91vbp5/EYJtu/mIHkMc/kRPVDx7+F+cJhPbm8YerRlojoFIs6u3hNrIN4y+1JWsN4
-         m/BgNQXja7L+z4bLI83CLjkbPXuNVXkEH8CzU/QWDENvDk2mKYjNLCz6ToiF6YgKvrU+
-         VhqVl02HYFzeWximDShP94ATcJtRICu/IfcB/kUMRABdVPeodk8zsrcIbyTk8nbM7R5C
-         nObM0C7HuzOkNplI9T89O28qEA8bHa8x+S7cc5l8WmJOi1lDngUPYDXS0SO86tP3vPOU
-         xrXWQQmq+mcjSJ+jVQPxDwCbvwSTeYKATaUxKvRI0dJLYueJTbfv9e0Ymrw7rAFBWD8T
-         rSpg==
-X-Gm-Message-State: AOAM533lB889ZAGmZU14XEP8n8gEm+jbQeMqKr62PpCbg0Sv62epCwo5
-        UJttXpZUC/MWVZq52qGoENm4CBpCTxACMEEmY48aNExojMhPe3hdg3XMZuqD1xjcKdwX7A3rUIj
-        2qp0ZUHJxr+Ru7k2NFyBgFx7MgWkp
-X-Received: by 2002:a02:cc45:: with SMTP id i5mr9861772jaq.28.1590174442902;
-        Fri, 22 May 2020 12:07:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwIFFNlgaU/eThYhW9DqhVOj6LZHR21fL4hjoeIBf5EJwZulCvNJ6ZQz7PbPCf047iwbuPoJw==
-X-Received: by 2002:a02:cc45:: with SMTP id i5mr9861736jaq.28.1590174442518;
-        Fri, 22 May 2020 12:07:22 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id a17sm4939092ilr.68.2020.05.22.12.07.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 12:07:21 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kuba@kernel.org
-Cc:     tariqt@mellanox.com, davem@davemloft.net,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kjlu@umn.edu, wu000273@umn.edu
-Subject: [PATCH v2] net/mlx4_core: fix a memory leak bug.
-Date:   Fri, 22 May 2020 14:07:15 -0500
-Message-Id: <20200522190715.29022-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 May 2020 15:07:50 -0400
+Received: from belgarion ([86.210.245.36])
+        by mwinf5d03 with ME
+        id hv7i220030nqnCN03v7iXH; Fri, 22 May 2020 21:07:47 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Fri, 22 May 2020 21:07:47 +0200
+X-ME-IP: 86.210.245.36
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 2/3] gpio: pxa: Fix return value of pxa_gpio_probe()
+References: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
+        <1590120740-22912-2-git-send-email-yangtiezhu@loongson.cn>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Fri, 22 May 2020 21:07:23 +0200
+In-Reply-To: <1590120740-22912-2-git-send-email-yangtiezhu@loongson.cn>
+        (Tiezhu Yang's message of "Fri, 22 May 2020 12:12:19 +0800")
+Message-ID: <874ks7okk4.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 
-In function mlx4_opreq_action(), pointer "mailbox" is not released,
-when mlx4_cmd_box() return and error, causing a memory leak bug.
-Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
-free this pointer.
+> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+> to check the return value and return PTR_ERR() if failed.
+>
+> Fixes: 542c25b7a209 ("drivers: gpio: pxa: use devm_platform_ioremap_resource()")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  drivers/gpio/gpio-pxa.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+> index 1361270..0cb6600 100644
+> --- a/drivers/gpio/gpio-pxa.c
+> +++ b/drivers/gpio/gpio-pxa.c
+> @@ -660,8 +660,8 @@ static int pxa_gpio_probe(struct platform_device *pdev)
+>  	pchip->irq1 = irq1;
+>  
+>  	gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
+> -	if (!gpio_reg_base)
+> -		return -EINVAL;
+> +	if (IS_ERR(gpio_reg_base))
+> +		return PTR_ERR(gpio_reg_base);
+As far as I know, devm_platform_ioremap_resource() could return NULL which is
+not handled by this test (unless __devm_ioremap() semantics changed since I had
+a look).
 
-Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/net/ethernet/mellanox/mlx4/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Therefore, this patch is incorrect, or rather incomplete.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
-index 6e501af0e532..f6ff9620a137 100644
---- a/drivers/net/ethernet/mellanox/mlx4/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
-@@ -2734,7 +2734,7 @@ void mlx4_opreq_action(struct work_struct *work)
- 		if (err) {
- 			mlx4_err(dev, "Failed to retrieve required operation: %d\n",
- 				 err);
--			return;
-+			goto out;
- 		}
- 		MLX4_GET(modifier, outbox, GET_OP_REQ_MODIFIER_OFFSET);
- 		MLX4_GET(token, outbox, GET_OP_REQ_TOKEN_OFFSET);
+Cheers.
+
 -- 
-2.17.1
-
+Robert
