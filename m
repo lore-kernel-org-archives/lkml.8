@@ -2,114 +2,131 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD626C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956AF20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052BC20756
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KCChTIHc"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BeLXgfkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgEVRgD (ORCPT
+        id S1730765AbgEVRgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:36:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730572AbgEVRgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:36:03 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E995C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:36:03 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so4638300plq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=d2JbpNQ5BB8THZLFRZdUsN5zyBBBg1g/qGCRRq9W1mM=;
-        b=KCChTIHcglv8zga3a5aOx2ivsb/AjYh4uFhKYSzdjk8Zy7lmmEqJJ6I41tdc7Qxcel
-         SKXsc6lA7boxff1mWCeR6Hym/HbT/Y8JCY54dDB2dKV7LUqpig3/sEfxfj3YlbMjxk78
-         cf4xmQWG34WMeCDIKi5DinQN2V4caGJiIsSXQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d2JbpNQ5BB8THZLFRZdUsN5zyBBBg1g/qGCRRq9W1mM=;
-        b=MWwxlqpGY5O0XJ0SlbpDRDu8GqX7njxTWlxWvbnN4grkHRCUr/nogPiGh/C9H7+620
-         T9ngQQCzXnckWDSGg++urgMVZvnhaBmbgrcJkWio8OR5Jv4uviOZyH2wAe5L4ikV/BjD
-         glqUCTsOyyEYYUqEbBLp1fa+9t/43LraQF16KmT0RiRfAgBtXiwlJgr+g0xoyp7/G9Q2
-         5PGnAUpvt8cv9r/HcRA/dOd/bes6Xo0isqod7Xqfj3fnLEkS3cUS4maS+eXMZ9ijMVDb
-         rOrlhrh340ZuEucZ+fXjYZVQQkkSEv6gTwR8AHgv7TkwroUXPH6rVdIxifuf8mh2eQTa
-         FGpA==
-X-Gm-Message-State: AOAM532eq878HYopl2cnP9VmjSypN75Ju1TCwu9qXXhQFoTevBaRZxgF
-        MQNlAow0DTADZOSMKr9F8R43oQ==
-X-Google-Smtp-Source: ABdhPJy3bKJ2cO/LbOCqUoRt6uBWzveUTeVTjmUCNI6pxDVh8fOHpftgmCyiWGsqex2F3Yb7IJd/Xw==
-X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr15646877plz.179.1590168962631;
-        Fri, 22 May 2020 10:36:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q3sm6224293pgp.69.2020.05.22.10.36.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 10:36:01 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:36:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [RFC PATCH 5/5] selftest/x86: Add CET quick test
-Message-ID: <202005221034.59F5DF75@keescook>
-References: <20200521211720.20236-1-yu-cheng.yu@intel.com>
- <20200521211720.20236-6-yu-cheng.yu@intel.com>
- <20200522092848.GJ325280@hirez.programming.kicks-ass.net>
- <202005221020.B578B8C6@keescook>
- <20200522172711.GA317569@hirez.programming.kicks-ass.net>
+        Fri, 22 May 2020 13:36:53 -0400
+Received: from mout.gmx.net ([212.227.15.19]:35025 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730572AbgEVRgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:36:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590168963;
+        bh=L8OHkKiGCB/f+IXGOvXlrA5dVZpPxKv0KWhPeCEfQiU=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=BeLXgfkAIYebk7dPy/b/dHEAFaJjpOKqtoTzjnKVAW06ogNORfIBepC20GqIxMD4h
+         zFf8XH+aqqUE9rOOAVt7tRhQ8iAzw1u9Fn/jzKYz3gz5wy76dVx5rnFmiyYWgXqG/8
+         zS41n3XBx7P/lOPsGptgJBPdUEv4ekgyuFVGwTos=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MmULr-1jCEVO1rBh-00iRzC; Fri, 22
+ May 2020 19:36:03 +0200
+Date:   Fri, 22 May 2020 19:35:49 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>, keescook@chromium.org,
+        mchehab@kernel.org, clemens@ladisch.de, tiwai@suse.de,
+        perex@perex.cz
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        levonshe@gmail.com, alsa-devel@alsa-project.org,
+        stefanr@s5r6.in-berlin.de
+Subject: Re: [PATCH 0/2] firewire: obsolete cast of function callback toward
+ CFI
+Message-ID: <20200522173549.GA3059@ubuntu>
+References: <20200520064726.31838-1-o-takashi@sakamocchi.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522172711.GA317569@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200520064726.31838-1-o-takashi@sakamocchi.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:FBWJEV1Z+urCsYOxGe/qn+1ueZnIfzXJgXzE4sYXx2E6pTYxzTv
+ z+vuWi/c+ugAv7NWN04Ae5Py94IM94abNLP1X0yCKYKEFIpu63slErlj9Fhy71e4OHzYglB
+ +lQqRKUx5IjQ07W1dZ28vMOnrvIxckwJzFlxHK/OLsyentYpWqqW6H0z/J+wo+Rho3M4EOR
+ yy6Jf31X/2ADUl48LCMBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qQZnxhBV1OE=:rHKO2Cr/IEWABaxDAPPKV6
+ o3uezfePqPg8YTDyafPdmkb+4ckMJPNxVRQkNHKzYeHo+Os6qkNQUSxxTHCmQFDhfBQb0jNHh
+ BdBqwZG+aGRrCkMv5CdCwkQ/d4GyQt9bgCR4jlFZ3jv49X5MW7L0b7Dmpbpa8g1BZ6mcyNDVH
+ JFRDJGUlEAZFnnpwaHhJCBD3LS5z+DD4ubbcGszKZYshC6FDJERTbifdP0VSzin5thJm4wMLl
+ s+Pqk3W+LI/3M2B2Ot5cHoHa2TmxhrYXisqjRtZNNrvr2G9PUbJxPUV2jRf/9MlCz7zvtx7w2
+ IhWpaXJbAvi/KoT2F5zMykbYL3rrOmkRqwmvw8cQZmEtJgUUIBZdOEgJU0WVGBTf4IQou6u8y
+ yfBXCYXnSXmc7UqZn+Xr+wkFqRiBd4AEjqzDYOIMOOproICCTYf3XOvSuf+jdUXvW8nbbY3M9
+ 3lvNG0t8kNHp/P/0p5WO3EsA7AObaFik3wTY32uWwIJH4b8U4h7wbNSR+0TWc76+PLLSZWnnw
+ WFpv4AzhWrXeSCXgpeabnNO9lDgc3aDUW3oMeIO8NTErhmEJztO/Md2W3YtHrt4rXPankumz9
+ lMAQTUARY+TKYggs6JnZQrfRsmfP4N/6EjPWvVbp4Xi333kuxYEGyoMLu4yHcXZJHi4mAaihJ
+ EfJyvM+pNSejc0KDT/mrCEuZ7ODbAXJsIo6FYU83i7jv+2kVtURdOgPdsTv3bgnC/9gU5Wo2p
+ qO8l/TM+osXKI7V7SBWWh8XsBndANr8TxGGJ9SS4gFG2ZmV5cXw5KsganYsF0rT/b804BTW/p
+ bL0mRLhw5i+gXNVqYUrA7hfSTNq83sw1cJHT6P6L+T+VHC6QLeQo1X+scEuKtTeQIL+A/zibh
+ aikX9N2HOSiKma4BOujmTmP2sFZbygP3CmxmYE5oI1eg8fsxyzzT1fsM4MaKQ1VwueAxyPxv/
+ QLQUlcvW09MYGaIgN2THxOeQSa8zuDJWMglQ19+o3DqtjSGi/H0BAtvukYx46jFOUu1kwDtTg
+ ooprer23ED/ADxKx4B7Ym+/ptHya3yxwKz/9nJ1xPgCMd7p8bbbtKAnowRofqh5PdmFBWuryE
+ sIkYM2rpcNAYV4c+6ui8wgVr9kWwnSx8bqUTEKF2biSG45/AE4bEItsUyOXejHsTjvmTSQZ4m
+ opPsBqRorwR0fA0Y4Xif41sZWA/dty4A+hdK2FyzhaEC5O4xhBisLmMxCbRO/tAqcGH+ysXFZ
+ ZmLIFobfRvFTtpOLP
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 07:27:11PM +0200, Peter Zijlstra wrote:
-> On Fri, May 22, 2020 at 10:22:51AM -0700, Kees Cook wrote:
-> 
-> > But yes, I think getting a copy of asm.h would be nice here. I don't
-> > think the WRITE_ONCE() is needed in this particular case. Hmm.
-> 
-> Paranoia on my end because I had no clue wth he wanted with his -O0
-> magic gunk.
+Hi,
 
-Heh, yes, which is why I asked for many more comments. ;) I *think* it
-was entirely to control the stack (and ssp) behavior (i.e. don't inline,
-don't elide unused stack variables, etc).
+On Wed, May 20, 2020 at 03:47:24PM +0900, Takashi Sakamoto wrote:
+> Hi,
+>
+> Oscar Carter works for Control Flow Integrity build. Any cast
+> of function callback is inconvenient for the work. Unfortunately,
+> current code of firewire-core driver includes the cast[1] and Oscar
+> posted some patches to remove it[2]. The patch is itself good. However,
+> it includes changes existent kernel API and all of drivers as user
+> of the API get affects from the change.
+>
+> This patchset is an alternative idea to add a new kernel API specific
+> for multichannel isoc context. The existent kernel API and drivers is
+> left as is.
+>
+> Practically, no in-kernel drivers use the additional API. Although the
+> API is exported in the patchset, it's better to discuss about unexportin=
+g
+> the API.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/drivers/firewire/core-cdev.c#n985
+> [2] https://lore.kernel.org/lkml/20200519173425.4724-1-oscar.carter@gmx.=
+com/
+>
+> Regards
+>
+> Takashi Sakamoto (2):
+>   firewire-core: add kernel API to construct multichannel isoc context
+>   firewire-core: obsolete cast of function callback
+>
+>  drivers/firewire/core-cdev.c | 44 +++++++++++++++++++-----------------
+>  drivers/firewire/core-iso.c  | 17 ++++++++++++++
+>  include/linux/firewire.h     |  3 +++
+>  3 files changed, 43 insertions(+), 21 deletions(-)
+>
+> --
+> 2.25.1
+>
+Thanks for your work and new proposal. I've done a test build an it cleans=
+ the
+-Wcast-function-type warning without the need to change the current API. S=
+o, it
+looks good to me.
 
--- 
-Kees Cook
+Thanks,
+Oscar Carter
