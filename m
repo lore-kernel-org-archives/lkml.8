@@ -2,277 +2,188 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25F8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C31320738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9A3206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="nAvZfwpo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrGCbf8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbgEVMwl (ORCPT
+        id S1730079AbgEVMwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38588 "EHLO
+        Fri, 22 May 2020 08:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729962AbgEVMw2 (ORCPT
+        with ESMTP id S1729399AbgEVMwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:52:28 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE72AC08C5C7
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:27 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z6so12438083ljm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:27 -0700 (PDT)
+        Fri, 22 May 2020 08:52:35 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554D2C061A0E;
+        Fri, 22 May 2020 05:52:34 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a2so12856786ejb.10;
+        Fri, 22 May 2020 05:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iuw1xkRjcXmsK4stEeuiGW4w7Bgw3ocR3EwBbivjZB8=;
-        b=nAvZfwpo2XufBEG9O4I+bP/QA3rUDiglZWAfRAUbbmxFJHVM7MjJX6jw9D+v83wIEh
-         bLAe30hWjHZbCfPlen5i0Pk/uCZMnaHGf+QEwyDoeKzBvpuREkRedR6H+OFtWMTQ9B1A
-         V0TJrPi4cZ8U+PtvIXGZ0+HBjbkEp5kHOmiNTiI4Z4ed72WscM9psLvvGE7W4WJZy1t9
-         AAGCxTd5v19W2bwiyUOA3qjxhuuygCbECxupUCzA4tTRbc0DEx33sLJ1UrDrpBoXbCpa
-         7wl1kPLvtGIQPMjEhtvLJn57b7mKbvxjyERMnAY8TmQ6cKzezAJWQSNWeN0WzBFY62q8
-         zoFQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IW2xLhRUUlaXc/xXfKfLY+pgA/EioOj4mjqACt8eku4=;
+        b=FrGCbf8vqfs6yRsO3LWva1cQ9UCY+PeTTKQC+5Yb9HFmvsbYUbdHe0FAIsl7MEVhWo
+         WsuX3wiBsOFuUJQyiX9/WtUw2S71NjCdzrFYW3UUzSf7GLeduG/1IHROB0bZVX2kkz4b
+         zWLdaskaq4SYEZQwOJJiKYzunNr5bkLUdSDt5B5SvgebFg7bI5ER88SYr/HjYDt0zoho
+         TdF3m/IVSDJgL6dsCgs+swSzZ3UQlsXH822gtRCHIRkQwqDpShtM+FlP5c4+LIoCjo8v
+         SxFQeNb4mp4NQKxKuVwKj9/byGKhkvNo19ed9Oixqd4Mafmjuz0S5JfuOVeRr0xOln9l
+         myXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iuw1xkRjcXmsK4stEeuiGW4w7Bgw3ocR3EwBbivjZB8=;
-        b=cBDT+2dViIOqBbl39yIadBFm82fgiciXlLsIaJqe56yAfPF82rqTRvT9q90rIYMyZo
-         ReaqblIBbjvyi/b5u5GPwkBCep10fgnKZxSPNP838q2ELaML2upeI1suJpIPhWlhVKLm
-         2S50B/dTE4YWUX/EDLNdB2CDpbWuNjksJ3boFnxnQJCfNg78VeZaUb14C7+dZ++0SCLL
-         S2AoM9EUMJpvBXz5eYHjlqdmH6WF3CTnKqOCl2etbYo6BClKioMX08xYWUPyYm5l9DLN
-         hOCWlb4xVXqf191o2kSXQaOIP9d3Il/K1GMSO+5aMoEhDOvwyAz5/PmVdcYxsWluW5vh
-         /B2w==
-X-Gm-Message-State: AOAM5305CPjLNkjFfh19q9mzJsvksJ7z4ptopkEEx/ASe2kGWceOqtIA
-        Qy6Mfs8rXNqbexyhRuwYODTfnQ==
-X-Google-Smtp-Source: ABdhPJwqihqvAsOaLlmGwWVOsCLhtqXYamXtJyWkA59wywoSZ5SCKVLtje40pqAx/jhBiNJOmWuLpg==
-X-Received: by 2002:a2e:7a02:: with SMTP id v2mr5172371ljc.374.1590151946210;
-        Fri, 22 May 2020 05:52:26 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j10sm2312515ljc.21.2020.05.22.05.52.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IW2xLhRUUlaXc/xXfKfLY+pgA/EioOj4mjqACt8eku4=;
+        b=TWsuA5xe0DtsLKWq6tS1JwmRFowfQrQdHqboG3mGtoPmx3V4mMQgJ7riNw3vSX5wnS
+         FKcAb49Xtb1JQyYUqGmcqqT5m6Nyel1rAZ82/Nq/6UlDS20YvI0t8zNJouY1MgMrAXU8
+         Pt68Y0a+mmiDxgL74OZnTUhysYU6McN9iUESU1QE05W/ftMf8QeHHxJt2h5JcQGMLwyy
+         4wW7FdxZE3QWXk2OI//aJyOjyTwe+aRO56QbS661svg8Hj8iJmAvS9MEcAPVAVJXFu8j
+         X6LQ7AjPmCMSUOi0lL/RKYORqaCEh5A4dnjXdON+GpPsC6DoMMgkROr7f+oR3OZxW/ih
+         mYcg==
+X-Gm-Message-State: AOAM531RxWL9ggmk6UL0JsCmldiQkeAmA591OgbGiG+D65odSFp8ySta
+        4vUD73bVTT61XLMqVTQAqJ8=
+X-Google-Smtp-Source: ABdhPJzSwHvYgtRMbq4x1v+PTgL38UkUiTqd/YBOqEVKptA8W95PLh+08krYfPjOGEXz5qhGQK6ciA==
+X-Received: by 2002:a17:906:814b:: with SMTP id z11mr7522307ejw.531.1590151952998;
+        Fri, 22 May 2020 05:52:32 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id b16sm8169566ejg.43.2020.05.22.05.52.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 05:52:22 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 1206D10205C; Fri, 22 May 2020 15:52:20 +0300 (+03)
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [RFC 14/16] KVM: Introduce gfn_to_pfn_memslot_protected()
-Date:   Fri, 22 May 2020 15:52:12 +0300
-Message-Id: <20200522125214.31348-15-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+        Fri, 22 May 2020 05:52:31 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:52:30 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when
+ not applicable
+Message-ID: <20200522125230.GH2163848@ulmo>
+References: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+ <20200522122644.GE2163848@ulmo>
+ <95d01fae-bf1f-28d1-2d11-8f5693646fa3@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="X1xGqyAVbSpAWs5A"
+Content-Disposition: inline
+In-Reply-To: <95d01fae-bf1f-28d1-2d11-8f5693646fa3@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new interface allows to detect if the page is protected.
-A protected page cannot be accessed directly by the host: it has to be
-mapped manually.
 
-This is preparation for the next patch.
+--X1xGqyAVbSpAWs5A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/powerpc/kvm/book3s_64_mmu_hv.c    |  2 +-
- arch/powerpc/kvm/book3s_64_mmu_radix.c |  2 +-
- arch/x86/kvm/mmu/mmu.c                 |  6 +++--
- include/linux/kvm_host.h               |  2 +-
- virt/kvm/kvm_main.c                    | 35 ++++++++++++++++++--------
- 5 files changed, 32 insertions(+), 15 deletions(-)
+On Fri, May 22, 2020 at 03:42:18PM +0300, Dmitry Osipenko wrote:
+> 22.05.2020 15:26, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Wed, May 20, 2020 at 01:08:57PM -0700, Sowjanya Komatineni wrote:
+> >> When auto calibration timeouts, calibration is disabled and fail-safe
+> >> drive strength values are programmed based on the signal voltage.
+> >>
+> >> Different fail-safe drive strength values based on voltage are
+> >> applicable only for SoCs supporting 3V3 and 1V8 pad controls.
+> >>
+> >> So, this patch avoids reading these properties from the device tree
+> >> for SoCs not using pad controls and the warning of missing properties
+> >> will not show up on these SoC platforms.
+> >>
+> >> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> >> ---
+> >>  drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++---------=
+---------
+> >>  1 file changed, 33 insertions(+), 24 deletions(-)
+> >>
+> >> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-t=
+egra.c
+> >> index 3e2c510..141b49b 100644
+> >> --- a/drivers/mmc/host/sdhci-tegra.c
+> >> +++ b/drivers/mmc/host/sdhci-tegra.c
+> >> @@ -605,6 +605,39 @@ static void tegra_sdhci_parse_pad_autocal_dt(stru=
+ct sdhci_host *host)
+> >>  		autocal->pull_down_1v8 =3D 0;
+> >> =20
+> >>  	err =3D device_property_read_u32(host->mmc->parent,
+> >> +			"nvidia,pad-autocal-pull-up-offset-sdr104",
+> >> +			&autocal->pull_up_sdr104);
+> >> +	if (err)
+> >> +		autocal->pull_up_sdr104 =3D autocal->pull_up_1v8;
+> >> +
+> >> +	err =3D device_property_read_u32(host->mmc->parent,
+> >> +			"nvidia,pad-autocal-pull-down-offset-sdr104",
+> >> +			&autocal->pull_down_sdr104);
+> >> +	if (err)
+> >> +		autocal->pull_down_sdr104 =3D autocal->pull_down_1v8;
+> >> +
+> >> +	err =3D device_property_read_u32(host->mmc->parent,
+> >> +			"nvidia,pad-autocal-pull-up-offset-hs400",
+> >> +			&autocal->pull_up_hs400);
+> >> +	if (err)
+> >> +		autocal->pull_up_hs400 =3D autocal->pull_up_1v8;
+> >> +
+> >> +	err =3D device_property_read_u32(host->mmc->parent,
+> >> +			"nvidia,pad-autocal-pull-down-offset-hs400",
+> >> +			&autocal->pull_down_hs400);
+> >> +	if (err)
+> >> +		autocal->pull_down_hs400 =3D autocal->pull_down_1v8;
+> >> +
+> >> +	/*
+> >> +	 * Different fail-safe drive strength values based on the signaling
+> >> +	 * voltage are applicable for SoCs supporting 3V3 and 1V8 pad contro=
+ls.
+> >> +	 * So, avoid reading below device tree properies for SoCs that don't
+> >> +	 * have NVQUIRK_NEEDS_PAD_CONTROL.
+> >> +	 */
+> >> +	if (!(tegra_host->soc_data->nvquirks & NVQUIRK_NEEDS_PAD_CONTROL))
+> >> +		return;
+> >=20
+> > Hm... so what exactly is the difference between NVQUIRK_HAS_PADCALIB? I
+> > think Tegra30 will also end up calling tegra_sdhci_set_padctrl(), but it
+> > will then write the default (0) value for these drive strength. Is that
+> > okay?
+>=20
+> It won't write 0, but skip the writing if values are 0. Technically T30+
+> supports the customized strengths, but I'm not sure whether it was ever
+> tested and whether it's really needed. I think Sowjanya said before that
+> the default values are always okay for older SoCs.
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index 2b35f9bcf892..e9a13ecf812f 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -587,7 +587,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	} else {
- 		/* Call KVM generic code to do the slow-path check */
- 		pfn = __gfn_to_pfn_memslot(memslot, gfn, false, NULL,
--					   writing, &write_ok);
-+					   writing, &write_ok, NULL);
- 		if (is_error_noslot_pfn(pfn))
- 			return -EFAULT;
- 		page = NULL;
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index aa12cd4078b3..58f8df466a94 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -798,7 +798,7 @@ int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
- 
- 		/* Call KVM generic code to do the slow-path check */
- 		pfn = __gfn_to_pfn_memslot(memslot, gfn, false, NULL,
--					   writing, upgrade_p);
-+					   writing, upgrade_p, NULL);
- 		if (is_error_noslot_pfn(pfn))
- 			return -EFAULT;
- 		page = NULL;
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8071952e9cf2..0fc095a66a3c 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4096,7 +4096,8 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 
- 	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
- 	async = false;
--	*pfn = __gfn_to_pfn_memslot(slot, gfn, false, &async, write, writable);
-+	*pfn = __gfn_to_pfn_memslot(slot, gfn, false, &async, write, writable,
-+				    NULL);
- 	if (!async)
- 		return false; /* *pfn has correct page already */
- 
-@@ -4110,7 +4111,8 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 			return true;
- 	}
- 
--	*pfn = __gfn_to_pfn_memslot(slot, gfn, false, NULL, write, writable);
-+	*pfn = __gfn_to_pfn_memslot(slot, gfn, false, NULL, write, writable,
-+				    NULL);
- 	return false;
- }
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d7072f6d6aa0..eca18ef9b1f4 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -724,7 +724,7 @@ kvm_pfn_t gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn);
- kvm_pfn_t gfn_to_pfn_memslot_atomic(struct kvm_memory_slot *slot, gfn_t gfn);
- kvm_pfn_t __gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn,
- 			       bool atomic, bool *async, bool write_fault,
--			       bool *writable);
-+			       bool *writable, bool *protected);
- 
- void kvm_release_pfn_clean(kvm_pfn_t pfn);
- void kvm_release_pfn_dirty(kvm_pfn_t pfn);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 63282def3760..8bcf3201304a 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1779,9 +1779,10 @@ static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
-  * 1 indicates success, -errno is returned if error is detected.
-  */
- static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
--			   bool *writable, kvm_pfn_t *pfn)
-+			   bool *writable, bool *protected, kvm_pfn_t *pfn)
- {
- 	unsigned int flags = FOLL_HWPOISON | FOLL_KVM;
-+	struct vm_area_struct *vma;
- 	struct page *page;
- 	int npages = 0;
- 
-@@ -1795,9 +1796,15 @@ static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
- 	if (async)
- 		flags |= FOLL_NOWAIT;
- 
--	npages = get_user_pages_unlocked(addr, 1, &page, flags);
--	if (npages != 1)
-+	down_read(&current->mm->mmap_sem);
-+	npages = get_user_pages(addr, 1, flags, &page, &vma);
-+	if (npages != 1) {
-+		up_read(&current->mm->mmap_sem);
- 		return npages;
-+	}
-+	if (protected)
-+		*protected = vma_is_kvm_protected(vma);
-+	up_read(&current->mm->mmap_sem);
- 
- 	/* map read fault as writable if possible */
- 	if (unlikely(!write_fault) && writable) {
-@@ -1888,7 +1895,7 @@ static int hva_to_pfn_remapped(struct vm_area_struct *vma,
-  *     whether the mapping is writable.
-  */
- static kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool *async,
--			bool write_fault, bool *writable)
-+			bool write_fault, bool *writable, bool *protected)
- {
- 	struct vm_area_struct *vma;
- 	kvm_pfn_t pfn = 0;
-@@ -1903,7 +1910,8 @@ static kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool *async,
- 	if (atomic)
- 		return KVM_PFN_ERR_FAULT;
- 
--	npages = hva_to_pfn_slow(addr, async, write_fault, writable, &pfn);
-+	npages = hva_to_pfn_slow(addr, async, write_fault, writable, protected,
-+				 &pfn);
- 	if (npages == 1)
- 		return pfn;
- 
-@@ -1937,7 +1945,7 @@ static kvm_pfn_t hva_to_pfn(unsigned long addr, bool atomic, bool *async,
- 
- kvm_pfn_t __gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn,
- 			       bool atomic, bool *async, bool write_fault,
--			       bool *writable)
-+			       bool *writable, bool *protected)
- {
- 	unsigned long addr = __gfn_to_hva_many(slot, gfn, NULL, write_fault);
- 
-@@ -1960,7 +1968,7 @@ kvm_pfn_t __gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn,
- 	}
- 
- 	return hva_to_pfn(addr, atomic, async, write_fault,
--			  writable);
-+			  writable, protected);
- }
- EXPORT_SYMBOL_GPL(__gfn_to_pfn_memslot);
- 
-@@ -1968,19 +1976,26 @@ kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
- 		      bool *writable)
- {
- 	return __gfn_to_pfn_memslot(gfn_to_memslot(kvm, gfn), gfn, false, NULL,
--				    write_fault, writable);
-+				    write_fault, writable, NULL);
- }
- EXPORT_SYMBOL_GPL(gfn_to_pfn_prot);
- 
- kvm_pfn_t gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
- {
--	return __gfn_to_pfn_memslot(slot, gfn, false, NULL, true, NULL);
-+	return __gfn_to_pfn_memslot(slot, gfn, false, NULL, true, NULL, NULL);
- }
- EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot);
- 
-+static kvm_pfn_t gfn_to_pfn_memslot_protected(struct kvm_memory_slot *slot,
-+					      gfn_t gfn, bool *protected)
-+{
-+	return __gfn_to_pfn_memslot(slot, gfn, false, NULL, true, NULL,
-+				    protected);
-+}
-+
- kvm_pfn_t gfn_to_pfn_memslot_atomic(struct kvm_memory_slot *slot, gfn_t gfn)
- {
--	return __gfn_to_pfn_memslot(slot, gfn, true, NULL, true, NULL);
-+	return __gfn_to_pfn_memslot(slot, gfn, true, NULL, true, NULL, NULL);
- }
- EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot_atomic);
- 
--- 
-2.26.2
+Alright then, in that case:
 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--X1xGqyAVbSpAWs5A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7Hyw4ACgkQ3SOs138+
+s6H8NQ//XJnXCnLkdDGEVXiHKU2dI5aUXGrAhE6Nq3oKQThB5B8FsjBT8mxtp0L5
+trDoUSpMfIPsT/oWdEpFbpgtElLv16yoBAfkRwLkc88JdvIYlzcXXELMc8NDS70M
+xVnyg8EALd3tvRnYn02WCljPB2Mg9varDaz/0luI9Fp+OxU7X6gWhbN69MstU7aD
+o6iKMB94FwMDiJ6vZJmUeXmHFhalwS1rKHajcfX2QNw/AJo7+QY3K+LERviS1P7b
+YeFV9s6j/w5xAa9y0lFIkxru7X56T5uEU9yZgmqr96wUnW0/h/GnCWtk6JTNDNP9
+5NFLC8zme/zFSu6G54p+FSP2jo3lp++5VLTdr7pTDp9hJhm1yx87hABGCNLFCcO/
+rIsOUrMmp1UC5t+6e4qZaX9u0DV/VjxTOF7I7+U8q9P/JeeHG4kJtAX5tRL5UiEK
+qosNuEYUYyhflvop+W67Hkd9pbUp3yhGyJryrxhPwXLS+FLJpHQfV/1r83VqwppG
+dSpiH0sl7+uCfc6j0CfgYvM7rEAD9t1M+CHI01wI1eORwQZ0RSIiaH+ez7w1bW8N
++8yHOW6M1TJK3+qfY5l/efZLXbzcY5BZlpk7A4KDt8CWfVZJGPXdiPG1vDEtV4/u
+t91//K4eOTLXYbKjdOUoR+8tGsIpSj2XJZBu3uz7hSAPNTbT5JI=
+=SKC9
+-----END PGP SIGNATURE-----
+
+--X1xGqyAVbSpAWs5A--
