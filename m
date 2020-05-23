@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25371C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53450C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01B9120787
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3347920787
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MWKaekWv"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eaWQu5rI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388068AbgEWS6q (ORCPT
+        id S2388091AbgEWS6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 14:58:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36588 "EHLO
+        Sat, 23 May 2020 14:58:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728688AbgEWS6H (ORCPT
+        with ESMTP id S2387580AbgEWS6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 14:58:07 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528E1C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:58:06 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t11so6591884pgg.2
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:58:06 -0700 (PDT)
+        Sat, 23 May 2020 14:58:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02FB8C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:58:04 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id n15so6779764pfd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QLIKOC51UDi6y8ydZtCT2FsP1dt+ucWxar6wAIDn3TQ=;
-        b=MWKaekWvtx+WTMH7SA8TxEwVGEMQRZ6Y3Djw7RNC7oEYUCXetIPXBjtiJgnyF71Y0b
-         UMa3s3nv9VNBNz/E5zE58K6odN5gP1YpWtoRtR26Jtt0hxzlYhRsfCdDXvyf1atMh5bs
-         o3zeYxTrMI80Xwj9+WtyiI7NO1qDg3KQpO4qdC3SwkxvfVqMOsKdB1CW997onc1jjj0s
-         glvIv02sptmvS0nrlsCIZFZqjJuVPnwA32f5p/IDDJg82jymdpaM0DYrJhhfbQg3g/lN
-         7krBmUvtb5GR2kiVrgRdtyjFenuM4+KBhSnVAZc+Y4QeRkSFLNE8OUmPmx2atAUI+eH/
-         IZtQ==
+        bh=fQihCl0dLbHaElgiRrlXkibi9/E8OKsaJ7lF0uUyO/s=;
+        b=eaWQu5rIF65IIe8LNBzP1VhRXuhf/K8YuXmyjWuD3csLufjFBKBEZDaJbIB6RwswAQ
+         rDBP5Ms4v5GriXypOxasHghq7UnINAs0gaI86yQ/hNhK85oUXxh9tCLqJ+1ReVF5l/ix
+         tPRMxxn5OJgrvK94v8gqoHCYdCO3fgQMAXr+vr1QgQvnYsZJ/wdm4/qp2eaVtNDY2sgH
+         LDz+wH7VwwOwdN2+SX1xQCFbPnBR8BZ8SA2j96fkibGQYbL5STDJ4sUUYmLUjN6asTWW
+         kgkWS4yZfdrzVsXNsu8c22UnUv/buUDX4ks7m/nlfPqKjekl11LSVTWWEwpgJg0OiRni
+         cSww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QLIKOC51UDi6y8ydZtCT2FsP1dt+ucWxar6wAIDn3TQ=;
-        b=U3x26zyWQ/c3OvTRyFjnNBx6l3Pasy/xlYiu9rNjyjB1d+uCZkXa7d2sev+T5/6RuC
-         d6LM7k3IKuWHiGinsYmWGwv11FQRgagCtp3Xl3tw/lyCauTJ6a59fYdI/n7ucISJpkoy
-         mWghxHaQ+dREdUs+6s4N139i7OBOYLDr8+iqapp1sdeqCRIM0bAdCkPm53blbXUPx/L0
-         wceotz190p6z3+59COtR7l6XLcVZ07fw8/n7bvTSI1UKKVdw4Iu2qnm5/nkn5xHPdh0m
-         7mnAwQAMuYXg/GmrYt13PoC35HdvpJmW8I8b06yeHsL+rBSCnqfV4+85dOZrVeAvEiKA
-         Rqjw==
-X-Gm-Message-State: AOAM5329uOGhGWkEmTZz7tK81TwQY12krdCK+9rEm0+p+Wnn6qk9zYQH
-        0gW4FiSLzH4gykATLmENGduJlw==
-X-Google-Smtp-Source: ABdhPJxlGEJfDdI/CHMnwiSfxbLnvzCi9W829t09wDrbokAThLoEnwexsOcrvdVDPXc3WyV+F2HO2Q==
-X-Received: by 2002:a65:66d5:: with SMTP id c21mr18973961pgw.155.1590260285870;
-        Sat, 23 May 2020 11:58:05 -0700 (PDT)
+        bh=fQihCl0dLbHaElgiRrlXkibi9/E8OKsaJ7lF0uUyO/s=;
+        b=cMtJsw4LyUSXsS+9WxO14YV5qfrjga3v3rnApATcBbdJ1fAPrxd8Z5xC3x9QF4qyBB
+         R6YV7huonWHZz7KgudOB5DGIdI2oXb28+55azeApGS7S0PrS9Rco5e6zWd2yuQJ3JUdn
+         pT8KOn838GnclFc5hA4zk9U6i6sl8257RFk+zrh3l44pHzCDbTMK0zAX+jSYvbdS2kG2
+         fth7OSoforWVHeNcomgXPzgEzOzc6BIbT/m+fuf6/1DYV6wv1p8kj9+E65qfHgkdurom
+         +dKKGhZa3pzBg9f/RCnv1O5Gp5/bD41TfEsM/Q5kAr8XRGOSqkXzHvgE865C6dIYwnhP
+         juOg==
+X-Gm-Message-State: AOAM533fUK9ZXYfihbS5urzk7BLF6SOg1eLi4gnGkFdhkx3YIuTep3oG
+        Xc98vXEziubQZFaOFKAjeOWNvA==
+X-Google-Smtp-Source: ABdhPJz9vqnGrCG9qj0wEnBzhySeVMrYNwRHjDaahSZXAg0rEuCiNKORSORIP7O+cxiJTr2yWj4euQ==
+X-Received: by 2002:a63:3114:: with SMTP id x20mr20316638pgx.52.1590260283492;
+        Sat, 23 May 2020 11:58:03 -0700 (PDT)
 Received: from x1.lan ([2605:e000:100e:8c61:c94:a67a:9209:cf5f])
-        by smtp.gmail.com with ESMTPSA id 25sm9297319pjk.50.2020.05.23.11.58.04
+        by smtp.gmail.com with ESMTPSA id 25sm9297319pjk.50.2020.05.23.11.58.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 11:58:05 -0700 (PDT)
+        Sat, 23 May 2020 11:58:03 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     io-uring@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 05/12] mm: support async buffered reads in generic_file_buffered_read()
-Date:   Sat, 23 May 2020 12:57:48 -0600
-Message-Id: <20200523185755.8494-6-axboe@kernel.dk>
+Subject: [PATCH 03/12] mm: abstract out wake_page_match() from wake_page_function()
+Date:   Sat, 23 May 2020 12:57:46 -0600
+Message-Id: <20200523185755.8494-4-axboe@kernel.dk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200523185755.8494-1-axboe@kernel.dk>
 References: <20200523185755.8494-1-axboe@kernel.dk>
@@ -76,79 +76,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the async page locking infrastructure, if IOCB_WAITQ is set in the
-passed in iocb. The caller must expect an -EIOCBQUEUED return value,
-which means that IO is started but not done yet. This is similar to how
-O_DIRECT signals the same operation. Once the callback is received by
-the caller for IO completion, the caller must retry the operation.
+No functional changes in this patch, just in preparation for allowing
+more callers.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- mm/filemap.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+ include/linux/pagemap.h | 37 +++++++++++++++++++++++++++++++++++++
+ mm/filemap.c            | 35 ++++-------------------------------
+ 2 files changed, 41 insertions(+), 31 deletions(-)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index c746541b1d49..a3b86c9acdc8 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1219,6 +1219,14 @@ static int __wait_on_page_locked_async(struct page *page,
- 	return ret;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index a8f7bd8ea1c6..53d980f2208d 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -456,6 +456,43 @@ static inline pgoff_t linear_page_index(struct vm_area_struct *vma,
+ 	return pgoff;
  }
  
-+static int wait_on_page_locked_async(struct page *page,
-+				     struct wait_page_queue *wait)
++/* This has the same layout as wait_bit_key - see fs/cachefiles/rdwr.c */
++struct wait_page_key {
++	struct page *page;
++	int bit_nr;
++	int page_match;
++};
++
++struct wait_page_queue {
++	struct page *page;
++	int bit_nr;
++	wait_queue_entry_t wait;
++};
++
++static inline int wake_page_match(struct wait_page_queue *wait_page,
++				  struct wait_page_key *key)
 +{
-+	if (!PageLocked(page))
++	if (wait_page->page != key->page)
++	       return 0;
++	key->page_match = 1;
++
++	if (wait_page->bit_nr != key->bit_nr)
 +		return 0;
-+	return __wait_on_page_locked_async(compound_head(page), wait, false);
++
++	/*
++	 * Stop walking if it's locked.
++	 * Is this safe if put_and_wait_on_page_locked() is in use?
++	 * Yes: the waker must hold a reference to this page, and if PG_locked
++	 * has now already been set by another task, that task must also hold
++	 * a reference to the *same usage* of this page; so there is no need
++	 * to walk on to wake even the put_and_wait_on_page_locked() callers.
++	 */
++	if (test_bit(key->bit_nr, &key->page->flags))
++		return -1;
++
++	return 1;
 +}
 +
- /**
-  * put_and_wait_on_page_locked - Drop a reference and wait for it to be unlocked
-  * @page: The page to wait for.
-@@ -2058,17 +2066,25 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
- 					index, last_index - index);
- 		}
- 		if (!PageUptodate(page)) {
--			if (iocb->ki_flags & IOCB_NOWAIT) {
--				put_page(page);
--				goto would_block;
--			}
--
- 			/*
- 			 * See comment in do_read_cache_page on why
- 			 * wait_on_page_locked is used to avoid unnecessarily
- 			 * serialisations and why it's safe.
- 			 */
--			error = wait_on_page_locked_killable(page);
-+			if (iocb->ki_flags & IOCB_WAITQ) {
-+				if (written) {
-+					put_page(page);
-+					goto out;
-+				}
-+				error = wait_on_page_locked_async(page,
-+								iocb->private);
-+			} else {
-+				if (iocb->ki_flags & IOCB_NOWAIT) {
-+					put_page(page);
-+					goto would_block;
-+				}
-+				error = wait_on_page_locked_killable(page);
-+			}
- 			if (unlikely(error))
- 				goto readpage_error;
- 			if (PageUptodate(page))
-@@ -2156,7 +2172,10 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ extern void __lock_page(struct page *page);
+ extern int __lock_page_killable(struct page *page);
+ extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 80747f1377d5..e891b5bee8fd 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -990,43 +990,16 @@ void __init pagecache_init(void)
+ 	page_writeback_init();
+ }
  
- page_not_up_to_date:
- 		/* Get exclusive access to the page ... */
--		error = lock_page_killable(page);
-+		if (iocb->ki_flags & IOCB_WAITQ)
-+			error = lock_page_async(page, iocb->private);
-+		else
-+			error = lock_page_killable(page);
- 		if (unlikely(error))
- 			goto readpage_error;
+-/* This has the same layout as wait_bit_key - see fs/cachefiles/rdwr.c */
+-struct wait_page_key {
+-	struct page *page;
+-	int bit_nr;
+-	int page_match;
+-};
+-
+-struct wait_page_queue {
+-	struct page *page;
+-	int bit_nr;
+-	wait_queue_entry_t wait;
+-};
+-
+ static int wake_page_function(wait_queue_entry_t *wait, unsigned mode, int sync, void *arg)
+ {
+ 	struct wait_page_key *key = arg;
+ 	struct wait_page_queue *wait_page
+ 		= container_of(wait, struct wait_page_queue, wait);
++	int ret;
+ 
+-	if (wait_page->page != key->page)
+-	       return 0;
+-	key->page_match = 1;
+-
+-	if (wait_page->bit_nr != key->bit_nr)
+-		return 0;
+-
+-	/*
+-	 * Stop walking if it's locked.
+-	 * Is this safe if put_and_wait_on_page_locked() is in use?
+-	 * Yes: the waker must hold a reference to this page, and if PG_locked
+-	 * has now already been set by another task, that task must also hold
+-	 * a reference to the *same usage* of this page; so there is no need
+-	 * to walk on to wake even the put_and_wait_on_page_locked() callers.
+-	 */
+-	if (test_bit(key->bit_nr, &key->page->flags))
+-		return -1;
+-
++	ret = wake_page_match(wait_page, key);
++	if (ret != 1)
++		return ret;
+ 	return autoremove_wake_function(wait, mode, sync, key);
+ }
  
 -- 
 2.26.2
