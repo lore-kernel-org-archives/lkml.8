@@ -2,155 +2,121 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B597C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4194E2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A20220723
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTN8eeat"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WpzksIlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388074AbgEWRJi (ORCPT
+        id S1728688AbgEWRLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388017AbgEWRJh (ORCPT
+        Sat, 23 May 2020 13:11:40 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48396 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728310AbgEWRLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:09:37 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F1EC061A0E;
-        Sat, 23 May 2020 10:09:37 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m1so220168pgk.1;
-        Sat, 23 May 2020 10:09:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8bgnQ1KLCVEjAO9szlA67IscwztAgRigBVDr++Cu17U=;
-        b=BTN8eeatqn/NGZp+VWE9G00KOaCnzl+GiQKQjwjz82ZhG1oorKNCWfXhpUp5jQXsh+
-         nIAB5h/nvtHuYpM63gVFN3HIVbhGvNVsKpr8WRV9dgVt2I8hheeLuXdSeK7fd6KzaGJj
-         H4QvcYXR+P7WEHKcScl9NXSapWYnCzmuWsK6w3JZn0jRCA+2gTOTHhPzhGXNpse4fKJy
-         lY0egm4BftY/zBdC6HkgGfwk20NEX67O0V2t1VmrrIR4TVd+u6yI6o1PBPo8hWjEyyGz
-         mb44H3TuxbOs1Pn4xSqmMc42yhdbsXqbtayyfJQ/V5D5tQoDrzt0GIxN37Yqj0Rtbrlw
-         VE5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8bgnQ1KLCVEjAO9szlA67IscwztAgRigBVDr++Cu17U=;
-        b=KGu8R2mTdcLF7Za0W8sEduDYCiYaV6vo1jxBEOs5Ct81pTec1q+WHSqn5XYlNwzbzP
-         +Tlnnt5dm2atdEyt4Fwzb1akgaOwH/ttl0IWaIqZ6EyineYICLF7JTxlBZ3jquqsAWwZ
-         ccvvLfsWzvZJ+Y+LJ/sXPfAfmWcn1v3X1CspqBQlRkCEtivPKhr3ZIv/43nDQfARpKUU
-         TcRlYAuF1Sc7IZmWM+6AgYSBaCun4bZ1Je5GMMsTtIAvF4HjhMcXRYP4MI27AJGMFAXL
-         nMTD8PzkLEJ67Hqf8csD8lA+2uWSxuZfvAkSSw6YMlgpkOY9htrAeA7zWESsqCh73Xcj
-         RX3Q==
-X-Gm-Message-State: AOAM532Ke6+EnVkqs0sYw2d4GIzas1rfnz5E6BkzCObpQo+b3a7vnlxn
-        owPgfjB4C5SmpTPBoJLmxkA=
-X-Google-Smtp-Source: ABdhPJwLZLxXE7FoTSOMuP4MjGOWJtGYT8uG8p21Xp6bviW0PfjTIZ3Zf9sjtfHQ2BVP37n4lOd1GQ==
-X-Received: by 2002:a62:3381:: with SMTP id z123mr9774612pfz.274.1590253776635;
-        Sat, 23 May 2020 10:09:36 -0700 (PDT)
-Received: from localhost (176.122.159.134.16clouds.com. [176.122.159.134])
-        by smtp.gmail.com with ESMTPSA id l9sm9986840pfd.5.2020.05.23.10.09.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 23 May 2020 10:09:36 -0700 (PDT)
-Date:   Sun, 24 May 2020 01:09:33 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        michal.simek@xilinx.com, baruch@tkos.co.il, paul@crapouillou.net,
-        khilman@baylibre.com, shawnguo@kernel.org, festevam@gmail.com,
-        vz@mleia.com, heiko@sntech.de, linus.walleij@linaro.org,
-        baohua@kernel.org, ardb@kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] drivers: provide devm_platform_request_irq()
-Message-ID: <20200523170933.GA16771@nuc8i5>
-References: <20200523145157.16257-1-zhengdejin5@gmail.com>
- <20200523160828.GE3459@ninjato>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523160828.GE3459@ninjato>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 23 May 2020 13:11:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590253899; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=qvi0VRqlKEMVA/6GmY+485IFJ3sXKzvdCZwty6wFVGo=; b=WpzksIlVNGDw+LxVrpemOe4cweaglY+Tg2/j04S3WGl4i1mHSsV5s/CSZLSuhshgHlxos94e
+ SNAlU80zcEwMMDQ6Snv7g4Drxm/7goBTVuw7stiKKNhmafaeyqH1iDXw5CvLapASfcRKBP1q
+ 41Ios7mlSmcoUitX7isWASPamCw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec9593c.7fc0b43cc1b8-smtp-out-n03;
+ Sat, 23 May 2020 17:11:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 56EF7C433A1; Sat, 23 May 2020 17:11:24 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BE3CC433C6;
+        Sat, 23 May 2020 17:11:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9BE3CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     bjorn.andersson@linaro.org, maz@kernel.org,
+        linus.walleij@linaro.org, swboyd@chromium.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v2 0/4] irqchip: qcom: pdc: Introduce irq_set_wake call
+Date:   Sat, 23 May 2020 22:41:09 +0530
+Message-Id: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 06:08:29PM +0200, Wolfram Sang wrote:
-> On Sat, May 23, 2020 at 10:51:55PM +0800, Dejin Zheng wrote:
-> > It will call devm_request_irq() after platform_get_irq() function
-> > in many drivers, sometimes, it is not right for the error handling
-> > of these two functions in some drivers. so provide this function
-> > to simplify the driver.
-> > 
-> > the first patch will provide devm_platform_request_irq(), and the
-> > other patch will convert to devm_platform_request_irq() in some
-> > i2c bus dirver.
-> > 
-> > v1 -> v2:
-> > 	- I give up this series of patches in v1 version. I resend this
-> > 	  patches v2 by that discussion:
-> > 	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
-> > 	  The patch content has not changed.
-> 
-> I don't understand. v1 has been nacked because of technical reasons. How
-> did the discussion above change the situation? Am I missing something?
->
-No, you are not missing something. Maybe I did not explain clearly.
+Changes in v2:
+- Fix compiler error on gpiolib patch
 
-The v1 has been nacked because Grygorii told me that the
-function platform_get_irq() should be done as early as possible to avoid
-unnecessary initialization steps, and the function devm_request_irq()
-should be done late in probe when driver and HW are actually ready to
-handle IRQs. It can do the other things between the two funtions. I agree
-with him that it may be necessary in some complex drives. So abandon the
-patch v1.
+This series adds support to lazy disable pdc interrupt.
 
-Base on the discussion of you and Michal, I think maybe this patch is also
-needed for the simple driver or the driver of already use it like that:
-	
-	irq = platform_get_irq(pdev, 0);
-	if (irq < 0)
-		return irq;
-	ret = devm_request_irq()
+Some drivers using gpio interrupts want to configure gpio for wakeup using
+enable_irq_wake() but during suspend entry disables irq and expects system
+to resume when interrupt occurs. In the driver resume call interrupt is
+re-enabled and removes wakeup capability using disable_irq_wake() one such
+example is cros ec driver.
 
-It provides a common error handling and reduce one function call for each
-drivers, more easier to use and simplify code. So resend it.
+With [1] in documentation saying "An irq can be disabled with disable_irq()
+and still wake the system as long as the irq has wake enabled".
 
-BR,
-Dejin
+The PDC IRQs are currently "unlazy disabled" (disable here means that it
+will be masked in PDC & GIC HW GICD_ISENABLER, the moment driver invokes
+disable_irq()) such IRQs can not wakeup from low power modes like suspend
+to RAM since the driver chosen to disable this.
 
-> > 
-> > Dejin Zheng (2):
-> >   drivers: provide devm_platform_request_irq()
-> >   i2c: busses: convert to devm_platform_request_irq()
-> > 
-> >  drivers/base/platform.c            | 33 ++++++++++++++++++++++++++++++
-> >  drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++------------
-> >  drivers/i2c/busses/i2c-cadence.c   | 10 +++------
-> >  drivers/i2c/busses/i2c-digicolor.c | 10 +++------
-> >  drivers/i2c/busses/i2c-emev2.c     |  5 ++---
-> >  drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
-> >  drivers/i2c/busses/i2c-meson.c     | 13 ++++--------
-> >  drivers/i2c/busses/i2c-mxs.c       |  9 +++-----
-> >  drivers/i2c/busses/i2c-pnx.c       |  9 ++------
-> >  drivers/i2c/busses/i2c-rcar.c      |  9 +++-----
-> >  drivers/i2c/busses/i2c-rk3x.c      | 14 +++----------
-> >  drivers/i2c/busses/i2c-sirf.c      | 10 ++-------
-> >  drivers/i2c/busses/i2c-stu300.c    |  4 ++--
-> >  drivers/i2c/busses/i2c-synquacer.c | 12 +++--------
-> >  include/linux/platform_device.h    |  4 ++++
-> >  15 files changed, 72 insertions(+), 91 deletions(-)
-> > 
-> > -- 
-> > 2.25.0
-> > 
+During suspend entry, no one re-enable/unmask in HW, even if its marked for
+wakeup.
 
+One solutions thought to address this problem was...During suspend entry at
+last point, irq chip driver re-enable/unmask IRQs in HW that are marked for
+wakeup. This was attemped in [2].
 
+This series adds alternate solution to [2] by "lazy disable" IRQs in HW.
+The genirq takes care of lazy disable in case if irqchip did not implement
+irq_disable callback. Below is high level steps on how this works out..
+
+a. During driver's disable_irq() call, IRQ will be marked disabled in SW
+b. IRQ will still be enabled(read unmasked in HW)
+c. The device then enters low power mode like suspend to RAM
+d. The HW detects unmasked IRQs and wakesup the CPU
+e. During resume after local_irq_enable() CPU goes to handle the wake IRQ
+f. Generic handler comes to know that IRQ is disabled in SW
+g. Generic handler marks IRQ as pending and now invokes mask callback
+h. IRQ gets disabled/masked in HW now
+i. When driver invokes enable_irq() the SW pending IRQ leads IRQ's handler
+j. enable_irq() will again enable/unmask in HW
+
+[1] https://www.spinics.net/lists/kernel/msg3398294.html
+[2] https://patchwork.kernel.org/patch/11466021/
+
+Maulik Shah (4):
+  gpio: gpiolib: Allow GPIO IRQs to lazy disable
+  pinctrl: qcom: Remove irq_disable callback from msmgpio irqchip
+  pinctrl: qcom: Add msmgpio irqchip flags
+  irqchip: qcom-pdc: Introduce irq_set_wake call
+
+ drivers/gpio/gpiolib.c             | 55 +++++++++++++++++++++++++-------------
+ drivers/irqchip/qcom-pdc.c         | 33 ++++++++++++-----------
+ drivers/pinctrl/qcom/pinctrl-msm.c | 15 ++---------
+ include/linux/gpio/driver.h        | 13 +++++++++
+ 4 files changed, 68 insertions(+), 48 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
