@@ -2,116 +2,100 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A59204EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kbdB0Yri"
+	by mail.kernel.org (Postfix) with ESMTP id 4894720787
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbgEWTvm (ORCPT
+        id S2387905AbgEWUBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 15:51:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46550 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgEWTvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 15:51:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=PFCyc6acPZlxNiaaAXGg8gqtKeEybE/CLvO7b+Q8cE4=; b=kbdB0YripATEiV0bY55/9sjWnK
-        yYYhM6/eL8pnSLvbU5zj1rSN/hsHT4Hd7okI+l49su85WWOyI8kecLdgkICwjFPPv9mDrW0a1sEGY
-        G4gNZrO/7DaqsoJDT2D3/J/crUfDSFS1GaxfIXGV18ulH9MIzvwWQMbD5BRKW4OX7Dqg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jcaB9-0035FH-I5; Sat, 23 May 2020 21:51:31 +0200
-Date:   Sat, 23 May 2020 21:51:31 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org,
-        davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 03/11] net: phy: refactor c45 phy identification sequence
-Message-ID: <20200523195131.GN610998@lunn.ch>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-4-jeremy.linton@arm.com>
- <20200523183058.GX1551@shell.armlinux.org.uk>
+        Sat, 23 May 2020 16:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbgEWUBn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 16:01:43 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC986C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 13:01:43 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jcaKt-0007U9-AD; Sat, 23 May 2020 22:01:35 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jcaKj-0002Ig-7H; Sat, 23 May 2020 22:01:25 +0200
+Date:   Sat, 23 May 2020 22:01:25 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     David Wu <david.wu@rock-chips.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH] pwm: rockchip: simplify rockchip_pwm_get_state()
+Message-ID: <20200523200125.khdw3eau5eakxqy6@pengutronix.de>
+References: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+ <20190919111115.5oraof2bdl4627xv@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200523183058.GX1551@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190919111115.5oraof2bdl4627xv@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >  static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> >  			   struct phy_c45_device_ids *c45_ids) {
-> > -	int phy_reg;
-> > -	int i, reg_addr;
-> > +	int ret;
-> > +	int i;
-> >  	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
-> >  	u32 *devs = &c45_ids->devices_in_package;
-> 
-> I feel a "reverse christmas tree" complaint brewing... yes, the original
-> code didn't follow it.  Maybe a tidy up while touching this code?
+Hello David,
 
-At minimum, a patch should not make it worse. ret and i should clearly
-be after devs.
+On Thu, Sep 19, 2019 at 01:11:15PM +0200, oUwe Kleine-König wrote:
+> On Thu, Sep 19, 2019 at 11:17:27AM +0200, Rasmus Villemoes wrote:
+> > The way state->enabled is computed is rather convoluted and hard to
+> > read - both branches of the if() actually do the exact same thing. So
+> > remove the if(), and further simplify "<boolean condition> ? true :
+> > false" to "<boolean condition>".
+> > 
+> > Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > ---
+> > I stumbled on this while trying to understand how the pwm subsystem
+> > works. This patch is a semantic no-op, but it's also possible that,
+> > say, the first branch simply contains a "double negative" so either
+> > the != should be == or the "false : true" should be "true : false".
+> 
+> The change looks obviously right, it's a noop.
+> 
+> I share your doubts however. The construct was introduced in commit 
+> 831b2790507b ("pwm: rockchip: Use same PWM ops for each IP") by David
+> Wu.
+> 
+> Before there were rockchip_pwm_get_state_v1 for the supports_polarity =
+> false case and rockchip_pwm_get_state_v2 for supports_polarity = true.
+> 
+> In both state->enabled was assigned true if ((val & enable_conf) ==
+> enable_conf). So I assume everything is fine.
+> 
+> A confirmation by David would be great though.
 
-> >  static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
-> >  		      bool is_c45, struct phy_c45_device_ids *c45_ids)
-> >  {
-> > -	int phy_reg;
-> > +	int ret;
-> >  
-> >  	if (is_c45)
-> >  		return get_phy_c45_ids(bus, addr, phy_id, c45_ids);
-> >  
-> > -	/* Grab the bits from PHYIR1, and put them in the upper half */
-> > -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID1);
-> > -	if (phy_reg < 0) {
-> > +	ret = _get_phy_id(bus, addr, 0, phy_id, false);
-> > +	if (ret < 0) {
-> >  		/* returning -ENODEV doesn't stop bus scanning */
-> > -		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
-> > +		return (ret == -EIO || ret == -ENODEV) ? -ENODEV : -EIO;
-> 
-> Since ret will only ever be -EIO here, this can only ever return
-> -ENODEV, which is a functional change in the code (probably unintended.)
-> Nevertheless, it's likely introducing a bug if the intention is for
-> some other return from mdiobus_read() to be handled differently.
-> 
-> >  	}
-> >  
-> > -	*phy_id = phy_reg << 16;
-> > -
-> > -	/* Grab the bits from PHYIR2, and put them in the lower half */
-> > -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
-> > -	if (phy_reg < 0)
-> > -		return -EIO;
-> 
-> ... whereas this one always returns -EIO on any error.
-> 
-> So, I think you have the potential in this patch to introduce a subtle
-> change of behaviour, which may lead to problems - have you closely
-> analysed why the code was the way it was, and whether your change of
-> behaviour is actually valid?
+This is still open. Can you please have a look at
+https://patchwork.ozlabs.org/project/linux-pwm/patch/20190919091728.24756-1-linux@rasmusvillemoes.dk/
+and verify it's correct?
 
-I could be remembering this wrongly, but i think this is to do with
-orion_mdio_xsmi_read() returning -ENODEV, not 0xffffffffff, if there
-is no device on the bus at the given address. -EIO is fatal to the
-scan, everything stops with the assumption the bus is broken. -ENODEV
-should not be fatal to the scan.
+Best regards
+Uwe
 
-   Andrew
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
