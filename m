@@ -2,222 +2,91 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4788CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CBA2070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590235248;
-	bh=y75yQmWflL5gb+Qr48qsUcaC4h/0vscQ5q/Ojnql+M8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dnCOjxgsNjEHwt7YC1sH39ufRLocmn+sWauEqhhUJzIYnok/eET16j+UeLOIdHB93
-	 m/kp3LweYto9tzjwark/WGiLQ8tW+gZTuBn8ubkBojrKfioYGuLpmH5eU97kyoQ81x
-	 stm8DxbaZxST+wSfm+TOPHf66SWUpibO6jkrfhEA=
+	by mail.kernel.org (Postfix) with ESMTP id 8BBE12070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:04:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pg+pyAIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbgEWMAr (ORCPT
+        id S2387814AbgEWMEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 08:00:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41088 "EHLO mail.kernel.org"
+        Sat, 23 May 2020 08:04:01 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56763 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387814AbgEWMAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 08:00:44 -0400
-Received: from localhost.localdomain (82-64-249-211.subs.proxad.net [82.64.249.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387741AbgEWMEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 08:04:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46FDF206C3;
-        Sat, 23 May 2020 12:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590235243;
-        bh=y75yQmWflL5gb+Qr48qsUcaC4h/0vscQ5q/Ojnql+M8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmPtaA+ZH8/tAzmv3XJFqhmWH/kM/GlrNnwXlrSwpQF7iMGUT/KMMT0ti9H1ndhnW
-         m+qmScHb0cOFw638Aga1BG9jTA8gjQTEfpevUA8y44JSjyxg0FlFEqkCW0LyvJmkgB
-         /lLqVOTKc6zO7aWywVjA+kbG6lKXDHnOwPbDxHgk=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Thpf3hDvz9sRK;
+        Sat, 23 May 2020 22:03:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1590235438;
+        bh=O3nhdbyrugCN8LK3q4E5ycpy4wCXqUUTYLiEp+dr1H8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=pg+pyAIbGIeLiPaclGpnk/vcjO0iw0QR2sp5m+d5FV425fNtw+B+39p82hDercUEY
+         ZJ+mY0CzW0GI2xtxf/n62eTclRhJo6rzBsHYXI+Di/s4bsBjo2OTQm6pujX8uXGjVF
+         bvvDM0nt+6klYh7YVceWiZEyF9uTvLqKDBnotCsHeAmlFZn4WYDrf+8QEqpv0UusCa
+         JefMOnFs3OAl+D8UVcleYvVdbj675xe3insjgc8V8naXHn3nvAgV4edfa1LyDx7n3/
+         77MBFSFAzN7q19WfHkXJFg7nB5DB3BAqtQwmrfwKbw6/F6PfYwoksBD+EarVTcB6h7
+         pBkxFL7qn7tSw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dan Williams <dan.j.williams@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com
+Cc:     x86@kernel.org, stable@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: [PATCH v2 3/3] x86/boot/compressed: get rid of GOT fixup code
-Date:   Sat, 23 May 2020 14:00:21 +0200
-Message-Id: <20200523120021.34996-4-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200523120021.34996-1-ardb@kernel.org>
-References: <20200523120021.34996-1-ardb@kernel.org>
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH v4 1/2] x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user, kernel}()
+In-Reply-To: <159010126739.975921.6393757191247357952.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <159010126119.975921.6614194205409771984.stgit@dwillia2-desk3.amr.corp.intel.com> <159010126739.975921.6393757191247357952.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sat, 23 May 2020 22:04:13 +1000
+Message-ID: <87mu5yg8n6.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a previous patch, we have eliminated GOT entries from the decompressor
-binary and added an assertion that the .got section is empty. This means
-that the GOT fixup routines that exist in both the 32-bit and 64-bit
-startup routines have become dead code, and can be removed.
+Hi Dan,
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/compressed/head_32.S     | 22 ++------
- arch/x86/boot/compressed/head_64.S     | 57 --------------------
- arch/x86/boot/compressed/vmlinux.lds.S |  2 -
- 3 files changed, 3 insertions(+), 78 deletions(-)
+Sorry one minor nit below.
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index ab3307036ba4..dfa4131c65df 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -49,16 +49,13 @@
-  * Position Independent Executable (PIE) so that linker won't optimize
-  * R_386_GOT32X relocation to its fixed symbol address.  Older
-  * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
-- * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
-+ * _bss, _ebss, in PIE.  It isn't wrong, just suboptimal compared
-+ * to R_386_RELATIVE.  But the x86 kernel fails to properly handle
-  * R_386_32 relocations when relocating the kernel.  To generate
-- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
-- * hidden:
-+ * R_386_RELATIVE relocations, we mark _bss and _ebss as hidden:
-  */
- 	.hidden _bss
- 	.hidden _ebss
--	.hidden _got
--	.hidden _egot
- 
- 	__HEAD
- SYM_FUNC_START(startup_32)
-@@ -191,19 +188,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	shrl	$2, %ecx
- 	rep	stosl
- 
--/*
-- * Adjust our own GOT
-- */
--	leal	_got(%ebx), %edx
--	leal	_egot(%ebx), %ecx
--1:
--	cmpl	%ecx, %edx
--	jae	2f
--	addl	%ebx, (%edx)
--	addl	$4, %edx
--	jmp	1b
--2:
--
- /*
-  * Do the extraction, and jump to the new kernel..
-  */
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 4f7e6b84be07..706fbf6eef53 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -40,8 +40,6 @@
-  */
- 	.hidden _bss
- 	.hidden _ebss
--	.hidden _got
--	.hidden _egot
- 
- 	__HEAD
- 	.code32
-@@ -344,25 +342,6 @@ SYM_CODE_START(startup_64)
- 	/* Set up the stack */
- 	leaq	boot_stack_end(%rbx), %rsp
- 
--	/*
--	 * paging_prepare() and cleanup_trampoline() below can have GOT
--	 * references. Adjust the table with address we are running at.
--	 *
--	 * Zero RAX for adjust_got: the GOT was not adjusted before;
--	 * there's no adjustment to undo.
--	 */
--	xorq	%rax, %rax
--
--	/*
--	 * Calculate the address the binary is loaded at and use it as
--	 * a GOT adjustment.
--	 */
--	call	1f
--1:	popq	%rdi
--	subq	$1b, %rdi
--
--	call	.Ladjust_got
--
- 	/*
- 	 * At this point we are in long mode with 4-level paging enabled,
- 	 * but we might want to enable 5-level paging or vice versa.
-@@ -447,21 +426,6 @@ trampoline_return:
- 	pushq	$0
- 	popfq
- 
--	/*
--	 * Previously we've adjusted the GOT with address the binary was
--	 * loaded at. Now we need to re-adjust for relocation address.
--	 *
--	 * Calculate the address the binary is loaded at, so that we can
--	 * undo the previous GOT adjustment.
--	 */
--	call	1f
--1:	popq	%rax
--	subq	$1b, %rax
--
--	/* The new adjustment is the relocation address */
--	movq	%rbx, %rdi
--	call	.Ladjust_got
--
- /*
-  * Copy the compressed kernel to the end of our buffer
-  * where decompression in place becomes safe.
-@@ -539,27 +503,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	jmp	*%rax
- SYM_FUNC_END(.Lrelocated)
- 
--/*
-- * Adjust the global offset table
-- *
-- * RAX is the previous adjustment of the table to undo (use 0 if it's the
-- * first time we touch GOT).
-- * RDI is the new adjustment to apply.
-- */
--.Ladjust_got:
--	/* Walk through the GOT adding the address to the entries */
--	leaq	_got(%rip), %rdx
--	leaq	_egot(%rip), %rcx
--1:
--	cmpq	%rcx, %rdx
--	jae	2f
--	subq	%rax, (%rdx)	/* Undo previous adjustment */
--	addq	%rdi, (%rdx)	/* Apply the new adjustment */
--	addq	$8, %rdx
--	jmp	1b
--2:
--	ret
--
- 	.code32
- /*
-  * This is the 32-bit trampoline that will be copied over to low memory.
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 60a99dfb9d72..d91fdda51aa8 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -43,9 +43,7 @@ SECTIONS
- 		_erodata = . ;
- 	}
- 	.got : {
--		_got = .;
- 		KEEP(*(.got))
--		_egot = .;
- 	}
- 	.got.plt : {
- 		KEEP(*(.got.plt))
--- 
-2.20.1
+Dan Williams <dan.j.williams@intel.com> writes:
+> diff --git a/tools/testing/selftests/powerpc/copyloops/.gitignore b/tools/testing/selftests/powerpc/copyloops/.gitignore
+> index ddaf140b8255..1152bcc819fe 100644
+> --- a/tools/testing/selftests/powerpc/copyloops/.gitignore
+> +++ b/tools/testing/selftests/powerpc/copyloops/.gitignore
+> @@ -12,4 +12,4 @@ memcpy_p7_t1
+>  copyuser_64_exc_t0
+>  copyuser_64_exc_t1
+>  copyuser_64_exc_t2
+> -memcpy_mcsafe_64
+> +copy_mc_to_user
 
+Should be:
+
++copy_mc_64
+
+Otherwise the powerpc bits look good to me.
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+cheers
