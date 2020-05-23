@@ -2,129 +2,144 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6540C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC57D20727
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E98520756
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fAaH855X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S4YFKaPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbgEWBnt (ORCPT
+        id S2387516AbgEWBsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:43:49 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11739 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387427AbgEWBnt (ORCPT
+        Fri, 22 May 2020 21:48:15 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44472 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387453AbgEWBsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:43:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec87f430000>; Fri, 22 May 2020 18:41:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 18:43:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 18:43:48 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 23 May
- 2020 01:43:48 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 23 May 2020 01:43:48 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.52.1]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec87fd40001>; Fri, 22 May 2020 18:43:48 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Souptick Joarder <jrdr.linux@gmail.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, <kvm@vger.kernel.org>
-Subject: [PATCH 1/1] vfio/spapr_tce: convert get_user_pages() --> pin_user_pages()
-Date:   Fri, 22 May 2020 18:43:47 -0700
-Message-ID: <20200523014347.193290-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 22 May 2020 21:48:14 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04N1lrnx103671;
+        Fri, 22 May 2020 20:47:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590198473;
+        bh=yiS4eaMZLr5N5lmPgiZnhfhO2vD8vhckjgLQdVGEMjo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=S4YFKaPjhOkUmRmWvAvIofxQwMmQgsvHxCns71fok5YuWB7WhcCRLFKqmwszgJaPi
+         PrEBqH060yekOMhsht0ZOKFWWEkEwoKoFWaoBvWAYnxyDT4xIJ2CNQGxtx3ckdnaBs
+         xLSBF2n5eQBYQZkHWaFD0BLjVwIg3tCioxNciMes=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04N1lrQL067401
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 20:47:53 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 20:47:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 20:47:52 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04N1lmIK029381;
+        Fri, 22 May 2020 20:47:48 -0500
+Subject: Re: [PATCH 00/19] Implement NTB Controller using multiple PCI EP
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        PCI <linux-pci@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>
+References: <20200514145927.17555-1-kishon@ti.com>
+ <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d0c4c813-2af7-7fd4-e401-6fd5de69d4e4@ti.com>
+Date:   Sat, 23 May 2020 07:17:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590198083; bh=aNxPaUMw4B6W9o4OKROyKEN8taVDg0VgvpxK29EQarg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=fAaH855X8qd9w/i41ulaTLwkNv7vNOo/uAIWw0g6ZIauJPn0I+dJ3tJBHQcvOiBHA
-         /vQ2YrtqSNTbDY8zUKLuTFkGmAeGsYxXuGOCEUdUHEr/4+6L/cAhKxV31BOww26dfK
-         EyAxjd/weu4sdSe5uy9jw+qi7/HLDMOlEHv5YoVoTkVJwXsg8JUDSMBlNxIMvB+WRQ
-         TxtyMvrGfITDKeQVf5kOy0iYmNI2Dy6aUBnHDyPqTJYqndA/lj8uBb4Ib7ajcJceMY
-         TAr8Cxhf0YHDO8J99+Gt55xHt0q9+YSRpsaa/LWtJTnkOD2apoN4WUWfePUblIkKJe
-         whxoekKWcJLEA==
+In-Reply-To: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
+Hi Rob,
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+On 5/22/2020 9:41 PM, Rob Herring wrote:
+> On Thu, May 14, 2020 at 8:59 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> This series is about implementing SW defined NTB using
+>> multiple endpoint instances. This series has been tested using
+>> 2 endpoint instances in J7 connected to two DRA7 boards. However there
+>> is nothing platform specific for the NTB functionality.
+>>
+>> This was presented in Linux Plumbers Conference. The presentation
+>> can be found @ [1]
+> 
+> I'd like to know why putting this into DT is better than configfs.
+> Does it solve some problem? Doing things in userspace is so much
+> easier and more flexible than modifying and updating a DT.
 
-[1] Documentation/core-api/pin_user_pages.rst
+It's a lot cleaner to have an endpoint function bound to two different endpoint
+controller using device tree than configfs.
 
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
++    epf_bus {
++      compatible = "pci-epf-bus";
++
++      func@0 {
++        compatible = "pci-epf-ntb";
++        epcs = <&pcie0_ep>, <&pcie1_ep>;
++        epc-names = "primary", "secondary";
++        reg = <0>;
++        epf,vendor-id = /bits/ 16 <0x104c>;
++        epf,device-id = /bits/ 16 <0xb00d>;
++        num-mws = <4>;
++        mws-size = <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>;
++      };
 
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: kvm@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
+For device tree, just using phandles is enough and the driver can easily parse
+DT to get EPCs bound to the endpoint function
++        epcs = <&pcie0_ep>, <&pcie1_ep>;
++        epc-names = "primary", "secondary";
 
-Hi,
+This would be
+ln -s functions/pci-epf-ntb/func1 controllers/2900000.pcie-ep/
+ln -s functions/pci-epf-ntb/func1 controllers/2910000.pcie-ep/
 
-I'm compile-tested this, but am not able to run-time test, so any
-testing help is much appreciated!
+pci_epc_epf_link() should then maintain the order of EPC bound to EPF and
+designate one as PRIMARY_INTERFACE and the second as SECONDARY_INTERFACE.
+pci_epf_bind() should be made to behave differently for NTB case.
 
-thanks,
-John Hubbard
-NVIDIA
+While the standard properties (like vendorid, deviceid) has configfs entries,
+additional logic would be required for adding function specific fields like
+num-mws and mws-size above.
 
- drivers/vfio/vfio_iommu_spapr_tce.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+While all this support could be added in configfs, it looks simpler to
+represent then in DT.
 
-diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_=
-spapr_tce.c
-index 16b3adc508db..fe888b5dcc00 100644
---- a/drivers/vfio/vfio_iommu_spapr_tce.c
-+++ b/drivers/vfio/vfio_iommu_spapr_tce.c
-@@ -383,7 +383,7 @@ static void tce_iommu_unuse_page(struct tce_container *=
-container,
- 	struct page *page;
-=20
- 	page =3D pfn_to_page(hpa >> PAGE_SHIFT);
--	put_page(page);
-+	unpin_user_page(page);
- }
-=20
- static int tce_iommu_prereg_ua_to_hpa(struct tce_container *container,
-@@ -486,7 +486,7 @@ static int tce_iommu_use_page(unsigned long tce, unsign=
-ed long *hpa)
- 	struct page *page =3D NULL;
- 	enum dma_data_direction direction =3D iommu_tce_direction(tce);
-=20
--	if (get_user_pages_fast(tce & PAGE_MASK, 1,
-+	if (pin_user_pages_fast(tce & PAGE_MASK, 1,
- 			direction !=3D DMA_TO_DEVICE ? FOLL_WRITE : 0,
- 			&page) !=3D 1)
- 		return -EFAULT;
---=20
-2.26.2
+> 
+> I don't really think the PCI endpoint stuff is mature enough to be
+> putting into DT either.
 
+I think this will anyways come when we have to export real HW peripherals to
+the remote HOST using EP controller.
+
+Thanks
+Kishon
