@@ -2,106 +2,85 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2446C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25E2520823
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:52:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQm47eTF"
+	by mail.kernel.org (Postfix) with ESMTP id C3662206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbgEWLwy (ORCPT
+        id S2387799AbgEWLyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 07:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728749AbgEWLwy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 07:52:54 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D37C061A0E;
-        Sat, 23 May 2020 04:52:51 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id a13so5482356pls.8;
-        Sat, 23 May 2020 04:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C5xoUn3Q4/Fp4EcCpbrhEdHWRsyadLgqa5T9a3XYKYo=;
-        b=VQm47eTFvQPbJMM8ywJp0vkVBO//feHejDn7v3HotsM0ncw5eruPvMdLiANU0BlXNu
-         oftqiKGG41cDRuJnUd1/36SN9o26ZTp1yMmkcKCbZCd5yEEH8LO8eH2+wxtz+Fc7RxLb
-         LgQgAzDH/pMplqqqonGc/UdaEqe2uod5u9w07a3GU5GVCheRTmlAQgEJqPpkIxeFaJDD
-         3ib1dYSbyxf/ZDQtaOHF5K4A/sqQNWlawy1FYpizPXPjj83DJIPNzGwfgGLWW27E55Xv
-         csXaqfPRL4f5W4yvvBrTjj9bZpcBT6AFI8QIKpnTYairyw1ia+YiDA3Rpd9u+oyqatBv
-         8zrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C5xoUn3Q4/Fp4EcCpbrhEdHWRsyadLgqa5T9a3XYKYo=;
-        b=meUbOQ+YqkloysQU3UhRurCjTMIWEY7t9IRmwRY9UWETWTx0nhaXrSVPObb7Pzgzj5
-         8MDQIWL0dMp0UjFgBc4Q/bgzFjUlHpBaWQtzvPjgJmUfkEwHoDn8cDFq9AJRxwZ0lSet
-         KtjD0MqUk0KIF1J4H7DNwSqczu3k+1gURGDiclpwzXINSavEZJK21lNN18VfzMwqrnHQ
-         XHPSgLmqkFsl2DaltT1ER5wHejB+8M8jjPXHHRPP5uBRNiV4YPhmgq9sl4aLqL3KhpXR
-         bnZECR1z/UXsPbohdCCd6ZysSyYEcTmNtXHf7AMNp3Mi1pQFZtSYTRsU07Ck4NR8hvN5
-         u6Mw==
-X-Gm-Message-State: AOAM532ZVjmXhXzK+7QT/dD/Wld5xsrjJqTsDwcEgqkvjkCXC9uokKkc
-        lBKb/xtm2roxtI8mwU7DQfjFyLqpm/Gbdgq2xZE=
-X-Google-Smtp-Source: ABdhPJxEGjiwB7kgqx5YJHq/6Pv/Bu4eDGwGyRlLk2ISdBwnq2tmscxvk9wJb2o21pGftL0ah3jZsqeFxJdAvO8kI5Q=
-X-Received: by 2002:a17:902:ea8a:: with SMTP id x10mr19539324plb.255.1590234770883;
- Sat, 23 May 2020 04:52:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
- <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
- <5a8a6e7b.bef25.1723b588c7f.Coremail.dinghao.liu@zju.edu.cn>
- <CAHp75Vem1kQviLrobJ65aVOb_VCmLkAv=5U_iXAdWPNe7n0+Ng@mail.gmail.com>
- <CAHp75VexCBc6iCrd_VLj5jXE8cxxdzUUf6pMG6O8LjtNj0J1Aw@mail.gmail.com> <53722a45.c204d.172414e8ed8.Coremail.dinghao.liu@zju.edu.cn>
-In-Reply-To: <53722a45.c204d.172414e8ed8.Coremail.dinghao.liu@zju.edu.cn>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 23 May 2020 14:52:33 +0300
-Message-ID: <CAHp75VcfcE63KHbyokoBuBKDdTHiB8QiauL8XU=rRo0-=NL-Kg@mail.gmail.com>
-Subject: Re: Re: Re: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>, Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 23 May 2020 07:54:38 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:21770 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728749AbgEWLyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 07:54:38 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgC3TkHyDslepNH5AA--.6321S4;
+        Sat, 23 May 2020 19:54:30 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: vsp1: Fix runtime PM imbalance in vsp1_probe
+Date:   Sat, 23 May 2020 19:54:26 +0800
+Message-Id: <20200523115426.19285-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgC3TkHyDslepNH5AA--.6321S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWftFX_Wr
+        s8ZF47Wr4rGr1vqr1UKFy3ZrySqFZ8Wr18C3Z3tF1ay3yUu3WvqryUZr98uw47Z3yUZFy8
+        JFZ3WFy7Cr9a9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUHv38UUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoJBlZdtORR7AACsj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 2:32 PM <dinghao.liu@zju.edu.cn> wrote:
->
-> > On Fri, May 22, 2020 at 6:20 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, May 22, 2020 at 10:46 AM <dinghao.liu@zju.edu.cn> wrote:
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-...
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/media/platform/vsp1/vsp1_drv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> I also checked many other implementation of probe in drivers.
-> It seems that using pm_runtime_put() is ok.
-
-In *error path* or normal path?
-
-> If I misunderstood
-> your opinion, please point it out, thanks.
-
-Bottom line is (for the *error path* case):
-pm_runtime_put_noidle() has no side effects
-pm_runtime_put() (potentially) might have side effects.
-
-You should choose one which is clearer about what it does.
-
+diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+index c650e45bb0ad..017a54f2fdd8 100644
+--- a/drivers/media/platform/vsp1/vsp1_drv.c
++++ b/drivers/media/platform/vsp1/vsp1_drv.c
+@@ -846,8 +846,10 @@ static int vsp1_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_sync(&pdev->dev);
+ 		goto done;
++	}
+ 
+ 	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
+ 	pm_runtime_put_sync(&pdev->dev);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
