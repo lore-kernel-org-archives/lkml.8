@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D71CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D89207F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1200A20870
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388250AbgEWRZs (ORCPT
+        id S2388257AbgEWRZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50334 "EHLO
+        Sat, 23 May 2020 13:25:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388240AbgEWRZs (ORCPT
+        with ESMTP id S2388041AbgEWRZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:25:48 -0400
+        Sat, 23 May 2020 13:25:59 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2679C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:25:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486FEC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:25:59 -0700 (PDT)
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jcXtg-0002eQ-Kw; Sat, 23 May 2020 19:25:20 +0200
+        id 1jcXts-0002lj-4y; Sat, 23 May 2020 19:25:32 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jcXtg-00059k-3e; Sat, 23 May 2020 19:25:20 +0200
-Date:   Sat, 23 May 2020 19:25:20 +0200
+        id 1jcXtr-0005G5-D3; Sat, 23 May 2020 19:25:31 +0200
+Date:   Sat, 23 May 2020 19:25:31 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Yangtao Li <tiny.windzz@gmail.com>
@@ -52,16 +52,16 @@ Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         linux-mediatek@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 14/32] pwm: meson: convert to
+Subject: Re: [PATCH 32/32] pwm: atmel: convert to
  devm_platform_ioremap_resource
-Message-ID: <20200523172520.w7ltdn4ac2vcdzbg@pengutronix.de>
+Message-ID: <20200523172531.mw4bifb4t6ouwsxd@pengutronix.de>
 References: <20191229080610.7597-1-tiny.windzz@gmail.com>
- <20191229080610.7597-14-tiny.windzz@gmail.com>
+ <20191229080610.7597-32-tiny.windzz@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191229080610.7597-14-tiny.windzz@gmail.com>
+In-Reply-To: <20191229080610.7597-32-tiny.windzz@gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -74,7 +74,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-On Sun, Dec 29, 2019 at 08:05:52AM +0000, Yangtao Li wrote:
+On Sun, Dec 29, 2019 at 08:06:10AM +0000, Yangtao Li wrote:
 > Use devm_platform_ioremap_resource() to simplify code.
 > 
 > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
