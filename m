@@ -2,167 +2,93 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A506C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0CF2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D2B2053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R1XZgxxW"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sSI1R1nG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgEWRHZ (ORCPT
+        id S1728719AbgEWRHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:07:25 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44105 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728476AbgEWRHZ (ORCPT
+        Sat, 23 May 2020 13:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728476AbgEWRHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:07:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590253644; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=bROKX/djbcXfyKcI+T3w7r8zl613AlHc8MDTB/AnzJI=; b=R1XZgxxW+9eiyEZfYQFLl8/at/DmRTgfmV1G1Wub2hmwXAIUHX5t2ltWj8Zbf+RTbz0EDShe
- TRIx+6uyVZJ+v4RbxGyIDLcepkP9UOGQY+0eenJdtHWpR5rM1KyqUddNuOpslWykfH4LWWsQ
- KquworR7RhQUn+pD7/qQhCOZU/Y=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5ec95838569a62550d6cb5f0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 23 May 2020 17:07:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E6496C43387; Sat, 23 May 2020 17:07:03 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.147.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6317FC433C6;
-        Sat, 23 May 2020 17:06:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6317FC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        swboyd@chromium.org, evgreen@chromium.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
- <1590153569-21706-2-git-send-email-mkshah@codeaurora.org>
- <5888fc645d26b4780e9d9c6fd582374f@kernel.org>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <e08c9f6e-0e84-5f2a-766d-7a1c45bd977a@codeaurora.org>
-Date:   Sat, 23 May 2020 22:36:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 23 May 2020 13:07:36 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FCDC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:07:36 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id l73so2897837pjb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=egMx+No4Q7JjvOH6HOQxtmCuDUz9eFhby8mi1jgHo88=;
+        b=sSI1R1nGqQkE67A0UByykv2becr/N/nEMsk1aYYRxUFWzu6viyG4Sps2d6npfiJvKw
+         gbeTDje4JgbfrNVC/VRmwuHmHrgcIyhpSPSiLqQJwzletjfTO3p1JBOTODia1MqvoQ6X
+         XHPqgRc4IpO3EClibxSClAEmy8HFa/JIgNLDyuVUKxamQN/tKzi74Q/uBo6D+Ez5W3qd
+         k2RQ0Qjbkh99iyIEfTadj4Wd0yo02fu1D6V4H0DBvGDqGCfgn4KTwZxPsGKv2aS9c9dO
+         UaYutES/BtQ0/mpgUDp9uHQWGC//alIU2tz6QaJf/LSFVETtjt50CwK8FiLA+vd3XFUT
+         9T/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=egMx+No4Q7JjvOH6HOQxtmCuDUz9eFhby8mi1jgHo88=;
+        b=TMsx/f9K/DWMTRpNcUQ33V1+HfXQyZeewYG1Dq+XZXTthIFCSb2GF/nM1aqDC+Fx71
+         IXjiHaKsF82iQJCYWMWL09S9rHqiCdvTK9J16qCvhYEejgNL5FVuSwPXoNVExmhNCRNL
+         a9in1ep1ccr7ASfViwY99cs4If7p6eSP1yDuWorxJSTCTQpUQx42c/vb0xFrYVtTIrQj
+         cwspw6uNqzFJ1mXfMrwyeEI/gt/FdptnJrqG/2OXWILAKcnyRx0YRnVV++Xbv1+ZBMRi
+         Z1e273czRyMc6x/XJFJUmVdWCa/05BiDK9woI+D7Hv4z+89L2dwldamdjAUmivz2fC9h
+         BsgA==
+X-Gm-Message-State: AOAM532l7SMF+8MeeF+QwF3IQbCd3m+QmOdxYa3OLscTQYewfl3dohn2
+        IRKC+HW+gLasGxoqdl6zKejnDw==
+X-Google-Smtp-Source: ABdhPJxnyYvG0ZjbSXbIIdKDqPnqOs0WiiBaaWE2i2K0BL1GNY+NkEai1e0hxFdwoTJxRJ3wismciA==
+X-Received: by 2002:a17:90a:23e7:: with SMTP id g94mr11931683pje.210.1590253655802;
+        Sat, 23 May 2020 10:07:35 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:7c7a:121c:c8c2:4d28? ([2605:e000:100e:8c61:7c7a:121c:c8c2:4d28])
+        by smtp.gmail.com with ESMTPSA id m12sm4823488pjf.44.2020.05.23.10.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2020 10:07:35 -0700 (PDT)
+Subject: Re: [PATCH] linux/blkdev.h: Use ilog2() directly in blksize_bits()
+To:     Kaitao Cheng <pilgrimtao@gmail.com>
+Cc:     damien.lemoal@wdc.com, bvanassche@acm.org, ming.lei@redhat.com,
+        martin.petersen@oracle.com, satyat@google.com,
+        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
+        asml.silence@gmail.com, ajay.joshi@wdc.com,
+        linux-kernel@vger.kernel.org, songmuchun@bytedance.com
+References: <20200523155048.29369-1-pilgrimtao@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <98a69358-9976-e0e6-9cc6-f9c4676d8f3f@kernel.dk>
+Date:   Sat, 23 May 2020 11:07:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <5888fc645d26b4780e9d9c6fd582374f@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <20200523155048.29369-1-pilgrimtao@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 5/23/20 9:50 AM, Kaitao Cheng wrote:
+> blksize_bits() can be achieved through ilog2(), and ilog2() is
+> more efficient.
 
-On 5/23/2020 3:12 PM, Marc Zyngier wrote:
-> On 2020-05-22 14:19, Maulik Shah wrote:
->> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' 
->> gpiolib
->> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
->> callback is implemented then genirq takes unlazy path to disable irq.
->>
->> Underlying irqchip may not want to implement irq_disable callback to 
->> lazy
->> disable irq when client drivers invokes disable_irq(). By overriding
->> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
->>
->> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback 
->> only
->> if irqchip implemented irq_disable. In cases where irq_disable is not
->> implemented irq_mask is overridden. Similarly override irq_enable 
->> callback
->> only if irqchip implemented irq_enable otherwise irq_unmask is 
->> overridden.
->>
->> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>  drivers/gpio/gpiolib.c      | 59 
->> +++++++++++++++++++++++++++++----------------
->>  include/linux/gpio/driver.h | 13 ++++++++++
->>  2 files changed, 51 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index eaa0e20..a8fdc74 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -2465,33 +2465,38 @@ static void gpiochip_irq_relres(struct 
->> irq_data *d)
->>      gpiochip_relres_irq(gc, d->hwirq);
->>  }
->>
->> +static void gpiochip_irq_mask(struct irq_data *d)
->> +{
->> +    struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
->> +
->> +    if (chip->irq.irq_mask)
->> +        chip->irq.irq_mask(d);
->> +    gpiochip_disable_irq(chip, d->hwirq);
->> +}
->> +
->> +static void gpiochip_irq_unmask(struct irq_data *d)
->> +{
->> +    struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
->> +
->> +    gpiochip_enable_irq(chip, d->hwirq);
->> +    if (chip->irq.irq_unmask)
->> +        chip->irq.irq_unmask(d);
->> +}
->> +
->>  static void gpiochip_irq_enable(struct irq_data *d)
->>  {
->>      struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>
->> -    gpiochip_enable_irq(gc, d->hwirq);
->> -    if (gc->irq.irq_enable)
->> -        gc->irq.irq_enable(d);
->> -    else
->> -        gc->irq.chip->irq_unmask(d);
->> +    gpiochip_enable_irq(chip, d->hwirq);
->
-> You really never compiled this, did you?
->
-> I've stopped looking at this. Please send something that you will have 
-> actually tested.
->
->         M.
-
-Apologies.
-
-I did tested out on internal devices based on kernel 5.4 as well as 
-linux-next with sc7180.
-
-While posting i somehow taken patch from kernel 5.4 and messed up this 
-patch during merge conflicts.
-
-I fixed this in v2 and posted out changes that cleanly applies on latest 
-linux-next tag (next-20200521).
-
-Thanks,
-Maulik
+I like the simplification, but do you have any results to back up
+that claim? Is the generated code shorter? Runs faster?
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Jens Axboe
 
