@@ -2,92 +2,205 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D235C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA85C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCA2D2071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6331E207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlbX2Jyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbgEWKDt (ORCPT
+        id S2387778AbgEWKGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 06:03:49 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:16114 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725270AbgEWKDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 06:03:49 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app2 (Coremail) with SMTP id by_KCgCnHr709Mhe2tm5AQ--.78S4;
-        Sat, 23 May 2020 18:03:36 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: coda: Fix runtime PM imbalance in coda_probe
-Date:   Sat, 23 May 2020 18:03:32 +0800
-Message-Id: <20200523100332.32626-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgCnHr709Mhe2tm5AQ--.78S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4rJFyfAF15Wr1rAw1xAFb_yoW8Gr13pa
-        9Ykay0kFWFgws0vr4DAw1UuFW5WFyS9ry7Kr9ruwn5A3s8Jas2qw4rtFy3tFy8JrZ7A3W7
-        AFnIq39rAF4j9r7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxG
-        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
-        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUd-B_UUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQJBlZdtORGcwAFsi
+        Sat, 23 May 2020 06:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387750AbgEWKGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 06:06:38 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B34C061A0E;
+        Sat, 23 May 2020 03:06:38 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id a13so5416707pls.8;
+        Sat, 23 May 2020 03:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=pHMA/O04guMph5hS5Q4P9Tcl5HEUZXZqg3o4kCIqJOE=;
+        b=GlbX2Jyb007pfBF014RLYULwNRRnvvq9SiWsQm9QoCPjQbzlUpxwQ7XVd/CU79x0r0
+         mmcg+X7jMo5hf/Bt0jaHBZzdgBScFwgOEs3+UFAzo033cvkJ/jVyowWdQ/k3yyPU3ZJC
+         yLYb75pcxKeSwQUt5WpieRtFyGiSTyKg1pzdKSoOOV66yyQ4bk0i1YGOA+QHoK/tfzC6
+         bYJeRMA+YiMEak4D93XkRW9KpjugfPQX6WkTogHhzNZNSqfXHRscMPaZC8cLA+lG7osA
+         YnNEZWPhi7x0fCPNv6MWbWGXS5Sl2H3vuEItLTS9Pzu9otLRZ01V4SYHguejc6/GM+iq
+         dSBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=pHMA/O04guMph5hS5Q4P9Tcl5HEUZXZqg3o4kCIqJOE=;
+        b=AbWjn+s6jQN+q61sT62MZ5Tbdkxr6W7NxujnOWJMrEQZ5kfsgZS4/piYqjnzXVMskc
+         VEvcWUq6jJnBvXOcHs5mCiIIknmR8XDYpfOGP7610yDyLo+pkbyevp9PsRlxD7k+1+kQ
+         KYuSL8aHyBsGULI7mH9Irn9phcCVoUkYeKX5CLQQqRJ/XiW48EpvMaAUX/ZmH5QXj+tp
+         hIQscTNVFyfmaBdfzHJGrYY1NRm/YBxLiY3S6Hy8REYXv3dN4aBOVYdNnOdBPUepr/Cw
+         B/cSSvt6bYiNl1HyzDP1hBgOkbmB2EKy6AH+B2yxwkM/W7+Jx785tcopsEZFwfWSiYmm
+         whvg==
+X-Gm-Message-State: AOAM530NNGn+OZI6ZLo2wmc2CzCBAdrUKDCMRXdKFV07Jep4C7yD3CvB
+        VI8Vxnd49B3AB51lu9r00APein9OiLY=
+X-Google-Smtp-Source: ABdhPJwkiMz9WliVzcTJZscrGxXsIlnkGc4/qoNgcUnXdXTUKIIvtq9iQDo7UW5bwyMvEl5kRrJCBw==
+X-Received: by 2002:a17:90a:64f:: with SMTP id q15mr9224434pje.169.1590228397286;
+        Sat, 23 May 2020 03:06:37 -0700 (PDT)
+Received: from localhost (115-64-212-199.static.tpgi.com.au. [115.64.212.199])
+        by smtp.gmail.com with ESMTPSA id a2sm2383046pfg.98.2020.05.23.03.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 03:06:36 -0700 (PDT)
+Date:   Sat, 23 May 2020 20:06:30 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
+To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sami Tolvanen <samitolvanen@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+References: <20200521202716.193316-1-samitolvanen@google.com>
+        <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
+        <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
+In-Reply-To: <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
+MIME-Version: 1.0
+Message-Id: <1590226253.lnkg0jun9x.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When coda_firmware_request() returns an error code,
-a pairing runtime PM usage counter decrement is needed
-to keep the counter balanced.
+Excerpts from Masahiro Yamada's message of May 23, 2020 3:44 am:
+> + Michael, and PPC ML.
+>=20
+> They may know something about the reason of failure.
 
-Also, the caller expects coda_probe() to increase PM
-usage counter, there should be a refcount decrement
-in coda_remove() to keep the counter balanced.
+Because the linker can't put branch stubs within object code sections,=20
+so when you incrementally link them too large, the linker can't resolve=20
+branches into other object files.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/media/platform/coda/coda-common.c | 3 +++
- 1 file changed, 3 insertions(+)
+This is why we added incremental linking in the first place. I suppose=20
+it could be made conditional for platforms that can use this=20
+optimization.
 
-diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-index d0d093dd8f7c..550e9a1266da 100644
---- a/drivers/media/platform/coda/coda-common.c
-+++ b/drivers/media/platform/coda/coda-common.c
-@@ -3119,6 +3119,8 @@ static int coda_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_alloc_workqueue:
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
- 	destroy_workqueue(dev->workqueue);
- err_v4l2_register:
- 	v4l2_device_unregister(&dev->v4l2_dev);
-@@ -3136,6 +3138,7 @@ static int coda_remove(struct platform_device *pdev)
- 	}
- 	if (dev->m2m_dev)
- 		v4l2_m2m_release(dev->m2m_dev);
-+	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	v4l2_device_unregister(&dev->v4l2_dev);
- 	destroy_workqueue(dev->workqueue);
--- 
-2.17.1
+What'd be really nice is if we could somehow build and link kallsyms=20
+without relinking everything twice, and if we could do section mismatch=20
+analysis without making that vmlinux.o as well. I had a few ideas but=20
+not enough time to do much work on it.
 
+Thanks,
+Nick
+
+>=20
+>=20
+> On Sat, May 23, 2020 at 2:41 AM Masahiro Yamada <masahiroy@kernel.org> wr=
+ote:
+>>
+>> On Fri, May 22, 2020 at 5:27 AM Sami Tolvanen <samitolvanen@google.com> =
+wrote:
+>> >
+>> > Instead of linking all compilation units again each time vmlinux_link =
+is
+>> > called, reuse vmlinux.o from modpost_link.
+>> >
+>> > With x86_64 allyesconfig, vmlinux_link is called three times and reusi=
+ng
+>> > vmlinux.o reduces the build time ~38 seconds on my system (59% reducti=
+on
+>> > in the time spent in vmlinux_link).
+>> >
+>> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+>> > ---
+>> >  scripts/link-vmlinux.sh | 5 +----
+>> >  1 file changed, 1 insertion(+), 4 deletions(-)
+>> >
+>> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+>> > index d09ab4afbda4..c6cc4305950c 100755
+>> > --- a/scripts/link-vmlinux.sh
+>> > +++ b/scripts/link-vmlinux.sh
+>> > @@ -77,11 +77,8 @@ vmlinux_link()
+>> >
+>> >         if [ "${SRCARCH}" !=3D "um" ]; then
+>> >                 objects=3D"--whole-archive                        \
+>> > -                       ${KBUILD_VMLINUX_OBJS}                  \
+>> > +                       vmlinux.o                               \
+>> >                         --no-whole-archive                      \
+>> > -                       --start-group                           \
+>> > -                       ${KBUILD_VMLINUX_LIBS}                  \
+>> > -                       --end-group                             \
+>> >                         ${@}"
+>> >
+>> >                 ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
+>> >
+>> > base-commit: b85051e755b0e9d6dd8f17ef1da083851b83287d
+>> > --
+>> > 2.27.0.rc0.183.gde8f92d652-goog
+>> >
+>>
+>>
+>> I like this patch irrespective of CLANG_LTO, but
+>> unfortunately, my build test failed.
+>>
+>>
+>> ARCH=3Dpowerpc failed to build as follows:
+>>
+>>
+>>
+>>   MODPOST vmlinux.o
+>>   MODINFO modules.builtin.modinfo
+>>   GEN     modules.builtin
+>>   LD      .tmp_vmlinux.kallsyms1
+>> vmlinux.o:(__ftr_alt_97+0x20): relocation truncated to fit:
+>> R_PPC64_REL14 against `.text'+4b1c
+>> vmlinux.o:(__ftr_alt_97+0x164): relocation truncated to fit:
+>> R_PPC64_REL14 against `.text'+1cf78
+>> vmlinux.o:(__ftr_alt_97+0x288): relocation truncated to fit:
+>> R_PPC64_REL14 against `.text'+1dac4
+>> vmlinux.o:(__ftr_alt_97+0x2f0): relocation truncated to fit:
+>> R_PPC64_REL14 against `.text'+1e254
+>> make: *** [Makefile:1125: vmlinux] Error 1
+>>
+>>
+>>
+>> I used powerpc-linux-gcc
+>> available at
+>> https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2=
+.0/
+>>
+>>
+>> Build command:
+>>
+>> make -j24 ARCH=3Dpowerpc  CROSS_COMPILE=3Dpowerpc-linux-  defconfig all
+>>
+>>
+>> Could you check it please?
+>>
+>>
+>>
+>> I will apply it to my test branch.
+>> Perhaps, 0-day bot may find more failure cases.
+>>
+>>
+>> --
+>> Best Regards
+>> Masahiro Yamada
+>=20
+>=20
+>=20
+> --=20
+> Best Regards
+> Masahiro Yamada
+>=20
