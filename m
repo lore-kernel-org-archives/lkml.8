@@ -2,102 +2,165 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E939AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F98AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5196206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DzeaLolo"
+	by mail.kernel.org (Postfix) with ESMTP id 66A2D207F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387589AbgEWEHq (ORCPT
+        id S2387594AbgEWEJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 00:07:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25873 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725294AbgEWEHp (ORCPT
+        Sat, 23 May 2020 00:09:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12254 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725294AbgEWEJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 00:07:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590206864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F1bhCGQtRl8cBs0zYrkz/5FLXJrqBYq5wZlx9jEG8Uc=;
-        b=DzeaLolomh708EMfB9sr7hfe8y9wLr9050wX6hOBFVK6zLO9Z4yDGDBbKMivh3wjSXvkK9
-        iLlYU/TI2wYyB6/MfBKPcY+YjqMNtsJDRxnNJGGQZrApmXjdTV5fU0x8e/68br9JPe1I4t
-        Kqe1LGhGyfl1dObozmAGl27Yh+InJZE=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-BxYPg-3LPIm3itgG48LKyQ-1; Sat, 23 May 2020 00:07:40 -0400
-X-MC-Unique: BxYPg-3LPIm3itgG48LKyQ-1
-Received: by mail-qt1-f199.google.com with SMTP id v17so13984904qtp.15
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 21:07:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F1bhCGQtRl8cBs0zYrkz/5FLXJrqBYq5wZlx9jEG8Uc=;
-        b=N/B8/ZFLk+8/32TqC0Q32PCmr7E5wt4+o6UJt7c70/GeLjw2qxGapLUVRxhjHufIm2
-         CmLI2UPS23Dz4Pk8so4jdwM+f4Tc8OxHWqavAn8PSxIo8lKIE7DBCjPO9ko7jYwxgxY0
-         VEEXE7h3G6fJIqz0481Mjd2+ZJf93J0jNMEHrKct7HDSQBjN+BqgnYVIUoDlQQ7oxUR+
-         UqsHpYT5glESvROpXmq6yioSlCx3ERSAzv3+tAs0X25ZD/Tz2lnZ36cUgZyCnaNIXVRf
-         xmYz30YylHgynm0Xj9wxauJso6FpcOYhP04TfmxKOVpTb0dHaYGPqlb9O10aXRxG6U5Z
-         TDvQ==
-X-Gm-Message-State: AOAM533td9STlbWGnaW/rlar8yR8Me5wyCQG77fwA3V28l1v81LWXuWj
-        c+i0WRy6GVrXRpEYR8QtlxSGHaJ3zAF4UnZVBp8/rTyT5V0R54YzkG87eJay41iF0mTLwEseh05
-        wBG7zqqRn8F+BQI9tXXuzTpK1HoilzsBSKp0T1tOa
-X-Received: by 2002:a37:270a:: with SMTP id n10mr17623768qkn.288.1590206860004;
-        Fri, 22 May 2020 21:07:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxqucE/BLDWAWbsUb5BS4pFv+/cIpYb0lPmqP/rcpvyVgWQsH8wbXFsAUfUqER06Q9HPajqCxqlT56dHPAxYvs=
-X-Received: by 2002:a37:270a:: with SMTP id n10mr17623751qkn.288.1590206859751;
- Fri, 22 May 2020 21:07:39 -0700 (PDT)
+        Sat, 23 May 2020 00:09:36 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04N42942159920;
+        Sat, 23 May 2020 00:08:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3160mk2mpc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 23 May 2020 00:08:30 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04N48U8L175628;
+        Sat, 23 May 2020 00:08:30 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3160mk2mnw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 23 May 2020 00:08:30 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04N45RWH012073;
+        Sat, 23 May 2020 04:08:28 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 316uf9084h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 23 May 2020 04:08:28 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04N48SdY14025224
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 23 May 2020 04:08:28 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 536E2AC05B;
+        Sat, 23 May 2020 04:08:28 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1ABCAC059;
+        Sat, 23 May 2020 04:08:17 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.49.7])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Sat, 23 May 2020 04:08:17 +0000 (GMT)
+References: <20200504203829.6330-1-prsriva@linux.microsoft.com> <20200505095620.GA82424@C02TD0UTHF1T.local> <e8c7d74e-74bf-caa3-452d-23faa649e825@linux.microsoft.com> <20200512230509.GA2654@bogus> <7701df90-a68b-b710-4279-9d64e45ee792@linux.microsoft.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
+        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        balajib@linux.microsoft.com
+Subject: Re: [RFC][PATCH 0/2] Add support for using reserved memory for ima buffer pass
+In-reply-to: <7701df90-a68b-b710-4279-9d64e45ee792@linux.microsoft.com>
+Date:   Sat, 23 May 2020 01:08:13 -0300
+Message-ID: <87v9knpa36.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <20200522085723.29007-1-mszeredi@redhat.com> <20200522160815.GT23230@ZenIV.linux.org.uk>
- <CAOssrKcpQwYh39JpcNmV3JiuH2aPDJxgT5MADQ9cZMboPa9QaQ@mail.gmail.com>
- <CAOQ4uxi80CFLgeTYbnHvD7GbY_01z0uywP1jF8gZe76_EZYiug@mail.gmail.com>
- <CAOssrKfXgpRykVN94EiEy8xT4j+HCedN96i31j9iHomtavFaLA@mail.gmail.com> <20200522195626.GV23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200522195626.GV23230@ZenIV.linux.org.uk>
-From:   Miklos Szeredi <mszeredi@redhat.com>
-Date:   Sat, 23 May 2020 06:07:28 +0200
-Message-ID: <CAOssrKcpWj=ACbNfy0iBjGDRogouDZAv-LT3P91XaXY3HD=jBA@mail.gmail.com>
-Subject: Re: [PATCH] ovl: make private mounts longterm
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_12:2020-05-22,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ suspectscore=0 cotscore=-2147483648 impostorscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 clxscore=1011 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005230027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 9:56 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+
+Hello Prakhar,
+
+Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+
+> On 5/12/20 4:05 PM, Rob Herring wrote:
+>> On Wed, May 06, 2020 at 10:50:04PM -0700, Prakhar Srivastava wrote:
+>>> Hi Mark,
+>>
+>> Please don't top post.
+>>
+>>> This patch set currently only address the Pure DT implementation.
+>>> EFI and ACPI implementations will be posted in subsequent patchsets.
+>>>
+>>> The logs are intended to be carried over the kexec and once read the
+>>> logs are no longer needed and in prior conversation with James(
+>>> https://lore.kernel.org/linux-arm-kernel/0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com/)
+>>> the apporach of using a chosen node doesn't
+>>> support the case.
+>>>
+>>> The DT entries make the reservation permanent and thus doesnt need kernel
+>>> segments to be used for this, however using a chosen-node with
+>>> reserved memory only changes the node information but memory still is
+>>> reserved via reserved-memory section.
+>>
+>> I think Mark's point was whether it needs to be permanent. We don't
+>> hardcode the initrd address for example.
+>>
+> Thankyou for clarifying my misunderstanding, i am modelling this keeping to the
+> TPM log implementation that uses a reserved memory. I will rev up the version
+> with chosen-node support.
+> That will make the memory reservation free after use.
+
+Nice. Do you intend to use the same property that powerpc uses
+(linux,ima-kexec-buffer)?
+
+>>> On 5/5/20 2:59 AM, Mark Rutland wrote:
+>>>> Hi Prakhar,
+>>>>
+>>>> On Mon, May 04, 2020 at 01:38:27PM -0700, Prakhar Srivastava wrote:
+>>>>> IMA during kexec(kexec file load) verifies the kernel signature and measures
+>>
+>> What's IMAIMA is a LSM attempting to detect if files have been accidentally or
+> maliciously altered, both remotely and locally, it can also be used
+> to appraise a file's measurement against a "good" value stored as an extended
+> attribute, and enforce local file integrity.
 >
-> On Fri, May 22, 2020 at 08:53:49PM +0200, Miklos Szeredi wrote:
-
-> > Right, we should just get rid of ofs->upper_mnt and ofs->upperdir_trap
-> > and use ofs->layers[0] to store those.
+> IMA also validates and measures the signers of the kernel and initrd
+> during kexec. The measurements are extended to PCR 10(configurable) and the logs
+> stored in memory, however once kexec'd the logs are lost. Kexec is used as
+> secondary boot loader in may use cases and loosing the signer
+> creates a security hole.
 >
-> For that you'd need to allocate ->layers before you get to ovl_get_upper(),
-> though.  I'm not saying it's a bad idea - doing plain memory allocations
-> before anything else tends to make failure exits cleaner; it's just that
-> it'll take some massage.  Basically, do ovl_split_lowerdirs() early,
-> then allocate everything you need, then do lookups, etc., filling that
-> stuff.
+> This patch is an implementation to carry over the logs and making it
+> possible to remotely validate the signers of the kernel and initrd. Such a
+> support exits only in powerpc.
+> This patch makes the carry over of logs architecture independent and puts the
+> complexity in a driver.
 
-That was exactly the plan I set out.
+If I'm not mistaken, the code at arch/powerpc/kexec/ima.c isn't actually
+powerpc-specific. It could be moved to an arch-independent directory and
+used by any other architecture which supports device trees.
 
-> Regarding this series - the points regarding the name choice and the
-> need to document the calling conventions change still remain.
+I think that's the simplest way forward. And to be honest I'm still
+trying to understand why you didn't take that approach. Did you try it
+and hit some obstacle or noticed a disadvantage for your use case?
 
-Agreed.
-
-Thanks,
-Miklos
-
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
