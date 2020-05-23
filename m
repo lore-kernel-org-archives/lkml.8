@@ -2,154 +2,163 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D701EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28ED20738
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48D8206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WCZw6WIm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SbAjIaif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgEWBHM (ORCPT
+        id S2387490AbgEWBYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:07:12 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:19849 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387473AbgEWBHL (ORCPT
+        Fri, 22 May 2020 21:24:37 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43044 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387418AbgEWBYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:07:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590196030; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=kC/dl/V3vLG5GJYc4tMyBfR//6G/sHvL+fgCx9U0Eww=; b=WCZw6WImYplT12qB4f0fHYQlX1SdU1RORSrMgdbNrK3n7dVyEbqaAd3BJnWRYJX1S2b2k4YI
- RmWW3RRRDTgsJfScwfjUwP9+e25AUF3kZZHiHaD5AKdiksFtTZvi/F7uiRJZCOtm+QpihCbH
- 2NInLsd8m678XozpFhGKfT/poTA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ec87734c60c306cc8a5c5ab (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 23 May 2020 01:07:00
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D4F7C433CB; Sat, 23 May 2020 01:07:00 +0000 (UTC)
-Received: from majja-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: majja)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9114C433C8;
-        Sat, 23 May 2020 01:06:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9114C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=majja@codeaurora.org
-From:   Maheshwar Ajja <majja@codeaurora.org>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        ezequiel@collabora.com, paul.kocialkowski@bootlin.com,
-        p.zabel@pengutronix.de, posciak@chromium.org, jonas@kwiboo.se,
-        boris.brezillon@collabora.com, ribalda@kernel.org,
-        tglx@linutronix.de, sumitg@nvidia.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Maheshwar Ajja <majja@codeaurora.org>
-Subject: [PATCH] media: v4l2-ctrls: Add encoder constant quality control
-Date:   Fri, 22 May 2020 18:05:26 -0700
-Message-Id: <1590195927-14438-1-git-send-email-majja@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589836035-16579-1-git-send-email-majja@codeaurora.org>
-References: <1589836035-16579-1-git-send-email-majja@codeaurora.org>
+        Fri, 22 May 2020 21:24:36 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04N1ONZY122215;
+        Fri, 22 May 2020 20:24:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590197063;
+        bh=pc8GIbCeCGbGW+dH6N5QrFkDMQ4GvXVFsG0XIqTPplo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SbAjIaifncOFx0ks4RCylrSqylUM8uq5BtAEVysnNa8NfHN5GiBNQJorE0g1OGQ3p
+         pmaMHRW9HJCbTSl4SmMy9Ki20mrlSActRpo4rGLeAH3w9bQ+5nDX5+8Lc80msM6hP8
+         r3cU/dryBNsrwcNdMMMKBwWzFOn6xUlo1werTWXY=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04N1ON1l064608
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 20:24:23 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 20:24:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 20:24:22 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04N1OJgZ108060;
+        Fri, 22 May 2020 20:24:20 -0500
+Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200506151429.12255-1-kishon@ti.com>
+ <20200506151429.12255-8-kishon@ti.com> <20200520213434.GA583923@bogus>
+ <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
+ <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <44690fec-0b65-0192-75f7-e4fa086c4c0b@ti.com>
+Date:   Sat, 23 May 2020 06:54:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When V4L2_CID_MPEG_VIDEO_BITRATE_MODE value is
-V4L2_MPEG_VIDEO_BITRATE_MODE_CQ, encoder will produce
-constant quality output indicated by
-V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY control value.
-Encoder will choose appropriate quantization parameter
-and bitrate to produce requested frame quality level.
+Hi Rob,
 
-Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
----
- Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 10 ++++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c                      |  2 ++
- include/uapi/linux/v4l2-controls.h                        |  2 ++
- 3 files changed, 14 insertions(+)
+On 5/22/2020 10:15 PM, Rob Herring wrote:
+> On Thu, May 21, 2020 at 5:35 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/21/2020 3:04 AM, Rob Herring wrote:
+>>> On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Cadence driver uses "mem" memory resource to obtain the offset of
+>>>> configuration space address region, memory space address region and
+>>>> message space address region. The obtained offset is used to program
+>>>> the Address Translation Unit (ATU). However certain platforms like TI's
+>>>> J721E SoC require the absolute address to be programmed in the ATU and not
+>>>> just the offset.
+>>>
+>>> Once again, Cadence host binding is broken (or at least the example is).
+>>> The 'mem' region shouldn't even exist. It is overlapping the config
+>>> space and 'ranges':
+>>>
+>>>             reg = <0x0 0xfb000000  0x0 0x01000000>,
+>>>                   <0x0 0x41000000  0x0 0x00001000>,
+>>>                   <0x0 0x40000000  0x0 0x04000000>;
+>>>             reg-names = "reg", "cfg", "mem";
+>>>
+>>>             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+>>>                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
+>>>
+>>>
+>>> 16M of registers looks a bit odd. I guess it doesn't matter
+>>> unless you have a 32-bit platform and care about your virtual
+>>> space. Probably should have been 3 regions for LM, RP, and AT looking
+>>> at the driver.
+>>
+>> The "mem" region in never ioremapped. However $patch removes requiring to add
+>> "mem" memory resource.
+> 
+> I was referring to ioremapping 'reg' region.
+> 
+>>>
+>>> Whatever outbound address translation you need should be based on
+>>> 'ranges'.
+>>
+>> You mean we don't need to add "new *ops* for CPU addr fixup"?. The issue is
+>> ranges provides CPU address and PCI address. The CPU will access whatever is
+>> populated in ranges to access the PCI bus. However while programming the ATU,
+>> we cannot use the CPU address provided in ranges directly (in some platforms)
+>> because the controller does not see the full address and only the lower 28bits.
+> 
+> Okay, that is clearer as to what the difference is. I think this
+> should be 2 patches. One dropping 'mem' usage and using a mask and the
+> 2nd making the mask per platform.
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index d0d506a..b9d3f7a 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -581,6 +581,8 @@ enum v4l2_mpeg_video_bitrate_mode -
-       - Variable bitrate
-     * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CBR``
-       - Constant bitrate
-+    * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``
-+      - Constant quality
- 
- 
- 
-@@ -592,6 +594,14 @@ enum v4l2_mpeg_video_bitrate_mode -
-     the average video bitrate. It is ignored if the video bitrate mode
-     is set to constant bitrate.
- 
-+``V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY (integer)``
-+    Constant quality level control. This control is applicable when
-+    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE`` value is
-+    ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``. Valid range is 1 to 100
-+    where 1 indicates lowest quality and 100 indicates highest quality.
-+    Encoder will decide the appropriate quantization parameter and
-+    bitrate to produce requested frame quality.
-+
- ``V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION (integer)``
-     For every captured frame, skip this many subsequent frames (default
-     0).
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 1c617b4..f94cc9d 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -199,6 +199,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 	static const char * const mpeg_video_bitrate_mode[] = {
- 		"Variable Bitrate",
- 		"Constant Bitrate",
-+		"Constant Quality",
- 		NULL
- 	};
- 	static const char * const mpeg_stream_type[] = {
-@@ -982,6 +983,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice Parameters";
- 	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode Mode";
- 	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
-+	case V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY:		return "Constant Quality";
- 
- 	/* CAMERA controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 0ba1005..ca916da 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -375,6 +375,7 @@ enum v4l2_mpeg_video_aspect {
- enum v4l2_mpeg_video_bitrate_mode {
- 	V4L2_MPEG_VIDEO_BITRATE_MODE_VBR = 0,
- 	V4L2_MPEG_VIDEO_BITRATE_MODE_CBR = 1,
-+	V4L2_MPEG_VIDEO_BITRATE_MODE_CQ  = 2,
- };
- #define V4L2_CID_MPEG_VIDEO_BITRATE		(V4L2_CID_MPEG_BASE+207)
- #define V4L2_CID_MPEG_VIDEO_BITRATE_PEAK	(V4L2_CID_MPEG_BASE+208)
-@@ -742,6 +743,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
- #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
- #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
- #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-+#define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE + 645)
- 
- /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
- #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+hmm okay.
+> 
+> Really, the parent node of the PCI controller should probably have
+> 'ranges' and you could extract a mask from that. Looks like that is
+> what you had for DRA7... I'm not sure if ABI stability is important
+> for the Cadence platform. I'd assume that's just some IP eval system
+> and probably not?
 
+Right TI's J721E should be the first HW platform to use Cadence in mainline.
+> 
+> Why do you need an ops here? All you need is a mask value.
+
+So how do we get platform specific mask? Use a different binding to specify the
+mask value?
+> 
+>> This similar restriction was there with Designware (mostly an integration
+>> issue) and we used *ops* to fixup the address that has to be programmed in ATU.
+>> The Designware initially used a wrapper so that ranges property can be directly
+>> used [1]. However this approach was later removed in [2]
+>>
+>> [1] -> https://lore.kernel.org/patchwork/patch/468523/
+>> [2] -> https://lkml.org/lkml/2015/10/16/232
+> 
+> So while you had the data for a mask in DT, the driver now hardcodes it?
+
+Yes, that's correct. Which approach should we use for Cadence?
+
+Thanks
+Kishon
