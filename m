@@ -2,111 +2,90 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11812C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E350C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E455C2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:40:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NpzpEoKH"
+	by mail.kernel.org (Postfix) with ESMTP id 178552067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387627AbgEWFka (ORCPT
+        id S2387635AbgEWFld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 01:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        Sat, 23 May 2020 01:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387590AbgEWFk3 (ORCPT
+        with ESMTP id S2387457AbgEWFlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 01:40:29 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05546C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:40:28 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w19so5248404ply.11
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jxqs63Z1KDKQGpOdOeQMTViZZkGnReSqlh+zqFpbleQ=;
-        b=NpzpEoKHZnmldpoPMkE+bzHJ8AFM3iTtY/iE5mkL1vDY50VUOrfKjd5gNaVtnOTlYl
-         sMm3Lsly+RCq/jcCZIgneJXFg3cxvGAMX9Fuw3b/sfc0jgJoEQw7ZUNcuBEGAWuTKV9y
-         W6t//DvWTOky7bm6ofj60Me4iszhpqG7zHs0PputqOWVYAZq4Eh910LHpYktU7aMDH5R
-         P4Pjsl7KGL7evuGTo+s3GFfOvp4R9aTBAuuncQd7yo1GTkayDyAmZU05qET54wygA2K2
-         jqjx+Hpx2nfdM85Ga85d6wO/WJRWE7KylRwZS56KjtsnffzSDaWPhtUEVXKG28naajR+
-         9iYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jxqs63Z1KDKQGpOdOeQMTViZZkGnReSqlh+zqFpbleQ=;
-        b=dqZEo0qRpJilK1tkTcXE0PTUS/rEF5df7Ej6hKcdsr639tfhGisgII0tEh86q+5G0s
-         f7j7tV8J4/klNR2DojPUqPx2SZooufjX8v5OHiO2+UhVlWh0J1a5rD2A9exPc9gMnQzV
-         BBB0DVFTqYviXJtxAL6Q/c0a40Fx+THrZwH7stcXUm0MxLPFP4MDW8E146XpGxVplzR4
-         4XDQBlJOJFW3bLtiHVkP+KwlOYcEHyxyuKA8JMwAnYMB6gSVPWoysKClRJ1JY+A0J+2x
-         6mfSrKEfnVGIbWIGbaL1keZVg74dAxjBXs4F3Fbr1rsarG9Bdys9Yk9EeZTDcCbQ93/u
-         uAcg==
-X-Gm-Message-State: AOAM530zNwKIdjd/kYGNrJTcNoTBAFJsEw3q82e+9IcdT5bO1GUzXqDy
-        v/mRRX0BAizPJqheaBm1RA1CDg==
-X-Google-Smtp-Source: ABdhPJzrIIxev5YLq7j06KRiNYHqrMaVzvotEBa13813oXSRwPO34UqHwh/8/IsfG3JFW0nxQhyE8Q==
-X-Received: by 2002:a17:90a:8c85:: with SMTP id b5mr8201260pjo.187.1590212428371;
-        Fri, 22 May 2020 22:40:28 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l3sm8426994pjb.39.2020.05.22.22.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 22:40:27 -0700 (PDT)
-Date:   Fri, 22 May 2020 22:40:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: enable pm8150 rtc
-Message-ID: <20200523054025.GL11847@yoga>
-References: <20200523041201.32065-1-jonathan@marek.ca>
+        Sat, 23 May 2020 01:41:32 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE5FC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:41:32 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jcMuL-00DvEc-Av; Sat, 23 May 2020 05:41:17 +0000
+Date:   Sat, 23 May 2020 06:41:17 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     wu000273@umn.edu
+Cc:     hubcap@omnibond.com, martin@omnibond.com, devel@lists.orangefs.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu
+Subject: Re: [PATCH 2/2] orangefs: fix double-unlock issue in
+ service_operation().
+Message-ID: <20200523054117.GY23230@ZenIV.linux.org.uk>
+References: <20200523043551.9756-1-wu000273@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200523041201.32065-1-jonathan@marek.ca>
+In-Reply-To: <20200523043551.9756-1-wu000273@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 22 May 21:12 PDT 2020, Jonathan Marek wrote:
-
-> I don't see any reason for it to be disabled by default.
+On Fri, May 22, 2020 at 11:35:51PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
+> spin_unlock(&op->lock) is called before calling wake_up_interruptible().
+> But spin_unlock() was called again after a call of the function
+> "wait_for_matching_downcall" failed.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Yes, it was.
 
-Regards,
-Bjorn
+> Fix this issue by remove
+> the second spin_unlock().
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> index c0b197458665..b738c263f9d1 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> @@ -64,8 +64,6 @@ rtc@6000 {
->  			reg = <0x6000>;
->  			reg-names = "rtc", "alarm";
->  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
-> -
-> -			status = "disabled";
->  		};
->  
->  		pm8150_gpios: gpio@c000 {
-> -- 
-> 2.26.1
-> 
+Why is that a bug?  That's not an idle question - you could demonstrate
+that if you had reproduced an unbalanced unlock experimentally, or you
+could've proven it possible by analysis of the source.
+
+The former ought to be clearly reported; the latter... AFAICS, your
+reasoning is
+	1) at the time of wait_for_matching_downcall() call the spinlock
+is not being held, since we'd unlocked it upstream of that call and had
+done nothing that could have reacquired it.
+	2) after the return from that function we are doing unlock.
+That is a bug, because one should not unlock a spinlock that is not
+locked.
+
+The gap in that proof is the unverified assumption that the locking
+conditions upon return from wait_for_matching_downcall() are the same
+as upon its call.  IF that assumption holds, there is, indeed a bug.
+Now, a look at the function in question shows
+	* a comment right before it claiming that it
+" * Returns with op->lock taken.".  Which might or might not be correct.
+	* one of the wait_for_completion...() called; that clearly
+indicates that no spinlocks should be held upon the entry.
+	* unconditional spin_lock(&op->lock); right after that.
+	* several predicates checked, apparently some debugging
+output possibly produced and a value returned.  The predicates
+(op_state_service(), op_state_purged()) are clearly locking-neutral -
+grep shows
+fs/orangefs/orangefs-kernel.h:154:#define op_state_serviced(op)    ((op)->op_state & OP_VFS_STATE_SERVICED)
+fs/orangefs/orangefs-kernel.h:155:#define op_state_purged(op)      ((op)->op_state & OP_VFS_STATE_PURGED)
+so it's plain arithmetics.  The same, of course, applies to
+comparisons.
+
+In other words, the function *does* acquire that spinlock and
+does not release it, regardless of the value it returns.  Which
+means that your patch would very likely to cause deadlocks.
