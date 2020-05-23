@@ -2,260 +2,167 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B2420738
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0CF2053B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:07:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R1XZgxxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgEWRER (ORCPT
+        id S1728622AbgEWRHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:04:17 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:38570 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgEWREQ (ORCPT
+        Sat, 23 May 2020 13:07:25 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44105 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728476AbgEWRHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:04:16 -0400
-Received: by mail-il1-f199.google.com with SMTP id p81so11532887ill.5
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:04:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=N8d6QeYPUHpdLo5KPtrA8gD+DQMUAZwou75CTKpAngQ=;
-        b=HXd5NDM7KRWvY3btkAlLLrWVu48QLJCnWsdhTZJYxJbfL8xNMq2r90gfBSqByYhDCs
-         mgEP8s0qcXkl9UdwWFCJCoNAZD7RAsLV45DRLRkHs32Ga5hx4iUtw4+ROn4MMDfDBPlc
-         j+2lWAEdgOuwslYt7r7YmoIg69R6mnFDO1V/bFPprg+xfZVmjNIukIoGeB5FQubl5z5+
-         GQVstNBQU3B8GYcH7/D6MxLQTnEMHLYy2nkjmbUrVSpuuxw7qTPvMCqefVZ7YWBMAetQ
-         LDDoCtYHp4t3MCBeCAZWMLfqWXD7B11n54E88ZM5aQZZ4xjuSaaxRjRAV2auYOQJj4b8
-         G8kw==
-X-Gm-Message-State: AOAM530FuT42c/gcchkIEWPXrLeGGJh4xj/GOOtyws5IyspmAn3IwUyt
-        VEFPvaxKJ3R9Xw8Uhfwk/4eiEOKCmnf1alq+dyxwPPzEJlYu
-X-Google-Smtp-Source: ABdhPJyNRetGuMPRSC3TJJS3852pUoFf/F8dXdiBJXRfxpPhSme4g2h+uCaHK9VPu+dfEtaEbubR0znf4l8NVmSvsuKqMiJpqJQr
+        Sat, 23 May 2020 13:07:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590253644; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=bROKX/djbcXfyKcI+T3w7r8zl613AlHc8MDTB/AnzJI=; b=R1XZgxxW+9eiyEZfYQFLl8/at/DmRTgfmV1G1Wub2hmwXAIUHX5t2ltWj8Zbf+RTbz0EDShe
+ TRIx+6uyVZJ+v4RbxGyIDLcepkP9UOGQY+0eenJdtHWpR5rM1KyqUddNuOpslWykfH4LWWsQ
+ KquworR7RhQUn+pD7/qQhCOZU/Y=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ec95838569a62550d6cb5f0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 23 May 2020 17:07:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E6496C43387; Sat, 23 May 2020 17:07:03 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.147.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6317FC433C6;
+        Sat, 23 May 2020 17:06:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6317FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        swboyd@chromium.org, evgreen@chromium.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
+ <1590153569-21706-2-git-send-email-mkshah@codeaurora.org>
+ <5888fc645d26b4780e9d9c6fd582374f@kernel.org>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <e08c9f6e-0e84-5f2a-766d-7a1c45bd977a@codeaurora.org>
+Date:   Sat, 23 May 2020 22:36:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9f4d:: with SMTP id u13mr7746122iot.113.1590253454748;
- Sat, 23 May 2020 10:04:14 -0700 (PDT)
-Date:   Sat, 23 May 2020 10:04:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000045f37205a653bcf8@google.com>
-Subject: KASAN: use-after-free Read in put_device
-From:   syzbot <syzbot+60f9ee7f99afe29ef9fa@syzkaller.appspotmail.com>
-To:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
-        heikki.krogerus@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        rafael@kernel.org, rdunlap@infradead.org,
-        syzkaller-bugs@googlegroups.com, wsa@the-dreams.de
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5888fc645d26b4780e9d9c6fd582374f@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On 5/23/2020 3:12 PM, Marc Zyngier wrote:
+> On 2020-05-22 14:19, Maulik Shah wrote:
+>> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' 
+>> gpiolib
+>> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
+>> callback is implemented then genirq takes unlazy path to disable irq.
+>>
+>> Underlying irqchip may not want to implement irq_disable callback to 
+>> lazy
+>> disable irq when client drivers invokes disable_irq(). By overriding
+>> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
+>>
+>> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback 
+>> only
+>> if irqchip implemented irq_disable. In cases where irq_disable is not
+>> implemented irq_mask is overridden. Similarly override irq_enable 
+>> callback
+>> only if irqchip implemented irq_enable otherwise irq_unmask is 
+>> overridden.
+>>
+>> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>  drivers/gpio/gpiolib.c      | 59 
+>> +++++++++++++++++++++++++++++----------------
+>>  include/linux/gpio/driver.h | 13 ++++++++++
+>>  2 files changed, 51 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index eaa0e20..a8fdc74 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -2465,33 +2465,38 @@ static void gpiochip_irq_relres(struct 
+>> irq_data *d)
+>>      gpiochip_relres_irq(gc, d->hwirq);
+>>  }
+>>
+>> +static void gpiochip_irq_mask(struct irq_data *d)
+>> +{
+>> +    struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+>> +
+>> +    if (chip->irq.irq_mask)
+>> +        chip->irq.irq_mask(d);
+>> +    gpiochip_disable_irq(chip, d->hwirq);
+>> +}
+>> +
+>> +static void gpiochip_irq_unmask(struct irq_data *d)
+>> +{
+>> +    struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+>> +
+>> +    gpiochip_enable_irq(chip, d->hwirq);
+>> +    if (chip->irq.irq_unmask)
+>> +        chip->irq.irq_unmask(d);
+>> +}
+>> +
+>>  static void gpiochip_irq_enable(struct irq_data *d)
+>>  {
+>>      struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>
+>> -    gpiochip_enable_irq(gc, d->hwirq);
+>> -    if (gc->irq.irq_enable)
+>> -        gc->irq.irq_enable(d);
+>> -    else
+>> -        gc->irq.chip->irq_unmask(d);
+>> +    gpiochip_enable_irq(chip, d->hwirq);
+>
+> You really never compiled this, did you?
+>
+> I've stopped looking at this. Please send something that you will have 
+> actually tested.
+>
+>         M.
 
-HEAD commit:    c11d28ab Add linux-next specific files for 20200522
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=114e4f06100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-dashboard link: https://syzkaller.appspot.com/bug?extid=60f9ee7f99afe29ef9fa
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10ba16e2100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16caefe6100000
+Apologies.
 
-The bug was bisected to:
+I did tested out on internal devices based on kernel 5.4 as well as 
+linux-next with sc7180.
 
-commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa
-Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date:   Wed May 13 15:18:40 2020 +0000
+While posting i somehow taken patch from kernel 5.4 and messed up this 
+patch during merge conflicts.
 
-    kobject: Make sure the parent does not get released before its children
+I fixed this in v2 and posted out changes that cleanly applies on latest 
+linux-next tag (next-20200521).
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=140a5cba100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=160a5cba100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=120a5cba100000
+Thanks,
+Maulik
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+60f9ee7f99afe29ef9fa@syzkaller.appspotmail.com
-Fixes: 4ef12f719802 ("kobject: Make sure the parent does not get released before its children")
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-i2c-tiny-usb 1-1:0.0: version 63.ce found at bus 001 address 002
- (null): failure reading functionality
-i2c i2c-0: failure reading functionality
-i2c i2c-0: connected i2c-tiny-usb device
-usb 1-1: USB disconnect, device number 2
-==================================================================
-BUG: KASAN: use-after-free in kobject_put+0x296/0x2f0 lib/kobject.c:745
-Read of size 1 at addr ffff8880a8ce3054 by task kworker/0:7/2516
-
-CPU: 0 PID: 2516 Comm: kworker/0:7 Not tainted 5.7.0-rc6-next-20200522-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- kobject_put+0x296/0x2f0 lib/kobject.c:745
- put_device+0x1b/0x30 drivers/base/core.c:2761
- i2cdev_detach_adapter.part.0+0x53/0x70 drivers/i2c/i2c-dev.c:689
- i2cdev_detach_adapter drivers/i2c/i2c-dev.c:647 [inline]
- i2cdev_notifier_call+0xad/0xc0 drivers/i2c/i2c-dev.c:704
- notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
- __blocking_notifier_call_chain kernel/notifier.c:284 [inline]
- __blocking_notifier_call_chain kernel/notifier.c:271 [inline]
- blocking_notifier_call_chain kernel/notifier.c:295 [inline]
- blocking_notifier_call_chain+0x85/0xa0 kernel/notifier.c:292
- device_del+0x17e/0xd30 drivers/base/core.c:2813
- device_unregister+0x11/0x30 drivers/base/core.c:2871
- i2c_del_adapter drivers/i2c/i2c-core-base.c:1671 [inline]
- i2c_del_adapter+0x42b/0x590 drivers/i2c/i2c-core-base.c:1610
- i2c_tiny_usb_disconnect+0x3a/0xb0 drivers/i2c/busses/i2c-tiny-usb.c:283
- usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
- __device_release_driver drivers/base/dd.c:1113 [inline]
- device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1144
- bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
- device_del+0x481/0xd30 drivers/base/core.c:2839
- usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1245
- usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2217
- hub_port_connect drivers/usb/core/hub.c:5059 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x17ca/0x38f0 drivers/usb/core/hub.c:5576
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- process_scheduled_works kernel/workqueue.c:2330 [inline]
- worker_thread+0x7ab/0xe20 kernel/workqueue.c:2416
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-
-Allocated by task 2516:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- get_free_i2c_dev drivers/i2c/i2c-dev.c:76 [inline]
- i2cdev_attach_adapter.part.0+0x9a/0x3f0 drivers/i2c/i2c-dev.c:651
- i2cdev_attach_adapter drivers/i2c/i2c-dev.c:647 [inline]
- i2cdev_notifier_call drivers/i2c/i2c-dev.c:702 [inline]
- i2cdev_notifier_call+0x9b/0xc0 drivers/i2c/i2c-dev.c:695
- notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
- __blocking_notifier_call_chain kernel/notifier.c:284 [inline]
- __blocking_notifier_call_chain kernel/notifier.c:271 [inline]
- blocking_notifier_call_chain kernel/notifier.c:295 [inline]
- blocking_notifier_call_chain+0x85/0xa0 kernel/notifier.c:292
- device_add+0xa6e/0x1900 drivers/base/core.c:2640
- i2c_register_adapter+0x30d/0xb00 drivers/i2c/i2c-core-base.c:1415
- i2c_add_adapter+0xba/0x100 drivers/i2c/i2c-core-base.c:1528
- i2c_tiny_usb_probe+0x3a8/0x528 drivers/i2c/busses/i2c-tiny-usb.c:265
- usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:374
- really_probe+0x281/0x6d0 drivers/base/dd.c:525
- driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
- __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
- bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
- __device_attach+0x21a/0x360 drivers/base/dd.c:873
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xaf1/0x1900 drivers/base/core.c:2662
- usb_set_configuration+0xec5/0x1740 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x9d/0xe0 drivers/usb/core/generic.c:241
- usb_probe_device+0xc6/0x1f0 drivers/usb/core/driver.c:272
- really_probe+0x281/0x6d0 drivers/base/dd.c:525
- driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
- __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
- bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
- __device_attach+0x21a/0x360 drivers/base/dd.c:873
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0xaf1/0x1900 drivers/base/core.c:2662
- usb_new_device.cold+0x753/0x103d drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x1eca/0x38f0 drivers/usb/core/hub.c:5576
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-
-Freed by task 2516:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- device_release+0x71/0x200 drivers/base/core.c:1541
- kobject_cleanup lib/kobject.c:701 [inline]
- kobject_release lib/kobject.c:732 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1c8/0x2f0 lib/kobject.c:749
- cdev_device_del+0x69/0x80 fs/char_dev.c:575
- put_i2c_dev+0x160/0x1b0 drivers/i2c/i2c-dev.c:93
- i2cdev_detach_adapter.part.0+0x53/0x70 drivers/i2c/i2c-dev.c:689
- i2cdev_detach_adapter drivers/i2c/i2c-dev.c:647 [inline]
- i2cdev_notifier_call+0xad/0xc0 drivers/i2c/i2c-dev.c:704
- notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
- __blocking_notifier_call_chain kernel/notifier.c:284 [inline]
- __blocking_notifier_call_chain kernel/notifier.c:271 [inline]
- blocking_notifier_call_chain kernel/notifier.c:295 [inline]
- blocking_notifier_call_chain+0x85/0xa0 kernel/notifier.c:292
- device_del+0x17e/0xd30 drivers/base/core.c:2813
- device_unregister+0x11/0x30 drivers/base/core.c:2871
- i2c_del_adapter drivers/i2c/i2c-core-base.c:1671 [inline]
- i2c_del_adapter+0x42b/0x590 drivers/i2c/i2c-core-base.c:1610
- i2c_tiny_usb_disconnect+0x3a/0xb0 drivers/i2c/busses/i2c-tiny-usb.c:283
- usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
- __device_release_driver drivers/base/dd.c:1113 [inline]
- device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1144
- bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
- device_del+0x481/0xd30 drivers/base/core.c:2839
- usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1245
- usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2217
- hub_port_connect drivers/usb/core/hub.c:5059 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x17ca/0x38f0 drivers/usb/core/hub.c:5576
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- process_scheduled_works kernel/workqueue.c:2330 [inline]
- worker_thread+0x7ab/0xe20 kernel/workqueue.c:2416
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-
-The buggy address belongs to the object at ffff8880a8ce3000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 84 bytes inside of
- 2048-byte region [ffff8880a8ce3000, ffff8880a8ce3800)
-The buggy address belongs to the page:
-page:ffffea0002a338c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000240c988 ffffea00027fd2c8 ffff8880aa000e00
-raw: 0000000000000000 ffff8880a8ce3000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a8ce2f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc
- ffff8880a8ce2f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880a8ce3000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                 ^
- ffff8880a8ce3080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a8ce3100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
