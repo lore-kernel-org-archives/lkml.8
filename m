@@ -2,103 +2,82 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3536C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A978C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80ECD207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590207585;
-	bh=RNoJbDbbBcLxV6rl8Fj4qfXJ6yim+zf4HGZeqjR4a1g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mGi05oBKg0ESpvi2+VmGmvCgWc+AZdQjcA5daIX63dVvRp6vPp6XOvi5Jspougqa6
-	 sgx10WCISyhB5yqLJziyP4czQTSLy700fSWpysO7BJ8i1EdmiaRE9h/yDZjyvhNYpa
-	 TiOqqOia1i2ebGCr20qnXU0JebLFw4CTENN5sYtY=
+	by mail.kernel.org (Postfix) with ESMTP id D5F63207F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Mv9P92EP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbgEWETo (ORCPT
+        id S2387565AbgEWEUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 00:19:44 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:22223 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgEWETn (ORCPT
+        Sat, 23 May 2020 00:20:17 -0400
+Received: from mail-m964.mail.126.com ([123.126.96.4]:54788 "EHLO
+        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgEWEUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 00:19:43 -0400
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 04N4JFFQ010653;
-        Sat, 23 May 2020 13:19:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 04N4JFFQ010653
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590207556;
-        bh=RNoJbDbbBcLxV6rl8Fj4qfXJ6yim+zf4HGZeqjR4a1g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=E10VqfQIRMmNyVhzChr6ZKBHXQrMBnKCPQML9HZyW1v9g76oLzxWagTDtIEHPqUWl
-         hmuXyVVsSR3VvfUdeJIDtngRbqBHakzEgEQqO6u0WMiUHtDwMlZDr8Le7s65+qqoti
-         ENOyFbDC2WqiCjuYFvL8CikqPLo7AFT0knruJTe0MqAXOCOR2zhL8MDsK6Kj2Qgo8x
-         LIG1Ee56HaK3ewffpR+2tnGi5647kYEdgeHKx2lHdHCcreMIqbY+hvl0XzCoq+5hzr
-         G19ShBaEEBZ0lW1B0VGejQKLutNbMgtwNFur+A+EbRRr0zv7ShnJgBxfEz4Vh4VTEx
-         BRWTLQklrgd5w==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id b13so4475189uav.3;
-        Fri, 22 May 2020 21:19:16 -0700 (PDT)
-X-Gm-Message-State: AOAM530IlZ9h3fHuR4MrvVaNkx8BzwS6wfN76TY6qg67unwn3lSn48N3
-        n4bFALn5vEoPbcLJ2vrX18gGU/Wux9L3w7zy75c=
-X-Google-Smtp-Source: ABdhPJw2cv3u062hO6R+LOtLTJcXjI7T8W/sufipbLNiVjSUAy9kUd8zvk77S220SDmryfox9N/qIWRWKKmmUugWkQA=
-X-Received: by 2002:ab0:3245:: with SMTP id r5mr12152251uan.109.1590207555035;
- Fri, 22 May 2020 21:19:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200517094859.2376211-1-masahiroy@kernel.org>
- <20200517094859.2376211-4-masahiroy@kernel.org> <20200519102133.GA279905@hirez.programming.kicks-ass.net>
- <CAK7LNARkUkdRsW0D5cc5cEtXFJfnKhiVuZvrD6T1Xg3sr9kv=A@mail.gmail.com> <20200520122920.GB325280@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200520122920.GB325280@hirez.programming.kicks-ass.net>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 23 May 2020 13:18:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQf_VTA31tFQAbZUkwLWihhqqiQqYQw6RqD93u-Ch4ZJg@mail.gmail.com>
-Message-ID: <CAK7LNAQf_VTA31tFQAbZUkwLWihhqqiQqYQw6RqD93u-Ch4ZJg@mail.gmail.com>
-Subject: Re: [PATCH 03/29] modpost: add read_text_file() and get_line() helpers
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 23 May 2020 00:20:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=Fynj679f2jrOclrqH6
+        Nydv7tjRQ5vbBgRn0vdlSqZ50=; b=Mv9P92EPwGOwCVWPGo7+ksRlTkUbl8zfbp
+        Ve3LExdLn1ScA1fzmqumZ7veaP1o8jxo/zpDZt88MZTEu9oyQayNVzTGsbxmGSaT
+        yJK3+dzLrlMoCDL1DLETWQlxgeTo/UcfTxGJ9bgcUJzk9egktS92u0Y2FPSAESAH
+        42g31mAZ0=
+Received: from localhost.localdomain (unknown [122.194.9.243])
+        by smtp9 (Coremail) with SMTP id NeRpCgAHxS01nchePzBaPA--.303S3;
+        Sat, 23 May 2020 11:49:13 +0800 (CST)
+From:   chenxb_99091@126.com
+To:     David Airlie <airlied@linux.ie>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Xuebing Chen <chenxb_99091@126.com>
+Subject: [PATCH] drm: fix setting of plane_mask in pan_display_atomic()  function for linux-4.4
+Date:   Sat, 23 May 2020 11:49:07 +0800
+Message-Id: <1590205747-19599-1-git-send-email-chenxb_99091@126.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: NeRpCgAHxS01nchePzBaPA--.303S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrury3XFy7tr1kAryUtw47urg_yoWfGFg_CF
+        48Zws2krsFyryIv3Wayw43ZFyFka1rAF4rJrs5K3sIyrnFvrn3Gw12va4xur1UXF18tFyq
+        va42v3WfXryxtjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUntDG3UUUUU==
+X-Originating-IP: [122.194.9.243]
+X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbi7hktxVtC3bsREAAAsh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 9:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, May 20, 2020 at 09:17:45PM +0900, Masahiro Yamada wrote:
->
-> > The specification [1] says this:
-> >
-> > "The value returned may be less than nbyte if the number of bytes
-> > left in the file is less than nbyte, if the read() request was
-> > interrupted by a signal, or if the file is a pipe or FIFO or
-> > special file and has fewer than nbyte bytes immediately available
-> > for reading."
-> >
-> >
-> > This case does not meet any of 'if ...' parts.
->
-> So nobody ever ^Z's their build? I really don't think you can assume
-> that you'll never get a signal. That's just asking for trouble.
->
-> Doing the right thing here is 'trivial', there is absolutely no reason
-> to not do it.
+From: Xuebing Chen <chenxb_99091@126.com>
 
+The <include/drm/drm_crtc.h> provides drm_for_each_plane_mask macro and
+plane_mask is defined as bitmask of plane indices, such as
+1<<drm_plane_index(plane). This patch fixes error setting of plane_mask
+in pan_display_atomic() function.
 
-In my testing, read() seems robust against ^Z,
-but perhaps it might be implementation-defined ?
+Signed-off-by: Xuebing Chen <chenxb_99091@126.com>
+---
+ drivers/gpu/drm/drm_fb_helper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index e449f22..6a9f7ee 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -1256,7 +1256,7 @@ retry:
+ 			goto fail;
+ 
+ 		plane = mode_set->crtc->primary;
+-		plane_mask |= drm_plane_index(plane);
++		plane_mask |= 1 << drm_plane_index(plane);
+ 		plane->old_fb = plane->fb;
+ 	}
+ 
+-- 
+2.7.4
 
-I think you are right.
-We can gain extra safety with a trivial change.
-
---
-Best Regards
-Masahiro Yamada
