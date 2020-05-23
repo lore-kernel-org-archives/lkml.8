@@ -2,162 +2,94 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D566620727
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNiX28rd"
+	by mail.kernel.org (Postfix) with ESMTP id E411C206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387528AbgEWCbQ (ORCPT
+        id S2387554AbgEWCvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 22:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387427AbgEWCbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 22:31:13 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7693EC061A0E;
-        Fri, 22 May 2020 19:31:12 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w19so5128836ply.11;
-        Fri, 22 May 2020 19:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YT/k1rfVjIePeTXXkpUPtF/OwHqLeXNiGhtIiGZ/dQo=;
-        b=LNiX28rdTFOphtwhil5rORMlilHK/PI2wau7P7a6KmMQs0Sbu1Dvk8RGq9G1ewl+c5
-         dBwAZOU3shEOXwiW3+KJT/3mGUGJcVp0NXqZ+5Wj85F0ZSZjopqbDCdmdScpze5Z9FE1
-         gCBFL41HDHerefHUT6ijsdwGhrPqsYBZ2lzNdVRFu9I8t91RnMRyE0Va/ypawF4OLsIs
-         vwTCoJExzUPEFjzJDn4xoi/RTtVb9hUT7FbsoDyWS0K3/nL2FAoZLGogzOLxfMdxYDY3
-         2GdFIUon8Quts0ttXuR+LxNAbge9RXMAnRLoXoC3A8/CRIKcMVbDrubkpuy/vU+5JTD6
-         S0ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=YT/k1rfVjIePeTXXkpUPtF/OwHqLeXNiGhtIiGZ/dQo=;
-        b=CMGB/C0arU+EMe5+0ZJQyhdHYcj1LBB544busgmapgcnaISHTih2DUa+PfjYiiMLJi
-         LakZ68Eq8Wszzpq+cCtei/CMAfKXvVPKYxYIz7bEa3I1Cy0tlGjSFNB2ME+IXlTuJiHe
-         i0w84e3JIiR5iXmycddJXd1OTPqGzf4BGBFgOR5f7XBfGWd8OTDFZPpqSfibyDONriw+
-         0YMxhHbL5dwNAo06aqpQ6nem5hZuyGR/SP2REH9y0CbxAQosZw1l8rFEeQ3L5q+7XCuM
-         A/ItGMH6K8vc/6g8g8W+UJIbBly+UByv/objAYs5IDfw+tLM+51GkULAdtmc5bKFZqfj
-         kpLA==
-X-Gm-Message-State: AOAM533abBv0x7MJQuH3e25XCVjfa1wi5hQ3PdLA6dLQl4PwoQwVKs2f
-        50M7ToPOkkT8TyZQZkDk1/4=
-X-Google-Smtp-Source: ABdhPJy+ggU6E08aod2PoTLkPztWYi27NlUh+WoJh3UjcTQtYRk/aCJOGPLhLckcoyhA25USa4eUnw==
-X-Received: by 2002:a17:902:b088:: with SMTP id p8mr18347355plr.123.1590201071731;
-        Fri, 22 May 2020 19:31:11 -0700 (PDT)
-Received: from udknight.localhost ([59.57.156.148])
-        by smtp.gmail.com with ESMTPSA id u1sm7038448pgf.28.2020.05.22.19.31.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 May 2020 19:31:11 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 04N2V0wm008878;
-        Sat, 23 May 2020 10:31:00 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id 04N2Uqhj008875;
-        Sat, 23 May 2020 10:30:52 +0800
-Date:   Sat, 23 May 2020 10:30:52 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v6] checkpatch: add support to check 'Fixes:' tag format
-Message-ID: <20200523023052.GA6969@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
-References: <20200504082002.GA29972@udknight>
- <aaa0a1f9619130293a8d8810fa8de140d5612e45.camel@perches.com>
+        Fri, 22 May 2020 22:51:14 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:53244 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387490AbgEWCvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 22:51:12 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Sat, 23 May 2020 10:51:04
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Sat, 23 May 2020 10:51:04 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Charles Keepax" <ckeepax@opensource.cirrus.com>
+Cc:     kjlu@umn.edu, "MyungJoo Ham" <myungjoo.ham@samsung.com>,
+        "Chanwoo Choi" <cw00.choi@samsung.com>,
+        patches@opensource.cirrus.com, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] extcon: arizona: Fix runtime PM imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200522165530.GH71940@ediswmail.ad.cirrus.com>
+References: <20200522110732.874-1-dinghao.liu@zju.edu.cn>
+ <20200522165530.GH71940@ediswmail.ad.cirrus.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aaa0a1f9619130293a8d8810fa8de140d5612e45.camel@perches.com>
-User-Agent: Mutt/1.7.1 (2016-10-04)
+Message-ID: <3215e62.c14f3.1723f70eade.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCnjwqYj8helF4NAg--.41746W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg4IBlZdtOQvSwALs2
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8JwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_JF0_Jw1lV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 11:34:31AM -0700, Joe Perches wrote:
-> On Mon, 2020-05-04 at 16:20 +0800, Wang YanQing wrote:
-> > According to submitting-patches.rst, 'Fixes:' tag has a little
-> > stricter condition about the one line summary than normal git
-> > commit description:
-> > “...
-> > Do not split the tag across multiple lines, tags are exempt from
-> > the "wrap at 75 columns" rule in order to simplify parsing scripts
-> > ...”
-> > 
-> > And there is no sanity check for 'Fixes:' tag format in checkpatch
-> > the same as GIT_COMMIT_ID for git commit description, so let's expand
-> > the GIT_COMMIT_ID to add 'Fixes:' tag format check support.
-> > 
-> > The check supports below formats:
-> > Fixes: 54a4f0239f2e ("KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed")
-> > Fixes: 85f7cd3a2aad ("Revert "media: Kconfig: better support hybrid TV devices"")
-> > Fixes: 878520ac45f9 ("ext4: save the error code which triggered...")
-> > Fixes: 878520ac45f9 ("ext4: save the error code which triggered")
-> > Fixes: 277f27e2f277 ("SUNRPC/cache: Allow garbage collection ... ")
-> > 
-> > The check doesn't support below formats and it will emit diagnostics info for them:
-> > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
-> > Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
-> > Fixes: 3fd6e7d9a146 (ASoC: tas571x: New driver for TI TAS571x power amplifiers)
-> > Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
-> > Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
-> > Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
-> > Fixes:      9b1640686470 ("scsi: lpfc: Fix use-after-free mailbox cmd completion")
-> > Fixes: 03f6fc6de919 ('ASoC: rt5682: Add the soundwire support')
-> > Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
-> > 
-> > Because after GIT_COMMIT_ID supports 'Fixes:' tag format check, it could do
-> > the same check as the UNKNOWN_COMMIT_ID, so we don't need UNKNOWN_COMMIT_ID
-> > anymore and I decide to delete it.
-> > 
-> > Note: this patch also fixes double quotation mark issue for normal git
-> >       commit description, and now it supports double quotation mark in
-> >       title line, for example:
-> >       Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by default
-> >       when checking usable channels"")
-> > 
-> > Note: this patch also adds diagnostics info support for normal git commit
-> >       description format check.
-> 
-> Thanks YanQing.
-> 
-> All of this seems fine, but perhaps checkpatch's output message content
-> could be a bit shorter.  I'll give it a think for a while.
-> 
-
-Hi! Joe
-
-What are the status of these patches?
-"[PATCH v2] checkpatch: fix can't check for too long invalid commit id"
-"[PATCH v6] checkpatch: add support to check 'Fixes:' tag format"
-"[PATCH v2] checkpatch: allow commit description spans across three lines"
-
-This is a ping message, maybe you have forgot them?
-
-Thanks.
-
-
+PiBPbiBGcmksIE1heSAyMiwgMjAyMCBhdCAwNzowNzozMVBNICswODAwLCBEaW5naGFvIExpdSB3
+cm90ZToKPiA+IFdoZW4gYXJpem9uYV9yZXF1ZXN0X2lycSgpIHJldHVybnMgYW4gZXJyb3IgY29k
+ZSwgYQo+ID4gcGFpcmluZyBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZGVjcmVtZW50IGlzIG5l
+ZWRlZAo+ID4gdG8ga2VlcCB0aGUgY291bnRlciBiYWxhbmNlZC4gRm9yIGVycm9yIHBhdGhzIGFm
+dGVyCj4gPiB0aGlzIGZ1bmN0aW9uLCB0aGluZ3MgYXJlIHRoZSBzYW1lLgo+ID4gCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+
+IAo+IEdvb2Qgc3BvdCBvbiB0aGUgYnVnIHRoYW5rIHlvdS4KPiAKPiA+ICBkcml2ZXJzL2V4dGNv
+bi9leHRjb24tYXJpem9uYS5jIHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2V4dGNvbi9leHRjb24tYXJpem9uYS5j
+IGIvZHJpdmVycy9leHRjb24vZXh0Y29uLWFyaXpvbmEuYwo+ID4gaW5kZXggNzQwMTczM2RiMDhi
+Li40NzBiYmM4ZTUwODkgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2V4dGNvbi9leHRjb24tYXJp
+em9uYS5jCj4gPiArKysgYi9kcml2ZXJzL2V4dGNvbi9leHRjb24tYXJpem9uYS5jCj4gPiBAQCAt
+MTc0NCw2ICsxNzQ0LDcgQEAgc3RhdGljIGludCBhcml6b25hX2V4dGNvbl9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gIGVycl9yaXNlOgo+ID4gIAlhcml6b25hX2ZyZWVf
+aXJxKGFyaXpvbmEsIGphY2tfaXJxX3Jpc2UsIGluZm8pOwo+ID4gIGVycl9ncGlvOgo+ID4gKwlw
+bV9ydW50aW1lX3B1dCgmcGRldi0+ZGV2KTsKPiAKPiBIb3dldmVyLCBJIGRvbid0IHRoaW5rIHRo
+aXMgd29ya3MgYXMgYSBmaXguIEZpcnN0bHksIHRoZSBlcnJfZ3Bpbwo+IGxhYmVsIGlzIHVzZWQg
+YmVmb3JlIHRoZSBjYWxsIHRvIHBtX3J1bnRpbWVfZ2V0X3N5bmMsIHRoaXMgbWlnaHQKPiBiZSBv
+ayBzaW5jZSBwbV9ydW50aW1lX2VuYWJsZSBoYXNuJ3QgYmVlbiBjYWxsZWQgeWV0IGJ1dCBwcm9i
+YWJseQo+IGJldHRlciB0byBhZGQgYSBuZXcgbGFiZWwgZm9yIGl0Lgo+IAoKWW91IGFyZSByaWdo
+dCwgdGhhbmsgeW91IGZvciB5b3VyIGNvcnJlY3Rpb24hIAoKPiBTZWNvbmRseSwgZm9sbG93aW5n
+IHRoZSBlcnJfaHBkZXQgZXJyb3IgcGF0aCB3aWxsIGFsc28gcmVzdWx0IGluCj4gYSBkb3VibGUg
+cHV0LiBJbiB0aGF0IGNhc2UgSSBkb24ndCB0aGluayB0aGVyZSBpcyBhbnkgcmVhc29uIHdoeQo+
+IHdlIG5lZWQgdG8gcHV0IGJlZm9yZSBjYWxsaW5nIGlucHV0X2RldmljZV9yZWdpc3RlciBzbyBp
+dCBtaWdodAo+IGp1c3QgYmUgc2ltcGxlc3QgdG8gbW92ZSB0aGF0IHB1dCB1bnRpbCBhZnRlciBy
+ZWdpc3RlcmluZyB0aGUKPiBpbnB1dCBkZXZpY2UuCj4gCgpBZ3JlZS4gSSB3aWxsIGZpeCB0aGlz
+IGluIHRoZSBuZXh0IGVkaXRpb24gb2YgcGF0Y2guCgpSZWdhcmRzLApEaW5naGFvCgo+IFRoYW5r
+cywKPiBDaGFybGVzCj4gCj4gPiAgCWdwaW9kX3B1dChpbmZvLT5taWNkX3BvbF9ncGlvKTsKPiA+
+ICBlcnJfcmVnaXN0ZXI6Cj4gPiAgCXBtX3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+ZGV2KTsKPiA+
+IC0tIAo+ID4gMi4xNy4xCj4gPiAK
