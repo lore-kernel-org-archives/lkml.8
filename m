@@ -2,101 +2,169 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2847C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 479CA2071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10CA20812
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590230789;
+	bh=pbReTCTmAIHmTd4BJrQV3YAqM3Cg2azMISSPySR/VeE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S71HhEcIBgvV5gZSTXhsqX4J19dVWd7LC8VTfTiMKSDqwm1LCTUjFSeFn5ygZMTMN
+	 6av4EqKLtXW+ko5mY9i6xp/QZ3FkA+JZdtNhDQ9bXIBNkc+lzf70+cyIaB82bBczur
+	 fNDMGBP8tC5y0T/Xjy39fz9RLi1rScCUzEJroGNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbgEWKmU (ORCPT
+        id S2387763AbgEWKq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 06:42:20 -0400
-Received: from v6.sk ([167.172.42.174]:40074 "EHLO v6.sk"
+        Sat, 23 May 2020 06:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731237AbgEWKmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 06:42:17 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id B8966610CD;
-        Sat, 23 May 2020 10:41:45 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 2/4] drm/etnaviv: Don't ignore errors on getting clocks
-Date:   Sat, 23 May 2020 12:41:35 +0200
-Message-Id: <20200523104137.12562-3-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200523104137.12562-1-lkundrak@v3.sk>
-References: <20200523104137.12562-1-lkundrak@v3.sk>
+        id S1725908AbgEWKq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 06:46:28 -0400
+Received: from localhost (p5486c962.dip0.t-ipconnect.de [84.134.201.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4740E2071C;
+        Sat, 23 May 2020 10:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590230788;
+        bh=pbReTCTmAIHmTd4BJrQV3YAqM3Cg2azMISSPySR/VeE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dkhtftQ/UB2JXoW8P545devsy9L/piU0uizM9rj9bh9fsgUV27y1zesvuLCrCYqb4
+         ex99CvspcJLpmfp36jRcZUNvzuJj2aH/KIqA2Z/lAWh3C3t7erD8w209kJPvzhrcrt
+         JMWBvyOa/VKZvl4R9niA0/QJ2mgpf9oYRCZpAfFU=
+Date:   Sat, 23 May 2020 12:46:25 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Alain Volmat <alain.volmat@st.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 1/4] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200523104624.GB3459@ninjato>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+ <1588657871-14747-2-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
+Content-Disposition: inline
+In-Reply-To: <1588657871-14747-2-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There might be good reasons why the getting a clock failed. To treat the
-clocks as optional we're specifically only interested in ignoring -ENOENT,
-and devm_clk_get_optional() does just that.
 
-Note that this preserves the original behavior of all clocks being
-optional. The binding document mandates the "bus" clock while the dove
-machine only specifies "core".
+--WYTEVAkct0FjGQmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
----
-Changes since v1:
-- Fix the actual return value
----
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Adding Benjamin who mainly implemented this.
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index c6dacfe3d321..f303172c091d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1786,26 +1786,26 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Get Clocks: */
--	gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
-+	gpu->clk_reg = devm_clk_get_optional(&pdev->dev, "reg");
- 	DBG("clk_reg: %p", gpu->clk_reg);
- 	if (IS_ERR(gpu->clk_reg))
--		gpu->clk_reg = NULL;
-+		return PTR_ERR(gpu->clk_reg);
- 
--	gpu->clk_bus = devm_clk_get(&pdev->dev, "bus");
-+	gpu->clk_bus = devm_clk_get_optional(&pdev->dev, "bus");
- 	DBG("clk_bus: %p", gpu->clk_bus);
- 	if (IS_ERR(gpu->clk_bus))
--		gpu->clk_bus = NULL;
-+		return PTR_ERR(gpu->clk_bus);
- 
--	gpu->clk_core = devm_clk_get(&pdev->dev, "core");
-+	gpu->clk_core = devm_clk_get_optional(&pdev->dev, "core");
- 	DBG("clk_core: %p", gpu->clk_core);
- 	if (IS_ERR(gpu->clk_core))
--		gpu->clk_core = NULL;
-+		return PTR_ERR(gpu->clk_core);
- 	gpu->base_rate_core = clk_get_rate(gpu->clk_core);
- 
--	gpu->clk_shader = devm_clk_get(&pdev->dev, "shader");
-+	gpu->clk_shader = devm_clk_get_optional(&pdev->dev, "shader");
- 	DBG("clk_shader: %p", gpu->clk_shader);
- 	if (IS_ERR(gpu->clk_shader))
--		gpu->clk_shader = NULL;
-+		return PTR_ERR(gpu->clk_shader);
- 	gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
- 
- 	/* TODO: figure out max mapped size */
--- 
-2.26.2
+On Tue, May 05, 2020 at 07:51:08AM +0200, Alain Volmat wrote:
+> SMBus Host-Notify protocol, from the adapter point of view
+> consist of receiving a message from a client, including the
+> client address and some other data.
+>=20
+> It can be simply handled by creating a new slave device
+> and registering a callback performing the parsing of the
+> message received from the client.
+>=20
+> This commit introduces two new core functions
+>   * i2c_new_smbus_host_notify_device
+>   * i2c_free_smbus_host_notify_device
+> that take care of registration of the new slave device and
+> callback and will call i2c_handle_smbus_host_notify once a
+> Host-Notify event is received.
 
+Yay, cool idea to use the slave interface. I like it a lot!
+
+> +static int i2c_smbus_host_notify_cb(struct i2c_client *client,
+> +				    enum i2c_slave_event event, u8 *val)
+> +{
+> +	struct i2c_smbus_host_notify_status *status =3D client->dev.platform_da=
+ta;
+> +	int ret;
+> +
+> +	switch (event) {
+> +	case I2C_SLAVE_WRITE_REQUESTED:
+> +		status->notify_start =3D true;
+> +		break;
+> +	case I2C_SLAVE_WRITE_RECEIVED:
+> +		/* We only retrieve the first byte received (addr)
+> +		 * since there is currently no way to retrieve the data
+> +		 * parameter from the client.
+
+Maybe s/no way/no support/ ? I still wonder if we couldn't add it
+somehow. Once we find a device which needs this, of course.
+
+> +		 */
+> +		if (!status->notify_start)
+> +			break;
+> +		status->addr =3D *val;
+> +		status->notify_start =3D false;
+> +		break;
+> +	case I2C_SLAVE_STOP:
+
+What about setting 'notify_start' to false here as well? In the case of
+an incomplete write?
+
+> +		ret =3D i2c_handle_smbus_host_notify(client->adapter,
+> +						   status->addr);
+> +		if (ret < 0) {
+> +			dev_warn(&client->adapter->dev, "failed to handle host_notify (%d)\n",
+> +				ret);
+
+I think we should rather add such error strings to the core if we think
+they are needed. I am not convinced they are, though.
+
+> +			return ret;
+> +		}
+> +		break;
+> +	default:
+> +		/* Only handle necessary events */
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+Rest of the code looks good. Maybe we should compile all this only when
+I2C_SLAVE is enabled?
+
+
+--WYTEVAkct0FjGQmd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7I/wAACgkQFA3kzBSg
+KbbXgQ/+LcMC7QayI4s8Dvz6JvDUJwv5Hb0sbJhWY6hZjTukOGuxIPjrqZ/TqNGN
+FAqr4fNEgfEH2wJw2zvuMUlqkVhAgfnw5/DtOOzDGhmogXa8eyP8VCBA35wNkLv7
+glMCNfuaWYvQMZv0Ftr8atBoONlIofe0s7yIABC0KginLoUqTMLIGOzM4+JWAQ9o
+l4n8aoWdmZL1/TksIOhN6UK0uxup3MPvL3KGCFh8YwFRxvRvEZOcvxbcXjZstQd3
+5Rf0BYf85c0vVOxXY0V7tNUVSZtcgkKr0yyrFtRwpI0EaFwx6lR9zrclPeNZQd9p
+xHwp/i3DSUL69SPOgCgeaOglKUEZqNk8i8RzBDcGBtiih5illJH+6gXuYcS9GfR2
+XJgUybgtl9dQwIcr4KkZraayA4SNBiXwNcjOn1CqunS3Xv21Ep8dW3HTkv6opO1f
+u1j43ZN/51NATCPp/I6OdSQqpfMhpds4BPjrAm96ZygEVYHWqAdOOs/IK2Rvdnw5
+0yQBdpeqWP+oFpL/W0uUcS+u5pMjQSL8SA9hxav4FuitaECBsgeFU+k7O28Qsv4g
+9w6QKh7X9oEbbiG22YLNJ+/pGbijqMSRASEyYsu6wh3GsJ/RqIC1WnsGztdNwDtR
+8GXDv+ja9iaSIc28HjfMszo/vbXSlU2MJ7SwWOG1H2sFxQO3ZNw=
+=EXgv
+-----END PGP SIGNATURE-----
+
+--WYTEVAkct0FjGQmd--
