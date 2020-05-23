@@ -2,189 +2,187 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53450C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C6CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3347920787
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7771B20874
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eaWQu5rI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cds9qCdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388091AbgEWS6v (ORCPT
+        id S1728414AbgEWTEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 14:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36566 "EHLO
+        Sat, 23 May 2020 15:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387580AbgEWS6F (ORCPT
+        with ESMTP id S1728012AbgEWTEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 14:58:05 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02FB8C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:58:04 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id n15so6779764pfd.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:58:03 -0700 (PDT)
+        Sat, 23 May 2020 15:04:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84F9C061A0E;
+        Sat, 23 May 2020 12:04:06 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so1241870wmd.5;
+        Sat, 23 May 2020 12:04:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fQihCl0dLbHaElgiRrlXkibi9/E8OKsaJ7lF0uUyO/s=;
-        b=eaWQu5rIF65IIe8LNBzP1VhRXuhf/K8YuXmyjWuD3csLufjFBKBEZDaJbIB6RwswAQ
-         rDBP5Ms4v5GriXypOxasHghq7UnINAs0gaI86yQ/hNhK85oUXxh9tCLqJ+1ReVF5l/ix
-         tPRMxxn5OJgrvK94v8gqoHCYdCO3fgQMAXr+vr1QgQvnYsZJ/wdm4/qp2eaVtNDY2sgH
-         LDz+wH7VwwOwdN2+SX1xQCFbPnBR8BZ8SA2j96fkibGQYbL5STDJ4sUUYmLUjN6asTWW
-         kgkWS4yZfdrzVsXNsu8c22UnUv/buUDX4ks7m/nlfPqKjekl11LSVTWWEwpgJg0OiRni
-         cSww==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4Wp6U59WJXx5xI3WqDgCNxPeehTudNwV/AnL/0eDEsA=;
+        b=Cds9qCdO+z56YBd23dYQIhroLVifRO/y7QNNFe4mQh7dfdFRwxKEAkXP66wDYCyDtk
+         wC5mNi+cJtifD1sW5wLhA4LlIc12mTWI7SUpcRcDauUffPy+DVW0NVpRkq3iXGPWoF//
+         mkoEGDqwvVnK95LhutFAiBR0nFrp/IJn45euDJSGR1lFlScTjlf0ZAFoeugQsxvvKmKe
+         9LdXQdvQrTsz+uHy51gMKndtXkba5p0Yvb+lguxYs3GB3B5Ke9kKsvCQGtvA+UVNWdH8
+         9LGxTVHrlbziZdvoRCatN9wD+HW3EnKoQkkSAZ6DSWK9sFhm2PUbqeDVMCGYfudwaFHm
+         IzXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fQihCl0dLbHaElgiRrlXkibi9/E8OKsaJ7lF0uUyO/s=;
-        b=cMtJsw4LyUSXsS+9WxO14YV5qfrjga3v3rnApATcBbdJ1fAPrxd8Z5xC3x9QF4qyBB
-         R6YV7huonWHZz7KgudOB5DGIdI2oXb28+55azeApGS7S0PrS9Rco5e6zWd2yuQJ3JUdn
-         pT8KOn838GnclFc5hA4zk9U6i6sl8257RFk+zrh3l44pHzCDbTMK0zAX+jSYvbdS2kG2
-         fth7OSoforWVHeNcomgXPzgEzOzc6BIbT/m+fuf6/1DYV6wv1p8kj9+E65qfHgkdurom
-         +dKKGhZa3pzBg9f/RCnv1O5Gp5/bD41TfEsM/Q5kAr8XRGOSqkXzHvgE865C6dIYwnhP
-         juOg==
-X-Gm-Message-State: AOAM533fUK9ZXYfihbS5urzk7BLF6SOg1eLi4gnGkFdhkx3YIuTep3oG
-        Xc98vXEziubQZFaOFKAjeOWNvA==
-X-Google-Smtp-Source: ABdhPJz9vqnGrCG9qj0wEnBzhySeVMrYNwRHjDaahSZXAg0rEuCiNKORSORIP7O+cxiJTr2yWj4euQ==
-X-Received: by 2002:a63:3114:: with SMTP id x20mr20316638pgx.52.1590260283492;
-        Sat, 23 May 2020 11:58:03 -0700 (PDT)
-Received: from x1.lan ([2605:e000:100e:8c61:c94:a67a:9209:cf5f])
-        by smtp.gmail.com with ESMTPSA id 25sm9297319pjk.50.2020.05.23.11.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 11:58:03 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 03/12] mm: abstract out wake_page_match() from wake_page_function()
-Date:   Sat, 23 May 2020 12:57:46 -0600
-Message-Id: <20200523185755.8494-4-axboe@kernel.dk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200523185755.8494-1-axboe@kernel.dk>
-References: <20200523185755.8494-1-axboe@kernel.dk>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4Wp6U59WJXx5xI3WqDgCNxPeehTudNwV/AnL/0eDEsA=;
+        b=QNhGTjNClsCJ2WpjguyD+wTe1E2n/pr+Q0oIsxQxE1l/mecGp7UZljlm2yPN1UM2tO
+         8vfzSzyEgnTfpCi7bNacmlWs942MKnDNB2hmXWEX34cMa1zicRlThX2U1DwwEG3/iIgP
+         HD7hC9LHqRkisllcTtqYCLSL4M/87cpV58JEJakbqXMJnYV6B9rMHNZVvji9a0NB2GYH
+         S9DNV1kjK+eKhAIFmNz071CYXhQntFOUPO1/pIISQPwBgnTot1zBGkp3Vevy96Kidfyr
+         OWXeQ7mLi29mYx3hcSTDzyCom3Dnh4AkjdUlcqqnEAfi8GkouK1bf96QTAlO5H+VhUyl
+         dpVg==
+X-Gm-Message-State: AOAM532w/OzmuZ/c4BKIDlmARdZJc9USGzz4lEZoVLj7179mbor0VFj7
+        b2Glh0rWIhpNpzPoz7+zX24=
+X-Google-Smtp-Source: ABdhPJwjQjLNAWC5LiaXcPLv1eB2d5sU5LyYHf6sWpBqI4I8QizDRHupsiVBvNZZnBMCL/Jf5ZdPrA==
+X-Received: by 2002:a1c:23d2:: with SMTP id j201mr18728440wmj.48.1590260645376;
+        Sat, 23 May 2020 12:04:05 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id 10sm13230959wmw.26.2020.05.23.12.04.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2020 12:04:04 -0700 (PDT)
+Subject: Re: [PATCH V3] arm64: dts: mediatek: add cpufreq and cci devfreq
+ nodes for mt8183
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+References: <1576826785-3867-1-git-send-email-andrew-sh.cheng@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <085be59e-76d5-4743-0f0c-12f6440715fe@gmail.com>
+Date:   Sat, 23 May 2020 21:04:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576826785-3867-1-git-send-email-andrew-sh.cheng@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional changes in this patch, just in preparation for allowing
-more callers.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- include/linux/pagemap.h | 37 +++++++++++++++++++++++++++++++++++++
- mm/filemap.c            | 35 ++++-------------------------------
- 2 files changed, 41 insertions(+), 31 deletions(-)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index a8f7bd8ea1c6..53d980f2208d 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -456,6 +456,43 @@ static inline pgoff_t linear_page_index(struct vm_area_struct *vma,
- 	return pgoff;
- }
- 
-+/* This has the same layout as wait_bit_key - see fs/cachefiles/rdwr.c */
-+struct wait_page_key {
-+	struct page *page;
-+	int bit_nr;
-+	int page_match;
-+};
-+
-+struct wait_page_queue {
-+	struct page *page;
-+	int bit_nr;
-+	wait_queue_entry_t wait;
-+};
-+
-+static inline int wake_page_match(struct wait_page_queue *wait_page,
-+				  struct wait_page_key *key)
-+{
-+	if (wait_page->page != key->page)
-+	       return 0;
-+	key->page_match = 1;
-+
-+	if (wait_page->bit_nr != key->bit_nr)
-+		return 0;
-+
-+	/*
-+	 * Stop walking if it's locked.
-+	 * Is this safe if put_and_wait_on_page_locked() is in use?
-+	 * Yes: the waker must hold a reference to this page, and if PG_locked
-+	 * has now already been set by another task, that task must also hold
-+	 * a reference to the *same usage* of this page; so there is no need
-+	 * to walk on to wake even the put_and_wait_on_page_locked() callers.
-+	 */
-+	if (test_bit(key->bit_nr, &key->page->flags))
-+		return -1;
-+
-+	return 1;
-+}
-+
- extern void __lock_page(struct page *page);
- extern int __lock_page_killable(struct page *page);
- extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 80747f1377d5..e891b5bee8fd 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -990,43 +990,16 @@ void __init pagecache_init(void)
- 	page_writeback_init();
- }
- 
--/* This has the same layout as wait_bit_key - see fs/cachefiles/rdwr.c */
--struct wait_page_key {
--	struct page *page;
--	int bit_nr;
--	int page_match;
--};
--
--struct wait_page_queue {
--	struct page *page;
--	int bit_nr;
--	wait_queue_entry_t wait;
--};
--
- static int wake_page_function(wait_queue_entry_t *wait, unsigned mode, int sync, void *arg)
- {
- 	struct wait_page_key *key = arg;
- 	struct wait_page_queue *wait_page
- 		= container_of(wait, struct wait_page_queue, wait);
-+	int ret;
- 
--	if (wait_page->page != key->page)
--	       return 0;
--	key->page_match = 1;
--
--	if (wait_page->bit_nr != key->bit_nr)
--		return 0;
--
--	/*
--	 * Stop walking if it's locked.
--	 * Is this safe if put_and_wait_on_page_locked() is in use?
--	 * Yes: the waker must hold a reference to this page, and if PG_locked
--	 * has now already been set by another task, that task must also hold
--	 * a reference to the *same usage* of this page; so there is no need
--	 * to walk on to wake even the put_and_wait_on_page_locked() callers.
--	 */
--	if (test_bit(key->bit_nr, &key->page->flags))
--		return -1;
--
-+	ret = wake_page_match(wait_page, key);
-+	if (ret != 1)
-+		return ret;
- 	return autoremove_wake_function(wait, mode, sync, key);
- }
- 
--- 
-2.26.2
+On 20/12/2019 08:26, Andrew-sh.Cheng wrote:
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+> 
+> add cpufreq and cci devfreq nodes for mt8183
+> 
+> Depend on regulator node patch:
+> https://patchwork.kernel.org/patch/11284617/
+> 
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  36 ++++
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 245 ++++++++++++++++++++++++++++
+>  2 files changed, 281 insertions(+)
+> 
+[...]
+> +
+> +	cci: cci {
+> +		compatible = "mediatek,mt8183-cci";
 
+I wasn't able to find anyprovider for this compatible.
+
+I'll drop this patch from my queue.
+
+Regards,
+Matthias
