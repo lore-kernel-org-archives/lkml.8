@@ -2,108 +2,113 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8193C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FEF20823
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A547C20727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa+zxmlN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNeKxX1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388034AbgEWVAP (ORCPT
+        id S2388027AbgEWVND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 17:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55628 "EHLO
+        Sat, 23 May 2020 17:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387965AbgEWVAO (ORCPT
+        with ESMTP id S2387984AbgEWVND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 17:00:14 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E0DC061A0E;
-        Sat, 23 May 2020 14:00:13 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id l15so16373018lje.9;
-        Sat, 23 May 2020 14:00:13 -0700 (PDT)
+        Sat, 23 May 2020 17:13:03 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC34C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 14:13:03 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id 19so15759436qtp.8
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 14:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/EsWH2Z0Xvdv8zJjOt7cdEn91hyou87YyYLaPvp1v0g=;
-        b=Sa+zxmlNg4c4JyBiPsaefryAVRYS6ONzMiCbRBmwpc+hAQNtYDz+lOIxj+ucvehdqo
-         ypLmP2uZvIgBWdTDaWu3LfltZpO4GulH5Pgz3H02sv+xcBlYz4oe5LQI1pv01c44md7i
-         Jo+F1VZys1v2hG+sClcfy3T/48pEXUIMHTU8Mij5YMtKou+s53bBLTfBeXoiIOf+M271
-         LjlgjMJ5FvGIAeoFHQ1ecuUNorIrjgc1iIV1xSFp3vLj054ToUdfHJXfjayJidRx7bHQ
-         Q5LUXMHe1NHAnUJrv8uyTP0VsLQ6Fu+py5AAZFpGwhi1KpISLvCn911JBwqbxDlaAxfT
-         0huw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=2bby9cI45fyWKXrKxGRnCB0PRSUsYL3TkgfMjCuANdc=;
+        b=dNeKxX1T//NGG+vd4uYpN00vNrJRS7onBOZtFFDXQPplWUpavI0ZRFPSGOxiUoCKkL
+         9ulpdOjmwUdhFktPdMKioK1Z3sZ3cX6mcNzWzqRQYt9DojkHv6yMNNq2Zj6ftm0QcxN5
+         tH72kJn7qHRu5p6FiMKXPNOPoYqeuSO7Kov2urHL6Cu7Y5R5AU+h5B0XXH0pmvozrnsU
+         ZZz9aaLYUBrYvWwkE9PAdx6ghEB3KDmYt87ovSQ/mEq/geuIu8Sjd4Lre8fx/p1vboqD
+         f+SqAQX9fJmbaZv1QCqR6bqAPfI+/yuHt4wpM1agiK+Va+I63YrWPRTtGFHFhbFrE5l4
+         M30g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/EsWH2Z0Xvdv8zJjOt7cdEn91hyou87YyYLaPvp1v0g=;
-        b=YZ2UYnYYIeYihnR1VUpjb8RIrdR8NbCuX1Irr4j1s+uLppl3qxLHdAEHkvKGxUYMwO
-         kCWs2bj9alBJA3X7TxA6fzy20GBB63PQSGEmbgy0G+wFr9J3nFXfcyq+UlLOuCLMqksH
-         DDdi2WRqPD5FN5WnVCEhICxXrVdkNVTs2lzhppRxxCgDxxrlMpPGxh19uyBGQH+78/fN
-         /74o/RhduPksOhWL+j3tpkKEZmoA/QfweiF0UWbAL3QF86R9S7CIlnuyRysD6OXEO+9s
-         vDWQCqlGWXjIg/Ied9xYHfMrhqPqtKNaIT/ZwgGyAFpq8kfje3f/jHwSN9y8mS809Dj8
-         8kgA==
-X-Gm-Message-State: AOAM530dzT1B0TYFeB+ht4V4mF8IRxhskhioCGBBvGIdl5EYF5SZn9eu
-        hLN010HMR8xBWdktrP0MhFIc5i2BV4UHuw==
-X-Google-Smtp-Source: ABdhPJxqC3eua7TiWDvHzfAusUT8WgJI9LirGt3xhFJCsgjp4JjoI0zMuM6j3vW61/66xYpF6S7YIw==
-X-Received: by 2002:a2e:b4f3:: with SMTP id s19mr3830469ljm.218.1590267612343;
-        Sat, 23 May 2020 14:00:12 -0700 (PDT)
-Received: from btopel-mobl.ger.intel.com (c83-250-27-170.bredband.comhem.se. [83.250.27.170])
-        by smtp.gmail.com with ESMTPSA id d22sm3320712lfc.27.2020.05.23.14.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 14:00:11 -0700 (PDT)
-From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH] Documentation/features: Correct RISC-V kprobes support entry
-Date:   Sat, 23 May 2020 23:00:05 +0200
-Message-Id: <20200523210005.59140-1-bjorn.topel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=2bby9cI45fyWKXrKxGRnCB0PRSUsYL3TkgfMjCuANdc=;
+        b=p8GewW4dZ9dPC8IZW4IYL5Zi6rH7kiaVPehVPlhPOcPawlz5qx114LIvkTEofRBokT
+         UKSrNBPRaGJPZA8q7J0LiJt6og3mgwjZfKdKPtJe/lcE2q4zaqyewmw4EOA6FtAXsL2u
+         xCDL7Vz9endAW+AWSCQiv9uFCfiYEl85fZsAM4VyRtOuWSA4PFoQVdrzbYX52wtfbaWL
+         kdbCm0tBMpE4f1UjKBAt5pdi2TRNqCikfwh5q4mCePrvcH7FwxRVnjbQtcG1T+7Kcub4
+         rowclloDtemAIj+RIDnBww1g2CUgsRXzXRtdmsEpCqAVfVVYyE3tVBTAs8tmGvGrTuhB
+         7NQw==
+X-Gm-Message-State: AOAM530ojqojoCoRWLLFIE/ApZ7z3HEEBW4CFxZ0PBeNu4+UEx9cmU8S
+        uvuyHQPN07pGOtlrblwHFIy/5GeRXz7m
+X-Google-Smtp-Source: ABdhPJwcJbwcvkxkyoyFSZSbn82VKMzlrI84RDXWlN8XaC46q1B7drpSxXma/Hm3zmPp9rGVqI2twciQSTlq
+X-Received: by 2002:a0c:a5c5:: with SMTP id z63mr9694727qvz.50.1590268381597;
+ Sat, 23 May 2020 14:13:01 -0700 (PDT)
+Date:   Sat, 23 May 2020 22:12:47 +0100
+Message-Id: <20200523211247.23262-1-pterjan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH] staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+From:   Pascal Terjan <pterjan@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Taihsiang Ho (tai271828)" <tai271828@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Pascal Terjan <pterjan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/features/debug/kprobes/arch-support.txt incorrectly
-states that RISC-V has kprobes support. This is not the case.
+The value in shared headers was fixed 9 years ago in commit 8d661f1e462d
+("ieee80211: correct IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK macro") and
+while looking at using shared headers for other duplicated constants
+I noticed this driver uses the old value.
 
-Note that entries that have been incorrectly marked with 'ok' will not
-be changed back to 'TODO' by the features-refresh.sh script.
+The macros are also defined twice in this file so I am deleting the
+second definition.
 
-Fixes: 7156fc292850 ("Documentation/features: Refresh the arch support status files in place")
-Signed-off-by: Björn Töpel <bjorn.topel@gmail.com>
+Signed-off-by: Pascal Terjan <pterjan@google.com>
 ---
- Documentation/features/debug/kprobes/arch-support.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/rtl8712/wifi.h | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/Documentation/features/debug/kprobes/arch-support.txt b/Documentation/features/debug/kprobes/arch-support.txt
-index e68239b5d2f0..0ed80700bc35 100644
---- a/Documentation/features/debug/kprobes/arch-support.txt
-+++ b/Documentation/features/debug/kprobes/arch-support.txt
-@@ -23,7 +23,7 @@
-     |    openrisc: | TODO |
-     |      parisc: |  ok  |
-     |     powerpc: |  ok  |
--    |       riscv: |  ok  |
-+    |       riscv: | TODO |
-     |        s390: |  ok  |
-     |          sh: |  ok  |
-     |       sparc: |  ok  |
-
-base-commit: 423b8baf18a8c03f2d6fa99aa447ed0da189bb95
+diff --git a/drivers/staging/rtl8712/wifi.h b/drivers/staging/rtl8712/wifi.h
+index be731f1a2209..91b65731fcaa 100644
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -440,7 +440,7 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+ /* block-ack parameters */
+ #define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+ #define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
++#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+ #define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+ #define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+ 
+@@ -532,13 +532,6 @@ struct ieee80211_ht_addt_info {
+ #define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+ #define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
+ 
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFA0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ /*
+  * A-PMDU buffer sizes
+  * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
 -- 
-2.25.1
+2.27.0.rc0.183.gde8f92d652-goog
 
