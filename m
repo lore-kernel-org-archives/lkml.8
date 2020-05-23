@@ -2,143 +2,149 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9626EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C3020738
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053EC20663
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="W2HyZ358"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="InaJ5J7G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387453AbgEWAfQ (ORCPT
+        id S2387456AbgEWAk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 20:35:16 -0400
-Received: from mail-vi1eur05on2041.outbound.protection.outlook.com ([40.107.21.41]:11876
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Fri, 22 May 2020 20:40:29 -0400
+Received: from mail-mw2nam10on2106.outbound.protection.outlook.com ([40.107.94.106]:34369
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731182AbgEWAfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 20:35:16 -0400
+        id S1731169AbgEWAk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 20:40:27 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lUofwUzwskeXFN8wJw72S3R9pJ6pQwCiSvovTCgbe79ZgjOhfnJrTtEzDk73cEOGlPAgJGQSHJq0fssiHyW+5JLmVf+eJq867ks90Ak4XEUpAgN64BRicuvPTpN40YzfeUaclxzwzyZ2VS8GYBacVx1eusRgCwIOVaXkVDgbW3uolnsE9YqVBXDbNzv6QQ/L5d13xwlZ0qbLKGXaQE9PQUVLWAwAN5c89wMkdL80yW8qWZuFUyP2mSHC6UPCOZDBMROC+JyrTZ3qd3wYS+1eDqN1cqFZcPczc5/Ga+cVQyC0gk0S1HFpa4aLaaoHohjvhUsed17YQTIT4rb8wJd1Hg==
+ b=e277MVzmDYhd7n5hg6EzHQlqMFtDjuXXfloa1jsHLE64CmIwS6vvqTl/1w82/+KUoFAz8R0SecN0avyC/NpQr6tax9yrpYOLNnU+SOAfJ5/CYvRxYHKJgNCE5z8sU7H0Df08ahDsF/NXV6kysR7Eguivk+8cQU6DUroolA4FjZCXZXfcWc5iGc6rlxAnIruMZu78GGoQRt+gsSPUK3ZknIuS1kWOT4gOmWcX/0guiHjkfYzt+fzfZ8Qb9oQ3AbpwU3Z/PPdyZ/WSV52i2HFJlMdvp9UnYESSb6/nicRdksJZYv7eMK4KWEm13u3Pi3xtgj3QV6MlAEeYFVhcdMDo2w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1CgbGxjv1xzEnPJeI09pmjT5z+wlxOGIjpXSrRzpDA4=;
- b=GZlYl0UaY1Fb+OlVPUTRfiLHSu28koAQe/WRweJegsYEn4IXBmFeluB3IVDgeeu9ILrYeE8BJthfXaGKae1nHKP+cH/KGjc4JxR5dWlFm2L0mxD6bBCvWAisJy+mjI93H1atd9sXtA/o2XoMEypgAxxJP2ZdTMVPpXvSyT2mgYGbvau18ap9ImygkBh3DmsILkHQKyaD9E5CcQ8Z5HMlHK+7buI1IiHuHS6u6vDD/JpIM+W3vUgiHYf3L+fjuiu6fGOiCtN8MBK6nczaDc4wgduST4abcIWP6eeeHSwE0jH6dIfqLEGfcIn2Qzjcu0Z7ariAVUAUAXEqayg8/NKuww==
+ bh=Q5PO86VUE+NSHBz/pHSPCSf8mUGqliYygM5IvSwvZYc=;
+ b=JF1NYCj/tvjpfv4QahOJCUmHVMC2ZQBGTyf8sqR9nZnB6XQlxzJnZ2HWOKbNTURLRK3BN7DZEnDnpDCCNdczEUV493n72mNCM0jzESkt8OO5Hm7azgi7pLNqVz+Lw5uzBlhBLxOY7/VsPi6Szp7YHxWVutCasVsQRG5Pp0Ht6xVUr2j8aHkiRCVaJGaGxzGZA5LCYy79mVApLkZvo2imc1JsGCT7SlwQwPHCI3cE4PmS4RkPBdzIEGspOXDBM0ABy15zz60zDEKCfNd/GTCwyxZfxjj/h47EUkrOXiUbls3hV9YJWs9I5DtoiYGCopqBOSqOQSiZl+CVY+Y8menTkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1CgbGxjv1xzEnPJeI09pmjT5z+wlxOGIjpXSrRzpDA4=;
- b=W2HyZ358P1FCdKWsfjo7PP0khyBbJcQ0OpfhY69EcTKVGfwp6Gw/V9DugLkcnxHV07OH0tbV6DRXYae/hrDkcQ08Sb3vzZliZS5sd0QPW9ojwn7FGzxsPdVbnW8qgdFZswaG2fHXZM8korlPXpUe1wQeL9X5XDIu5ospy9XYlOE=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3817.eurprd04.prod.outlook.com (2603:10a6:8:12::14) with
+ bh=Q5PO86VUE+NSHBz/pHSPCSf8mUGqliYygM5IvSwvZYc=;
+ b=InaJ5J7GX7yXfwwrQ7pBfHCDIkgava5NEeHm6zz4691hXpw24HrfqQDvSpmG8z/8wl5uiY0oK81WSLgSLOU48UgicH+SBISkubZ0NRPBcMG8DvrDYSlWC89NMnYpU5CsbdMm1Qh+Kktmp7vKqb/kEbjNluuyQRV1q+20hdwsjyw=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1114.namprd21.prod.outlook.com (2603:10b6:302:a::31) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Sat, 23 May
- 2020 00:35:10 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3000.034; Sat, 23 May 2020
- 00:35:10 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.2; Sat, 23 May
+ 2020 00:40:25 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950%7]) with mapi id 15.20.3021.002; Sat, 23 May 2020
+ 00:40:24 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] thermal: imx8mm: Add get_trend ops
-Thread-Topic: [PATCH] thermal: imx8mm: Add get_trend ops
-Thread-Index: AQHWKNOp8EPkl0qqRkG+GoQWiQOYA6i0bHgAgABvx3A=
-Date:   Sat, 23 May 2020 00:35:10 +0000
-Message-ID: <DB3PR0402MB3916B6D11328A036BD479D39F5B50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
- <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
-In-Reply-To: <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
+Subject: RE: [EXTERNAL] Re: [PATCH] x86/Hyper-V: Support for free page
+ reporting
+Thread-Topic: [EXTERNAL] Re: [PATCH] x86/Hyper-V: Support for free page
+ reporting
+Thread-Index: AdYuDAEiPLOc+vnoR1KnBaBInLPPAQAeU/0AAHOA1cAAEXefwA==
+Date:   Sat, 23 May 2020 00:40:24 +0000
+Message-ID: <MW2PR2101MB10520A323E708F71A9944758D7B50@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
+ <20200520090158.4x4lkbssm7ncirn7@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+ <SN4PR2101MB08804F99992085C64982C821C0B40@SN4PR2101MB0880.namprd21.prod.outlook.com>
+In-Reply-To: <SN4PR2101MB08804F99992085C64982C821C0B40@SN4PR2101MB0880.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [92.121.68.129]
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-23T00:40:22Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5b38e9df-0b9a-46b6-abb2-ceb198f3ad26;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3e3df3c7-6104-46cd-4b13-08d7feb12675
-x-ms-traffictypediagnostic: DB3PR0402MB3817:
+x-ms-office365-filtering-correlation-id: 7c919ed7-c4b8-4510-72c0-08d7feb1e1f5
+x-ms-traffictypediagnostic: MW2PR2101MB1114:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB38179BCC3C2832CA5FFF01DBF5B50@DB3PR0402MB3817.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <MW2PR2101MB1114C7FC83E2DEF3694A00D6D7B50@MW2PR2101MB1114.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
 x-forefront-prvs: 0412A98A59
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iJ2Fs24bII8WsdA11wTitiJX62SUUTJx1XiOHkWA68AWDEHB+BEnDKgFoKZyi7iwT2vB6BXhf8bZ0t6ynHtI81R2xMpa+qTymVDoizKvHrMzkLtyIwD4uo1UOUetdq6v5cZC0fNBIgn2CZpnSLCC4sjd2Zoj/9ZGDLTrvNdGZPuCtSLihFNsO0e46cqKQBRRFCQd1atYSSKTMxm/g4m15CR6Hld6e1kYHS7yB3pJLOo7MOIwwYarkTRE5wIeofdQFESJj7e+gPFmYfArWNM9WMZslQGtc5+EogN63/mAU8V1IzEW54UviTVA+gQGSryq0lQ8a6FtSBRmppn4bb3Ny5hNTOLIbDHHYnGP814nF7+pNALmqJa+qZkekBIzNqzNUinl7ZD8qQvtkMzEbvRvZQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(39860400002)(396003)(478600001)(316002)(55016002)(5660300002)(44832011)(71200400001)(33656002)(64756008)(66946007)(66556008)(66476007)(52536014)(66446008)(76116006)(26005)(6506007)(8936002)(53546011)(186003)(4326008)(7696005)(2906002)(110136005)(9686003)(8676002)(7416002)(86362001)(921003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: kPMCGqafYeMUQfvVFo0Fmt5gFHlxBpYfL3z1ZIlpWA6YGMfLvw/IToO1klpvR8rOs3jjmc0zr4Gxo/D9UO6d9c3MAhtWejVZpPCcBg0CFA/2eyLMv8zUaP9Yzt3BNSYc70RXr0XgdvFCMKE4dD35fUVQE1+IQhBSM8wISjBpfUslIC/pUrlRTIT3n5nKy3QvnTIRMIO1B5+9OZA1mfsVBAHcGY91fWBYWpkP0brj5FadjItFjVSxvonwpNNjW3lv2nH8Zd/HoMkfqzd0sczLYZ3N29Meoz4prHLyTP0qVDd+xgSJodS7y+OStWBRoVdzbHNtHxPIhFiY4oiJyAWHGky6iJzfNfjELdc9mczeNVoQ7w7WHDmLd3js476o45uuuTdrI1/BnEj7btMWkUK1rSJBKu1anjzj2l1EofOdBsne7tndVKZduELj5ABWMXP9DSvMbIFmvL8GyYOvsnocqfnkfzxvShLIRkmIJ7yZXIU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: mDqJGbj63VOWNOT2AdPeu8lwYnxH/4wrFnoixM8TZe6q0jMJZKTpJrg13A+HgAqf0SWwHTjRsk6bSeUyy7EasRpSbNX05zlaf/fmBuOGTL5vrSWBdrAO8idtuuHcygxKGQyF5yGYKYEvYHL75xP+bjYRWtB46xWAb+LTmTjVoM9oI1rQGdLD2nGIzqUs7Sgx8+BHUiMHZI1RXQCiq6mwtExB0oLmGoAAC+UN7btJfgGHe2mO0J/RboO9BrnglkdSOeL83aTZFU/ctptzG4cezz+ywqxzIrJXGD2EyTOEo5flthSTFZ4Edm28tJBDLkwfvc8+ViqqmfL3ySsH2NxAqbDMUJMPMvL0z3g3bW4QSAT3muIb62/uBXtiSOhyogTf
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(346002)(376002)(66446008)(2906002)(5660300002)(82950400001)(82960400001)(66946007)(76116006)(8676002)(66476007)(8936002)(478600001)(10290500003)(33656002)(64756008)(54906003)(7696005)(4326008)(316002)(110136005)(8990500004)(26005)(186003)(66556008)(71200400001)(6506007)(9686003)(55016002)(86362001)(52536014)(4533004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: TRMIg8g+J/RNu9n76x6OZDel5v3FuOqy5n/PbUzt3w0eTnBhBAxFGpuoZkoksNwBTvgw0Lr5mStQwOI/AK1PZVggy5+bv6Jjr38inS/FYrXucgjEyjlcdaZe/jIbB3caBcr8u7L6iV3T0jD79Dfp2s2FvPvaUBpSW2Pis2wnYDi5qTgDnwV8jiM03Z0/H0quCyAAPLlTL6TwIvmzLbcXPhNwNzlxQokY22sAu6iKwT5Hj0hRq1CTld3jPzfPobR5GFgb6G4TROtH8AAzFEMBRCvAIT1uuQ4LDx0a4FtpMM/wQVrSUwYsp02zIovsZiBkJnbDBdf2OWSOICOq7hHB+BKMV2IFE5XFfXyLk55ywvLcTE/TruM+P4u3/V1zJCeZQY6Nca1BFHeph+5ePpG8EK1PJb/c0jdhDbWSru0tm/c2y7RxhDjMkNwXx6JCI6yyOLIcLc3PO7Mf54QnN6tMgBQQWbVSDnEvshaFleuSElRkbaDlHVphddX68XSxlkxq
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e3df3c7-6104-46cd-4b13-08d7feb12675
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2020 00:35:10.3452
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c919ed7-c4b8-4510-72c0-08d7feb1e1f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2020 00:40:24.7531
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dIgadSXYpzpzTu6atqeIHxB+x1Jht3wYWN0pjSRYA3frde/o0SrD40IvxH3tANhDXFsqmm++e7dWxUXz2WTkfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3817
+X-MS-Exchange-CrossTenant-userprincipalname: jVYJ5GG8SRhfkZa/ckyct+Xw9huq/0OTKK4f5z1uCL4jqM1S40XfHcy1asl8DUeyxFhdjoGlgaYup0UTIl729RS02ztKFRlzjN2QeZ/KvdM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gdGhlcm1hbDogaW14OG1tOiBB
-ZGQgZ2V0X3RyZW5kIG9wcw0KPiANCj4gT24gMTMvMDUvMjAyMCAwNDo1OCwgQW5zb24gSHVhbmcg
-d3JvdGU6DQo+ID4gQWRkIGdldF90cmVuZCBvcHMgZm9yIGkuTVg4TU0gdGhlcm1hbCB0byBhcHBs
-eSBmYXN0IGNvb2xpbmcgbWVjaGFuaXNtLA0KPiA+IHdoZW4gdGVtcGVyYXR1cmUgZXhjZWVkcyBw
-YXNzaXZlIHRyaXAgcG9pbnQsIHRoZSBoaWdoZXN0IGNvb2xpbmcNCj4gPiBhY3Rpb24gd2lsbCBi
-ZSBhcHBsaWVkLCBhbmQgd2hlbiB0ZW1wZXJhdHVyZSBkcm9wcyB0byBsb3dlciB0aGFuIHRoZQ0K
-PiA+IG1hcmdpbiBiZWxvdyBwYXNzaXZlIHRyaXAgcG9pbnQsIHRoZSBsb3dlc3QgY29vbGluZyBh
-Y3Rpb24gd2lsbCBiZQ0KPiA+IGFwcGxpZWQuDQo+IA0KPiBZb3UgYXJlIG5vdCBkZXNjcmliaW5n
-IHdoYXQgaXMgdGhlIGdvYWwgb2YgdGhpcyBjaGFuZ2UuDQoNClRoZSBnb2FsIG9mIHRoaXMgY2hh
-bmdlIGlzIHRvIG1ha2Ugc3VyZSB3aGVuZXZlciB0ZW1wZXJhdHVyZSBleGNlZWRzIHBhc3NpdmUg
-dHJpcCBwb2ludCwNCnRoZSBoaWdoZXN0IGNvb2xpbmcgYWN0aW9uIHdpbGwgYmUgYXBwbGllZCBp
-bW1lZGlhdGVseSwgZS5nLiwgaWYgdGhlcmUgYXJlIG1hbnkgY3B1ZnJlcSBPUFAsDQp0aGUgZGVm
-YXVsdCBjb29saW5nIHdpbGwgYmUgc3RlcCBieSBzdGVwLCBpdCB3aWxsIHRha2Ugc29tZSBtb3Jl
-IHJvdW5kcyB0byBtYWtlIGNwdWZyZXEgZHJvcA0KdG8gbG93ZXN0IE9QUCwgd2hpbGUgb24gaS5N
-WCwgd2UgZXhwZWN0IHRoZSBjcHVmcmVxIGRyb3AgdG8gbG93ZXN0IE9QUCBpbW1lZGlhdGVseS4N
-Cg0KPiANCj4gSUlVQywgdGhlIHJlc3VsdGluZyBjaGFuZ2Ugd2lsbCBiZSBhbiBvbi9vZmYgYWN0
-aW9uLiBUaGUgdGhlcm1hbCB6b25lIGlzDQo+IG1pdGlnYXRlZCB3aXRoIHRoZSBoaWdoZXN0IGNv
-b2xpbmcgZWZmZWN0LCBzbyB0aGUgbG93ZXN0IE9QUCwgdGhlbiB0aGUNCj4gdGVtcGVyYXR1cmUg
-dHJlbmQgaXMgc3RhYmxlIHVudGlsIGl0IGdvZXMgYmVsb3cgdGhlIHRyaXAgLSBtYXJnaW4gd2hl
-cmUgdGhlDQo+IG1pdGlnYXRpb24gaXMgc3RvcHBlZC4NCg0KWWVzLCB5b3VyIHVuZGVyc3RhbmRp
-bmcgaXMgY29ycmVjdGx5LCBvbmNlIHRoZSB0ZW1wZXJhdHVyZSBleGNlZWRzIHBhc3NpdmUgdHJp
-cCBwb2ludCwNCnRoZSBoaWdoZXN0IGNvb2xpbmcgYWN0aW9uIHdpbGwgYmUgYXBwbGllZCBpbW1l
-ZGlhdGVseSBhbmQgdGhlbiBpdCB3aWxsIGJlIHN0YWJsZSB0aGVyZQ0KdW50aWwgdGVtcGVyYXR1
-cmUgZHJvcCB0byB0cmlwIC0gbWFyZ2luLCB0aGVuIHRoZSBjb29saW5nIGFjdGlvbiB3aWxsIGJl
-IGNhbmNlbGxlZCwgdGhlDQptYXJnaW4gaXMgdG8gYXZvaWQgdGhlIGJhY2sgYW5kIGZvcnRoIG5l
-YXIgdGhlIHBhc3NpdmUgdHJpcCBwb2ludC4NCg0KPiANCj4gRXhjZXB0LCBJJ20gbWlzc2luZyBz
-b21ldGhpbmcsIHNldHRpbmcgYSB0cmlwIHBvaW50IHdpdGggYSAxMDAwMCBoeXN0ZXJlc2lzIGFu
-ZA0KPiBhIGNvb2xpbmcgbWFwIG1pbi9tYXggc2V0IHRvIHRoZSBoaWdoZXN0IG9wcCB3aWxsIHJl
-c3VsdCBvbiB0aGUgc2FtZS4NCg0KWWVzIHNldHRpbmcgY29vbGluZyBtYXAgbWluL21heCBjb29s
-aW5nIHN0YXRlIHRvIGhpZ2hlc3QgT1BQIHdpbGwgbWFrZSB0aGUgaGlnaGVzdA0KY29vbGluZyBh
-Y3Rpb24gYXBwbGllZCBpbW1lZGlhdGVseSwgYW5kIHRvIGhhdmUgdGhlIGZ1bmN0aW9uIG9mIGNv
-b2xpbmcgYWN0aW9uIGJlaW5nDQpjYW5jZWxsZWQgd2hlbiB0ZW1wZXJhdHVyZSBkcm9wcyB0byB0
-cmlwIC0gbWFyZ2luLCBJIGhhdmUgdG8gZGVmaW5lIGFub3RoZXIgdHJpcCBwb2ludCwNCnNheSBw
-YXNzaXZlIHRyaXAgcG9pbnQgaXMgODUwMDAsIGFuZCBjb29saW5nIG1hcCBtaW4vbWF4IHNldCB0
-byBoaWdoZXN0IE9QUCBpbiBwYXNzaXZlDQp0cmlwIHBvaW50IHRoZW4gYWRkIGFub3RoZXIgdHJp
-cCBwb2ludCBuYW1lZCAiYWN0aXZlIiB3aXRoIDc1MDAwLCBhbmQgd2l0aG91dCBhbnkNCmNvb2xp
-bmcgbWFwIGluIGl0LCByaWdodD8NCg0KSWYgeWVzLCB0aGVuIEkgdGhpbmsgSSBjYW4gdHJ5IHRv
-IG1ha2UgdGhlIGNoYW5nZXMgaW4gRFQgaW5zdGVhZCBvZiB0aGVybWFsIGRyaXZlci4gDQoNClRo
-YW5rcywNCkFuc29uDQo=
+From: Sunil Muthuswamy <sunilmut@microsoft.com> Sent: Friday, May 22, 2020 =
+9:40 AM
+>=20
+> > > +	if (hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL, cap) =3D=
+=3D
+> > > +	    HV_STATUS_SUCCESS)
+> >
+> > You're using the input page as the output parameter. Ideally we should
+> > introduce hyperv_pcpu_output_arg page, but that would waste one page pe=
+r
+> > cpu just for this one call.
+> >
+> > So for now I think this setup is fine, but I would like to add the
+> > following comment.
+> >
+> >     /*
+> >      * Repurpose the input_arg page to accept output from Hyper-V for
+> >      * now because this is the only call that needs output from the
+> >      * hypervisor. It should be fixed properly by introducing an
+> >      * output_arg page once we have more places that require output.
+> >      */
+>=20
+> Sounds good. Will add it in v2.
+>=20
+
+Note that the only real requirement for the output parameter to hypercalls
+is that it not cross a page boundary.  Since '*cap' is only 64-bits, you ca=
+n
+declare it as a static variable or even as a local on the stack.  It will
+naturally be aligned  (or can add __aligned(8) to be explicit??), so it won=
+'t
+cross a page boundary.  Then you can skip using the per-cpu input arg
+altogether, along with the associated local_irq_save()/restore().
+
+Michael
