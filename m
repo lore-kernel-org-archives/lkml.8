@@ -2,85 +2,117 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2446C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3662206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8DC2070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590235240;
+	bh=a1EfeTlX8OqgAm4kNKi5ia4j9VRX69XYnUu6nE/MoiI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FfTB3/OD69bLL8ErD30isZzy4HpVgVZFawph971DKGAaV8ojRjBrUsRrGfg7oUDTv
+	 eAR6rdz+RvH1deYr1zEadr2XGjdcWEOaxiPR8oABhz8U7bOr23XES++SiBTl+jZ647
+	 pZNgzRLKlCtfEE/g9gKqB2UIuzmaPZn7TjuEu15c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387799AbgEWLyi (ORCPT
+        id S2387795AbgEWMAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 07:54:38 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:21770 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728749AbgEWLyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 07:54:38 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgC3TkHyDslepNH5AA--.6321S4;
-        Sat, 23 May 2020 19:54:30 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: vsp1: Fix runtime PM imbalance in vsp1_probe
-Date:   Sat, 23 May 2020 19:54:26 +0800
-Message-Id: <20200523115426.19285-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgC3TkHyDslepNH5AA--.6321S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWftFX_Wr
-        s8ZF47Wr4rGr1vqr1UKFy3ZrySqFZ8Wr18C3Z3tF1ay3yUu3WvqryUZr98uw47Z3yUZFy8
-        JFZ3WFy7Cr9a9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUHv38UUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoJBlZdtORR7AACsj
+        Sat, 23 May 2020 08:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728749AbgEWMAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 08:00:39 -0400
+Received: from localhost.localdomain (82-64-249-211.subs.proxad.net [82.64.249.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E29206C3;
+        Sat, 23 May 2020 12:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590235238;
+        bh=a1EfeTlX8OqgAm4kNKi5ia4j9VRX69XYnUu6nE/MoiI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bHFXmpuCwMc3PgK8aXtgTzlOCn9DMagXiavppfZ2J9d17sdFhBPu5vvaVjO4tf/Iy
+         Dde4pvvfFfr9IR+uepbOX5hkDma0SXAIbeu34uEDc3a8w0r+cBXPaDGkAF7Ma23bvO
+         lRpzr2osX3ecrGGNzu/7vWH6c6tKh+5vgQIJ5hd8=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: [PATCH v2 0/3] x86/boot: get rid of GOT entries and associated fixup code
+Date:   Sat, 23 May 2020 14:00:18 +0200
+Message-Id: <20200523120021.34996-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Building position independent code using GCC by default results in references
+to symbols with external linkage to be resolved via GOT entries, which
+carry the absolute addresses of the symbols, and thus need to be corrected
+if the load time address of the executable != the link time address.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/media/platform/vsp1/vsp1_drv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+For fully linked binaries, such GOT indirected references are completely
+useless, and actually make the startup code more complicated than necessary,
+since these corrections may need to be applied more than once. In fact, we
+have been very careful to avoid such references in the EFI stub code, since
+it would require yet another [earlier] pass of GOT fixups which we currently
+don't implement.
 
-diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
-index c650e45bb0ad..017a54f2fdd8 100644
---- a/drivers/media/platform/vsp1/vsp1_drv.c
-+++ b/drivers/media/platform/vsp1/vsp1_drv.c
-@@ -846,8 +846,10 @@ static int vsp1_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_sync(&pdev->dev);
- 		goto done;
-+	}
- 
- 	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
- 	pm_runtime_put_sync(&pdev->dev);
+Older GCCs were quirky when it came to overriding this behavior using symbol
+visibility, but now that we have increased the minimum GCC version to 4.6,
+we can actually start setting the symbol visibility to 'hidden' globally for
+all symbol references in the decompressor, getting rid of the GOT entirely.
+This means we can get rid of the GOT fixup code right away, and we can start
+using ordinary external symbol references in the EFI stub without running the
+risk of boot regressions. (v2 note: we have already started doing this)
+
+CC'ing Linus and Maarten, who were involved in diagnosing an issue related
+to GOT entries emitted from the EFI stub ~5 years ago. [0] [1]
+
+Many thanks to Arvind for the suggestions and the help in testing these
+changes. Tested on GCC 4.6 + binutils 2.24 (Ubuntu 14.04), and GCC 8 +
+binutils 2.31 (Debian Buster)
+
+Changes since v1 [2]:
+Rebase only - recent EFI changes have moved all the C code into
+drivers/firmware/efi/libstub/, which is also built with hidden
+visibility, and contains an additional objdump pass to detect (and
+reject) absolute symbol references.
+
+Unless anyone objects, I'd like to incorporate these changes into my
+late EFI PR for v5.8, which will go out in a day or two.
+
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+
+[0] https://lore.kernel.org/lkml/5405E186.2080406@canonical.com/
+[1] https://lore.kernel.org/lkml/CA+55aFxW9PmtjOf9nUQwpU8swsFqJOz8whZXcONo+XFmkSwezg@mail.gmail.com/
+[2] https://lore.kernel.org/linux-efi/20200108102304.25800-1-ardb@kernel.org/
+
+Ard Biesheuvel (3):
+  x86/boot/compressed: move .got.plt entries out of the .got section
+  x86/boot/compressed: force hidden visibility for all symbol references
+  x86/boot/compressed: get rid of GOT fixup code
+
+ arch/x86/boot/compressed/Makefile      |  1 +
+ arch/x86/boot/compressed/head_32.S     | 22 ++------
+ arch/x86/boot/compressed/head_64.S     | 57 --------------------
+ arch/x86/boot/compressed/hidden.h      | 19 +++++++
+ arch/x86/boot/compressed/vmlinux.lds.S | 16 ++++--
+ 5 files changed, 36 insertions(+), 79 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/hidden.h
+
 -- 
-2.17.1
+2.20.1
 
