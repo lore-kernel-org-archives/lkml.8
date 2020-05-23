@@ -2,230 +2,100 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9822070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fTMO7vBf"
+	by mail.kernel.org (Postfix) with ESMTP id AD3BE2070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388087AbgEWSbP (ORCPT
+        id S1728150AbgEWSdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 14:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387518AbgEWSbO (ORCPT
+        Sat, 23 May 2020 14:33:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42426 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgEWSdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 14:31:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FAFC061A0E;
-        Sat, 23 May 2020 11:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pg+aVLZCvfHq24tf8cjS0+Pqk/O0vhGg2MMQza4aLcY=; b=fTMO7vBfk4Hrnv/QnUEizJciv
-        5ShLRqd2mvoCcITZcd9oP9MC3ECfyWRwwfFxtpfAuCEvFAY6UPdGOdMpcYMJ7C5Bqes/g0DALsJM7
-        Cl9gSD6yy3eq3/VW63NG1ZxfAv0WJCrcKrwROzlM1r8T87GoG1tua/B9wLEbDaYvNZ1Tscm0zaqgf
-        TskhRGjNrze+/C066I7cOgVbTwCU/G9y1Ja1sE/Cgm1j2Y+OdiAZkMIev4Apu4tQJj8Oh95Yb/Exl
-        4I+KSe/ETMKGXqTD5tan0EDOmatVq/Ww8GnW4S8cIq9zXBzaY/1wgfb+ngyGZvSa11X+opO2sTBsd
-        xwc7le0gA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:33574)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jcYvF-0000Tp-Pb; Sat, 23 May 2020 19:31:01 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jcYvC-0002TA-E2; Sat, 23 May 2020 19:30:58 +0100
-Date:   Sat, 23 May 2020 19:30:58 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 03/11] net: phy: refactor c45 phy identification sequence
-Message-ID: <20200523183058.GX1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-4-jeremy.linton@arm.com>
+        Sat, 23 May 2020 14:33:18 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 124so352809pgi.9
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:33:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=cBFw/ySYPuYh7W7gWO72H2s2PdHaMcpBNHanIcU0gJA=;
+        b=f59khgc9twkPF3qN1vH2IB1s8LNze+vlaQzHe9D8sPy6aSn7veczd0DG4m5sEEoUlo
+         aGCRjpAkMXYf3/yIlpei2XT/oJNt6wWIectbLAOhA0Jbyy+/5uR4zxAOvPrPxkPqEYDe
+         3iSufJczaekTghDNWJHS3KLXKZJqP983pLoEE9dSiig+Q8rzCfxFlV31MvAe0z6ZENy4
+         YwUI49ZP5O5cFxB/+VtBHmSYjQAFp86N0zZN+xSPHWnnDiqOb3j9Ncg+87HiRelP2up5
+         aqbHJoak2P9V7hZ9E4r7Jp6QQ0EyMTfS9b92dP/kDLkb28tZue+vVjtGBtt3k1Mi0BDf
+         dN9w==
+X-Gm-Message-State: AOAM533+HE0coms6r67YLGnQ2I0b5eNHrnrMCI5jVy5tl/i0YMCsMYMz
+        WkN8pI2s/ChMpQNd38a84KI=
+X-Google-Smtp-Source: ABdhPJzaDT9FgdyXPht3W6HFL4139O9L7TVeP5Pm+4VYw73/HxWrIBVx7dWKr7M9xdv1Usqhv/QZPw==
+X-Received: by 2002:a63:f854:: with SMTP id v20mr1591311pgj.0.1590258797973;
+        Sat, 23 May 2020 11:33:17 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:89ea:f77d:d990:dc8c? ([2601:647:4000:d7:89ea:f77d:d990:dc8c])
+        by smtp.gmail.com with ESMTPSA id m14sm8584739pgn.83.2020.05.23.11.33.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2020 11:33:17 -0700 (PDT)
+Subject: Re: [PATCH] linux/blkdev.h: Use ilog2() directly in blksize_bits()
+To:     Kaitao Cheng <pilgrimtao@gmail.com>, axboe@kernel.dk
+Cc:     damien.lemoal@wdc.com, ming.lei@redhat.com,
+        martin.petersen@oracle.com, satyat@google.com,
+        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
+        asml.silence@gmail.com, ajay.joshi@wdc.com,
+        linux-kernel@vger.kernel.org, songmuchun@bytedance.com
+References: <20200523155048.29369-1-pilgrimtao@gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <714861ac-50aa-465c-c28f-dce7e16d0313@acm.org>
+Date:   Sat, 23 May 2020 11:33:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522213059.1535892-4-jeremy.linton@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200523155048.29369-1-pilgrimtao@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:30:51PM -0500, Jeremy Linton wrote:
-> Lets factor out the phy id logic, and make it generic
-> so that it can be used for c22 and c45.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->  drivers/net/phy/phy_device.c | 65 +++++++++++++++++++-----------------
->  1 file changed, 35 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 7746c07b97fe..f0761fa5e40b 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -695,6 +695,29 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
->  	return 0;
->  }
->  
-> +static int _get_phy_id(struct mii_bus *bus, int addr, int dev_addr,
-> +		       u32 *phy_id, bool c45)
-> +{
-> +	int phy_reg, reg_addr;
-> +
-> +	int reg_base = c45 ? (MII_ADDR_C45 | dev_addr << 16) : 0;
+On 2020-05-23 08:50, Kaitao Cheng wrote:
+> blksize_bits() can be achieved through ilog2(), and ilog2() is
+> more efficient.
 
-	int phy_reg, reg_addr, reg_base;
+If Jens agrees, how about removing the blksize_bits() function entirely
+and to make all callers use ilog2() instead of blksize_bits()?
 
-	reg_base = c45 ? (MII_ADDR_C45 | dev_addr << 16) : 0;
+Thanks,
 
-I think would be preferable.
-
-> +
-> +	reg_addr =  reg_base | MII_PHYSID1;
-> +	phy_reg = mdiobus_read(bus, addr, reg_addr);
-> +	if (phy_reg < 0)
-> +		return -EIO;
-> +
-> +	*phy_id = phy_reg << 16;
-> +
-> +	reg_addr = reg_base | MII_PHYSID2;
-> +	phy_reg = mdiobus_read(bus, addr, reg_addr);
-> +	if (phy_reg < 0)
-> +		return -EIO;
-> +	*phy_id |= phy_reg;
-
-The line spacing seems to be a little inconsistent between the above two
-register reads.
-
-> +
-> +	return 0;
-> +}
-
-So, _get_phy_id() returns either zero or -EIO.
-
-> +
->  static bool valid_phy_id(int val)
->  {
->  	return (val > 0 && ((val & 0x1fffffff) != 0x1fffffff));
-> @@ -715,17 +738,17 @@ static bool valid_phy_id(int val)
->   */
->  static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->  			   struct phy_c45_device_ids *c45_ids) {
-> -	int phy_reg;
-> -	int i, reg_addr;
-> +	int ret;
-> +	int i;
->  	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
->  	u32 *devs = &c45_ids->devices_in_package;
-
-I feel a "reverse christmas tree" complaint brewing... yes, the original
-code didn't follow it.  Maybe a tidy up while touching this code?
-
->  
->  	/* Find first non-zero Devices In package. Device zero is reserved
->  	 * for 802.3 c45 complied PHYs, so don't probe it at first.
->  	 */
-> -	for (i = 1; i < num_ids && *devs == 0; i++) {
-> -		phy_reg = get_phy_c45_devs_in_pkg(bus, addr, i, devs);
-> -		if (phy_reg < 0)
-> +	for (i = 0; i < num_ids && *devs == 0; i++) {
-> +		ret = get_phy_c45_devs_in_pkg(bus, addr, i, devs);
-> +		if (ret < 0)
->  			return -EIO;
->  
->  		if ((*devs & 0x1fffffff) == 0x1fffffff) {
-> @@ -752,17 +775,9 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->  		if (!(c45_ids->devices_in_package & (1 << i)))
->  			continue;
->  
-> -		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID1;
-> -		phy_reg = mdiobus_read(bus, addr, reg_addr);
-> -		if (phy_reg < 0)
-> -			return -EIO;
-> -		c45_ids->device_ids[i] = phy_reg << 16;
-> -
-> -		reg_addr = MII_ADDR_C45 | i << 16 | MII_PHYSID2;
-> -		phy_reg = mdiobus_read(bus, addr, reg_addr);
-> -		if (phy_reg < 0)
-> -			return -EIO;
-> -		c45_ids->device_ids[i] |= phy_reg;
-> +		ret = _get_phy_id(bus, addr, i, &c45_ids->device_ids[i], true);
-> +		if (ret < 0)
-> +			return ret;
-
-So here we can only propagate the -EIO, so this keeps the semantics.
-
->  	}
->  	*phy_id = 0;
->  	return 0;
-> @@ -787,27 +802,17 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->  static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
->  		      bool is_c45, struct phy_c45_device_ids *c45_ids)
->  {
-> -	int phy_reg;
-> +	int ret;
->  
->  	if (is_c45)
->  		return get_phy_c45_ids(bus, addr, phy_id, c45_ids);
->  
-> -	/* Grab the bits from PHYIR1, and put them in the upper half */
-> -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID1);
-> -	if (phy_reg < 0) {
-> +	ret = _get_phy_id(bus, addr, 0, phy_id, false);
-> +	if (ret < 0) {
->  		/* returning -ENODEV doesn't stop bus scanning */
-> -		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
-> +		return (ret == -EIO || ret == -ENODEV) ? -ENODEV : -EIO;
-
-Since ret will only ever be -EIO here, this can only ever return
--ENODEV, which is a functional change in the code (probably unintended.)
-Nevertheless, it's likely introducing a bug if the intention is for
-some other return from mdiobus_read() to be handled differently.
-
->  	}
->  
-> -	*phy_id = phy_reg << 16;
-> -
-> -	/* Grab the bits from PHYIR2, and put them in the lower half */
-> -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
-> -	if (phy_reg < 0)
-> -		return -EIO;
-
-... whereas this one always returns -EIO on any error.
-
-So, I think you have the potential in this patch to introduce a subtle
-change of behaviour, which may lead to problems - have you closely
-analysed why the code was the way it was, and whether your change of
-behaviour is actually valid?
-
-> -
-> -	*phy_id |= phy_reg;
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.26.2
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+Bart.
