@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5521C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8457A2053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78A320738
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388036AbgEWRJS (ORCPT
+        id S2388044AbgEWRJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:09:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:52986 "EHLO foss.arm.com"
+        Sat, 23 May 2020 13:09:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:52996 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388007AbgEWRJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:09:12 -0400
+        id S2388011AbgEWRJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 13:09:14 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EB4112FC;
-        Sat, 23 May 2020 10:09:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86D1F1396;
+        Sat, 23 May 2020 10:09:13 -0700 (PDT)
 Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8A4E43F305;
-        Sat, 23 May 2020 10:09:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A2A2B3F305;
+        Sat, 23 May 2020 10:09:12 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5/8] soc: ux500: Switch to use DEVICE_ATTR_RO()
-Date:   Sat, 23 May 2020 18:08:56 +0100
-Message-Id: <20200523170859.50003-6-sudeep.holla@arm.com>
+Subject: [PATCH 6/8] soc: ux500: Use custom soc attribute group instead of device_create_file
+Date:   Sat, 23 May 2020 18:08:57 +0100
+Message-Id: <20200523170859.50003-7-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200523170859.50003-1-sudeep.holla@arm.com>
 References: <20200523170859.50003-1-sudeep.holla@arm.com>
@@ -41,59 +41,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move device attributes to DEVICE_ATTR_RO() as that would make things
-a lot more "obvious" what is happening over the existing __ATTR usage.
+Commit c31e73121f4c ("base: soc: Handle custom soc information sysfs
+entries") introduced custom soc attribute group in soc_device_attribute
+structure but there are no users treewide. While trying to understand
+the motivation and tried to use it, it was found lot of existing custom
+attributes can moved to use it instead of device_create_file.
+
+Though most of these never remove/cleanup the custom attribute as they
+never call soc_device_unregister, using these custom attribute group
+eliminate the need for any cleanup as the driver infrastructure will
+take care of that.
+
+Let us remove device_create_file and start using the custom attribute
+group in soc_device_attribute.
 
 Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/soc/ux500/ux500-soc-id.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/soc/ux500/ux500-soc-id.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/soc/ux500/ux500-soc-id.c b/drivers/soc/ux500/ux500-soc-id.c
-index d64feeb51a40..55ceb67e066b 100644
+index 55ceb67e066b..a9472e0e5d61 100644
 --- a/drivers/soc/ux500/ux500-soc-id.c
 +++ b/drivers/soc/ux500/ux500-soc-id.c
-@@ -146,9 +146,8 @@ static const char * __init ux500_get_revision(void)
- 	return kasprintf(GFP_KERNEL, "%s", "Unknown");
- }
+@@ -157,6 +157,13 @@ process_show(struct device *dev, struct device_attribute *attr, char *buf)
  
--static ssize_t ux500_get_process(struct device *dev,
--					struct device_attribute *attr,
--					char *buf)
-+static ssize_t
-+process_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	if (dbx500_id.process == 0x00)
- 		return sprintf(buf, "Standard\n");
-@@ -156,6 +155,8 @@ static ssize_t ux500_get_process(struct device *dev,
- 	return sprintf(buf, "%02xnm\n", dbx500_id.process);
- }
+ static DEVICE_ATTR_RO(process);
  
-+static DEVICE_ATTR_RO(process);
++static struct attribute *ux500_soc_attrs[] = {
++	&dev_attr_process.attr,
++	NULL
++};
++
++ATTRIBUTE_GROUPS(ux500_soc);
 +
  static const char *db8500_read_soc_id(struct device_node *backupram)
  {
  	void __iomem *base;
-@@ -186,9 +187,6 @@ static void __init soc_info_populate(struct soc_device_attribute *soc_dev_attr,
+@@ -185,11 +192,11 @@ static void __init soc_info_populate(struct soc_device_attribute *soc_dev_attr,
+ 	soc_dev_attr->machine  = ux500_get_machine();
+ 	soc_dev_attr->family   = ux500_get_family();
  	soc_dev_attr->revision = ux500_get_revision();
++	soc_dev_attr->custom_attr_group = ux500_soc_groups[0];
  }
  
--static const struct device_attribute ux500_soc_attr =
--	__ATTR(process,  S_IRUGO, ux500_get_process,  NULL);
--
  static int __init ux500_soc_device_init(void)
  {
- 	struct device *parent;
-@@ -218,7 +216,7 @@ static int __init ux500_soc_device_init(void)
+-	struct device *parent;
+ 	struct soc_device *soc_dev;
+ 	struct soc_device_attribute *soc_dev_attr;
+ 	struct device_node *backupram;
+@@ -215,9 +222,6 @@ static int __init ux500_soc_device_init(void)
+ 		return PTR_ERR(soc_dev);
  	}
  
- 	parent = soc_device_to_device(soc_dev);
--	device_create_file(parent, &ux500_soc_attr);
-+	device_create_file(parent, &dev_attr_process);
- 
+-	parent = soc_device_to_device(soc_dev);
+-	device_create_file(parent, &dev_attr_process);
+-
  	return 0;
  }
+ subsys_initcall(ux500_soc_device_init);
 -- 
 2.17.1
 
