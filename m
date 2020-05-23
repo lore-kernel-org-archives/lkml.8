@@ -3,35 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8874B20738
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D6F2085B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbgEWRTN (ORCPT
+        id S2388098AbgEWRTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49176 "EHLO
+        Sat, 23 May 2020 13:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387571AbgEWRTN (ORCPT
+        with ESMTP id S2387571AbgEWRTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:19:13 -0400
+        Sat, 23 May 2020 13:19:37 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B6EC061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:19:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AC2C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:19:36 -0700 (PDT)
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jcXnO-0000mi-2T; Sat, 23 May 2020 19:18:50 +0200
+        id 1jcXnl-0000si-Cg; Sat, 23 May 2020 19:19:13 +0200
 Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1jcXnN-0004zA-HE; Sat, 23 May 2020 19:18:49 +0200
-Date:   Sat, 23 May 2020 19:18:49 +0200
+        id 1jcXnk-0004zG-Kj; Sat, 23 May 2020 19:19:12 +0200
+Date:   Sat, 23 May 2020 19:19:12 +0200
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Yangtao Li <tiny.windzz@gmail.com>
@@ -52,16 +52,16 @@ Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         linux-mediatek@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 22/32] pwm: bcm2835: convert to
+Subject: Re: [PATCH 21/32] pwm: tiecap: convert to
  devm_platform_ioremap_resource
-Message-ID: <20200523171849.uybbbpqwma4oqqai@pengutronix.de>
+Message-ID: <20200523171912.kbe7dbxfdf6s7v5m@pengutronix.de>
 References: <20191229080610.7597-1-tiny.windzz@gmail.com>
- <20191229080610.7597-22-tiny.windzz@gmail.com>
+ <20191229080610.7597-21-tiny.windzz@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191229080610.7597-22-tiny.windzz@gmail.com>
+In-Reply-To: <20191229080610.7597-21-tiny.windzz@gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -74,7 +74,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-On Sun, Dec 29, 2019 at 08:06:00AM +0000, Yangtao Li wrote:
+On Sun, Dec 29, 2019 at 08:05:59AM +0000, Yangtao Li wrote:
 > Use devm_platform_ioremap_resource() to simplify code.
 > 
 > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
