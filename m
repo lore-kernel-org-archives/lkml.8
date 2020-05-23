@@ -2,108 +2,113 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01162C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A95C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3D16207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB70B207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q7Sxl+I4"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ehwpCzIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbgEWVco (ORCPT
+        id S2388100AbgEWVdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 17:32:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387847AbgEWVcn (ORCPT
+        Sat, 23 May 2020 17:33:14 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18215 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387847AbgEWVdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 17:32:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69988C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 14:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=euhs23l2LckQQZqClPP1ffQdVbjSsT+bd+0gLo+sW/g=; b=Q7Sxl+I4qXTrbIz8BvGb4iRFil
-        QZQoRnqHO1Mz6Wkp21SyoFnG0Ji8aNikGKJt35awZetB2H3MMne3cBHkLncfp/dN+WYEPVzOwpYPE
-        lBq5N0SnpFSutrz90UOxS65ArL74R5W5tL0UMYm/RZp7Fm1dBfXiE9qce5L2gl7VPcdZDFTrrEYk5
-        ZNi71itYo+xtF/ZJoWmnCBxIlvvahO8GJ8g4cYuxYPbMNtSZ3ug2VNDyodh99QI6QpjhuEv1i/guV
-        t+NqbrNgCBLTILBO46cnwzZkwj70Ae3MGTNShVqbA4SLf/UqBn14BeZN+9VXe7SdM0mnICTjhEzsJ
-        TYdZxkag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcbkz-0003mK-N4; Sat, 23 May 2020 21:32:37 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 184D69834A2; Sat, 23 May 2020 23:32:35 +0200 (CEST)
-Date:   Sat, 23 May 2020 23:32:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
-Subject: Re: [RFC][PATCH 0/4] x86/entry: disallow #DB more
-Message-ID: <20200523213235.GB4496@worktop.programming.kicks-ass.net>
-References: <20200522204738.645043059@infradead.org>
- <CALCETrV7GYg5V5dgM9BToc6RAqpcjRdoZoeXbnrTKTqjBfft6g@mail.gmail.com>
- <20200523125940.GA2483@worktop.programming.kicks-ass.net>
+        Sat, 23 May 2020 17:33:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec996060000>; Sat, 23 May 2020 14:30:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 23 May 2020 14:33:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 23 May 2020 14:33:13 -0700
+Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 23 May
+ 2020 21:33:12 +0000
+Subject: Re: [PATCH v2] fpga: dfl: afu: convert get_user_pages() -->
+ pin_user_pages()
+To:     Moritz Fischer <mdf@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+        Wu Hao <hao.wu@intel.com>, <linux-fpga@vger.kernel.org>
+References: <20200519201449.3136033-1-jhubbard@nvidia.com>
+ <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
+ <20200523205717.GA443638@epycbox.lan>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <ccf86d21-2ecf-7873-1c30-fbea880b9081@nvidia.com>
+Date:   Sat, 23 May 2020 14:33:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523125940.GA2483@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200523205717.GA443638@epycbox.lan>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590269446; bh=eRMBYMwT7HglaGDS/HEjHC3APgFjhB0IGthjLynCTmg=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ehwpCzIY1PHJCvVslMEZpX9i9geALAhsYB0Ai9tSzWSshHQesNcmokU1NBC8Frg0s
+         ZtF2HW3Gw1A3OMK8nFsWXTRNfXWuHlTa3L5atA0fNOmYrApWyNw7jTlozlSQdtURNQ
+         jZNLBbCQA6uyLw5ZnnWP++axkxAdyC5CANl5+7GNztlv6U1UaYpWHZKnfkyfbj9HUy
+         auMjf0YjOuvSPeGhSDw3U6EyZHmbHK3ix0JLsX70YvRqjxOU9O7EzjYbsxey5TGMpF
+         byqhy153HPPvYVZPy1a+XMlQTzyS+y9+K2ieNfRTBIVcdFIJr8tAVrXcP0GuXgQkpM
+         cx71DUtaXT3ug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 02:59:40PM +0200, Peter Zijlstra wrote:
-> On Fri, May 22, 2020 at 03:13:57PM -0700, Andy Lutomirski wrote:
-
-> > This is great, except that the unconditional DR7 write is going to
-> > seriously hurt perf performance.  Fortunately, no one cares about
-> > perf, right? :)
+On 2020-05-23 13:57, Moritz Fischer wrote:
+> On Fri, May 22, 2020 at 06:52:34PM -0700, John Hubbard wrote:
+>> On 2020-05-19 13:14, John Hubbard wrote:
+>>> This code was using get_user_pages_fast(), in a "Case 2" scenario
+>>> (DMA/RDMA), using the categorization from [1]. That means that it's
+>>> time to convert the get_user_pages_fast() + put_page() calls to
+>>> pin_user_pages_fast() + unpin_user_pages() calls.
+>>>
+>>> There is some helpful background in [2]: basically, this is a small
+>>> part of fixing a long-standing disconnect between pinning pages, and
+>>> file systems' use of those pages.
+>>>
+>>> [1] Documentation/core-api/pin_user_pages.rst
+>>>
+>>> [2] "Explicit pinning of user-space pages":
+>>>       https://lwn.net/Articles/807108/
+>>>
+>>> Cc: Xu Yilun <yilun.xu@intel.com>
+>>> Cc: Wu Hao <hao.wu@intel.com>
+>>> Cc: Moritz Fischer <mdf@kernel.org>
+>>> Cc: linux-fpga@vger.kernel.org
+>>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>>
+>>
+>> Hi Moritz and FPGA developers,
+>>
+>> Is this OK? And if so, is it going into your git tree? Or should I
+>> send it up through a different tree? (I'm new to the FPGA development
+>> model).
 > 
-> Good point, so the trivial optimization is below. I couldn't find
-> instruction latency numbers for DRn load/stores anywhere. I'm hoping
-> loads are cheap.
+> I can take it, sorry for sluggish response.
+> 
 
-+	u64 empty = 0, read = 0, write = 0;
-+	unsigned long dr7;
-+
-+	for (i=0; i<100; i++) {
-+		u64 s;
-+
-+		s = rdtsc();
-+		barrier_nospec();
-+		barrier_nospec();
-+		empty += rdtsc() - s;
-+
-+		s = rdtsc();
-+		barrier_nospec();
-+		dr7 = native_get_debugreg(7);
-+		barrier_nospec();
-+		read += rdtsc() - s;
-+
-+		s = rdtsc();
-+		barrier_nospec();
-+		native_set_debugreg(7, 0);
-+		barrier_nospec();
-+		write += rdtsc() - s;
-+	}
-+
-+	printk("XXX: %ld %ld %ld\n", empty, read, write);
+That's great news, thanks Moritz! Sorry to be pushy, just didn't want it
+to get lost. :)
 
-
-[    1.628125] XXX: 2800 2404 19600
-
-IOW, reading DR7 is basically free, and certainly cheaper than looking
-at cpu_dr7 which would probably be an insta cache miss.
-
-Which seems to suggest KVM can go pound sand. Maybe they can fix
-themselves with some paravirt love.
-
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
