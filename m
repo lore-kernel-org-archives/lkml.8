@@ -2,102 +2,98 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F02320825
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="F5eKxJj+"
+	by mail.kernel.org (Postfix) with ESMTP id 65CC920812
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387772AbgEWLQP (ORCPT
+        id S2387792AbgEWLdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 07:16:15 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52279 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbgEWLQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 07:16:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49TglX39TCz9sRK;
-        Sat, 23 May 2020 21:16:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1590232573;
-        bh=XdJ4GsUtyCeZgpbb9v8CA5sMkmlRwqHwNrM4xAXS61k=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=F5eKxJj+Hlk8PWkkgX8L7qfqOyREq18UpzzW44RqnKPs0k1u3h76rDnoVchsW4VM+
-         MxQ+0faOCx2NxDdKdOSyGLXnN1BXavZQ4kLw+q+SzvtRFC8KDpJscsm/MZ8RXvZMli
-         Uik9xq6s4cn6WDZB8RPYvlPHJT9+AX4PoHzD6RdUnV2nqz75vbevwWu8uL+pnDNM+6
-         HusW3zRwShhbSgnylftW/6wvDZ1VPVzMrZC88gNUrOk09sKOUTn0KYLirLPXVJPpxe
-         muBDDnC/UwyxIqgqk0NEPRmFf7T7Cj4eCZitvEX+FQehuYA+CSviqkgXAzKN7rrxc8
-         ZS3RyK3piRHSw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Kees Cook <keescook@chromium.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 1/6] printk: Collapse shutdown types into a single dump reason
-In-Reply-To: <20200515184434.8470-2-keescook@chromium.org>
-References: <20200515184434.8470-1-keescook@chromium.org> <20200515184434.8470-2-keescook@chromium.org>
-Date:   Sat, 23 May 2020 21:16:30 +1000
-Message-ID: <87pnaugaup.fsf@mpe.ellerman.id.au>
+        Sat, 23 May 2020 07:33:00 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:20546 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387741AbgEWLc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 07:32:59 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Sat, 23 May 2020 19:32:46
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Sat, 23 May 2020 19:32:46 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc:     "Kangjie Lu" <kjlu@umn.edu>,
+        "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Re: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on
+ error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <CAHp75VexCBc6iCrd_VLj5jXE8cxxdzUUf6pMG6O8LjtNj0J1Aw@mail.gmail.com>
+References: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
+ <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
+ <5a8a6e7b.bef25.1723b588c7f.Coremail.dinghao.liu@zju.edu.cn>
+ <CAHp75Vem1kQviLrobJ65aVOb_VCmLkAv=5U_iXAdWPNe7n0+Ng@mail.gmail.com>
+ <CAHp75VexCBc6iCrd_VLj5jXE8cxxdzUUf6pMG6O8LjtNj0J1Aw@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <53722a45.c204d.172414e8ed8.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBHf3jeCcle70MSAg--.40478W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgAJBlZdtORRbAABsq
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8KwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-> To turn the KMSG_DUMP_* reasons into a more ordered list, collapse
-> the redundant KMSG_DUMP_(RESTART|HALT|POWEROFF) reasons into
-> KMSG_DUMP_SHUTDOWN. The current users already don't meaningfully
-> distinguish between them, so there's no need to, as discussed here:
-> https://lore.kernel.org/lkml/CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com/
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/powerpc/kernel/nvram_64.c | 4 +---
->  fs/pstore/platform.c           | 8 ++------
->  include/linux/kmsg_dump.h      | 4 +---
->  kernel/reboot.c                | 6 +++---
->  4 files changed, 7 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-> index fb4f61096613..0cd1c88bfc8b 100644
-> --- a/arch/powerpc/kernel/nvram_64.c
-> +++ b/arch/powerpc/kernel/nvram_64.c
-> @@ -655,9 +655,7 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
->  	int rc = -1;
->  
->  	switch (reason) {
-> -	case KMSG_DUMP_RESTART:
-> -	case KMSG_DUMP_HALT:
-> -	case KMSG_DUMP_POWEROFF:
-> +	case KMSG_DUMP_SHUTDOWN:
->  		/* These are almost always orderly shutdowns. */
->  		return;
->  	case KMSG_DUMP_OOPS:
+PiBPbiBGcmksIE1heSAyMiwgMjAyMCBhdCA2OjIwIFBNIEFuZHkgU2hldmNoZW5rbwo+IDxhbmR5
+LnNoZXZjaGVua29AZ21haWwuY29tPiB3cm90ZToKPiA+IE9uIEZyaSwgTWF5IDIyLCAyMDIwIGF0
+IDEwOjQ2IEFNIDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPiB3cm90ZToKPiAKPiAuLi4KPiAKPiA+
+IE1vcmVvdmVyLCBjb25zaWRlciBiZWxvdyBjYXNlCj4gPgo+ID4gQ1BVMTogLi4uc29tZXdoZXJl
+IGluIHRoZSBjb2RlLi4uCj4gPiBwbV9ydW50aW1lX2dldCgpIC8vIHdpdGggc3VjY2VzcyEKPiA+
+IC4uLnNlZSBiZWxvdy4uLgo+ID4gcG1fcnVudGltZV9wdXQoKQo+ID4KPiA+IENQVTI6IC4uLm9u
+IHBhcmFsbGVsIHRocmVhZC4uLgo+ID4gcmV0ID0gcG1fcnVudGltZV9nZXRfc3luYygpIC8vIGZh
+aWxlZCEKPiA+IGlmIChyZXQpCj4gPiAgIHBtX3J1bnRpbWVfcHV0KCkgLy8gb2kgdmVpLCB3ZSBw
+dXQgZGV2aWNlIGludG8gc2xlZXAKPiA+Cj4gPiBTbywgdGhlcmUgaXMgYSBwb3RlbnRpYWwgaXNz
+dWUuCj4gCj4gLi4uYW5kIGV2ZW4gaWYgaXQncyBpbXBvc3NpYmxlIChubyBidWdzIGluIHJ1bnRp
+bWUgUE0gY29yZSwgZXRjKSB0aGUKPiBjb2RlIHdpdGggcHV0KCkgbG9va3Mgc3VzcGljaW91cy4K
+PiAKCkkgbWF5IHVuZGVyc3RhbmQgd2hhdCB5b3UgYXJlIHdvcnJpZWQgYWJvdXQuIERvIHlvdSBt
+ZWFuIHRoYXQKZXhlY3V0aW5nIHBtX3J1bnRpbWVfcHV0KCkgd2lsbCBpbmZsdWVuY2Ugb3RoZXIg
+dGhyZWFkcyAoZS5nLiwKb25lIHBhcmFsbGVsIHRocmVhZCBjYW4gcHV0IHRoZSBkZXZpY2UgaW50
+byBzbGVlcCB3aGlsZSBvdGhlcgp0aHJlYWRzIGFyZSB1c2luZyB0aGlzIGRldmljZSk/CgpJIHRo
+aW5rIHRoaXMgd2lsbCBuZXZlciBoYXBwZW4uIEJlY2F1c2UgaW4gdGhpcyBjYXNlIHRoZSBQTSB1
+c2FnZQpjb3VudGVyIGNhbm5vdCBiZSBkZWNyZWFzZWQgdG8gemVybyBpZiB0aGVyZSBhcmUgc3Rp
+bGwgc29tZSB0aHJlYWRzCnVzaW5nIHRoaXMgZGV2aWNlLiBPdGhlcndpc2UsIHBtX3J1bnRpbWVf
+cHV0KCkgc2hvdWxkIG5ldmVyIGJlCnVzZWQgaW4gdGhlIGNhc2Ugb2YgbXVsdGl0aHJlYWRpbmcs
+IHdoaWNoIGlzIHN0cmFuZ2Ugc2luY2UgdGhpcwpBUEkgaXMgdXNlZCB3aWRlbHkuIAoKSSBhbHNv
+IGNoZWNrZWQgbWFueSBvdGhlciBpbXBsZW1lbnRhdGlvbiBvZiBwcm9iZSBpbiBkcml2ZXJzLgpJ
+dCBzZWVtcyB0aGF0IHVzaW5nIHBtX3J1bnRpbWVfcHV0KCkgaXMgb2suIElmIEkgbWlzdW5kZXJz
+dG9vZAp5b3VyIG9waW5pb24sIHBsZWFzZSBwb2ludCBpdCBvdXQsIHRoYW5rcy4KClJlZ2FyZHMs
+CkRpbmdoYW8KCj4gLS0gCj4gV2l0aCBCZXN0IFJlZ2FyZHMsCj4gQW5keSBTaGV2Y2hlbmtvCg==
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-cheers
