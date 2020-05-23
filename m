@@ -2,201 +2,88 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8134AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8C72071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nfJBLKFe"
+	by mail.kernel.org (Postfix) with ESMTP id 66E322071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbgEWMzT (ORCPT
+        id S1731330AbgEWM5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 08:55:19 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41722 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgEWMzR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 08:55:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1590238514; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=4H5s0QFOM5/H2soQZqt1IUyUDqpcpHgzFYC6TqO7StY=;
-        b=nfJBLKFeNz7AabXPcYV/iLwDNAeQUj/6xCxsDCCRKt3OSHSMIUupJDDSQlBbUS+U1DjbLZ
-        tB8K6KJJx62eRqHW88tCAyP3Uujqhvc2pieS9RjRUbTeCKOu9stEHYCl0/gQi1WfobKKyx
-        V9rmQNUwJR45bjLUZm0MK9TFHbpRZUc=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Sat, 23 May 2020 08:57:20 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:25134 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731216AbgEWM5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 08:57:18 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgBXrwmgHcleqCMTAg--.8066S4;
+        Sat, 23 May 2020 20:57:08 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
         Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     od@zcrc.me, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH] ASoC: ingenic: Unconditionally depend on devicetree
-Date:   Sat, 23 May 2020 14:54:55 +0200
-Message-Id: <20200523125455.12392-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] spi: tegra114: Fix runtime PM imbalance on error
+Date:   Sat, 23 May 2020 20:57:04 +0800
+Message-Id: <20200523125704.30300-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgBXrwmgHcleqCMTAg--.8066S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWfWrc_Cr
+        s8Xr1xKF4SgFsrJa1jga43ZrySqF98Xr1Fqr1vyFy3K3yq9r1UC34DXr1qkF47uw47ZF1q
+        yFn0gFySyrn8CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfUeWlkDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAFsF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All boards with Ingenic SoCs probe with devicetree already, we have no
-use for a non-devicetree path.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-This solves some compilation warnings that were caused by unused
-variables in the case where CONFIG_OF was disabled.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- sound/soc/codecs/Kconfig      | 3 +++
- sound/soc/codecs/jz4725b.c    | 4 +---
- sound/soc/codecs/jz4740.c     | 4 +---
- sound/soc/codecs/jz4770.c     | 2 +-
- sound/soc/jz4740/Kconfig      | 2 +-
- sound/soc/jz4740/jz4740-i2s.c | 4 +---
- 6 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index e60e0b6a689c..3a0a6824e278 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -681,6 +681,7 @@ config SND_SOC_CX2072X
- 
- config SND_SOC_JZ4740_CODEC
- 	depends on MIPS || COMPILE_TEST
-+	depends on OF
- 	select REGMAP_MMIO
- 	tristate "Ingenic JZ4740 internal CODEC"
- 	help
-@@ -692,6 +693,7 @@ config SND_SOC_JZ4740_CODEC
- 
- config SND_SOC_JZ4725B_CODEC
- 	depends on MIPS || COMPILE_TEST
-+	depends on OF
- 	select REGMAP
- 	tristate "Ingenic JZ4725B internal CODEC"
- 	help
-@@ -703,6 +705,7 @@ config SND_SOC_JZ4725B_CODEC
- 
- config SND_SOC_JZ4770_CODEC
- 	depends on MIPS || COMPILE_TEST
-+	depends on OF
- 	select REGMAP
- 	tristate "Ingenic JZ4770 internal CODEC"
- 	help
-diff --git a/sound/soc/codecs/jz4725b.c b/sound/soc/codecs/jz4725b.c
-index 2567a5d15b55..e49374c72e70 100644
---- a/sound/soc/codecs/jz4725b.c
-+++ b/sound/soc/codecs/jz4725b.c
-@@ -574,19 +574,17 @@ static int jz4725b_codec_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--#ifdef CONFIG_OF
- static const struct of_device_id jz4725b_codec_of_matches[] = {
- 	{ .compatible = "ingenic,jz4725b-codec", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, jz4725b_codec_of_matches);
--#endif
- 
- static struct platform_driver jz4725b_codec_driver = {
- 	.probe = jz4725b_codec_probe,
- 	.driver = {
- 		.name = "jz4725b-codec",
--		.of_match_table = of_match_ptr(jz4725b_codec_of_matches),
-+		.of_match_table = jz4725b_codec_of_matches,
- 	},
- };
- module_platform_driver(jz4725b_codec_driver);
-diff --git a/sound/soc/codecs/jz4740.c b/sound/soc/codecs/jz4740.c
-index 460aa1fd1efe..c9900d1cd5c2 100644
---- a/sound/soc/codecs/jz4740.c
-+++ b/sound/soc/codecs/jz4740.c
-@@ -344,19 +344,17 @@ static int jz4740_codec_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--#ifdef CONFIG_OF
- static const struct of_device_id jz4740_codec_of_matches[] = {
- 	{ .compatible = "ingenic,jz4740-codec", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, jz4740_codec_of_matches);
--#endif
- 
- static struct platform_driver jz4740_codec_driver = {
- 	.probe = jz4740_codec_probe,
- 	.driver = {
- 		.name = "jz4740-codec",
--		.of_match_table = of_match_ptr(jz4740_codec_of_matches),
-+		.of_match_table = jz4740_codec_of_matches,
- 	},
- };
- 
-diff --git a/sound/soc/codecs/jz4770.c b/sound/soc/codecs/jz4770.c
-index e7cf2c107607..34775aa62402 100644
---- a/sound/soc/codecs/jz4770.c
-+++ b/sound/soc/codecs/jz4770.c
-@@ -937,7 +937,7 @@ static struct platform_driver jz4770_codec_driver = {
- 	.probe			= jz4770_codec_probe,
- 	.driver			= {
- 		.name		= "jz4770-codec",
--		.of_match_table = of_match_ptr(jz4770_codec_of_matches),
-+		.of_match_table = jz4770_codec_of_matches,
- 	},
- };
- module_platform_driver(jz4770_codec_driver);
-diff --git a/sound/soc/jz4740/Kconfig b/sound/soc/jz4740/Kconfig
-index e72f826062e9..29144720cb62 100644
---- a/sound/soc/jz4740/Kconfig
-+++ b/sound/soc/jz4740/Kconfig
-@@ -2,7 +2,7 @@
- config SND_JZ4740_SOC_I2S
- 	tristate "SoC Audio (I2S protocol) for Ingenic JZ4740 SoC"
- 	depends on MIPS || COMPILE_TEST
--	depends on HAS_IOMEM
-+	depends on OF && HAS_IOMEM
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
- 	help
- 	  Say Y if you want to use I2S protocol and I2S codec on Ingenic JZ4740
-diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
-index 6f6f8dad0356..52460adf6ca1 100644
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -504,7 +504,6 @@ static const struct snd_soc_component_driver jz4740_i2s_component = {
- 	.resume		= jz4740_i2s_resume,
- };
- 
--#ifdef CONFIG_OF
- static const struct of_device_id jz4740_of_matches[] = {
- 	{ .compatible = "ingenic,jz4740-i2s", .data = &jz4740_i2s_soc_info },
- 	{ .compatible = "ingenic,jz4760-i2s", .data = &jz4760_i2s_soc_info },
-@@ -513,7 +512,6 @@ static const struct of_device_id jz4740_of_matches[] = {
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, jz4740_of_matches);
--#endif
- 
- static int jz4740_i2s_dev_probe(struct platform_device *pdev)
- {
-@@ -558,7 +556,7 @@ static struct platform_driver jz4740_i2s_driver = {
- 	.probe = jz4740_i2s_dev_probe,
- 	.driver = {
- 		.name = "jz4740-i2s",
--		.of_match_table = of_match_ptr(jz4740_of_matches)
-+		.of_match_table = jz4740_of_matches,
- 	},
- };
+Changelog:
+
+v2: - Use pm_runtime_put_noidle() instead of pm_runtime_put().
+---
+ drivers/spi/spi-tegra114.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 83edabdb41ad..c2c58871a947 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -1398,6 +1398,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
++		pm_runtime_put_noidle(&pdev->dev);
+ 		goto exit_pm_disable;
+ 	}
  
 -- 
-2.26.2
+2.17.1
 
