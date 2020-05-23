@@ -2,124 +2,139 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C05C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 03:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E95C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 03:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368E020735
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 03:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="T47xmdIs"
+	by mail.kernel.org (Postfix) with ESMTP id D8293207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 03:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387547AbgEWDQV (ORCPT
+        id S2387552AbgEWDZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 23:16:21 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:41128 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387492AbgEWDQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 23:16:21 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49TT5w15nFz9vfWN
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 03:16:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id M8LllSdV3WHl for <linux-kernel@vger.kernel.org>;
-        Fri, 22 May 2020 22:16:20 -0500 (CDT)
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49TT5v6WwHz9vfW1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:16:19 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49TT5v6WwHz9vfW1
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49TT5v6WwHz9vfW1
-Received: by mail-il1-f200.google.com with SMTP id g19so10280276ila.12
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 20:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/9+5ZbDGAf206FjfB/Y4KtRjTHhCj+Zv9K8sI80lDtk=;
-        b=T47xmdIsnMA3yh760O6PAYrHanqjkCLCvEn2/BlkxEytWqwVaoyV6+EXGBT/kpnx1n
-         Y7sBtT4Cz/jUOjjT/R5+xq3Eb781dRVxN4nzLxP99C2UnVwKPSoleE2+BcJ/7KrGn1N4
-         3zZr+PFavfWN5Kf1i4MpIdEwMgita5rsjT10hcry+NEBRvGrOXLlkud3fWdmBcP7bcbA
-         0QlQGQdz+NYlIr0iz1fl7dP6c2pJA44wCZLqxFEMDeUtfQbRgLJetqQb0qY9FQFNZqZu
-         lLf/SUj+aHPouPhjMlfF0AtDj+XUqL/b+F5tG3luVaNCW7BOU//Vx0UGF4fkkva2yTpn
-         PQCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/9+5ZbDGAf206FjfB/Y4KtRjTHhCj+Zv9K8sI80lDtk=;
-        b=e3A2GMQfvnZ0MmMYCeW9v+I9OBZShxXweNPBknrLZvGgngsNBOCFhYmBrAHO6PD3Sl
-         hByJ87JM0kkrEwp+2VOPVA0ZMQqYpN4odHbvtjNbnV3FchGCqRWkSP7ebwftPEZxZtHE
-         8BY+fhBiNVERlqYmtRCcpgX2Zw2q0ehHBCbtexImKwJMPXR7N6DSe3H1L0F0O0yc6QRE
-         zrV1/K/aYyS7qXRBe5ltKV+VWZusxAH54DQZ6e0VoWA3Vrv4Jj8Xu5o+ylR6b9gmDjlV
-         /Kn0K//gSaXTWPmmuIGLBKaCw0rLS8SEJD2jD2WRDXEkzujc0Ekf0V7QLXkOEuWpRm0j
-         u2hg==
-X-Gm-Message-State: AOAM533PfgXQS7ykq8N3GDA8miVYzIg/1FfNip7wjCLCC3paNRhxOYTC
-        a1qJE3CBingRHkjpmI1S/9uLRhqz2PqsDyp61J/L3osufgmoYLonkMtLsjBK7/ARVUSQToTeg4Z
-        LZTqmOCbR7WG+F+Tge9LaTo5LSJ01
-X-Received: by 2002:a6b:7515:: with SMTP id l21mr5574911ioh.82.1590203779360;
-        Fri, 22 May 2020 20:16:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxVw0qOOCzSdfRC1iQj2JMEBteYw0RaJJdsRxe31UT8PO1YV1RbIdpUHrDVX29bG9bIzV6xTw==
-X-Received: by 2002:a6b:7515:: with SMTP id l21mr5574900ioh.82.1590203779051;
-        Fri, 22 May 2020 20:16:19 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id w88sm5777247ilk.83.2020.05.22.20.16.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 20:16:18 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     bleung@chromium.org
-Cc:     enric.balletbo@collabora.com, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, kjlu@umn.edu, wu000273@umn.edu
-Subject: [PATCH] platform/chrome: fix a double-unlock issue
-Date:   Fri, 22 May 2020 22:16:08 -0500
-Message-Id: <20200523031608.17918-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 May 2020 23:25:25 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49774 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387509AbgEWDZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 23:25:24 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH95+l8hejRE4AA--.282S3;
+        Sat, 23 May 2020 11:24:48 +0800 (CST)
+Subject: Re: [PATCH 2/3] gpio: pxa: Fix return value of pxa_gpio_probe()
+To:     Robert Jarzmik <robert.jarzmik@free.fr>
+References: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
+ <1590120740-22912-2-git-send-email-yangtiezhu@loongson.cn>
+ <874ks7okk4.fsf@belgarion.home>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <3382c1df-1429-ecd3-70b6-35bc00343608@loongson.cn>
+Date:   Sat, 23 May 2020 11:24:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <874ks7okk4.fsf@belgarion.home>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxH95+l8hejRE4AA--.282S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw4kCr47Jw18Gr45Xw1kXwb_yoW8uw45pr
+        WkWFWF9r15GF12ga9FyanrCFs3A3W7t3yYkr48X3Zaq3WDJrW7Ar48CFWj9ryrCFW8tw10
+        qr4fCry8Aa4kZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
+        67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+        AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+        0D73UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On 05/23/2020 03:07 AM, Robert Jarzmik wrote:
+> Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+>
+>> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+>> to check the return value and return PTR_ERR() if failed.
+>>
+>> Fixes: 542c25b7a209 ("drivers: gpio: pxa: use devm_platform_ioremap_resource()")
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   drivers/gpio/gpio-pxa.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+>> index 1361270..0cb6600 100644
+>> --- a/drivers/gpio/gpio-pxa.c
+>> +++ b/drivers/gpio/gpio-pxa.c
+>> @@ -660,8 +660,8 @@ static int pxa_gpio_probe(struct platform_device *pdev)
+>>   	pchip->irq1 = irq1;
+>>   
+>>   	gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
+>> -	if (!gpio_reg_base)
+>> -		return -EINVAL;
+>> +	if (IS_ERR(gpio_reg_base))
+>> +		return PTR_ERR(gpio_reg_base);
+> As far as I know, devm_platform_ioremap_resource() could return NULL which is
+> not handled by this test (unless __devm_ioremap() semantics changed since I had
+> a look).
 
-In function cros_ec_ishtp_probe(), "up_write" is already called
-before function "cros_ec_dev_init". But "up_write" will be called
-again after the calling of the function "cros_ec_dev_init" failed.
-Thus add a call of the function “down_write” in this if branch
-for the completion of the exception handling.
+Hi Robert,
 
-Fixes: 26a14267aff2 ("platform/chrome: Add ChromeOS EC ISHTP driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/platform/chrome/cros_ec_ishtp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+In the function __devm_ioremap_resource(), if __devm_ioremap returns NULL,
+it will return IOMEM_ERR_PTR(-ENOMEM).
 
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-index 93a71e93a2f1..41d60af618c9 100644
---- a/drivers/platform/chrome/cros_ec_ishtp.c
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -660,8 +660,10 @@ static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
- 
- 	/* Register croc_ec_dev mfd */
- 	rv = cros_ec_dev_init(client_data);
--	if (rv)
-+	if (rv) {
-+		down_write(&init_lock);
- 		goto end_cros_ec_dev_init_error;
-+	}
- 
- 	return 0;
- 
--- 
-2.17.1
+devm_platform_ioremap_resource()
+         devm_ioremap_resource()
+                 __devm_ioremap_resource()
+                        __devm_ioremap()
+
+static void __iomem *
+__devm_ioremap_resource(struct device *dev, const struct resource *res,
+             enum devm_ioremap_type type)
+{
+...
+     dest_ptr = __devm_ioremap(dev, res->start, size, type);
+     if (!dest_ptr) {
+         dev_err(dev, "ioremap failed for resource %pR\n", res);
+         devm_release_mem_region(dev, res->start, size);
+         dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
+     }
+
+     return dest_ptr;
+}
+
+And also, we can see the comment of devm_ioremap_resource():
+
+Usage example:
+
+         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+         base = devm_ioremap_resource(&pdev->dev, res);
+         if (IS_ERR(base))
+                 return PTR_ERR(base);
+
+>
+> Therefore, this patch is incorrect, or rather incomplete.
+
+So I think this patch is correct, do I miss something?
+
+Thanks,
+Tiezhu Yang
+
+>
+> Cheers.
+>
 
