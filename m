@@ -6,77 +6,88 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74845C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D235C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6502071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA2D2071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbgEWJ4n (ORCPT
+        id S2387767AbgEWKDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 05:56:43 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60724 "EHLO loongson.cn"
+        Sat, 23 May 2020 06:03:49 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:16114 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387687AbgEWJ4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 05:56:42 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_2lG88hecSk4AA--.531S2;
-        Sat, 23 May 2020 17:56:24 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH 1/2] rtc: goldfish: Fix return value of goldfish_rtc_probe()
-Date:   Sat, 23 May 2020 17:56:21 +0800
-Message-Id: <1590227782-32249-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx_2lG88hecSk4AA--.531S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykAFyUAw4fKrg_yoWfWFXEka
-        18ur4fJF1kZr1qvw12vw43Cry7CFnYgrZ7XFn5Ka9av3y7Xw17WayDZFs7Aa95Ar4jkF98
-        Gas7GFyfuw1fJjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb48FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4f
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjzBT5UUUU
-        U==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1725270AbgEWKDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 06:03:49 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgCnHr709Mhe2tm5AQ--.78S4;
+        Sat, 23 May 2020 18:03:36 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: coda: Fix runtime PM imbalance in coda_probe
+Date:   Sat, 23 May 2020 18:03:32 +0800
+Message-Id: <20200523100332.32626-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgCnHr709Mhe2tm5AQ--.78S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4rJFyfAF15Wr1rAw1xAFb_yoW8Gr13pa
+        9Ykay0kFWFgws0vr4DAw1UuFW5WFyS9ry7Kr9ruwn5A3s8Jas2qw4rtFy3tFy8JrZ7A3W7
+        AFnIq39rAF4j9r7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxG
+        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUd-B_UUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQJBlZdtORGcwAFsi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+When coda_firmware_request() returns an error code,
+a pairing runtime PM usage counter decrement is needed
+to keep the counter balanced.
 
-Fixes: 89576bebbc17 ("rtc: Use devm_platform_ioremap_resource()")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Also, the caller expects coda_probe() to increase PM
+usage counter, there should be a refcount decrement
+in coda_remove() to keep the counter balanced.
+
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- drivers/rtc/rtc-goldfish.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/coda/coda-common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
-index cb6b0ad..2779715 100644
---- a/drivers/rtc/rtc-goldfish.c
-+++ b/drivers/rtc/rtc-goldfish.c
-@@ -174,7 +174,7 @@ static int goldfish_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, rtcdrv);
- 	rtcdrv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rtcdrv->base))
--		return -ENODEV;
-+		return PTR_ERR(rtcdrv->base);
+diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
+index d0d093dd8f7c..550e9a1266da 100644
+--- a/drivers/media/platform/coda/coda-common.c
++++ b/drivers/media/platform/coda/coda-common.c
+@@ -3119,6 +3119,8 @@ static int coda_probe(struct platform_device *pdev)
+ 	return 0;
  
- 	rtcdrv->irq = platform_get_irq(pdev, 0);
- 	if (rtcdrv->irq < 0)
+ err_alloc_workqueue:
++	pm_runtime_disable(&pdev->dev);
++	pm_runtime_put_noidle(&pdev->dev);
+ 	destroy_workqueue(dev->workqueue);
+ err_v4l2_register:
+ 	v4l2_device_unregister(&dev->v4l2_dev);
+@@ -3136,6 +3138,7 @@ static int coda_remove(struct platform_device *pdev)
+ 	}
+ 	if (dev->m2m_dev)
+ 		v4l2_m2m_release(dev->m2m_dev);
++	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	v4l2_device_unregister(&dev->v4l2_dev);
+ 	destroy_workqueue(dev->workqueue);
 -- 
-2.1.0
+2.17.1
 
