@@ -2,92 +2,110 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AC9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21453C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69D6020679
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F111120679
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388134AbgEWRa3 (ORCPT
+        id S2388106AbgEWRdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:30:29 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37450 "EHLO pegase1.c-s.fr"
+        Sat, 23 May 2020 13:33:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:53910 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbgEWRa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:30:28 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49Tr3M1FsRz9v0rq;
-        Sat, 23 May 2020 19:30:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 6AYhYT_9Gpsv; Sat, 23 May 2020 19:30:23 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49Tr3M0TyQz9v0rp;
-        Sat, 23 May 2020 19:30:23 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6DCA18B876;
-        Sat, 23 May 2020 19:30:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id F9Ne9NoMRqYB; Sat, 23 May 2020 19:30:25 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1121E8B86D;
-        Sat, 23 May 2020 19:30:25 +0200 (CEST)
-Subject: Re: Kernel bug in 5.7 for PPC32 on PowerBook G4 - bisected to commit
- 697ece7
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        ppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <2c361d8e-5e2a-cdd9-da8e-aa49a4f93cfd@lwfinger.net>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <3e3e2343-d674-02e0-7b23-81636b472641@csgroup.eu>
-Date:   Sat, 23 May 2020 19:30:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727123AbgEWRdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 13:33:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F25441FB;
+        Sat, 23 May 2020 10:33:04 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BD1E3F305;
+        Sat, 23 May 2020 10:33:04 -0700 (PDT)
+Subject: Re: [RFC 03/11] net: phy: refactor c45 phy identification sequence
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
+        linux-kernel@vger.kernel.org
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-4-jeremy.linton@arm.com>
+ <20200523152800.GM610998@lunn.ch>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <54e6a5d3-3d98-7cd4-3622-ab5019725979@arm.com>
+Date:   Sat, 23 May 2020 12:32:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <2c361d8e-5e2a-cdd9-da8e-aa49a4f93cfd@lwfinger.net>
+In-Reply-To: <20200523152800.GM610998@lunn.ch>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Larry,
+Hi,
 
-Le 23/05/2020 à 19:24, Larry Finger a écrit :
-> Hi Christophe,
+On 5/23/20 10:28 AM, Andrew Lunn wrote:
+> On Fri, May 22, 2020 at 04:30:51PM -0500, Jeremy Linton wrote:
+>> Lets factor out the phy id logic, and make it generic
+>> so that it can be used for c22 and c45.
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   drivers/net/phy/phy_device.c | 65 +++++++++++++++++++-----------------
+>>   1 file changed, 35 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index 7746c07b97fe..f0761fa5e40b 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+>> @@ -695,6 +695,29 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
+>>   	return 0;
+>>   }
+>>   
+>> +static int _get_phy_id(struct mii_bus *bus, int addr, int dev_addr,
+>> +		       u32 *phy_id, bool c45)
 > 
-> Although kernel 5.7.0-rc2 appeared to boot cleanly, it failed on my G4 
-> when I tried to generate a new kernel. The following BUG message is logged:
+> Hi Jeremy
+> 
+> How about read_phy_id() so you can avoid the _ prefix.
+> 
+>>   static bool valid_phy_id(int val)
+>>   {
+>>   	return (val > 0 && ((val & 0x1fffffff) != 0x1fffffff));
+>> @@ -715,17 +738,17 @@ static bool valid_phy_id(int val)
+>>    */
+>>   static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>   			   struct phy_c45_device_ids *c45_ids) {
+>> -	int phy_reg;
+>> -	int i, reg_addr;
+>> +	int ret;
+>> +	int i;
+>>   	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
+>>   	u32 *devs = &c45_ids->devices_in_package;
+>>   
+>>   	/* Find first non-zero Devices In package. Device zero is reserved
+>>   	 * for 802.3 c45 complied PHYs, so don't probe it at first.
+>>   	 */
+>> -	for (i = 1; i < num_ids && *devs == 0; i++) {
+>> -		phy_reg = get_phy_c45_devs_in_pkg(bus, addr, i, devs);
+>> -		if (phy_reg < 0)
+>> +	for (i = 0; i < num_ids && *devs == 0; i++) {
+>> +		ret = get_phy_c45_devs_in_pkg(bus, addr, i, devs);
+>> +		if (ret < 0)
+>>   			return -EIO;
+> 
+> Renaming reg_addr to ret does not belong in this patch.
 > 
 
-[...]
+Looks like I changed the loop index in this patch while shuffling things 
+around yesterday too. The "for (i = 1/0.." change belongs in 5/11 as well.
 
-> 
-> This problem was bisected to commit 697ece7 ("powerpc/32s: reorder Linux 
-> PTE bits to better match Hash PTE bits").
 
-Being reversed in new -rc , see 
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/87sgfsf4hs.fsf@mpe.ellerman.id.au/
 
-> 
-> If I had done more rigorous tests earlier, I would have found the bug 
-> with more time to fix it before release of 5.7, but every other problem 
-> I have found happened at boot, not when the machine had to swap.
-> 
-> Thanks,
-> 
-> Larry
-
-Christophe
