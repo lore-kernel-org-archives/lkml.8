@@ -2,101 +2,178 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E78C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1792A2072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2019B20735
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zbiGe0xN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X2SnSaT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbgEWBv5 (ORCPT
+        id S2387666AbgEWBwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:51:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387481AbgEWBu7 (ORCPT
+        Fri, 22 May 2020 21:52:35 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1583 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387481AbgEWBwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:50:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A5EC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 18:50:59 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so5117360plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 18:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DT9kV8IQxC/D+uhFJsefv+iJT3TxYB4ReZ7s4ZFOil0=;
-        b=zbiGe0xN/5Eo+H2CF5xCbc37d8G9FUD+KwT1btc4sCr0MmxKKhWlYkpMFKsBDe+auM
-         9Lo6glgxT0TpCX3WRGG2vn4VE4AX+1pfCRCyrummCo1lCgDdqbkeBEk6ijx9JZHEJeU6
-         jRmvQq6kJzvuOmFc9w5apNTgM3Y6aWuEs/rQtJ0OKa8yDTfg0sKs6pnYpShqn12A0A9y
-         J6Wc16rnzBpz+0lD/w43ca6v1fqIWEl8Vw2+W7mJDgRZMzxLokmiLxhG9yZLWNMkjrKX
-         Hj5+zMmQhwgf39Gi5fHYe6g3ZGmPsA6EMMkh/9rZ+BCgVtl95AzUU9gmqRnnCNoVHzwK
-         88yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DT9kV8IQxC/D+uhFJsefv+iJT3TxYB4ReZ7s4ZFOil0=;
-        b=E+upsU7Us/IuJDLoVnkW8ecUu6nqidxkvVFWu58Hf9nvQFK1sHVywOm5FtSsE1ChBz
-         s+qd/bkn9vem2KbEsjniYiE+zBj4HS13dYTmE8lnCavvskxiC69S3xE+JtKY4L8bcu8i
-         hlStd8Ij7SiUSPA4T2YShQYt0xE+VtuHo6A0HXuI2YmO42IDMf34Ha9wwQlW1ElL1LEG
-         /Dnh8UM1iTf/Ne0CiDegka6g3t7++Ub/F0WJGHEeXXNoAMg7DhDoreZdzZLU/JwHwTnb
-         WnFDluG/xlTXib7m+qKFdnX3LeUp+23ntb1woGtvV+yp8Owh1r87rJlIYsIeR/xK93ms
-         rizA==
-X-Gm-Message-State: AOAM531C7qiGd1I1BNrVgoKGQh+m+MIIbrH5fm+j9TbU9GdTv4Hw69bZ
-        PWDXzfzQEAOCEKS7+u2t+BGEqA==
-X-Google-Smtp-Source: ABdhPJwBmDXlE+x5QTHM8T9DaQOh7Fl5EgB2+dvXN52teuRxNlg4WmYuq4kTmwFYa3fjjpSWpHNLKQ==
-X-Received: by 2002:a17:90a:344c:: with SMTP id o70mr8104020pjb.23.1590198658974;
-        Fri, 22 May 2020 18:50:58 -0700 (PDT)
-Received: from x1.lan ([2605:e000:100e:8c61:e0db:da55:b0a4:601])
-        by smtp.gmail.com with ESMTPSA id a71sm8255477pje.0.2020.05.22.18.50.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 18:50:58 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 01/11] block: read-ahead submission should imply no-wait as well
-Date:   Fri, 22 May 2020 19:50:39 -0600
-Message-Id: <20200523015049.14808-2-axboe@kernel.dk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200523015049.14808-1-axboe@kernel.dk>
-References: <20200523015049.14808-1-axboe@kernel.dk>
+        Fri, 22 May 2020 21:52:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec881920000>; Fri, 22 May 2020 18:51:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 May 2020 18:52:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 18:52:34 -0700
+Received: from [10.2.52.1] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 23 May
+ 2020 01:52:34 +0000
+Subject: Re: [PATCH v2] fpga: dfl: afu: convert get_user_pages() -->
+ pin_user_pages()
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
+        Moritz Fischer <mdf@kernel.org>, <linux-fpga@vger.kernel.org>
+References: <20200519201449.3136033-1-jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
+Date:   Fri, 22 May 2020 18:52:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519201449.3136033-1-jhubbard@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590198674; bh=H0H4bnfmZctAlDk5DLSVcRpTFSw3qTsKUJh0ZTZurr0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=X2SnSaT7Sre/ZYhMC6y2b6BWRFVOldzacF6lVvqQ6bEN1JPnOQM4Pr8en2VFy77DJ
+         bu48Qgw92YsFEu3twD2Zlq5M1hRCuvLBcu8WmT+mPDWqVkfK/lYqqp5hjG16VzwFRt
+         9aXkfPEVxjvv//sTJZ5f3RQCkNiRMKhbunRzMyNub4PD4hzEGKUAGGDiOcQq3hSKAG
+         LMffZkVrCKRB4ERw+wSd3szU5l07qmea/t20Bolj5+p2z/LqECpvcEPsRwLcO19voP
+         ACBwxvYV0Yrz3KrnfmlljYgoOyFdwSVOH39ctMSHlaqCDqeR75vouuLaLMKn+nHHFD
+         GZPSf0WA92Rcg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As read-ahead is opportunistic, don't block for request allocation.
+On 2020-05-19 13:14, John Hubbard wrote:
+> This code was using get_user_pages_fast(), in a "Case 2" scenario
+> (DMA/RDMA), using the categorization from [1]. That means that it's
+> time to convert the get_user_pages_fast() + put_page() calls to
+> pin_user_pages_fast() + unpin_user_pages() calls.
+> 
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+> 
+> [1] Documentation/core-api/pin_user_pages.rst
+> 
+> [2] "Explicit pinning of user-space pages":
+>      https://lwn.net/Articles/807108/
+> 
+> Cc: Xu Yilun <yilun.xu@intel.com>
+> Cc: Wu Hao <hao.wu@intel.com>
+> Cc: Moritz Fischer <mdf@kernel.org>
+> Cc: linux-fpga@vger.kernel.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- include/linux/blk_types.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index ccb895f911b1..c296463c15eb 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -374,7 +374,8 @@ enum req_flag_bits {
- #define REQ_INTEGRITY		(1ULL << __REQ_INTEGRITY)
- #define REQ_FUA			(1ULL << __REQ_FUA)
- #define REQ_PREFLUSH		(1ULL << __REQ_PREFLUSH)
--#define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
-+#define REQ_RAHEAD		\
-+	((1ULL << __REQ_RAHEAD) | (1ULL << __REQ_NOWAIT))
- #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
- #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
- #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
+Hi Moritz and FPGA developers,
+
+Is this OK? And if so, is it going into your git tree? Or should I
+send it up through a different tree? (I'm new to the FPGA development
+model).
+
+
+thanks,
 -- 
-2.26.2
+John Hubbard
+NVIDIA
+
+
+
+> ---
+> 
+> Hi,
+> 
+> Changes since v1:
+> 
+> Changed the label from "put_pages", to "unpin_pages".
+> 
+> thanks,
+> John Hubbard
+> NVIDIA
+>   
+>   drivers/fpga/dfl-afu-dma-region.c | 19 +++++--------------
+>   1 file changed, 5 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+> index 62f924489db5..a31dd3a7e581 100644
+> --- a/drivers/fpga/dfl-afu-dma-region.c
+> +++ b/drivers/fpga/dfl-afu-dma-region.c
+> @@ -16,15 +16,6 @@
+>   
+>   #include "dfl-afu.h"
+>   
+> -static void put_all_pages(struct page **pages, int npages)
+> -{
+> -	int i;
+> -
+> -	for (i = 0; i < npages; i++)
+> -		if (pages[i])
+> -			put_page(pages[i]);
+> -}
+> -
+>   void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
+>   {
+>   	struct dfl_afu *afu = dfl_fpga_pdata_get_private(pdata);
+> @@ -57,11 +48,11 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+>   		goto unlock_vm;
+>   	}
+>   
+> -	pinned = get_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
+> +	pinned = pin_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
+>   				     region->pages);
+>   	if (pinned < 0) {
+>   		ret = pinned;
+> -		goto put_pages;
+> +		goto unpin_pages;
+>   	} else if (pinned != npages) {
+>   		ret = -EFAULT;
+>   		goto free_pages;
+> @@ -71,8 +62,8 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+>   
+>   	return 0;
+>   
+> -put_pages:
+> -	put_all_pages(region->pages, pinned);
+> +unpin_pages:
+> +	unpin_user_pages(region->pages, pinned);
+>   free_pages:
+>   	kfree(region->pages);
+>   unlock_vm:
+> @@ -94,7 +85,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platform_data *pdata,
+>   	long npages = region->length >> PAGE_SHIFT;
+>   	struct device *dev = &pdata->dev->dev;
+>   
+> -	put_all_pages(region->pages, npages);
+> +	unpin_user_pages(region->pages, npages);
+>   	kfree(region->pages);
+>   	account_locked_vm(current->mm, npages, false);
+>   
+> 
 
