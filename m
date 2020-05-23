@@ -2,177 +2,108 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7218C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7517E20735
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590267441;
-	bh=q16N3HHZ0JFErGW3tFMulKD5VrVCtOw8nsj3hhHH+Aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x8WgiL9JY1hVaD/f3vtmIQo8WneQO72UXhRT4cKrG5dEMvrZh1q6usMVMtaLH0WQp
-	 9AdXrA3iSRD/1RenetPf9Rg4/Ksb7QvzW3zRHqELGuUeTNezhg5I+j8qJUT8TrmakZ
-	 LkcNdqNaZtJt7DVI05CUD9k4Tx9/dE/sQbC3j37c=
+	by mail.kernel.org (Postfix) with ESMTP id 30FEF20823
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:00:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa+zxmlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388001AbgEWU5U (ORCPT
+        id S2388034AbgEWVAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 16:57:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36142 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387947AbgEWU5U (ORCPT
+        Sat, 23 May 2020 17:00:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387965AbgEWVAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 16:57:20 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c75so6679734pga.3;
-        Sat, 23 May 2020 13:57:19 -0700 (PDT)
+        Sat, 23 May 2020 17:00:14 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E0DC061A0E;
+        Sat, 23 May 2020 14:00:13 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id l15so16373018lje.9;
+        Sat, 23 May 2020 14:00:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/EsWH2Z0Xvdv8zJjOt7cdEn91hyou87YyYLaPvp1v0g=;
+        b=Sa+zxmlNg4c4JyBiPsaefryAVRYS6ONzMiCbRBmwpc+hAQNtYDz+lOIxj+ucvehdqo
+         ypLmP2uZvIgBWdTDaWu3LfltZpO4GulH5Pgz3H02sv+xcBlYz4oe5LQI1pv01c44md7i
+         Jo+F1VZys1v2hG+sClcfy3T/48pEXUIMHTU8Mij5YMtKou+s53bBLTfBeXoiIOf+M271
+         LjlgjMJ5FvGIAeoFHQ1ecuUNorIrjgc1iIV1xSFp3vLj054ToUdfHJXfjayJidRx7bHQ
+         Q5LUXMHe1NHAnUJrv8uyTP0VsLQ6Fu+py5AAZFpGwhi1KpISLvCn911JBwqbxDlaAxfT
+         0huw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FAMTM8agctXMaG0UGWtbx5NqNA6ypNIUWGYaE6iGVQg=;
-        b=EwCpZkYXN3p0gh2HYoBsaE8Jxcu6i+gO4ImQ8ZOh3TuxocYBGegsgIcPuNuK89rda9
-         EVIA6EIkUj8szXgGZJfsNV2UM3aCIVs8qYosowVSqu7ooXd1LcHFmpnA9kB7lOmHzzLx
-         fYHHb5vAAmNpuqDNRKKRjsXVg9r86ydxR+Zq10+LGpdqXt3+QoQfLtrac19h6TF6iYkP
-         DeNWnBzf8S/3JKfWMTTdU+ImSF5etAPzZNgwq7YBEj2HLIWPJrJLVWWj2vq/RuGAsIVI
-         HVo+mGA3z1ww5Wbmx1sWxlhkGXoP6VZWYQ2/VFjVgytxv9GMk8CdXcJxvI+hqJ0rn83t
-         UaPA==
-X-Gm-Message-State: AOAM533ZFtdEm2FWxjBQpgxlBwN5M53+sLjkAkSu7wrU8bia7nn70/fD
-        1FD5whQ+s5Ys3pByrPsvkk8=
-X-Google-Smtp-Source: ABdhPJxDFjY6rayx1BYmwpGoC4kzKGZrUW2SzFQtq7crgGpz8AJwuENuBQgG7Y3qPb0N0ZZO6/uNdg==
-X-Received: by 2002:a63:658:: with SMTP id 85mr19303222pgg.181.1590267439241;
-        Sat, 23 May 2020 13:57:19 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id s123sm9757424pfs.170.2020.05.23.13.57.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/EsWH2Z0Xvdv8zJjOt7cdEn91hyou87YyYLaPvp1v0g=;
+        b=YZ2UYnYYIeYihnR1VUpjb8RIrdR8NbCuX1Irr4j1s+uLppl3qxLHdAEHkvKGxUYMwO
+         kCWs2bj9alBJA3X7TxA6fzy20GBB63PQSGEmbgy0G+wFr9J3nFXfcyq+UlLOuCLMqksH
+         DDdi2WRqPD5FN5WnVCEhICxXrVdkNVTs2lzhppRxxCgDxxrlMpPGxh19uyBGQH+78/fN
+         /74o/RhduPksOhWL+j3tpkKEZmoA/QfweiF0UWbAL3QF86R9S7CIlnuyRysD6OXEO+9s
+         vDWQCqlGWXjIg/Ied9xYHfMrhqPqtKNaIT/ZwgGyAFpq8kfje3f/jHwSN9y8mS809Dj8
+         8kgA==
+X-Gm-Message-State: AOAM530dzT1B0TYFeB+ht4V4mF8IRxhskhioCGBBvGIdl5EYF5SZn9eu
+        hLN010HMR8xBWdktrP0MhFIc5i2BV4UHuw==
+X-Google-Smtp-Source: ABdhPJxqC3eua7TiWDvHzfAusUT8WgJI9LirGt3xhFJCsgjp4JjoI0zMuM6j3vW61/66xYpF6S7YIw==
+X-Received: by 2002:a2e:b4f3:: with SMTP id s19mr3830469ljm.218.1590267612343;
+        Sat, 23 May 2020 14:00:12 -0700 (PDT)
+Received: from btopel-mobl.ger.intel.com (c83-250-27-170.bredband.comhem.se. [83.250.27.170])
+        by smtp.gmail.com with ESMTPSA id d22sm3320712lfc.27.2020.05.23.14.00.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 13:57:18 -0700 (PDT)
-Date:   Sat, 23 May 2020 13:57:17 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-        Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org
-Subject: Re: [PATCH v2] fpga: dfl: afu: convert get_user_pages() -->
- pin_user_pages()
-Message-ID: <20200523205717.GA443638@epycbox.lan>
-References: <20200519201449.3136033-1-jhubbard@nvidia.com>
- <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
+        Sat, 23 May 2020 14:00:11 -0700 (PDT)
+From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH] Documentation/features: Correct RISC-V kprobes support entry
+Date:   Sat, 23 May 2020 23:00:05 +0200
+Message-Id: <20200523210005.59140-1-bjorn.topel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 06:52:34PM -0700, John Hubbard wrote:
-> On 2020-05-19 13:14, John Hubbard wrote:
-> > This code was using get_user_pages_fast(), in a "Case 2" scenario
-> > (DMA/RDMA), using the categorization from [1]. That means that it's
-> > time to convert the get_user_pages_fast() + put_page() calls to
-> > pin_user_pages_fast() + unpin_user_pages() calls.
-> > 
-> > There is some helpful background in [2]: basically, this is a small
-> > part of fixing a long-standing disconnect between pinning pages, and
-> > file systems' use of those pages.
-> > 
-> > [1] Documentation/core-api/pin_user_pages.rst
-> > 
-> > [2] "Explicit pinning of user-space pages":
-> >      https://lwn.net/Articles/807108/
-> > 
-> > Cc: Xu Yilun <yilun.xu@intel.com>
-> > Cc: Wu Hao <hao.wu@intel.com>
-> > Cc: Moritz Fischer <mdf@kernel.org>
-> > Cc: linux-fpga@vger.kernel.org
-> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> 
-> Hi Moritz and FPGA developers,
-> 
-> Is this OK? And if so, is it going into your git tree? Or should I
-> send it up through a different tree? (I'm new to the FPGA development
-> model).
+The Documentation/features/debug/kprobes/arch-support.txt incorrectly
+states that RISC-V has kprobes support. This is not the case.
 
-I can take it, sorry for sluggish response.
+Note that entries that have been incorrectly marked with 'ok' will not
+be changed back to 'TODO' by the features-refresh.sh script.
 
-Cheers,
-Moritz
+Fixes: 7156fc292850 ("Documentation/features: Refresh the arch support status files in place")
+Signed-off-by: Björn Töpel <bjorn.topel@gmail.com>
+---
+ Documentation/features/debug/kprobes/arch-support.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
-> 
-> 
-> 
-> > ---
-> > 
-> > Hi,
-> > 
-> > Changes since v1:
-> > 
-> > Changed the label from "put_pages", to "unpin_pages".
-> > 
-> > thanks,
-> > John Hubbard
-> > NVIDIA
-> >   drivers/fpga/dfl-afu-dma-region.c | 19 +++++--------------
-> >   1 file changed, 5 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-> > index 62f924489db5..a31dd3a7e581 100644
-> > --- a/drivers/fpga/dfl-afu-dma-region.c
-> > +++ b/drivers/fpga/dfl-afu-dma-region.c
-> > @@ -16,15 +16,6 @@
-> >   #include "dfl-afu.h"
-> > -static void put_all_pages(struct page **pages, int npages)
-> > -{
-> > -	int i;
-> > -
-> > -	for (i = 0; i < npages; i++)
-> > -		if (pages[i])
-> > -			put_page(pages[i]);
-> > -}
-> > -
-> >   void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
-> >   {
-> >   	struct dfl_afu *afu = dfl_fpga_pdata_get_private(pdata);
-> > @@ -57,11 +48,11 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
-> >   		goto unlock_vm;
-> >   	}
-> > -	pinned = get_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
-> > +	pinned = pin_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
-> >   				     region->pages);
-> >   	if (pinned < 0) {
-> >   		ret = pinned;
-> > -		goto put_pages;
-> > +		goto unpin_pages;
-> >   	} else if (pinned != npages) {
-> >   		ret = -EFAULT;
-> >   		goto free_pages;
-> > @@ -71,8 +62,8 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
-> >   	return 0;
-> > -put_pages:
-> > -	put_all_pages(region->pages, pinned);
-> > +unpin_pages:
-> > +	unpin_user_pages(region->pages, pinned);
-> >   free_pages:
-> >   	kfree(region->pages);
-> >   unlock_vm:
-> > @@ -94,7 +85,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platform_data *pdata,
-> >   	long npages = region->length >> PAGE_SHIFT;
-> >   	struct device *dev = &pdata->dev->dev;
-> > -	put_all_pages(region->pages, npages);
-> > +	unpin_user_pages(region->pages, npages);
-> >   	kfree(region->pages);
-> >   	account_locked_vm(current->mm, npages, false);
-> > 
-> 
+diff --git a/Documentation/features/debug/kprobes/arch-support.txt b/Documentation/features/debug/kprobes/arch-support.txt
+index e68239b5d2f0..0ed80700bc35 100644
+--- a/Documentation/features/debug/kprobes/arch-support.txt
++++ b/Documentation/features/debug/kprobes/arch-support.txt
+@@ -23,7 +23,7 @@
+     |    openrisc: | TODO |
+     |      parisc: |  ok  |
+     |     powerpc: |  ok  |
+-    |       riscv: |  ok  |
++    |       riscv: | TODO |
+     |        s390: |  ok  |
+     |          sh: |  ok  |
+     |       sparc: |  ok  |
+
+base-commit: 423b8baf18a8c03f2d6fa99aa447ed0da189bb95
+-- 
+2.25.1
+
