@@ -2,152 +2,85 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 15:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 15:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33632072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 15:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600CE2071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 15:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mkEKmCtl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4BL/0Gtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbgEWPIq (ORCPT
+        id S2387953AbgEWPJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 11:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387815AbgEWPIp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 11:08:45 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA2FC061A0E;
-        Sat, 23 May 2020 08:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=+L1qyjeYez4naHDlqKEQbGA3dUqIQLDkuxoqpeTg+yU=; b=mkEKmCtliH+55rZa+ipwPcNydW
-        KUDIjF1IVH5CRKZVarYUmqPVt1DebfFDImGBfPnLWgtiULFkkWwqPtCf9nH6LrAv5jgzcFsMnTpga
-        BANYf6hhvxkAXJBCf+5QGmwEAWGZfMce6wNj95EtRmfQXS5S4XnRpY2Ifl33zSS0yqmDFWrjzgJ14
-        QAhpTu+NaoQiHrjqtGAVv+jSNJ8x7D0yzW0MZeSCEYECHAAfcvomHoX4YQ6Y/ODowCbLsUrph7Qdi
-        1/JYPHAM+4TpXTdf3cfjuJPWAQ4Mi/ND1/krdbgbl7pzNxUjYu7f0EWbr9Yn4KcLnKyJuGRubzJjB
-        IBTFUwvA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcVlM-0004y7-QT; Sat, 23 May 2020 15:08:36 +0000
-Subject: Re: mmotm 2020-05-22-20-35 uploaded (phy/intel/phy-intel-combo.c)
-To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-References: <20200523033645.-uo7X483o%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9960b5aa-4a8e-15a4-6e0b-63561f760d3a@infradead.org>
-Date:   Sat, 23 May 2020 08:08:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 23 May 2020 11:09:57 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46322 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387815AbgEWPJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 11:09:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zh94Nr629GpL+7Cc8d7CAB3Ge/T9cKmSDlUiPtXtVyY=; b=4BL/0GtpgOfn+IAhEzql2eSDX+
+        DVGeFgoayWi+x9vGrlTnqRnwFrmtwKz53Gt8urbo5mYyuxNycvaCn9nuUaS4KiX4fHvRLRbKizsFn
+        4l7fJg2XKm+xNdc8sKmggRz9TrW7s61he3Dmm+xL6Np776nJLXJyNQHN6YGBM7AYArL8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jcVmZ-0034So-JE; Sat, 23 May 2020 17:09:51 +0200
+Date:   Sat, 23 May 2020 17:09:51 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, hkallweit1@gmail.com,
+        davem@davemloft.net, robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+Message-ID: <20200523150951.GK610998@lunn.ch>
+References: <20200522122534.3353-1-dmurphy@ti.com>
+ <20200522122534.3353-5-dmurphy@ti.com>
+ <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
+ <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200523033645.-uo7X483o%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 8:36 PM, Andrew Morton wrote:
-> The mm-of-the-moment snapshot 2020-05-22-20-35 has been uploaded to
+> > > +	dp83869->tx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
+> > > +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+> > > +				   &dp83869->tx_id_delay);
+> > > +	if (!ret && dp83869->tx_id_delay > dp83869_internal_delay[delay_size]) {
+> > > +		phydev_err(phydev,
+> > > +			   "tx-internal-delay value of %u out of range\n",
+> > > +			   dp83869->tx_id_delay);
+> > > +		return -EINVAL;
+> > > +	}
+> > This is the kind of validation that I would be expecting from the PHY
+> > library to do, in fact, since you use Device Tree standard property, I
+> > would expect you only need to pass the maximum delay value and some
+> > storage for your array of delays.
 > 
->    http://www.ozlabs.org/~akpm/mmotm/
+> Actually the PHY library will return either the 0th index if the value is to
+> small or the max index if the value is to large
 > 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
-> 
-> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> followed by the base kernel version against which this patch series is to
-> be applied.
-> 
-> This tree is partially included in linux-next.  To see which patches are
-> included in linux-next, consult the `series' file.  Only the patches
-> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> linux-next.
-> 
-> 
+> based on the array passed in so maybe this check is unnecessary.
 
-on i386:
+Hi Dan
 
-  CC      drivers/phy/intel/phy-intel-combo.o
-In file included from ../include/linux/build_bug.h:5:0,
-                 from ../include/linux/bitfield.h:10,
-                 from ../drivers/phy/intel/phy-intel-combo.c:8:
-../drivers/phy/intel/phy-intel-combo.c: In function ‘combo_phy_w32_off_mask’:
-../include/linux/compiler.h:447:38: error: call to ‘__compiletime_assert_39’ declared with attribute error: FIELD_PREP: mask is not constant
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-                                      ^
-../include/linux/compiler.h:428:4: note: in definition of macro ‘__compiletime_assert’
-    prefix ## suffix();    \
-    ^~~~~~
-../include/linux/compiler.h:447:2: note: in expansion of macro ‘_compiletime_assert’
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-  ^~~~~~~~~~~~~~~~~~~
-../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-../include/linux/bitfield.h:46:3: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),  \
-   ^~~~~~~~~~~~~~~~
-../include/linux/bitfield.h:94:3: note: in expansion of macro ‘__BF_FIELD_CHECK’
-   __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-   ^~~~~~~~~~~~~~~~
-../drivers/phy/intel/phy-intel-combo.c:137:13: note: in expansion of macro ‘FIELD_PREP’
-  reg_val |= FIELD_PREP(mask, val);
-             ^~~~~~~~~~
-../include/linux/compiler.h:447:38: error: call to ‘__compiletime_assert_43’ declared with attribute error: BUILD_BUG_ON failed: (((mask) + (1ULL << (__builtin_ffsll(mask) - 1))) & (((mask) + (1ULL << (__builtin_ffsll(mask) - 1))) - 1)) != 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-                                      ^
-../include/linux/compiler.h:428:4: note: in definition of macro ‘__compiletime_assert’
-    prefix ## suffix();    \
-    ^~~~~~
-../include/linux/compiler.h:447:2: note: in expansion of macro ‘_compiletime_assert’
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-  ^~~~~~~~~~~~~~~~~~~
-../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-../include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-  ^~~~~~~~~~~~~~~~
-../include/linux/build_bug.h:21:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-  ^~~~~~~~~~~~
-../include/linux/bitfield.h:54:3: note: in expansion of macro ‘__BUILD_BUG_ON_NOT_POWER_OF_2’
-   __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +   \
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../include/linux/bitfield.h:94:3: note: in expansion of macro ‘__BF_FIELD_CHECK’
-   __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-   ^~~~~~~~~~~~~~~~
-../drivers/phy/intel/phy-intel-combo.c:137:13: note: in expansion of macro ‘FIELD_PREP’
-  reg_val |= FIELD_PREP(mask, val);
-             ^~~~~~~~~~
+I'm not sure the helper is implementing the best behaviour. Rounded to
+the nearest when within the supported range is O.K. But if the request
+is outside the range, i would report an error.
 
+Any why is your PHY special, in that is does care about out of range
+delays, when others using new the new core helper don't?
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+	Andrew
