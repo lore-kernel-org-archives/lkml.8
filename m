@@ -2,118 +2,126 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D61C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD4D206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D737207FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590213446;
-	bh=B+hznuKDFx6T7Au3LCjr/F3IeAwacylewB3yHhTyAlA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bjUI4MmxN1yyUGCn2epbLdUElqRuyrhLBt0a3343gO3yfZIBhJDFpgF7y8s+lloBa
-	 dNKcrnPTrw5ikZHBPCdH8HWgZ2KZzEgZSt+TuyoMgw29hgl5ucYFuN93WjDiWuZJ/R
-	 i8DXGhBXq0LijiwAsuiqXecwvXgpfL58p8jXxCYU=
+	s=default; t=1590213954;
+	bh=C1Z/ykijQkXEDxKuat87W9+yNZvMZvP4bUwTmC+spjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z6llqEjvvdZ6VupKw4cZi2NHt0pDMB8bbWB9nkv4LyxTQ1AEJiCUTfu42lJIAm9+G
+	 HjDJtBqhbaqS7HuZV13s8/pFu37A+i7wE+dST8ZYeyihIer3NEcFgCl+o2RQOrHhT3
+	 qTLBc5cYRWLr3iQ3oShaOSRV7Y3r83XvGG3WwUT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387599AbgEWF5Z (ORCPT
+        id S2387620AbgEWGFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 01:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
+        Sat, 23 May 2020 02:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387446AbgEWF5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 01:57:25 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S2387446AbgEWGFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 02:05:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E816206DD;
-        Sat, 23 May 2020 05:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CACD42072C;
+        Sat, 23 May 2020 06:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590213445;
-        bh=B+hznuKDFx6T7Au3LCjr/F3IeAwacylewB3yHhTyAlA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h2tEJyVD5zZXvGZgtxeg3dC43GmuSLWjqsmlOUJToGAk9oxwiZ+BqaR6qYoWtDiJt
-         5d5Ec1/FUR50t1VWh8OuzZsFUOy3ifsxAe4I3gWGNnsZObupbAU/eOij/QDMeNvJ4/
-         nlQecWDhKdbVgFooMHlt07X26kppUPN7lTL1rcfs=
-Date:   Sat, 23 May 2020 07:57:20 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     davem@davemloft.net, robh@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update my maintainer entries to reorder
- email addresses
-Message-ID: <20200523075720.64e24d11@coco.lan>
-In-Reply-To: <20200523021928.67126-1-skhan@linuxfoundation.org>
-References: <20200523021928.67126-1-skhan@linuxfoundation.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1590213952;
+        bh=C1Z/ykijQkXEDxKuat87W9+yNZvMZvP4bUwTmC+spjs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XjXxc9dw7SZ93/g6KObshDL9/6CkEB6mKSTSZ0Ay1pyfblZRRPVDdr5XCf3rvjT4J
+         gv58zQ1jkBmwl7eR3xCk35Sw0+etCsWgN0yMuhc3uZ3/Ipa0tfg+XZB7B15nB2PsQQ
+         8pwI3oHK1JDr5D4U8WMzN86Uiy8HFHwtVoTws6jQ=
+Date:   Sat, 23 May 2020 08:05:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH] firmware_loader: change enum fw_opt to u32
+Message-ID: <20200523060548.GA3124611@kroah.com>
+References: <20200522214658.12722-1-scott.branden@broadcom.com>
+ <20200522224508.GE11244@42.do-not-panic.com>
+ <d87aabd0-1195-64ae-d871-b0771be832a8@broadcom.com>
+ <20200522230025.GG11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200522230025.GG11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
-
-Em Fri, 22 May 2020 20:19:28 -0600
-Shuah Khan <skhan@linuxfoundation.org> escreveu:
-
-> get_maintainer.pl picks only the first email address found in the file.
-> Reorder my email addresses so it finds my linuxfoundation.org email.
-
-Next time someone would run the ordering script again, this patch
-would need to be re-applied.
-
-Instead, why don't you just use a single e-mail at the maintainer's
-entry and place the other one at the .mailmap file?
-
+On Fri, May 22, 2020 at 11:00:25PM +0000, Luis Chamberlain wrote:
+> On Fri, May 22, 2020 at 03:49:05PM -0700, Scott Branden wrote:
+> > Hi Luis,
+> > 
+> > On 2020-05-22 3:45 p.m., Luis Chamberlain wrote:
+> > > On Fri, May 22, 2020 at 02:46:58PM -0700, Scott Branden wrote:
+> > > >   /**
+> > > > - * enum fw_opt - options to control firmware loading behaviour
+> > > > + * fw_opt - options to control firmware loading behaviour
+> > > >    *
+> > > >    * @FW_OPT_UEVENT: Enables the fallback mechanism to send a kobject uevent
+> > > >    *	when the firmware is not found. Userspace is in charge to load the
+> > > > @@ -33,15 +33,13 @@
+> > > >    *	the platform's main firmware. If both this fallback and the sysfs
+> > > >    *      fallback are enabled, then this fallback will be tried first.
+> > > >    */
+> > > > -enum fw_opt {
+> > > > -	FW_OPT_UEVENT			= BIT(0),
+> > > > -	FW_OPT_NOWAIT			= BIT(1),
+> > > > -	FW_OPT_USERHELPER		= BIT(2),
+> > > > -	FW_OPT_NO_WARN			= BIT(3),
+> > > > -	FW_OPT_NOCACHE			= BIT(4),
+> > > > -	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
+> > > > -	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
+> > > > -};
+> > > > +#define FW_OPT_UEVENT			BIT(0)
+> > > > +#define FW_OPT_NOWAIT			BIT(1)
+> > > > +#define FW_OPT_USERHELPER		BIT(2)
+> > > > +#define FW_OPT_NO_WARN			BIT(3)
+> > > > +#define FW_OPT_NOCACHE			BIT(4)
+> > > > +#define FW_OPT_NOFALLBACK_SYSFS		BIT(5)
+> > > > +#define FW_OPT_FALLBACK_PLATFORM	BIT(6)
+> > > Everything looked good up to here. The enum defines each flag.
+> > > We just want to use an enum for *one* flag represetnation, not
+> > > a bundle.
+> >
+> > I do not know exactly what you are looking for then.  The FW_OPT_*
+> > values are OR'd together in the code.  You still want the fw_opt enum
+> > above left in place entirely and then the values used in OR'd
+> > together?
 > 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  MAINTAINERS | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ecc0749810b0..dbad8b18bfe6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4404,8 +4404,8 @@ F:	include/linux/cpuidle.h
->  
->  CPU POWER MONITORING SUBSYSTEM
->  M:	Thomas Renninger <trenn@suse.com>
-> -M:	Shuah Khan <shuah@kernel.org>
->  M:	Shuah Khan <skhan@linuxfoundation.org>
-> +M:	Shuah Khan <shuah@kernel.org>
->  L:	linux-pm@vger.kernel.org
->  S:	Maintained
->  F:	tools/power/cpupower/
-> @@ -9238,8 +9238,8 @@ F:	include/uapi/linux/sunrpc/
->  F:	net/sunrpc/
->  
->  KERNEL SELFTEST FRAMEWORK
-> -M:	Shuah Khan <shuah@kernel.org>
->  M:	Shuah Khan <skhan@linuxfoundation.org>
-> +M:	Shuah Khan <shuah@kernel.org>
->  L:	linux-kselftest@vger.kernel.org
->  S:	Maintained
->  Q:	https://patchwork.kernel.org/project/linux-kselftest/list/
-> @@ -17484,8 +17484,8 @@ F:	drivers/usb/common/usb-otg-fsm.c
->  
->  USB OVER IP DRIVER
->  M:	Valentina Manea <valentina.manea.m@gmail.com>
-> -M:	Shuah Khan <shuah@kernel.org>
->  M:	Shuah Khan <skhan@linuxfoundation.org>
-> +M:	Shuah Khan <shuah@kernel.org>
->  L:	linux-usb@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/usb/usbip_protocol.rst
+> Yes, exactly. If they are combined then we just use a u32 to represent
+> these are then flags combined. An enum represents just *one* flag, not
+> a set which are OR'd together. Let me know if this is still not clear.
 
+If this is the case, why have an enum at all?  What difference is it
+from a #define like was done here?
 
+thanks,
 
-Thanks,
-Mauro
+greg k-h
