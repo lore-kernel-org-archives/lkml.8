@@ -2,215 +2,126 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 16:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9164BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 16:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3C820738
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 16:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BFD20849
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 16:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590253153;
+	bh=sJKPAoS2JphcJsCNgw/SfE8Hx7/rTddjhOwUyHhfCZw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=mLZvyZ8En7nFvKuV/bzQBk5mF+bTdZI34FaPx6UudE0tR6/k1NCC97y251giqwIag
+	 63FfRPyQgn7R/ZAVEaH5qVJV7JnkQRkK9xq+NKqs24/mauPJ3hxhl+FjFBdN75hL9m
+	 NgwQQV8t93pYok9MjkZe7018CY7+cU4LiqGNg65I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387961AbgEWQyC (ORCPT
+        id S1728255AbgEWQ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 12:54:02 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:39706 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgEWQyC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 12:54:02 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Sat, 23 May 2020 12:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727901AbgEWQ7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 12:59:12 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 09C5B2001E;
-        Sat, 23 May 2020 18:53:56 +0200 (CEST)
-Date:   Sat, 23 May 2020 18:53:55 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
-Message-ID: <20200523165355.GA5570@ravnborg.org>
-References: <20200521202716.193316-1-samitolvanen@google.com>
- <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
- <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
- <1590226253.lnkg0jun9x.astroid@bobo.none>
- <CAK7LNAR_-q3jhaUzDpkC3ej_DpAerzMsORT-tFw_3AwX7xM0Yw@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9808920738;
+        Sat, 23 May 2020 16:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590253151;
+        bh=sJKPAoS2JphcJsCNgw/SfE8Hx7/rTddjhOwUyHhfCZw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TnLemG7d+DdfKLmwDBpwm1W89zi3EHFbF2aXLJM0sbJJGF2WRyrld4TDAahCwRkqW
+         hZ8o3uez1QcUnB+D/w47tqlG/00RTDzlQ333Q8dMDRd1Jtk9ntpsOVU0OEuxzLqrBB
+         qx2HIk9qL9kbwrSUmg9QbzuULIICxleSVfBGCKxE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7C8213522680; Sat, 23 May 2020 09:59:11 -0700 (PDT)
+Date:   Sat, 23 May 2020 09:59:11 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
+ access
+Message-ID: <20200523165911.GQ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200519201912.1564477-1-bigeasy@linutronix.de>
+ <20200519201912.1564477-4-bigeasy@linutronix.de>
+ <20200520102407.GF317569@hirez.programming.kicks-ass.net>
+ <20200520120608.mwros5jurmidxxfv@linutronix.de>
+ <20200520184345.GU2869@paulmck-ThinkPad-P72>
+ <20200522151255.rtqnuk2cl3dpruou@linutronix.de>
+ <20200522173953.GI2869@paulmck-ThinkPad-P72>
+ <20200523150831.wdrthklakwm6wago@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAR_-q3jhaUzDpkC3ej_DpAerzMsORT-tFw_3AwX7xM0Yw@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8
-        a=KYv34p_JZkM_z_Kwq-QA:9 a=Fnwy0QA8ZUuOD27D:21 a=D97444Hf2OcUiBNx:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <20200523150831.wdrthklakwm6wago@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro.
+On Sat, May 23, 2020 at 05:08:31PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-05-22 10:39:53 [-0700], Paul E. McKenney wrote:
+> > It looks good to me, but I have not yet tested it.  (Happy to let you
+> > take the first crack at rcutorture in any case, scenarios SRCU-P and
+> > SRCU-N.)
+> 
+> on it.
+> 
+> > > That check_init_srcu_struct() is needed, because otherwise:
+> > > 
+> > > | BUG: spinlock bad magic on CPU#2, swapper/0/1
+> > > |  lock: 0xffff88803ed28ac0, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+> > > | CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #81
+> > > | Call Trace:
+> > > |  dump_stack+0x71/0xa0
+> > > |  do_raw_spin_lock+0x6c/0xb0
+> > > |  _raw_spin_lock_irqsave+0x33/0x40
+> > > |  synchronize_srcu+0x24/0xc9
+> > > |  wakeup_source_remove+0x4d/0x70
+> > > |  wakeup_source_unregister.part.0+0x9/0x40
+> > > |  device_wakeup_enable+0x99/0xc0
+> > > 
+> > > I'm not sure if there should be an explicit init of `wakeup_srcu' or if
+> > > an srcu function (like call_srcu()) is supposed to do it.
+> > 
+> > It is fine.  Beforehand, that check_init_srcu_struct() would have been
+> > invoked very shortly thereafter from __call_srcu(), and there is no
+> > instead harm invoking it a few microseconds earlier.  ;-)
+> 
+> Oki. I wasn't sure if an explizit initialized on wakeup_srcu's side was
+> missing or if this is new since we use the lock earlier.
 
-On Sun, May 24, 2020 at 12:12:35AM +0900, Masahiro Yamada wrote:
-> Hi Nicholas,
-> (+CC: Sam Ravnborg)
-> 
-> 
-> On Sat, May 23, 2020 at 7:06 PM Nicholas Piggin <npiggin@gmail.com> wrote:
-> >
-> > Excerpts from Masahiro Yamada's message of May 23, 2020 3:44 am:
-> > > + Michael, and PPC ML.
-> > >
-> > > They may know something about the reason of failure.
-> >
-> > Because the linker can't put branch stubs within object code sections,
-> > so when you incrementally link them too large, the linker can't resolve
-> > branches into other object files.
-> 
-> 
-> Ah, you are right.
-> 
-> So, this is a problem not only for PPC
-> but also for ARM (both 32 and 64 bit), etc.
-> 
-> ARM needs to insert a veneer to jump far.
-> 
-> Prior to thin archive, we could not compile
-> ARCH=arm allyesconfig because
-> drivers/built-in.o was too large.
-> 
-> This patch gets us back to the too large
-> incremental object situation.
-> 
-> With my quick compile-testing,
-> ARCH=arm allyesconfig
-> and ARCH=arm64 allyesconfig are broken.
-> 
-> 
-> > This is why we added incremental linking in the first place. I suppose
-> > it could be made conditional for platforms that can use this
-> > optimization.
-> >
-> > What'd be really nice is if we could somehow build and link kallsyms
-> > without relinking everything twice, and if we could do section mismatch
-> > analysis without making that vmlinux.o as well. I had a few ideas but
-> > not enough time to do much work on it.
-> 
-> 
-> Right, kallsyms links 3 times. (not twice)
-> 
-> 
-> Hmm, I think Sami's main motivation is Clang LTO.
-> 
-> LTO is very time-consuming.
-> So, the android common kernel implements Clang LTO
-> in the pre modpost stage:
-> 
-> 
-> 1) LTO against vmlinux.o
-> 
-> 2) modpost against vmlinux.o
-> 
-> 3) Link vmlinux.o + kallsyms into vmlinux
->    (this requires linking 3 times)
+If you want to worry, the cause for concern that comes to mind is lock
+contention.  Except that this is a per-CPU lock, and it isn't acquired
+all that often.  And when it is acquired often (call_srcu() floods, for
+example), it is acquired on the CPU in question.  So seems unlikely.
 
-We have kallsyms we had to link three times because the linking
-increased the object a little in size so symbols did not match.
-The last time was added more or less only to check that we did
-have stable symbol addresses.
+But should lock contention nevertheless become a problem:
 
-All this predates LTO stuff which we only introduced later.
+1.	Tighten up any acquisitions to avoid unncessary off-CPU
+	acquisition of this lock.
 
-The reason for doing modpost on vmlinux.o was that we had cases
-where everything in drivers/ was fine but there was section mismatch
-references from arch/* to drivers/*
-This is back when there were much more drivers in arch/ than what we
-have today.
-And back then we also had much more to check ad we had cPU hotplug
-that could really cause section mismatches - this is no longer the case
-which is a good thing.
+2.	Convert this particular lock acquisition into a trylock,
+	and make trylock failure return such that a non-expedited
+	grace period results.
 
+But again, I don't see the need for these at the moment.
 
-
-...
-> 
-> The following two commits.
-> I did not fully understand the background, though.
-> 
-> I CC'ed Sam in case he may add some comments.
-> 
-> commit 85bd2fddd68e757da8e1af98f857f61a3c9ce647
-> Author: Sam Ravnborg <sam@ravnborg.org>
-> Date:   Mon Feb 26 15:33:52 2007 +0100
-> 
->     kbuild: fix section mismatch check for vmlinux
-> 
->     vmlinux does not contain relocation entries which is
->     used by the section mismatch checks.
->     Reported by: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
-> 
->     Use the individual objects as inputs to overcome
->     this limitation.
->     In modpost check the .o files and skip non-ELF files.
-> 
->     Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-
-
-So we checked vmlinx - but vmlinx did have too much stripped away.
-so in reality nothing was checked.
-To allow the warnings to be as precise as possible move the checks
-out to the indovidual .o files.
-Sometimes the names was mangled a little so if warnigns was only
-reported on vmlinx level in could be difficult to track down the
-offender.
-This would then also do the check on .o files that had all the
-relocation symbols rtequired.
-
-> 
-> commit 741f98fe298a73c9d47ed53703c1279a29718581
-> Author: Sam Ravnborg <sam@ravnborg.org>
-> Date:   Tue Jul 17 10:54:06 2007 +0200
-> 
->     kbuild: do section mismatch check on full vmlinux
-> 
->     Previously we did do the check on the .o files used to link
->     vmlinux but that failed to find questionable references across
->     the .o files.
->     Create a dedicated vmlinux.o file used only for section mismatch checks
->     that uses the defualt linker script so section does not get renamed.
-> 
->     The vmlinux.o may later be used as part of the the final link of vmlinux
->     but for now it is used fo section mismatch only.
->     For a defconfig build this is instant but for an allyesconfig this
->     add two minutes to a full build (that anyways takes ~2 hours).
-> 
->     Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-
-But when we introduced check of the individual .o fiules we missed when
-the references spanned outside the .o files as explained previously.
-So included a link of vmlinx.o that did NOT drop the relocations
-so we could use it to check for the remaining section mismatch warnings.
-
-Remember - back when we started this we had many hundred warnings
-and it was a fight to keep that number low.
-But we also wanted to report as much as possible.
-
-There was back then several discussions if this was really worth the
-effort. How much was gained from discarding the memory where the
-section mismatch warnigns was triggered.
-In other words - how about just keeping the init code in memory so there
-were no illegal references anymore.
-That is something that is maybe worth to consiuder again as we have even
-less memory we save by throwing away the init code.
-But I think this is a topic for another mail thread.
-
-	Sam
+							Thanx, Paul
