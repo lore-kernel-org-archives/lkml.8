@@ -2,134 +2,177 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2060BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7218C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9AF207CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EM8o2YVy"
+	by mail.kernel.org (Postfix) with ESMTP id 7517E20735
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590267441;
+	bh=q16N3HHZ0JFErGW3tFMulKD5VrVCtOw8nsj3hhHH+Aw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x8WgiL9JY1hVaD/f3vtmIQo8WneQO72UXhRT4cKrG5dEMvrZh1q6usMVMtaLH0WQp
+	 9AdXrA3iSRD/1RenetPf9Rg4/Ksb7QvzW3zRHqELGuUeTNezhg5I+j8qJUT8TrmakZ
+	 LkcNdqNaZtJt7DVI05CUD9k4Tx9/dE/sQbC3j37c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbgEWUfT (ORCPT
+        id S2388001AbgEWU5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 16:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387883AbgEWUfS (ORCPT
+        Sat, 23 May 2020 16:57:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36142 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387947AbgEWU5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 16:35:18 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC35C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 13:35:18 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id x27so8458092lfg.9
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 13:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wEmUEirF5tfAd7Gq1m77iRwi3DBT03ajwm/+Kim4iFg=;
-        b=EM8o2YVyEwUqzdJ+R97QdRyWik29nXrHHi1lSu3IWudNr6YhRjDeYEqE1PGfsOTj2I
-         9j7+PO+0hkKWWaN4XLgb6UqHEVFqud2NqlkV6EnExAdOEtBjmiEv1BYrmomCptcIYKAY
-         n8QU2rzLgSp42zNfG9cgvQ9G/TfrGAoWrEQQBXpjvIxcHcN6rMsRXCZrRGml7GnuaXq1
-         XjwcwxmCzzg06PPf7rV3Cw/TwvGFzhJ161B5qnm41M8RPNlnB84OUXUPBtxqI/+NgKe5
-         RALeoVV1qdXz8Wef9U8WMCe16bGYIg1f+rG+BNJM0eQxj8OFiL8gUjLmK8WvEwebATwr
-         Pa8Q==
+        Sat, 23 May 2020 16:57:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c75so6679734pga.3;
+        Sat, 23 May 2020 13:57:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wEmUEirF5tfAd7Gq1m77iRwi3DBT03ajwm/+Kim4iFg=;
-        b=HZZPjMFU905lRct+prreZv3BGijOcxZp0JH4dfDPMdQYUNcSND+jEExln/RKcnEBxA
-         MxoqfVDSQXQFlJLIaKmurig12rrAlNMC7HgF2zdQ4uOzbvP9VHN3+7ZMoeDx2YPjI8Zv
-         jqYfW1XYyP8cvrDrCnzaLncaXO7KjmTVOc568oLD4JvGTtd/3uEZ9DcoyVJzhelOPQI6
-         J8akqZUAEHnZutqtaoUFYhbjVgwum+Lm2NtawVOnFTJyF6hzOIw0f1aOcXVE+53+WK4E
-         qrK2PtGknRzKefyPfn4zjGjikvI6AqzVLRFrqn/CS47BtTRVnpgw/l402DngFY5BNttd
-         v1Bw==
-X-Gm-Message-State: AOAM531HLlWXZrrsGOWkZH2i4VoVQfm+pK8TEKAbI6pI3lBV9rVG/F4X
-        NPIjXRIcuw9LgF1rmdc8Uuc=
-X-Google-Smtp-Source: ABdhPJw8beiOY5GbQG+UAI+K9m6fW/bBhsr/irDhjKPMhW7JYgDHzKqg9gxgNaTpOtyM0DcTBMxN+w==
-X-Received: by 2002:a19:c187:: with SMTP id r129mr10765647lff.35.1590266116799;
-        Sat, 23 May 2020 13:35:16 -0700 (PDT)
-Received: from localhost.localdomain ([85.249.97.232])
-        by smtp.googlemail.com with ESMTPSA id l20sm3342354lfj.10.2020.05.23.13.35.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 May 2020 13:35:16 -0700 (PDT)
-From:   Artur Barsegyan <a.barsegyan96@gmail.com>
-Cc:     a.barsegyan96@gmail.com, skutepov@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lu Shuaibing <shuaibinglu@126.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ipc/msg.c: wake up senders until there is a queue empty capacity
-Date:   Sat, 23 May 2020 23:34:44 +0300
-Message-Id: <20200523203448.84235-1-a.barsegyan96@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FAMTM8agctXMaG0UGWtbx5NqNA6ypNIUWGYaE6iGVQg=;
+        b=EwCpZkYXN3p0gh2HYoBsaE8Jxcu6i+gO4ImQ8ZOh3TuxocYBGegsgIcPuNuK89rda9
+         EVIA6EIkUj8szXgGZJfsNV2UM3aCIVs8qYosowVSqu7ooXd1LcHFmpnA9kB7lOmHzzLx
+         fYHHb5vAAmNpuqDNRKKRjsXVg9r86ydxR+Zq10+LGpdqXt3+QoQfLtrac19h6TF6iYkP
+         DeNWnBzf8S/3JKfWMTTdU+ImSF5etAPzZNgwq7YBEj2HLIWPJrJLVWWj2vq/RuGAsIVI
+         HVo+mGA3z1ww5Wbmx1sWxlhkGXoP6VZWYQ2/VFjVgytxv9GMk8CdXcJxvI+hqJ0rn83t
+         UaPA==
+X-Gm-Message-State: AOAM533ZFtdEm2FWxjBQpgxlBwN5M53+sLjkAkSu7wrU8bia7nn70/fD
+        1FD5whQ+s5Ys3pByrPsvkk8=
+X-Google-Smtp-Source: ABdhPJxDFjY6rayx1BYmwpGoC4kzKGZrUW2SzFQtq7crgGpz8AJwuENuBQgG7Y3qPb0N0ZZO6/uNdg==
+X-Received: by 2002:a63:658:: with SMTP id 85mr19303222pgg.181.1590267439241;
+        Sat, 23 May 2020 13:57:19 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id s123sm9757424pfs.170.2020.05.23.13.57.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 13:57:18 -0700 (PDT)
+Date:   Sat, 23 May 2020 13:57:17 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+        Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
+        linux-fpga@vger.kernel.org
+Subject: Re: [PATCH v2] fpga: dfl: afu: convert get_user_pages() -->
+ pin_user_pages()
+Message-ID: <20200523205717.GA443638@epycbox.lan>
+References: <20200519201449.3136033-1-jhubbard@nvidia.com>
+ <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take into account the total size of the already enqueued messages of
-previously handled senders before another one.
+On Fri, May 22, 2020 at 06:52:34PM -0700, John Hubbard wrote:
+> On 2020-05-19 13:14, John Hubbard wrote:
+> > This code was using get_user_pages_fast(), in a "Case 2" scenario
+> > (DMA/RDMA), using the categorization from [1]. That means that it's
+> > time to convert the get_user_pages_fast() + put_page() calls to
+> > pin_user_pages_fast() + unpin_user_pages() calls.
+> > 
+> > There is some helpful background in [2]: basically, this is a small
+> > part of fixing a long-standing disconnect between pinning pages, and
+> > file systems' use of those pages.
+> > 
+> > [1] Documentation/core-api/pin_user_pages.rst
+> > 
+> > [2] "Explicit pinning of user-space pages":
+> >      https://lwn.net/Articles/807108/
+> > 
+> > Cc: Xu Yilun <yilun.xu@intel.com>
+> > Cc: Wu Hao <hao.wu@intel.com>
+> > Cc: Moritz Fischer <mdf@kernel.org>
+> > Cc: linux-fpga@vger.kernel.org
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> 
+> 
+> Hi Moritz and FPGA developers,
+> 
+> Is this OK? And if so, is it going into your git tree? Or should I
+> send it up through a different tree? (I'm new to the FPGA development
+> model).
 
-Otherwise, we have serious degradation of receiver throughput for
-case with multiple senders because another sender wakes up,
-checks the queue capacity and falls into sleep again.
+I can take it, sorry for sluggish response.
 
-Each round-trip wastes CPU time a lot and leads to perceptible
-throughput degradation.
+Cheers,
+Moritz
 
-Source code of:
-	- sender/receiver
-	- benchmark script
-	- ready graphics of before/after results
-
-is located here: https://github.com/artur-barsegyan/systemv_queue_research
-
-Signed-off-by: Artur Barsegyan <a.barsegyan96@gmail.com>
----
- ipc/msg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/ipc/msg.c b/ipc/msg.c
-index caca67368cb5..52d634b0a65a 100644
---- a/ipc/msg.c
-+++ b/ipc/msg.c
-@@ -214,6 +214,7 @@ static void ss_wakeup(struct msg_queue *msq,
- 	struct msg_sender *mss, *t;
- 	struct task_struct *stop_tsk = NULL;
- 	struct list_head *h = &msq->q_senders;
-+	size_t msq_quota_used = 0;
- 
- 	list_for_each_entry_safe(mss, t, h, list) {
- 		if (kill)
-@@ -233,7 +234,7 @@ static void ss_wakeup(struct msg_queue *msq,
- 		 * move the sender to the tail on behalf of the
- 		 * blocked task.
- 		 */
--		else if (!msg_fits_inqueue(msq, mss->msgsz)) {
-+		else if (!msg_fits_inqueue(msq, msq_quota_used + mss->msgsz)) {
- 			if (!stop_tsk)
- 				stop_tsk = mss->tsk;
- 
-@@ -241,6 +242,7 @@ static void ss_wakeup(struct msg_queue *msq,
- 			continue;
- 		}
- 
-+		msq_quota_used += mss->msgsz;
- 		wake_q_add(wake_q, mss->tsk);
- 	}
- }
--- 
-2.19.1
-
+> 
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
+> 
+> 
+> 
+> > ---
+> > 
+> > Hi,
+> > 
+> > Changes since v1:
+> > 
+> > Changed the label from "put_pages", to "unpin_pages".
+> > 
+> > thanks,
+> > John Hubbard
+> > NVIDIA
+> >   drivers/fpga/dfl-afu-dma-region.c | 19 +++++--------------
+> >   1 file changed, 5 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+> > index 62f924489db5..a31dd3a7e581 100644
+> > --- a/drivers/fpga/dfl-afu-dma-region.c
+> > +++ b/drivers/fpga/dfl-afu-dma-region.c
+> > @@ -16,15 +16,6 @@
+> >   #include "dfl-afu.h"
+> > -static void put_all_pages(struct page **pages, int npages)
+> > -{
+> > -	int i;
+> > -
+> > -	for (i = 0; i < npages; i++)
+> > -		if (pages[i])
+> > -			put_page(pages[i]);
+> > -}
+> > -
+> >   void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
+> >   {
+> >   	struct dfl_afu *afu = dfl_fpga_pdata_get_private(pdata);
+> > @@ -57,11 +48,11 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+> >   		goto unlock_vm;
+> >   	}
+> > -	pinned = get_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
+> > +	pinned = pin_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
+> >   				     region->pages);
+> >   	if (pinned < 0) {
+> >   		ret = pinned;
+> > -		goto put_pages;
+> > +		goto unpin_pages;
+> >   	} else if (pinned != npages) {
+> >   		ret = -EFAULT;
+> >   		goto free_pages;
+> > @@ -71,8 +62,8 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+> >   	return 0;
+> > -put_pages:
+> > -	put_all_pages(region->pages, pinned);
+> > +unpin_pages:
+> > +	unpin_user_pages(region->pages, pinned);
+> >   free_pages:
+> >   	kfree(region->pages);
+> >   unlock_vm:
+> > @@ -94,7 +85,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platform_data *pdata,
+> >   	long npages = region->length >> PAGE_SHIFT;
+> >   	struct device *dev = &pdata->dev->dev;
+> > -	put_all_pages(region->pages, npages);
+> > +	unpin_user_pages(region->pages, npages);
+> >   	kfree(region->pages);
+> >   	account_locked_vm(current->mm, npages, false);
+> > 
+> 
