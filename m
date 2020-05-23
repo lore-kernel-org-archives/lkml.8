@@ -2,170 +2,88 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B87AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9008207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5pSwqzq"
+	by mail.kernel.org (Postfix) with ESMTP id 7A71020727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 12:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbgEWMdq (ORCPT
+        id S1731298AbgEWMsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 08:33:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbgEWMdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 08:33:45 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27054C05BD43
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 05:33:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c3so8641705wru.12
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 05:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+ha2P0gI7/dhCR+x1uWrZGR8vEfMxTFQAnCpem5drIw=;
-        b=m5pSwqzqb6HpOMNW5gFCyuwJNBY7jMuVL1za74VwCneV9k6X7R6QpHOUgqEQWRtNn4
-         SvgCa954xVeXMD3Km6dpuNgUjmocnT70TzaK9JeGyXbRNIY1Sr3DsXl957oOAGywgQsi
-         2XswZKMKCgiGNlyFjiExEZuBIglEdLs1Ps7G1cuh+GODhvIvW2hSCVJJbuKwtIEswduK
-         Ca8K/X0yHehp9OEEpgRyIWdiOPMG3ADKIc0H9OYpSdEbduubihaEYZDKvrDe4Uq1g4Bu
-         rygpkOerSD5lSVX2Re+Mx0lILNsyegxBIBaxW5W2xzgeXUfsn9fYw9sX273OQBRAf++1
-         Wvvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+ha2P0gI7/dhCR+x1uWrZGR8vEfMxTFQAnCpem5drIw=;
-        b=nhHTcgtkdd2nFSpxcacO8Z+IHvrMO4iSQHlQISkV7ZBS4KCcYrApHzNauS+Ka8ycdq
-         8ZjcOgNWTYLu9B/R57g8/AcfeoWWlE8yacI0v/yt3Pe00DRraNAPvV8Yx8VxY5+Wg546
-         YhZqDRVmfo6h6R7M5ksSrszweeS3MkJcRl9E9uIWUU3z5j0ogxFyMHeSuhwbDvxir8zt
-         DIi+shSfpOKhqXG0hEff5i5bbT4XTJfksdH0WnuoBRa59akkhsnpSpI3/TrFnaGnxqdI
-         o24S3gd6sbrOqq//jlqHtHGd5scbEvAr7Ux4/7XdJ1uTiX5/SEATzbEjM26rYSGmvTqJ
-         jOdA==
-X-Gm-Message-State: AOAM530mj0jWPkGYzr1T8QyjoYBsDAs8+8xVI9MQR/ftghvsxl1grIW0
-        2ePIFMw3Fcn5JlMQzSiYtAIi+g==
-X-Google-Smtp-Source: ABdhPJyL1mgbO/QqqFeAEHWsW/FnRQwYf9IXv1JuxdTJ0DWSLveRKUz+j5yAZUkxEzwjdUnPqh5o8Q==
-X-Received: by 2002:adf:fec3:: with SMTP id q3mr1267150wrs.123.1590237222514;
-        Sat, 23 May 2020 05:33:42 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:c871:e070:f68d:a4f7? ([2a01:e34:ed2f:f020:c871:e070:f68d:a4f7])
-        by smtp.googlemail.com with ESMTPSA id h1sm12875416wme.42.2020.05.23.05.33.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 May 2020 05:33:41 -0700 (PDT)
-Subject: Re: [PATCH] thermal: imx8mm: Add get_trend ops
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
- <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
- <DB3PR0402MB3916B6D11328A036BD479D39F5B50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <6a4d31e4-8a24-2e9f-aa49-bec8258ead4c@linaro.org>
-Date:   Sat, 23 May 2020 14:33:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB3916B6D11328A036BD479D39F5B50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 23 May 2020 08:48:14 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:24630 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726671AbgEWMsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 08:48:13 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgB3zwl+G8leagsTAg--.11847S4;
+        Sat, 23 May 2020 20:48:02 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] spi: tegra20-sflash: Fix runtime PM imbalance on error
+Date:   Sat, 23 May 2020 20:47:58 +0800
+Message-Id: <20200523124758.28604-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgB3zwl+G8leagsTAg--.11847S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWfZrg_Cr
+        s0qr9rGr4fKFWkW3WUG343ZrySvFZ8Zr1vqrs2yFy3K39YvF1Uu34kXrs8Cr18u3yjyr1q
+        yr95KFyxArn8CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUID73UUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQADsD
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/05/2020 02:35, Anson Huang wrote:
-> Hi, Daniel
-> 
-> 
->> Subject: Re: [PATCH] thermal: imx8mm: Add get_trend ops
->>
->> On 13/05/2020 04:58, Anson Huang wrote:
->>> Add get_trend ops for i.MX8MM thermal to apply fast cooling mechanism,
->>> when temperature exceeds passive trip point, the highest cooling
->>> action will be applied, and when temperature drops to lower than the
->>> margin below passive trip point, the lowest cooling action will be
->>> applied.
->>
->> You are not describing what is the goal of this change.
-> 
-> The goal of this change is to make sure whenever temperature exceeds passive trip point,
-> the highest cooling action will be applied immediately, e.g., if there are many cpufreq OPP,
-> the default cooling will be step by step, it will take some more rounds to make cpufreq drop
-> to lowest OPP, while on i.MX, we expect the cpufreq drop to lowest OPP immediately.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Whatever the slope of the temperature increase?
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
->> IIUC, the resulting change will be an on/off action. The thermal zone is
->> mitigated with the highest cooling effect, so the lowest OPP, then the
->> temperature trend is stable until it goes below the trip - margin where the
->> mitigation is stopped.
-> 
-> Yes, your understanding is correctly, once the temperature exceeds passive trip point,
-> the highest cooling action will be applied immediately and then it will be stable there
-> until temperature drop to trip - margin, then the cooling action will be cancelled, the
-> margin is to avoid the back and forth near the passive trip point.
-> 
->>
->> Except, I'm missing something, setting a trip point with a 10000 hysteresis and
->> a cooling map min/max set to the highest opp will result on the same.
-> 
-> Yes setting cooling map min/max cooling state to highest OPP will make the highest
-> cooling action applied immediately, and to have the function of cooling action being
-> cancelled when temperature drops to trip - margin, I have to define another trip point,
-> say passive trip point is 85000, and cooling map min/max set to highest OPP in passive
-> trip point then add another trip point named "active" with 75000, and without any
-> cooling map in it, right?
+Changelog:
 
-May be I misunderstood but only the change as below is needed. No need
-to add a trip point, especially an 'active' trip which is a for an
-active cooling device like a fan.
+v2: - Use pm_runtime_put_noidle() instead of pm_runtime_put().
+---
+ drivers/spi/spi-tegra20-sflash.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index cc7152ecedd9..bea263bd06b4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -231,10 +231,10 @@ cooling-maps {
- 				map0 {
- 					trip = <&cpu_alert0>;
- 					cooling-device =
--						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						<&A53_0 2 2>,
-+						<&A53_1 2 2>,
-+						<&A53_2 2 2>,
-+						<&A53_3 2 2>
- 				};
- 			};
- 		};
-
-
-> If yes, then I think I can try to make the changes in DT instead of thermal driver. 
-
-
+diff --git a/drivers/spi/spi-tegra20-sflash.c b/drivers/spi/spi-tegra20-sflash.c
+index 514429379206..02cf5f463ba6 100644
+--- a/drivers/spi/spi-tegra20-sflash.c
++++ b/drivers/spi/spi-tegra20-sflash.c
+@@ -491,6 +491,7 @@ static int tegra_sflash_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
++		pm_runtime_put_noidle(&pdev->dev);
+ 		goto exit_pm_disable;
+ 	}
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
