@@ -2,138 +2,140 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB251C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A29EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922BB20727
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB83C20727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W6i4bXYb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EbxfOHj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387753AbgEWJX6 (ORCPT
+        id S2387749AbgEWJ00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 05:23:58 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39588 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387678AbgEWJX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 05:23:58 -0400
-Received: from zn.tnic (p200300ec2f1b96004c59f332ede330a0.dip0.t-ipconnect.de [IPv6:2003:ec:2f1b:9600:4c59:f332:ede3:30a0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D4F011EC00F8;
-        Sat, 23 May 2020 11:23:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590225837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RhlLOpWrzFCYAA5wjrrTkxDaFVK4ufjSSsBDJauVbXs=;
-        b=W6i4bXYbASIdWPDlvAWA9Sw9TKs/imch2CRIvLqZAZ4AKkFkjp/UuQi1aiIvRsUqpb/Ijj
-        rhKqdXWe1V8tbZrsV+ydJdjBXCSo3iOhh1eYx5fNwk/T/wLPMiQnd007L0F2AmgC3CZUHh
-        n/hVT/CyRpJEn0ufXVLgJKYXhQaudvg=
-Date:   Sat, 23 May 2020 11:23:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 49/75] x86/sev-es: Handle instruction fetches from
- user-space
-Message-ID: <20200523092351.GE27431@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-50-joro@8bytes.org>
+        Sat, 23 May 2020 05:26:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387513AbgEWJ0Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 05:26:25 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AD5DC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 02:26:25 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m18so15539301ljo.5
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 02:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3+UjsWYOj5RAA70832m2KjeDieKRHT5+oaeChsm4PiY=;
+        b=EbxfOHj73ERD/vJjb5Gqxro9mSG+2H76UVDhL+7A5mkJ3+S5AKZjW8a0wtwNphqqaG
+         Xo0Tj+foQ+zQE4OhGy8YVCBB7tvXBGv+wSAOUIJOFCGOfeJZjM+Gz5RYBF+daTFqHyA+
+         iTJGatzMBRnSKZ/2UueHuIkM9z2VBL0UpDTiB7eTLyavgxmteMF1zE5iEeMSk8e3a/Rk
+         +n3dy4Inw9M63v0v42GvFziLYbE2bOJGN39wAN8Zj5rUrX0/Y3BLL+hKBKRSzwpd500h
+         PDsR4ltXcoTh6zObg6EJOuPuhgRifwPMJfWF2BVCsndUnMGit3wrdsC2aOL94yri74Sz
+         CxXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3+UjsWYOj5RAA70832m2KjeDieKRHT5+oaeChsm4PiY=;
+        b=ADc0+cdLoE8msfe4WpnMkHDn2P6A9VFQAMMpLGWoSknjPCvfAqEicc71NUlsKBBYRP
+         um8x7ZGtJD0XNhgGMvj140P2AP8jWXISsruPwyOc4vFzR+gkaQiBkit4uhbgVsCP3uP2
+         7KZqjVob+MXNnEkI7lD05Qhrl/ogiXqeT+uuB3eMyY9ZjVADzBVZntJSF49DVsN4z5B/
+         YVq3FCh9g5Uv/dWahLVLV0rIPIxUDvY42OyYVF+MQvZ1xpYkOTGoNNMw8+WqwddlRwfW
+         /LSLyT4zrE+JXUqcgKmtclsbLgtzfM7pHu/zs7j26gU2vnVsBeakehB6Mkq8uGrEZ6CM
+         XGdQ==
+X-Gm-Message-State: AOAM532kmnjp5tHym0i65G9CGuTWBoU2pUGXc9k1YePQCi52/z+HK/XU
+        R2X5R7hrDm9pxAxVGRLjtSgIHJYaYd/VbQCY
+X-Google-Smtp-Source: ABdhPJwD7NQzJIATCdMiLNTsRrlgf3lnqx/yCmCgLtLdCgUOid9ZHjky7/t6yxEw97hazi8NTrxZPQ==
+X-Received: by 2002:a2e:978d:: with SMTP id y13mr10084219lji.80.1590225983329;
+        Sat, 23 May 2020 02:26:23 -0700 (PDT)
+Received: from [192.168.81.109] (2.71.98.25.mobile.tre.se. [2.71.98.25])
+        by smtp.gmail.com with ESMTPSA id j14sm3223358lji.63.2020.05.23.02.26.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2020 02:26:22 -0700 (PDT)
+Subject: Re: [PATCH] uio: disable lazy irq disable to avoid double fire
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200521144209.19413-1-thommyj@gmail.com>
+ <20200522091444.GA1192483@kroah.com>
+From:   Thommy Jakobsson <thommyj@gmail.com>
+Message-ID: <6d5b0844-dcaf-902e-466a-1af5ca340b1e@gmail.com>
+Date:   Sat, 23 May 2020 11:26:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200522091444.GA1192483@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-50-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:59PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+On 2020-05-22 11:14, Greg KH wrote:
+> On Thu, May 21, 2020 at 04:42:09PM +0200, Thommy Jakobsson wrote:
+>> +	if (uioinfo->irq) {
 > 
-> When a #VC exception is triggered by user-space the instruction decoder
-> needs to read the instruction bytes from user addresses.  Enhance
-> vc_decode_insn() to safely fetch kernel and user instructions.
+> How is this not true at this point in time based on the code above this?
+> ->irq should always be set here, right?
+It seems to me like there is a path to continue without an IRQ in the
+section above, "uioinfo->irq = UIO_IRQ_NONE;", where UIO_IRQ_NONE is
+0. Do you agree?
+
 > 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/sev-es.c | 31 ++++++++++++++++++++++---------
->  1 file changed, 22 insertions(+), 9 deletions(-)
+>> +		struct irq_data *irq_data = irq_get_irq_data(uioinfo->irq);
+>> +
+>> +		/*
+>> +		 * If a level interrupt, dont do lazy disable. Otherwise the
+>> +		 * irq will fire again since clearing of the actual cause, on
+>> +		 * device level, is done in userspace
+>> +		 */
+>> +		if (!irq_data) {
+>> +			dev_err(&pdev->dev, "unable to get irq data\n");
+>> +			ret = -ENXIO;
+>> +			goto bad1;
 > 
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 85027fb4177e..c2223c2a28c2 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -165,17 +165,30 @@ static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
->  	enum es_result ret;
->  	int res;
->  
-> -	res = vc_fetch_insn_kernel(ctxt, buffer);
-> -	if (unlikely(res == -EFAULT)) {
+> Why is not having this information all of a sudden an error for this
+> code?  What could cause that info to not be there?  Existing systems
+> without this set would work just fine before this change, and I think
+> this breaks them, right?
+irq_data should always exists as long as there is an irq descriptor and
+I assumed that the descriptors "should" exists at the point when this
+code run. So a NULL would either mean something serious and would be
+more of a sanity check than anything else, or (more likely) it is the
+wrong irq configured.
 
-Let's also test for 0 in case the probe_read* guts get changed and start
-returning so other errval besides -EFAULT.
+The "should" comes from that this code path later registers the irq
+(devm_uio_register_device->... ->__uio_register_device->...
+->request_irq->... ->request_threaded_irq), and when this happen its an
+-EINVAL back if there isn't any descriptor from irq_to_desc (which is
+the same function as irq_get_data internally uses). So I don't see any
+new breaks from this, but I could be wrong so please correct me in that
+case. At least it was my intention to not break anything currently
+working. Maybe it is better to just do a dev_dbg and let
+request_threaded_irq handle the wrong irq case?
 
-> -		ctxt->fi.vector     = X86_TRAP_PF;
-> -		ctxt->fi.error_code = 0;
-> -		ctxt->fi.cr2        = ctxt->regs->ip;
-> -		return ES_EXCEPTION;
-> +	if (!user_mode(ctxt->regs)) {
+> 
+>> +		}
+>> +		/*
+>> +		 * irqd_is_level_type() isn't used since isn't valid unitil
+>> +		 * irq is configured.
+>> +		 */
+>> +		if (irqd_get_trigger_type(irq_data) & IRQ_TYPE_LEVEL_MASK) {
+>> +			dev_info(&pdev->dev, "disable lazy unmask\n");
+> 
+> Why dev_info?  If drivers are working properly, they should be quiet.
+> dev_dbg() is fine to use here if you want to debug things to see what is
+> happening.
+Agreed
 
-Flip that check so that it reads more naturally:
-
-	if (user_mode(..)
-			insn_fetch_from_user()
-
-		...
-	} else {
-		vc_fetch_insn_kernel()
-
-	}
-
-> +		res = vc_fetch_insn_kernel(ctxt, buffer);
-
-
-
-> +		if (unlikely(res == -EFAULT)) {
-> +			ctxt->fi.vector     = X86_TRAP_PF;
-> +			ctxt->fi.error_code = 0;
-> +			ctxt->fi.cr2        = ctxt->regs->ip;
-> +			return ES_EXCEPTION;
-> +		}
-> +
-> +		insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE - res, 1);
-> +		insn_get_length(&ctxt->insn);
-> +	} else {
-> +		res = insn_fetch_from_user(ctxt->regs, buffer);
-> +		if (res == 0) {
-
-		if (!res)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+BR,
+Thommy Jakobsson
