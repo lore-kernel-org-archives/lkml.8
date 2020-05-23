@@ -2,131 +2,129 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F53AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F156820727
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC57D20727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A992b6KQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fAaH855X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbgEWBfo (ORCPT
+        id S2387501AbgEWBnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbgEWBfo (ORCPT
+        Fri, 22 May 2020 21:43:49 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11739 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387427AbgEWBnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:35:44 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0A1C061A0E;
-        Fri, 22 May 2020 18:35:43 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id 18so12693579iln.9;
-        Fri, 22 May 2020 18:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S1QSAzJLA557HDI9geZdFtza2j2ttaAmC0/pNbF94RQ=;
-        b=A992b6KQ0XxvQBvr4hpSCBAiJVOy3bCMOJRZbTEgNVsjziHkOX1YLkNL2W7JgGf5kB
-         6dkdnQIBW/+Lh4TZr5VZ9W9jlKsQLHFUNaXvbtKPXiXkE2z25chDOo+YqkADBuJdDhZ/
-         tHUB4rgSKsyEN1xbge2cNw65A0heIWhKbJcDMDvUkNC/9rydOmAqGX3PUZ8I2z0U7Y/V
-         5Cr+kLr+aMh+DQj7mplWOIOBhISwulzYr6G01tL+aSEMoNt7Tw1DQ0rbXyQBcNzZ99L6
-         aTZi5JpRzKVrsOLiFDG26hTNg0/+eB2eYUciggM6rhuzsRwMg4KgAEsT2EqkXuw9fJM0
-         UHFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S1QSAzJLA557HDI9geZdFtza2j2ttaAmC0/pNbF94RQ=;
-        b=DgAFAc830boakhrF3DPI/j3d+CCWdkDX14ukx/QlioTLAHr0BpeV8dr+orcc1Xa6eg
-         /HcJWyFXIav2X0LeX/YETywX+obHaYm0BbTYLlVL+Nwh5CpnWEOcdcyeDwFUR6YRHZkO
-         OW/wwORiBOU4/iWhwNPXa/yLtm9T55KS7FVjEqA4h2hQbcmOK+hOTZxjD6wTAuE1T7cK
-         xZ9bjz+X8JEurVZW5B6PuQkfXwXPFnE+5AL8wv9UZYk/coJXss7CMBm4w08mVCyk5XN9
-         3l8dQuF0Hu6gjMq5FcHOWMy+YPcnBFf+dif3Idt9aAXqUpDrEoW4nZAC09gfjUj8w3FA
-         OZzw==
-X-Gm-Message-State: AOAM532arBrW/DX65bckdXrLUsNI9smIclT5cLczOJNbHc5WvdkaWdx9
-        rJZEphQE/BdineKCqmJYR2vtbH/izU5a1PpRWOZuzCte1dc=
-X-Google-Smtp-Source: ABdhPJyFMcan15/IQgBUd7V654mVVCiDvmI/KPlV1LTFmOXrmNhn289+5jn0LkISjmGIfWZTCLlEXoFxdgoJGQtXdZU=
-X-Received: by 2002:a92:dc85:: with SMTP id c5mr15557198iln.270.1590197742955;
- Fri, 22 May 2020 18:35:42 -0700 (PDT)
+        Fri, 22 May 2020 21:43:49 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec87f430000>; Fri, 22 May 2020 18:41:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 May 2020 18:43:48 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 18:43:48 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 23 May
+ 2020 01:43:48 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 23 May 2020 01:43:48 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.52.1]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec87fd40001>; Fri, 22 May 2020 18:43:48 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, <kvm@vger.kernel.org>
+Subject: [PATCH 1/1] vfio/spapr_tce: convert get_user_pages() --> pin_user_pages()
+Date:   Fri, 22 May 2020 18:43:47 -0700
+Message-ID: <20200523014347.193290-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
- <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
- <20200522113634.GE5801@sirena.org.uk> <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
- <CAL9mu0JZ4Qy+m2oF9TSTRqA_mM0J89huCt3t_Gs7qHa=3LxhBw@mail.gmail.com> <20200522162901.GP5801@sirena.org.uk>
-In-Reply-To: <20200522162901.GP5801@sirena.org.uk>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Sat, 23 May 2020 09:35:06 +0800
-Message-ID: <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
- support for stm32f4
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590198083; bh=aNxPaUMw4B6W9o4OKROyKEN8taVDg0VgvpxK29EQarg=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=fAaH855X8qd9w/i41ulaTLwkNv7vNOo/uAIWw0g6ZIauJPn0I+dJ3tJBHQcvOiBHA
+         /vQ2YrtqSNTbDY8zUKLuTFkGmAeGsYxXuGOCEUdUHEr/4+6L/cAhKxV31BOww26dfK
+         EyAxjd/weu4sdSe5uy9jw+qi7/HLDMOlEHv5YoVoTkVJwXsg8JUDSMBlNxIMvB+WRQ
+         TxtyMvrGfITDKeQVf5kOy0iYmNI2Dy6aUBnHDyPqTJYqndA/lj8uBb4Ib7ajcJceMY
+         TAr8Cxhf0YHDO8J99+Gt55xHt0q9+YSRpsaa/LWtJTnkOD2apoN4WUWfePUblIkKJe
+         whxoekKWcJLEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 12:29 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, May 22, 2020 at 11:59:25PM +0800, dillon min wrote:
->
-> > but, after spi-core create a dummy tx_buf or rx_buf, then i can't get
-> > the correct spi_3wire direction.
-> > actually, this dummy tx_buf is useless for SPI_3WIRE. it's has meaning
-> > for SPI_SIMPLE_RX mode,
-> > simulate SPI_FULL_DUMPLEX
->
-> Oh, that's annoying.  I think the fix here is in the core, it should
-> ignore MUST_TX and MUST_RX in 3WIRE mode since they clearly make no
-> sense there.
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-How about add below changes to spi-core
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 8994545..bfd465c 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1022,7 +1022,8 @@ static int spi_map_msg(struct spi_controller
-*ctlr, struct spi_message *msg)
-        void *tmp;
-        unsigned int max_tx, max_rx;
+[1] Documentation/core-api/pin_user_pages.rst
 
--       if (ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) {
-+       if ((ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) &&
-+               !(msg->spi->mode & SPI_3WIRE)) {
-                max_tx = 0;
-                max_rx = 0;
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
-for my board, lcd panel ilitek ill9341 use 3wire mode, gyro l3gd20 use
-simplex rx mode.
-it's has benefits to l3gd20, no impact to ili9341.
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: kvm@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
-if it's fine to spi-core, i will include it to my next submits.
+Hi,
 
-thanks
+I'm compile-tested this, but am not able to run-time test, so any
+testing help is much appreciated!
 
-best regards.
+thanks,
+John Hubbard
+NVIDIA
 
-Dillon
+ drivers/vfio/vfio_iommu_spapr_tce.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_=
+spapr_tce.c
+index 16b3adc508db..fe888b5dcc00 100644
+--- a/drivers/vfio/vfio_iommu_spapr_tce.c
++++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+@@ -383,7 +383,7 @@ static void tce_iommu_unuse_page(struct tce_container *=
+container,
+ 	struct page *page;
+=20
+ 	page =3D pfn_to_page(hpa >> PAGE_SHIFT);
+-	put_page(page);
++	unpin_user_page(page);
+ }
+=20
+ static int tce_iommu_prereg_ua_to_hpa(struct tce_container *container,
+@@ -486,7 +486,7 @@ static int tce_iommu_use_page(unsigned long tce, unsign=
+ed long *hpa)
+ 	struct page *page =3D NULL;
+ 	enum dma_data_direction direction =3D iommu_tce_direction(tce);
+=20
+-	if (get_user_pages_fast(tce & PAGE_MASK, 1,
++	if (pin_user_pages_fast(tce & PAGE_MASK, 1,
+ 			direction !=3D DMA_TO_DEVICE ? FOLL_WRITE : 0,
+ 			&page) !=3D 1)
+ 		return -EFAULT;
+--=20
+2.26.2
+
