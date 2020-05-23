@@ -2,155 +2,127 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2580AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48DE0206C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F350D206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="H3rWb5HU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CcVRcc9i"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZLEXWPqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbgEWH7G (ORCPT
+        id S2387756AbgEWH7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 03:59:06 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:51307 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387725AbgEWH7D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 03:59:03 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id A0D13874;
-        Sat, 23 May 2020 03:59:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sat, 23 May 2020 03:59:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=K9bdneoooJ1uSBw5jkomBqz3iW0
-        HsoKgOxHBuN88dzA=; b=H3rWb5HUYcQn7iZXb7kBxoSo164u2D2hVvlNCeXfw33
-        vPfXrucVHEPaNFgPKynsNfLu9sswkct6TBU+ulxNIaw6VejbT3wIjZSh1SBgRWed
-        37G/3vgYwnuytM7AUt8VmRelj55JNfHGl1DFJBnkktNp8gbthsSgRqUD1vb3Dioo
-        oApBMjnbaUmoQHmdsXR/FXiAtvFI3xc/C56alJZluumRtFOFuQWhJ6VtYXGn29mx
-        /uHQLUxc7EcEWeJSmD0RVHQVwxL4y6E+vJ36WC4ktDt+GWzQYna8G67frcbar58V
-        WkkaAGX9eKQ7ZdE0czbjq4KF00ZmXPj+KX9G9WSf7qA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=K9bdne
-        oooJ1uSBw5jkomBqz3iW0HsoKgOxHBuN88dzA=; b=CcVRcc9iulo5FrFWsvMwNI
-        lnO1f6CwgY494tKBtmumqn8rFALyNsIivbS9xjEuFDxNvieYN9l7bH8WRLr+piIR
-        Hj1jylf3k9X9SMeOYOzEMKd1s/EJHu1VdQ7/+FqtPUVATE/KUoEHME8/ctLx+itm
-        eagXQ48TrSjcTD6En5e10/SVYN8DPtqRQZIwzDFDZ6T4+ggwg+Z5pKCf5SwFjZNy
-        H1xpeXO1XhBuis4MzAWZOClWQIJIggq4HU8TTMcNqQr+dMJbbRE/O5YaYggluu+v
-        hkouwGdlZiV8+Gw6yhghDLUytmFQ+kUM8upUDnJlv3Gq1dPGRi5Cmr7Q6VFMCqQA
-        ==
-X-ME-Sender: <xms:xNfIXpIYAmfqIChvyJM_rKIA0yUIxHG6Z0AgyhTnotb0mwkBuTquYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddugedguddvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
-    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
-    hjpheqnecuggftrfgrthhtvghrnhephfefleekfeevgffhhfehudetkeeivdeuvdelgeej
-    jefhffegkeffffdugfevudetnecuffhomhgrihhnpehgihhthhhusgdrtghomhdprghlsh
-    grqdhprhhojhgvtghtrdhorhhgnecukfhppedukedtrddvfeehrdefrdehgeenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshh
-    hisehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:xNfIXlK-hUj2c_B-TJAeEP4Nv8ItDjNR79jB0y4kcSeRYV0cYVe9Ng>
-    <xmx:xNfIXhsN6JBRk4ydpuWG_Wqdcl1Uy2vhIKaqbVVFOHa-B7fcj_lI2w>
-    <xmx:xNfIXqZCW_JuSxoblr1zefmM5ZBES2YNtOCd4SmdkHLQMAoGY4rc-Q>
-    <xmx:xdfIXqDiHCJPhSs3amiBVLQ9b3oEfEyPZLCS9vGA9sPVJvr-kmK65UXOCtI>
-Received: from workstation (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 747FB328005E;
-        Sat, 23 May 2020 03:58:56 -0400 (EDT)
-Date:   Sat, 23 May 2020 16:58:54 +0900
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        stable <stable@vger.kernel.org>,
+        Sat, 23 May 2020 03:59:32 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57804 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387627AbgEWH7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 03:59:31 -0400
+Received: from zn.tnic (p200300ec2f1b96004c59f332ede330a0.dip0.t-ipconnect.de [IPv6:2003:ec:2f1b:9600:4c59:f332:ede3:30a0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 215841EC0338;
+        Sat, 23 May 2020 09:59:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590220770;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PIo+t2JcI6yVRedmlgz10X421O+M066c0hltaVL112k=;
+        b=ZLEXWPqMrm4G0DwJpbs8Xgi9xF4kgV5KjgjmvT9VK9gOBCLZtVjao6/GkCbl6+4X+V5fwU
+        RC9EWJFZV06I1nR899eptspZxrdViE5apbzfahsF0PgTl3LX1V8HCCJUtgslfPsCUj9YUS
+        /PGarM2WPPCDvyJoyVnqQyWd5w4+ROU=
+Date:   Sat, 23 May 2020 09:59:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        "Lev R . Oshvang ." <levonshe@gmail.com>
-Subject: Re: [PATCH v2] firewire: Remove function callback casts
-Message-ID: <20200523075854.GA170441@workstation>
-Mail-Followup-To: Greg KH <gregkh@linuxfoundation.org>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        stable <stable@vger.kernel.org>, Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, alsa-devel@alsa-project.org,
-        "Lev R . Oshvang ." <levonshe@gmail.com>
-References: <20200519173425.4724-1-oscar.carter@gmx.com>
- <20200520061624.GA25690@workstation>
- <20200522174308.GB3059@ubuntu>
- <20200523061033.GB3131938@kroah.com>
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 47/75] x86/sev-es: Add Runtime #VC Exception Handler
+Message-ID: <20200523075924.GB27431@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-48-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200523061033.GB3131938@kroah.com>
+In-Reply-To: <20200428151725.31091-48-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Tue, Apr 28, 2020 at 05:16:57PM +0200, Joerg Roedel wrote:
+> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+> index a4fa7f351bf2..bc3a58427028 100644
+> --- a/arch/x86/kernel/sev-es.c
+> +++ b/arch/x86/kernel/sev-es.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/sched/debug.h>	/* For show_regs() */
+>  #include <linux/percpu-defs.h>
+>  #include <linux/mem_encrypt.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/printk.h>
+>  #include <linux/mm_types.h>
+>  #include <linux/set_memory.h>
+> @@ -25,7 +26,7 @@
+>  #include <asm/insn-eval.h>
+>  #include <asm/fpu/internal.h>
+>  #include <asm/processor.h>
+> -#include <asm/trap_defs.h>
+> +#include <asm/traps.h>
+>  #include <asm/svm.h>
+>  
+>  /* For early boot hypervisor communication in SEV-ES enabled guests */
+> @@ -46,10 +47,26 @@ struct sev_es_runtime_data {
+>  
+>  	/* Physical storage for the per-cpu IST stacks of the #VC handler */
+>  	struct vmm_exception_stacks vc_stacks __aligned(PAGE_SIZE);
+> +
+> +	/* Reserve on page per CPU as backup storage for the unencrypted GHCB */
 
-On Sat, May 23, 2020 at 08:10:33AM +0200, Greg KH wrote:
-> On Fri, May 22, 2020 at 07:43:08PM +0200, Oscar Carter wrote:
-> > Hi,
-> > 
-> > On Wed, May 20, 2020 at 03:16:24PM +0900, Takashi Sakamoto wrote:
-> > > Hi,
-> > >
-> > > I'm an author of ALSA firewire stack and thanks for the patch. I agree with
-> > > your intention to remove the cast of function callback toward CFI build.
-> > >
-> > > Practically, the isochronous context with FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL
-> > > is never used by in-kernel drivers. Here, I propose to leave current
-> > > kernel API (fw_iso_context_create() with fw_iso_callback_t) as is.
-> 
-> If it's not used by anyone, why is it still there?  Can't we just delete
-> it?
+		  one
 
-For this patchset, I followed to the theory to keep backward compatibility
-when adding any change, and it's what I'd like to discuss.
+> +	struct ghcb backup_ghcb;
 
-The isoc context of multichannel mode is also available for userspace
-applications, and libhinoko[1] uses it. In a point of backward
-compatibility for userspace, we can't delete the mode.
+I could use some text explaining what those backups are for?
 
-(Practically, the mode is useful for the purpose of packet sniffing in
-bus and helpful to my work for development of ALSA firewire stack[2].)
+> +	/*
+> +	 * Mark the per-cpu GHCBs as in-use to detect nested #VC exceptions.
+> +	 * There is no need for it to be atomic, because nothing is written to
+> +	 * the GHCB between the read and the write of ghcb_active. So it is safe
+> +	 * to use it when a nested #VC exception happens before the write.
+> +	 */
 
-On the other hand, there's no unit driver to use the mode in upstream
-kernel. It's unlikely to use the mode for unit driver since the mode is
-not specific to unit functionality. In my opinion, it's reasonable to
-lose backward compatibility slightly by hiding the multichannel mode
-from in-kernel unit driver.
+Looks liks that is that text... support for nested #VC exceptions.
+I'm sure this has come up already but why do we even want to support
+nested #VCs? IOW, can we do without them first or are they absolutely
+necessary?
 
-I'll post v2 patchset later and I'd like you to merge them if no
-objections from the others for the loss of backward compatibility.
+I'm guessing VC exceptions inside the VC handler but what are the
+sensible use cases?
 
-[1] https://github.com/takaswie/libhinoko
-[2] https://mailman.alsa-project.org/pipermail/alsa-devel/2019-April/147862.html
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards
-
-Takashi Sakamoto
+https://people.kernel.org/tglx/notes-about-netiquette
