@@ -2,126 +2,264 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9164BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 16:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E60CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BFD20849
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 16:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590253153;
-	bh=sJKPAoS2JphcJsCNgw/SfE8Hx7/rTddjhOwUyHhfCZw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=mLZvyZ8En7nFvKuV/bzQBk5mF+bTdZI34FaPx6UudE0tR6/k1NCC97y251giqwIag
-	 63FfRPyQgn7R/ZAVEaH5qVJV7JnkQRkK9xq+NKqs24/mauPJ3hxhl+FjFBdN75hL9m
-	 NgwQQV8t93pYok9MjkZe7018CY7+cU4LiqGNg65I=
+	by mail.kernel.org (Postfix) with ESMTP id 869BF20849
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgEWQ7M (ORCPT
+        id S1728455AbgEWREQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 12:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbgEWQ7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 12:59:12 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9808920738;
-        Sat, 23 May 2020 16:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590253151;
-        bh=sJKPAoS2JphcJsCNgw/SfE8Hx7/rTddjhOwUyHhfCZw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=TnLemG7d+DdfKLmwDBpwm1W89zi3EHFbF2aXLJM0sbJJGF2WRyrld4TDAahCwRkqW
-         hZ8o3uez1QcUnB+D/w47tqlG/00RTDzlQ333Q8dMDRd1Jtk9ntpsOVU0OEuxzLqrBB
-         qx2HIk9qL9kbwrSUmg9QbzuULIICxleSVfBGCKxE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7C8213522680; Sat, 23 May 2020 09:59:11 -0700 (PDT)
-Date:   Sat, 23 May 2020 09:59:11 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
- access
-Message-ID: <20200523165911.GQ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-4-bigeasy@linutronix.de>
- <20200520102407.GF317569@hirez.programming.kicks-ass.net>
- <20200520120608.mwros5jurmidxxfv@linutronix.de>
- <20200520184345.GU2869@paulmck-ThinkPad-P72>
- <20200522151255.rtqnuk2cl3dpruou@linutronix.de>
- <20200522173953.GI2869@paulmck-ThinkPad-P72>
- <20200523150831.wdrthklakwm6wago@linutronix.de>
+        Sat, 23 May 2020 13:04:16 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:49638 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgEWREP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 13:04:15 -0400
+Received: by mail-il1-f198.google.com with SMTP id g13so11484821ild.16
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:04:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=XLLYy0As2CsW3+0Bfy9dEV2flfrjY5RXDtcpxrMn2j4=;
+        b=IGR8TiWCdENXwe3Y3hnKiIkbQwPqWoPuq6507jfv9gD+5f7zJB6N/0PXzrlIDoTy8e
+         6xu7msD8IBS8/aN38PU/iGO8zRVKSUljPdeoozNHJXLIpNLzqXFBeSltThymAHHitqf6
+         cRd7U11vLldzLT4pqGQbEkRjRq7wOzbKvIwPUXBBZFjkYjXPUsqgT010rwu6GElpH9VQ
+         zvAbXae3msJl8c1fUE3/eVbJWYt6U6B0MfuwJD/a1J+PPJzE5DRCVTGmxZRzcexuoLVk
+         c5MF91jPAzV97NarN0mZSp3RRwI5SB6mzGzeXzP7Kn7jnZiBwEYvVHhJgz29CqTBIsza
+         mNsg==
+X-Gm-Message-State: AOAM5322cCLj0g/J/oKJKWiw1Zsz0qpmwawnLs5fZKdJWSlr8LRJ2Fv1
+        jMtjQsWL6GOr2RfX0JlGnkdpXBsAXa3NxxHkFhGHNcpcFxj0
+X-Google-Smtp-Source: ABdhPJy7BC8yQeDAiLEmlXeVjJH6swWMjqXQ9SG/Glo+iVd3TW60Rdy756TyHlTskufD94YZeJosfq7fL7fXtM2WlR70A0KIBtBc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523150831.wdrthklakwm6wago@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6638:b:: with SMTP id z11mr2606694jao.114.1590253454452;
+ Sat, 23 May 2020 10:04:14 -0700 (PDT)
+Date:   Sat, 23 May 2020 10:04:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000041728005a653bcd7@google.com>
+Subject: KASAN: use-after-free Read in mousedev_cleanup
+From:   syzbot <syzbot+29b33f3f410e564731f1@syzkaller.appspotmail.com>
+To:     brendanhiggins@google.com, dmitry.torokhov@gmail.com,
+        gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rafael.j.wysocki@intel.com, rdunlap@infradead.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 05:08:31PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-05-22 10:39:53 [-0700], Paul E. McKenney wrote:
-> > It looks good to me, but I have not yet tested it.  (Happy to let you
-> > take the first crack at rcutorture in any case, scenarios SRCU-P and
-> > SRCU-N.)
-> 
-> on it.
-> 
-> > > That check_init_srcu_struct() is needed, because otherwise:
-> > > 
-> > > | BUG: spinlock bad magic on CPU#2, swapper/0/1
-> > > |  lock: 0xffff88803ed28ac0, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> > > | CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #81
-> > > | Call Trace:
-> > > |  dump_stack+0x71/0xa0
-> > > |  do_raw_spin_lock+0x6c/0xb0
-> > > |  _raw_spin_lock_irqsave+0x33/0x40
-> > > |  synchronize_srcu+0x24/0xc9
-> > > |  wakeup_source_remove+0x4d/0x70
-> > > |  wakeup_source_unregister.part.0+0x9/0x40
-> > > |  device_wakeup_enable+0x99/0xc0
-> > > 
-> > > I'm not sure if there should be an explicit init of `wakeup_srcu' or if
-> > > an srcu function (like call_srcu()) is supposed to do it.
-> > 
-> > It is fine.  Beforehand, that check_init_srcu_struct() would have been
-> > invoked very shortly thereafter from __call_srcu(), and there is no
-> > instead harm invoking it a few microseconds earlier.  ;-)
-> 
-> Oki. I wasn't sure if an explizit initialized on wakeup_srcu's side was
-> missing or if this is new since we use the lock earlier.
+Hello,
 
-If you want to worry, the cause for concern that comes to mind is lock
-contention.  Except that this is a per-CPU lock, and it isn't acquired
-all that often.  And when it is acquired often (call_srcu() floods, for
-example), it is acquired on the CPU in question.  So seems unlikely.
+syzbot found the following crash on:
 
-But should lock contention nevertheless become a problem:
+HEAD commit:    c11d28ab Add linux-next specific files for 20200522
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=119c3f06100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
+dashboard link: https://syzkaller.appspot.com/bug?extid=29b33f3f410e564731f1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135ffa9a100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1076acba100000
 
-1.	Tighten up any acquisitions to avoid unncessary off-CPU
-	acquisition of this lock.
+The bug was bisected to:
 
-2.	Convert this particular lock acquisition into a trylock,
-	and make trylock failure return such that a non-expedited
-	grace period results.
+commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa
+Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Date:   Wed May 13 15:18:40 2020 +0000
 
-But again, I don't see the need for these at the moment.
+    kobject: Make sure the parent does not get released before its children
 
-							Thanx, Paul
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ab01e2100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16ab01e2100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ab01e2100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+29b33f3f410e564731f1@syzkaller.appspotmail.com
+Fixes: 4ef12f719802 ("kobject: Make sure the parent does not get released before its children")
+
+usb 1-1: USB disconnect, device number 2
+==================================================================
+BUG: KASAN: use-after-free in __mutex_lock_common kernel/locking/mutex.c:938 [inline]
+BUG: KASAN: use-after-free in __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
+Read of size 8 at addr ffff88809452f150 by task kworker/0:2/2485
+
+CPU: 0 PID: 2485 Comm: kworker/0:2 Not tainted 5.7.0-rc6-next-20200522-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ __mutex_lock_common kernel/locking/mutex.c:938 [inline]
+ __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
+ mousedev_mark_dead drivers/input/mousedev.c:791 [inline]
+ mousedev_cleanup+0x21/0x180 drivers/input/mousedev.c:816
+ mousedev_destroy+0x28/0xa0 drivers/input/mousedev.c:928
+ __input_unregister_device+0x1b0/0x430 drivers/input/input.c:2091
+ input_unregister_device+0xb4/0xf0 drivers/input/input.c:2273
+ hidinput_disconnect+0x15e/0x3d0 drivers/hid/hid-input.c:1968
+ hid_disconnect+0x13f/0x1a0 drivers/hid/hid-core.c:2008
+ hid_hw_stop drivers/hid/hid-core.c:2055 [inline]
+ hid_device_remove+0x186/0x240 drivers/hid/hid-core.c:2298
+ __device_release_driver drivers/base/dd.c:1111 [inline]
+ device_release_driver_internal+0x231/0x500 drivers/base/dd.c:1144
+ bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2839
+ hid_remove_device drivers/hid/hid-core.c:2467 [inline]
+ hid_destroy_device+0xe1/0x150 drivers/hid/hid-core.c:2486
+ usbhid_disconnect+0x9f/0xe0 drivers/hid/usbhid/hid-core.c:1434
+ usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
+ __device_release_driver drivers/base/dd.c:1113 [inline]
+ device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1144
+ bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2839
+ usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1245
+ usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2217
+ hub_port_connect drivers/usb/core/hub.c:5059 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x17ca/0x38f0 drivers/usb/core/hub.c:5576
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+Allocated by task 17:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ mousedev_create+0x90/0xa20 drivers/input/mousedev.c:856
+ mousedev_connect+0x20/0x280 drivers/input/mousedev.c:981
+ input_attach_handler+0x194/0x200 drivers/input/input.c:1031
+ input_register_device.cold+0xf5/0x246 drivers/input/input.c:2229
+ hidinput_connect+0x4f8f/0xdb30 drivers/hid/hid-input.c:1935
+ hid_connect+0x96b/0xbc0 drivers/hid/hid-core.c:1931
+ hid_hw_start drivers/hid/hid-core.c:2035 [inline]
+ hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:2026
+ kye_probe+0x44/0x536 drivers/hid/hid-kye.c:713
+ hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2263
+ really_probe+0x281/0x6d0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x360 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xaf1/0x1900 drivers/base/core.c:2662
+ hid_add_device drivers/hid/hid-core.c:2419 [inline]
+ hid_add_device+0x33c/0x9a0 drivers/hid/hid-core.c:2368
+ usbhid_probe+0xac8/0xff0 drivers/hid/usbhid/hid-core.c:1407
+ usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:374
+ really_probe+0x281/0x6d0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x360 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xaf1/0x1900 drivers/base/core.c:2662
+ usb_set_configuration+0xec5/0x1740 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x9d/0xe0 drivers/usb/core/generic.c:241
+ usb_probe_device+0xc6/0x1f0 drivers/usb/core/driver.c:272
+ really_probe+0x281/0x6d0 drivers/base/dd.c:525
+ driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:701
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:807
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x360 drivers/base/dd.c:873
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xaf1/0x1900 drivers/base/core.c:2662
+ usb_new_device.cold+0x753/0x103d drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x1eca/0x38f0 drivers/usb/core/hub.c:5576
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+Freed by task 2485:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ device_release+0x71/0x200 drivers/base/core.c:1541
+ kobject_cleanup lib/kobject.c:701 [inline]
+ kobject_release lib/kobject.c:732 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1c8/0x2f0 lib/kobject.c:749
+ cdev_device_del+0x69/0x80 fs/char_dev.c:575
+ mousedev_destroy+0x20/0xa0 drivers/input/mousedev.c:927
+ __input_unregister_device+0x1b0/0x430 drivers/input/input.c:2091
+ input_unregister_device+0xb4/0xf0 drivers/input/input.c:2273
+ hidinput_disconnect+0x15e/0x3d0 drivers/hid/hid-input.c:1968
+ hid_disconnect+0x13f/0x1a0 drivers/hid/hid-core.c:2008
+ hid_hw_stop drivers/hid/hid-core.c:2055 [inline]
+ hid_device_remove+0x186/0x240 drivers/hid/hid-core.c:2298
+ __device_release_driver drivers/base/dd.c:1111 [inline]
+ device_release_driver_internal+0x231/0x500 drivers/base/dd.c:1144
+ bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2839
+ hid_remove_device drivers/hid/hid-core.c:2467 [inline]
+ hid_destroy_device+0xe1/0x150 drivers/hid/hid-core.c:2486
+ usbhid_disconnect+0x9f/0xe0 drivers/hid/usbhid/hid-core.c:1434
+ usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
+ __device_release_driver drivers/base/dd.c:1113 [inline]
+ device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1144
+ bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2839
+ usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1245
+ usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2217
+ hub_port_connect drivers/usb/core/hub.c:5059 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x17ca/0x38f0 drivers/usb/core/hub.c:5576
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+The buggy address belongs to the object at ffff88809452f000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 336 bytes inside of
+ 2048-byte region [ffff88809452f000, ffff88809452f800)
+The buggy address belongs to the page:
+page:ffffea0002514bc0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002461788 ffffea0002786608 ffff8880aa000e00
+raw: 0000000000000000 ffff88809452f000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809452f000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809452f080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88809452f100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                 ^
+ ffff88809452f180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809452f200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
