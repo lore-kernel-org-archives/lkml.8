@@ -2,138 +2,84 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A58C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE71B2065C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1Ar8F9SQ"
+	by mail.kernel.org (Postfix) with ESMTP id B6A282073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 20:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590264946;
+	bh=6NVJkDskDeSVG7nACrgOiBNrXbEYpv5thIkjzs1fYpQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DyaZRpir10FBTg6MCa3Si/cZt2Pu96RW51w503ktYg2ndIVOyBokICVIiffnnX7jw
+	 vUhqYS6bjQiafAwkpIZhSf6NBa0Ac9yfqvDbpHJsf5CpIul5C3w4YsmUOfyjmuB3ZE
+	 OvbtkOmcA/CS1oESP37dOz/LmHDhSjwOEQfR98LE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbgEWUCC (ORCPT
+        id S2387916AbgEWUPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 16:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387893AbgEWUCB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 16:02:01 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9D1C061A0E;
-        Sat, 23 May 2020 13:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=j1ff5g6g6ztV3jNNgAfrfHjYUnntJgUcK2NdpyyQ1D0=; b=1Ar8F9SQGdd9pINkpWuadByHC
-        qF3oozfiX5mGJkbqfMVvdijBhgE74/dmtTVyhskANu84hDvxDj+LgfNfMdHizaUsU5Bhn8QfMK1j4
-        p/8+ELZGq88XNF8tlzl/hMKlmsNRtP1D8waM+qtBx/3/6RfmMPZOm5vHXwNu7rB2H1Nn2KAVprKya
-        brm3pDSY/E2PnSdlB91hfThRnO+VmuOjhHe668mxRzXd96B0zP+JfM9s44xYjFxMZ4/b/ijADxchg
-        NOZ0FO2Yj6xPdzxaBEDwi8GBH7Vv0YTx6hSVPkEqzG4fzbDxqOzyE/igcht1mGjs2mNWmVVL/JA5C
-        g9EVMv6Ag==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36066)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jcaL5-0000cK-Sr; Sat, 23 May 2020 21:01:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jcaKz-0002YD-OO; Sat, 23 May 2020 21:01:41 +0100
-Date:   Sat, 23 May 2020 21:01:41 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org,
-        davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 03/11] net: phy: refactor c45 phy identification sequence
-Message-ID: <20200523200141.GD1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-4-jeremy.linton@arm.com>
- <20200523183058.GX1551@shell.armlinux.org.uk>
- <20200523195131.GN610998@lunn.ch>
+        Sat, 23 May 2020 16:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387834AbgEWUPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 16:15:45 -0400
+Received: from ziggy.de (unknown [213.195.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 332B420735;
+        Sat, 23 May 2020 20:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590264945;
+        bh=6NVJkDskDeSVG7nACrgOiBNrXbEYpv5thIkjzs1fYpQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YqJ1UC6/w724lYfsZMcCtX6NO+gGocMubK8pXx+Y7r0uYeXyR+3ErvxQlffNYL3pf
+         VD+VpIpVPxmTiN2S8S1PUOCUjN3npLKQ1iIlvkW1BET+zmFVX10n3nYiqQZMfkuFXn
+         M16XalZKAkz22ItTu9hAFLiRjAAAoINHcjlR/C3o=
+From:   matthias.bgg@kernel.org
+To:     sean.wang@mediatek.com, vkoul@kernel.org, robh+dt@kernel.org
+Cc:     matthias.bgg@gmail.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
+Subject: [PATCH] dt-bindings: dma: uart: mtk: fix example
+Date:   Sat, 23 May 2020 22:15:30 +0200
+Message-Id: <20200523201530.18225-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523195131.GN610998@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 09:51:31PM +0200, Andrew Lunn wrote:
-> > >  static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > >  			   struct phy_c45_device_ids *c45_ids) {
-> > > -	int phy_reg;
-> > > -	int i, reg_addr;
-> > > +	int ret;
-> > > +	int i;
-> > >  	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
-> > >  	u32 *devs = &c45_ids->devices_in_package;
-> > 
-> > I feel a "reverse christmas tree" complaint brewing... yes, the original
-> > code didn't follow it.  Maybe a tidy up while touching this code?
-> 
-> At minimum, a patch should not make it worse. ret and i should clearly
-> be after devs.
-> 
-> > >  static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
-> > >  		      bool is_c45, struct phy_c45_device_ids *c45_ids)
-> > >  {
-> > > -	int phy_reg;
-> > > +	int ret;
-> > >  
-> > >  	if (is_c45)
-> > >  		return get_phy_c45_ids(bus, addr, phy_id, c45_ids);
-> > >  
-> > > -	/* Grab the bits from PHYIR1, and put them in the upper half */
-> > > -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID1);
-> > > -	if (phy_reg < 0) {
-> > > +	ret = _get_phy_id(bus, addr, 0, phy_id, false);
-> > > +	if (ret < 0) {
-> > >  		/* returning -ENODEV doesn't stop bus scanning */
-> > > -		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
-> > > +		return (ret == -EIO || ret == -ENODEV) ? -ENODEV : -EIO;
-> > 
-> > Since ret will only ever be -EIO here, this can only ever return
-> > -ENODEV, which is a functional change in the code (probably unintended.)
-> > Nevertheless, it's likely introducing a bug if the intention is for
-> > some other return from mdiobus_read() to be handled differently.
-> > 
-> > >  	}
-> > >  
-> > > -	*phy_id = phy_reg << 16;
-> > > -
-> > > -	/* Grab the bits from PHYIR2, and put them in the lower half */
-> > > -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
-> > > -	if (phy_reg < 0)
-> > > -		return -EIO;
-> > 
-> > ... whereas this one always returns -EIO on any error.
-> > 
-> > So, I think you have the potential in this patch to introduce a subtle
-> > change of behaviour, which may lead to problems - have you closely
-> > analysed why the code was the way it was, and whether your change of
-> > behaviour is actually valid?
-> 
-> I could be remembering this wrongly, but i think this is to do with
-> orion_mdio_xsmi_read() returning -ENODEV, not 0xffffffffff, if there
-> is no device on the bus at the given address. -EIO is fatal to the
-> scan, everything stops with the assumption the bus is broken. -ENODEV
-> should not be fatal to the scan.
+From: Matthias Brugger <mbrugger@suse.com>
 
-Maybe orion_mdio_xsmi_read() should be fixed then?  Also, maybe
-adding return code documentation for mdiobus_read() / mdiobus_write()
-would help MDIO driver authors have some consistency in what
-errors they are expected to return (does anyone know for certain?)
+The binding example is missing the fallback compatible.
+This is needed as the driver only matches against mt6577.
 
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+---
+ Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+index 5d6f98c43e3d..2117db0ce4f2 100644
+--- a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
++++ b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+@@ -21,7 +21,8 @@ Required properties:
+ Examples:
+ 
+ 	apdma: dma-controller@11000400 {
+-		compatible = "mediatek,mt2712-uart-dma";
++		compatible = "mediatek,mt2712-uart-dma",
++			     "mediatek,mt6577-uart-dma";
+ 		reg = <0 0x11000400 0 0x80>,
+ 		      <0 0x11000480 0 0x80>,
+ 		      <0 0x11000500 0 0x80>,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+2.26.2
+
