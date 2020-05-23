@@ -2,97 +2,105 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B28C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8123C20825
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590269027;
-	bh=FJ+we7Wp4RFWgIBg7miQSN2ilxbswIuR7F8eVxZGfFI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=FkLQL1AbZ8fgL9MvOlchXd7G2SYYmIc4+esQL++Bk5Yye6rg2NU6kdQWesMJF1qOe
-	 6WTH9jD2HTwiqf2ehlTjYVV37oKgcnAxWVQOnmVuyyQrDe0cN7orjqSczrGQG3SdrU
-	 7b24nhql8TbnvocJDi8ZlrqsILTbEFatzyHxhtZg=
+	by mail.kernel.org (Postfix) with ESMTP id 82AB92072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HLAhLxlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbgEWVXr (ORCPT
+        id S2388068AbgEWV0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 17:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387586AbgEWVXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 17:23:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9DF2072C;
-        Sat, 23 May 2020 21:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590269026;
-        bh=FJ+we7Wp4RFWgIBg7miQSN2ilxbswIuR7F8eVxZGfFI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=yBiF/OlYvCJArLxROuca1TrD8GCNWEhz92e30hI6iQ/+qVjNSZDoqNqAtwAwkD0ck
-         3vnj3ImHJclxCwe96zKD43kUIfJKRmK8G9en4QyIpO7AJb/lEhV25yrgv8N07B6+xk
-         yZjfCEl/XVnz6ENsyqOvVBCkD8knqmYiyN5UmgZY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F1BE23522A2B; Sat, 23 May 2020 14:23:45 -0700 (PDT)
-Date:   Sat, 23 May 2020 14:23:45 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        elver@google.com
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200523212345.GR2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200522033119.1bbd99c5@canb.auug.org.au>
- <20200521173520.GL6608@willie-the-truck>
- <20200522171708.5f392fde@canb.auug.org.au>
- <20200522174944.1a1732fa@canb.auug.org.au>
- <20200523001223.GA23921@paulmck-ThinkPad-P72>
- <20200523064643.GA27431@zn.tnic>
- <87a71zq8ml.fsf@nanos.tec.linutronix.de>
- <20200523150614.GP2869@paulmck-ThinkPad-P72>
- <871rnaqxor.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871rnaqxor.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 23 May 2020 17:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387986AbgEWV0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 17:26:36 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882B4C05BD43
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 14:26:36 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id x10so13205990ybx.8
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 14:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=TrTjVo1OcoXHUCoJ8HjrgU12KCu7XFLQYbdnxvd251Y=;
+        b=HLAhLxlvXnsfpG/KopUm9p5Je1BoyxhAuZlSqyLMcwVqB04pQDZm1PICjxrts0ozAV
+         pEaYPWD7lan8aisHjsHqetSginIqCu17tn204RPBK/wcI3c4S9GzQMD73FujWAg7Uhfx
+         e9ZjpVkmbIzmD/nM39awkYguZRJTkiLCxVgLmZDYRNmuCnVO7FfSwLJTs2VAWVzrDFZ3
+         C9zvAlKr7rtl2kMHsnFqzrKcc00W1kPCf6TSB6iEeqic5i8br02wB+MW50rirfLpOkgW
+         97BkPoG5Zz3Fsa9Mq2NYpwZNby+BqRvmp9QqPzMfteo6uw+9TMechD1BY6K7d7oFAOVx
+         0fQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=TrTjVo1OcoXHUCoJ8HjrgU12KCu7XFLQYbdnxvd251Y=;
+        b=K+Ofl0mgJStJ2hduN3RhlK1z2ebsmujMJ6xhf63AGcr4OQz0a9I1rvkZ/Nf+QxIQT3
+         jgpZbhSIaBQ0cYHl8DDcCi1XKJebwD4fdBFg0s993uDrXZGmB2baTFs1ig1QG2hdYwl9
+         SOwvtParnp7OQqdFzharT//UaqcgQt6ic8VL1pSp5ZmtnkrlgoAMZU2JBCV6GNC00xcU
+         2a57zqA8opYHWIIJRXaUQ+Gn8/1zBWQp3wlA4iTwUm/K++Ephd/PPxwKOaWgcK5KePx9
+         JsYPaEzay6Ah6MmGUigILikxZPmdWulQezEw1ShM/OkHV6hu/4cVjT3SKvrJVEVZpSx2
+         mARw==
+X-Gm-Message-State: AOAM530BNt+Hx9BtNWUKgaVBC4QhytVqAIFk31kbe8gpQQSjXAFyR7yy
+        xrsNaFrfk64a9QRFLzwzAA5Q9akN6wPD
+X-Google-Smtp-Source: ABdhPJxwW3ZnH52iCl4gZeP+CKsgfEGyKLlyuNnzeWwOEkG/Bs9soUUIFZHHEM2v0y3jaM4HUlricKQ4+sC8
+X-Received: by 2002:a25:a508:: with SMTP id h8mr14282492ybi.219.1590269195703;
+ Sat, 23 May 2020 14:26:35 -0700 (PDT)
+Date:   Sat, 23 May 2020 22:26:28 +0100
+Message-Id: <20200523212628.31526-1-pterjan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH] libertas: Use shared constant for rfc1042 header
+From:   Pascal Terjan <pterjan@google.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Pascal Terjan <pterjan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 09:05:24PM +0200, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Sat, May 23, 2020 at 11:54:26AM +0200, Thomas Gleixner wrote:
-> >> core/rcu is the one which diverged and caused the merge conflict with
-> >> PPC to happen twice. So Paul needs to remove the stale core/rcu bits and
-> >> rebase on the current version (which is not going to change again).
-> >
-> > So there will be another noinstr-rcu-* tag, and I will rebase on top
-> > of that, correct?  If so, fair enough!
-> 
-> Here you go: noinstr-rcu-220-05-23
-> 
-> I wanted this to be 2020 and not 220 but I noticed after pushing it
-> out. I guess it still does the job :)
+This is one of the 9 drivers redefining rfc1042_header.
 
-Now -that- is what I call an old-school tag name!!!  ;-)
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+---
+ drivers/net/wireless/marvell/libertas/rx.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-I remerged, rebased, and pushed to -rcu branch "dev".
+diff --git a/drivers/net/wireless/marvell/libertas/rx.c b/drivers/net/wireless/marvell/libertas/rx.c
+index 58a1fc433b73..f28aa09d1f9e 100644
+--- a/drivers/net/wireless/marvell/libertas/rx.c
++++ b/drivers/net/wireless/marvell/libertas/rx.c
+@@ -62,9 +62,6 @@ int lbs_process_rxed_packet(struct lbs_private *priv, struct sk_buff *skb)
+ 	struct rxpd *p_rx_pd;
+ 	int hdrchop;
+ 	struct ethhdr *p_ethhdr;
+-	static const u8 rfc1042_eth_hdr[] = {
+-		0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00
+-	};
+ 
+ 	BUG_ON(!skb);
+ 
+@@ -102,7 +99,7 @@ int lbs_process_rxed_packet(struct lbs_private *priv, struct sk_buff *skb)
+ 		sizeof(p_rx_pkt->eth803_hdr.src_addr));
+ 
+ 	if (memcmp(&p_rx_pkt->rfc1042_hdr,
+-		   rfc1042_eth_hdr, sizeof(rfc1042_eth_hdr)) == 0) {
++		   rfc1042_header, sizeof(rfc1042_header)) == 0) {
+ 		/*
+ 		 *  Replace the 803 header and rfc1042 header (llc/snap) with an
+ 		 *    EthernetII header, keep the src/dst and snap_type (ethertype)
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
 
-If it survives testing, I will reset -rcu branch "rcu/next" as well.
-
-							Thanx, Paul
