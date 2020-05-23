@@ -2,132 +2,103 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E64C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3536C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B2D207F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brjn7n8m"
+	by mail.kernel.org (Postfix) with ESMTP id 80ECD207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 04:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590207585;
+	bh=RNoJbDbbBcLxV6rl8Fj4qfXJ6yim+zf4HGZeqjR4a1g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mGi05oBKg0ESpvi2+VmGmvCgWc+AZdQjcA5daIX63dVvRp6vPp6XOvi5Jspougqa6
+	 sgx10WCISyhB5yqLJziyP4czQTSLy700fSWpysO7BJ8i1EdmiaRE9h/yDZjyvhNYpa
+	 TiOqqOia1i2ebGCr20qnXU0JebLFw4CTENN5sYtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgEWETf (ORCPT
+        id S1731233AbgEWETo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 00:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgEWETd (ORCPT
+        Sat, 23 May 2020 00:19:44 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:22223 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgEWETn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 00:19:33 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CAFC061A0E;
-        Fri, 22 May 2020 21:19:33 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k7so5847596pjs.5;
-        Fri, 22 May 2020 21:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lnKO8mEgKG0cuqfZGwVZY3dnnPkJgdITjBuWRWcUqiQ=;
-        b=brjn7n8mURXe0FKXGVqBamb/EFgvxQBFyCyv8KRwVVLButg24bt1mO+ShPhCfc8b7b
-         qyF0yYPI78ty562/3Y8jNL82dtOcK6AafaszzzWi/T4Q9iy6J1c6Qy8gaFoqzSoKzKNY
-         f+mRVVq3hOSP3hmyktnJxhQiFm1YR2Ja2S7zfpuiqFXG1AfMQVJK8IIurdw8PzAXvztH
-         OgNBa+L+q9gj/7prZDr7VvFi/Z9UjQnwklLZVdrktiW/83F+jpJ1/3Vv6gqLS9uEpkjg
-         3yqgo99VvvnpNWibMzYlO0TrgNKAObuJsEzyJJa4H9Fwf9N9x10aKc1z8WfDnp3SMogA
-         WR9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lnKO8mEgKG0cuqfZGwVZY3dnnPkJgdITjBuWRWcUqiQ=;
-        b=qkQfHzS9bQR/ErasgBSq1EcUOP8aw1DMlX9tJQ1eZAQVmttkWUU+VyYbglfd2oc+MR
-         GL08HBn9PxcKU3hVFMRvt/MmZcnI83oIL9alp+UGXt0Ya4ECa6JlKPwCD4U1/Na+tyLa
-         ytw+ez76MY5MCPd8evDfHqyLRHuej5L/hsLZ2UuGsZdVtALKfJY4fVLP/xPuoH9CLBrP
-         fK1nlRzik2b6cnB17o/z+vYklvtnu/pKdfnlFQWAvy7TOe5YpCe2cyHpGALZGCYB6GXr
-         qNM6Sb7HKxc6Cc0Ux7N4pv7r5YDvhbY8FkgqMpYqcuMflr92DVuUkV4HyzXQMDAwncnp
-         pIXg==
-X-Gm-Message-State: AOAM5307uk1jvDq+HPqNhubRgm3OLsyYxSNsESjRaYchHBrNHS6PQvJv
-        EPJvSM4N7hLb+W2TP89kBD0=
-X-Google-Smtp-Source: ABdhPJysX9LqXvkIYAcO2nda8F8H3jXr/8IwdGUWf9qFEo01Q6E3ECDmQaGCBwTTxTKz38LznCi7FA==
-X-Received: by 2002:a17:902:bd07:: with SMTP id p7mr17186991pls.293.1590207573197;
-        Fri, 22 May 2020 21:19:33 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g18sm8202317pfq.146.2020.05.22.21.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 21:19:32 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] mt76: mt7915: Use proper enum type in __mt7915_mcu_msg_send
-Date:   Fri, 22 May 2020 21:19:23 -0700
-Message-Id: <20200523041923.3332257-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0
+        Sat, 23 May 2020 00:19:43 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 04N4JFFQ010653;
+        Sat, 23 May 2020 13:19:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 04N4JFFQ010653
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590207556;
+        bh=RNoJbDbbBcLxV6rl8Fj4qfXJ6yim+zf4HGZeqjR4a1g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=E10VqfQIRMmNyVhzChr6ZKBHXQrMBnKCPQML9HZyW1v9g76oLzxWagTDtIEHPqUWl
+         hmuXyVVsSR3VvfUdeJIDtngRbqBHakzEgEQqO6u0WMiUHtDwMlZDr8Le7s65+qqoti
+         ENOyFbDC2WqiCjuYFvL8CikqPLo7AFT0knruJTe0MqAXOCOR2zhL8MDsK6Kj2Qgo8x
+         LIG1Ee56HaK3ewffpR+2tnGi5647kYEdgeHKx2lHdHCcreMIqbY+hvl0XzCoq+5hzr
+         G19ShBaEEBZ0lW1B0VGejQKLutNbMgtwNFur+A+EbRRr0zv7ShnJgBxfEz4Vh4VTEx
+         BRWTLQklrgd5w==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id b13so4475189uav.3;
+        Fri, 22 May 2020 21:19:16 -0700 (PDT)
+X-Gm-Message-State: AOAM530IlZ9h3fHuR4MrvVaNkx8BzwS6wfN76TY6qg67unwn3lSn48N3
+        n4bFALn5vEoPbcLJ2vrX18gGU/Wux9L3w7zy75c=
+X-Google-Smtp-Source: ABdhPJw2cv3u062hO6R+LOtLTJcXjI7T8W/sufipbLNiVjSUAy9kUd8zvk77S220SDmryfox9N/qIWRWKKmmUugWkQA=
+X-Received: by 2002:ab0:3245:: with SMTP id r5mr12152251uan.109.1590207555035;
+ Fri, 22 May 2020 21:19:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20200517094859.2376211-1-masahiroy@kernel.org>
+ <20200517094859.2376211-4-masahiroy@kernel.org> <20200519102133.GA279905@hirez.programming.kicks-ass.net>
+ <CAK7LNARkUkdRsW0D5cc5cEtXFJfnKhiVuZvrD6T1Xg3sr9kv=A@mail.gmail.com> <20200520122920.GB325280@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200520122920.GB325280@hirez.programming.kicks-ass.net>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 23 May 2020 13:18:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQf_VTA31tFQAbZUkwLWihhqqiQqYQw6RqD93u-Ch4ZJg@mail.gmail.com>
+Message-ID: <CAK7LNAQf_VTA31tFQAbZUkwLWihhqqiQqYQw6RqD93u-Ch4ZJg@mail.gmail.com>
+Subject: Re: [PATCH 03/29] modpost: add read_text_file() and get_line() helpers
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Wed, May 20, 2020 at 9:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, May 20, 2020 at 09:17:45PM +0900, Masahiro Yamada wrote:
+>
+> > The specification [1] says this:
+> >
+> > "The value returned may be less than nbyte if the number of bytes
+> > left in the file is less than nbyte, if the read() request was
+> > interrupted by a signal, or if the file is a pipe or FIFO or
+> > special file and has fewer than nbyte bytes immediately available
+> > for reading."
+> >
+> >
+> > This case does not meet any of 'if ...' parts.
+>
+> So nobody ever ^Z's their build? I really don't think you can assume
+> that you'll never get a signal. That's just asking for trouble.
+>
+> Doing the right thing here is 'trivial', there is absolutely no reason
+> to not do it.
 
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:232:9: warning: implicit
-conversion from enumeration type 'enum mt76_txq_id' to different
-enumeration type 'enum mt7915_txq_id' [-Wenum-conversion]
-                txq = MT_TXQ_FWDL;
-                    ~ ^~~~~~~~~~~
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:239:9: warning: implicit
-conversion from enumeration type 'enum mt76_txq_id' to different
-enumeration type 'enum mt7915_txq_id' [-Wenum-conversion]
-                txq = MT_TXQ_MCU_WA;
-                    ~ ^~~~~~~~~~~~~
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:243:9: warning: implicit
-conversion from enumeration type 'enum mt76_txq_id' to different
-enumeration type 'enum mt7915_txq_id' [-Wenum-conversion]
-                txq = MT_TXQ_MCU;
-                    ~ ^~~~~~~~~~
-drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:287:36: warning:
-implicit conversion from enumeration type 'enum mt7915_txq_id' to
-different enumeration type 'enum mt76_txq_id' [-Wenum-conversion]
-        return mt76_tx_queue_skb_raw(dev, txq, skb, 0);
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
 
-txq should be a "enum mt76_txq_id" as values of that type are the only
-ones assigned to it and that is the type that mt76_tx_queue_skb_raw
-expects.
+In my testing, read() seems robust against ^Z,
+but perhaps it might be implementation-defined ?
 
-Fixes: e57b7901469f ("mt76: add mac80211 driver for MT7915 PCIe-based chipsets")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1035
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/wireless/mediatek/mt76/mt7915/mcu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-index f00ad2b66761..916f664e964e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-@@ -220,7 +220,7 @@ static int __mt7915_mcu_msg_send(struct mt7915_dev *dev, struct sk_buff *skb,
- {
- 	struct mt7915_mcu_txd *mcu_txd;
- 	u8 seq, pkt_fmt, qidx;
--	enum mt7915_txq_id txq;
-+	enum mt76_txq_id txq;
- 	__le32 *txd;
- 	u32 val;
- 
+I think you are right.
+We can gain extra safety with a trivial change.
 
-base-commit: c11d28ab4a691736e30b49813fb801847bd44e83
--- 
-2.27.0.rc0
-
+--
+Best Regards
+Masahiro Yamada
