@@ -2,104 +2,143 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37116C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9626EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050FB2072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590193456;
-	bh=Ltqk5S7sTe6qhzTsLX+lmDJTePgoj+yWfBQOSW1e5F8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wZ9g5kMoLXaWckn83reSwYI87r3fKBbTMAQ2qM0bPk5pYYXW50OcGVpSEumDtrh/u
-	 V84ZzCdI5VOg4b2MfkVfXEkePBCj1icVPN2gp7Z0WSMsKnKKIody/GDBVUVazxMvvi
-	 Osh8qxrKGW/sSrEvIC+A6F4vRHedPqH3OeJsHads=
+	by mail.kernel.org (Postfix) with ESMTP id 74C3020738
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:35:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="W2HyZ358"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbgEWAYP (ORCPT
+        id S2387453AbgEWAfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 20:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731169AbgEWAYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 20:24:14 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F161C206B6;
-        Sat, 23 May 2020 00:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590193454;
-        bh=Ltqk5S7sTe6qhzTsLX+lmDJTePgoj+yWfBQOSW1e5F8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1bkaaMvhTxF5JMHQIXeMj1VUx4IxQzKJsYnk9y9BesD/kJ1NP93vE9yr7FoNNbDBS
-         GeeUnYVf9sO7wwe+wmjsUDnFf3KF0cV1FwI/fT1mKecJ3TmJeSLozYUh1+u751XCA/
-         7ihIEaQJI1cwlxIqd2N87NnqyzPwHpOeX5nIo0NI=
-Date:   Fri, 22 May 2020 17:24:13 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH mmotm] mm/swap: fix livelock in
- __read_swap_cache_async()
-Message-Id: <20200522172413.19c1d45848b4f3db1015a534@linux-foundation.org>
-In-Reply-To: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
-References: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 22 May 2020 20:35:16 -0400
+Received: from mail-vi1eur05on2041.outbound.protection.outlook.com ([40.107.21.41]:11876
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731182AbgEWAfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 20:35:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lUofwUzwskeXFN8wJw72S3R9pJ6pQwCiSvovTCgbe79ZgjOhfnJrTtEzDk73cEOGlPAgJGQSHJq0fssiHyW+5JLmVf+eJq867ks90Ak4XEUpAgN64BRicuvPTpN40YzfeUaclxzwzyZ2VS8GYBacVx1eusRgCwIOVaXkVDgbW3uolnsE9YqVBXDbNzv6QQ/L5d13xwlZ0qbLKGXaQE9PQUVLWAwAN5c89wMkdL80yW8qWZuFUyP2mSHC6UPCOZDBMROC+JyrTZ3qd3wYS+1eDqN1cqFZcPczc5/Ga+cVQyC0gk0S1HFpa4aLaaoHohjvhUsed17YQTIT4rb8wJd1Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1CgbGxjv1xzEnPJeI09pmjT5z+wlxOGIjpXSrRzpDA4=;
+ b=GZlYl0UaY1Fb+OlVPUTRfiLHSu28koAQe/WRweJegsYEn4IXBmFeluB3IVDgeeu9ILrYeE8BJthfXaGKae1nHKP+cH/KGjc4JxR5dWlFm2L0mxD6bBCvWAisJy+mjI93H1atd9sXtA/o2XoMEypgAxxJP2ZdTMVPpXvSyT2mgYGbvau18ap9ImygkBh3DmsILkHQKyaD9E5CcQ8Z5HMlHK+7buI1IiHuHS6u6vDD/JpIM+W3vUgiHYf3L+fjuiu6fGOiCtN8MBK6nczaDc4wgduST4abcIWP6eeeHSwE0jH6dIfqLEGfcIn2Qzjcu0Z7ariAVUAUAXEqayg8/NKuww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1CgbGxjv1xzEnPJeI09pmjT5z+wlxOGIjpXSrRzpDA4=;
+ b=W2HyZ358P1FCdKWsfjo7PP0khyBbJcQ0OpfhY69EcTKVGfwp6Gw/V9DugLkcnxHV07OH0tbV6DRXYae/hrDkcQ08Sb3vzZliZS5sd0QPW9ojwn7FGzxsPdVbnW8qgdFZswaG2fHXZM8korlPXpUe1wQeL9X5XDIu5ospy9XYlOE=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3817.eurprd04.prod.outlook.com (2603:10a6:8:12::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Sat, 23 May
+ 2020 00:35:10 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3000.034; Sat, 23 May 2020
+ 00:35:10 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] thermal: imx8mm: Add get_trend ops
+Thread-Topic: [PATCH] thermal: imx8mm: Add get_trend ops
+Thread-Index: AQHWKNOp8EPkl0qqRkG+GoQWiQOYA6i0bHgAgABvx3A=
+Date:   Sat, 23 May 2020 00:35:10 +0000
+Message-ID: <DB3PR0402MB3916B6D11328A036BD479D39F5B50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
+ <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
+In-Reply-To: <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3e3df3c7-6104-46cd-4b13-08d7feb12675
+x-ms-traffictypediagnostic: DB3PR0402MB3817:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38179BCC3C2832CA5FFF01DBF5B50@DB3PR0402MB3817.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0412A98A59
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iJ2Fs24bII8WsdA11wTitiJX62SUUTJx1XiOHkWA68AWDEHB+BEnDKgFoKZyi7iwT2vB6BXhf8bZ0t6ynHtI81R2xMpa+qTymVDoizKvHrMzkLtyIwD4uo1UOUetdq6v5cZC0fNBIgn2CZpnSLCC4sjd2Zoj/9ZGDLTrvNdGZPuCtSLihFNsO0e46cqKQBRRFCQd1atYSSKTMxm/g4m15CR6Hld6e1kYHS7yB3pJLOo7MOIwwYarkTRE5wIeofdQFESJj7e+gPFmYfArWNM9WMZslQGtc5+EogN63/mAU8V1IzEW54UviTVA+gQGSryq0lQ8a6FtSBRmppn4bb3Ny5hNTOLIbDHHYnGP814nF7+pNALmqJa+qZkekBIzNqzNUinl7ZD8qQvtkMzEbvRvZQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(39860400002)(396003)(478600001)(316002)(55016002)(5660300002)(44832011)(71200400001)(33656002)(64756008)(66946007)(66556008)(66476007)(52536014)(66446008)(76116006)(26005)(6506007)(8936002)(53546011)(186003)(4326008)(7696005)(2906002)(110136005)(9686003)(8676002)(7416002)(86362001)(921003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: kPMCGqafYeMUQfvVFo0Fmt5gFHlxBpYfL3z1ZIlpWA6YGMfLvw/IToO1klpvR8rOs3jjmc0zr4Gxo/D9UO6d9c3MAhtWejVZpPCcBg0CFA/2eyLMv8zUaP9Yzt3BNSYc70RXr0XgdvFCMKE4dD35fUVQE1+IQhBSM8wISjBpfUslIC/pUrlRTIT3n5nKy3QvnTIRMIO1B5+9OZA1mfsVBAHcGY91fWBYWpkP0brj5FadjItFjVSxvonwpNNjW3lv2nH8Zd/HoMkfqzd0sczLYZ3N29Meoz4prHLyTP0qVDd+xgSJodS7y+OStWBRoVdzbHNtHxPIhFiY4oiJyAWHGky6iJzfNfjELdc9mczeNVoQ7w7WHDmLd3js476o45uuuTdrI1/BnEj7btMWkUK1rSJBKu1anjzj2l1EofOdBsne7tndVKZduELj5ABWMXP9DSvMbIFmvL8GyYOvsnocqfnkfzxvShLIRkmIJ7yZXIU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e3df3c7-6104-46cd-4b13-08d7feb12675
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2020 00:35:10.3452
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dIgadSXYpzpzTu6atqeIHxB+x1Jht3wYWN0pjSRYA3frde/o0SrD40IvxH3tANhDXFsqmm++e7dWxUXz2WTkfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3817
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 22:56:20 -0700 (PDT) Hugh Dickins <hughd@google.com> wrote:
-
-> I've only seen this livelock on one machine (repeatably, but not to
-> order), and not fully analyzed it - two processes seen looping around
-> getting -EEXIST from swapcache_prepare(), I guess a third (at lower
-> priority? but wanting the same cpu as one of the loopers? preemption
-> or cond_resched() not enough to let it back in?) set SWAP_HAS_CACHE,
-> then went off into direct reclaim, scheduled away, and somehow could
-> not get back to add the page to swap cache and let them all complete.
-> 
-> Restore the page allocation in __read_swap_cache_async() to before
-> the swapcache_prepare() call: "mm: memcontrol: charge swapin pages
-> on instantiation" moved it outside the loop, which indeed looks much
-> nicer, but exposed this weakness.  We used to allocate new_page once
-> and then keep it across all iterations of the loop: but I think that
-> just optimizes for a rare case, and complicates the flow, so go with
-> the new simpler structure, with allocate+free each time around (which
-> is more considerate use of the memory too).
-> 
-> Fix the comment on the looping case, which has long been inaccurate:
-> it's not a racing get_swap_page() that's the problem here.
-> 
-> Fix the add_to_swap_cache() and mem_cgroup_charge() error recovery:
-> not swap_free(), but put_swap_page() to undo SWAP_HAS_CACHE, as was
-> done before; but delete_from_swap_cache() already includes it.
-> 
-> And one more nit: I don't think it makes any difference in practice,
-> but remove the "& GFP_KERNEL" mask from the mem_cgroup_charge() call:
-> add_to_swap_cache() needs that, to convert gfp_mask from user and page
-> cache allocation (e.g. highmem) to radix node allocation (lowmem), but
-> we don't need or usually apply that mask when charging mem_cgroup.
-> 
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> ---
-> Mostly fixing mm-memcontrol-charge-swapin-pages-on-instantiation.patch
-> but now I see that mm-memcontrol-delete-unused-lrucare-handling.patch
-> made a further change here (took an arg off the mem_cgroup_charge call):
-> as is, this patch is diffed to go on top of both of them, and better
-> that I get it out now for Johannes look at; but could be rediffed for
-> folding into blah-instantiation.patch later.
-
-Thanks - I did the necessary jiggery-pokery to get this into the right
-place.
-
+SGksIERhbmllbA0KDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gdGhlcm1hbDogaW14OG1tOiBB
+ZGQgZ2V0X3RyZW5kIG9wcw0KPiANCj4gT24gMTMvMDUvMjAyMCAwNDo1OCwgQW5zb24gSHVhbmcg
+d3JvdGU6DQo+ID4gQWRkIGdldF90cmVuZCBvcHMgZm9yIGkuTVg4TU0gdGhlcm1hbCB0byBhcHBs
+eSBmYXN0IGNvb2xpbmcgbWVjaGFuaXNtLA0KPiA+IHdoZW4gdGVtcGVyYXR1cmUgZXhjZWVkcyBw
+YXNzaXZlIHRyaXAgcG9pbnQsIHRoZSBoaWdoZXN0IGNvb2xpbmcNCj4gPiBhY3Rpb24gd2lsbCBi
+ZSBhcHBsaWVkLCBhbmQgd2hlbiB0ZW1wZXJhdHVyZSBkcm9wcyB0byBsb3dlciB0aGFuIHRoZQ0K
+PiA+IG1hcmdpbiBiZWxvdyBwYXNzaXZlIHRyaXAgcG9pbnQsIHRoZSBsb3dlc3QgY29vbGluZyBh
+Y3Rpb24gd2lsbCBiZQ0KPiA+IGFwcGxpZWQuDQo+IA0KPiBZb3UgYXJlIG5vdCBkZXNjcmliaW5n
+IHdoYXQgaXMgdGhlIGdvYWwgb2YgdGhpcyBjaGFuZ2UuDQoNClRoZSBnb2FsIG9mIHRoaXMgY2hh
+bmdlIGlzIHRvIG1ha2Ugc3VyZSB3aGVuZXZlciB0ZW1wZXJhdHVyZSBleGNlZWRzIHBhc3NpdmUg
+dHJpcCBwb2ludCwNCnRoZSBoaWdoZXN0IGNvb2xpbmcgYWN0aW9uIHdpbGwgYmUgYXBwbGllZCBp
+bW1lZGlhdGVseSwgZS5nLiwgaWYgdGhlcmUgYXJlIG1hbnkgY3B1ZnJlcSBPUFAsDQp0aGUgZGVm
+YXVsdCBjb29saW5nIHdpbGwgYmUgc3RlcCBieSBzdGVwLCBpdCB3aWxsIHRha2Ugc29tZSBtb3Jl
+IHJvdW5kcyB0byBtYWtlIGNwdWZyZXEgZHJvcA0KdG8gbG93ZXN0IE9QUCwgd2hpbGUgb24gaS5N
+WCwgd2UgZXhwZWN0IHRoZSBjcHVmcmVxIGRyb3AgdG8gbG93ZXN0IE9QUCBpbW1lZGlhdGVseS4N
+Cg0KPiANCj4gSUlVQywgdGhlIHJlc3VsdGluZyBjaGFuZ2Ugd2lsbCBiZSBhbiBvbi9vZmYgYWN0
+aW9uLiBUaGUgdGhlcm1hbCB6b25lIGlzDQo+IG1pdGlnYXRlZCB3aXRoIHRoZSBoaWdoZXN0IGNv
+b2xpbmcgZWZmZWN0LCBzbyB0aGUgbG93ZXN0IE9QUCwgdGhlbiB0aGUNCj4gdGVtcGVyYXR1cmUg
+dHJlbmQgaXMgc3RhYmxlIHVudGlsIGl0IGdvZXMgYmVsb3cgdGhlIHRyaXAgLSBtYXJnaW4gd2hl
+cmUgdGhlDQo+IG1pdGlnYXRpb24gaXMgc3RvcHBlZC4NCg0KWWVzLCB5b3VyIHVuZGVyc3RhbmRp
+bmcgaXMgY29ycmVjdGx5LCBvbmNlIHRoZSB0ZW1wZXJhdHVyZSBleGNlZWRzIHBhc3NpdmUgdHJp
+cCBwb2ludCwNCnRoZSBoaWdoZXN0IGNvb2xpbmcgYWN0aW9uIHdpbGwgYmUgYXBwbGllZCBpbW1l
+ZGlhdGVseSBhbmQgdGhlbiBpdCB3aWxsIGJlIHN0YWJsZSB0aGVyZQ0KdW50aWwgdGVtcGVyYXR1
+cmUgZHJvcCB0byB0cmlwIC0gbWFyZ2luLCB0aGVuIHRoZSBjb29saW5nIGFjdGlvbiB3aWxsIGJl
+IGNhbmNlbGxlZCwgdGhlDQptYXJnaW4gaXMgdG8gYXZvaWQgdGhlIGJhY2sgYW5kIGZvcnRoIG5l
+YXIgdGhlIHBhc3NpdmUgdHJpcCBwb2ludC4NCg0KPiANCj4gRXhjZXB0LCBJJ20gbWlzc2luZyBz
+b21ldGhpbmcsIHNldHRpbmcgYSB0cmlwIHBvaW50IHdpdGggYSAxMDAwMCBoeXN0ZXJlc2lzIGFu
+ZA0KPiBhIGNvb2xpbmcgbWFwIG1pbi9tYXggc2V0IHRvIHRoZSBoaWdoZXN0IG9wcCB3aWxsIHJl
+c3VsdCBvbiB0aGUgc2FtZS4NCg0KWWVzIHNldHRpbmcgY29vbGluZyBtYXAgbWluL21heCBjb29s
+aW5nIHN0YXRlIHRvIGhpZ2hlc3QgT1BQIHdpbGwgbWFrZSB0aGUgaGlnaGVzdA0KY29vbGluZyBh
+Y3Rpb24gYXBwbGllZCBpbW1lZGlhdGVseSwgYW5kIHRvIGhhdmUgdGhlIGZ1bmN0aW9uIG9mIGNv
+b2xpbmcgYWN0aW9uIGJlaW5nDQpjYW5jZWxsZWQgd2hlbiB0ZW1wZXJhdHVyZSBkcm9wcyB0byB0
+cmlwIC0gbWFyZ2luLCBJIGhhdmUgdG8gZGVmaW5lIGFub3RoZXIgdHJpcCBwb2ludCwNCnNheSBw
+YXNzaXZlIHRyaXAgcG9pbnQgaXMgODUwMDAsIGFuZCBjb29saW5nIG1hcCBtaW4vbWF4IHNldCB0
+byBoaWdoZXN0IE9QUCBpbiBwYXNzaXZlDQp0cmlwIHBvaW50IHRoZW4gYWRkIGFub3RoZXIgdHJp
+cCBwb2ludCBuYW1lZCAiYWN0aXZlIiB3aXRoIDc1MDAwLCBhbmQgd2l0aG91dCBhbnkNCmNvb2xp
+bmcgbWFwIGluIGl0LCByaWdodD8NCg0KSWYgeWVzLCB0aGVuIEkgdGhpbmsgSSBjYW4gdHJ5IHRv
+IG1ha2UgdGhlIGNoYW5nZXMgaW4gRFQgaW5zdGVhZCBvZiB0aGVybWFsIGRyaXZlci4gDQoNClRo
+YW5rcywNCkFuc29uDQo=
