@@ -2,123 +2,155 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC49C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E372B2071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DE0206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="naczRbjR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a1JDGcSI"
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="H3rWb5HU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CcVRcc9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387734AbgEWHtS (ORCPT
+        id S2387747AbgEWH7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 03:49:18 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:49965 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387500AbgEWHtR (ORCPT
+        Sat, 23 May 2020 03:59:06 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:51307 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387725AbgEWH7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 03:49:17 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9E9535800E8;
-        Sat, 23 May 2020 03:49:15 -0400 (EDT)
+        Sat, 23 May 2020 03:59:03 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id A0D13874;
+        Sat, 23 May 2020 03:59:01 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Sat, 23 May 2020 03:49:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=HYzvmvyhCdDCgy2Up0L8kyIQNh0
-        GHJNZlq1iXsF1dWk=; b=naczRbjRRQYoLQwrtOlHT4O/toqGfVrcKqQ+mrDqEX1
-        A3bZsj6fd7/9bZH6tHoMVzUleCUxr4qAVQU994l+tHR2H7EqOrpBQog0Lkuk09pH
-        rxjGk5JLBLiA/ZXd6SVbzUNaF6OGHRltWaxoi4ayjKDvmhcnjOb6T6B79XDGD1Yp
-        c4KrQb/hBB6BXI+bmjegSmZf5+d/h92AFsQkX1o4Cwy+oVMvsg99XDHEaPLPGbKN
-        BcsFvHZ01RBalHLVxrCZlnFUGBjKHEuGYG1gOXm+eX4T+f/dGBA8EO4Keato214D
-        QYGxK92x1rGodA+OgEGkNeOQcK9e+X6slCK851PWgig==
+  by compute2.internal (MEProxy); Sat, 23 May 2020 03:59:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+         h=date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=K9bdneoooJ1uSBw5jkomBqz3iW0
+        HsoKgOxHBuN88dzA=; b=H3rWb5HUYcQn7iZXb7kBxoSo164u2D2hVvlNCeXfw33
+        vPfXrucVHEPaNFgPKynsNfLu9sswkct6TBU+ulxNIaw6VejbT3wIjZSh1SBgRWed
+        37G/3vgYwnuytM7AUt8VmRelj55JNfHGl1DFJBnkktNp8gbthsSgRqUD1vb3Dioo
+        oApBMjnbaUmoQHmdsXR/FXiAtvFI3xc/C56alJZluumRtFOFuQWhJ6VtYXGn29mx
+        /uHQLUxc7EcEWeJSmD0RVHQVwxL4y6E+vJ36WC4ktDt+GWzQYna8G67frcbar58V
+        WkkaAGX9eKQ7ZdE0czbjq4KF00ZmXPj+KX9G9WSf7qA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=HYzvmv
-        yhCdDCgy2Up0L8kyIQNh0GHJNZlq1iXsF1dWk=; b=a1JDGcSIF60I70XD+vtvfN
-        M0XoiqqFIjOLkTIBpuwuiFOVtN3A66HN8vDd8LrYNGxj8Mp6CuPPudBPLnWz19hr
-        mCK+onEVk2UCfKYCGntHRrh5UZpOGuDWu+cyMKdaQCJHfzWdHmL6cqokfZeEKU5H
-        0C/S4BNR0hZHbMMTSDykfxW1TGVJ6aBAWKwwDtBAW2T0r3ioUImNBWA7VkaSJTB2
-        vO7RD3eHSKdn/FKiJ6MN+LOpOe9X3+u+lo/Z7OeTNzI1FzxwA+gWfe7Qr58yPWhN
-        B+2PIAURvIxaxu56bG8nJo7Cp4u5eap/iO+XHl1QFfDljozyNO6YIcZXM2juw/3Q
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=K9bdne
+        oooJ1uSBw5jkomBqz3iW0HsoKgOxHBuN88dzA=; b=CcVRcc9iulo5FrFWsvMwNI
+        lnO1f6CwgY494tKBtmumqn8rFALyNsIivbS9xjEuFDxNvieYN9l7bH8WRLr+piIR
+        Hj1jylf3k9X9SMeOYOzEMKd1s/EJHu1VdQ7/+FqtPUVATE/KUoEHME8/ctLx+itm
+        eagXQ48TrSjcTD6En5e10/SVYN8DPtqRQZIwzDFDZ6T4+ggwg+Z5pKCf5SwFjZNy
+        H1xpeXO1XhBuis4MzAWZOClWQIJIggq4HU8TTMcNqQr+dMJbbRE/O5YaYggluu+v
+        hkouwGdlZiV8+Gw6yhghDLUytmFQ+kUM8upUDnJlv3Gq1dPGRi5Cmr7Q6VFMCqQA
         ==
-X-ME-Sender: <xms:dtXIXkkUQwLyf7bLgRPA2mYvGdXHW2muFPf7U0Lls3RoVj5YzanFoQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddugedguddvtdcutefuodetggdotefrod
+X-ME-Sender: <xms:xNfIXpIYAmfqIChvyJM_rKIA0yUIxHG6Z0AgyhTnotb0mwkBuTquYA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddugedguddvvdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuhe
-    ejgfffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeek
-    fedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:dtXIXj1VC4RADb62e_BokGosqZPXVmkrpX1zHvEuf7K88SPn1-N08g>
-    <xmx:dtXIXipxBNnQQaoYtMTHHVIifjmYyu1_8hE7aMLU7AAZ_nuoCVHppA>
-    <xmx:dtXIXglXK2j5Nw8E2d2C9xcQ-o1N4uwgFY-APhmsr9UWQsNMDsjRfA>
-    <xmx:e9XIXvAhgaFwAyW2LMzLbyZzJdDDO6J7ctdmt5Np1E6vAH_sgxgFxA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9563B328005A;
-        Sat, 23 May 2020 03:49:09 -0400 (EDT)
-Date:   Sat, 23 May 2020 09:49:08 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, stable@vger.kernel.org,
-        x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 5.4] KVM: x86: Fix pkru save/restore when guest
- CR4.PKE=0, move it to x86.c
-Message-ID: <20200523074908.GA3285051@kroah.com>
-References: <159016509437.3131.17229420966309596602.stgit@naples-babu.amd.com>
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecuggftrfgrthhtvghrnhephfefleekfeevgffhhfehudetkeeivdeuvdelgeej
+    jefhffegkeffffdugfevudetnecuffhomhgrihhnpehgihhthhhusgdrtghomhdprghlsh
+    grqdhprhhojhgvtghtrdhorhhgnecukfhppedukedtrddvfeehrdefrdehgeenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshh
+    hisehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:xNfIXlK-hUj2c_B-TJAeEP4Nv8ItDjNR79jB0y4kcSeRYV0cYVe9Ng>
+    <xmx:xNfIXhsN6JBRk4ydpuWG_Wqdcl1Uy2vhIKaqbVVFOHa-B7fcj_lI2w>
+    <xmx:xNfIXqZCW_JuSxoblr1zefmM5ZBES2YNtOCd4SmdkHLQMAoGY4rc-Q>
+    <xmx:xdfIXqDiHCJPhSs3amiBVLQ9b3oEfEyPZLCS9vGA9sPVJvr-kmK65UXOCtI>
+Received: from workstation (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 747FB328005E;
+        Sat, 23 May 2020 03:58:56 -0400 (EDT)
+Date:   Sat, 23 May 2020 16:58:54 +0900
+From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        stable <stable@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        "Lev R . Oshvang ." <levonshe@gmail.com>
+Subject: Re: [PATCH v2] firewire: Remove function callback casts
+Message-ID: <20200523075854.GA170441@workstation>
+Mail-Followup-To: Greg KH <gregkh@linuxfoundation.org>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        stable <stable@vger.kernel.org>, Kees Cook <keescook@chromium.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, alsa-devel@alsa-project.org,
+        "Lev R . Oshvang ." <levonshe@gmail.com>
+References: <20200519173425.4724-1-oscar.carter@gmx.com>
+ <20200520061624.GA25690@workstation>
+ <20200522174308.GB3059@ubuntu>
+ <20200523061033.GB3131938@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159016509437.3131.17229420966309596602.stgit@naples-babu.amd.com>
+In-Reply-To: <20200523061033.GB3131938@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:32:49AM -0500, Babu Moger wrote:
-> [Backported upstream commit 37486135d3a7b03acc7755b63627a130437f066a]
-> 
-> Though rdpkru and wrpkru are contingent upon CR4.PKE, the PKRU
-> resource isn't. It can be read with XSAVE and written with XRSTOR.
-> So, if we don't set the guest PKRU value here(kvm_load_guest_xsave_state),
-> the guest can read the host value.
-> 
-> In case of kvm_load_host_xsave_state, guest with CR4.PKE clear could
-> potentially use XRSTOR to change the host PKRU value.
-> 
-> While at it, move pkru state save/restore to common code and the
-> host_pkru field to kvm_vcpu_arch.  This will let SVM support protection keys.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Hi Greg,
 
-Now applied, thanks.
+On Sat, May 23, 2020 at 08:10:33AM +0200, Greg KH wrote:
+> On Fri, May 22, 2020 at 07:43:08PM +0200, Oscar Carter wrote:
+> > Hi,
+> > 
+> > On Wed, May 20, 2020 at 03:16:24PM +0900, Takashi Sakamoto wrote:
+> > > Hi,
+> > >
+> > > I'm an author of ALSA firewire stack and thanks for the patch. I agree with
+> > > your intention to remove the cast of function callback toward CFI build.
+> > >
+> > > Practically, the isochronous context with FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL
+> > > is never used by in-kernel drivers. Here, I propose to leave current
+> > > kernel API (fw_iso_context_create() with fw_iso_callback_t) as is.
+> 
+> If it's not used by anyone, why is it still there?  Can't we just delete
+> it?
 
-greg k-h
+For this patchset, I followed to the theory to keep backward compatibility
+when adding any change, and it's what I'd like to discuss.
+
+The isoc context of multichannel mode is also available for userspace
+applications, and libhinoko[1] uses it. In a point of backward
+compatibility for userspace, we can't delete the mode.
+
+(Practically, the mode is useful for the purpose of packet sniffing in
+bus and helpful to my work for development of ALSA firewire stack[2].)
+
+On the other hand, there's no unit driver to use the mode in upstream
+kernel. It's unlikely to use the mode for unit driver since the mode is
+not specific to unit functionality. In my opinion, it's reasonable to
+lose backward compatibility slightly by hiding the multichannel mode
+from in-kernel unit driver.
+
+I'll post v2 patchset later and I'd like you to merge them if no
+objections from the others for the loss of backward compatibility.
+
+[1] https://github.com/takaswie/libhinoko
+[2] https://mailman.alsa-project.org/pipermail/alsa-devel/2019-April/147862.html
+
+
+Regards
+
+Takashi Sakamoto
