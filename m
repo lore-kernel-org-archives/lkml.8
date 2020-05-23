@@ -2,79 +2,147 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B814C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC15206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD53207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590226982;
+	bh=hj2/MZNt9a5rifdy8Xt84AYjhMeZP/OYOP04fmwQbhg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oiDtR4e6qjHSG8obxnzdIznqLkqX0s6WYw3j/wuXUS3qyGEOv3836gdrHasu3WxSr
+	 /XKP8cWd3fmHtlbQEsM/oeQ6XIsLoBoCbkTbU3gwWnLf/IB04LDq0wqDaptnGsQtik
+	 67zlmii46OkFXfC3YPszeHTE3GheoD6PWjKMbkak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgEWJll convert rfc822-to-8bit (ORCPT
+        id S2387761AbgEWJnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 05:41:41 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:57880 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725268AbgEWJll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 05:41:41 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21269533-1500050 
-        for multiple; Sat, 23 May 2020 10:41:25 +0100
-Content-Type: text/plain; charset="utf-8"
+        Sat, 23 May 2020 05:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgEWJnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 05:43:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBC35206DD;
+        Sat, 23 May 2020 09:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590226980;
+        bh=hj2/MZNt9a5rifdy8Xt84AYjhMeZP/OYOP04fmwQbhg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ARG81cTbzmoJuaL93XUXGM6BmTzp9SKNDIDONRvPP+bcfpwZE3IwH9YwFQN7JVUXE
+         cGS7MoKD2fLp5M/WZPz2mHh2JxvFEzqpAXfhUdws/vFEzbGa4WSFYCCm4XqU60wir5
+         b7ZQlQUbsc3O9F1R8weu+eVZ7D90i0nsT8BcEsWY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jcQgE-00EiXE-9o; Sat, 23 May 2020 10:42:58 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200522051931.54191-1-jhubbard@nvidia.com>
-References: <20200522051931.54191-1-jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v2 0/4] mm/gup, drm/i915: refactor gup_fast, convert to pin_user_pages()
-Message-ID: <159022688563.11139.3402294435382936623@build.alporthouse.com>
-User-Agent: alot/0.8.1
-Date:   Sat, 23 May 2020 10:41:25 +0100
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 23 May 2020 10:42:58 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        swboyd@chromium.org, evgreen@chromium.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+Subject: Re: [PATCH 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+In-Reply-To: <1590153569-21706-2-git-send-email-mkshah@codeaurora.org>
+References: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
+ <1590153569-21706-2-git-send-email-mkshah@codeaurora.org>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <5888fc645d26b4780e9d9c6fd582374f@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: mkshah@codeaurora.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, swboyd@chromium.org, evgreen@chromium.org, mka@chromium.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting John Hubbard (2020-05-22 06:19:27)
-> The purpose of posting this series is to launch a test in the
-> intel-gfx-ci tree. (The patches have already been merged into Andrew's
-> linux-mm tree.)
+On 2020-05-22 14:19, Maulik Shah wrote:
+> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' 
+> gpiolib
+> overrides irqchip's irq_enable and irq_disable callbacks. If 
+> irq_disable
+> callback is implemented then genirq takes unlazy path to disable irq.
 > 
-> This applies to today's linux.git (note the base-commit tag at the
-> bottom).
+> Underlying irqchip may not want to implement irq_disable callback to 
+> lazy
+> disable irq when client drivers invokes disable_irq(). By overriding
+> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
 > 
-> Changes since V1:
+> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback 
+> only
+> if irqchip implemented irq_disable. In cases where irq_disable is not
+> implemented irq_mask is overridden. Similarly override irq_enable 
+> callback
+> only if irqchip implemented irq_enable otherwise irq_unmask is 
+> overridden.
 > 
-> * Fixed a bug in the refactoring patch: added FOLL_FAST_ONLY to the
->   list of gup_flags *not* to WARN() on. This lead to a failure in the
->   first intel-gfx-ci test run [1].
+> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  drivers/gpio/gpiolib.c      | 59 
+> +++++++++++++++++++++++++++++----------------
+>  include/linux/gpio/driver.h | 13 ++++++++++
+>  2 files changed, 51 insertions(+), 21 deletions(-)
 > 
-> [1] https://lore.kernel.org/r/159008745422.32320.5724805750977048669@build.alporthouse.com
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index eaa0e20..a8fdc74 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2465,33 +2465,38 @@ static void gpiochip_irq_relres(struct irq_data 
+> *d)
+>  	gpiochip_relres_irq(gc, d->hwirq);
+>  }
+> 
+> +static void gpiochip_irq_mask(struct irq_data *d)
+> +{
+> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+> +
+> +	if (chip->irq.irq_mask)
+> +		chip->irq.irq_mask(d);
+> +	gpiochip_disable_irq(chip, d->hwirq);
+> +}
+> +
+> +static void gpiochip_irq_unmask(struct irq_data *d)
+> +{
+> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+> +
+> +	gpiochip_enable_irq(chip, d->hwirq);
+> +	if (chip->irq.irq_unmask)
+> +		chip->irq.irq_unmask(d);
+> +}
+> +
+>  static void gpiochip_irq_enable(struct irq_data *d)
+>  {
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> 
+> -	gpiochip_enable_irq(gc, d->hwirq);
+> -	if (gc->irq.irq_enable)
+> -		gc->irq.irq_enable(d);
+> -	else
+> -		gc->irq.chip->irq_unmask(d);
+> +	gpiochip_enable_irq(chip, d->hwirq);
 
-Ran this through our CI, warn and subsequent lockup were gone. That
-lockup is worrying me now, but that doesn't seem to be an issue from
-this series.
+You really never compiled this, did you?
 
-The i915 changes were simple enough, I would have computed the pin flags
-just once (since the readonly bit is static, that would be interesting
-if that was allowed to change mid gup :)
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
--Chris
+I've stopped looking at this. Please send something that you will have 
+actually tested.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
