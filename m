@@ -2,69 +2,115 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F2D207F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25B1207F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="kAPKJBbB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o3LniShn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387622AbgEWGOu (ORCPT
+        id S2387645AbgEWGQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 02:14:50 -0400
-Received: from smtprelay0238.hostedemail.com ([216.40.44.238]:33310 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387446AbgEWGOu (ORCPT
+        Sat, 23 May 2020 02:16:31 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:57127 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387446AbgEWGQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 02:14:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 71542182CED28;
-        Sat, 23 May 2020 06:14:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: list31_1c0598526d2d
-X-Filterd-Recvd-Size: 1471
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 23 May 2020 06:14:48 +0000 (UTC)
-Message-ID: <bebc39aff642692e63f52874a9b5bbd212611abf.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: Update my maintainer entries to reorder
- email addresses
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     davem@davemloft.net, robh@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 22 May 2020 23:14:47 -0700
-In-Reply-To: <20200523075720.64e24d11@coco.lan>
-References: <20200523021928.67126-1-skhan@linuxfoundation.org>
-         <20200523075720.64e24d11@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Sat, 23 May 2020 02:16:31 -0400
+X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Sat, 23 May 2020 02:16:31 EDT
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id B27D18CB;
+        Sat, 23 May 2020 02:10:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Sat, 23 May 2020 02:10:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        from:date:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=LrrYTVFkm9x5WAtV96l5QFTVfXK
+        7jcQpg5sr70HsgwE=; b=kAPKJBbB3e4aBtF2OcbBUICIud8yPLH22RFoStnp4e8
+        yDZXaIlUHk0hzMRsWVU1tHFiy4j0L0oLLRjDEWOTmhX/S/kyk3zo4JPIGMqvBvu/
+        pVHsRR8shbwejVVYYURo0N2WYAO0gpTmU1ZNWJ2HUmC1oVxu4P8anVPVK5dPa3D3
+        VCtDB+/zUbFUwYk4BMaqAjLO9JlrzQtA/2FPzETfMh6ca94xQ5B/gQDe0te1qzXw
+        /DdP9SgJLR7qZbBpupaF2rfmz2uUpswbVzE6RAxliD1hVZEC6Cxme/m7h+bltlXo
+        sgi1B50yNPN4u/lqaF3ofGVVEz6iGA+UFhvCDk9u8bg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LrrYTV
+        Fkm9x5WAtV96l5QFTVfXK7jcQpg5sr70HsgwE=; b=o3LniShnRlpl+p+BDDClSJ
+        gFgFe65lkZbszodtwx+k48xiTCURwK42S+Fty6srSnJabd4skcMtn27IN77BBB4t
+        0m6wvn6WSvufHru66KSihYcVKdZmLEv188Rj/+jHrpJRk7vef08ZiRmu6xJzZeUb
+        brmvvzvNucIVMlzSlDVdJOwBLrzodmiQwcIIvPxG2miwdgmgYaS1xK3qbGXy0b/B
+        0gwn3JDRJH9RlFMvMAS5WoQy9X9IX7E6Zbaj4Oc+/Nc8SxPoasIiShar3D91kh21
+        l8/i2gHtlYm6pgY2gXS1A6QnKUZM07e1CXyuBXaMoKSP1JNtmNR25lY6c3PjWSTg
+        ==
+X-ME-Sender: <xms:T77IXlv6y-F4jWSN-g0qsuwh-D2FgNmSuQkyix1z2-REyP1dBZ1AQw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddugedguddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhfffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepghhrvghg
+    sehkrhhorghhrdgtohhmnecuggftrfgrthhtvghrnheptdehveeuieekuddvjefhlefgke
+    dugeeffeffjeetieefgfduveehfedvheeludfhnecukfhppeekfedrkeeirdekledruddt
+    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrh
+    gvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:T77IXud2oWQcXqtjJpYSLzcm7xfysXz80uywdWroCd0IuG6WeZsNvQ>
+    <xmx:T77IXoyC589Z7sLJ5OoU5m3ZDXiWXru70tkQEr2CPDnobSrWxGnt4Q>
+    <xmx:T77IXsPJz4o-qG0QNang-l9w2SYk8cE6fRSpM7EiEVXr9iU2A99IVg>
+    <xmx:UL7IXsVykN8rG8y8fgoGUWZ6glDMhYsF3Sub3bpYfEABCX_YO4a-ML45vUs>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CFB1530664D9;
+        Sat, 23 May 2020 02:10:22 -0400 (EDT)
+From:   greg@kroah.com
+Date:   Sat, 23 May 2020 08:10:18 +0200
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     stable <stable@vger.kernel.org>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Kees Cook <keescook@chromium.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        "Lev R . Oshvang ." <levonshe@gmail.com>
+Subject: Re: [PATCH v2] firewire: Remove function callback casts
+Message-ID: <20200523061018.GA3131938@kroah.com>
+References: <20200519173425.4724-1-oscar.carter@gmx.com>
+ <20200520061624.GA25690@workstation>
+ <20200522174308.GB3059@ubuntu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522174308.GB3059@ubuntu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-05-23 at 07:57 +0200, Mauro Carvalho Chehab wrote:
-> Hi Shuah,
+On Fri, May 22, 2020 at 07:43:08PM +0200, Oscar Carter wrote:
+> Hi,
 > 
-> Em Fri, 22 May 2020 20:19:28 -0600
-> Shuah Khan <skhan@linuxfoundation.org> escreveu:
-> 
-> > get_maintainer.pl picks only the first email address found in the file.
-> > Reorder my email addresses so it finds my linuxfoundation.org email.
-> 
-> Next time someone would run the ordering script again, this patch
-> would need to be re-applied.
+> On Wed, May 20, 2020 at 03:16:24PM +0900, Takashi Sakamoto wrote:
+> > Hi,
+> >
+> > I'm an author of ALSA firewire stack and thanks for the patch. I agree with
+> > your intention to remove the cast of function callback toward CFI build.
+> >
+> > Practically, the isochronous context with FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL
+> > is never used by in-kernel drivers. Here, I propose to leave current
+> > kernel API (fw_iso_context_create() with fw_iso_callback_t) as is.
 
-Not so.
-Reordering does not change maintainer emails entries.
-Reordering only happens to file patterns.
+If it's not used by anyone, why is it still there?  Can't we just delete
+it?
 
+thanks,
 
+greg k-h
