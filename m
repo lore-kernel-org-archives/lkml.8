@@ -2,105 +2,63 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C90AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F368AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC0C20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA72C207CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbgEWXfd (ORCPT
+        id S2388237AbgEWXfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 19:35:33 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:41977 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388010AbgEWXfc (ORCPT
+        Sat, 23 May 2020 19:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388140AbgEWXfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 19:35:32 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 089223A3457;
-        Sun, 24 May 2020 09:35:27 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jcdfp-0001EA-N4; Sun, 24 May 2020 09:35:25 +1000
-Date:   Sun, 24 May 2020 09:35:25 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: lockdep trace with xfs + mm in it from 5.7.0-rc5
-Message-ID: <20200523233525.GO2040@dread.disaster.area>
-References: <CAPM=9tyy5vubggbcj32bGpA_h6yDaBNM3QeJPySTzci-etfBZw@mail.gmail.com>
- <20200521231312.GJ17635@magnolia>
- <20200522003027.GC2040@dread.disaster.area>
- <20200522204308.GC8230@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522204308.GC8230@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
-        a=SdnPbZQmd8PgC_pepjQA:9 a=rMy9fwq0lcmpeslW:21 a=whivUyDIyx5-Z5nh:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Sat, 23 May 2020 19:35:33 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C0CC061A0E;
+        Sat, 23 May 2020 16:35:33 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 976831286F3AF;
+        Sat, 23 May 2020 16:35:32 -0700 (PDT)
+Date:   Sat, 23 May 2020 16:35:32 -0700 (PDT)
+Message-Id: <20200523.163532.187431052087652248.davem@davemloft.net>
+To:     wu000273@umn.edu
+Cc:     kuba@kernel.org, tariqt@mellanox.com, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kjlu@umn.edu
+Subject: Re: [PATCH v2] net/mlx4_core: fix a memory leak bug.
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200522190715.29022-1-wu000273@umn.edu>
+References: <20200522190715.29022-1-wu000273@umn.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 23 May 2020 16:35:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 01:43:08PM -0700, Darrick J. Wong wrote:
-> On Fri, May 22, 2020 at 10:30:27AM +1000, Dave Chinner wrote:
-> > On Thu, May 21, 2020 at 04:13:12PM -0700, Darrick J. Wong wrote:
-> > > [cc linux-xfs]
-> > > 
-> > > On Fri, May 22, 2020 at 08:21:50AM +1000, Dave Airlie wrote:
-> > > > Hi,
-> > > > 
-> > > > Just updated a rawhide VM to the Fedora 5.7.0-rc5 kernel, did some
-> > > > package building,
-> > > > 
-> > > > got the below trace, not sure if it's known and fixed or unknown.
-> > > 
-> > > It's a known false-positive.  An inode can't simultaneously be getting
-> > > reclaimed due to zero refcount /and/ be the target of a getxattr call.
-> > > Unfortunately, lockdep can't tell the difference, and it seems a little
-> > > strange to set NOFS on the allocation (which increases the chances of a
-> > > runtime error) just to quiet that down.
-> > 
-> > __GFP_NOLOCKDEP is the intended flag to telling memory allocation
-> > that lockdep is stupid.
-> > 
-> > However, it seems that the patches that were in progress some months
-> > ago to convert XFS to kmalloc interfaces and using GFP flags
-> > directly stalled - being able to mark locations like this with
-> > __GFP_NOLOCKDEP was one of the main reasons for getting rid of all
-> > the internal XFS memory allocation wrappers...
+From: wu000273@umn.edu
+Date: Fri, 22 May 2020 14:07:15 -0500
+
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
-> Question is, should I spend time adding a GFP_NOLOCKDEP bandaid to XFS
-> or would my time be better spent reviewing your async inode reclaim
-> series to make this go away for real?
+> In function mlx4_opreq_action(), pointer "mailbox" is not released,
+> when mlx4_cmd_box() return and error, causing a memory leak bug.
+> Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
+> free this pointer.
+> 
+> Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 
-Heh. I started to write that async reclaim would make this go away,
-but then I realised it won't because we still do an XFS_ILOCK_EXCL
-call in xfs_inode_reclaim() right at the end to synchronise with
-anything that was blocked in the ILOCK during a lockless lookup
-waiting for reclaim to drop the lock after setting ip->i_ino = 0.
-
-So that patchset doesn't make the lockdep issues go away. I still
-need to work out if we can get rid of that ILOCK cycling in
-xfs_reclaim_inode() by changing the lockless lookup code, but that's
-a separate problem...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Applied.
