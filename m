@@ -2,205 +2,87 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA85C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6331E207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:06:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlbX2Jyb"
+	by mail.kernel.org (Postfix) with ESMTP id 2BCA720757
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 10:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387778AbgEWKGi (ORCPT
+        id S2387749AbgEWKKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 06:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387750AbgEWKGi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 06:06:38 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B34C061A0E;
-        Sat, 23 May 2020 03:06:38 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id a13so5416707pls.8;
-        Sat, 23 May 2020 03:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=pHMA/O04guMph5hS5Q4P9Tcl5HEUZXZqg3o4kCIqJOE=;
-        b=GlbX2Jyb007pfBF014RLYULwNRRnvvq9SiWsQm9QoCPjQbzlUpxwQ7XVd/CU79x0r0
-         mmcg+X7jMo5hf/Bt0jaHBZzdgBScFwgOEs3+UFAzo033cvkJ/jVyowWdQ/k3yyPU3ZJC
-         yLYb75pcxKeSwQUt5WpieRtFyGiSTyKg1pzdKSoOOV66yyQ4bk0i1YGOA+QHoK/tfzC6
-         bYJeRMA+YiMEak4D93XkRW9KpjugfPQX6WkTogHhzNZNSqfXHRscMPaZC8cLA+lG7osA
-         YnNEZWPhi7x0fCPNv6MWbWGXS5Sl2H3vuEItLTS9Pzu9otLRZ01V4SYHguejc6/GM+iq
-         dSBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=pHMA/O04guMph5hS5Q4P9Tcl5HEUZXZqg3o4kCIqJOE=;
-        b=AbWjn+s6jQN+q61sT62MZ5Tbdkxr6W7NxujnOWJMrEQZ5kfsgZS4/piYqjnzXVMskc
-         VEvcWUq6jJnBvXOcHs5mCiIIknmR8XDYpfOGP7610yDyLo+pkbyevp9PsRlxD7k+1+kQ
-         KYuSL8aHyBsGULI7mH9Irn9phcCVoUkYeKX5CLQQqRJ/XiW48EpvMaAUX/ZmH5QXj+tp
-         hIQscTNVFyfmaBdfzHJGrYY1NRm/YBxLiY3S6Hy8REYXv3dN4aBOVYdNnOdBPUepr/Cw
-         B/cSSvt6bYiNl1HyzDP1hBgOkbmB2EKy6AH+B2yxwkM/W7+Jx785tcopsEZFwfWSiYmm
-         whvg==
-X-Gm-Message-State: AOAM530NNGn+OZI6ZLo2wmc2CzCBAdrUKDCMRXdKFV07Jep4C7yD3CvB
-        VI8Vxnd49B3AB51lu9r00APein9OiLY=
-X-Google-Smtp-Source: ABdhPJwkiMz9WliVzcTJZscrGxXsIlnkGc4/qoNgcUnXdXTUKIIvtq9iQDo7UW5bwyMvEl5kRrJCBw==
-X-Received: by 2002:a17:90a:64f:: with SMTP id q15mr9224434pje.169.1590228397286;
-        Sat, 23 May 2020 03:06:37 -0700 (PDT)
-Received: from localhost (115-64-212-199.static.tpgi.com.au. [115.64.212.199])
-        by smtp.gmail.com with ESMTPSA id a2sm2383046pfg.98.2020.05.23.03.06.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 03:06:36 -0700 (PDT)
-Date:   Sat, 23 May 2020 20:06:30 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
-To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-References: <20200521202716.193316-1-samitolvanen@google.com>
-        <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
-        <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
-In-Reply-To: <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
-MIME-Version: 1.0
-Message-Id: <1590226253.lnkg0jun9x.astroid@bobo.none>
+        Sat, 23 May 2020 06:10:46 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:16444 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725268AbgEWKKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 06:10:45 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Sat, 23 May 2020 18:10:25
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Sat, 23 May 2020 18:10:25 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     "kjlu@umn.edu" <kjlu@umn.edu>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        "Avri Altman" <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        "Can Guo" <cang@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: RE: RE: [EXT] [PATCH] scsi: ufs-bsg: Fix runtime PM imbalance
+ on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <SN6PR08MB5693D06B4B30D0A76824D2BBDBB40@SN6PR08MB5693.namprd08.prod.outlook.com>
+References: <20200522045932.31795-1-dinghao.liu@zju.edu.cn>
+ <SN6PR08MB56932A6D579AFB4E28AFD001DBB40@SN6PR08MB5693.namprd08.prod.outlook.com>
+ <4a6ba414.bf5c4.1723b9792df.Coremail.dinghao.liu@zju.edu.cn>
+ <SN6PR08MB5693D06B4B30D0A76824D2BBDBB40@SN6PR08MB5693.namprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Message-ID: <2ca4e9a1.c1e27.1724103291c.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBHf3iR9shee3ERAg--.40393W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQJBlZdtORGcwAIsv
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtCS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_JrI_JrylV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVACI402YVCY1x02628vn2kIc2xKxwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14
+        v_Gw1lV2xY6xkI7II2jI8vz4vEwIxGrwCS07vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1U
+        MIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14v26r106r1rMIAIbVC2zVAF1VAY17CE14v2
+        6r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v26r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lV2xY6IIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCS07vEIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Masahiro Yamada's message of May 23, 2020 3:44 am:
-> + Michael, and PPC ML.
->=20
-> They may know something about the reason of failure.
-
-Because the linker can't put branch stubs within object code sections,=20
-so when you incrementally link them too large, the linker can't resolve=20
-branches into other object files.
-
-This is why we added incremental linking in the first place. I suppose=20
-it could be made conditional for platforms that can use this=20
-optimization.
-
-What'd be really nice is if we could somehow build and link kallsyms=20
-without relinking everything twice, and if we could do section mismatch=20
-analysis without making that vmlinux.o as well. I had a few ideas but=20
-not enough time to do much work on it.
-
-Thanks,
-Nick
-
->=20
->=20
-> On Sat, May 23, 2020 at 2:41 AM Masahiro Yamada <masahiroy@kernel.org> wr=
-ote:
->>
->> On Fri, May 22, 2020 at 5:27 AM Sami Tolvanen <samitolvanen@google.com> =
-wrote:
->> >
->> > Instead of linking all compilation units again each time vmlinux_link =
-is
->> > called, reuse vmlinux.o from modpost_link.
->> >
->> > With x86_64 allyesconfig, vmlinux_link is called three times and reusi=
-ng
->> > vmlinux.o reduces the build time ~38 seconds on my system (59% reducti=
-on
->> > in the time spent in vmlinux_link).
->> >
->> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
->> > ---
->> >  scripts/link-vmlinux.sh | 5 +----
->> >  1 file changed, 1 insertion(+), 4 deletions(-)
->> >
->> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
->> > index d09ab4afbda4..c6cc4305950c 100755
->> > --- a/scripts/link-vmlinux.sh
->> > +++ b/scripts/link-vmlinux.sh
->> > @@ -77,11 +77,8 @@ vmlinux_link()
->> >
->> >         if [ "${SRCARCH}" !=3D "um" ]; then
->> >                 objects=3D"--whole-archive                        \
->> > -                       ${KBUILD_VMLINUX_OBJS}                  \
->> > +                       vmlinux.o                               \
->> >                         --no-whole-archive                      \
->> > -                       --start-group                           \
->> > -                       ${KBUILD_VMLINUX_LIBS}                  \
->> > -                       --end-group                             \
->> >                         ${@}"
->> >
->> >                 ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
->> >
->> > base-commit: b85051e755b0e9d6dd8f17ef1da083851b83287d
->> > --
->> > 2.27.0.rc0.183.gde8f92d652-goog
->> >
->>
->>
->> I like this patch irrespective of CLANG_LTO, but
->> unfortunately, my build test failed.
->>
->>
->> ARCH=3Dpowerpc failed to build as follows:
->>
->>
->>
->>   MODPOST vmlinux.o
->>   MODINFO modules.builtin.modinfo
->>   GEN     modules.builtin
->>   LD      .tmp_vmlinux.kallsyms1
->> vmlinux.o:(__ftr_alt_97+0x20): relocation truncated to fit:
->> R_PPC64_REL14 against `.text'+4b1c
->> vmlinux.o:(__ftr_alt_97+0x164): relocation truncated to fit:
->> R_PPC64_REL14 against `.text'+1cf78
->> vmlinux.o:(__ftr_alt_97+0x288): relocation truncated to fit:
->> R_PPC64_REL14 against `.text'+1dac4
->> vmlinux.o:(__ftr_alt_97+0x2f0): relocation truncated to fit:
->> R_PPC64_REL14 against `.text'+1e254
->> make: *** [Makefile:1125: vmlinux] Error 1
->>
->>
->>
->> I used powerpc-linux-gcc
->> available at
->> https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2=
-.0/
->>
->>
->> Build command:
->>
->> make -j24 ARCH=3Dpowerpc  CROSS_COMPILE=3Dpowerpc-linux-  defconfig all
->>
->>
->> Could you check it please?
->>
->>
->>
->> I will apply it to my test branch.
->> Perhaps, 0-day bot may find more failure cases.
->>
->>
->> --
->> Best Regards
->> Masahiro Yamada
->=20
->=20
->=20
-> --=20
-> Best Regards
-> Masahiro Yamada
->=20
+PiBIaSwgRGluZ2hhbwo+IAo+ID4gVGhhbmsgeW91IGZvciB5b3VyIGFkdmljZSEgTW92aW5nIG9y
+aWdpbmFsIHBtX3J1bnRpbWVfcHV0X3N5bmMoKSB0byBhZnRlcgo+ID4gIm91dCIgbGFiZWwgd2ls
+bCBpbmZsdWVuY2UgYW4gZXJyb3IgcGF0aCBicmFuY2hlZCBmcm9tCj4gPiB1cHNfYnNnX3Zlcmlm
+eV9xdWVyeV9zaXplKCkuIFNvIEkgdGhpbmsgY2hhbmdpbmcgImdvdG8gb3V0IiB0byAiYnJlYWsi
+IGlzIGEgZ29vZAo+ID4gaWRlYS4gQnV0IGluIHRoaXMgY2FzZSB3ZSBtYXkgZXhlY3V0ZSBhbiBl
+eHRyYQo+ID4gc2dfY29weV9mcm9tX2J1ZmZlcigpIGFuZCBhbiBleHRyYSBrZnJlZSgpIGNvbXBh
+cmVkIHdpdGggdW5wYXRjaGVkIHZlcnNpb24uCj4gPiBEb2VzIHRoaXMgbWF0dGVyPwo+ID4gCj4g
+V2hhdCBkbyB5b3UgbWVhbiAiIHVucGF0Y2hlZCB2ZXJzaW9uICI/IAo+Cj4gSSBzZWUsIGJlbG93
+IGdvdG8gd2lsbCBieXBhc3Mgc2dfY29weV9mcm9tX2J1ZmZlcigpIGFuZCBhbiBleHRyYSBrZnJl
+ZSgpCj4gSW4gY2FzZSB1ZnNfYnNnX2FsbG9jX2Rlc2NfYnVmZmVyKCkgZmFpbHMuIAo+IAoKVGhh
+dCdzIGV4YWN0bHkgd2hhdCBJIHdhbnQgdG8gZXhwcmVzcy4gSWYgdXNpbmcgImJyZWFrIiBpcyBP
+SyBJIHdpbGwgc2VuZAphIG5ldyBwYXRjaCB0byBmaXggdGhpcyBwcm9ibGVtLgoKPiBCZWFuCj4g
+CgpSZWdhZWRzLApEaW5naGFvCg==
