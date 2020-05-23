@@ -7,397 +7,238 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90752C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C29B206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475B8206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 05:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="uufsQ0ES"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="P0naG0UC";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ok0A1NZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387572AbgEWFNq (ORCPT
+        id S2387599AbgEWFP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 01:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgEWFNp (ORCPT
+        Sat, 23 May 2020 01:15:58 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:46145 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387457AbgEWFP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 01:13:45 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69878C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:13:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k7so5887095pjs.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:13:44 -0700 (PDT)
+        Sat, 23 May 2020 01:15:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1590210969; x=1621746969;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=DgJdXbICNbI8OQN4EAi512Y0oqvMzN1ZCzm5jAI6CuU=;
+  b=P0naG0UC/jgoEjyze6RuS8vH1JTesG13Wf4TGCgXwh1GXuf3xeCsBUH8
+   /B0xqsmJN/VG41I76sbEXqAmzMcLIjTJ0ViQrBqqOqCwKzLyimM5K6xED
+   zJAScwV/OZYCcBLO7Ti4VMGwl6+dJYE133m9sKk4+Wl6om0qPLCfbkzUu
+   hgVZW7ntlJr5m/SmG0DW2+cU2AAQszdJXHx8EDhUKZXHfjYf9r7N7IZ5Y
+   EXb/nJC2C5s9JEi9sfRGskV1oQCzs0k0fsul2eEltWrwjF6iQogoGQXs1
+   jIgTUBUmbDbGN57GYK1sQDSFiGaphQH3JhLLSYbs8d/RmX1NhPYWfcDeR
+   g==;
+IronPort-SDR: rFYOLPe8naTa1v32NH62DQOclt1A448uVnZ9XZ0H98zxnEsVPdE/P1zs9wV029a9XxhohVXXyC
+ ZJ9qMI0mpwD3nHSCFrXmlQ4fh1pRo7Njec/p621luc9Pajka85y8ConH+KiyVHxOYJo3K71G1W
+ OELpg91zzWbDN2riTHatNRsZoc0vPdgIxf9vw7sQA6NDDApm/gjeCt/qHCU9fCXq9khH7VTQwT
+ gFxQ1SiF77xxQJde765X/c4cvIUjwpoGdLCuwn9YaykHIAjCIeipV9NTu1lAcnfMRTyDpr3FZZ
+ JA8=
+X-IronPort-AV: E=Sophos;i="5.73,424,1583164800"; 
+   d="scan'208";a="241119434"
+Received: from mail-sn1nam02lp2052.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.52])
+  by ob1.hgst.iphmx.com with ESMTP; 23 May 2020 13:16:07 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OLFIYWOWZmC75y+UJhmsdzP+JY6cEtEBSdIE1ow9cecBIDu7okzSXlQhj9ayJPpqkapzJELEUwxVG1Z6bdyzTBtHzspw+BOTVBj5vxU5HvgrRYCFb+UwlXXdQT5FZVhQ/3aXCSj+G1nMnaVsi/RrSczNJpSNTMQKJ7WRPvIjISdS7bA/W5QQwE6pXjt5w3i1SsNsLm7ZlfJRKx6fTGeLjLeokvHXgJCVgOEmlvkb8bL9xGnfrVPmT58VE4/Hq8p0HmSBLzkgwxtpOyRPwJt3MZSxRzDupbDyris2iEvpVZPPEmkshGTJGXqJRmmjStNrSP+aA/u7YG32FFoYT1J0pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DgJdXbICNbI8OQN4EAi512Y0oqvMzN1ZCzm5jAI6CuU=;
+ b=dKCE/JWR9dOG6diPC9o9v0QiVFJcGFzHs6wwhDtmJKwET0RWZksCuoihdG0n09Lghs5/+F0JGLiRlJqTmXHt8npnIhG+l8/GVTRHMNuyz31vTi0iDbVgC2gErftHL8rvd2v5UKxhE87AEFqtladRMZ3bG6yOKdnfrbx+yfw1U2rx0SH233tjuhVDhia8cKotORyBRzMvjtGVAMrelRFvmla7WPRCFV238+tr/KxIfUXYstF4B1KQ0jy4/byQbtjLaP95EUEyI6ot7tVxdzg0j7wdfXeMKN3s28TA41T/Mn9F9ABbXQraPcFKwCsWruL4VYmLgdGeuInaZNraSxGWDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=ZAspQf7TM/M02K0B+p3YEM0X6lS3/JZ71GqSbfax5/k=;
-        b=uufsQ0ESVkF6yv6Vc23XswtFuKezeifYKwKehcYCRFjMTigrMM/MqLlr3j05UNJA3b
-         I9EibMWMrnmM3g+uzfCf6h9o33N/GqHjiYP1R5xzA9PNS9tdzGx3IYJRADeY7e8ao9oA
-         JjVtsaYPcmfUFYGX6t0LUNQ07Dq8qsddOeuNrhyZFmWj8syDldPGOyySug4YoHp+r1As
-         u6v79AGTWpLLxhh5pMYuHxJr2ZN8WxGdyZwyPf/rDOnL+liSxxFWOiaE+Gz6wnK/LxTU
-         lvYeH9NDu5o9EUuaJUzyrPrljNNPSvIMlrzegkUeP2RiKKHNCXqRf90ncrsQ0lfk+oPt
-         OMVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=ZAspQf7TM/M02K0B+p3YEM0X6lS3/JZ71GqSbfax5/k=;
-        b=t2ZPUr8m1dqjxNs/p01SIsd2uvAhO9OgV536H/WFEhDCGQoVFwyRJBuY5X4a/sufDt
-         d0/hom6+L1e5JIgH0pxl6JpGXnHS4UB4jf9naFUF8DPJteln9q9Kq5jHTSWisgAZp/pO
-         K/E+BfOO+1LoW4rl5ysAg3WMxcqbwIrL7alWmgdU8L7VS+bGENPkl6ZOSA1nrceRZHfS
-         e5Cak3+lXglkWW16CSXrmptPrT+wFji4t7BHrnguMgScJDSFOWPy5apbG1cU+V6SZxGG
-         nV8Qa8+wGhWwPIxwaRxYDAC5bBLj2Amzt+QWZfk2/IPdnTwLtHWL/Dht1NgL7VtDCrXP
-         ueAw==
-X-Gm-Message-State: AOAM531ppRuEn5OKgWnYjNFoi6v3P1GhIDcFvhq0F4ibjP21eDfDqThq
-        owS6dpOZp+O9O7sVqsKJRWn+MQ==
-X-Google-Smtp-Source: ABdhPJzKlxEMs9umPqk6EJ8eDdYBxJLlG4weeXG8K6c07uZt5fwjqCgDr/qdJxOdxIK9BRnM97irIQ==
-X-Received: by 2002:a17:90a:ca94:: with SMTP id y20mr8084782pjt.97.1590210823757;
-        Fri, 22 May 2020 22:13:43 -0700 (PDT)
-Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id y5sm8117974pff.150.2020.05.22.22.13.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 May 2020 22:13:42 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <F23FF70E-F94D-481C-8A85-32B4CE50B63E@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_EA940E7B-23BE-40EB-888E-1A45D84AE90C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH V4 7/8] fs/ext4: Introduce DAX inode flag
-Date:   Fri, 22 May 2020 23:13:41 -0600
-In-Reply-To: <20200521191313.261929-8-ira.weiny@intel.com>
-Cc:     Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     ira.weiny@intel.com
-References: <20200521191313.261929-1-ira.weiny@intel.com>
- <20200521191313.261929-8-ira.weiny@intel.com>
-X-Mailer: Apple Mail (2.3273)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DgJdXbICNbI8OQN4EAi512Y0oqvMzN1ZCzm5jAI6CuU=;
+ b=ok0A1NZnhPAGz7ctCG2wU81I5/u/JZcZMRwnm58TdM1AjVbdCU0iILOPWmD1bIBfSUe4T7KJOy8Pq0OKRMy8VkF40sS8tDkKLK9Cv4geHTI1sCNVNHeZl8bLzIuGyWzT2qUu05Bn7Qe+dsV+wm9+4tOzM5UZip07TiVEDSK0Cl0=
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB4954.namprd04.prod.outlook.com (2603:10b6:5:19::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24; Sat, 23 May
+ 2020 05:15:53 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.3021.027; Sat, 23 May 2020
+ 05:15:53 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+CC:     Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v5 4/6] clocksource/drivers/timer-riscv: Use per-CPU timer
+ interrupt
+Thread-Topic: [PATCH v5 4/6] clocksource/drivers/timer-riscv: Use per-CPU
+ timer interrupt
+Thread-Index: AQHWL3R6sYmJxZ+TeUaHloYoFyxT+Ki0FS2AgAEN0WA=
+Date:   Sat, 23 May 2020 05:15:53 +0000
+Message-ID: <DM6PR04MB6201C6B4F6852A31E0CCDE398DB50@DM6PR04MB6201.namprd04.prod.outlook.com>
+References: <20200521133301.816665-1-anup.patel@wdc.com>
+ <20200521133301.816665-5-anup.patel@wdc.com>
+ <af395b79-c74c-3c6d-8331-b84e37b01797@linaro.org>
+In-Reply-To: <af395b79-c74c-3c6d-8331-b84e37b01797@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [106.51.30.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 65af5d2e-64eb-4a96-8fdd-08d7fed85daf
+x-ms-traffictypediagnostic: DM6PR04MB4954:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR04MB4954E807B4AA60B70CD687CA8DB50@DM6PR04MB4954.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0412A98A59
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w4bov3ylliCT55RmFX+t+VuUH6QushHwoIxbuTYfTj56bH78sFxvSvbCAg7ppovfljFdMEMuUfVAY9TM6KUfCvmvXIN6LQvEl08L0ng0NyUGYhXRX01pQf/iV2yvgou49NPQKRCEi34AJtYG8bD9yOsEita3hF/2OLk5EfXXDEpPAW7dEWQ1eMetBpfQz2CUu4SM40amENxjurvEQjWIdvxhGuD1557Atx2s1hZKjIxhORQcHnitDDfzbUP5ERHnqzmb5nvQvJ+KyAjQ2nYrZMuduRzE0fUFOn0kD5RQkVCSJ3JoJ5XHVa6oIOw2bZ9thZ1SzbCIL4R9W+LGqgG309qEUo3SaxkEQR7tpRjvRwAsq3Npc8xqhOz75x7JDVPPUkaNbhbBcJoabbSE2gjB6A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(366004)(39860400002)(346002)(110136005)(5660300002)(7416002)(6506007)(316002)(8936002)(54906003)(478600001)(2906002)(8676002)(9686003)(33656002)(55016002)(86362001)(26005)(55236004)(7696005)(76116006)(53546011)(66446008)(71200400001)(52536014)(66476007)(186003)(4326008)(66946007)(64756008)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 1Q+ZoYx022wI5Oav/fk+GscAVOPZQX7+BoNpndMVFFOAXNx1o69kx4u4lHOMg6ITeNIsMh/7dmfUwczb63k9ug3cwtcjtzSEGtttiY7OAsGOJs48E7BwvFPhU/2ChH1EzyQeZq29y9+myncRl7JxIyHZEOJD2tNZZbstqezpp196zGxqI2zVBxeYChXMIuLzwD/gCYhlKqdM2veJujICn5iDcRaIbjzHBBo76c5bl0WGPD0X4dVdqRtcUOGcs3OOzYagRZahKecHjW+ZwZsyXQTr4MjoMb0Hnc9ZhEVKXZdDKGzBsmKvM8JwO2IGXw6xQh0hHA7DBd8e1DioHzjn0JY0po/7eHagDSr+MdID0maFuJHTyNj8UxP4+cYUqlTLFGleBWxqgb97PngGmw54EeQgeHrGJkugZh2wIxskhmZzBzkrsH0L5nuKOsbJTZCbHwa8KWb2LLMA98iPU9O02x56xU+gy3ITgzU0REK1VC0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65af5d2e-64eb-4a96-8fdd-08d7fed85daf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2020 05:15:53.1364
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yc+8y83WvnmDutQeVZOWXwppIvm25Nre2i7mzJSsbA5Bobd0elfuXrp63bUIYBrMg0ab6R0Wt4iytl4fbVVDLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB4954
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Apple-Mail=_EA940E7B-23BE-40EB-888E-1A45D84AE90C
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-On May 21, 2020, at 1:13 PM, ira.weiny@intel.com wrote:
->=20
-> From: Ira Weiny <ira.weiny@intel.com>
->=20
-> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
->=20
-> Set the flag to be user visible and changeable.  Set the flag to be
-> inherited.  Allow applications to change the flag at any time with the
-> exception of if VERITY or ENCRYPT is set.
->=20
-> Disallow setting VERITY or ENCRYPT if DAX is set.
->=20
-> Finally, on regular files, flag the inode to not be cached to =
-facilitate
-> changing S_DAX on the next creation of the inode.
->=20
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-
->=20
-> ---
-> Changes from V3:
-> 	Move bit to bit25 per Andreas
->=20
-> Change from V2:
-> 	Add in making verity and DAX exclusive.
-> 	'Squash' in making encryption and DAX exclusive.
-> 	Add in EXT4_INODE_DAX flag definition to be compatible with
-> 		ext4_[set|test]_inode_flag() bit operations
-> 	Use ext4_[set|test]_inode_flag() bit operations to be consistent
-> 		with other code.
->=20
-> Change from V0:
-> 	Add FS_DAX_FL to include/uapi/linux/fs.h
-> 		to be consistent
-> 	Move ext4_dax_dontcache() to ext4_ioctl_setflags()
-> 		This ensures that it is only set when the flags are =
-going to be
-> 		set and not if there is an error
-> 		Also this sets don't cache in the FS_IOC_SETFLAGS case
->=20
-> Change from RFC:
-> 	use new d_mark_dontcache()
-> 	Allow caching if ALWAYS/NEVER is set
-> 	Rebased to latest Linus master
-> 	Change flag to unused 0x01000000
-> 	update ext4_should_enable_dax()
-> ---
-> fs/ext4/ext4.h          | 14 ++++++++++----
-> fs/ext4/inode.c         |  2 +-
-> fs/ext4/ioctl.c         | 34 +++++++++++++++++++++++++++++++++-
-> fs/ext4/super.c         |  3 +++
-> fs/ext4/verity.c        |  2 +-
-> include/uapi/linux/fs.h |  1 +
-> 6 files changed, 49 insertions(+), 7 deletions(-)
->=20
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 65ffb831b2b9..09b8906568d2 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -415,13 +415,16 @@ struct flex_groups {
-> #define EXT4_VERITY_FL			0x00100000 /* Verity =
-protected inode */
-> #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for =
-large EA */
-> /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
-> +
-> +#define EXT4_DAX_FL			0x02000000 /* Inode is DAX */
-> +
-> #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline =
-data. */
-> #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with =
-parents projid */
-> #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
-> #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 =
-lib */
->=20
-> -#define EXT4_FL_USER_VISIBLE		0x705BDFFF /* User visible flags =
-*/
-> -#define EXT4_FL_USER_MODIFIABLE		0x604BC0FF /* User =
-modifiable flags */
-> +#define EXT4_FL_USER_VISIBLE		0x725BDFFF /* User visible flags =
-*/
-> +#define EXT4_FL_USER_MODIFIABLE		0x624BC0FF /* User =
-modifiable flags */
->=20
-> /* Flags we can manipulate with through EXT4_IOC_FSSETXATTR */
-> #define EXT4_FL_XFLAG_VISIBLE		(EXT4_SYNC_FL | \
-> @@ -429,14 +432,16 @@ struct flex_groups {
-> 					 EXT4_APPEND_FL | \
-> 					 EXT4_NODUMP_FL | \
-> 					 EXT4_NOATIME_FL | \
-> -					 EXT4_PROJINHERIT_FL)
-> +					 EXT4_PROJINHERIT_FL | \
-> +					 EXT4_DAX_FL)
->=20
-> /* Flags that should be inherited by new inodes from their parent. */
-> #define EXT4_FL_INHERITED (EXT4_SECRM_FL | EXT4_UNRM_FL | =
-EXT4_COMPR_FL |\
-> 			   EXT4_SYNC_FL | EXT4_NODUMP_FL | =
-EXT4_NOATIME_FL |\
-> 			   EXT4_NOCOMPR_FL | EXT4_JOURNAL_DATA_FL |\
-> 			   EXT4_NOTAIL_FL | EXT4_DIRSYNC_FL |\
-> -			   EXT4_PROJINHERIT_FL | EXT4_CASEFOLD_FL)
-> +			   EXT4_PROJINHERIT_FL | EXT4_CASEFOLD_FL |\
-> +			   EXT4_DAX_FL)
->=20
-> /* Flags that are appropriate for regular files (all but dir-specific =
-ones). */
-> #define EXT4_REG_FLMASK (~(EXT4_DIRSYNC_FL | EXT4_TOPDIR_FL | =
-EXT4_CASEFOLD_FL |\
-> @@ -488,6 +493,7 @@ enum {
-> 	EXT4_INODE_VERITY	=3D 20,	/* Verity protected inode */
-> 	EXT4_INODE_EA_INODE	=3D 21,	/* Inode used for large EA */
-> /* 22 was formerly EXT4_INODE_EOFBLOCKS */
-> +	EXT4_INODE_DAX		=3D 25,	/* Inode is DAX */
-> 	EXT4_INODE_INLINE_DATA	=3D 28,	/* Data in inode. */
-> 	EXT4_INODE_PROJINHERIT	=3D 29,	/* Create with parents projid */
-> 	EXT4_INODE_RESERVED	=3D 31,	/* reserved for ext4 lib */
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 68fac9289109..778b0dbe3da6 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -4419,7 +4419,7 @@ static bool ext4_should_enable_dax(struct inode =
-*inode)
-> 	if (test_opt(inode->i_sb, DAX_ALWAYS))
-> 		return true;
->=20
-> -	return false;
-> +	return ext4_test_inode_flag(inode, EXT4_INODE_DAX);
-> }
->=20
-> void ext4_set_inode_flags(struct inode *inode, bool init)
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 145083e8cd1e..668b8c17d6eb 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -292,6 +292,21 @@ static int ext4_ioctl_check_immutable(struct =
-inode *inode, __u32 new_projid,
-> 	return 0;
-> }
->=20
-> +static void ext4_dax_dontcache(struct inode *inode, unsigned int =
-flags)
-> +{
-> +	struct ext4_inode_info *ei =3D EXT4_I(inode);
-> +
-> +	if (S_ISDIR(inode->i_mode))
-> +		return;
-> +
-> +	if (test_opt2(inode->i_sb, DAX_NEVER) ||
-> +	    test_opt(inode->i_sb, DAX_ALWAYS))
-> +		return;
-> +
-> +	if ((ei->i_flags ^ flags) & EXT4_DAX_FL)
-> +		d_mark_dontcache(inode);
-> +}
-> +
-> static int ext4_ioctl_setflags(struct inode *inode,
-> 			       unsigned int flags)
-> {
-> @@ -303,6 +318,16 @@ static int ext4_ioctl_setflags(struct inode =
-*inode,
-> 	unsigned int jflag;
-> 	struct super_block *sb =3D inode->i_sb;
->=20
-> +	if (ext4_test_inode_flag(inode, EXT4_INODE_DAX)) {
-> +		if (ext4_test_inode_flag(inode, EXT4_INODE_VERITY) ||
-> +		    ext4_test_inode_flag(inode, EXT4_INODE_ENCRYPT) ||
-> +		    ext4_test_inode_state(inode,
-> +					  =
-EXT4_STATE_VERITY_IN_PROGRESS)) {
-> +			err =3D -EOPNOTSUPP;
-> +			goto flags_out;
-> +		}
-> +	}
-> +
-> 	/* Is it quota file? Do not allow user to mess with it */
-> 	if (ext4_is_quota_file(inode))
-> 		goto flags_out;
-> @@ -369,6 +394,8 @@ static int ext4_ioctl_setflags(struct inode =
-*inode,
-> 	if (err)
-> 		goto flags_err;
->=20
-> +	ext4_dax_dontcache(inode, flags);
-> +
-> 	for (i =3D 0, mask =3D 1; i < 32; i++, mask <<=3D 1) {
-> 		if (!(mask & EXT4_FL_USER_MODIFIABLE))
-> 			continue;
-> @@ -528,12 +555,15 @@ static inline __u32 =
-ext4_iflags_to_xflags(unsigned long iflags)
-> 		xflags |=3D FS_XFLAG_NOATIME;
-> 	if (iflags & EXT4_PROJINHERIT_FL)
-> 		xflags |=3D FS_XFLAG_PROJINHERIT;
-> +	if (iflags & EXT4_DAX_FL)
-> +		xflags |=3D FS_XFLAG_DAX;
-> 	return xflags;
-> }
->=20
-> #define EXT4_SUPPORTED_FS_XFLAGS (FS_XFLAG_SYNC | FS_XFLAG_IMMUTABLE | =
-\
-> 				  FS_XFLAG_APPEND | FS_XFLAG_NODUMP | \
-> -				  FS_XFLAG_NOATIME | =
-FS_XFLAG_PROJINHERIT)
-> +				  FS_XFLAG_NOATIME | =
-FS_XFLAG_PROJINHERIT | \
-> +				  FS_XFLAG_DAX)
->=20
-> /* Transfer xflags flags to internal */
-> static inline unsigned long ext4_xflags_to_iflags(__u32 xflags)
-> @@ -552,6 +582,8 @@ static inline unsigned long =
-ext4_xflags_to_iflags(__u32 xflags)
-> 		iflags |=3D EXT4_NOATIME_FL;
-> 	if (xflags & FS_XFLAG_PROJINHERIT)
-> 		iflags |=3D EXT4_PROJINHERIT_FL;
-> +	if (xflags & FS_XFLAG_DAX)
-> +		iflags |=3D EXT4_DAX_FL;
->=20
-> 	return iflags;
-> }
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 5e056aa20ce9..3658e3016999 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1323,6 +1323,9 @@ static int ext4_set_context(struct inode *inode, =
-const void *ctx, size_t len,
-> 	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
-> 		return -EINVAL;
->=20
-> +	if (ext4_test_inode_flag(inode, EXT4_INODE_DAX))
-> +		return -EOPNOTSUPP;
-> +
-> 	res =3D ext4_convert_inline_data(inode);
-> 	if (res)
-> 		return res;
-> diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-> index 89a155ece323..4fecb3e4e338 100644
-> --- a/fs/ext4/verity.c
-> +++ b/fs/ext4/verity.c
-> @@ -113,7 +113,7 @@ static int ext4_begin_enable_verity(struct file =
-*filp)
-> 	handle_t *handle;
-> 	int err;
->=20
-> -	if (IS_DAX(inode))
-> +	if (IS_DAX(inode) || ext4_test_inode_flag(inode, =
-EXT4_INODE_DAX))
-> 		return -EINVAL;
->=20
-> 	if (ext4_verity_in_progress(inode))
-> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> index 379a612f8f1d..f44eb0a04afd 100644
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -262,6 +262,7 @@ struct fsxattr {
-> #define FS_EA_INODE_FL			0x00200000 /* Inode used =
-for large EA */
-> #define FS_EOFBLOCKS_FL			0x00400000 /* Reserved =
-for ext4 */
-> #define FS_NOCOW_FL			0x00800000 /* Do not cow file */
-> +#define FS_DAX_FL			0x02000000 /* Inode is DAX */
-> #define FS_INLINE_DATA_FL		0x10000000 /* Reserved for ext4 =
-*/
-> #define FS_PROJINHERIT_FL		0x20000000 /* Create with =
-parents projid */
-> #define FS_CASEFOLD_FL			0x40000000 /* Folder is =
-case insensitive */
-> --
-> 2.25.1
->=20
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_EA940E7B-23BE-40EB-888E-1A45D84AE90C
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl7IsQUACgkQcqXauRfM
-H+AZ0RAAtwfgf5s1Lxk/3cQkf4+C7aJK/Z7GapQwbrKpIUt9+AMV/tg51I/jqbYg
-RjhH+y9lhegPRuXq+MnuydevKEQ29Bua6X7DWA/FEkbaUVf9tEam32D5lri5SAeq
-2pXy5tNvmFljZMrZJEvIjuPY+5vAeQik8FqYWk60m0VdUhEfpxr+3TL2EKFMvfRr
-04ZO5wwuDUrrEFycmpLFU1RO+JeqCthsNnOckW9rJ55W2PhWxwbJiPemwzROgnVZ
-XHP7evLVXu0Uq8I/wsT2qOyJrCJKbmYn5ygq8BcU7vqIEePAT+VtwF4cjcjx+flh
-Vo5Qy44RvDne6w4cziBJEw8y77EJvaIuZ5lkcAmHxrj4SR3YyoKBfing2Qso0rcS
-yfxoWWCwXx0iUcAY9DEe034NrUz9rWTpV/WzMS8LtWyy5+0xQIOtZtgm+AxO+lqI
-andWp5o/4yRCWZXq9UkFN4JUBDdk54ihCz/6Ef1OCXwcqbVg3F/7DRF9KoLdKlfr
-eBZSOnplz4R63dkkrYOzg6eajSOcGdVjwvPB1h5xb07BsjNN2csbhaIE/1B9Nxq9
-aWrSX+kYL3twAtD88dyMfV+79mJ8CJbHeroOszIUdxiU9d2zCiavss59RPXbKPD2
-GvQtNwOjavD330Ucdu1COYq/ajrgSOcRtX9HgPzxquhFqN3T55Y=
-=V0lu
------END PGP SIGNATURE-----
-
---Apple-Mail=_EA940E7B-23BE-40EB-888E-1A45D84AE90C--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuaWVsIExlemNhbm8g
+PGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IFNlbnQ6IDIyIE1heSAyMDIwIDE4OjM4DQo+
+IFRvOiBBbnVwIFBhdGVsIDxBbnVwLlBhdGVsQHdkYy5jb20+OyBQYWxtZXIgRGFiYmVsdA0KPiA8
+cGFsbWVyQGRhYmJlbHQuY29tPjsgUGF1bCBXYWxtc2xleSA8cGF1bC53YWxtc2xleUBzaWZpdmUu
+Y29tPjsgQWxiZXJ0DQo+IE91IDxhb3VAZWVjcy5iZXJrZWxleS5lZHU+OyBUaG9tYXMgR2xlaXhu
+ZXIgPHRnbHhAbGludXRyb25peC5kZT47IEphc29uDQo+IENvb3BlciA8amFzb25AbGFrZWRhZW1v
+bi5uZXQ+OyBNYXJjIFp5bmdpZXIgPG1hekBrZXJuZWwub3JnPg0KPiBDYzogQXRpc2ggUGF0cmEg
+PEF0aXNoLlBhdHJhQHdkYy5jb20+OyBBbGlzdGFpciBGcmFuY2lzDQo+IDxBbGlzdGFpci5GcmFu
+Y2lzQHdkYy5jb20+OyBBbnVwIFBhdGVsIDxhbnVwQGJyYWluZmF1bHQub3JnPjsgbGludXgtDQo+
+IHJpc2N2QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcN
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSA0LzZdIGNsb2Nrc291cmNlL2RyaXZlcnMvdGltZXIt
+cmlzY3Y6IFVzZSBwZXItQ1BVIHRpbWVyDQo+IGludGVycnVwdA0KPiANCj4gT24gMjEvMDUvMjAy
+MCAxNTozMiwgQW51cCBQYXRlbCB3cm90ZToNCj4gPiBJbnN0ZWFkIG9mIGRpcmVjdGx5IGNhbGxp
+bmcgUklTQy1WIHRpbWVyIGludGVycnVwdCBoYW5kbGVyIGZyb20gUklTQy1WDQo+ID4gbG9jYWwg
+aW50ZXJydXB0IGNvbm50cm9sbGVyIGRyaXZlciwgdGhpcyBwYXRjaCBpbXBsZW1lbnRzIFJJU0Mt
+ViB0aW1lcg0KPiA+IGludGVycnVwdCBhcyBhIHBlci1DUFUgaW50ZXJydXB0IHVzaW5nIHBlci1D
+UFUgQVBJcyBvZiBMaW51eCBJUlENCj4gPiBzdWJzeXN0ZW0uDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBBbnVwIFBhdGVsIDxhbnVwLnBhdGVsQHdkYy5jb20+DQo+IA0KPiB2aWEgd2hpY2ggdHJl
+ZSBkbyB5b3Ugd2FudCB0aGlzIHBhdGNoIHRvIGJlIG1lcmdlZCA/DQoNCldoYXQgaXMgeW91ciBz
+dWdnZXN0aW9uID8NCg0KVGhpcyBzZXJpZXMgaXMgcHJpbWFyaWx5IGNoYW5nZSBpbiBhcmNoL3Jp
+c2N2IGFuZCBkcml2ZXJzL2lycWNoaXAuDQoNClJlZ2FyZHMsDQpBbnVwDQoNCj4gDQo+ID4gLS0t
+DQo+ID4gIGFyY2gvcmlzY3YvaW5jbHVkZS9hc20vaXJxLmggICAgICB8ICAyIC0tDQo+ID4gIGRy
+aXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYyB8IDMwICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKy0tLQ0KPiA+IGRyaXZlcnMvaXJxY2hpcC9pcnEtcmlzY3YtaW50Yy5jICB8ICA4IC0t
+LS0tLS0tDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRp
+b25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9pcnEu
+aA0KPiA+IGIvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9pcnEuaCBpbmRleCBhOWU1ZjA3YTdlOWMu
+Ljk4MDdhZDE2NDAxNSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2ly
+cS5oDQo+ID4gKysrIGIvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9pcnEuaA0KPiA+IEBAIC0xMCw4
+ICsxMCw2IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPiAgI2luY2x1
+ZGUgPGxpbnV4L2xpbmthZ2UuaD4NCj4gPg0KPiA+IC12b2lkIHJpc2N2X3RpbWVyX2ludGVycnVw
+dCh2b2lkKTsNCj4gPiAtDQo+ID4gICNpbmNsdWRlIDxhc20tZ2VuZXJpYy9pcnEuaD4NCj4gPg0K
+PiA+ICAjZW5kaWYgLyogX0FTTV9SSVNDVl9JUlFfSCAqLw0KPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXJpc2N2LmMNCj4gPiBiL2RyaXZlcnMvY2xvY2tzb3VyY2Uv
+dGltZXItcmlzY3YuYw0KPiA+IGluZGV4IGM0ZjE1YzQwNjhjMC4uNWZiN2M1YmE1YzkxIDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYw0KPiA+IEBAIC0xNCw2ICsxNCw5IEBA
+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9pcnEuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NjaGVk
+X2Nsb2NrLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9pby02NC1ub25hdG9taWMtbG8taGkuaD4N
+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2lycWNoaXAvaXJxLXJpc2N2LWludGMuaD4gI2luY2x1ZGUN
+Cj4gPiArPGxpbnV4L2ludGVycnVwdC5oPiAjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQo+ID4g
+ICNpbmNsdWRlIDxhc20vc21wLmg+DQo+ID4gICNpbmNsdWRlIDxhc20vc2JpLmg+DQo+ID4NCj4g
+PiBAQCAtMzksNiArNDIsNyBAQCBzdGF0aWMgaW50IHJpc2N2X2Nsb2NrX25leHRfZXZlbnQodW5z
+aWduZWQgbG9uZyBkZWx0YSwNCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiArc3Rh
+dGljIHVuc2lnbmVkIGludCByaXNjdl9jbG9ja19ldmVudF9pcnE7DQo+ID4gIHN0YXRpYyBERUZJ
+TkVfUEVSX0NQVShzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlLCByaXNjdl9jbG9ja19ldmVudCkg
+PSB7DQo+ID4gIAkubmFtZQkJCT0gInJpc2N2X3RpbWVyX2Nsb2NrZXZlbnQiLA0KPiA+ICAJLmZl
+YXR1cmVzCQk9IENMT0NLX0VWVF9GRUFUX09ORVNIT1QsDQo+ID4gQEAgLTc0LDMwICs3OCwzNSBA
+QCBzdGF0aWMgaW50IHJpc2N2X3RpbWVyX3N0YXJ0aW5nX2NwdSh1bnNpZ25lZCBpbnQgY3B1KQ0K
+PiA+ICAJc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqY2UgPSBwZXJfY3B1X3B0cigmcmlzY3Zf
+Y2xvY2tfZXZlbnQsDQo+ID4gY3B1KTsNCj4gPg0KPiA+ICAJY2UtPmNwdW1hc2sgPSBjcHVtYXNr
+X29mKGNwdSk7DQo+ID4gKwljZS0+aXJxID0gcmlzY3ZfY2xvY2tfZXZlbnRfaXJxOw0KPiA+ICAJ
+Y2xvY2tldmVudHNfY29uZmlnX2FuZF9yZWdpc3RlcihjZSwgcmlzY3ZfdGltZWJhc2UsIDEwMCwN
+Cj4gPiAweDdmZmZmZmZmKTsNCj4gPg0KPiA+IC0JY3NyX3NldChDU1JfSUUsIElFX1RJRSk7DQo+
+ID4gKwllbmFibGVfcGVyY3B1X2lycShyaXNjdl9jbG9ja19ldmVudF9pcnEsDQo+ID4gKwkJCSAg
+aXJxX2dldF90cmlnZ2VyX3R5cGUocmlzY3ZfY2xvY2tfZXZlbnRfaXJxKSk7DQo+ID4gIAlyZXR1
+cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gIHN0YXRpYyBpbnQgcmlzY3ZfdGltZXJfZHlpbmdfY3B1
+KHVuc2lnbmVkIGludCBjcHUpICB7DQo+ID4gLQljc3JfY2xlYXIoQ1NSX0lFLCBJRV9USUUpOw0K
+PiA+ICsJZGlzYWJsZV9wZXJjcHVfaXJxKHJpc2N2X2Nsb2NrX2V2ZW50X2lycSk7DQo+ID4gIAly
+ZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gIC8qIGNhbGxlZCBkaXJlY3RseSBmcm9tIHRoZSBs
+b3ctbGV2ZWwgaW50ZXJydXB0IGhhbmRsZXIgKi8gLXZvaWQNCj4gPiByaXNjdl90aW1lcl9pbnRl
+cnJ1cHQodm9pZCkNCj4gPiArc3RhdGljIGlycXJldHVybl90IHJpc2N2X3RpbWVyX2ludGVycnVw
+dChpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBjbG9ja19ldmVu
+dF9kZXZpY2UgKmV2ZGV2ID0gdGhpc19jcHVfcHRyKCZyaXNjdl9jbG9ja19ldmVudCk7DQo+ID4N
+Cj4gPiAgCWNzcl9jbGVhcihDU1JfSUUsIElFX1RJRSk7DQo+ID4gIAlldmRldi0+ZXZlbnRfaGFu
+ZGxlcihldmRldik7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ICB9DQo+
+ID4NCj4gPiAgc3RhdGljIGludCBfX2luaXQgcmlzY3ZfdGltZXJfaW5pdF9kdChzdHJ1Y3QgZGV2
+aWNlX25vZGUgKm4pICB7DQo+ID4gIAlpbnQgY3B1aWQsIGhhcnRpZCwgZXJyb3I7DQo+ID4gKwlz
+dHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdzIG9pcnE7DQo+ID4NCj4gPiAgCWhhcnRpZCA9IHJpc2N2X29m
+X3Byb2Nlc3Nvcl9oYXJ0aWQobik7DQo+ID4gIAlpZiAoaGFydGlkIDwgMCkgew0KPiA+IEBAIC0x
+MTUsNiArMTI0LDEzIEBAIHN0YXRpYyBpbnQgX19pbml0IHJpc2N2X3RpbWVyX2luaXRfZHQoc3Ry
+dWN0DQo+IGRldmljZV9ub2RlICpuKQ0KPiA+ICAJaWYgKGNwdWlkICE9IHNtcF9wcm9jZXNzb3Jf
+aWQoKSkNCj4gPiAgCQlyZXR1cm4gMDsNCj4gPg0KPiA+ICsJb2lycS5ucCA9IHJpc2N2X29mX2lu
+dGNfZG9tYWluX25vZGUoKTsNCj4gPiArCW9pcnEuYXJnc19jb3VudCA9IDE7DQo+ID4gKwlvaXJx
+LmFyZ3NbMF0gPSBSVl9JUlFfVElNRVI7DQo+ID4gKwlyaXNjdl9jbG9ja19ldmVudF9pcnEgPSBp
+cnFfY3JlYXRlX29mX21hcHBpbmcoJm9pcnEpOw0KPiA+ICsJaWYgKCFyaXNjdl9jbG9ja19ldmVu
+dF9pcnEpDQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gKw0KPiA+ICAJcHJfaW5mbygiJXM6
+IFJlZ2lzdGVyaW5nIGNsb2Nrc291cmNlIGNwdWlkIFslZF0gaGFydGlkIFslZF1cbiIsDQo+ID4g
+IAkgICAgICAgX19mdW5jX18sIGNwdWlkLCBoYXJ0aWQpOw0KPiA+ICAJZXJyb3IgPSBjbG9ja3Nv
+dXJjZV9yZWdpc3Rlcl9oeigmcmlzY3ZfY2xvY2tzb3VyY2UsIHJpc2N2X3RpbWViYXNlKTsNCj4g
+PiBAQCAtMTI2LDYgKzE0MiwxNCBAQCBzdGF0aWMgaW50IF9faW5pdCByaXNjdl90aW1lcl9pbml0
+X2R0KHN0cnVjdA0KPiA+IGRldmljZV9ub2RlICpuKQ0KPiA+DQo+ID4gIAlzY2hlZF9jbG9ja19y
+ZWdpc3RlcihyaXNjdl9zY2hlZF9jbG9jaywgNjQsIHJpc2N2X3RpbWViYXNlKTsNCj4gPg0KPiA+
+ICsJZXJyb3IgPSByZXF1ZXN0X3BlcmNwdV9pcnEocmlzY3ZfY2xvY2tfZXZlbnRfaXJxLA0KPiA+
+ICsJCQkJICAgIHJpc2N2X3RpbWVyX2ludGVycnVwdCwNCj4gPiArCQkJCSAgICAicmlzY3YtdGlt
+ZXIiLCAmcmlzY3ZfY2xvY2tfZXZlbnQpOw0KPiA+ICsJaWYgKGVycm9yKSB7DQo+ID4gKwkJcHJf
+ZXJyKCJyZWdpc3RlcmluZyBwZXJjcHUgaXJxIGZhaWxlZCBbJWRdXG4iLCBlcnJvcik7DQo+ID4g
+KwkJcmV0dXJuIGVycm9yOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAgCWVycm9yID0gY3B1aHBfc2V0
+dXBfc3RhdGUoQ1BVSFBfQVBfUklTQ1ZfVElNRVJfU1RBUlRJTkcsDQo+ID4gIAkJCSAiY2xvY2tl
+dmVudHMvcmlzY3YvdGltZXI6c3RhcnRpbmciLA0KPiA+ICAJCQkgcmlzY3ZfdGltZXJfc3RhcnRp
+bmdfY3B1LCByaXNjdl90aW1lcl9keWluZ19jcHUpOyBkaWZmDQo+IC0tZ2l0DQo+ID4gYS9kcml2
+ZXJzL2lycWNoaXAvaXJxLXJpc2N2LWludGMuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtcmlzY3Yt
+aW50Yy5jDQo+ID4gaW5kZXggMmYzNjRlNmE4N2Y5Li5kNGZiYzM1NDM0NTkgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9pcnFjaGlwL2lycS1yaXNjdi1pbnRjLmMNCj4gPiArKysgYi9kcml2ZXJz
+L2lycWNoaXAvaXJxLXJpc2N2LWludGMuYw0KPiA+IEBAIC0yMywyMCArMjMsMTIgQEAgc3RhdGlj
+IHN0cnVjdCBpcnFfZG9tYWluICppbnRjX2RvbWFpbjsNCj4gPg0KPiA+ICBzdGF0aWMgYXNtbGlu
+a2FnZSB2b2lkIHJpc2N2X2ludGNfaXJxKHN0cnVjdCBwdF9yZWdzICpyZWdzKSAgew0KPiA+IC0J
+c3RydWN0IHB0X3JlZ3MgKm9sZF9yZWdzOw0KPiA+ICAJdW5zaWduZWQgbG9uZyBjYXVzZSA9IHJl
+Z3MtPmNhdXNlICYgfkNBVVNFX0lSUV9GTEFHOw0KPiA+DQo+ID4gIAlpZiAodW5saWtlbHkoY2F1
+c2UgPj0gQklUU19QRVJfTE9ORykpDQo+ID4gIAkJcGFuaWMoInVuZXhwZWN0ZWQgaW50ZXJydXB0
+IGNhdXNlIik7DQo+ID4NCj4gPiAgCXN3aXRjaCAoY2F1c2UpIHsNCj4gPiAtCWNhc2UgUlZfSVJR
+X1RJTUVSOg0KPiA+IC0JCW9sZF9yZWdzID0gc2V0X2lycV9yZWdzKHJlZ3MpOw0KPiA+IC0JCWly
+cV9lbnRlcigpOw0KPiA+IC0JCXJpc2N2X3RpbWVyX2ludGVycnVwdCgpOw0KPiA+IC0JCWlycV9l
+eGl0KCk7DQo+ID4gLQkJc2V0X2lycV9yZWdzKG9sZF9yZWdzKTsNCj4gPiAtCQlicmVhazsNCj4g
+PiAgI2lmZGVmIENPTkZJR19TTVANCj4gPiAgCWNhc2UgUlZfSVJRX1NPRlQ6DQo+ID4gIAkJLyoN
+Cj4gPg0KPiANCj4gDQo+IC0tDQo+IDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3Jn
+IOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MNCj4gDQo+IEZvbGxvdyBMaW5h
+cm86ICA8aHR0cDovL3d3dy5mYWNlYm9vay5jb20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8DQo+
+IDxodHRwOi8vdHdpdHRlci5jb20vIyEvbGluYXJvb3JnPiBUd2l0dGVyIHwgPGh0dHA6Ly93d3cu
+bGluYXJvLm9yZy9saW5hcm8tDQo+IGJsb2cvPiBCbG9nDQo=
