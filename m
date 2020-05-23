@@ -2,151 +2,131 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F53AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4816020727
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590197664;
-	bh=iQA3+sV9xEGHDhH86hIZeaDTSY4Ccpq9K37OB1XQOPQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vtdI2Q6B3jThS55kPJHL5yq3CN+KJ4t+0A9zD7W7sVeUhM/creW84KSCJnvUkSLSK
-	 5rpzY2KtSqn4V2VdYTfD8fqXUu/ZJFOeuSpJs9t1aNam/wrYz5xbgR0tx0LlJln6jm
-	 cKd/36T4ywtDuh6uU2963ZP4Wwtd4M331gO99gbE=
+	by mail.kernel.org (Postfix) with ESMTP id F156820727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A992b6KQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387536AbgEWBeX (ORCPT
+        id S2387543AbgEWBfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387418AbgEWBeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:34:22 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7638206DD;
-        Sat, 23 May 2020 01:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590197662;
-        bh=iQA3+sV9xEGHDhH86hIZeaDTSY4Ccpq9K37OB1XQOPQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OX085bb/DXJF53o8HWB2n4tDxwKFCM87nTz9V4MKvGArIf9//eO66j0OGDomN20yZ
-         mqm9gmsha+R4PPEjKkkTXf/nfJqdQgqmjwk0buDNt8EeXher0Muem5H3QfuqkzPM7G
-         ATw+R8ppgSHSsa/Or5aOhzBKGMWjBQlKO+YmR+HE=
-Date:   Fri, 22 May 2020 18:34:21 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] mm/compaction: avoid VM_BUG_ON(PageSlab()) in
- page_mapcount()
-Message-Id: <20200522183421.7c52ba9650a2ad11cec2be8d@linux-foundation.org>
-In-Reply-To: <158937872515.474360.5066096871639561424.stgit@buzz>
-References: <158937872515.474360.5066096871639561424.stgit@buzz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 22 May 2020 21:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387418AbgEWBfo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 21:35:44 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0A1C061A0E;
+        Fri, 22 May 2020 18:35:43 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 18so12693579iln.9;
+        Fri, 22 May 2020 18:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S1QSAzJLA557HDI9geZdFtza2j2ttaAmC0/pNbF94RQ=;
+        b=A992b6KQ0XxvQBvr4hpSCBAiJVOy3bCMOJRZbTEgNVsjziHkOX1YLkNL2W7JgGf5kB
+         6dkdnQIBW/+Lh4TZr5VZ9W9jlKsQLHFUNaXvbtKPXiXkE2z25chDOo+YqkADBuJdDhZ/
+         tHUB4rgSKsyEN1xbge2cNw65A0heIWhKbJcDMDvUkNC/9rydOmAqGX3PUZ8I2z0U7Y/V
+         5Cr+kLr+aMh+DQj7mplWOIOBhISwulzYr6G01tL+aSEMoNt7Tw1DQ0rbXyQBcNzZ99L6
+         aTZi5JpRzKVrsOLiFDG26hTNg0/+eB2eYUciggM6rhuzsRwMg4KgAEsT2EqkXuw9fJM0
+         UHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S1QSAzJLA557HDI9geZdFtza2j2ttaAmC0/pNbF94RQ=;
+        b=DgAFAc830boakhrF3DPI/j3d+CCWdkDX14ukx/QlioTLAHr0BpeV8dr+orcc1Xa6eg
+         /HcJWyFXIav2X0LeX/YETywX+obHaYm0BbTYLlVL+Nwh5CpnWEOcdcyeDwFUR6YRHZkO
+         OW/wwORiBOU4/iWhwNPXa/yLtm9T55KS7FVjEqA4h2hQbcmOK+hOTZxjD6wTAuE1T7cK
+         xZ9bjz+X8JEurVZW5B6PuQkfXwXPFnE+5AL8wv9UZYk/coJXss7CMBm4w08mVCyk5XN9
+         3l8dQuF0Hu6gjMq5FcHOWMy+YPcnBFf+dif3Idt9aAXqUpDrEoW4nZAC09gfjUj8w3FA
+         OZzw==
+X-Gm-Message-State: AOAM532arBrW/DX65bckdXrLUsNI9smIclT5cLczOJNbHc5WvdkaWdx9
+        rJZEphQE/BdineKCqmJYR2vtbH/izU5a1PpRWOZuzCte1dc=
+X-Google-Smtp-Source: ABdhPJyFMcan15/IQgBUd7V654mVVCiDvmI/KPlV1LTFmOXrmNhn289+5jn0LkISjmGIfWZTCLlEXoFxdgoJGQtXdZU=
+X-Received: by 2002:a92:dc85:: with SMTP id c5mr15557198iln.270.1590197742955;
+ Fri, 22 May 2020 18:35:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
+ <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
+ <20200522113634.GE5801@sirena.org.uk> <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
+ <CAL9mu0JZ4Qy+m2oF9TSTRqA_mM0J89huCt3t_Gs7qHa=3LxhBw@mail.gmail.com> <20200522162901.GP5801@sirena.org.uk>
+In-Reply-To: <20200522162901.GP5801@sirena.org.uk>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Sat, 23 May 2020 09:35:06 +0800
+Message-ID: <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 17:05:25 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+On Sat, May 23, 2020 at 12:29 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, May 22, 2020 at 11:59:25PM +0800, dillon min wrote:
+>
+> > but, after spi-core create a dummy tx_buf or rx_buf, then i can't get
+> > the correct spi_3wire direction.
+> > actually, this dummy tx_buf is useless for SPI_3WIRE. it's has meaning
+> > for SPI_SIMPLE_RX mode,
+> > simulate SPI_FULL_DUMPLEX
+>
+> Oh, that's annoying.  I think the fix here is in the core, it should
+> ignore MUST_TX and MUST_RX in 3WIRE mode since they clearly make no
+> sense there.
 
-> Function isolate_migratepages_block() runs some checks out of lru_lock
-> when choose pages for migration. After checking PageLRU() it checks extra
-> page references by comparing page_count() and page_mapcount(). Between
-> these two checks page could be removed from lru, freed and taken by slab.
-> 
-> As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
-> Race window is tiny. For certain workload this happens around once a year.
-> 
-> 
->  page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
->  flags: 0x500000000008100(slab|head)
->  raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
->  raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
->  page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
->  ------------[ cut here ]------------
->  kernel BUG at ./include/linux/mm.h:628!
->  invalid opcode: 0000 [#1] SMP NOPTI
->  CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
->  Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
->  RIP: 0010:isolate_migratepages_block+0x986/0x9b0
-> 
-> 
-> To fix just opencode page_mapcount() in racy check for 0-order case and
-> recheck carefully under lru_lock when page cannot escape from lru.
-> 
-> Also add checking extra references for file pages and swap cache.
+How about add below changes to spi-core
 
-I dunno, this code looks quite nasty.  I'm more thinking we should
-revert and rethink David's 119d6d59dcc0980dcd58 ("mm, compaction: avoid
-isolating pinned pages").
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 8994545..bfd465c 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1022,7 +1022,8 @@ static int spi_map_msg(struct spi_controller
+*ctlr, struct spi_message *msg)
+        void *tmp;
+        unsigned int max_tx, max_rx;
 
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -935,12 +935,16 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  		}
->  
->  		/*
-> -		 * Migration will fail if an anonymous page is pinned in memory,
-> +		 * Migration will fail if an page is pinned in memory,
->  		 * so avoid taking lru_lock and isolating it unnecessarily in an
-> -		 * admittedly racy check.
-> +		 * admittedly racy check simplest case for 0-order pages.
-> +		 *
-> +		 * Open code page_mapcount() to avoid VM_BUG_ON(PageSlab(page)).
-> +		 * Page could have extra reference from mapping or swap cache.
->  		 */
-> -		if (!page_mapping(page) &&
-> -		    page_count(page) > page_mapcount(page))
-> +		if (!PageCompound(page) &&
-> +		    page_count(page) > atomic_read(&page->_mapcount) + 1 +
-> +				(!PageAnon(page) || PageSwapCache(page)))
->  			goto isolate_fail;
+-       if (ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) {
++       if ((ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) &&
++               !(msg->spi->mode & SPI_3WIRE)) {
+                max_tx = 0;
+                max_rx = 0;
 
-OK, we happened to notice this because we happened to trigger a
-!PageSlab assertion.  But if this page has been freed and reused for
-slab, it could have been reused for *anything*?  Perhaps it was reused
-as a migratable page which we'll go ahead and migrate even though we no
-longer should.  There are various whacky parts of the kernel which
-(ab)use surprising struct page fields in surprising ways - how do we
-know it isn't one of those which now happens to look like a migratable
-page?
+for my board, lcd panel ilitek ill9341 use 3wire mode, gyro l3gd20 use
+simplex rx mode.
+it's has benefits to l3gd20, no impact to ili9341.
 
-I also worry about the next test:
+if it's fine to spi-core, i will include it to my next submits.
 
-		/*
-		 * Only allow to migrate anonymous pages in GFP_NOFS context
-		 * because those do not depend on fs locks.
-		 */
-		if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
-			goto isolate_fail;
+thanks
 
-This page isn't PageLocked(), is it?  It could be a recycled page which
-is will be getting its ->mapping set one nanosecond hence.
+best regards.
 
-
->  		/*
-> @@ -975,6 +979,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  				low_pfn += compound_nr(page) - 1;
->  				goto isolate_fail;
->  			}
-> +
-> +			/* Recheck page extra references under lock */
-> +			if (page_count(page) > page_mapcount(page) +
-> +				    (!PageAnon(page) || PageSwapCache(page)))
-> +				goto isolate_fail;
->  		}
->  
->  		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> 
+Dillon
