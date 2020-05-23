@@ -2,180 +2,132 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF92C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACA720723
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:23:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b98PVWiN"
+	by mail.kernel.org (Postfix) with ESMTP id 6236A20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387716AbgEWHX1 (ORCPT
+        id S2387695AbgEWH3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 03:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387622AbgEWHXZ (ORCPT
+        Sat, 23 May 2020 03:29:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:49458 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387641AbgEWH3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 03:23:25 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3BADC061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 00:23:24 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n18so6249890pfa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 00:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=rkQjo00JjFI2fAC/o/2WCC1p0oPD9CQpCRaJecUJgjw=;
-        b=b98PVWiNaivm9ZiyZan+DVPHGPcXBj6ewOabjJD+9e81ibdAoRXx4l1oTj7FbChlUo
-         4vPZhqxfy3UFwAkN8iNMTU7mFc+4fqlw8LHjxRBRdJdZFHnf7zqxGgFEi2T5SBcbb9AM
-         iAyhRHC8v2NHCBOlf79Ml00dVLBUmD7oBCb7hrXdBea8jfX+T2jJLOi+5pdD2raTJR+2
-         t7u09a29UrI7myl6xPmDuhz3VyNhSXP3TYJRsYgsM28p76SyQLE3Pm4A+K2XJ5kI6/OK
-         fPvX3fMuFpy9kYRIupb4Y7HO/CUxtfxZ6+SKnOhjUiAHsuUyiDudOxjjns4AT8Yd9yex
-         UHPQ==
+        Sat, 23 May 2020 03:29:18 -0400
+Received: by mail-il1-f197.google.com with SMTP id g13so10606481ild.16
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 00:29:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=rkQjo00JjFI2fAC/o/2WCC1p0oPD9CQpCRaJecUJgjw=;
-        b=N10p8hxyxYV1OztnK/ys2/FFFj0q62Ofp/rRwu6uuUgrmfG1FTyz/Nyxz3eyaB9qjS
-         X68cFh49VBrIamW4ym2zEGFrHaQYh/ex0xvG7uzfaMBmcy1SeB6i8rvIr60H5pVuG3nF
-         5iuB/IZ7F2MuGFVZdUHOKIdfMeW9KX6rlWQIiLLmIhTB50TpUNn56HYbgawWmIxf2086
-         ByHfCUjg++LTSl8Oyg17vemCtd4gOFiU3yCG1yb9OCFcq1EdT3U1SLkoGpXVzE3DKNGV
-         /H794BJm/mAQf/2uaSnDPbzKcp/6gGFqP56dkEd7CTxTJNFkHPa1Su8HQc5kqiCbQsQX
-         hZyA==
-X-Gm-Message-State: AOAM531j4euXZUtliWWFZlDK5xRRnWEa0aNofFitWw+VIwtnQvVg18em
-        gS4r5Y9Zup2BxLD280MQUwuBYA==
-X-Google-Smtp-Source: ABdhPJwBXAYthcc94MlJNYar0cK8NQ0m6fDRrV1047IEGn1lJ7oVpxn+yl5bbg5BfOkLu2OAiW8nvA==
-X-Received: by 2002:a65:51c1:: with SMTP id i1mr17010704pgq.272.1590218604234;
-        Sat, 23 May 2020 00:23:24 -0700 (PDT)
-Received: from dragon ([80.251.214.228])
-        by smtp.gmail.com with ESMTPSA id h4sm9368364pje.29.2020.05.23.00.23.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 23 May 2020 00:23:23 -0700 (PDT)
-Date:   Sat, 23 May 2020 15:23:02 +0800
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, tongtiangen <tongtiangen@huawei.com>
-Subject: Re: [PATCH v1 1/3] drm/msm: Attach the IOMMU device during
- initialization
-Message-ID: <20200523072300.GB28198@dragon>
-References: <20200522220316.23772-1-jcrouse@codeaurora.org>
- <20200522220316.23772-2-jcrouse@codeaurora.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=URfabu0vKqV63BojTfHzXnf8eicb+TRu6nrD2d8nH2k=;
+        b=oLBkwOX/D3t4uRU+xdcYqMvjzhNv27iOYc0b4+cyckMuF4/2ZBnjinRwPSE7nK/DXd
+         btxy+ezjxtdwpSeTVPQJDf2DOvAIuu4nY/CATpv0Lo1ES6v9/Jyi9W/J6mGSK+E82Ke1
+         svN5iPkBjfNjpVlE1Lat/5aFOkkw1zdc2T0YKgCcaUsmB+oYdZMrOpRWWckHJKsdz/oY
+         yHj8MrQ9aK2Cw8f1qc554f3mGjQVq0tFVvZVrZVSSnDHOoheFMOR6J6EezeKQ0EL6Oi3
+         A4hvaTw9lQ6/yr6hM6kWOULWHC8WzCEdeNTneUfcQhiNmy8H7cCjMcUKKtedZ4dW3NTo
+         D06A==
+X-Gm-Message-State: AOAM533DOHnure6QBsfrFevL/2/FreHt5e8gpwsGPbhDZy3tJYlHuyPA
+        Djk91wAFr6ZgFVxEV5wxBHgY4hGNWtXF2ZoPy6XIF/gS4/VU
+X-Google-Smtp-Source: ABdhPJzT1xMSR3A/6kdLMBO8+9MhM93wKRvEnOM9aUfxdZt/EIFb5VDRurnOGG8bUyI0mrkFcQpEoDi4FOfr2clDJcuXvFXQr+lC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200522220316.23772-2-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a02:8529:: with SMTP id g38mr66142jai.143.1590218956131;
+ Sat, 23 May 2020 00:29:16 -0700 (PDT)
+Date:   Sat, 23 May 2020 00:29:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fef2d505a64bb3d7@google.com>
+Subject: WARNING: proc registration bug in clusterip_tg_check (2)
+From:   syzbot <syzbot+35e9c587ab6de655a1b3@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:03:14PM -0600, Jordan Crouse wrote:
-> diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-> index 34980d8eb7ad..0ad0f848560a 100644
-> --- a/drivers/gpu/drm/msm/msm_gpummu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpummu.c
-> @@ -21,11 +21,6 @@ struct msm_gpummu {
->  #define GPUMMU_PAGE_SIZE SZ_4K
->  #define TABLE_SIZE (sizeof(uint32_t) * GPUMMU_VA_RANGE / GPUMMU_PAGE_SIZE)
->  
-> -static int msm_gpummu_attach(struct msm_mmu *mmu)
-> -{
-> -	return 0;
-> -}
-> -
->  static void msm_gpummu_detach(struct msm_mmu *mmu)
->  {
->  }
-> @@ -85,7 +80,6 @@ static void msm_gpummu_destroy(struct msm_mmu *mmu)
->  }
->  
->  static const struct msm_mmu_funcs funcs = {
-> -		.attach = msm_gpummu_attach,
->  		.detach = msm_gpummu_detach,
->  		.map = msm_gpummu_map,
->  		.unmap = msm_gpummu_unmap,
-> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> index ad58cfe5998e..e35dab5792cf 100644
-> --- a/drivers/gpu/drm/msm/msm_iommu.c
-> +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> @@ -66,7 +66,6 @@ static void msm_iommu_destroy(struct msm_mmu *mmu)
->  }
->  
->  static const struct msm_mmu_funcs funcs = {
-> -		.attach = msm_iommu_attach,
+Hello,
 
-It causes an unused function warning as below.
+syzbot found the following crash on:
 
-drivers/gpu/drm/msm/msm_iommu.c:26:12: warning: ‘msm_iommu_attach’ defined but not used [-Wunused-function]
- static int msm_iommu_attach(struct msm_mmu *mmu)
-            ^~~~~~~~~~~~~~~~
+HEAD commit:    d2f8825a Merge tag 'for_linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10eed272100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
+dashboard link: https://syzkaller.appspot.com/bug?extid=35e9c587ab6de655a1b3
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-Not sure if you will use it again in future patches though.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Shawn
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+35e9c587ab6de655a1b3@syzkaller.appspotmail.com
 
->  		.detach = msm_iommu_detach,
->  		.map = msm_iommu_map,
->  		.unmap = msm_iommu_unmap,
-> @@ -76,6 +75,7 @@ static const struct msm_mmu_funcs funcs = {
->  struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
->  {
->  	struct msm_iommu *iommu;
-> +	int ret;
->  
->  	iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
->  	if (!iommu)
-> @@ -85,5 +85,11 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
->  	msm_mmu_init(&iommu->base, dev, &funcs);
->  	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
->  
-> +	ret = iommu_attach_device(iommu->domain, dev);
-> +	if (ret) {
-> +		kfree(iommu);
-> +		return ERR_PTR(ret);
-> +	}
-> +
->  	return &iommu->base;
->  }
-> diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-> index 67a623f14319..bae9e8e67ec1 100644
-> --- a/drivers/gpu/drm/msm/msm_mmu.h
-> +++ b/drivers/gpu/drm/msm/msm_mmu.h
-> @@ -10,7 +10,6 @@
->  #include <linux/iommu.h>
->  
->  struct msm_mmu_funcs {
-> -	int (*attach)(struct msm_mmu *mmu);
->  	void (*detach)(struct msm_mmu *mmu);
->  	int (*map)(struct msm_mmu *mmu, uint64_t iova, struct sg_table *sgt,
->  			unsigned len, int prot);
-> -- 
-> 2.17.1
-> 
+------------[ cut here ]------------
+proc_dir_entry 'ipt_CLUSTERIP/127.0.0.1' already registered
+WARNING: CPU: 1 PID: 21213 at fs/proc/generic.c:363 proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 21213 Comm: syz-executor.2 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1ac/0x2d0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
+Code: 08 4c 8b 74 24 28 48 8b 6c 24 20 74 08 48 89 ef e8 a9 35 d1 ff 48 8b 55 00 48 c7 c7 c4 82 e9 88 48 89 de 31 c0 e8 b4 50 65 ff <0f> 0b 48 c7 c7 c0 00 33 89 e8 c6 b6 2b 06 48 8b 44 24 30 42 8a 04
+RSP: 0018:ffffc900196af938 EFLAGS: 00010246
+RAX: 516b049ad9e30c00 RBX: ffff88805557e8e4 RCX: 0000000000040000
+RDX: ffffc9000d311000 RSI: 000000000001758c RDI: 000000000001758d
+RBP: ffff88805a697e98 R08: ffffffff815cd2b9 R09: ffffed1015d26660
+R10: ffffed1015d26660 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000009 R14: ffff88805a697e54 R15: ffff88805a697dc0
+ proc_create_data+0x1d0/0x240 fs/proc/generic.c:551
+ clusterip_config_init net/ipv4/netfilter/ipt_CLUSTERIP.c:281 [inline]
+ clusterip_tg_check+0xa5b/0x10e0 net/ipv4/netfilter/ipt_CLUSTERIP.c:502
+ xt_check_target+0x6c6/0xb10 net/netfilter/x_tables.c:1019
+ check_target net/ipv4/netfilter/ip_tables.c:511 [inline]
+ find_check_entry net/ipv4/netfilter/ip_tables.c:553 [inline]
+ translate_table+0x17b0/0x20e0 net/ipv4/netfilter/ip_tables.c:717
+ do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
+ do_ipt_set_ctl+0x28b/0x4c0 net/ipv4/netfilter/ip_tables.c:1672
+ nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
+ nf_setsockopt+0x2be/0x2e0 net/netfilter/nf_sockopt.c:115
+ __sys_setsockopt+0x564/0x710 net/socket.c:2132
+ __do_sys_setsockopt net/socket.c:2148 [inline]
+ __se_sys_setsockopt net/socket.c:2145 [inline]
+ __x64_sys_setsockopt+0xb1/0xc0 net/socket.c:2145
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca29
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fa4aaf69c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000501e00 RCX: 000000000045ca29
+RDX: 0000000000000040 RSI: 0004000000000000 RDI: 0000000000000003
+RBP: 000000000078bfa0 R08: 0000000000000260 R09: 0000000000000000
+R10: 0000000020000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a3f R14: 00000000004cd086 R15: 00007fa4aaf6a6d4
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
