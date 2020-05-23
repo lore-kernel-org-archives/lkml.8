@@ -2,130 +2,69 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B810EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3967620787
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gA/uZNdk"
+	by mail.kernel.org (Postfix) with ESMTP id B7D8D2070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590258604;
+	bh=J1nzUGsp+jt/bbvokITb2nZWCDRks58eGlX6ZQ6IS/k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=0nNbpvm05zsQK5xH8jNkW9kyzpIgtITGKELIimfWs5zhkhTRAm3fY8aiJ87TCo+7M
+	 tpeQJMYieU6MGxd389v8BPeNw0LmA16eC/+sMQTEtHkzxwNNcMaDmbL85cu50ZprZ1
+	 pR1s8edmLp6WqrSUmCRfaJ3XQF67+XyqyilJpk7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbgEWSVT (ORCPT
+        id S2387976AbgEWSaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 14:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbgEWSVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 14:21:18 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF49C061A0E;
-        Sat, 23 May 2020 11:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nSUTrS+Js2HSvmnL14DjqtpgJSSsEW5R57ypchErLwg=; b=gA/uZNdkmC2JRZFCEyrK9jpf9
-        5T7RYZPGGJCvZlrYXeWaE2rkNFs7Rxm5GK6RVkLbzaLW8mydeE1CEZbuADlUuMpM7dJ8ewap+itmr
-        1XF2Q5oHZoQREGSDw6MLo8gKZQjkWaUbhFZtCnJK9jMmCQgBuMahSM6pSGWu8cujz+aRvb+08nYyP
-        vvzq5fRnSbd38h6eaVFqrzs3trfVBnAnx0IGdTn2taGv6Hifd7yHYzAVIGN+XhsHufCy+1b4kHsdp
-        Wg5YI5RZbEAzyqTEB5THomCJL3gM1d0/CNziOwZXgeS644GH+uzvywhP5zLzBP7L9FKRLwlol8Rul
-        1q/3T5HNA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36018)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jcYlY-0000Sm-T0; Sat, 23 May 2020 19:21:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jcYlS-0002Sz-SK; Sat, 23 May 2020 19:20:54 +0100
-Date:   Sat, 23 May 2020 19:20:54 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 01/11] net: phy: Don't report success if devices weren't
- found
-Message-ID: <20200523182054.GW1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-2-jeremy.linton@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522213059.1535892-2-jeremy.linton@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 23 May 2020 14:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727117AbgEWSaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 14:30:03 -0400
+Subject: Re: [GIT PULL] s390 updates for 5.7-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590258602;
+        bh=J1nzUGsp+jt/bbvokITb2nZWCDRks58eGlX6ZQ6IS/k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=I2F6oC/9SyrPsp6JrtYFDhOk5jhLQYhGMFTWnUDeTg9BZsK6zLnTQjpkA2b5n3sMY
+         6dPbMDnhrO/+VHBB0+6C4XY//jrHYuW/Q2dfCWwsOcFljzWZnadDYAWMPuST8YoggN
+         UgRnnOxOZgb01QCa6NNMG0FdERvzRxXC1n1LqzF4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <your-ad-here.call-01590229105-ext-5688@work.hours>
+References: <your-ad-here.call-01590229105-ext-5688@work.hours>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <your-ad-here.call-01590229105-ext-5688@work.hours>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-4
+X-PR-Tracked-Commit-Id: 4c1cbcbd6c56c79de2c07159be4f55386bb0bef2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9bca7c40850eca2613d79878e6d730faeaa602cf
+Message-Id: <159025860281.7121.14844093492746630510.pr-tracker-bot@kernel.org>
+Date:   Sat, 23 May 2020 18:30:02 +0000
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:30:49PM -0500, Jeremy Linton wrote:
-> C45 devices are to return 0 for registers they haven't
-> implemented. This means in theory we can terminate the
-> device search loop without finding any MMDs. In that
-> case we want to immediately return indicating that
-> nothing was found rather than continuing to probe
-> and falling into the success state at the bottom.
+The pull request you sent on Sat, 23 May 2020 12:18:25 +0200:
 
-This is a little confusing when you read this comment:
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-4
 
-                        /*  If mostly Fs, there is no device there,
-                         *  then let's continue to probe more, as some
-                         *  10G PHYs have zero Devices In package,
-                         *  e.g. Cortina CS4315/CS4340 PHY.
-                         */
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9bca7c40850eca2613d79878e6d730faeaa602cf
 
-Since it appears to be talking about the case of a PHY where *devs will
-be zero.  However, tracking down the original submission, it seems this
-is not the case at all, and the comment is grossly misleading.
-
-It seems these PHYs only report a valid data in the Devices In Package
-registers for devad=0 - it has nothing to do with a zero Devices In
-Package.
-
-Can I suggest that this comment is fixed while we're changing the code
-to explicitly reject this "zero Devices In package" so that it's not
-confusing?
-
-Thanks.
-
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->  drivers/net/phy/phy_device.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index ac2784192472..245899b58a7d 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -742,6 +742,12 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->  		}
->  	}
->  
-> +	/* no reported devices */
-> +	if (*devs == 0) {
-> +		*phy_id = 0xffffffff;
-> +		return 0;
-> +	}
-> +
->  	/* Now probe Device Identifiers for each device present. */
->  	for (i = 1; i < num_ids; i++) {
->  		if (!(c45_ids->devices_in_package & (1 << i)))
-> -- 
-> 2.26.2
-> 
-> 
+Thank you!
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
