@@ -2,132 +2,85 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF92C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B297C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6236A20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52EA32071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387695AbgEWH3S (ORCPT
+        id S2387673AbgEWHg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 03:29:18 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:49458 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387641AbgEWH3S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 03:29:18 -0400
-Received: by mail-il1-f197.google.com with SMTP id g13so10606481ild.16
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 00:29:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=URfabu0vKqV63BojTfHzXnf8eicb+TRu6nrD2d8nH2k=;
-        b=oLBkwOX/D3t4uRU+xdcYqMvjzhNv27iOYc0b4+cyckMuF4/2ZBnjinRwPSE7nK/DXd
-         btxy+ezjxtdwpSeTVPQJDf2DOvAIuu4nY/CATpv0Lo1ES6v9/Jyi9W/J6mGSK+E82Ke1
-         svN5iPkBjfNjpVlE1Lat/5aFOkkw1zdc2T0YKgCcaUsmB+oYdZMrOpRWWckHJKsdz/oY
-         yHj8MrQ9aK2Cw8f1qc554f3mGjQVq0tFVvZVrZVSSnDHOoheFMOR6J6EezeKQ0EL6Oi3
-         A4hvaTw9lQ6/yr6hM6kWOULWHC8WzCEdeNTneUfcQhiNmy8H7cCjMcUKKtedZ4dW3NTo
-         D06A==
-X-Gm-Message-State: AOAM533DOHnure6QBsfrFevL/2/FreHt5e8gpwsGPbhDZy3tJYlHuyPA
-        Djk91wAFr6ZgFVxEV5wxBHgY4hGNWtXF2ZoPy6XIF/gS4/VU
-X-Google-Smtp-Source: ABdhPJzT1xMSR3A/6kdLMBO8+9MhM93wKRvEnOM9aUfxdZt/EIFb5VDRurnOGG8bUyI0mrkFcQpEoDi4FOfr2clDJcuXvFXQr+lC
-MIME-Version: 1.0
-X-Received: by 2002:a02:8529:: with SMTP id g38mr66142jai.143.1590218956131;
- Sat, 23 May 2020 00:29:16 -0700 (PDT)
-Date:   Sat, 23 May 2020 00:29:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fef2d505a64bb3d7@google.com>
-Subject: WARNING: proc registration bug in clusterip_tg_check (2)
-From:   syzbot <syzbot+35e9c587ab6de655a1b3@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 23 May 2020 03:36:57 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:8548 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387471AbgEWHg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 03:36:57 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgAHGBCH0she5564AQ--.42805S4;
+        Sat, 23 May 2020 15:36:44 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Todor Tomov <todor.too@gmail.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: camss: csid: Fix runtime PM imbalance in csid_set_power
+Date:   Sat, 23 May 2020 15:36:39 +0800
+Message-Id: <20200523073639.7442-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgAHGBCH0she5564AQ--.42805S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWfZwb_Gr
+        4DXF1xXrW5GrWktr4jkw13uryfXa95u3W8CF1ftF1ayayv9a4kWrykZr98Zwn3ur1jvr17
+        GFn8uFyfCr93ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VUbhiSPUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQJBlZdtORGcwABsm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-syzbot found the following crash on:
-
-HEAD commit:    d2f8825a Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10eed272100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
-dashboard link: https://syzkaller.appspot.com/bug?extid=35e9c587ab6de655a1b3
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+35e9c587ab6de655a1b3@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-proc_dir_entry 'ipt_CLUSTERIP/127.0.0.1' already registered
-WARNING: CPU: 1 PID: 21213 at fs/proc/generic.c:363 proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21213 Comm: syz-executor.2 Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
-Code: 08 4c 8b 74 24 28 48 8b 6c 24 20 74 08 48 89 ef e8 a9 35 d1 ff 48 8b 55 00 48 c7 c7 c4 82 e9 88 48 89 de 31 c0 e8 b4 50 65 ff <0f> 0b 48 c7 c7 c0 00 33 89 e8 c6 b6 2b 06 48 8b 44 24 30 42 8a 04
-RSP: 0018:ffffc900196af938 EFLAGS: 00010246
-RAX: 516b049ad9e30c00 RBX: ffff88805557e8e4 RCX: 0000000000040000
-RDX: ffffc9000d311000 RSI: 000000000001758c RDI: 000000000001758d
-RBP: ffff88805a697e98 R08: ffffffff815cd2b9 R09: ffffed1015d26660
-R10: ffffed1015d26660 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000009 R14: ffff88805a697e54 R15: ffff88805a697dc0
- proc_create_data+0x1d0/0x240 fs/proc/generic.c:551
- clusterip_config_init net/ipv4/netfilter/ipt_CLUSTERIP.c:281 [inline]
- clusterip_tg_check+0xa5b/0x10e0 net/ipv4/netfilter/ipt_CLUSTERIP.c:502
- xt_check_target+0x6c6/0xb10 net/netfilter/x_tables.c:1019
- check_target net/ipv4/netfilter/ip_tables.c:511 [inline]
- find_check_entry net/ipv4/netfilter/ip_tables.c:553 [inline]
- translate_table+0x17b0/0x20e0 net/ipv4/netfilter/ip_tables.c:717
- do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
- do_ipt_set_ctl+0x28b/0x4c0 net/ipv4/netfilter/ip_tables.c:1672
- nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
- nf_setsockopt+0x2be/0x2e0 net/netfilter/nf_sockopt.c:115
- __sys_setsockopt+0x564/0x710 net/socket.c:2132
- __do_sys_setsockopt net/socket.c:2148 [inline]
- __se_sys_setsockopt net/socket.c:2145 [inline]
- __x64_sys_setsockopt+0xb1/0xc0 net/socket.c:2145
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa4aaf69c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000501e00 RCX: 000000000045ca29
-RDX: 0000000000000040 RSI: 0004000000000000 RDI: 0000000000000003
-RBP: 000000000078bfa0 R08: 0000000000000260 R09: 0000000000000000
-R10: 0000000020000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a3f R14: 00000000004cd086 R15: 00007fa4aaf6a6d4
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/media/platform/qcom/camss/camss-csid.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
+index a5ae85674ffb..8a247b6f5550 100644
+--- a/drivers/media/platform/qcom/camss/camss-csid.c
++++ b/drivers/media/platform/qcom/camss/camss-csid.c
+@@ -562,8 +562,10 @@ static int csid_set_power(struct v4l2_subdev *sd, int on)
+ 		u32 hw_version;
+ 
+ 		ret = pm_runtime_get_sync(dev);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_sync(dev);
+ 			return ret;
++		}
+ 
+ 		ret = regulator_enable(csid->vdda);
+ 		if (ret < 0) {
+-- 
+2.17.1
+
