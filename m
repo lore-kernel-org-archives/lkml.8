@@ -2,144 +2,158 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6540C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E98520756
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D291B20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S4YFKaPj"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LAvGq9CG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387516AbgEWBsP (ORCPT
+        id S2387530AbgEWBvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:48:15 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44472 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387453AbgEWBsO (ORCPT
+        Fri, 22 May 2020 21:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387427AbgEWBu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:48:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04N1lrnx103671;
-        Fri, 22 May 2020 20:47:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590198473;
-        bh=yiS4eaMZLr5N5lmPgiZnhfhO2vD8vhckjgLQdVGEMjo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=S4YFKaPjhOkUmRmWvAvIofxQwMmQgsvHxCns71fok5YuWB7WhcCRLFKqmwszgJaPi
-         PrEBqH060yekOMhsht0ZOKFWWEkEwoKoFWaoBvWAYnxyDT4xIJ2CNQGxtx3ckdnaBs
-         xLSBF2n5eQBYQZkHWaFD0BLjVwIg3tCioxNciMes=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04N1lrQL067401
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 20:47:53 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 20:47:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 20:47:52 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04N1lmIK029381;
-        Fri, 22 May 2020 20:47:48 -0500
-Subject: Re: [PATCH 00/19] Implement NTB Controller using multiple PCI EP
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>
-References: <20200514145927.17555-1-kishon@ti.com>
- <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d0c4c813-2af7-7fd4-e401-6fd5de69d4e4@ti.com>
-Date:   Sat, 23 May 2020 07:17:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 21:50:59 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221F1C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 18:50:59 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q16so5125096plr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 18:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7l3Vl4XUCnVrv5zLlaIS2TAqW4v3YGdr3s+ckhxwo3k=;
+        b=LAvGq9CG4T4SASualjrsfImwFHjrZ23/6PxdRJIQJ4CB67r5pCfVQlfHkmlkhrE17o
+         vlrG0IeVUqgfrC0LHjA+Flocnfg3Z03dOs44FH3RPLcrPB9l8he10iFWcqjhkLfP3ZPI
+         lkX6+1Gsd1Ny65q3n+Cu5/d2VSd36EV1pcSsbHCqYL0jCoKysJLQTtXwcVHTtO06HjF9
+         cr8h4KWHzcRkYb2Fc+NBSvWGcc4/gX6ZqX4d71d/Ybwur2aMHfV+aUt6J4jPxQ+IAS2p
+         9I2oqK48BHRVuQH/vFIjLYDuT+t0Ky0uAi5UG2mdfd0qP78H9zQUhHra4ZnPk4cE2L2w
+         q+qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7l3Vl4XUCnVrv5zLlaIS2TAqW4v3YGdr3s+ckhxwo3k=;
+        b=Tt4VdsgsnkbqG1ng4SDTKosCu0ei7IqHySji3xyukgvVHF4lTkbP9bx4E7ZCUEvWmw
+         zzXc2jl/NZv8kgfbl6OX1lfWfM1PYXzVWRXMB2YZ08Nx3zyb9xFRBglW+txLkGTjdjti
+         r3ZL360c+DiWI8xL8nkIgub4YZlfalnj/rAjq5BBS39ToMDrgHpwmAu/oT8rSVDSdqmv
+         s4R+d3Vrglpt/L9qXq2y0ikViB8BuuQ7I0+WBkQhNot2UbG2ScPl1gpivQq425AfcWHo
+         t11NsGJeXgrYbyOtoeRC2dr8tZ/XCYcDX28OLw/QYTwszbYTSrz7FdPhnJ+gFmvXFRNu
+         NHXA==
+X-Gm-Message-State: AOAM532Wng+rNKonGZ+UZWAxFUw4UoRFEBbklSR7qYGqMkKF59pd/VPP
+        VeWfqKJmHUXJEvNdCRNtfXK+5w==
+X-Google-Smtp-Source: ABdhPJzbVANbqitIh8v7v51fEGKGFyBynVcF+TbM0Ms1gwAamMyyZ0DbB1Z9x3LfCBk3dayD3vcwSw==
+X-Received: by 2002:a17:90b:e0c:: with SMTP id ge12mr8085637pjb.3.1590198657579;
+        Fri, 22 May 2020 18:50:57 -0700 (PDT)
+Received: from x1.lan ([2605:e000:100e:8c61:e0db:da55:b0a4:601])
+        by smtp.gmail.com with ESMTPSA id a71sm8255477pje.0.2020.05.22.18.50.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 18:50:56 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCHSET v2 RFC 0/11] Add support for async buffered reads
+Date:   Fri, 22 May 2020 19:50:38 -0600
+Message-Id: <20200523015049.14808-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKxe5FtZfiQKcQFFLOM5F52kx-q8vZspPTXhcWg+3rJvQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+We technically support this already through io_uring, but it's
+implemented with a thread backend to support cases where we would
+block. This isn't ideal.
 
-On 5/22/2020 9:41 PM, Rob Herring wrote:
-> On Thu, May 14, 2020 at 8:59 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> This series is about implementing SW defined NTB using
->> multiple endpoint instances. This series has been tested using
->> 2 endpoint instances in J7 connected to two DRA7 boards. However there
->> is nothing platform specific for the NTB functionality.
->>
->> This was presented in Linux Plumbers Conference. The presentation
->> can be found @ [1]
-> 
-> I'd like to know why putting this into DT is better than configfs.
-> Does it solve some problem? Doing things in userspace is so much
-> easier and more flexible than modifying and updating a DT.
+After a few prep patches, the core of this patchset is adding support
+for async callbacks on page unlock. With this primitive, we can simply
+retry the IO operation. With io_uring, this works a lot like poll based
+retry for files that support it. If a page is currently locked and
+needed, -EIOCBQUEUED is returned with a callback armed. The callers
+callback is responsible for restarting the operation.
 
-It's a lot cleaner to have an endpoint function bound to two different endpoint
-controller using device tree than configfs.
+With this callback primitive, we can add support for
+generic_file_buffered_read(), which is what most file systems end up
+using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
+trivial to add more.
 
-+    epf_bus {
-+      compatible = "pci-epf-bus";
-+
-+      func@0 {
-+        compatible = "pci-epf-ntb";
-+        epcs = <&pcie0_ep>, <&pcie1_ep>;
-+        epc-names = "primary", "secondary";
-+        reg = <0>;
-+        epf,vendor-id = /bits/ 16 <0x104c>;
-+        epf,device-id = /bits/ 16 <0xb00d>;
-+        num-mws = <4>;
-+        mws-size = <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>, <0x0 0x100000>;
-+      };
+The file flags support for this by setting FMODE_BUF_RASYNC, similar
+to what we do for FMODE_NOWAIT. Open to suggestions here if this is
+the preferred method or not.
 
-For device tree, just using phandles is enough and the driver can easily parse
-DT to get EPCs bound to the endpoint function
-+        epcs = <&pcie0_ep>, <&pcie1_ep>;
-+        epc-names = "primary", "secondary";
+In terms of results, I wrote a small test app that randomly reads 4G
+of data in 4K chunks from a file hosted by ext4. The app uses a queue
+depth of 32.
 
-This would be
-ln -s functions/pci-epf-ntb/func1 controllers/2900000.pcie-ep/
-ln -s functions/pci-epf-ntb/func1 controllers/2910000.pcie-ep/
+preadv for comparison:
+	real    1m13.821s
+	user    0m0.558s
+	sys     0m11.125s
+	CPU	~13%
 
-pci_epc_epf_link() should then maintain the order of EPC bound to EPF and
-designate one as PRIMARY_INTERFACE and the second as SECONDARY_INTERFACE.
-pci_epf_bind() should be made to behave differently for NTB case.
+Mainline:
+	real    0m12.054s
+	user    0m0.111s
+	sys     0m5.659s
+	CPU	~32% + ~50% == ~82%
 
-While the standard properties (like vendorid, deviceid) has configfs entries,
-additional logic would be required for adding function specific fields like
-num-mws and mws-size above.
+This patchset:
+	real    0m9.283s
+	user    0m0.147s
+	sys     0m4.619s
+	CPU	~52%
+													
+The CPU numbers are just a rough estimate. For the mainline io_uring
+run, this includes the app itself and all the threads doing IO on its
+behalf (32% for the app, ~1.6% per worker and 32 of them). Context
+switch rate is much smaller with the patchset, since we only have the
+one task performing IO.
 
-While all this support could be added in configfs, it looks simpler to
-represent then in DT.
+The goal here is efficiency. Async thread offload adds latency, and
+it also adds noticable overhead on items such as adding pages to the
+page cache. By allowing proper async buffered read support, we don't
+have X threads hammering on the same inode page cache, we have just
+the single app actually doing IO.
 
-> 
-> I don't really think the PCI endpoint stuff is mature enough to be
-> putting into DT either.
+Series can also be found here:
 
-I think this will anyways come when we have to export real HW peripherals to
-the remote HOST using EP controller.
+https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.2
 
-Thanks
-Kishon
+or pull from:
+
+git://git.kernel.dk/linux-block async-buffered.2
+
+ fs/block_dev.c            |   2 +-
+ fs/btrfs/file.c           |   2 +-
+ fs/ext4/file.c            |   2 +-
+ fs/io_uring.c             | 102 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_file.c         |   2 +-
+ include/linux/blk_types.h |   3 +-
+ include/linux/fs.h        |   5 ++
+ include/linux/pagemap.h   |  39 +++++++++++++++
+ mm/filemap.c              |  83 +++++++++++++++++++++++++------
+ 9 files changed, 219 insertions(+), 21 deletions(-)
+
+Changes since v1:
+
+- Fix an issue with inline page locking
+- Fix a potential race with __wait_on_page_locked_async()
+- Fix a hang related to not setting page_match, thus missing a wakeup
+
+-- 
+Jens Axboe
+
+
