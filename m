@@ -2,105 +2,191 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A97C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0030EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B680920727
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D168820727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:18:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MPsUp3WT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR7VJUtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388122AbgEWXOs (ORCPT
+        id S2388129AbgEWXSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 19:14:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39721 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388047AbgEWXOr (ORCPT
+        Sat, 23 May 2020 19:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388016AbgEWXSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 19:14:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590275686;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/MzHc18owJsea3S0pNt/rgvBciUHqh90tS1+xejWc1g=;
-        b=MPsUp3WT8ZuU0BOnBT5QS6uQBWxiMXtWTV4lohdIQql2QJYzijh4+RvHY6CMSZMGoNDvUc
-        c5W1hTQKfvLn7Rzdt1MZVw1UK4eflqxH/olxSXrAJC4npm1XbV1Tb/EfqcEBZOZbOYwcQK
-        Fy+QAANzqcuD6g3PMVcAMjdpavZrbqc=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-ouinngDQOaWI9LUZxkAimg-1; Sat, 23 May 2020 19:14:44 -0400
-X-MC-Unique: ouinngDQOaWI9LUZxkAimg-1
-Received: by mail-qk1-f197.google.com with SMTP id p126so14780314qke.8
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 16:14:44 -0700 (PDT)
+        Sat, 23 May 2020 19:18:43 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7B8C061A0E;
+        Sat, 23 May 2020 16:18:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id h21so16950664ejq.5;
+        Sat, 23 May 2020 16:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qTudC0kHsQhaAnF/cig67ZtgOuZShJYIz5n75777QI0=;
+        b=nR7VJUtBYdfY7cZfN+bMTyk9xVMDKht+TU3DEdUb3kXBwElFsd6R9+g4zVO4qYGjND
+         j3ExNebSDQansXRRAUMWm6XOapUtBjPUSJ7tHvL35C2foTZ+nl6S/qEbhEuE/nPSU3wi
+         AVY66IrjmaHc1lSHqRphxZvFfNCLN2K9uH6rGUGVH21aIPaEwn71KM2mtPe3xYwHAP15
+         2ecZeBo+JFYQvl/cYqwAcybMbgYjRvDz+Eva1HQsY/dHHZvj5G1e3UXLNygrki7r6jXN
+         t2DnbijuggGFY3Ewha8JmDqLNZ2+5YGJ3XHag4vNPWGbUAGIvA0Jnu5O/C9V33Mx6oga
+         PBvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/MzHc18owJsea3S0pNt/rgvBciUHqh90tS1+xejWc1g=;
-        b=fozRFKm/FX+rImIyoPD1wQ5X0CGVwbyGkPJFpCVXBpO0cATAYzQ2ZKwG2aktpEZkZf
-         cdiJomCPur+GqzR37ybEXJPRnArpBLaCSBcLuTsGl4f06NwU64++se2gk2/izLQby816
-         Jpb2kTT+jpwXAZvVinAdCwsFli4/JSDmWvOgb6z5DxYFAchBEeb7TT5CXSFELaTItYq9
-         wc+Ecg+mLNNHH2P6LUdl/o7nFKuCgvm/BFs2bJ9GZCKqDsGAYGuGXCRB74pVlRZn4CRt
-         bSdGACnMf6/nNTQ0pTUKWoTNeu71NPMrNR3l+RSPJfymaDM0TZP7E7//HLJtBLkfZiHF
-         a+0g==
-X-Gm-Message-State: AOAM532mEA0Pxx6lmFesCs3u/7c1A1ApiWzaY1/PB0zj2uEqv2J41bA4
-        eEowl6e7Qwd9Z35f/EQt+xeFYXeZZ2hZZaEscv8fSps8amvogQLsOfB8I0rkFoS+30S+g5QorCR
-        +BPX2a2OXPvBS1jkgLa3GbirJ
-X-Received: by 2002:a0c:8e84:: with SMTP id x4mr10010268qvb.175.1590275684053;
-        Sat, 23 May 2020 16:14:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzg2V3f8vAVlVmyPgxPifwONVk1iV05bsQWUMpAUKMaaP31/PMeICcUqi8DAc/chgJvp8iwaA==
-X-Received: by 2002:a0c:8e84:: with SMTP id x4mr10010251qvb.175.1590275683837;
-        Sat, 23 May 2020 16:14:43 -0700 (PDT)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id n31sm12353018qtc.36.2020.05.23.16.14.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 16:14:42 -0700 (PDT)
-Date:   Sat, 23 May 2020 19:14:41 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: Re: [PATCH v9 00/14] KVM: Dirty ring interface
-Message-ID: <20200523231441.GB939059@xz-x1>
-References: <20200523225659.1027044-1-peterx@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qTudC0kHsQhaAnF/cig67ZtgOuZShJYIz5n75777QI0=;
+        b=U/K99c4onOjV9zyZfoky7zFqUUDbbS6gfp96hcZ3fxUcxEy9rmTMF0MZmcr3/Z2siR
+         FA27Koibl+8BZ7s7dAeYDp+H5a9DTKzb4EyMYiagnbmB+FPiJ/MqqyapYI/99/AZNYvK
+         mNct8I/TnX3qVwd0C9tfqDShD1PEIxxelUEHPZcrValPF9RqtUenRDpgy4zgwvBw/spc
+         oDZOL52kbxXkPhv+8eLfGWxKTj3Hy4DL944lOntTBGeUIN49hk/DSQomKD+sl33rLzwT
+         nrH66ytQNWS9i1zrT0c44ORlZl3A230RUHOGK4NVacbteTNrGiwmGNwMaYwzjlkMUyi0
+         dFqQ==
+X-Gm-Message-State: AOAM532FKxjGC9aac46q4mP5mbOqsj4YUVePo9LUSr74G7YOTTv99Yyh
+        XnFDRSLXbYj6mT4/s1nxGIPgzMQ3QscsO8dyWhY=
+X-Google-Smtp-Source: ABdhPJwzMx/jVFuTDLKRDebwIdmlbU6Vpg2xa3/LcsOdKTMjNBXwRaLoF5JgX+ThsXGDyFVVS7kntTFfz4vPb72aNas=
+X-Received: by 2002:a17:906:6843:: with SMTP id a3mr12943995ejs.245.1590275921497;
+ Sat, 23 May 2020 16:18:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200523225659.1027044-1-peterx@redhat.com>
+References: <20200522220316.23772-1-jcrouse@codeaurora.org>
+ <20200522220316.23772-2-jcrouse@codeaurora.org> <20200523072300.GB28198@dragon>
+In-Reply-To: <20200523072300.GB28198@dragon>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 23 May 2020 16:19:02 -0700
+Message-ID: <CAF6AEGsrH4PvhBHcVgkVWTk4+wXnRQqiusQA18MrZ-dX-oFRcg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] drm/msm: Attach the IOMMU device during initialization
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tongtiangen <tongtiangen@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 06:56:45PM -0400, Peter Xu wrote:
-> KVM branch:
->   https://github.com/xzpeter/linux/tree/kvm-dirty-ring
-> 
-> QEMU branch for testing:
->   https://github.com/xzpeter/qemu/tree/kvm-dirty-ring
-> 
-> v9:
-> - patch 3: __x86_set_memory_region: squash another trivial change to return
->   (0xdeadull << 48) always for slot removal [Sean]
-> - pick r-bs for Drew
+On Sat, May 23, 2020 at 12:23 AM Shawn Guo <shawn.guo@linaro.org> wrote:
+>
+> On Fri, May 22, 2020 at 04:03:14PM -0600, Jordan Crouse wrote:
+> > diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm=
+_gpummu.c
+> > index 34980d8eb7ad..0ad0f848560a 100644
+> > --- a/drivers/gpu/drm/msm/msm_gpummu.c
+> > +++ b/drivers/gpu/drm/msm/msm_gpummu.c
+> > @@ -21,11 +21,6 @@ struct msm_gpummu {
+> >  #define GPUMMU_PAGE_SIZE SZ_4K
+> >  #define TABLE_SIZE (sizeof(uint32_t) * GPUMMU_VA_RANGE / GPUMMU_PAGE_S=
+IZE)
+> >
+> > -static int msm_gpummu_attach(struct msm_mmu *mmu)
+> > -{
+> > -     return 0;
+> > -}
+> > -
+> >  static void msm_gpummu_detach(struct msm_mmu *mmu)
+> >  {
+> >  }
+> > @@ -85,7 +80,6 @@ static void msm_gpummu_destroy(struct msm_mmu *mmu)
+> >  }
+> >
+> >  static const struct msm_mmu_funcs funcs =3D {
+> > -             .attach =3D msm_gpummu_attach,
+> >               .detach =3D msm_gpummu_detach,
+> >               .map =3D msm_gpummu_map,
+> >               .unmap =3D msm_gpummu_unmap,
+> > diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_=
+iommu.c
+> > index ad58cfe5998e..e35dab5792cf 100644
+> > --- a/drivers/gpu/drm/msm/msm_iommu.c
+> > +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> > @@ -66,7 +66,6 @@ static void msm_iommu_destroy(struct msm_mmu *mmu)
+> >  }
+> >
+> >  static const struct msm_mmu_funcs funcs =3D {
+> > -             .attach =3D msm_iommu_attach,
+>
+> It causes an unused function warning as below.
+>
+> drivers/gpu/drm/msm/msm_iommu.c:26:12: warning: =E2=80=98msm_iommu_attach=
+=E2=80=99 defined but not used [-Wunused-function]
+>  static int msm_iommu_attach(struct msm_mmu *mmu)
+>             ^~~~~~~~~~~~~~~~
+>
+> Not sure if you will use it again in future patches though.
 
-Sorry to always have forgotten to add Drew in the CC list, so it would be a
-partial series again...  It'll be there for the next post.  Thanks,
+looks like this was removed in msm_gpummu (a2xx) but not msm_iommu
+(a3xx+).. I've squashed a fixup and pushed to msm-next
 
--- 
-Peter Xu
+thx
 
+BR,
+-R
+
+> Shawn
+>
+> >               .detach =3D msm_iommu_detach,
+> >               .map =3D msm_iommu_map,
+> >               .unmap =3D msm_iommu_unmap,
+> > @@ -76,6 +75,7 @@ static const struct msm_mmu_funcs funcs =3D {
+> >  struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain =
+*domain)
+> >  {
+> >       struct msm_iommu *iommu;
+> > +     int ret;
+> >
+> >       iommu =3D kzalloc(sizeof(*iommu), GFP_KERNEL);
+> >       if (!iommu)
+> > @@ -85,5 +85,11 @@ struct msm_mmu *msm_iommu_new(struct device *dev, st=
+ruct iommu_domain *domain)
+> >       msm_mmu_init(&iommu->base, dev, &funcs);
+> >       iommu_set_fault_handler(domain, msm_fault_handler, iommu);
+> >
+> > +     ret =3D iommu_attach_device(iommu->domain, dev);
+> > +     if (ret) {
+> > +             kfree(iommu);
+> > +             return ERR_PTR(ret);
+> > +     }
+> > +
+> >       return &iommu->base;
+> >  }
+> > diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mm=
+u.h
+> > index 67a623f14319..bae9e8e67ec1 100644
+> > --- a/drivers/gpu/drm/msm/msm_mmu.h
+> > +++ b/drivers/gpu/drm/msm/msm_mmu.h
+> > @@ -10,7 +10,6 @@
+> >  #include <linux/iommu.h>
+> >
+> >  struct msm_mmu_funcs {
+> > -     int (*attach)(struct msm_mmu *mmu);
+> >       void (*detach)(struct msm_mmu *mmu);
+> >       int (*map)(struct msm_mmu *mmu, uint64_t iova, struct sg_table *s=
+gt,
+> >                       unsigned len, int prot);
+> > --
+> > 2.17.1
+> >
