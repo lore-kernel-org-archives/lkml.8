@@ -2,77 +2,144 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04EF207F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HH7ZSBGa"
+	by mail.kernel.org (Postfix) with ESMTP id 924CC206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 06:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590216525;
+	bh=zkC/Bzv/4d9imdV7bd4UQsca1L1wLbu0TMHulEGm0Cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=agvoDwAuWnDCb2ultq4ab8O3MgtyFMHH1b6O0uix6BrkXTcyVha7j/FllbIGSzHgz
+	 I1gjGO7G9VyYuh4nQhlRgAQR9O3KaALF6aAQdPsR+x2Wctjtg9uwg1b0RjL+mAClck
+	 /ZgDOCJW/KM/2NF7XVperEyyt/JE4mVHRI3bjSmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387659AbgEWGqq (ORCPT
+        id S2387669AbgEWGsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 02:46:46 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48950 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387612AbgEWGqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 02:46:45 -0400
-Received: from zn.tnic (p200300ec2f1b960084fca2944bfbd32f.dip0.t-ipconnect.de [IPv6:2003:ec:2f1b:9600:84fc:a294:4bfb:d32f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7B6771EC0322;
-        Sat, 23 May 2020 08:46:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590216404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=mjUjsegmvcQg4u0dywhJ/yTV9Lh8VueAxwVooMoA3RU=;
-        b=HH7ZSBGa13XLAHMq09BzwawT3y36ZWabw46h9nhXz+VMcuVWFs61TRXrydjjvcpqHF9l39
-        VX5jPF3zWudPY8+xAa6exbgsRLFUSRvTvuG8ocGSxw30/rpUPUC/fBDCBB1HBFn8YPudsg
-        vjcVCxjMwxj4mkp1B82gukUtSgKLpjc=
-Date:   Sat, 23 May 2020 08:46:43 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        elver@google.com
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200523064643.GA27431@zn.tnic>
-References: <20200522033119.1bbd99c5@canb.auug.org.au>
- <20200521173520.GL6608@willie-the-truck>
- <20200522171708.5f392fde@canb.auug.org.au>
- <20200522174944.1a1732fa@canb.auug.org.au>
- <20200523001223.GA23921@paulmck-ThinkPad-P72>
+        Sat, 23 May 2020 02:48:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37297 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387466AbgEWGso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 02:48:44 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x10so5304787plr.4;
+        Fri, 22 May 2020 23:48:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NpNzKiRERZoLVhj+jDvGzomV5rdbxMN4yOkmuyXrsqc=;
+        b=dfSjIyfKRCEdcQDSYFHtXy52a4IusV7vOl3zfbH0GuzpOUbLjPhksRISHxozp792wY
+         /eELU7qVZEOyRRBXJ3y/cGXu/A9fNm3cXpZT7PklU/LxySn/PgilSup+KaXxR8LK6Zap
+         OERMiyxxeKiVBoEb/+E9C8eiT9QvC7IsOT4Gcc3vmiI3tfDobU1B10Kbs1bdDQzFtJmb
+         HB7IQGUHXoBB6n4aTYfVxpaTJt8m0910imxNLzBlsInYg6+Hk9o17ZpA+TJyjMwJ/FbH
+         ncPunslXALS8j98l6ujGrIEWnQq5MgxZFkosMW4eVS67RaGLfn1nCGOFkXBk6BIo5fok
+         jHUw==
+X-Gm-Message-State: AOAM532uAwFwhKytexhN2ubbcKHf2qpUF7TwlDXvuz2WIv3141EjCWl3
+        1mNkz0yOVw0Y07vzJ4WIwgI=
+X-Google-Smtp-Source: ABdhPJwTc/h4nDTy2YuDCAXvaLPEjLXQmwxq1dkA9Y4zNiWHgma1YWCSf2CT4PnncLtLKjIlyguZFw==
+X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr18209345plz.179.1590216523391;
+        Fri, 22 May 2020 23:48:43 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id k24sm8362342pfk.134.2020.05.22.23.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 23:48:42 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 32F45404B0; Sat, 23 May 2020 06:48:41 +0000 (UTC)
+Date:   Sat, 23 May 2020 06:48:41 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH] firmware_loader: change enum fw_opt to u32
+Message-ID: <20200523064841.GJ11244@42.do-not-panic.com>
+References: <20200522214658.12722-1-scott.branden@broadcom.com>
+ <20200522224508.GE11244@42.do-not-panic.com>
+ <d87aabd0-1195-64ae-d871-b0771be832a8@broadcom.com>
+ <20200522230025.GG11244@42.do-not-panic.com>
+ <20200523060548.GA3124611@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200523001223.GA23921@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200523060548.GA3124611@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 05:12:23PM -0700, Paul E. McKenney wrote:
-> Marco, Thomas, is there any better setup I can provide Stephen?  Or
-> is the next-20200519 -rcu tree the best we have right now?
+On Sat, May 23, 2020 at 08:05:48AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, May 22, 2020 at 11:00:25PM +0000, Luis Chamberlain wrote:
+> > On Fri, May 22, 2020 at 03:49:05PM -0700, Scott Branden wrote:
+> > > Hi Luis,
+> > > 
+> > > On 2020-05-22 3:45 p.m., Luis Chamberlain wrote:
+> > > > On Fri, May 22, 2020 at 02:46:58PM -0700, Scott Branden wrote:
+> > > > >   /**
+> > > > > - * enum fw_opt - options to control firmware loading behaviour
+> > > > > + * fw_opt - options to control firmware loading behaviour
+> > > > >    *
+> > > > >    * @FW_OPT_UEVENT: Enables the fallback mechanism to send a kobject uevent
+> > > > >    *	when the firmware is not found. Userspace is in charge to load the
+> > > > > @@ -33,15 +33,13 @@
+> > > > >    *	the platform's main firmware. If both this fallback and the sysfs
+> > > > >    *      fallback are enabled, then this fallback will be tried first.
+> > > > >    */
+> > > > > -enum fw_opt {
+> > > > > -	FW_OPT_UEVENT			= BIT(0),
+> > > > > -	FW_OPT_NOWAIT			= BIT(1),
+> > > > > -	FW_OPT_USERHELPER		= BIT(2),
+> > > > > -	FW_OPT_NO_WARN			= BIT(3),
+> > > > > -	FW_OPT_NOCACHE			= BIT(4),
+> > > > > -	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
+> > > > > -	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
+> > > > > -};
+> > > > > +#define FW_OPT_UEVENT			BIT(0)
+> > > > > +#define FW_OPT_NOWAIT			BIT(1)
+> > > > > +#define FW_OPT_USERHELPER		BIT(2)
+> > > > > +#define FW_OPT_NO_WARN			BIT(3)
+> > > > > +#define FW_OPT_NOCACHE			BIT(4)
+> > > > > +#define FW_OPT_NOFALLBACK_SYSFS		BIT(5)
+> > > > > +#define FW_OPT_FALLBACK_PLATFORM	BIT(6)
+> > > > Everything looked good up to here. The enum defines each flag.
+> > > > We just want to use an enum for *one* flag represetnation, not
+> > > > a bundle.
+> > >
+> > > I do not know exactly what you are looking for then.  The FW_OPT_*
+> > > values are OR'd together in the code.  You still want the fw_opt enum
+> > > above left in place entirely and then the values used in OR'd
+> > > together?
+> > 
+> > Yes, exactly. If they are combined then we just use a u32 to represent
+> > these are then flags combined. An enum represents just *one* flag, not
+> > a set which are OR'd together. Let me know if this is still not clear.
+> 
+> If this is the case, why have an enum at all?  What difference is it
+> from a #define like was done here?
 
-I've queued the fixes yesterday into tip:locking/kcsan and tglx said
-something about you having to rebase anyway. I guess you can find him on
-IRC at some point later. :)
+If used on a switch to test for cases the compiler will error if you
+miss one, and it is easier to use kdoc for them.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+  Luis
