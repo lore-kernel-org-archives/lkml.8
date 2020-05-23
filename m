@@ -2,129 +2,79 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA57C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B814C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B823206C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXyua9Pi"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC15206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387741AbgEWJio (ORCPT
+        id S1727895AbgEWJll convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 05:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgEWJin (ORCPT
+        Sat, 23 May 2020 05:41:41 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:57880 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725268AbgEWJll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 05:38:43 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E04C061A0E;
-        Sat, 23 May 2020 02:38:43 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id 17so13250225ilj.3;
-        Sat, 23 May 2020 02:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ySOv5RFCOhNktqRnSUecG+h4XEMSSgtZIHTThacyrl4=;
-        b=ZXyua9PiZh0B75CZ+wJJFbfRSHWNfEdmJG5gqb7VI4LU8BqFGnO8YgcvZZ0GAqcGjE
-         KX+7b/V+awdlA48iOHjoSHYEiSgeqyhJVm9gaxlql1bRKv8Oz5DRsnTXZ43I65wYqPLK
-         uWfkCx8oLLmUTWwYp6k8iCRtST2/u1tPVai3/4A1wyZBozQ0VNpEz99/9QjjcQVXM2QR
-         P2+pYH4LqpepHkBrWOU+EzHTPfW42I+705YQv/OXS1POu52dVPCOQFN7btxk8VOkckse
-         qCIXdqbsJuxDTw1PBbV6S3chJbH1DoEPjZGJzUkSr4As3rhhvWx+HcNkR6xmSO1tVCtq
-         J8Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ySOv5RFCOhNktqRnSUecG+h4XEMSSgtZIHTThacyrl4=;
-        b=Zt+kLUZnXSjOFzLfF4P5R3r+0+0WY3y76Kh5VC+Y13Grp9AZd1ellYXjFeCukTpkMN
-         KFDMNTjSGa/sds3LWxaQthQwMQzwEzeAFF6grCyexl0ZL9PV+ZdoIpVV+ebzhPC0qCzC
-         2cGSfhwrUjQXHCIfBw3++EK5cKWI0RjVmuj4x6rbXciGIxcF9UVUAp5fFhTloABTcOs8
-         qUjBmpxzyhh0aQPR72GOmzqa0XZyG4lGAudbYmuV3m5cur8+xNlPuyXip4DJ+Tnh01Kw
-         OnXt9frruHOsa/cowp75X0TbnRJdOimkG6gKEYC3EfTrMvOJ4n1HjzzGmH1OrWAHIaQh
-         C9Qw==
-X-Gm-Message-State: AOAM530gEvTADSD/VAZsp52AsDXdc56SK0rB8S7u44bQshlrhrMTKWOe
-        sQx5D8ZBndt/hjL7al7/x1fbKtRmB1SPQYiiJ5A=
-X-Google-Smtp-Source: ABdhPJxgpTkyq+JCvO/9xevE2z4ZZX7u3mZjbSC4yXtpeOEmIaWlllSlL5fpKL/h6v2R/KBjV/68cLBWj/+cHclL77w=
-X-Received: by 2002:a92:5dd2:: with SMTP id e79mr15635058ilg.94.1590226723047;
- Sat, 23 May 2020 02:38:43 -0700 (PDT)
+        Sat, 23 May 2020 05:41:41 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21269533-1500050 
+        for multiple; Sat, 23 May 2020 10:41:25 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200518201646.48312-1-dagmcr@gmail.com> <20200522202349.GF5824@pendragon.ideasonboard.com>
-In-Reply-To: <20200522202349.GF5824@pendragon.ideasonboard.com>
-From:   Daniel G <dagmcr@gmail.com>
-Date:   Sat, 23 May 2020 11:38:32 +0200
-Message-ID: <CAPsT6hmddjW3m3OMkkAT1djTTtijepTu_N22eCgOGhGHxPQcaA@mail.gmail.com>
-Subject: Re: [PATCH] drm: rcar-du: Fix build error
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        kieran.bingham+renesas@ideasonboard.com,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200522051931.54191-1-jhubbard@nvidia.com>
+References: <20200522051931.54191-1-jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v2 0/4] mm/gup, drm/i915: refactor gup_fast, convert to pin_user_pages()
+Message-ID: <159022688563.11139.3402294435382936623@build.alporthouse.com>
+User-Agent: alot/0.8.1
+Date:   Sat, 23 May 2020 10:41:25 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Quoting John Hubbard (2020-05-22 06:19:27)
+> The purpose of posting this series is to launch a test in the
+> intel-gfx-ci tree. (The patches have already been merged into Andrew's
+> linux-mm tree.)
+> 
+> This applies to today's linux.git (note the base-commit tag at the
+> bottom).
+> 
+> Changes since V1:
+> 
+> * Fixed a bug in the refactoring patch: added FOLL_FAST_ONLY to the
+>   list of gup_flags *not* to WARN() on. This lead to a failure in the
+>   first intel-gfx-ci test run [1].
+> 
+> [1] https://lore.kernel.org/r/159008745422.32320.5724805750977048669@build.alporthouse.com
 
-On Fri, 22 May 2020 at 22:24, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Daniel,
->
-> Thank you for the patch.
->
-> On Mon, May 18, 2020 at 10:16:46PM +0200, Daniel Gomez wrote:
-> > Select DRM_KMS_HELPER dependency.
-> >
-> > Build error when DRM_KMS_HELPER is not selected:
-> >
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
-> >
-Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
-> > Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> and taken in my tree for v5.9. If you think it should get in v5.8 as a
-> fix, I can do so as well, could you then provide a Fixes: tag ?
-That would be fine. You can find above the fixes tag.
-Thanks!
+Ran this through our CI, warn and subsequent lockup were gone. That
+lockup is worrying me now, but that doesn't seem to be an issue from
+this series.
 
->
-> > ---
-> >  drivers/gpu/drm/rcar-du/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> > index 0919f1f159a4..f65d1489dc50 100644
-> > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > @@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
-> >  config DRM_RCAR_LVDS
-> >       tristate "R-Car DU LVDS Encoder Support"
-> >       depends on DRM && DRM_BRIDGE && OF
-> > +     select DRM_KMS_HELPER
-> >       select DRM_PANEL
-> >       select OF_FLATTREE
-> >       select OF_OVERLAY
->
-> --
-> Regards,
->
-> Laurent Pinchart
-Daniel
+The i915 changes were simple enough, I would have computed the pin flags
+just once (since the readonly bit is static, that would be interesting
+if that was allowed to change mid gup :)
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+-Chris
