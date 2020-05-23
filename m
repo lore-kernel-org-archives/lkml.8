@@ -2,175 +2,102 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 08:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF7A20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 08:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESbBjCgS"
+	by mail.kernel.org (Postfix) with ESMTP id EC79F206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 09:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590224649;
+	bh=Hp1tC5MycJ9XgfCfaud3YimEXsipBgcHUujsSOlD/DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zlQAt89nDwfKYeUGpipwWBzcjg8s4qtb+QZYrmszj6e7wPmSVa6XLx/bQX3Bzzsg/
+	 vW8/+2I7PveBI+ex9FrXy4P6g5uvp8U/q2+D8tNSvOrqSHNtP+CwcYw1tkcsmBOlhf
+	 24n4zUzAULQ6PC9q2Fj+vKwVarjbzIYQ93gPtEbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387717AbgEWIzp (ORCPT
+        id S2387729AbgEWJEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 04:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387627AbgEWIzo (ORCPT
+        Sat, 23 May 2020 05:04:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37556 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387498AbgEWJEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 04:55:44 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823CEC061A0E;
-        Sat, 23 May 2020 01:55:43 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f5so4021231wmh.2;
-        Sat, 23 May 2020 01:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ip4CdvVdeoliE+WLGXA2mvtdacmG1QBAN4qXqyjKjP0=;
-        b=ESbBjCgSnogehYN17cUuf2zXR4yovMUkuQVozbbuLxqQqr2FT4lzO0rs7DuTiUfAF8
-         xa9Q/s9EtyKEt21VoYT6cons5fdqLggXx6cIVEq6owmOZTjKOn7iAyDjXOfaHa1+iNTG
-         lm6eMaCeVcwJRLAp2s414DsBy7gev0XG+Wdfgv++7UfjUZN9UId7imqygzaZPSSXFrA0
-         LF6CVN8Z5hAfY10wDBQSFrk0KrkFEbGKAi6UPpFi6cVc2kq0oCU60O5IW6PScr3vEZjx
-         CxdjgoPC5Z4CClMR1s0v+vmlU3vXHL9y7z4UrJs/l7ZYpxMHqH8EOpgnSt424J4aH8S0
-         S4ew==
+        Sat, 23 May 2020 05:04:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l17so12587824wrr.4;
+        Sat, 23 May 2020 02:04:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ip4CdvVdeoliE+WLGXA2mvtdacmG1QBAN4qXqyjKjP0=;
-        b=jqNaCMZBtlomfOOIFBsF4VJbzN3CvhH+jQpOv4q4lAbUXs+yEvujpfzXnKYCTLSQkL
-         R3SAv1aKL3b6SjZC4NOLkaDc+NhLDe5hzOy/S7GvwJhD0ooupzXh/K33KjivB08HeFz6
-         nbB+fJcsN/V/5vaqPd5u0e3o5iHZGchQ+72Vc44nlG5VvR4HZeVanguHqzTdaLKzhf/5
-         X3UDW8I2sUu15wvtMmE34GY+9lP9IJ8k4AKClVzLD7i3IgmVd5inmmsI0fJtrRhVA2zZ
-         2zlKQCKD9BDEAqcZLyAWEopuqDBxuAuj5svNEgPx0bFjLT9T4aAjLvaf5JKPjOLufiNP
-         eqsw==
-X-Gm-Message-State: AOAM533hN0UwKcI+tWje513sik+87FGA1hRbxfO1ED/B6ZfpMwNeDk6C
-        9iWyZ+fza9iLVm8Z+kv3QERsHkYfkiSy5C/jQ0yxblS4
-X-Google-Smtp-Source: ABdhPJwDioVwAOIDpTA60Aana+5GWvVPpzNj89PXIHn759+3usEheL9q0w2oJABjscMv7dPiX1I8h94jNQsv8qWU/Yg=
-X-Received: by 2002:a05:600c:2258:: with SMTP id a24mr16365171wmm.111.1590224142285;
- Sat, 23 May 2020 01:55:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wHEVgPYbInrmivVdwVmS/wLcMCPWwyD58Nhe2wcQjfs=;
+        b=jKs1L/smdt6HZ/N/w6fAe2gFc4/U0gKsO7TuyY5l59qcVTDqNzcWZ1XAaVaBhXhQ/F
+         waLzR6HMUtrMXA65Y4TGoupqFIJAN5HqSB8rNiDIE/ihJzsMAJsJ/ssSq1e+M+d+5C2v
+         F7ZJPzSPl4nuLahNwyJYMabnbw2B0tWHqFklbfadHtMzW6gNfzYzXtcJ1/huHad0YMlk
+         DOAWt7HopPvLp3wT8FP7jiEB+7gA/hFnheOK/PrQT3p3NaDQhSLrPwTFLh0B69kIsFyy
+         UzyqL91/zn5mrDIdRSkjFr/nny/KS4q5okP1YJkTxhOkM8F9mvnlu4YMSlbG7laRtYdT
+         +zNg==
+X-Gm-Message-State: AOAM530DsqnkWwugULpeX4nntyDun10EIkByBZcoIL9OgQMqbn7ou9a8
+        hE+igou+8vFDwAJSFKp8g7Y=
+X-Google-Smtp-Source: ABdhPJwfXDlEVR+GjK8MD8CecRuUJ5OzBF1LGAGM+dByWZJ9G3u0arNxw5VIu+B5pcY8/pRP39nqsw==
+X-Received: by 2002:adf:810a:: with SMTP id 10mr7088226wrm.101.1590224645436;
+        Sat, 23 May 2020 02:04:05 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id z16sm2645612wmf.3.2020.05.23.02.04.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 02:04:04 -0700 (PDT)
+Date:   Sat, 23 May 2020 09:04:03 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] VMBus channel interrupts reassignment - Fixes
+Message-ID: <20200523090403.hqyrdbbzgeckmi3q@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200522171901.204127-1-parri.andrea@gmail.com>
 MIME-Version: 1.0
-References: <20200421143149.45108-1-yuehaibing@huawei.com> <20200422125346.27756-1-yuehaibing@huawei.com>
- <0015ec4c-0e9c-a9d2-eb03-4d51c5fbbe86@huawei.com> <20200519085353.GE13121@gauss3.secunet.de>
- <CADvbK_eXW24SkuLUOKkcg4JPa8XLcWpp6RNCrQT+=okaWe+GDA@mail.gmail.com>
- <550a82f1-9cb3-2392-25c6-b2a84a00ca33@huawei.com> <CADvbK_cpXOxbWzHzonrzzrrb+Vh3q8NhXnapz0yc9h4H4gN02A@mail.gmail.com>
- <1c4c5d40-1e35-f9bb-3f17-01bb4675f3aa@huawei.com>
-In-Reply-To: <1c4c5d40-1e35-f9bb-3f17-01bb4675f3aa@huawei.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Sat, 23 May 2020 17:02:38 +0800
-Message-ID: <CADvbK_e8ixjGGHRK9A4HcXDGKYcNykneUHzHiE8sQ4ojDz+e-g@mail.gmail.com>
-Subject: Re: [PATCH v2] xfrm: policy: Fix xfrm policy match
-To:     Yuehaibing <yuehaibing@huawei.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        davem <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522171901.204127-1-parri.andrea@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 8:39 PM Yuehaibing <yuehaibing@huawei.com> wrote:
->
-> On 2020/5/22 13:49, Xin Long wrote:
-> > On Fri, May 22, 2020 at 9:45 AM Yuehaibing <yuehaibing@huawei.com> wrote:
-> >>
-> >> On 2020/5/21 14:49, Xin Long wrote:
-> >>> On Tue, May 19, 2020 at 4:53 PM Steffen Klassert
-> >>> <steffen.klassert@secunet.com> wrote:
-> >>>>
-> >>>> On Fri, May 15, 2020 at 04:39:57PM +0800, Yuehaibing wrote:
-> >>>>>
-> >>>>> Friendly ping...
-> >>>>>
-> >>>>> Any plan for this issue?
-> >>>>
-> >>>> There was still no consensus between you and Xin on how
-> >>>> to fix this issue. Once this happens, I consider applying
-> >>>> a fix.
-> >>>>
-> >>> Sorry, Yuehaibing, I can't really accept to do: (A->mark.m & A->mark.v)
-> >>> I'm thinking to change to:
-> >>>
-> >>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
-> >>>                                    struct xfrm_policy *pol)
-> >>>  {
-> >>> -       u32 mark = policy->mark.v & policy->mark.m;
-> >>> -
-> >>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
-> >>> -               return true;
-> >>> -
-> >>> -       if ((mark & pol->mark.m) == pol->mark.v &&
-> >>> -           policy->priority == pol->priority)
-> >>> +       if (policy->mark.v == pol->mark.v &&
-> >>> +           (policy->mark.m == pol->mark.m ||
-> >>> +            policy->priority == pol->priority))
-> >>>                 return true;
-> >>>
-> >>>         return false;
-> >>>
-> >>> which means we consider (the same value and mask) or
-> >>> (the same value and priority) as the same one. This will
-> >>> cover both problems.
-> >>
-> >>   policy A (mark.v = 0x1011, mark.m = 0x1011, priority = 1)
-> >>   policy B (mark.v = 0x1001, mark.m = 0x1001, priority = 1)
-> > I'd think these are 2 different policies.
-> >
-> >>
-> >>   when fl->flowi_mark == 0x12341011, in xfrm_policy_match() do check like this:
-> >>
-> >>         (fl->flowi_mark & pol->mark.m) != pol->mark.v
-> >>
-> >>         0x12341011 & 0x1011 == 0x00001011
-> >>         0x12341011 & 0x1001 == 0x00001001
-> >>
-> >>  This also match different policy depends on the order of policy inserting.
-> > Yes, this may happen when a user adds 2  policies like that.
-> > But I think this's a problem that the user doesn't configure it well,
-> > 'priority' should be set.
-> > and this can not be avoided, also such as:
-> >
-> >    policy A (mark.v = 0xff00, mark.m = 0x1000, priority = 1)
-> >    policy B (mark.v = 0x00ff, mark.m = 0x0011, priority = 1)
-> >
-> >    try with 0x12341011
-> >
-> > So just be it, let users decide.
->
-> Ok, this make sense.
-Thanks Yuehaibing, it's good we're on the same page now.
+On Fri, May 22, 2020 at 07:18:59PM +0200, Andrea Parri (Microsoft) wrote:
+> Two fixes on top of the channel interrupts reassignment series, both
+> addressing race conditions between the initialization of the target
+> CPUs and the CPU hot removal path.   (Fixes: tags refer to commit IDs
+> from the hyperv tree and should be considered as placeholders; please
+> let me know how you'd prefer to handle these...)
 
-Just realized the patch I created above won't work for the case:
+Thanks for the heads-up. I will change the tags if I end up rebasing
+hyperv-next.
 
-  policy A (mark.v = 0x10, mark.m = 0, priority = 1)
-  policy B (mark.v = 0x1,  mark.m = 0, priority = 2)
-  policy C (mark.v = 0x10, mark.m = 0, priority = 2)
+Wei.
 
-when policy C is being added, the warning still occurs.
-
-So I will just check value and priority:
--       u32 mark = policy->mark.v & policy->mark.m;
--
--       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--               return true;
--
--       if ((mark & pol->mark.m) == pol->mark.v &&
-+       if (policy->mark.v == pol->mark.v &&
-            policy->priority == pol->priority)
-                return true;
-
-This allows two policies like this exist:
-
-  policy A (mark.v = 0x10, mark.m = 0, priority = 1)
-  policy C (mark.v = 0x10, mark.m = 0, priority = 2)
-
-But I don't think it's a problem.
+> 
+> Thanks,
+>   Andrea
+> 
+> Andrea Parri (Microsoft) (2):
+>   Drivers: hv: vmbus: Resolve race between init_vp_index() and CPU
+>     hotplug
+>   Drivers: hv: vmbus: Resolve more races involving init_vp_index()
+> 
+>  drivers/hv/channel_mgmt.c | 66 +++++++++++++++++++--------------------
+>  drivers/hv/hyperv_vmbus.h | 48 ++++++++++++++++++++++++++++
+>  drivers/hv/vmbus_drv.c    | 19 +++++++----
+>  include/linux/hyperv.h    |  7 +++++
+>  4 files changed, 101 insertions(+), 39 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
