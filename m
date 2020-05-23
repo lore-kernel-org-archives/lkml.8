@@ -2,94 +2,177 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E411C206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3476206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 02:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxUpicDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387554AbgEWCvO (ORCPT
+        id S2387658AbgEWCwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 22:51:14 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:53244 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387490AbgEWCvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 22:51:12 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Sat, 23 May 2020 10:51:04
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Sat, 23 May 2020 10:51:04 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Charles Keepax" <ckeepax@opensource.cirrus.com>
-Cc:     kjlu@umn.edu, "MyungJoo Ham" <myungjoo.ham@samsung.com>,
-        "Chanwoo Choi" <cw00.choi@samsung.com>,
-        patches@opensource.cirrus.com, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] extcon: arizona: Fix runtime PM imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200522165530.GH71940@ediswmail.ad.cirrus.com>
-References: <20200522110732.874-1-dinghao.liu@zju.edu.cn>
- <20200522165530.GH71940@ediswmail.ad.cirrus.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Fri, 22 May 2020 22:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387481AbgEWCwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 22:52:36 -0400
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7ACC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 19:52:36 -0700 (PDT)
+Received: by mail-io1-xd2a.google.com with SMTP id p20so202649iop.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 19:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xmAJ72ZodSQPB9GQTcZc5m3h7JN9shWGEOhEZ9gi9Uk=;
+        b=sxUpicDSra9P9lNgsoRTqewWTnywmfeSeqHXvm7JJ0IY3KRVXVHUgAX93uDIMknust
+         ZIynhkYUMl13pAqoGpYnVbHMMhMaAXQgR2lboLLwyAZEdKOPvoSwFKohYFMUAqs0dJ/I
+         u0KF56/qNbRg1brCQA7Wv2u4yaos8bqDPQ7MvA7x3jKLgl5ZJOAeWeeYZeoGO7dVjMHV
+         WgN0qHWDYWplkafI1sgdtezAHYahfibUJCZwfLHK1xVeb/T2F0VW6WxUKxejkJLvQLwx
+         UMn7/w9eZKSj2FDVDBddujV8DuaAy4xQvho5iZAkDxlx9a/GY2gqr0HShERNVTq0hL/q
+         R9Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xmAJ72ZodSQPB9GQTcZc5m3h7JN9shWGEOhEZ9gi9Uk=;
+        b=nGN2hcKC8wjCF11xeZoL8Ng5PKpb7EEutx1UqJ4WcKkVPEHnTpwlexqPlNcpWEk0Dc
+         hVjOZEFkPS1h6tWIBFKcJN4LipUAohSSKcPUcPZdnaa5EvAT8WZan0e9wTCqoMXXDKEW
+         x0udqFoKJM8BeTAEh9sgHovCRT1F7w1En+z409yfzuISvYmYTDweHToz4fNKoQ0UAjA2
+         IRCxNHDIN0A/pQhujBD3ZLSx6r4ufY1OqdKcjb5/h7f/7cq1/+leI3owEsdIlcS8l4aG
+         6k8WT72Q8wNPhfYXNSZuf5BlcHtGs5Z1C8sOhlm1w0t2d8G93Q9XMQ64kyqYrmcNQO3F
+         8k2A==
+X-Gm-Message-State: AOAM5333woBD8rM5BJLVg6L3UXOT6yHnapqSYeeM/hEEu1Q8qlR91Xw7
+        WcU55MuKIuppu0UcRlLmTA1BMIzfGLVsgq4H9JU=
+X-Google-Smtp-Source: ABdhPJyVBia3RcF7qraQSjY8xFJ7L1SRxDXM3+9DrguITm5hOoOI62hpauA+ig17o4GZ7tMZPckkz4neCjukPj5fh6E=
+X-Received: by 2002:a02:6d46:: with SMTP id e6mr2321953jaf.43.1590202355441;
+ Fri, 22 May 2020 19:52:35 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <3215e62.c14f3.1723f70eade.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCnjwqYj8helF4NAg--.41746W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg4IBlZdtOQvSwALs2
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8JwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_JF0_Jw1lV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
+References: <20200518160750.GA279861@hirez.programming.kicks-ass.net>
+ <87367xvvmy.fsf@nanos.tec.linutronix.de> <20200519083826.GC279861@hirez.programming.kicks-ass.net>
+ <20200519090226.GD279861@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200519090226.GD279861@hirez.programming.kicks-ass.net>
+From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
+Date:   Sat, 23 May 2020 10:52:24 +0800
+Message-ID: <CAJhGHyCStHRzqv2Di57ALnBiPCpKjob4TG6Hj76+NowpNLqD7w@mail.gmail.com>
+Subject: Re: [patch V6 00/37] x86/entry: Rework leftovers and merge plan
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBGcmksIE1heSAyMiwgMjAyMCBhdCAwNzowNzozMVBNICswODAwLCBEaW5naGFvIExpdSB3
-cm90ZToKPiA+IFdoZW4gYXJpem9uYV9yZXF1ZXN0X2lycSgpIHJldHVybnMgYW4gZXJyb3IgY29k
-ZSwgYQo+ID4gcGFpcmluZyBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZGVjcmVtZW50IGlzIG5l
-ZWRlZAo+ID4gdG8ga2VlcCB0aGUgY291bnRlciBiYWxhbmNlZC4gRm9yIGVycm9yIHBhdGhzIGFm
-dGVyCj4gPiB0aGlzIGZ1bmN0aW9uLCB0aGluZ3MgYXJlIHRoZSBzYW1lLgo+ID4gCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+
-IAo+IEdvb2Qgc3BvdCBvbiB0aGUgYnVnIHRoYW5rIHlvdS4KPiAKPiA+ICBkcml2ZXJzL2V4dGNv
-bi9leHRjb24tYXJpem9uYS5jIHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2V4dGNvbi9leHRjb24tYXJpem9uYS5j
-IGIvZHJpdmVycy9leHRjb24vZXh0Y29uLWFyaXpvbmEuYwo+ID4gaW5kZXggNzQwMTczM2RiMDhi
-Li40NzBiYmM4ZTUwODkgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2V4dGNvbi9leHRjb24tYXJp
-em9uYS5jCj4gPiArKysgYi9kcml2ZXJzL2V4dGNvbi9leHRjb24tYXJpem9uYS5jCj4gPiBAQCAt
-MTc0NCw2ICsxNzQ0LDcgQEAgc3RhdGljIGludCBhcml6b25hX2V4dGNvbl9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gIGVycl9yaXNlOgo+ID4gIAlhcml6b25hX2ZyZWVf
-aXJxKGFyaXpvbmEsIGphY2tfaXJxX3Jpc2UsIGluZm8pOwo+ID4gIGVycl9ncGlvOgo+ID4gKwlw
-bV9ydW50aW1lX3B1dCgmcGRldi0+ZGV2KTsKPiAKPiBIb3dldmVyLCBJIGRvbid0IHRoaW5rIHRo
-aXMgd29ya3MgYXMgYSBmaXguIEZpcnN0bHksIHRoZSBlcnJfZ3Bpbwo+IGxhYmVsIGlzIHVzZWQg
-YmVmb3JlIHRoZSBjYWxsIHRvIHBtX3J1bnRpbWVfZ2V0X3N5bmMsIHRoaXMgbWlnaHQKPiBiZSBv
-ayBzaW5jZSBwbV9ydW50aW1lX2VuYWJsZSBoYXNuJ3QgYmVlbiBjYWxsZWQgeWV0IGJ1dCBwcm9i
-YWJseQo+IGJldHRlciB0byBhZGQgYSBuZXcgbGFiZWwgZm9yIGl0Lgo+IAoKWW91IGFyZSByaWdo
-dCwgdGhhbmsgeW91IGZvciB5b3VyIGNvcnJlY3Rpb24hIAoKPiBTZWNvbmRseSwgZm9sbG93aW5n
-IHRoZSBlcnJfaHBkZXQgZXJyb3IgcGF0aCB3aWxsIGFsc28gcmVzdWx0IGluCj4gYSBkb3VibGUg
-cHV0LiBJbiB0aGF0IGNhc2UgSSBkb24ndCB0aGluayB0aGVyZSBpcyBhbnkgcmVhc29uIHdoeQo+
-IHdlIG5lZWQgdG8gcHV0IGJlZm9yZSBjYWxsaW5nIGlucHV0X2RldmljZV9yZWdpc3RlciBzbyBp
-dCBtaWdodAo+IGp1c3QgYmUgc2ltcGxlc3QgdG8gbW92ZSB0aGF0IHB1dCB1bnRpbCBhZnRlciBy
-ZWdpc3RlcmluZyB0aGUKPiBpbnB1dCBkZXZpY2UuCj4gCgpBZ3JlZS4gSSB3aWxsIGZpeCB0aGlz
-IGluIHRoZSBuZXh0IGVkaXRpb24gb2YgcGF0Y2guCgpSZWdhcmRzLApEaW5naGFvCgo+IFRoYW5r
-cywKPiBDaGFybGVzCj4gCj4gPiAgCWdwaW9kX3B1dChpbmZvLT5taWNkX3BvbF9ncGlvKTsKPiA+
-ICBlcnJfcmVnaXN0ZXI6Cj4gPiAgCXBtX3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+ZGV2KTsKPiA+
-IC0tIAo+ID4gMi4xNy4xCj4gPiAK
+On Tue, May 19, 2020 at 5:04 PM Peter Zijlstra <peterz@infradead.org> wrote:
+
+> +#ifdef CONFIG_DEBUG_ENTRY
+>  /* Begin/end of an instrumentation safe region */
+> -#define instrumentation_begin() ({                                             \
+> +#define instrumentation_begin() ({                                     \
+>         asm volatile("%c0:\n\t"                                         \
+>                      ".pushsection .discard.instr_begin\n\t"            \
+>                      ".long %c0b - .\n\t"                               \
+>                      ".popsection\n\t" : : "i" (__COUNTER__));          \
+>  })
+>
+> -#define instrumentation_end() ({                                                       \
+> -       asm volatile("%c0:\n\t"                                         \
+> +/*
+> + * Because instrumentation_{begin,end}() can nest, objtool validation considers
+> + * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
+> + * When the value is greater than 0, we consider instrumentation allowed.
+> + *
+> + * There is a problem with code like:
+> + *
+> + * noinstr void foo()
+> + * {
+> + *     instrumentation_begin();
+> + *     ...
+> + *     if (cond) {
+> + *             instrumentation_begin();
+> + *             ...
+> + *             instrumentation_end();
+> + *     }
+> + *     bar();
+> + *     instrumentation_end();
+> + * }
+> + *
+> + * If instrumentation_end() would be an empty label, like all the other
+> + * annotations, the inner _end(), which is at the end of a conditional block,
+> + * would land on the instruction after the block.
+> + *
+> + * If we then consider the sum of the !cond path, we'll see that the call to
+> + * bar() is with a 0-value, even though, we meant it to happen with a positive
+> + * value.
+> + *
+> + * To avoid this, have _end() be a NOP instruction, this ensures it will be
+> + * part of the condition block and does not escape.
+> + */
+> +#define instrumentation_end() ({                                       \
+> +       asm volatile("%c0: nop\n\t"                                     \
+>                      ".pushsection .discard.instr_end\n\t"              \
+>                      ".long %c0b - .\n\t"                               \
+>                      ".popsection\n\t" : : "i" (__COUNTER__));          \
+>  })
+
+Hello,
+
+I, who don't know how does the objtool handle it, am just curious.
+_begin() and _end() are symmetrical, which means if _end() (without nop)
+can escape, so can _begin() in a reverse way. For example:
+
+noinstr void foo()
+{
+    instrumentation_begin();
+    do {
+            instrumentation_begin();
+            ...
+            instrumentation_end();
+    } while (cond);
+    bar();
+    instrumentation_end();
+}
+
+Here, the first _begin() can be "dragged" into the do-while block.
+Expectedly, objtool validation should not complain here.
+
+But objtool validation's not complaining means it can handle it
+magically correctly (by distinguishing how many _begin()s should
+be taken around the jmp target when jmp in a specific path), or
+handle it by not checking if all paths have the same count onto
+a jmp target (a little nervous to me), or other possible ways.
+
+Sorry for my curiosity.
+Thanks
+Lai.
