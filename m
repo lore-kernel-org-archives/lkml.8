@@ -1,102 +1,197 @@
-Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD67C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2668320738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:53:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590191584;
-	bh=HRrdOuGUdvjl0wXxA5ZTMAtvsW5wKqP1K72cTMtDBds=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LUsfBN3rg7ffhfpPIBarysJtmP7wSG2W4cjLEkkJZQN46v6RE4GBwJl+n95NSrVPS
-	 hHpLDQVHY8Dvz1CpQjLbdiakW9o8ip/GQFXs4g8xO6na+CoCm1id6S37g4esgF4tCW
-	 AauqPb36NoYRXAwc/CXXQei2/MlnV91fyrafwBhw=
+	by mail.kernel.org (Postfix) with ESMTP id AFAAD20738
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bnZAzu4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387469AbgEVXxD (ORCPT
+        id S2387427AbgEWAEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:53:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387437AbgEVXxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:53:03 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E057B206BE;
-        Fri, 22 May 2020 23:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590191582;
-        bh=HRrdOuGUdvjl0wXxA5ZTMAtvsW5wKqP1K72cTMtDBds=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1AlseEXERTVm6vSNK1ukfK+IKevlLvrv6Ut5WPfcaxPjEQDtTwQU1c78tP25poSPW
-         Pkl8eSf9lB28MNNLVVALtVRBzSnpqvBMMBfnOi5Q3QgSu4rEMqixny1o33eD6zyvPb
-         ZVWFPXMqETTQHAGv+cqRhqFBFl0fIYa3FdeSmo0I=
-Date:   Fri, 22 May 2020 16:53:01 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Dave Chinner <david@fromorbit.com>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org, willy@infradead.org
-Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
- code
-Message-Id: <20200522165301.727977de1d39ac5bfb683ed0@linux-foundation.org>
-In-Reply-To: <906f7469-492d-febc-c7ed-b01830ae900d@cloud.ionos.com>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
-        <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
-        <20200521225220.GV2005@dread.disaster.area>
-        <906f7469-492d-febc-c7ed-b01830ae900d@cloud.ionos.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 22 May 2020 20:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731169AbgEWAEc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 20:04:32 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B62C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 17:04:30 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b6so12433560qkh.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 17:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=I4oTDZ0SG8/GIH3rBRxYfT2nbMLHgnXLkHQH9l1K6YU=;
+        b=bnZAzu4NWL2RpGBJiOTgnhW2jCEDO4kCGJ8mnreKdfAoKaC6WrSt42wURXU5i9UsLZ
+         JePMyKjwSe0VE+6ugiGdNhyAk6t3JEbONSsQnk8WV5YClGpOQscl37m6GaGlSMYOpjmE
+         o1WA3n9doz1R2c1XlzFmgtgN0I/uucEzSuZAMc+5zIPrDdc5kHRH5/NMQ875Kkh3r7rm
+         Ab/GaftOEy8+NPcLZmXMt4+FumMitEyQirGh7Bz8wInF0WudbHW2d4WhfTBIdHMci6dI
+         n+1NvCJt/F1XfAbbh6emJmp5Y4DALy8yQn2r6MV/9rhtusFCvCC/x813HTRpawUkuRJD
+         j/5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I4oTDZ0SG8/GIH3rBRxYfT2nbMLHgnXLkHQH9l1K6YU=;
+        b=RRreUbj6W+BWO9a7R6tdEPN5O98Bxy5pzFgK5DmoOncdk4lFOG9ZI7+fSwy98AC5mF
+         i+O36OXV85qvd+1HkpeWp0ccqZ1le/7xgIBgh2d3QvoknkjY6vNNNb771hf/ocUV7zrI
+         hPmquhFSb4Gb+mZSVfOKWZmuL5tGoJow58caZdEvKZWDMHhd+cyhBmuAsSX8EtuAQ7iM
+         mKtvWAa7m9RETyvJgbnmeKZ0yrPz4F9YAsFEXU59GgPy/PmDpjBHd66WwqbeNu6Cz+Ya
+         msyEWr2AimszbrQ5JsNQ3+vlqjKM7CJIHYHIQBKAsipt2J8nyiVZ56yce/LUTYaoOhUR
+         sAeg==
+X-Gm-Message-State: AOAM532lc7NQ9doQcwLRhrjRuZr17bVlCeX12lFxYrZEBAyakojh0xA2
+        0tp/5LGK6cZOrGARzyJ9AW3u6Q==
+X-Google-Smtp-Source: ABdhPJxk4y5tFBnPUt8Aakl8oASL5WWPAyiiWNLr5TzmF97UdynfPSDexe6tFTK2lFpjJr7zmfgj5Q==
+X-Received: by 2002:a37:bc7:: with SMTP id 190mr17264764qkl.286.1590192269906;
+        Fri, 22 May 2020 17:04:29 -0700 (PDT)
+Received: from Qians-MacBook-Air.local (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k20sm8395865qkk.30.2020.05.22.17.04.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 17:04:29 -0700 (PDT)
+Date:   Fri, 22 May 2020 20:04:27 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Chen Yu <yu.c.chen@intel.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 3/9] intel_idle: Relocate definitions of cpuidle callbacks
+Message-ID: <20200523000427.GF1337@Qians-MacBook-Air.local>
+References: <2960689.qre192dJKD@kreacher>
+ <2912140.PDVJEUYNKe@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2912140.PDVJEUYNKe@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 09:18:25 +0200 Guoqing Jiang <guoqing.jiang@cloud.ionos.com> wrote:
-
-> >> -	ClearPagePrivate(page);
-> >> -	set_page_private(newpage, page_private(page));
-> >> -	set_page_private(page, 0);
-> >> -	put_page(page);
-> >> +	set_page_private(newpage, detach_page_private(page));
-> > attach_page_private(newpage, detach_page_private(page));
+On Thu, Feb 13, 2020 at 11:00:26PM +0100, Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 > 
-> Mattew had suggested it as follows, but not sure if we can reorder of 
-> the setup of
-> the bh and setting PagePrivate, so I didn't want to break the original 
-> syntax.
+> Move the definitions of intel_idle() and intel_idle_s2idle() before
+> the definitions of cpuidle_state structures referring to them to
+> avoid having to use additional declarations of them (and drop those
+> declarations).
 > 
-> @@ -797,11 +797,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
->          if (rc != MIGRATEPAGE_SUCCESS)
->                  goto unlock_buffers;
->   
-> -       ClearPagePrivate(page);
-> -       set_page_private(newpage, page_private(page));
-> -       set_page_private(page, 0);
-> -       put_page(page);
-> -       get_page(newpage);
-> +       attach_page_private(newpage, detach_page_private(page));
->   
->          bh = head;
->          do {
-> @@ -810,8 +806,6 @@ static int __buffer_migrate_page(struct address_space *mapping,
->   
->          } while (bh != head);
->   
-> -       SetPagePrivate(newpage);
-> -
->          if (mode != MIGRATE_SYNC_NO_COPY)
+> No functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/idle/intel_idle.c | 154 ++++++++++++++++++++++------------------------
+>  1 file changed, 75 insertions(+), 79 deletions(-)
+> 
+> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+> index 5adc058c705d..e0332d567735 100644
+> --- a/drivers/idle/intel_idle.c
+> +++ b/drivers/idle/intel_idle.c
+[]
+> +/**
+> + * intel_idle - Ask the processor to enter the given idle state.
+> + * @dev: cpuidle device of the target CPU.
+> + * @drv: cpuidle driver (assumed to point to intel_idle_driver).
+> + * @index: Target idle state index.
+> + *
+> + * Use the MWAIT instruction to notify the processor that the CPU represented by
+> + * @dev is idle and it can try to enter the idle state corresponding to @index.
+> + *
+> + * If the local APIC timer is not known to be reliable in the target idle state,
+> + * enable one-shot tick broadcasting for the target CPU before executing MWAIT.
+> + *
+> + * Optionally call leave_mm() for the target CPU upfront to avoid wakeups due to
+> + * flushing user TLBs.
+> + *
+> + * Must be called under local_irq_disable().
+> + */
+> +static __cpuidle int intel_idle(struct cpuidle_device *dev,
+> +				struct cpuidle_driver *drv, int index)
+> +{
+> +	struct cpuidle_state *state = &drv->states[index];
+> +	unsigned long eax = flg2MWAIT(state->flags);
+> +	unsigned long ecx = 1; /* break on interrupt flag */
+> +	bool uninitialized_var(tick);
 
-This is OK - coherency between PG_private and the page's buffer
-ring is maintained by holding lock_page().
+This will generate an UBSAN warning because Clang could poison all
+uninitialized stack variables to 0xAA due to CONFIG_INIT_STACK_ALL=y, so one
+issue is that,
 
-I have (effectively) applied the above change.
+bool uninitialized_var(x);
+
+would always broken on Clang like this,
+
+[   92.140611] UBSAN: invalid-load in drivers/idle/intel_idle.c:135:7
+[   92.143111] load of value 170 is not a valid value for type 'bool' (aka '_Bool')
+[   92.145657] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc6-next-20200522+ #3
+[   92.147424] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
+[   92.149869] Call Trace:
+[   92.149869]  dump_stack+0x10b/0x17f
+[   92.149869]  __ubsan_handle_load_invalid_value+0xd2/0x110
+[   92.149869]  intel_idle+0x54/0xf0
+[   92.156202]  cpuidle_enter_state+0x120/0x4f0
+[   92.156202]  cpuidle_enter+0x5b/0xa0
+[   92.156202]  call_cpuidle+0x25/0x50
+[   92.156202]  do_idle+0x1eb/0x2c0
+[   92.156202]  cpu_startup_entry+0x25/0x30
+[   92.156202]  rest_init+0x26f/0x280
+[   92.156202]  arch_call_rest_init+0x17/0x1e
+[   92.156202]  start_kernel+0x598/0x633
+[   92.156202]  x86_64_start_reservations+0x24/0x26
+[   92.156202]  x86_64_start_kernel+0x116/0x1c1
+[   92.156202]  secondary_startup_64+0xb6/0xc0
+
+However, I am wondering if it is correct to let "tick" uninitialized to begin
+with. If this condition is true,
+
+!static_cpu_has(X86_FEATURE_ARAT) && lapic_timer_always_reliable
+
+Then, we could in the final branch to use the uninitialized value.
+
+if (!static_cpu_has(X86_FEATURE_ARAT) && tick)
+
+Isn't that possible?
+
+> +	int cpu = smp_processor_id();
+> +
+> +	/*
+> +	 * leave_mm() to avoid costly and often unnecessary wakeups
+> +	 * for flushing the user TLB's associated with the active mm.
+> +	 */
+> +	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
+> +		leave_mm(cpu);
+> +
+> +	if (!static_cpu_has(X86_FEATURE_ARAT) && !lapic_timer_always_reliable) {
+> +		/*
+> +		 * Switch over to one-shot tick broadcast if the target C-state
+> +		 * is deeper than C1.
+> +		 */
+> +		if ((eax >> MWAIT_SUBSTATE_SIZE) & MWAIT_CSTATE_MASK) {
+> +			tick = true;
+> +			tick_broadcast_enter();
+> +		} else {
+> +			tick = false;
+> +		}
+> +	}
+> +
+> +	mwait_idle_with_hints(eax, ecx);
+> +
+> +	if (!static_cpu_has(X86_FEATURE_ARAT) && tick)
+> +		tick_broadcast_exit();
+> +
+> +	return index;
+> +}
