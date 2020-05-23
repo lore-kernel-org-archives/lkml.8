@@ -2,98 +2,101 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02848C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A09FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2EFD207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590239898;
-	bh=MiBK1bmI2x+vgmgd072DJ2yKOanRH70VQ3qjtUJrPBI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=1S4WyK+MyER9i/Evw8gRyEHIfEBnw1fcq0f1CrOBeRsQfSdfAgeE8QeBqjcBE3/eI
-	 MzVn/wATiPm4uU38yGRuhVZemLxd4Cyejt56zmBxJbWA75eSHKtsU4OK5PWvBdgylL
-	 /YJJGa/S56j0mMazL5/3RT4RdElIYEMFNdOopxho=
+	by mail.kernel.org (Postfix) with ESMTP id 56C7B20727
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Omo1S8aT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbgEWNSS (ORCPT
+        id S2387814AbgEWNU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 09:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387772AbgEWNSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 09:18:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205CC207F9;
-        Sat, 23 May 2020 13:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590239897;
-        bh=MiBK1bmI2x+vgmgd072DJ2yKOanRH70VQ3qjtUJrPBI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=o+uLu6h7FyVLxTFgyOvsYJ6be36GrA2b4+28XTuntIe8EW/ucVWSJAMQ3SGlcaQbH
-         XUfiOTPab0uDeZTiJuJdcvaU9Vev0bMgJ416UG6Qo8bKWxbvTdrDLLr+BAEcs9Tr0n
-         xLwNXoCo6z8xAoRf/D0NdnMhDMoBmV6dV894kCc0=
-Date:   Sat, 23 May 2020 15:18:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.7-rc7
-Message-ID: <20200523131815.GA56291@kroah.com>
+        Sat, 23 May 2020 09:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731279AbgEWNUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 09:20:55 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521CBC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 06:20:55 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id v15so6038350qvr.8
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 06:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jTWXBoIp5xP2z98SKXvxr1jwUQDv9G49Gs5gB7jAmQ=;
+        b=Omo1S8aTK2Xnmb0ZKAitTpFmzlzazJ6IEpN8QlZupFp4jAG/z+ILAtQ22mh90r0Q6N
+         H8VCvisko0Otqabe3s1i4RXIgtSlzjtuQzMixowLsADA6YrvoYzySOSEMolVTlmgl3BZ
+         unmnh0KcrxdfbG0ZTMyZyjTqC/YzzYqiTUXBB91FWV1nXL18uthuwcjCxYHyEKs+QYd+
+         KcmdtQlUnUOi4mpp2kJOX+qzILl15d4vCLA/7aYSnIwj2QfxbEWuR2tQse2pGSZtA7kp
+         Ms81QtCOf07KkEkWmRrXf60EdjabUREqAmOGI1dUShhFZIDqIuUTGeZyxaN9O1xfVFGI
+         +s0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jTWXBoIp5xP2z98SKXvxr1jwUQDv9G49Gs5gB7jAmQ=;
+        b=lwUzfBYumqQbv2uPhr6mLTx8OGcmcoyPjwHtZTJFFXJR72oUOxSJ1ExggCuCozb7+f
+         2euWLRkc8mAStqh+XHe3D15LHJR9qiipO4nk+bxmKbBzNTIXwWLpH04BqVl7gstT54o6
+         V2ReqXHM/mfvQy/4RROhU6fC4jBrIgu2IPaxydsdCU4ijNUjKfuzfOKOb2hX1WGEOaqF
+         Elcyz6+sl4TA5PfK9Ux6A5SWUZnieXkKftR5DLlRf/BZtgiApTTpanO1c/UI4fdqUxbT
+         oH2YA7yfTRKqYuoxRAYrEZPQQEkNpTor/VSSTeFnqVimKVL4U/9g8d1a4tx6tGwziD9q
+         0y8w==
+X-Gm-Message-State: AOAM5304cPK2DihLoGiqVpBlxRiFk0xjjg2F5pWyVYhuV0Ns+/4U3S+Z
+        Aujwd34Zu/qhcqCiVKXoG9Yyyw==
+X-Google-Smtp-Source: ABdhPJzSiWtfHLcpMPsu3/OplQOPrW3WaqO9a9RL0m/spX6r63BLU7ZEGJoOWSQ+p6psVR32yyK4wg==
+X-Received: by 2002:ad4:55ac:: with SMTP id f12mr227669qvx.51.1590240054557;
+        Sat, 23 May 2020 06:20:54 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id m33sm10349519qte.17.2020.05.23.06.20.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 06:20:54 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: sm8250: rename spmi node to spmi_bus
+Date:   Sat, 23 May 2020 09:21:04 -0400
+Message-Id: <20200523132104.31046-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
+The pm8150 dtsi files refer to it as spmi_bus, so change it.
 
-  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 04c9c215ffcd..a273b99bf1e6 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -578,7 +578,7 @@ pdc: interrupt-controller@b220000 {
+ 			interrupt-controller;
+ 		};
+ 
+-		spmi: qcom,spmi@c440000 {
++		spmi_bus: qcom,spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0x0 0x0c440000 0x0 0x0001100>,
+ 			      <0x0 0x0c600000 0x0 0x2000000>,
+-- 
+2.26.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.7-rc7
-
-for you to fetch changes up to 7a839dbab1be59f5ed3b3b046de29e166784c9b4:
-
-  misc: rtsx: Add short delay after exit from ASPM (2020-05-22 13:27:38 +0200)
-
-----------------------------------------------------------------
-Char/Misc fixes for 5.7-rc7
-
-Here are some small char/misc driver fixes for 5.7-rc7 that resolve some
-reported issues.  Included in here are tiny fixes for the mei,
-coresight, rtsx, ipack, and mhi drivers.
-
-All of these have been in linux-next with no reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alexander Usyskin (1):
-      mei: release me_cl object reference
-
-Calvin Johnson (1):
-      coresight: cti: remove incorrect NULL return check
-
-Klaus Doth (1):
-      misc: rtsx: Add short delay after exit from ASPM
-
-Wei Yongjun (2):
-      ipack: tpci200: fix error return code in tpci200_register()
-      bus: mhi: core: Fix some error return code
-
- drivers/bus/mhi/core/init.c                          | 2 ++
- drivers/hwtracing/coresight/coresight-cti-platform.c | 4 ++--
- drivers/ipack/carriers/tpci200.c                     | 1 +
- drivers/misc/cardreader/rtsx_pcr.c                   | 3 +++
- drivers/misc/mei/client.c                            | 2 ++
- 5 files changed, 10 insertions(+), 2 deletions(-)
