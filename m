@@ -2,127 +2,108 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2580AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19226C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 08:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F350D206C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 07:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZLEXWPqM"
+	by mail.kernel.org (Postfix) with ESMTP id C1C4220738
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 08:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387756AbgEWH7c (ORCPT
+        id S2387743AbgEWIIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 03:59:32 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57804 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387627AbgEWH7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 03:59:31 -0400
-Received: from zn.tnic (p200300ec2f1b96004c59f332ede330a0.dip0.t-ipconnect.de [IPv6:2003:ec:2f1b:9600:4c59:f332:ede3:30a0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 215841EC0338;
-        Sat, 23 May 2020 09:59:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590220770;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=PIo+t2JcI6yVRedmlgz10X421O+M066c0hltaVL112k=;
-        b=ZLEXWPqMrm4G0DwJpbs8Xgi9xF4kgV5KjgjmvT9VK9gOBCLZtVjao6/GkCbl6+4X+V5fwU
-        RC9EWJFZV06I1nR899eptspZxrdViE5apbzfahsF0PgTl3LX1V8HCCJUtgslfPsCUj9YUS
-        /PGarM2WPPCDvyJoyVnqQyWd5w4+ROU=
-Date:   Sat, 23 May 2020 09:59:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 47/75] x86/sev-es: Add Runtime #VC Exception Handler
-Message-ID: <20200523075924.GB27431@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-48-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-48-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 23 May 2020 04:08:37 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:10362 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387500AbgEWIIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 04:08:36 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgD3_5P02che+eO4AQ--.44369S4;
+        Sat, 23 May 2020 16:08:24 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Steve Glendinning <steve.glendinning@shawell.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: smsc911x: Fix runtime PM imbalance on error
+Date:   Sat, 23 May 2020 16:08:20 +0800
+Message-Id: <20200523080820.13476-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgD3_5P02che+eO4AQ--.44369S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur4DCr17trykKr1rJFyUAwb_yoW8Xw13pa
+        1xXa4rWr1SqryYyr4DJr1DZFW3Aay7trZagrs7Kw1fZw1Yya4vqF4xtryaqF1kJrW0yr1f
+        tF4qv34fCFs5ArUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUva1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxG
+        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfUeHUDDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQJBlZdtORGcwADsk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:57PM +0200, Joerg Roedel wrote:
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index a4fa7f351bf2..bc3a58427028 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -10,6 +10,7 @@
->  #include <linux/sched/debug.h>	/* For show_regs() */
->  #include <linux/percpu-defs.h>
->  #include <linux/mem_encrypt.h>
-> +#include <linux/lockdep.h>
->  #include <linux/printk.h>
->  #include <linux/mm_types.h>
->  #include <linux/set_memory.h>
-> @@ -25,7 +26,7 @@
->  #include <asm/insn-eval.h>
->  #include <asm/fpu/internal.h>
->  #include <asm/processor.h>
-> -#include <asm/trap_defs.h>
-> +#include <asm/traps.h>
->  #include <asm/svm.h>
->  
->  /* For early boot hypervisor communication in SEV-ES enabled guests */
-> @@ -46,10 +47,26 @@ struct sev_es_runtime_data {
->  
->  	/* Physical storage for the per-cpu IST stacks of the #VC handler */
->  	struct vmm_exception_stacks vc_stacks __aligned(PAGE_SIZE);
-> +
-> +	/* Reserve on page per CPU as backup storage for the unencrypted GHCB */
+Remove runtime PM usage counter decrement when the
+increment function has not been called to keep the
+counter balanced.
 
-		  one
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> +	struct ghcb backup_ghcb;
-
-I could use some text explaining what those backups are for?
-
-> +	/*
-> +	 * Mark the per-cpu GHCBs as in-use to detect nested #VC exceptions.
-> +	 * There is no need for it to be atomic, because nothing is written to
-> +	 * the GHCB between the read and the write of ghcb_active. So it is safe
-> +	 * to use it when a nested #VC exception happens before the write.
-> +	 */
-
-Looks liks that is that text... support for nested #VC exceptions.
-I'm sure this has come up already but why do we even want to support
-nested #VCs? IOW, can we do without them first or are they absolutely
-necessary?
-
-I'm guessing VC exceptions inside the VC handler but what are the
-sensible use cases?
-
-Thx.
-
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+index 49a6a9167af4..fc168f85e7af 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -2493,20 +2493,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+ 
+ 	retval = smsc911x_init(dev);
+ 	if (retval < 0)
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 
+ 	netif_carrier_off(dev);
+ 
+ 	retval = smsc911x_mii_init(pdev, dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	}
+ 
+ 	retval = register_netdev(dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	} else {
+ 		SMSC_TRACE(pdata, probe,
+ 			   "Network interface: \"%s\"", dev->name);
+@@ -2547,9 +2547,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-out_disable_resources:
++out_init_fail:
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++out_disable_resources:
+ 	(void)smsc911x_disable_resources(pdev);
+ out_enable_resources_fail:
+ 	smsc911x_free_resources(pdev);
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
