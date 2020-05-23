@@ -2,432 +2,138 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4843C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 14:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48370C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 14:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6DA520723
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 14:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FE720759
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 14:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgWg8lkm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Y697UmxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387913AbgEWOw2 (ORCPT
+        id S2387915AbgEWO6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 10:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387815AbgEWOw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 10:52:27 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857DCC061A0E;
-        Sat, 23 May 2020 07:52:27 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z26so6547208pfk.12;
-        Sat, 23 May 2020 07:52:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pxLCcU8xeh4BTOQJQSOmkT+qMwzpdvcUJm0sQKhFSwc=;
-        b=TgWg8lkmFDsjwIGQQglQKwW50ryo4CPnjYDGe67R7/pTCeaolXJ1l8toLUDJANiWeG
-         impTKRV0FLURooTGb2WD6HuXVq0FLC1FpTezJuGxcU3y+gCc+ovcBVaQO/h2RUpAsxNw
-         6mUlJn0h8xc2qI5K07OMUwLcc/RyZWjUUlqPzxJF/NltBbz+XwW+QeNcMXHZ99kaOwRF
-         BDxBU8BsGG5p7Jvx3ub69eURQLvm9yoiWj0QS1wcw5oMefjANeQJmLO+K3wrd8r17pls
-         CupwXOsMXVw0PtHZTgHjQOsPTxRbMqx8hXGAIVk0Hwc6wNAWiuO4oDHCYKyVD/zRy0QN
-         owLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pxLCcU8xeh4BTOQJQSOmkT+qMwzpdvcUJm0sQKhFSwc=;
-        b=a0CCEuj9feL03KW7IGFgidiqys8HL09mZm4LfBZNkGv27UoPSn1jc8Qa7LOUW0JzKz
-         Xk0IN3SQfXaOOH+mobdEOY4kHAS4Ml+FsVPDllGkW5Si2lmFMwGSLQ1TwkUXLdSGeNeP
-         p7Wqd7OONuqvUbn0s5TvVRy3kWAOStv5B5Pptf8jEuNPveU34KLiSk/eSnDpV9WL9O5E
-         Y9wPuaKN/l5RUOstUyvTTItJ8lMSx2gWpSGCuCrO0AQOvWhFWTU08TspBebkPEuR9XDb
-         0QK5wPWe1DWDTLwv9sxGtfyXSd4RinJa1jUXlMcNyoOJyPAI1ylFL/KNnxqAWSftQjX5
-         BhQQ==
-X-Gm-Message-State: AOAM530Rqko7hDLyfwCCVtvDli8OdwVubceGNZHzBN6026XCpjBnR0q3
-        z0QNWpxIvaf9HV5gN88K/Cs=
-X-Google-Smtp-Source: ABdhPJwvaBZkcay0o7SrViCylfHDPYCgg3QYMtSM7xcPSzjYen7cDNl+k4aGP7Xrusp+5iHU4UPxqQ==
-X-Received: by 2002:a62:b402:: with SMTP id h2mr9263914pfn.221.1590245547021;
-        Sat, 23 May 2020 07:52:27 -0700 (PDT)
-Received: from localhost ([176.122.159.134])
-        by smtp.gmail.com with ESMTPSA id e21sm8231704pga.71.2020.05.23.07.52.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 23 May 2020 07:52:26 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        michal.simek@xilinx.com, baruch@tkos.co.il, paul@crapouillou.net,
-        khilman@baylibre.com, shawnguo@kernel.org, festevam@gmail.com,
-        vz@mleia.com, heiko@sntech.de, linus.walleij@linaro.org,
-        baohua@kernel.org, ardb@kernel.org, linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH v2 2/2] i2c: busses: convert to devm_platform_request_irq()
-Date:   Sat, 23 May 2020 22:51:57 +0800
-Message-Id: <20200523145157.16257-3-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200523145157.16257-1-zhengdejin5@gmail.com>
-References: <20200523145157.16257-1-zhengdejin5@gmail.com>
+        Sat, 23 May 2020 10:58:43 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46306 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387815AbgEWO6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 10:58:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Cy8TMfFe9/igSyNs9fuUQdkDSBXJLsJjI81IzQferQU=; b=Y697UmxTZKun2ELviziRRLaMYS
+        KITlJt+XU2EmbbJxMt/OYO3RDfJJD1hqSBYiu54zW1l85wLHEVl02KFJm+uB2p5FutyLpxTIKJJnV
+        Kax+mkHflINhIyz1vHlbowmy/eARErNYgVKA2Psq1kqi0+C73V34HXGEc639nU6kRE3Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jcVbc-0034Qb-VV; Sat, 23 May 2020 16:58:32 +0200
+Date:   Sat, 23 May 2020 16:58:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH net-next 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+Message-ID: <20200523145832.GJ610998@lunn.ch>
+References: <20200521174834.3234-1-dmurphy@ti.com>
+ <20200521174834.3234-5-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521174834.3234-5-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_request_irq() to simplify code, and it contains
-platform_get_irq() and devm_request_irq().
+On Thu, May 21, 2020 at 12:48:34PM -0500, Dan Murphy wrote:
+> Add RGMII internal delay configuration for Rx and Tx.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/net/phy/dp83869.c | 101 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+> 
+> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+> index cfb22a21a2e6..40c34fefffe4 100644
+> --- a/drivers/net/phy/dp83869.c
+> +++ b/drivers/net/phy/dp83869.c
+> @@ -99,6 +99,14 @@
+>  #define DP83869_OP_MODE_MII			BIT(5)
+>  #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
+>  
+> +/* RGMIIDCTL bits */
+> +#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
+> +#define DP83869_RGMII_CLK_DELAY_INV		0
+> +
+> +static int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500, 1750,
+> +				       2000, 2250, 2500, 2750, 3000, 3250,
+> +				       3500, 3750, 4000};
+> +
+>  enum {
+>  	DP83869_PORT_MIRRORING_KEEP,
+>  	DP83869_PORT_MIRRORING_EN,
+> @@ -108,6 +116,8 @@ enum {
+>  struct dp83869_private {
+>  	int tx_fifo_depth;
+>  	int rx_fifo_depth;
+> +	u32 rx_id_delay;
+> +	u32 tx_id_delay;
+>  	int io_impedance;
+>  	int port_mirroring;
+>  	bool rxctrl_strap_quirk;
+> @@ -182,6 +192,7 @@ static int dp83869_of_init(struct phy_device *phydev)
+>  	struct dp83869_private *dp83869 = phydev->priv;
+>  	struct device *dev = &phydev->mdio.dev;
+>  	struct device_node *of_node = dev->of_node;
+> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
+>  	int ret;
+>  
+>  	if (!of_node)
+> @@ -232,6 +243,26 @@ static int dp83869_of_init(struct phy_device *phydev)
+>  				 &dp83869->tx_fifo_depth))
+>  		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+>  
+> +	dp83869->rx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
+> +	ret = of_property_read_u32(of_node, "rx-internal-delay",
+> +				   &dp83869->rx_id_delay);
+> +	if (!ret && dp83869->rx_id_delay > dp83869_internal_delay[delay_size]) {
+> +		phydev_err(phydev,
+> +			   "rx-internal-delay value of %u out of range\n",
+> +			   dp83869->rx_id_delay);
+> +		return -EINVAL;
+> +	}
 
-I resend this patch by that discussion.
-https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+Hi Dan
 
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v1 -> v2:
-	- The patch content has not changed. just resend it by this discussion:
-	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+Seems like the helper should be doing the range check, and printing
+the message. It should be common to all PHY drivers using delays
+looked up in a list.
 
- drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++-------------
- drivers/i2c/busses/i2c-cadence.c   | 10 +++-------
- drivers/i2c/busses/i2c-digicolor.c | 10 +++-------
- drivers/i2c/busses/i2c-emev2.c     |  5 ++---
- drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
- drivers/i2c/busses/i2c-meson.c     | 13 ++++---------
- drivers/i2c/busses/i2c-mxs.c       |  9 +++------
- drivers/i2c/busses/i2c-pnx.c       |  9 ++-------
- drivers/i2c/busses/i2c-rcar.c      |  9 +++------
- drivers/i2c/busses/i2c-rk3x.c      | 14 +++-----------
- drivers/i2c/busses/i2c-sirf.c      | 10 ++--------
- drivers/i2c/busses/i2c-stu300.c    |  4 ++--
- drivers/i2c/busses/i2c-synquacer.c | 12 +++---------
- 13 files changed, 35 insertions(+), 91 deletions(-)
+I also wonder about putting the of_property_read_u32 inside a
+helper. Something like
 
-diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
-index ed5e1275ae46..f45acb47552a 100644
---- a/drivers/i2c/busses/i2c-bcm-kona.c
-+++ b/drivers/i2c/busses/i2c-bcm-kona.c
-@@ -818,20 +818,10 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
- 	       ISR_NOACK_MASK,
- 	       dev->base + ISR_OFFSET);
- 
--	/* Get the interrupt number */
--	dev->irq = platform_get_irq(pdev, 0);
--	if (dev->irq < 0) {
--		rc = dev->irq;
--		goto probe_disable_clk;
--	}
--
--	/* register the ISR handler */
--	rc = devm_request_irq(&pdev->dev, dev->irq, bcm_kona_i2c_isr,
--			      IRQF_SHARED, pdev->name, dev);
--	if (rc) {
--		dev_err(dev->device, "failed to request irq %i\n", dev->irq);
-+	rc = devm_platform_request_irq(pdev, 0, &dev->irq, bcm_kona_i2c_isr,
-+					IRQF_SHARED, pdev->name, dev);
-+	if (rc)
- 		goto probe_disable_clk;
--	}
- 
- 	/* Enable the controller but leave it idle */
- 	bcm_kona_i2c_send_cmd_to_ctrl(dev, BCM_CMD_NOACTION);
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 4b72398af505..9ffae4d231dc 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -1204,8 +1204,6 @@ static int cdns_i2c_probe(struct platform_device *pdev)
- 	if (IS_ERR(id->membase))
- 		return PTR_ERR(id->membase);
- 
--	id->irq = platform_get_irq(pdev, 0);
--
- 	id->adap.owner = THIS_MODULE;
- 	id->adap.dev.of_node = pdev->dev.of_node;
- 	id->adap.algo = &cdns_i2c_algo;
-@@ -1256,12 +1254,10 @@ static int cdns_i2c_probe(struct platform_device *pdev)
- 		goto err_clk_dis;
- 	}
- 
--	ret = devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
--				 DRIVER_NAME, id);
--	if (ret) {
--		dev_err(&pdev->dev, "cannot get irq %d\n", id->irq);
-+	ret = devm_platform_request_irq(pdev, 0, &id->irq, cdns_i2c_isr, 0,
-+					DRIVER_NAME, id);
-+	if (ret)
- 		goto err_clk_dis;
--	}
- 
- 	/*
- 	 * Cadence I2C controller has a bug wherein it generates
-diff --git a/drivers/i2c/busses/i2c-digicolor.c b/drivers/i2c/busses/i2c-digicolor.c
-index 332f00437479..9ea965f41396 100644
---- a/drivers/i2c/busses/i2c-digicolor.c
-+++ b/drivers/i2c/busses/i2c-digicolor.c
-@@ -290,7 +290,7 @@ static int dc_i2c_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct dc_i2c *i2c;
--	int ret = 0, irq;
-+	int ret = 0;
- 
- 	i2c = devm_kzalloc(&pdev->dev, sizeof(struct dc_i2c), GFP_KERNEL);
- 	if (!i2c)
-@@ -314,12 +314,8 @@ static int dc_i2c_probe(struct platform_device *pdev)
- 	if (IS_ERR(i2c->regs))
- 		return PTR_ERR(i2c->regs);
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
--
--	ret = devm_request_irq(&pdev->dev, irq, dc_i2c_irq, 0,
--			       dev_name(&pdev->dev), i2c);
-+	ret = devm_platform_request_irq(pdev, 0, NULL, dc_i2c_irq, 0,
-+					dev_name(&pdev->dev), i2c);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/drivers/i2c/busses/i2c-emev2.c b/drivers/i2c/busses/i2c-emev2.c
-index 1a319352e51b..cae00a9ec86f 100644
---- a/drivers/i2c/busses/i2c-emev2.c
-+++ b/drivers/i2c/busses/i2c-emev2.c
-@@ -395,9 +395,8 @@ static int em_i2c_probe(struct platform_device *pdev)
- 
- 	em_i2c_reset(&priv->adap);
- 
--	priv->irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(&pdev->dev, priv->irq, em_i2c_irq_handler, 0,
--				"em_i2c", priv);
-+	ret = devm_platform_request_irq(pdev, 0, &priv->irq,
-+			em_i2c_irq_handler, 0, "em_i2c", priv);
- 	if (ret)
- 		goto err_clk;
- 
-diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz4780.c
-index ba831df6661e..27de0309f211 100644
---- a/drivers/i2c/busses/i2c-jz4780.c
-+++ b/drivers/i2c/busses/i2c-jz4780.c
-@@ -825,9 +825,8 @@ static int jz4780_i2c_probe(struct platform_device *pdev)
- 
- 	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0x0);
- 
--	i2c->irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(&pdev->dev, i2c->irq, jz4780_i2c_irq, 0,
--			       dev_name(&pdev->dev), i2c);
-+	ret = devm_platform_request_irq(pdev, 0, &i2c->irq, jz4780_i2c_irq, 0,
-+					dev_name(&pdev->dev), i2c);
- 	if (ret)
- 		goto err;
- 
-diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
-index c5dec572fc48..2e5a855ff20a 100644
---- a/drivers/i2c/busses/i2c-meson.c
-+++ b/drivers/i2c/busses/i2c-meson.c
-@@ -398,7 +398,7 @@ static int meson_i2c_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct meson_i2c *i2c;
- 	struct i2c_timings timings;
--	int irq, ret = 0;
-+	int ret = 0;
- 
- 	i2c = devm_kzalloc(&pdev->dev, sizeof(struct meson_i2c), GFP_KERNEL);
- 	if (!i2c)
-@@ -425,15 +425,10 @@ static int meson_i2c_probe(struct platform_device *pdev)
- 	if (IS_ERR(i2c->regs))
- 		return PTR_ERR(i2c->regs);
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
--
--	ret = devm_request_irq(&pdev->dev, irq, meson_i2c_irq, 0, NULL, i2c);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "can't request IRQ\n");
-+	ret = devm_platform_request_irq(pdev, 0, NULL, meson_i2c_irq,
-+					0, NULL, i2c);
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	ret = clk_prepare(i2c->clk);
- 	if (ret < 0) {
-diff --git a/drivers/i2c/busses/i2c-mxs.c b/drivers/i2c/busses/i2c-mxs.c
-index 9587347447f0..cff82af3208a 100644
---- a/drivers/i2c/busses/i2c-mxs.c
-+++ b/drivers/i2c/busses/i2c-mxs.c
-@@ -802,7 +802,7 @@ static int mxs_i2c_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct mxs_i2c_dev *i2c;
- 	struct i2c_adapter *adap;
--	int err, irq;
-+	int err;
- 
- 	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
- 	if (!i2c)
-@@ -817,11 +817,8 @@ static int mxs_i2c_probe(struct platform_device *pdev)
- 	if (IS_ERR(i2c->regs))
- 		return PTR_ERR(i2c->regs);
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
--
--	err = devm_request_irq(dev, irq, mxs_i2c_isr, 0, dev_name(dev), i2c);
-+	err = devm_platform_request_irq(pdev, 0, NULL, mxs_i2c_isr, 0,
-+					dev_name(dev), i2c);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/i2c/busses/i2c-pnx.c b/drivers/i2c/busses/i2c-pnx.c
-index 5d7207c10f1d..3e249373375f 100644
---- a/drivers/i2c/busses/i2c-pnx.c
-+++ b/drivers/i2c/busses/i2c-pnx.c
-@@ -718,13 +718,8 @@ static int i2c_pnx_probe(struct platform_device *pdev)
- 	}
- 	init_completion(&alg_data->mif.complete);
- 
--	alg_data->irq = platform_get_irq(pdev, 0);
--	if (alg_data->irq < 0) {
--		ret = alg_data->irq;
--		goto out_clock;
--	}
--	ret = devm_request_irq(&pdev->dev, alg_data->irq, i2c_pnx_interrupt,
--			       0, pdev->name, alg_data);
-+	ret = devm_platform_request_irq(pdev, 0, &alg_data->irq,
-+				i2c_pnx_interrupt, 0, pdev->name, alg_data);
- 	if (ret)
- 		goto out_clock;
- 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index a45c4bf1ec01..bd59a13de707 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -984,13 +984,10 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 	else
- 		pm_runtime_put(dev);
- 
--
--	priv->irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(dev, priv->irq, rcar_i2c_irq, 0, dev_name(dev), priv);
--	if (ret < 0) {
--		dev_err(dev, "cannot get irq %d\n", priv->irq);
-+	ret = devm_platform_request_irq(pdev, 0, &priv->irq, rcar_i2c_irq, 0,
-+					dev_name(dev), priv);
-+	if (ret < 0)
- 		goto out_pm_disable;
--	}
- 
- 	platform_set_drvdata(pdev, priv);
- 
-diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-index bc698240c4aa..a8d47689de0a 100644
---- a/drivers/i2c/busses/i2c-rk3x.c
-+++ b/drivers/i2c/busses/i2c-rk3x.c
-@@ -1196,7 +1196,6 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
- 	int ret = 0;
- 	int bus_nr;
- 	u32 value;
--	int irq;
- 	unsigned long clk_rate;
- 
- 	i2c = devm_kzalloc(&pdev->dev, sizeof(struct rk3x_i2c), GFP_KERNEL);
-@@ -1258,17 +1257,10 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	/* IRQ setup */
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
--
--	ret = devm_request_irq(&pdev->dev, irq, rk3x_i2c_irq,
--			       0, dev_name(&pdev->dev), i2c);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "cannot request IRQ\n");
-+	ret = devm_platform_request_irq(pdev, 0, NULL, rk3x_i2c_irq,
-+					0, dev_name(&pdev->dev), i2c);
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	platform_set_drvdata(pdev, i2c);
- 
-diff --git a/drivers/i2c/busses/i2c-sirf.c b/drivers/i2c/busses/i2c-sirf.c
-index d7f72ec331e8..a593c15bfbf5 100644
---- a/drivers/i2c/busses/i2c-sirf.c
-+++ b/drivers/i2c/busses/i2c-sirf.c
-@@ -274,7 +274,6 @@ static int i2c_sirfsoc_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 	int bitrate;
- 	int ctrl_speed;
--	int irq;
- 
- 	int err;
- 	u32 regval;
-@@ -314,13 +313,8 @@ static int i2c_sirfsoc_probe(struct platform_device *pdev)
- 		goto out;
- 	}
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		err = irq;
--		goto out;
--	}
--	err = devm_request_irq(&pdev->dev, irq, i2c_sirfsoc_irq, 0,
--		dev_name(&pdev->dev), siic);
-+	err = devm_platform_request_irq(pdev, 0, NULL, i2c_sirfsoc_irq, 0,
-+					dev_name(&pdev->dev), siic);
- 	if (err)
- 		goto out;
- 
-diff --git a/drivers/i2c/busses/i2c-stu300.c b/drivers/i2c/busses/i2c-stu300.c
-index 64d739baf480..7893c532b8f2 100644
---- a/drivers/i2c/busses/i2c-stu300.c
-+++ b/drivers/i2c/busses/i2c-stu300.c
-@@ -881,8 +881,8 @@ static int stu300_probe(struct platform_device *pdev)
- 	if (IS_ERR(dev->virtbase))
- 		return PTR_ERR(dev->virtbase);
- 
--	dev->irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(&pdev->dev, dev->irq, stu300_irh, 0, NAME, dev);
-+	ret = devm_platform_request_irq(pdev, 0, &dev->irq, stu300_irh,
-+					0, NAME, dev);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/drivers/i2c/busses/i2c-synquacer.c b/drivers/i2c/busses/i2c-synquacer.c
-index c9a3dba6a75d..d9143373e688 100644
---- a/drivers/i2c/busses/i2c-synquacer.c
-+++ b/drivers/i2c/busses/i2c-synquacer.c
-@@ -577,16 +577,10 @@ static int synquacer_i2c_probe(struct platform_device *pdev)
- 	if (IS_ERR(i2c->base))
- 		return PTR_ERR(i2c->base);
- 
--	i2c->irq = platform_get_irq(pdev, 0);
--	if (i2c->irq < 0)
--		return -ENODEV;
--
--	ret = devm_request_irq(&pdev->dev, i2c->irq, synquacer_i2c_isr,
--			       0, dev_name(&pdev->dev), i2c);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "cannot claim IRQ %d\n", i2c->irq);
-+	ret = devm_platform_request_irq(pdev, 0, &i2c->irq, synquacer_i2c_isr,
-+					0, dev_name(&pdev->dev), i2c);
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	i2c->state = STATE_IDLE;
- 	i2c->dev = &pdev->dev;
--- 
-2.25.0
+of_get_phy_rgmii_delays(struct device_node *np, phy_interface_t interface,
+			u32 *rx_delay, u32 *tx_delay)
 
+And maybe a third helper which combines phy_get_delay_index() and
+of_get_phy_rgmii_delays().
+
+> +static int dp83869_verify_rgmii_cfg(struct phy_device *phydev)
+> +{
+> +	struct dp83869_private *dp83869 = phydev->priv;
+> +
+> +	/* RX delay *must* be specified if internal delay of RX is used. */
+
+No. As i said last time, default to 2ns, if there is no specific delay
+value in DT.
+
+    Andrew
