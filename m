@@ -2,113 +2,124 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A95C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F93C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB70B207FB
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049F02067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 21:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ehwpCzIY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BbdzPxea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbgEWVdO (ORCPT
+        id S2388080AbgEWVkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 17:33:14 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18215 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387847AbgEWVdN (ORCPT
+        Sat, 23 May 2020 17:40:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57624 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388001AbgEWVkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 17:33:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec996060000>; Sat, 23 May 2020 14:30:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 23 May 2020 14:33:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 23 May 2020 14:33:13 -0700
-Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 23 May
- 2020 21:33:12 +0000
-Subject: Re: [PATCH v2] fpga: dfl: afu: convert get_user_pages() -->
- pin_user_pages()
-To:     Moritz Fischer <mdf@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-        Wu Hao <hao.wu@intel.com>, <linux-fpga@vger.kernel.org>
-References: <20200519201449.3136033-1-jhubbard@nvidia.com>
- <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
- <20200523205717.GA443638@epycbox.lan>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <ccf86d21-2ecf-7873-1c30-fbea880b9081@nvidia.com>
-Date:   Sat, 23 May 2020 14:33:12 -0700
+        Sat, 23 May 2020 17:40:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04NLeNFr113922;
+        Sat, 23 May 2020 16:40:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590270023;
+        bh=SiMQ2mdVD6XIm9JHgI3bhekP7OEXIT1Wjqo0LdZtwhc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BbdzPxeaMRIKYjKSwBQCjFxMkoToook77XlC//QL2++YQic5CZi0sElHbSCEtPKon
+         pIMtPYIRGAPBKyp6ZRUHgi4cnDiNl0eI/VyETXXISveLIaU2UL1dOU+qABPqTo6oL5
+         b+bd54IqhU0pl+6hFamgSYxj4F1qkbFRyVJMRZkE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04NLeN7M031345;
+        Sat, 23 May 2020 16:40:23 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 23
+ May 2020 16:40:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sat, 23 May 2020 16:40:22 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04NLeMeU126916;
+        Sat, 23 May 2020 16:40:22 -0500
+Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200522122534.3353-1-dmurphy@ti.com>
+ <20200522122534.3353-5-dmurphy@ti.com>
+ <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
+ <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
+ <20200523150951.GK610998@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <a59412a5-7cc6-dc70-b851-c7d65c1635b7@ti.com>
+Date:   Sat, 23 May 2020 16:40:22 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200523205717.GA443638@epycbox.lan>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
+In-Reply-To: <20200523150951.GK610998@lunn.ch>
 Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590269446; bh=eRMBYMwT7HglaGDS/HEjHC3APgFjhB0IGthjLynCTmg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ehwpCzIY1PHJCvVslMEZpX9i9geALAhsYB0Ai9tSzWSshHQesNcmokU1NBC8Frg0s
-         ZtF2HW3Gw1A3OMK8nFsWXTRNfXWuHlTa3L5atA0fNOmYrApWyNw7jTlozlSQdtURNQ
-         jZNLBbCQA6uyLw5ZnnWP++axkxAdyC5CANl5+7GNztlv6U1UaYpWHZKnfkyfbj9HUy
-         auMjf0YjOuvSPeGhSDw3U6EyZHmbHK3ix0JLsX70YvRqjxOU9O7EzjYbsxey5TGMpF
-         byqhy153HPPvYVZPy1a+XMlQTzyS+y9+K2ieNfRTBIVcdFIJr8tAVrXcP0GuXgQkpM
-         cx71DUtaXT3ug==
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-23 13:57, Moritz Fischer wrote:
-> On Fri, May 22, 2020 at 06:52:34PM -0700, John Hubbard wrote:
->> On 2020-05-19 13:14, John Hubbard wrote:
->>> This code was using get_user_pages_fast(), in a "Case 2" scenario
->>> (DMA/RDMA), using the categorization from [1]. That means that it's
->>> time to convert the get_user_pages_fast() + put_page() calls to
->>> pin_user_pages_fast() + unpin_user_pages() calls.
->>>
->>> There is some helpful background in [2]: basically, this is a small
->>> part of fixing a long-standing disconnect between pinning pages, and
->>> file systems' use of those pages.
->>>
->>> [1] Documentation/core-api/pin_user_pages.rst
->>>
->>> [2] "Explicit pinning of user-space pages":
->>>       https://lwn.net/Articles/807108/
->>>
->>> Cc: Xu Yilun <yilun.xu@intel.com>
->>> Cc: Wu Hao <hao.wu@intel.com>
->>> Cc: Moritz Fischer <mdf@kernel.org>
->>> Cc: linux-fpga@vger.kernel.org
->>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->>
->>
->> Hi Moritz and FPGA developers,
->>
->> Is this OK? And if so, is it going into your git tree? Or should I
->> send it up through a different tree? (I'm new to the FPGA development
->> model).
-> 
-> I can take it, sorry for sluggish response.
-> 
+Andrew
 
-That's great news, thanks Moritz! Sorry to be pushy, just didn't want it
-to get lost. :)
+On 5/23/20 10:09 AM, Andrew Lunn wrote:
+>>>> +	dp83869->tx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
+>>>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>>> +				   &dp83869->tx_id_delay);
+>>>> +	if (!ret && dp83869->tx_id_delay > dp83869_internal_delay[delay_size]) {
+>>>> +		phydev_err(phydev,
+>>>> +			   "tx-internal-delay value of %u out of range\n",
+>>>> +			   dp83869->tx_id_delay);
+>>>> +		return -EINVAL;
+>>>> +	}
+>>> This is the kind of validation that I would be expecting from the PHY
+>>> library to do, in fact, since you use Device Tree standard property, I
+>>> would expect you only need to pass the maximum delay value and some
+>>> storage for your array of delays.
+>> Actually the PHY library will return either the 0th index if the value is to
+>> small or the max index if the value is to large
+>>
+>> based on the array passed in so maybe this check is unnecessary.
+> Hi Dan
+>
+> I'm not sure the helper is implementing the best behaviour. Rounded to
+> the nearest when within the supported range is O.K. But if the request
+> is outside the range, i would report an error.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Hope this email does not bounce.
+
+> Any why is your PHY special, in that is does care about out of range
+> delays, when others using new the new core helper don't?
+
+We are not rounding to nearest here.  Basically the helper works to find 
+the best match
+
+If the delay passed in is less than or equal to the smallest delay then 
+return the smallest delay index
+
+If the delay passed in is greater then the largest delay then return the 
+max delay index
+
+Not sure what you mean about this PHY being special.  This helper is not 
+PHY specific.
+
+After I think about this more I am thinking a helper may be over kill 
+here and the delay to setting should be done within the PHY driver itself
+
+Dan
+
+> 	Andrew
