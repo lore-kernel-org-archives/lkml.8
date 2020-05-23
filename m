@@ -2,99 +2,167 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0DB20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188FB20735
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 18:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lrQ8W86t"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1MtbvOz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387901AbgEWSuH (ORCPT
+        id S1728230AbgEWS6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 14:50:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35326 "EHLO
+        Sat, 23 May 2020 14:58:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387587AbgEWSuH (ORCPT
+        with ESMTP id S1726790AbgEWS6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 14:50:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B041C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:50:06 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t8so4381750pju.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:50:06 -0700 (PDT)
+        Sat, 23 May 2020 14:58:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E218CC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:57:59 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cx22so6453032pjb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 11:57:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b1mMhxUUXy+J5qvG4lrRGiQpsIcLlIbc98MeN4fSSBs=;
-        b=lrQ8W86t2BzC3p5tK16tu4MyclRomNJ8LUm/DKdmWlSUSP97lTFTpS6eK8zkYiVUlB
-         mOrSnVOFeD0QK+qjS32+811BNDbI1oP668sv7p5ZB6aGDqTaxygTBD8W2F6MRHMk+5te
-         EpsQBjGNaOzcY41VxhGjqQXnik7aEhtUBIOh3fO6bOzEYV51rtT3fRHag/qoZhqhhHMo
-         1DZXn3COfGxanTs5Y2GAy4mIS7chOe1/hSMqB/Z2VeCoov9mR7NeGL+zN67WP2Zp0Sjj
-         9tLfw/Rhpx7kW4Ioh5ZDrFUcydqBMZj48j6NHEBJTzkO+e9Ijtq5IIugEKHw7fpRbtNH
-         7Olg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iSyL9nA+53Bvqa5M3mPCVCWXeLpByAjCJu0zD/ohw+8=;
+        b=1MtbvOz1/nCvQ0+b3EzjI6QTcR9fFRtdVoM6dpuHEDAGi8YBUc9ych6ORcbliyXYKf
+         /7MQtjg1+IKRFOMm0/SlTC5B/B08eLyupnncF4JyInt48DdiI+tAogAwcdkCl69fG6tf
+         3ysRpTIUj2Cq7aLRaERGdelcLx2rnXbbh/2WycAfMFz2yG+ABSNvKapSq5DTv6avZIuI
+         5z026Fb6tuDkYeB5yuNsrMmN4s5WUZ2fla9q6cReBMZhm+Ojrh0X35rMa5jhARBwmBPD
+         +deMnRUWCXW5hBenDn7Mpdf9KEh7qQ07ZZTQ7RpnB8toxIOUvpOh2fc4PlViZbb+IB2M
+         tOxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=b1mMhxUUXy+J5qvG4lrRGiQpsIcLlIbc98MeN4fSSBs=;
-        b=Tv6F2Y8avaTt00AdVte3bCc1ccvcqh4psNi6HoIV4y1DPmYekU0Fly6hmWH/pev/Ip
-         RFhvxZAQ/M08iqZ9jkJgpkLx9TLZNBesWR5nygez+eGhrHNHWrLhEO6K33fccxjmbjPr
-         RCemljVdeH8LCXAWz40g/HWQ7X7KL4ktd55LuVfbToCJU44JCep+olrZkqjPiqo5c9ME
-         rnsZilUnxkvCMkKfIaoo+t7TxOPk88DPSPcUsGr/6/SrKeJPkF5nrjBdlbbkQLN3juoZ
-         qqR7oBquWuAn1HCTB842fRNFk3GqYm/nMIa9hsItap2rnDmpBZO0eRmQtyCHcVo5stP1
-         U7rg==
-X-Gm-Message-State: AOAM532/538TY1gzNj6Tghr/joMUZqtl7TUyxRIC7BEp9LPK4fT7yT+6
-        X8/vt2xh9cpseURxlHER7WMRqw==
-X-Google-Smtp-Source: ABdhPJwPZ6c2Ma+fKM8Fkz87aKpDhVKm2umsk4CEsp2hRwjlLyY4JvK8puI9Z8bW5chTEwJklHJe1A==
-X-Received: by 2002:a17:90a:2a4a:: with SMTP id d10mr11884967pjg.32.1590259805666;
-        Sat, 23 May 2020 11:50:05 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:c94:a67a:9209:cf5f? ([2605:e000:100e:8c61:c94:a67a:9209:cf5f])
-        by smtp.gmail.com with ESMTPSA id e5sm9587517pfe.121.2020.05.23.11.50.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 May 2020 11:50:05 -0700 (PDT)
-Subject: Re: [PATCH] linux/blkdev.h: Use ilog2() directly in blksize_bits()
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Kaitao Cheng <pilgrimtao@gmail.com>
-Cc:     damien.lemoal@wdc.com, ming.lei@redhat.com,
-        martin.petersen@oracle.com, satyat@google.com,
-        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
-        asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-kernel@vger.kernel.org, songmuchun@bytedance.com
-References: <20200523155048.29369-1-pilgrimtao@gmail.com>
- <714861ac-50aa-465c-c28f-dce7e16d0313@acm.org>
+        bh=iSyL9nA+53Bvqa5M3mPCVCWXeLpByAjCJu0zD/ohw+8=;
+        b=oMvi+7KpFe1PvS8yRtJlblN9rOeHBvGdI0vRIDrIdTO0Tmkj7VizmpEvi2/GSatfTa
+         N/KVzyL1/yaewG8JwGmkHnoGvupUwC/rTJ3XHA9oUlOJlJ1hmNkZQBgMPOQmsMLE6PB9
+         rcxLDOu1rAsFkmBPNRTyNpIwOD3WTrZznQsqDvQuHXvDqLPpdEDpKpS7xm8RvBdbq/5z
+         UBk2Db4l9WzUgFmZF+3NNIBKKXDJ5gzN6/niqa+w8VqG0IscIroAravWgyMIN7M1rZyE
+         VT0UiyzRFXsuzEAJocnTZ2y2MO0zs5z1vtI7kYXBkoqVf/iej46kzK96N7xbCr0s/9g3
+         4aPA==
+X-Gm-Message-State: AOAM5309r27nezUIU2i5KZGhGgKOwyVV+WNYKXzoySSi1SL/dbI/q+Mh
+        TmAEzWo1jaUeUNVDtsIm312HfA==
+X-Google-Smtp-Source: ABdhPJyrMCBfxmmC26HOKoShcD6Ly68WzB+R2ReanKFkNbhK0MuG3y8yEmsp7Tv65+SbVJgmAkFi2A==
+X-Received: by 2002:a17:90b:245:: with SMTP id fz5mr11847967pjb.232.1590260279405;
+        Sat, 23 May 2020 11:57:59 -0700 (PDT)
+Received: from x1.lan ([2605:e000:100e:8c61:c94:a67a:9209:cf5f])
+        by smtp.gmail.com with ESMTPSA id 25sm9297319pjk.50.2020.05.23.11.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 11:57:58 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fd3b8124-d62b-ca73-5af2-0d2ee2c58f92@kernel.dk>
-Date:   Sat, 23 May 2020 12:50:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+To:     io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCHSET v2 0/12] Add support for async buffered reads
+Date:   Sat, 23 May 2020 12:57:43 -0600
+Message-Id: <20200523185755.8494-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <714861ac-50aa-465c-c28f-dce7e16d0313@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/20 12:33 PM, Bart Van Assche wrote:
-> On 2020-05-23 08:50, Kaitao Cheng wrote:
->> blksize_bits() can be achieved through ilog2(), and ilog2() is
->> more efficient.
-> 
-> If Jens agrees, how about removing the blksize_bits() function entirely
-> and to make all callers use ilog2() instead of blksize_bits()?
+We technically support this already through io_uring, but it's
+implemented with a thread backend to support cases where we would
+block. This isn't ideal.
 
-Yeah, if we are going this path, then let's just kill the function
-completely.
+After a few prep patches, the core of this patchset is adding support
+for async callbacks on page unlock. With this primitive, we can simply
+retry the IO operation. With io_uring, this works a lot like poll based
+retry for files that support it. If a page is currently locked and
+needed, -EIOCBQUEUED is returned with a callback armed. The callers
+callback is responsible for restarting the operation.
+
+With this callback primitive, we can add support for
+generic_file_buffered_read(), which is what most file systems end up
+using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
+trivial to add more.
+
+The file flags support for this by setting FMODE_BUF_RASYNC, similar
+to what we do for FMODE_NOWAIT. Open to suggestions here if this is
+the preferred method or not.
+
+In terms of results, I wrote a small test app that randomly reads 4G
+of data in 4K chunks from a file hosted by ext4. The app uses a queue
+depth of 32. If you want to test yourself, you can just use buffered=1
+with ioengine=io_uring with fio. No application changes are needed to
+use the more optimized buffered async read.
+
+preadv for comparison:
+	real    1m13.821s
+	user    0m0.558s
+	sys     0m11.125s
+	CPU	~13%
+
+Mainline:
+	real    0m12.054s
+	user    0m0.111s
+	sys     0m5.659s
+	CPU	~32% + ~50% == ~82%
+
+This patchset:
+	real    0m9.283s
+	user    0m0.147s
+	sys     0m4.619s
+	CPU	~52%
+
+The CPU numbers are just a rough estimate. For the mainline io_uring
+run, this includes the app itself and all the threads doing IO on its
+behalf (32% for the app, ~1.6% per worker and 32 of them). Context
+switch rate is much smaller with the patchset, since we only have the
+one task performing IO.
+
+The goal here is efficiency. Async thread offload adds latency, and
+it also adds noticable overhead on items such as adding pages to the
+page cache. By allowing proper async buffered read support, we don't
+have X threads hammering on the same inode page cache, we have just
+the single app actually doing IO.
+
+Been beating on this and it's solid for me, and I'm now pretty happy
+with how it all turned out. Not aware of any missing bits/pieces or
+code cleanups that need doing.
+
+Series can also be found here:
+
+https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.3
+
+or pull from:
+
+git://git.kernel.dk/linux-block async-buffered.3
+
+ fs/block_dev.c            |   2 +-
+ fs/btrfs/file.c           |   2 +-
+ fs/ext4/file.c            |   2 +-
+ fs/io_uring.c             |  99 ++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_file.c         |   2 +-
+ include/linux/blk_types.h |   3 +-
+ include/linux/fs.h        |   5 ++
+ include/linux/pagemap.h   |  64 ++++++++++++++++++++++
+ mm/filemap.c              | 111 ++++++++++++++++++++++++--------------
+ 9 files changed, 245 insertions(+), 45 deletions(-)
+
+Changes since v2:
+- Get rid of unnecessary wait_page_async struct, just use wait_page_async
+- Add another prep handler, adding wake_page_match()
+- Use wake_page_match() in both callers
+Changes since v1:
+- Fix an issue with inline page locking
+- Fix a potential race with __wait_on_page_locked_async()
+- Fix a hang related to not setting page_match, thus missing a wakeup
 
 -- 
 Jens Axboe
+
 
