@@ -2,119 +2,95 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F15C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6949C20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7823207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 00:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590192745;
-	bh=i2mVo27EQF4lNBS9IayQbm5SwyNaYxnGrl/yPkcM4iY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ukIvetRwX8KQWLnxkDsDMRQmMJrqmCSoLU958a0lbvur2Qc00iApexOonjILBfK34
-	 aSHThZtB+mtWXzMX91eHyiPFjZovd4vtG2RC1TAowARA19DzCstmqPgW9WNgq1bgVp
-	 Oum/nrffvTTPxYG7NptrJns+faaNc5PBXMI/Tu2E=
+	s=default; t=1590192887;
+	bh=eyNd/Cq5EUSq2zODs4rsYd5H54YT8PZ2ailfI9ii6zY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NRO+160cx7EcDCcKMUGjZuSRStonTtZIQV4pQqn44udzsc/IAC37DkdnSlen8ihAn
+	 Ubsd0Cfvzv6qEi0HHFmjrJvsatlXPy05d1UausgXtvDIpO0NjFo8RSMNfokR2cShgA
+	 0K0vIMBJacvy3mJUy0aromzpW59ARG12MAFAgBGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgEWAMZ (ORCPT
+        id S2387451AbgEWAOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 20:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731169AbgEWAMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 20:12:24 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFBD2206B6;
-        Sat, 23 May 2020 00:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590192744;
-        bh=i2mVo27EQF4lNBS9IayQbm5SwyNaYxnGrl/yPkcM4iY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=nTcstaV27D3miCiaUjMLPYQNjsOV2zjv9IVJEjCxOvFHc+7X0m5O7zN8t8W+JIABN
-         B8SaMwegapCgvtM+btv3jc9iY4SqC5Lp51+XjWN9/vbN62LJbOIfl0U+hl9gIaSr+O
-         3a7KjDpOAIVOYbjPt5t/Sk3o8W2OTu+t9w4y2njw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D57973521294; Fri, 22 May 2020 17:12:23 -0700 (PDT)
-Date:   Fri, 22 May 2020 17:12:23 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        elver@google.com, bp@alien8.de
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200523001223.GA23921@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200522033119.1bbd99c5@canb.auug.org.au>
- <20200521173520.GL6608@willie-the-truck>
- <20200522171708.5f392fde@canb.auug.org.au>
- <20200522174944.1a1732fa@canb.auug.org.au>
+        Fri, 22 May 2020 20:14:47 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:50183 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731169AbgEWAOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 20:14:46 -0400
+Received: by mail-pj1-f66.google.com with SMTP id nu7so5689907pjb.0;
+        Fri, 22 May 2020 17:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8sh7/Jb1dluiEsgALu1CN7Z9jV8JyhMmSJJWK9ECsGg=;
+        b=DU91Hpgt/x/QsRigWve7HGyG4bCKJ9WM5qw6NgYaOdEzAjTHnAIQZSb0O6HWPYxCRc
+         VpLkwiUaHFBf5HjYRGEp/RV/4IRRqjIVa6ZKtp3wJIeniFMXw7t0h197FpLWXzWAxMT/
+         PeV8CYIY+NP8tE8MOS27Pz5G3C8BUSgc89FXt+a7g09Vjd7odRLXCCuQ1zRh+ND9SE0G
+         0aurk1ZpWpzN6uKUERM8EFfS4iRmKGcb5cLr5UQkXP3yX/xOq0Y0qgMpaSbDDLjXDI6C
+         oirkgAINdmEERmjNOi4PNxkpU2ELB+Ll8uIiRiq9/I5BS+gnXK7yHxaDsMpqHsTazJ90
+         Xd0A==
+X-Gm-Message-State: AOAM533Ar5jdE3VbGFPLl+VyOIpClX6IP0gWiL5vYynFWDsDeOlycLf9
+        62pe2C/JfojRcgOQFm8YwVY=
+X-Google-Smtp-Source: ABdhPJzinHVQBUmTlp57xG6X/Xg4Lcp1Fohv2CAoewS7fdg2SiJzKBWsFw4r9rlUlrkuFx7lNSDfXg==
+X-Received: by 2002:a17:90a:dc10:: with SMTP id i16mr7356372pjv.137.1590192885688;
+        Fri, 22 May 2020 17:14:45 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o15sm7236031pjq.28.2020.05.22.17.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 17:14:44 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id C6A9B404B0; Sat, 23 May 2020 00:14:43 +0000 (UTC)
+Date:   Sat, 23 May 2020 00:14:43 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2] firmware_loader: change enum fw_opt to u32
+Message-ID: <20200523001443.GI11244@42.do-not-panic.com>
+References: <20200522231202.13681-1-scott.branden@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522174944.1a1732fa@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200522231202.13681-1-scott.branden@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 05:49:44PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Fri, May 22, 2020 at 04:12:02PM -0700, Scott Branden wrote:
+> "enum fw_opt" is not used as an enum.
+> Change fw_opt to u32 as FW_OPT_* values are OR'd together.
 > 
-> On Fri, 22 May 2020 17:17:08 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > On Thu, 21 May 2020 18:35:22 +0100 Will Deacon <will@kernel.org> wrote:
-> > >
-> > > [+Marco and Boris]
-> > > 
-> > > On Fri, May 22, 2020 at 03:31:19AM +1000, Stephen Rothwell wrote:  
-> > > > After merging the tip tree, all my linux-next builds took signficantly
-> > > > longer and used much more memory.  In some cases, builds would seg fault
-> > > > due to running out of memory :-(
-> > > > 
-> > > > I have eventaully bisected it to commit
-> > > > 
-> > > >   cdd28ad2d811 ("READ_ONCE: Use data_race() to avoid KCSAN instrumentation")
-> > > > 
-> > > > For my (e.g.) x86_64 allmodconfig builds (cross compiled on PowerPC le,
-> > > > -j80) the elapsed time went from around 9 minutes to over 17 minutes
-> > > > and the maximum resident size (as reported by /usr/bin/time) from around
-> > > > 500M to around 2G (I saw lots of cc1 processes over 2G in size).
-> > > > 
-> > > > For tomorrow's linux-next (well, later today :-() I will revert that
-> > > > commit (and its child) when I merge the tip tree.    
-> > > 
-> > > Sorry about that, seems we can't avoid running into compiler problems with
-> > > this lot. The good news is that there's a series to fix this here:
-> > > 
-> > > https://lore.kernel.org/r/20200521142047.169334-1-elver@google.com
-> > > 
-> > > so hopefully this be fixed in -tip soon (but I agree that reverting the
-> > > thing in -next in the meantime makes sense).  
-> > 
-> > Unfortunately, the revert didn't work, so instead I have used the tip
-> > tree from next-20200518 for today (hopefully this will all be sorted
-> > out by Monday).
-> 
-> And the rcu tree has merged part of the tip tree that contains the
-> offending commits, so I have used the version fo the rcu tree from
-> next-20200519 for today.
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 
-Please accept my apologies for my part of this problem!  I don't see
-the slowdowns on my normal test system (possibly due to gcc 4.8.5),
-but I do see them on my laptop.
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Marco, Thomas, is there any better setup I can provide Stephen?  Or
-is the next-20200519 -rcu tree the best we have right now?
-
-							Thanx, Paul
+  Luis
