@@ -2,125 +2,102 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791CFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5C420814
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590231706;
-	bh=xemUji08Zmu27LB6PcMCt2apr23hpQFKF9p4eBeTcUs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IITskIM1lEyG/72z6aDMQTqdpANII8K0FNMNkgcPlSC+ARssT9bDt5BWyfZS/Gw6n
-	 mzBG5fSxKjJHQNHLsoxCOxY8Qxj2RIKn8PUG28eZkjaODxQbx5CeEn192fAOr86+Ez
-	 kmWQnEcdz8Ux09p+6lrO5X894Bg/KZrqVlsmswQA=
+	by mail.kernel.org (Postfix) with ESMTP id 4F02320825
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 11:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="F5eKxJj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387770AbgEWLBp (ORCPT
+        id S2387772AbgEWLQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 07:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
+        Sat, 23 May 2020 07:16:15 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52279 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbgEWLBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 07:01:44 -0400
-Received: from localhost (p5486c962.dip0.t-ipconnect.de [84.134.201.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728006AbgEWLQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 07:16:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AA4D2070A;
-        Sat, 23 May 2020 11:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590231704;
-        bh=xemUji08Zmu27LB6PcMCt2apr23hpQFKF9p4eBeTcUs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PvxGdi8JW2GIxv1ABsPvTRT7aPsZr1ZUbmMFkyEtmN8PfosXq6gmoO2sa8qFQe7o0
-         39mzeGKp7wFGafKBDr+GrIOaPyYxL8PmCLhogdPcUpNa80rM57xQ+ty8+rxMhqoZkY
-         NIAS5Rk4rTZVL7njuQMdcRMuKJwlz3v1bcDz8QxE=
-Date:   Sat, 23 May 2020 13:01:40 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 4/4] i2c: stm32f7: Add SMBus-specific protocols support
-Message-ID: <20200523110140.GD3459@ninjato>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-5-git-send-email-alain.volmat@st.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49TglX39TCz9sRK;
+        Sat, 23 May 2020 21:16:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1590232573;
+        bh=XdJ4GsUtyCeZgpbb9v8CA5sMkmlRwqHwNrM4xAXS61k=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=F5eKxJj+Hlk8PWkkgX8L7qfqOyREq18UpzzW44RqnKPs0k1u3h76rDnoVchsW4VM+
+         MxQ+0faOCx2NxDdKdOSyGLXnN1BXavZQ4kLw+q+SzvtRFC8KDpJscsm/MZ8RXvZMli
+         Uik9xq6s4cn6WDZB8RPYvlPHJT9+AX4PoHzD6RdUnV2nqz75vbevwWu8uL+pnDNM+6
+         HusW3zRwShhbSgnylftW/6wvDZ1VPVzMrZC88gNUrOk09sKOUTn0KYLirLPXVJPpxe
+         muBDDnC/UwyxIqgqk0NEPRmFf7T7Cj4eCZitvEX+FQehuYA+CSviqkgXAzKN7rrxc8
+         ZS3RyK3piRHSw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 1/6] printk: Collapse shutdown types into a single dump reason
+In-Reply-To: <20200515184434.8470-2-keescook@chromium.org>
+References: <20200515184434.8470-1-keescook@chromium.org> <20200515184434.8470-2-keescook@chromium.org>
+Date:   Sat, 23 May 2020 21:16:30 +1000
+Message-ID: <87pnaugaup.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u65IjBhB3TIa72Vp"
-Content-Disposition: inline
-In-Reply-To: <1588657871-14747-5-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kees Cook <keescook@chromium.org> writes:
+> To turn the KMSG_DUMP_* reasons into a more ordered list, collapse
+> the redundant KMSG_DUMP_(RESTART|HALT|POWEROFF) reasons into
+> KMSG_DUMP_SHUTDOWN. The current users already don't meaningfully
+> distinguish between them, so there's no need to, as discussed here:
+> https://lore.kernel.org/lkml/CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com/
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/powerpc/kernel/nvram_64.c | 4 +---
+>  fs/pstore/platform.c           | 8 ++------
+>  include/linux/kmsg_dump.h      | 4 +---
+>  kernel/reboot.c                | 6 +++---
+>  4 files changed, 7 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
+> index fb4f61096613..0cd1c88bfc8b 100644
+> --- a/arch/powerpc/kernel/nvram_64.c
+> +++ b/arch/powerpc/kernel/nvram_64.c
+> @@ -655,9 +655,7 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
+>  	int rc = -1;
+>  
+>  	switch (reason) {
+> -	case KMSG_DUMP_RESTART:
+> -	case KMSG_DUMP_HALT:
+> -	case KMSG_DUMP_POWEROFF:
+> +	case KMSG_DUMP_SHUTDOWN:
+>  		/* These are almost always orderly shutdowns. */
+>  		return;
+>  	case KMSG_DUMP_OOPS:
 
---u65IjBhB3TIa72Vp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-
-> +static int stm32f7_i2c_reg_client(struct i2c_client *client)
-> +{
-> +	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(client->adapter);
-> +	int ret;
-> +
-> +	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
-> +		/* Only enable on the first device registration */
-> +		if (atomic_inc_return(&i2c_dev->host_notify_cnt) == 1) {
-> +			ret = stm32f7_i2c_enable_smbus_host(i2c_dev);
-> +			if (ret) {
-> +				dev_err(i2c_dev->dev,
-> +					"failed to enable SMBus host notify (%d)\n",
-> +					ret);
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-So, as mentioned in the other review, I'd like to evaluate other
-possibilities for the above:
-
-- One option is to enable it globally in probe(). Then you lose the
-  possibility to have a device at address 0x08.
-- Enable it in probe() only if there is a generic binding "host-notify".
-- Let the core scan for a device with HOST_NOTIFY when registering an
-  adapter and then call back into the driver somehow?
-
-Other ideas?
-
-
---u65IjBhB3TIa72Vp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7JApQACgkQFA3kzBSg
-KbZPBg//Yu/cFAZDkasWicaLj/8KEo4knB3mYgq+/AGe8Sib9oPeQYo5UCBjjXhv
-svRUyxcoHxwRvRo5iG/0hl3SzrAZz1xoz46znwdyGfUm5pX1cDe4o4wYUnuQsuJL
-Kfg4+nQ/qLW75cOj1V1z9Tf7QGCWEhxkedMt+Up7xpDS06ZcwIb+Q4TE+Ziu/LYc
-MoDLi4rbjWVSZKWRKpBvAAXyVLZUoFDJuHGr39IafE9Y3JdixRglrjwDE6T4feQS
-V68mGqcWG1LBPtsyonN6PvPJq3bp9ZxhvhUioLUZCcoxmdSyT6qDewcOHczkwlnr
-ZZ4tX9QZjPLwEe6VaTeJqWWvOkrWPlsDOnUDiZq8WPowITVL7eRNvkBpkRpCRkdH
-hDNnOYtOgjVnGwkgM/S8aUEla8/LBTCWoFiGJ38yL7aNxXbEpE+uVQLsG1d2ci52
-xfZZA0hm0GDxYKnigr11x3mIA8VdZLtQeaTw3EUZAsUWfKV/pfYRElsDZ/dul984
-cSioEGynR6ndQJ+fEAaiRR2KWUaOUEaLCOco6aODIy/stIJnfSEQDk+cTsfBQV8v
-Ptp5MEwkOItxXftIwDLexRaob7cbre+jNa/Nsvl1EcJpqq2pN1dCXM40JVdqA5a7
-J//X8FOfUW0pALR5BSvRFtV9QaqJ/MDXbeww81CCLO8Zo+uv6g4=
-=5Hj7
------END PGP SIGNATURE-----
-
---u65IjBhB3TIa72Vp--
+cheers
