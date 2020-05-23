@@ -2,178 +2,148 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E53C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9338C2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2D220812
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 19:27:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0q+YU9P9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDwq+vPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387834AbgEWTUr (ORCPT
+        id S2387867AbgEWT10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 15:20:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40144 "EHLO
+        Sat, 23 May 2020 15:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbgEWTUq (ORCPT
+        with ESMTP id S1726790AbgEWT10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 15:20:46 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A90C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 12:20:45 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so5754242plq.12
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 12:20:45 -0700 (PDT)
+        Sat, 23 May 2020 15:27:26 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6887C061A0E;
+        Sat, 23 May 2020 12:27:25 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c11so14447420ljn.2;
+        Sat, 23 May 2020 12:27:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hA9QPDx7hlE3ND4DwWRlDMJ19Frvrmq/H2EqY+eNJ64=;
-        b=0q+YU9P9GK7f7corz/MS41QLym929QjELiRrpW8MG8nwgFwcsxsqzCbNyC7laJ1+PF
-         glJphrkI1udiLmwSzBkbGBRq+UPe73XZoD2mvtEOZ4ia2S44JuxRfUumeDe4yb98XkRZ
-         P5yD3lBb+VKq6WVq34r3Ou4D6u7gizH6e7wDh7/5gwBjIVCkJ5KgFhS+c6pf7/vrEzJy
-         AkgSLIH8Z/r7HU6xk2xehOVbOp05rjgCDx4olsrirOGmqMR80ofSNU686R2TjN7Rhvct
-         fjYmAUM0vHO1N3eVEB+5PPKJmsdd0ligK7RL/JZb1osl2D7+Z2ZNcRhTw69SNr8BEkjg
-         r9Nw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4zh7dLGu7lIkgyTn7FvmIN1ENGY6DqOeI+3TT5hxCt0=;
+        b=SDwq+vPLA0VttbVnCIyh849cyujPiB4Sr5VE3OMr00ndVG07fQzr9R15FPIx1iqUtW
+         P77gdjZKGBER/wOo6ZfKLZ/MnwEYUsOS6LA6V/sWnAI3xblDIvlXaLbXny+B/Ku6NhEC
+         PyMTCg7+1GU1lZL8KcMSVdNbebuXR0Nv3iNLHgWmvgfoOqq9fe2DbeGW8rHwd/rLn3Hc
+         6p7pWKUCNCOwYj7fdyTkYx7ypzcitzJAhMGkoXfv8S8zUTNoaJQAnuWwIa4TQjSyu8R9
+         aULDf1WC3dkaxWC6o9AnAWGp4HZdj6nTR+qk+RmpStevnJIqDgbfmmrMOwbA1RLcLBRk
+         fOJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hA9QPDx7hlE3ND4DwWRlDMJ19Frvrmq/H2EqY+eNJ64=;
-        b=llYVGq1cdLtTkFUj0CyeKzSspJ3HwSuc69wOFaliOxFRnfjcrnd7qFdXc7xi6NNYqJ
-         1Ls0yXRfNWdZVFhFvfbS09gO6Xvrv/+amhW8GNpBCaWzmOiAgUGiSg0hd8xraiprKIzw
-         jez7110vhAnJkZROyZV213TbCZYGe7mcQHRhGodA7tLBSzMZ6zMyfaQgnCHnZYt+B3bh
-         Byzc7Cd8yOvpdBLjP6mg1v+Jt7/TwgAvWwa6lBhPP6cVr8nFz4hpurM8zDSYluc7yrGd
-         lHWgeBvQ1Fm1SWsbfMtwUIfzH4w60zs91paoqkV1PMIXVojU/LJ1c+FnYaKvPJSjMZ7/
-         ysZw==
-X-Gm-Message-State: AOAM5337KBEBtr55ZJ8N0CU5iVUQrk3eo7HTEBqovwlBNFxw+TMEcdda
-        a9NOUZGXWpL+H7zyfE0N4BYF2vnjmCLKIg==
-X-Google-Smtp-Source: ABdhPJxXzjl6T/Z1yURPua6/Yup1Xp5ljESCno0qdshH4asOxNjDPYFoS3I9T3IMOBXTfYoB8AZclg==
-X-Received: by 2002:a17:90a:8545:: with SMTP id a5mr11496077pjw.200.1590261644246;
-        Sat, 23 May 2020 12:20:44 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:c94:a67a:9209:cf5f? ([2605:e000:100e:8c61:c94:a67a:9209:cf5f])
-        by smtp.gmail.com with ESMTPSA id 202sm2033541pfv.155.2020.05.23.12.20.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 May 2020 12:20:43 -0700 (PDT)
-Subject: Re: [PATCHSET v2 0/12] Add support for async buffered reads
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200523185755.8494-1-axboe@kernel.dk>
-Message-ID: <2b42c0c3-5d3c-e381-4193-83cb3f971399@kernel.dk>
-Date:   Sat, 23 May 2020 13:20:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4zh7dLGu7lIkgyTn7FvmIN1ENGY6DqOeI+3TT5hxCt0=;
+        b=qRaM4buyrPdeuPQpk0hAv0az1RRQTGg4jwC9eN0YjNU4Div8THs+GZeMbm9rWeWIOX
+         5mdgqofH+C19gLntyR/HaAtjPxLBevnZMXbCjfGmOp3552FdfapR/Foiu/seFA8QWY0B
+         9yJyFIJgdlbhFx3bTFbaRxYTKTlNIV09m8WSG0tI1GcDKeVMJQrloD+nYvgV5vWUlzNz
+         nrl6H+YRrb91ny9TVamKy6TMWvYwQiGc21r++UC0EWMx9KSWtbAkVskI9+GkdpV9EVSR
+         ZX03A6bSwq2UL/i3Ub6ZPCnbeIw7aumQTdjZE5K7b+uI0zGmaXtmJ0IYjHhfFEh586BW
+         SKFA==
+X-Gm-Message-State: AOAM5336erzi3M+Y0UrINFxUK8sIqEMScGsx1ENpRxNEPfPA/iTr0PlN
+        /HTmSju3m1Piqt+Fpy555Y6CmSCJ+p9H4CMks8Q=
+X-Google-Smtp-Source: ABdhPJx/aePhkdk7Qd1gPorTLl+bFXIeiWFXCUwHcB1sqn3tOPAQvRYi6F02pl0bBHDR2PIWoOrdqQ4l/KajgyWOA64=
+X-Received: by 2002:a2e:99cd:: with SMTP id l13mr10155778ljj.257.1590262043781;
+ Sat, 23 May 2020 12:27:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200523185755.8494-1-axboe@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1590252072-2793-1-git-send-email-jrdr.linux@gmail.com> <20200523172519.GA17206@bombadil.infradead.org>
+In-Reply-To: <20200523172519.GA17206@bombadil.infradead.org>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Sun, 24 May 2020 01:05:28 +0530
+Message-ID: <CAFqt6zZfrdRB5pbHo5nu668yQUaTV9DbV3ZTeFq-UEKjs0X8XQ@mail.gmail.com>
+Subject: Re: [linux-next RFC] mm/gup.c: Convert to use get_user_pages_fast_only()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, acme@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        namhyung@kernel.org, pbonzini@redhat.com,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mike Rapoport <rppt@linux.ibm.com>, msuchanek@suse.de,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        kvm@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And this one is v3, obviously, not v2...
+On Sat, May 23, 2020 at 10:55 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Sat, May 23, 2020 at 10:11:12PM +0530, Souptick Joarder wrote:
+> > Renaming the API __get_user_pages_fast() to get_user_pages_
+> > fast_only() to align with pin_user_pages_fast_only().
+>
+> Please don't split a function name across lines.  That messes
+> up people who are grepping for the function name in the changelog.
+
+Ok.
+
+>
+> > As part of this we will get rid of write parameter.
+> > Instead caller will pass FOLL_WRITE to get_user_pages_fast_only().
+> > This will not change any existing functionality of the API.
+> >
+> > All the callers are changed to pass FOLL_WRITE.
+> >
+> > Updated the documentation of the API.
+>
+> Everything you have done here is an improvement, and I'd be happy to
+> see it go in (after fixing the bug I note below).
+>
+> But in reading through it, I noticed almost every user ...
+>
+> > -     if (__get_user_pages_fast(hva, 1, 1, &page) == 1) {
+> > +     if (get_user_pages_fast_only(hva, 1, FOLL_WRITE, &page) == 1) {
+>
+> passes '1' as the second parameter.  So do we want to add:
+>
+> static inline bool get_user_page_fast_only(unsigned long addr,
+>                 unsigned int gup_flags, struct page **pagep)
+> {
+>         return get_user_pages_fast_only(addr, 1, gup_flags, pagep) == 1;
+> }
+>
+Yes, this can be added. Does get_user_page_fast_only() naming is fine ?
 
 
-On 5/23/20 12:57 PM, Jens Axboe wrote:
-> We technically support this already through io_uring, but it's
-> implemented with a thread backend to support cases where we would
-> block. This isn't ideal.
-> 
-> After a few prep patches, the core of this patchset is adding support
-> for async callbacks on page unlock. With this primitive, we can simply
-> retry the IO operation. With io_uring, this works a lot like poll based
-> retry for files that support it. If a page is currently locked and
-> needed, -EIOCBQUEUED is returned with a callback armed. The callers
-> callback is responsible for restarting the operation.
-> 
-> With this callback primitive, we can add support for
-> generic_file_buffered_read(), which is what most file systems end up
-> using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
-> trivial to add more.
-> 
-> The file flags support for this by setting FMODE_BUF_RASYNC, similar
-> to what we do for FMODE_NOWAIT. Open to suggestions here if this is
-> the preferred method or not.
-> 
-> In terms of results, I wrote a small test app that randomly reads 4G
-> of data in 4K chunks from a file hosted by ext4. The app uses a queue
-> depth of 32. If you want to test yourself, you can just use buffered=1
-> with ioengine=io_uring with fio. No application changes are needed to
-> use the more optimized buffered async read.
-> 
-> preadv for comparison:
-> 	real    1m13.821s
-> 	user    0m0.558s
-> 	sys     0m11.125s
-> 	CPU	~13%
-> 
-> Mainline:
-> 	real    0m12.054s
-> 	user    0m0.111s
-> 	sys     0m5.659s
-> 	CPU	~32% + ~50% == ~82%
-> 
-> This patchset:
-> 	real    0m9.283s
-> 	user    0m0.147s
-> 	sys     0m4.619s
-> 	CPU	~52%
-> 
-> The CPU numbers are just a rough estimate. For the mainline io_uring
-> run, this includes the app itself and all the threads doing IO on its
-> behalf (32% for the app, ~1.6% per worker and 32 of them). Context
-> switch rate is much smaller with the patchset, since we only have the
-> one task performing IO.
-> 
-> The goal here is efficiency. Async thread offload adds latency, and
-> it also adds noticable overhead on items such as adding pages to the
-> page cache. By allowing proper async buffered read support, we don't
-> have X threads hammering on the same inode page cache, we have just
-> the single app actually doing IO.
-> 
-> Been beating on this and it's solid for me, and I'm now pretty happy
-> with how it all turned out. Not aware of any missing bits/pieces or
-> code cleanups that need doing.
-> 
-> Series can also be found here:
-> 
-> https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.3
-> 
-> or pull from:
-> 
-> git://git.kernel.dk/linux-block async-buffered.3
-> 
->  fs/block_dev.c            |   2 +-
->  fs/btrfs/file.c           |   2 +-
->  fs/ext4/file.c            |   2 +-
->  fs/io_uring.c             |  99 ++++++++++++++++++++++++++++++++++
->  fs/xfs/xfs_file.c         |   2 +-
->  include/linux/blk_types.h |   3 +-
->  include/linux/fs.h        |   5 ++
->  include/linux/pagemap.h   |  64 ++++++++++++++++++++++
->  mm/filemap.c              | 111 ++++++++++++++++++++++++--------------
->  9 files changed, 245 insertions(+), 45 deletions(-)
-> 
-> Changes since v2:
-> - Get rid of unnecessary wait_page_async struct, just use wait_page_async
-> - Add another prep handler, adding wake_page_match()
-> - Use wake_page_match() in both callers
-> Changes since v1:
-> - Fix an issue with inline page locking
-> - Fix a potential race with __wait_on_page_locked_async()
-> - Fix a hang related to not setting page_match, thus missing a wakeup
-> 
+> > @@ -2797,10 +2803,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+> >        * FOLL_FAST_ONLY is required in order to match the API description of
+> >        * this routine: no fall back to regular ("slow") GUP.
+> >        */
+> > -     unsigned int gup_flags = FOLL_GET | FOLL_FAST_ONLY;
+> > -
+> > -     if (write)
+> > -             gup_flags |= FOLL_WRITE;
+> > +     gup_flags = FOLL_GET | FOLL_FAST_ONLY;
+>
+> Er ... gup_flags |=, surely?
+
+Poor mistake.
 
 
--- 
-Jens Axboe
+@@ -1998,7 +1998,7 @@ int gfn_to_page_many_atomic(struct
+kvm_memory_slot *slot, gfn_t gfn,
+        if (entry < nr_pages)
+                return 0;
 
+-       return __get_user_pages_fast(addr, nr_pages, 1, pages);
++       return get_user_pages_fast(addr, nr_pages, FOLL_WRITE, pages);
+
+Also this needs to be corrected.
