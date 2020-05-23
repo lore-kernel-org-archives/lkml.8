@@ -2,197 +2,299 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6647C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06559C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B33A720679
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AEC20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XT+8AQbx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRbNmxsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388032AbgEWRi4 (ORCPT
+        id S2388152AbgEWRj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:38:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52366 "EHLO
+        Sat, 23 May 2020 13:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387515AbgEWRi4 (ORCPT
+        with ESMTP id S2387515AbgEWRj2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:38:56 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381F4C061A0E;
-        Sat, 23 May 2020 10:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=hPoQCBjZWmjMZw8FIVwgdhSjmWeQlwdjeV959pqd6d4=; b=XT+8AQbxTPZM29pEwHt33upJzd
-        BULVgdiPtVtJzJdlO6boiPP2mNsIplOVjNEzOH4u8CS4F8YJmCJNVzt74RompVLLTVANwFyEPH47J
-        3PFAHLH6Ku56XLNX55ZXLAYfuoN/loa5ySfRY5Vmn+M3PD+8XbcZcfq9jDLBDTLKpbIqhesOlRFlA
-        xC6CQXQollwsIIxAAiBIAzELwBqcjCdwGl9kua+0iYVbMVfhNZiZnNyFR3OC0Bdhh66CeD73/pkmW
-        9N3EhrkmUmGCv4OBXyVncN97TTg104K/CR6q6msHoTPl6oLn9SiIHW8NZ/yWaRNb4T4e99V387KHK
-        LWmf2N0w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcY6n-0002yu-4c; Sat, 23 May 2020 17:38:53 +0000
-Subject: Re: possible deadlock in media_devnode_release
-To:     syzbot <syzbot+e3c234427cd464510547@syzkaller.appspotmail.com>,
-        brendanhiggins@google.com, gregkh@linuxfoundation.org,
-        heikki.krogerus@linux.intel.com, laurent.pinchart@ideasonboard.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, rafael.j.wysocki@intel.com,
-        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
-References: <0000000000004ae30305a653bc86@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <08f732a9-986f-6dcf-87dd-075a9b4605d7@infradead.org>
-Date:   Sat, 23 May 2020 10:38:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 23 May 2020 13:39:28 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24715C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:39:27 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 5so6423811pjd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pf6Ugn99es2SlmyB0AGFZh8SoF73A0fGWtO9ESLW5e0=;
+        b=bRbNmxszfYMnCYRjwizdd0HeFOcouozdSx2Wf1APoyo/4Y8wO1f5p7jr2AgKB7IDg7
+         iBGnBragMuIj0T7DKPFh8FAYFfvGimWWEW1le30L2fbMYSC1O5K0uZZWCg4hP+xtH7Kj
+         e/kGqVD2xR30jANPA6etuaczAt/oWX+OWBRr56nI+aWjlEs66mYdb6mFAMgGHlMF2NsO
+         VrdXSsnR2sLJWqMfibkyOTncmZ7JucGlK0JKYHzP9O0VOW2zithVy70pQbhlH+Ul9B+q
+         Q9O3NbFN0LzNafl/nNnJHJzNuIotK2n3D7yfo7BbUupLLr+ozs0+oWdqOoTyjb30G3sU
+         oQnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pf6Ugn99es2SlmyB0AGFZh8SoF73A0fGWtO9ESLW5e0=;
+        b=hLIoiyzKAF/pTrmA8MkCwEbqLluJRI6w5449hCCY6s1dG6z1CMkz2X6xeE5S7G2C/b
+         dzm6t+JjhExueai0puY5sP09wECuG9KwDXy1IMYFVmP7LxejCKzvVZYMcorc2ZUjrC1I
+         Y1pOPm5mjqPvoCxR0C9I9a9Hly89BVZIa0qgszToybqsPpdITFJWo0EjKF1iqmrzitoB
+         p1z25QIfsah7zjR706z5+OMDle53kDfYaR2Hc6oVhH7nL2AzpqIyRss1Xv5Ghd2gHy6C
+         M+HawrNhs1gc7Qn0M94tLWawGXH0utq/eJRhmjtIQkvNlYkqwFlTLW/c8Y3MxMB5cnVX
+         /2bg==
+X-Gm-Message-State: AOAM532O9p5FyydSi/heGN7itV2Qa0G60djZAcl1aAthBodUwugG/5bf
+        n4nhgGeht1+EMJEreyIVsw4=
+X-Google-Smtp-Source: ABdhPJx/1pJNxzdRaiXn/UpjbE0w0k+lcmbZsHc2nwu/BGZY0WaYGL1vkQP63oTa3X2l+RDBHucIFA==
+X-Received: by 2002:a17:90a:264c:: with SMTP id l70mr11733707pje.18.1590255566631;
+        Sat, 23 May 2020 10:39:26 -0700 (PDT)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id m4sm9840866pje.47.2020.05.23.10.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 10:39:25 -0700 (PDT)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Allison Randal <allison@lohutok.net>,
+        Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH] ALSA: line6: add hw monitor volume control for POD HD500
+Date:   Sat, 23 May 2020 10:39:03 -0700
+Message-Id: <20200523173903.5136-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <0000000000004ae30305a653bc86@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/20 10:04 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    c11d28ab Add linux-next specific files for 20200522
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17330172100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e3c234427cd464510547
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122eacba100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12fffa9a100000
-> 
-> The bug was bisected to:
-> 
-> commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa
-> Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Date:   Wed May 13 15:18:40 2020 +0000
-> 
->     kobject: Make sure the parent does not get released before its children
+Add hw monitor volume control for POD HD500. The same change may
+work for HD500X but I don't have it to test.
 
-Hi,
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+---
+ sound/usb/line6/driver.c |   3 +-
+ sound/usb/line6/driver.h |   4 ++
+ sound/usb/line6/podhd.c  | 124 ++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 129 insertions(+), 2 deletions(-)
 
-Greg just sent a revert for this patch:
-https://lore.kernel.org/lkml/20200523152922.GA224858@kroah.com/
-
-so all 3 of these reports should be cleared up soon.
-
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=146b3d22100000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=166b3d22100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=126b3d22100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e3c234427cd464510547@syzkaller.appspotmail.com
-> Fixes: 4ef12f719802 ("kobject: Make sure the parent does not get released before its children")
-> 
-> usb 1-1: USB disconnect, device number 2
-> ============================================
-> WARNING: possible recursive locking detected
-> 5.7.0-rc6-next-20200522-syzkaller #0 Not tainted
-> --------------------------------------------
-> kworker/1:1/28 is trying to acquire lock:
-> ffffffff8a4f3aa8 (media_devnode_lock){+.+.}-{3:3}, at: media_devnode_release+0x1a/0xe0 drivers/media/mc/mc-devnode.c:53
-> 
-> but task is already holding lock:
-> ffffffff8a4f3aa8 (media_devnode_lock){+.+.}-{3:3}, at: media_devnode_unregister+0x1c/0x69 drivers/media/mc/mc-devnode.c:283
-> 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
-> 
->        CPU0
->        ----
->   lock(media_devnode_lock);
->   lock(media_devnode_lock);
-> 
->  *** DEADLOCK ***
-> 
->  May be due to missing lock nesting notation
-> 
-> 6 locks held by kworker/1:1/28:
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:303 [inline]
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
->  #0: ffff88821a8e6138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: process_one_work+0x844/0x16a0 kernel/workqueue.c:2239
->  #1: ffffc90000de7dc0 ((work_completion)(&hub->events)){+.+.}-{0:0}, at: process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
->  #2: ffff88809e850218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
->  #2: ffff88809e850218 (&dev->mutex){....}-{3:3}, at: hub_event+0x1b6/0x38f0 drivers/usb/core/hub.c:5522
->  #3: ffff88809749e218 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:768 [inline]
->  #3: ffff88809749e218 (&dev->mutex){....}-{3:3}, at: usb_disconnect+0x91/0x8d0 drivers/usb/core/hub.c:2208
->  #4: ffff8880951c01a8 (&dev->mutex){....}-{3:3}, at: device_release_driver_internal+0x23/0x500 drivers/base/dd.c:1141
->  #5: ffffffff8a4f3aa8 (media_devnode_lock){+.+.}-{3:3}, at: media_devnode_unregister+0x1c/0x69 drivers/media/mc/mc-devnode.c:283
-> 
-> stack backtrace:
-> CPU: 1 PID: 28 Comm: kworker/1:1 Not tainted 5.7.0-rc6-next-20200522-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x18f/0x20d lib/dump_stack.c:118
->  print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
->  check_deadlock kernel/locking/lockdep.c:2432 [inline]
->  validate_chain kernel/locking/lockdep.c:3202 [inline]
->  __lock_acquire.cold+0x240/0x3e2 kernel/locking/lockdep.c:4380
->  lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4959
->  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
->  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
->  media_devnode_release+0x1a/0xe0 drivers/media/mc/mc-devnode.c:53
->  device_release+0x71/0x200 drivers/base/core.c:1541
->  kobject_cleanup lib/kobject.c:701 [inline]
->  kobject_release lib/kobject.c:732 [inline]
->  kref_put include/linux/kref.h:65 [inline]
->  kobject_put+0x1c8/0x2f0 lib/kobject.c:749
->  cdev_device_del+0x69/0x80 fs/char_dev.c:575
->  media_devnode_unregister+0x2b/0x69 drivers/media/mc/mc-devnode.c:285
->  media_device_unregister drivers/media/mc/mc-device.c:846 [inline]
->  media_device_unregister+0x3da/0x570 drivers/media/mc/mc-device.c:800
->  uvc_unregister_video+0x1b6/0x210 drivers/media/usb/uvc/uvc_driver.c:1960
->  uvc_disconnect+0xbc/0x160 drivers/media/usb/uvc/uvc_driver.c:2270
->  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
->  __device_release_driver drivers/base/dd.c:1113 [inline]
->  device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1144
->  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
->  device_del+0x481/0xd30 drivers/base/core.c:2839
->  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1245
->  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2217
->  hub_port_connect drivers/usb/core/hub.c:5059 [inline]
->  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
->  port_event drivers/usb/core/hub.c:5494 [inline]
->  hub_event+0x17ca/0x38f0 drivers/usb/core/hub.c:5576
->  process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
->  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->  kthread+0x3b5/0x4a0 kernel/kthread.c:291
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
-> 
-
-
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index 7629116f570e..597a36c0a51d 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -97,7 +97,7 @@ static void line6_stop_listen(struct usb_line6 *line6)
+ /*
+ 	Send raw message in pieces of wMaxPacketSize bytes.
+ */
+-static int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
++int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
+ 				  int size)
+ {
+ 	int i, done = 0;
+@@ -132,6 +132,7 @@ static int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
+ 
+ 	return done;
+ }
++EXPORT_SYMBOL(line6_send_raw_message);
+ 
+ /*
+ 	Notification of completion of asynchronous request transmission.
+diff --git a/sound/usb/line6/driver.h b/sound/usb/line6/driver.h
+index 1a4e3700c80c..62c686bed0ca 100644
+--- a/sound/usb/line6/driver.h
++++ b/sound/usb/line6/driver.h
+@@ -108,6 +108,8 @@ enum {
+ 	LINE6_CAP_CONTROL_MIDI = 1 << 4,
+ 	/* device provides low-level information */
+ 	LINE6_CAP_CONTROL_INFO = 1 << 5,
++	/* device provides hardware monitoring volume control */
++	LINE6_CAP_HWMON_CTL =	1 << 6,
+ };
+ 
+ /*
+@@ -185,6 +187,8 @@ extern int line6_read_data(struct usb_line6 *line6, unsigned address,
+ 			   void *data, unsigned datalen);
+ extern int line6_read_serial_number(struct usb_line6 *line6,
+ 				    u32 *serial_number);
++extern int line6_send_raw_message(struct usb_line6 *line6,
++					const char *buffer, int size);
+ extern int line6_send_raw_message_async(struct usb_line6 *line6,
+ 					const char *buffer, int size);
+ extern int line6_send_sysex_message(struct usb_line6 *line6,
+diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
+index e39dc85c355a..a40115625c01 100644
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -11,6 +11,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <sound/core.h>
++#include <sound/control.h>
+ #include <sound/pcm.h>
+ 
+ #include "driver.h"
+@@ -37,6 +38,9 @@ struct usb_line6_podhd {
+ 
+ 	/* Firmware version */
+ 	int firmware_version;
++
++	/* Monitor level */
++	int monitor_level;
+ };
+ 
+ #define line6_to_podhd(x)	container_of(x, struct usb_line6_podhd, line6)
+@@ -250,6 +254,115 @@ static void podhd_disconnect(struct usb_line6 *line6)
+ 	}
+ }
+ 
++static const unsigned int float_zero_to_one_lookup[] = {
++0x00000000, 0x3C23D70A, 0x3CA3D70A, 0x3CF5C28F, 0x3D23D70A, 0x3D4CCCCD,
++0x3D75C28F, 0x3D8F5C29, 0x3DA3D70A, 0x3DB851EC, 0x3DCCCCCD, 0x3DE147AE,
++0x3DF5C28F, 0x3E051EB8, 0x3E0F5C29, 0x3E19999A, 0x3E23D70A, 0x3E2E147B,
++0x3E3851EC, 0x3E428F5C, 0x3E4CCCCD, 0x3E570A3D, 0x3E6147AE, 0x3E6B851F,
++0x3E75C28F, 0x3E800000, 0x3E851EB8, 0x3E8A3D71, 0x3E8F5C29, 0x3E947AE1,
++0x3E99999A, 0x3E9EB852, 0x3EA3D70A, 0x3EA8F5C3, 0x3EAE147B, 0x3EB33333,
++0x3EB851EC, 0x3EBD70A4, 0x3EC28F5C, 0x3EC7AE14, 0x3ECCCCCD, 0x3ED1EB85,
++0x3ED70A3D, 0x3EDC28F6, 0x3EE147AE, 0x3EE66666, 0x3EEB851F, 0x3EF0A3D7,
++0x3EF5C28F, 0x3EFAE148, 0x3F000000, 0x3F028F5C, 0x3F051EB8, 0x3F07AE14,
++0x3F0A3D71, 0x3F0CCCCD, 0x3F0F5C29, 0x3F11EB85, 0x3F147AE1, 0x3F170A3D,
++0x3F19999A, 0x3F1C28F6, 0x3F1EB852, 0x3F2147AE, 0x3F23D70A, 0x3F266666,
++0x3F28F5C3, 0x3F2B851F, 0x3F2E147B, 0x3F30A3D7, 0x3F333333, 0x3F35C28F,
++0x3F3851EC, 0x3F3AE148, 0x3F3D70A4, 0x3F400000, 0x3F428F5C, 0x3F451EB8,
++0x3F47AE14, 0x3F4A3D71, 0x3F4CCCCD, 0x3F4F5C29, 0x3F51EB85, 0x3F547AE1,
++0x3F570A3D, 0x3F59999A, 0x3F5C28F6, 0x3F5EB852, 0x3F6147AE, 0x3F63D70A,
++0x3F666666, 0x3F68F5C3, 0x3F6B851F, 0x3F6E147B, 0x3F70A3D7, 0x3F733333,
++0x3F75C28F, 0x3F7851EC, 0x3F7AE148, 0x3F7D70A4, 0x3F800000
++};
++
++static void podhd_set_monitor_level(struct usb_line6_podhd *podhd, int value)
++{
++	unsigned int fl;
++	static const unsigned char msg[16] = {
++		/* Chunk is 0xc bytes (without first word) */
++		0x0c, 0x00,
++		/* First chunk in the message */
++		0x01, 0x00,
++		/* Message size is 2 4-byte words */
++		0x02, 0x00,
++		/* Unknown */
++		0x04, 0x41,
++		/* Unknown */
++		0x04, 0x00, 0x13, 0x00,
++		/* Volume, LE float32, 0.0 - 1.0 */
++		0x00, 0x00, 0x00, 0x00
++	};
++	unsigned char *buf;
++
++	buf = kmalloc(sizeof(msg), GFP_ATOMIC);
++	memcpy(buf, msg, sizeof(msg));
++
++	if (value < 0)
++		value = 0;
++
++	if (value > ARRAY_SIZE(float_zero_to_one_lookup))
++		value = ARRAY_SIZE(float_zero_to_one_lookup);
++
++	fl = float_zero_to_one_lookup[value];
++
++	buf[12] = (fl >> 0) & 0xff;
++	buf[13] = (fl >> 8) & 0xff;
++	buf[14] = (fl >> 16) & 0xff;
++	buf[15] = (fl >> 24) & 0xff;
++
++	line6_send_raw_message(&podhd->line6, buf, sizeof(msg));
++	kfree(buf);
++
++	podhd->monitor_level = value;
++}
++
++/* control info callback */
++static int snd_podhd_control_monitor_info(struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_info *uinfo)
++{
++	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
++	uinfo->count = 1;
++	uinfo->value.integer.min = 0;
++	uinfo->value.integer.max = 100;
++	uinfo->value.integer.step = 1;
++	return 0;
++}
++
++/* control get callback */
++static int snd_podhd_control_monitor_get(struct snd_kcontrol *kcontrol,
++				       struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_line6_pcm *line6pcm = snd_kcontrol_chip(kcontrol);
++	struct usb_line6_podhd *podhd = line6_to_podhd(line6pcm->line6);
++
++	ucontrol->value.integer.value[0] = podhd->monitor_level;
++	return 0;
++}
++
++/* control put callback */
++static int snd_podhd_control_monitor_put(struct snd_kcontrol *kcontrol,
++				       struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_line6_pcm *line6pcm = snd_kcontrol_chip(kcontrol);
++	struct usb_line6_podhd *podhd = line6_to_podhd(line6pcm->line6);
++
++	if (ucontrol->value.integer.value[0] == podhd->monitor_level)
++		return 0;
++
++	podhd_set_monitor_level(podhd, ucontrol->value.integer.value[0]);
++	return 1;
++}
++
++/* control definition */
++static const struct snd_kcontrol_new podhd_control_monitor = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "Monitor Playback Volume",
++	.index = 0,
++	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,
++	.info = snd_podhd_control_monitor_info,
++	.get = snd_podhd_control_monitor_get,
++	.put = snd_podhd_control_monitor_put
++};
++
+ /*
+ 	Try to init POD HD device.
+ */
+@@ -298,6 +411,15 @@ static int podhd_init(struct usb_line6 *line6,
+ 			return err;
+ 	}
+ 
++	if (pod->line6.properties->capabilities & LINE6_CAP_HWMON_CTL) {
++		podhd_set_monitor_level(pod, 100);
++		err = snd_ctl_add(line6->card,
++				  snd_ctl_new1(&podhd_control_monitor,
++					       line6->line6pcm));
++		if (err < 0)
++			return err;
++	}
++
+ 	if (!(pod->line6.properties->capabilities & LINE6_CAP_CONTROL_INFO)) {
+ 		/* register USB audio system directly */
+ 		return snd_card_register(line6->card);
+@@ -354,7 +476,7 @@ static const struct line6_properties podhd_properties_table[] = {
+ 		.id = "PODHD500",
+ 		.name = "POD HD500",
+ 		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
+-				| LINE6_CAP_HWMON,
++				| LINE6_CAP_HWMON | LINE6_CAP_HWMON_CTL,
+ 		.altsetting = 1,
+ 		.ctrl_if = 1,
+ 		.ep_ctrl_r = 0x81,
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.26.2
+
