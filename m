@@ -2,163 +2,191 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D701EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48D8206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99AC206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 01:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SbAjIaif"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Q4Xt6LBU";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="U/YLC21Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbgEWBYh (ORCPT
+        id S2387515AbgEWBc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 21:24:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43044 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbgEWBYg (ORCPT
+        Fri, 22 May 2020 21:32:28 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53598 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387418AbgEWBc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 21:24:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04N1ONZY122215;
-        Fri, 22 May 2020 20:24:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590197063;
-        bh=pc8GIbCeCGbGW+dH6N5QrFkDMQ4GvXVFsG0XIqTPplo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SbAjIaifncOFx0ks4RCylrSqylUM8uq5BtAEVysnNa8NfHN5GiBNQJorE0g1OGQ3p
-         pmaMHRW9HJCbTSl4SmMy9Ki20mrlSActRpo4rGLeAH3w9bQ+5nDX5+8Lc80msM6hP8
-         r3cU/dryBNsrwcNdMMMKBwWzFOn6xUlo1werTWXY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04N1ON1l064608
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 20:24:23 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 20:24:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 20:24:22 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04N1OJgZ108060;
-        Fri, 22 May 2020 20:24:20 -0500
-Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-8-kishon@ti.com> <20200520213434.GA583923@bogus>
- <3f9cf6e5-94f8-4c54-aaee-c181b0e79f1f@ti.com>
- <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <44690fec-0b65-0192-75f7-e4fa086c4c0b@ti.com>
-Date:   Sat, 23 May 2020 06:54:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 21:32:27 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04N1VB0n006096;
+        Fri, 22 May 2020 18:32:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=98ZgZVR5A47n8AEHE7ESHW4pSdnJ7s2QaUrOS0X0a+g=;
+ b=Q4Xt6LBUUbC14nWzpwXOAEnWgdl7vb8smG5VDJzbuxwZ6IxBzEJRS2gnrzyUvWxOM4/c
+ kuy3VO2UNdBkk1ztPoniFlPsdTaHjEaxPcrSojqx8HdWG1+fd2yNYlBTED4BBbnaYBAr
+ 1XinsqIDtVQJ/OjwwR0HHyz4IyGtQKK8YQc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 314e9u1s5u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 22 May 2020 18:32:19 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 22 May 2020 18:32:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EG2myRohfdhOZrd8ynnHBuNdHJ0OqLkUsaP/VkfH6W5Iacfa8ULKYwFnAWvLQc0fn0sgvmDp9ZdoPS7jx1ZwNgL1Z3kvIISinltaeVKEOr5hPia/0L/fuDjnp8Ij8a1IPLu8s6/Zn2pYaB/XumzBy5lVPgaviAdGapbxCglkwt6swIsHBUvM4O+SiOIWThz1Ixeac+VXegmezFO2+a8bturc/yOaVX080123NLOLozNDFA4NQ4YvXwOSKMrlFjkHwIctDHaFfN2pXK6CQbukGtsClQJPDrTpFCP9JmVCivuuDGJ0cOA+7IGOXV+HbUR6ElEtbxIfXcQ1YSt5cMt5UQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98ZgZVR5A47n8AEHE7ESHW4pSdnJ7s2QaUrOS0X0a+g=;
+ b=UFHTvQeZv2NOk6Z2JHOu8thnWuV+ZYcqlhFdQ+d//h+jpKMYd+SokE3FxA+nCwA3+ZVeuI6cgVAyI0njiUlS1np0OcDm0C5vHphSt53UuptIXjmEX0olBPkX8M92VBaj59EoaEVhDZ6F1T7qf3dCPY3GsOCKzrNDfg0HHzphDZPbeX5lzW7o5+l5rwAJI8u74vepXZ5FRk2D3SQcMipOAZb0zHkQBGTTUXmQ59ov9KGhcOwfISsnMr1MT8RUpmDT/Tsrk7PQfy/Za0A+AC/tKIBWHyNLyclHAOPQ3mesdG+zRiy3YYyrR2ZFO0I0VfSSwoOvrbYu+qz48Z8pvGMeLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98ZgZVR5A47n8AEHE7ESHW4pSdnJ7s2QaUrOS0X0a+g=;
+ b=U/YLC21YK3YDZDgKVzWKwvsLAo+y8gX/QQYz+kOGklOi7MnB1pVfK/wg7FKbJNdlou6tQFLXvtTl5BIdD6QJ74fzWu9IFfH+10KzQjyc9KXAyxwiHJ4DyojXlAgY2xeGR+JBJk3w51Dbh0Pd8kjnPA+yS7j8kfsFhz86Z4nB0cg=
+Authentication-Results: suse.cz; dkim=none (message not signed)
+ header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3429.namprd15.prod.outlook.com (2603:10b6:a03:10c::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Sat, 23 May
+ 2020 01:32:04 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.3021.020; Sat, 23 May 2020
+ 01:32:04 +0000
+Date:   Fri, 22 May 2020 18:32:00 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 07/19] mm: memcg/slab: allocate obj_cgroups for
+ non-root slab pages
+Message-ID: <20200523013200.GA356168@carbon.DHCP.thefacebook.com>
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-8-guro@fb.com>
+ <930fb5f4-0666-5db0-0fcf-a78171bf29be@suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <930fb5f4-0666-5db0-0fcf-a78171bf29be@suse.cz>
+X-ClientProxiedBy: BYAPR08CA0061.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::38) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+qcgKvauJ-GjsnmmpmRusyEJ6pRDpBOQKOadig4XfsxQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:8195) by BYAPR08CA0061.namprd08.prod.outlook.com (2603:10b6:a03:117::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Sat, 23 May 2020 01:32:03 +0000
+X-Originating-IP: [2620:10d:c090:400::5:8195]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 567fac9e-9a11-4e79-5e95-08d7feb91902
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3429:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3429CBD923EB3E18526A58D6BEB50@BYAPR15MB3429.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0412A98A59
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XgpJlUlKV2Bm0rBcTyp+ZxIsluqYvHt1PdswWPMufsk0AK1ojZRI3G48CvC+Q5BT0EE7L1rbqNg4VWnxGfFNv8HlPFN6xhDrOCkc0o1Kf5S+BPNJv38tpulheTXVq2ybe+2OMzidXSWAZQfUeKSg1r+S2zr1Ua4dxGYvbZcRgfS1qdB500sTt9XVrN5eT5mxv0XEPW0qtd/kmdAoEz6prmaG8M0Nv0p0R8jyO+89iWfH3VUuaMqbojfAPiP3LaqkuLEjwFxJPj2M7OFPKIkGUkguUKXM5OsiNvKXCdejD5UNM3EdMBe6rNC5Lyl1xqtvvxfcyRzjORNFx7HJlIiLxQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(376002)(346002)(39860400002)(136003)(66556008)(53546011)(6506007)(7696005)(8676002)(86362001)(2906002)(52116002)(66946007)(55016002)(16526019)(6916009)(9686003)(186003)(8936002)(33656002)(66476007)(54906003)(316002)(5660300002)(4326008)(1076003)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: +8/8qguiKa+dq7uvewKGrvLQAQwu4B2h71TyaiwmXkNzHafwHDz2xuVYq/VySY+n17UlR0eXsn8WLdjQDaMLUUkEveO7XcRcLCbDTWOxTvDTridKKFHwmtIeeRssEay1ylbV5zCueKgN59WZNheM6PuOOcKV0cKI8hetaHVAnNOWjJXO+kxP699eiJT1vJBf+mU9+LRbM6ereixlwmwcQ3ms2z9Rp586zwz+nlmmX6vrntlFc5rCxBVqUoI9aDrfDAkCdd2pJ06py07aq6kGsCr0osXHWh/oxwnFvqOZMNXFOyMcZqh06RcgxWEYZhHqtXoOlt827gCOFLoqUH87/9/qWv2l7HE4lVfCGXGPnGZ6RPHKJdPiMCi3MhZXJS7khzGppZHfCMKImk13dg58fLFWlM1RetHEO4EWThd1L/jGyUeuUonYcfuwLh2yKVFlSgmGK3G6KnDw58dDVA7GNz6Bb1m892WKj+kasSEqlH/HeWHhkn+bV3oahDkJ8zyzid6vobbMI/a7aq6FahPCLw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 567fac9e-9a11-4e79-5e95-08d7feb91902
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2020 01:32:04.0883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ow3u14IgjE/GPMv4VInIV/zccvXdvmTYuZYF9G/xjjbY8G0mrEoCz6YuWD1JRCIy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3429
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_12:2020-05-22,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ mlxlogscore=999 malwarescore=0 clxscore=1015 priorityscore=1501
+ cotscore=-2147483648 spamscore=0 phishscore=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 suspectscore=1 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005230010
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Fri, May 22, 2020 at 08:27:15PM +0200, Vlastimil Babka wrote:
+> On 4/22/20 10:46 PM, Roman Gushchin wrote:
+> > Allocate and release memory to store obj_cgroup pointers for each
+> > non-root slab page. Reuse page->mem_cgroup pointer to store a pointer
+> > to the allocated space.
+> > 
+> > To distinguish between obj_cgroups and memcg pointers in case
+> > when it's not obvious which one is used (as in page_cgroup_ino()),
+> > let's always set the lowest bit in the obj_cgroup case.
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> 
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 5/22/2020 10:15 PM, Rob Herring wrote:
-> On Thu, May 21, 2020 at 5:35 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/21/2020 3:04 AM, Rob Herring wrote:
->>> On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
->>>> Cadence driver uses "mem" memory resource to obtain the offset of
->>>> configuration space address region, memory space address region and
->>>> message space address region. The obtained offset is used to program
->>>> the Address Translation Unit (ATU). However certain platforms like TI's
->>>> J721E SoC require the absolute address to be programmed in the ATU and not
->>>> just the offset.
->>>
->>> Once again, Cadence host binding is broken (or at least the example is).
->>> The 'mem' region shouldn't even exist. It is overlapping the config
->>> space and 'ranges':
->>>
->>>             reg = <0x0 0xfb000000  0x0 0x01000000>,
->>>                   <0x0 0x41000000  0x0 0x00001000>,
->>>                   <0x0 0x40000000  0x0 0x04000000>;
->>>             reg-names = "reg", "cfg", "mem";
->>>
->>>             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
->>>                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
->>>
->>>
->>> 16M of registers looks a bit odd. I guess it doesn't matter
->>> unless you have a 32-bit platform and care about your virtual
->>> space. Probably should have been 3 regions for LM, RP, and AT looking
->>> at the driver.
->>
->> The "mem" region in never ioremapped. However $patch removes requiring to add
->> "mem" memory resource.
-> 
-> I was referring to ioremapping 'reg' region.
-> 
->>>
->>> Whatever outbound address translation you need should be based on
->>> 'ranges'.
->>
->> You mean we don't need to add "new *ops* for CPU addr fixup"?. The issue is
->> ranges provides CPU address and PCI address. The CPU will access whatever is
->> populated in ranges to access the PCI bus. However while programming the ATU,
->> we cannot use the CPU address provided in ranges directly (in some platforms)
->> because the controller does not see the full address and only the lower 28bits.
-> 
-> Okay, that is clearer as to what the difference is. I think this
-> should be 2 patches. One dropping 'mem' usage and using a mask and the
-> 2nd making the mask per platform.
+Thank you!
 
-hmm okay.
 > 
-> Really, the parent node of the PCI controller should probably have
-> 'ranges' and you could extract a mask from that. Looks like that is
-> what you had for DRA7... I'm not sure if ABI stability is important
-> for the Cadence platform. I'd assume that's just some IP eval system
-> and probably not?
-
-Right TI's J721E should be the first HW platform to use Cadence in mainline.
+> But I have a suggestion:
 > 
-> Why do you need an ops here? All you need is a mask value.
-
-So how do we get platform specific mask? Use a different binding to specify the
-mask value?
+> ...
 > 
->> This similar restriction was there with Designware (mostly an integration
->> issue) and we used *ops* to fixup the address that has to be programmed in ATU.
->> The Designware initially used a wrapper so that ranges property can be directly
->> used [1]. However this approach was later removed in [2]
->>
->> [1] -> https://lore.kernel.org/patchwork/patch/468523/
->> [2] -> https://lkml.org/lkml/2015/10/16/232
+> > --- a/include/linux/slub_def.h
+> > +++ b/include/linux/slub_def.h
+> > @@ -191,4 +191,6 @@ static inline unsigned int obj_to_index(const struct kmem_cache *cache,
+> >  				 cache->reciprocal_size);
+> >  }
+> >  
+> > +extern int objs_per_slab(struct kmem_cache *cache);
+> > +
+> >  #endif /* _LINUX_SLUB_DEF_H */
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 7f87a0eeafec..63826e460b3f 100644
 > 
-> So while you had the data for a mask in DT, the driver now hardcodes it?
+> ...
+> 
+> > --- a/mm/slub.c
+> > +++ b/mm/slub.c
+> > @@ -5992,4 +5992,9 @@ ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+> >  {
+> >  	return -EIO;
+> >  }
+> > +
+> > +int objs_per_slab(struct kmem_cache *cache)
+> > +{
+> > +	return oo_objects(cache->oo);
+> > +}
+> >  #endif /* CONFIG_SLUB_DEBUG */
+> > 
+> 
+> It's somewhat unfortunate to function call just for this. Although perhaps
+> compiler can be smart enough as charge_slab_page() (that callse objs_per_slab())
+> is inline and called from alloc_slab_page() which is also in mm/slub.c.
+> 
+> But it might be also a bit wasteful in case SLUB doesn't manage to allocate its
+> desired order, but smaller. The actual number of objects is then in page->objects.
+> 
+> So ideally this should use something like objs_per_slab_page(cache, page) where
+> SLAB supplies cache->num and SLUB page->objects, both implementations inline,
+> and ignoring the other parameter?
 
-Yes, that's correct. Which approach should we use for Cadence?
+Yeah, good point, makes total sense to me. I'll implement it in the next version
+of the patchset.
 
-Thanks
-Kishon
+Thank you!
