@@ -2,111 +2,95 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE62C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28DC207F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CFF207F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 13:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Vwf8oR+8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6zPa6bf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731341AbgEWNMN (ORCPT
+        id S1731368AbgEWNNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 09:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38982 "EHLO
+        Sat, 23 May 2020 09:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731313AbgEWNMM (ORCPT
+        with ESMTP id S1731347AbgEWNNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 09:12:12 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF35C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 06:12:12 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id p4so6011332qvr.10
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 06:12:12 -0700 (PDT)
+        Sat, 23 May 2020 09:13:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE98FC061A0E;
+        Sat, 23 May 2020 06:13:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v2so1406372pfv.7;
+        Sat, 23 May 2020 06:13:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r5+LkB1TL3R/xRtbnTpHtVc52mSgHT6mX07ymQdEhWE=;
-        b=Vwf8oR+80FRu8UPj1VE1dhrJHkJlhsGbZ+BmwY6L1UJIBjNk7uSfXod2I+QlmDJjtH
-         BNtFwcmQmq2hUUV/aBwSc5AzO148HI+MOP0EwoeJqpEOhoyYgJOIb6+aFL4+E7rXZMot
-         mNv/yELgHPAIAU1cIFw9QxixlWzj2U5f4DTSNDfcwgrLh2v7obMGx+pXtg6pZR9H6kwz
-         rF3cppHqtl2r9D9FumdxMQfyAnIqTnsv6fGEelckgd752cictGUZb6B8wOAJibBtbhAc
-         M3o3vfhasmtxazjvqGxQRcC5dbzoUpimf3JwgZBYkoMeOgZOxRDMzPVczfsi6jdDO2ms
-         AwxQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=H8pDFipnynsk4X9dPZFc4G5VJ+Iod2lTWU7AAQ+F64A=;
+        b=d6zPa6bfCge/OEzuOBCipFM61kSveZ6IXS80k0pe1JMnCxANiMUBC02P4pEPgCpX/l
+         9fJASJNGlA0D9XCySR6of+WKuRVF6ib+xx/w5yzyWAU3/XsLymxnnFVjO+EoAxyOpeyY
+         YVV+GhbUUVACDNKJSD0H+M9Oe/F71/se6K2owzEQ9U3kM4ICyKbWmP6NL8o2c6aBzZNI
+         SyNP/pLd9Nf7YuK5F4RtYN/P40h1Pgo0vZXW2XcHaa592A5ZGl5isA0R01TT8+xhA2CE
+         T3fXp47j1hrWJXWvocf0kfuuvOHHmq70H9hSFrcL7y8Day2a4JWhJmcUOW1U6Wb4y3ae
+         4rCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r5+LkB1TL3R/xRtbnTpHtVc52mSgHT6mX07ymQdEhWE=;
-        b=AyTAK+RR+ulEC0w+wU0RTdLB1DkZOAUrFwNkPenwSamv7FiopPWZCHY7ln4gB1lrN7
-         q5gOLJe8GurjY4UVZK/wDm1dXtunyF7soFgr/y5CqO/UH/ohLEJYH0uAMknPX5KjTQds
-         +Q0WEee29/mMCh4HJG2HPrCJj2M73Ynn1ZkrFkXjCteuVqjP+6nJSCn2Ver6btObRwp/
-         hvSAyUR0/6E3XClgYzvAMCoKBk2rHLu1pc4m/RUOhnFMUKIH3cru02v8RBwWD/7nKWs7
-         iekrmcmUEo+TJTGImb2w1u+5DlydZqcphQcAdrbLeH9ub+Kxq+c9Y+2UmyBteblKccAt
-         0jMg==
-X-Gm-Message-State: AOAM531ixpk07T1SJ98AO/SiQzL+kwaMHFMF3FsyW9ohJy/OPVQeFQs4
-        QZCPmKsX6TaJWH+nMa00W3PEEQ==
-X-Google-Smtp-Source: ABdhPJypNcrx5YdS8JdgKXKLMq/J/EbituhaWK1VReOyeS9PyW05locBmPix0rf/2iu/DzD4JiB92A==
-X-Received: by 2002:a05:6214:122e:: with SMTP id p14mr8037854qvv.168.1590239531569;
-        Sat, 23 May 2020 06:12:11 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id d140sm9305607qkc.22.2020.05.23.06.12.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H8pDFipnynsk4X9dPZFc4G5VJ+Iod2lTWU7AAQ+F64A=;
+        b=s/BnEYb3gruZKAXswYZNpUVD4ebKtrwvsDldAd/Mws0aA/aGhFIuA2yJrfdS+BKgjr
+         Pcaaf+TiZBiH9amHahGLtk3gUK1sq6LDTEeay/yhUgf/fahBAAZ7Jqm2tPL7uQEtI+yu
+         4FzlgucrSy5a9f0PqXkOFgS+8XSM6m2OzVSXVlyHrKfgpBXcJKa/VQoBPE05pYJNBJ6F
+         rfkKadmaiO8ogDIMJR61Pzw3BVytFICybBX5oO9tUUUJXdFg60MA0hYt3Qf+h2+yIJ3r
+         3NBVM5Kf9oHpcoLeBbCGaZyIhOU69Ta3tGrutLFrXE1LG50Em+XRil62UBs6YYn4OlaV
+         +fvQ==
+X-Gm-Message-State: AOAM531ePq4uGU+NGh6otdPXOC+gBbgf7Y79UaT4Vbp5rJ58uK+AjML9
+        QUemQT/AGBanKlJiLP+MxYeR8KXAAeqAXg==
+X-Google-Smtp-Source: ABdhPJzn4ahbjc4uF3F0G80Mlr9dXdVeoYkcPPDAUFoQXK30/ymi69aOdssi+fEGEZNakIN+xRFn3A==
+X-Received: by 2002:a63:774d:: with SMTP id s74mr9438pgc.315.1590239621095;
+        Sat, 23 May 2020 06:13:41 -0700 (PDT)
+Received: from localhost.localdomain ([157.51.175.150])
+        by smtp.gmail.com with ESMTPSA id 9sm8741528pju.1.2020.05.23.06.13.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 06:12:11 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: sm8250: use dt-bindings defines for clocks
-Date:   Sat, 23 May 2020 09:12:13 -0400
-Message-Id: <20200523131213.18653-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 23 May 2020 06:13:40 -0700 (PDT)
+From:   Hari <harichandrakanthan@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     Hari <harichandrakanthan@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org
+Subject: [PATCH] e1000: Fix typo in the comment
+Date:   Sat, 23 May 2020 18:43:26 +0530
+Message-Id: <20200523131326.23409-1-harichandrakanthan@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the dt-bindings defines for qupv3_id_1 node's clocks.
+Continuous Double "the" in a comment. Changed it to single "the"
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Hari <harichandrakanthan@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/e1000/e1000_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 9c210fbac65e..04c9c215ffcd 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -292,7 +292,8 @@ qupv3_id_1: geniqup@ac0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0x0 0x00ac0000 0x0 0x6000>;
- 			clock-names = "m-ahb", "s-ahb";
--			clocks = <&gcc 133>, <&gcc 134>;
-+			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-+				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-@@ -302,7 +303,7 @@ uart2: serial@a90000 {
- 				compatible = "qcom,geni-debug-uart";
- 				reg = <0x0 0x00a90000 0x0 0x4000>;
- 				clock-names = "se";
--				clocks = <&gcc 113>;
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_hw.c b/drivers/net/ethernet/intel/e1000/e1000_hw.c
+index 48428d6a00be..623e516a9630 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_hw.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_hw.c
+@@ -3960,7 +3960,7 @@ static s32 e1000_do_read_eeprom(struct e1000_hw *hw, u16 offset, u16 words,
+  * @hw: Struct containing variables accessed by shared code
+  *
+  * Reads the first 64 16 bit words of the EEPROM and sums the values read.
+- * If the the sum of the 64 16 bit words is 0xBABA, the EEPROM's checksum is
++ * If the sum of the 64 16 bit words is 0xBABA, the EEPROM's checksum is
+  * valid.
+  */
+ s32 e1000_validate_eeprom_checksum(struct e1000_hw *hw)
 -- 
-2.26.1
+2.17.1
 
