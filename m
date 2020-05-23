@@ -2,83 +2,88 @@ Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0E620849
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590254407;
-	bh=m05tFrEbf2m1NPbPYNxX3YOuv436rKNnJOpYIC07+kk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A+FUGBpspbtOUAHI6ADshyUDXQ4wF6Hz7ndOuaZ6ljmcix+P9md9JShDK7XgZLik0
-	 KLGqDBn2vGGemaQCous7CRJrx/ywR8ullvPyqKvrz5l0znE3ANDN2/eXhMq4MPPsx1
-	 SucTD7D/gDVySbujXVOd4ZAfR7K6tAx5nfqqnR/U=
+	by mail.kernel.org (Postfix) with ESMTP id 142F3207F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 17:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388110AbgEWRUG (ORCPT
+        id S2388120AbgEWRUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 13:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387571AbgEWRUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 13:20:05 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3154F2085B
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 17:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590254405;
-        bh=m05tFrEbf2m1NPbPYNxX3YOuv436rKNnJOpYIC07+kk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ocetK+ReMqXLPvEAWNueUZVAkCN5naBt77jffyqNtmIqXptiyxgCfAts9+BUUw3Fy
-         iwjeMp/AJSVOwxBzGbut1ebw5QpEESnS0MCUBICPBX8uuaJoIF30+oRXzm7imKdHPv
-         3olGhI3ALdaEqYOurUcaqrjHZ2O0XbhA+2A26lYM=
-Received: by mail-wr1-f54.google.com with SMTP id l11so13424297wru.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:20:05 -0700 (PDT)
-X-Gm-Message-State: AOAM533ecIAowUgZwoVNPobfuYO7vq0kHXtDJZqIcvTUaCc/dtuZTaj/
-        XWU6sFVAZnjVxA9nIIDaQoq1avmmY+0m6aqGochklw==
-X-Google-Smtp-Source: ABdhPJygf+Ofrce7h1FhXXAEt66GetOSSV9c0nVEKeKvATyoyRigt6PTqqxZlJlYaPB2PDtfyA/+i4NM6vpS24BabmA=
-X-Received: by 2002:adf:ea11:: with SMTP id q17mr6325873wrm.75.1590254403670;
- Sat, 23 May 2020 10:20:03 -0700 (PDT)
+        Sat, 23 May 2020 13:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387571AbgEWRUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 13:20:11 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76010C05BD43
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 10:20:11 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jcXoD-0000ys-HW; Sat, 23 May 2020 19:19:41 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jcXoC-0004zP-Q3; Sat, 23 May 2020 19:19:40 +0200
+Date:   Sat, 23 May 2020 19:19:40 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        f.fainelli@gmail.com, nsaenzjulienne@suse.de, shc_work@mail.ru,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, vz@mleia.com,
+        slemieux.tyco@gmail.com, khilman@baylibre.com,
+        matthias.bgg@gmail.com, heiko@sntech.de, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, mripard@kernel.org, wens@csie.org,
+        jonathanh@nvidia.com, linux@prisktech.co.nz,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 19/32] pwm: puv3: convert to
+ devm_platform_ioremap_resource
+Message-ID: <20200523171940.qg2sxjoe6yilzfkb@pengutronix.de>
+References: <20191229080610.7597-1-tiny.windzz@gmail.com>
+ <20191229080610.7597-19-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-References: <20200523155737.GC1189358@rani.riverdale.lan>
-In-Reply-To: <20200523155737.GC1189358@rani.riverdale.lan>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 23 May 2020 10:19:52 -0700
-X-Gmail-Original-Message-ID: <CALCETrW2O0xFe733EVchVDXdJv3tazA=aXuBQ3fKfmHEwdZnLQ@mail.gmail.com>
-Message-ID: <CALCETrW2O0xFe733EVchVDXdJv3tazA=aXuBQ3fKfmHEwdZnLQ@mail.gmail.com>
-Subject: Re: x86: Question about state of general purpose registers on switch
- to 64-bit mode
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191229080610.7597-19-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 8:57 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Hi,
->
-> I have a question about the state of the upper 32 bits of the general
-> purpose registers following a switch from/to 64-bit mode.
->
-> Both the AMD [0] and Intel [1] manuals state that these bits are
-> undefined following a switch from 64 to 32-bit mode. Since they can't be
-> accessed in 32-bit mode, presumably this means they are undefined once
-> you switch back to 64-bit mode and can see them again.
+Hello,
 
-I would guess that all x86_64 CPUs actually preserve those registers
-across mode changes and clear the high bits on 32-bit operations.  But
-making the kernel boot code more robust sounds entirely sensible to
-me.
+On Sun, Dec 29, 2019 at 08:05:57AM +0000, Yangtao Li wrote:
+> Use devm_platform_ioremap_resource() to simplify code.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
