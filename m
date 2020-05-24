@@ -2,141 +2,220 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA191C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 07:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 07:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A06702076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 07:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658202076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 07:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="f+asM5zM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnfN7GAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgEXHq4 (ORCPT
+        id S1728382AbgEXHs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 03:46:56 -0400
-Received: from mout.web.de ([217.72.192.78]:40719 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbgEXHqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 03:46:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590306411;
-        bh=RVx2ZpfrKwAQMz1Fvlh8UKxMRyjqGc9WECkJRsumVFg=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=f+asM5zM/k+m7lwzW0OPZH1NUkj8qEtiv6oVzxuXxMTVdj4GQsVe/uHzcjW6Hb/zH
-         j7gdKzEM+6kXwgAjuB6ymE2P8YYCmfejk1rIeqTKe1cG+Q4dvvHGjrA93nrHakZCJY
-         E/B/dQ1ySGbzCqesZWrQdgT0ceD9+oBJfsuG7J4Q=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.187.46]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MXGOC-1jWlZl11lW-00YsIH; Sun, 24
- May 2020 09:46:51 +0200
-To:     Kaitao Cheng <pilgrimtao@gmail.com>, linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: Re: [PATCH] proc/fd: Remove the initialization of variables in
- seq_show()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e218bc34-b8cf-cf0d-aaf1-e1f259d29f7c@web.de>
-Date:   Sun, 24 May 2020 09:46:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 24 May 2020 03:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgEXHsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 03:48:25 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D58C061A0E;
+        Sun, 24 May 2020 00:48:25 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id f3so15913827ioj.1;
+        Sun, 24 May 2020 00:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=lYyxQy2basMHk+ymmytrrORebX9PiLqKXhegfXyfuDw=;
+        b=fnfN7GArFrWdQ6imDIwKvsDoM8g62KbimmJDHdZAEtNXkGDhzKR474F6WCKpe7VkgH
+         vKCn+yo7zDppvxXUMZPbezY+z797+WqkukFSK4j4U1b0Z+4X7iDaQYJDB0o7oPI8JwT3
+         yQd4VWo/xAuCDnas1301CsmqwFqt0zC7FykxMVBpV7SGXW+oIw3mApNINADYQZ+8a8D8
+         Qen3uu9+SVITTc4EWZMcZD4FRl6EehjQOotowEFGpbfo5KHIV4fE4/4XbQkz/mlrJ23p
+         hRC/P07PjeswM5JfAQc7A5zySgyVxvQNJ+kL0y5jU5Z9Td0ct3Ltg1E14a9kNGTTCTLJ
+         f77Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=lYyxQy2basMHk+ymmytrrORebX9PiLqKXhegfXyfuDw=;
+        b=rX4RAn2W6WIWBJevmLoKm/vT1UmEvEB0cJdpADUQDEpXHzpTJEEclmT2//0bJ651IX
+         tYdN0zF185niPKbSYDH2Yjsm2zLKauxZFR4GJE1cd2o2Tg+3PUJB3TecwGrZn6m6Jxtx
+         zL9y8KeKrMvS1H9SCsBwEZQum8HlGcflZVUhc34XMZV84bkIRKLnw83VY24q2rwn07Kt
+         /LLVr0Trc5QZ74QOsE+aoQ4mRsDyxvDcZIIA552h3f/fdmuO0RuAZjUALkHJj4hznnXJ
+         MfUKVBiB7/tevnK3XzxUB3Vjb0YMiov0sq3G4pcGRJzQu93XELmshlEaqiTN0cIwWOCu
+         zOPw==
+X-Gm-Message-State: AOAM532I6amSIpkJewBpXE7AaZSD7C14xA7v6rOHfLYGTUhiYSAPBHO9
+        YUwz4RGN7q1pmr9h0r4BrqJRiBR61U7Kbqib45s=
+X-Google-Smtp-Source: ABdhPJwJVAexR5ySaZ4n6PBO4gsRhLU5FfLS57HEYMsi0KejAx+7Ur/7EbTkZT2fB4cOkegxZwgkaBIKRSMs+3wfSE4=
+X-Received: by 2002:a02:ca18:: with SMTP id i24mr3984955jak.70.1590306504893;
+ Sun, 24 May 2020 00:48:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DkfpQb1eUe7ib/LnNNAnPf2vk0nC57Dnmw1w3PAvhXKKlO4u/HF
- n7j6Ybmf8+OfYpII9QlGJCt22NHNywJBWSQd56nwdINTsSNc1eSTzfzJ4A/cf04tU7bkAuX
- GXKVbpeAXkY+AHPrUYQAksVb6fvp+JXBTFomMLUrZ/kKjR/6zEcsesdEbTI4hTtbkBJb1u/
- 6cR7hg1KD+/5YAcdC5lIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aJN1yDCRtTE=:c5iEpkAwjn6hFw1GtWBYae
- FDUZDxbHnKWqV9Ph109r1QFs+cAZycSwlNTEZrBReHwUU2ghklwtrksCXJs6rpwB5vx+C1Tlv
- nNUCyPrRzYjcrWJamHKwEhWJJeFZMFQS8AaIUv8TWc+AVIrBW5/Kgi2cgO47lz5Hy3D3KKnU/
- BOPLOfKuK/BtP1/dq1NeurugQeC31d14AQEKudvqPnmTEog7hUWAhHLPYFy8R0XFmSphXliLs
- s9MTEbU719vKeaB7OYV3ubu7W3oJZ5dZtuWxndGjMEfhXbWex6NEsfMwbsylPfpbVOIPd3pJI
- wod/DAWsMEb45FxoRK/xf65PFmhK2bFwr3PBiiMn92WqUPFgUGs7hzPBmzE9yBFs+O3jd6oZ6
- 8wYHPb83WWee8Bxr/tZgI/v83aOhJ9afoOjkP/1fBJ/NPDgk6iCzYtuvZPHLyJXdgUq3rUItn
- MpDgi4Lvx+lgvtNt79YLFjv10KNnhFP6T4dxNfmVAFMjknNiJU0EZETGhyjb4xb9G2crU7XUH
- 8EtEV8eABTX7WFekvmZajJ7wPEvBE/98NoSDqw6Kap1IJkHUCo6aNoABNIer05P7GFiVAUm1O
- QregnxSGN538HdwKzbxSvWgiM9RYCEx5wd30BRugEVrQsRUcPhUdznpxeAht3dnWu1OXQSPK8
- BSmCEvTH09LoxSNPD+w7jPDYKumOHH/JgeJmMp//EIgPlZIIB/YhPSPtF6XR4rXugfERT3s3m
- EoTpqEVOpZb0/YDzZx1fi+o4H62ufCYytUjSLb02W7jbMQka5t5je40Uy9cqaB58Gpd7AQ9qA
- XdJpsieXlWxeJo97c9IfTFLpSq1yvEEkJ2fFmuMZlUTHUt4iblOKncjmJ5Iu1KCOVxksKMmUf
- WwonzHpMsvvYXbyH2SFRahAYpg+Wz0arg0HprbSXA2Rx9sioXkFAuiz0JM6NzrDSHHJRQ4LsT
- 1l4eKYlukL1Knn9vl6/bLbHSR3JDJFjlOWidcq9YoAv9NcYw6olkV6xtpnRA+TdFFrU/K71S6
- sxZfW2AlKF+U+TH68S5m8d0+nF3aifR0V+yZuiA0EK2kxRXzRiD3vSO9U20aEX6ZcavOdOpKH
- HvOgJRLWFrM7Wt+Y7WbYPxyTnOuJn3DKaR3E2eeMuJh6qrn651BJXomuyZtLeoVJL0zhV4ycm
- uYUA7e3hBI6g2OQry/S16F/xPY6wpC4O6nvIoGQWr5VSD23YqOyIfBRca3O34xneydY17Qnj+
- TpBISmZ6vstFTHySq
+References: <10f4fb0b-1012-b0e6-af05-0aa5a906de21@redhat.com>
+ <20200520193637.6015-1-ndesaulniers@google.com> <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
+ <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com> <CAK7LNARofo7wawEF4EcA2-wxnQkKw+WFoJ36EOeYFTUrthRfrA@mail.gmail.com>
+In-Reply-To: <CAK7LNARofo7wawEF4EcA2-wxnQkKw+WFoJ36EOeYFTUrthRfrA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sun, 24 May 2020 09:48:13 +0200
+Message-ID: <CA+icZUXwNLG3ojWMhTuNkvR0AYtc1+BG6neOLZo56CB7ij01JQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: support compressed debug info
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blakie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The variables{files, file} will definitely be assigned,
+On Sun, May 24, 2020 at 5:57 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Fri, May 22, 2020 at 6:57 AM 'Nick Desaulniers' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > On Wed, May 20, 2020 at 7:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > > Suggested-by: Fangrui Song <maskray@google.com>
+> > >
+> > >
+> > > Suggested-by -> Reviewed-by
+> > >
+> > > https://patchwork.kernel.org/patch/11524939/#23349551
+> >
+> > Yes, my mistake.
+> >
+> > > > Suggested-by: Nick Clifton <nickc@redhat.com>
+> > >
+> > >
+> > > I do not know where this tag came from.
+> > >
+> > > Nick Clifton taught us the version rule of binutils,but did not state
+> > > anything about this patch itself.
+> > >
+> > > https://patchwork.kernel.org/patch/11524939/#23355175
+> > >
+> > >
+> > > > Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > >
+> > > I do not see the source of this tag, either...
+> >
+> > Not all contributions to open source need to be in the form of
+> > patches.  Both Sedat and Nick gave suggestions which ultimately
+> > informed the contents of this patch.  They should be rewarded for
+> > their efforts, and incentivized to help improve the code base further.
+> > I think suggested by tags are a good way to do that; but if it's
+> > against a written convention or if you still disagree, it's not the
+> > end of the world to me, and you may drop those tags from the v3.
+>
+>
+> Documentation/process/submitting-patches.rst
+> gives the guideline.
+>
+>
+> "A Suggested-by: tag indicates that the patch idea is suggested by the person
+> named and ensures credit to the person for the idea. Please note that this
+> tag should not be added without the reporter's permission, especially if the
+> idea was not posted in a public forum. That said, if we diligently credit our
+> idea reporters, they will, hopefully, be inspired to help us again in the
+> future."
+>
+>
+> I think this tag should be given to people who
+> gave the main idea to come up with
+> the main part of the patch.
+>
+>
+> Is that David Blaikie who suggested to
+> compress the debug info ?
+> If so, definitely he deserves to have Suggested-by tag.
+>
+> For the others, I do not think Suggested-by is a good fit.
+>
+> I appreciate their contribution to improve this patch.
+> So, maybe you can give credit in other form, for example,
+> mention it in the commit log explicitly?
+>
+> Nick Clifton helped us to provide the minimal binutils version.
+> Sedat Dilet found an increase in size of debug .deb package.
+>
+>
+> Thanks.
 
-I find an other specification nicer for these identifiers.
+Hi,
 
+first my last name is Dilek - just for the sake of completeness.
+No, it is not my first name as Dilek is a female Turkish first name,
+so I do not want to change my gender.
 
-> so we don't need to initialize them.
+So this discussions come up again and again.
 
-I suggest to recheck programming concerns around the handling
-of the null pointer for the variable =E2=80=9Cfile=E2=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs=
-/proc/fd.c?id=3Dcaffb99b6929f41a69edbb5aef3a359bf45f3315#n20
-https://elixir.bootlin.com/linux/v5.7-rc6/source/fs/proc/fd.c#L20
+Thus some own words on this - this is my personal opinion.
 
-Will another imperative wording be preferred for the change description?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Dcaffb99b6929f41a69edbb5aef=
-3a359bf45f3315#n151
+Like the author of Curl and DOH said at FOSDEM 2019 in Bruessel:
+I am doing all this work - first - for myself - in my build and
+developing environment.
+Very very egoistically!
 
-Regards,
-Markus
+"Share knowledge aggressively!"
+...was Nick's words at First ClangBuiltLinux Meetup in Zurich 2020.
+In a 2nd round I share my knowledge and I like this - that's why I am
+doing Open Source.
+
+For me it sounds like a "Suggested-by" tag or other credits like
+"Reviewed-by" have a higher value than a Tested-by tag.
+
+*** The opposite is the case. ***
+
+Here, I am on a Samsung SandyBridge CPU/GPU aka 2nd generation
+ultrabook series runing Debian/testing AMD64.
+
+A slightly modified Debian-kernel linux-config takes me approx. 5 (in
+words five) hours of compiling and generating Debian packages.
+
+Plus, testing.
+Plus, testing.
+Plus, testing.
+
+In Linux-next times I run the whole Linux-Test-Project tests plus some
+FIO tests.
+
+Finally, I decide depending from what is new and interesting to me to
+attend a full single Linux-kernel release cycle.
+The last was Linux v5.3 which was the first release to be
+compile/link-able - with no modifications - with LLVM/Clang/LLD v9.0.
+For upcoming Linux v5.7 I have built each single RC Linux-kernel and
+used it in my daily work!
+Since RC1 - for me running on bare metal counts - checking QEMU or
+other VM is nice - but showed me that says sometimes nothing.
+
+Plus, I am building llvm-toolchains (LLVM/Clang/LLD) and testing with
+them (and report if needed).
+
+"...if we diligently credit our idea reporters, they will, hopefully,
+be inspired to help us again in the future."
+
+These are some motivating words...
+
+My Tested-by is like a certificate - like a "Made in Germany" seal :-).
+
+Virtual Greeting from North-West Germany,
+- Sedat -
