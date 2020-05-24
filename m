@@ -2,167 +2,145 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE880C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFFB20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590337326;
-	bh=YweMuEPk/vOQ2J8eOzqSp+RPj79OVzORMtJFlJKshPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sgDb85Ssd5t2m7m6CzQKTfoddeGnk+eVd3VnWAP/Eanc2V3NylxCYt8xp3shkmgX2
-	 TNKBDHC9yYEted7rxhi8U0SW01cJckTtG2ei79VuWli89j3FH2B0onY3BtViirSeFq
-	 BHu9imd+vt6dli9D32cPtHng2FPFxhOiVp2SsisQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0B0CE20826
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:23:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BmN0JpbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbgEXQWG (ORCPT
+        id S1728847AbgEXQXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 12:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55308 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 12:23:04 -0400
+Received: from mout.gmx.net ([212.227.15.15]:41243 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbgEXQWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 12:22:04 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F85207CB;
-        Sun, 24 May 2020 16:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590337323;
-        bh=YweMuEPk/vOQ2J8eOzqSp+RPj79OVzORMtJFlJKshPg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMNAopsV8q+N0zHNkNU/EYpIx2mwRywPKtnLesOKJ4EEMT4ehndEt9ecniLjGtMJh
-         DjFFaoyx9I/gpqqYlKSnhiguj+2ptWR+r8Ygqi2SiPENFHn2NSFgTs/ijKFsS+W7m9
-         Cj7HIIIWmjRQpBKc8Z66922qXJ4NijiyNs5VSzlk=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 2/2] sparc32: srmmu: improve type safety of __nocache_fix()
-Date:   Sun, 24 May 2020 19:21:51 +0300
-Message-Id: <20200524162151.3493-3-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200524162151.3493-1-rppt@kernel.org>
-References: <20200524162151.3493-1-rppt@kernel.org>
+        id S1727899AbgEXQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 12:23:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590337362;
+        bh=GhbaLbz6BoWoySPE2WrVRqo1Hs0zEpUCTqPaWcI0xwE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=BmN0JpbSnv0GLBU/g6FHt+QEkAdwjigWwKVDOdNkMZUOghd6EoOoQyt09XDSCfLWo
+         ffB2CcAfywPb/5UPM8H2Ij9CsdA6M4x1yhczmNYeFtfdYADQ++CRRbPF8tTqDa5Kyr
+         5ea8MsSvdUtOePfvdOJ9IlWH4QEJxTTFEO1N84sE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MbAh0-1j1Lis1ZbE-00beoV; Sun, 24 May 2020 18:22:42 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH v2] drivers/irqchip: Remove function callback casts
+Date:   Sun, 24 May 2020 18:22:20 +0200
+Message-Id: <20200524162220.10186-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:et4o8Q6v0HWJb9s6cbtqw5ilkVjTdMIhGXcGmpZesYL/diDIHAw
+ 5twt75zNlwyDUAocjXlC3OTsqL+VakCZu09fks2op1KXjc+BVaq2N/zH97oebbgkCxc9bzc
+ rTtFk1In3pZAxtcFyjZeIOowUyc7UdNSCf959pwJiF3obh4gZ7zXitIy7EfORKkzAcmU5B6
+ qYlLxnH6IgEUgwMcVL6sA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:u4eOC1hoWnQ=:J1YITlvQlifiCqL8IYQxo1
+ EdKpfoFKSD4kAZEXm8BNjY0xaBaTGlpL1JJcuZgoZ6JNT2oyBcoUfdQE3iLny2aiaOlFzeMlx
+ t1JG2GYbLIo9vodQJ13eygHsOMpu3WdO1PTIomvF8zGoyK+9XqrqY7Bin0VFIH3So9K+JJ84O
+ G7f8BycFp9Bt0DPaOSRR7gG13OQ+tMp3isHjbLXAX6z/vsdr78zurvgaDIQHBsMRe4QzxsNkE
+ ntyFtwuZpiHIKHcJNfblJ57h5333YUMpfU6c/Pq0M/1tYWLG+n6EWOHAmKYlEVM1+ezxYfEQd
+ o7dxrUhIv6rEwIAOQr0XInxt2jVWyTBKjMCRCgwdgTUvF/Hds7VxfTFzzwTzAtubmzf+MRkXO
+ CVX54z+FQpt1dKjU9d0RE/iHhnFzuStIEFy8CLmERKOX1sp/GFoSr8MLkM1bgWN/4teiwjxqZ
+ SXDQJ/Lh0SWjKRCQDUaLkoKeeKKvI0DSpObkSWgvME7fsyy8iHrVJIRQoAmVvT2eobMA9MZrP
+ jtSCLUe4nBHgXLwSdRXXm8uMKlkbaCigeiji7n7fVqGOvri4MLXAT6DaE82BR85F4wnxSnuuO
+ gcEcSKZ4SnM5ECWc70J//QwfayLyUcE3scUQw8EXnHwJoeL/VEPHDDwbchHlPQB8LQB2ZVZTz
+ egDLdS9p6UUGGPDjHXkGPSux+LnRijVyhInZ+4A1Ke0iZB7OtroG8MOpYfzgvl+sQIjJGe+WT
+ No7mpJ9aSYiuytaWo1oAUuMy1mspigHVX+Oq8h5BVk37tPdXVE7EiGcGrPcra5eas93uOxNFU
+ eMWyA3hO7UNyZX0GX9w4KFGbTW/joUesfN4b++bxDTgNMQ30cWcfYj4xo5lPHCjyphMEGJvHs
+ 6qM9Bia/ETOUdvIXFZw2vNpgaL3LWFQ61y7xYBY8Vv7uvoAzNYAkGDR0IsqSfEUJ3eCdfAK+b
+ 2ZxAsRmRq3P9uPXmaWCqwenfk94945zNTVo/IzH2umFuS1CmKj67CBoG5SzCspY5T2ck+g7vM
+ ITg4jU93Ue8jXxQOW2vl9Rc4kJycwRcm63vHWc07V4ipHhqbPSxywWQCdnIidkDFyAmCmwYzR
+ Bjs/XC5iq4VWyT2FWZo8SUDw9VzQRmDR84x1Dxq9HPdC/C5tJVObE2qmMu90q9K1PvILLHKSu
+ XULrGJ3OI0NTprbzvYbh/5PpkM7JcCxhb+Z49hzWlsN9trwZ8DAdbfRqoP18L/5UsSO3g87R6
+ 8XqEHL1LSoorbWfHn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, remove all the function callback
+casts.
 
-The __nocache_fix(VADDR) macro is used to add an offset for pointers and
-its "return type" is 'void *'.
+To do this, create a new macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+to initialize the acpi_probe_entry struct using the probe_subtbl field
+instead of the probe_table field. Then, modify the IRQCHIP_ACPI_DECLARE
+macro to use this new defined macro.
 
-We can do better and keep the type information with simply by casting the
-return value to (__typeof__(VADDR)).
+Even though these two commented fields are part of a union, this is
+necessary to avoid function cast mismatches. That is, due to the
+IRQCHIP_ACPI_DECLARE invocations use as last parameter a function with
+the protoype "int (*func)(struct acpi_subtable_header *, const unsigned
+long)" it's necessary that this macro initialize the probe_subtbl field
+of the acpi_probe_entry struct and not the probe_table field.
 
-This will  ".. show when those pgd/p4d/pud pointers get mis-used because
-they don't end up dropping the type info.."
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+Changelog v1->v2
+- Add more details in the commit changelog to clarify the changes (Marc
+  Zyngier)
+- Declare a new macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY (Marc
+  Zyngier)
+- In the IRQCHIP_ACPI_DECLARE use the new defined macro (Marc Zyngier)
 
-The addition of the casting to __nocache_fix() also allows to remove
-explicit casts at its call sites.
+ include/linux/acpi.h    | 11 +++++++++++
+ include/linux/irqchip.h |  5 +++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Link: https://lkml.kernel.org/stablestablestablestablestabler/CAHk-=wisORTa7QVPnFqNw9pFs62UiwgsD4C4d=MtYy1o4JPyGQ@mail.gmail.com
----
- arch/sparc/include/asm/pgtsrmmu.h |  2 +-
- arch/sparc/mm/srmmu.c             | 16 ++++++++--------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index d661cd0ee64d..fed49b276a90 100644
+=2D-- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1154,6 +1154,17 @@ struct acpi_probe_entry {
+ 			.driver_data =3D data, 				\
+ 		   }
 
-diff --git a/arch/sparc/include/asm/pgtsrmmu.h b/arch/sparc/include/asm/pgtsrmmu.h
-index 32a508897501..941d42a59b81 100644
---- a/arch/sparc/include/asm/pgtsrmmu.h
-+++ b/arch/sparc/include/asm/pgtsrmmu.h
-@@ -143,7 +143,7 @@ extern unsigned long last_valid_pfn;
- extern void *srmmu_nocache_pool;
- #define __nocache_pa(VADDR) (((unsigned long)VADDR) - SRMMU_NOCACHE_VADDR + __pa((unsigned long)srmmu_nocache_pool))
- #define __nocache_va(PADDR) (__va((unsigned long)PADDR) - (unsigned long)srmmu_nocache_pool + SRMMU_NOCACHE_VADDR)
--#define __nocache_fix(VADDR) __va(__nocache_pa(VADDR))
-+#define __nocache_fix(VADDR) ((__typeof__(VADDR))__va(__nocache_pa(VADDR)))
- 
- /* Accessing the MMU control register. */
- unsigned int srmmu_get_mmureg(void);
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index dbf5334dd084..d86e6c657922 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -724,7 +724,7 @@ static void __init srmmu_early_allocate_ptable_skeleton(unsigned long start,
- 			pud_set(__nocache_fix(pudp), pmdp);
- 		}
- 		pmdp = pmd_offset(__nocache_fix(pudp), start);
--		if (srmmu_pmd_none(*(pmd_t *)__nocache_fix(pmdp))) {
-+		if (srmmu_pmd_none(*__nocache_fix(pmdp))) {
- 			ptep = __srmmu_get_nocache(PTE_SIZE, PTE_SIZE);
- 			if (ptep == NULL)
- 				early_pgtable_allocfail("pte");
-@@ -836,11 +836,11 @@ static void __init srmmu_inherit_prom_mappings(unsigned long start,
- 		p4dp = p4d_offset(pgdp, start);
- 		pudp = pud_offset(p4dp, start);
- 		if (what == 2) {
--			*(pgd_t *)__nocache_fix(pgdp) = __pgd(probed);
-+			*__nocache_fix(pgdp) = __pgd(probed);
- 			start += SRMMU_PGDIR_SIZE;
- 			continue;
- 		}
--		if (pud_none(*(pud_t *)__nocache_fix(pudp))) {
-+		if (pud_none(*__nocache_fix(pudp))) {
- 			pmdp = __srmmu_get_nocache(SRMMU_PMD_TABLE_SIZE,
- 						   SRMMU_PMD_TABLE_SIZE);
- 			if (pmdp == NULL)
-@@ -849,7 +849,7 @@ static void __init srmmu_inherit_prom_mappings(unsigned long start,
- 			pud_set(__nocache_fix(pudp), pmdp);
- 		}
- 		pmdp = pmd_offset(__nocache_fix(pudp), start);
--		if (srmmu_pmd_none(*(pmd_t *)__nocache_fix(pmdp))) {
-+		if (srmmu_pmd_none(*__nocache_fix(pmdp))) {
- 			ptep = __srmmu_get_nocache(PTE_SIZE, PTE_SIZE);
- 			if (ptep == NULL)
- 				early_pgtable_allocfail("pte");
-@@ -865,12 +865,12 @@ static void __init srmmu_inherit_prom_mappings(unsigned long start,
- 			unsigned long *val;
- 			x = (start >> PMD_SHIFT) & 15;
- 			val = &pmdp->pmdv[x];
--			*(unsigned long *)__nocache_fix(val) = probed;
-+			*__nocache_fix(val) = probed;
- 			start += SRMMU_REAL_PMD_SIZE;
- 			continue;
- 		}
- 		ptep = pte_offset_kernel(__nocache_fix(pmdp), start);
--		*(pte_t *)__nocache_fix(ptep) = __pte(probed);
-+		*__nocache_fix(ptep) = __pte(probed);
- 		start += PAGE_SIZE;
- 	}
- }
-@@ -884,7 +884,7 @@ static void __init do_large_mapping(unsigned long vaddr, unsigned long phys_base
- 	unsigned long big_pte;
- 
- 	big_pte = KERNEL_PTE(phys_base >> 4);
--	*(pgd_t *)__nocache_fix(pgdp) = __pgd(big_pte);
-+	*__nocache_fix(pgdp) = __pgd(big_pte);
- }
- 
- /* Map sp_bank entry SP_ENTRY, starting at virtual address VBASE. */
-@@ -974,7 +974,7 @@ void __init srmmu_paging_init(void)
- 	srmmu_ctx_table_phys = (ctxd_t *)__nocache_pa(srmmu_context_table);
- 
- 	for (i = 0; i < num_contexts; i++)
--		srmmu_ctxd_set((ctxd_t *)__nocache_fix(&srmmu_context_table[i]), srmmu_swapper_pg_dir);
-+		srmmu_ctxd_set(__nocache_fix(&srmmu_context_table[i]), srmmu_swapper_pg_dir);
- 
- 	flush_cache_all();
- 	srmmu_set_ctable_ptr((unsigned long)srmmu_ctx_table_phys);
--- 
-2.26.2
++#define ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(table, name, table_id,	\
++					  subtable, valid, data, fn)	\
++	static const struct acpi_probe_entry __acpi_probe_##name	\
++		__used __section(__##table##_acpi_probe_table) =3D {	\
++			.id =3D table_id,					\
++			.type =3D subtable,				\
++			.subtable_valid =3D valid,			\
++			.probe_subtbl =3D (acpi_tbl_entry_handler)fn,	\
++			.driver_data =3D data,				\
++		}
++
+ #define ACPI_PROBE_TABLE(name)		__##name##_acpi_probe_table
+ #define ACPI_PROBE_TABLE_END(name)	__##name##_acpi_probe_table_end
+
+diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+index 950e4b2458f0..447f22880a69 100644
+=2D-- a/include/linux/irqchip.h
++++ b/include/linux/irqchip.h
+@@ -39,8 +39,9 @@
+  * @fn: initialization function
+  */
+ #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
+-	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
+-				 subtable, validate, data, fn)
++	ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(irqchip, name,		\
++					  ACPI_SIG_MADT, subtable,	\
++					  validate, data, fn)
+
+ #ifdef CONFIG_IRQCHIP
+ void irqchip_init(void);
+=2D-
+2.20.1
 
