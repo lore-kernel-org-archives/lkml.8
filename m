@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B150C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C472078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B22207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="qsFxJ01k"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="grjGwVpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388208AbgEXVGZ (ORCPT
+        id S2388256AbgEXVGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:06:25 -0400
+        Sun, 24 May 2020 17:06:31 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387897AbgEXVGX (ORCPT
+        with ESMTP id S2388210AbgEXVG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:06:23 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143F9C05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:23 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b6so15932161qkh.11
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:23 -0700 (PDT)
+        Sun, 24 May 2020 17:06:26 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AEBAC08C5C0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:25 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id v79so5903298qkb.10
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=x2YTxfETzWjAksdQ/X5rhCf1iBVjxTPhgU3IMSOyIVI=;
-        b=qsFxJ01k3v1iRrbLqOWwe6UEZOLh6OxqwyhN2WM/mb9nuyZ86pwKzAZQPll7ukD8+U
-         07HOF80ov7Mn0kW/xE6UI4QNDdUnSnh5aJ/0Ny8GpMqxc6nuMA1o147IEogxjGAcApLA
-         rOcH+Wa9a9+HaKF7zCAzdOTEmULHpm4GzbuaepGA05ZTA35NUDr4EpWULMGn7gASQk1c
-         YLdAUuwo0K1LkTOi84mf7ObYGtg/Oy/q+p2bjqF8ARmSiNsDgAVKvsB5oSuGX5dAmRFG
-         SUlLHPqvDClDLDjQsfncfNXdCTmVhdHmH+wP5U6eYi5pHJbPGPLRDaTVA5mzDU/8bGC7
-         6llA==
+        bh=JZAgaP5woLxgcXHosrZpunWOJzCPGNVUHXsQchER0OE=;
+        b=grjGwVpXkxkvehF3ztGVZ0+axZxgywMdVt4bJocVsGxrb+bw0vddmaiMSIMqBdOjKP
+         ltzQ3mlmFx9Hr6xi3UlPe4bE2Ze1kB6hYHPojLVgoXvkmIVqaVbvDXezUQmln3gJOj6u
+         e3odFIAaeDWc48ZX0MqUFFxOt8z1w4mc8h348d69r6BKDMyE1xiyEiOv23FUUIWnJW+G
+         P/C5HD5wzUEsWXXphH4bCTibInsn5Ew0OsuUETxn/7IP1mWxEzUmUZ0qoGPGmo42cblJ
+         F80Wh9FEYAGq5fXEzcWqPVV22LmSw1gpVwaPIjTJewH6rygmRGa6nxUfWjUKOcaz2Kn2
+         Gwrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=x2YTxfETzWjAksdQ/X5rhCf1iBVjxTPhgU3IMSOyIVI=;
-        b=gZ71egeJSBukevvRO2g3ZFUSiLxSl8ge2Wn5OmmoX7F0VEmslQ0jOI12eg/jcfn30E
-         3DB58wgzLeEGmRWEucMGvMbDLSzp9023tEdDmqfeFPjBjQ3uMv1KhLWu2EP/HAX6geL0
-         ujwOmygB1B69AAeZK3iUFHzlxtrgBttdzYjo1zN0B8fRRRuytIJ+HLbOIMxXife6V+9d
-         rWo40PUZ7iZye9lZL+rB2VDEYU0zcbYPKJPvjrNxblmTRvPlS+6q8f7+1iGRtf5TsXmc
-         G9SJGYDQu7aJNgMwgPZiMb36rQHhGam3EJSf6/DsMJniCIGa/1ZYnXAq3xY6SsH5jywp
-         KnyA==
-X-Gm-Message-State: AOAM533JgusUa/d6Y2dTDv8qtS9Yq1ozSepCzIEVIiSNFdsxqQe49TmU
-        buGzP9PVfm4g9S/6lLpmI1bbIQ==
-X-Google-Smtp-Source: ABdhPJzKOt1CWRq+M6AB3PTubYSJdzAWgJDWx+rUlfrT/dYBg+ybqG77+O87MHT6AbCEZ2Eb7lQz3g==
-X-Received: by 2002:a37:aa87:: with SMTP id t129mr10022061qke.197.1590354382256;
-        Sun, 24 May 2020 14:06:22 -0700 (PDT)
+        bh=JZAgaP5woLxgcXHosrZpunWOJzCPGNVUHXsQchER0OE=;
+        b=KVxRe1gxdMI1+ljepc9chvZpxWK533wC9Be3vpiORe/DR2Ibkb0JBwWeQgN/QfZzyZ
+         nCUgAD836RRfpLCQx0vLM40kPhwwPiqpjfZD2HogGxsrEMXMmFXHtZxAX8nGnXVMpSdF
+         6+74wvA7bx5rLflRLpfpoAfrydztkzJcFJcNCl3ZV+stLmP8CMpwj7UircbYFA9ahBfm
+         wW9xT5Z9Hp2d1GNjy6NnEH6tjcfgscXKJMDxOvyAwyd5ZS8k5rmvVf3lw6kU3GXl8fWe
+         wPA2tD3jm8FsSh7Y7Ue8LFE60Uki8zIAIgV3k7SaerVoY9BeDcbWkIAOiyPbvKsAo6bN
+         KIlQ==
+X-Gm-Message-State: AOAM530Ep3lwnDMiQuJQlBeDXZ9tNpD+aLqy30XuIG+YYmkq8d8fBE6U
+        KE+LxNxiVSgcolt4cyu9ClbQKw==
+X-Google-Smtp-Source: ABdhPJywDSNHrQwVhkcv/CtEnu17VHvnh5/74RzgGULsJTA5VsvEtaFEw59eIUXI73jOwG7ZB57nlQ==
+X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr25455161qkl.9.1590354384546;
+        Sun, 24 May 2020 14:06:24 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.21
+        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:06:21 -0700 (PDT)
+        Sun, 24 May 2020 14:06:24 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 02/10] clk: qcom: clk-alpha-pll: same regs and ops for trion and lucid
-Date:   Sun, 24 May 2020 17:06:03 -0400
-Message-Id: <20200524210615.17035-3-jonathan@marek.ca>
+Subject: [PATCH 04/10] clk: qcom: gcc: remove unnecessary vco_table from SM8150
+Date:   Sun, 24 May 2020 17:06:05 -0400
+Message-Id: <20200524210615.17035-5-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200524210615.17035-1-jonathan@marek.ca>
 References: <20200524210615.17035-1-jonathan@marek.ca>
@@ -80,255 +80,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed ops were already identical, this adds support for non-fixed ops by
-sharing between trion and lucid.
-
-This also changes the names for trion ops to be consistent with the rest.
-
-Note LUCID_PCAL_DONE is renamed to TRION_PCAL_DONE because it is wrong for
-lucid, LUCID_PCAL_DONE should be BIT(27). Next patch will address this.
+The fixed alpha pll ops only use it for clamping in round_rate, which is
+unnecessary. This is consistent with SM8250 GCC not using vco_table.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- drivers/clk/qcom/clk-alpha-pll.c | 58 ++++++++++----------------------
- drivers/clk/qcom/clk-alpha-pll.h | 17 ++++++----
- drivers/clk/qcom/gcc-sm8150.c    |  8 ++---
- 3 files changed, 32 insertions(+), 51 deletions(-)
+ drivers/clk/qcom/gcc-sm8150.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index 1325139173c9..be7ffeae21b1 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -101,21 +101,6 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
- 		[PLL_OFF_FRAC] = 0x38,
- 	},
- 	[CLK_ALPHA_PLL_TYPE_TRION] = {
--		[PLL_OFF_L_VAL] = 0x04,
--		[PLL_OFF_CAL_L_VAL] = 0x08,
--		[PLL_OFF_USER_CTL] = 0x0c,
--		[PLL_OFF_USER_CTL_U] = 0x10,
--		[PLL_OFF_USER_CTL_U1] = 0x14,
--		[PLL_OFF_CONFIG_CTL] = 0x18,
--		[PLL_OFF_CONFIG_CTL_U] = 0x1c,
--		[PLL_OFF_CONFIG_CTL_U1] = 0x20,
--		[PLL_OFF_TEST_CTL] = 0x24,
--		[PLL_OFF_TEST_CTL_U] = 0x28,
--		[PLL_OFF_STATUS] = 0x30,
--		[PLL_OFF_OPMODE] = 0x38,
--		[PLL_OFF_ALPHA_VAL] = 0x40,
--	},
--	[CLK_ALPHA_PLL_TYPE_LUCID] =  {
- 		[PLL_OFF_L_VAL] = 0x04,
- 		[PLL_OFF_CAL_L_VAL] = 0x08,
- 		[PLL_OFF_USER_CTL] = 0x0c,
-@@ -154,9 +139,9 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
- #define PLL_OUT_MASK		0x7
- #define PLL_RATE_MARGIN		500
- 
--/* LUCID PLL specific settings and offsets */
--#define LUCID_PLL_CAL_VAL	0x44
--#define LUCID_PCAL_DONE		BIT(26)
-+/* TRION PLL specific settings and offsets */
-+#define TRION_PLL_CAL_VAL	0x44
-+#define TRION_PCAL_DONE		BIT(26)
- 
- #define pll_alpha_width(p)					\
- 		((PLL_ALPHA_VAL_U(p) - PLL_ALPHA_VAL(p) == 4) ?	\
-@@ -910,14 +895,14 @@ const struct clk_ops clk_alpha_pll_hwfsm_ops = {
- };
- EXPORT_SYMBOL_GPL(clk_alpha_pll_hwfsm_ops);
- 
--const struct clk_ops clk_trion_fixed_pll_ops = {
-+const struct clk_ops clk_alpha_pll_fixed_trion_ops = {
- 	.enable = clk_trion_pll_enable,
- 	.disable = clk_trion_pll_disable,
- 	.is_enabled = clk_trion_pll_is_enabled,
- 	.recalc_rate = clk_trion_pll_recalc_rate,
- 	.round_rate = clk_alpha_pll_round_rate,
- };
--EXPORT_SYMBOL_GPL(clk_trion_fixed_pll_ops);
-+EXPORT_SYMBOL_GPL(clk_alpha_pll_fixed_trion_ops);
- 
- static unsigned long
- clk_alpha_pll_postdiv_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
-@@ -1337,12 +1322,12 @@ clk_trion_pll_postdiv_set_rate(struct clk_hw *hw, unsigned long rate,
- 				  val << PLL_POST_DIV_SHIFT);
- }
- 
--const struct clk_ops clk_trion_pll_postdiv_ops = {
-+const struct clk_ops clk_alpha_pll_postdiv_trion_ops = {
- 	.recalc_rate = clk_trion_pll_postdiv_recalc_rate,
- 	.round_rate = clk_trion_pll_postdiv_round_rate,
- 	.set_rate = clk_trion_pll_postdiv_set_rate,
- };
--EXPORT_SYMBOL_GPL(clk_trion_pll_postdiv_ops);
-+EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_trion_ops);
- 
- static long clk_alpha_pll_postdiv_fabia_round_rate(struct clk_hw *hw,
- 				unsigned long rate, unsigned long *prate)
-@@ -1397,13 +1382,13 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
-  * @regmap: register map
-  * @config: configuration to apply for pll
-  */
--void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-+void clk_trion_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 			     const struct alpha_pll_config *config)
- {
- 	if (config->l)
- 		regmap_write(regmap, PLL_L_VAL(pll), config->l);
- 
--	regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
-+	regmap_write(regmap, PLL_CAL_L_VAL(pll), TRION_PLL_CAL_VAL);
- 
- 	if (config->alpha)
- 		regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
-@@ -1456,13 +1441,13 @@ void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 	/* Place the PLL in STANDBY mode */
- 	regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_N);
- }
--EXPORT_SYMBOL_GPL(clk_lucid_pll_configure);
-+EXPORT_SYMBOL_GPL(clk_trion_pll_configure);
- 
- /*
-- * The Lucid PLL requires a power-on self-calibration which happens when the
-+ * The TRION PLL requires a power-on self-calibration which happens when the
-  * PLL comes out of reset. Calibrate in case it is not completed.
-  */
--static int alpha_pll_lucid_prepare(struct clk_hw *hw)
-+static int alpha_pll_trion_prepare(struct clk_hw *hw)
- {
- 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
- 	u32 regval;
-@@ -1470,7 +1455,7 @@ static int alpha_pll_lucid_prepare(struct clk_hw *hw)
- 
- 	/* Return early if calibration is not needed. */
- 	regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
--	if (regval & LUCID_PCAL_DONE)
-+	if (regval & TRION_PCAL_DONE)
- 		return 0;
- 
- 	/* On/off to calibrate */
-@@ -1481,7 +1466,7 @@ static int alpha_pll_lucid_prepare(struct clk_hw *hw)
- 	return ret;
- }
- 
--static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
-+static int alpha_pll_trion_set_rate(struct clk_hw *hw, unsigned long rate,
- 				    unsigned long prate)
- {
- 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-@@ -1535,26 +1520,17 @@ static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
- 	return 0;
- }
- 
--const struct clk_ops clk_alpha_pll_lucid_ops = {
--	.prepare = alpha_pll_lucid_prepare,
-+const struct clk_ops clk_alpha_pll_trion_ops = {
-+	.prepare = alpha_pll_trion_prepare,
- 	.enable = clk_trion_pll_enable,
- 	.disable = clk_trion_pll_disable,
- 	.is_enabled = clk_trion_pll_is_enabled,
- 	.recalc_rate = clk_trion_pll_recalc_rate,
- 	.round_rate = clk_alpha_pll_round_rate,
--	.set_rate = alpha_pll_lucid_set_rate,
-+	.set_rate = alpha_pll_trion_set_rate,
- };
- EXPORT_SYMBOL_GPL(clk_alpha_pll_lucid_ops);
- 
--const struct clk_ops clk_alpha_pll_fixed_lucid_ops = {
--	.enable = clk_trion_pll_enable,
--	.disable = clk_trion_pll_disable,
--	.is_enabled = clk_trion_pll_is_enabled,
--	.recalc_rate = clk_trion_pll_recalc_rate,
--	.round_rate = clk_alpha_pll_round_rate,
--};
--EXPORT_SYMBOL_GPL(clk_alpha_pll_fixed_lucid_ops);
--
- const struct clk_ops clk_alpha_pll_postdiv_lucid_ops = {
- 	.recalc_rate = clk_alpha_pll_postdiv_fabia_recalc_rate,
- 	.round_rate = clk_alpha_pll_postdiv_fabia_round_rate,
-diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-index 704674a153b6..67f1fd271931 100644
---- a/drivers/clk/qcom/clk-alpha-pll.h
-+++ b/drivers/clk/qcom/clk-alpha-pll.h
-@@ -14,7 +14,7 @@ enum {
- 	CLK_ALPHA_PLL_TYPE_BRAMMO,
- 	CLK_ALPHA_PLL_TYPE_FABIA,
- 	CLK_ALPHA_PLL_TYPE_TRION,
--	CLK_ALPHA_PLL_TYPE_LUCID,
-+	CLK_ALPHA_PLL_TYPE_LUCID = CLK_ALPHA_PLL_TYPE_TRION,
- 	CLK_ALPHA_PLL_TYPE_MAX,
- };
- 
-@@ -128,18 +128,23 @@ extern const struct clk_ops clk_alpha_pll_fabia_ops;
- extern const struct clk_ops clk_alpha_pll_fixed_fabia_ops;
- extern const struct clk_ops clk_alpha_pll_postdiv_fabia_ops;
- 
--extern const struct clk_ops clk_alpha_pll_lucid_ops;
--extern const struct clk_ops clk_alpha_pll_fixed_lucid_ops;
-+extern const struct clk_ops clk_alpha_pll_trion_ops;
-+extern const struct clk_ops clk_alpha_pll_fixed_trion_ops;
-+extern const struct clk_ops clk_alpha_pll_postdiv_trion_ops;
-+
-+#define clk_alpha_pll_lucid_ops clk_alpha_pll_trion_ops
-+#define clk_alpha_pll_fixed_lucid_ops clk_alpha_pll_fixed_trion_ops
- extern const struct clk_ops clk_alpha_pll_postdiv_lucid_ops;
- 
- void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 			     const struct alpha_pll_config *config);
- void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 				const struct alpha_pll_config *config);
--void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-+void clk_trion_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 			     const struct alpha_pll_config *config);
-+#define clk_lucid_pll_configure(pll, regmap, config) \
-+	clk_trion_pll_configure(pll, regmap, config)
-+
- 
--extern const struct clk_ops clk_trion_fixed_pll_ops;
--extern const struct clk_ops clk_trion_pll_postdiv_ops;
- 
- #endif
 diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-index 732bc7c937e6..46dc67157eba 100644
+index 46dc67157eba..b14de0f35559 100644
 --- a/drivers/clk/qcom/gcc-sm8150.c
 +++ b/drivers/clk/qcom/gcc-sm8150.c
-@@ -53,7 +53,7 @@ static struct clk_alpha_pll gpll0 = {
- 				.name = "bi_tcxo",
- 			},
- 			.num_parents = 1,
--			.ops = &clk_trion_fixed_pll_ops,
-+			.ops = &clk_alpha_pll_fixed_trion_ops,
- 		},
- 	},
- };
-@@ -79,7 +79,7 @@ static struct clk_alpha_pll_postdiv gpll0_out_even = {
- 			.hw = &gpll0.clkr.hw,
- 		},
- 		.num_parents = 1,
--		.ops = &clk_trion_pll_postdiv_ops,
-+		.ops = &clk_alpha_pll_postdiv_trion_ops,
- 	},
+@@ -34,14 +34,8 @@ enum {
+ 	P_SLEEP_CLK,
  };
  
-@@ -98,7 +98,7 @@ static struct clk_alpha_pll gpll7 = {
- 				.name = "bi_tcxo",
- 			},
- 			.num_parents = 1,
--			.ops = &clk_trion_fixed_pll_ops,
-+			.ops = &clk_alpha_pll_fixed_trion_ops,
- 		},
- 	},
- };
-@@ -118,7 +118,7 @@ static struct clk_alpha_pll gpll9 = {
- 				.name = "bi_tcxo",
- 			},
- 			.num_parents = 1,
--			.ops = &clk_trion_fixed_pll_ops,
-+			.ops = &clk_alpha_pll_fixed_trion_ops,
- 		},
- 	},
- };
+-static const struct pll_vco trion_vco[] = {
+-	{ 249600000, 2000000000, 0 },
+-};
+-
+ static struct clk_alpha_pll gpll0 = {
+ 	.offset = 0x0,
+-	.vco_table = trion_vco,
+-	.num_vco = ARRAY_SIZE(trion_vco),
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
+ 	.clkr = {
+ 		.enable_reg = 0x52000,
+@@ -85,8 +79,6 @@ static struct clk_alpha_pll_postdiv gpll0_out_even = {
+ 
+ static struct clk_alpha_pll gpll7 = {
+ 	.offset = 0x1a000,
+-	.vco_table = trion_vco,
+-	.num_vco = ARRAY_SIZE(trion_vco),
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
+ 	.clkr = {
+ 		.enable_reg = 0x52000,
+@@ -105,8 +97,6 @@ static struct clk_alpha_pll gpll7 = {
+ 
+ static struct clk_alpha_pll gpll9 = {
+ 	.offset = 0x1c000,
+-	.vco_table = trion_vco,
+-	.num_vco = ARRAY_SIZE(trion_vco),
+ 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
+ 	.clkr = {
+ 		.enable_reg = 0x52000,
 -- 
 2.26.1
 
