@@ -2,100 +2,79 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51528C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEF8C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C8820787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335102;
-	bh=GEn50ZqSj70RL5+2LuZKVFCwXcmdPQISzM7/zU2Po98=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XojB77A3KyugdD3mPDrIM531lNjfgzYEro7cMHuRBFSEeNzJHh3UEDST+0D327SEo
-	 pQ0NC8rKZTfJvQbMs90G8QDuSsGY4+NY6sNQbOCLCd3AgUJWI/80sxfKYcSf3I/lCT
-	 S5QROR+fduEQFtAtapMBnHMIQXsWtAtJCaDSaseI=
+	by mail.kernel.org (Postfix) with ESMTP id BF34C207CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgEXPo5 (ORCPT
+        id S1728614AbgEXPsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:44:57 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19699 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728393AbgEXPnX (ORCPT
+        Sun, 24 May 2020 11:48:05 -0400
+Received: from out28-77.mail.aliyun.com ([115.124.28.77]:54087 "EHLO
+        out28-77.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbgEXPsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 11:43:23 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcUu017561;
-        Mon, 25 May 2020 00:42:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUu017561
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334964;
-        bh=+QWobT3EgOenGYNYTgdtjHSb52oUpu7V4hA//icuG9c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCZpQj+XxTMvU3MjtmUECGGNNIxeSv+7S41E1+thOGFHCAjrl+LDHccMrt7kd1LsX
-         xDriAvGwaa6UP5Ko/cNYsgzPMS+beH3qK2FrCekTeS469WT9852QuIHZdFR2IhifEX
-         VQhWh44ZBawRWmu5+b9nyWQs4/tbtcdagBey/YBFC2EqV3oucsWTBUAC+7GHYezwq7
-         qHhie8eC5wetyo+79mrQ++ZsaAkAvCKddgt2gpglpRZH3fRQ6oo0H7eY80GvT35Lin
-         2joGskQDUPXAL6uRJ7W+hHcKKibn5DGac0OttWrKQP795+g1KXrAgJmYS1728BEWdZ
-         RhpsFBhrK+MZg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/29] modpost: pass -N option only for modules modpost
-Date:   Mon, 25 May 2020 00:42:17 +0900
-Message-Id: <20200524154235.380482-12-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
-References: <20200524154235.380482-1-masahiroy@kernel.org>
+        Sun, 24 May 2020 11:48:04 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.375452|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0182425-0.000259138-0.981498;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16367;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HcyTzUM_1590335272;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HcyTzUM_1590335272)
+          by smtp.aliyun-inc.com(10.147.44.118);
+          Sun, 24 May 2020 23:47:59 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: [PATCH v9 0/6] Add support for the X1830 and fix bugs for X1000
+Date:   Sun, 24 May 2020 23:47:23 +0800
+Message-Id: <20200524154729.30958-2-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200524154729.30958-1-zhouyanjie@wanyeetech.com>
+References: <20200524154729.30958-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The built-in only code is not required to have MODULE_IMPORT_NS() to
-use symbols. So, the namespace is not checked for vmlinux(.o).
+v8->v9:
+Add Paul Cercueil's Reviewed-by, somehow his emails are not displayed
+on the mailing list and patchwork of clock framework subsystem.
 
-Do not pass the meaningless -N option to the first pass of modpost.
+周琰杰 (Zhou Yanjie) (6):
+  clk: Ingenic: Remove unnecessary spinlock when reading registers.
+  clk: Ingenic: Adjust cgu code to make it compatible with X1830.
+  dt-bindings: clock: Add X1830 bindings.
+  clk: Ingenic: Add CGU driver for X1830.
+  dt-bindings: clock: Add and reorder ABI for X1000.
+  clk: X1000: Add FIXDIV for SSI clock of X1000.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+ .../devicetree/bindings/clock/ingenic,cgu.yaml     |   2 +
+ drivers/clk/ingenic/Kconfig                        |  10 +
+ drivers/clk/ingenic/Makefile                       |   1 +
+ drivers/clk/ingenic/cgu.c                          |  28 +-
+ drivers/clk/ingenic/cgu.h                          |   4 +
+ drivers/clk/ingenic/jz4725b-cgu.c                  |   4 +
+ drivers/clk/ingenic/jz4740-cgu.c                   |   4 +
+ drivers/clk/ingenic/jz4770-cgu.c                   |   8 +-
+ drivers/clk/ingenic/jz4780-cgu.c                   |   3 +
+ drivers/clk/ingenic/x1000-cgu.c                    | 114 +++++-
+ drivers/clk/ingenic/x1830-cgu.c                    | 436 +++++++++++++++++++++
+ include/dt-bindings/clock/x1000-cgu.h              |  64 +--
+ include/dt-bindings/clock/x1830-cgu.h              |  54 +++
+ 13 files changed, 684 insertions(+), 48 deletions(-)
+ create mode 100644 drivers/clk/ingenic/x1830-cgu.c
+ create mode 100644 include/dt-bindings/clock/x1830-cgu.h
 
-Changes in v2: None
-
- scripts/Makefile.modpost | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index da7730a43819..bc5561aedb24 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -53,7 +53,6 @@ MODPOST = scripts/mod/modpost								\
- 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))			\
- 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))					\
- 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
--	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N) 	\
- 	$(if $(KBUILD_MODPOST_WARN),-w)
- 
- ifdef MODPOST_VMLINUX
-@@ -66,7 +65,9 @@ __modpost:
- 
- else
- 
-+# modpost options for modules (both in-kernel and external)
- MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s \
-+	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N) \
- 	$(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))
- 
- ifeq ($(KBUILD_EXTMOD),)
 -- 
-2.25.1
+2.11.0
 
