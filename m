@@ -2,130 +2,110 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B45BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F768C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 498C42075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BC82075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="jV5abBUX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mi1T6Zts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388609AbgEXX6f (ORCPT
+        id S2388334AbgEXX7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 19:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
+        Sun, 24 May 2020 19:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388559AbgEXX6f (ORCPT
+        with ESMTP id S2388149AbgEXX7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 19:58:35 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7992C05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:58:33 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id b18so12661222oti.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:58:33 -0700 (PDT)
+        Sun, 24 May 2020 19:59:00 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B62C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:58:59 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id e16so6866405qtg.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Ujgmu6qsF8KjwF0asTJwlN/jtHorDxcj3S3k6D7sfR4=;
-        b=jV5abBUXtxyNey4FdgLuz5aknabD6HeVYSYsWWwVfhdAice2CVc4CA1W3B8auInwQE
-         gnOuh9u7VPvwRnOLAx237unvR/r7zl/5Kg7025KjFSFCaS8HVAh71QRYqSlZX7UXNjQw
-         77qmB+EB6hxMeAUPgbtrBZUHtGeWEAn+tQdTkU8cbUc71pT8kG8Gd2pCSXYvqOy1tXMh
-         5MUMduFTA7+8GH/fZdRiZe5vl8bQKE+8p1ppqmDfc1llEvjph0KccZ6dx9AQPJN7GUco
-         itgSd4SND67rD4CZXVhq5tZeI3YHToadTvsEjq+7QezEaPQ4yYBLEZzGe6jIlDOz1pbJ
-         bQWw==
+        bh=X1mIyAkwbgWoxrz90REt4fG4bY063H1i6zQ27Un6aao=;
+        b=mi1T6ZtsPlzDI7d/PdTXk4g8yQZEgVkLNKOEnFBZihPx6fpvuA8BvsSHJbrcknvSAX
+         z5E4IhiN9r9b699JVm0os30Sco7Y1fzQdSt1ASba9x6IwpaRGb9XAPTto9TcVXsJxxbp
+         vG81GEguGTYbe2C9EqaZ6mDZbi9f0pUTRuJlBzExybQG5L9NYdzIlm71MzWVG/XIe9Hm
+         U2Nw9LOwzh47smCgn2QQzpjd3/rlNnTqtBAozPx6c510c8BAumkWHBTzzATEo6WiVhef
+         N+qIHE0drnc+mdIQOA1yVDR0AHbiCr8tftA7FF93pmcU/Wl7o+Dia5xrDy7aPjazFdUL
+         g08w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ujgmu6qsF8KjwF0asTJwlN/jtHorDxcj3S3k6D7sfR4=;
-        b=m2Nsot6rYydnrsaAeCsTQBMeNxOnKEEyVz5HNoWVRFu+y8z8LLS7bWrK6O2R0uJkJo
-         jwXWLVg54EzdTR/ocsEdcZCAOjm09O21XKIBFH1wgvAIcYIii1TJnVK8FG/vpOz9el6I
-         Rlt+liWZFeF8dnbcb5/qjq8Mzp4LyJDWGFLQyuDQS+ZPzSoFSRpG6RDyyCdIqPR5woHQ
-         SHyHfx05yk98/y7UCNYO5eYWBKx+0TZAXdhtd59z5a25fp+E858yjpIQYaBxm7QFUzO8
-         eBmujIvJkSzrxY4xT3qI02LOSWbXsCI6kn6/aW49BtWKhr9+ii6W3xDzeBYfCny58iIN
-         7MMA==
-X-Gm-Message-State: AOAM530GkJn8X1uOj4NiSyFitD1IhwBst+4h00A+iUqKj5F25tVrq3Az
-        GVLU34loZpTuoVpJnJJEyyp65g==
-X-Google-Smtp-Source: ABdhPJx+fCXqTvAG+9ISY3kf3Llc7o0fLy7/xyCQNcjszyp+Ny99EH8k+j6pXMd/J4mglh/dYopq7A==
-X-Received: by 2002:a9d:785a:: with SMTP id c26mr18109817otm.39.1590364713095;
-        Sun, 24 May 2020 16:58:33 -0700 (PDT)
-Received: from cisco ([2601:282:b02:8120:e9d7:5ec6:88ea:b4a1])
-        by smtp.gmail.com with ESMTPSA id c184sm4808180oif.3.2020.05.24.16.58.31
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=X1mIyAkwbgWoxrz90REt4fG4bY063H1i6zQ27Un6aao=;
+        b=HpUkqrj62LMxvHkENUlQTc6/iqvGdcU1yUQPTTOSQ5Y7uD/1c0CFAdMao9r65Wi1il
+         ZCn/w11QLKs/liNAPgRwmi9ktn95qTtv9UJP1mDlFcNIwNNpdQmnp/IUpwkx+VCypxQl
+         90slUxVPRnT/ostxXuQ/DmJsFmv2/b6haWo+n3lU2jyL1PjX1UN4lyB3iCUBJg3Zq1Fb
+         NqeqShc/3npgD6XlW8MmHo6eBr1YvF2HAF4EwjIGmiZ9sBf6D8QIVGmRWuc/J0Kvy0d+
+         ktxbUvxVYnzmWQWo06NCqgusPPFDasdTaJDH23WfzKjqCcy+BaTPEKyjIHTVngMxIrRD
+         aVSg==
+X-Gm-Message-State: AOAM530MrKbU3imUJvWo4Da9NoWPbi0XXizFCPCMlI1dgQnkRKGtO35b
+        j93pjy5G2P83eUA/YCugdtc=
+X-Google-Smtp-Source: ABdhPJyG+IeYxC6ELrcfCrNo9CnT7YthlMBgdgORz0LWSUWtXprZvhBrVl2YHQYRQlFA7bYIMObQDQ==
+X-Received: by 2002:ac8:6a1a:: with SMTP id t26mr24668127qtr.331.1590364738911;
+        Sun, 24 May 2020 16:58:58 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id u3sm14638550qtk.63.2020.05.24.16.58.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 16:58:32 -0700 (PDT)
-Date:   Sun, 24 May 2020 17:58:34 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        christian.brauner@ubuntu.com, keescook@chromium.org,
-        cyphar@cyphar.com, Jeffrey Vander Stoep <jeffv@google.com>,
-        jannh@google.com, rsesek@google.com, palmer@google.com,
-        Matt Denton <mpdenton@google.com>,
-        Kees Cook <keescook@google.com>
-Subject: Re: [PATCH 2/5] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <20200524235834.GJ2605652@cisco>
-References: <20200524233942.8702-1-sargun@sargun.me>
- <20200524233942.8702-3-sargun@sargun.me>
- <20200524235732.GI2605652@cisco>
+        Sun, 24 May 2020 16:58:58 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sun, 24 May 2020 19:58:56 -0400
+To:     Fangrui Song <maskray@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] x86/boot: Remove runtime relocations from
+ head_{32,64}.S
+Message-ID: <20200524235856.GD280334@rani.riverdale.lan>
+References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+ <20200524212816.243139-4-nivedita@alum.mit.edu>
+ <20200524232214.i7rfpdzoam6tpt6n@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200524235732.GI2605652@cisco>
+In-Reply-To: <20200524232214.i7rfpdzoam6tpt6n@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 05:57:32PM -0600, Tycho Andersen wrote:
-> On Sun, May 24, 2020 at 04:39:39PM -0700, Sargun Dhillon wrote:
-> > +static void seccomp_handle_addfd(struct seccomp_kaddfd *addfd)
-> > +{
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * Remove the notification, and reset the list pointers, indicating
-> > +	 * that it has been handled.
-> > +	 */
-> > +	list_del_init(&addfd->list);
-> > +
-> > +	ret = security_file_receive(addfd->file);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	if (addfd->fd >= 0) {
-> > +		ret = replace_fd(addfd->fd, addfd->file, addfd->flags);
-> > +		if (ret >= 0)
-> > +			fput(addfd->file);
-> > +	} else {
-> > +		ret = get_unused_fd_flags(addfd->flags);
-> > +		if (ret >= 0)
-> > +			fd_install(ret, addfd->file);
-> > +	}
-> > +
-> > +out:
-> > +	addfd->ret = ret;
-> > +	complete(&addfd->completion);
-> > +}
+On Sun, May 24, 2020 at 04:22:14PM -0700, Fangrui Song wrote:
 > 
-> My previous comment about SCM_RIGHTS still applies, right? That is, we
-> should do,
-> 
-> 		sock = sock_from_file(fp[i], &err);
-> 		if (sock) {
-> 				sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> 				sock_update_classid(&sock->sk->sk_cgrp_data);
-> 		}
-> 
-> and perhaps lift that into a helper.
+> Probably worth mentioning that this works around GNU ld<2.35
 
-Oh, and now I see the later patch. But is there a reason to separate
-these? I can't think of one.
+Thanks, I'll add that in v2.
 
-Tycho
+> 
+> 
+> This commit fixing https://sourceware.org/bugzilla/show_bug.cgi?id=25754
+> also fixed the bug. (Just verified that both 2.24 and 2.34 have the bug. binutils-gdb HEAD (future 2.35) is good.)
+> 
+> % cat a.s
+> pushl $z_input_len
+> % cat b.s
+> .globl z_input_len
+> z_input_len = 0xb612
+> % gcc -m32 -c a.s b.s
+> % ld.bfd -m elf_i386 -pie a.o b.o  # has an incorrect R_386_RELATIVE before binutils 2.35
+> 
+> 
+> Reviewed-by: Fangrui Song <maskray@google.com>
