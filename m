@@ -2,103 +2,85 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 18:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 18:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCDD0207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 18:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8272076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 18:58:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DYn3XCh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388014AbgEXS4g (ORCPT
+        id S2388043AbgEXS6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 14:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387823AbgEXS4f (ORCPT
+        Sun, 24 May 2020 14:58:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34630 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387823AbgEXS6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 14:56:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C181C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 11:56:35 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcvnS-0006jB-Hi; Sun, 24 May 2020 20:56:30 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcvnQ-00054U-E9; Sun, 24 May 2020 20:56:28 +0200
-Date:   Sun, 24 May 2020 20:56:28 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] pwm: jz4740: Add support for the JZ4725B
-Message-ID: <20200524185628.bfx4qefdr3eet22r@pengutronix.de>
-References: <20200413121445.72996-1-paul@crapouillou.net>
- <20200413121445.72996-3-paul@crapouillou.net>
- <20200524173711.ofprgoueyimhkowj@pengutronix.de>
- <N9KUAQ.VPI8V42FNJQU@crapouillou.net>
+        Sun, 24 May 2020 14:58:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ywdpDsyEeOdIC3u+1kMdolXQv8cEi/Fq0UPFNBjeBYU=; b=DYn3XCh5NWZza7qNhG8mvgP8kc
+        KLAjbzNg0GFKkei70OtbXqo7hqP/TnlKmxCRXsTfGgYAGduMtowuxbXcxvzAjcyX2pGHFmXqgWBa4
+        F3tF6dDjhvvoMG3dwbDrt4GKjGl+IuYJ90BEuhsBdTTaooTS++3zbIgrSbX42ULhRY9PQNleZQjux
+        wJNgtxuLyOKY6bKAAtICdPQGsq82SNVoYk3ng1ccCtiwKDgM71I4DnRhiKsyMoiKRDRC+xCdWY8vQ
+        vwKqFpHzmQk0hF61rejEGmVCJnBYSPoTU82c9291qLZGIb/Z6Bap9XhgzTgvjlFuRZOS2BTBoDt8f
+        yB8dK3Kw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jcvp4-00010O-ME; Sun, 24 May 2020 18:58:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 552953011E8;
+        Sun, 24 May 2020 20:58:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3CC3621462C28; Sun, 24 May 2020 20:58:00 +0200 (CEST)
+Date:   Sun, 24 May 2020 20:58:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: TSC problems with Acer TravelMate 5735Z
+Message-ID: <20200524185800.GV325280@hirez.programming.kicks-ass.net>
+References: <a8c0c572-6dba-8d35-69bd-5e7b19bf6aba@molgen.mpg.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <N9KUAQ.VPI8V42FNJQU@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <a8c0c572-6dba-8d35-69bd-5e7b19bf6aba@molgen.mpg.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Paul,
-
-On Sun, May 24, 2020 at 07:51:23PM +0200, Paul Cercueil wrote:
-> Le dim. 24 mai 2020 à 19:37, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Mon, Apr 13, 2020 at 02:14:45PM +0200, Paul Cercueil wrote:
-> > >  @@ -214,6 +218,7 @@ static int jz4740_pwm_probe(struct
-> > > platform_device *pdev)
-> > >   {
-> > >   	struct device *dev = &pdev->dev;
-> > >   	struct jz4740_pwm_chip *jz4740;
-> > >  +	const struct soc_info *info = device_get_match_data(dev);
-> > > 
-> > >   	jz4740 = devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
-> > >   	if (!jz4740)
-> > >  @@ -227,8 +232,8 @@ static int jz4740_pwm_probe(struct
-> > > platform_device *pdev)
-> > > 
-> > >   	jz4740->chip.dev = dev;
-> > >   	jz4740->chip.ops = &jz4740_pwm_ops;
-> > >  -	jz4740->chip.npwm = NUM_PWM;
-> > >   	jz4740->chip.base = -1;
-> > >  +	jz4740->chip.npwm = info ? info->num_pwms : NUM_PWM;
-> > 
-> > Can info be actually NULL? I don't think so, so you can just use
-> > info->num_pwms here and drop the definition of NUM_PWM.
+On Sun, May 24, 2020 at 07:09:18PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> In *theory* it can be NULL if the kernel is configured without CONFIG_OF,
-> which will never happen on any board supported by this driver. I can add a
-> dependency on CONFIG_OF in V2, then use info->num_pwms there.
+> 
+> I got my hands on an old Acer TravelMate 5735Z (Intel GM45/Cantiga) and
+> installed Debian Sid/unstable with Linux 5.6.7 on it.
+> 
+> Booting the system it takes a long time, and the systemd units fail to
+> start. The logs contain that the TSC is unstable. Adding `tsc=unstable` to
+> the Linux kernel command line fixes this.
 
-I'd prefer just something like:
+It fixes nothing; it just doesn't get you the warning because you told
+it upfront.
 
-	if (!info)
-		return -EINVAL;
+> Do you have an idea, what might cause this? 
 
-instead of a dependency on CONFIG_OF.
+Yes, but you didn't include the dmesg of the affected case. IIRC it
+actually spells it out for you.
 
-Best regards
-Uwe
+> Do you have an idea, what might cause this, 
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+It's a Core2, Core2 doesn't have stable TSC.
+
+> and how it can be fixed?
+
+Use a 'better' CPU :-)
