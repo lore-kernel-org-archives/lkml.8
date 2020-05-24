@@ -2,279 +2,138 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E24C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9D920776
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4195420776
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388434AbgEXV2k (ORCPT
+        id S2388373AbgEXV2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:28:40 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39294 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388382AbgEXV2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:28:36 -0400
-IronPort-SDR: ojqRPSM5NLLEPlNrjX/E5kkB7CTBkW/hRbv1+jbVnp046G69zGtqePXSxEVohCgyjB73Da+tGr
- mC4lnwnWlPcw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 14:28:23 -0700
-IronPort-SDR: 5dAmFGQ1mgtxkvomweC6ZHW0Pjc2R8Nqh860LB227G4FJT2m0njyBr68B7WEXGMQOR5JQvHhfV
- /UZyBOXuAtcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,431,1583222400"; 
-   d="scan'208";a="254928558"
-Received: from tjrondo-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.251.20.235])
-  by orsmga007.jf.intel.com with ESMTP; 24 May 2020 14:28:10 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v2 5/5] PCI/AER: Replace pcie_aer_get_firmware_first() with pcie_aer_is_native()
-Date:   Sun, 24 May 2020 14:27:56 -0700
-Message-Id: <4ce198dfd8e2da43d6394ed3143ee81579e1a2b4.1590355211.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1590355211.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1590355211.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Sun, 24 May 2020 17:28:24 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38515 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388331AbgEXV2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 17:28:21 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i68so12599957qtb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:28:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=k86zNxnaewD/kcJp/CHjCp3w81OEIlc7GLgOACCIBWU=;
+        b=UYvlqrmkiLh7zeUh09xKzOX5e5PCssoSQCBAUbjtBLgiwUkgf2CeO0vjtF/7rHQZKX
+         75feJIh4eoeDznVvL2/rp9M+BpDF96pt4ryAw5BZNNLwgiKWFNFS+QK2xAQiVRBD7yaY
+         pAj9iHyverFpERhmniW8k8C6GEYHBAPn9PR2+5N1D7dHkHa27Uu21/vi1DFGPY3+afKU
+         d+9TJufGbwQPOJp1yGeKUELrR6VXOdViKFqIOfTwBrcdxE++ZyqQE9RHEFCd153IwOjv
+         iVKkI7wbsjlhNEp6kn2MkJOwVTNqky38+gvncreiowRy7X3qzxuOBFIetW+5YYKQ+PHT
+         hV/g==
+X-Gm-Message-State: AOAM533fi3ekaHOJPNfKmLFbWSN5BIVaFz+VXeO8KD5c/3D2UW18w5kp
+        8ZOmLuMDJw3FRD0JXBoCMrk=
+X-Google-Smtp-Source: ABdhPJzH5DLMNj6BE0TuKxsAjqkenLwub28Ddg5REzEs4wguvxqZDziJxizA3cq44Ynh6kqXxdsJ+A==
+X-Received: by 2002:aed:2213:: with SMTP id n19mr25897885qtc.246.1590355698528;
+        Sun, 24 May 2020 14:28:18 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d14sm3665729qkg.25.2020.05.24.14.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 14:28:18 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] x86/boot: Remove runtime relocations from compressed kernel
+Date:   Sun, 24 May 2020 17:28:12 -0400
+Message-Id: <20200524212816.243139-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+The compressed kernel currently contains bogus runtime relocations in
+the startup code in head_{32,64}.S, which are generated by the linker,
+but must not actually be processed at runtime.
 
-Commit e7909188dd4d ("PCI/AER: Use only _OSC to determine AER ownership")
-removed the dependency of HEST table in determining the status of AER
-ownership. But AER driver still uses HEST table parsed result in
-verifying the AER ownership status in some of its API's. So remove HEST
-table dependency, and instead use pcie_aer_is_native() to verify the AER
-native ownership status.
+This generates warnings when linking with the BFD linker, and errors
+with LLD, which defaults to erroring on runtime relocations in read-only
+sections. It also requires the -z noreloc-overflow hack for the 64-bit
+kernel, which prevents us from linking it as -pie on an older BFD linker
+(<= 2.26) or on LLD, because the locations that are to be apparently
+relocated are only 32-bits in size and so cannot normally have
+R_X86_64_RELATIVE relocations.
 
-Also remove unused HEST table parsing helper functions from AER driver.
+This series aims to get rid of these relocations. It is based on
+efi/next (efi-changes-for-v5.8), where the latest patches touch the
+head code to eliminate the global offset table.
 
-We can reintroduce HEST table parser once the usage of FIRMWARE_FIRST bit
-is clarified in PCI/AER specification.
+The first patch is an independent fix for LLD, to avoid an orphan
+section in arch/x86/boot/setup.elf [0].
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/pcie/aer.c     | 113 ++++---------------------------------
- drivers/pci/pcie/dpc.c     |   2 +-
- drivers/pci/pcie/portdrv.h |  13 +----
- 3 files changed, 13 insertions(+), 115 deletions(-)
+The second patch gets rid of almost all the relocations. It uses
+standard PIC addressing technique for 32-bit, i.e. loading a register
+with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+references to access variables. For 64-bit, there is 32-bit code that
+cannot use RIP-relative addressing, and also cannot use the 32-bit
+method, since GOTOFF references are 64-bit only. This is instead handled
+using a macro to replace a reference like gdt with (gdt-startup_32)
+instead. The assembler will generate a PC32 relocation entry, with
+addend set to (.-startup_32), and these will be replaced with constants
+at link time. This works as long as all the code using such references
+lives in the same section as startup_32, i.e. in .head.text.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 5f5ffe2f0986..12fa67c9ed9c 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -211,115 +211,22 @@ void pcie_ecrc_get_policy(char *str)
- }
- #endif	/* CONFIG_PCIE_ECRC */
- 
--#ifdef CONFIG_ACPI_APEI
--static inline int hest_match_pci(struct acpi_hest_aer_common *p,
--				 struct pci_dev *pci)
--{
--	return   ACPI_HEST_SEGMENT(p->bus) == pci_domain_nr(pci->bus) &&
--		 ACPI_HEST_BUS(p->bus)     == pci->bus->number &&
--		 p->device                 == PCI_SLOT(pci->devfn) &&
--		 p->function               == PCI_FUNC(pci->devfn);
--}
--
--static inline bool hest_match_type(struct acpi_hest_header *hest_hdr,
--				struct pci_dev *dev)
--{
--	u16 hest_type = hest_hdr->type;
--	u8 pcie_type = pci_pcie_type(dev);
--
--	if ((hest_type == ACPI_HEST_TYPE_AER_ROOT_PORT &&
--		pcie_type == PCI_EXP_TYPE_ROOT_PORT) ||
--	    (hest_type == ACPI_HEST_TYPE_AER_ENDPOINT &&
--		pcie_type == PCI_EXP_TYPE_ENDPOINT) ||
--	    (hest_type == ACPI_HEST_TYPE_AER_BRIDGE &&
--		(dev->class >> 16) == PCI_BASE_CLASS_BRIDGE))
--		return true;
--	return false;
--}
--
--struct aer_hest_parse_info {
--	struct pci_dev *pci_dev;
--	int firmware_first;
--};
--
--static int hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr)
--{
--	if (hest_hdr->type == ACPI_HEST_TYPE_AER_ROOT_PORT ||
--	    hest_hdr->type == ACPI_HEST_TYPE_AER_ENDPOINT ||
--	    hest_hdr->type == ACPI_HEST_TYPE_AER_BRIDGE)
--		return 1;
--	return 0;
--}
--
--static int aer_hest_parse(struct acpi_hest_header *hest_hdr, void *data)
--{
--	struct aer_hest_parse_info *info = data;
--	struct acpi_hest_aer_common *p;
--	int ff;
--
--	if (!hest_source_is_pcie_aer(hest_hdr))
--		return 0;
--
--	p = (struct acpi_hest_aer_common *)(hest_hdr + 1);
--	ff = !!(p->flags & ACPI_HEST_FIRMWARE_FIRST);
--
--	/*
--	 * If no specific device is supplied, determine whether
--	 * FIRMWARE_FIRST is set for *any* PCIe device.
--	 */
--	if (!info->pci_dev) {
--		info->firmware_first |= ff;
--		return 0;
--	}
--
--	/* Otherwise, check the specific device */
--	if (p->flags & ACPI_HEST_GLOBAL) {
--		if (hest_match_type(hest_hdr, info->pci_dev))
--			info->firmware_first = ff;
--	} else
--		if (hest_match_pci(p, info->pci_dev))
--			info->firmware_first = ff;
--
--	return 0;
--}
-+#define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
-+				 PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE)
- 
--static void aer_set_firmware_first(struct pci_dev *pci_dev)
-+int pcie_aer_is_native(struct pci_dev *dev)
- {
--	int rc;
--	struct aer_hest_parse_info info = {
--		.pci_dev	= pci_dev,
--		.firmware_first	= 0,
--	};
--
--	rc = apei_hest_parse(aer_hest_parse, &info);
-+	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
- 
--	if (rc)
--		pci_dev->__aer_firmware_first = 0;
--	else
--		pci_dev->__aer_firmware_first = info.firmware_first;
--	pci_dev->__aer_firmware_first_valid = 1;
--}
--
--int pcie_aer_get_firmware_first(struct pci_dev *dev)
--{
- 	if (!dev->aer_cap)
- 		return 0;
- 
--	if (pcie_ports_native)
--		return 0;
--
--	if (!dev->__aer_firmware_first_valid)
--		aer_set_firmware_first(dev);
--	return dev->__aer_firmware_first;
-+	return host->native_aer;
- }
--#endif
--
--#define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
--				 PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE)
- 
- int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- {
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	return pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-@@ -328,7 +235,7 @@ EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
- 
- int pci_disable_pcie_error_reporting(struct pci_dev *dev)
- {
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	return pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
-@@ -349,7 +256,7 @@ int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- 	int pos = dev->aer_cap;
- 	u32 status, sev;
- 
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	/* Clear status bits for ERR_NONFATAL errors only */
-@@ -368,7 +275,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
- 	int pos = dev->aer_cap;
- 	u32 status, sev;
- 
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return;
- 
- 	/* Clear status bits for ERR_FATAL errors only */
-@@ -415,7 +322,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
- 
- int pci_aer_clear_status(struct pci_dev *dev)
- {
--	if (pcie_aer_get_firmware_first(dev))
-+	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
- 	return pci_aer_raw_clear_status(dev);
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 762170423fdd..0993d51abf03 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -284,7 +284,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	int status;
- 	u16 ctl, cap;
- 
--	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-+	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index 64b5e081cdb2..5bc1fcb21543 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -29,8 +29,10 @@ extern bool pcie_ports_dpc_native;
- 
- #ifdef CONFIG_PCIEAER
- int pcie_aer_init(void);
-+int pcie_aer_is_native(struct pci_dev *dev);
- #else
- static inline int pcie_aer_init(void) { return 0; }
-+statuc inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
- #endif
- 
- #ifdef CONFIG_HOTPLUG_PCI_PCIE
-@@ -147,16 +149,5 @@ static inline bool pcie_pme_no_msi(void) { return false; }
- static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
- #endif /* !CONFIG_PCIE_PME */
- 
--#ifdef CONFIG_ACPI_APEI
--int pcie_aer_get_firmware_first(struct pci_dev *pci_dev);
--#else
--static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
--{
--	if (pci_dev->__aer_firmware_first_valid)
--		return pci_dev->__aer_firmware_first;
--	return 0;
--}
--#endif
--
- struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
- #endif /* _PORTDRV_H_ */
+The third patch addresses a remaining issue with the BFD linker, which
+insists on generating runtime relocations for absolute symbols. We use
+z_input_len and z_output_len, defined in the generated piggy.S file, as
+symbols whose absolute "addresses" are actually the size of the
+compressed payload and the size of the decompressed kernel image
+respectively. LLD does not generate relocations for these two symbols,
+but the BFD linker does. To get around this, piggy.S is extended to also
+define two u32 variables (in .rodata) with the lengths, and the head
+code is modified to use those instead of the symbol addresses.
+
+An alternative way to handle z_input_len/z_output_len would be to just
+include piggy.S in head_{32,64}.S instead of as a separate object file,
+since the GNU assembler doesn't generate relocations for symbols set to
+constants.
+
+The last patch adds a check in the linker script to ensure that no
+runtime relocations get reintroduced. Since the GOT has been eliminated
+as well, the compressed kernel has no runtime relocations whatsoever any
+more.
+
+[0] https://lore.kernel.org/lkml/20200521152459.558081-1-nivedita@alum.mit.edu/
+
+Arvind Sankar (4):
+  x86/boot: Add .text.startup to setup.ld
+  x86/boot: Remove runtime relocations from .head.text code
+  x86/boot: Remove runtime relocations from head_{32,64}.S
+  x86/boot: Check that there are no runtime relocations
+
+ arch/x86/boot/compressed/Makefile      | 36 +---------
+ arch/x86/boot/compressed/head_32.S     | 59 +++++++--------
+ arch/x86/boot/compressed/head_64.S     | 99 +++++++++++++++-----------
+ arch/x86/boot/compressed/mkpiggy.c     |  6 ++
+ arch/x86/boot/compressed/vmlinux.lds.S | 11 +++
+ arch/x86/boot/setup.ld                 |  2 +-
+ 6 files changed, 109 insertions(+), 104 deletions(-)
+
 -- 
-2.17.1
+2.26.2
 
