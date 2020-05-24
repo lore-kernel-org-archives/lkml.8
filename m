@@ -2,168 +2,119 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7255C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E88D20776
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="My9KlHE1"
+	by mail.kernel.org (Postfix) with ESMTP id 9BE902076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388317AbgEXD04 (ORCPT
+        id S2388342AbgEXD20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 23:26:56 -0400
-Received: from mail-am6eur05on2061.outbound.protection.outlook.com ([40.107.22.61]:40158
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388290AbgEXD04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 23:26:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KdAGxd6rC/vW+q6PjLaAzVNiR89KdAS5fo+hHSm6mrP//FpQKkNQlaRvepQFX2IXfz3IHzVP5PHAdkEW+1Egd4xd+wFe4MjAB1ijhzOrjWPUe0ko+uw5aRHOyUOzg2QPeclLVMqxMUs/HJEdvm2pgmyNV01JRQgxxbme3D5LAMeczcOBXJe8wgu/TYJJsMJCjXHQHkPbZnjNaSqdoQCQycY7W488sRRIQ7mfKGmA4j/Rpc0Itu/aFI5fFvYgh9673FMIPJ7PsRj5ZVJeJ7y9ZXeewVYBHazIpConM5rQxMAPoOiSO8+wDVifv8tcXo1s8rbocSsMTxi/WhTk/e8D3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zk4pjYqmdIem2fzxp5lW9xnmTG9QQpDUmIykYa3wW9g=;
- b=MKHH316qhltu08pfUZC9cvFymPQV210kNzrWLlsIihy42XFbevmNbL1GLT8HEDdRuOwG3kE9pkBOWDVDZR0VwQSWfWeQ3iaH885AcAMbUf35jjssCPhyRo4oRUwqSahc+O+zue7qWEc2neYOmPOkHO/3SfcSa6fGpt8eN5JMz1SFVZItZVPg55PhqNO/jGc22JOh8Ni9H+wemYVCf7oeY+197kDHYonc6q56QBnp5GC6CcFXa1TK0Gsx+KEGCM6x5P+fjpYZS3pCbfnE3BmEMa/dUuFndwWc1A+ib+KQMR+rqAMSSgAg3/c7knu1kM8HimrrD4Ay3g2BYmm8MKnqrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zk4pjYqmdIem2fzxp5lW9xnmTG9QQpDUmIykYa3wW9g=;
- b=My9KlHE19/sCQcCEtITnh8zZYEwca9c30S7w9jKGFaJZ0SoRHfBg8TvxtJGOQsftSvRimgTOs13ZfG0v79PlM/QWVGJKy4Hja04mwxEyF4zQ2RXhSGI5RO761CKJxXY9rFs6Qz3St3gEZ0qIS2mvKpJHipLaBmOxkNElQoN87Uo=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3676.eurprd04.prod.outlook.com (2603:10a6:8:d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Sun, 24 May
- 2020 03:26:50 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3021.027; Sun, 24 May 2020
- 03:26:50 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3] thermal: imx: Add missing of_node_put()
-Thread-Topic: [PATCH V3] thermal: imx: Add missing of_node_put()
-Thread-Index: AQHWHdINpRSpu2HCw02EbBMkbedAtKi2unvA
-Date:   Sun, 24 May 2020 03:26:50 +0000
-Message-ID: <DB3PR0402MB391639FE30CD00F3371A0763F5B20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1588128570-12917-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1588128570-12917-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e80e2e57-b3bf-4c60-e21a-08d7ff924c68
-x-ms-traffictypediagnostic: DB3PR0402MB3676:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB367677E2F9D3C0C91099D75DF5B20@DB3PR0402MB3676.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:741;
-x-forefront-prvs: 0413C9F1ED
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lNkoQfY3KcoRpfk6iemcy/hks7NMs33vsT5qdW/e6bdx0nsMQkD5AEixxs0jUB1ASODUoNH+meRCHk17qSPQTU0O2eVJKLi1OZ5U1/zVPdyyrhPHR6NxDru8vGSDYjCyU4dt6t8VCFUgrvMe5VIdnOXWJT5hzVTtEijImdpDX+P++8haORC4DYe/rRL3pBMahc8MyBBqY0X8TclJ2xzxzSXScPW0mLC7RWCQAFAIznd8gVLMEZxGeb6UXCVN6+vhQxrhmSbuOoxx2gy7YgFBriKs763LZHxLhHbmZFBYYHSWbEgQheaRHIrR5yGsvGsIFOzkSFn5T/60eEtqQN86krYgd7u0KfqSQUu8WZ/uc2S5BfS2AMoOuJIYFb91abOt
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(39860400002)(396003)(376002)(316002)(2906002)(6506007)(66476007)(8676002)(8936002)(86362001)(186003)(66556008)(64756008)(66946007)(76116006)(52536014)(110136005)(44832011)(66446008)(55016002)(5660300002)(7416002)(4326008)(7696005)(9686003)(478600001)(71200400001)(26005)(33656002)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: I2/f1bDBK+MXB/TDWPy6uz8RsBz0FjDTKnNjCSAqAi9ydDwk8PnyRYsnRJS4TKSC6vCbKj+GzlXF3k6IfxH1M30w8ijHkoJXAXWYXV++s1wZkXCUfNNN75u3SiLl26J7GAU3mWmIMBSPj+2q6TJgiK5hK7ntFY3PZ9isT2pgsJHqIdBFXBdezECx1YM/pP9wN/5T9XZoYd1yLVUuFLytTPo/3gnL+PD9GZh5Hye9P5jyjkZf/PxCoYFNFxSEpbrGqe7lhPg8UVmu3zWJpKNp2uQQhgzesdW7GQri7+FrYIX0KMzmaqyL2x+LpSdAVANtD/0IrHTFVS7MvmhxGAoDkJaKYmwwjBsU9kT5Bm7yTVj+u+BCBsDJpsrr00/jqAiiBvbMxeg1eu5QyDPxIAFoIGNaL5Bocrlc3A80mKqrdHl1mUvg/1klRgKEGPvGYQvT1VOTw0RRpfKMgyejpp7zPZEdPlf8mEpTm551PJczs/OB2w3KfdfiVKn9FR4QSz22
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e80e2e57-b3bf-4c60-e21a-08d7ff924c68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2020 03:26:50.7275
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7tdjqSFf5a93JLl9f+yeDLjuK7B4YuQ/01h0MlOBPJ4e2BfuLTv6KNbzEJ+aFzpoXxscggs1lW3f7mH0jf7Ymg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3676
+        Sat, 23 May 2020 23:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388290AbgEXD20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 23:28:26 -0400
+Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03490C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 20:28:25 -0700 (PDT)
+Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04O3SMpE027737
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:28:22 -0400
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04O3SHle015502
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:28:22 -0400
+Received: by mail-qv1-f72.google.com with SMTP id t10so14569481qvz.9
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 20:28:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
+         :content-transfer-encoding:date:message-id;
+        bh=i58OCaMAvQBYliGiBa5+vTtK/78utl6tdtCjNYsEte8=;
+        b=KE3nDEprF4Z6NJolT+pGg7wLgX3RkNBpv8myYJM+Vkx2JBdRwIVj70oGDAgQ/b6jaq
+         gJsbl/raCAsLUpObUM2hr/RaY9mvaZeg/DYFDzPPO9HyHKwRcDNGnBalGS9Nw/5yYyO/
+         YwD8jR65OBlTwNfKhqnyqPrV5/qv+FEPNaMHYIho2S/UN/9wr2OXJvkrohjIuDDnoYEQ
+         SBN4zz+fs+xPey+/eSe3iqao1x4/3wfqpPbNp2NTZZjjGiU0E7hIWVe7xYSJdwSiX+Pb
+         tIoDqjFzs5pza6x4qC3PL9lLoUBR/OPZe8rjR7r5ng9kufBdZBr76fTQqn7sojWhb9lg
+         ypNw==
+X-Gm-Message-State: AOAM533SuYGdUH00PpbkkZZBDIXPmWjCS8rDrVl8PRdvx5LcDhZF0KYO
+        Hv4EZ5xKPrw5H3FAN2QHqoRSKVoxxqkN/hQZKbkj3OdZtF8PA2n5q/BkqcwK6p8J/HQNgz62vpi
+        3doCo3qh0TR5oV80ieaByJgGn9yiex2eICuQ=
+X-Received: by 2002:a05:620a:1524:: with SMTP id n4mr22092049qkk.490.1590290897448;
+        Sat, 23 May 2020 20:28:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzTv3M8riA+KCQEJ7UovI1OPJ0n7n+QJ0IE5YxSOmpO2i0TDa2rJYRwX0A2430HsIuZYpNvCw==
+X-Received: by 2002:a05:620a:1524:: with SMTP id n4mr22092030qkk.490.1590290896986;
+        Sat, 23 May 2020 20:28:16 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id p25sm2768539qtj.18.2020.05.23.20.28.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 20:28:15 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: next-20200522 - build fail in fs/binfmt_elf_fdpic.c
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1590290894_16657P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 23 May 2020 23:28:14 -0400
+Message-ID: <22928.1590290894@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gentle ping...
+--==_Exmh_1590290894_16657P
+Content-Type: text/plain; charset=us-ascii
+
+Eric:  looks like you missed one?
+
+commit b8a61c9e7b4a0fec493d191429e9653d66a79ccc
+Author: Eric W. Biederman <ebiederm@xmission.com>
+Date:   Thu May 14 15:17:40 2020 -0500
+
+    exec: Generic execfd support
+
+  CHECK   fs/binfmt_elf_fdpic.c
+fs/binfmt_elf_fdpic.c:591:34: error: undefined identifier 'BINPRM_FLAGS_EXECFD'
+  CC      fs/binfmt_elf_fdpic.o
+fs/binfmt_elf_fdpic.c: In function 'create_elf_fdpic_tables':
+fs/binfmt_elf_fdpic.c:591:27: error: 'BINPRM_FLAGS_EXECFD' undeclared (first use in this function); did you mean 'VM_DATA_FLAGS_EXEC'?
+  if (bprm->interp_flags & BINPRM_FLAGS_EXECFD)
+                           ^~~~~~~~~~~~~~~~~~~
+                           VM_DATA_FLAGS_EXEC
+fs/binfmt_elf_fdpic.c:591:27: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [scripts/Makefile.build:273: fs/binfmt_elf_fdpic.o] Error 1
+23:14:07 0 [/usr/src/linux-next]2
 
 
-> Subject: [PATCH V3] thermal: imx: Add missing of_node_put()
->=20
-> After finishing using cpu node got from of_get_cpu_node(), of_node_put()
-> needs to be called, the cpufreq policy also needs to be put unconditional=
-ly.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- call cpufreq_cpu_put() unconditionally after cooling register done.
-> ---
->  drivers/thermal/imx_thermal.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.=
-c
-> index e761c9b..8764cb5 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
-> static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *d=
-ata)
-> {
->  	struct device_node *np;
-> -	int ret;
-> +	int ret =3D 0;
->=20
->  	data->policy =3D cpufreq_cpu_get(0);
->  	if (!data->policy) {
-> @@ -661,20 +661,19 @@ static int
-> imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
->=20
->  	if (!np || !of_find_property(np, "#cooling-cells", NULL)) {
->  		data->cdev =3D cpufreq_cooling_register(data->policy);
-> -		if (IS_ERR(data->cdev)) {
-> +		if (IS_ERR(data->cdev))
->  			ret =3D PTR_ERR(data->cdev);
-> -			cpufreq_cpu_put(data->policy);
-> -			return ret;
-> -		}
->  	}
->=20
-> -	return 0;
-> +	cpufreq_cpu_put(data->policy);
-> +	of_node_put(np);
-> +
-> +	return ret;
->  }
->=20
->  static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_dat=
-a
-> *data)  {
->  	cpufreq_cooling_unregister(data->cdev);
-> -	cpufreq_cpu_put(data->policy);
->  }
->=20
->  #else
-> --
-> 2.7.4
+--==_Exmh_1590290894_16657P
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXsnpzQdmEQWDXROgAQKL5BAAjI/OXaLC+STtx047fdE5RkoaXShnqUSw
+GhJ1TJnAtDtaDQTtX1BGLWaUtLlBqndad5OBRri0fspOPB2iL4nRscZCojqNupAv
+Mja4gDYmlNhvHjO6Vzs/OHGRObz01+WD0SGAs7vEx2Sxpbm2rq37sWe7dzblznVl
+VUyc3t+AUJek45kuOyxP6MrvvakLQLJdLWTHbg0bqUh0byRU6LT97Xu5gdyYoGsi
+a/DfSNQFJHYbAzqR8cZA+/u9m04uEaJ+1eaz1NTQqq9fxN4fFFSXkqokkUAhezbq
+OyFz8Q1cW7R3rB/EsrcmQ+hpGrZmlFR/N8qtK7Frp6ALwM1kgvpLpRAOWsVdlFTq
+W7km69mUe3eBrUNGQ0UD0SUxGDIYwu2Z1GKUjmTDe3kPzH2PCk+/TIpYtVvXMnCe
+T8vmu/yR37VgEOepko8Zgo9pNY6V5CGr/e/UiZHnA7DgFp5cT2YD3G6OLoXsibnf
+k/qzNNJ0mmu+iDduIH+rBIOE5bpFn41Un8vuZRxb8FQD1PLFdwlT/V6BHqIuhAnU
+ZtIjOlC0AUu15jzFZFrpUsOKC22BCNBSMzrHlli+G5BsDB4hR/xWSMHaedTAQwdH
+cxOm75EAhXpwBj5xlnXyujyRvTSw52Lt5fNzVVGboYP4SEFIeePuenaKmkpCYs0e
+3HPmljnddXE=
+=6Us+
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1590290894_16657P--
