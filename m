@@ -2,131 +2,67 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09970C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 20:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F384C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 20:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E28FC20825
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 20:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF872076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 20:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388128AbgEXUSF (ORCPT
+        id S1728815AbgEXU37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 16:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388045AbgEXUSF (ORCPT
+        Sun, 24 May 2020 16:29:59 -0400
+Received: from outbound-smtp58.blacknight.com ([46.22.136.242]:54709 "EHLO
+        outbound-smtp58.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725836AbgEXU37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 16:18:05 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F121FC061A0E;
-        Sun, 24 May 2020 13:18:04 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2A9BD26107D;
-        Sun, 24 May 2020 21:18:02 +0100 (BST)
-Date:   Sun, 24 May 2020 22:17:58 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: Re: [PATCH v8 02/19] spi: spi-mem: allow specifying a command's
- extension
-Message-ID: <20200524221758.7c30f336@collabora.com>
-In-Reply-To: <20200522224042.29970-3-p.yadav@ti.com>
-References: <20200522224042.29970-1-p.yadav@ti.com>
-        <20200522224042.29970-3-p.yadav@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sun, 24 May 2020 16:29:59 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp58.blacknight.com (Postfix) with ESMTPS id 1A55DFA973
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:29:57 +0100 (IST)
+Received: (qmail 3104 invoked from network); 24 May 2020 20:29:56 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPA; 24 May 2020 20:29:56 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        valentin.schneider@arm.com, Hillf Danton <hdanton@sina.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 0/2] Optimise try_to_wake_up() when wakee is descheduling
+Date:   Sun, 24 May 2020 21:29:54 +0100
+Message-Id: <20200524202956.27665-1-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 May 2020 04:10:25 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
+The following two patches optimise try_to_wake_up() when the wakee is
+descheduling. In a vanilla kernel, there can be excessive time spent
+spinning on p->on_rq. This is fine if it's a strictly synchronous wakeup
+and the waker is going to sleep but in other cases, the waker spins until
+it can do work that can be deferred to the wakee.
 
-> diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
-> index 69491f3a515d..4e4292f0ee1d 100644
-> --- a/drivers/spi/spi-mxic.c
-> +++ b/drivers/spi/spi-mxic.c
-> @@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
->  	int nio = 1, i, ret;
->  	u32 ss_ctrl;
->  	u8 addr[8];
-> +	u8 opcode = op->cmd.opcode & 0xff;
+The first patch frontloads work that can be done before p->on_rq is
+checked.  If it's a wakeup on a CPU that does not share cache then the
+wakelist is used instead of spinning. The second patch goes a little
+further and uses the wakelist if the wakee is descheduling and is the
+only task running on the target CPU.
 
-You don't need the '& 0xff' here, the cast to an u8 will truncate the
-value anyway.
+The performance impact is documented in the changelog of the second patch.
 
->  
->  	ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
->  	if (ret)
-> @@ -393,7 +394,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
->  	writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
->  	       mxic->regs + HC_CFG);
->  
-> -	ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
-> +	ret = mxic_spi_data_xfer(mxic, &opcode, NULL, 1);
->  	if (ret)
->  		goto out;
->  
-> diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
-> index 17641157354d..41389856e14a 100644
-> --- a/drivers/spi/spi-zynq-qspi.c
-> +++ b/drivers/spi/spi-zynq-qspi.c
-> @@ -527,20 +527,21 @@ static int zynq_qspi_exec_mem_op(struct spi_mem *mem,
->  	struct zynq_qspi *xqspi = spi_controller_get_devdata(mem->spi->master);
->  	int err = 0, i;
->  	u8 *tmpbuf;
-> +	u8 opcode = op->cmd.opcode & 0xff;
->  
+ kernel/sched/core.c  | 81 ++++++++++++++++++++++++++++++++------------
+ kernel/sched/sched.h |  3 +-
+ 2 files changed, 61 insertions(+), 23 deletions(-)
 
-Ditto.
+-- 
+2.26.1
 
->  	dev_dbg(xqspi->dev, "cmd:%#x mode:%d.%d.%d.%d\n",
-> -		op->cmd.opcode, op->cmd.buswidth, op->addr.buswidth,
-> +		opcode, op->cmd.buswidth, op->addr.buswidth,
->  		op->dummy.buswidth, op->data.buswidth);
->  
->  	zynq_qspi_chipselect(mem->spi, true);
->  	zynq_qspi_config_op(xqspi, mem->spi);
->  
-> -	if (op->cmd.opcode) {
-> +	if (opcode) {
-
-Unrelated to this patch, but this test is wrong. I don't see why we
-couldn't have a '0' opcode. The test should be dropped or done on the
-new op->cmd.nbytes field.
-
->  		reinit_completion(&xqspi->data_completion);
-> -		xqspi->txbuf = (u8 *)&op->cmd.opcode;
-> +		xqspi->txbuf = &opcode;
->  		xqspi->rxbuf = NULL;
-> -		xqspi->tx_bytes = sizeof(op->cmd.opcode);
-> -		xqspi->rx_bytes = sizeof(op->cmd.opcode);
-> +		xqspi->tx_bytes = op->cmd.nbytes;
-> +		xqspi->rx_bytes = op->cmd.nbytes;
->  		zynq_qspi_write_op(xqspi, ZYNQ_QSPI_FIFO_DEPTH, true);
->  		zynq_qspi_write(xqspi, ZYNQ_QSPI_IEN_OFFSET,
->  				ZYNQ_QSPI_IXR_RXTX_MASK);
