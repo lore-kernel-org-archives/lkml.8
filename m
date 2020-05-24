@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95DBC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232F1207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2AD020787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgEXPIt (ORCPT
+        id S1729590AbgEXPIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54038 "EHLO
+        Sun, 24 May 2020 11:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbgEXPIp (ORCPT
+        with ESMTP id S1728379AbgEXPIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 11:08:45 -0400
+        Sun, 24 May 2020 11:08:44 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDF2C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 08:08:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400C8C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 08:08:44 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jcsF1-00046M-94; Sun, 24 May 2020 17:08:43 +0200
+        id 1jcsF0-00045z-1c; Sun, 24 May 2020 17:08:42 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 89F1C100D0B;
-        Sun, 24 May 2020 17:08:42 +0200 (CEST)
-Date:   Sun, 24 May 2020 15:08:03 -0000
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 53B39100D19;
+        Sun, 24 May 2020 17:08:41 +0200 (CEST)
+Date:   Sun, 24 May 2020 15:08:02 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/urgent for v5.7-rc7
+Subject: [GIT pull] sched/urgent for v5.7-rc7
 References: <159033288117.21635.13199705716119914103.tglx@nanos.tec.linutronix.de>
-Message-ID: <159033288358.21635.2357843074773527660.tglx@nanos.tec.linutronix.de>
+Message-ID: <159033288238.21635.76261789367356025.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -51,83 +51,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest x86/urgent branch from:
+please pull the latest sched/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-05-24
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2020-05-24
 
-up to:  187b96db5ca7: x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
+up to:  39f23ce07b93: sched/fair: Fix unthrottle_cfs_rq() for leaf_cfs_rq list
 
+A set of fixes for the scheduler:
 
-Two fixes for x86:
+ - Fix handling of throttled parents in enqueue_task_fair() completely. The
+   recent fix overlooked a corner case where the first iteration terminates
+   do a entiry being on rq which makes the list management incomplete and
+   later triggers the assertion which checks for completeness.
 
-  - Unbreak stack dumps for inactive tasks by interpreting the special
-    first frame left by __switch_to_asm() correctly. The recent change not
-    to skip the first frame so ORC and frame unwinder behave in the same
-    way caused all entries to be unreliable, i.e. prepended with '?'.
+ - Fix a similar problem in unthrottle_cfs_rq().
 
-  - Use cpumask_available() instead of an implicit NULL check of a
-    cpumask_var_t in mmio trace to prevent a Clang build warning
+ - Show the correct uclamp values in procfs which prints the effective
+   value twice instead of requested and effective.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Josh Poimboeuf (1):
-      x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
+Pavankumar Kondeti (1):
+      sched/debug: Fix requested task uclamp values shown in procfs
 
-Nathan Chancellor (1):
-      x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
+Phil Auld (1):
+      sched/fair: Fix enqueue_task_fair() warning some more
+
+Vincent Guittot (1):
+      sched/fair: Fix unthrottle_cfs_rq() for leaf_cfs_rq list
 
 
- arch/x86/kernel/unwind_orc.c | 7 +++++++
- arch/x86/mm/mmio-mod.c       | 4 ++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ kernel/sched/debug.c |  4 ++--
+ kernel/sched/fair.c  | 49 +++++++++++++++++++++++++++++++++++++------------
+ 2 files changed, 39 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index fa79e4227d3d..7f969b2d240f 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -320,12 +320,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_address);
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index a562df57a86e..239970b991c0 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -948,8 +948,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 	P(se.avg.util_est.enqueued);
+ #endif
+ #ifdef CONFIG_UCLAMP_TASK
+-	__PS("uclamp.min", p->uclamp[UCLAMP_MIN].value);
+-	__PS("uclamp.max", p->uclamp[UCLAMP_MAX].value);
++	__PS("uclamp.min", p->uclamp_req[UCLAMP_MIN].value);
++	__PS("uclamp.max", p->uclamp_req[UCLAMP_MAX].value);
+ 	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
+ 	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
+ #endif
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..538ba5d94e99 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4774,7 +4774,6 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 	struct rq *rq = rq_of(cfs_rq);
+ 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
+ 	struct sched_entity *se;
+-	int enqueue = 1;
+ 	long task_delta, idle_task_delta;
  
- unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
- {
-+	struct task_struct *task = state->task;
+ 	se = cfs_rq->tg->se[cpu_of(rq)];
+@@ -4798,26 +4797,44 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 	idle_task_delta = cfs_rq->idle_h_nr_running;
+ 	for_each_sched_entity(se) {
+ 		if (se->on_rq)
+-			enqueue = 0;
++			break;
++		cfs_rq = cfs_rq_of(se);
++		enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
 +
- 	if (unwind_done(state))
- 		return NULL;
- 
- 	if (state->regs)
- 		return &state->regs->ip;
- 
-+	if (task != current && state->sp == task->thread.sp) {
-+		struct inactive_task_frame *frame = (void *)task->thread.sp;
-+		return &frame->ret_addr;
++		cfs_rq->h_nr_running += task_delta;
++		cfs_rq->idle_h_nr_running += idle_task_delta;
++
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto unthrottle_throttle;
 +	}
+ 
++	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		if (enqueue) {
+-			enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
+-		} else {
+-			update_load_avg(cfs_rq, se, 0);
+-			se_update_runnable(se);
+-		}
 +
- 	if (state->sp)
- 		return (unsigned long *)state->sp - 1;
++		update_load_avg(cfs_rq, se, UPDATE_TG);
++		se_update_runnable(se);
  
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index 109325d77b3e..43fd19b3f118 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
- 	int cpu;
- 	int err;
+ 		cfs_rq->h_nr_running += task_delta;
+ 		cfs_rq->idle_h_nr_running += idle_task_delta;
  
--	if (downed_cpus == NULL &&
-+	if (!cpumask_available(downed_cpus) &&
- 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
- 		pr_notice("Failed to allocate mask\n");
- 		goto out;
-@@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
++
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto unthrottle_throttle;
++
++		/*
++		 * One parent has been throttled and cfs_rq removed from the
++		 * list. Add it back to not break the leaf list.
++		 */
++		if (throttled_hierarchy(cfs_rq))
++			list_add_leaf_cfs_rq(cfs_rq);
+ 	}
  
--	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
+-	if (!se)
+-		add_nr_running(rq, task_delta);
++	/* At this point se is NULL and we are at root level*/
++	add_nr_running(rq, task_delta);
+ 
++unthrottle_throttle:
+ 	/*
+ 	 * The cfs_rq_throttled() breaks in the above iteration can result in
+ 	 * incomplete leaf list maintenance, resulting in triggering the
+@@ -4826,7 +4843,8 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+ 
+-		list_add_leaf_cfs_rq(cfs_rq);
++		if (list_add_leaf_cfs_rq(cfs_rq))
++			break;
+ 	}
+ 
+ 	assert_list_leaf_cfs_rq(rq);
+@@ -5479,6 +5497,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+ 			goto enqueue_throttle;
++
++               /*
++                * One parent has been throttled and cfs_rq removed from the
++                * list. Add it back to not break the leaf list.
++                */
++               if (throttled_hierarchy(cfs_rq))
++                       list_add_leaf_cfs_rq(cfs_rq);
+ 	}
+ 
+ enqueue_throttle:
 
