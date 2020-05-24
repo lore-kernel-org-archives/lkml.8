@@ -2,71 +2,123 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4513C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F00D2075F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDF520825
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tAcJd41A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388450AbgEXT1p convert rfc822-to-8bit (ORCPT
+        id S2388460AbgEXT1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 15:27:45 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:53403 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387982AbgEXT1p (ORCPT
+        Sun, 24 May 2020 15:27:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387862AbgEXT1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 15:27:45 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1F098240003;
-        Sun, 24 May 2020 19:27:41 +0000 (UTC)
-Date:   Sun, 24 May 2020 21:27:40 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>,
-        computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v4 4/5] dt: bindings: brcmnand: add v2.1 and v2.2
- support
-Message-ID: <20200524212740.08c2810f@xps13>
-In-Reply-To: <20200524192550.4559-1-miquel.raynal@bootlin.com>
-References: <20200522121524.4161539-5-noltari@gmail.com>
-        <20200524192550.4559-1-miquel.raynal@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 May 2020 15:27:50 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A320AC061A0E;
+        Sun, 24 May 2020 12:27:49 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id a4so9349842lfh.12;
+        Sun, 24 May 2020 12:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rKQHqAYuyPGCkAJDsVVw4O2WcuzpsiIQPL4viSQa7G0=;
+        b=tAcJd41AAo8LrMlZLQNlAz7LYU4eMuMN3ndTg4otcrNEp1Hv+lk+cx2V2IjRq6kULk
+         upwt3u9MKW0j0vmt1VQlQZYMRY04RH5yRro4gRui9YDO3BjHM9rf27POQfcCsyarP8V1
+         yfyRznBNg8g6ctXtaOzFDseKwwoog+EVNFSIzyI/w/EY//RDDzMWnXYDrJy++yT+9OQZ
+         ScMjRN166SrMp9hWQHeccljhhVEQ174/zy5KyvFDiRxiY/xWUSjjd5Tp42vP37NQulKM
+         VEqYz3eUtYfS15ZiSafaikgKBbONNsoxkqcFayZmoP73dqf8+GtFJERNqdwMYZ1GlazF
+         KAYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rKQHqAYuyPGCkAJDsVVw4O2WcuzpsiIQPL4viSQa7G0=;
+        b=CJTYchLBKbMKMmvfaq9oRDIZEm4UX9nqi/Zm5HfBAFy9gAxWTGfIh7Jjo59+JYyifD
+         JcaF3mqw5Yst3d0YjUHmGf8XnfgIBLURikTRc1RGM1KYzFLDt6OfiqeWY5z5maMzyZJU
+         0VmmYrefKkT3UNcjtbjnfUqbNgJKqXMjFNjLkUGP1sblFBL/NueoE1BOCjUoQcr7PFNA
+         teuNJ2D0BRVR590ynwtm7d5zHduRo4QhXSb5b1E+TATr++BTcoWLX8p4+EGrMJVNnNe+
+         zkRJfEzB7CHu5pGZV7NLzIaBzAuYJoNxltDyOe8lWpOIyenme4uwX5gOLQnUaC+8Bx45
+         0YXg==
+X-Gm-Message-State: AOAM530q5YtC0tCS+01H9MsXNqVOb+aaZFqLJ65MB522L6Nc7IJO9i9p
+        JRrlqNFup/e2Ew0eG5dAfq4=
+X-Google-Smtp-Source: ABdhPJy8024FpbHaKx/cRVMDCHBg1vTzwrl0TzfsFiiXVv1Y2Jz3TJTlE03IcaqYQbBS4oSuI3QZJw==
+X-Received: by 2002:ac2:5324:: with SMTP id f4mr12993687lfh.209.1590348468196;
+        Sun, 24 May 2020 12:27:48 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-76-17-204.pppoe.mtu-net.ru. [91.76.17.204])
+        by smtp.gmail.com with ESMTPSA id x8sm3879864ljh.97.2020.05.24.12.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 12:27:47 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Zack Pearsall <zpearsall@yahoo.com>
+Cc:     linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mfd: tps65910: Correct power-off programming sequence
+Date:   Sun, 24 May 2020 22:26:43 +0300
+Message-Id: <20200524192643.18207-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch fixes system shutdown on a devices that use TPS65910 as a
+system's power controller. In accordance to the TPS65910 datasheet, the
+PMIC's state-machine transitions into the OFF state only when DEV_OFF
+bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
+otherwise PMIC won't get into a proper state on shutdown. Devices like
+Nexus 7 tablet and Ouya game console are now shutting down properly.
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun, 24 May 2020
-21:25:50 +0200:
+Tested-by: Zack Pearsall <zpearsall@yahoo.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
 
-> On Fri, 2020-05-22 at 12:15:23 UTC, =?utf-8?q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= wrote:
-> > Added brcm,brcmnand-v2.1 and brcm,brcmnand-v2.2 as possible compatible
-> > strings to support brcmnand controllers v2.1 and v2.2.
-> > 
-> > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>  
-> 
-> Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+Changelog:
 
-FYI I updated the commit log:
-s/dt: bindings:/dt-bindings: mtd:/
-s/Added/Add/
+v2: - Now using a single tps65910_reg_update_bits() instead of set+clear.
+      Thanks to Michał Mirosław for the suggestion.
 
-Thanks,
-Miquèl
+ drivers/mfd/tps65910.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+index 11959021b50a..3f4483dec871 100644
+--- a/drivers/mfd/tps65910.c
++++ b/drivers/mfd/tps65910.c
+@@ -440,8 +440,13 @@ static void tps65910_power_off(void)
+ 			DEVCTRL_PWR_OFF_MASK) < 0)
+ 		return;
+ 
+-	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
+-			DEVCTRL_DEV_ON_MASK);
++	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
++			DEVCTRL_DEV_SLP_MASK) < 0)
++		return;
++
++	tps65910_reg_update_bits(tps65910, TPS65910_DEVCTRL,
++				 DEVCTRL_DEV_OFF_MASK | DEVCTRL_DEV_ON_MASK,
++				 DEVCTRL_DEV_OFF_MASK);
+ }
+ 
+ static int tps65910_i2c_probe(struct i2c_client *i2c,
+-- 
+2.26.0
+
