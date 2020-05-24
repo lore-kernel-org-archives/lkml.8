@@ -2,93 +2,125 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48896C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E73C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2B3206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590340863;
-	bh=DqE1UVbxqtvvo9lmIPOTIwxWjEHUJrZOcnIhYYy3mv8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BQAdZEHEs/kOZHej2Oc/UMxleuv1L5I+rOSMtLVbO/M+Rml/TdLE08TuiOYyrmxGU
-	 xhxLMMEIVlmpEMutxpvyscjz4apb8HlmKK1O6CCtORvds4OjvL5ozrT0dlIq21ABEs
-	 4CezAt3PfpvOiq47DtVUrP8cz3t8B8YJHU/hpeUY=
+	by mail.kernel.org (Postfix) with ESMTP id 26F3E206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3UMUo+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbgEXRVC (ORCPT
+        id S2387830AbgEXRV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 13:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46310 "EHLO
+        Sun, 24 May 2020 13:21:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387707AbgEXRVC (ORCPT
+        with ESMTP id S2387707AbgEXRVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 13:21:02 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FE7C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 10:21:01 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id h188so9282519lfd.7
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 10:21:01 -0700 (PDT)
+        Sun, 24 May 2020 13:21:25 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96FD6C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 10:21:25 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b27so5672157qka.4
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 10:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/aCjUz30Co8OAaC+F3+nt0BF0y7Y9AvEW+q7XB2zskk=;
-        b=E2iJ5D2ZzTFp3uRgYV/U0UxrNYQBE76KzJW3+MEj0ix+OLrVNoUqRednrg9LKmlvy8
-         0PN392K8TN/4eP+OB1RnUEs0cqGT0RX8l3q9+N2YE/HSb6soY9XA5IsTWitunuBtorqI
-         oGmNLRGRnRpz/miPWiVDsKxsXFezOJ2TLcBNY=
+        bh=7yaQbyc25RqKKkOAhEkaw1xc+vmh3Cee1FjzEZxcqNM=;
+        b=p3UMUo+Y7cqhA8YXDA1S3xm1BT3lRjqwfEnypkY0sIgdny7gwd91b4PcFlvJTb6XY2
+         Gf0Yv9889A41M+udDV5U12ZCN+962b2Gh1shG9QnvX3rSYF+m5wKV8SN4oz0Rg8T1eDC
+         SQDoLEMI0Fqv9thyomqohtZoQIlZfuVuP/j/9rhluR9KK2HoVQ2f27KXzYEfpP835n8V
+         gVsTq8uvrFQZ/gcyKjz710Q8oaD/hLc5e2rmzw/zl/dl4GOhA3lkTwHjwYmWdGu38bGk
+         d1csJgNME0Z1qE8XC5ED3KyMCnDYHmkLsREajfFGWr962I0X6vDsHsJtRjHwIK0OqhJ3
+         N/Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/aCjUz30Co8OAaC+F3+nt0BF0y7Y9AvEW+q7XB2zskk=;
-        b=mkS27lOuag8iLVnao++6qGWKkWOYOWCxRUnvUyGTLILUCkU96gkRTOayPAiKK3pxJf
-         TAl+0rnOpA7G7hfY8fA0/nj2OUcEm1yj32fcUBW8cRT5Dq16qgWYaLYBH3nUZ/0tSDUL
-         L1Qfo4WiVqsnzyXAK2bAW2ILwJWpCO05QnMiHwuKaF7B2Ycbv9cF4Htt/EK3pNjIuytF
-         isRSPOLMyOYVISMNqd6mWTpZRcLPGkNce0CJrQ13uUeCGOEOIpgob7E8i50WpYuvSdgy
-         I1QLKdM6BidDz83uePsi9G3cF/w/RhHx9QroPNZXEih/ZvOb4Yew/70Djsln09X77qrK
-         azQA==
-X-Gm-Message-State: AOAM530Xx/7KeJhG92ls6VAlH5xAxEEus2zYgHVqgp3WXmQ03QyrOKhS
-        j6O7NqTqE01EH3kumEBMcJ4KONRp6zo=
-X-Google-Smtp-Source: ABdhPJzjkvA2PTLPB30QI3fpMQGw39UHgBCo7yjGK/MpewEVYd17GFyCive97KdZaJrH8bigYtcEcw==
-X-Received: by 2002:ac2:54ba:: with SMTP id w26mr12531321lfk.54.1590340859807;
-        Sun, 24 May 2020 10:20:59 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id o14sm8060ljj.135.2020.05.24.10.20.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 May 2020 10:20:58 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id v16so18381032ljc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 10:20:58 -0700 (PDT)
-X-Received: by 2002:a2e:7e0a:: with SMTP id z10mr9786776ljc.314.1590340858466;
- Sun, 24 May 2020 10:20:58 -0700 (PDT)
+        bh=7yaQbyc25RqKKkOAhEkaw1xc+vmh3Cee1FjzEZxcqNM=;
+        b=R73esnH8rIadtRvWP79txiI+2bc6ukOPhHlMMJJ+rWCRZfOB1Fxp+xLLS5nvyWcseu
+         GpAhej98+uB4XRoIuAjTNs/+PuwjMLQ4VuIo+6QfEk7cdOjJ1sgTSanrdYB8LRSTv/JJ
+         Pd+Oa9nXX3JXdRYTxo3dXA7zSd4pj8DKOOZKa12+zSvOEqunqmzuhl3/G8T9RrCpiC1T
+         odh6zdqdkPgAE2wvAOdzG1pBJ+BNvBEKJxUuJsApyxLaYs4B/w5rOrieHL8awgfLQsGr
+         gDps+afF5Mgq+EHEOqAwaM578M+oxCD41LMCArpyjHqbDz8/T2avvM6YhPaOU0TNJ2d+
+         mAQA==
+X-Gm-Message-State: AOAM5339s7HmdMweHKSYnnSy+GqFqjg6S54pC9LLrWzQ652RPklvHniw
+        bKAfE0Bnim3Xuu1xGqqmk3tJxmzqtNl8iLqngPM=
+X-Google-Smtp-Source: ABdhPJzK5UDUD9Z/IcNNHqoev1Fg7LXphylP+EuvxrgJxhiHNqSOfzgI8aG9c3+szRmXbqjbxowCFuQALUCvxmtT9Yg=
+X-Received: by 2002:ae9:e901:: with SMTP id x1mr22465025qkf.131.1590340884838;
+ Sun, 24 May 2020 10:21:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <159033288117.21635.13199705716119914103.tglx@nanos.tec.linutronix.de>
- <159033288238.21635.76261789367356025.tglx@nanos.tec.linutronix.de>
-In-Reply-To: <159033288238.21635.76261789367356025.tglx@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 24 May 2020 10:20:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjkwxJZDjgrqqugzsW++5Oo43DvFL1z8Ei=+0FZuQ84uQ@mail.gmail.com>
-Message-ID: <CAHk-=wjkwxJZDjgrqqugzsW++5Oo43DvFL1z8Ei=+0FZuQ84uQ@mail.gmail.com>
-Subject: Re: [GIT pull] sched/urgent for v5.7-rc7
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <20200523174957.6294-1-anarsoul@gmail.com> <s5hftbpx1h1.wl-tiwai@suse.de>
+In-Reply-To: <s5hftbpx1h1.wl-tiwai@suse.de>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 24 May 2020 10:20:58 -0700
+Message-ID: <CA+E=qVf4kRGV+iwkuVkceumxsPynoEDHCBWsoy3bHWpghte5Hw@mail.gmail.com>
+Subject: Re: [PATCH v2] ALSA: line6: add hw monitor volume control for POD HD500
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Pavel Machek <pavel@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 8:08 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Sat, May 23, 2020 at 11:59 PM Takashi Iwai <tiwai@suse.de> wrote:
+
+> Thanks for the patch.
+> The basic implementation looks good, but I see a few issues.
+
+> > +EXPORT_SYMBOL(line6_send_raw_message);
 >
->    [..] overlooked a corner case where the first iteration terminates
->    do a entiry being on rq which makes the list management incomplete [..]
+> Let's use EXPORT_SYMBOL_GPL() instead.
 
-You had some kind of mini-stroke while writing that explanation. I
-tried to fix it up as best I could.
+Sure, will do.
 
-              Linus
+> > +static const unsigned int float_zero_to_one_lookup[] = {
+> > +0x00000000, 0x3C23D70A, 0x3CA3D70A, 0x3CF5C28F, 0x3D23D70A, 0x3D4CCCCD,
+> > +0x3D75C28F, 0x3D8F5C29, 0x3DA3D70A, 0x3DB851EC, 0x3DCCCCCD, 0x3DE147AE,
+> > +0x3DF5C28F, 0x3E051EB8, 0x3E0F5C29, 0x3E19999A, 0x3E23D70A, 0x3E2E147B,
+> > +0x3E3851EC, 0x3E428F5C, 0x3E4CCCCD, 0x3E570A3D, 0x3E6147AE, 0x3E6B851F,
+> > +0x3E75C28F, 0x3E800000, 0x3E851EB8, 0x3E8A3D71, 0x3E8F5C29, 0x3E947AE1,
+> > +0x3E99999A, 0x3E9EB852, 0x3EA3D70A, 0x3EA8F5C3, 0x3EAE147B, 0x3EB33333,
+> > +0x3EB851EC, 0x3EBD70A4, 0x3EC28F5C, 0x3EC7AE14, 0x3ECCCCCD, 0x3ED1EB85,
+> > +0x3ED70A3D, 0x3EDC28F6, 0x3EE147AE, 0x3EE66666, 0x3EEB851F, 0x3EF0A3D7,
+> > +0x3EF5C28F, 0x3EFAE148, 0x3F000000, 0x3F028F5C, 0x3F051EB8, 0x3F07AE14,
+> > +0x3F0A3D71, 0x3F0CCCCD, 0x3F0F5C29, 0x3F11EB85, 0x3F147AE1, 0x3F170A3D,
+> > +0x3F19999A, 0x3F1C28F6, 0x3F1EB852, 0x3F2147AE, 0x3F23D70A, 0x3F266666,
+> > +0x3F28F5C3, 0x3F2B851F, 0x3F2E147B, 0x3F30A3D7, 0x3F333333, 0x3F35C28F,
+> > +0x3F3851EC, 0x3F3AE148, 0x3F3D70A4, 0x3F400000, 0x3F428F5C, 0x3F451EB8,
+> > +0x3F47AE14, 0x3F4A3D71, 0x3F4CCCCD, 0x3F4F5C29, 0x3F51EB85, 0x3F547AE1,
+> > +0x3F570A3D, 0x3F59999A, 0x3F5C28F6, 0x3F5EB852, 0x3F6147AE, 0x3F63D70A,
+> > +0x3F666666, 0x3F68F5C3, 0x3F6B851F, 0x3F6E147B, 0x3F70A3D7, 0x3F733333,
+> > +0x3F75C28F, 0x3F7851EC, 0x3F7AE148, 0x3F7D70A4, 0x3F800000
+>
+> Just nitpick: better to align with lower hex letters (a-f).
+
+Sorry, I don't really understand what you meant here. Could you elaborate?
+
+> > +     buf = kmalloc(sizeof(msg), GFP_ATOMIC);
+>
+> Is this function called from the irq context like the urb callback?
+> I saw that it's called from the mixer put callback, and it's in the
+> normal sleepable context, hence GFP_KERNEL can be used safely.
+
+It's also called from podhd_init() to set initial value but I assume
+it can sleep there. I'll change it to GFP_KERNEL.
+
+Thanks for review!
+
+Regards,
+Vasily
