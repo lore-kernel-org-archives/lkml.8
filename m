@@ -2,106 +2,86 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 897EC2078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40ED2078B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590354746;
-	bh=Flr026ZtzINe0Q7Gpmgcr+VZp7b/m6owt3uG5bFsaQw=;
+	s=default; t=1590355189;
+	bh=WE2kW/Hh64n5TAy/jvjJY9wl3IFEMH5x7/Au5mTP5Jc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K5n1XDbJSoMBcsfe/o9o2M4SQCTiv+sKXVA4hsUHGtI+PHxgRktqSW71hx+btIyaX
-	 zCiC9PJYeGu/VWiM6JTCajnEbkMa1iNlS/gSVUZeJksCuI1EXjb2KBfffbmuLq2Jwb
-	 GNxJYiKG/erh2zmqYlq3FtJXKO/gej2NwqSLrGs4=
+	b=lmfXNjqifgewZPUWSGV7gSbpmYtJGDLZCQetjMuTjyH7N1LR+v1UH0iYiRTeAiPGI
+	 e0/YQw8OBwtKapHVFG7E/hPILhmoSJNr6DvCt3GNPAmMiOxTpuSr4DqWRvRXFfeWH+
+	 1gfif2VxcpqTM4tHtp2hGBOJE3tbTqFZYumYjUPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbgEXVMY (ORCPT
+        id S2387941AbgEXVTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 17:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387830AbgEXVMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:12:23 -0400
+        id S2387830AbgEXVTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 17:19:47 -0400
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAE4E2076C;
-        Sun, 24 May 2020 21:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04A092076C;
+        Sun, 24 May 2020 21:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590354743;
-        bh=Flr026ZtzINe0Q7Gpmgcr+VZp7b/m6owt3uG5bFsaQw=;
+        s=default; t=1590355187;
+        bh=WE2kW/Hh64n5TAy/jvjJY9wl3IFEMH5x7/Au5mTP5Jc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V5EE6nGn1WgxJLQFbmLcD7DFe8/QvumGgHGpS+WC1MnwGJyRqfFE6hOLPxlS+K6oy
-         Ae4BaEvjSh6Wk/IhmDstdeRQ+6L0fb2l4HwRqIC8pjtLi6KlRwsXj0/8ucNM9HrHDb
-         dT5Af3/4Gz/PVwPWKizy/8TlGcYO7WTIoF9zWZm8=
-Date:   Sun, 24 May 2020 17:12:21 -0400
+        b=OwCim7mYUE563gvdWuF9JmGSjn4pW3SdxT5xYfrksFP0BNINc+jhilYZ57uas3Aoz
+         ZQATiM3oS/Q/bC9v+eqbrk6F+hjuJPvAJ6iIfTOQpMxCjxLoSSL9qAxsxFjWf5jwtY
+         jlj97QHR1BgZXDZgXeQHJzsVt+P5DVSqsjVk49J8=
+Date:   Sun, 24 May 2020 17:19:45 -0400
 From:   Sasha Levin <sashal@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [GIT PULL] Driver core fixes for 5.7-rc7 - take 2
-Message-ID: <20200524211221.GW33628@sasha-vm>
-References: <20200523131759.GA55886@kroah.com>
- <20200523152922.GA224858@kroah.com>
- <CAHk-=wih_B_8a48Au=6B+gwFcYnM7qF02dGX3R0QN_2bzVcjVA@mail.gmail.com>
- <20200524150018.GB11262@kroah.com>
- <CAHk-=wh4bZdCkhng3EsJCDhHLxHT6x4S66v5JQvusihVfYrc5Q@mail.gmail.com>
- <20200524194550.GV33628@sasha-vm>
+To:     hpa@zytor.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Don Porter <porter@cs.unc.edu>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, dave.hansen@intel.com,
+        tony.luck@intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com
+Subject: Re: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200524211945.GX33628@sasha-vm>
+References: <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
+ <20200515164013.GF29995@sasha-vm>
+ <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
+ <20200518153407.GA499505@tassilo.jf.intel.com>
+ <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
+ <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
+ <20200519164853.GA19706@linux.intel.com>
+ <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
+ <87h7w7qy18.fsf@nanos.tec.linutronix.de>
+ <A9483B8B-C0DD-46CB-AD5D-D12EC61BB331@zytor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200524194550.GV33628@sasha-vm>
+In-Reply-To: <A9483B8B-C0DD-46CB-AD5D-D12EC61BB331@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 03:45:50PM -0400, Sasha Levin wrote:
->On Sun, May 24, 2020 at 10:05:28AM -0700, Linus Torvalds wrote:
->>Sasha mentioned "--follow", which also happens to show that commit,
->>but that's more of an incidental happenstance than anything else. "git
->>log --follow" is kind of a special case, where git stops doing some of
->>the pathname-based simplifying, because if the file shows up from
->>nothing, git will try to then figure out where it came from. The fact
->>that "--follow" this ends up not pruning irrelevant history as
->>aggressively is more of an implementation artifact than anything else.
->>
->>So generally, don't use "--follow". It's kind of a hack to emulate
->>"track changes to a file", but it is a hack, and it fundamentally is a
->>bogus operation (for all the same reasons that the CVS/SCCS/SVN/etc
->>notion of a "file identity" is complete garbage and leads to
->>fundamental problems).
->
->Interesting. My thinking around --follow was that it's like
->--full-history in the sense that it won't prune history, but it would
->also keep listing history beyond file renames.
->
->The --follow functionality is quite useful when looking at older
->branches and trying to understand where changes should go into on those
->older branches.
->
->We also do have some notion of "file identity" in the kernel; it's
->prevalent with "quirk files". Look at these for example:
->
-> - drivers/mmc/core/quirks.h
-> - sound/pci/hda/patch_*.c
-> - drivers/hid/hid-quirks.c
->
->We know that patches to those files are likely to contain quirks (which
->we usually want to take into the Stable branches) so I might have a
->script that monitors a list of these "special" files in which case I
->need to see a complete list of commits that went into those files.
+On Sun, May 24, 2020 at 12:45:18PM -0700, hpa@zytor.com wrote:
+>There are legitimate reasons to write a root-hole module, the main one being able to test security features like SMAP. I have requested before a TAINT flag specifically for this purpose, because TAINT_CRAP is nowhere near explicit enough, and is also used for staging drivers. Call it TAINT_TOXIC or TAINT_ROOTHOLE; it should always be accompanied with a CRIT level alert.
 
-(and I'd like to see the reverts too, so that I could apply that revert
-to Stable trees as well. If a revert doesn't show up in git log we might
-miss doing a backport of it).
+What I don't like about our current system of TAINT_* flags is that
+while we can improve it as much as we want, no one outside of the kernel
+tree seems to be using it. While Thomas may have been commenting on
+Graphene's behaviour, look at any other code that did the same thing:
+
+- Graphene: https://github.com/oscarlab/graphene-sgx-driver/blob/master/gsgx.c
+- Occlum: https://github.com/occlum/enable_rdfsbase/blob/master/enable_rdfsbase.c
+- SGX-LKL: https://github.com/lsds/sgx-lkl/blob/master/tools/kmod-set-fsgsbase/mod_set_cr4_fsgsbase.c
+
+None of which set even the CRAP flag.
 
 -- 
 Thanks,
