@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F75C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B20CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EFC20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E313220826
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335054;
-	bh=houjMtH6ycXSFhi1ULRuFe3SCot8sSKz+6o1PGFhr/c=;
+	s=default; t=1590335059;
+	bh=wwpvf5Bc7L9HSmVx+W4amM4AqhGCgS8xnCo1xXpDQqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZxlz6ly/hUSenGoEdX2NI16FfL86sRlcEWL7IHVEO+BVPrxXVCmkkGQVeJAsDtne
-	 ckpAGMFXOxywArBA+m26+8Lm9oTBPPktjWlSewFuuZqyTHOvhUkwasrJS+UwhW/zWE
-	 v3k9X5yq1F4BLjoBA/4cAHsF7oIuDPgipbMrr4JE=
+	b=PsM7pI93LZ94lCT/l07UZeilPYEtDqb3zj0ETA+AMxyCoeAqCMWBdwbnTkWBZU9bJ
+	 9R+7q95yv1Oec6byHsF/XQRnJLDtn5PJQW3ohfzqwOK2LiKEIFvMvWp4gUA2AFys1W
+	 pkJLLIswtlgqNpl/SgyBUWikqd9cbrZUcIQsbELA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbgEXPoH (ORCPT
+        id S2387882AbgEXPoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:44:07 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19708 "EHLO
+        Sun, 24 May 2020 11:44:18 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19700 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728491AbgEXPnX (ORCPT
+        with ESMTP id S1728407AbgEXPnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:43:23 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcUl017561;
-        Mon, 25 May 2020 00:42:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUl017561
+        by conuserg-09.nifty.com with ESMTP id 04OFgcV2017561;
+        Mon, 25 May 2020 00:42:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcV2017561
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334960;
-        bh=AmWnXsDA0m9RaYw4vjP1saZJezsMT0YyLRKQlJgcCkA=;
+        s=dec2015msa; t=1590334968;
+        bh=dx46xPKo8/Ev4BVyOq1gqpNICFRHPYuyTLcxI7gbKJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ls2+BHAirpssH38YftP+jC5ueS0xKVdPyTxzI9LHqQBUS+zSwgl0uBB59w5SrjK5R
-         OaJ2Cg+0GZaqO26U5tYeHhBACR27+T6cxmYhj53Us/F3hXx7f8F3/ofotuAFfpewOg
-         cbBfwy1LM1XCFGL49npE47j4tzbTo0j3mDoD8ebQ7A5zgnNl3Ic4VvqiYakCrAW8RW
-         JEkDnsfIX4maz2GWiH8xEu9izChdWkqMm83MwHMOy3bhKzGj/qkOtJmz3DCO3ZShBR
-         nzJfC9TwW8CFDvIMvhGLtimfkruH0y09wH5zSK9Y2EfbSZoy4180KGx0OYWW0CqBWl
-         fNOVS0fC46TvQ==
+        b=TAjbyITJi6GbuNHF7Httids1qDblpUwBbcTqdKKWiZtHTbAEPVvnrq2KJ8c0SRzFc
+         u01AGCSeLQKYhgFPC20B5v4yigOp4pkNMkQkD/tVMPn3UCLEqRkrPkPumcCwNbQREY
+         en38dmTVjML0XOlk2X4/3cEUtD5V0VR4TDqy83UTAPi/PUJLCjJ2enUM/z3uu0b9x4
+         i/G7mEQamLN24S8BNRdqCaBBr1Kk8aYLBK2lrGx92T9B7lYQUDNZfgV2UENwpjVZ9G
+         F0id7I+7aBp3iOinWAj9mQWVfCp92IOP5mpXPx3sTwRQlAOrVlQtw3B4ktKleANe9k
+         ct/WIdJAgOUEw==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/29] modpost: do not call get_modinfo() for vmlinux
-Date:   Mon, 25 May 2020 00:42:08 +0900
-Message-Id: <20200524154235.380482-3-masahiroy@kernel.org>
+Subject: [PATCH v2 17/29] modpost: re-add -e to set external_module flag
+Date:   Mon, 25 May 2020 00:42:23 +0900
+Message-Id: <20200524154235.380482-18-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
 References: <20200524154235.380482-1-masahiroy@kernel.org>
@@ -61,86 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The three calls of get_modinfo() ("license", "import_ns", "version")
-always return NULL for vmlinux because the built-in module info is
-prefixed with __MODULE_INFO_PREFIX.
+Previously, the -i option had two functions; load a symbol dump file,
+and set the external_module flag.
 
-It is harmless to call get_modinfo(), but there is no point to search
-for what apparently does not exist.
+I want to assign a dedicate option for each of them.
+
+Going forward, the -i is used to load a symbol dump file, and the -e
+to set the external_module flag.
+
+With this, we will be able to use -i for loading in-kernel symbols.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- scripts/mod/modpost.c | 45 +++++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ scripts/Makefile.modpost | 1 +
+ scripts/mod/modpost.c    | 6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index a316095c843c..d14143b30b7a 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -81,6 +81,7 @@ include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
+ 
+ # modpost options for external modules
+ MODPOST += \
++	-e \
+ 	-i Module.symvers \
+ 	$(addprefix -i ,$(KBUILD_EXTRA_SYMBOLS)) \
+ 	-o $(KBUILD_EXTMOD)/Module.symvers
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 77e5425759e2..af098d7efc22 100644
+index ebfc720ee5a4..0a24d2c501c1 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -2014,25 +2014,26 @@ static void read_symbols(const char *modname)
- 		mod->skip = 1;
- 	}
+@@ -2566,10 +2566,12 @@ int main(int argc, char **argv)
+ 	struct dump_list *dump_read_start = NULL;
+ 	struct dump_list **dump_read_iter = &dump_read_start;
  
--	license = get_modinfo(&info, "license");
--	if (!license && !is_vmlinux(modname))
--		warn("missing MODULE_LICENSE() in %s\n"
--		     "see include/linux/module.h for "
--		     "more information\n", modname);
--	while (license) {
--		if (license_is_gpl_compatible(license))
--			mod->gpl_compatible = 1;
--		else {
--			mod->gpl_compatible = 0;
--			break;
-+	if (!is_vmlinux(modname)) {
-+		license = get_modinfo(&info, "license");
-+		if (!license)
-+			warn("missing MODULE_LICENSE() in %s\n", modname);
-+		while (license) {
-+			if (license_is_gpl_compatible(license))
-+				mod->gpl_compatible = 1;
-+			else {
-+				mod->gpl_compatible = 0;
-+				break;
-+			}
-+			license = get_next_modinfo(&info, "license", license);
- 		}
--		license = get_next_modinfo(&info, "license", license);
--	}
- 
--	namespace = get_modinfo(&info, "import_ns");
--	while (namespace) {
--		add_namespace(&mod->imported_namespaces, namespace);
--		namespace = get_next_modinfo(&info, "import_ns", namespace);
-+		namespace = get_modinfo(&info, "import_ns");
-+		while (namespace) {
-+			add_namespace(&mod->imported_namespaces, namespace);
-+			namespace = get_next_modinfo(&info, "import_ns",
-+						     namespace);
-+		}
- 	}
- 
- 	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
-@@ -2073,10 +2074,12 @@ static void read_symbols(const char *modname)
- 	if (!is_vmlinux(modname) || vmlinux_section_warnings)
- 		check_sec_ref(mod, modname, &info);
- 
--	version = get_modinfo(&info, "version");
--	if (version || (all_versions && !is_vmlinux(modname)))
--		get_src_version(modname, mod->srcversion,
--				sizeof(mod->srcversion)-1);
-+	if (!is_vmlinux(modname)) {
-+		version = get_modinfo(&info, "version");
-+		if (version || all_versions)
-+			get_src_version(modname, mod->srcversion,
-+					sizeof(mod->srcversion) - 1);
-+	}
- 
- 	parse_elf_finish(&info);
- 
+-	while ((opt = getopt(argc, argv, "i:mnsT:o:awENd:")) != -1) {
++	while ((opt = getopt(argc, argv, "ei:mnsT:o:awENd:")) != -1) {
+ 		switch (opt) {
+-		case 'i':
++		case 'e':
+ 			external_module = 1;
++			break;
++		case 'i':
+ 			*dump_read_iter =
+ 				NOFAIL(calloc(1, sizeof(**dump_read_iter)));
+ 			(*dump_read_iter)->file = optarg;
 -- 
 2.25.1
 
