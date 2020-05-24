@@ -2,99 +2,419 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 01:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 903172070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 01:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0177207F7
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXCe6XV0"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gkly61Ah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbgEXBud (ORCPT
+        id S2388260AbgEXCCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 21:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
+        Sat, 23 May 2020 22:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387589AbgEXBuc (ORCPT
+        with ESMTP id S2387573AbgEXCC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 21:50:32 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B34C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 18:50:32 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id l6so12831823oic.9
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 18:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=GTGkis+uD2ofy0cZ775LPyRGKOg7EagKw1kot4jTVqU=;
-        b=YXCe6XV0Tu1cYSY+GV19pQoXKE1HdBmMQCMd/UTuxnG6GT7aD5TFD8TPv9jUndpR99
-         +c+k73mOQOYzHJtewAQj2N07pQB7MX+FMAFCd9HtxFCSAjWStW5+zRqBDSZLnOZdNfFb
-         PdOqMpV57kzRZixu6yTIK1RaJIb5NYxb1BKkM2HLIAk7KuLB/AM96znCr+O/ihS2YiS3
-         mf5dN7m5I01Ixu92CEls4QCSlE7r5WGpSSyz4avJIHkFvjoX/tAdu0A8mLR7bfLMPJfn
-         JfJgc90iBH3nSoZV/Xv/OVabK1ODNh21wE1vRllEsnPXIr5iKKmqJwFh6sU2XhFNLMmu
-         aBfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=GTGkis+uD2ofy0cZ775LPyRGKOg7EagKw1kot4jTVqU=;
-        b=tUeu+bBzCdMQY6XNzakEyFPIrLUA9VIyb1Og07Z6d59DLq6taxMwFESmAHNzUDzyMu
-         nFnKRvD3yxVNdBcGTiE8U/VXllLIAyZbpWj3SRtWeA7+4VA00tGVjN4r04JB7ZIl0ZLo
-         65yoWp+r9M0T8CtLEKO0t7bZwZ4BaJDl+wswEa7q0+LCKeA4u9UIB/LzU+bbPYuLyG8E
-         BCKuCbMDTHvohd3I7XuqiWhNgLmX5WVymyMgEaxKbV4sOFs0i547ij3ayRXXqGssbuQm
-         BNv2OXUP+iozQinqaltewhLIgKYNE2ws7bzEz65XWCPUvVnkV1DLSaBx6zvQy25ovQKE
-         XDKQ==
-X-Gm-Message-State: AOAM532nNMVlP/rZ+Wc7vvfq4Lw9bmcOx7wsxyYjyQk204JoOaaX9TR0
-        mhJWmWdi0Qbt8a/VT6Y0ebNveQ==
-X-Google-Smtp-Source: ABdhPJxaHuIb6ZWnBsergKfmo1QTtSLghg3lk2e4mQ4KOB2hMGfsuCM6lg7KfN51p0oEGAZEhcZdWw==
-X-Received: by 2002:aca:4852:: with SMTP id v79mr7088402oia.20.1590285031681;
-        Sat, 23 May 2020 18:50:31 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id h9sm3856461oor.21.2020.05.23.18.50.29
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sat, 23 May 2020 18:50:30 -0700 (PDT)
-Date:   Sat, 23 May 2020 18:50:15 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Song Liu <songliubraving@fb.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH] mm,thp: stop leaking unreleased file pages
-Message-ID: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Sat, 23 May 2020 22:02:29 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B84C061A0E;
+        Sat, 23 May 2020 19:02:29 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0C16424D;
+        Sun, 24 May 2020 04:02:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590285747;
+        bh=0up19u9tm13zJLOJzGxB1I6aEaPqgsHa2bsPf5YdchI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gkly61Ahte2sMLQ7Tyo53rsjaQdh2yJ3Q0vVZUfKO4Tf8pWOOT8I8wTYW4IGmB56W
+         I19Pt6HfiTYH1sUZOYyJT30AfmREK1UrUPLurwXzc4svhizcUaKyfNQmfC0arzrbdz
+         WjeEulboEhITTro7EpwyVe2QaQqdFK+5qTlPSc1M=
+Date:   Sun, 24 May 2020 05:02:14 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v13 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20200524020214.GB6026@pendragon.ideasonboard.com>
+References: <20200512151947.120348-1-vishal.sagar@xilinx.com>
+ <20200512151947.120348-2-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200512151947.120348-2-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When collapse_file() calls try_to_release_page(), it has already
-isolated the page: so if releasing buffers happens to fail (as it
-sometimes does), remember to putback_lru_page(): otherwise that page is
-left unreclaimable and unfreeable, and the file extent uncollapsible.
+Hi Vishal,
 
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-Cc: stable@vger.kernel.org # v5.4+
----
+Thank you for the patch.
 
- mm/khugepaged.c |    1 +
- 1 file changed, 1 insertion(+)
+On Tue, May 12, 2020 at 08:49:46PM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> 
+> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> D-PHY in Rx mode and a Video Format Bridge.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> v13
+> - Based on Laurent's suggestions
+> - Fixed the datatypes values as minimum and maximum
+> - condition added for en-vcx property
+> 
+> v12
+> - Moved to yaml format
+> - Update CSI-2 and D-PHY
+> - Mention that bindings for D-PHY not here
+> - reset -> video-reset
+> 
+> v11
+> - Modify compatible string from 4.0 to 5.0
+> 
+> v10
+> - No changes
+> 
+> v9
+> - Fix xlnx,vfb description.
+> - s/Optional/Required endpoint property.
+> - Move data-lanes description from Ports to endpoint property section.
+> 
+> v8
+> - Added reset-gpios optional property to assert video_aresetn
+> 
+> v7
+> - Removed the control name from dt bindings
+> - Updated the example dt node name to csi2rx
+> 
+> v6
+> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+> - Added reviewed by Rob Herring
+> 
+> v5
+> - Incorporated comments by Luca Cersoli
+> - Removed DPHY clock from description and example
+> - Removed bayer pattern from device tree MIPI CSI IP
+>   doesn't deal with bayer pattern.
+> 
+> v4
+> - Added reviewed by Hyun Kwon
+> 
+> v3
+> - removed interrupt parent as suggested by Rob
+> - removed dphy clock
+> - moved vfb to optional properties
+> - Added required and optional port properties section
+> - Added endpoint property section
+> 
+> v2
+> - updated the compatible string to latest version supported
+> - removed DPHY related parameters
+> - added CSI v2.0 related property (including VCX for supporting upto 16
+>   virtual channels).
+> - modified csi-pxl-format from string to unsigned int type where the value
+>   is as per the CSI specification
+> - Defined port 0 and port 1 as sink and source ports.
+> - Removed max-lanes property as suggested by Rob and Sakari
+>  .../bindings/media/xilinx/xlnx,csi2rxss.yaml  | 226 ++++++++++++++++++
+>  1 file changed, 226 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> new file mode 100644
+> index 000000000000..b0885f461785
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> @@ -0,0 +1,226 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,csi2rxss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx MIPI CSI-2 Receiver Subsystem
+> +
+> +maintainers:
+> +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> +
+> +description: |
+> +  The Xilinx MIPI CSI-2 Receiver Subsystem is used to capture MIPI CSI-2
+> +  traffic from compliant camera sensors and send the output as AXI4 Stream
+> +  video data for image processing.
+> +  The subsystem consists of a MIPI D-PHY in slave mode which captures the
+> +  data packets. This is passed along the MIPI CSI-2 Rx IP which extracts the
+> +  packet data. The optional Video Format Bridge (VFB) converts this data to
+> +  AXI4 Stream video data.
+> +  For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
+> +  Please note that this bindings includes only the MIPI CSI-2 Rx controller
+> +  and Video Format Bridge and not D-PHY.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - xlnx,mipi-csi2-rx-subsystem-5.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: List of clock specifiers
+> +    items:
+> +      - description: AXI Lite clock
+> +      - description: Video clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: lite_aclk
+> +      - const: video_aclk
+> +
+> +  xlnx,csi-pxl-format:
+> +    description: |
+> +      This denotes the CSI Data type selected in hw design.
+> +      Packets other than this data type (except for RAW8 and
+> +      User defined data types) will be filtered out.
+> +      Possible values are as below -
+> +      0x1e - YUV4228B
+> +      0x1f - YUV42210B
+> +      0x20 - RGB444
+> +      0x21 - RGB555
+> +      0x22 - RGB565
+> +      0x23 - RGB666
+> +      0x24 - RGB888
+> +      0x28 - RAW6
+> +      0x29 - RAW7
+> +      0x2a - RAW8
+> +      0x2b - RAW10
+> +      0x2c - RAW12
+> +      0x2d - RAW14
+> +      0x2e - RAW16
+> +      0x2f - RAW20
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - anyOf:
+> +        - minimum: 0x1e
+> +        - maximum: 0x24
+> +        - minimum: 0x28
+> +        - maximum: 0x2f
+> +
+> +  xlnx,vfb:
+> +    type: boolean
+> +    description: Present when Video Format Bridge is enabled in IP configuration
+> +
+> +  xlnx,en-csi-v2-0:
+> +    type: boolean
+> +    description: Present if CSI v2 is enabled in IP configuration.
+> +
+> +  xlnx,en-vcx:
+> +    type: boolean
+> +    description: |
+> +      When present, there are maximum 16 virtual channels, else only 4.
+> +
+> +  xlnx,en-active-lanes:
+> +    type: boolean
+> +    description: |
+> +      Present if the number of active lanes can be re-configured at
+> +      runtime in the Protocol Configuration Register. Otherwise all lanes,
+> +      as set in IP configuration, are always active.
+> +
+> +  video-reset-gpios:
+> +    description: Optional specifier for a GPIO that asserts video_aresetn.
+> +    maxItems: 1
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          Input / sink port node, single endpoint describing the
+> +          CSI-2 transmitter.
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          endpoint:
+> +            type: object
+> +
+> +            properties:
+> +
+> +              data-lanes:
+> +                description: |
+> +                  This is required only in the sink port 0 endpoint which
+> +                  connects to MIPI CSI-2 source like sensor.
+> +                  The possible values are -
+> +                  1       - For 1 lane enabled in IP.
+> +                  1 2     - For 2 lanes enabled in IP.
+> +                  1 2 3   - For 3 lanes enabled in IP.
+> +                  1 2 3 4 - For 4 lanes enabled in IP.
+> +                items:
+> +                  - const: 1
+> +                  - const: 2
+> +                  - const: 3
+> +                  - const: 4
+> +
+> +              remote-endpoint: true
+> +
+> +            required:
+> +              - data-lanes
+> +              - remote-endpoint
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Output / source port node, endpoint describing modules
+> +          connected the CSI-2 receiver.
+> +
+> +        properties:
+> +
+> +          reg:
+> +            const: 1
+> +
+> +          endpoint:
+> +            type: object
+> +
+> +            properties:
+> +
+> +              remote-endpoint: true
+> +
+> +            required:
+> +              - remote-endpoint
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - xlnx,csi-pxl-format
+> +  - ports
+> +
+> +if:
+> +  not:
+> +    required:
+> +      - xlnx,en-csi-v2-0
+> +then:
+> +  properties:
+> +    xlnx,en-vcx: false
 
---- 5.7-rc6/mm/khugepaged.c	2020-04-12 16:24:37.710999073 -0700
-+++ linux/mm/khugepaged.c	2020-05-10 17:06:21.788398646 -0700
-@@ -1692,6 +1692,7 @@ static void collapse_file(struct mm_stru
- 		if (page_has_private(page) &&
- 		    !try_to_release_page(page, GFP_KERNEL)) {
- 			result = SCAN_PAGE_HAS_PRIVATE;
-+			putback_lru_page(page);
- 			goto out_unlock;
- 		}
- 
+As I've just commented on v12, I think we should condition the
+xlnx,csi-pxl-format property to xlnx,vfb being set. xlnx,csi-pxl-format
+should be removed from the required properties above, and the following
+conditions added:
+
+allOf:
+  - if:
+      required:
+        - xlnx,vfb
+    then:
+      required:
+        - xlnx,csi-pxl-format
+    else:
+      properties:
+        xlnx,csi-pxl-format: false
+
+  - if:
+      not:
+        required:
+          - xlnx,en-csi-v2-0
+    then:
+      properties:
+        xlnx,en-vcx: false
+
+The 'allOf' is needed as you can't have two 'if' constructs at the top
+level.
+
+Please however let me know if my understanding is wrong and
+xlnx,csi-pxl-format is needed even when xlnx,vfb is not set. In that
+case please ignore this change (but please add the ... below).
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    xcsi2rxss_1: csi2rx@a0020000 {
+> +        compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
+> +        reg = <0x0 0xa0020000 0x0 0x10000>;
+> +        interrupt-parent = <&gic>;
+> +        interrupts = <0 95 4>;
+> +        xlnx,csi-pxl-format = <0x2a>;
+> +        xlnx,vfb;
+> +        xlnx,en-active-lanes;
+> +        xlnx,en-csi-v2-0;
+> +        xlnx,en-vcx;
+> +        clock-names = "lite_aclk", "video_aclk";
+> +        clocks = <&misc_clk_0>, <&misc_clk_1>;
+> +        video-reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                /* Sink port */
+> +                reg = <0>;
+> +                csiss_in: endpoint {
+> +                    data-lanes = <1 2 3 4>;
+> +                    /* MIPI CSI-2 Camera handle */
+> +                    remote-endpoint = <&camera_out>;
+> +                };
+> +            };
+> +            port@1 {
+> +                /* Source port */
+> +                reg = <1>;
+> +                csiss_out: endpoint {
+> +                    remote-endpoint = <&vproc_in>;
+> +                };
+> +            };
+> +        };
+> +    };
+
+YAML files usually end with
+
+...
+
+on the last line to mark the end of file. 
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+-- 
+Regards,
+
+Laurent Pinchart
