@@ -2,87 +2,109 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3751BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40ED2078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590355189;
-	bh=WE2kW/Hh64n5TAy/jvjJY9wl3IFEMH5x7/Au5mTP5Jc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lmfXNjqifgewZPUWSGV7gSbpmYtJGDLZCQetjMuTjyH7N1LR+v1UH0iYiRTeAiPGI
-	 e0/YQw8OBwtKapHVFG7E/hPILhmoSJNr6DvCt3GNPAmMiOxTpuSr4DqWRvRXFfeWH+
-	 1gfif2VxcpqTM4tHtp2hGBOJE3tbTqFZYumYjUPs=
+	by mail.kernel.org (Postfix) with ESMTP id 1EE0120776
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbgEXVTs (ORCPT
+        id S2388000AbgEXV1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387830AbgEXVTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:19:47 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A092076C;
-        Sun, 24 May 2020 21:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590355187;
-        bh=WE2kW/Hh64n5TAy/jvjJY9wl3IFEMH5x7/Au5mTP5Jc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OwCim7mYUE563gvdWuF9JmGSjn4pW3SdxT5xYfrksFP0BNINc+jhilYZ57uas3Aoz
-         ZQATiM3oS/Q/bC9v+eqbrk6F+hjuJPvAJ6iIfTOQpMxCjxLoSSL9qAxsxFjWf5jwtY
-         jlj97QHR1BgZXDZgXeQHJzsVt+P5DVSqsjVk49J8=
-Date:   Sun, 24 May 2020 17:19:45 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     hpa@zytor.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Don Porter <porter@cs.unc.edu>,
+        Sun, 24 May 2020 17:27:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57496 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387830AbgEXV1W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 17:27:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id CF0E11C02AB; Sun, 24 May 2020 23:27:20 +0200 (CEST)
+Date:   Sun, 24 May 2020 23:27:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        bp@alien8.de, luto@kernel.org, dave.hansen@intel.com,
-        tony.luck@intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com
-Subject: Re: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-Message-ID: <20200524211945.GX33628@sasha-vm>
-References: <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
- <20200515164013.GF29995@sasha-vm>
- <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
- <20200518153407.GA499505@tassilo.jf.intel.com>
- <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
- <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
- <20200519164853.GA19706@linux.intel.com>
- <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
- <87h7w7qy18.fsf@nanos.tec.linutronix.de>
- <A9483B8B-C0DD-46CB-AD5D-D12EC61BB331@zytor.com>
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        bp@alien8.de, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200524212719.GA1192@bug>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <20200426165753.GA11046@wind.enjellic.com>
+ <87d07gk24l.fsf@nanos.tec.linutronix.de>
+ <20200508190226.GA31465@wind.enjellic.com>
+ <20200508195635.GR27052@linux.intel.com>
+ <20200514091637.GA25156@wind.enjellic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <A9483B8B-C0DD-46CB-AD5D-D12EC61BB331@zytor.com>
+In-Reply-To: <20200514091637.GA25156@wind.enjellic.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 12:45:18PM -0700, hpa@zytor.com wrote:
->There are legitimate reasons to write a root-hole module, the main one being able to test security features like SMAP. I have requested before a TAINT flag specifically for this purpose, because TAINT_CRAP is nowhere near explicit enough, and is also used for staging drivers. Call it TAINT_TOXIC or TAINT_ROOTHOLE; it should always be accompanied with a CRIT level alert.
+Hi!
 
-What I don't like about our current system of TAINT_* flags is that
-while we can improve it as much as we want, no one outside of the kernel
-tree seems to be using it. While Thomas may have been commenting on
-Graphene's behaviour, look at any other code that did the same thing:
+> > > At the very least a modular form of the driver should be
+> > > considered that would allow alternate implementations.  Sean
+> > > indicated that there was a 'kludgy' approach that would allow an
+> > > alternate modular implementation alongside the in-kernel driver.
+> > > I believe that Andy has already indicated that may not be an
+> > > advisable approach.
+> 
+> > Modularizing the the driver does nothing for your use case.  The
+> > "driver" is a relatively lightweight wrapper, removing that is akin
+> > to making /dev/sgx/enclave inaccessible, i.e. it doesn't make the
 
-- Graphene: https://github.com/oscarlab/graphene-sgx-driver/blob/master/gsgx.c
-- Occlum: https://github.com/occlum/enable_rdfsbase/blob/master/enable_rdfsbase.c
-- SGX-LKL: https://github.com/lsds/sgx-lkl/blob/master/tools/kmod-set-fsgsbase/mod_set_cr4_fsgsbase.c
+Well... SGX is proprietary feature of Intel. I don't see any effort for standartization
+so that other architectures could use it. Yet it provides userspace interface...
 
-None of which set even the CRAP flag.
+You clearly want distros to enable it, but that will waste memory on non-Intel systems.
 
+That is not good.
+
+> Here in a nutshell is the paradox the kernel faces:
+> 
+> No one seems to be disputing the fact that the primary focus of this
+> driver will be to support the notion of 'runtime encryption' and
+> Confidential Computing.  The whole premise of the concept and economic
+> predicate of the initiative is that the owner/manager of the platform
+> has no visibility into what is being done on the platform.
+
+Well, in my eyes preventing owner of the machine from accessing all its parts is
+pretty questionable.
+
+Physics says it is impossible, many tried, and many failed. Why it should be
+different this time?
+
+> If the Linux community believes that standard platform security
+> controls can make qualitatively good judgements on what enclave based
+> execution is doing, it is effectively making the statement that the
+> very concept of runtime encryption and by extension Confidential
+> Computing is invalid.
+
+And yes, I believe that concept of Confidential Computing is invalid.. and we
+should simply not merge this support.
+
+It provides false sense of security, and I'm afraid big companies will try to force
+people to use it. "DRM, now with hardware support". "Finally advertisments you can
+not skip". "Just run this piece of code on your machine to access your bank account.
+Trust us!"
+
+:-(.
+
+									Pavel
 -- 
-Thanks,
-Sasha
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
