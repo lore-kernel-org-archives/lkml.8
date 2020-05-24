@@ -1,111 +1,234 @@
-Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F768C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 00:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69BC82075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mi1T6Zts"
+	by mail.kernel.org (Postfix) with ESMTP id 2BA7F20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 00:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388334AbgEXX7B (ORCPT
+        id S2388538AbgEYAEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 19:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388149AbgEXX7A (ORCPT
+        Sun, 24 May 2020 20:04:51 -0400
+Received: from einhorn-mail.in-berlin.de ([217.197.80.20]:47289 "EHLO
+        einhorn-mail.in-berlin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388149AbgEYAEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 19:59:00 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B62C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:58:59 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e16so6866405qtg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X1mIyAkwbgWoxrz90REt4fG4bY063H1i6zQ27Un6aao=;
-        b=mi1T6ZtsPlzDI7d/PdTXk4g8yQZEgVkLNKOEnFBZihPx6fpvuA8BvsSHJbrcknvSAX
-         z5E4IhiN9r9b699JVm0os30Sco7Y1fzQdSt1ASba9x6IwpaRGb9XAPTto9TcVXsJxxbp
-         vG81GEguGTYbe2C9EqaZ6mDZbi9f0pUTRuJlBzExybQG5L9NYdzIlm71MzWVG/XIe9Hm
-         U2Nw9LOwzh47smCgn2QQzpjd3/rlNnTqtBAozPx6c510c8BAumkWHBTzzATEo6WiVhef
-         N+qIHE0drnc+mdIQOA1yVDR0AHbiCr8tftA7FF93pmcU/Wl7o+Dia5xrDy7aPjazFdUL
-         g08w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=X1mIyAkwbgWoxrz90REt4fG4bY063H1i6zQ27Un6aao=;
-        b=HpUkqrj62LMxvHkENUlQTc6/iqvGdcU1yUQPTTOSQ5Y7uD/1c0CFAdMao9r65Wi1il
-         ZCn/w11QLKs/liNAPgRwmi9ktn95qTtv9UJP1mDlFcNIwNNpdQmnp/IUpwkx+VCypxQl
-         90slUxVPRnT/ostxXuQ/DmJsFmv2/b6haWo+n3lU2jyL1PjX1UN4lyB3iCUBJg3Zq1Fb
-         NqeqShc/3npgD6XlW8MmHo6eBr1YvF2HAF4EwjIGmiZ9sBf6D8QIVGmRWuc/J0Kvy0d+
-         ktxbUvxVYnzmWQWo06NCqgusPPFDasdTaJDH23WfzKjqCcy+BaTPEKyjIHTVngMxIrRD
-         aVSg==
-X-Gm-Message-State: AOAM530MrKbU3imUJvWo4Da9NoWPbi0XXizFCPCMlI1dgQnkRKGtO35b
-        j93pjy5G2P83eUA/YCugdtc=
-X-Google-Smtp-Source: ABdhPJyG+IeYxC6ELrcfCrNo9CnT7YthlMBgdgORz0LWSUWtXprZvhBrVl2YHQYRQlFA7bYIMObQDQ==
-X-Received: by 2002:ac8:6a1a:: with SMTP id t26mr24668127qtr.331.1590364738911;
-        Sun, 24 May 2020 16:58:58 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u3sm14638550qtk.63.2020.05.24.16.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 16:58:58 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sun, 24 May 2020 19:58:56 -0400
-To:     Fangrui Song <maskray@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] x86/boot: Remove runtime relocations from
- head_{32,64}.S
-Message-ID: <20200524235856.GD280334@rani.riverdale.lan>
-References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
- <20200524212816.243139-4-nivedita@alum.mit.edu>
- <20200524232214.i7rfpdzoam6tpt6n@google.com>
+        Sun, 24 May 2020 20:04:51 -0400
+X-Greylist: delayed 513 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 May 2020 20:04:49 EDT
+X-Envelope-From: stefanr@s5r6.in-berlin.de
+Received: from authenticated.user (localhost [127.0.0.1]) by einhorn.in-berlin.de  with ESMTPSA id 04ONtZBW010868
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Mon, 25 May 2020 01:55:37 +0200
+Date:   Mon, 25 May 2020 01:55:32 +0200
+From:   Stefan Richter <stefanr@s5r6.in-berlin.de>
+To:     Greg KH <greg@kroah.com>
+Cc:     Takashi Sakamoto <o-takashi@sakamocchi.jp>, oscar.carter@gmx.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, clemens@ladisch.de
+Subject: Re: [PATCH v2] firewire-core: remove cast of function callback
+Message-ID: <20200525015532.0055f9df@kant>
+In-Reply-To: <20200524152301.GB21163@kroah.com>
+References: <20200524132048.243223-1-o-takashi@sakamocchi.jp>
+        <20200524152301.GB21163@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200524232214.i7rfpdzoam6tpt6n@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 04:22:14PM -0700, Fangrui Song wrote:
+On May 24 Greg KH wrote:
+> On Sun, May 24, 2020 at 10:20:48PM +0900, Takashi Sakamoto wrote:
+> > In 1394 OHCI specification, Isochronous Receive DMA context has several
+> > modes. One of mode is 'BufferFill' and Linux FireWire stack uses it to
+> > receive isochronous packets for multiple isochronous channel as
+> > FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL.
+> > 
+> > The mode is not used by in-kernel driver, while it's available for
+> > userspace. The character device driver in firewire-core includes
+> > cast of function callback for the mode since the type of callback
+> > function is different from the other modes. The case is inconvenient
+> > to effort of Control Flow Integrity builds due to
+> > -Wcast-function-type warning.
+> > 
+> > This commit removes the cast. A inline helper function is newly added
+> > to initialize isochronous context for the mode. The helper function
+> > arranges isochronous context to assign specific callback function
+> > after call of existent kernel API. It's noticeable that the number of
+> > isochronous channel, speed, the size of header are not required for the
+> > mode. The helper function is used for the mode by character device
+> > driver instead of direct call of existent kernel API.
+> > 
+> > Changes in v2:
+> >  - unexport helper function
+> >  - use inline for helper function
+> >  - arrange arguments for helper function
+> >  - tested by libhinoko
+> > 
+> > Reported-by: Oscar Carter <oscar.carter@gmx.com>
+> > Reference: https://lore.kernel.org/lkml/20200519173425.4724-1-oscar.carter@gmx.com/
+> > Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> > ---
+> >  drivers/firewire/core-cdev.c | 40 +++++++++++++++---------------------
+> >  include/linux/firewire.h     | 16 +++++++++++++++
+> >  2 files changed, 33 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+> > index 6e291d8f3a27..7cbf6df34b43 100644
+> > --- a/drivers/firewire/core-cdev.c
+> > +++ b/drivers/firewire/core-cdev.c
+> > @@ -957,7 +957,6 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+> >  {
+> >  	struct fw_cdev_create_iso_context *a = &arg->create_iso_context;
+> >  	struct fw_iso_context *context;
+> > -	fw_iso_callback_t cb;
+> >  	int ret;
+> >  
+> >  	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT != FW_ISO_CONTEXT_TRANSMIT ||
+> > @@ -965,32 +964,27 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+> >  		     FW_CDEV_ISO_CONTEXT_RECEIVE_MULTICHANNEL !=
+> >  					FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL);
+> >  
+> > -	switch (a->type) {
+> > -	case FW_ISO_CONTEXT_TRANSMIT:
+> > -		if (a->speed > SCODE_3200 || a->channel > 63)
+> > -			return -EINVAL;
+> > -
+> > -		cb = iso_callback;
+> > -		break;
+> > -
+> > -	case FW_ISO_CONTEXT_RECEIVE:
+> > -		if (a->header_size < 4 || (a->header_size & 3) ||
+> > -		    a->channel > 63)
+> > -			return -EINVAL;
+> > -
+> > -		cb = iso_callback;
+> > -		break;
+> > -
+> > -	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
+> > -		cb = (fw_iso_callback_t)iso_mc_callback;
+> > -		break;
+> > +	if (a->type == FW_ISO_CONTEXT_TRANSMIT ||
+> > +	    a->type == FW_ISO_CONTEXT_RECEIVE) {
+> > +		if (a->type == FW_ISO_CONTEXT_TRANSMIT) {
+> > +			if (a->speed > SCODE_3200 || a->channel > 63)
+> > +				return -EINVAL;
+> > +		} else {
+> > +			if (a->header_size < 4 || (a->header_size & 3) ||
+> > +			    a->channel > 63)
+> > +				return -EINVAL;
+> > +		}
+> >  
+> > -	default:
+> > +		context = fw_iso_context_create(client->device->card, a->type,
+> > +					a->channel, a->speed, a->header_size,
+> > +					iso_callback, client);
+> > +	} else if (a->type == FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL) {
+> > +		context = fw_iso_mc_context_create(client->device->card,
+> > +						   iso_mc_callback, client);
+> > +	} else {
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -	context = fw_iso_context_create(client->device->card, a->type,
+> > -			a->channel, a->speed, a->header_size, cb, client);
+> >  	if (IS_ERR(context))
+> >  		return PTR_ERR(context);
+> >  	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
+> > diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+> > index aec8f30ab200..bff08118baaf 100644
+> > --- a/include/linux/firewire.h
+> > +++ b/include/linux/firewire.h
+> > @@ -453,6 +453,22 @@ struct fw_iso_context {
+> >  struct fw_iso_context *fw_iso_context_create(struct fw_card *card,
+> >  		int type, int channel, int speed, size_t header_size,
+> >  		fw_iso_callback_t callback, void *callback_data);
+> > +
+> > +static inline struct fw_iso_context *fw_iso_mc_context_create(
+> > +						struct fw_card *card,
+> > +						fw_iso_mc_callback_t callback,
+> > +						void *callback_data)
+> > +{
+> > +	struct fw_iso_context *ctx;
+> > +
+> > +	ctx = fw_iso_context_create(card, FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL,
+> > +				    0, 0, 0, NULL, callback_data);
+> > +	if (!IS_ERR(ctx))
+> > +		ctx->callback.mc = callback;
+> > +
+> > +	return ctx;
+> > +}  
 > 
-> Probably worth mentioning that this works around GNU ld<2.35
+> Why is this in a .h file?  What's wrong with just putting it in the .c
+> file as a static function?  There's no need to make this an inline,
+> right?
 
-Thanks, I'll add that in v2.
+There is no need for this in a header.
+Furthermore, I prefer the original switch statement over the nested if/else.
 
-> 
-> 
-> This commit fixing https://sourceware.org/bugzilla/show_bug.cgi?id=25754
-> also fixed the bug. (Just verified that both 2.24 and 2.34 have the bug. binutils-gdb HEAD (future 2.35) is good.)
-> 
-> % cat a.s
-> pushl $z_input_len
-> % cat b.s
-> .globl z_input_len
-> z_input_len = 0xb612
-> % gcc -m32 -c a.s b.s
-> % ld.bfd -m elf_i386 -pie a.o b.o  # has an incorrect R_386_RELATIVE before binutils 2.35
-> 
-> 
-> Reviewed-by: Fangrui Song <maskray@google.com>
+Here is another proposal; I will resend it later as a proper patch.
+
+diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+index 719791819c24..bece1b69b43f 100644
+--- a/drivers/firewire/core-cdev.c
++++ b/drivers/firewire/core-cdev.c
+@@ -957,7 +957,6 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ {
+ 	struct fw_cdev_create_iso_context *a = &arg->create_iso_context;
+ 	struct fw_iso_context *context;
+-	fw_iso_callback_t cb;
+ 	int ret;
+ 
+ 	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT != FW_ISO_CONTEXT_TRANSMIT ||
+@@ -969,20 +968,15 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ 	case FW_ISO_CONTEXT_TRANSMIT:
+ 		if (a->speed > SCODE_3200 || a->channel > 63)
+ 			return -EINVAL;
+-
+-		cb = iso_callback;
+ 		break;
+ 
+ 	case FW_ISO_CONTEXT_RECEIVE:
+ 		if (a->header_size < 4 || (a->header_size & 3) ||
+ 		    a->channel > 63)
+ 			return -EINVAL;
+-
+-		cb = iso_callback;
+ 		break;
+ 
+ 	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
+-		cb = (fw_iso_callback_t)iso_mc_callback;
+ 		break;
+ 
+ 	default:
+@@ -990,9 +984,15 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+ 	}
+ 
+ 	context = fw_iso_context_create(client->device->card, a->type,
+-			a->channel, a->speed, a->header_size, cb, client);
++			a->channel, a->speed, a->header_size, NULL, client);
+ 	if (IS_ERR(context))
+ 		return PTR_ERR(context);
++
++	if (a->type == FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL)
++		context->callback.mc = iso_mc_callback;
++	else
++		context->callback.sc = iso_callback;
++
+ 	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
+ 		context->drop_overflow_headers = true;
+ 
+
+-- 
+Stefan Richter
+-======--=-- -=-= ==--=
+http://arcgraph.de/sr/
