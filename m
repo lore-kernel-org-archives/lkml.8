@@ -2,254 +2,319 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A581BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37C002086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590336055;
-	bh=KhUdwmuzSH0N8u0r8mIa4a8FTVYRHuHTLkI28CPI384=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PxUjmkfDpB+DwQBhNSGVp6sZwOGZYoR3aWpnEqMZGZMRajQ2mWm6Q5eIVTt0zjMPF
-	 mjtawcuAPiDLx/RJEPVk7cJXXdBDSktCsYWcMBG2XBfuFRsTie8cCVo2kIj2YYQNL/
-	 f7mDXEpH7sGIZ9nRxvUoR1oslU93CTzpObOHP4Co=
+	by mail.kernel.org (Postfix) with ESMTP id 841EA206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:06:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNurkOT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgEXQAy (ORCPT
+        id S1728456AbgEXQGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 12:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgEXQAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 12:00:53 -0400
-Received: from localhost.localdomain (unknown [115.204.118.67])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D544220878;
-        Sun, 24 May 2020 16:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590336052;
-        bh=KhUdwmuzSH0N8u0r8mIa4a8FTVYRHuHTLkI28CPI384=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxZA+Hh5adEkNLzVvHVSDUrAkIDo8YzRZwfJkol8vNe8JJXOZnGU9CzkD2g/Uvtpq
-         MtnZi/+vvyfuR7i+2kHhni7Dv3RkOHVJNmeP8v26lzsS2ohrZMLRgo9LGawuN7Wh6r
-         W+TB1+nIphqiPSTJLprPUx+iqZ6Xt/cqu17r7gZk=
-From:   guoren@kernel.org
-To:     linux-csky@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        arnd@arnd.de, Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH 3/3] csky: Coding convention in entry.S
-Date:   Sun, 24 May 2020 15:59:24 +0000
-Message-Id: <1590335964-79023-3-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590335964-79023-1-git-send-email-guoren@kernel.org>
-References: <1590335964-79023-1-git-send-email-guoren@kernel.org>
+        Sun, 24 May 2020 12:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbgEXQGq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 12:06:46 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D080C061A0E;
+        Sun, 24 May 2020 09:06:46 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id a2so18168085ejb.10;
+        Sun, 24 May 2020 09:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sxEJyU9TaXEIp1/fo5xw/QmL2ngVwpIdCduUvrBnplM=;
+        b=sNurkOT5nUX7mei8dVVCD9bx5S0mCWH7rHU9DVn0oa3Vx7AfqWTBIx0aarjsKH5eju
+         L4gExWaOHiGlROrm30c1VnApfd0vAWtc5qimIIAZsDHjzHLWjzm5RQokNDXvE8pOGenZ
+         B+JUKwXawsHXzLtmOvSQ84qWp/YCXb5XRIlW7Bfxie73D3Xyow8yji/3+HMOwYxyCF6w
+         LCslZhGni3ZvD6GVNoA2uDUJWC8DBYJ5U39amRMg2WimQFI+a3wyaJfoN4aIQYFENPiB
+         3TtM+RBVySGuQlz63QjE6coT9Wh1aanRw5u/3toxXPvulECFDGpjDiLw2McDWlPaJGnV
+         g/2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sxEJyU9TaXEIp1/fo5xw/QmL2ngVwpIdCduUvrBnplM=;
+        b=d8ChdSXnB22hL1jst7krdfGpqotAch7EzBDNUmtNZHL2wcZC19e5WtX7qytuuBr8NF
+         RU/9cc3EdD/pjcG3sCNXR6vGxcdqKf33VsjKgj522Fwg+6zt5TwF0OkcpFlZrlFP95d2
+         BuhV34gYZtNThO4z3YVXbKqkBVIWeEQJIrE1Z2/UpOAT46VFIaC+RTbyRuK22ihSILSB
+         Np5mAYWIKghvET3bc/PCBq7mSLBDCG9KRboVq3+cvgmUDDw/upvkscCckNJI6+Y+30l9
+         JaiYsHpvojHfadND6r+ZgquwwoLPo4OSUCUA8ZZvDi2BvrXyn4dvb/Vej/6GXzx3MA0D
+         EmyA==
+X-Gm-Message-State: AOAM532isD7D5+ahxgZR7TsqUTVg1qR69xCC6fk1CHq3TuByV9yjNirG
+        TqhkojvetJy7OhEaSo1L5vkq93haILk=
+X-Google-Smtp-Source: ABdhPJzppSARRKRiOw707Bp1+PJaCjNmzltSjjaQgRwiUuFBPOVi5G7Fh6mBA5jXNi2qvpZvG8bZSA==
+X-Received: by 2002:a17:906:c943:: with SMTP id fw3mr15404257ejb.288.1590336404894;
+        Sun, 24 May 2020 09:06:44 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id qn17sm13252855ejb.125.2020.05.24.09.06.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 May 2020 09:06:44 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: rockchip: rename label and nodename pinctrl subnodes that end with gpio
+Date:   Sun, 24 May 2020 18:06:35 +0200
+Message-Id: <20200524160636.16547-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+A test with the command below gives for example this error:
 
-There is no fixup or feature in the patch, we only cleanup with:
+arch/arm/boot/dts/rk3288-tinker.dt.yaml: tsadc: otp-gpio:
+{'phandle': [[54]], 'rockchip,pins': [[0, 10, 0, 118]]}
+is not of type 'array'
 
- - Remove unnecessary reg used (r11, r12), just use r9 & r10 &
-   syscallid regs as temp useage.
- - Add _TIF_SYSCALL_WORK and _TIF_WORK_MASK to gather macros.
+'gpio' is a sort of reserved nodename and should not be used
+for pinctrl in combination with 'rockchip,pins', so change
+nodes that end with 'gpio' to end with 'pin' or 'pins'.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/
+dtschema/schemas/gpio/gpio.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/csky/abiv1/inc/abi/entry.h     |  5 ---
- arch/csky/abiv2/inc/abi/entry.h     |  5 ---
- arch/csky/include/asm/thread_info.h |  6 ++++
- arch/csky/kernel/entry.S            | 66 ++++++++++++++++++++-----------------
- 4 files changed, 42 insertions(+), 40 deletions(-)
+ arch/arm/boot/dts/rk322x.dtsi              |  6 +++---
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts    |  2 +-
+ arch/arm/boot/dts/rk3288-veyron-jerry.dts  |  2 +-
+ arch/arm/boot/dts/rk3288-veyron-mighty.dts |  6 +++---
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts |  2 +-
+ arch/arm/boot/dts/rk3288-veyron-pinky.dts  |  6 +++---
+ arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi |  2 +-
+ arch/arm/boot/dts/rk3288-veyron-speedy.dts |  2 +-
+ arch/arm/boot/dts/rk3288.dtsi              |  6 +++---
+ arch/arm/boot/dts/rv1108.dtsi              | 12 ++++++------
+ 10 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
-index b3559db..13c23e2 100644
---- a/arch/csky/abiv1/inc/abi/entry.h
-+++ b/arch/csky/abiv1/inc/abi/entry.h
-@@ -174,9 +174,4 @@
- 	movi	r6, 0
- 	cpwcr	r6, cpcr31
- .endm
--
--.macro ANDI_R3 rx, imm
--	lsri	\rx, 3
--	andi	\rx, (\imm >> 3)
--.endm
- #endif /* __ASM_CSKY_ENTRY_H */
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index 6ee71bf..4fdd6c1 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -302,9 +302,4 @@
- 	jmpi	3f /* jump to va */
- 3:
- .endm
--
--.macro ANDI_R3 rx, imm
--	lsri	\rx, 3
--	andi	\rx, (\imm >> 3)
--.endm
- #endif /* __ASM_CSKY_ENTRY_H */
-diff --git a/arch/csky/include/asm/thread_info.h b/arch/csky/include/asm/thread_info.h
-index 5c61e84..8980e4e 100644
---- a/arch/csky/include/asm/thread_info.h
-+++ b/arch/csky/include/asm/thread_info.h
-@@ -81,4 +81,10 @@ static inline struct thread_info *current_thread_info(void)
- #define _TIF_RESTORE_SIGMASK	(1 << TIF_RESTORE_SIGMASK)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 7a1a69183..3590ce15a 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -522,9 +522,9 @@
+ 		resets = <&cru SRST_TSADC>;
+ 		reset-names = "tsadc-apb";
+ 		pinctrl-names = "init", "default", "sleep";
+-		pinctrl-0 = <&otp_gpio>;
++		pinctrl-0 = <&otp_pin>;
+ 		pinctrl-1 = <&otp_out>;
+-		pinctrl-2 = <&otp_gpio>;
++		pinctrl-2 = <&otp_pin>;
+ 		#thermal-sensor-cells = <0>;
+ 		rockchip,hw-tshut-temp = <95000>;
+ 		status = "disabled";
+@@ -1103,7 +1103,7 @@
+ 		};
  
-+#define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
-+				 _TIF_NOTIFY_RESUME | _TIF_UPROBE)
-+
-+#define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
-+				 _TIF_SYSCALL_TRACEPOINT)
-+
- #endif	/* _ASM_CSKY_THREAD_INFO_H */
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index 76dc729..9595e86 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -134,31 +134,32 @@ ENTRY(csky_systemcall)
- #endif
- 	psrset  ee, ie
+ 		tsadc {
+-			otp_gpio: otp-gpio {
++			otp_pin: otp-pin {
+ 				rockchip,pins = <0 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
  
--	lrw     r11, __NR_syscalls
--	cmphs   syscallid, r11		/* Check nr of syscall */
-+	lrw     r9, __NR_syscalls
-+	cmphs   syscallid, r9		/* Check nr of syscall */
- 	bt      ret_from_exception
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index 171ba6185..8efba9dea 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -47,7 +47,7 @@
+ &sdmmc {
+ 	disable-wp;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_pin
+ 			&sdmmc_bus4>;
+ };
  
--	lrw     r13, sys_call_table
--	ixw     r13, syscallid
--	ldw     r11, (r13)
--	cmpnei  r11, 0
-+	lrw     r9, sys_call_table
-+	ixw     r9, syscallid
-+	ldw     syscallid, (r9)
-+	cmpnei  syscallid, 0
- 	bf      ret_from_exception
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+index 66f00d288..2c916c50d 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+@@ -192,7 +192,7 @@
+ &sdmmc {
+ 	disable-wp;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_pin
+ 			&sdmmc_bus4>;
+ };
  
- 	mov     r9, sp
- 	bmaski  r10, THREAD_SHIFT
- 	andn    r9, r10
--	ldw     r12, (r9, TINFO_FLAGS)
--	ANDI_R3	r12, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
--	cmpnei	r12, 0
-+	ldw     r10, (r9, TINFO_FLAGS)
-+	lrw	r9, _TIF_SYSCALL_WORK
-+	and	r10, r9
-+	cmpnei	r10, 0
- 	bt      csky_syscall_trace
- #if defined(__CSKYABIV2__)
- 	subi    sp, 8
- 	stw  	r5, (sp, 0x4)
- 	stw  	r4, (sp, 0x0)
--	jsr     r11                      /* Do system call */
-+	jsr     syscallid                      /* Do system call */
- 	addi 	sp, 8
- #else
--	jsr     r11
-+	jsr     syscallid
- #endif
- 	stw     a0, (sp, LSAVE_A0)      /* Save return value */
- 	jmpi    ret_from_exception
-@@ -177,13 +178,12 @@ csky_syscall_trace:
- 	stw	r9, (sp, 0x0)
- 	ldw	r9, (sp, LSAVE_A5)
- 	stw	r9, (sp, 0x4)
-+	jsr	syscallid                     /* Do system call */
-+	addi	sp, 8
- #else
- 	ldw	r6, (sp, LSAVE_A4)
- 	ldw	r7, (sp, LSAVE_A5)
--#endif
--	jsr	r11                     /* Do system call */
--#if defined(__CSKYABIV2__)
--	addi	sp, 8
-+	jsr	syscallid                     /* Do system call */
- #endif
- 	stw	a0, (sp, LSAVE_A0)	/* Save return value */
+diff --git a/arch/arm/boot/dts/rk3288-veyron-mighty.dts b/arch/arm/boot/dts/rk3288-veyron-mighty.dts
+index 27fbc0747..fa695a88f 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-mighty.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-mighty.dts
+@@ -18,8 +18,8 @@
+ };
  
-@@ -202,18 +202,20 @@ ENTRY(ret_from_fork)
- 	mov	r9, sp
- 	bmaski	r10, THREAD_SHIFT
- 	andn	r9, r10
--	ldw	r12, (r9, TINFO_FLAGS)
--	ANDI_R3	r12, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
--	cmpnei	r12, 0
-+	ldw	r10, (r9, TINFO_FLAGS)
-+	lrw	r9, _TIF_SYSCALL_WORK
-+	and	r10, r9
-+	cmpnei	r10, 0
- 	bf	ret_from_exception
- 	mov	a0, sp			/* sp = pt_regs pointer */
- 	jbsr	syscall_trace_exit
+ &sdmmc {
+-	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
+-			&sdmmc_wp_gpio &sdmmc_bus4>;
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_pin
++			&sdmmc_wp_pin &sdmmc_bus4>;
+ 	wp-gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>;
  
- ret_from_exception:
- 	psrclr	ie
--	ld	syscallid, (sp, LSAVE_PSR)
--	btsti	syscallid, 31
-+	ld	r9, (sp, LSAVE_PSR)
-+	btsti	r9, 31
+ 	/delete-property/ disable-wp;
+@@ -27,7 +27,7 @@
  
-+	bt	1f
- 	/*
- 	 * Load address of current->thread_info, Then get address of task_struct
- 	 * Get task_needreshed in task_struct
-@@ -222,15 +224,19 @@ ret_from_exception:
- 	bmaski	r10, THREAD_SHIFT
- 	andn	r9, r10
+ &pinctrl {
+ 	sdmmc {
+-		sdmmc_wp_gpio: sdmmc-wp-gpio {
++		sdmmc_wp_pin: sdmmc-wp-pin {
+ 			rockchip,pins = <7 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 383fad1a8..f8b69e0a1 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -114,7 +114,7 @@
+ &sdmmc {
+ 	disable-wp;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_pin
+ 			&sdmmc_bus4>;
+ };
  
--	bt	1f
--	ldw	r12, (r9, TINFO_FLAGS)
--	andi	r12, (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | _TIF_UPROBE)
--	cmpnei	r12, 0
-+	ldw	r10, (r9, TINFO_FLAGS)
-+	lrw	r9, _TIF_WORK_MASK
-+	and	r10, r9
-+	cmpnei	r10, 0
- 	bt	exit_work
- 1:
- #ifdef CONFIG_PREEMPTION
--	ldw	r12, (r9, TINFO_PREEMPT)
--	cmpnei	r12, 0
-+	mov	r9, sp
-+	bmaski	r10, THREAD_SHIFT
-+	andn	r9, r10
-+
-+	ldw	r10, (r9, TINFO_PREEMPT)
-+	cmpnei	r10, 0
- 	bt	2f
- 	jbsr	preempt_schedule_irq	/* irq en/disable is done inside */
- 2:
-@@ -246,15 +252,15 @@ ret_from_exception:
- 	RESTORE_ALL
+diff --git a/arch/arm/boot/dts/rk3288-veyron-pinky.dts b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
+index 71e6629cc..4e9fdb0f7 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
+@@ -105,7 +105,7 @@
+ 	};
  
- exit_work:
--	lrw	syscallid, ret_from_exception
--	mov	lr, syscallid
-+	lrw	r9, ret_from_exception
-+	mov	lr, r9
+ 	sdmmc {
+-		sdmmc_wp_gpio: sdmmc-wp-gpio {
++		sdmmc_wp_pin: sdmmc-wp-pin {
+ 			rockchip,pins = <7 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+@@ -126,8 +126,8 @@
  
--	btsti	r12, TIF_NEED_RESCHED
-+	btsti	r10, TIF_NEED_RESCHED
- 	bt	work_resched
+ &sdmmc {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
+-		     &sdmmc_wp_gpio &sdmmc_bus4>;
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_pin
++		     &sdmmc_wp_pin &sdmmc_bus4>;
+ 	wp-gpios = <&gpio7 RK_PB2 GPIO_ACTIVE_HIGH>;
+ };
  
- 	psrset	ie
- 	mov	a0, sp
--	mov	a1, r12
-+	mov	a1, r10
- 	jmpi	do_notify_resume
+diff --git a/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi b/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi
+index fe950f986..27fb06ce9 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi
+@@ -41,7 +41,7 @@
+ 		};
  
- work_resched:
+ 		/* This is where we actually hook up CD */
+-		sdmmc_cd_gpio: sdmmc-cd-gpio {
++		sdmmc_cd_pin: sdmmc-cd-pin {
+ 			rockchip,pins = <7 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+index e354c61a4..4a3ea934d 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+@@ -54,7 +54,7 @@
+ &sdmmc {
+ 	disable-wp;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_pin
+ 			&sdmmc_bus4>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0cd88774d..d052a4758 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -575,9 +575,9 @@
+ 		resets = <&cru SRST_TSADC>;
+ 		reset-names = "tsadc-apb";
+ 		pinctrl-names = "init", "default", "sleep";
+-		pinctrl-0 = <&otp_gpio>;
++		pinctrl-0 = <&otp_pin>;
+ 		pinctrl-1 = <&otp_out>;
+-		pinctrl-2 = <&otp_gpio>;
++		pinctrl-2 = <&otp_pin>;
+ 		#thermal-sensor-cells = <1>;
+ 		rockchip,grf = <&grf>;
+ 		rockchip,hw-tshut-temp = <95000>;
+@@ -1930,7 +1930,7 @@
+ 		};
+ 
+ 		tsadc {
+-			otp_gpio: otp-gpio {
++			otp_pin: otp-pin {
+ 				rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index b453f8d0f..f3ff54753 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -352,9 +352,9 @@
+ 		clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+ 		clock-names = "tsadc", "apb_pclk";
+ 		pinctrl-names = "init", "default", "sleep";
+-		pinctrl-0 = <&otp_gpio>;
++		pinctrl-0 = <&otp_pin>;
+ 		pinctrl-1 = <&otp_out>;
+-		pinctrl-2 = <&otp_gpio>;
++		pinctrl-2 = <&otp_pin>;
+ 		resets = <&cru SRST_TSADC>;
+ 		reset-names = "tsadc-apb";
+ 		rockchip,hw-tshut-temp = <120000>;
+@@ -729,7 +729,7 @@
+ 						<0 RK_PC6 3 &pcfg_pull_none>;
+ 			};
+ 
+-			i2c2m1_gpio: i2c2m1-gpio {
++			i2c2m1_pins: i2c2m1-pins {
+ 				rockchip,pins = <0 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>,
+ 						<0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+@@ -741,7 +741,7 @@
+ 						<1 RK_PD4 2 &pcfg_pull_none>;
+ 			};
+ 
+-			i2c2m05v_gpio: i2c2m05v-gpio {
++			i2c2m05v_pins: i2c2m05v-pins {
+ 				rockchip,pins = <1 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>,
+ 						<1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+@@ -868,7 +868,7 @@
+ 				rockchip,pins = <0 RK_PB7 1 &pcfg_pull_none>;
+ 			};
+ 
+-			otp_gpio: otp-gpio {
++			otp_pin: otp-pin {
+ 				rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+ 		};
+@@ -887,7 +887,7 @@
+ 				rockchip,pins = <3 RK_PA3 1 &pcfg_pull_none>;
+ 			};
+ 
+-			uart0_rts_gpio: uart0-rts-gpio {
++			uart0_rts_pin: uart0-rts-pin {
+ 				rockchip,pins = <3 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+ 		};
 -- 
-2.7.4
+2.11.0
 
