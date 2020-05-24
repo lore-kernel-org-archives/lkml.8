@@ -2,100 +2,172 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E303C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0403AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBEF92075F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590309752;
-	bh=sf8z0UjiPnonog6GK0bHV0LN7Xmm1JvGEb55h0+rYNs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OyAi/GRbjvJfOPKpZ3if6dml8/Nufo4XA2IuoQoQcU/z6m0/+FTFYnvMmFhRICMYc
-	 ZFtOkHGUeiTnDIxunAIFj1B5KLB4+QijueygF7fM9TjITrK2jHGtno0xrqFZSR295j
-	 aC4J/zZlWBADPnhbQz84gF/RRYtHX1XU+WgizhSg=
+	by mail.kernel.org (Postfix) with ESMTP id CE71F20787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgEXImb (ORCPT
+        id S1728422AbgEXIv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 04:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbgEXIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 04:42:30 -0400
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0557F207D8;
-        Sun, 24 May 2020 08:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590309750;
-        bh=sf8z0UjiPnonog6GK0bHV0LN7Xmm1JvGEb55h0+rYNs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BxG96CXUPSWUmRNkHl6HjVlkGh5/eUa8JFBIpmAn6/z/e3e5rsfje3HBa/AFqIJeJ
-         aRGGqDsqnHSWjuxf2Xulqf3hsrSXGfhESLUQ2Ruu9ZqBhI2e8FUphT80zRfAwItRtb
-         0wsByv02WtF2m5TjW0yWcNDpsaXa8YRMM9uBT6Ds=
-Received: by mail-il1-f174.google.com with SMTP id m6so14864877ilq.7;
-        Sun, 24 May 2020 01:42:29 -0700 (PDT)
-X-Gm-Message-State: AOAM531LHen/5xiHqa+pgh33h8lqc9EKzmSIwnZhYf1KE0k+BBOa8sDv
-        K6vCtNAbtqOk0jsFgRkmmcnyze8w0jAEaLjVBhU=
-X-Google-Smtp-Source: ABdhPJyQ6Fg0YcOCssHHZTIP7zDTGlLO2oy6Gg5BafA6ko2vA4QKybLI4tw5YiFQmK1RXGgS64RfRq5TqWmiZIEVPho=
-X-Received: by 2002:a92:3556:: with SMTP id c83mr18361004ila.218.1590309749379;
- Sun, 24 May 2020 01:42:29 -0700 (PDT)
+        Sun, 24 May 2020 04:51:59 -0400
+Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:40226 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727848AbgEXIv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 04:51:59 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 2FA4C52C1;
+        Sun, 24 May 2020 08:51:57 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: run46_151812526d37
+X-Filterd-Recvd-Size: 5163
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 24 May 2020 08:51:53 +0000 (UTC)
+Message-ID: <cc610c7f97dfd5899ab8b751fdfb9670a0cc761e.camel@perches.com>
+Subject: Re: [PATCH] staging: rtl8188eu: clean up some declarations
+From:   Joe Perches <joe@perches.com>
+To:     Michael Straube <straube.linux@gmail.com>,
+        gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 24 May 2020 01:51:50 -0700
+In-Reply-To: <20200524082748.12901-1-straube.linux@gmail.com>
+References: <20200524082748.12901-1-straube.linux@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-References: <20200523120021.34996-1-ardb@kernel.org> <20200523120021.34996-4-ardb@kernel.org>
- <20200523151758.GB1189358@rani.riverdale.lan>
-In-Reply-To: <20200523151758.GB1189358@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 24 May 2020 10:42:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH6ekEbY9TVT+_3NmrGVdGO0yUVx6hvtu4Z-4+AMT0+WQ@mail.gmail.com>
-Message-ID: <CAMj1kXH6ekEbY9TVT+_3NmrGVdGO0yUVx6hvtu4Z-4+AMT0+WQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] x86/boot/compressed: get rid of GOT fixup code
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 May 2020 at 17:18, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Sat, May 23, 2020 at 02:00:21PM +0200, Ard Biesheuvel wrote:
-> > In a previous patch, we have eliminated GOT entries from the decompressor
-> > binary and added an assertion that the .got section is empty. This means
-> > that the GOT fixup routines that exist in both the 32-bit and 64-bit
-> > startup routines have become dead code, and can be removed.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> > index 60a99dfb9d72..d91fdda51aa8 100644
-> > --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> > @@ -43,9 +43,7 @@ SECTIONS
-> >               _erodata = . ;
-> >       }
-> >       .got : {
-> > -             _got = .;
-> >               KEEP(*(.got))
-> > -             _egot = .;
-> >       }
-> >       .got.plt : {
-> >               KEEP(*(.got.plt))
-> > --
-> > 2.20.1
-> >
->
-> I think you can get rid of both the KEEP's here as well?
+On Sun, 2020-05-24 at 10:27 +0200, Michael Straube wrote:
+> Clean up some array declarations in phy_iq_calibrate() to reduce
+> indentation and clear line over 80 characters checkpatch warnings.
 
-Yeah, they seem fairly pointless to me to begin with, given that these
-contents are created by the linker on the fly, rather than passed
-through from the input objects.
+Better still would be to mark these as static const
+and also mark the functions that use them to take
+const pointers
 
-I'll drop them.
+Something like:
+---
+ drivers/staging/rtl8188eu/hal/phy.c | 52 ++++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/staging/rtl8188eu/hal/phy.c b/drivers/staging/rtl8188eu/hal/phy.c
+index 5eca3625d5a8..9a4f1b84fefc 100644
+--- a/drivers/staging/rtl8188eu/hal/phy.c
++++ b/drivers/staging/rtl8188eu/hal/phy.c
+@@ -786,7 +786,7 @@ static void pathb_fill_iqk(struct adapter *adapt, bool iqkok, s32 result[][8],
+ 	}
+ }
+ 
+-static void save_adda_registers(struct adapter *adapt, u32 *addareg,
++static void save_adda_registers(struct adapter *adapt, const u32 *addareg,
+ 				u32 *backup, u32 register_num)
+ {
+ 	u32 i;
+@@ -795,7 +795,7 @@ static void save_adda_registers(struct adapter *adapt, u32 *addareg,
+ 		backup[i] = phy_query_bb_reg(adapt, addareg[i], bMaskDWord);
+ }
+ 
+-static void save_mac_registers(struct adapter *adapt, u32 *mac_reg,
++static void save_mac_registers(struct adapter *adapt, const u32 *mac_reg,
+ 			       u32 *backup)
+ {
+ 	u32 i;
+@@ -806,7 +806,7 @@ static void save_mac_registers(struct adapter *adapt, u32 *mac_reg,
+ 	backup[i] = usb_read32(adapt, mac_reg[i]);
+ }
+ 
+-static void reload_adda_reg(struct adapter *adapt, u32 *adda_reg,
++static void reload_adda_reg(struct adapter *adapt, const u32 *adda_reg,
+ 			    u32 *backup, u32 regiester_num)
+ {
+ 	u32 i;
+@@ -816,7 +816,7 @@ static void reload_adda_reg(struct adapter *adapt, u32 *adda_reg,
+ }
+ 
+ static void reload_mac_registers(struct adapter *adapt,
+-				 u32 *mac_reg, u32 *backup)
++				 const u32 *mac_reg, u32 *backup)
+ {
+ 	u32 i;
+ 
+@@ -826,7 +826,7 @@ static void reload_mac_registers(struct adapter *adapt,
+ 	usb_write32(adapt, mac_reg[i], backup[i]);
+ }
+ 
+-static void path_adda_on(struct adapter *adapt, u32 *adda_reg,
++static void path_adda_on(struct adapter *adapt, const u32 *adda_reg,
+ 			 bool is_path_a_on, bool is2t)
+ {
+ 	u32 path_on;
+@@ -844,7 +844,8 @@ static void path_adda_on(struct adapter *adapt, u32 *adda_reg,
+ 		phy_set_bb_reg(adapt, adda_reg[i], bMaskDWord, path_on);
+ }
+ 
+-static void mac_setting_calibration(struct adapter *adapt, u32 *mac_reg, u32 *backup)
++static void mac_setting_calibration(struct adapter *adapt, const u32 *mac_reg,
++				    u32 *backup)
+ {
+ 	u32 i = 0;
+ 
+@@ -952,26 +953,29 @@ static void phy_iq_calibrate(struct adapter *adapt, s32 result[][8],
+ 	struct odm_dm_struct *dm_odm = &adapt->HalData->odmpriv;
+ 	u32 i;
+ 	u8 path_a_ok, path_b_ok;
+-	u32 adda_reg[IQK_ADDA_REG_NUM] = {
+-					  rFPGA0_XCD_SwitchControl, rBlue_Tooth,
+-					  rRx_Wait_CCA, rTx_CCK_RFON,
+-					  rTx_CCK_BBON, rTx_OFDM_RFON,
+-					  rTx_OFDM_BBON, rTx_To_Rx,
+-					  rTx_To_Tx, rRx_CCK,
+-					  rRx_OFDM, rRx_Wait_RIFS,
+-					  rRx_TO_Rx, rStandby,
+-					  rSleep, rPMPD_ANAEN};
+-
+-	u32 iqk_mac_reg[IQK_MAC_REG_NUM] = {
+-					    REG_TXPAUSE, REG_BCN_CTRL,
+-					    REG_BCN_CTRL_1, REG_GPIO_MUXCFG};
++	static const u32 adda_reg[IQK_ADDA_REG_NUM] = {
++		rFPGA0_XCD_SwitchControl, rBlue_Tooth,
++		rRx_Wait_CCA, rTx_CCK_RFON,
++		rTx_CCK_BBON, rTx_OFDM_RFON,
++		rTx_OFDM_BBON, rTx_To_Rx,
++		rTx_To_Tx, rRx_CCK,
++		rRx_OFDM, rRx_Wait_RIFS,
++		rRx_TO_Rx, rStandby,
++		rSleep, rPMPD_ANAEN
++	};
++
++	static const u32 iqk_mac_reg[IQK_MAC_REG_NUM] = {
++		REG_TXPAUSE, REG_BCN_CTRL,
++		REG_BCN_CTRL_1, REG_GPIO_MUXCFG
++	};
+ 
+ 	/* since 92C & 92D have the different define in IQK_BB_REG */
+-	u32 iqk_bb_reg_92c[IQK_BB_REG_NUM] = {
+-					      rOFDM0_TRxPathEnable, rOFDM0_TRMuxPar,
+-					      rFPGA0_XCD_RFInterfaceSW, rConfig_AntA, rConfig_AntB,
+-					      rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
+-					      rFPGA0_XB_RFInterfaceOE, rFPGA0_RFMOD};
++	static const u32 iqk_bb_reg_92c[IQK_BB_REG_NUM] = {
++		rOFDM0_TRxPathEnable, rOFDM0_TRMuxPar,
++		rFPGA0_XCD_RFInterfaceSW, rConfig_AntA, rConfig_AntB,
++		rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
++		rFPGA0_XB_RFInterfaceOE, rFPGA0_RFMOD
++	};
+ 
+ 	u32 retry_count = 9;
+ 
+
+
