@@ -2,126 +2,72 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D052C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB11C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA8A2073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CD42073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387850AbgEXRhQ (ORCPT
+        id S2387899AbgEXRiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 13:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387656AbgEXRhQ (ORCPT
+        Sun, 24 May 2020 13:38:06 -0400
+Received: from smtprelay0221.hostedemail.com ([216.40.44.221]:40222 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387656AbgEXRiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 13:37:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C231C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 10:37:16 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcuYi-0000HP-32; Sun, 24 May 2020 19:37:12 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jcuYh-0002UN-Ml; Sun, 24 May 2020 19:37:11 +0200
-Date:   Sun, 24 May 2020 19:37:11 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] pwm: jz4740: Add support for the JZ4725B
-Message-ID: <20200524173711.ofprgoueyimhkowj@pengutronix.de>
-References: <20200413121445.72996-1-paul@crapouillou.net>
- <20200413121445.72996-3-paul@crapouillou.net>
+        Sun, 24 May 2020 13:38:06 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 5E2D5100E7B40;
+        Sun, 24 May 2020 17:38:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bean88_3a0fbd626d3a
+X-Filterd-Recvd-Size: 1808
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 24 May 2020 17:38:03 +0000 (UTC)
+Message-ID: <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
+Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
+ printk(KERN_DEBUG)
+From:   Joe Perches <joe@perches.com>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Sun, 24 May 2020 10:38:02 -0700
+In-Reply-To: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
+References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200413121445.72996-3-paul@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 02:14:45PM +0200, Paul Cercueil wrote:
-> The PWM hardware in the JZ4725B works the same as in the JZ4740, but has
-> only six channels available.
+On Sun, 2020-05-24 at 23:50 +0900, Tetsuo Handa wrote:
+> syzbot found a NULL pointer dereference bug inside mptcp_recvmsg() due to
+> ssock == NULL, but this bug manifested inside selinux_socket_recvmsg()
+> because pr_debug() was no-op [1].
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     I did not add documentation for the new jz4725b-pwm compatible
->     string on purpose. The reason is that the documentation file
->     for the Timer/Counter Unit (TCU) of Ingenic SoCs will be
->     completely rewritten from .txt to YAML in a separate patchset.
-> 
->  drivers/pwm/pwm-jz4740.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> index f566f9d248d6..bb27934fb6c2 100644
-> --- a/drivers/pwm/pwm-jz4740.c
-> +++ b/drivers/pwm/pwm-jz4740.c
-> @@ -22,6 +22,10 @@
->  
->  #define NUM_PWM 8
->  
-> +struct soc_info {
-> +	unsigned int num_pwms;
-> +};
-> +
->  struct jz4740_pwm_chip {
->  	struct pwm_chip chip;
->  	struct regmap *map;
-> @@ -36,7 +40,7 @@ static bool jz4740_pwm_can_use_chn(struct jz4740_pwm_chip *jz,
->  				   unsigned int channel)
->  {
->  	/* Enable all TCU channels for PWM use by default except channels 0/1 */
-> -	u32 pwm_channels_mask = GENMASK(NUM_PWM - 1, 2);
-> +	u32 pwm_channels_mask = GENMASK(jz->chip.npwm - 1, 2);
->  
->  	device_property_read_u32(jz->chip.dev->parent,
->  				 "ingenic,pwm-channels-mask",
-> @@ -214,6 +218,7 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct jz4740_pwm_chip *jz4740;
-> +	const struct soc_info *info = device_get_match_data(dev);
->  
->  	jz4740 = devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
->  	if (!jz4740)
-> @@ -227,8 +232,8 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
->  
->  	jz4740->chip.dev = dev;
->  	jz4740->chip.ops = &jz4740_pwm_ops;
-> -	jz4740->chip.npwm = NUM_PWM;
->  	jz4740->chip.base = -1;
-> +	jz4740->chip.npwm = info ? info->num_pwms : NUM_PWM;
+>   pr_debug("fallback-read subflow=%p",
+>            mptcp_subflow_ctx(ssock->sk));
+>   copied = sock_recvmsg(ssock, msg, flags);
 
-Can info be actually NULL? I don't think so, so you can just use
-info->num_pwms here and drop the definition of NUM_PWM.
+> Since console loglevel used by syzkaller will not print KERN_DEBUG
+> messages to consoles, always evaluating pr_devel()/pr_debug() messages
+> will not cause too much console output. Thus, let's allow fuzzers to
+> always evaluate pr_devel()/pr_debug() messages.
 
->  	jz4740->chip.of_xlate = of_pwm_xlate_with_flags;
->  	jz4740->chip.of_pwm_n_cells = 3;
->  
+While I think this is rather unnecessary,
+what about dev_dbg/netdev_dbg/netif_dbg et al ?
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
