@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF04AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B82C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956CE20776
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC382076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdA3XEiN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QeeaUABZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388581AbgEXXWU (ORCPT
+        id S2388590AbgEXXgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 19:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
+        Sun, 24 May 2020 19:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388508AbgEXXWT (ORCPT
+        with ESMTP id S2387914AbgEXXgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 19:22:19 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AEAC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:22:19 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id n15so7770545pjt.4
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:22:19 -0700 (PDT)
+        Sun, 24 May 2020 19:36:13 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A90C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:36:13 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bg4so1520272plb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:36:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=1v9i69sL4QICbaidphEj2SUMbixrvb6wzpMA1fDBRz4=;
-        b=qdA3XEiNpc4s3LOJdybF95r2coHrr4EYw1Kd9/E8t+hWRVSr1qrADWhihQgPdIeROt
-         9x4FWqxmQeMd2z5nOEAlFZHgcKPmzGTTxSHkEcDFIPf6klNTuMMYHARstzZR1R0TUq4T
-         HjkbBSLyHsQB6EZx+IyPpA52mpXfOvEKAJ1VRbl2Z5TktoTgLmAXbbwrCxvCNm6KoTqr
-         fRzoOG8WxyaE7OAnXGVNLUrnScDTpsCQ/xVXH6sGVG6t4spU3YnsAmr1vybMZU4rqUGe
-         n7V2F24ZX/HQsgGiaWYXqXfbahkC/fW3GHul63KZ4hnqwjaM1U3SKxTx7ZksGI4SpTWm
-         SrTw==
+        bh=/xSfk8UNIM4h1pIcoF/9EHCGXYkBOmPVW3Mq1rqJ1Bw=;
+        b=QeeaUABZgKIL3kaH31FoNGWufVvWNec0TZ5UsuZOCEnRk8+eS9pjWgzJoSn40kG1/X
+         jcFJsZBiLmNaB6+b303tdFBI8ErFJV3+8eH04UQ09wr6+O2uNq4lMQLFLCDvQlMR32+0
+         RMQRBXbHx2kLpct8xh7/2/J1ysJavNbZXn/J9gcbrShTm+w9Oduh2gZDQR650KYJe8uH
+         PWLitPBXKBd7t0Rvp93AHI1f4k6937DS2jmw8p0LFJzTEmA3wKtitNkgzH9YVclSyrVx
+         diTra4psaw+vbpNgtDYUNQWP8nsVCZN5eqCJMfTCKxZi4fPf16rfpA7EWaP/n8lw4zZG
+         UVkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1v9i69sL4QICbaidphEj2SUMbixrvb6wzpMA1fDBRz4=;
-        b=JXjSVYnp/kPTR6l5nspdVQCVSBsrRpjPg6muzzLtaw4x9zBxuM8VHtpvi4856+vaeT
-         XaWTNdfEKdw7xbPY5brj4o1szzTcinjUjvxR5fONaQtGQWME8rb9hCmq8r9ljLxfXKf0
-         QtVdWRHO7V9CLN3+UbmZwfarEv5ln0+ozBY6fLM524YukWouEWVNKR9tYCaOfWXFwHAa
-         mFy4SFCkwKJkaMw/OEt0YW9zN2iBmg/dD7X4m6LujkVACh6038zY5SZDty1zacUEysWr
-         RjjhzYEII0rQEzFgvzU/YSCvQXeKstKRi7iPQi2EihFMlVK1M5Lesg1perqLKjBWSr6s
-         Owjw==
-X-Gm-Message-State: AOAM530cbcj9ea8iHyNKMLZA/Vvro4Vf6OR5LKEP/jbFTcc9gLzRhXfC
-        X29y/4NoQcjSywAmR8enMfO9QA==
-X-Google-Smtp-Source: ABdhPJwQgIfXysyUDKLKOooM6eLO2jR91+HtP1xRVU2oAmyu5D2Z09yo5jed8mOQc4nCuaxt2vjIbg==
-X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr24655796plr.160.1590362538802;
-        Sun, 24 May 2020 16:22:18 -0700 (PDT)
+        bh=/xSfk8UNIM4h1pIcoF/9EHCGXYkBOmPVW3Mq1rqJ1Bw=;
+        b=gh9h/TzeNWvw6zPZs8Fo0bzFoq5P2k/hVTjDKWzzChrknFeBC6G2+vP+LWa91sgT2w
+         wDDmj6Mebn27TFOScPHZiEXJYLQinlWuPcQwY4pgTXYcqMMPXa74btx4rRs6nOYf9sC4
+         9FK6A0FiK5Sod6+Q8QsTvQBHeyG3OLf7HApecod+I1m+I1pO6XPtAh4hVpwf0k4wO7+u
+         /UVh7mxt6jyn4Bk522CgH9iEF+l0BbwVmllbkIEQ7IITLwuBVej+pIte0t82Z7mfQEe5
+         82zGFNmN6dxxv/LXlQ8J7oayY1iQRO9iEaTn1Q4Wb4coOhTdepDuFuBWqR15BUk9IUCv
+         8tDw==
+X-Gm-Message-State: AOAM531A9bMR1+rhZSiDdvN7zhYOsONjiR7uUdEQ/Ky7UD+RlwmcIlw/
+        KFqTgcQlxGp1smR11yBX35Zopg==
+X-Google-Smtp-Source: ABdhPJwl3z03bzxPrfzpnHzT7q7i/5q9HmT8LeSs/4VODMqNHafKAP74M3UOCJZYTdUgne7W8QlTjQ==
+X-Received: by 2002:a17:90a:64c6:: with SMTP id i6mr16719577pjm.14.1590363372259;
+        Sun, 24 May 2020 16:36:12 -0700 (PDT)
 Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id t20sm11471717pjo.13.2020.05.24.16.22.17
+        by smtp.gmail.com with ESMTPSA id 2sm11652343pfz.39.2020.05.24.16.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 16:22:17 -0700 (PDT)
-Date:   Sun, 24 May 2020 16:22:14 -0700
+        Sun, 24 May 2020 16:36:11 -0700 (PDT)
+Date:   Sun, 24 May 2020 16:36:07 -0700
 From:   Fangrui Song <maskray@google.com>
 To:     Arvind Sankar <nivedita@alum.mit.edu>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -71,142 +71,133 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ard Biesheuvel <ardb@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] x86/boot: Remove runtime relocations from
- head_{32,64}.S
-Message-ID: <20200524232214.i7rfpdzoam6tpt6n@google.com>
+        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] x86/boot: Check that there are no runtime relocations
+Message-ID: <20200524233607.cihnsmxuaqoy7xi4@google.com>
 References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
- <20200524212816.243139-4-nivedita@alum.mit.edu>
+ <20200524212816.243139-5-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200524212816.243139-4-nivedita@alum.mit.edu>
+In-Reply-To: <20200524212816.243139-5-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
 On 2020-05-24, Arvind Sankar wrote:
->The BFD linker generates runtime relocations for z_input_len and
->z_output_len, even though they are absolute symbols.
+>Add a linker script check that there are no runtime relocations, and
+>remove the old one that tries to check via looking for specially-named
+>sections in the object files.
 >
->Work around this by defining two variables input_len and output_len in
->addition to the symbols, and use them via position-independent
->references.
->
->This eliminates the last two runtime relocations in the head code and
->allows us to drop the -z noreloc-overflow flag to the linker.
+>Drop the tests for -fPIE compiler option and -pie linker option, as they
+>are available in all supported gcc and binutils versions (as well as
+>clang and lld).
 >
 >Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 >---
-> arch/x86/boot/compressed/Makefile  |  8 --------
-> arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
-> arch/x86/boot/compressed/head_64.S |  4 ++--
-> arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
-> 4 files changed, 16 insertions(+), 19 deletions(-)
+> arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+> arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++
+> 2 files changed, 14 insertions(+), 25 deletions(-)
 >
 >diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
->index aa9ed814e5fa..d3e882e855ee 100644
+>index d3e882e855ee..679a2b383bfe 100644
 >--- a/arch/x86/boot/compressed/Makefile
 >+++ b/arch/x86/boot/compressed/Makefile
->@@ -49,15 +49,7 @@ UBSAN_SANITIZE :=n
+>@@ -27,7 +27,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+> 	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
+>
+> KBUILD_CFLAGS := -m$(BITS) -O2
+>-KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+>+KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+> KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+> cflags-$(CONFIG_X86_32) := -march=i386
+> cflags-$(CONFIG_X86_64) := -mcmodel=small
+>@@ -49,7 +49,7 @@ UBSAN_SANITIZE :=n
 > KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
 > # Compressed kernel should be built as PIE since it may be loaded at any
 > # address by the bootloader.
->-ifeq ($(CONFIG_X86_32),y)
-> KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
->-else
->-# To build 64-bit compressed kernel as PIE, we disable relocation
->-# overflow check to avoid relocation overflow error with a new linker
->-# command-line option, -z noreloc-overflow.
->-KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
->-	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
->-endif
+>-KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
+>+KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
 > LDFLAGS_vmlinux := -T
 >
 > hostprogs	:= mkpiggy
->diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
->index 66657bb99aae..064e895bad92 100644
->--- a/arch/x86/boot/compressed/head_32.S
->+++ b/arch/x86/boot/compressed/head_32.S
->@@ -193,18 +193,17 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
-> /*
->  * Do the extraction, and jump to the new kernel..
->  */
->-				/* push arguments for extract_kernel: */
->-	pushl	$z_output_len	/* decompressed length, end of relocs */
->+	/* push arguments for extract_kernel: */
+>@@ -84,30 +84,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+> vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
 >
->-	pushl	%ebp		/* output address */
+>-# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+>-# can place it anywhere in memory and it will still run. However, since
+>-# it is executed as-is without any ELF relocation processing performed
+>-# (and has already had all relocation sections stripped from the binary),
+>-# none of the code can use data relocations (e.g. static assignments of
+>-# pointer values), since they will be meaningless at runtime. This check
+>-# will refuse to link the vmlinux if any of these relocations are found.
+>-quiet_cmd_check_data_rel = DATAREL $@
+>-define cmd_check_data_rel
+>-	for obj in $(filter %.o,$^); do \
+>-		$(READELF) -S $$obj | grep -qF .rel.local && { \
+>-			echo "error: $$obj has data relocations!" >&2; \
+>-			exit 1; \
+>-		} || true; \
+>-	done
+>-endef
 >-
->-	pushl	$z_input_len	/* input_len */
->+	pushl	output_len@GOTOFF(%ebx)	/* decompressed length, end of relocs */
->+	pushl	%ebp			/* output address */
->+	pushl	input_len@GOTOFF(%ebx)	/* input_len */
-> 	leal	input_data@GOTOFF(%ebx), %eax
->-	pushl	%eax		/* input_data */
->+	pushl	%eax			/* input_data */
-> 	leal	boot_heap@GOTOFF(%ebx), %eax
->-	pushl	%eax		/* heap area */
->-	pushl	%esi		/* real mode pointer */
->-	call	extract_kernel	/* returns kernel location in %eax */
->+	pushl	%eax			/* heap area */
->+	pushl	%esi			/* real mode pointer */
->+	call	extract_kernel		/* returns kernel location in %eax */
-> 	addl	$24, %esp
+>-# We need to run two commands under "if_changed", so merge them into a
+>-# single invocation.
+>-quiet_cmd_check-and-link-vmlinux = LD      $@
+>-      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+>-
+> $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+>-	$(call if_changed,check-and-link-vmlinux)
+>+	$(call if_changed,ld)
 >
-> /*
->diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
->index f6ba32cd5702..6e4704b6a94e 100644
->--- a/arch/x86/boot/compressed/head_64.S
->+++ b/arch/x86/boot/compressed/head_64.S
->@@ -508,9 +508,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
-> 	movq	%rsi, %rdi		/* real mode address */
-> 	leaq	boot_heap(%rip), %rsi	/* malloc area for uncompression */
-> 	leaq	input_data(%rip), %rdx  /* input_data */
->-	movl	$z_input_len, %ecx	/* input_len */
->+	movl	input_len(%rip), %ecx	/* input_len */
-> 	movq	%rbp, %r8		/* output target address */
->-	movl	$z_output_len, %r9d	/* decompressed length, end of relocs */
->+	movl	output_len(%rip), %r9d	/* decompressed length, end of relocs */
-> 	call	extract_kernel		/* returns kernel location in %rax */
-> 	popq	%rsi
->
->diff --git a/arch/x86/boot/compressed/mkpiggy.c b/arch/x86/boot/compressed/mkpiggy.c
->index 7e01248765b2..52aa56cdbacc 100644
->--- a/arch/x86/boot/compressed/mkpiggy.c
->+++ b/arch/x86/boot/compressed/mkpiggy.c
->@@ -60,6 +60,12 @@ int main(int argc, char *argv[])
-> 	printf(".incbin \"%s\"\n", argv[1]);
-> 	printf("input_data_end:\n");
->
->+	printf(".section \".rodata\",\"a\",@progbits\n");
->+	printf(".globl input_len\n");
->+	printf("input_len:\n\t.long %lu\n", ilen);
->+	printf(".globl output_len\n");
->+	printf("output_len:\n\t.long %lu\n", (unsigned long)olen);
+> OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+> $(obj)/vmlinux.bin: vmlinux FORCE
+>diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+>index d826ab38a8f9..0ac14feacb24 100644
+>--- a/arch/x86/boot/compressed/vmlinux.lds.S
+>+++ b/arch/x86/boot/compressed/vmlinux.lds.S
+>@@ -11,9 +11,15 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
+> #ifdef CONFIG_X86_64
+> OUTPUT_ARCH(i386:x86-64)
+> ENTRY(startup_64)
 >+
-> 	retval = 0;
-> bail:
-> 	if (f)
+>+#define REL .rela
+>+
+> #else
+> OUTPUT_ARCH(i386)
+> ENTRY(startup_32)
+>+
+>+#define REL .rel
+>+
+> #endif
+>
+> SECTIONS
+>@@ -42,6 +48,9 @@ SECTIONS
+> 		*(.rodata.*)
+> 		_erodata = . ;
+> 	}
+>+	REL.dyn : {
+>+		*(REL.*)
+>+	}
+> 	.got : {
+> 		*(.got)
+> 	}
+>@@ -83,3 +92,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+> #else
+> ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+> #endif
+>+
+>+ASSERT(SIZEOF(REL.dyn) == 0, "Unexpected runtime relocations detected!")
 >-- 
 >2.26.2
 >
 
-Probably worth mentioning that this works around GNU ld<2.35
-
-
-This commit fixing https://sourceware.org/bugzilla/show_bug.cgi?id=25754
-also fixed the bug. (Just verified that both 2.24 and 2.34 have the bug. binutils-gdb HEAD (future 2.35) is good.)
-
-% cat a.s
-pushl $z_input_len
-% cat b.s
-.globl z_input_len
-z_input_len = 0xb612
-% gcc -m32 -c a.s b.s
-% ld.bfd -m elf_i386 -pie a.o b.o  # has an incorrect R_386_RELATIVE before binutils 2.35
+`grep -qF .rel.local` from 98f78525371b55ccd1c480207ce10296c72fa340
+may be incorrect.. None of these synthesized dynamic relocation sections is
+called *.rel.local* ...
+(it probably wanted to name .rel.data.rel.ro or .rel.data)
 
 
 Reviewed-by: Fangrui Song <maskray@google.com>
