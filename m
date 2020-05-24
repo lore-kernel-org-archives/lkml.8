@@ -2,87 +2,80 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA5F204EF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E0120885
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbgEXVkS (ORCPT
+        id S2388542AbgEXVxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:40:18 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:17462 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388539AbgEXVkQ (ORCPT
+        Sun, 24 May 2020 17:53:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:56567 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388349AbgEXVxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:40:16 -0400
-X-IronPort-AV: E=Sophos;i="5.73,431,1583161200"; 
-   d="scan'208";a="47678241"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 25 May 2020 06:40:15 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 7B45940E4593;
-        Mon, 25 May 2020 06:40:12 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 8/8] ARM: dts: r8a7742: Add xhci support
-Date:   Sun, 24 May 2020 22:37:57 +0100
-Message-Id: <1590356277-19993-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 24 May 2020 17:53:05 -0400
+Received: by mail-io1-f70.google.com with SMTP id s126so5376446iod.23
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:53:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=W2XSpdpI4imP3oFttp3ea6rQjy1+gsYM/fLbimKy0J8=;
+        b=kHmZk4Z12khc+xl8RDd44oT2jLCxeqljXJdOfz3EMlSqylyz3q2RQ/bEp37oMTxUm1
+         0yTva0OSmu5wW9gqJxV0nhXGM9UkuyTTF1UL2uBwsufFV/av2fF2k7dzc+OKxuSXYrEd
+         YIOEKlBdp1BCBUwuG0KO5GveYMgSu9uzzwKc/srEEryFhoid1STNy0vYQUX/EYoslgTl
+         YD03wkLmL5OwEowwjoiyN2FHMQwfkJn7RLH85gXAzxYUdmGPxmYoMxMLQZUBxk5HDFx6
+         fK5wCwfNCUOuJgVrYaZWsKVibJ0bJ9rpff65TtlJKQnw3pAdZF6rfGzZNXbujr7IB3RF
+         xUBQ==
+X-Gm-Message-State: AOAM533f8pAywbUtEpVBqOtLemEW8Qnvl0wU+VVRqh08gSqMLAf1+Hkd
+        WASVsw93Il35DyY1YgqT9QRqEjkvlAhfaNNWpAov7Q8A+waX
+X-Google-Smtp-Source: ABdhPJxqwdoquD6CD1t/4vURcXUY094C2cwyZVIZOKx/NGCIbF4xF4jKrwBVk0W6TIG38UReDIw9O+Vu9CfgTfvRCzjbz4MkjNyl
+MIME-Version: 1.0
+X-Received: by 2002:a92:885c:: with SMTP id h89mr22924691ild.16.1590357183712;
+ Sun, 24 May 2020 14:53:03 -0700 (PDT)
+Date:   Sun, 24 May 2020 14:53:03 -0700
+In-Reply-To: <000000000000cd404e058c9de28b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000000537605a66be3a8@google.com>
+Subject: Re: WARNING in dlfb_submit_urb/usb_submit_urb
+From:   syzbot <syzbot+53ce4a4246d0fe0fee34@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, balbi@kernel.org, corbet@lwn.net,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        ingrassia@epigenesys.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add xhci support to R8A7742 SoC DT.
+syzbot has bisected this bug to:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7742.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+commit c61769bd4777a922952aed0d042a2572e5bd9b74
+Author: Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu May 7 17:06:57 2020 +0000
 
-diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
-index cbf3d85..3a9c67b 100644
---- a/arch/arm/boot/dts/r8a7742.dtsi
-+++ b/arch/arm/boot/dts/r8a7742.dtsi
-@@ -821,6 +821,19 @@
- 			status = "disabled";
- 		};
- 
-+		xhci: usb@ee000000 {
-+			compatible = "renesas,xhci-r8a7742",
-+				     "renesas,rcar-gen2-xhci";
-+			reg = <0 0xee000000 0 0xc00>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 328>;
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 328>;
-+			phys = <&usb2 1>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		pci0: pci@ee090000 {
- 			compatible = "renesas,pci-r8a7742",
- 				     "renesas,pci-rcar-gen2";
--- 
-2.7.4
+    usb: raw-gadget: support stalling/halting/wedging endpoints
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14add53c100000
+start commit:   051143e1 Merge tag 'apparmor-pr-2020-05-21' of git://git.k..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16add53c100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12add53c100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b3368ce0cc5f5ace
+dashboard link: https://syzkaller.appspot.com/bug?extid=53ce4a4246d0fe0fee34
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15be3ad6100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1559676e100000
+
+Reported-by: syzbot+53ce4a4246d0fe0fee34@syzkaller.appspotmail.com
+Fixes: c61769bd4777 ("usb: raw-gadget: support stalling/halting/wedging endpoints")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
