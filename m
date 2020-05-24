@@ -2,138 +2,85 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DEFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4195420776
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98522207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388373AbgEXV2Y (ORCPT
+        id S2388450AbgEXV2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:28:24 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38515 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388331AbgEXV2V (ORCPT
+        Sun, 24 May 2020 17:28:43 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57740 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388370AbgEXV2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:28:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id i68so12599957qtb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:28:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=k86zNxnaewD/kcJp/CHjCp3w81OEIlc7GLgOACCIBWU=;
-        b=UYvlqrmkiLh7zeUh09xKzOX5e5PCssoSQCBAUbjtBLgiwUkgf2CeO0vjtF/7rHQZKX
-         75feJIh4eoeDznVvL2/rp9M+BpDF96pt4ryAw5BZNNLwgiKWFNFS+QK2xAQiVRBD7yaY
-         pAj9iHyverFpERhmniW8k8C6GEYHBAPn9PR2+5N1D7dHkHa27Uu21/vi1DFGPY3+afKU
-         d+9TJufGbwQPOJp1yGeKUELrR6VXOdViKFqIOfTwBrcdxE++ZyqQE9RHEFCd153IwOjv
-         iVKkI7wbsjlhNEp6kn2MkJOwVTNqky38+gvncreiowRy7X3qzxuOBFIetW+5YYKQ+PHT
-         hV/g==
-X-Gm-Message-State: AOAM533fi3ekaHOJPNfKmLFbWSN5BIVaFz+VXeO8KD5c/3D2UW18w5kp
-        8ZOmLuMDJw3FRD0JXBoCMrk=
-X-Google-Smtp-Source: ABdhPJzH5DLMNj6BE0TuKxsAjqkenLwub28Ddg5REzEs4wguvxqZDziJxizA3cq44Ynh6kqXxdsJ+A==
-X-Received: by 2002:aed:2213:: with SMTP id n19mr25897885qtc.246.1590355698528;
-        Sun, 24 May 2020 14:28:18 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d14sm3665729qkg.25.2020.05.24.14.28.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:28:18 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] x86/boot: Remove runtime relocations from compressed kernel
-Date:   Sun, 24 May 2020 17:28:12 -0400
-Message-Id: <20200524212816.243139-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
-References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+        Sun, 24 May 2020 17:28:38 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 715D61C02AB; Sun, 24 May 2020 23:28:37 +0200 (CEST)
+Date:   Sun, 24 May 2020 23:28:36 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Michal Kubecek <mkubecek@suse.cz>, Marek Vasut <marex@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: signal quality and cable diagnostic
+Message-ID: <20200524212836.GE1192@bug>
+References: <20200511141310.GA2543@pengutronix.de>
+ <20200511145926.GC8503@lion.mk-sys.cz>
+ <20200512064858.GA16536@pengutronix.de>
+ <20200512130418.GF409897@lunn.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512130418.GF409897@lunn.ch>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The compressed kernel currently contains bogus runtime relocations in
-the startup code in head_{32,64}.S, which are generated by the linker,
-but must not actually be processed at runtime.
+On Tue 2020-05-12 15:04:18, Andrew Lunn wrote:
+> > > As for getting / setting the threshold, perhaps ETHTOOL_MSG_LINKINFO_GET
+> > > and ETHTOOL_MSG_LINKINFO_SET. Unless you expect more configurable
+> > > parameters like this in which case we may want to consider adding new
+> > > request type (e.g. link params or link management).
+> > 
+> > Currently in my short term todo are:
+> > - SQI
+> 
+> 
+> > - PHY undervoltage
+> > - PHY overtemerature
+> 
+> Do you only have alarms? Or are current values available for voltage
+> and temperature?
+> 
+> Both of these would fit hwmon. It even has the option to set the alarm
+> thresholds. The advantage of hwmon is that they are then just more
 
-This generates warnings when linking with the BFD linker, and errors
-with LLD, which defaults to erroring on runtime relocations in read-only
-sections. It also requires the -z noreloc-overflow hack for the 64-bit
-kernel, which prevents us from linking it as -pie on an older BFD linker
-(<= 2.26) or on LLD, because the locations that are to be apparently
-relocated are only 32-bits in size and so cannot normally have
-R_X86_64_RELATIVE relocations.
+> sensors. You could even include the temperature sensor into a thermal zone to influence 
+> cooling. There are a couple of PHYs which already do hwmon, so there is code you can 
+> copy.
 
-This series aims to get rid of these relocations. It is based on
-efi/next (efi-changes-for-v5.8), where the latest patches touch the
-head code to eliminate the global offset table.
+Yes, hwmon can do a lot of stuff. OTOH figuring out "what hwmon device corresponds to what
+network device is going to be tricky, and Im not sure if we want utilities like mii-tool to
+start using hwmon interfaces...
 
-The first patch is an independent fix for LLD, to avoid an orphan
-section in arch/x86/boot/setup.elf [0].
-
-The second patch gets rid of almost all the relocations. It uses
-standard PIC addressing technique for 32-bit, i.e. loading a register
-with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
-references to access variables. For 64-bit, there is 32-bit code that
-cannot use RIP-relative addressing, and also cannot use the 32-bit
-method, since GOTOFF references are 64-bit only. This is instead handled
-using a macro to replace a reference like gdt with (gdt-startup_32)
-instead. The assembler will generate a PC32 relocation entry, with
-addend set to (.-startup_32), and these will be replaced with constants
-at link time. This works as long as all the code using such references
-lives in the same section as startup_32, i.e. in .head.text.
-
-The third patch addresses a remaining issue with the BFD linker, which
-insists on generating runtime relocations for absolute symbols. We use
-z_input_len and z_output_len, defined in the generated piggy.S file, as
-symbols whose absolute "addresses" are actually the size of the
-compressed payload and the size of the decompressed kernel image
-respectively. LLD does not generate relocations for these two symbols,
-but the BFD linker does. To get around this, piggy.S is extended to also
-define two u32 variables (in .rodata) with the lengths, and the head
-code is modified to use those instead of the symbol addresses.
-
-An alternative way to handle z_input_len/z_output_len would be to just
-include piggy.S in head_{32,64}.S instead of as a separate object file,
-since the GNU assembler doesn't generate relocations for symbols set to
-constants.
-
-The last patch adds a check in the linker script to ensure that no
-runtime relocations get reintroduced. Since the GOT has been eliminated
-as well, the compressed kernel has no runtime relocations whatsoever any
-more.
-
-[0] https://lore.kernel.org/lkml/20200521152459.558081-1-nivedita@alum.mit.edu/
-
-Arvind Sankar (4):
-  x86/boot: Add .text.startup to setup.ld
-  x86/boot: Remove runtime relocations from .head.text code
-  x86/boot: Remove runtime relocations from head_{32,64}.S
-  x86/boot: Check that there are no runtime relocations
-
- arch/x86/boot/compressed/Makefile      | 36 +---------
- arch/x86/boot/compressed/head_32.S     | 59 +++++++--------
- arch/x86/boot/compressed/head_64.S     | 99 +++++++++++++++-----------
- arch/x86/boot/compressed/mkpiggy.c     |  6 ++
- arch/x86/boot/compressed/vmlinux.lds.S | 11 +++
- arch/x86/boot/setup.ld                 |  2 +-
- 6 files changed, 109 insertions(+), 104 deletions(-)
-
+Best regards,
+									Pavel
 -- 
-2.26.2
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
