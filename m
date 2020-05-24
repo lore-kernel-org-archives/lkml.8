@@ -2,192 +2,201 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA807C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDD72086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nmQu6o8G"
+	by mail.kernel.org (Postfix) with ESMTP id 9E66720787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgEXQar (ORCPT
+        id S2387707AbgEXQay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 12:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgEXQaq (ORCPT
+        Sun, 24 May 2020 12:30:54 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52695 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727899AbgEXQax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 12:30:46 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D8FC05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 09:30:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id l73so3322449pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 09:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JN/e+A9ktyHXM8zsyrn02aJMxhSbMiH8/CW921mNbJc=;
-        b=nmQu6o8G5J+l4W4zBcQp+jsl3Uw+smSVCJtpS5T4yTJA1GGwd8/BAGRhBqMPopGKIO
-         KWVANpynxh85QYUvlV5rO8XjAPqs//u8yPnD1I5y6NTb8H3mCizC8VVC2x33wBncbGZk
-         +35uSLRNn9+PyaGO4oGDCOrdUiKMq86a2LKXF1k7S24lQwLtyoiZyKxu/olMYC8dpv7D
-         VW9av1A11ah7C3/YFl3fo4X6OZK/UacH6xrxHnj6V0bam5MU/qHdAOqdN2yqgwluSqMy
-         sTvxfgXqVT7aUwQXOND45i9ojAn7Qpk8fDNxaZW5dQym4SPC5SFhMKop7cJ8SrmLYhLu
-         TKOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JN/e+A9ktyHXM8zsyrn02aJMxhSbMiH8/CW921mNbJc=;
-        b=f1xtc7ozETwmUM/Z47Lhw42GcJUVVwhCAgWV1panXElxvl8nppvsut9/CX614uMHvN
-         C20+GG8LxFRg+3e8ULHMmdQpbLvusuViWStqFN/AGwvvmzFmMOxpRkFyWdMnDrfLBL7l
-         hR9TtJErQfcXhmcyObInBjErv+ZMPjsH95UIplH+O+vc8GJeeErURnAAZqT9f7cqSTjT
-         RWShmy6hu1VSvTJKgV6VlJQEp93HncyXomcEM6utXSoEUrn1r764Hsdp3MTl7T8vwWoC
-         edbgiAxCZVtjG/pymhyijP6n93S6yJzJNXhsYRY0ighl/p7/o2isatUoJCqpBmZjSIVL
-         SwoA==
-X-Gm-Message-State: AOAM533+5g2OUugeKgXCu8fdtUgCeDLCdDKeP5HiQK1hUY/7PZi6S4GJ
-        RI/+Coo6SUBA6Tx/OHhILwfXptr0S0SSDw==
-X-Google-Smtp-Source: ABdhPJyAnCWSpBZuHzIMhJn2QD1jU6hTg5Vw1EN325mx9Y5SVQek+j7ZmlgXjm+POf7NuknYCtKFwg==
-X-Received: by 2002:a17:90a:890b:: with SMTP id u11mr5692496pjn.233.1590337844549;
-        Sun, 24 May 2020 09:30:44 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:8568:4ec4:ebd3:32d1? ([2605:e000:100e:8c61:8568:4ec4:ebd3:32d1])
-        by smtp.gmail.com with ESMTPSA id go1sm10608240pjb.26.2020.05.24.09.30.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 May 2020 09:30:43 -0700 (PDT)
-Subject: Re: [PATCH 05/12] mm: support async buffered reads in
- generic_file_buffered_read()
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200523185755.8494-1-axboe@kernel.dk>
- <20200523185755.8494-6-axboe@kernel.dk>
- <264614fc4fa08df2b0899da1cd38bb07150cd7f3.camel@hammerspace.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2fa7104a-ea85-55f2-692c-514eb3b88a88@kernel.dk>
-Date:   Sun, 24 May 2020 10:30:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 24 May 2020 12:30:53 -0400
+Received: from localhost.localdomain (d28-23-45-10.dim.wideopenwest.com [23.28.10.45])
+        (authenticated bits=0)
+        (User authenticated as jaytlang@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 04OGSl7C011682
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sun, 24 May 2020 12:28:57 -0400
+From:   Jay Lang <jaytlang@mit.edu>
+Cc:     jaytlang@mit.edu, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Christian Brauner <christian@brauner.io>,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        yu kuai <yukuai3@huawei.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/ioperm: fix a memory leak bug
+Date:   Sun, 24 May 2020 12:27:39 -0400
+Message-Id: <20200524162742.253727-1-jaytlang@mit.edu>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <264614fc4fa08df2b0899da1cd38bb07150cd7f3.camel@hammerspace.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/20 8:05 AM, Trond Myklebust wrote:
-> On Sat, 2020-05-23 at 12:57 -0600, Jens Axboe wrote:
->> Use the async page locking infrastructure, if IOCB_WAITQ is set in
->> the
->> passed in iocb. The caller must expect an -EIOCBQUEUED return value,
->> which means that IO is started but not done yet. This is similar to
->> how
->> O_DIRECT signals the same operation. Once the callback is received by
->> the caller for IO completion, the caller must retry the operation.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->> ---
->>  mm/filemap.c | 33 ++++++++++++++++++++++++++-------
->>  1 file changed, 26 insertions(+), 7 deletions(-)
->>
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index c746541b1d49..a3b86c9acdc8 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -1219,6 +1219,14 @@ static int __wait_on_page_locked_async(struct
->> page *page,
->>  	return ret;
->>  }
->>  
->> +static int wait_on_page_locked_async(struct page *page,
->> +				     struct wait_page_queue *wait)
->> +{
->> +	if (!PageLocked(page))
->> +		return 0;
->> +	return __wait_on_page_locked_async(compound_head(page), wait,
->> false);
->> +}
->> +
->>  /**
->>   * put_and_wait_on_page_locked - Drop a reference and wait for it to
->> be unlocked
->>   * @page: The page to wait for.
->> @@ -2058,17 +2066,25 @@ static ssize_t
->> generic_file_buffered_read(struct kiocb *iocb,
->>  					index, last_index - index);
->>  		}
->>  		if (!PageUptodate(page)) {
->> -			if (iocb->ki_flags & IOCB_NOWAIT) {
->> -				put_page(page);
->> -				goto would_block;
->> -			}
->> -
->>  			/*
->>  			 * See comment in do_read_cache_page on why
->>  			 * wait_on_page_locked is used to avoid
->> unnecessarily
->>  			 * serialisations and why it's safe.
->>  			 */
->> -			error = wait_on_page_locked_killable(page);
->> +			if (iocb->ki_flags & IOCB_WAITQ) {
->> +				if (written) {
->> +					put_page(page);
->> +					goto out;
->> +				}
->> +				error = wait_on_page_locked_async(page,
->> +								iocb-
->>> private);
-> 
-> If it is being used in 'generic_file_buffered_read()' as storage for a
-> wait queue, then it is hard to consider this a 'private' field.
+In the copy_process() routine called by _do_fork(), failure to allocate
+a PID (or further along in the function) will trigger an invocation to
+exit_thread(). This is done to clean up from an earlier call to
+copy_thread_tls(). Naturally, the child task is passed into exit_thread(),
+however during the process, io_bitmap_exit() nullifies the parent's
+io_bitmap rather than the child's.
 
-private isn't the prettiest, and in fact this one in particular is a bit
-of a mess. It's not clear if it's caller or callee owned. It's generally
-not used, outside of the old usb gadget code, iomap O_DIRECT, and ocfs2.
-With FMODE_BUF_RASYNC, the fs obviously can't set it if it uses
-->private for buffered IO.
+As copy_thread_tls() has been called ahead of the failure, the reference
+count on the calling thread's io_bitmap is incremented as we would expect.
+However, io_bitmap_exit() doesn't accept any arguments, and thus assumes
+it should trash the current thread's io_bitmap reference rather than the
+child's. This is pretty sneaky in practice, because in all instances but
+this one, exit_thread() is called with respect to the current task and
+everything works out.
 
-> Perhaps either rename and add type checking, or else add a separate
-> field altogether to struct kiocb?
+A determined attacker can issue an appropriate ioctl (i.e. KDENABIO) to
+get a bitmap allocated, and force a clone3() syscall to fail by passing
+in a zeroed clone_args structure. The kernel handles the erroneous struct
+and the buggy code path is followed, and even though the parent's reference
+to the io_bitmap is trashed, the child still holds a reference and thus
+the structure will never be freed.
 
-I'd hate to add a new field and increase the size of the kiocb... One
-alternative is to do:
+Fix this by tweaking io_bitmap_exit() and its subroutines to accept a
+task_struct argument which to operate on. This may not be the most elegant
+solution, but it mitigates the trigger described above on an x86_64 kernel.
 
-	union {
-		void *private;
-		struct wait_page_queue *ki_waitq;
-	};
+Signed-off-by: Jay Lang <jaytlang@mit.edu>
+---
+ arch/x86/include/asm/io_bitmap.h |  4 ++--
+ arch/x86/kernel/ioport.c         | 22 +++++++++++-----------
+ arch/x86/kernel/process.c        |  4 ++--
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-and still use IOCB_WAITQ to say that ->ki_waitq is valid.
-
-There's also 4 bytes of padding in the kiocb struct. And some fields are
-only used for O_DIRECT as well, eg ->ki_cookie which is just used for
-polled O_DIRECT. So we could also do:
-
-	union {
-		unsigned int ki_cookie;
-		struct wait_page_queue *ki_waitq;
-	};
-
-and still not grow the kiocb. How about we go with this approach, and
-also add:
-
-	if (kiocb->ki_flags & IOCB_HIPRI)
-		return -EOPNOTSUPP;
-
-to kiocb_wait_page_queue_init() to make sure that this combination isn't
-valid?
-
+diff --git a/arch/x86/include/asm/io_bitmap.h b/arch/x86/include/asm/io_bitmap.h
+index 07344d82e88e..ac1a99ffbd8d 100644
+--- a/arch/x86/include/asm/io_bitmap.h
++++ b/arch/x86/include/asm/io_bitmap.h
+@@ -17,7 +17,7 @@ struct task_struct;
+ 
+ #ifdef CONFIG_X86_IOPL_IOPERM
+ void io_bitmap_share(struct task_struct *tsk);
+-void io_bitmap_exit(void);
++void io_bitmap_exit(struct task_struct *tsk);
+ 
+ void native_tss_update_io_bitmap(void);
+ 
+@@ -29,7 +29,7 @@ void native_tss_update_io_bitmap(void);
+ 
+ #else
+ static inline void io_bitmap_share(struct task_struct *tsk) { }
+-static inline void io_bitmap_exit(void) { }
++static inline void io_bitmap_exit(struct task_struct *tsk) { }
+ static inline void tss_update_io_bitmap(void) { }
+ #endif
+ 
+diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
+index a53e7b4a7419..e2fab3ceb09f 100644
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -33,15 +33,15 @@ void io_bitmap_share(struct task_struct *tsk)
+ 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ }
+ 
+-static void task_update_io_bitmap(void)
++static void task_update_io_bitmap(struct task_struct *tsk)
+ {
+-	struct thread_struct *t = &current->thread;
++	struct thread_struct *t = &tsk->thread;
+ 
+ 	if (t->iopl_emul == 3 || t->io_bitmap) {
+ 		/* TSS update is handled on exit to user space */
+-		set_thread_flag(TIF_IO_BITMAP);
++		set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ 	} else {
+-		clear_thread_flag(TIF_IO_BITMAP);
++		clear_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ 		/* Invalidate TSS */
+ 		preempt_disable();
+ 		tss_update_io_bitmap();
+@@ -49,12 +49,12 @@ static void task_update_io_bitmap(void)
+ 	}
+ }
+ 
+-void io_bitmap_exit(void)
++void io_bitmap_exit(struct task_struct *tsk)
+ {
+-	struct io_bitmap *iobm = current->thread.io_bitmap;
++	struct io_bitmap *iobm = tsk->thread.io_bitmap;
+ 
+-	current->thread.io_bitmap = NULL;
+-	task_update_io_bitmap();
++	tsk->thread.io_bitmap = NULL;
++	task_update_io_bitmap(tsk);
+ 	if (iobm && refcount_dec_and_test(&iobm->refcnt))
+ 		kfree(iobm);
+ }
+@@ -102,7 +102,7 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
+ 		if (!iobm)
+ 			return -ENOMEM;
+ 		refcount_set(&iobm->refcnt, 1);
+-		io_bitmap_exit();
++		io_bitmap_exit(current);
+ 	}
+ 
+ 	/*
+@@ -134,7 +134,7 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
+ 	}
+ 	/* All permissions dropped? */
+ 	if (max_long == UINT_MAX) {
+-		io_bitmap_exit();
++		io_bitmap_exit(current);
+ 		return 0;
+ 	}
+ 
+@@ -192,7 +192,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
+ 	}
+ 
+ 	t->iopl_emul = level;
+-	task_update_io_bitmap();
++	task_update_io_bitmap(current);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 9da70b279dad..35638f1c5791 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -96,7 +96,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ }
+ 
+ /*
+- * Free current thread data structures etc..
++ * Free thread data structures etc..
+  */
+ void exit_thread(struct task_struct *tsk)
+ {
+@@ -104,7 +104,7 @@ void exit_thread(struct task_struct *tsk)
+ 	struct fpu *fpu = &t->fpu;
+ 
+ 	if (test_thread_flag(TIF_IO_BITMAP))
+-		io_bitmap_exit();
++		io_bitmap_exit(tsk);
+ 
+ 	free_vm86(t);
+ 
 -- 
-Jens Axboe
+2.25.1
 
