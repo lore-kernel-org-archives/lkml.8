@@ -2,166 +2,132 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A42BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD0F20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590332931;
-	bh=sv3AVRYZJId4i+K69aX96oMRg3yxDra/DQfLcz+fyQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RUPtxDzrfC2zLaf+3xd/yxOhWDyScBVfVO85rDA6H8QEwjNZWHiA4eti3xD2skvuE
-	 ubdMQf7UAwUIpI5/NQQ2lPF/quSrEO3yjQ9BFG7K6B4jghrh+/1RaFsXbGWnKdwMB1
-	 VfEDzaD+Sg6D1aXktts6zo58eqlvC3cpBUEakcRw=
+	by mail.kernel.org (Postfix) with ESMTP id 232F1207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbgEXPIu (ORCPT
+        id S1729977AbgEXPIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
+        Sun, 24 May 2020 11:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729858AbgEXPIp (ORCPT
+        with ESMTP id S1728420AbgEXPIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:08:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871E4C05BD43;
-        Sun, 24 May 2020 08:08:45 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v19so7449576wmj.0;
-        Sun, 24 May 2020 08:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o1gyVEfsYNacJFc5KocHHb7hmm4985MqiuLspiDPh0s=;
-        b=Ri5CCc6DhJf25jmxXNkWbUeANRV+cYc0dpgPD020+PpGe7765dfSIeLqgDXc7qV9mp
-         tCgrzkdG8YUhWHsytk1Fknpwheg+pqP2H3B6PJuQGyzxEVchyljUfHWFM+OIpiqtbNAP
-         XVOj3Yz/acVILpmjp6wZ7HzDTJPLXVePhkUiDSf+N7x3TodV1VG5+Z1nhTA2YxhkRai8
-         aTEvOtVdUo7ZRGYdU/o753fDzETL43RiFGUDvUpk1ThMGeIWSgu7RyaVbt/39KnGzdls
-         SmkfRHwgBOOtnucb5sSVZEMk9XXzT6rSc8Pw2tA5O/3UgOaCFGm0Zu2ATIuyNqM3yKhu
-         xjsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=o1gyVEfsYNacJFc5KocHHb7hmm4985MqiuLspiDPh0s=;
-        b=A+mhicO1APtr6fuwcPC4XPCt5YMLGVvi2opXaznBOAEJB3yeqA/XrulkledVz3BByf
-         vNXf1wGxmF7hWHq+0KUsN8kYCO3H060JZcmC/rPe9NmMVAcKakV6/cXv2mLB345udkW1
-         CL0Vp74XO2cV9wEl7j9PjttLQc4Xsd4uft27BYBXXyu52rh9nFYOWGLffrI7yX41T9v8
-         o56T1JvSFCpwbV734AQNaaKJLbaGMhFv3DX+oUBB39v5+DvcTJ55SsgywJApHnhkmbJi
-         +Blc+cF38jRsmcYy+fWlhPbmqI9GbRMrkPnmW8vVQLUhKDun2304oACx3wKAHrKWSXIA
-         Mm8g==
-X-Gm-Message-State: AOAM533z/Y3x/vETzvOoumzH2jkPAA5nCHQhwDQ7AjtesXfqTRdzS7Mu
-        jTNkPC3sXiKAe9hB+ZbPUCRnQ5Uz
-X-Google-Smtp-Source: ABdhPJzqZTqtIm/t+i0lCy81mdQW9Cf+Iadwb/YZe+oSsON2T+w21CgdZdKvH2v5Lu4cSjjBMyqZsw==
-X-Received: by 2002:a1c:22d7:: with SMTP id i206mr827300wmi.186.1590332924206;
-        Sun, 24 May 2020 08:08:44 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id g10sm15050075wrx.4.2020.05.24.08.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 08:08:43 -0700 (PDT)
-Date:   Sun, 24 May 2020 17:08:41 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH v2 1/3] x86/boot/compressed: move .got.plt entries out of
- the .got section
-Message-ID: <20200524150841.GA11617@gmail.com>
-References: <20200523120021.34996-1-ardb@kernel.org>
- <20200523120021.34996-2-ardb@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDF2C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 08:08:45 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jcsF1-00046M-94; Sun, 24 May 2020 17:08:43 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 89F1C100D0B;
+        Sun, 24 May 2020 17:08:42 +0200 (CEST)
+Date:   Sun, 24 May 2020 15:08:03 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] x86/urgent for v5.7-rc7
+References: <159033288117.21635.13199705716119914103.tglx@nanos.tec.linutronix.de>
+Message-ID: <159033288358.21635.2357843074773527660.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <20200523120021.34996-2-ardb@kernel.org>
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+please pull the latest x86/urgent branch from:
 
-> The .got.plt section contains the part of the GOT which is used by PLT
-> entries, and which gets updated lazily by the dynamic loader when
-> function calls are dispatched through those PLT entries.
-> 
-> On fully linked binaries such as the kernel proper or the decompressor,
-> this never happens, and so in practice, the .got.plt section consists
-> only of the first 3 magic entries that are meant to point at the _DYNAMIC
-> section and at the fixup routine in the loader. However, since we don't
-> use a dynamic loader, those entries are never populated or used.
-> 
-> This means that treating those entries like ordinary GOT entries, and
-> updating their values based on the actual placement of the executable in
-> memory is completely pointless, and we can just ignore the .got.plt
-> section entirely, provided that it has no additional entries beyond
-> the first 3 ones.
-> 
-> So add an assertion in the linker script to ensure that this assumption
-> holds, and move the contents out of the [_got, _egot) memory range that
-> is modified by the GOT fixup routines.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/x86/boot/compressed/vmlinux.lds.S | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index 0dc5c2b9614b..ce3fdfb93b57 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -44,10 +44,13 @@ SECTIONS
->  	}
->  	.got : {
->  		_got = .;
-> -		KEEP(*(.got.plt))
->  		KEEP(*(.got))
->  		_egot = .;
->  	}
-> +	.got.plt : {
-> +		KEEP(*(.got.plt))
-> +	}
-> +
->  	.data :	{
->  		_data = . ;
->  		*(.data)
-> @@ -75,3 +78,11 @@ SECTIONS
->  	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
->  	_end = .;
->  }
-> +
-> +#ifdef CONFIG_X86_64
-> +ASSERT (SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18,
-> +	"Unexpected GOT/PLT entries detected!")
-> +#else
-> +ASSERT (SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc,
-> +	"Unexpected GOT/PLT entries detected!")
-> +#endif
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-05-24
 
-Cool debugging check!
+up to:  187b96db5ca7: x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
 
-Minor consistent-style nit:
 
-s/ASSERT (
- /ASSERT(
+Two fixes for x86:
 
-Optional: maybe even merge these on a single line, as a special exception to the col80 rule?
+  - Unbreak stack dumps for inactive tasks by interpreting the special
+    first frame left by __switch_to_asm() correctly. The recent change not
+    to skip the first frame so ORC and frame unwinder behave in the same
+    way caused all entries to be unreliable, i.e. prepended with '?'.
 
- #ifdef CONFIG_X86_64
- ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
- #else
- ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) ==  0xc, "Unexpected GOT/PLT entries detected!")
- #endif
-
-But fine either way.
+  - Use cpumask_available() instead of an implicit NULL check of a
+    cpumask_var_t in mmio trace to prevent a Clang build warning
 
 Thanks,
 
-	Ingo
+	tglx
+
+------------------>
+Josh Poimboeuf (1):
+      x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
+
+Nathan Chancellor (1):
+      x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
+
+
+ arch/x86/kernel/unwind_orc.c | 7 +++++++
+ arch/x86/mm/mmio-mod.c       | 4 ++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index fa79e4227d3d..7f969b2d240f 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -320,12 +320,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_address);
+ 
+ unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
+ {
++	struct task_struct *task = state->task;
++
+ 	if (unwind_done(state))
+ 		return NULL;
+ 
+ 	if (state->regs)
+ 		return &state->regs->ip;
+ 
++	if (task != current && state->sp == task->thread.sp) {
++		struct inactive_task_frame *frame = (void *)task->thread.sp;
++		return &frame->ret_addr;
++	}
++
+ 	if (state->sp)
+ 		return (unsigned long *)state->sp - 1;
+ 
+diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+index 109325d77b3e..43fd19b3f118 100644
+--- a/arch/x86/mm/mmio-mod.c
++++ b/arch/x86/mm/mmio-mod.c
+@@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
+ 	int cpu;
+ 	int err;
+ 
+-	if (downed_cpus == NULL &&
++	if (!cpumask_available(downed_cpus) &&
+ 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
+ 		pr_notice("Failed to allocate mask\n");
+ 		goto out;
+@@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
+ 	int cpu;
+ 	int err;
+ 
+-	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
++	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
+ 		return;
+ 	pr_notice("Re-enabling CPUs...\n");
+ 	for_each_cpu(cpu, downed_cpus) {
+
