@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E72C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9A8207CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4EB207CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335010;
-	bh=KnZ2/QwltKFQM/nedfV0aMwFJJvT8wHZu2vE3JfcFag=;
+	s=default; t=1590335012;
+	bh=gBhhirDjZolfGLxJe0bPvfaVCL75euD45ekyEMYKB1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CydQ60JUqU2iXTM/iMJMYSzXI6BOwPXtoln6I2MfyBmqwQ23qdxcJ07ekwYPGWgrS
-	 dsV6kZgaCKVTLtigKT5VBEjrovEBEIJCYI329/0or2J+4aS6W/mRf6xkrX8dDQmeU7
-	 7OhyRSOLT0vjlFe4YXkNQR4zANzb5x2Of5MdwXxM=
+	b=PKv3vuv00Z70qvBVI4qPMAQWC0NJgurOdrMVEuXgT1IP739ddHDN8v6UfhitXWd3H
+	 Rbxfcn4x4ZMHCcApXzMJL3i2wSnCpiq5n8VaKVtqxSKZaDGmSZ9fFMjEuyV1Djm2Rt
+	 7cfYaTACnBvQZQcWm2OKUUNV+SmSZsOq1RjsOTQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgEXPn3 (ORCPT
+        id S1729205AbgEXPnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:43:29 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19694 "EHLO
+        Sun, 24 May 2020 11:43:31 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19691 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgEXPnX (ORCPT
+        with ESMTP id S1728008AbgEXPnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:43:23 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcVE017561;
-        Mon, 25 May 2020 00:42:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcVE017561
+        by conuserg-09.nifty.com with ESMTP id 04OFgcUs017561;
+        Mon, 25 May 2020 00:42:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUs017561
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334974;
-        bh=G869loiYVAwAkrK3b+xUggAjxNzU2jDd+CxSJ9Mmwlo=;
+        s=dec2015msa; t=1590334963;
+        bh=2i0oB1lRvNAyuaOZEymlGqm+mH33LQP16aGL75EsgEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIzMju7p45f/YK9ERCHG9QeZcnuhStUm/9X4Cs2KsyNAIIR7yebG0FhXhHYejv156
-         ITyNboW/upHn5IWwK2ZtzZbzywm3WGln0xvgDBbGm3pvkuun4u8C6kceFFK+goT3I8
-         VCMEea74hdIv4NJAztoUFiflb1Qg2BwYNgF7H4nFB1tClXlqTO20adanvuOwyFohGv
-         ttDqlV+aaEs6a4WoV77ZzhGO5c60hhJ92GknBxf9ZeK632hvAVSzGYP4xKqtFZy6FD
-         w49smWiSNrOw1BIjFAoTaVqG5rJw1tY46cpsZ+lx5bzLqMrSG522XvL7t8c8XdQOUp
-         oa5ZZb/TFJkdg==
+        b=P/OqifHSQRAAXPxFDd3sqBv8MksqEtPJ/UKQ5fUd+nha9AhuSR/am0g1OmKhBgcGO
+         pO4lLzJjDFsDzMMBXDovn7UUUDkyuIVqa8eAwedMWs2VxH99Ar6Vim8IvOGhW91brf
+         Nqanszpkb76vuVqst4/FqkVKJ2uv0lMeSahuxCuNoYQQxvvAlrNTCRpB/3ubFGN41V
+         ydrKeOhqh5WRqZj1iRmFpwNjiKoovLzEeUf5iVaWk3V0nx2lwOkC5hCM4bc7Pk0WWZ
+         SuSBG5S7lWZVj1qYBr8VKCgAM0G+ciCKmeq6wstKRJ2oMprf2BaDrGZZuEixPvgMaN
+         C2sEnaFqILZTw==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 29/29] modpost: change elf_info->size to size_t
-Date:   Mon, 25 May 2020 00:42:35 +0900
-Message-Id: <20200524154235.380482-30-masahiroy@kernel.org>
+Subject: [PATCH v2 09/29] kbuild: disallow multi-word in M= or KBUILD_EXTMOD
+Date:   Mon, 25 May 2020 00:42:15 +0900
+Message-Id: <20200524154235.380482-10-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
 References: <20200524154235.380482-1-masahiroy@kernel.org>
@@ -61,64 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Align with the mmap / munmap APIs.
+$(firstword ...) in scripts/Makefile.modpost was added by commit
+3f3fd3c05585 ("[PATCH] kbuild: allow multi-word $M in Makefile.modpost")
+to build multiple external module directories.
+
+It was a solution to resolve symbol dependencies when an external
+module depends on another external module.
+
+Commit 0d96fb20b7ed ("kbuild: Add new Kbuild variable
+KBUILD_EXTRA_SYMBOLS") introduced another solution by passing symbol
+info via KBUILD_EXTRA_SYMBOLS, then broke the multi-word M= support.
+
+  include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
+               $(KBUILD_EXTMOD)/Kbuild, $(KBUILD_EXTMOD)/Makefile)
+
+... does not work if KBUILD_EXTMOD contains multiple words.
+
+This feature has been broken for more than a decade. Remove the
+bitrotten code, and stop parsing if M or KBUILD_EXTMOD contains
+multiple words.
+
+As Documentation/kbuild/modules.rst explains, if your module depends
+on another one, there are two solutions:
+  - add a common top-level Kbuild file
+  - use KBUILD_EXTRA_SYMBOLS
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
-Changes in v2: None
+Changes in v2:
+  - Add more commit log
 
- scripts/mod/modpost.c | 9 ++++-----
- scripts/mod/modpost.h | 2 +-
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ Makefile                 | 3 +++
+ scripts/Makefile.modpost | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 527f71b662b0..a0e44991a525 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -439,7 +439,7 @@ static void sym_set_crc(const char *name, unsigned int crc)
- 	s->crc_valid = 1;
- }
+diff --git a/Makefile b/Makefile
+index 72eb55a36545..48a2dfaf3bf3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -218,6 +218,9 @@ ifeq ("$(origin M)", "command line")
+   KBUILD_EXTMOD := $(M)
+ endif
  
--static void *grab_file(const char *filename, unsigned long *size)
-+static void *grab_file(const char *filename, size_t *size)
- {
- 	struct stat st;
- 	void *map = MAP_FAILED;
-@@ -461,7 +461,7 @@ static void *grab_file(const char *filename, unsigned long *size)
- 	return map;
- }
++$(if $(word 2, $(KBUILD_EXTMOD)), \
++	$(error building multiple external modules is not supported))
++
+ export KBUILD_CHECKSRC KBUILD_EXTMOD
  
--static void release_file(void *file, unsigned long size)
-+static void release_file(void *file, size_t size)
- {
- 	munmap(file, size);
- }
-@@ -517,9 +517,8 @@ static int parse_elf(struct elf_info *info, const char *filename)
+ extmod-prefix = $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 957eed6a17a5..b79bf0e30d32 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -44,7 +44,7 @@ include include/config/auto.conf
+ include scripts/Kbuild.include
  
- 	/* Check if file offset is correct */
- 	if (hdr->e_shoff > info->size) {
--		fatal("section header offset=%lu in file '%s' is bigger than "
--		      "filesize=%lu\n", (unsigned long)hdr->e_shoff,
--		      filename, info->size);
-+		fatal("section header offset=%lu in file '%s' is bigger than filesize=%zu\n",
-+		      (unsigned long)hdr->e_shoff, filename, info->size);
- 		return 0;
- 	}
+ kernelsymfile := $(objtree)/Module.symvers
+-modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
++modulesymfile := $(KBUILD_EXTMOD)/Module.symvers
  
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 1df87d204c9a..efb74dba19e2 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -133,7 +133,7 @@ struct module {
- };
- 
- struct elf_info {
--	unsigned long size;
-+	size_t size;
- 	Elf_Ehdr     *hdr;
- 	Elf_Shdr     *sechdrs;
- 	Elf_Sym      *symtab_start;
+ MODPOST = scripts/mod/modpost								\
+ 	$(if $(CONFIG_MODVERSIONS),-m)							\
 -- 
 2.25.1
 
