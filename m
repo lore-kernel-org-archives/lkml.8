@@ -2,163 +2,101 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01212C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F303720776
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590360201;
-	bh=biWfr3pQnS6POQVbnqskwDSx4Ghz4Z+wO10jfwRineU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s4AsSy0y/kdF+1hzyrlk2Qu0Iacxoy42vsQHxsZAhCjA+yM4ZjBGESVBLpU5jZYzY
-	 PS16TzRHCNBjmAZfyYg5lblvze4fjhoawroXwb1ViWSKzTh9CUD0EIlIO7w31a3dpx
-	 JPGsYWkQeN5LMhOXWl9BWpxGtnqVm9uPAr2GDqoA=
+	by mail.kernel.org (Postfix) with ESMTP id D50D220776
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xecVH8CH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388673AbgEXWnT convert rfc822-to-8bit (ORCPT
+        id S2388622AbgEXWnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 18:43:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42260 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388627AbgEXWnG (ORCPT
+        Sun, 24 May 2020 18:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388599AbgEXWm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 18:43:06 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106--yIlddMdOfGwQJCHvCqA6Q-1; Sun, 24 May 2020 18:42:59 -0400
-X-MC-Unique: -yIlddMdOfGwQJCHvCqA6Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8D62460;
-        Sun, 24 May 2020 22:42:57 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.192.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 702F05D788;
-        Sun, 24 May 2020 22:42:55 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 11/14] perf tools: Factor out prepare_metric function
-Date:   Mon, 25 May 2020 00:42:16 +0200
-Message-Id: <20200524224219.234847-12-jolsa@kernel.org>
-In-Reply-To: <20200524224219.234847-1-jolsa@kernel.org>
-References: <20200524224219.234847-1-jolsa@kernel.org>
+        Sun, 24 May 2020 18:42:58 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94929C061A0E;
+        Sun, 24 May 2020 15:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/LrcVT1btKqn93FHBR9FP0SUTFOHTkhJS9hiLmevHSo=; b=xecVH8CHbE83mzbEnf8mS+FMY
+        U4ieHHS01dJCZ4BuTA+QeCjdyjeOIlRgKaIX1Yx7C27ddnq741lWEIcZlX1GRqdfJB0pKlOxwUrx7
+        hLljnnD4Rt8oUazx0i/DcwQ6u9/+AytPla4NiDP7e2fxtlL/A3fREie/+cRtMgEO+oCG7gCnnBUfV
+        J3XUsAhvc5qkX5FqeiAiiEc55DsHF5NOa3lUxNBWCL/OcLTlgLl2iz/xvfo4djgvHGcVZEr0/E0+F
+        DzQsSthg8WFKYSAI5Xr4BUg0vtE1PikXo19roLmLfUe8qE23leXMDtXO4rWvb2Et4zIDHLdzC+yUb
+        LfYC6+bTg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36528)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jczK4-0003I2-Cx; Sun, 24 May 2020 23:42:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jczJw-0003ha-1W; Sun, 24 May 2020 23:42:16 +0100
+Date:   Sun, 24 May 2020 23:42:16 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Christian Herber <christian.herber@nxp.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        Marek Vasut <marex@denx.de>
+Subject: Re: signal quality and cable diagnostic
+Message-ID: <20200524224215.GE1551@shell.armlinux.org.uk>
+References: <AM0PR04MB7041E1F0913A90F40DFB31A386BC0@AM0PR04MB7041.eurprd04.prod.outlook.com>
+ <20200524212757.GC1192@bug>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524212757.GC1192@bug>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factoring out prepare_metric functio so it can
-be used in test interface coming in following
-changes.
+On Sun, May 24, 2020 at 11:27:57PM +0200, Pavel Machek wrote:
+> > > The SNR seems to be most universal value, when it comes to comparing
+> > > different situations (different links and different PHYs). The
+> > > resolution of BER is not that detailed, for the NXP PHY is says only
+> > > "BER below 1e-10" or not.
+> > 
+> > The point I was trying to make is that SQI is intentionally called SQI and NOT SNR, because it is not a measure for SNR. The standard only suggest a mapping of SNR to SQI, but vendors do not need to comply to that or report that. The only mandatory requirement is linking to BER. BER is also what would be required by a user, as this is the metric that determines what happens to your traffic, not the SNR.
+> > 
+> > So when it comes to KAPI parameters, I see the following options
+> > - SQI only
+> > - SQI + plus indication of SQI level at which BER<10^-10 (this is the only required and standardized information)
+> > - SQI + BER range (best for users, but requires input from the silicon vendors)
+> 
+> Last option looks best to me... and it will mean that hopefully silicon vendors standartize
+> something in future.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/stat-shadow.c | 53 ++++++++++++++++++++++-------------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+It already has been for > 1G PHYs, but whether they implement it is
+another question altogether.  It's a 22-bit limiting counter in the
+PCS.  There's also indications of "high BER".
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index a7c13a88ecb9..27be7ce2fff4 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -730,25 +730,16 @@ static void print_smi_cost(struct perf_stat_config *config,
- 	out->print_metric(config, out->ctx, NULL, "%4.0f", "SMI#", smi_num);
- }
- 
--static void generic_metric(struct perf_stat_config *config,
--			   const char *metric_expr,
--			   struct evsel **metric_events,
--			   char *name,
--			   const char *metric_name,
--			   const char *metric_unit,
--			   int runtime,
--			   int cpu,
--			   struct perf_stat_output_ctx *out,
--			   struct runtime_stat *st)
-+static int prepare_metric(struct evsel **metric_events,
-+			  struct expr_parse_ctx *pctx,
-+			  int cpu,
-+			  struct runtime_stat *st)
- {
--	print_metric_t print_metric = out->print_metric;
--	struct expr_parse_ctx pctx;
--	double ratio, scale;
--	int i;
--	void *ctxp = out->ctx;
-+	double scale;
- 	char *n, *pn;
-+	int i;
- 
--	expr__ctx_init(&pctx);
-+	expr__ctx_init(pctx);
- 	for (i = 0; metric_events[i]; i++) {
- 		struct saved_value *v;
- 		struct stats *stats;
-@@ -771,7 +762,7 @@ static void generic_metric(struct perf_stat_config *config,
- 
- 		n = strdup(metric_events[i]->name);
- 		if (!n)
--			return;
-+			return -ENOMEM;
- 		/*
- 		 * This display code with --no-merge adds [cpu] postfixes.
- 		 * These are not supported by the parser. Remove everything
-@@ -782,11 +773,35 @@ static void generic_metric(struct perf_stat_config *config,
- 			*pn = 0;
- 
- 		if (metric_total)
--			expr__add_id(&pctx, n, metric_total);
-+			expr__add_id(pctx, n, metric_total);
- 		else
--			expr__add_id(&pctx, n, avg_stats(stats)*scale);
-+			expr__add_id(pctx, n, avg_stats(stats)*scale);
- 	}
- 
-+	return i;
-+}
-+
-+static void generic_metric(struct perf_stat_config *config,
-+			   const char *metric_expr,
-+			   struct evsel **metric_events,
-+			   char *name,
-+			   const char *metric_name,
-+			   const char *metric_unit,
-+			   int runtime,
-+			   int cpu,
-+			   struct perf_stat_output_ctx *out,
-+			   struct runtime_stat *st)
-+{
-+	print_metric_t print_metric = out->print_metric;
-+	struct expr_parse_ctx pctx;
-+	double ratio, scale;
-+	int i;
-+	void *ctxp = out->ctx;
-+
-+	i = prepare_metric(metric_events, &pctx, cpu, st);
-+	if (i < 0)
-+		return;
-+
- 	if (!metric_events[i]) {
- 		if (expr__parse(&ratio, &pctx, metric_expr, runtime) == 0) {
- 			char *unit;
 -- 
-2.25.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
