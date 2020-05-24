@@ -2,303 +2,77 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E62F20812
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WbcDYwGh"
+	by mail.kernel.org (Postfix) with ESMTP id EA406207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388316AbgEXVcF (ORCPT
+        id S2388360AbgEXVch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387879AbgEXVcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:32:04 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93632C061A0E;
-        Sun, 24 May 2020 14:32:04 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 190so16083072qki.1;
-        Sun, 24 May 2020 14:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zsTKP6UPCyjc3gedPSTiX+Hw4fSD23Gy2TgvwORJtZI=;
-        b=WbcDYwGhcm7jTcpYsw7Uxi8nCjwbcze3sDcocME48h3tDO1Q7VdThjO3mT9nZrpjOt
-         A/5Ugjl0WHy8J95fuBA9b7z8/NiuzPoQSpPzht4z9djsNxsxVsrOI2uMmwUU+MHw3GXE
-         EsvINxgU6yBaDDmDV5YzXTDE3UfoppBUgL0R9uT0zN499lY9XXBf8Y/FH4HfswMlAiCe
-         +l6pq2lhzmNzsBIsfb4/APiIy8s6huWB/+/NOWQo3DATC9lyUDeSakBxwmrzxjOHEdla
-         kAa7/Kio89/prvuSyYvsQIuodjrJ4cgWUvhdf+bNN1Nbxol9Pth3VvkxRYVKps8bfbog
-         tg3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zsTKP6UPCyjc3gedPSTiX+Hw4fSD23Gy2TgvwORJtZI=;
-        b=pRXQItmpRBwUKdBiWl85hDg6mCxsbXDtz2q2uDmZhXzOrcHuxS2QoD5VlAQ4AD2UXw
-         b6RW7WYl0BDPJjiodxmY2XbKR+mNe6L4L0rAu5J8yvrKpyxgfVSMftvZkRQtIt0V9/FY
-         TYtnUmD9ZCLTTbm/7M2IGRmxokFfXaaksg1nv75/dD72tqVfv/mPg9fs9R4iK7ab7GzB
-         6mcwC94lLTpN1opqmaP78ASzjRK9pszmTjNQXr4irCFtV73Z5e2j7oHVYOGW6g2IjjfF
-         5yPhrJk8svgUJXM5HaR6Ju2neuoQdzNPbknigGaGEfiiHyCmWWlthyUqiRL+OlRhYobo
-         1Bhg==
-X-Gm-Message-State: AOAM532X02ImU/VrgaAsOSHO7luPg1ApYqjuCPNtMUbGSCMTP1XsAX6K
-        qArbbH4544m4PHdGDraHohs=
-X-Google-Smtp-Source: ABdhPJwN6C5sOR0YlCVooSvLA7ctJR5Lw+j/WHrsTM1GIgdU94ksuZcgYt/CUIHOBpimjH5OPJmAPQ==
-X-Received: by 2002:a37:6389:: with SMTP id x131mr18589657qkb.160.1590355923525;
-        Sun, 24 May 2020 14:32:03 -0700 (PDT)
-Received: from localhost.localdomain (toroon0411w-lp130-02-64-231-189-42.dsl.bell.ca. [64.231.189.42])
-        by smtp.googlemail.com with ESMTPSA id n13sm2110197qtb.20.2020.05.24.14.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:32:02 -0700 (PDT)
-From:   Andrew Sy Kim <kim.andrewsy@gmail.com>
-Cc:     kim.andrewsy@gmail.com, Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: [PATCH] netfilter/ipvs: immediately expire no destination connections in kthread if expire_nodest_conn=1
-Date:   Sun, 24 May 2020 17:31:05 -0400
-Message-Id: <20200524213105.14805-1-kim.andrewsy@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <alpine.LFD.2.21.2005192139500.3504@ja.home.ssi.bg>
-References: <alpine.LFD.2.21.2005192139500.3504@ja.home.ssi.bg>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 24 May 2020 17:32:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:9322 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387879AbgEXVch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 17:32:37 -0400
+IronPort-SDR: na2+GEy23Z5Gox2iXhiBQMNfbE4TzcQ/hKgP5rgjGx4sOlGXH2gfNIJq3ynzBJqZruwY1XwN3V
+ tZefYBCvc/lA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 14:32:36 -0700
+IronPort-SDR: qR8Zd6uw2Bo9zc/Ed0jd5J4jCriPSU00TYJUCnLgroXBsTZ8rBXw1UiZg6P+ldwn6Ab++4h16C
+ oaDgIqY2Fhpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,431,1583222400"; 
+   d="scan'208";a="467875383"
+Received: from tjrondo-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.251.20.235])
+  by fmsmga006.fm.intel.com with ESMTP; 24 May 2020 14:32:36 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v3 0/5] Remove AER HEST table parser
+Date:   Sun, 24 May 2020 14:32:29 -0700
+Message-Id: <cover.1590355824.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If expire_nodest_conn=1 and a destination is deleted, IPVS should
-also expire all matching connections immiediately instead of waiting for
-the next matching packet. This is particulary useful when there are a
-lot of packets coming from a few number of clients. Those clients are
-likely to match against existing entries if a source port in the
-connection hash is reused. When the number of entries in the connection
-tracker is large, we can significantly reduce the number of dropped
-packets by expiring all connections upon deletion in a kthread.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
----
- include/net/ip_vs.h             | 12 +++++++++
- net/netfilter/ipvs/ip_vs_conn.c | 48 +++++++++++++++++++++++++++++++++
- net/netfilter/ipvs/ip_vs_core.c | 45 +++++++++++++------------------
- net/netfilter/ipvs/ip_vs_ctl.c  | 16 +++++++++++
- 4 files changed, 95 insertions(+), 26 deletions(-)
+Commit c100beb9ccfb ("PCI/AER: Use only _OSC to determine AER ownership")
+removed HEST dependency in determining the AER ownership status. The
+following patch set cleansup rest of the HEST table related code from
+AER driver.
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 83be2d93b407..d1fbead6965d 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -1049,6 +1049,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
- 	return ipvs->sysctl_conn_reuse_mode;
- }
- 
-+static inline int sysctl_expire_nodest_conn(struct netns_ipvs *ipvs)
-+{
-+	return ipvs->sysctl_expire_nodest_conn;
-+}
-+
- static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
- {
- 	return ipvs->sysctl_schedule_icmp;
-@@ -1209,6 +1214,13 @@ struct ip_vs_conn * ip_vs_conn_out_get_proto(struct netns_ipvs *ipvs, int af,
- 					     const struct sk_buff *skb,
- 					     const struct ip_vs_iphdr *iph);
- 
-+
-+int ip_vs_conn_flush_dest(void *data);
-+struct ip_vs_conn_flush_dest_tinfo {
-+	struct netns_ipvs *ipvs;
-+	struct ip_vs_dest *dest;
-+};
-+
- /* Get reference to gain full access to conn.
-  * By default, RCU read-side critical sections have access only to
-  * conn fields and its PE data, see ip_vs_conn_rcu_free() for reference.
-diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
-index 02f2f636798d..111fa0e287a2 100644
---- a/net/netfilter/ipvs/ip_vs_conn.c
-+++ b/net/netfilter/ipvs/ip_vs_conn.c
-@@ -1366,6 +1366,54 @@ static void ip_vs_conn_flush(struct netns_ipvs *ipvs)
- 		goto flush_again;
- 	}
- }
-+
-+/*	Thread function to flush all the connection entries in the
-+ *	ip_vs_conn_tab with a matching destination.
-+ */
-+int ip_vs_conn_flush_dest(void *data)
-+{
-+	struct ip_vs_conn_flush_dest_tinfo *tinfo = data;
-+	struct netns_ipvs *ipvs = tinfo->ipvs;
-+	struct ip_vs_dest *dest = tinfo->dest;
-+
-+	int idx;
-+	struct ip_vs_conn *cp, *cp_c;
-+
-+	IP_VS_DBG_BUF(4, "flushing all connections with destination %s:%d",
-+		      IP_VS_DBG_ADDR(dest->af, &dest->addr), ntohs(dest->port));
-+
-+	rcu_read_lock();
-+	for (idx = 0; idx < ip_vs_conn_tab_size; idx++) {
-+		hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_list) {
-+			if (cp->ipvs != ipvs)
-+				continue;
-+
-+			if (cp->dest != dest)
-+				continue;
-+
-+			/* As timers are expired in LIFO order, restart
-+			 * the timer of controlling connection first, so
-+			 * that it is expired after us.
-+			 */
-+			cp_c = cp->control;
-+			/* cp->control is valid only with reference to cp */
-+			if (cp_c && __ip_vs_conn_get(cp)) {
-+				IP_VS_DBG(4, "del controlling connection\n");
-+				ip_vs_conn_expire_now(cp_c);
-+				__ip_vs_conn_put(cp);
-+			}
-+
-+			IP_VS_DBG(4, "del connection\n");
-+			ip_vs_conn_expire_now(cp);
-+		}
-+		cond_resched_rcu();
-+	}
-+	rcu_read_unlock();
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ip_vs_conn_flush_dest);
-+
- /*
-  * per netns init and exit
-  */
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index aa6a603a2425..ff052e57e054 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -24,6 +24,7 @@
- 
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/kthread.h>
- #include <linux/ip.h>
- #include <linux/tcp.h>
- #include <linux/sctp.h>
-@@ -694,11 +695,6 @@ static int sysctl_nat_icmp_send(struct netns_ipvs *ipvs)
- 	return ipvs->sysctl_nat_icmp_send;
- }
- 
--static int sysctl_expire_nodest_conn(struct netns_ipvs *ipvs)
--{
--	return ipvs->sysctl_expire_nodest_conn;
--}
--
- #else
- 
- static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0; }
-@@ -2095,36 +2091,33 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
- 		}
- 	}
- 
--	if (unlikely(!cp)) {
--		int v;
--
--		if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
--			return v;
--	}
--
--	IP_VS_DBG_PKT(11, af, pp, skb, iph.off, "Incoming packet");
--
- 	/* Check the server status */
--	if (cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
-+	if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
- 		/* the destination server is not available */
- 
--		__u32 flags = cp->flags;
--
--		/* when timer already started, silently drop the packet.*/
--		if (timer_pending(&cp->timer))
--			__ip_vs_conn_put(cp);
--		else
--			ip_vs_conn_put(cp);
-+		if (sysctl_expire_nodest_conn(ipvs)) {
-+			bool uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
- 
--		if (sysctl_expire_nodest_conn(ipvs) &&
--		    !(flags & IP_VS_CONN_F_ONE_PACKET)) {
--			/* try to expire the connection immediately */
- 			ip_vs_conn_expire_now(cp);
-+			__ip_vs_conn_put(cp);
-+			if (uses_ct)
-+				return NF_DROP;
-+			cp = NULL;
-+		} else {
-+			__ip_vs_conn_put(cp);
-+			return NF_DROP;
- 		}
-+	}
- 
--		return NF_DROP;
-+	if (unlikely(!cp)) {
-+		int v;
-+
-+		if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
-+			return v;
- 	}
- 
-+	IP_VS_DBG_PKT(11, af, pp, skb, iph.off, "Incoming packet");
-+
- 	ip_vs_in_stats(cp, skb);
- 	ip_vs_set_state(cp, IP_VS_DIR_INPUT, skb, pd);
- 	if (cp->packet_xmit)
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 8d14a1acbc37..fa48268368fc 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -1163,6 +1163,22 @@ static void __ip_vs_del_dest(struct netns_ipvs *ipvs, struct ip_vs_dest *dest,
- 	list_add(&dest->t_list, &ipvs->dest_trash);
- 	dest->idle_start = 0;
- 	spin_unlock_bh(&ipvs->dest_trash_lock);
-+
-+	/*	If expire_nodest_conn is enabled, expire all connections
-+	 *	immediately in a kthread.
-+	 */
-+	if (sysctl_expire_nodest_conn(ipvs)) {
-+		struct ip_vs_conn_flush_dest_tinfo *tinfo = NULL;
-+
-+		tinfo = kcalloc(1, sizeof(struct ip_vs_conn_flush_dest_tinfo),
-+				GFP_KERNEL);
-+		tinfo->ipvs = ipvs;
-+		tinfo->dest = dest;
-+
-+		IP_VS_DBG(3, "flushing connections in kthread\n");
-+		kthread_run(ip_vs_conn_flush_dest,
-+			    tinfo, "ipvs-flush-dest-conn");
-+	}
- }
- 
- 
+This patchset also includes some minor AER driver fixes.
+
+Changes since v2:
+ * Fixed commit sha id for patch "PCI/AER: Use only _OSC to determine AER ownership".
+
+Kuppuswamy Sathyanarayanan (5):
+  PCI/AER: Remove redundant pci_is_pcie() checks.
+  PCI/AER: Remove redundant dev->aer_cap checks.
+  ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
+  ACPI/PCI: Ignore _OSC DPC negotiation result if pcie_ports_dpc_native
+    is set.
+  PCI/AER: Replace pcie_aer_get_firmware_first() with
+    pcie_aer_is_native()
+
+ drivers/acpi/pci_root.c    |  28 ++++----
+ drivers/pci/pcie/aer.c     | 139 ++++---------------------------------
+ drivers/pci/pcie/dpc.c     |   2 +-
+ drivers/pci/pcie/portdrv.h |  13 +---
+ include/linux/pci.h        |   2 +
+ 5 files changed, 34 insertions(+), 150 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
