@@ -2,80 +2,104 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E0120885
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7116207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388542AbgEXVxG (ORCPT
+        id S2388407AbgEXV5r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:53:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:56567 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388349AbgEXVxF (ORCPT
+        Sun, 24 May 2020 17:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388037AbgEXV5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:53:05 -0400
-Received: by mail-io1-f70.google.com with SMTP id s126so5376446iod.23
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:53:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=W2XSpdpI4imP3oFttp3ea6rQjy1+gsYM/fLbimKy0J8=;
-        b=kHmZk4Z12khc+xl8RDd44oT2jLCxeqljXJdOfz3EMlSqylyz3q2RQ/bEp37oMTxUm1
-         0yTva0OSmu5wW9gqJxV0nhXGM9UkuyTTF1UL2uBwsufFV/av2fF2k7dzc+OKxuSXYrEd
-         YIOEKlBdp1BCBUwuG0KO5GveYMgSu9uzzwKc/srEEryFhoid1STNy0vYQUX/EYoslgTl
-         YD03wkLmL5OwEowwjoiyN2FHMQwfkJn7RLH85gXAzxYUdmGPxmYoMxMLQZUBxk5HDFx6
-         fK5wCwfNCUOuJgVrYaZWsKVibJ0bJ9rpff65TtlJKQnw3pAdZF6rfGzZNXbujr7IB3RF
-         xUBQ==
-X-Gm-Message-State: AOAM533f8pAywbUtEpVBqOtLemEW8Qnvl0wU+VVRqh08gSqMLAf1+Hkd
-        WASVsw93Il35DyY1YgqT9QRqEjkvlAhfaNNWpAov7Q8A+waX
-X-Google-Smtp-Source: ABdhPJxqwdoquD6CD1t/4vURcXUY094C2cwyZVIZOKx/NGCIbF4xF4jKrwBVk0W6TIG38UReDIw9O+Vu9CfgTfvRCzjbz4MkjNyl
+        Sun, 24 May 2020 17:57:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1228C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:57:46 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jcycp-0007Zv-CS; Sun, 24 May 2020 23:57:43 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 0/7 v2] Introduce local_lock()
+Date:   Sun, 24 May 2020 23:57:32 +0200
+Message-Id: <20200524215739.551568-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-X-Received: by 2002:a92:885c:: with SMTP id h89mr22924691ild.16.1590357183712;
- Sun, 24 May 2020 14:53:03 -0700 (PDT)
-Date:   Sun, 24 May 2020 14:53:03 -0700
-In-Reply-To: <000000000000cd404e058c9de28b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000000537605a66be3a8@google.com>
-Subject: Re: WARNING in dlfb_submit_urb/usb_submit_urb
-From:   syzbot <syzbot+53ce4a4246d0fe0fee34@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, balbi@kernel.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        ingrassia@epigenesys.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+This is v2 of the local_lock() series. The v1 can be found at 
 
-commit c61769bd4777a922952aed0d042a2572e5bd9b74
-Author: Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu May 7 17:06:57 2020 +0000
+   https://lore.kernel.org/lkml/20200519201912.1564477-1-bigeasy@linutronix.de/
 
-    usb: raw-gadget: support stalling/halting/wedging endpoints
+v1…v2:
+  - Remove static initializer so a local_lock is not used as a single
+    per-CPU variable but as a member of an existing structure, that is
+    used per-CPU.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14add53c100000
-start commit:   051143e1 Merge tag 'apparmor-pr-2020-05-21' of git://git.k..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16add53c100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12add53c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b3368ce0cc5f5ace
-dashboard link: https://syzkaller.appspot.com/bug?extid=53ce4a4246d0fe0fee34
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15be3ad6100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1559676e100000
+  - Use LD_WAIT_CONFIG as wait-type in the dep_map.
 
-Reported-by: syzbot+53ce4a4246d0fe0fee34@syzkaller.appspotmail.com
-Fixes: c61769bd4777 ("usb: raw-gadget: support stalling/halting/wedging endpoints")
+  - Expect a pointer like value as argument (same as this_cpu_ptr()).
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+  - Drop the SRCU patch. A different sollution is worked on.
+
+  - Drop the zswap patch. That code part will be reworked.
+
+
+preempt_disable() and local_irq_disable/save() are in principle per CPU big
+kernel locks. This has several downsides:
+
+  - The protection scope is unknown
+
+  - Violation of protection rules is hard to detect by instrumentation
+
+  - For PREEMPT_RT such sections, unless in low level critical code, can
+    violate the preemptability constraints.
+
+To address this PREEMPT_RT introduced the concept of local_locks which are
+strictly per CPU.
+
+The lock operations map to preempt_disable(), local_irq_disable/save() and
+the enabling counterparts on non RT enabled kernels.
+
+If lockdep is enabled local locks gain a lock map which tracks the usage
+context. This will catch cases where an area is protected by
+preempt_disable() but the access also happens from interrupt context. local
+locks have identified quite a few such issues over the years, the most
+recent example is:
+
+  b7d5dc21072cd ("random: add a spinlock_t to struct batched_entropy")
+
+Aside of the lockdep coverage this also improves code readability as it
+precisely annotates the protection scope.
+
+PREEMPT_RT substitutes these local locks with 'sleeping' spinlocks to
+protect such sections while maintaining preemtability and CPU locality.
+
+The followin series introduces the infrastructure including
+documentation and provides a couple of examples how they are used to
+adjust code to be RT ready.
+
+Sebastian
+
