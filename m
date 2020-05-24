@@ -2,108 +2,82 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A66C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7264D2078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="du/akGfR"
+	by mail.kernel.org (Postfix) with ESMTP id 5722620812
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgEXFdl (ORCPT
+        id S1728217AbgEXGDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 01:33:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbgEXFdk (ORCPT
+        Sun, 24 May 2020 02:03:04 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47068 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbgEXGDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 01:33:40 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB0CC061A0E;
-        Sat, 23 May 2020 22:33:40 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id h16so12468137eds.5;
-        Sat, 23 May 2020 22:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
-        bh=mUlXuaPdGF8MyrNkvvQ+W8qtB5P6ns9XkeFGoT1hV9g=;
-        b=du/akGfRVb0CNDOxQ2VjUqmu19WuellI8oCk2MEGLZ+NLsAAh/jVLvXIzqu9Qg+wSv
-         as4DoCMSHRpbFXQDIEn8o0tfVu4FLHTn6NYXaZZ14sbQwFroe/9chPqi8KR5tS2zRFny
-         dpNg2YpFuUhntjlF8bqBt+4IJXgds0dxj/LQq+8OSzRDlFESv2+iJyXgEuEdGdlqxFWF
-         BYq+eNFttygKKgAmiSnEhojzAHCGTsNangGDBuXJmjOFLv5+Us3ApZ1gDkQXt8aAof2b
-         0hWcTubRBuyF+javMxVQIRwj1mFRpC484aB9wcfqLbTR9mfzvSHqbTo6YTK2XUtGoxJa
-         S05w==
+        Sun, 24 May 2020 02:03:04 -0400
+Received: by mail-il1-f199.google.com with SMTP id x2so1075556ill.13
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:03:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=mUlXuaPdGF8MyrNkvvQ+W8qtB5P6ns9XkeFGoT1hV9g=;
-        b=AJ+4kvtUmCbQ7yoUxNh9iC1lT98n8bprupPnwLd1A0zN02syKarxkC35nL2TRYV1oi
-         qu91VvdThgKEqkr6o/3adQKb+MTztwYBijcDBN+Gp6UiFU5LIzexM6boxaYk0F4WU3FU
-         8JYrg8eNKO0R7y1S1gZ1iX1wOMupdVkgpW+p+Qxic0ZondyTu+3Q3fzXx5CwcAR9jW2D
-         BEHCtWXbHQZvSIENKJJ7mliXPMTy2GUZt8Fvmqpn6y5oIXLwowL9OMGwNyfpCd/YBr54
-         tu/ane3eO6OVvb979nqcStx8vh4hbmdf0oLhDXD0+9Czi8kvPD0cOTnsBJQbp24Smdzh
-         +t2A==
-X-Gm-Message-State: AOAM531EH+MsXM0tVj2T3TOgdpaOKmfCNCFNLKIWugdS6mJWbBvgQNog
-        mGEQXdLXI/IYZ7ExsrTVCm4Z5j2XCJ0=
-X-Google-Smtp-Source: ABdhPJzGvODHU1b2elyOcjbhnVj3d36TWrWRd5uO/sMjFW1GM/baq4IibwWvKOcTNfWv0SdqfR16Kg==
-X-Received: by 2002:a05:6402:946:: with SMTP id h6mr9956287edz.245.1590298418966;
-        Sat, 23 May 2020 22:33:38 -0700 (PDT)
-Received: from felia ([2001:16b8:2d08:1b00:68f5:8079:cd02:67ba])
-        by smtp.gmail.com with ESMTPSA id w14sm12607719ejk.13.2020.05.23.22.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 22:33:38 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Sun, 24 May 2020 07:33:29 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Jonathan Corbet <corbet@lwn.net>
-cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: reference to Linux Foundation NDA program obsolete?
-Message-ID: <alpine.DEB.2.21.2005240722560.5201@felia>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=f8cm7i+6DZaPSRKesHef9xX2E7QNOPynTMGv2aqlP84=;
+        b=PtqG8tn/FO+vBeP796Wt/AFV0OEdNh1sfciSSd7hzCBtj1AiQlA4HfKDWI6x+rNnkI
+         1KWGBgJtPBCMPgvl8eEss6VIjK0l1/XcOuMkSJWUCf6qWhtRmKgCP4c6SpIOCu2d0ywA
+         TCfY+PCRa9rZ6yGypXbNrQnnMl6EgSCS1a8xfcM0OhwDI7a5ZMcZyQ75Wk4+DipFyYLh
+         YQHDwhxcCRH6yQGCyrbo+hbq/uynViYJpwPKlQzAovQBjvI118Oejz+iIZzhGtjPb88/
+         4upklYXrKJmJH5d0WtdWMNV+ldadnU9y0NAy7SFbPtbptX+2vTQMALWGIjS1QdCHuss0
+         qPtw==
+X-Gm-Message-State: AOAM5326BobOJuKCjJb2LjWsFflwAqjkf4HFGLvwxpF9omGT8ztLn9in
+        kjojXatEchRrNutRtYi3/V0WPTLu0llfHBk73Jkrtdv8eCxe
+X-Google-Smtp-Source: ABdhPJwGqcUvFi9kw0HhVexHTCTsxhtssXwOhzWwTlRVW0bo6dxr+flQYWuUIA+M7jdwFMz5UWSgckDGMnoq58SrEydxAK0FWUZP
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a92:914f:: with SMTP id t76mr20627206ild.238.1590300183500;
+ Sat, 23 May 2020 23:03:03 -0700 (PDT)
+Date:   Sat, 23 May 2020 23:03:03 -0700
+In-Reply-To: <000000000000ba47b705a6443a0d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000861e3305a65e9d74@google.com>
+Subject: Re: KASAN: use-after-free Read in uif_close
+From:   syzbot <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, daniel.baluta@nxp.com, festevam@gmail.com,
+        gregkh@linuxfoundation.org, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux@rempel-privat.de, miquel.raynal@bootlin.com, richard@nod.at,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+syzbot has bisected this bug to:
 
-while reading the process documentation, I noticed this reference to the 
-Linux Foundation NDA program in Documentation/process/3.Early-stage.rst:
+commit 32ec783ae19d48084b893cc54747fed37b07eb0c
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Wed Apr 8 19:02:57 2020 +0000
 
--->
+    firmware: imx: fix compile-testing
 
-That said, there are also cases where a company legitimately cannot
-disclose its plans early in the development process.  Companies with
-experienced kernel developers may choose to proceed in an open-loop manner
-on the assumption that they will be able to avoid serious integration
-problems later.  For companies without that sort of in-house expertise, 
-the best option is often to hire an outside developer to review the plans 
-undera non-disclosure agreement.  The Linux Foundation operates an NDA 
-program designed to help with this sort of situation; more information can 
-be found at:
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15b22972100000
+start commit:   c11d28ab Add linux-next specific files for 20200522
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17b22972100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13b22972100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
+dashboard link: https://syzkaller.appspot.com/bug?extid=0ce97ea45b008ba3b8bd
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b23f06100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111b0172100000
 
-    http://www.linuxfoundation.org/en/NDA_program
+Reported-by: syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com
+Fixes: 32ec783ae19d ("firmware: imx: fix compile-testing")
 
-This kind of review is often enough to avoid serious problems later on
-without requiring public disclosure of the project.
-
-<--
-
-The link is dead; internet search only showed some references from 
-meeting minutes in 2008, but nothing more since then.
-
-Has this LF NDA program simply been phased out?
-
-If so, I will provide a clean-up patch to remove this historic reference.
-
-Lukas
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
