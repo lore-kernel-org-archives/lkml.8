@@ -6,132 +6,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5942DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3595A2076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50632076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgEXJOV (ORCPT
+        id S1729030AbgEXJPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 05:14:21 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47995 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728502AbgEXJOU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 05:14:20 -0400
-X-Originating-IP: 90.112.45.105
-Received: from localhost.localdomain (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E91F0C0009;
-        Sun, 24 May 2020 09:14:17 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Zong Li <zong.li@sifive.com>, Anup Patel <anup@brainfault.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH 4/8] riscv: Prepare ptdump for vm layout dynamic addresses
-Date:   Sun, 24 May 2020 05:10:04 -0400
-Message-Id: <20200524091008.25587-5-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200524091008.25587-1-alex@ghiti.fr>
-References: <20200524091008.25587-1-alex@ghiti.fr>
+        Sun, 24 May 2020 05:15:17 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:47312 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728252AbgEXJPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 05:15:16 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 04O9EL1x030031
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Sun, 24 May 2020 02:14:32 -0700
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 24 May 2020 02:13:58 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <tj@kernel.org>
+CC:     <jiangshanlai@gmail.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] workqueue: Fix double kfree(rescuer) in destroy_workqueue()
+Date:   Sun, 24 May 2020 17:22:43 +0800
+Message-ID: <20200524092243.19083-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparatory patch for sv48 support that will introduce
-dynamic PAGE_OFFSET.
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-Dynamic PAGE_OFFSET implies that all zones (vmalloc, vmemmap, fixaddr...)
-whose addresses depend on PAGE_OFFSET become dynamic and can't be used
-to statically initialize the array used by ptdump to identify the
-different zones of the vm layout.
+When destroy_workqueue if rescuer worker exist,wq->rescuer pointer be
+kfree. if sanity checks passed. the func call_rcu(&wq->rcu, rcu_free_wq)
+will be called if the wq->flags & WQ_UNBOUND is false,in rcu_free_wq
+func wq->rescuer pointer was kfree again.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
 ---
- arch/riscv/mm/ptdump.c | 49 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 40 insertions(+), 9 deletions(-)
+ kernel/workqueue.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
-index 7eab76a93106..7d9386a7f5c2 100644
---- a/arch/riscv/mm/ptdump.c
-+++ b/arch/riscv/mm/ptdump.c
-@@ -49,22 +49,41 @@ struct addr_marker {
- 	const char *name;
- };
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 891ccad5f271..a2451cdcd503 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -3491,7 +3491,6 @@ static void rcu_free_wq(struct rcu_head *rcu)
+ 	else
+ 		free_workqueue_attrs(wq->unbound_attrs);
  
-+enum address_markers_idx {
-+#ifdef CONFIG_KASAN
-+	KASAN_SHADOW_START_NR,
-+	KASAN_SHADOW_END_NR,
-+#endif
-+	FIXMAP_START_NR,
-+	FIXMAP_END_NR,
-+	PCI_IO_START_NR,
-+	PCI_IO_END_NR,
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	VMEMMAP_START_NR,
-+	VMEMMAP_END_NR,
-+#endif
-+	VMALLOC_START_NR,
-+	VMALLOC_END_NR,
-+	PAGE_OFFSET_NR,
-+	END_OF_SPACE_NR
-+};
-+
- static struct addr_marker address_markers[] = {
- #ifdef CONFIG_KASAN
- 	{KASAN_SHADOW_START,	"Kasan shadow start"},
- 	{KASAN_SHADOW_END,	"Kasan shadow end"},
- #endif
--	{FIXADDR_START,		"Fixmap start"},
--	{FIXADDR_TOP,		"Fixmap end"},
--	{PCI_IO_START,		"PCI I/O start"},
--	{PCI_IO_END,		"PCI I/O end"},
-+	{0,			"Fixmap start"},
-+	{0,			"Fixmap end"},
-+	{0,			"PCI I/O start"},
-+	{0,			"PCI I/O end"},
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
--	{VMEMMAP_START,		"vmemmap start"},
--	{VMEMMAP_END,		"vmemmap end"},
-+	{0,			"vmemmap start"},
-+	{0,			"vmemmap end"},
- #endif
--	{VMALLOC_START,		"vmalloc() area"},
--	{VMALLOC_END,		"vmalloc() end"},
--	{PAGE_OFFSET,		"Linear mapping"},
-+	{0,			"vmalloc() area"},
-+	{0,			"vmalloc() end"},
-+	{0,			"Linear mapping"},
- 	{-1, NULL},
- };
+-	kfree(wq->rescuer);
+ 	kfree(wq);
+ }
  
-@@ -304,6 +323,18 @@ static int ptdump_init(void)
- {
- 	unsigned int i, j;
- 
-+	address_markers[FIXMAP_START_NR].start_address = FIXADDR_START;
-+	address_markers[FIXMAP_END_NR].start_address = FIXADDR_TOP;
-+	address_markers[PCI_IO_START_NR].start_address = PCI_IO_START;
-+	address_markers[PCI_IO_END_NR].start_address = PCI_IO_END;
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	address_markers[VMEMMAP_START_NR].start_address = VMEMMAP_START;
-+	address_markers[VMEMMAP_END_NR].start_address = VMEMMAP_END;
-+#endif
-+	address_markers[VMALLOC_START_NR].start_address = VMALLOC_START;
-+	address_markers[VMALLOC_END_NR].start_address = VMALLOC_END;
-+	address_markers[PAGE_OFFSET_NR].start_address = PAGE_OFFSET;
-+
- 	for (i = 0; i < ARRAY_SIZE(pg_level); i++)
- 		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
- 			pg_level[i].mask |= pte_bits[j].mask;
 -- 
-2.20.1
+2.17.0
 
