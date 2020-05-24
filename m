@@ -2,208 +2,211 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4841C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFFF72077D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891972076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:44:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="GY7ZzNRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbgEXKYP (ORCPT
+        id S1728069AbgEXKoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 06:24:15 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:46458 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbgEXKYO (ORCPT
+        Sun, 24 May 2020 06:44:54 -0400
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:60366 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgEXKoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 06:24:14 -0400
-Received: by mail-il1-f200.google.com with SMTP id x2so1408676ill.13
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 03:24:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=aQ2R90lcBZ5pzqo7KH+THps7IFll5Sr+F8zeDKtgZJM=;
-        b=bbCcEFmFn4RtCACRLg+Ebxfkc8vIjcYxbO0TZHDDPl3T0EEmg03evZFVxh97tRfke4
-         OgTZFpqUt8FKIIsYH/ApGIygXJcqvCqvEcZHw/EnesqKwblv+1V7//HTGvHtCr96uyFP
-         9cXoHaPZmHdJZULmom5pucGnEdKMgqTEm5fAGBY7aoPOortywPUGBylIYmjlAfVCad/z
-         Sy/KRHv8N00GYdTt11k/ctSKNPjEJ9CQkXFny4UaCG3iuf+nHzkVodho26oZ5ARU8bIN
-         qsb+CU79TxOg8YK5Z/uDcpkMxAfidD2o68hvB2KIxPoVLFfUN0KtH1IZ42Z7A+fW8+IB
-         t0Mw==
-X-Gm-Message-State: AOAM532ueuz28YJH2rjd4FnAgY2n7TYx0twGGFFrObVHyGhlVUwwETak
-        MQ8WP2UrR1fkVN4O7jio4bFdFgKJyL8h0yI8LqYdStWyixi2
-X-Google-Smtp-Source: ABdhPJySFHH59iBm+iOPcUtJl+p87aJm++qydSvRgFrddy4gCSv4A+y2Y/Wsb07YprMzwYjiSGPEjxlNkeOoq/gGGwDObWbBBF7N
+        Sun, 24 May 2020 06:44:54 -0400
+Received: from srv.home ([10.8.0.1] ident=heh26299)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <lists2009@fnarfbargle.com>)
+        id 1jco6V-0005vh-H3; Sun, 24 May 2020 18:43:39 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:Cc:References:To:From:Subject; bh=v4SJRTz7Dc2bDyNKhevHRucxH2rvPqVgU6jEjO2X4q4=;
+        b=GY7ZzNRQO5Lqde+13p6aH5R+9ioIwO8Y2kn7MJN+RATMb38eYa0At/qyY6BryMgvle2DD7wFLAIUJZ6PHfVip747JWynuOCDm8VR7yn774HuZXAgdhJyKBuKjpYWM/FNHwlk7kHoEyrlzuq8rsDehUt8Iohj7yc8B0EXNApfDS4=;
+Subject: Re: KVM broken after suspend in most recent kernels.
+From:   Brad Campbell <lists2009@fnarfbargle.com>
+To:     kvm@vger.kernel.org, sean.j.christopherson@intel.com
+References: <1f7a85cc-38a6-2a2e-cbe3-a5b9970b7b92@fnarfbargle.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <f726be8c-c7ef-bf6a-f31e-394969d35045@fnarfbargle.com>
+Date:   Sun, 24 May 2020 18:43:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:2708:: with SMTP id g8mr15615078jaa.52.1590315852684;
- Sun, 24 May 2020 03:24:12 -0700 (PDT)
-Date:   Sun, 24 May 2020 03:24:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007ae41505a66243fb@google.com>
-Subject: KASAN: use-after-free Read in evdev_cleanup
-From:   syzbot <syzbot+20458a5eab138777efc9@syzkaller.appspotmail.com>
-To:     brendanhiggins@google.com, dmitry.torokhov@gmail.com,
-        gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael.j.wysocki@intel.com, rdunlap@infradead.org,
-        rydberg@bitmath.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1f7a85cc-38a6-2a2e-cbe3-a5b9970b7b92@fnarfbargle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    c11d28ab Add linux-next specific files for 20200522
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f54441100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-dashboard link: https://syzkaller.appspot.com/bug?extid=20458a5eab138777efc9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133e254a100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15dbf016100000
-
-The bug was bisected to:
-
-commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa
-Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date:   Wed May 13 15:18:40 2020 +0000
-
-    kobject: Make sure the parent does not get released before its children
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16763f06100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15763f06100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11763f06100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+20458a5eab138777efc9@syzkaller.appspotmail.com
-Fixes: 4ef12f719802 ("kobject: Make sure the parent does not get released before its children")
-
-input: syz1 as /devices/virtual/input/input5
-==================================================================
-BUG: KASAN: use-after-free in __mutex_lock_common kernel/locking/mutex.c:938 [inline]
-BUG: KASAN: use-after-free in __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
-Read of size 8 at addr ffff8880a019f158 by task syz-executor054/6791
-
-CPU: 0 PID: 6791 Comm: syz-executor054 Not tainted 5.7.0-rc6-next-20200522-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __mutex_lock_common kernel/locking/mutex.c:938 [inline]
- __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
- evdev_mark_dead drivers/input/evdev.c:1314 [inline]
- evdev_cleanup+0x21/0x190 drivers/input/evdev.c:1323
- evdev_disconnect+0x45/0xb0 drivers/input/evdev.c:1408
- __input_unregister_device+0x1b0/0x430 drivers/input/input.c:2091
- input_unregister_device+0xb4/0xf0 drivers/input/input.c:2273
- uinput_destroy_device+0x1e2/0x240 drivers/input/misc/uinput.c:298
- uinput_release+0x37/0x50 drivers/input/misc/uinput.c:710
- __fput+0x33e/0x880 fs/file_table.c:281
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0xb5e/0x2e10 kernel/exit.c:805
- do_group_exit+0x125/0x340 kernel/exit.c:903
- __do_sys_exit_group kernel/exit.c:914 [inline]
- __se_sys_exit_group kernel/exit.c:912 [inline]
- __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x43f9e8
-Code: Bad RIP value.
-RSP: 002b:00007ffd043eeff8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043f9e8
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004bf228 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 6791:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- evdev_connect+0x80/0x4d0 drivers/input/evdev.c:1352
- input_attach_handler+0x194/0x200 drivers/input/input.c:1031
- input_register_device.cold+0xf5/0x246 drivers/input/input.c:2229
- uinput_create_device drivers/input/misc/uinput.c:364 [inline]
- uinput_ioctl_handler.isra.0+0x1210/0x1d80 drivers/input/misc/uinput.c:870
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Freed by task 6791:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- device_release+0x71/0x200 drivers/base/core.c:1541
- kobject_cleanup lib/kobject.c:701 [inline]
- kobject_release lib/kobject.c:732 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1c8/0x2f0 lib/kobject.c:749
- cdev_device_del+0x69/0x80 fs/char_dev.c:575
- evdev_disconnect+0x3d/0xb0 drivers/input/evdev.c:1407
- __input_unregister_device+0x1b0/0x430 drivers/input/input.c:2091
- input_unregister_device+0xb4/0xf0 drivers/input/input.c:2273
- uinput_destroy_device+0x1e2/0x240 drivers/input/misc/uinput.c:298
- uinput_release+0x37/0x50 drivers/input/misc/uinput.c:710
- __fput+0x33e/0x880 fs/file_table.c:281
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0xb5e/0x2e10 kernel/exit.c:805
- do_group_exit+0x125/0x340 kernel/exit.c:903
- __do_sys_exit_group kernel/exit.c:914 [inline]
- __se_sys_exit_group kernel/exit.c:912 [inline]
- __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-The buggy address belongs to the object at ffff8880a019f000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 344 bytes inside of
- 2048-byte region [ffff8880a019f000, ffff8880a019f800)
-The buggy address belongs to the page:
-page:ffffea00028067c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00029b4348 ffff8880aa001950 ffff8880aa000e00
-raw: 0000000000000000 ffff8880a019f000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a019f000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a019f080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880a019f100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                    ^
- ffff8880a019f180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a019f200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 24/5/20 12:50 pm, Brad Campbell wrote:
+> G'day all.
+> 
+> Machine is a Macbook Pro Retina ~ 2014. Kernels are always vanilla kernel and compiled on the machine. No additional patches.
+> 
+> vendor_id    : GenuineIntel
+> cpu family    : 6
+> model        : 69
+> model name    : Intel(R) Core(TM) i5-4278U CPU @ 2.60GHz
+> stepping    : 1
+> microcode    : 0x25
+> cpu MHz        : 2795.034
+> cache size    : 3072 KB
+> physical id    : 0
+> siblings    : 4
+> core id        : 1
+> cpu cores    : 2
+> apicid        : 3
+> initial apicid    : 3
+> fpu        : yes
+> fpu_exception    : yes
+> cpuid level    : 13
+> wp        : yes
+> flags        : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt dtherm ida arat pln pts md_clear flush_l1d
+> vmx flags    : vnmi preemption_timer invvpid ept_x_only ept_ad ept_1gb flexpriority tsc_offset vtpr mtf vapic ept vpid unrestricted_guest ple
+> bugs        : cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit
+> bogomips    : 5199.87
+> clflush size    : 64
+> cache_alignment    : 64
+> address sizes    : 39 bits physical, 48 bits virtual
+> 
+> 
+> KVM worked fine in kernels somewhere prior to 5.4-5.5.
+> 
+> KVM works fine in later kernels up to and including 5.7.0-rc6 after a clean boot. It does not work after a suspend.
+> 
+> I can't actually bisect this because there is a bug in earlier kernels that breaks the suspend method used which requires manual patching to work around.
+> 
+> This is using qemu version 5.0.0, but also happens with 4.2.0.
+> 
+> In kernels earlier than 5.7 it results in either an immediate hard lock, or a GPF that results in progressive system freeze until a hard reboot is required (won't flush to disk so no logs get recorded and I have no serial or netconsole ability). In 5.7-rc6 it results in the following trace and thankfully no further issues (so I can get the logs and report it).
+> 
+> I can and will perform any required testing and debugging, but this machine suspends with pm-utils s2both, and that is broken between about 5.4 & 5.6 due to swapfile locking issues, which makes actual bisection very, very difficult as it *requires* a suspend/resume to trigger the bug.
+> 
+> [  227.715173] ------------[ cut here ]------------
+> [  227.715176] VMXON faulted, MSR_IA32_FEAT_CTL (0x3a) = 0x4
+> [  227.715194] WARNING: CPU: 0 PID: 5502 at arch/x86/kvm/vmx/vmx.c:2239 hardware_enable+0x167/0x180 [kvm_intel]
+> [  227.715195] Modules linked in: brcmfmac xhci_pci xhci_hcd cmac bnep iptable_nat xt_MASQUERADE nf_nat nf_conntrack nf_defrag_ipv4 ip_tables x_tables nfsd bridge stp llc appletouch brcmutil snd_hda_codec_hdmi sha256_ssse3 snd_hda_codec_cirrus snd_hda_codec_generic sha256_generic libsha256 x86_pkg_temp_thermal coretemp btusb kvm_intel btrtl kvm btbcm btintel irqbypass bluetooth cfg80211 snd_hda_intel ecdh_generic ecc snd_intel_dspcfg bcm5974 rfkill snd_hda_codec snd_hwdep snd_hda_core snd_pcm_oss snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi i915 snd_seq snd_seq_device snd_timer i2c_algo_bit iosf_mbi drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops snd drm intel_gtt agpgart evdev apple_bl video soundcore hid_apple usb_storage hid_generic usbhid hid dm_crypt dm_mod i2c_i801 i2c_core sg usbcore usb_common [last unloaded: xhci_hcd]
+> [  227.715221] CPU: 0 PID: 5502 Comm: qemu Not tainted 5.7.0-rc6+ #15
+> [  227.715222] Hardware name: Apple Inc. MacBookPro11,1/Mac-189A3D4F975D5FFC, BIOS 159.0.0.0.0 02/05/2020
+> [  227.715225] RIP: 0010:hardware_enable+0x167/0x180 [kvm_intel]
+> [  227.715227] Code: 01 00 01 b9 3a 00 00 00 0f 32 31 c9 48 c1 e2 20 be ef be ad de 48 c7 c7 68 fd bb c0 48 09 c2 85 c9 48 0f 44 f2 e8 43 78 4f dc <0f> 0b eb 8a 48 8b 15 ce 89 06 dd e9 c7 fe ff ff 66 0f 1f 84 00 00
+> [  227.715228] RSP: 0018:ffff97091d873df8 EFLAGS: 00010092
+> [  227.715229] RAX: 000000000000002d RBX: 0000000000000046 RCX: 0000000000000007
+> [  227.715230] RDX: 0000000000000007 RSI: 0000000000000082 RDI: ffff97091f2187a0
+> [  227.715231] RBP: ffff97091d873e10 R08: 0000000000000008 R09: 0000000000000495
+> [  227.715232] R10: 0000000000000010 R11: ffff97091d873c6d R12: 0000000000000000
+> [  227.715233] R13: 0000000000000286 R14: ffffb5d08015e010 R15: 0000000000000000
+> [  227.715234] FS:  00007f1468fd33c0(0000) GS:ffff97091f200000(0000) knlGS:0000000000000000
+> [  227.715235] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  227.715236] CR2: 0000563b54c7201d CR3: 000000043f43f001 CR4: 00000000001626f0
+> [  227.715237] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  227.715238] DR3: 0000000000000080 DR6: 00000000ffff0ff0 DR7: 0000000020000400
+> [  227.715238] Call Trace:
+> [  227.715251]  kvm_arch_hardware_enable+0x65/0x230 [kvm]
+> [  227.715257]  hardware_enable_nolock+0x2f/0x60 [kvm]
+> [  227.715262]  ? __kvm_write_guest_page+0x60/0x60 [kvm]
+> [  227.715266]  on_each_cpu+0x34/0x40
+> [  227.715271]  kvm_dev_ioctl+0x63a/0x6c0 [kvm]
+> [  227.715275]  ? do_sys_openat2+0x1a7/0x2d0
+> [  227.715277]  ksys_ioctl+0x70/0xb0
+> [  227.715279]  ? vtime_user_exit+0x1b/0x60
+> [  227.715280]  __x64_sys_ioctl+0x15/0x20
+> [  227.715282]  do_syscall_64+0x4f/0x190
+> [  227.715284]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  227.715285] RIP: 0033:0x7f146ba30427
+> [  227.715287] Code: 00 00 90 48 8b 05 69 aa 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 39 aa 0c 00 f7 d8 64 89 01 48
+> [  227.715288] RSP: 002b:00007fff63e4e898 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> [  227.715290] RAX: ffffffffffffffda RBX: 000000000000ae01 RCX: 00007f146ba30427
+> [  227.715292] RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 000000000000000c
+> [  227.715293] RBP: 0000000000000000 R08: 0000563b55030de0 R09: 0000000000000001
+> [  227.715294] R10: 0000563b54da1010 R11: 0000000000000246 R12: 0000563b55081d60
+> [  227.715295] R13: 000000000000000c R14: 0000000000000000 R15: 00007fff63e4ea80
+> [  227.715297] ---[ end trace 0ce5d8cb29fff4bc ]---
+> [  227.715299] kvm: enabling virtualization on CPU0 failed
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Found a bisect method that was viable.
+
+21bd3467a58ea51ccc0b1d9bcb86dadf1640a002 is the first bad commit
+commit 21bd3467a58ea51ccc0b1d9bcb86dadf1640a002
+Author: Sean Christopherson <sean.j.christopherson@intel.com>
+Date:   Fri Dec 20 20:45:08 2019 -0800
+
+     KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR
+         Remove KVM's code to initialize IA32_FEAT_CTL MSR when KVM is loaded now
+     that the MSR is initialized during boot on all CPUs that support VMX,
+     i.e. on all CPUs that can possibly load kvm_intel.
+         Note, don't WARN if IA32_FEAT_CTL is unlocked, even though the MSR is
+     unconditionally locked by init_ia32_feat_ctl().  KVM isn't tied directly
+     to a CPU vendor detection, whereas init_ia32_feat_ctl() is invoked if
+     and only if the CPU vendor is recognized and known to support VMX.  As a
+     result, vmx_disabled_by_bios() may be reached without going through
+     init_ia32_feat_ctl() and thus without locking IA32_FEAT_CTL.  This quirk
+     will be eliminated in a future patch.
+         Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+     Signed-off-by: Borislav Petkov <bp@suse.de>
+     Reviewed-by: Jim Mattson <jmattson@google.com>
+     Link: https://lkml.kernel.org/r/20191221044513.21680-15-sean.j.christopherson@intel.com
+
+V5.5 was good. V5.6 was bad.
+On v5.6 it causes the machine to instantly hardlock.
+On v5.7 it drops the aforementioned WARNING in the log.
+
+Basically:
+Clean boot. Run test qemu. echo mem > /sys/power/state. Hit key to wake up machine. Run test qemu.
+
+Good works. Bad hardlocks instantly.
+
+git bisect start
+# bad: [7111951b8d4973bda27ff663f2cf18b663d15b48] Linux 5.6
+git bisect bad 7111951b8d4973bda27ff663f2cf18b663d15b48
+# good: [d5226fa6dbae0569ee43ecfc08bdcd6770fc4755] Linux 5.5
+git bisect good d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
+# bad: [9f68e3655aae6d49d6ba05dd263f99f33c2567af] Merge tag 'drm-next-2020-01-30' of git://anongit.freedesktop.org/drm/drm
+git bisect bad 9f68e3655aae6d49d6ba05dd263f99f33c2567af
+# bad: [fb95aae6e67c4e319a24b3eea32032d4246a5335] Merge tag 'sound-5.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+git bisect bad fb95aae6e67c4e319a24b3eea32032d4246a5335
+# good: [f76e4c167ea2212e23c15ee7e601a865e822c291] net: phy: add default ARCH_BCM_IPROC for MDIO_BCM_IPROC
+git bisect good f76e4c167ea2212e23c15ee7e601a865e822c291
+# good: [c677124e631d97130e4ff7db6e10acdfb7a82321] Merge branch 'sched-core-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good c677124e631d97130e4ff7db6e10acdfb7a82321
+# good: [90fb04f890bcb7384b4d4c216dc2640b0a870df3] Merge tag 'asoc-v5.6' of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-linus
+git bisect good 90fb04f890bcb7384b4d4c216dc2640b0a870df3
+# good: [684cf266eb04911825a6de10dadd188cf801d063] crypto: ccree - fix typo in comment
+git bisect good 684cf266eb04911825a6de10dadd188cf801d063
+# good: [4e19443da1941050b346f8fc4c368aa68413bc88] btrfs: free block groups after free'ing fs trees
+git bisect good 4e19443da1941050b346f8fc4c368aa68413bc88
+# bad: [b5f7ab6b1c4ed967fb76258f79251193cb1ad41d] Merge tag 'fs-dedupe-last-block-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+git bisect bad b5f7ab6b1c4ed967fb76258f79251193cb1ad41d
+# good: [f6170f0afbe23ad82b4a1195168949c31e3a2527] Merge branch 'x86-core-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good f6170f0afbe23ad82b4a1195168949c31e3a2527
+# bad: [a4d0b2fdbcf75ef6654713c83c316ea3a661ddc3] KVM: VMX: Use VMX feature flag to query BIOS enabling
+git bisect bad a4d0b2fdbcf75ef6654713c83c316ea3a661ddc3
+# good: [501444905fcb4166589fda99497c273ac5efc65e] x86/centaur: Use common IA32_FEAT_CTL MSR initialization
+git bisect good 501444905fcb4166589fda99497c273ac5efc65e
+# good: [b47ce1fed42eeb9ac8c07fcda6c795884826723d] x86/cpu: Detect VMX features on Intel, Centaur and Zhaoxin CPUs
+git bisect good b47ce1fed42eeb9ac8c07fcda6c795884826723d
+# good: [167a4894c113ebe6a1f8b24fa6f9fca849c77f8a] x86/cpu: Set synthetic VMX cpufeatures during init_ia32_feat_ctl()
+git bisect good 167a4894c113ebe6a1f8b24fa6f9fca849c77f8a
+# bad: [21bd3467a58ea51ccc0b1d9bcb86dadf1640a002] KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR
+git bisect bad 21bd3467a58ea51ccc0b1d9bcb86dadf1640a002
+# good: [85c17291e2eb4903bf73e5d3f588f41dbcc6f115] x86/cpufeatures: Add flag to track whether MSR IA32_FEAT_CTL is configured
+git bisect good 85c17291e2eb4903bf73e5d3f588f41dbcc6f115
+# first bad commit: [21bd3467a58ea51ccc0b1d9bcb86dadf1640a002] KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR
+
+Regards,
+Brad
