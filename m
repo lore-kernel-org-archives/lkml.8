@@ -4,63 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C996C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE65207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F79D20853
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590334258;
-	bh=T5XlMX19GYR/KRA5wWejsFAh7tRi9SxxgN01sDGq38w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LDlNwAaiejeHKpfSyxvcqLKrQd8Drvl89/ldPywIgErIB3DTciV0TRZE8W5F6YCB6
-	 FHf0YHCDZzSRgYIt4E0vlTQPM2Aq6GnELYlSvOPXsUitWUNSXiheMU+klklRT401yr
-	 tVOi+K4E2uAadmUsPC/ibnmVl42L574fRIuUQeF0=
+	s=default; t=1590334270;
+	bh=72LIESe7ZfL82S+V55dpl4yXI9zYbHv4OcNdyudZjs4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BBnCCXU375t32fZbulA+LyuFALdpvxkeyqDoC17ZH4nNv2kf13Qw1Eqbl9zams7/c
+	 cWGXEtsxrIbReEjTYCW+RScBn0RsxMRfmZPpINz3mf0l5hfJsOhUWZvdIbYemrbJbY
+	 dpIQcqMWSdFyU3DSoLwzl0qbN/bMmTzcdv8BaZcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387734AbgEXPa6 (ORCPT
+        id S1729361AbgEXPbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 11:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgEXPa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 11:30:57 -0400
+        id S1728879AbgEXPbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 11:31:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE5C207CB;
-        Sun, 24 May 2020 15:30:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 534CC20826;
+        Sun, 24 May 2020 15:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590334257;
-        bh=T5XlMX19GYR/KRA5wWejsFAh7tRi9SxxgN01sDGq38w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AQGnc8WzdNAZCZUBt1N6mXsUUB0Xa3DRtU9ywegGDWbbJtFw6RGpylHJCeKHyJVLx
-         BvIauU1I3urxFD0qcQWlLbyLUM9pbkULux7dFUdstLo7mjCjVhwrTfhSHwEzTFyYJL
-         joO1xS4t0I0VMYMKJuGg70KZPueQSYQIxIDDPkd0=
+        s=default; t=1590334267;
+        bh=72LIESe7ZfL82S+V55dpl4yXI9zYbHv4OcNdyudZjs4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2m9xcHrXE6vgdM905QSpm/9qeRNOifOHmZ1cQ3jJBRJwjVSc4CRVoHnBmjw7TYzd4
+         29snaNKdmUeaxlrj1+G+XDETrmj+fUG78BqH7SU15oZnxcoQyH4BADAPN/33yazwhs
+         cEwJdeVrL11sWXpG1O7LCE4rQPNAkdjBDPj34yx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux@roeck-us.net,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        stable <stable@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 1/2] software node: implement software_node_unregister()
-Date:   Sun, 24 May 2020 17:30:40 +0200
-Message-Id: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH 2/2] kobject: send KOBJ_REMOVE uevent when the object is removed from sysfs
+Date:   Sun, 24 May 2020 17:30:41 +0200
+Message-Id: <20200524153041.2361-2-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,119 +57,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it is better to unregister individual nodes instead of trying
-to do them all at once with software_node_unregister_nodes(), so create
-software_node_unregister() so that you can unregister them one at a
-time.
+It is possible for a KOBJ_REMOVE uevent to be sent to userspace way
+after the files are actually gone from sysfs, due to how reference
+counting for kobjects work.  This should not be a problem, but it would
+be good to properly send the information when things are going away, not
+at some later point in time in the future.
 
-This is especially important when creating nodes in a hierarchy, with
-parent -> children representations.  Children always need to be removed
-before a parent is, as the swnode logic assumes this is going to be the
-case.
+Before this move, if a kobject's parent was torn down before the child,
+when the call to kobject_uevent() happened, the parent walk to try to
+reconstruct the full path of the kobject could be a total mess and cause
+crashes.  It's not good to try to tear down a kobject tree from top
+down, but let's at least try to not to crash if a user does so.
 
-Fix up the lib/test_printf.c fwnode_pointer() test which to use this new
-function as it had the problem of tearing things down in the backwards
-order.
-
-Fixes: f1ce39df508d ("lib/test_printf: Add tests for %pfw printk modifier")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Cc: stable <stable@vger.kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/swnode.c    | 27 +++++++++++++++++++++------
- include/linux/property.h |  1 +
- lib/test_printf.c        |  4 +++-
- 3 files changed, 25 insertions(+), 7 deletions(-)
+ lib/kobject.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index de8d3543e8fe..770b1f47a625 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -712,17 +712,18 @@ EXPORT_SYMBOL_GPL(software_node_register_nodes);
-  * @nodes: Zero terminated array of software nodes to be unregistered
-  *
-  * Unregister multiple software nodes at once.
-+ *
-+ * NOTE: Be careful using this call if the nodes had parent pointers set up in
-+ * them before registering.  If so, it is wiser to remove the nodes
-+ * individually, in the correct order (child before parent) instead of relying
-+ * on the sequential order of the list of nodes in the array.
-  */
- void software_node_unregister_nodes(const struct software_node *nodes)
- {
--	struct swnode *swnode;
- 	int i;
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d..2509e22ad74a 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -620,6 +620,13 @@ void kobject_del(struct kobject *kobj)
+ 	if (ktype)
+ 		sysfs_remove_groups(kobj, ktype->default_groups);
  
--	for (i = 0; nodes[i].name; i++) {
--		swnode = software_node_to_swnode(&nodes[i]);
--		if (swnode)
--			fwnode_remove_software_node(&swnode->fwnode);
++	/* send "remove" if the caller did not do it but sent "add" */
++	if (kobj->state_add_uevent_sent && !kobj->state_remove_uevent_sent) {
++		pr_debug("kobject: '%s' (%p): auto cleanup 'remove' event\n",
++			 kobject_name(kobj), kobj);
++		kobject_uevent(kobj, KOBJ_REMOVE);
++	}
++
+ 	sysfs_remove_dir(kobj);
+ 	sysfs_put(sd);
+ 
+@@ -673,13 +680,6 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		pr_debug("kobject: '%s' (%p): does not have a release() function, it is broken and must be fixed. See Documentation/kobject.txt.\n",
+ 			 kobject_name(kobj), kobj);
+ 
+-	/* send "remove" if the caller did not do it but sent "add" */
+-	if (kobj->state_add_uevent_sent && !kobj->state_remove_uevent_sent) {
+-		pr_debug("kobject: '%s' (%p): auto cleanup 'remove' event\n",
+-			 kobject_name(kobj), kobj);
+-		kobject_uevent(kobj, KOBJ_REMOVE);
 -	}
-+	for (i = 0; nodes[i].name; i++)
-+		software_node_unregister(&nodes[i]);
- }
- EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
- 
-@@ -741,6 +742,20 @@ int software_node_register(const struct software_node *node)
- }
- EXPORT_SYMBOL_GPL(software_node_register);
- 
-+/**
-+ * software_node_unregister - Unregister static software node
-+ * @node: The software node to be unregistered
-+ */
-+void software_node_unregister(const struct software_node *node)
-+{
-+	struct swnode *swnode;
-+
-+	swnode = software_node_to_swnode(node);
-+	if (swnode)
-+		fwnode_remove_software_node(&swnode->fwnode);
-+}
-+EXPORT_SYMBOL_GPL(software_node_unregister);
-+
- struct fwnode_handle *
- fwnode_create_software_node(const struct property_entry *properties,
- 			    const struct fwnode_handle *parent)
-diff --git a/include/linux/property.h b/include/linux/property.h
-index d86de017c689..0d4099b4ce1f 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -441,6 +441,7 @@ int software_node_register_nodes(const struct software_node *nodes);
- void software_node_unregister_nodes(const struct software_node *nodes);
- 
- int software_node_register(const struct software_node *node);
-+void software_node_unregister(const struct software_node *node);
- 
- int software_node_notify(struct device *dev, unsigned long action);
- 
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 6b1622f4d7c2..fc63b8959d42 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -637,7 +637,9 @@ static void __init fwnode_pointer(void)
- 	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
- 	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
- 
--	software_node_unregister_nodes(softnodes);
-+	software_node_unregister(&softnodes[2]);
-+	software_node_unregister(&softnodes[1]);
-+	software_node_unregister(&softnodes[0]);
- }
- 
- static void __init
+-
+ 	/* remove from sysfs if the caller did not do it */
+ 	if (kobj->state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
 -- 
 2.26.2
 
