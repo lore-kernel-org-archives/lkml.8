@@ -2,119 +2,83 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7255C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A52DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE902076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8542F2076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 03:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388342AbgEXD20 (ORCPT
+        id S2388347AbgEXDeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 23:28:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388290AbgEXD20 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 23:28:26 -0400
-Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03490C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 20:28:25 -0700 (PDT)
-Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04O3SMpE027737
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:28:22 -0400
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04O3SHle015502
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:28:22 -0400
-Received: by mail-qv1-f72.google.com with SMTP id t10so14569481qvz.9
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 20:28:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
-         :content-transfer-encoding:date:message-id;
-        bh=i58OCaMAvQBYliGiBa5+vTtK/78utl6tdtCjNYsEte8=;
-        b=KE3nDEprF4Z6NJolT+pGg7wLgX3RkNBpv8myYJM+Vkx2JBdRwIVj70oGDAgQ/b6jaq
-         gJsbl/raCAsLUpObUM2hr/RaY9mvaZeg/DYFDzPPO9HyHKwRcDNGnBalGS9Nw/5yYyO/
-         YwD8jR65OBlTwNfKhqnyqPrV5/qv+FEPNaMHYIho2S/UN/9wr2OXJvkrohjIuDDnoYEQ
-         SBN4zz+fs+xPey+/eSe3iqao1x4/3wfqpPbNp2NTZZjjGiU0E7hIWVe7xYSJdwSiX+Pb
-         tIoDqjFzs5pza6x4qC3PL9lLoUBR/OPZe8rjR7r5ng9kufBdZBr76fTQqn7sojWhb9lg
-         ypNw==
-X-Gm-Message-State: AOAM533SuYGdUH00PpbkkZZBDIXPmWjCS8rDrVl8PRdvx5LcDhZF0KYO
-        Hv4EZ5xKPrw5H3FAN2QHqoRSKVoxxqkN/hQZKbkj3OdZtF8PA2n5q/BkqcwK6p8J/HQNgz62vpi
-        3doCo3qh0TR5oV80ieaByJgGn9yiex2eICuQ=
-X-Received: by 2002:a05:620a:1524:: with SMTP id n4mr22092049qkk.490.1590290897448;
-        Sat, 23 May 2020 20:28:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzTv3M8riA+KCQEJ7UovI1OPJ0n7n+QJ0IE5YxSOmpO2i0TDa2rJYRwX0A2430HsIuZYpNvCw==
-X-Received: by 2002:a05:620a:1524:: with SMTP id n4mr22092030qkk.490.1590290896986;
-        Sat, 23 May 2020 20:28:16 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id p25sm2768539qtj.18.2020.05.23.20.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 20:28:15 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: next-20200522 - build fail in fs/binfmt_elf_fdpic.c
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1590290894_16657P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 23 May 2020 23:28:14 -0400
-Message-ID: <22928.1590290894@turing-police>
+        Sat, 23 May 2020 23:34:22 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:55762 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388290AbgEXDeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 23:34:21 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgCXlTAt68leaFLCAQ--.12977S4;
+        Sun, 24 May 2020 11:34:08 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: exynos4-is: Fix runtime PM imbalance in isp_video_open
+Date:   Sun, 24 May 2020 11:34:04 +0800
+Message-Id: <20200524033404.23227-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgCXlTAt68leaFLCAQ--.12977S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWfArb_Cr
+        1kXF1xXr1qqw4qqryjyFn8ZryxtrZ8Wwn5Ga1SqrW7t3yUAF4UJrWkZr93ur47XFsruFyD
+        JrZ8XF17Ar9xCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r48MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU-miiUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAVsV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1590290894_16657P
-Content-Type: text/plain; charset=us-ascii
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Eric:  looks like you missed one?
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/media/platform/exynos4-is/fimc-isp-video.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-commit b8a61c9e7b4a0fec493d191429e9653d66a79ccc
-Author: Eric W. Biederman <ebiederm@xmission.com>
-Date:   Thu May 14 15:17:40 2020 -0500
+diff --git a/drivers/media/platform/exynos4-is/fimc-isp-video.c b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+index 15f443fa7208..612b9872afc8 100644
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -293,6 +293,7 @@ static int isp_video_open(struct file *file)
+ 	if (!ret)
+ 		goto unlock;
+ rel_fh:
++	pm_runtime_put_noidle(&isp->pdev->dev);
+ 	v4l2_fh_release(file);
+ unlock:
+ 	mutex_unlock(&isp->video_lock);
+-- 
+2.17.1
 
-    exec: Generic execfd support
-
-  CHECK   fs/binfmt_elf_fdpic.c
-fs/binfmt_elf_fdpic.c:591:34: error: undefined identifier 'BINPRM_FLAGS_EXECFD'
-  CC      fs/binfmt_elf_fdpic.o
-fs/binfmt_elf_fdpic.c: In function 'create_elf_fdpic_tables':
-fs/binfmt_elf_fdpic.c:591:27: error: 'BINPRM_FLAGS_EXECFD' undeclared (first use in this function); did you mean 'VM_DATA_FLAGS_EXEC'?
-  if (bprm->interp_flags & BINPRM_FLAGS_EXECFD)
-                           ^~~~~~~~~~~~~~~~~~~
-                           VM_DATA_FLAGS_EXEC
-fs/binfmt_elf_fdpic.c:591:27: note: each undeclared identifier is reported only once for each function it appears in
-make[1]: *** [scripts/Makefile.build:273: fs/binfmt_elf_fdpic.o] Error 1
-23:14:07 0 [/usr/src/linux-next]2
-
-
---==_Exmh_1590290894_16657P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXsnpzQdmEQWDXROgAQKL5BAAjI/OXaLC+STtx047fdE5RkoaXShnqUSw
-GhJ1TJnAtDtaDQTtX1BGLWaUtLlBqndad5OBRri0fspOPB2iL4nRscZCojqNupAv
-Mja4gDYmlNhvHjO6Vzs/OHGRObz01+WD0SGAs7vEx2Sxpbm2rq37sWe7dzblznVl
-VUyc3t+AUJek45kuOyxP6MrvvakLQLJdLWTHbg0bqUh0byRU6LT97Xu5gdyYoGsi
-a/DfSNQFJHYbAzqR8cZA+/u9m04uEaJ+1eaz1NTQqq9fxN4fFFSXkqokkUAhezbq
-OyFz8Q1cW7R3rB/EsrcmQ+hpGrZmlFR/N8qtK7Frp6ALwM1kgvpLpRAOWsVdlFTq
-W7km69mUe3eBrUNGQ0UD0SUxGDIYwu2Z1GKUjmTDe3kPzH2PCk+/TIpYtVvXMnCe
-T8vmu/yR37VgEOepko8Zgo9pNY6V5CGr/e/UiZHnA7DgFp5cT2YD3G6OLoXsibnf
-k/qzNNJ0mmu+iDduIH+rBIOE5bpFn41Un8vuZRxb8FQD1PLFdwlT/V6BHqIuhAnU
-ZtIjOlC0AUu15jzFZFrpUsOKC22BCNBSMzrHlli+G5BsDB4hR/xWSMHaedTAQwdH
-cxOm75EAhXpwBj5xlnXyujyRvTSw52Lt5fNzVVGboYP4SEFIeePuenaKmkpCYs0e
-3HPmljnddXE=
-=6Us+
------END PGP SIGNATURE-----
-
---==_Exmh_1590290894_16657P--
