@@ -4,141 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A683C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE58720849
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B75020823
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590320641;
-	bh=o6SJToLu6ZDHu0wWMseTOeGzHfMogzrCv91Eoa763Fk=;
+	s=default; t=1590320799;
+	bh=t6FPAdbmqROUcprpTUToZ+d/YaWfRUyQrPNoUSm1fAw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bThCkXhrdQYXBzOCnJxeqM5y8b5mPvYL9WJQkunepRc0Rz00G7Crw3wTxCSe5K+kF
-	 62cwTo8C56BX70zgE38n8vICWPJaP4zh64ICZawuK/bp64SpBrPbP6UQ2RcmQuy5Pv
-	 ue4YWNEc5kSP67vm0p0tYWRy7Fz0hMevhEhRUqII=
+	b=OwnrDxQFyO2XEC2EgvW85ADsAjsm+sLPyRabVV6adxxVW2kMDl34T30Tv7E6ZJuNt
+	 vxkYvBYf2fTWLqWNMbAmn9KOJxNI/ysbwXUEVCt3wn3OymLdMRbdJi9skv4S4EgblE
+	 0B/0l456d+wa2T+PCi6WFrKpsbV+aE/+yBCyr79c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387620AbgEXLoB (ORCPT
+        id S1729361AbgEXLqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 07:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54548 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 07:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgEXLoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 07:44:00 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1727916AbgEXLqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 07:46:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB2D32075F;
-        Sun, 24 May 2020 11:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B5B2075F;
+        Sun, 24 May 2020 11:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590320640;
-        bh=o6SJToLu6ZDHu0wWMseTOeGzHfMogzrCv91Eoa763Fk=;
+        s=default; t=1590320797;
+        bh=t6FPAdbmqROUcprpTUToZ+d/YaWfRUyQrPNoUSm1fAw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YS4MpGLgOLIA+60LS/zs1BAG3NBBNsopgHBdArXjgNa+lq30E+6bEsbVVIEsXhD7h
-         Jgl7hkEBfMnwmZ0ElCV29eniU2a4cvhoP4oyvXXKY8Hl3FpzI7Z250jc+Fk6aALKvX
-         uEXIwvdQYNmA6Cx4clOyQvm2TD3Qhfxkv76GaLys=
-Date:   Sun, 24 May 2020 12:43:55 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@nxp.com,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 5/5] iio: imu: bmi160: added mount-matrix support
-Message-ID: <20200524124355.526af9d9@archlinux>
-In-Reply-To: <20200520194656.16218-6-jonathan.albrieux@gmail.com>
-References: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
-        <20200520194656.16218-6-jonathan.albrieux@gmail.com>
+        b=cqN2XUbILAoV9pd917Y0YLJE2EmAh1kSZaKzNlmUo2iDeQEhrEZh5RrBbzcZ79TOp
+         6VkATfU0PrHNKD2uf/XSWvnFhWpWpNI1qyOabp3zd1F7bziXsZK5Ojb85tFeb6CiL+
+         p9RJ69/W0dJKyj2scd7LS2AO2NSS0VVdguLH3lf4=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jcp5P-00Ewm3-R2; Sun, 24 May 2020 12:46:36 +0100
+Date:   Sun, 24 May 2020 12:46:34 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/irqchip: Remove function callback casts
+Message-ID: <20200524124634.113203f6@why>
+In-Reply-To: <20200524080910.13087-1-oscar.carter@gmx.com>
+References: <20200524080910.13087-1-oscar.carter@gmx.com>
+Organization: Approximate
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 21:46:44 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+On Sun, 24 May 2020 10:09:10 +0200
+Oscar Carter <oscar.carter@gmx.com> wrote:
 
-> Add mount-matrix binding support. As chip could have different orientations
-> a mount matrix support is needed to correctly translate these differences.
+Hi Oscar,
+
+Thanks for this. Comments below.
+
+> In an effort to enable -Wcast-function-type in the top-level Makefile to
+> support Control Flow Integrity builds, remove all the function callback
+> casts.
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> To do this, modify the IRQCHIP_ACPI_DECLARE macro initializing the
+> acpi_probe_entry struct directly instead of use the existent macro
+> ACPI_DECLARE_PROBE_ENTRY.
+> 
+> In this new initialization use the probe_subtbl field instead of the
+> probe_table field use in the ACPI_DECLARE_PROBE_ENTRY macro.
 
-Other than those bits for the binding doc, the rest of the series
-looks good to me.   Given timing this will only go into mainline in the
-next cycle now anyway so we have plenty of time to tidy up the corners.
+Please add *why* this is a valid transformation (probe_table and
+probe_subtbl are part of a union).
+
+> 
+> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> ---
+>  include/linux/irqchip.h | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+> index 950e4b2458f0..1f464fd10df0 100644
+> --- a/include/linux/irqchip.h
+> +++ b/include/linux/irqchip.h
+> @@ -39,8 +39,14 @@
+>   * @fn: initialization function
+>   */
+>  #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
+> -	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
+> -				 subtable, validate, data, fn)
+> +	static const struct acpi_probe_entry __acpi_probe_##name	\
+> +		__used __section(__irqchip_acpi_probe_table) = {	\
+> +			.id = ACPI_SIG_MADT,				\
+> +			.type = subtable,				\
+> +			.subtable_valid = validate,			\
+> +			.probe_subtbl = (acpi_tbl_entry_handler)fn,	\
+> +			.driver_data = data,				\
+> +		}
+> 
+
+I'd rather you add an ACPI_DECLARE_SUBTABLE_PROBE_ENTRY to acpi.h, and
+use that here so that we can keep the ACPI gunk in a single place.
+
+>  #ifdef CONFIG_IRQCHIP
+>  void irqchip_init(void);
+> --
+> 2.20.1
+> 
+> 
 
 Thanks,
 
-Jonathan
-
-> ---
->  drivers/iio/imu/bmi160/bmi160.h      |  1 +
->  drivers/iio/imu/bmi160/bmi160_core.c | 20 ++++++++++++++++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> index 923c3b274fde..a82e040bd109 100644
-> --- a/drivers/iio/imu/bmi160/bmi160.h
-> +++ b/drivers/iio/imu/bmi160/bmi160.h
-> @@ -9,6 +9,7 @@ struct bmi160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *trig;
->  	struct regulator_bulk_data supplies[2];
-> +	struct iio_mount_matrix orientation;
->  };
->  
->  extern const struct regmap_config bmi160_regmap_config;
-> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> index d3316ca02fbd..26d586daee26 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> @@ -110,6 +110,7 @@
->  		.storagebits = 16,				\
->  		.endianness = IIO_LE,				\
->  	},							\
-> +	.ext_info = bmi160_ext_info,				\
->  }
->  
->  /* scan indexes follow DATA register order */
-> @@ -265,6 +266,20 @@ static const struct  bmi160_odr_item bmi160_odr_table[] = {
->  	},
->  };
->  
-> +static const struct iio_mount_matrix *
-> +bmi160_get_mount_matrix(const struct iio_dev *indio_dev,
-> +			const struct iio_chan_spec *chan)
-> +{
-> +	struct bmi160_data *data = iio_priv(indio_dev);
-> +
-> +	return &data->orientation;
-> +}
-> +
-> +static const struct iio_chan_spec_ext_info bmi160_ext_info[] = {
-> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmi160_get_mount_matrix),
-> +	{ }
-> +};
-> +
->  static const struct iio_chan_spec bmi160_channels[] = {
->  	BMI160_CHANNEL(IIO_ACCEL, X, BMI160_SCAN_ACCEL_X),
->  	BMI160_CHANNEL(IIO_ACCEL, Y, BMI160_SCAN_ACCEL_Y),
-> @@ -839,6 +854,11 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  		return ret;
->  	}
->  
-> +	ret = iio_read_mount_matrix(dev, "mount-matrix",
-> +				    &data->orientation);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = bmi160_chip_init(data, use_spi);
->  	if (ret)
->  		return ret;
-
+	M.
+-- 
+Jazz is not dead. It just smells funny...
