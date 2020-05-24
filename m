@@ -2,193 +2,117 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE46C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9A020823
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3E920823
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590325992;
-	bh=Lcf8VBXRWwR3/d5jNdn1zKLq0hrW94IIhtTMeUpk/Qs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s7dqD3r5vZUgmMUfF4YjnlSvH00N5QtPDJeV/hNYVCmFT7Kzils16npR4OcAdYe7r
-	 telBhM9qDi+M0rGAlHpcdtqen29zVM8Rzd9BejQedf5lGI5zvFSNgbmm/IkEg+ov7I
-	 1fiR5uY5aroSEO8FB+VloMATOnzXeKXYl+hTVjXI=
+	s=default; t=1590326049;
+	bh=muFEtcuBsA0pSYNVjA3NIPvGfhok6nWzyufAte0QWOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gLpqQm6oJYM9Bfy8p8NGqKiWW4pCRUzQgx2eeFAvAeilXzsscy/vML2r2QWGA29BD
+	 41+Ku4pKczx6e8dQJPf4z8bRBUYMd4oHvhX+LZIzHhfBp2yE/ShQrm41FuLVbWVOYL
+	 f3o09t7PsINtKMKM7UdrYyEJAti19OE5+cV6VzU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgEXNNL (ORCPT
+        id S1729521AbgEXNOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 09:13:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 09:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbgEXNNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 09:13:11 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726064AbgEXNOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 09:14:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FBBF20787;
-        Sun, 24 May 2020 13:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29CEF20787;
+        Sun, 24 May 2020 13:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590325990;
-        bh=Lcf8VBXRWwR3/d5jNdn1zKLq0hrW94IIhtTMeUpk/Qs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l1OWd1cNWrdKlfgLyXcpYOANbARyD0Y9kAt+VzDNhgMP0eS8/7ABU3I5iCG6h+qDz
-         bVYT7R1FYK63LqRNYu7h+asIZiDJk/JvTfNC1LIyeBEZSVdcYjQXqh9amWdWeBpFDA
-         9zyZVPsk0iMy26L1lnYYMwnPNwhr6eGhxeR01ELc=
-Date:   Sun, 24 May 2020 14:13:06 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>
-Subject: Re: [PATCH] iio: stm32-dfsdm-adc: keep a reference to the iio
- device on the state struct
-Message-ID: <20200524141306.139d7433@archlinux>
-In-Reply-To: <20200522130804.631508-1-alexandru.ardelean@analog.com>
-References: <20200522130804.631508-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1590326047;
+        bh=muFEtcuBsA0pSYNVjA3NIPvGfhok6nWzyufAte0QWOw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vjA9zglvhtz7/QCN+e3x2VDxcx/AlTNVpeFrdz/LT5Gz7UY9LYQnk15L5Qxh+vTQx
+         co/ueLNponuqjky7Pa4jF6ProEppyslgqNsxnJja+dTvovSA5y28NTX3z+MA1M7lIH
+         oCbSHqdK7Uc19Z5++CHVoIoZnKEXdVSMypARooZc=
+Date:   Sun, 24 May 2020 15:14:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] kobject: Make sure the parent does not get released
+ before its children
+Message-ID: <20200524131405.GA24073@kroah.com>
+References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
+ <20200523153643.GA226270@kroah.com>
+ <7a5e4740-8099-ef70-776f-0d92ce84ab3d@infradead.org>
+ <20200524125727.GA2430@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524125727.GA2430@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 16:08:04 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> We may want to get rid of the iio_priv_to_dev() helper. The reason is that
-> we will hide some of the members of the iio_dev structure (to prevent
-> drivers from accessing them directly), and that will also mean hiding the
-> implementation of the iio_priv_to_dev() helper inside the IIO core.
+On Sun, May 24, 2020 at 02:57:27PM +0200, Greg Kroah-Hartman wrote:
+> On Sat, May 23, 2020 at 08:44:06AM -0700, Randy Dunlap wrote:
+> > On 5/23/20 8:36 AM, Greg Kroah-Hartman wrote:
+> > > On Wed, May 13, 2020 at 06:18:40PM +0300, Heikki Krogerus wrote:
+> > >> In the function kobject_cleanup(), kobject_del(kobj) is
+> > >> called before the kobj->release(). That makes it possible to
+> > >> release the parent of the kobject before the kobject itself.
+> > >>
+> > >> To fix that, adding function __kboject_del() that does
+> > >> everything that kobject_del() does except release the parent
+> > >> reference. kobject_cleanup() then calls __kobject_del()
+> > >> instead of kobject_del(), and separately decrements the
+> > >> reference count of the parent kobject after kobj->release()
+> > >> has been called.
+> > >>
+> > >> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > >> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > >> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+> > >> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+> > >> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > >> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > >> Tested-by: Brendan Higgins <brendanhiggins@google.com>
+> > >> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> > >> ---
+> > >>  lib/kobject.c | 30 ++++++++++++++++++++----------
+> > >>  1 file changed, 20 insertions(+), 10 deletions(-)
+> > > 
+> > > Stepping back, now that it turns out this patch causes more problems
+> > > than it fixes, how is everyone reproducing the original crash here?
+> > 
+> > Just load lib/test_printf.ko and boom!
 > 
-> Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
-> may not be fast anymore, so a general idea is to try to get rid of the
-> iio_priv_to_dev() altogether.
-> The iio_priv() helper won't be affected by the rework.
+> Thanks, that helps.
 > 
-> For this driver, not using iio_priv_to_dev(), means keeping a reference to
-> the IIO device on the state struct.
+> Ok, in messing around with the kobject core more, originally we thought
+> this was an issue of the kobject uevent happening for the parent pointer
+> (when the parent was invalid).  so, moving things around some more, and
+> now I'm crashing in software_node_release() when we are trying to access
+> swnode->parent->child_ids as parent is invalid there.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-As this one is a bit simpler, I think the case for just changing the callbacks
-to take the iio_dev directly is stronger than adding this level of indirection.
-
-Again, perhaps I'm missing something.
-
-Jonathan
-
-> ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
+> So I feel like this is a swnode bug, or a use of swnode in a way it
+> shouldn't be that the testing framework is exposing somehow.
 > 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 76a60d93fe23..ff7a6afa4558 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -69,6 +69,7 @@ struct stm32_dfsdm_dev_data {
->  
->  struct stm32_dfsdm_adc {
->  	struct stm32_dfsdm *dfsdm;
-> +	struct iio_dev *indio_dev;
->  	const struct stm32_dfsdm_dev_data *dev_data;
->  	unsigned int fl_id;
->  	unsigned int nconv;
-> @@ -332,7 +333,7 @@ static int stm32_dfsdm_compute_all_osrs(struct iio_dev *indio_dev,
->  
->  static int stm32_dfsdm_start_channel(struct stm32_dfsdm_adc *adc)
->  {
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	const struct iio_chan_spec *chan;
->  	unsigned int bit;
-> @@ -352,7 +353,7 @@ static int stm32_dfsdm_start_channel(struct stm32_dfsdm_adc *adc)
->  
->  static void stm32_dfsdm_stop_channel(struct stm32_dfsdm_adc *adc)
->  {
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	const struct iio_chan_spec *chan;
->  	unsigned int bit;
-> @@ -422,7 +423,7 @@ static int stm32_dfsdm_filter_set_trig(struct stm32_dfsdm_adc *adc,
->  				       unsigned int fl_id,
->  				       struct iio_trigger *trig)
->  {
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	u32 jextsel = 0, jexten = STM32_DFSDM_JEXTEN_DISABLED;
->  	int ret;
-> @@ -451,7 +452,7 @@ static int stm32_dfsdm_channels_configure(struct stm32_dfsdm_adc *adc,
->  					  unsigned int fl_id,
->  					  struct iio_trigger *trig)
->  {
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[fl_id];
->  	struct stm32_dfsdm_filter_osr *flo = &fl->flo[0];
-> @@ -495,7 +496,7 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
->  					unsigned int fl_id,
->  					struct iio_trigger *trig)
->  {
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[fl_id];
->  	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fl->fast];
-> @@ -1314,7 +1315,7 @@ static const struct iio_info stm32_dfsdm_info_adc = {
->  static irqreturn_t stm32_dfsdm_irq(int irq, void *arg)
->  {
->  	struct stm32_dfsdm_adc *adc = arg;
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	struct regmap *regmap = adc->dfsdm->regmap;
->  	unsigned int status, int_en;
->  
-> @@ -1569,6 +1570,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
->  
->  	adc = iio_priv(iio);
->  	adc->dfsdm = dev_get_drvdata(dev->parent);
-> +	adc->indio_dev = iio;
->  
->  	iio->dev.parent = dev;
->  	iio->dev.of_node = np;
-> @@ -1651,7 +1653,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
->  static int stm32_dfsdm_adc_remove(struct platform_device *pdev)
->  {
->  	struct stm32_dfsdm_adc *adc = platform_get_drvdata(pdev);
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  
->  	if (adc->dev_data->type == DFSDM_AUDIO)
->  		of_platform_depopulate(&pdev->dev);
-> @@ -1664,7 +1666,7 @@ static int stm32_dfsdm_adc_remove(struct platform_device *pdev)
->  static int __maybe_unused stm32_dfsdm_adc_suspend(struct device *dev)
->  {
->  	struct stm32_dfsdm_adc *adc = dev_get_drvdata(dev);
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  
->  	if (iio_buffer_enabled(indio_dev))
->  		__stm32_dfsdm_predisable(indio_dev);
-> @@ -1675,7 +1677,7 @@ static int __maybe_unused stm32_dfsdm_adc_suspend(struct device *dev)
->  static int __maybe_unused stm32_dfsdm_adc_resume(struct device *dev)
->  {
->  	struct stm32_dfsdm_adc *adc = dev_get_drvdata(dev);
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-> +	struct iio_dev *indio_dev = adc->indio_dev;
->  	const struct iio_chan_spec *chan;
->  	struct stm32_dfsdm_channel *ch;
->  	int i, ret;
+> Let me dig deeper...
 
+Ah, ick, static software nodes trying to be cleaned up in the totally
+wrong order.  You can't just try to randomly clean up a kobject anywhere
+in the middle of the hierarchy, that's flat out not going to work
+properly.  let me unwind it...
+
+
+greg k-h
