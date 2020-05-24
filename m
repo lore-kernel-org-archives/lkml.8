@@ -2,91 +2,124 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C21C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E6E20759
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B5B207F7
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:11:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J786UewE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbgEXCJa (ORCPT
+        id S2388306AbgEXCLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 22:09:30 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:50904 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387611AbgEXCJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 22:09:30 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app2 (Coremail) with SMTP id by_KCgDnzpEj18leS73BAQ--.41369S4;
-        Sun, 24 May 2020 10:08:39 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Andi Shyti <andi.shyti@intel.com>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
-        Abdiel Janulgue <abdiel.janulgue@linux.intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i915/selftests: Fix runtime PM imbalance on error
-Date:   Sun, 24 May 2020 10:08:32 +0800
-Message-Id: <20200524020835.7989-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgDnzpEj18leS73BAQ--.41369S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw4UCw4xCFWUury3tr17Awb_yoWfAFcEkr
-        yYvr97Wr4DZFs5AF13Xa13Zry0vFnFvrWkt3W7ta4Svry3Z3y8WrWkZF1UWw17WayjgFZF
-        qa1vvF4kArn7GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbpwZ7UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQANsN
+        Sat, 23 May 2020 22:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388225AbgEXCLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 22:11:11 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40444C061A0E;
+        Sat, 23 May 2020 19:11:11 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x10so6006247plr.4;
+        Sat, 23 May 2020 19:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1NYHauUBWTQgbc43oFTAJCreNKv+baIo/68K96Zs4rc=;
+        b=J786UewExllUKHofcVvgLTI358KCYatvgJpAOm0F2OufvL+pVNAtJGo1pj6JUBbbpC
+         3NF7ePvGe1k+NcGAVJWA2jqXhGQgat6fKQL9C+cfS+HDIRW3Ap1PV2RjfeIRroac1Ezk
+         KhFr6z8QBUa1W8cUNJnD/40ivm8kFHrTlkiHK7cocLe4YIU63lxvhlKVJLa1uVkKSRXG
+         K5T/3uWMrNaxJoDU2eQqFcsAoD5BLt9X90hzco/4eRKjYTM1gkTYB1q7X53w991RSW2v
+         1MVV+EKruZWQnr+ZrRghABtNQQDfIE7Sfy1pYYOvIS3EeWc8l92vFliiDW9EjpixaL1h
+         Qflg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1NYHauUBWTQgbc43oFTAJCreNKv+baIo/68K96Zs4rc=;
+        b=Qb9sNV064AArRV05HIGQ6y9u5uXrTjVSEBDbki/iMQ+pi6j7p0mSaz7zYpV8sJK7F1
+         SnAKETVrr1kiqND/xtpj4rTmJ9vDJM+gDlH52p7fXgi4gG8VYHHviqdgh/Q4pxlqmAE+
+         2Ggp+8zUpP/PC7mDAtUyCoKozvF6tWfXW9FGgI9Ladfgltn3de2A83j8bmyweAdp4IFd
+         5IJA7kOiPgVGF/fMG9bwkVtorZ6tqIR6U+ZV0GYyMR10vbPUM0ylo0BttwhPdmmdw2Vs
+         BxwwMcRtOUFn79f+TZkIWI9NrvKLHRHNyWiPEiQcaMQ5OPE4RrqRbsoBPLixUJVgMUsV
+         DrtQ==
+X-Gm-Message-State: AOAM533jwINdWIdx6a8eKtZ9wcS5OrU277jRE5R+DietqyoGPCTLCQ8w
+        YqCuEBXqLwmNMfVyen4AWDM=
+X-Google-Smtp-Source: ABdhPJzjaswgBjGeZOebznwn3ru9lufOX3WhHax+o+4Bd9NRfLzG3TqcRXoKe1CoWCEUQMaErKCTqQ==
+X-Received: by 2002:a17:90a:10c1:: with SMTP id b1mr7863131pje.232.1590286270773;
+        Sat, 23 May 2020 19:11:10 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id p1sm1961780pjz.36.2020.05.23.19.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 19:11:10 -0700 (PDT)
+Date:   Sat, 23 May 2020 19:11:06 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Jianyong Wu <jianyong.wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com,
+        steven.price@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com,
+        justin.he@arm.com, Wei.Chen@arm.com, nd@arm.com
+Subject: Re: [RFC PATCH v12 10/11] arm64: add mechanism to let user choose
+ which counter to return
+Message-ID: <20200524021106.GC335@localhost>
+References: <20200522083724.38182-1-jianyong.wu@arm.com>
+ <20200522083724.38182-11-jianyong.wu@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522083724.38182-11-jianyong.wu@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When drm_dev_init() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep
-the counter balanced. For error paths after this call,
-things are the same.
+On Fri, May 22, 2020 at 04:37:23PM +0800, Jianyong Wu wrote:
+> In general, vm inside will use virtual counter compered with host use
+> phyical counter. But in some special scenarios, like nested
+> virtualization, phyical counter maybe used by vm. A interface added in
+> ptp_kvm driver to offer a mechanism to let user choose which counter
+> should be return from host.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/gpu/drm/i915/selftests/mock_gem_device.c | 1 +
- 1 file changed, 1 insertion(+)
+Sounds like you have two time sources, one for normal guest, and one
+for nested.  Why not simply offer the correct one to user space
+automatically?  If that cannot be done, then just offer two PHC
+devices with descriptive names.
 
-diff --git a/drivers/gpu/drm/i915/selftests/mock_gem_device.c b/drivers/gpu/drm/i915/selftests/mock_gem_device.c
-index 754d0eb6beaa..fdf01461acc6 100644
---- a/drivers/gpu/drm/i915/selftests/mock_gem_device.c
-+++ b/drivers/gpu/drm/i915/selftests/mock_gem_device.c
-@@ -200,6 +200,7 @@ struct drm_i915_private *mock_gem_device(void)
- 	drm_mode_config_cleanup(&i915->drm);
- 	drm_dev_fini(&i915->drm);
- put_device:
-+	pm_runtime_put_noidle(&pdev->dev);
- 	put_device(&pdev->dev);
- err:
- 	return NULL;
--- 
-2.17.1
+> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+> index fef72f29f3c8..8b0a7b328bcd 100644
+> --- a/drivers/ptp/ptp_chardev.c
+> +++ b/drivers/ptp/ptp_chardev.c
+> @@ -123,6 +123,9 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+>  	struct timespec64 ts;
+>  	int enable, err = 0;
+>  
+> +#ifdef CONFIG_ARM64
+> +	static long flag;
 
+static?  This is not going to fly.
+
+> +		 * In most cases, we just need virtual counter from host and
+> +		 * there is limited scenario using this to get physical counter
+> +		 * in guest.
+> +		 * Be careful to use this as there is no way to set it back
+> +		 * unless you reinstall the module.
+
+How on earth is the user supposed to know this?
+
+From your description, this "flag" really should be a module
+parameter.
+
+Thanks,
+Richard
