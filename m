@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1787DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE64C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E0B2076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2803B207D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgEXJR1 (ORCPT
+        id S2387594AbgEXJS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 05:17:27 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:50789 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgEXJR0 (ORCPT
+        Sun, 24 May 2020 05:18:28 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:51203 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgEXJS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 05:17:26 -0400
+        Sun, 24 May 2020 05:18:28 -0400
 Received: from localhost.localdomain (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
         (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7D2AA200007;
-        Sun, 24 May 2020 09:17:23 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 21CD6240002;
+        Sun, 24 May 2020 09:18:24 +0000 (UTC)
 From:   Alexandre Ghiti <alex@ghiti.fr>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -32,126 +32,53 @@ To:     Paul Walmsley <paul.walmsley@sifive.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Alexandre Ghiti <alex@ghiti.fr>,
         Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH 7/8] riscv: Use pgtable_l4_enabled to output mmu type in cpuinfo
-Date:   Sun, 24 May 2020 05:10:07 -0400
-Message-Id: <20200524091008.25587-8-alex@ghiti.fr>
+Subject: [PATCH 8/8] riscv: Explicit comment about user virtual address space size
+Date:   Sun, 24 May 2020 05:10:08 -0400
+Message-Id: <20200524091008.25587-9-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200524091008.25587-1-alex@ghiti.fr>
 References: <20200524091008.25587-1-alex@ghiti.fr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the mmu type is determined at runtime using SATP
-characteristic, use the global variable pgtable_l4_enabled to output
-mmu type of the processor through /proc/cpuinfo instead of relying on
-device tree infos.
+Define precisely the size of the user accessible virtual space size
+for sv32/39/48 mmu types and explain why the whole virtual address
+space is split into 2 equal chunks between kernel and user space.
 
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 Reviewed-by: Anup Patel <anup@brainfault.org>
 Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi |  4 ----
- arch/riscv/kernel/cpu.c                    | 24 ++++++++++++----------
- 2 files changed, 13 insertions(+), 15 deletions(-)
+ arch/riscv/include/asm/pgtable.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 7db861053483..6138590a2229 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -50,7 +50,6 @@
- 			i-cache-size = <32768>;
- 			i-tlb-sets = <1>;
- 			i-tlb-size = <32>;
--			mmu-type = "riscv,sv39";
- 			reg = <1>;
- 			riscv,isa = "rv64imafdc";
- 			tlb-split;
-@@ -74,7 +73,6 @@
- 			i-cache-size = <32768>;
- 			i-tlb-sets = <1>;
- 			i-tlb-size = <32>;
--			mmu-type = "riscv,sv39";
- 			reg = <2>;
- 			riscv,isa = "rv64imafdc";
- 			tlb-split;
-@@ -98,7 +96,6 @@
- 			i-cache-size = <32768>;
- 			i-tlb-sets = <1>;
- 			i-tlb-size = <32>;
--			mmu-type = "riscv,sv39";
- 			reg = <3>;
- 			riscv,isa = "rv64imafdc";
- 			tlb-split;
-@@ -122,7 +119,6 @@
- 			i-cache-size = <32768>;
- 			i-tlb-sets = <1>;
- 			i-tlb-size = <32>;
--			mmu-type = "riscv,sv39";
- 			reg = <4>;
- 			riscv,isa = "rv64imafdc";
- 			tlb-split;
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 40a3c442ac5f..38a699b997a8 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -8,6 +8,8 @@
- #include <linux/of.h>
- #include <asm/smp.h>
- 
-+extern bool pgtable_l4_enabled;
-+
- /*
-  * Returns the hart ID of the given device tree node, or -ENODEV if the node
-  * isn't an enabled and valid RISC-V hart node.
-@@ -54,18 +56,19 @@ static void print_isa(struct seq_file *f, const char *isa)
- 	seq_puts(f, "\n");
- }
- 
--static void print_mmu(struct seq_file *f, const char *mmu_type)
-+static void print_mmu(struct seq_file *f)
- {
-+	char sv_type[16];
-+
- #if defined(CONFIG_32BIT)
--	if (strcmp(mmu_type, "riscv,sv32") != 0)
--		return;
-+	strncpy(sv_type, "sv32", 5);
- #elif defined(CONFIG_64BIT)
--	if (strcmp(mmu_type, "riscv,sv39") != 0 &&
--	    strcmp(mmu_type, "riscv,sv48") != 0)
--		return;
-+	if (pgtable_l4_enabled)
-+		strncpy(sv_type, "sv48", 5);
-+	else
-+		strncpy(sv_type, "sv39", 5);
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index b8a8ba69d0a2..0c7d07f614b3 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -481,8 +481,15 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
  #endif
--
--	seq_printf(f, "mmu\t\t: %s\n", mmu_type+6);
-+	seq_printf(f, "mmu\t\t: %s\n", sv_type);
- }
  
- static void *c_start(struct seq_file *m, loff_t *pos)
-@@ -90,14 +93,13 @@ static int c_show(struct seq_file *m, void *v)
- {
- 	unsigned long cpu_id = (unsigned long)v - 1;
- 	struct device_node *node = of_get_cpu_node(cpu_id, NULL);
--	const char *compat, *isa, *mmu;
-+	const char *compat, *isa;
- 
- 	seq_printf(m, "processor\t: %lu\n", cpu_id);
- 	seq_printf(m, "hart\t\t: %lu\n", cpuid_to_hartid_map(cpu_id));
- 	if (!of_property_read_string(node, "riscv,isa", &isa))
- 		print_isa(m, isa);
--	if (!of_property_read_string(node, "mmu-type", &mmu))
--		print_mmu(m, mmu);
-+	print_mmu(m);
- 	if (!of_property_read_string(node, "compatible", &compat)
- 	    && strcmp(compat, "riscv"))
- 		seq_printf(m, "uarch\t\t: %s\n", compat);
+ /*
+- * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+- * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
++ * Task size is:
++ * -     0x9fc00000 (~2.5GB) for RV32.
++ * -   0x4000000000 ( 256GB) for RV64 using SV39 mmu
++ * - 0x800000000000 ( 128TB) for RV64 using SV48 mmu
++ *
++ * Note that PGDIR_SIZE must evenly divide TASK_SIZE since "RISC-V
++ * Instruction Set Manual Volume II: Privileged Architecture" states that
++ * "load and store effective addresses, which are 64bits, must have bits
++ * 63–48 all equal to bit 47, or else a page-fault exception will occur."
+  */
+ #ifdef CONFIG_64BIT
+ #define TASK_SIZE (PGDIR_SIZE * PTRS_PER_PGD / 2)
 -- 
 2.20.1
 
