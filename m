@@ -2,135 +2,147 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01027C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F018207C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418C7207C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/2AKCpD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2OK68h4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgEXIag (ORCPT
+        id S1728420AbgEXIeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 04:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
+        Sun, 24 May 2020 04:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgEXIag (ORCPT
+        with ESMTP id S1726331AbgEXIeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 04:30:36 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DDAC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 01:30:35 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id z5so17605970ejb.3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 01:30:35 -0700 (PDT)
+        Sun, 24 May 2020 04:34:02 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6FDC061A0E;
+        Sun, 24 May 2020 01:34:01 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w10so17621083ljo.0;
+        Sun, 24 May 2020 01:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=86C6qQlpj66Vdu46Is+yMMwh5i/kAr5WUUQnyqcq9nw=;
-        b=f/2AKCpDmqUEshPrE7Wk4dThtsUXAUuOvBREWBCWtdTJKMWgsKWoKykMtqNery1Ziw
-         sjHbcZsbq6dh82xXTDdvHee0IpZrdjv7c/c2RDMtqmT/xLZ8YKoeXMgxPR0RPH2C3KTt
-         Oj6zEwI8rXXvdFwD1xkS9kOiJQwXUjA/F1yKyXWnUnfIypca6C/gFigvCdj75W47krr3
-         DJf8wtMaq9PWbYt5wBVtb5vQPwwTxnj7Iu4X+hKrmfRNoXMYGGqqjqmpMiUWA2wRLGKh
-         O8VHXrmFnNZ/xRTS8q5aKtIQVEQxQFpcoi/hWLWIGHWsA0VlWobTfqCgU5Iiw3oSv18D
-         qLVg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ym2/jmTuyZ+LCBHY8uUjF46ZmpdYuv1HzG4ugP1Ee4c=;
+        b=a2OK68h4qAK4dqg2rQRo8Rc37ilbBu7fedOc1eeY8wPG5npT+PP5fRrec8wXKowX96
+         AYouvBDwSKKubCp3bgbXwrqmZeMdpQgvlBCEjsMvsO33DNIzkdlFQLL3N7DSF1NBSc4G
+         XcLqHaiig+Cc00/JXzXObmM6xAPryWfXk9R1I/l3Wf1ic2V8QLdRAPjhVzB16InUNBgQ
+         Dmumf6k5hUiUhkqRlUEYCt8vOa1E6A7O+Yn6GBL/s1gTCj0GI1GAlh/kAnoKxWTnoxgO
+         eHCvEP52/Y8oahSavx4GfwLfLI/orzXNuYHUv22DwIH10YMzeTdOWssMWHJBtIChR+jc
+         iRsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=86C6qQlpj66Vdu46Is+yMMwh5i/kAr5WUUQnyqcq9nw=;
-        b=Wm5LNfP0zlfKSn+180jo6GWZE6kH07A2qxR+s9ly/W3GLcaCDi0yJtyJAWBbQCOIOT
-         3uMARo5ty9PeLYYxLmia6YZD1LxVT8b7iCxUN012LIFQbgMnvax/ZCeFcwIiah7o++iH
-         eGO9NM3fJXpizH814MxW3IfcmwY9+MipSAyOtjF1XaEwb1rpWJQf4LB7cFeug6jC4Yub
-         MIRiqHzQctTsb6SxF0UcgJGi/AZxVb0o9lPpDE+iSYRSg7bEf6XfGfnbCUCZovlS6P2A
-         QQh3w6S90372W9WpXfysHRQaOCygaDNhY0jk/0SnlccOyshK5e1RQgrwCStgOtYxxvQ1
-         uSIA==
-X-Gm-Message-State: AOAM531wG0KMVSuU57UiawB7REuXuCE+MtoQ4Y0KNQfnSFc7jSy0bmmZ
-        oXhy/eirD014N4TRsKET5sQ=
-X-Google-Smtp-Source: ABdhPJyDmd1aAO6M8pHpbFtz+KWAKSSM/4ZTyXwcwqhOUmXidYFZDslKjBLQ2fqs4Fi3nQBBO7lFxw==
-X-Received: by 2002:a17:906:7e03:: with SMTP id e3mr1282041ejr.363.1590309034281;
-        Sun, 24 May 2020 01:30:34 -0700 (PDT)
-Received: from localhost.localdomain (dslb-178-006-252-177.178.006.pools.vodafone-ip.de. [178.6.252.177])
-        by smtp.gmail.com with ESMTPSA id d22sm12430381ejb.15.2020.05.24.01.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 01:30:33 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: clean up some declarations
-Date:   Sun, 24 May 2020 10:27:48 +0200
-Message-Id: <20200524082748.12901-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ym2/jmTuyZ+LCBHY8uUjF46ZmpdYuv1HzG4ugP1Ee4c=;
+        b=Sm2Aw+dora/67pmKlF8opISLoASVysQlsGSOofXkkESb1Uiw8DMiHTDWoe3kplU1yY
+         WE3eKEfwhTQx4hvmnOW6SgcGSACE4U6gXyL+rNLFy4HoXpinnEJhg8DCB0s3vXHKNAwR
+         JOPXRYajl1eEnAfwjDZNhz48mVmEdKMKCDCQ4b9cjd62htWltvvHk5JdoKOKNWvjjdUE
+         83euzN9PfsLDD44eKsNpnftZ7U8q8KwuZkRh33K3oYQHv0smtvhvSZBAXP+q2Rk5YTvq
+         BlA5pPboU/ABv+jKUuwyaxAT2L21doMv4hyB/9yfRTXjRYrXKSpZskXtca9AwcIhiEEL
+         3NXw==
+X-Gm-Message-State: AOAM530RDyodp9VK8F8+2VQcGWasqBiq6wdAHAgqiAjPa0IywxHm4jO6
+        j9VYDDigHQ+63LJQWLvZlpoWPV/v9203KAZkWoI=
+X-Google-Smtp-Source: ABdhPJyBeDmLEIA6+69iUoeLVOe0EjmnE3EcoRmeGkobz8HZ7gPzhnIXQ9hDlQd64+9msfF5i7BtMZDVtdHZlpC2mTA=
+X-Received: by 2002:a2e:898d:: with SMTP id c13mr9696182lji.108.1590309239942;
+ Sun, 24 May 2020 01:33:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200522113312.181413-1-tali.perry1@gmail.com>
+ <20200522113312.181413-2-tali.perry1@gmail.com> <20200522224217.GA847856@bogus>
+ <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
+In-Reply-To: <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
+From:   Tali Perry <tali.perry1@gmail.com>
+Date:   Sun, 24 May 2020 11:35:20 +0300
+Message-ID: <CAHb3i=ummYNiqqS4QNi1n1XAzg6bbGXyNPgmFeU_a0T+JP7xqQ@mail.gmail.com>
+Subject: Re: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, kfting@nuvoton.com,
+        Benjamin Fair <benjaminfair@google.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Patrick Venture <venture@google.com>,
+        Ofer Yehielli <ofery@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up some array declarations in phy_iq_calibrate() to reduce
-indentation and clear line over 80 characters checkpatch warnings.
+Hi Rob,
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/hal/phy.c | 33 +++++++++++++++--------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+On Sat, May 23, 2020 at 1:47 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, May 22, 2020 at 4:42 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, 22 May 2020 14:33:10 +0300, Tali Perry wrote:
+> > > Added device tree binding documentation for Nuvoton BMC
+> > > NPCM I2C controller.
+> > >
+> > > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> > > ---
+> > >  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
+> > >  1 file changed, 60 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+> > >
+> >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
+> > make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
+> > make[1]: *** Waiting for unfinished jobs....
+> > Makefile:1300: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> >
+> > See https://patchwork.ozlabs.org/patch/1296162
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> >
+> > Please check and re-submit.
+>
+> Why do you keep sending new versions with the same problem? It won't
+> get reviewed until this is fixed. This isn't a free automated service
+> to throw things at to see if they work. I have to review the failures.
+>
+> Rob
 
-diff --git a/drivers/staging/rtl8188eu/hal/phy.c b/drivers/staging/rtl8188eu/hal/phy.c
-index 5eca3625d5a8..a0522d6764d6 100644
---- a/drivers/staging/rtl8188eu/hal/phy.c
-+++ b/drivers/staging/rtl8188eu/hal/phy.c
-@@ -953,25 +953,26 @@ static void phy_iq_calibrate(struct adapter *adapt, s32 result[][8],
- 	u32 i;
- 	u8 path_a_ok, path_b_ok;
- 	u32 adda_reg[IQK_ADDA_REG_NUM] = {
--					  rFPGA0_XCD_SwitchControl, rBlue_Tooth,
--					  rRx_Wait_CCA, rTx_CCK_RFON,
--					  rTx_CCK_BBON, rTx_OFDM_RFON,
--					  rTx_OFDM_BBON, rTx_To_Rx,
--					  rTx_To_Tx, rRx_CCK,
--					  rRx_OFDM, rRx_Wait_RIFS,
--					  rRx_TO_Rx, rStandby,
--					  rSleep, rPMPD_ANAEN};
--
-+		rFPGA0_XCD_SwitchControl, rBlue_Tooth,
-+		rRx_Wait_CCA, rTx_CCK_RFON,
-+		rTx_CCK_BBON, rTx_OFDM_RFON,
-+		rTx_OFDM_BBON, rTx_To_Rx,
-+		rTx_To_Tx, rRx_CCK,
-+		rRx_OFDM, rRx_Wait_RIFS,
-+		rRx_TO_Rx, rStandby,
-+		rSleep, rPMPD_ANAEN
-+	};
- 	u32 iqk_mac_reg[IQK_MAC_REG_NUM] = {
--					    REG_TXPAUSE, REG_BCN_CTRL,
--					    REG_BCN_CTRL_1, REG_GPIO_MUXCFG};
--
-+		REG_TXPAUSE, REG_BCN_CTRL,
-+		REG_BCN_CTRL_1, REG_GPIO_MUXCFG
-+	};
- 	/* since 92C & 92D have the different define in IQK_BB_REG */
- 	u32 iqk_bb_reg_92c[IQK_BB_REG_NUM] = {
--					      rOFDM0_TRxPathEnable, rOFDM0_TRMuxPar,
--					      rFPGA0_XCD_RFInterfaceSW, rConfig_AntA, rConfig_AntB,
--					      rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
--					      rFPGA0_XB_RFInterfaceOE, rFPGA0_RFMOD};
-+		rOFDM0_TRxPathEnable, rOFDM0_TRMuxPar,
-+		rFPGA0_XCD_RFInterfaceSW, rConfig_AntA, rConfig_AntB,
-+		rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
-+		rFPGA0_XB_RFInterfaceOE, rFPGA0_RFMOD
-+	};
- 
- 	u32 retry_count = 9;
- 
--- 
-2.26.2
+Definitely not trying to use the Bot to check my yaml. On the first
+version the dt-check was not updated on my side.
+On the previous version I updated according to the bot explanations.
+Found an error and fixed it. Now I don't see any errors. with latest
+dt-check.
+I did:
 
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
+--upgrade
+make dt_binding_check
+
+And got a clean log, no warnings or errors. Was I suppose to check
+anything else?
+
+Thanks,
+Tali
