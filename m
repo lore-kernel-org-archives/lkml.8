@@ -2,202 +2,138 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B82C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC382076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E42B2076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 23:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QeeaUABZ"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="GCKHxVz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388590AbgEXXgN (ORCPT
+        id S2388598AbgEXXjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 19:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
+        Sun, 24 May 2020 19:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387914AbgEXXgN (ORCPT
+        with ESMTP id S2388120AbgEXXjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 19:36:13 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A90C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:36:13 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bg4so1520272plb.3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:36:12 -0700 (PDT)
+        Sun, 24 May 2020 19:39:48 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E65C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:39:46 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ci23so7775548pjb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 16:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/xSfk8UNIM4h1pIcoF/9EHCGXYkBOmPVW3Mq1rqJ1Bw=;
-        b=QeeaUABZgKIL3kaH31FoNGWufVvWNec0TZ5UsuZOCEnRk8+eS9pjWgzJoSn40kG1/X
-         jcFJsZBiLmNaB6+b303tdFBI8ErFJV3+8eH04UQ09wr6+O2uNq4lMQLFLCDvQlMR32+0
-         RMQRBXbHx2kLpct8xh7/2/J1ysJavNbZXn/J9gcbrShTm+w9Oduh2gZDQR650KYJe8uH
-         PWLitPBXKBd7t0Rvp93AHI1f4k6937DS2jmw8p0LFJzTEmA3wKtitNkgzH9YVclSyrVx
-         diTra4psaw+vbpNgtDYUNQWP8nsVCZN5eqCJMfTCKxZi4fPf16rfpA7EWaP/n8lw4zZG
-         UVkA==
+        d=sargun.me; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dECFMl9BmmZ3+aYimNGMaHnjr31NSpcMrgo0hG57jSE=;
+        b=GCKHxVz/fL3BhDuGXbcUgVZYy3X+rDbmzbLHsW3C2IIIU7jKp9zs7WtQyBn9oXgltU
+         oHAedSy3n2UqH1/xJkuE9Xxumx8S/hQzW1Yq12yF1MHOD3sW5o2uqgYtoxqTe7wSX61+
+         wVj/v/yR/Dho4fLFJnHRiX62/H9onLke6YIWA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/xSfk8UNIM4h1pIcoF/9EHCGXYkBOmPVW3Mq1rqJ1Bw=;
-        b=gh9h/TzeNWvw6zPZs8Fo0bzFoq5P2k/hVTjDKWzzChrknFeBC6G2+vP+LWa91sgT2w
-         wDDmj6Mebn27TFOScPHZiEXJYLQinlWuPcQwY4pgTXYcqMMPXa74btx4rRs6nOYf9sC4
-         9FK6A0FiK5Sod6+Q8QsTvQBHeyG3OLf7HApecod+I1m+I1pO6XPtAh4hVpwf0k4wO7+u
-         /UVh7mxt6jyn4Bk522CgH9iEF+l0BbwVmllbkIEQ7IITLwuBVej+pIte0t82Z7mfQEe5
-         82zGFNmN6dxxv/LXlQ8J7oayY1iQRO9iEaTn1Q4Wb4coOhTdepDuFuBWqR15BUk9IUCv
-         8tDw==
-X-Gm-Message-State: AOAM531A9bMR1+rhZSiDdvN7zhYOsONjiR7uUdEQ/Ky7UD+RlwmcIlw/
-        KFqTgcQlxGp1smR11yBX35Zopg==
-X-Google-Smtp-Source: ABdhPJwl3z03bzxPrfzpnHzT7q7i/5q9HmT8LeSs/4VODMqNHafKAP74M3UOCJZYTdUgne7W8QlTjQ==
-X-Received: by 2002:a17:90a:64c6:: with SMTP id i6mr16719577pjm.14.1590363372259;
-        Sun, 24 May 2020 16:36:12 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id 2sm11652343pfz.39.2020.05.24.16.36.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dECFMl9BmmZ3+aYimNGMaHnjr31NSpcMrgo0hG57jSE=;
+        b=RF9YqUM+CbR10UMvcBE3ujfgSDyW5/hj4JDavTjSzWFFE/nRuoiozUsYSpdyvgGOcr
+         tbSugb7m6/SjMn20AhQymyXraGFtOqBN1fL3rPtdQGmffYn7rsIQAQdbgd7ZqeahKfH0
+         tDgSVzEXHaay2qrD9t36EATW51SJSKwBDqHI5H2Tco9yNuUUWfa4CW/A99cgFO4wytcQ
+         GAFq7No8yrdFBYJ5de5ISpSWol+BFiZCajbUPIZghNCpt50tO0FigLCHgmawApz9iFvG
+         TZW439WEw5HEuMHJumFBeVus4j2lxyUl2Aq0+milylL96nTQ8eV/R/BFLphXZkD4vD4k
+         KaMw==
+X-Gm-Message-State: AOAM533HZGlmdTJlx0s8Lu9UkS8BAlthHUHgapoVk/XYbqPWOnQNwyw+
+        agcPYIDEbegTuNJSFwEs+0T8HX84nJ5rCnd8
+X-Google-Smtp-Source: ABdhPJw5FNIgchuHVTYQM5hwt4Kd+TtTpK1LkOXfqM8KGDJ9jbvBYAllkAWh1t+0VqQBHZxp31QU/A==
+X-Received: by 2002:a17:90a:690f:: with SMTP id r15mr18203328pjj.65.1590363585776;
+        Sun, 24 May 2020 16:39:45 -0700 (PDT)
+Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
+        by smtp.gmail.com with ESMTPSA id b16sm11633177pfi.74.2020.05.24.16.39.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 16:36:11 -0700 (PDT)
-Date:   Sun, 24 May 2020 16:36:07 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/boot: Check that there are no runtime relocations
-Message-ID: <20200524233607.cihnsmxuaqoy7xi4@google.com>
-References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
- <20200524212816.243139-5-nivedita@alum.mit.edu>
+        Sun, 24 May 2020 16:39:45 -0700 (PDT)
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org
+Cc:     Sargun Dhillon <sargun@sargun.me>, christian.brauner@ubuntu.com,
+        tycho@tycho.ws, keescook@chromium.org, cyphar@cyphar.com,
+        Jeffrey Vander Stoep <jeffv@google.com>, jannh@google.com,
+        rsesek@google.com, palmer@google.com
+Subject: [PATCH 0/5] Add seccomp notifier ioctl that enables adding fds
+Date:   Sun, 24 May 2020 16:39:37 -0700
+Message-Id: <20200524233942.8702-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200524212816.243139-5-nivedita@alum.mit.edu>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-24, Arvind Sankar wrote:
->Add a linker script check that there are no runtime relocations, and
->remove the old one that tries to check via looking for specially-named
->sections in the object files.
->
->Drop the tests for -fPIE compiler option and -pie linker option, as they
->are available in all supported gcc and binutils versions (as well as
->clang and lld).
->
->Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
->---
-> arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
-> arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++
-> 2 files changed, 14 insertions(+), 25 deletions(-)
->
->diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
->index d3e882e855ee..679a2b383bfe 100644
->--- a/arch/x86/boot/compressed/Makefile
->+++ b/arch/x86/boot/compressed/Makefile
->@@ -27,7 +27,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
-> 	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
->
-> KBUILD_CFLAGS := -m$(BITS) -O2
->-KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
->+KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
-> KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
-> cflags-$(CONFIG_X86_32) := -march=i386
-> cflags-$(CONFIG_X86_64) := -mcmodel=small
->@@ -49,7 +49,7 @@ UBSAN_SANITIZE :=n
-> KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
-> # Compressed kernel should be built as PIE since it may be loaded at any
-> # address by the bootloader.
->-KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
->+KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
-> LDFLAGS_vmlinux := -T
->
-> hostprogs	:= mkpiggy
->@@ -84,30 +84,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
-> vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
->
->-# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
->-# can place it anywhere in memory and it will still run. However, since
->-# it is executed as-is without any ELF relocation processing performed
->-# (and has already had all relocation sections stripped from the binary),
->-# none of the code can use data relocations (e.g. static assignments of
->-# pointer values), since they will be meaningless at runtime. This check
->-# will refuse to link the vmlinux if any of these relocations are found.
->-quiet_cmd_check_data_rel = DATAREL $@
->-define cmd_check_data_rel
->-	for obj in $(filter %.o,$^); do \
->-		$(READELF) -S $$obj | grep -qF .rel.local && { \
->-			echo "error: $$obj has data relocations!" >&2; \
->-			exit 1; \
->-		} || true; \
->-	done
->-endef
->-
->-# We need to run two commands under "if_changed", so merge them into a
->-# single invocation.
->-quiet_cmd_check-and-link-vmlinux = LD      $@
->-      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
->-
-> $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
->-	$(call if_changed,check-and-link-vmlinux)
->+	$(call if_changed,ld)
->
-> OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
-> $(obj)/vmlinux.bin: vmlinux FORCE
->diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
->index d826ab38a8f9..0ac14feacb24 100644
->--- a/arch/x86/boot/compressed/vmlinux.lds.S
->+++ b/arch/x86/boot/compressed/vmlinux.lds.S
->@@ -11,9 +11,15 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
-> #ifdef CONFIG_X86_64
-> OUTPUT_ARCH(i386:x86-64)
-> ENTRY(startup_64)
->+
->+#define REL .rela
->+
-> #else
-> OUTPUT_ARCH(i386)
-> ENTRY(startup_32)
->+
->+#define REL .rel
->+
-> #endif
->
-> SECTIONS
->@@ -42,6 +48,9 @@ SECTIONS
-> 		*(.rodata.*)
-> 		_erodata = . ;
-> 	}
->+	REL.dyn : {
->+		*(REL.*)
->+	}
-> 	.got : {
-> 		*(.got)
-> 	}
->@@ -83,3 +92,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
-> #else
-> ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
-> #endif
->+
->+ASSERT(SIZEOF(REL.dyn) == 0, "Unexpected runtime relocations detected!")
->-- 
->2.26.2
->
+This adds the capability for seccomp notifier listeners to add file
+descriptors in response to a seccomp notification. This is useful for
+syscalls in which the previous capabilities were not sufficient. The
+current mechanism works well for syscalls that either have side effects
+that are system / namespace wide (mount), or that operate on a specific
+set of registers (reboot, mknod), and don't require dereferencing pointers.
+The problem with derefencing pointers in a supervisor is that it leaves
+us vulnerable to TOC-TOU [1] style attacks. For syscalls that had a direct
+effect on file descriptors pidfd_getfd was added, allowing for those file
+descriptors to be directly operated upon by the supervisor [2].
 
-`grep -qF .rel.local` from 98f78525371b55ccd1c480207ce10296c72fa340
-may be incorrect.. None of these synthesized dynamic relocation sections is
-called *.rel.local* ...
-(it probably wanted to name .rel.data.rel.ro or .rel.data)
+Unfortunately, this leaves system calls which return file descriptors
+out of the picture. These are fairly common syscalls, such as openat,
+socket, and perf_event_open that return file descriptors, and have
+arguments that are pointers. These require that the supervisor is able to
+verify the arguments, make the call on behalf of the process on hand,
+and pass back the resulting file descriptor. This is where addfd comes
+into play.
 
+There is an additional flag that allows you to "set" an FD, rather than
+add it with an arbitrary number. This has dup2 style semantics, and
+installs the new file at that file descriptor, and atomically closes
+the old one if it existed. This is useful for a particular use case
+that we have, in which we want to swap out AF_INET sockets for AF_UNIX,
+AF_INET6, and sockets in another namespace when doing "upconversion".
 
-Reviewed-by: Fangrui Song <maskray@google.com>
+My specific usecase at Netflix is to enable our IPv4-IPv6 transition
+mechanism, in which we our namespaces have no real IPv4 reachability,
+and when it comes time to do a connect(2), we get a socket from a
+namespace with global IPv4 reachability.
+
+In addition, we intend to use it for our servicemesh, and where our
+service mesh needs to intercept traffic ingress traffic, the addfd
+capability will act as a mechanism to do socket activation.
+
+Addfd is not implemented as a separate syscall, a la pidfd_getfd, as
+VFS makes some optimizations in regards to the fdtable, and assumes
+that they are not modified by external processes. Although a mechanism
+that scheduled something in the context of the task could work, it is
+somewhat simpler to do it in the context of the ioctl as we control
+the task while in kernel.
+
+There is an additional flag (move) that was added to enable cgroup
+v1 controllers (netprio, classid), and moving sockets, as a socket
+can only be associated with one cgroup at a time.
+
+[1]: https://lore.kernel.org/lkml/20190918084833.9369-2-christian.brauner@ubuntu.com/
+[2]: https://lore.kernel.org/lkml/20200107175927.4558-1-sargun@sargun.me/
+
+Sargun Dhillon (5):
+  seccomp: Add find_notification helper
+  seccomp: Introduce addfd ioctl to seccomp user notifier
+  selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
+  seccomp: Add SECCOMP_ADDFD_FLAG_MOVE flag to add fd ioctl
+  selftests/seccomp: Add test for addfd move semantics
+
+ include/uapi/linux/seccomp.h                  |  33 +++
+ kernel/seccomp.c                              | 228 +++++++++++++++--
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 235 ++++++++++++++++++
+ 3 files changed, 479 insertions(+), 17 deletions(-)
+
+-- 
+2.25.1
+
