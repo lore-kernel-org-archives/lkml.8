@@ -2,147 +2,125 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE32C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982852076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="sKmEqVf0"
+	by mail.kernel.org (Postfix) with ESMTP id 1523A2076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgEXG5M (ORCPT
+        id S1728807AbgEXG72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 02:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgEXG5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 02:57:12 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E9F1C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:57:12 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id f3so15857791ioj.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=noxFunX2uI/FVRTYdrIrdHqbpc9T4lCMyDInJvvG8rs=;
-        b=sKmEqVf0g2OLue9Rp1A/WkSXf70RjVaTuI3MbjU8wS/C7acN/fmBvNE67EieNmqvMf
-         jRe1vfe9CkK76yclpUEWyB5YXYSqHDFJ772rO2kUs4rM8fmV6bBR7xZPMoIXLwN4m3hq
-         81SmFj/W6fm/8MOEpkzOpx48SdpvSfHm/VTOXCmuHsaFKpvKF9qbFyprxsq8P8Gd2i8i
-         3MT3a3JnCibxEtC7K1Gjrw0WVb8WJpIPXqWIPvI9qnsqInY1p0gQ7hSWbyLLxNTNn1ta
-         ezpvkeuMoxqR9Um0oPBP4N58/efb+RFrBlPbDxXOdHsAe7izw0VhQD7R3e4ueAIVhQX9
-         VlPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=noxFunX2uI/FVRTYdrIrdHqbpc9T4lCMyDInJvvG8rs=;
-        b=Nv/tSBMUqpREV+XQ0PWzJJ2m/KAB6LdNVm6bg9HU3WtSw9coFub2JfXvAluKpO82/V
-         0AMA52pQaLKRPvAZbOI5EVZ/2rrOnbNH4B49UnR0qGPEAqzo4kDgNpT7pk6L1nx8IJv1
-         m5aNiBDdKcThDkXufZnj2UkFQVH9K24DrpYSOFpBK2KVKNigMMACnCtKhtyjmYE3FLwR
-         cMb3bvWzy8x3OZvECeQySLnqSFPOql3ARmF6asic8gqt1gd/f8i7eykZYeAW2IxdFr0w
-         35uBSkNt/50vd/QPx3VgRbJEV/7JhuMsr2GBo5jFG6iYd0pO0YBZwdxbM/DlfQfXLES2
-         XwzA==
-X-Gm-Message-State: AOAM5309SUiih/il20ICY2k9av6g/vbW1ZvF1tTXe88kJ8ZIiaBEtVnx
-        DcoXuBH8bo4VcfbNLUw1xL8Xj5opavARcPdVDwwV0w==
-X-Google-Smtp-Source: ABdhPJxsTmfAXqCTWeb8LCoLtGraNutbh1nU/LqHMh/NN3fmkihgGKjA1xwD+BPQlycsQL4PiIDH6n1Yr02j9d+i0Mo=
-X-Received: by 2002:a6b:6b04:: with SMTP id g4mr9182371ioc.75.1590303430943;
- Sat, 23 May 2020 23:57:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <CABV8kRz0mKSc=u1LeonQSLroKJLOKWOWktCoGji2nvEBc=e7=w@mail.gmail.com>
- <20200519081551.GA9980@willie-the-truck> <CABV8kRzYzBrdzC1_opmmdpW63N2htfOsAUZ+RjiSDsy=SJW6Yg@mail.gmail.com>
- <20200520174149.GB27629@willie-the-truck> <CABV8kRzjCCsjVeRsBD7U_Lo0==sBw9EKm=1z7g=60KyJvJLZBQ@mail.gmail.com>
-In-Reply-To: <CABV8kRzjCCsjVeRsBD7U_Lo0==sBw9EKm=1z7g=60KyJvJLZBQ@mail.gmail.com>
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Sun, 24 May 2020 02:56:35 -0400
-Message-ID: <CABV8kRxfet2RXXNcUoTKwfVzFWEQfxAkXUX4M5XhkP3nc-0+rQ@mail.gmail.com>
-Subject: Re: arm64: Register modification during syscall entry/exit stop
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kyle Huey <khuey@pernos.co>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 24 May 2020 02:59:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43528 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbgEXG72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 02:59:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5E24BB04F;
+        Sun, 24 May 2020 06:59:28 +0000 (UTC)
+Date:   Sun, 24 May 2020 08:59:22 +0200
+Message-ID: <s5hftbpx1h1.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Pavel Machek <pavel@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ALSA: line6: add hw monitor volume control for POD HD500
+In-Reply-To: <20200523174957.6294-1-anarsoul@gmail.com>
+References: <20200523174957.6294-1-anarsoul@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just ran into this issue again, with what I think may be most compelling
-example yet why this is problematic:
+On Sat, 23 May 2020 19:49:57 +0200,
+Vasily Khoruzhick wrote:
+> 
+> Add hw monitor volume control for POD HD500. The same change may
+> work for HD500X but I don't have it to test.
+> 
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+> v2: clamp volume value to [0, ARRAY_SIZE() -1] in
+>     podhd_set_monitor_level()
 
-The tracee incurred a signal, we PTRACE_SYSEMU'd to the rt_sigreturn,
-which the tracer tried to emulate by applying the state from the signal frame.
-However, the PTRACE_SYSEMU stop is a syscall-stop, so the tracer's write
-to x7 was ignored and x7 retained the value it had in the signal handler,
-which broke the tracee.
+Thanks for the patch.
+The basic implementation looks good, but I see a few issues.
+Below are the comments:
 
-Keno
+> @@ -132,6 +132,7 @@ static int line6_send_raw_message(struct usb_line6 *line6, const char *buffer,
+>  
+>  	return done;
+>  }
+> +EXPORT_SYMBOL(line6_send_raw_message);
 
-On Sat, May 23, 2020 at 1:35 AM Keno Fischer <keno@juliacomputing.com> wrote:
->
-> I got bitten by this again, so I decided to write up a simple example
-> that shows the problem:
->
-> https://gist.github.com/Keno/cde691b26e32373307fb7449ad305739
->
-> This runs the same child twice. First vanilla where it prints "Hello world".
-> The second time, using a textbook ptrace example, to only print "world".
-> The problem here is that by the time the ptracer gets around to restoring
-> the registers, it's no longer in a syscall stop, so the write to x7 does not
-> get ignored and the correct value of x7 gets clobbered.
-> I copied the syscall definition from musl, so the compiler thinks x7 is
-> live, and we can see an assertion.
->
-> Output on my machine (will depend on compiler version, etc.):
-> ```
-> $ gcc -g3 -O3 ptrace_lies.c
-> $ ./a.out
-> Hello World
-> World
-> a.out: ptrace_lies.c:49: do_child: Assertion `v3 == values[2]' failed.
-> a.out: ptrace_lies.c:134: main: Assertion `WIFEXITED(status) &&
-> WEXITSTATUS(status) == 0' failed.
-> Aborted (core dumped)
-> ```
->
-> However, I don't think that whether or not the compiler thinks that x7 is
-> live is the problem here. The problem is entirely that this mechanism
-> prevents the ptracer from precisely controlling the register state. While
-> basic ptracers don't need this feature (strace),
-> more advanced ptracers (think criu, etc.) absolutely do want to precisely
-> control what the register state is.
-> The ptracer I'm working on (https://rr-project.org/)
-> happens to be an extreme case of this, where it wants *bitwise* equivalent
-> register states such that it can run the same code many times and get
-> the exact same results.
->
-> Also, if the issue was just that the kernel clobbered x7, that would be fine
-> we could deal with that no problem. However, it's much worse than that,
-> because the behavior of the kernel with respect to x7 depends on what
-> kind of ptrace stop we're in and even worse, in some kinds of stop,
-> there's absolutely no way to get at the actual value of x7.
->
-> > Hmm, does that actually result in the SVC instruction getting inlined? I
-> > think that's quite dangerous, since we document that we can trash the SVE
-> > register state on a system call, for example. I'm also surprised that
-> > the register variables are honoured by compilers if that inlining can occur.
->
-> I haven't gotten to trying SVE yet, so I appreciate the warning :). That said,
-> deterministic clobbering of registers is fine. Even changing the registers to
-> random junk is fine. We're happy to read those registers through ptrace.
-> The problem here is that the kernel lies about what the contents of the x7
-> register is and discards any writes to it.
->
-> I really hope we can come up with a solution here, I'm already dreading
-> the next time I unexpectedly run into this and have to add yet
-> another special case :(.
->
-> Keno
+Let's use EXPORT_SYMBOL_GPL() instead.
+
+
+> +static const unsigned int float_zero_to_one_lookup[] = {
+> +0x00000000, 0x3C23D70A, 0x3CA3D70A, 0x3CF5C28F, 0x3D23D70A, 0x3D4CCCCD,
+> +0x3D75C28F, 0x3D8F5C29, 0x3DA3D70A, 0x3DB851EC, 0x3DCCCCCD, 0x3DE147AE,
+> +0x3DF5C28F, 0x3E051EB8, 0x3E0F5C29, 0x3E19999A, 0x3E23D70A, 0x3E2E147B,
+> +0x3E3851EC, 0x3E428F5C, 0x3E4CCCCD, 0x3E570A3D, 0x3E6147AE, 0x3E6B851F,
+> +0x3E75C28F, 0x3E800000, 0x3E851EB8, 0x3E8A3D71, 0x3E8F5C29, 0x3E947AE1,
+> +0x3E99999A, 0x3E9EB852, 0x3EA3D70A, 0x3EA8F5C3, 0x3EAE147B, 0x3EB33333,
+> +0x3EB851EC, 0x3EBD70A4, 0x3EC28F5C, 0x3EC7AE14, 0x3ECCCCCD, 0x3ED1EB85,
+> +0x3ED70A3D, 0x3EDC28F6, 0x3EE147AE, 0x3EE66666, 0x3EEB851F, 0x3EF0A3D7,
+> +0x3EF5C28F, 0x3EFAE148, 0x3F000000, 0x3F028F5C, 0x3F051EB8, 0x3F07AE14,
+> +0x3F0A3D71, 0x3F0CCCCD, 0x3F0F5C29, 0x3F11EB85, 0x3F147AE1, 0x3F170A3D,
+> +0x3F19999A, 0x3F1C28F6, 0x3F1EB852, 0x3F2147AE, 0x3F23D70A, 0x3F266666,
+> +0x3F28F5C3, 0x3F2B851F, 0x3F2E147B, 0x3F30A3D7, 0x3F333333, 0x3F35C28F,
+> +0x3F3851EC, 0x3F3AE148, 0x3F3D70A4, 0x3F400000, 0x3F428F5C, 0x3F451EB8,
+> +0x3F47AE14, 0x3F4A3D71, 0x3F4CCCCD, 0x3F4F5C29, 0x3F51EB85, 0x3F547AE1,
+> +0x3F570A3D, 0x3F59999A, 0x3F5C28F6, 0x3F5EB852, 0x3F6147AE, 0x3F63D70A,
+> +0x3F666666, 0x3F68F5C3, 0x3F6B851F, 0x3F6E147B, 0x3F70A3D7, 0x3F733333,
+> +0x3F75C28F, 0x3F7851EC, 0x3F7AE148, 0x3F7D70A4, 0x3F800000
+
+Just nitpick: better to align with lower hex letters (a-f).
+
+
+> +};
+> +
+> +static void podhd_set_monitor_level(struct usb_line6_podhd *podhd, int value)
+> +{
+> +	unsigned int fl;
+> +	static const unsigned char msg[16] = {
+> +		/* Chunk is 0xc bytes (without first word) */
+> +		0x0c, 0x00,
+> +		/* First chunk in the message */
+> +		0x01, 0x00,
+> +		/* Message size is 2 4-byte words */
+> +		0x02, 0x00,
+> +		/* Unknown */
+> +		0x04, 0x41,
+> +		/* Unknown */
+> +		0x04, 0x00, 0x13, 0x00,
+> +		/* Volume, LE float32, 0.0 - 1.0 */
+> +		0x00, 0x00, 0x00, 0x00
+> +	};
+> +	unsigned char *buf;
+> +
+> +	buf = kmalloc(sizeof(msg), GFP_ATOMIC);
+
+Is this function called from the irq context like the urb callback?
+I saw that it's called from the mixer put callback, and it's in the
+normal sleepable context, hence GFP_KERNEL can be used safely.
+
+
+thanks,
+
+Takashi
