@@ -2,136 +2,242 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C43C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F072073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="b227SeaI"
+	by mail.kernel.org (Postfix) with ESMTP id CEB3D20776
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgEXFRo (ORCPT
+        id S1726796AbgEXF3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 01:17:44 -0400
-Received: from ns3.fnarfbargle.com ([103.4.19.87]:52660 "EHLO
-        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgEXFRn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 01:17:43 -0400
-X-Greylist: delayed 1578 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 May 2020 01:17:41 EDT
-Received: from srv.home ([10.8.0.1] ident=heh12491)
-        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <lists2009@fnarfbargle.com>)
-        id 1jciaX-0005sw-GZ; Sun, 24 May 2020 12:50:17 +0800
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:To; bh=OdOLP0WvRHgcmPIHB1HDDaR0+7pMLS8Inh/6tqYLjpM=;
-        b=b227SeaIBIC7nDb5U/miwFBGJZSRWhHlcUKvs5fefVuKTlaqZ0Mfw5k+gzxhk/vFTX+qfDO+y99yzV8iWSB+XyRH+9Diw265kvtAP5ks9OC1jBINVMzaEXBj1Auv+8oHLldt6mRXnIrYazayndC7YrXJBEAUIrwI6oIbm7M+k48=;
-To:     kvm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Brad Campbell <lists2009@fnarfbargle.com>
-Subject: KVM broken after suspend in most recent kernels.
-Message-ID: <1f7a85cc-38a6-2a2e-cbe3-a5b9970b7b92@fnarfbargle.com>
-Date:   Sun, 24 May 2020 12:50:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 24 May 2020 01:29:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12732 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbgEXF3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 01:29:01 -0400
+IronPort-SDR: XL5yFXlMDsiNSA5wECb4tnSuLouarHAQwX48990wHRh6ECkd+JhRLZzR6OGzrwjBUl7YCpd1Wx
+ /9tQGS9XG7zQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2020 22:29:00 -0700
+IronPort-SDR: IFoBZC1WP6hBXsYE3/GxtlXqtrs/WO8+ir/h98nDrVPJEs71hmxFrY7SD8/yFWEWXQPvGwNv7D
+ wLcfFuLgPzyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,428,1583222400"; 
+   d="scan'208";a="413178843"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 23 May 2020 22:28:58 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jcjBx-0002Yw-TK; Sun, 24 May 2020 13:28:57 +0800
+Date:   Sun, 24 May 2020 13:28:30 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: drivers/misc/pci_endpoint_test.c:347:6: warning: Local variable
+ 'irq_type' shadows outer variable [shadowVariable]
+Message-ID: <202005241325.ko7vAgMK%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-G'day all.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   caffb99b6929f41a69edbb5aef3a359bf45f3315
+commit: b2ba9225e0313b1de631a44b7b48c109032bffec misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
+date:   7 weeks ago
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build):
+        git checkout b2ba9225e0313b1de631a44b7b48c109032bffec
+        # save the attached .config to linux build tree
+        make ARCH=x86_64 
 
-Machine is a Macbook Pro Retina ~ 2014. Kernels are always vanilla kernel and compiled on the machine. No additional patches.
-
-vendor_id	: GenuineIntel
-cpu family	: 6
-model		: 69
-model name	: Intel(R) Core(TM) i5-4278U CPU @ 2.60GHz
-stepping	: 1
-microcode	: 0x25
-cpu MHz		: 2795.034
-cache size	: 3072 KB
-physical id	: 0
-siblings	: 4
-core id		: 1
-cpu cores	: 2
-apicid		: 3
-initial apicid	: 3
-fpu		: yes
-fpu_exception	: yes
-cpuid level	: 13
-wp		: yes
-flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt dtherm ida arat pln pts md_clear flush_l1d
-vmx flags	: vnmi preemption_timer invvpid ept_x_only ept_ad ept_1gb flexpriority tsc_offset vtpr mtf vapic ept vpid unrestricted_guest ple
-bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit
-bogomips	: 5199.87
-clflush size	: 64
-cache_alignment	: 64
-address sizes	: 39 bits physical, 48 bits virtual
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
 
 
-KVM worked fine in kernels somewhere prior to 5.4-5.5.
+cppcheck warnings: (new ones prefixed by >>)
 
-KVM works fine in later kernels up to and including 5.7.0-rc6 after a clean boot. It does not work after a suspend.
+>> drivers/misc/pci_endpoint_test.c:347:6: warning: Local variable 'irq_type' shadows outer variable [shadowVariable]
+    int irq_type = test->irq_type;
+        ^
+   drivers/misc/pci_endpoint_test.c:86:12: note: Shadowed declaration
+   static int irq_type = IRQ_TYPE_MSI;
+              ^
+   drivers/misc/pci_endpoint_test.c:347:6: note: Shadow variable
+    int irq_type = test->irq_type;
+        ^
+   drivers/misc/pci_endpoint_test.c:481:6: warning: Local variable 'irq_type' shadows outer variable [shadowVariable]
+    int irq_type = test->irq_type;
+        ^
+   drivers/misc/pci_endpoint_test.c:86:12: note: Shadowed declaration
+   static int irq_type = IRQ_TYPE_MSI;
+              ^
+   drivers/misc/pci_endpoint_test.c:481:6: note: Shadow variable
+    int irq_type = test->irq_type;
+        ^
+   drivers/misc/pci_endpoint_test.c:580:6: warning: Local variable 'irq_type' shadows outer variable [shadowVariable]
+    int irq_type = test->irq_type;
+        ^
+   drivers/misc/pci_endpoint_test.c:86:12: note: Shadowed declaration
+   static int irq_type = IRQ_TYPE_MSI;
+              ^
+   drivers/misc/pci_endpoint_test.c:580:6: note: Shadow variable
+    int irq_type = test->irq_type;
+        ^
 
-I can't actually bisect this because there is a bug in earlier kernels that breaks the suspend method used which requires manual patching to work around.
+vim +/irq_type +347 drivers/misc/pci_endpoint_test.c
 
-This is using qemu version 5.0.0, but also happens with 4.2.0.
+   326	
+   327	static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+   328					   unsigned long arg)
+   329	{
+   330		struct pci_endpoint_test_xfer_param param;
+   331		bool ret = false;
+   332		void *src_addr;
+   333		void *dst_addr;
+   334		u32 flags = 0;
+   335		bool use_dma;
+   336		size_t size;
+   337		dma_addr_t src_phys_addr;
+   338		dma_addr_t dst_phys_addr;
+   339		struct pci_dev *pdev = test->pdev;
+   340		struct device *dev = &pdev->dev;
+   341		void *orig_src_addr;
+   342		dma_addr_t orig_src_phys_addr;
+   343		void *orig_dst_addr;
+   344		dma_addr_t orig_dst_phys_addr;
+   345		size_t offset;
+   346		size_t alignment = test->alignment;
+ > 347		int irq_type = test->irq_type;
+   348		u32 src_crc32;
+   349		u32 dst_crc32;
+   350		int err;
+   351	
+   352		err = copy_from_user(&param, (void __user *)arg, sizeof(param));
+   353		if (err) {
+   354			dev_err(dev, "Failed to get transfer param\n");
+   355			return false;
+   356		}
+   357	
+   358		size = param.size;
+   359		if (size > SIZE_MAX - alignment)
+   360			goto err;
+   361	
+   362		use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
+   363		if (use_dma)
+   364			flags |= FLAG_USE_DMA;
+   365	
+   366		if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
+   367			dev_err(dev, "Invalid IRQ type option\n");
+   368			goto err;
+   369		}
+   370	
+   371		orig_src_addr = kzalloc(size + alignment, GFP_KERNEL);
+   372		if (!orig_src_addr) {
+   373			dev_err(dev, "Failed to allocate source buffer\n");
+   374			ret = false;
+   375			goto err;
+   376		}
+   377	
+   378		get_random_bytes(orig_src_addr, size + alignment);
+   379		orig_src_phys_addr = dma_map_single(dev, orig_src_addr,
+   380						    size + alignment, DMA_TO_DEVICE);
+   381		if (dma_mapping_error(dev, orig_src_phys_addr)) {
+   382			dev_err(dev, "failed to map source buffer address\n");
+   383			ret = false;
+   384			goto err_src_phys_addr;
+   385		}
+   386	
+   387		if (alignment && !IS_ALIGNED(orig_src_phys_addr, alignment)) {
+   388			src_phys_addr = PTR_ALIGN(orig_src_phys_addr, alignment);
+   389			offset = src_phys_addr - orig_src_phys_addr;
+   390			src_addr = orig_src_addr + offset;
+   391		} else {
+   392			src_phys_addr = orig_src_phys_addr;
+   393			src_addr = orig_src_addr;
+   394		}
+   395	
+   396		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_SRC_ADDR,
+   397					 lower_32_bits(src_phys_addr));
+   398	
+   399		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_SRC_ADDR,
+   400					 upper_32_bits(src_phys_addr));
+   401	
+   402		src_crc32 = crc32_le(~0, src_addr, size);
+   403	
+   404		orig_dst_addr = kzalloc(size + alignment, GFP_KERNEL);
+   405		if (!orig_dst_addr) {
+   406			dev_err(dev, "Failed to allocate destination address\n");
+   407			ret = false;
+   408			goto err_dst_addr;
+   409		}
+   410	
+   411		orig_dst_phys_addr = dma_map_single(dev, orig_dst_addr,
+   412						    size + alignment, DMA_FROM_DEVICE);
+   413		if (dma_mapping_error(dev, orig_dst_phys_addr)) {
+   414			dev_err(dev, "failed to map destination buffer address\n");
+   415			ret = false;
+   416			goto err_dst_phys_addr;
+   417		}
+   418	
+   419		if (alignment && !IS_ALIGNED(orig_dst_phys_addr, alignment)) {
+   420			dst_phys_addr = PTR_ALIGN(orig_dst_phys_addr, alignment);
+   421			offset = dst_phys_addr - orig_dst_phys_addr;
+   422			dst_addr = orig_dst_addr + offset;
+   423		} else {
+   424			dst_phys_addr = orig_dst_phys_addr;
+   425			dst_addr = orig_dst_addr;
+   426		}
+   427	
+   428		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_DST_ADDR,
+   429					 lower_32_bits(dst_phys_addr));
+   430		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_DST_ADDR,
+   431					 upper_32_bits(dst_phys_addr));
+   432	
+   433		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE,
+   434					 size);
+   435	
+   436		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
+   437		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+   438		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+   439		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
+   440					 COMMAND_COPY);
+   441	
+   442		wait_for_completion(&test->irq_raised);
+   443	
+   444		dma_unmap_single(dev, orig_dst_phys_addr, size + alignment,
+   445				 DMA_FROM_DEVICE);
+   446	
+   447		dst_crc32 = crc32_le(~0, dst_addr, size);
+   448		if (dst_crc32 == src_crc32)
+   449			ret = true;
+   450	
+   451	err_dst_phys_addr:
+   452		kfree(orig_dst_addr);
+   453	
+   454	err_dst_addr:
+   455		dma_unmap_single(dev, orig_src_phys_addr, size + alignment,
+   456				 DMA_TO_DEVICE);
+   457	
+   458	err_src_phys_addr:
+   459		kfree(orig_src_addr);
+   460	
+   461	err:
+   462		return ret;
+   463	}
+   464	
 
-In kernels earlier than 5.7 it results in either an immediate hard lock, or a GPF that results in progressive system freeze until a hard reboot is required (won't flush to disk so no logs get recorded and I have no serial or netconsole ability). In 5.7-rc6 it results in the following trace and thankfully no further issues (so I can get the logs and report it).
-
-I can and will perform any required testing and debugging, but this machine suspends with pm-utils s2both, and that is broken between about 5.4 & 5.6 due to swapfile locking issues, which makes actual bisection very, very difficult as it *requires* a suspend/resume to trigger the bug.
-
-[  227.715173] ------------[ cut here ]------------
-[  227.715176] VMXON faulted, MSR_IA32_FEAT_CTL (0x3a) = 0x4
-[  227.715194] WARNING: CPU: 0 PID: 5502 at arch/x86/kvm/vmx/vmx.c:2239 hardware_enable+0x167/0x180 [kvm_intel]
-[  227.715195] Modules linked in: brcmfmac xhci_pci xhci_hcd cmac bnep iptable_nat xt_MASQUERADE nf_nat nf_conntrack nf_defrag_ipv4 ip_tables x_tables nfsd bridge stp llc appletouch brcmutil snd_hda_codec_hdmi sha256_ssse3 snd_hda_codec_cirrus snd_hda_codec_generic sha256_generic libsha256 x86_pkg_temp_thermal coretemp btusb kvm_intel btrtl kvm btbcm btintel irqbypass bluetooth cfg80211 snd_hda_intel ecdh_generic ecc snd_intel_dspcfg bcm5974 rfkill snd_hda_codec snd_hwdep snd_hda_core snd_pcm_oss snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi i915 snd_seq snd_seq_device snd_timer i2c_algo_bit iosf_mbi drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops snd drm intel_gtt agpgart evdev apple_bl video soundcore hid_apple usb_storage hid_generic usbhid hid dm_crypt dm_mod i2c_i801 i2c_core sg usbcore usb_common [last unloaded: xhci_hcd]
-[  227.715221] CPU: 0 PID: 5502 Comm: qemu Not tainted 5.7.0-rc6+ #15
-[  227.715222] Hardware name: Apple Inc. MacBookPro11,1/Mac-189A3D4F975D5FFC, BIOS 159.0.0.0.0 02/05/2020
-[  227.715225] RIP: 0010:hardware_enable+0x167/0x180 [kvm_intel]
-[  227.715227] Code: 01 00 01 b9 3a 00 00 00 0f 32 31 c9 48 c1 e2 20 be ef be ad de 48 c7 c7 68 fd bb c0 48 09 c2 85 c9 48 0f 44 f2 e8 43 78 4f dc <0f> 0b eb 8a 48 8b 15 ce 89 06 dd e9 c7 fe ff ff 66 0f 1f 84 00 00
-[  227.715228] RSP: 0018:ffff97091d873df8 EFLAGS: 00010092
-[  227.715229] RAX: 000000000000002d RBX: 0000000000000046 RCX: 0000000000000007
-[  227.715230] RDX: 0000000000000007 RSI: 0000000000000082 RDI: ffff97091f2187a0
-[  227.715231] RBP: ffff97091d873e10 R08: 0000000000000008 R09: 0000000000000495
-[  227.715232] R10: 0000000000000010 R11: ffff97091d873c6d R12: 0000000000000000
-[  227.715233] R13: 0000000000000286 R14: ffffb5d08015e010 R15: 0000000000000000
-[  227.715234] FS:  00007f1468fd33c0(0000) GS:ffff97091f200000(0000) knlGS:0000000000000000
-[  227.715235] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  227.715236] CR2: 0000563b54c7201d CR3: 000000043f43f001 CR4: 00000000001626f0
-[  227.715237] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  227.715238] DR3: 0000000000000080 DR6: 00000000ffff0ff0 DR7: 0000000020000400
-[  227.715238] Call Trace:
-[  227.715251]  kvm_arch_hardware_enable+0x65/0x230 [kvm]
-[  227.715257]  hardware_enable_nolock+0x2f/0x60 [kvm]
-[  227.715262]  ? __kvm_write_guest_page+0x60/0x60 [kvm]
-[  227.715266]  on_each_cpu+0x34/0x40
-[  227.715271]  kvm_dev_ioctl+0x63a/0x6c0 [kvm]
-[  227.715275]  ? do_sys_openat2+0x1a7/0x2d0
-[  227.715277]  ksys_ioctl+0x70/0xb0
-[  227.715279]  ? vtime_user_exit+0x1b/0x60
-[  227.715280]  __x64_sys_ioctl+0x15/0x20
-[  227.715282]  do_syscall_64+0x4f/0x190
-[  227.715284]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  227.715285] RIP: 0033:0x7f146ba30427
-[  227.715287] Code: 00 00 90 48 8b 05 69 aa 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 39 aa 0c 00 f7 d8 64 89 01 48
-[  227.715288] RSP: 002b:00007fff63e4e898 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-[  227.715290] RAX: ffffffffffffffda RBX: 000000000000ae01 RCX: 00007f146ba30427
-[  227.715292] RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 000000000000000c
-[  227.715293] RBP: 0000000000000000 R08: 0000563b55030de0 R09: 0000000000000001
-[  227.715294] R10: 0000563b54da1010 R11: 0000000000000246 R12: 0000563b55081d60
-[  227.715295] R13: 000000000000000c R14: 0000000000000000 R15: 00007fff63e4ea80
-[  227.715297] ---[ end trace 0ce5d8cb29fff4bc ]---
-[  227.715299] kvm: enabling virtualization on CPU0 failed
-
-Regards,
-Brad
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
