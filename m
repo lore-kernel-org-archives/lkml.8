@@ -1,82 +1,173 @@
-Return-Path: <SRS0=zXkI=7F=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB461C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46194C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 00:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49FE20878
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 May 2020 23:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1665F2077D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 00:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQuKJEyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388247AbgEWX4f (ORCPT
+        id S2388189AbgEXACJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 19:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388106AbgEWX4e (ORCPT
+        Sat, 23 May 2020 20:02:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51365 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388106AbgEXACI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 19:56:34 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0D4C061A0E;
-        Sat, 23 May 2020 16:56:34 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2E5D81287375F;
-        Sat, 23 May 2020 16:56:33 -0700 (PDT)
-Date:   Sat, 23 May 2020 16:56:32 -0700 (PDT)
-Message-Id: <20200523.165632.2131763470920616688.davem@davemloft.net>
-To:     brgl@bgdev.pl
-Cc:     corbet@lwn.net, matthias.bgg@gmail.com, john@phrozen.org,
-        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
-        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
-        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
-        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
-Subject: Re: [PATCH v2 0/5] net: provide a devres variant of
- register_netdev()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200523132711.30617-1-brgl@bgdev.pl>
-References: <20200523132711.30617-1-brgl@bgdev.pl>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 23 May 2020 16:56:33 -0700 (PDT)
+        Sat, 23 May 2020 20:02:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590278526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lzVe4yseOekokt0xWutdOy0SRVtJNa4hqgRPx0ValMA=;
+        b=QQuKJEyVm3JWl7Hs6QgoUFyjnNomtqyOILZtYCDDvqjvccHIYNZlnUJuxKWbDSN8ecwiSH
+        53CbwM8b+unwwEUoE8EJ/5fpXHrMHHeJOz72Lgk9K5gkf2md2abTuMG6N4mKd4v0vbX3xc
+        B+/mWM4OXHo2j+eKoJSmO9wke47tmHA=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-5-bUOdBgMpPYCeDdboYdVsyQ-1; Sat, 23 May 2020 20:02:04 -0400
+X-MC-Unique: bUOdBgMpPYCeDdboYdVsyQ-1
+Received: by mail-qt1-f198.google.com with SMTP id b22so15993358qto.17
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 17:02:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lzVe4yseOekokt0xWutdOy0SRVtJNa4hqgRPx0ValMA=;
+        b=gRUil61TOeBCW5YtXhl3HOTe00M50qtKIyVv8SSF4GQp6cIt9jKaUFMFAkWdeDYnQN
+         KYgbaOoMNiF7UJP5XaXZY4U6KEeK+PocIszBQnkdxq/K5C93OJsA3sN7kv15yWRAc/TZ
+         qVZRs03i2360t0mKNbVLU9guP3QP/xOxhxf/IaRteqEyo2v2KmyRwaijkScc17VV8lMC
+         m+OuJ+xBxDVnXxA2kDJSnU2qulQYHqtot+A1pQeMHBIPOSu1uyJoQqSlTRsRN1wYL7+E
+         mLIs7XckO8oZ8BwF8TObo/PINSoFYzGMUr3X6SD6pLa2VLlvn6SlIlmZlhBlNKeiFJu0
+         jl7w==
+X-Gm-Message-State: AOAM531jAszphQyTFI7Cl3hm0CcKvf9xe5lUdE+9v/w6zlZJQjlaX05L
+        Dm3QWVF4mS8siVYyTcTpCqDINLyayDkujgSE+pRN3YPtP90Oh75CJZFcj8816Uzmpy5xV5BK7jX
+        /vrIW3MKqNKxtaYm8mHJdKmhF
+X-Received: by 2002:a37:9ac6:: with SMTP id c189mr21269866qke.398.1590278524200;
+        Sat, 23 May 2020 17:02:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyZ7JOf5p9PoChQF8XgwRUjCRcM/TrdnJvWGrlfSGHSuVMX0Ez6eTGo6asCaTttd5BxzKydhQ==
+X-Received: by 2002:a37:9ac6:: with SMTP id c189mr21269854qke.398.1590278523935;
+        Sat, 23 May 2020 17:02:03 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id o2sm12139909qtj.70.2020.05.23.17.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 17:02:03 -0700 (PDT)
+Date:   Sat, 23 May 2020 20:02:01 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, jgg@ziepe.ca, cai@lca.pw,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
+ on disabled memory
+Message-ID: <20200524000201.GD939059@xz-x1>
+References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
+ <159017506369.18853.17306023099999811263.stgit@gimli.home>
+ <20200523193417.GI766834@xz-x1>
+ <20200523170602.5eb09a66@x1.home>
+ <20200523235257.GC939059@xz-x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200523235257.GC939059@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sat, 23 May 2020 15:27:06 +0200
+(CC Andrea too)
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
+> On Sat, May 23, 2020 at 05:06:02PM -0600, Alex Williamson wrote:
+> > On Sat, 23 May 2020 15:34:17 -0400
+> > Peter Xu <peterx@redhat.com> wrote:
+> > 
+> > > Hi, Alex,
+> > > 
+> > > On Fri, May 22, 2020 at 01:17:43PM -0600, Alex Williamson wrote:
+> > > > @@ -1346,15 +1526,32 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+> > > >  {
+> > > >  	struct vm_area_struct *vma = vmf->vma;
+> > > >  	struct vfio_pci_device *vdev = vma->vm_private_data;
+> > > > +	vm_fault_t ret = VM_FAULT_NOPAGE;
+> > > > +
+> > > > +	mutex_lock(&vdev->vma_lock);
+> > > > +	down_read(&vdev->memory_lock);  
+> > > 
+> > > I remembered to have seen the fault() handling FAULT_FLAG_RETRY_NOWAIT at least
+> > > in the very first version, but it's not here any more...  Could I ask what's
+> > > the reason behind?  I probably have missed something along with the versions,
+> > > I'm just not sure whether e.g. this would potentially block a GUP caller even
+> > > if it's with FOLL_NOWAIT.
+> > 
+> > This is largely what v2 was about, from the cover letter:
+> > 
+> >     Locking in 3/ is substantially changed to avoid the retry scenario
+> >     within the fault handler, therefore a caller who does not allow
+> >     retry will no longer receive a SIGBUS on contention.
+> > 
+> > The discussion thread starts here:
+> > 
+> > https://lore.kernel.org/kvm/20200501234849.GQ26002@ziepe.ca/
 > 
-> Using devres helpers allows to shrink the probing code, avoid memory leaks in
-> error paths make sure the order in which resources are freed is the exact
-> opposite of their allocation. This series proposes to add a devres variant
-> of register_netdev() that will only work with net_device structures whose
-> memory is also managed.
+> [1]
 > 
-> First we add the missing documentation entry for the only other networking
-> devres helper: devm_alloc_etherdev().
+> > 
+> > Feel free to interject if there's something that doesn't make sense,
+> > the idea is that since we've fixed the lock ordering we never need to
+> > release one lock to wait for another, therefore we can wait for the
+> > lock.  I'm under the impression that we can wait for the lock
+> > regardless of the flags under these conditions.
 > 
-> Next we move devm_alloc_etherdev() into a separate source file.
+> I see; thanks for the link.  Sorry I should probably follow up the discussion
+> and ask the question earlier, anyway...
 > 
-> We then use a proxy structure in devm_alloc_etherdev() to improve readability.
+> For what I understand now, IMHO we should still need all those handlings of
+> FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
+> try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
+> not sure what would be the side effect of that if fault() blocked it.  E.g.,
+> the caller could be in an atomic context.
 > 
-> Last: we implement devm_register_netdev() and use it in mtk-eth-mac driver.
+> But now I also agree that VM_FAULT_SIGBUS is probably not correct there in the
+> initial version [1] - I thought it was OK initially (after all after the
+> multiple fault retry series we should always be with FAULT_FLAG_ALLOW_RETRY..).
+> However after some thinking... it should be the common slow path where retry is
+> simply not allowed.  So IMHO instead of SIGBUS there, we should also use all
+> the slow path of the locks.  That'll be safe then because it's never going to
+> be with FAULT_FLAG_RETRY_NOWAIT (FAULT_FLAG_RETRY_NOWAIT depends on
+> FAULT_FLAG_ALLOW_RETRY).
 > 
-> v1 -> v2:
-> - rebase on top of net-next after driver rename, no functional changes
+> A reference code could be __lock_page_or_retry() where the lock_page could wait
+> just like we taking the sems/mutexes, and the previous SIGBUS case would
+> corresponds to this chunk of __lock_page_or_retry():
+> 
+> 	} else {
+> 		if (flags & FAULT_FLAG_KILLABLE) {
+> 			int ret;
+> 
+> 			ret = __lock_page_killable(page);
+> 			if (ret) {
+> 				up_read(&mm->mmap_sem);
+> 				return 0;
+> 			}
+> 		} else
+> 			__lock_page(page);
+> 		return 1;
+> 	}
+> 
+> Thanks,
+> 
+> -- 
+> Peter Xu
 
-Series applied, thank you.
+-- 
+Peter Xu
+
