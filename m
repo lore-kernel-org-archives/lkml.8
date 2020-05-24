@@ -2,159 +2,129 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79953207D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941692076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:01:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=movency.com header.i=@movency.com header.b="CJyLgB48"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YhvL8fVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgEXKAj (ORCPT
+        id S2387572AbgEXKBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 06:00:39 -0400
-Received: from mail.movency.com ([151.236.222.166]:48932 "EHLO b-6.movency.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728704AbgEXKAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 06:00:38 -0400
-X-Greylist: delayed 862 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 May 2020 06:00:36 EDT
-Received: by b-6.movency.com  with ESMTPSA id 04O9kAQW1722314; Sun, 24 May 2020 09:46:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=movency.com; s=mail;
-        t=1590313570; bh=7BbKC33g6/SJX0HzjCZQwGRQaPz1+PXkt/MsPwq9E8w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CJyLgB48NcEl+KvLnGv3WibuDbym811oaMyjEZ1ZO0MCYcDUELobQgrckBj+HTaU1
-         Mtpqgs5GhlHt6H7JbvylLaJwcvzuHBzwr4aP5P6+OwgIURhZl/i3XK5uo2W3NHrSgk
-         IGtMTKO3O0a6mhRPxmMOIIv04OHQOKa8mwtPdiQQBgVGSCXbq8wE+C275GW/KDC8RZ
-         NR5rJ/Dx2LYz9p42yoRkWLus5JkunLcR1QKgU7qJSLe/P2pnorYqlapIcXFuiqnCar
-         uTuQZbQX8V7c2WT/RR2+bGnUAYNyG71HtK5p5M/RZlvn309aJxUPszKex29bTU+xvg
-         8RDjBmlrtL6ZA==
-Subject: Re: [PATCHSET v2 0/12] Add support for async buffered reads
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200523185755.8494-1-axboe@kernel.dk>
- <2b42c0c3-5d3c-e381-4193-83cb3f971399@kernel.dk>
-From:   Chris Panayis <chris@movency.com>
-Message-ID: <43ee202c-ffd1-2276-3c8d-7d5201b60684@movency.com>
-Date:   Sun, 24 May 2020 10:46:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 24 May 2020 06:01:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728704AbgEXKBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 06:01:32 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B757C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 03:01:32 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id v128so13636067oia.7
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 03:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oTajmnohfywFupxs957CWHHjqHcvTI6e5RfNGOZbkGc=;
+        b=YhvL8fVdrbh3XfLrAXLRTb2lrsFdJKPZBC6VFogb/a+IDT4r6kXTNEpClNwyN8xzoX
+         PovzcKVQCCTTp5jpI9t388nRIm2CpbShnPhMKTsl833/Zg4Q1qitewLWEkU2FdyShT0z
+         QvgtbKq2j46QJSYyUHZ80XmbHJUMjmUBIqLlI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oTajmnohfywFupxs957CWHHjqHcvTI6e5RfNGOZbkGc=;
+        b=GJygv0bmFDdfXFm/GP3+DAFHxZOi66cNHyti/Lk61JzeZbl3Wr8+k+PUgqqtCFpjqq
+         D8T4JkwRjXnxEVp7MoE2k5biYeLB1oCifM8uDyP5H+Pt9AbrEVZsS+usGpWFDQFieMQ+
+         ew1049gL+FMx5L5n+IL/IyzdJsSL5ibARmmd/a1p0oEBBEXL+zN6uREg3m98NEv6fNtK
+         tKX/zDYt7W3orltdFOG0nAQaBJ7oXl9nU8qg8mWFHDD78/m0mQcI+DZpeGFlCQCW825S
+         Bid53+8Hb+jI6BA4KLLwglmqApfMxXQTdJUhLpRN8hWUjo7Xf0n8KlxaKSkqtiZ+Mwap
+         Td3Q==
+X-Gm-Message-State: AOAM532bB6sajNJ1yq/ZaS/6wH/joHP8Xfur0NwSMIk0AvvwHcWmcJbq
+        Y/yJSfDG813vw/JgxX0z7iw0kh7EczkHCA1XJr53Ag==
+X-Google-Smtp-Source: ABdhPJyYQjQntruCcmBuzCOoJjVws8Uf/VrPmrDFHKD1uZxz3ratl/o/oUQNoQUQQuBO/mmCLqEaCqSuIRxVr4LZk2s=
+X-Received: by 2002:aca:4b91:: with SMTP id y139mr7314961oia.128.1590314491735;
+ Sun, 24 May 2020 03:01:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2b42c0c3-5d3c-e381-4193-83cb3f971399@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
+ <20200430161438.17640-2-alpernebiyasak@gmail.com> <20200513053529.GL413@jagdpanzerIV.localdomain>
+In-Reply-To: <20200513053529.GL413@jagdpanzerIV.localdomain>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Sun, 24 May 2020 12:01:20 +0200
+Message-ID: <CAKMK7uHO43-O+bPkJMhuv5HNh-PS7+wm6==n-7VQfRu2zq8xvQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] printk: Add function to set console to
+ preferred console's driver
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Alper Nebi Yasak <alpernebiyasak@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
+        linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Feng Tang <feng.tang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes! Jens & Team! Yes!
-
-My code has never looked so beautiful, been so efficient and run so well 
-since switching to io_uring/async awesome-ness.. Really, really is a 
-game-changer in terms of software design, control, performance, 
-expressiveness... so many levels. Really, really great work! Thank you!
-
-Chris
-
-
-On 23/05/2020 20:20, Jens Axboe wrote:
-> And this one is v3, obviously, not v2...
+On Wed, May 13, 2020 at 7:35 AM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
 >
+> On (20/04/30 19:14), Alper Nebi Yasak wrote:
+> [..]
+> > +int update_console_to_preferred(void)
+> > +{
+> > +     struct console_cmdline *c = NULL;
+> > +     struct console *con = NULL;
+> > +     struct console *tmp = NULL;
+> > +
+> > +     if (preferred_console >= 0)
+> > +             c = &console_cmdline[preferred_console];
+> > +
+> > +     if (!c || !c->name[0])
+> > +             return 0;
+> > +
+> > +     for_each_console(con) {
+> > +             if (!con->next || !(con->next->flags & CON_ENABLED))
+> > +                     continue;
+> > +             if (strcmp(c->name, con->next->name) != 0)
+> > +                     continue;
 >
-> On 5/23/20 12:57 PM, Jens Axboe wrote:
->> We technically support this already through io_uring, but it's
->> implemented with a thread backend to support cases where we would
->> block. This isn't ideal.
->>
->> After a few prep patches, the core of this patchset is adding support
->> for async callbacks on page unlock. With this primitive, we can simply
->> retry the IO operation. With io_uring, this works a lot like poll based
->> retry for files that support it. If a page is currently locked and
->> needed, -EIOCBQUEUED is returned with a callback armed. The callers
->> callback is responsible for restarting the operation.
->>
->> With this callback primitive, we can add support for
->> generic_file_buffered_read(), which is what most file systems end up
->> using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
->> trivial to add more.
->>
->> The file flags support for this by setting FMODE_BUF_RASYNC, similar
->> to what we do for FMODE_NOWAIT. Open to suggestions here if this is
->> the preferred method or not.
->>
->> In terms of results, I wrote a small test app that randomly reads 4G
->> of data in 4K chunks from a file hosted by ext4. The app uses a queue
->> depth of 32. If you want to test yourself, you can just use buffered=1
->> with ioengine=io_uring with fio. No application changes are needed to
->> use the more optimized buffered async read.
->>
->> preadv for comparison:
->> 	real    1m13.821s
->> 	user    0m0.558s
->> 	sys     0m11.125s
->> 	CPU	~13%
->>
->> Mainline:
->> 	real    0m12.054s
->> 	user    0m0.111s
->> 	sys     0m5.659s
->> 	CPU	~32% + ~50% == ~82%
->>
->> This patchset:
->> 	real    0m9.283s
->> 	user    0m0.147s
->> 	sys     0m4.619s
->> 	CPU	~52%
->>
->> The CPU numbers are just a rough estimate. For the mainline io_uring
->> run, this includes the app itself and all the threads doing IO on its
->> behalf (32% for the app, ~1.6% per worker and 32 of them). Context
->> switch rate is much smaller with the patchset, since we only have the
->> one task performing IO.
->>
->> The goal here is efficiency. Async thread offload adds latency, and
->> it also adds noticable overhead on items such as adding pages to the
->> page cache. By allowing proper async buffered read support, we don't
->> have X threads hammering on the same inode page cache, we have just
->> the single app actually doing IO.
->>
->> Been beating on this and it's solid for me, and I'm now pretty happy
->> with how it all turned out. Not aware of any missing bits/pieces or
->> code cleanups that need doing.
->>
->> Series can also be found here:
->>
->> https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.3
->>
->> or pull from:
->>
->> git://git.kernel.dk/linux-block async-buffered.3
->>
->>   fs/block_dev.c            |   2 +-
->>   fs/btrfs/file.c           |   2 +-
->>   fs/ext4/file.c            |   2 +-
->>   fs/io_uring.c             |  99 ++++++++++++++++++++++++++++++++++
->>   fs/xfs/xfs_file.c         |   2 +-
->>   include/linux/blk_types.h |   3 +-
->>   include/linux/fs.h        |   5 ++
->>   include/linux/pagemap.h   |  64 ++++++++++++++++++++++
->>   mm/filemap.c              | 111 ++++++++++++++++++++++++--------------
->>   9 files changed, 245 insertions(+), 45 deletions(-)
->>
->> Changes since v2:
->> - Get rid of unnecessary wait_page_async struct, just use wait_page_async
->> - Add another prep handler, adding wake_page_match()
->> - Use wake_page_match() in both callers
->> Changes since v1:
->> - Fix an issue with inline page locking
->> - Fix a potential race with __wait_on_page_locked_async()
->> - Fix a hang related to not setting page_match, thus missing a wakeup
->>
+> This matches the consoles by exact name. Consoles can have aliases,
+> but matching by alias is rather complex and it has some side effects.
 >
+> Let me Cc more people on this. VT has a console takeover logic,
+> I wonder if we can extend the takeover code somehow.
+>
+> Daniel, any thoughts?
+
+Apologies for late reply, but nope, no thoughts. I have some ideas for
+the locking in the console subsystem, but that's just to untangle it
+from gpu drivers as much as possible. Otherwise I'm trying to stay
+away from it as far as I can :-)
+
+Cheers, Daniel
+
+>
+> https://lore.kernel.org/lkml/20200430161438.17640-1-alpernebiyasak@gmail.com
+>
+>         -ss
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
