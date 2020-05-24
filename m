@@ -2,114 +2,176 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E182C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D900820787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FE420823
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 22:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590359330;
-	bh=xG1s6sJdInNTx2vBPXk4s1yNKlu8cFhyrCOtsCkrcNU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DMViItybyVIBSf6Hlkjb8wsBlFYcaCxMuzUtDaJ/1XZ1RXW0vkOIecMnC1UN3lKk5
-	 9MTid3rSKZAWZeLBdg2RlFusl78j5eO+kQ4k+ro8H3P2ZEQsicZkK+oEHS0fa6AIzm
-	 OD8ctKrIZM+4OVX8aCofA/PAoeuprZjiA5x6jYoI=
+	s=default; t=1590360165;
+	bh=q2JGWyaAldnk927k20GrrRnWk7xvFNqWcp2skn7i6EI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cOdGjjlkG9WM2dB7X0Ml3CP8IQ44eEURSTA5MytkkBsT9rmpN13pKhyYjeWqEg8ca
+	 03xVAeRAhmInVlom5TZgQN+WdBGl9wqbzm9Hb1kzbJBNngCnFuSERM93AxUYZ89rMS
+	 DkIE0r3HvRbCQCfPbZ/CNv6Wj5EPoqJqYekLBAUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388528AbgEXW2u (ORCPT
+        id S2388468AbgEXWmi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 18:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388229AbgEXW2t (ORCPT
+        Sun, 24 May 2020 18:42:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38402 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387850AbgEXWmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 18:28:49 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29540C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 15:28:49 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x22so9511401lfd.4
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 15:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kAqabt4OR5c4yrPXL5ECf7rkFYVLN0cT+oP5V8EGnJw=;
-        b=RGjwnc+bQ2Y64T16esul8H4tmcVEu60xFCc5yhqZq3JpidUlIufKFDfrr0QZNTehsw
-         +76HMYLXrQbvEN59BSyTiGj37Mi03lYbEEVagLs+n2X2L5quy/y2wgOgXsPIx9SUxEPA
-         7cOCDHzKW47RRwu4GWZZUz5o/RciKT76bL3yU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kAqabt4OR5c4yrPXL5ECf7rkFYVLN0cT+oP5V8EGnJw=;
-        b=kELeiapJZMK9DHPbLj5ULqgzJCWQuRrI+COumCmNB0+UbsJfPPu5uC9eYbEZzq3Hpz
-         5B5gmKUEnY9aPlw9+EGDHIhjVamkctiSaaADhuXh3k/+L47k6GjS8lYPrD14IsHBN0/k
-         tx/icTe3qyLmcCuNeKGEDcGR/HFZrKT5ALb5JuwpLB8fFuQHRgD31MyVgt5k9a0jNdpq
-         1O9LVdWgYG6E5bhHd7x7GHrBZuSExkSAR7YiTBDzxbghFzHBI7Lmv3zpRyIEsjEkcyK/
-         8Betz39QFU+QrOg5noeAsLqY1lQVs55u7Xtyd2vFj/IrrF8zU+L/cwYTxh3FoIuVw1Sx
-         /ROw==
-X-Gm-Message-State: AOAM532LitQ15tMTcu9Uv+NZTVg6J/Qpzw6dLkQomyLTxzQ27Rfn8V7K
-        IYYssVXRduq6pASUmYLk/qy91H0qHl0=
-X-Google-Smtp-Source: ABdhPJx/Q68S6sy+r+hhOz7obY/qddpSQCY4JOeSMKDCto76/ByysoFxfmLVGY9xo2aae27I8Fd5dQ==
-X-Received: by 2002:ac2:48a3:: with SMTP id u3mr9140754lfg.115.1590359327078;
-        Sun, 24 May 2020 15:28:47 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id y17sm4203348lfa.77.2020.05.24.15.28.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 May 2020 15:28:45 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id l15so18438340lje.9
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 15:28:45 -0700 (PDT)
-X-Received: by 2002:a2e:7e0a:: with SMTP id z10mr10170612ljc.314.1590359325216;
- Sun, 24 May 2020 15:28:45 -0700 (PDT)
+        Sun, 24 May 2020 18:42:37 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-Wm1SiBvxNDG89WH77f9hlQ-1; Sun, 24 May 2020 18:42:28 -0400
+X-MC-Unique: Wm1SiBvxNDG89WH77f9hlQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B18AF460;
+        Sun, 24 May 2020 22:42:26 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.192.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 852E95D788;
+        Sun, 24 May 2020 22:42:23 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 01/14] perf tests: Check on subtest for user specified test
+Date:   Mon, 25 May 2020 00:42:06 +0200
+Message-Id: <20200524224219.234847-2-jolsa@kernel.org>
+In-Reply-To: <20200524224219.234847-1-jolsa@kernel.org>
+References: <20200524224219.234847-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20200523131759.GA55886@kroah.com> <20200523152922.GA224858@kroah.com>
- <CAHk-=wih_B_8a48Au=6B+gwFcYnM7qF02dGX3R0QN_2bzVcjVA@mail.gmail.com>
- <20200524150018.GB11262@kroah.com> <CAHk-=wh4bZdCkhng3EsJCDhHLxHT6x4S66v5JQvusihVfYrc5Q@mail.gmail.com>
- <20200524194550.GV33628@sasha-vm> <20200524211221.GW33628@sasha-vm>
-In-Reply-To: <20200524211221.GW33628@sasha-vm>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 24 May 2020 15:28:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjdf_jR1TriXQWZpS+bs9RhdV_E_VD9_SXc_yQXC+yzFA@mail.gmail.com>
-Message-ID: <CAHk-=wjdf_jR1TriXQWZpS+bs9RhdV_E_VD9_SXc_yQXC+yzFA@mail.gmail.com>
-Subject: Re: [GIT PULL] Driver core fixes for 5.7-rc7 - take 2
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 2:12 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> (and I'd like to see the reverts too, so that I could apply that revert
-> to Stable trees as well. If a revert doesn't show up in git log we might
-> miss doing a backport of it).
+It's now possible to put subtest name as a test filter:
 
-Plain "git log" never simplifies anything at all.
+  $ perf test 'PMU event table sanity'
+  10: PMU events                                            :
+  10.1: PMU event table sanity                              : Ok
 
-Only when you ask for simplification will "git log" start skipping things.
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/tests/builtin-test.c | 34 +++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
-That's things like "--grep=XYZ" to only ask for something that has a
-pattern in the commit log. Or asking for a certain author. That's the
-simplest kind of log simplification.
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 9553f8061772..a9daaeb9fd27 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -334,7 +334,7 @@ static struct test *tests[] = {
+ 	arch_tests,
+ };
+ 
+-static bool perf_test__matches(struct test *test, int curr, int argc, const char *argv[])
++static bool perf_test__matches(const char *desc, int curr, int argc, const char *argv[])
+ {
+ 	int i;
+ 
+@@ -351,7 +351,7 @@ static bool perf_test__matches(struct test *test, int curr, int argc, const char
+ 			continue;
+ 		}
+ 
+-		if (strcasestr(test->desc, argv[i]))
++		if (strcasestr(desc, argv[i]))
+ 			return true;
+ 	}
+ 
+@@ -580,7 +580,7 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
+ 			.priv = &st,
+ 		};
+ 
+-		if (!perf_test__matches(&test, curr, argc, argv))
++		if (!perf_test__matches(test.desc, curr, argc, argv))
+ 			continue;
+ 
+ 		st.file = ent->d_name;
+@@ -608,9 +608,25 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 
+ 	for_each_test(j, t) {
+ 		int curr = i++, err;
++		int subi;
+ 
+-		if (!perf_test__matches(t, curr, argc, argv))
+-			continue;
++		if (!perf_test__matches(t->desc, curr, argc, argv)) {
++			bool skip = true;
++			int subn;
++
++			if (!t->subtest.get_nr)
++				continue;
++
++			subn = t->subtest.get_nr();
++
++			for (subi = 0; subi < subn; subi++) {
++				if (perf_test__matches(t->subtest.get_desc(subi), curr, argc, argv))
++					skip = false;
++			}
++
++			if (skip)
++				continue;
++		}
+ 
+ 		if (t->is_supported && !t->is_supported()) {
+ 			pr_debug("%2d: %-*s: Disabled\n", i, width, t->desc);
+@@ -638,7 +654,6 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 			 */
+ 			int subw = width > 2 ? width - 2 : width;
+ 			bool skip = false;
+-			int subi;
+ 
+ 			if (subn <= 0) {
+ 				color_fprintf(stderr, PERF_COLOR_YELLOW,
+@@ -655,6 +670,9 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 			}
+ 
+ 			for (subi = 0; subi < subn; subi++) {
++				if (!perf_test__matches(t->subtest.get_desc(subi), curr, argc, argv))
++					continue;
++
+ 				pr_info("%2d.%1d: %-*s:", i, subi + 1, subw,
+ 					t->subtest.get_desc(subi));
+ 				err = test_and_print(t, skip, subi);
+@@ -688,7 +706,7 @@ static int perf_test__list_shell(int argc, const char **argv, int i)
+ 			.desc = shell_test__description(bf, sizeof(bf), path, ent->d_name),
+ 		};
+ 
+-		if (!perf_test__matches(&t, curr, argc, argv))
++		if (!perf_test__matches(t.desc, curr, argc, argv))
+ 			continue;
+ 
+ 		pr_info("%2d: %s\n", i, t.desc);
+@@ -707,7 +725,7 @@ static int perf_test__list(int argc, const char **argv)
+ 	for_each_test(j, t) {
+ 		int curr = i++;
+ 
+-		if (!perf_test__matches(t, curr, argc, argv) ||
++		if (!perf_test__matches(t->desc, curr, argc, argv) ||
+ 		    (t->is_supported && !t->is_supported()))
+ 			continue;
+ 
+-- 
+2.25.4
 
-But saying "I'm only interested in changes to this pathname" is
-another "please give me simplified history, only as it is relevant to
-this pathname". And then it does exactly that. Including pruning out
-whole branches that aren't relevant.
-
-Trust me, it's the behavior you want. There's a reason we have
-"--full-history", but it's not enabled by default.
-
-But if you do want full history, you can still say so.
-
-              Linus
