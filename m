@@ -2,95 +2,139 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A19C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D18C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56BD6207D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E3E20787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nqZYIRbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgEXJ2l (ORCPT
+        id S1728892AbgEXJga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 05:28:41 -0400
-Received: from elvis.franken.de ([193.175.24.41]:36885 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbgEXJ2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 05:28:41 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jcmvv-0005CF-00; Sun, 24 May 2020 11:28:39 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 695BBC01D2; Sun, 24 May 2020 11:28:20 +0200 (CEST)
-Date:   Sun, 24 May 2020 11:28:20 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: DTS: Only build subdir of current platform
-Message-ID: <20200524092820.GA4874@alpha.franken.de>
-References: <1590027306-2137-1-git-send-email-yangtiezhu@loongson.cn>
+        Sun, 24 May 2020 05:36:30 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:55389 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728704AbgEXJg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 05:36:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590312987; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=+d2IffuX0fcJRBhd+RuZep3EB0a9GMnYHUOyGNlqGoE=; b=nqZYIRbkghQ8djQu/lHQMmZPlKPRNjvVoEe5YY1dj169wH9gL37UOPZKWElCgbylx2qFramK
+ fO8yI+aIs3iNtYc+5xZ4RwnYJqRs0B6A3TqLuAFZsGhgDeeVuRyEysyo1PqeLzdbJvSVfKIl
+ 3l1dKQxSfzvGNiv/TwmyO2AQ1rI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5eca40189d4cf4d3efd0b7a9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 24 May 2020 09:36:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 90C21C43391; Sun, 24 May 2020 09:36:24 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [49.207.133.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CEBFC433C6;
+        Sun, 24 May 2020 09:36:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2CEBFC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V3 3/8] clk: qcom: Add A53 PLL support for ipq6018 devices
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
+ <1586832922-29191-4-git-send-email-sivaprak@codeaurora.org>
+ <158754602745.132238.14379194464345140559@swboyd.mtv.corp.google.com>
+ <4025e5c3-b532-d235-f73b-2b86055bdde2@codeaurora.org>
+ <158948883904.215346.15910533287389644445@swboyd.mtv.corp.google.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <cd562d7c-2ea6-9481-c723-858dad799b06@codeaurora.org>
+Date:   Sun, 24 May 2020 15:06:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590027306-2137-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <158948883904.215346.15910533287389644445@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:15:06AM +0800, Tiezhu Yang wrote:
-> Add config check in Makefile to only build the subdir of current platform.
-> 
-> E.g. without this patch:
-> 
->   AR      arch/mips/built-in.a
->   AR      arch/mips/boot/dts/brcm/built-in.a
->   AR      arch/mips/boot/dts/cavium-octeon/built-in.a
->   AR      arch/mips/boot/dts/img/built-in.a
->   AR      arch/mips/boot/dts/ingenic/built-in.a
->   AR      arch/mips/boot/dts/lantiq/built-in.a
->   DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
->   DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
->   AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
->   DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
->   DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
->   AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
->   AR      arch/mips/boot/dts/loongson/built-in.a
->   AR      arch/mips/boot/dts/mscc/built-in.a
->   AR      arch/mips/boot/dts/mti/built-in.a
->   AR      arch/mips/boot/dts/netlogic/built-in.a
->   AR      arch/mips/boot/dts/ni/built-in.a
->   AR      arch/mips/boot/dts/pic32/built-in.a
->   AR      arch/mips/boot/dts/qca/built-in.a
->   AR      arch/mips/boot/dts/ralink/built-in.a
->   AR      arch/mips/boot/dts/xilfpga/built-in.a
->   AR      arch/mips/boot/dts/built-in.a
-> 
-> With this patch:
-> 
->   AR      arch/mips/built-in.a
->   DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
->   DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
->   AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
->   DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
->   DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
->   AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
->   AR      arch/mips/boot/dts/loongson/built-in.a
->   AR      arch/mips/boot/dts/built-in.a
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/mips/boot/dts/Makefile | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
 
-applied to mips-next.
+On 5/15/2020 2:10 AM, Stephen Boyd wrote:
+> Quoting Sivaprakash Murugesan (2020-04-22 03:44:33)
+>> On 4/22/2020 2:30 PM, Stephen Boyd wrote:
+>>> Quoting Sivaprakash Murugesan (2020-04-13 19:55:17)
+>>>> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
+>>>> index 45cfc57..a95351c 100644
+>>>> --- a/drivers/clk/qcom/a53-pll.c
+>>>> +++ b/drivers/clk/qcom/a53-pll.c
+>>>> @@ -57,30 +146,26 @@ static int qcom_a53pll_probe(struct platform_device *pdev)
+>>>>           if (IS_ERR(regmap))
+>>>>                   return PTR_ERR(regmap);
+>>>>    
+>>>> -       pll->l_reg = 0x04;
+>>>> -       pll->m_reg = 0x08;
+>>>> -       pll->n_reg = 0x0c;
+>>>> -       pll->config_reg = 0x14;
+>>>> -       pll->mode_reg = 0x00;
+>>>> -       pll->status_reg = 0x1c;
+>>>> -       pll->status_bit = 16;
+>>>> -       pll->freq_tbl = a53pll_freq;
+>>>> -
+>>>> -       init.name = "a53pll";
+>>>> -       init.parent_names = (const char *[]){ "xo" };
+>>>> -       init.num_parents = 1;
+>>>> -       init.ops = &clk_pll_sr2_ops;
+>>>> -       init.flags = CLK_IS_CRITICAL;
+>>> Please document why a clk is critical.
+>> ok
+>>>> -       pll->clkr.hw.init = &init;
+>>>> -
+>>>> -       ret = devm_clk_register_regmap(dev, &pll->clkr);
+>>>> +       if (pll_data->flags & PLL_IS_ALPHA) {
+>>>> +               struct clk_alpha_pll *alpha_pll =
+>>>> +                       pll_data->a53pll.alpha_pll.pll;
+>>>> +               struct alpha_pll_config *alpha_pll_config =
+>>>> +                       pll_data->a53pll.alpha_pll.pll_config;
+>>>> +
+>>>> +               clk_alpha_pll_configure(alpha_pll, regmap, alpha_pll_config);
+>>>> +               clkr = &pll_data->a53pll.alpha_pll.pll->clkr;
+>>>> +       } else {
+>>>> +               clkr = &pll_data->a53pll.pll->clkr;
+>>>> +       }
+>>> Sorry, the design is confusing.
+>> The basic idea is to add support for various PLLs available to clock the
+>> A53 core.
+>>
+>> if this messing up the code, can the alpha pll support be moved to a
+>> separate file?
+>>
+>> It would be very helpful if you provide your input on this.
+> Isn't the alpha PLL support already in a different file? Is it sometimes
+> an alpha pll and other times it is something else?
 
-Thomas.
+alpha pll for cpufreq is not yet available, and for ipq based devices it 
+is alpha pll, and I guess
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+for other mobile based devices it is something else.
+
+I have raised a patch set keeping the alpha pll as a separate file, 
+could you please take a
+
+look into it?
+
