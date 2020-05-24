@@ -2,97 +2,82 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3016FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 00:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 00:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE45B207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 00:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866E52077D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 00:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7nTUaiP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGK3jObq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbgEXAYg (ORCPT
+        id S2388216AbgEXAkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 20:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
+        Sat, 23 May 2020 20:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388106AbgEXAYf (ORCPT
+        with ESMTP id S2388106AbgEXAkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 20:24:35 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EF3C061A0E;
-        Sat, 23 May 2020 17:24:35 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id v17so11325749ote.0;
-        Sat, 23 May 2020 17:24:35 -0700 (PDT)
+        Sat, 23 May 2020 20:40:10 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DA8C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 17:40:08 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y198so6987972pfb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 17:40:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kekfxXMdb8bE1LuIOxDVSOfLlMhP6qizU1VyVltzXYA=;
-        b=U7nTUaiPPwYH1gzE5lpymmoyUozSFhrWpXJ8DpzQGZEVc47eXF8mrAEn463M87cpEw
-         uWcDH2Ul+tyGdHxYW0M7BLGn8MeR4E7d1dtsw7o22u6QqG4nX3llZNB7Fqgn813tIX3e
-         zC4ZOzPdwQy+af2hnh57kYtlt/xC/5e1/vnw61TQoFfUX4mYIaRstpAP/hDkUdSqVUlX
-         Df9IuSkYo8QFxoC8OSMFEiaA+CbXPS2he98UpKdlY9obZNKVe0NK/VTPkLPN3AObCfN8
-         pAMbs20yCP/zK1P1APR0rvcWj+NmQryGQ02odPRdRNFq5XmZHdGvfMZaEEM+1SQx16vG
-         BZgQ==
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version;
+        bh=v4d4ISfjUvIFvHJuALETvgiIbZuG6462V+CJxwK89z0=;
+        b=KGK3jObq/Rwqq8KeUundU5/ZBV9GnwTXRDtlyxSM5ipoMWY3Xl2OzkzpGlsDYd2qpj
+         7ANBcvK/20y+8w8+ZNGpvUMqvEH2MbdMLlYqpjP/NiXUfYnXlCt3KwivZ5QktBQqN/QP
+         kyxRUVddRPH2YXvqGKFwx52wk7cOrL2kBrMCRw0sHkcu9644gTZK0KX2EAxZPOKM8pKP
+         9miHX4Pkcd97wuj4mSccKq9FitA/qRnZS6qQty4THzb4j5bcmwcjDcvE5RINjMiknfZq
+         EtB6sXF4oTlX1PBE74nh7ekHLoetL0n3PMAz719Jbg6njj1ruvLffteWsBI0qe3/0mo0
+         SO5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kekfxXMdb8bE1LuIOxDVSOfLlMhP6qizU1VyVltzXYA=;
-        b=RQJfVcQB7se66SYezS7t8LKIZtqBcicZ+ohSn9z+AczUGUmxnT8eWVKCjhSFd6iWeN
-         qjti275X0dqnJp9TpDwlqTeGVrA28pPFx9UiUHPZ8bWaCrV7FfKwrN6BOEGJzEI+ZV0Z
-         wUY4/tNbMCQ2GdUGWXPFrF8IvT4bP7vwtimv3txj4mmsfPsRWgeV4bkpwJ0lbqW5S3GV
-         LGxUk4X+KoSfc2fEMqVuFLscByV9nabMfBRX2w15u6iUBWG67VKRkPh93lE7s3jccZTR
-         C0Algt3exMZIgWpTm4UHkRtSeSWH6CfD8ZbtQrSFCIHyrupn20sq5TCuIuG7qceW4Avq
-         9XvQ==
-X-Gm-Message-State: AOAM532feW06N4aJoIsqixu4+dp6G6BmpGs+bHyigBgF4zAny7/2YPR2
-        O7GeBo3ZgTDpSp3SmAFnxh+QM42VL4yIgu1xZNkazPMBZXc=
-X-Google-Smtp-Source: ABdhPJwuA88Tv+hCcPRHPd8gqY+yFPdjYiEomp6Y8HjMkRwiqh4Bb8lzKej1fozAKRmWp2BxiP0iwJcGKvAPxBjn2LQ=
-X-Received: by 2002:a9d:3675:: with SMTP id w108mr16677732otb.116.1590279874351;
- Sat, 23 May 2020 17:24:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version;
+        bh=v4d4ISfjUvIFvHJuALETvgiIbZuG6462V+CJxwK89z0=;
+        b=VyLqDcaLRZ7nlN4zNNEVcDwalf6RQINfi1eUghE2n9WSSBUdR6IW+l+BP4HAvfy8LO
+         qelVuB5uScD/4TWkNHa22TjPzVhMtCNoot64YWp0MgmhJuiUOGovBWN1KZmN4a348wyL
+         hRZUqAPorYjnsDncITlPdLgVatXQvRsibYjybigvU/p76vasg7xVrlbOfZGD/zsXMel0
+         q6Vy8S+W3Sdz9mbgZ30HIOAcHplKZA6RJ3ZrARqxOuN/ydSuQOvVogjm++sNB2xj0BCW
+         gahDBYv0UXVarcM2vxcAdJJ8uW/bu9QoC43Cpf6ogjdnZCfiV9/jfILt1g4kUFQ8VB42
+         K/WA==
+X-Gm-Message-State: AOAM531xJoS/Vx3GEEer7VxVNTJt04W2l4jcutyahL4Vah9hfD1W+Wwy
+        tbJ80WXNFAsmCx46N7nnglo=
+X-Google-Smtp-Source: ABdhPJy0kE/yD99sX3juFkNJli6/lc6t3ADHzatkTJPHA/0p0HGodd1CdlNlnWGoz5bXhV+c3dsYLA==
+X-Received: by 2002:a63:1b46:: with SMTP id b6mr8682243pgm.429.1590280808063;
+        Sat, 23 May 2020 17:40:08 -0700 (PDT)
+Received: from [192.168.86.27] (c-73-222-199-61.hsd1.ca.comcast.net. [73.222.199.61])
+        by smtp.gmail.com with ESMTPSA id g17sm10032811pfr.85.2020.05.23.17.40.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 17:40:07 -0700 (PDT)
+Date:   Sat, 23 May 2020 17:39:59 -0700
+From:   Hill Ma <maahiuzeon@gmail.com>
+Subject: Re: [PATCH] x86/reboot/quirks: Add MacBook6,1 reboot quirk
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <NI8TAQ.QW9573GROMFS1@gmail.com>
+In-Reply-To: <9Q40AQ.AIBOX7WP0C792@gmail.com>
+References: <20200425200641.GA1554@cslab.localdomain>
+        <9Q40AQ.AIBOX7WP0C792@gmail.com>
+X-Mailer: geary/3.36.1
 MIME-Version: 1.0
-References: <CAGngYiVDCCjo6VKt660Uz5mbEGOBOZpcUWeRHWx_L=TapZgv_w@mail.gmail.com>
- <20190606151111.14237-1-TheSven73@gmail.com> <20200523201730.o7y7pent4hjtgia3@pengutronix.de>
-In-Reply-To: <20200523201730.o7y7pent4hjtgia3@pengutronix.de>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Sat, 23 May 2020 20:24:23 -0400
-Message-ID: <CAGngYiWCT=_H+PwXRTgMWRpwRWMrgvA3vD1is2r704oZn14LiA@mail.gmail.com>
-Subject: Re: [PATCH -next] pwm: pca9685: Remove set but not used variable 'pwm'
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
 
-On Sat, May 23, 2020 at 4:17 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Is this patch still relevant?
+gentle ping again and happy weekend to all :)
 
-A slightly different version of this patch has already landed in
-mainline. Clemens Gruber had
-relevant hardware available, and was able to test it out.
 
-See Linus's tree here:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d=
-rivers/pwm/pwm-pca9685.c?h=3Dv5.7-rc6&id=3D9cc5f232a4b6a0ef6e9b57876d61b88f=
-61bdd7c2
-
-Have a great week-end,
-Sven
