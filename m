@@ -2,90 +2,244 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4605D20853
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RcBKGvOC"
+	by mail.kernel.org (Postfix) with ESMTP id 2237220826
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590337159;
+	bh=byWAOearMKEuXBmgx0LII0i67ProJOMxHQL8RV5rP/A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=W3vaRWT0v5UBQEm4ZPT8oD8NyedhTQQZH+fwGlDoNcETm278AlsqUktNvJ7NoXXKz
+	 RfHKDMh2VX6x+rMNheBUSBIf7odiA09lyMJSqoePUh+iAGYHwziirwdWlvDLgj5+qg
+	 I4KN/paj5D24PSuy+oDmaUfQkt5N+w9uSJbD+3iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgEXQQ5 (ORCPT
+        id S1729109AbgEXQTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 12:16:57 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:45894 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728847AbgEXQQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 12:16:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1590337014; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=emIfzJZcNlvletQ+S8SsbsemNtmnNe6LxmjxeswycGc=;
-        b=RcBKGvOCYyL/YKWkBbJ40CA3Pm8hVojb5eak7HU2IRErkloU7Yh0aHBVdUHn1dHOAbqXat
-        QL/B43wLlMt6SvAglXvMxAOK1e5zjT2wewsZnUOK83jni8AD5FStrK9XlS8vDVCJaPLiCd
-        a4L6xhvU92/w/NZWo4DCXOVr8x3Qxuo=
-Date:   Sun, 24 May 2020 18:16:44 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/3] pwm: jz4740: Drop dependency on MACH_INGENIC
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <WVFUAQ.BITRQ3YW6GKI@crapouillou.net>
-In-Reply-To: <20200413121445.72996-1-paul@crapouillou.net>
-References: <20200413121445.72996-1-paul@crapouillou.net>
+        Sun, 24 May 2020 12:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbgEXQTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 12:19:18 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F85520776;
+        Sun, 24 May 2020 16:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590337157;
+        bh=byWAOearMKEuXBmgx0LII0i67ProJOMxHQL8RV5rP/A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JvUcpJFKHz88LiH5SCQSet+ZpwD2HegE8hERUtZ/olPDY74CuXEAxm0uWSSUFPE9f
+         7rQfrCtiDIrL/HdOJ2/joFHqfIEL3PkyfhvV34SKRSyVjGM8h5e+lJXZ/XlckA6c2q
+         3l2j8O7BExBSwe5kdDzekrxQ3CMOY3SAuJkRMDSs=
+Date:   Sun, 24 May 2020 17:19:11 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, david@lechnology.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Subject: Re: [PATCH v2 4/4] docs: counter: Document character device
+ interface
+Message-ID: <20200524171911.229e34f1@archlinux>
+In-Reply-To: <db0a9206d31c82f8381316ef5ff9872bfb53665b.1589654470.git.vilhelm.gray@gmail.com>
+References: <cover.1589654470.git.vilhelm.gray@gmail.com>
+        <db0a9206d31c82f8381316ef5ff9872bfb53665b.1589654470.git.vilhelm.gray@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, 16 May 2020 15:20:02 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-Any feedback on this patchset?
-
-Cheers,
--Paul
-
-
-Le lun. 13 avril 2020 =E0 14:14, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> Depending on MACH_INGENIC prevent us from creating a generic kernel=20
-> that
-> works on more than one MIPS board. Instead, we just depend on MIPS=20
-> being
-> set.
+> This patch adds high-level documentation about the Counter subsystem
+> character device interface.
 >=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 > ---
->  drivers/pwm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/driver-api/generic-counter.rst | 112 +++++++++++++------
+>  1 file changed, 76 insertions(+), 36 deletions(-)
 >=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index eebbc917ac97..7814e5b2cad7 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -234,7 +234,7 @@ config PWM_IMX_TPM
->=20
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
-> -	depends on MACH_INGENIC
-> +	depends on MIPS
->  	depends on COMMON_CLK
->  	select MFD_SYSCON
->  	help
-> --
-> 2.25.1
->=20
+> diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation=
+/driver-api/generic-counter.rst
+> index 8f85c30dea0b..58045b33b576 100644
+> --- a/Documentation/driver-api/generic-counter.rst
+> +++ b/Documentation/driver-api/generic-counter.rst
+> @@ -223,19 +223,6 @@ whether an input line is differential or single-ende=
+d) and instead focus
+>  on the core idea of what the data and process represent (e.g. position
+>  as interpreted from quadrature encoding data).
+> =20
+> -Userspace Interface
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -Several sysfs attributes are generated by the Generic Counter interface,
+> -and reside under the /sys/bus/counter/devices/counterX directory, where
+> -counterX refers to the respective counter device. Please see
+> -Documentation/ABI/testing/sysfs-bus-counter for detailed
+> -information on each Generic Counter interface sysfs attribute.
+> -
+> -Through these sysfs attributes, programs and scripts may interact with
+> -the Generic Counter paradigm Counts, Signals, and Synapses of respective
+> -counter devices.
+> -
+>  Driver API
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> @@ -377,13 +364,13 @@ driver can be exemplified by the following::
+>                  +----------------------------+          |
+>                  | Processes data from device |   -------------------
+>                  |----------------------------|  / driver callbacks /
+> -                | Type: unsigned long        |  -------------------
+> +                | Type: u64                  |  -------------------
+>                  | Value: 42                  |          |
+>                  +----------------------------+          |
+>                          |                               |
+> -                 ----------------                       |
+> -                / unsigned long /                       |
+> -                ----------------                        |
+> +                 ----------                             |
+> +                / u64     /                             |
+> +                ----------                              |
+>                          |                               |
+>                          |                               V
+>                          |               +----------------------+
+> @@ -398,25 +385,32 @@ driver can be exemplified by the following::
+>                          |               / driver callbacks /
+>                          |               -------------------
+>                          |                       |
+> -                +-------+                       |
+> +                +-------+---------------+       |
+> +                |                       |       |
+> +                |               +-------|-------+
+> +                |               |       |
+> +                V               |       V
+> +        +--------------------+  |  +---------------------+
+> +        | Counter sysfs      |<-+->| Counter chrdev      |
+> +        +--------------------+     +---------------------+
+> +        | Translates to the  |     | Translates to the   |
+> +        | standard Counter   |     | standard Counter    |
+> +        | sysfs output       |     | character device    |
+> +        |--------------------|     |---------------------+
+> +        | Type: const char * |     | Type: u64           |
+> +        | Value: "42"        |     | Value: 42           |
+> +        +--------------------+     +---------------------+
+>                  |                               |
+> -                |               +---------------+
+> -                |               |
+> -                V               |
+> -        +--------------------+  |
+> -        | Counter sysfs      |<-+
+> -        +--------------------+
+> -        | Translates to the  |
+> -        | standard Counter   |
+> -        | sysfs output       |
+> -        |--------------------|
+> -        | Type: const char * |
+> -        | Value: "42"        |
+> -        +--------------------+
+> -                |
+> -         ---------------
+> -        / const char * /
+> -        ---------------
+> +         ---------------                 ----------
+> +        / const char * /                / u64     /
+> +        ---------------                 ----------
+> +                |                               |
+> +                |                               V
+> +                |                       +-----------+
+> +                |                       | read      |
+> +                |                       +-----------+
+> +                |                       \ Count: 42 /
+> +                |                        -----------
+>                  |
+>                  V
+>          +--------------------------------------------------+
+> @@ -425,7 +419,7 @@ driver can be exemplified by the following::
+>          \ Count: "42"                                      /
+>           --------------------------------------------------
+> =20
+> -There are three primary components involved:
+> +There are four primary components involved:
+> =20
+>  Counter device driver
+>  ---------------------
+> @@ -445,3 +439,49 @@ and vice versa.
+>  Please refer to the `Documentation/ABI/testing/sysfs-bus-counter` file
+>  for a detailed breakdown of the available Generic Counter interface
+>  sysfs attributes.
+> +
+> +Counter chrdev
+> +--------------
+> +Translates counter data to the standard Counter character device; data
+> +is transferred via standard character device read/write calls.
+> +
+> +Sysfs Interface
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Several sysfs attributes are generated by the Generic Counter interface,
+> +and reside under the `/sys/bus/counter/devices/counterX` directory,
+> +where `X` is to the respective counter device id. Please see
+> +Documentation/ABI/testing/sysfs-bus-counter for detailed information on
+> +each Generic Counter interface sysfs attribute.
+> +
+> +Through these sysfs attributes, programs and scripts may interact with
+> +the Generic Counter paradigm Counts, Signals, and Synapses of respective
+> +counter devices.
+> +
+> +Counter Character Device
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Counter character device nodes are created under the `/dev` directory as
+> +`counterX`, where `X` is the respective counter device id. Defines for
+> +the standard Counter data types are exposed via the userspace
+> +`include/uapi/linux/counter-types.h` file.
+> +
+> +The first 196095 bytes of the character device serve as a control
+> +selection area where control exposure of desired Counter components and
+> +extensions may be selected. Each byte serves as a boolean selection
+> +indicator for a respective Counter component or extension. The format of
+> +this area is as follows:
+> +
+> +* For each device extension, a byte is required.
+> +* For each Signal, a byte is reserved for the Signal component, and a
+> +  byte is reserved for each Signal extension.
+> +* For each Count, a byte is reserved for the Count component, a byte is
+> +  reserved for the count function, a byte is reserved for each Synapse
+> +  action, and byte is reserved for each Count extension.
+> +
+> +The selected Counter components and extensions may then be interfaced
+> +after the first 196095 bytes via standard character device read/write
+> +operations. The number of bytes available for each component or
+> +extension is dependent on their respective data type: u8 will have 1
+> +byte available, u64 will have 8 bytes available, strings will have 64
+> +bytes available, etc.
+
+=46rom what I recall of the earlier conversation, I'm not sure this is what
+was being suggested.  I 'think' what people were after was a simple
+read interface for just the counters  (+ timestamps). This would also
+include the option to use select / poll on the counter.
+
+Simply moving over to a read / write really doesn't help for ease of use.
+I'm not sure what the right control approach is, or perhaps if we even
+need one (could just output all counts provided by hardware once the
+chrdev is opened).=20
+
+Jonathan
 
 
