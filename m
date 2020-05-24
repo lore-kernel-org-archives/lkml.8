@@ -2,109 +2,234 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99224C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 12:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92813C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7343620823
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 12:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732B020878
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590325052;
-	bh=dwTSrAbUCgX4YBr4LsehmVjh9zpHVu7tTZE2teD/vfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c0gXOI+JogdpWa+B7ARjpAPpGURA6miID4TRQwRiAyaTKt1cCEFWKQNrYsMHons0J
-	 tUpZBniVPhkncFHE6+yOQDGDfmK3cAB5Tz4KNn00ydFgKDqXNehvQX7O9A50k49jz4
-	 QgGdq3APsxdjk7WD7i4Ri+9z46SjpjnA4pKEb7Xo=
+	s=default; t=1590325765;
+	bh=2Yhi6AKFxMkREcrMyAjTyEAf6Iw0DqTol3b+5FGWzSs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZZQ9rhj3X4T2iYdt2WSXuNZw0a0H+4pa9Szg3QvILWqrUu4Ln2WkY1VZcofzeOls+
+	 ZG7Q2zYcPlExomaqzgdxcwvyQxghJjjC/YFT71smxFhnLz6mdiWKCuguBUMwR/Oo1r
+	 wbw03qU/bMeAThhRvkTgbehL/BqiB3Ir+B8ZD+eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbgEXM5b (ORCPT
+        id S1729338AbgEXNJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 08:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50458 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 09:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgEXM5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 08:57:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726064AbgEXNJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 09:09:24 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070EC20776;
-        Sun, 24 May 2020 12:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F90C20787;
+        Sun, 24 May 2020 13:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590325050;
-        bh=dwTSrAbUCgX4YBr4LsehmVjh9zpHVu7tTZE2teD/vfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SehOJISYgXvTWashVdp+g/gGC6yjGrTffmL2naP33hTAZS/eyn/JhmfTChbWMyw83
-         +iEv3HE0Abfml1RysVIfnWbYKDjm+i5PwLwhwLPDqwmj8cOVZl8VyrnROHnFRkQ6vy
-         QOq9GIMcbo8bQ/nom5yz/xaB28fYgcU13sidY8gA=
-Date:   Sun, 24 May 2020 14:57:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] kobject: Make sure the parent does not get released
- before its children
-Message-ID: <20200524125727.GA2430@kroah.com>
-References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
- <20200523153643.GA226270@kroah.com>
- <7a5e4740-8099-ef70-776f-0d92ce84ab3d@infradead.org>
+        s=default; t=1590325763;
+        bh=2Yhi6AKFxMkREcrMyAjTyEAf6Iw0DqTol3b+5FGWzSs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iWZTut5b8mxLNhLlCnMOxg/R8R2+jNVX9r8MLjATtcpik9eWu58nOyjiWkTIQMpsm
+         PZ+70RsULak+qQgaOZEZWwEhK+yyxrOt/BvYWCNtGrI3VU8Cb4QjPS1deZvTckyiHi
+         3jNksUCj8e2rkha0ulieGFwr8G1SGc6AiqaAXuj0=
+Date:   Sun, 24 May 2020 14:09:19 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>
+Subject: Re: [PATCH] iio: stm32-adc: keep a reference to the iio device on
+ the state struct
+Message-ID: <20200524140919.30b63227@archlinux>
+In-Reply-To: <20200522130719.630714-1-alexandru.ardelean@analog.com>
+References: <20200522130719.630714-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a5e4740-8099-ef70-776f-0d92ce84ab3d@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 08:44:06AM -0700, Randy Dunlap wrote:
-> On 5/23/20 8:36 AM, Greg Kroah-Hartman wrote:
-> > On Wed, May 13, 2020 at 06:18:40PM +0300, Heikki Krogerus wrote:
-> >> In the function kobject_cleanup(), kobject_del(kobj) is
-> >> called before the kobj->release(). That makes it possible to
-> >> release the parent of the kobject before the kobject itself.
-> >>
-> >> To fix that, adding function __kboject_del() that does
-> >> everything that kobject_del() does except release the parent
-> >> reference. kobject_cleanup() then calls __kobject_del()
-> >> instead of kobject_del(), and separately decrements the
-> >> reference count of the parent kobject after kobj->release()
-> >> has been called.
-> >>
-> >> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> >> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> >> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-> >> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
-> >> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> >> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> >> Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> >> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> >> ---
-> >>  lib/kobject.c | 30 ++++++++++++++++++++----------
-> >>  1 file changed, 20 insertions(+), 10 deletions(-)
-> > 
-> > Stepping back, now that it turns out this patch causes more problems
-> > than it fixes, how is everyone reproducing the original crash here?
+On Fri, 22 May 2020 16:07:19 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> We may want to get rid of the iio_priv_to_dev() helper. The reason is that
+> we will hide some of the members of the iio_dev structure (to prevent
+> drivers from accessing them directly), and that will also mean hiding the
+> implementation of the iio_priv_to_dev() helper inside the IIO core.
 > 
-> Just load lib/test_printf.ko and boom!
+> Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
+> may not be fast anymore, so a general idea is to try to get rid of the
+> iio_priv_to_dev() altogether.
+> The iio_priv() helper won't be affected by the rework.
+> 
+> For this driver, not using iio_priv_to_dev(), means keeping a reference to
+> the IIO device on the state struct.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Thanks, that helps.
+I don't particularly mind this approach, but an alternative would be to
+change the callbacks to take an iio_dev rather than the iio_priv()
+structure.  It's more invasive though as need to change what is
+provided via dev_get_drvdata for the adc device.
+It's possible I missed a path where this won't work for some reason though.
 
-Ok, in messing around with the kobject core more, originally we thought
-this was an issue of the kobject uevent happening for the parent pointer
-(when the parent was invalid).  so, moving things around some more, and
-now I'm crashing in software_node_release() when we are trying to access
-swnode->parent->child_ids as parent is invalid there.
+Up to the driver maintainers on which one they prefer.
 
-So I feel like this is a swnode bug, or a use of swnode in a way it
-shouldn't be that the testing framework is exposing somehow.
+Thanks,
 
-Let me dig deeper...
+Jonathan
 
-greg k-h
+
+> ---
+>  drivers/iio/adc/stm32-adc.c | 27 +++++++++++++++------------
+>  1 file changed, 15 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index ae622ee6d08c..7e58c4443e3f 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -171,6 +171,7 @@ struct stm32_adc_cfg {
+>  
+>  /**
+>   * struct stm32_adc - private data of each ADC IIO instance
+> + * @indio_dev:		back-reference to the IIO device object
+>   * @common:		reference to ADC block common data
+>   * @offset:		ADC instance register offset in ADC block
+>   * @cfg:		compatible configuration data
+> @@ -194,6 +195,7 @@ struct stm32_adc_cfg {
+>   * @chan_name:		channel name array
+>   */
+>  struct stm32_adc {
+> +	struct iio_dev		*indio_dev;
+>  	struct stm32_adc_common	*common;
+>  	u32			offset;
+>  	const struct stm32_adc_cfg	*cfg;
+> @@ -637,7 +639,7 @@ static void stm32h7_adc_start_conv(struct stm32_adc *adc, bool dma)
+>  
+>  static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int ret;
+>  	u32 val;
+>  
+> @@ -654,7 +656,7 @@ static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
+>  
+>  static int stm32h7_adc_exit_pwr_down(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int ret;
+>  	u32 val;
+>  
+> @@ -692,7 +694,7 @@ static void stm32h7_adc_enter_pwr_down(struct stm32_adc *adc)
+>  
+>  static int stm32h7_adc_enable(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int ret;
+>  	u32 val;
+>  
+> @@ -715,7 +717,7 @@ static int stm32h7_adc_enable(struct stm32_adc *adc)
+>  
+>  static void stm32h7_adc_disable(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int ret;
+>  	u32 val;
+>  
+> @@ -735,7 +737,7 @@ static void stm32h7_adc_disable(struct stm32_adc *adc)
+>   */
+>  static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int i, ret;
+>  	u32 lincalrdyw_mask, val;
+>  
+> @@ -779,7 +781,7 @@ static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
+>   */
+>  static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int i, ret;
+>  	u32 lincalrdyw_mask, val;
+>  
+> @@ -852,7 +854,7 @@ static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
+>   */
+>  static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
+>  {
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int ret;
+>  	u32 val;
+>  
+> @@ -1228,7 +1230,7 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
+>  static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
+>  {
+>  	struct stm32_adc *adc = data;
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+>  	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+>  
+> @@ -1241,7 +1243,7 @@ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
+>  static irqreturn_t stm32_adc_isr(int irq, void *data)
+>  {
+>  	struct stm32_adc *adc = data;
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+>  	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+>  
+> @@ -1879,6 +1881,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	adc = iio_priv(indio_dev);
+> +	adc->indio_dev = indio_dev;
+>  	adc->common = dev_get_drvdata(pdev->dev.parent);
+>  	spin_lock_init(&adc->lock);
+>  	init_completion(&adc->completion);
+> @@ -1990,7 +1993,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  static int stm32_adc_remove(struct platform_device *pdev)
+>  {
+>  	struct stm32_adc *adc = platform_get_drvdata(pdev);
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  
+>  	pm_runtime_get_sync(&pdev->dev);
+>  	iio_device_unregister(indio_dev);
+> @@ -2013,7 +2016,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
+>  static int stm32_adc_suspend(struct device *dev)
+>  {
+>  	struct stm32_adc *adc = dev_get_drvdata(dev);
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  
+>  	if (iio_buffer_enabled(indio_dev))
+>  		__stm32_adc_buffer_predisable(indio_dev);
+> @@ -2024,7 +2027,7 @@ static int stm32_adc_suspend(struct device *dev)
+>  static int stm32_adc_resume(struct device *dev)
+>  {
+>  	struct stm32_adc *adc = dev_get_drvdata(dev);
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct iio_dev *indio_dev = adc->indio_dev;
+>  	int ret;
+>  
+>  	ret = pm_runtime_force_resume(dev);
+
