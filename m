@@ -2,209 +2,266 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C64AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B265BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B26CD207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750C1207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="gr4FhdZT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j5FslOyo"
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="hKIiNI4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgEXNU4 (ORCPT
+        id S1729370AbgEXNVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 09:20:56 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:54895 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726064AbgEXNU4 (ORCPT
+        Sun, 24 May 2020 09:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgEXNVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 09:20:56 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id A68176D8;
-        Sun, 24 May 2020 09:20:54 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sun, 24 May 2020 09:20:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=yEdv+H/O/2SpAACnPzhE79bqt6
-        6x66Jv2DzRgvNuqFE=; b=gr4FhdZT9B2d8PL1hXXtX31pGKZ+s2bspeBROp3yGA
-        4ZOIUaU5+qAl6mM3OL4QIFuIUHpwdfS+/kznq1bntrC6OZae5NmsKIhSiJ4957QL
-        OJUGEHk1BrEvp7OFQupBaXUoOor8XsM075aL9BTDK4syBfgUkRzQRvnhYjvDK90q
-        KkNujPNi+oCVx/OYm1yvQaQ7n4K7gx3MyqnTQxbnd5Rw1UtfTFIa8no7CjCtM70B
-        s3pFi/rcpN3zV9ONiWylcg/qT8cQwNb2BryHysBgTh2g0i9BS5f1RGvSWPSfHjRT
-        hVfL/UvpRXDzRBZoldKooV8+YaPWGWIoHh+rh6XWI/Og==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yEdv+H/O/2SpAACnP
-        zhE79bqt66x66Jv2DzRgvNuqFE=; b=j5FslOyoKitukg2O5+nqXbs4c2J1OriNp
-        6z9+P6bN1C6pRIP5xypck0/yVbKGvbdLg8IyhCxWz5+QSShTnYNNCxDOQq5vFIvx
-        tx7YcVuU2GhYwu+s6GkWCkKDtqCy32wxWexxYMvPVcofy+ERdxelb9MFJCHj+7/O
-        YU856/JdWB/rbuF5Amjm4GyrQ7+i7SIPsBEfibujrzfDWqSjJYF6SjCDTjrX/j06
-        3AFSQ+9/Re3mVPhgEBjiTPXiAyosUCI0Vn/KrpqJgjR0+H4QuPG6H3/xvDRcYc8G
-        7bqrG+zDgowYev1a9uewB+/PUXvWOud/vWYXyTGS8bo7g53gwUgIQ==
-X-ME-Sender: <xms:tHTKXooXFSArvjV9bqpiDAkd_1QcUbUEatRmSslPKBN7jFPSk76vpQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddukedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhh
-    ihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhepteeiuefhjeekke
-    efheetieekvdegfefhgffgvdeiheehhfehiedvhffgjeejuddunecuffhomhgrihhnpehk
-    vghrnhgvlhdrohhrghenucfkphepudektddrvdefhedrfedrheegnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgr
-    khgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:tHTKXuodT0MBd3S5MHEf0lSJNoCPLiRV2Y6WpAUOJ_dnXO4-48khdA>
-    <xmx:tHTKXtNQqDQTAnA7hK-r5Y-cMZZp-6zt4bCx7TLLMUO1OxLZyoipXg>
-    <xmx:tHTKXv5nr2Ul_PYH-J0jmGkKhpCZnwsbm72BjrwYvZy_6nHQuZVA8w>
-    <xmx:tnTKXq1XDYRbvGSCwk7J8p1RGjc9ICxDdi5skoxJ48Zk9RD1osY5bQ>
-Received: from workstation.flets-east.jp (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC25E306651A;
-        Sun, 24 May 2020 09:20:50 -0400 (EDT)
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     oscar.carter@gmx.com, keescook@chromium.org, greg@kroah.com,
-        stefanr@s5r6.in-berlin.de
-Cc:     kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, clemens@ladisch.de
-Subject: [PATCH v2] firewire-core: remove cast of function callback
-Date:   Sun, 24 May 2020 22:20:48 +0900
-Message-Id: <20200524132048.243223-1-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.25.1
+        Sun, 24 May 2020 09:21:37 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7818AC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:21:35 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e2so17903775eje.13
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:21:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=PdKFnmHY5D0RuffzJcNxE/y6oL7p52+hcSK41C58lOQ=;
+        b=hKIiNI4Jh2d+B9HaeqvDvmKuSVzkaVRu1EKvzOgXJGBGNohUAzvM2jtecL9iHUcoqa
+         dFX+QMnieHeHAS4bQN/mjTTplFnsN6NSuyzIMfPAPhMerUEfrJ4tzwhJfDGrD1xboE8J
+         HO9oG1p+sp7MbRIhtriETcLRnfm8BRDSUVWghXcZcg1oa5cFobiX3smvZbfA9v6NRnJH
+         n7Ns5HTWy8jziosQzcMVllGW8Pm9QUpmWmAMu/IcNM9Y/2PIQK9ptMfbYg+b/hiPsgsw
+         ia9GFZTt++fPjfQ7QaIsHtPDxq4y+3ugCx0XyGNcYzxUScGBrXr3bryTaR7+YdHvk2EA
+         iZwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=PdKFnmHY5D0RuffzJcNxE/y6oL7p52+hcSK41C58lOQ=;
+        b=lMtYqq5b4onzDYkI2BKnM5D0YWV6n7ED87w42/W1E18kcAJkzvm+FBQhiLOzjnO1xf
+         15NO35ZKdIJrAm+CcbL342NuaGGRXe9Fy3/qonK5g0V/Q6Fo37RXvUshN0TiZr06j030
+         m3mB+ZLQ8I/elDBOERNYVMIYsS03mxFRsAkCKR8+nBvsrUp2P5MhDVQEeMvuKaGfPkAG
+         pZXW69x3l54ROEBZjqWWl3rX4wCSRSSun+Y6Xze2kmqeYpO9NLZJG+RYSm92ACKjEL+i
+         mJnmJW0gkdt3SrY88GkdoDWpMknGkbs7mMeVbxNvPTAGQ7YJH9XQUV5k8xksJ4ysmLOU
+         G4xg==
+X-Gm-Message-State: AOAM533N22ixI320hY/USEW+55mSne+b8rUT/+l+OZWndYW3Sz33l+xI
+        SsaELgd0V+34U/eY4erswAhjKoKumTw=
+X-Google-Smtp-Source: ABdhPJy/ZQhV8sPuh1CkWe7QFBRsuCGYzC3XSahcBFqZ/ow94G9O5slmnTUZqLe5Pa9c5QUovpwU8w==
+X-Received: by 2002:a17:906:2448:: with SMTP id a8mr14752890ejb.310.1590326493684;
+        Sun, 24 May 2020 06:21:33 -0700 (PDT)
+Received: from linux.fritz.box (p200300d9974ddc00d11660c61940cb1c.dip0.t-ipconnect.de. [2003:d9:974d:dc00:d116:60c6:1940:cb1c])
+        by smtp.googlemail.com with ESMTPSA id d22sm12948424ejb.15.2020.05.24.06.21.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 May 2020 06:21:32 -0700 (PDT)
+Subject: Re: [PATCH] ipc/msg.c: wake up senders until there is a queue empty
+ capacity
+To:     Artur Barsegyan <a.barsegyan96@gmail.com>
+Cc:     skutepov@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        Lu Shuaibing <shuaibinglu@126.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <20200523203448.84235-1-a.barsegyan96@gmail.com>
+From:   Manfred Spraul <manfred@colorfullife.com>
+Message-ID: <0410a00b-fb20-cbaa-4a29-c7752a469fdd@colorfullife.com>
+Date:   Sun, 24 May 2020 15:21:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200523203448.84235-1-a.barsegyan96@gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------32DD537C888A21B4AD1ED564"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 1394 OHCI specification, Isochronous Receive DMA context has several
-modes. One of mode is 'BufferFill' and Linux FireWire stack uses it to
-receive isochronous packets for multiple isochronous channel as
-FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL.
+This is a multi-part message in MIME format.
+--------------32DD537C888A21B4AD1ED564
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The mode is not used by in-kernel driver, while it's available for
-userspace. The character device driver in firewire-core includes
-cast of function callback for the mode since the type of callback
-function is different from the other modes. The case is inconvenient
-to effort of Control Flow Integrity builds due to
--Wcast-function-type warning.
+Hello Artur,
 
-This commit removes the cast. A inline helper function is newly added
-to initialize isochronous context for the mode. The helper function
-arranges isochronous context to assign specific callback function
-after call of existent kernel API. It's noticeable that the number of
-isochronous channel, speed, the size of header are not required for the
-mode. The helper function is used for the mode by character device
-driver instead of direct call of existent kernel API.
+On 5/23/20 10:34 PM, Artur Barsegyan wrote:
+> Take into account the total size of the already enqueued messages of
+> previously handled senders before another one.
+>
+> Otherwise, we have serious degradation of receiver throughput for
+> case with multiple senders because another sender wakes up,
+> checks the queue capacity and falls into sleep again.
+>
+> Each round-trip wastes CPU time a lot and leads to perceptible
+> throughput degradation.
+>
+> Source code of:
+> 	- sender/receiver
+> 	- benchmark script
+> 	- ready graphics of before/after results
+>
+> is located here: https://github.com/artur-barsegyan/systemv_queue_research
 
-Changes in v2:
- - unexport helper function
- - use inline for helper function
- - arrange arguments for helper function
- - tested by libhinoko
+Thanks for analyzing the issue!
 
-Reported-by: Oscar Carter <oscar.carter@gmx.com>
-Reference: https://lore.kernel.org/lkml/20200519173425.4724-1-oscar.carter@gmx.com/
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> Signed-off-by: Artur Barsegyan <a.barsegyan96@gmail.com>
+> ---
+>   ipc/msg.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/ipc/msg.c b/ipc/msg.c
+> index caca67368cb5..52d634b0a65a 100644
+> --- a/ipc/msg.c
+> +++ b/ipc/msg.c
+> @@ -214,6 +214,7 @@ static void ss_wakeup(struct msg_queue *msq,
+>   	struct msg_sender *mss, *t;
+>   	struct task_struct *stop_tsk = NULL;
+>   	struct list_head *h = &msq->q_senders;
+> +	size_t msq_quota_used = 0;
+>   
+>   	list_for_each_entry_safe(mss, t, h, list) {
+>   		if (kill)
+> @@ -233,7 +234,7 @@ static void ss_wakeup(struct msg_queue *msq,
+>   		 * move the sender to the tail on behalf of the
+>   		 * blocked task.
+>   		 */
+> -		else if (!msg_fits_inqueue(msq, mss->msgsz)) {
+> +		else if (!msg_fits_inqueue(msq, msq_quota_used + mss->msgsz)) {
+>   			if (!stop_tsk)
+>   				stop_tsk = mss->tsk;
+>   
+> @@ -241,6 +242,7 @@ static void ss_wakeup(struct msg_queue *msq,
+>   			continue;
+>   		}
+>   
+> +		msq_quota_used += mss->msgsz;
+>   		wake_q_add(wake_q, mss->tsk);
+
+You have missed the case of a do_msgsnd() that doesn't enqueue the message:
+
+Situation:
+
+- 2 messages of type 1 in the queue (2x8192 bytes, queue full)
+
+- 6 senders waiting to send messages of type 2
+
+- 6 receivers waiting to get messages of type 2.
+
+If now a receiver reads one message of type 1, then all 6 senders can send.
+
+WIth your patch applied, only one sender sends the message to one 
+receiver, and the remaining 10 tasks continue to sleep.
+
+
+Could you please check and (assuming that you agree) run your benchmarks 
+with the patch applied?
+
+--
+
+     Manfred
+
+
+
+
+--------------32DD537C888A21B4AD1ED564
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0002-ipc-msg.c-Handle-case-of-senders-not-enqueuing-the-m.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0002-ipc-msg.c-Handle-case-of-senders-not-enqueuing-the-m.pa";
+ filename*1="tch"
+
+From fe2f257b1950a19bf5c6f67e71aa25c2f13bcdc3 Mon Sep 17 00:00:00 2001
+From: Manfred Spraul <manfred@colorfullife.com>
+Date: Sun, 24 May 2020 14:47:31 +0200
+Subject: [PATCH 2/2] ipc/msg.c: Handle case of senders not enqueuing the
+ message
+
+The patch "ipc/msg.c: wake up senders until there is a queue empty
+capacity" avoids the thundering herd problem by wakeing up
+only as many potential senders as there is free space in the queue.
+
+This patch is a fix: If one of the senders doesn't enqueue its message,
+then a search for further potential senders must be performed.
+
+Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
 ---
- drivers/firewire/core-cdev.c | 40 +++++++++++++++---------------------
- include/linux/firewire.h     | 16 +++++++++++++++
- 2 files changed, 33 insertions(+), 23 deletions(-)
+ ipc/msg.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-index 6e291d8f3a27..7cbf6df34b43 100644
---- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -957,7 +957,6 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+diff --git a/ipc/msg.c b/ipc/msg.c
+index 52d634b0a65a..f6d5188db38a 100644
+--- a/ipc/msg.c
++++ b/ipc/msg.c
+@@ -208,6 +208,12 @@ static inline void ss_del(struct msg_sender *mss)
+ 		list_del(&mss->list);
+ }
+ 
++/*
++ * ss_wakeup() assumes that the stored senders will enqueue the pending message.
++ * Thus: If a woken up task doesn't send the enqueued message for whatever
++ * reason, then that task must call ss_wakeup() again, to ensure that no
++ * wakeup is lost.
++ */
+ static void ss_wakeup(struct msg_queue *msq,
+ 		      struct wake_q_head *wake_q, bool kill)
  {
- 	struct fw_cdev_create_iso_context *a = &arg->create_iso_context;
- 	struct fw_iso_context *context;
--	fw_iso_callback_t cb;
- 	int ret;
+@@ -843,6 +849,7 @@ static long do_msgsnd(int msqid, long mtype, void __user *mtext,
+ 	struct msg_queue *msq;
+ 	struct msg_msg *msg;
+ 	int err;
++	bool need_wakeup;
+ 	struct ipc_namespace *ns;
+ 	DEFINE_WAKE_Q(wake_q);
  
- 	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT != FW_ISO_CONTEXT_TRANSMIT ||
-@@ -965,32 +964,27 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
- 		     FW_CDEV_ISO_CONTEXT_RECEIVE_MULTICHANNEL !=
- 					FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL);
+@@ -869,6 +876,7 @@ static long do_msgsnd(int msqid, long mtype, void __user *mtext,
  
--	switch (a->type) {
--	case FW_ISO_CONTEXT_TRANSMIT:
--		if (a->speed > SCODE_3200 || a->channel > 63)
--			return -EINVAL;
--
--		cb = iso_callback;
--		break;
--
--	case FW_ISO_CONTEXT_RECEIVE:
--		if (a->header_size < 4 || (a->header_size & 3) ||
--		    a->channel > 63)
--			return -EINVAL;
--
--		cb = iso_callback;
--		break;
--
--	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
--		cb = (fw_iso_callback_t)iso_mc_callback;
--		break;
-+	if (a->type == FW_ISO_CONTEXT_TRANSMIT ||
-+	    a->type == FW_ISO_CONTEXT_RECEIVE) {
-+		if (a->type == FW_ISO_CONTEXT_TRANSMIT) {
-+			if (a->speed > SCODE_3200 || a->channel > 63)
-+				return -EINVAL;
-+		} else {
-+			if (a->header_size < 4 || (a->header_size & 3) ||
-+			    a->channel > 63)
-+				return -EINVAL;
-+		}
+ 	ipc_lock_object(&msq->q_perm);
  
--	default:
-+		context = fw_iso_context_create(client->device->card, a->type,
-+					a->channel, a->speed, a->header_size,
-+					iso_callback, client);
-+	} else if (a->type == FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL) {
-+		context = fw_iso_mc_context_create(client->device->card,
-+						   iso_mc_callback, client);
-+	} else {
- 		return -EINVAL;
++	need_wakeup = false;
+ 	for (;;) {
+ 		struct msg_sender s;
+ 
+@@ -898,6 +906,13 @@ static long do_msgsnd(int msqid, long mtype, void __user *mtext,
+ 		/* enqueue the sender and prepare to block */
+ 		ss_add(msq, &s, msgsz);
+ 
++		/* Enqueuing a sender is actually an obligation:
++		 * The sender must either enqueue the message, or call
++		 * ss_wakeup(). Thus track that we have added our message
++		 * to the candidates for the message queue.
++		 */
++		need_wakeup = true;
++
+ 		if (!ipc_rcu_getref(&msq->q_perm)) {
+ 			err = -EIDRM;
+ 			goto out_unlock0;
+@@ -935,12 +950,18 @@ static long do_msgsnd(int msqid, long mtype, void __user *mtext,
+ 		msq->q_qnum++;
+ 		atomic_add(msgsz, &ns->msg_bytes);
+ 		atomic_inc(&ns->msg_hdrs);
++
++		/* we have fulfilled our obligation, no need for wakeup */
++		need_wakeup = false;
  	}
  
--	context = fw_iso_context_create(client->device->card, a->type,
--			a->channel, a->speed, a->header_size, cb, client);
- 	if (IS_ERR(context))
- 		return PTR_ERR(context);
- 	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
-diff --git a/include/linux/firewire.h b/include/linux/firewire.h
-index aec8f30ab200..bff08118baaf 100644
---- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -453,6 +453,22 @@ struct fw_iso_context {
- struct fw_iso_context *fw_iso_context_create(struct fw_card *card,
- 		int type, int channel, int speed, size_t header_size,
- 		fw_iso_callback_t callback, void *callback_data);
+ 	err = 0;
+ 	msg = NULL;
+ 
+ out_unlock0:
++	if (need_wakeup)
++		ss_wakeup(msq, &wake_q, false);
 +
-+static inline struct fw_iso_context *fw_iso_mc_context_create(
-+						struct fw_card *card,
-+						fw_iso_mc_callback_t callback,
-+						void *callback_data)
-+{
-+	struct fw_iso_context *ctx;
-+
-+	ctx = fw_iso_context_create(card, FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL,
-+				    0, 0, 0, NULL, callback_data);
-+	if (!IS_ERR(ctx))
-+		ctx->callback.mc = callback;
-+
-+	return ctx;
-+}
-+
- int fw_iso_context_set_channels(struct fw_iso_context *ctx, u64 *channels);
- int fw_iso_context_queue(struct fw_iso_context *ctx,
- 			 struct fw_iso_packet *packet,
+ 	ipc_unlock_object(&msq->q_perm);
+ 	wake_up_q(&wake_q);
+ out_unlock1:
 -- 
-2.25.1
+2.26.2
 
+
+--------------32DD537C888A21B4AD1ED564--
