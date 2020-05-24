@@ -2,171 +2,192 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77554C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5208B20826
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590337549;
-	bh=8Sow2b/gmRxdhLhwL/1TKHwvcuZIa5HKY7WTfS3ObwI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LPWUK4hdHGlk21RgpWgpbyTJ9YXtrCjlV+TbGtnz/RJ6cv1V/BmQ6xCxV3WkjgHT6
-	 F3+AfBMnkR/0gj2k7NtEtqyzcqlTm4pVY5IUXRS4yyfw/fC8OjgGA3nsbL46ynqk5K
-	 tb/vqMWE/q4UdD/F7BOUrfg4w28D35aRiRDQya0I=
+	by mail.kernel.org (Postfix) with ESMTP id 0BDD72086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:30:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nmQu6o8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgEXQZs (ORCPT
+        id S1728983AbgEXQar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 12:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgEXQZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 12:25:48 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5530520787;
-        Sun, 24 May 2020 16:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590337547;
-        bh=8Sow2b/gmRxdhLhwL/1TKHwvcuZIa5HKY7WTfS3ObwI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lKUqdmL7BX21pzqiPn4lYuHypLtRe8EUcHU9E3pM0K1NNzzHlbFi7yv7uOzMEObL6
-         mJL0PVz+X0UcMZUPfPpWZ3va+Wu5GEAGNIJqBqcGA0yfTKn9RHZUevbSlKv/70CUFm
-         29ptM9hsJEneyIy1zYhNeH10rXnQWD4lYK2IE+yY=
-Date:   Sun, 24 May 2020 17:25:42 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        alexandre.belloni@bootlin.com, david@lechnology.com,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH v2 0/4] Introduce the Counter character device interface
-Message-ID: <20200524172542.31ff6ac7@archlinux>
-In-Reply-To: <cover.1589654470.git.vilhelm.gray@gmail.com>
-References: <cover.1589654470.git.vilhelm.gray@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 May 2020 12:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbgEXQaq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 12:30:46 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D8FC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 09:30:45 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id l73so3322449pjb.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 09:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JN/e+A9ktyHXM8zsyrn02aJMxhSbMiH8/CW921mNbJc=;
+        b=nmQu6o8G5J+l4W4zBcQp+jsl3Uw+smSVCJtpS5T4yTJA1GGwd8/BAGRhBqMPopGKIO
+         KWVANpynxh85QYUvlV5rO8XjAPqs//u8yPnD1I5y6NTb8H3mCizC8VVC2x33wBncbGZk
+         +35uSLRNn9+PyaGO4oGDCOrdUiKMq86a2LKXF1k7S24lQwLtyoiZyKxu/olMYC8dpv7D
+         VW9av1A11ah7C3/YFl3fo4X6OZK/UacH6xrxHnj6V0bam5MU/qHdAOqdN2yqgwluSqMy
+         sTvxfgXqVT7aUwQXOND45i9ojAn7Qpk8fDNxaZW5dQym4SPC5SFhMKop7cJ8SrmLYhLu
+         TKOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JN/e+A9ktyHXM8zsyrn02aJMxhSbMiH8/CW921mNbJc=;
+        b=f1xtc7ozETwmUM/Z47Lhw42GcJUVVwhCAgWV1panXElxvl8nppvsut9/CX614uMHvN
+         C20+GG8LxFRg+3e8ULHMmdQpbLvusuViWStqFN/AGwvvmzFmMOxpRkFyWdMnDrfLBL7l
+         hR9TtJErQfcXhmcyObInBjErv+ZMPjsH95UIplH+O+vc8GJeeErURnAAZqT9f7cqSTjT
+         RWShmy6hu1VSvTJKgV6VlJQEp93HncyXomcEM6utXSoEUrn1r764Hsdp3MTl7T8vwWoC
+         edbgiAxCZVtjG/pymhyijP6n93S6yJzJNXhsYRY0ighl/p7/o2isatUoJCqpBmZjSIVL
+         SwoA==
+X-Gm-Message-State: AOAM533+5g2OUugeKgXCu8fdtUgCeDLCdDKeP5HiQK1hUY/7PZi6S4GJ
+        RI/+Coo6SUBA6Tx/OHhILwfXptr0S0SSDw==
+X-Google-Smtp-Source: ABdhPJyAnCWSpBZuHzIMhJn2QD1jU6hTg5Vw1EN325mx9Y5SVQek+j7ZmlgXjm+POf7NuknYCtKFwg==
+X-Received: by 2002:a17:90a:890b:: with SMTP id u11mr5692496pjn.233.1590337844549;
+        Sun, 24 May 2020 09:30:44 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:8568:4ec4:ebd3:32d1? ([2605:e000:100e:8c61:8568:4ec4:ebd3:32d1])
+        by smtp.gmail.com with ESMTPSA id go1sm10608240pjb.26.2020.05.24.09.30.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 May 2020 09:30:43 -0700 (PDT)
+Subject: Re: [PATCH 05/12] mm: support async buffered reads in
+ generic_file_buffered_read()
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200523185755.8494-1-axboe@kernel.dk>
+ <20200523185755.8494-6-axboe@kernel.dk>
+ <264614fc4fa08df2b0899da1cd38bb07150cd7f3.camel@hammerspace.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2fa7104a-ea85-55f2-692c-514eb3b88a88@kernel.dk>
+Date:   Sun, 24 May 2020 10:30:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <264614fc4fa08df2b0899da1cd38bb07150cd7f3.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-...
-
-> The following are some questions I have about this patchset:
+On 5/24/20 8:05 AM, Trond Myklebust wrote:
+> On Sat, 2020-05-23 at 12:57 -0600, Jens Axboe wrote:
+>> Use the async page locking infrastructure, if IOCB_WAITQ is set in
+>> the
+>> passed in iocb. The caller must expect an -EIOCBQUEUED return value,
+>> which means that IO is started but not done yet. This is similar to
+>> how
+>> O_DIRECT signals the same operation. Once the callback is received by
+>> the caller for IO completion, the caller must retry the operation.
+>>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  mm/filemap.c | 33 ++++++++++++++++++++++++++-------
+>>  1 file changed, 26 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/mm/filemap.c b/mm/filemap.c
+>> index c746541b1d49..a3b86c9acdc8 100644
+>> --- a/mm/filemap.c
+>> +++ b/mm/filemap.c
+>> @@ -1219,6 +1219,14 @@ static int __wait_on_page_locked_async(struct
+>> page *page,
+>>  	return ret;
+>>  }
+>>  
+>> +static int wait_on_page_locked_async(struct page *page,
+>> +				     struct wait_page_queue *wait)
+>> +{
+>> +	if (!PageLocked(page))
+>> +		return 0;
+>> +	return __wait_on_page_locked_async(compound_head(page), wait,
+>> false);
+>> +}
+>> +
+>>  /**
+>>   * put_and_wait_on_page_locked - Drop a reference and wait for it to
+>> be unlocked
+>>   * @page: The page to wait for.
+>> @@ -2058,17 +2066,25 @@ static ssize_t
+>> generic_file_buffered_read(struct kiocb *iocb,
+>>  					index, last_index - index);
+>>  		}
+>>  		if (!PageUptodate(page)) {
+>> -			if (iocb->ki_flags & IOCB_NOWAIT) {
+>> -				put_page(page);
+>> -				goto would_block;
+>> -			}
+>> -
+>>  			/*
+>>  			 * See comment in do_read_cache_page on why
+>>  			 * wait_on_page_locked is used to avoid
+>> unnecessarily
+>>  			 * serialisations and why it's safe.
+>>  			 */
+>> -			error = wait_on_page_locked_killable(page);
+>> +			if (iocb->ki_flags & IOCB_WAITQ) {
+>> +				if (written) {
+>> +					put_page(page);
+>> +					goto out;
+>> +				}
+>> +				error = wait_on_page_locked_async(page,
+>> +								iocb-
+>>> private);
 > 
-> 1. Should the data format of the character device be configured via a
->    sysfs attribute?
-> 
->    In this patchset, the first 196095 bytes of the character device are
->    dedicated as a selection area to choose which Counter components or
->    extensions should be exposed; the subsequent bytes are the actual
->    data for the Counter components and extensions that were selected.
+> If it is being used in 'generic_file_buffered_read()' as storage for a
+> wait queue, then it is hard to consider this a 'private' field.
 
-That sounds like the worst of all possible worlds.  Reality is you need
-to do some magic library so at that point you might as well have ioctl
-options to configure it.   I wonder if you can keep the data flow
-to be a simple 'read' from the chardev but move the control away from
-that.  Either control via some chrdevs but keep them to the 'set / get'
-if this element is going to turn up in the read or not.  You rapidly
-run into problems though, such as now to see how large a given element
-is going to be etc.  Plus ioctls are rather messier to extend than
-simply adding a new sysfs file.  Various subsystems do complex
-'descriptor' type approaches to get around this, or you could do
-self describing records rather than raw data - like an input
-ev_dev event.
+private isn't the prettiest, and in fact this one in particular is a bit
+of a mess. It's not clear if it's caller or callee owned. It's generally
+not used, outside of the old usb gadget code, iomap O_DIRECT, and ocfs2.
+With FMODE_BUF_RASYNC, the fs obviously can't set it if it uses
+->private for buffered IO.
 
-> 
->    Moving this selection to a sysfs attribute and dedicating the
->    character device to just data transfer might be a better design. If
->    such a design is chosen, should the selection attribute be
->    human-readable or binary?
+> Perhaps either rename and add type checking, or else add a separate
+> field altogether to struct kiocb?
 
-Sysfs basically requires things are more or less human readable.
-So if you go that way I think it needs to be.
+I'd hate to add a new field and increase the size of the kiocb... One
+alternative is to do:
 
-> 
-> 2. How much space should allotted for strings?
-> 
->    Each Counter component and extension has a respective size allotted
->    for its data (u8 data is allotted 1 byte, u64 data is allotted 8
->    bytes, etc.); I have arbitrarily chosen to allot 64 bytes for
->    strings. Is this an apt size, or should string data be allotted more
->    or less space?
+	union {
+		void *private;
+		struct wait_page_queue *ki_waitq;
+	};
 
-I'd go with that being big enough, but try to keep the expose interface
-such that the size can change it it needs to the in the future.
+and still use IOCB_WAITQ to say that ->ki_waitq is valid.
 
-> 
-> 3. Should the owning component of an extension be handled by the device
->    driver or Counter subsystem?
-> 
->    The Counter subsystem figures out the owner (enum counter_owner_type)
->    for each component/extension in the counter-sysfs and counter-chrdev
->    code. When a callback must be executed, there are various switch
->    statements throughout the code to check whether the respective
->    Device, Signal, or Count version of the callback should be executed;
->    similarly, the appropriate owner type must match for the struct
->    counter_data macros such as COUNTER_DATA_DEVICE_U64,
->    COUNTER_DATA_SIGNAL_U64, COUNTER_DATA_COUNT_U64, etc.
-> 
->    All this complexity in the Counter subsystem code can be eliminated
->    if a single callback type with a `void *owner` parameter is defined
->    for use with all three owner types (Device, Signal, and Count). The
->    device driver would then be responsible for casting the callback
->    argument to the appropriate owner type; but in theory, this should
->    not be much of a problem since the device driver is responsible for
->    assigning the callbacks to the owning component anyway.
+There's also 4 bytes of padding in the kiocb struct. And some fields are
+only used for O_DIRECT as well, eg ->ki_cookie which is just used for
+polled O_DIRECT. So we could also do:
 
-Whilst its more complex for subsytem I think it's better to keep everything
-typed if we possibly can.  Always a trade off though, so use your discretion.
+	union {
+		unsigned int ki_cookie;
+		struct wait_page_queue *ki_waitq;
+	};
 
-Jonathan
+and still not grow the kiocb. How about we go with this approach, and
+also add:
 
+	if (kiocb->ki_flags & IOCB_HIPRI)
+		return -EOPNOTSUPP;
 
-> 
-> William Breathitt Gray (4):
->   counter: Internalize sysfs interface code
->   docs: counter: Update to reflect sysfs internalization
->   counter: Add character device interface
->   docs: counter: Document character device interface
-> 
->  Documentation/driver-api/generic-counter.rst |  275 +++-
->  MAINTAINERS                                  |    3 +-
->  drivers/counter/104-quad-8.c                 |  547 +++----
->  drivers/counter/Makefile                     |    1 +
->  drivers/counter/counter-chrdev.c             |  656 ++++++++
->  drivers/counter/counter-chrdev.h             |   16 +
->  drivers/counter/counter-core.c               |  187 +++
->  drivers/counter/counter-sysfs.c              |  881 +++++++++++
->  drivers/counter/counter-sysfs.h              |   14 +
->  drivers/counter/counter.c                    | 1496 ------------------
->  drivers/counter/ftm-quaddec.c                |   89 +-
->  drivers/counter/stm32-lptimer-cnt.c          |  161 +-
->  drivers/counter/stm32-timer-cnt.c            |  139 +-
->  drivers/counter/ti-eqep.c                    |  211 +--
->  include/linux/counter.h                      |  626 ++++----
->  include/linux/counter_enum.h                 |   45 -
->  include/uapi/linux/counter-types.h           |   45 +
->  17 files changed, 2826 insertions(+), 2566 deletions(-)
->  create mode 100644 drivers/counter/counter-chrdev.c
->  create mode 100644 drivers/counter/counter-chrdev.h
->  create mode 100644 drivers/counter/counter-core.c
->  create mode 100644 drivers/counter/counter-sysfs.c
->  create mode 100644 drivers/counter/counter-sysfs.h
->  delete mode 100644 drivers/counter/counter.c
->  delete mode 100644 include/linux/counter_enum.h
->  create mode 100644 include/uapi/linux/counter-types.h
-> 
+to kiocb_wait_page_queue_init() to make sure that this combination isn't
+valid?
+
+-- 
+Jens Axboe
 
