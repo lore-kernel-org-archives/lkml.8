@@ -2,147 +2,100 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E303C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 418C7207C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2OK68h4"
+	by mail.kernel.org (Postfix) with ESMTP id EBEF92075F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590309752;
+	bh=sf8z0UjiPnonog6GK0bHV0LN7Xmm1JvGEb55h0+rYNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OyAi/GRbjvJfOPKpZ3if6dml8/Nufo4XA2IuoQoQcU/z6m0/+FTFYnvMmFhRICMYc
+	 ZFtOkHGUeiTnDIxunAIFj1B5KLB4+QijueygF7fM9TjITrK2jHGtno0xrqFZSR295j
+	 aC4J/zZlWBADPnhbQz84gF/RRYtHX1XU+WgizhSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEXIeC (ORCPT
+        id S1728252AbgEXImb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 04:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgEXIeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 04:34:02 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6FDC061A0E;
-        Sun, 24 May 2020 01:34:01 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w10so17621083ljo.0;
-        Sun, 24 May 2020 01:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ym2/jmTuyZ+LCBHY8uUjF46ZmpdYuv1HzG4ugP1Ee4c=;
-        b=a2OK68h4qAK4dqg2rQRo8Rc37ilbBu7fedOc1eeY8wPG5npT+PP5fRrec8wXKowX96
-         AYouvBDwSKKubCp3bgbXwrqmZeMdpQgvlBCEjsMvsO33DNIzkdlFQLL3N7DSF1NBSc4G
-         XcLqHaiig+Cc00/JXzXObmM6xAPryWfXk9R1I/l3Wf1ic2V8QLdRAPjhVzB16InUNBgQ
-         Dmumf6k5hUiUhkqRlUEYCt8vOa1E6A7O+Yn6GBL/s1gTCj0GI1GAlh/kAnoKxWTnoxgO
-         eHCvEP52/Y8oahSavx4GfwLfLI/orzXNuYHUv22DwIH10YMzeTdOWssMWHJBtIChR+jc
-         iRsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ym2/jmTuyZ+LCBHY8uUjF46ZmpdYuv1HzG4ugP1Ee4c=;
-        b=Sm2Aw+dora/67pmKlF8opISLoASVysQlsGSOofXkkESb1Uiw8DMiHTDWoe3kplU1yY
-         WE3eKEfwhTQx4hvmnOW6SgcGSACE4U6gXyL+rNLFy4HoXpinnEJhg8DCB0s3vXHKNAwR
-         JOPXRYajl1eEnAfwjDZNhz48mVmEdKMKCDCQ4b9cjd62htWltvvHk5JdoKOKNWvjjdUE
-         83euzN9PfsLDD44eKsNpnftZ7U8q8KwuZkRh33K3oYQHv0smtvhvSZBAXP+q2Rk5YTvq
-         BlA5pPboU/ABv+jKUuwyaxAT2L21doMv4hyB/9yfRTXjRYrXKSpZskXtca9AwcIhiEEL
-         3NXw==
-X-Gm-Message-State: AOAM530RDyodp9VK8F8+2VQcGWasqBiq6wdAHAgqiAjPa0IywxHm4jO6
-        j9VYDDigHQ+63LJQWLvZlpoWPV/v9203KAZkWoI=
-X-Google-Smtp-Source: ABdhPJyBeDmLEIA6+69iUoeLVOe0EjmnE3EcoRmeGkobz8HZ7gPzhnIXQ9hDlQd64+9msfF5i7BtMZDVtdHZlpC2mTA=
-X-Received: by 2002:a2e:898d:: with SMTP id c13mr9696182lji.108.1590309239942;
- Sun, 24 May 2020 01:33:59 -0700 (PDT)
+        Sun, 24 May 2020 04:42:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbgEXIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 04:42:30 -0400
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0557F207D8;
+        Sun, 24 May 2020 08:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590309750;
+        bh=sf8z0UjiPnonog6GK0bHV0LN7Xmm1JvGEb55h0+rYNs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BxG96CXUPSWUmRNkHl6HjVlkGh5/eUa8JFBIpmAn6/z/e3e5rsfje3HBa/AFqIJeJ
+         aRGGqDsqnHSWjuxf2Xulqf3hsrSXGfhESLUQ2Ruu9ZqBhI2e8FUphT80zRfAwItRtb
+         0wsByv02WtF2m5TjW0yWcNDpsaXa8YRMM9uBT6Ds=
+Received: by mail-il1-f174.google.com with SMTP id m6so14864877ilq.7;
+        Sun, 24 May 2020 01:42:29 -0700 (PDT)
+X-Gm-Message-State: AOAM531LHen/5xiHqa+pgh33h8lqc9EKzmSIwnZhYf1KE0k+BBOa8sDv
+        K6vCtNAbtqOk0jsFgRkmmcnyze8w0jAEaLjVBhU=
+X-Google-Smtp-Source: ABdhPJyQ6Fg0YcOCssHHZTIP7zDTGlLO2oy6Gg5BafA6ko2vA4QKybLI4tw5YiFQmK1RXGgS64RfRq5TqWmiZIEVPho=
+X-Received: by 2002:a92:3556:: with SMTP id c83mr18361004ila.218.1590309749379;
+ Sun, 24 May 2020 01:42:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200522113312.181413-1-tali.perry1@gmail.com>
- <20200522113312.181413-2-tali.perry1@gmail.com> <20200522224217.GA847856@bogus>
- <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
-In-Reply-To: <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
-From:   Tali Perry <tali.perry1@gmail.com>
-Date:   Sun, 24 May 2020 11:35:20 +0300
-Message-ID: <CAHb3i=ummYNiqqS4QNi1n1XAzg6bbGXyNPgmFeU_a0T+JP7xqQ@mail.gmail.com>
-Subject: Re: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, kfting@nuvoton.com,
-        Benjamin Fair <benjaminfair@google.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Patrick Venture <venture@google.com>,
-        Ofer Yehielli <ofery@google.com>
+References: <20200523120021.34996-1-ardb@kernel.org> <20200523120021.34996-4-ardb@kernel.org>
+ <20200523151758.GB1189358@rani.riverdale.lan>
+In-Reply-To: <20200523151758.GB1189358@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sun, 24 May 2020 10:42:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH6ekEbY9TVT+_3NmrGVdGO0yUVx6hvtu4Z-4+AMT0+WQ@mail.gmail.com>
+Message-ID: <CAMj1kXH6ekEbY9TVT+_3NmrGVdGO0yUVx6hvtu4Z-4+AMT0+WQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] x86/boot/compressed: get rid of GOT fixup code
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On Sat, May 23, 2020 at 1:47 AM Rob Herring <robh+dt@kernel.org> wrote:
+On Sat, 23 May 2020 at 17:18, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On Fri, May 22, 2020 at 4:42 PM Rob Herring <robh@kernel.org> wrote:
+> On Sat, May 23, 2020 at 02:00:21PM +0200, Ard Biesheuvel wrote:
+> > In a previous patch, we have eliminated GOT entries from the decompressor
+> > binary and added an assertion that the .got section is empty. This means
+> > that the GOT fixup routines that exist in both the 32-bit and 64-bit
+> > startup routines have become dead code, and can be removed.
 > >
-> > On Fri, 22 May 2020 14:33:10 +0300, Tali Perry wrote:
-> > > Added device tree binding documentation for Nuvoton BMC
-> > > NPCM I2C controller.
-> > >
-> > > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> > > ---
-> > >  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
-> > >  1 file changed, 60 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
-> > >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> > index 60a99dfb9d72..d91fdda51aa8 100644
+> > --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> > @@ -43,9 +43,7 @@ SECTIONS
+> >               _erodata = . ;
+> >       }
+> >       .got : {
+> > -             _got = .;
+> >               KEEP(*(.got))
+> > -             _egot = .;
+> >       }
+> >       .got.plt : {
+> >               KEEP(*(.got.plt))
+> > --
+> > 2.20.1
 > >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
-> > make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
-> > make[1]: *** Waiting for unfinished jobs....
-> > Makefile:1300: recipe for target 'dt_binding_check' failed
-> > make: *** [dt_binding_check] Error 2
-> >
-> > See https://patchwork.ozlabs.org/patch/1296162
-> >
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure dt-schema is up to date:
-> >
-> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> >
-> > Please check and re-submit.
 >
-> Why do you keep sending new versions with the same problem? It won't
-> get reviewed until this is fixed. This isn't a free automated service
-> to throw things at to see if they work. I have to review the failures.
->
-> Rob
+> I think you can get rid of both the KEEP's here as well?
 
-Definitely not trying to use the Bot to check my yaml. On the first
-version the dt-check was not updated on my side.
-On the previous version I updated according to the bot explanations.
-Found an error and fixed it. Now I don't see any errors. with latest
-dt-check.
-I did:
+Yeah, they seem fairly pointless to me to begin with, given that these
+contents are created by the linker on the fly, rather than passed
+through from the input objects.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
---upgrade
-make dt_binding_check
-
-And got a clean log, no warnings or errors. Was I suppose to check
-anything else?
-
-Thanks,
-Tali
+I'll drop them.
