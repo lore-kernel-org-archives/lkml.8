@@ -4,130 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A304C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B75020823
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF0C20878
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590320799;
-	bh=t6FPAdbmqROUcprpTUToZ+d/YaWfRUyQrPNoUSm1fAw=;
+	s=default; t=1590321573;
+	bh=oomN50U4TtPd+8MHxnNDcOvRgha71PqDvUKwekeearw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OwnrDxQFyO2XEC2EgvW85ADsAjsm+sLPyRabVV6adxxVW2kMDl34T30Tv7E6ZJuNt
-	 vxkYvBYf2fTWLqWNMbAmn9KOJxNI/ysbwXUEVCt3wn3OymLdMRbdJi9skv4S4EgblE
-	 0B/0l456d+wa2T+PCi6WFrKpsbV+aE/+yBCyr79c=
+	b=tgXHGolgl2np4hAyHmEugJlA8+z/YTBeC4mPQzW5IdwFwBteM+CHXCM+jJo2+U3RQ
+	 s7KOMWBJX4LGfXeFXdXd5KtCpkstqxl014+Caoi0A7CRpm+nzf+FL6ATOlOxf79j5b
+	 idRd7KjewNbeIMDubkTOteVUQjfn7Hk3uH0Wf5cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729361AbgEXLqi (ORCPT
+        id S1729500AbgEXL7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 07:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 07:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgEXLqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 07:46:38 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726734AbgEXL7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 07:59:32 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B5B2075F;
-        Sun, 24 May 2020 11:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F64207FB;
+        Sun, 24 May 2020 11:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590320797;
-        bh=t6FPAdbmqROUcprpTUToZ+d/YaWfRUyQrPNoUSm1fAw=;
+        s=default; t=1590321571;
+        bh=oomN50U4TtPd+8MHxnNDcOvRgha71PqDvUKwekeearw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cqN2XUbILAoV9pd917Y0YLJE2EmAh1kSZaKzNlmUo2iDeQEhrEZh5RrBbzcZ79TOp
-         6VkATfU0PrHNKD2uf/XSWvnFhWpWpNI1qyOabp3zd1F7bziXsZK5Ojb85tFeb6CiL+
-         p9RJ69/W0dJKyj2scd7LS2AO2NSS0VVdguLH3lf4=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jcp5P-00Ewm3-R2; Sun, 24 May 2020 12:46:36 +0100
-Date:   Sun, 24 May 2020 12:46:34 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/irqchip: Remove function callback casts
-Message-ID: <20200524124634.113203f6@why>
-In-Reply-To: <20200524080910.13087-1-oscar.carter@gmx.com>
-References: <20200524080910.13087-1-oscar.carter@gmx.com>
-Organization: Approximate
+        b=Xhwlk2FGzBIduKDxIBDeJCVxm6wCwiJjxzjLc5u+rJq50kJptN3w7FpuxVsQzRGqs
+         kiUpt6UzDg8SlyUn3Y6lSSnNG+IwI9qLUo0pJcBx43jS/RIM9iRJq7TJUcRFxktYvQ
+         n8YAO6x8QQYP9tw64BYcRYj9G0ACI7m8qPpd/X3g=
+Date:   Sun, 24 May 2020 12:59:25 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
+        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V5 3/5] iio: adc: Add support for PMIC7 ADC
+Message-ID: <20200524125925.41102b3b@archlinux>
+In-Reply-To: <1590157452-27179-4-git-send-email-jprakash@codeaurora.org>
+References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
+        <1590157452-27179-4-git-send-email-jprakash@codeaurora.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 May 2020 10:09:10 +0200
-Oscar Carter <oscar.carter@gmx.com> wrote:
+On Fri, 22 May 2020 19:54:10 +0530
+Jishnu Prakash <jprakash@codeaurora.org> wrote:
 
-Hi Oscar,
-
-Thanks for this. Comments below.
-
-> In an effort to enable -Wcast-function-type in the top-level Makefile to
-> support Control Flow Integrity builds, remove all the function callback
-> casts.
+> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+> major change from PMIC5 is that all SW communication to ADC goes through
+> PMK8350, which communicates with other PMICs through PBS when the ADC
+> on PMK8350 works in master mode. The SID register is used to identify the
+> PMICs with which the PBS needs to communicate. Add support for the same.
 > 
-> To do this, modify the IRQCHIP_ACPI_DECLARE macro initializing the
-> acpi_probe_entry struct directly instead of use the existent macro
-> ACPI_DECLARE_PROBE_ENTRY.
-> 
-> In this new initialization use the probe_subtbl field instead of the
-> probe_table field use in the ACPI_DECLARE_PROBE_ENTRY macro.
-
-Please add *why* this is a valid transformation (probe_table and
-probe_subtbl are part of a union).
-
-> 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
 > ---
->  include/linux/irqchip.h | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/iio/adc/qcom-spmi-adc5.c   | 231 ++++++++++++++++++++++++++++++--
+>  drivers/iio/adc/qcom-vadc-common.c | 260 +++++++++++++++++++++++++++++++++++++
+>  drivers/iio/adc/qcom-vadc-common.h |  14 ++
+>  3 files changed, 496 insertions(+), 9 deletions(-)
 > 
-> diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
-> index 950e4b2458f0..1f464fd10df0 100644
-> --- a/include/linux/irqchip.h
-> +++ b/include/linux/irqchip.h
-> @@ -39,8 +39,14 @@
->   * @fn: initialization function
->   */
->  #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
-> -	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
-> -				 subtable, validate, data, fn)
-> +	static const struct acpi_probe_entry __acpi_probe_##name	\
-> +		__used __section(__irqchip_acpi_probe_table) = {	\
-> +			.id = ACPI_SIG_MADT,				\
-> +			.type = subtable,				\
-> +			.subtable_valid = validate,			\
-> +			.probe_subtbl = (acpi_tbl_entry_handler)fn,	\
-> +			.driver_data = data,				\
-> +		}
-> 
+> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
+> index 21fdcde..e1482fd 100644
+> --- a/drivers/iio/adc/qcom-spmi-adc5.c
+> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved.
+...
+> @@ -110,6 +120,7 @@ struct adc5_channel_prop {
+>  	enum adc5_cal_method	cal_method;
+>  	enum adc5_cal_val	cal_val;
+>  	unsigned int		decimation;
+> +	unsigned int		sid;
+>  	unsigned int		prescale;
+>  	unsigned int		hw_settle_time;
+>  	unsigned int		avg_samples;
+> @@ -140,6 +151,7 @@ struct adc5_chip {
+>  	bool			poll_eoc;
+>  	struct completion	complete;
+>  	struct mutex		lock;
+> +	int			irq_eoc;
 
-I'd rather you add an ACPI_DECLARE_SUBTABLE_PROBE_ENTRY to acpi.h, and
-use that here so that we can keep the ACPI gunk in a single place.
+This is introduced but doesn't seem to be used...
 
->  #ifdef CONFIG_IRQCHIP
->  void irqchip_init(void);
-> --
-> 2.20.1
-> 
-> 
+>  	const struct adc5_data	*data;
+>  };
+>  
+> @@ -155,6 +167,8 @@ static const struct vadc_prescale_ratio adc5_prescale_ratios[] = {
+>  	{.num =  1, .den = 16}
+>  };
+>  
+...
+
+>  static int adc5_prescaling_from_dt(u32 num, u32 den)
+>  {
+>  	unsigned int pre;
+> @@ -285,7 +304,7 @@ static int adc5_configure(struct adc5_chip *adc,
+>  
+>  	/* Read registers 0x42 through 0x46 */
+>  	ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
+> -	if (ret < 0)
+> +	if (ret)
+>  		return ret;
+
+As Andy mentioned, this is better in a separate patch. It's just adding
+noise to this patch which is actually doing things...
+
+>  
+>  	/* Digital param selection */
+> @@ -314,6 +333,47 @@ static int adc5_configure(struct adc5_chip *adc,
+>  	return adc5_write(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
+>  }
+>  
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Jonathan
