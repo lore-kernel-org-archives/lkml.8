@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE31C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22FBC20823
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6377D20885
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388576AbgEXV6S (ORCPT
+        id S2388589AbgEXV6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32960 "EHLO
+        Sun, 24 May 2020 17:58:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388038AbgEXV6S (ORCPT
+        with ESMTP id S2388038AbgEXV6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:58:18 -0400
+        Sun, 24 May 2020 17:58:20 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC238C061A0E;
-        Sun, 24 May 2020 14:58:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0946C061A0E;
+        Sun, 24 May 2020 14:58:20 -0700 (PDT)
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1jcycv-0007Zv-DF; Sun, 24 May 2020 23:57:49 +0200
+        id 1jcycw-0007Zv-U8; Sun, 24 May 2020 23:57:51 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -37,11 +37,12 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 2/7] radix-tree: Use local_lock for protection
-Date:   Sun, 24 May 2020 23:57:34 +0200
-Message-Id: <20200524215739.551568-3-bigeasy@linutronix.de>
+        Mike Galbraith <umgwanakikbuti@gmail.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, netdev@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2 5/7] connector/cn_proc: Protect send_msg() with a local lock
+Date:   Sun, 24 May 2020 23:57:37 +0200
+Message-Id: <20200524215739.551568-6-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200524215739.551568-1-bigeasy@linutronix.de>
 References: <20200524215739.551568-1-bigeasy@linutronix.de>
@@ -52,163 +53,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The radix-tree and idr preload mechanisms use preempt_disable() to protect
-the complete operation between xxx_preload() and xxx_preload_end().
+From: Mike Galbraith <umgwanakikbuti@gmail.com>
 
-As the code inside the preempt disabled section acquires regular spinlocks,
+send_msg() disables preemption to avoid out-of-order messages. As the
+code inside the preempt disabled section acquires regular spinlocks,
 which are converted to 'sleeping' spinlocks on a PREEMPT_RT kernel and
 eventually calls into a memory allocator, this conflicts with the RT
 semantics.
 
 Convert it to a local_lock which allows RT kernels to substitute them with
 a real per CPU lock. On non RT kernels this maps to preempt_disable() as
-before, but provides also lockdep coverage of the critical region.
-No functional change.
+before. No functional change.
 
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org
+[bigeasy: Patch description]
+
+Cc: Evgeniy Polyakov <zbr@ioremap.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Mike Galbraith <umgwanakikbuti@gmail.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/idr.h        |  5 +----
- include/linux/radix-tree.h |  6 +-----
- lib/radix-tree.c           | 29 ++++++++++++++++++++++-------
- 3 files changed, 24 insertions(+), 16 deletions(-)
+ drivers/connector/cn_proc.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/idr.h b/include/linux/idr.h
-index ac6e946b6767b..839da8f2f6f13 100644
---- a/include/linux/idr.h
-+++ b/include/linux/idr.h
-@@ -169,10 +169,7 @@ static inline bool idr_is_empty(const struct idr *idr)
-  * Each idr_preload() should be matched with an invocation of this
-  * function.  See idr_preload() for details.
-  */
--static inline void idr_preload_end(void)
--{
--	preempt_enable();
--}
-+void idr_preload_end(void);
+diff --git a/drivers/connector/cn_proc.c b/drivers/connector/cn_proc.c
+index d58ce664da843..d424d1f469136 100644
+--- a/drivers/connector/cn_proc.c
++++ b/drivers/connector/cn_proc.c
+@@ -18,6 +18,7 @@
+ #include <linux/pid_namespace.h>
 =20
- /**
-  * idr_for_each_entry() - Iterate over an IDR's elements of a given type.
-diff --git a/include/linux/radix-tree.h b/include/linux/radix-tree.h
-index 63e62372443a5..040b1fd0ab940 100644
---- a/include/linux/radix-tree.h
-+++ b/include/linux/radix-tree.h
-@@ -226,6 +226,7 @@ unsigned int radix_tree_gang_lookup(const struct radix_=
-tree_root *,
- 			unsigned int max_items);
- int radix_tree_preload(gfp_t gfp_mask);
- int radix_tree_maybe_preload(gfp_t gfp_mask);
-+void radix_tree_preload_end(void);
- void radix_tree_init(void);
- void *radix_tree_tag_set(struct radix_tree_root *,
- 			unsigned long index, unsigned int tag);
-@@ -243,11 +244,6 @@ unsigned int radix_tree_gang_lookup_tag_slot(const str=
-uct radix_tree_root *,
- 		unsigned int max_items, unsigned int tag);
- int radix_tree_tagged(const struct radix_tree_root *, unsigned int tag);
-=20
--static inline void radix_tree_preload_end(void)
--{
--	preempt_enable();
--}
--
- void __rcu **idr_get_free(struct radix_tree_root *root,
- 			      struct radix_tree_iter *iter, gfp_t gfp,
- 			      unsigned long max);
-diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-index 2ee6ae3b0ade0..609aeb900b550 100644
---- a/lib/radix-tree.c
-+++ b/lib/radix-tree.c
-@@ -20,6 +20,7 @@
- #include <linux/kernel.h>
- #include <linux/kmemleak.h>
- #include <linux/percpu.h>
+ #include <linux/cn_proc.h>
 +#include <linux/locallock.h>
- #include <linux/preempt.h>		/* in_interrupt() */
- #include <linux/radix-tree.h>
- #include <linux/rcupdate.h>
-@@ -27,7 +28,6 @@
- #include <linux/string.h>
- #include <linux/xarray.h>
 =20
--
  /*
-  * Radix tree node cache.
-  */
-@@ -59,11 +59,14 @@ struct kmem_cache *radix_tree_node_cachep;
-  * Per-cpu pool of preloaded nodes
-  */
- struct radix_tree_preload {
+  * Size of a cn_msg followed by a proc_event structure.  Since the
+@@ -38,25 +39,32 @@ static inline struct cn_msg *buffer_to_cn_msg(__u8 *buf=
+fer)
+ static atomic_t proc_event_num_listeners =3D ATOMIC_INIT(0);
+ static struct cb_id cn_proc_event_id =3D { CN_IDX_PROC, CN_VAL_PROC };
+=20
+-/* proc_event_counts is used as the sequence number of the netlink message=
+ */
+-static DEFINE_PER_CPU(__u32, proc_event_counts) =3D { 0 };
++/* local_evt.counts is used as the sequence number of the netlink message =
+*/
++struct local_evt {
++	__u32 counts;
 +	struct local_lock lock;
- 	unsigned nr;
- 	/* nodes->parent points to next preallocated node */
- 	struct radix_tree_node *nodes;
- };
--static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) =3D =
-{ 0, };
-+static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) =3D
-+	{ .lock =3D INIT_LOCAL_LOCK(lock),
-+	  .nr =3D 0, };
++};
++static DEFINE_PER_CPU(struct local_evt, local_evt) =3D {
++	.counts =3D 0,
++	.lock =3D INIT_LOCAL_LOCK(lock),
++};
 =20
- static inline struct radix_tree_node *entry_to_node(void *ptr)
+ static inline void send_msg(struct cn_msg *msg)
  {
-@@ -332,14 +335,14 @@ static __must_check int __radix_tree_preload(gfp_t gf=
-p_mask, unsigned nr)
+-	preempt_disable();
++	local_lock(&local_evt.lock);
+=20
+-	msg->seq =3D __this_cpu_inc_return(proc_event_counts) - 1;
++	msg->seq =3D __this_cpu_inc_return(local_evt.counts) - 1;
+ 	((struct proc_event *)msg->data)->cpu =3D smp_processor_id();
+=20
+ 	/*
+-	 * Preemption remains disabled during send to ensure the messages are
+-	 * ordered according to their sequence numbers.
++	 * local_lock() disables preemption during send to ensure the messages
++	 * are ordered according to their sequence numbers.
+ 	 *
+ 	 * If cn_netlink_send() fails, the data is not sent.
  	 */
- 	gfp_mask &=3D ~__GFP_ACCOUNT;
+ 	cn_netlink_send(msg, 0, CN_IDX_PROC, GFP_NOWAIT);
 =20
--	preempt_disable();
-+	local_lock(&radix_tree_preloads.lock);
- 	rtp =3D this_cpu_ptr(&radix_tree_preloads);
- 	while (rtp->nr < nr) {
--		preempt_enable();
-+		local_unlock(&radix_tree_preloads.lock);
- 		node =3D kmem_cache_alloc(radix_tree_node_cachep, gfp_mask);
- 		if (node =3D=3D NULL)
- 			goto out;
--		preempt_disable();
-+		local_lock(&radix_tree_preloads.lock);
- 		rtp =3D this_cpu_ptr(&radix_tree_preloads);
- 		if (rtp->nr < nr) {
- 			node->parent =3D rtp->nodes;
-@@ -381,11 +384,17 @@ int radix_tree_maybe_preload(gfp_t gfp_mask)
- 	if (gfpflags_allow_blocking(gfp_mask))
- 		return __radix_tree_preload(gfp_mask, RADIX_TREE_PRELOAD_SIZE);
- 	/* Preloading doesn't help anything with this gfp mask, skip it */
--	preempt_disable();
-+	local_lock(&radix_tree_preloads.lock);
- 	return 0;
+-	preempt_enable();
++	local_unlock(&local_evt.lock);
  }
- EXPORT_SYMBOL(radix_tree_maybe_preload);
 =20
-+void radix_tree_preload_end(void)
-+{
-+	local_unlock(&radix_tree_preloads.lock);
-+}
-+EXPORT_SYMBOL(radix_tree_preload_end);
-+
- static unsigned radix_tree_load_root(const struct radix_tree_root *root,
- 		struct radix_tree_node **nodep, unsigned long *maxindex)
- {
-@@ -1470,10 +1479,16 @@ EXPORT_SYMBOL(radix_tree_tagged);
- void idr_preload(gfp_t gfp_mask)
- {
- 	if (__radix_tree_preload(gfp_mask, IDR_PRELOAD_SIZE))
--		preempt_disable();
-+		local_lock(&radix_tree_preloads.lock);
- }
- EXPORT_SYMBOL(idr_preload);
-=20
-+void idr_preload_end(void)
-+{
-+	local_unlock(&radix_tree_preloads.lock);
-+}
-+EXPORT_SYMBOL(idr_preload_end);
-+
- void __rcu **idr_get_free(struct radix_tree_root *root,
- 			      struct radix_tree_iter *iter, gfp_t gfp,
- 			      unsigned long max)
+ void proc_fork_connector(struct task_struct *task)
 --=20
 2.27.0.rc0
 
