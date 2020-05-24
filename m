@@ -2,296 +2,102 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8138A2077D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="oRwkSg6i"
+	by mail.kernel.org (Postfix) with ESMTP id 88B3820759
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388331AbgEXCON (ORCPT
+        id S2388278AbgEXCTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 22:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388279AbgEXCOE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 22:14:04 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0217AC061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:04 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id dh1so6574004qvb.13
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EnLHuZ5XC+kb/uz+M5raqupXPaU3putI9okhf6dDt0U=;
-        b=oRwkSg6iVolhGe65OpgbNvLM3s4m+DG74zI4//dXQ70Wkp210XUjgwjuSB5gxNLkc+
-         R/ulCgnQu2nWo93bSme9TcVZ8hR5gqCGP9fzU+sCAeoccU4tKYWv6a+ccBkwtDlpyir9
-         dSD6nTo5ffdVerJFHJwJC3is1LsYUCrHnH6raZntCRjhaXO7+7IvrGTclN2KqzLxW7d1
-         eLlX5EYPSBdU9o9zrBJSDdO/Nzj+SMXAMH8+znaYkQ5Y+YK/UEc29UUdQrAmu01C5tXw
-         z48CjTMmEAwLDk2H7BRL7aY69zcGfjYq/Sy6FfjaO4UZ6urcE2+eCMQeP+tESxJqkP3L
-         23BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EnLHuZ5XC+kb/uz+M5raqupXPaU3putI9okhf6dDt0U=;
-        b=bjUeha3vp1VdMT4rJ49KrIy94AHLCowpm3tkw/apHBXLvTGNkA/Lq/lLSSKOkwdFOn
-         pxTEGFhJBrmUFSV93yhOzF06QINslunS/ZkCBDmgJ7SCjsVql08gaB6TE7idoe9D4eiP
-         E+7octMY9oaYEd8AGI5A3y35C0ePIfRcR93t53RQ2OctGWh88tZhhZLUn5qVjnnnwPJt
-         Cim1APyIVr2RNgFeEDA3VfWB+CdJcMsKsmLkvfVq7/3aPrSSHdKvBp8jetvzsBZ4Lvmd
-         UQVnUY+Y+p1fAC2MJCE7nvvMVfy7/TmK/7E9HaxD/SsCu/4sLQsBKq6nobE+O7ss8Y5p
-         UaZQ==
-X-Gm-Message-State: AOAM530X3HejUHuiTL0RzdHhHM9za1J6I0BrdjuasAwmlMLN4VKHXpT8
-        qQK5idK/2YuxiuHqjwZ1l1cK9ydmTLc=
-X-Google-Smtp-Source: ABdhPJzSVK88X6Ix5NPHLFCrihJ345TTLxI7xkyxukObIB3x7gaJDMnU2hK6cOQMCZL+6fCHIkxOhA==
-X-Received: by 2002:ad4:4d03:: with SMTP id l3mr10531624qvl.158.1590286443160;
-        Sat, 23 May 2020 19:14:03 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id t189sm1625501qkc.87.2020.05.23.19.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 19:14:02 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-kernel@vger.kernel.org (open list:GENERIC PHY FRAMEWORK)
-Subject: [PATCH 2/3] phy: qcom-qmp: Add QMP V4 USB3 UNIPHY
-Date:   Sat, 23 May 2020 22:14:14 -0400
-Message-Id: <20200524021416.17049-3-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200524021416.17049-1-jonathan@marek.ca>
-References: <20200524021416.17049-1-jonathan@marek.ca>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 23 May 2020 22:19:11 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:51552 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388225AbgEXCTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 22:19:11 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgCXlTCH2cleb8zBAQ--.12234S4;
+        Sun, 24 May 2020 10:18:50 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/panfrost: Fix runtime PM imbalance in panfrost_perfcnt_enable_locked
+Date:   Sun, 24 May 2020 10:18:46 +0800
+Message-Id: <20200524021846.9913-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgCXlTCH2cleb8zBAQ--.12234S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1furW8uw1DXrW8Zwb_yoW8XrW7pF
+        Z7uFy5Zry8C347t3s7CasrZay3ua43KrykGFZ8G3y5Aa17tFyktr4qka4YqFWUZFWkAFn8
+        tws7K3y7u3WYyF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+        6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW8JwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF3kuDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAPsP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the USB3 PHY used by the secondary usb controller on sm8150
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced. For all error
+paths after pm_runtime_get_sync(), things are the same.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 150 ++++++++++++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h |   5 +
- 2 files changed, 155 insertions(+)
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index b3e07afca3ca..9367f8f793b5 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -199,6 +199,17 @@ static const unsigned int qmp_v4_usb3phy_regs_layout[QPHY_LAYOUT_SIZE] = {
- 	[QPHY_START_CTRL]		= 0x44,
- 	[QPHY_PCS_STATUS]		= 0x14,
- 	[QPHY_PCS_POWER_DOWN_CONTROL]	= 0x40,
-+	[QPHY_PCS_AUTONOMOUS_MODE_CTRL]	= 0x308,
-+	[QPHY_PCS_LFPS_RXTERM_IRQ_CLEAR] = 0x314,
-+};
-+
-+static const unsigned int qmp_v4_usb3_uniphy_regs_layout[QPHY_LAYOUT_SIZE] = {
-+	[QPHY_SW_RESET]			= 0x00,
-+	[QPHY_START_CTRL]		= 0x44,
-+	[QPHY_PCS_STATUS]		= 0x14,
-+	[QPHY_PCS_POWER_DOWN_CONTROL]	= 0x40,
-+	[QPHY_PCS_AUTONOMOUS_MODE_CTRL]	= 0x608,
-+	[QPHY_PCS_LFPS_RXTERM_IRQ_CLEAR]  = 0x614,
- };
+diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+index 6913578d5aa7..d99bd2f0503a 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
++++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+@@ -83,11 +83,13 @@ static int panfrost_perfcnt_enable_locked(struct panfrost_device *pfdev,
  
- static const unsigned int sdm845_ufsphy_regs_layout[QPHY_LAYOUT_SIZE] = {
-@@ -1413,6 +1424,114 @@ static const struct qmp_phy_init_tbl sm8150_usb3_pcs_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2, 0x07),
- };
+ 	ret = pm_runtime_get_sync(pfdev->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto err_pm_get;
  
-+static const struct qmp_phy_init_tbl sm8150_usb3_uniphy_serdes_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0x1a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL, 0x11),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE0, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START1_MODE0, 0xab),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START2_MODE0, 0xea),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START3_MODE0, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0xca),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE0, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE0, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE0, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE1_MODE0, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE0, 0x34),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE0, 0x14),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP_EN, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_BUF_ENABLE, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE2_MODE1, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE1_MODE1, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CORECLK_DIV_MODE1, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE1, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START1_MODE1, 0xab),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START2_MODE1, 0xea),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START3_MODE1, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE1, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE1, 0x34),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE1, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE1, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE1, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xca),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CMN_IPTRIM, 0x20),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_EN_CENTER, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_PER1, 0x31),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_PER2, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE1_MODE1, 0xde),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE2_MODE1, 0x07),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE1_MODE0, 0xde),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE2_MODE0, 0x07),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_MAP, 0x02),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_usb3_uniphy_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_RCV_DETECT_LVL_2, 0x12),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_LANE_MODE_1, 0x95),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PI_QEC_CTRL, 0x40),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_RES_CODE_LANE_OFFSET_TX, 0x05),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_usb3_uniphy_rx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH4, 0xb8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH3, 0x7f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH2, 0x37),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH, 0x2f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_LOW, 0xef),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH4, 0xb3),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH3, 0x0b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH2, 0x5c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH, 0xdc),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_LOW, 0xdc),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CONTROLS, 0x99),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_THRESH1, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_THRESH2, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_GAIN1, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_GAIN2, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN, 0x2f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_HIGH, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x7f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FO_GAIN, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_VGA_CAL_CNTRL1, 0x54),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_VGA_CAL_CNTRL2, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_GM_CAL, 0x1f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3, 0x4a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_DFE_EN_TIMER, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x47),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_CNTRL, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL, 0x0e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW, 0xc0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_DFE_CTLE_POST_CAL_OFFSET, 0x20),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_GAIN, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_DCC_CTRL1, 0x0c),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_usb3_uniphy_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG1, 0xd0),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG2, 0x07),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG3, 0x20),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG6, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L, 0xe7),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H, 0x03),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RX_SIGDET_LVL, 0xaa),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_UNI_RXEQTRAINING_DFE_TIME_S2, 0x07),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_UNI_LFPS_DET_HIGH_COUNT_VAL, 0xf8),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_CDR_RESET_TIME, 0x0f),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG1, 0x88),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG2, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG1, 0x4b),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG5, 0x10),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_REFGEN_REQ_CONFIG1, 0x21),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_PCS_TX_RX_CONFIG, 0x0c),
-+};
-+
- /* struct qmp_phy_cfg - per-PHY initialization config */
- struct qmp_phy_cfg {
- 	/* phy-type - PCIE/UFS/USB */
-@@ -2000,6 +2119,34 @@ static const struct qmp_phy_cfg sm8150_usb3phy_cfg = {
- 	.is_dual_lane_phy	= true,
- };
+ 	bo = drm_gem_shmem_create(pfdev->ddev, perfcnt->bosize);
+-	if (IS_ERR(bo))
+-		return PTR_ERR(bo);
++	if (IS_ERR(bo)) {
++		ret = PTR_ERR(bo);
++		goto err_pm_get;
++	}
  
-+static const struct qmp_phy_cfg sm8150_usb3_uniphy_cfg = {
-+	.type			= PHY_TYPE_USB3,
-+	.nlanes			= 1,
-+
-+	.serdes_tbl		= sm8150_usb3_uniphy_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(sm8150_usb3_uniphy_serdes_tbl),
-+	.tx_tbl			= sm8150_usb3_uniphy_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(sm8150_usb3_uniphy_tx_tbl),
-+	.rx_tbl			= sm8150_usb3_uniphy_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(sm8150_usb3_uniphy_rx_tbl),
-+	.pcs_tbl		= sm8150_usb3_uniphy_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(sm8150_usb3_uniphy_pcs_tbl),
-+	.clk_list		= qmp_v4_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(qmp_v4_phy_clk_l),
-+	.reset_list		= msm8996_usb3phy_reset_l,
-+	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= qmp_v4_usb3_uniphy_regs_layout,
-+
-+	.start_ctrl		= SERDES_START | PCS_START,
-+	.pwrdn_ctrl		= SW_PWRDN,
-+
-+	.has_pwrdn_delay	= true,
-+	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
-+	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
-+};
-+
- static void qcom_qmp_phy_configure_lane(void __iomem *base,
- 					const unsigned int *regs,
- 					const struct qmp_phy_init_tbl tbl[],
-@@ -2774,6 +2921,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,sm8150-qmp-usb3-phy",
- 		.data = &sm8150_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,sm8150-qmp-usb3-uni-phy",
-+		.data = &sm8150_usb3_uniphy_cfg,
- 	},
- 	{ },
- };
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-index 6d017a0c0c8d..f39f7a968228 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-@@ -363,6 +363,7 @@
- /* Only for QMP V4 PHY - TX registers */
- #define QSERDES_V4_TX_RES_CODE_LANE_TX			0x34
- #define QSERDES_V4_TX_RES_CODE_LANE_RX			0x38
-+#define QSERDES_V4_TX_RES_CODE_LANE_OFFSET_TX 		0x3c
- #define QSERDES_V4_TX_LANE_MODE_1			0x84
- #define QSERDES_V4_TX_RCV_DETECT_LVL_2			0x9c
- #define QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1	0xd8
-@@ -709,6 +710,10 @@
- #define QPHY_V4_PCS_USB3_SIGDET_STARTUP_TIMER_VAL	0x354
- #define QPHY_V4_PCS_USB3_TEST_CONTROL			0x358
+ 	/* Map the perfcnt buf in the address space attached to file_priv. */
+ 	ret = panfrost_gem_open(&bo->base, file_priv);
+@@ -168,6 +170,8 @@ static int panfrost_perfcnt_enable_locked(struct panfrost_device *pfdev,
+ 	panfrost_gem_close(&bo->base, file_priv);
+ err_put_bo:
+ 	drm_gem_object_put_unlocked(&bo->base);
++err_pm_get:
++	pm_runtime_put_noidle(pfdev->dev);
+ 	return ret;
+ }
  
-+/* Only for QMP V4 PHY - UNI has 0x300 offset for PCS_USB3 regs */
-+#define QPHY_V4_PCS_USB3_UNI_LFPS_DET_HIGH_COUNT_VAL	0x618
-+#define QPHY_V4_PCS_USB3_UNI_RXEQTRAINING_DFE_TIME_S2	0x638
-+
- /* Only for QMP V4 PHY - PCS_MISC registers */
- #define QPHY_V4_PCS_MISC_TYPEC_CTRL			0x00
- #define QPHY_V4_PCS_MISC_TYPEC_PWRDN_CTRL		0x04
 -- 
-2.26.1
+2.17.1
 
