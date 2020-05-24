@@ -2,117 +2,101 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E234C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9750C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA19207D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC6620787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhzFKg9f"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gxGduZqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbgEXTSx (ORCPT
+        id S2388090AbgEXTWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 15:18:53 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33172 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387794AbgEXTSw (ORCPT
+        Sun, 24 May 2020 15:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387851AbgEXTWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 15:18:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590347931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/hcaiO8OAmzEEvBE9PTP1sm7IVt4F5J/5yjE5N6/7jM=;
-        b=bhzFKg9fh0jhhMsprnC7e6GQAyie0usRpfy+Fyx0XYkJGcAwiIt1800aYEjO8dS6KShtZN
-        U2Ek4Fb8vaC5J9OOZ0jAMzKjegOjs+lMAJ5c2nDrTLxUAW1YDNHEHIiqY7G1JfANQuBUyR
-        gR+4e6jNu+txJxHvcmxVZQn/5dF3ikg=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-isZjvzsPOcyw65ZX4ispRg-1; Sun, 24 May 2020 15:18:49 -0400
-X-MC-Unique: isZjvzsPOcyw65ZX4ispRg-1
-Received: by mail-oo1-f70.google.com with SMTP id z24so8594316ook.13
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:18:49 -0700 (PDT)
+        Sun, 24 May 2020 15:22:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73091C08C5C1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:22:14 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fs4so711725pjb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DT9kV8IQxC/D+uhFJsefv+iJT3TxYB4ReZ7s4ZFOil0=;
+        b=gxGduZqosF0z63K53o9awU20QA6ufSZ5TTqRe+tv3AOsZ2QlQ979YXr+1dskXq52Jk
+         HS3I9zTGgZsmogN4rJCO292dN+jQ4Bh81nqndOGDqgUTCuNwtxtCzXuJPlAMKQRJ58uA
+         DuMNOBDX6nN/HrDjMdSSysjmoxpz5chCYgMsvnmdpOOufOk2jA7gdSzJR/TzXpAMz7Lj
+         M0TIw38/7f79f2cKH+xUDuzBnClVTmIWWKOLweF65hex28srdE77jZIapgVeALrqEfAA
+         ocGg0o8OhrW4mbtznbLks7cKK3H/ZDmHlmgcJ/0qYgXMDuB9nDi7913IThDZ9hVUMz+H
+         0p2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/hcaiO8OAmzEEvBE9PTP1sm7IVt4F5J/5yjE5N6/7jM=;
-        b=CJDWaTWlvRqoJA17hVecDeC2zWl1Zk0Vi3zgXE4h57QKC+thTfmv47yy28YRlY8YRB
-         L7xnpX/DEegBNqT40Z3k1gC8fjP7tHnoCSC/XJIA01tNVrDIAVatwO7Cs09Yy0GQj8+x
-         w+g+wGlwLFJ5I6BjW5XMT5pKO+jWVUtptCd+Uno6+X9AqDj+hcHFzBDRdDGLS7+1vVV4
-         /iulXOmUCkPwAPfGNNrB96HonusaqvLWT5mLfLGNndgbVhs6JZNXQtuYItH1bKJTH5dd
-         qgL8xw4Z/dep176vzOUpruyUBYJT5lrv80TR7uSyRgL5fdYiQLZmWjndO5enQjUfxvuu
-         IkKA==
-X-Gm-Message-State: AOAM531gNPFH59y1/pdD/HeTMch8Cu4f1QomXACMNNrsuZ17m0WByKQn
-        TqJdr4WD6qVz+R8gAQ33or2sOp3TJnHOILAkEWKTeJgkJ8jvZaL7DiJp5zjQMK/w0NqAh4O4Fh4
-        YPXE/XWFh/4n/hz8JAskXlWYzRkiT6xJtQlzBebWO
-X-Received: by 2002:aca:230e:: with SMTP id e14mr8127885oie.127.1590347928490;
-        Sun, 24 May 2020 12:18:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxR67E8xiElSW8GFSVtkRz6H4YIOv3dOHo5+hRuKxFSktBuh65WLcJCA92/FZ3AbOMoVZnTpxopYyCyDrOGnzQ=
-X-Received: by 2002:aca:230e:: with SMTP id e14mr8127873oie.127.1590347928244;
- Sun, 24 May 2020 12:18:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DT9kV8IQxC/D+uhFJsefv+iJT3TxYB4ReZ7s4ZFOil0=;
+        b=iX7jLH+vJ+UH8klcmfJs90V6utUvknhiCjqiVQi/iePLdIspgEAKZ/K3EBQXcGO38r
+         7PazJ+Z3E9E6oND16O0Wf6/29VQ4/NVU9xrR0pnO7AVy5JUj/KAhiQITq+LsB4eI2v0l
+         xwcwhFoem66peDjVJHwA7HUgFuy9CJeJyQK6MaJ03ZQY4lrUkHhgHe0mtZ126sGR/7NV
+         T+oTz4SDE2izv8xPzW7JKlPaVXUvR9M7vh5jBIH+lmp1XZ3QHIleGPDtYytgi87M3LBN
+         MbaMIHCb7yxgyyBAKTYRCmPxlaN9JpeYovXvtCbcp0Eawn4fu02Sn+Ygyg9bgc17952U
+         lWog==
+X-Gm-Message-State: AOAM530DA0uel28EdiT0MYhBNBdFv3zoprskjzerGfB2dA2zDc0CzEDu
+        it3k6ylXPd15qFTtBLNFZeMcFg==
+X-Google-Smtp-Source: ABdhPJyWrtKyXRFlA4SwqdiGTTumD68oCqrgZnBOzPkJTTFSdRxzhdggPB+vLC5MAtEqdrvZvv1y/Q==
+X-Received: by 2002:a17:90a:648c:: with SMTP id h12mr17363317pjj.229.1590348133979;
+        Sun, 24 May 2020 12:22:13 -0700 (PDT)
+Received: from x1.lan ([2605:e000:100e:8c61:c871:e701:52fa:2107])
+        by smtp.gmail.com with ESMTPSA id t21sm10312426pgu.39.2020.05.24.12.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 12:22:13 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 01/12] block: read-ahead submission should imply no-wait as well
+Date:   Sun, 24 May 2020 13:21:55 -0600
+Message-Id: <20200524192206.4093-2-axboe@kernel.dk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200524192206.4093-1-axboe@kernel.dk>
+References: <20200524192206.4093-1-axboe@kernel.dk>
 MIME-Version: 1.0
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp> <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
-In-Reply-To: <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Sun, 24 May 2020 21:18:38 +0200
-Message-ID: <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into printk(KERN_DEBUG)
-To:     Joe Perches <joe@perches.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 7:38 PM Joe Perches <joe@perches.com> wrote:
-> On Sun, 2020-05-24 at 23:50 +0900, Tetsuo Handa wrote:
-> > syzbot found a NULL pointer dereference bug inside mptcp_recvmsg() due to
-> > ssock == NULL, but this bug manifested inside selinux_socket_recvmsg()
-> > because pr_debug() was no-op [1].
-> >
-> >   pr_debug("fallback-read subflow=%p",
-> >            mptcp_subflow_ctx(ssock->sk));
-> >   copied = sock_recvmsg(ssock, msg, flags);
->
-> > Since console loglevel used by syzkaller will not print KERN_DEBUG
-> > messages to consoles, always evaluating pr_devel()/pr_debug() messages
-> > will not cause too much console output. Thus, let's allow fuzzers to
-> > always evaluate pr_devel()/pr_debug() messages.
->
-> While I think this is rather unnecessary,
-> what about dev_dbg/netdev_dbg/netif_dbg et al ?
+As read-ahead is opportunistic, don't block for request allocation.
 
-I'm also not sure if this is really worth it... It would help localize
-the bug in this specific case, but there is nothing systematic about
-it. Are there that many debug print statements that dereference
-pointers that are later passed to functions, but not dereferenced
-otherwise? Maybe yes, but it seems to be quite an optimistic
-assumption... I don't consider it such a big problem that a bug in
-function X only manifests itself deeper in the callchain. There will
-always be such bugs, no matter how many moles you whack.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ include/linux/blk_types.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-That said, I'm not strongly opposed to the change either, I just
-wanted to state my opinion in case my reply to the syzbot report [1]
-gave the impression that I considered the "misattribution" as
-something that needs to be fixed :)
-
-[1] https://lore.kernel.org/selinux/CAFqZXNvf+oJs9u4H97u7=jTL2Wo_Hkf4nZdZJLD7tNC_J0KDRg@mail.gmail.com/
-
---
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index ccb895f911b1..c296463c15eb 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -374,7 +374,8 @@ enum req_flag_bits {
+ #define REQ_INTEGRITY		(1ULL << __REQ_INTEGRITY)
+ #define REQ_FUA			(1ULL << __REQ_FUA)
+ #define REQ_PREFLUSH		(1ULL << __REQ_PREFLUSH)
+-#define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
++#define REQ_RAHEAD		\
++	((1ULL << __REQ_RAHEAD) | (1ULL << __REQ_NOWAIT))
+ #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
+ #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
+ #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
+-- 
+2.26.2
 
