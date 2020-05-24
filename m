@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B15C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3087020787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C778207CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335086;
-	bh=xKPHzKay6k2r3n50d4X2uT2Nz8qgig7Im1XmCOjd64w=;
+	s=default; t=1590335087;
+	bh=y4LDN2cptklG/L3OvtbLFAtwBB06/jbLreEh7H/ewyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPgTNd9/usogVo+scNtRMnAoQFG80qly2j3cRKEHKFqLJ1koXGBkbfgut+oiyN36l
-	 hSrVScjnCKbKRFReFcvxlE5nO1urw20y58uawwYMZm69rpng3Rq17NY0NjcV27rK+7
-	 jCDmyr7izIWpxqk/Kdom1re3wHfYP7V10/ZPUHZg=
+	b=wrGi1r8DN9U23KdVmh66BCa9BC+MJV4NfexU32RGBZffiyGUYf3YNs9JNF4GCwFu+
+	 pGqyV3zX8sF5K/jL3J0vtKam9UBf7PiQEpQaHJDb5rBxslTGn2u0/CG31ijBa9RP7J
+	 crBBM5c/xP6GlNPLvI7UpMxjJ8t9eqOdthkEZ1ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388055AbgEXPop (ORCPT
+        id S1728375AbgEXPor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:44:45 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19701 "EHLO
+        Sun, 24 May 2020 11:44:47 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19707 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbgEXPnX (ORCPT
+        with ESMTP id S1728479AbgEXPnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:43:23 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcUr017561;
-        Mon, 25 May 2020 00:42:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUr017561
+        by conuserg-09.nifty.com with ESMTP id 04OFgcVD017561;
+        Mon, 25 May 2020 00:42:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcVD017561
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334963;
-        bh=gluhb44Vf90fefpnqsQIOxJvzgiBOySQWJIDyHg2TIE=;
+        s=dec2015msa; t=1590334974;
+        bh=MpjBywKi5hvRtpRuPaWkkgxcSAed2a9OTbmkoaxhCOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZ40vNoqZTyVt9fDzB5L/0JQ33WeXl80xFBRGUg3dFZCB8kNqa+Q3CijBFEcbML4s
-         XTVuZG3IDt/5cw/8jn+oNJOvql2D9fP+uEg8rc72re6+ZplGCFIQJxVEcFYDeZY6eK
-         o4Az8ib2EmnavXXu4TBO+Spky+mWaPwzLDR05WpIeHD6HAqYgYhFmjGK0XKezbGz9N
-         0opsvafBUqi+xcBJ1EQlJFC5USvTbsUZWZThBKhE76SS5GR9M2bYjq2TGlOz3RVrrj
-         zOird6UzzIW4so4ykSKtG+HdxbWLQWCqBD5dNt65FenCdC5UJZtzA+czbUld6T4ukE
-         6v6aI1LXKtLEQ==
+        b=h2vNDjNRqakTzs8Gw8isSeCoAbEkvZM631ReC3jWX+3Fzid2JYZcLbRnBx50rS415
+         /Une6cVawj2dEv1Gp+/wIZYdo92yDn0tJawcO85V1bCmFOojXr7/jDC0e35NWmhiYd
+         6MeKgU3i01VR+r+Zr0CMdQ4kSJeHcrYU2xaN5vJleYlOY6W9W5V8aYQL8Z9FpwyzSu
+         hm1FYjmv3T93A/szJT4MRbMv9tnd/HWfw+gNpC3z/pDe59Da08peQmJ7I/bSVP3LEd
+         kxumSLprm1EHR8tKkTQu3OFVbD7cZcozlN7TKdwMtLboKjQ2bBW0QF7dDDJxQaKmft
+         whDlgFGMr3wFg==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/29] modpost: remove get_next_text() and make {grab,release_}file static
-Date:   Mon, 25 May 2020 00:42:14 +0900
-Message-Id: <20200524154235.380482-9-masahiroy@kernel.org>
+Subject: [PATCH v2 28/29] modpost: remove is_vmlinux() helper
+Date:   Mon, 25 May 2020 00:42:34 +0900
+Message-Id: <20200524154235.380482-29-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
 References: <20200524154235.380482-1-masahiroy@kernel.org>
@@ -61,90 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-get_next_line() is no longer used. Remove.
+Now that is_vmlinux() is called only in new_module(), we can inline
+the function call.
 
-grab_file() and release_file() are only used in modpost.c. Make them
-static.
+modname is the basename with '.o' is stripped. No need to compare it
+with 'vmlinux.o'.
+
+vmlinux is always located at the current working directory. No need
+to strip the directory path.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- scripts/mod/modpost.c | 38 ++------------------------------------
- scripts/mod/modpost.h |  3 ---
- 2 files changed, 2 insertions(+), 39 deletions(-)
+ scripts/mod/modpost.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 40c6414aaeec..33cdb78a4ba1 100644
+index 2c783adbfc34..527f71b662b0 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -462,7 +462,7 @@ static void sym_set_crc(const char *name, unsigned int crc)
- 	s->crc_valid = 1;
+@@ -90,20 +90,6 @@ static inline bool strends(const char *str, const char *postfix)
+ 	return strcmp(str + strlen(str) - strlen(postfix), postfix) == 0;
  }
  
--void *grab_file(const char *filename, unsigned long *size)
-+static void *grab_file(const char *filename, unsigned long *size)
- {
- 	struct stat st;
- 	void *map = MAP_FAILED;
-@@ -484,41 +484,7 @@ void *grab_file(const char *filename, unsigned long *size)
- 	return map;
- }
- 
--/**
--  * Return a copy of the next line in a mmap'ed file.
--  * spaces in the beginning of the line is trimmed away.
--  * Return a pointer to a static buffer.
--  **/
--char *get_next_line(unsigned long *pos, void *file, unsigned long size)
+-static int is_vmlinux(const char *modname)
 -{
--	static char line[4096];
--	int skip = 1;
--	size_t len = 0;
--	signed char *p = (signed char *)file + *pos;
--	char *s = line;
+-	const char *myname;
 -
--	for (; *pos < size ; (*pos)++) {
--		if (skip && isspace(*p)) {
--			p++;
--			continue;
--		}
--		skip = 0;
--		if (*p != '\n' && (*pos < size)) {
--			len++;
--			*s++ = *p++;
--			if (len > 4095)
--				break; /* Too long, stop */
--		} else {
--			/* End of string */
--			*s = '\0';
--			return line;
--		}
--	}
--	/* End of buffer */
--	return NULL;
+-	myname = strrchr(modname, '/');
+-	if (myname)
+-		myname++;
+-	else
+-		myname = modname;
+-
+-	return (strcmp(myname, "vmlinux") == 0) ||
+-	       (strcmp(myname, "vmlinux.o") == 0);
 -}
 -
--void release_file(void *file, unsigned long size)
-+static void release_file(void *file, unsigned long size)
+ void *do_nofail(void *ptr, const char *expr)
  {
- 	munmap(file, size);
- }
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index dfadaa0c01ec..232a0e11fcaa 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -192,9 +192,6 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen);
- /* from modpost.c */
- char *read_text_file(const char *filename);
- char *get_line(char **stringp);
--void *grab_file(const char *filename, unsigned long *size);
--char* get_next_line(unsigned long *pos, void *file, unsigned long size);
--void release_file(void *file, unsigned long size);
+ 	if (!ptr)
+@@ -180,7 +166,7 @@ static struct module *new_module(const char *modname)
  
- enum loglevel {
- 	LOG_WARN,
+ 	/* add to list */
+ 	strcpy(mod->name, modname);
+-	mod->is_vmlinux = is_vmlinux(modname);
++	mod->is_vmlinux = (strcmp(modname, "vmlinux") == 0);
+ 	mod->gpl_compatible = -1;
+ 	mod->next = modules;
+ 	modules = mod;
 -- 
 2.25.1
 
