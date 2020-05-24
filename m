@@ -2,153 +2,107 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F12C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBEF2078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897EC2078B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590354746;
+	bh=Flr026ZtzINe0Q7Gpmgcr+VZp7b/m6owt3uG5bFsaQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K5n1XDbJSoMBcsfe/o9o2M4SQCTiv+sKXVA4hsUHGtI+PHxgRktqSW71hx+btIyaX
+	 zCiC9PJYeGu/VWiM6JTCajnEbkMa1iNlS/gSVUZeJksCuI1EXjb2KBfffbmuLq2Jwb
+	 GNxJYiKG/erh2zmqYlq3FtJXKO/gej2NwqSLrGs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388401AbgEXVHE (ORCPT
+        id S2388116AbgEXVMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:07:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41060 "EHLO mx2.suse.de"
+        Sun, 24 May 2020 17:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388211AbgEXVHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:07:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8046FAD85;
-        Sun, 24 May 2020 21:07:01 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 8F7E2604C8; Sun, 24 May 2020 23:06:53 +0200 (CEST)
-Date:   Sun, 24 May 2020 23:06:53 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     netdev@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Auke Kok <auke-jan.h.kok@intel.com>,
-        Jeff Garzik <jeff@garzik.org>,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
-        Len Brown <len.brown@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Neftin, Sasha" <sasha.neftin@intel.com>,
-        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
-        Stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] e1000e: Make WOL info in ethtool consistent with
- device wake up ability
-Message-ID: <20200524210653.2bzmotjbsknm6zhn@lion.mk-sys.cz>
-References: <cover.1590081982.git.yu.c.chen@intel.com>
- <725bad2f3ce7f7b7f1667d53b6527dc059f9e419.1590081982.git.yu.c.chen@intel.com>
- <20200521192342.GE8771@lion.mk-sys.cz>
- <20200523090950.GA20370@chenyu-office.sh.intel.com>
+        id S2387830AbgEXVMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 17:12:23 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAE4E2076C;
+        Sun, 24 May 2020 21:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590354743;
+        bh=Flr026ZtzINe0Q7Gpmgcr+VZp7b/m6owt3uG5bFsaQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V5EE6nGn1WgxJLQFbmLcD7DFe8/QvumGgHGpS+WC1MnwGJyRqfFE6hOLPxlS+K6oy
+         Ae4BaEvjSh6Wk/IhmDstdeRQ+6L0fb2l4HwRqIC8pjtLi6KlRwsXj0/8ucNM9HrHDb
+         dT5Af3/4Gz/PVwPWKizy/8TlGcYO7WTIoF9zWZm8=
+Date:   Sun, 24 May 2020 17:12:21 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [GIT PULL] Driver core fixes for 5.7-rc7 - take 2
+Message-ID: <20200524211221.GW33628@sasha-vm>
+References: <20200523131759.GA55886@kroah.com>
+ <20200523152922.GA224858@kroah.com>
+ <CAHk-=wih_B_8a48Au=6B+gwFcYnM7qF02dGX3R0QN_2bzVcjVA@mail.gmail.com>
+ <20200524150018.GB11262@kroah.com>
+ <CAHk-=wh4bZdCkhng3EsJCDhHLxHT6x4S66v5JQvusihVfYrc5Q@mail.gmail.com>
+ <20200524194550.GV33628@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200523090950.GA20370@chenyu-office.sh.intel.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200524194550.GV33628@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 05:09:50PM +0800, Chen Yu wrote:
-> Hi Michal,
-> Thanks for reviewing,
-> and sorry for late reply.
-> On Thu, May 21, 2020 at 09:23:42PM +0200, Michal Kubecek wrote:
-> > On Fri, May 22, 2020 at 01:59:13AM +0800, Chen Yu wrote:
-> > > Currently the ethtool shows that WOL(Wake On Lan) is enabled
-> > > even if the device wakeup ability has been disabled via sysfs:
-> > >   cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
-> > >    disabled
-> > > 
-> > >   ethtool eno1
-> > >   ...
-> > >   Wake-on: g
-> > > 
-> > > Fix this in ethtool to check if the user has explicitly disabled the
-> > > wake up ability for this device.
-> > 
-> > Wouldn't this lead to rather unexpected and inconsistent behaviour when
-> > the wakeup is disabled? As you don't touch the set_wol handler, I assume
-> > it will still allow setting enabled modes as usual so that you get e.g.
-> > 
-> >   ethtool -s eth0 wol g   # no error or warning, returns 0
-> >   ethtool eth0            # reports no modes enabled
-> > 
-> > The first command would set the enabled wol modes but that would be
-> > hidden from user and even the netlink notification would claim something
-> > different. Another exampe (with kernel and ethtool >= 5.6):
-> > 
-> >   ethtool -s eth0 wol g
-> >   ethtool -s eth0 wol +m
-> > 
-> > resulting in "mg" if device wakeup is enabled but "m" when it's disabled
-> > (but the latter would be hidden from user and only revealed when you
-> > enable the device wakeup).
-> > 
-> I've tested ethtool v5.6 on top of kernel v5.7-rc6, it looks like
-> the scenario you described will not happen as it will not allow
-> the user to enable the wol options with device wakeup disabled,
-> not sure if I missed something:
-> 
-> /sys/devices/pci0000:00/0000:00:1f.6/power# echo disabled > wakeup
-> 
-> ethtool -s eno1 wol g
-> netlink error: cannot enable unsupported WoL mode (offset 36)
-> netlink error: Invalid argument
-> 
-> I've not digged into the code too much, but according to
-> ethhl_set_wol(), it will first get the current wol options
-> via dev->ethtool_ops->get_wol(), and both the wolopts and
-> wol.supported are 0 when device wake up are disabled. Then
-> ethnl_update_bitset32 might manipulate on wolopts and
-> make it non-zero each is controdict with the precondition that
-> no opts should be enabled due to 0 wol.supported.
+On Sun, May 24, 2020 at 03:45:50PM -0400, Sasha Levin wrote:
+>On Sun, May 24, 2020 at 10:05:28AM -0700, Linus Torvalds wrote:
+>>Sasha mentioned "--follow", which also happens to show that commit,
+>>but that's more of an incidental happenstance than anything else. "git
+>>log --follow" is kind of a special case, where git stops doing some of
+>>the pathname-based simplifying, because if the file shows up from
+>>nothing, git will try to then figure out where it came from. The fact
+>>that "--follow" this ends up not pruning irrelevant history as
+>>aggressively is more of an implementation artifact than anything else.
+>>
+>>So generally, don't use "--follow". It's kind of a hack to emulate
+>>"track changes to a file", but it is a hack, and it fundamentally is a
+>>bogus operation (for all the same reasons that the CVS/SCCS/SVN/etc
+>>notion of a "file identity" is complete garbage and leads to
+>>fundamental problems).
+>
+>Interesting. My thinking around --follow was that it's like
+>--full-history in the sense that it won't prune history, but it would
+>also keep listing history beyond file renames.
+>
+>The --follow functionality is quite useful when looking at older
+>branches and trying to understand where changes should go into on those
+>older branches.
+>
+>We also do have some notion of "file identity" in the kernel; it's
+>prevalent with "quirk files". Look at these for example:
+>
+> - drivers/mmc/core/quirks.h
+> - sound/pci/hda/patch_*.c
+> - drivers/hid/hid-quirks.c
+>
+>We know that patches to those files are likely to contain quirks (which
+>we usually want to take into the Stable branches) so I might have a
+>script that monitors a list of these "special" files in which case I
+>need to see a complete list of commits that went into those files.
 
-You are right, I didn't realize that you report 0 even for supported WoL
-modes. However, this feels even more wrong from my point of view as then
-even the list of supported WoL modes would be hidden from user when the
-sysfs switch is off.
+(and I'd like to see the reverts too, so that I could apply that revert
+to Stable trees as well. If a revert doesn't show up in git log we might
+miss doing a backport of it).
 
-Also, AFAICS "ethtool -s <dev> wol d" would be still allowed but the
-behaviour would differ between ioctl and netlink code path: netlink
-would identify the operation as no-op and do nothing. But ioctl does not
-check new value against old one so that it would call your set_wol()
-handler which would set the (hidden) set of enabled WoL modes to empty
-which would mean WoL would stay disabled even after enabling the wakeup
-via sysctl. In other words, you would allow disabling all WoL modes
-(via ioctl) but not setting them to anything else.
-
-> > This is a general problem discussed recently for EEE and pause
-> > autonegotiation: if setting A can be effectively used only when B is
-> > enabled, should we hide actual setting of A from userspace when B is
-> > disabled or even reset the value of A whenever B gets toggled or rather
-> > allow setting A and B independently? AFAICS the consensus seemed to be
-> > that A should be allowed to be set and queried independently of the
-> > value of B.
-> 
-> But then there would be an inconsistence between A and B. I was
-> thinking if there's a way to align them in kernel space and  maintain
-> the difference in user space?
-
-I'm not sure what exactly you mean by maintaining the difference in
-userspace but there are many situations like this and we usually do not
-block the ability to query or set A when the "main switch" is off.
-For example, you can add IPv4/6 addresses to an interface when it is
-down, even if you cannot receive or transmit packets with these
-addresses. Or you can set up netlilter rules in FORWARDING chain
-independently of the global ip_forward sysctl which can block all
-IPv4 forwarding.
-
-Moreover, if we really wanted to report no supported and enabled WoL
-modes when device wakeup is disabled, it should be done for all network
-devices, not only in one driver.
-
-Michal
+-- 
+Thanks,
+Sasha
