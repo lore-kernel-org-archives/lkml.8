@@ -2,113 +2,143 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1878DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33542073B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9444C20787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 17:51:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="STVIqDna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbgEXRtc (ORCPT
+        id S2387882AbgEXRvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 13:49:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2428 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387766AbgEXRtb (ORCPT
+        Sun, 24 May 2020 13:51:36 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53810 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387656AbgEXRvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 13:49:31 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04OHV5pJ043199;
-        Sun, 24 May 2020 13:49:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 316wyq7s5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 24 May 2020 13:49:29 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04OHePxJ063022;
-        Sun, 24 May 2020 13:49:28 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 316wyq7s53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 24 May 2020 13:49:28 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04OHk8nh010858;
-        Sun, 24 May 2020 17:49:27 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 316uf8h262-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 24 May 2020 17:49:26 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04OHnOCW3211544
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 24 May 2020 17:49:24 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFE5152050;
-        Sun, 24 May 2020 17:49:24 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.201.18])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 4097C5204F;
-        Sun, 24 May 2020 17:49:24 +0000 (GMT)
-Date:   Sun, 24 May 2020 20:49:22 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     daeroro <skseofh@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/memblock:Do not retry a range that has already been
- checked
-Message-ID: <20200524174922.GB1515425@linux.ibm.com>
-References: <20200524141640.GA10017@roro-Lenovo-Y520-15IKBN>
+        Sun, 24 May 2020 13:51:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1590342693; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wHKb/Iq1AG0ntYJ2JavpAxwKFvwXNJiyIwNojQekjnc=;
+        b=STVIqDnaxuWOvarIU0u80E3ZXic3lrHT0axrrRvff4XGCFXLqm0A3gazUzDrPwxWv06Nu+
+        NIfdvsEufqyZ3X4PfsToZHSrEzpHveGzVFJEwfagFn5w+kZ6rZrd0E9q7F/3chrAhFS1IL
+        HDX/yRNgLTtdJbr0mw0lBw7r2Ir/yYk=
+Date:   Sun, 24 May 2020 19:51:23 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 3/3] pwm: jz4740: Add support for the JZ4725B
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <N9KUAQ.VPI8V42FNJQU@crapouillou.net>
+In-Reply-To: <20200524173711.ofprgoueyimhkowj@pengutronix.de>
+References: <20200413121445.72996-1-paul@crapouillou.net>
+        <20200413121445.72996-3-paul@crapouillou.net>
+        <20200524173711.ofprgoueyimhkowj@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200524141640.GA10017@roro-Lenovo-Y520-15IKBN>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-24_06:2020-05-22,2020-05-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 phishscore=0 adultscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 suspectscore=5 priorityscore=1501 spamscore=0
- mlxscore=0 bulkscore=0 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005240142
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:16:40PM +0900, daeroro wrote:
-> The range that has already been checked
-> don't have to be checked in a second attempt.
+Hi Uwe,
 
-The first attempts tries to find free memory in the interval [min_addr,
-max_addr) and the second attempt does not care about min_addr and looks
-for free memory in the interval [0, max_addr).
+Le dim. 24 mai 2020 =E0 19:37, Uwe Kleine-K=F6nig=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> On Mon, Apr 13, 2020 at 02:14:45PM +0200, Paul Cercueil wrote:
+>>  The PWM hardware in the JZ4725B works the same as in the JZ4740,=20
+>> but has
+>>  only six channels available.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      I did not add documentation for the new jz4725b-pwm compatible
+>>      string on purpose. The reason is that the documentation file
+>>      for the Timer/Counter Unit (TCU) of Ingenic SoCs will be
+>>      completely rewritten from .txt to YAML in a separate patchset.
+>>=20
+>>   drivers/pwm/pwm-jz4740.c | 20 +++++++++++++++++---
+>>   1 file changed, 17 insertions(+), 3 deletions(-)
+>>=20
+>>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+>>  index f566f9d248d6..bb27934fb6c2 100644
+>>  --- a/drivers/pwm/pwm-jz4740.c
+>>  +++ b/drivers/pwm/pwm-jz4740.c
+>>  @@ -22,6 +22,10 @@
+>>=20
+>>   #define NUM_PWM 8
+>>=20
+>>  +struct soc_info {
+>>  +	unsigned int num_pwms;
+>>  +};
+>>  +
+>>   struct jz4740_pwm_chip {
+>>   	struct pwm_chip chip;
+>>   	struct regmap *map;
+>>  @@ -36,7 +40,7 @@ static bool jz4740_pwm_can_use_chn(struct=20
+>> jz4740_pwm_chip *jz,
+>>   				   unsigned int channel)
+>>   {
+>>   	/* Enable all TCU channels for PWM use by default except channels=20
+>> 0/1 */
+>>  -	u32 pwm_channels_mask =3D GENMASK(NUM_PWM - 1, 2);
+>>  +	u32 pwm_channels_mask =3D GENMASK(jz->chip.npwm - 1, 2);
+>>=20
+>>   	device_property_read_u32(jz->chip.dev->parent,
+>>   				 "ingenic,pwm-channels-mask",
+>>  @@ -214,6 +218,7 @@ static int jz4740_pwm_probe(struct=20
+>> platform_device *pdev)
+>>   {
+>>   	struct device *dev =3D &pdev->dev;
+>>   	struct jz4740_pwm_chip *jz4740;
+>>  +	const struct soc_info *info =3D device_get_match_data(dev);
+>>=20
+>>   	jz4740 =3D devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
+>>   	if (!jz4740)
+>>  @@ -227,8 +232,8 @@ static int jz4740_pwm_probe(struct=20
+>> platform_device *pdev)
+>>=20
+>>   	jz4740->chip.dev =3D dev;
+>>   	jz4740->chip.ops =3D &jz4740_pwm_ops;
+>>  -	jz4740->chip.npwm =3D NUM_PWM;
+>>   	jz4740->chip.base =3D -1;
+>>  +	jz4740->chip.npwm =3D info ? info->num_pwms : NUM_PWM;
+>=20
+> Can info be actually NULL? I don't think so, so you can just use
+> info->num_pwms here and drop the definition of NUM_PWM.
 
-Is there a problem you see with this algorthim?
+In *theory* it can be NULL if the kernel is configured without=20
+CONFIG_OF, which will never happen on any board supported by this=20
+driver. I can add a dependency on CONFIG_OF in V2, then use=20
+info->num_pwms there.
 
-> Signed-off-by: daeroro <skseofh@naver.com>
-> ---
->  mm/memblock.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 39aceafc57f6..6f72fae415ee 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1489,7 +1489,7 @@ static void * __init memblock_alloc_internal(
->  
->  	/* retry allocation without lower limit */
->  	if (!alloc && min_addr)
-> -		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid,
-> +		alloc = memblock_alloc_range_nid(size, align, 0, min_addr, nid,
->  						exact_nid);
->  
->  	if (!alloc)
-> -- 
-> 2.17.1
-> 
+cheers,
+-Paul
 
--- 
-Sincerely yours,
-Mike.
+>>   	jz4740->chip.of_xlate =3D of_pwm_xlate_with_flags;
+>>   	jz4740->chip.of_pwm_n_cells =3D 3;
+>>=20
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> https://www.pengutronix.de/ |
+
+
