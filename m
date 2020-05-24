@@ -2,127 +2,183 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F92C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83748C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 14:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D2D20776
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE9620776
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 14:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDbN5uiv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C+lwWQQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgEXN6Z (ORCPT
+        id S1729590AbgEXOBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 09:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgEXN6Z (ORCPT
+        Sun, 24 May 2020 10:01:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40131 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729149AbgEXOBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 09:58:25 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD84EC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:58:23 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id be9so13013349edb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y9GFlVX6iZi5TB3ykNza+0McOKgu7mipE2JC0Ij8tgI=;
-        b=GDbN5uiv98WI7qD4CkOILF84Ff7vggJNTOzZtuDulUsKY8F/3GUND9cJlcJ4WjorpH
-         ArISA8XM/CpU4HCwCO7Za7k3gYp/Lvcl8rnwEyDbncYWaRpAWrJjGiYgnjNrw3vA5gWo
-         qrdcUoF0bfGDdPJ+G3e9Qk0YFuJjPLOpveb8Y5pgB1anVgTO2c7TA7igN1bcfGnNEbeb
-         tQ7dwC7o1MCKLKXFXnYXS6UpJ8cGJon2O0z1JwtGhsxRm0xa3yD5m+M8bPaNssFaBIfL
-         dDgRaMD7o4NfXUSpTMOZKnOWW0Qd21O78DhPPMSdirUNwgvZ2j1oHqp0HGICLiUOZWVf
-         GZKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y9GFlVX6iZi5TB3ykNza+0McOKgu7mipE2JC0Ij8tgI=;
-        b=j9FBd41lZDnHV1pcR23XDepSzQATC1nHsdlDE5qjqGLAQ+wli0O/zZeHNw+sDx5cHo
-         R08x4tdBFFkVdU5xsDoJzV5mR5GlEdErEnulX2neQztO842LYaWoDGhZOIk3dJvsgvW1
-         qs6mlXuts18UgIocWGh8GydF+hXA0+SWNi3W30LQEcj/EqN8MSXi5dEMCPIvIBaf43nd
-         dTIDHVXtydlUx5gQxeyLd0U3Wf882ZCe8ehHAmvhwT0yRFPmPNrbZB5NIg6MpgeFARum
-         cs4eb5rP4Z2FM9NnBa45bmaEWe2RNSSvd4JLcVhLM+Id9iBMLVdutIaGdhOOP7szXk0k
-         z89A==
-X-Gm-Message-State: AOAM533raK210qKPVrDoEW/MNrLxBgCkuHtueiMXY4sY0V36Lv7bdz6Z
-        /LUF1nJu75Nnta8HVeowg2iKCpex
-X-Google-Smtp-Source: ABdhPJy9dth36uK4+dZC8N+VYdLVpodxucDjb8UNAu7TaDNEKm/3OOUzkTpPHCqczJgr/N7obYsfYw==
-X-Received: by 2002:aa7:d590:: with SMTP id r16mr10720505edq.304.1590328702474;
-        Sun, 24 May 2020 06:58:22 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:ed3c:ef0e:6f3d:f78f])
-        by smtp.gmail.com with ESMTPSA id s19sm13371877eja.91.2020.05.24.06.58.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 06:58:21 -0700 (PDT)
-Date:   Sun, 24 May 2020 15:58:20 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     GAURAV PATHAK <gauravpathak129@gmail.com>
-Cc:     abbotti@mev.co.uk, gregkh@linuxfoundation.org,
-        hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH] Removing ununsed variable int lo, hi, int data and int i
- from comedi/drivers/dt2814.c.
-Message-ID: <20200524135820.snuv3bffhctwndme@ltop.local>
-References: <20200524113613.GA19734@xebrium.com>
- <20200524121044.fzpm6hkqrrpa2yhc@ltop.local>
- <20200524124919.GA6889@xebrium.com>
+        Sun, 24 May 2020 10:01:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590328858;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KKbHCmwkQnDS9Cy+qwvCvj19Zkm1/77I8cc9ukphsYE=;
+        b=C+lwWQQRZP+wxLV28CjNB8YT0OBqInXXBN++1cb2L1tSFxULlFDGfKQ0Xn/flwpjgKJcH4
+        j5L+aElF6pHXoGMKh81IEfdwf/q37tBChNgxuapvduAcKpmyQdhUN6Jn3k3ypapJVswQ0R
+        KuLRLZOqouU5FguykNP7YRF/5ci3Xjw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-70-srTMtUleOVaXFZeDj4GVRw-1; Sun, 24 May 2020 10:00:53 -0400
+X-MC-Unique: srTMtUleOVaXFZeDj4GVRw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC3E4107ACCD;
+        Sun, 24 May 2020 14:00:50 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-112-48.phx2.redhat.com [10.3.112.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 578D25D788;
+        Sun, 24 May 2020 14:00:48 +0000 (UTC)
+Date:   Sun, 24 May 2020 10:00:46 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
+Message-ID: <20200524140046.GA5598@lorien.usersys.redhat.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520222642.70679-1-joel@joelfernandes.org>
+ <20200521085122.GF325280@hirez.programming.kicks-ass.net>
+ <20200521134705.GA140701@google.com>
+ <20200522125905.GM325280@hirez.programming.kicks-ass.net>
+ <20200522213524.GD213825@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200524124919.GA6889@xebrium.com>
+In-Reply-To: <20200522213524.GD213825@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 06:19:22PM +0530, GAURAV PATHAK wrote:
-> Thanks a lot for your reply.
-> I am trying to run sparse on drivers/staging directory,
-> but I am not getting any useful warnings.
-> Steps that I did:
+On Fri, May 22, 2020 at 05:35:24PM -0400 Joel Fernandes wrote:
+> On Fri, May 22, 2020 at 02:59:05PM +0200, Peter Zijlstra wrote:
+> [..]
+> > > > It doens't allow tasks for form their own groups (by for example setting
+> > > > the key to that of another task).
+> > > 
+> > > So for this, I was thinking of making the prctl pass in an integer. And 0
+> > > would mean untagged. Does that sound good to you?
+> > 
+> > A TID, I think. If you pass your own TID, you tag yourself as
+> > not-sharing. If you tag yourself with another tasks's TID, you can do
+> > ptrace tests to see if you're allowed to observe their junk.
 > 
-> - Referred https://www.kernel.org/doc/man-pages/linux-next.html to get
-> linux-next latest tag next-20200522.
-> - After that executed following commands:
-> 	- make mrproper; make clean; make distclean
-> 	- make defconfig
-> 	- make menuconfig (Enabled all Staging Drivers with M)
-> 	- make modules_prepare
-> 	- make C=1 M=drivers/staging (Also tried individual directories
-> 	  inside staging directory e.g. make C=1 M=drivers/staging/comedi/drivers)
+> But that would require a bunch of tasks agreeing on which TID to tag with.
+> For example, if 2 tasks tag with each other's TID, then they would have
+> different tags and not share.
 > 
-> I am not getting any warning, I have attached the output in text format.
+> What's wrong with passing in an integer instead? In any case, we would do the
+> CAP_SYS_ADMIN check to limit who can do it.
 > 
-> Any pointers for finding warning using sparse in drivers/staging
-> directory will be helpful. I really appretiate your guidance in this
-> regard.
+> Also, one thing CGroup interface allows is an external process to set the
+> cookie, so I am wondering if we should use sched_setattr(2) instead of, or in
+> addition to, the prctl(2). That way, we can drop the CGroup interface
+> completely. How do you feel about that?
+>
 
-Well it seems that most staging drivers have no sparse warnings at all.
-I only see somes in the following staging drivers:
-	drivers/staging/isdn/
-	drivers/staging/kpc2000/
-	drivers/staging/uwb/
-	drivers/staging/vc04_services/
-	drivers/staging/wfx/
-	drivers/staging/wusbcore/
+I think it should be an arbitrary 64bit value, in both interfaces to avoid
+any potential reuse security issues. 
 
-Your commands seems to be good but I would advice you to use 'C=2'
-instead of 'C=1' in order for sparse to effectively run on each
-input file even when the corresponding .o file already exists.
+I think the cgroup interface could be extended not to be a boolean but take
+the value. With 0 being untagged as now.
 
-The simplest to use is:
-	- make allmodconfig
-	- make -j8 drivers/staging/
-This will just compile all the files without running sparse.
-So all warnings will be from the compiler.
-The you can run:
-	- make C=2 drivers/staging/
-which will only run sparse (and will thus be much faster).
- 
-Best regards,
--- Luc
+And sched_setattr could be used to set it on a per task basis.
+
+
+> > > > It is also horribly ill defined what it means to 'enable', with whoem
+> > > > is it allows to share a core.
+> > > 
+> > > I couldn't parse this. Do you mean "enabling coresched does not make sense if
+> > > we don't specify whom to share the core with?"
+> > 
+> > As a corrolary yes. I mostly meant that a blanket 'enable' doesn't
+> > specify a 'who' you're sharing your bits with.
+> 
+> Yes, ok. I can reword the commit log a bit to make it more clear that we are
+> specifying who we can share a core with.
+> 
+> > > I was just trying to respect the functionality of the CGroup patch in the
+> > > coresched series, after all a gentleman named Peter Zijlstra wrote that
+> > > patch ;-) ;-).
+> > 
+> > Yeah, but I think that same guy said that that was a shit interface and
+> > only hacked up because it was easy :-)
+> 
+> Fair enough :-)
+> 
+> > > More seriously, the reason I did it this way is the prctl-tagging is a bit
+> > > incompatible with CGroup tagging:
+> > > 
+> > > 1. What happens if 2 tasks are in a tagged CGroup and one of them changes
+> > > their cookie through prctl? Do they still remain in the tagged CGroup but are
+> > > now going to not trust each other? Do they get removed from the CGroup? This
+> > > is why I made the prctl fail with -EBUSY in such cases.
+> > > 
+> > > 2. What happens if 2 tagged tasks with different cookies are added to a
+> > > tagged CGroup? Do we fail the addition of the tasks to the group, or do we
+> > > override their cookie (like I'm doing)?
+> > 
+> > For #2 I think I prefer failure.
+> > 
+> > But having the rationale spelled out in documentation (man-pages for
+> > example) is important.
+> 
+> If we drop the CGroup interface, this would avoid both #1 and #2.
+>
+
+I believe both are useful.  Personally, I think the per-task setting should
+win over the cgroup tagging. In that case #1 just falls out. And #2 pretty
+much as well. Nothing would happen to the tagged task as they were added
+to the cgroup. They'd keep their explicitly assigned tags and everything
+should "just work". There are other reasons to be in a cpu cgroup together
+than just the core scheduling tag.
+
+There are a few other edge cases, like if you are in a cgroup, but have
+been tagged explicitly with sched_setattr and then get untagged (presumably
+by setting 0) do you get the cgroup tag or just stay untagged? I think based
+on per-task winning you'd stay untagged. I supposed you could move out and
+back in the cgroup to get the tag reapplied (Or maybe the cgroup interface
+could just be reused with the same value to re-tag everyone who's untagged).
+
+
+
+Cheers,
+Phil
+
+
+> thanks,
+> 
+>  - Joel
+> 
+
+-- 
+
