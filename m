@@ -2,321 +2,350 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 12:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E32C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 12:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0463A208A7
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 12:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590321889;
-	bh=p+CVYafn6nwoKLUG0OnDkhYwnz2spdrkgSqs5Qmh9kE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jpS2LAzH9RhOCwI5UPK520OUCt5iJsGgtmdTZQ93IfO93Ay3KAOyeXWATgLcm/Vzw
-	 gTjtGEXUjI46P6ze2IHBMsionLngY7DFFY2n3XVbO7MZf93IYYcDBl2W2KgyMLbAZu
-	 t0P73oeqxQmOPISH0AyaK65VEAZudHeN8GGRLsyM=
+	by mail.kernel.org (Postfix) with ESMTP id AA8952076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 12:09:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYyTW1KK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgEXMEs (ORCPT
+        id S1729455AbgEXMJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 08:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgEXMEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 08:04:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52D1207FB;
-        Sun, 24 May 2020 12:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590321886;
-        bh=p+CVYafn6nwoKLUG0OnDkhYwnz2spdrkgSqs5Qmh9kE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1oihyt6VjS4WOcA2/fEo+2MNN4ngWYqxVXxRtz0RQ/Nj1g+ZNpiTHXLoW1xClqvkH
-         3ITBVWtKWS5r4sfmRM0UvfoNQoLtl9DTRRIqMu45CMIVnEICV7ZCRYIfKKyyVVD/AM
-         3cZo/yuhBrQfa+gDUVDD+ia0tl2czljmXkz+zb+g=
-Date:   Sun, 24 May 2020 13:04:40 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
-        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V5 5/5] iio: adc: Clean up ADC code common to PMIC5 and
- PMIC7
-Message-ID: <20200524130440.250edb2e@archlinux>
-In-Reply-To: <1590157452-27179-6-git-send-email-jprakash@codeaurora.org>
-References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
-        <1590157452-27179-6-git-send-email-jprakash@codeaurora.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 May 2020 08:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbgEXMJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 08:09:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0EBC061A0E;
+        Sun, 24 May 2020 05:09:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t8so5167284pju.3;
+        Sun, 24 May 2020 05:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rb9RGmOmMMM2dD3TrKMy6fSbknGvk79DpYlGgni1l6k=;
+        b=vYyTW1KK14kGJFVllzbYUO+xdYeN8H0K4QHbWiHtp6tjYrlHjxrqbb+UY1V8WUo4U2
+         rHTNzXPX5IP0AXHXBtTipgufLXyTMyzFGEzXdZSfVQ5SchkTI88BUdrpUukxLgudjJ/R
+         QJTldveomegj4/4iJpCThX34FXnRK8dhmYBSitoq3Wa4+DfzFNa7yZdLA2Q0R5Qgsc/C
+         QvHlibRg0+vD1LmM8UAMU1VxH5xhzKu3EU8poLwn9XdFYZjR9EU3VURF/ovzXWyygQMG
+         uFUaYqBf8CoFKueY1ObTRUuOfYaJvTK1Y2X5sWCEGkyDLskNh/2E4gi1WAuPHrUahAHD
+         Y9zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rb9RGmOmMMM2dD3TrKMy6fSbknGvk79DpYlGgni1l6k=;
+        b=nnSNpX/BfH0iRf65zen3RlBezBzX6SiXGfkgE1LK+t3kAOQ1HcstnDv0TiJWfUmzCC
+         juT8jCZerw+FskxBDVTHe8ajH4JbLdc0HHCVUeX0HKQMtB4HnoSvWxEPRS5U4xmj5t+G
+         XiqX6SHySQQhTDFSCJhGu9GxOf5ocbsdXDaNDAebT29HRwZGQWCaUQ3TsQontOYJBELC
+         DnFYIER1RGTw0zI8WHqAWHdY/RjXmw5nQkH2q6OrMcuaDOhZbBklJfcFgYVzUXAvJkKE
+         6sUspFTZJtW9LoxmsfaQdxmGli7fP49QmxMqBdVHB77WhMLUNxnAj5iHpifV1381pO2B
+         irGw==
+X-Gm-Message-State: AOAM5309wTQFEjQU7K3HIIxRhf0QmBi16HiP5tPvEC0xlxtwodKJaol6
+        hCVUrhvPfbvUMpEpYZiPHRM=
+X-Google-Smtp-Source: ABdhPJzpj2UsvqpPU59Mv1QyThIf6RaZkRon2bGp4Y/Rm5lLcW6STN9oF3uQVffBebFMvN3+HiszXw==
+X-Received: by 2002:a17:90a:17e6:: with SMTP id q93mr14011274pja.133.1590322159873;
+        Sun, 24 May 2020 05:09:19 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id a136sm10931645pfa.99.2020.05.24.05.09.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 May 2020 05:09:19 -0700 (PDT)
+From:   Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Andrii Nakryiko <andriin@fb.com>, paulmck@kernel.org
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        dlustig@nvidia.com, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        "andrii.nakryiko@gmail.com" <andrii.nakryiko@gmail.com>,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
+ <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu>
+ <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+Message-ID: <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
+Date:   Sun, 24 May 2020 21:09:14 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 19:54:12 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
+On Fri, 22 May 2020 12:38:21 -0700, Andrii Nakryiko wrote:
+> On 5/22/20 10:43 AM, Paul E. McKenney wrote:
+>> On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+>>> On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+>>>> On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+>>>>> Hello!
+>>>>>
+>>>>> Just wanted to call your attention to some pretty cool and pretty s=
+erious
+>>>>> litmus tests that Andrii did as part of his BPF ring-buffer work:
+>>>>>
+>>>>> https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/=
 
-> This commit includes the following changes:
-> 
-> Add a common function used for read_raw callback for both PMIC5
-> and PMIC7 ADCs.
-> 
-> Add exit function for ADC.
+>>>>>
+>>>>> Thoughts?
+>>>>
+>>>> I find:
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0smp_wmb()
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0smp_store_release()
+>>>>
+>>>> a _very_ weird construct. What is that supposed to even do?
+>>>
+>>> Indeed, it looks like one or the other of those is redundant (dependi=
+ng
+>>> on the context).
+>>
+>> Probably.=C2=A0 Peter instead asked what it was supposed to even do.=C2=
+=A0 ;-)
+>=20
+> I agree, I think smp_wmb() is redundant here. Can't remember why I thou=
+ght that it's necessary, this algorithm went through a bunch of iteration=
+s, starting as completely lockless, also using READ_ONCE/WRITE_ONCE at so=
+me point, and settling on smp_read_acquire/smp_store_release, eventually.=
+ Maybe there was some reason, but might be that I was just over-cautious.=
+ See reply on patch thread as well ([0]).
+>=20
+> =C2=A0 [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5Y=
+J8zO+SoAJCDtp1jVhcQ@mail.gmail.com/
+>=20
+>=20
+>>
+>>> Also, what use is a spinlock that is accessed in only one thread?
+>>
+>> Multiple writers synchronize via the spinlock in this case.=C2=A0 I am=
 
-Hi Jishnu,
+>> guessing that his larger 16-hour test contended this spinlock.
+>=20
+> Yes, spinlock is for coordinating multiple producers. 2p1c cases (bound=
+ed and unbounded) rely on this already. 1p1c cases are sort of subsets (b=
+ut very fast to verify) checking only consumer/producer interaction.
+>=20
+>>
+>>> Finally, I doubt that these tests belong under tools/memory-model.
+>>> Shouldn't they go under the new Documentation/ directory for litmus
+>>> tests?=C2=A0 And shouldn't the patch update a README file?
+>>
+>> Agreed, and I responded to that effect to his original patch:
+>>
+>> https://lore.kernel.org/bpf/20200522003433.GG2869@paulmck-ThinkPad-P72=
+/
+>=20
+> Yep, makes sense, I'll will move.
 
-I don't understand why one is needed, and if it is you can't do
-what you have here without introducing some nasty races.
-So if you need it clearly explain why in comments in the code
-and also consider how it may race with new requests coming in etc
-as the userspace interfaces are still visible.
+Hi Andrii,
 
-Move the eoc_irq addition to the structure here as well as makes
-no sense in earlier patch.
+Andrea reported off-the-list that your litmus tests are incompatible
+with the to-be-released version 7.56 of herd7 and currently available
+versions of klitmus7.
 
-Thanks,
+This is due to a couple of C-language level issues.
 
-Jonathan
+herd7 used to be fairly generous in parsing C litmus tests.
+On the other hand, klitmus7 converts a litmus test into a
+kernel module.  The converted code is built by an actual C compiler
+with kernel headers included, and can fail to build due to syntax errors
+or serious warnings.
+herd7 HEAD is getting slightly stricter on uninitialized variable and
+it emits an error to mpsc-rb+1p1c+bounded.litmus:
 
+Warning: File "mpsc-rb+1p1c+bounded.litmus": read on location 0 does not =
+match any write
 
-> 
-> Add info_property under adc_data to more efficiently distinguish
-> PMIC5 and PMIC7 ADCs.
-> 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> ---
->  drivers/iio/adc/qcom-spmi-adc5.c   | 81 +++++++++++++++++++++-----------------
->  drivers/iio/adc/qcom-vadc-common.h |  1 +
->  2 files changed, 46 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-> index 11eb97c..0208da3 100644
-> --- a/drivers/iio/adc/qcom-spmi-adc5.c
-> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
-> @@ -167,8 +167,6 @@ static const struct vadc_prescale_ratio adc5_prescale_ratios[] = {
->  	{.num =  1, .den = 16}
->  };
->  
-> -static const struct adc5_data adc7_data_pmic;
-> -
->  static int adc5_read(struct adc5_chip *adc, u16 offset, u8 *data, int len)
->  {
->  	return regmap_bulk_read(adc->regmap, adc->base + offset, data, len);
-> @@ -452,6 +450,13 @@ static int adc7_do_conversion(struct adc5_chip *adc,
->  	return ret;
->  }
->  
-> +struct adc_do_conversion {
-> +	int (*adc_do_conversion)(struct adc5_chip *adc,
-> +			struct adc5_channel_prop *prop,
-> +			struct iio_chan_spec const *chan,
-> +			u16 *data_volt, u16 *data_cur);
-> +};
-> +
->  static irqreturn_t adc5_isr(int irq, void *dev_id)
->  {
->  	struct adc5_chip *adc = dev_id;
-> @@ -490,9 +495,9 @@ static int adc7_of_xlate(struct iio_dev *indio_dev,
->  	return -EINVAL;
->  }
->  
-> -static int adc5_read_raw(struct iio_dev *indio_dev,
-> +static int adc_read_raw_common(struct iio_dev *indio_dev,
->  			 struct iio_chan_spec const *chan, int *val, int *val2,
-> -			 long mask)
-> +			 long mask, struct adc_do_conversion do_conv)
->  {
->  	struct adc5_chip *adc = iio_priv(indio_dev);
->  	struct adc5_channel_prop *prop;
-> @@ -503,8 +508,8 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_PROCESSED:
-> -		ret = adc5_do_conversion(adc, prop, chan,
-> -				&adc_code_volt, &adc_code_cur);
-> +		ret = do_conv.adc_do_conversion(adc, prop, chan,
-> +					&adc_code_volt, &adc_code_cur);
->  		if (ret)
->  			return ret;
->  
-> @@ -521,36 +526,26 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> -static int adc7_read_raw(struct iio_dev *indio_dev,
-> +static int adc5_read_raw(struct iio_dev *indio_dev,
->  			 struct iio_chan_spec const *chan, int *val, int *val2,
->  			 long mask)
->  {
-> -	struct adc5_chip *adc = iio_priv(indio_dev);
-> -	struct adc5_channel_prop *prop;
-> -	u16 adc_code_volt, adc_code_cur;
-> -	int ret;
-> -
-> -	prop = &adc->chan_props[chan->address];
-> +	struct adc_do_conversion do_conv;
->  
-> -	switch (mask) {
-> -	case IIO_CHAN_INFO_PROCESSED:
-> -		ret = adc7_do_conversion(adc, prop, chan,
-> -					&adc_code_volt, &adc_code_cur);
-> -		if (ret)
-> -			return ret;
-> -
-> -		ret = qcom_adc5_hw_scale(prop->scale_fn_type,
-> -			&adc5_prescale_ratios[prop->prescale],
-> -			adc->data,
-> -			adc_code_volt, val);
-> +	do_conv.adc_do_conversion = adc5_do_conversion;
-> +	return adc_read_raw_common(indio_dev, chan, val, val2,
-> +				mask, do_conv);
-> +}
->  
-> -		if (ret)
-> -			return ret;
-> +static int adc7_read_raw(struct iio_dev *indio_dev,
-> +			 struct iio_chan_spec const *chan, int *val, int *val2,
-> +			 long mask)
-> +{
-> +	struct adc_do_conversion do_conv;
->  
-> -		return IIO_VAL_INT;
-> -	default:
-> -		return -EINVAL;
-> -	}
-> +	do_conv.adc_do_conversion = adc7_do_conversion;
-> +	return adc_read_raw_common(indio_dev, chan, val, val2,
-> +				mask, do_conv);
->  }
->  
->  static const struct iio_info adc5_info = {
-> @@ -706,7 +701,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  
->  	/* virtual channel number = sid << 8 | channel number */
->  
-> -	if (adc->data == &adc7_data_pmic) {
-> +	if (adc->data->info == &adc7_info) {
->  		sid = chan >> ADC_CHANNEL_OFFSET;
->  		chan = chan & ADC_CHANNEL_MASK;
->  	}
-> @@ -772,7 +767,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  		/* Digital controller >= 5.3 have hw_settle_2 option */
->  		if ((dig_version[0] >= ADC5_HW_SETTLE_DIFF_MINOR &&
->  			dig_version[1] >= ADC5_HW_SETTLE_DIFF_MAJOR) ||
-> -			adc->data == &adc7_data_pmic)
-> +			adc->data->info == &adc7_info)
->  			ret = adc5_hw_settle_time_from_dt(value,
->  							data->hw_settle_2);
->  		else
-> @@ -822,6 +817,7 @@ static const struct adc5_data adc5_data_pmic = {
->  	.full_scale_code_volt = 0x70e4,
->  	.full_scale_code_cur = 0x2710,
->  	.adc_chans = adc5_chans_pmic,
-> +	.info = &adc5_info,
->  	.decimation = (unsigned int [ADC5_DECIMATION_SAMPLES_MAX])
->  				{250, 420, 840},
->  	.hw_settle_1 = (unsigned int [VADC_HW_SETTLE_SAMPLES_MAX])
-> @@ -835,6 +831,7 @@ static const struct adc5_data adc5_data_pmic = {
->  static const struct adc5_data adc7_data_pmic = {
->  	.full_scale_code_volt = 0x70e4,
->  	.adc_chans = adc7_chans_pmic,
-> +	.info = &adc7_info,
->  	.decimation = (unsigned int [ADC5_DECIMATION_SAMPLES_MAX])
->  				{85, 340, 1360},
->  	.hw_settle_2 = (unsigned int [VADC_HW_SETTLE_SAMPLES_MAX])
-> @@ -847,6 +844,7 @@ static const struct adc5_data adc5_data_pmic_rev2 = {
->  	.full_scale_code_volt = 0x4000,
->  	.full_scale_code_cur = 0x1800,
->  	.adc_chans = adc5_chans_rev2,
-> +	.info = &adc5_info,
->  	.decimation = (unsigned int [ADC5_DECIMATION_SAMPLES_MAX])
->  				{256, 512, 1024},
->  	.hw_settle_1 = (unsigned int [VADC_HW_SETTLE_SAMPLES_MAX])
-> @@ -961,10 +959,7 @@ static int adc5_probe(struct platform_device *pdev)
->  	adc->dev = dev;
->  	adc->base = reg;
->  
-> -	if (of_device_is_compatible(node, "qcom,spmi-adc7"))
-> -		indio_dev->info = &adc7_info;
-> -	else
-> -		indio_dev->info = &adc5_info;
-> +	platform_set_drvdata(pdev, adc);
->  
->  	init_completion(&adc->complete);
->  	mutex_init(&adc->lock);
-> @@ -975,6 +970,8 @@ static int adc5_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	indio_dev->info = adc->data->info;
-> +
->  	irq_eoc = platform_get_irq(pdev, 0);
->  	if (irq_eoc < 0) {
->  		if (irq_eoc == -EPROBE_DEFER || irq_eoc == -EINVAL)
-> @@ -987,6 +984,8 @@ static int adc5_probe(struct platform_device *pdev)
->  			return ret;
->  	}
->  
-> +	adc->irq_eoc = irq_eoc;
-> +
->  	indio_dev->dev.parent = dev;
->  	indio_dev->dev.of_node = node;
->  	indio_dev->name = pdev->name;
-> @@ -997,12 +996,22 @@ static int adc5_probe(struct platform_device *pdev)
->  	return devm_iio_device_register(dev, indio_dev);
->  }
->  
-> +static int adc5_exit(struct platform_device *pdev)
-> +{
-> +	struct adc5_chip *adc = platform_get_drvdata(pdev);
-> +
-> +	if (adc->irq_eoc >= 0)
-> +		disable_irq(adc->irq_eoc);
+Converted code by klitmus7 fails to build with the following warning mess=
+ages:
 
-So here you are disabling an irq?  Why.  We should be removing it
-cleanly in the managed flow shortly anyway.  If you did do this
-here for some reason I'm not thinking of then you would have
-a race against the userspace being removed on the unwind
-of the iio device register.
+$ make
+make -C /lib/modules/5.3.0-53-generic/build/ M=3D/home/akira/bpf-rb/klitm=
+us modules
+make[1]: Entering directory '/usr/src/linux-headers-5.3.0-53-generic'
+  CC [M]  /home/akira/bpf-rb/klitmus/litmus000.o
+/home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98code1=E2=80=99=
+:
+/home/akira/bpf-rb/klitmus/litmus000.c:426:14: error: passing argument 1 =
+of =E2=80=98atomic_inc=E2=80=99
+  from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+   atomic_inc(dropped);
+              ^~~~~~~
+In file included from ./arch/x86/include/asm/atomic.h:265:0,
+                 from ./arch/x86/include/asm/msr.h:67,
+                 from ./arch/x86/include/asm/processor.h:21,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:38,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/seqlock.h:36,
+                 from ./include/linux/time.h:6,
+                 from ./include/linux/stat.h:19,
+                 from ./include/linux/module.h:10,
+                 from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+=2E/include/asm-generic/atomic-instrumented.h:237:1: note: expected =E2=80=
+=98atomic_t * {aka struct <anonymous> *}=E2=80=99 but argument is of type=
+ =E2=80=98int *=E2=80=99
+ atomic_inc(atomic_t *v)
+ ^~~~~~~~~~
+In file included from ./include/linux/export.h:45:0,
+                 from ./include/linux/linkage.h:7,
+                 from ./include/linux/kernel.h:8,
+                 from ./include/linux/list.h:9,
+                 from ./include/linux/module.h:9,
+                 from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+/home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98thread0=E2=80=
+=99:
+=2E/include/linux/compiler.h:187:26: warning: =E2=80=98rLenPtr=E2=80=99 m=
+ay be used uninitialized in this function [-Wmaybe-uninitialized]
+  case 4: *(__u32 *)res =3D *(volatile __u32 *)p; break;  \
+                          ^
+/home/akira/bpf-rb/klitmus/litmus000.c:365:7: note: =E2=80=98rLenPtr=E2=80=
+=99 was declared here
+  int *rLenPtr;
+       ^~~~~~~
+In file included from ./include/linux/export.h:45:0,
+                 from ./include/linux/linkage.h:7,
+                 from ./include/linux/kernel.h:8,
+                 from ./include/linux/list.h:9,
+                 from ./include/linux/module.h:9,
+                 from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+/home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98thread1=E2=80=
+=99:
+=2E/include/linux/compiler.h:225:31: warning: =E2=80=98rLenPtr=E2=80=99 m=
+ay be used uninitialized in this function [-Wmaybe-uninitialized]
+  case 4: *(volatile __u32 *)p =3D *(__u32 *)res; break;
+          ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/home/akira/bpf-rb/klitmus/litmus000.c:417:7: note: =E2=80=98rLenPtr=E2=80=
+=99 was declared here
+  int *rLenPtr;
+       ^~~~~~~
+cc1: some warnings being treated as errors
+scripts/Makefile.build:288: recipe for target '/home/akira/bpf-rb/klitmus=
+/litmus000.o' failed
+make[2]: *** [/home/akira/bpf-rb/klitmus/litmus000.o] Error 1
+Makefile:1656: recipe for target '_module_/home/akira/bpf-rb/klitmus' fai=
+led
+make[1]: *** [_module_/home/akira/bpf-rb/klitmus] Error 2
+make[1]: Leaving directory '/usr/src/linux-headers-5.3.0-53-generic'
+Makefile:8: recipe for target 'all' failed
+make: *** [all] Error 2
 
-> +	return 0;
-> +}
-> +
->  static struct platform_driver adc5_driver = {
->  	.driver = {
->  		.name = "qcom-spmi-adc5.c",
->  		.of_match_table = adc5_match_table,
->  	},
->  	.probe = adc5_probe,
-> +	.remove = adc5_exit,
->  };
->  module_platform_driver(adc5_driver);
->  
-> diff --git a/drivers/iio/adc/qcom-vadc-common.h b/drivers/iio/adc/qcom-vadc-common.h
-> index f10250b..17b2fc4 100644
-> --- a/drivers/iio/adc/qcom-vadc-common.h
-> +++ b/drivers/iio/adc/qcom-vadc-common.h
-> @@ -150,6 +150,7 @@ struct adc5_data {
->  	const u32	full_scale_code_volt;
->  	const u32	full_scale_code_cur;
->  	const struct adc5_channels *adc_chans;
-> +	const struct iio_info *info;
->  	unsigned int	*decimation;
->  	unsigned int	*hw_settle_1;
->  	unsigned int	*hw_settle_2;
+Appended below is a patch I applied to mpsc-rb+1p1c+bounded.litmus to mak=
+e
+herd7 HEAD and klitmus7 happy. (Give or take the redundant memory barrier=
+=2E)
+
+The other variants need similar changes.
+
+What I did here are:
+
+    - Remove unnecessary initialization (shared variables are 0 by defaul=
+t)
+    - Declare "dropped" as atomic_t
+    - Promote rLenPtr to a shared variable LenPtr
+
+Please note that if you are on Linux 5.6 (or later), you need an up-to-da=
+te
+klitmus7 due to a change in kernel API.
+
+Any question is welcome!
+
+        Thanks, Akira
+
+-----------------------
+diff --git a/mpsc-rb+1p1c+bounded.litmus b/mpsc-rb+1p1c+bounded.litmus
+index cafd17a..5af43c1 100644
+--- a/mpsc-rb+1p1c+bounded.litmus
++++ b/mpsc-rb+1p1c+bounded.litmus
+@@ -17,15 +17,11 @@ C mpsc-rb+1p1c+bounded
+=20
+ {
+ 	max_len =3D 1;
+-	len1 =3D 0;
+-	px =3D 0;
+-	cx =3D 0;
+-	dropped =3D 0;
++	atomic_t dropped;
+ }
+=20
+-P0(int *len1, int *cx, int *px)
++P0(int *len1, int *cx, int *px, int *LenPtr)
+ {
+-	int *rLenPtr;
+ 	int rLen;
+ 	int rPx;
+ 	int rCx;
+@@ -37,11 +33,11 @@ P0(int *len1, int *cx, int *px)
+ 	rPx =3D smp_load_acquire(px);
+ 	if (rCx < rPx) {
+ 		if (rCx =3D=3D 0)
+-			rLenPtr =3D len1;
++			LenPtr =3D len1;
+ 		else
+ 			rFail =3D 1;
+=20
+-		rLen =3D smp_load_acquire(rLenPtr);
++		rLen =3D smp_load_acquire(LenPtr);
+ 		if (rLen =3D=3D 0) {
+ 			rFail =3D 1;
+ 		} else if (rLen =3D=3D 1) {
+@@ -51,12 +47,11 @@ P0(int *len1, int *cx, int *px)
+ 	}
+ }
+=20
+-P1(int *len1, spinlock_t *rb_lock, int *px, int *cx, int *dropped, int *=
+max_len)
++P1(int *len1, spinlock_t *rb_lock, int *px, int *cx, atomic_t *dropped, =
+int *max_len, int *LenPtr)
+ {
+ 	int rPx;
+ 	int rCx;
+ 	int rFail;
+-	int *rLenPtr;
+=20
+ 	rFail =3D 0;
+ 	rCx =3D smp_load_acquire(cx);
+@@ -69,17 +64,17 @@ P1(int *len1, spinlock_t *rb_lock, int *px, int *cx, =
+int *dropped, int *max_len)
+ 		spin_unlock(rb_lock);
+ 	} else {
+ 		if (rPx =3D=3D 0)
+-			rLenPtr =3D len1;
++			LenPtr =3D len1;
+ 		else
+ 			rFail =3D 1;
+=20
+-		*rLenPtr =3D -1;
++		*LenPtr =3D -1;
+ 		smp_wmb();
+ 		smp_store_release(px, rPx + 1);
+=20
+ 		spin_unlock(rb_lock);
+=20
+-		smp_store_release(rLenPtr, 1);
++		smp_store_release(LenPtr, 1);
+ 	}
+ }
+=20
+----------------
 
