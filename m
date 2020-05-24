@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A84EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F19EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A30204EF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B43207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388427AbgEXVjh (ORCPT
+        id S2388487AbgEXVj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:39:37 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:17581 "EHLO
+        Sun, 24 May 2020 17:39:59 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:17462 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387879AbgEXVjh (ORCPT
+        by vger.kernel.org with ESMTP id S2387879AbgEXVj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:39:37 -0400
+        Sun, 24 May 2020 17:39:59 -0400
 X-IronPort-AV: E=Sophos;i="5.73,431,1583161200"; 
-   d="scan'208";a="47678148"
+   d="scan'208";a="47678197"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 25 May 2020 06:39:19 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 25 May 2020 06:39:57 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 815BE40E3D58;
-        Mon, 25 May 2020 06:39:16 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3CB9E40E3D5C;
+        Mon, 25 May 2020 06:39:54 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Vinod Koul <vkoul@kernel.org>,
@@ -40,9 +40,9 @@ Cc:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/8] dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
-Date:   Sun, 24 May 2020 22:37:51 +0100
-Message-Id: <1590356277-19993-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/8] dt-bindings: usb: renesas,usbhs: Add support for r8a7742
+Date:   Sun, 24 May 2020 22:37:52 +0100
+Message-Id: <1590356277-19993-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -51,29 +51,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add internal PCI bridge support for r8a7742 SoC. The Renesas RZ/G1H
-(R8A7742) internal PCI bridge is identical to the R-Car Gen2 family.
+Document support for RZ/G1H (R8A7742) SoC.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/renesas,usbhs.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-index b94078f..aeba38f 100644
---- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-+++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-@@ -6,7 +6,8 @@ AHB. There is one bridge instance per USB port connected to the internal
- OHCI and EHCI controllers.
+diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+index 469affa..32ade41 100644
+--- a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
++++ b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+@@ -22,6 +22,7 @@ properties:
  
- Required properties:
--- compatible: "renesas,pci-r8a7743" for the R8A7743 SoC;
-+- compatible: "renesas,pci-r8a7742" for the R8A7742 SoC;
-+	      "renesas,pci-r8a7743" for the R8A7743 SoC;
- 	      "renesas,pci-r8a7744" for the R8A7744 SoC;
- 	      "renesas,pci-r8a7745" for the R8A7745 SoC;
- 	      "renesas,pci-r8a7790" for the R8A7790 SoC;
+       - items:
+           - enum:
++              - renesas,usbhs-r8a7742  # RZ/G1H
+               - renesas,usbhs-r8a7743  # RZ/G1M
+               - renesas,usbhs-r8a7744  # RZ/G1N
+               - renesas,usbhs-r8a7745  # RZ/G1E
 -- 
 2.7.4
 
