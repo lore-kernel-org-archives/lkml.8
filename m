@@ -2,136 +2,127 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9492C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F92C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9D7207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:54:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590328482;
-	bh=lNY5bwD2IWRGQ8GGVNTkDd032tPyr6wbfzXC+8He9gw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VkRRyAcSCKkV+5jFfQgQMbc1JnJKT+44EzubhHbG+aSgTN8H+0UeON0USUxrH/p3D
-	 fZaooskLk2hX2wZD2CeGV72tXXDVetNguzi34EUrXp3suJ5bOC+2tmM1/QNr6H8nRJ
-	 mCRXoxiIAN28ujmulvRN+fZzaOT8aE5IoSHcJ0U8=
+	by mail.kernel.org (Postfix) with ESMTP id A1D2D20776
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:58:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDbN5uiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgEXNyl (ORCPT
+        id S1729455AbgEXN6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 09:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgEXNyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 09:54:41 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9CBD20776;
-        Sun, 24 May 2020 13:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590328480;
-        bh=lNY5bwD2IWRGQ8GGVNTkDd032tPyr6wbfzXC+8He9gw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UsLMt05sTxkz3a8fEenO5DfnsQhZGB2VyQzFbvaOSCozSuoVa+oWAJeOOWyMR/C1i
-         ffZA1kaCJhQHgSs+mLnh4McG7eeKc+0t65sp+noywP+ACpAo+vaFQZJbox74kBbfds
-         be6DSlTNCbw1nSjWlQldmzLi2UKuEoSmD/jeRYf4=
-Date:   Sun, 24 May 2020 14:54:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linus.walleij@linaro.org>,
-        <lorenzo.bianconi83@gmail.com>, <songqiang1304521@gmail.com>
-Subject: Re: [PATCH 2/3] iio: adc: at91-sama5d2_adc: remove
- predisable/postenable hooks
-Message-ID: <20200524145436.41aaeea2@archlinux>
-In-Reply-To: <20200522104632.517470-2-alexandru.ardelean@analog.com>
-References: <20200522104632.517470-1-alexandru.ardelean@analog.com>
-        <20200522104632.517470-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 May 2020 09:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgEXN6Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 09:58:25 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD84EC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:58:23 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id be9so13013349edb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Y9GFlVX6iZi5TB3ykNza+0McOKgu7mipE2JC0Ij8tgI=;
+        b=GDbN5uiv98WI7qD4CkOILF84Ff7vggJNTOzZtuDulUsKY8F/3GUND9cJlcJ4WjorpH
+         ArISA8XM/CpU4HCwCO7Za7k3gYp/Lvcl8rnwEyDbncYWaRpAWrJjGiYgnjNrw3vA5gWo
+         qrdcUoF0bfGDdPJ+G3e9Qk0YFuJjPLOpveb8Y5pgB1anVgTO2c7TA7igN1bcfGnNEbeb
+         tQ7dwC7o1MCKLKXFXnYXS6UpJ8cGJon2O0z1JwtGhsxRm0xa3yD5m+M8bPaNssFaBIfL
+         dDgRaMD7o4NfXUSpTMOZKnOWW0Qd21O78DhPPMSdirUNwgvZ2j1oHqp0HGICLiUOZWVf
+         GZKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y9GFlVX6iZi5TB3ykNza+0McOKgu7mipE2JC0Ij8tgI=;
+        b=j9FBd41lZDnHV1pcR23XDepSzQATC1nHsdlDE5qjqGLAQ+wli0O/zZeHNw+sDx5cHo
+         R08x4tdBFFkVdU5xsDoJzV5mR5GlEdErEnulX2neQztO842LYaWoDGhZOIk3dJvsgvW1
+         qs6mlXuts18UgIocWGh8GydF+hXA0+SWNi3W30LQEcj/EqN8MSXi5dEMCPIvIBaf43nd
+         dTIDHVXtydlUx5gQxeyLd0U3Wf882ZCe8ehHAmvhwT0yRFPmPNrbZB5NIg6MpgeFARum
+         cs4eb5rP4Z2FM9NnBa45bmaEWe2RNSSvd4JLcVhLM+Id9iBMLVdutIaGdhOOP7szXk0k
+         z89A==
+X-Gm-Message-State: AOAM533raK210qKPVrDoEW/MNrLxBgCkuHtueiMXY4sY0V36Lv7bdz6Z
+        /LUF1nJu75Nnta8HVeowg2iKCpex
+X-Google-Smtp-Source: ABdhPJy9dth36uK4+dZC8N+VYdLVpodxucDjb8UNAu7TaDNEKm/3OOUzkTpPHCqczJgr/N7obYsfYw==
+X-Received: by 2002:aa7:d590:: with SMTP id r16mr10720505edq.304.1590328702474;
+        Sun, 24 May 2020 06:58:22 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:b7f9:7600:ed3c:ef0e:6f3d:f78f])
+        by smtp.gmail.com with ESMTPSA id s19sm13371877eja.91.2020.05.24.06.58.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 06:58:21 -0700 (PDT)
+Date:   Sun, 24 May 2020 15:58:20 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     GAURAV PATHAK <gauravpathak129@gmail.com>
+Cc:     abbotti@mev.co.uk, gregkh@linuxfoundation.org,
+        hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH] Removing ununsed variable int lo, hi, int data and int i
+ from comedi/drivers/dt2814.c.
+Message-ID: <20200524135820.snuv3bffhctwndme@ltop.local>
+References: <20200524113613.GA19734@xebrium.com>
+ <20200524121044.fzpm6hkqrrpa2yhc@ltop.local>
+ <20200524124919.GA6889@xebrium.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524124919.GA6889@xebrium.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 13:46:31 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Sun, May 24, 2020 at 06:19:22PM +0530, GAURAV PATHAK wrote:
+> Thanks a lot for your reply.
+> I am trying to run sparse on drivers/staging directory,
+> but I am not getting any useful warnings.
+> Steps that I did:
+> 
+> - Referred https://www.kernel.org/doc/man-pages/linux-next.html to get
+> linux-next latest tag next-20200522.
+> - After that executed following commands:
+> 	- make mrproper; make clean; make distclean
+> 	- make defconfig
+> 	- make menuconfig (Enabled all Staging Drivers with M)
+> 	- make modules_prepare
+> 	- make C=1 M=drivers/staging (Also tried individual directories
+> 	  inside staging directory e.g. make C=1 M=drivers/staging/comedi/drivers)
+> 
+> I am not getting any warning, I have attached the output in text format.
+> 
+> Any pointers for finding warning using sparse in drivers/staging
+> directory will be helpful. I really appretiate your guidance in this
+> regard.
 
-> This should be squashed into the first patch, but it's the more peculiar =
-of
-> the changes.
-> I am not sure whether this is correct. The touchscreen channels shouldn't
-> be enabled by the IIO framework. So, we may need a different way to handle
-> those if needed.
->=20
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Well it seems that most staging drivers have no sparse warnings at all.
+I only see somes in the following staging drivers:
+	drivers/staging/isdn/
+	drivers/staging/kpc2000/
+	drivers/staging/uwb/
+	drivers/staging/vc04_services/
+	drivers/staging/wfx/
+	drivers/staging/wusbcore/
 
-Hmm. Unfortunately I can't remember exactly what is going on here.
+Your commands seems to be good but I would advice you to use 'C=2'
+instead of 'C=1' in order for sparse to effectively run on each
+input file even when the corresponding .o file already exists.
 
-=46rom a quick look my suspicion is we can handle this using the same
-'is it a triggered buffer' test as you now have in the core code.
-
-The touchscreen path operates as a non triggered buffer (I think...)
-
-I'm definitely looking for an ack and preferably a tested-by for this
-one.  You are right - it's non obvious!
-
-Jonathan
-
-> ---
->  drivers/iio/adc/at91-sama5d2_adc.c | 18 ------------------
->  1 file changed, 18 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sa=
-ma5d2_adc.c
-> index 9abbbdcc7420..f71071096392 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -937,14 +937,6 @@ static int at91_adc_buffer_preenable(struct iio_dev =
-*indio_dev)
->  	return 0;
->  }
-> =20
-> -static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-> -{
-> -	if (at91_adc_current_chan_is_touch(indio_dev))
-> -		return 0;
-> -
-> -	return iio_triggered_buffer_postenable(indio_dev);
-> -}
-> -
->  static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
->  {
->  	struct at91_adc_state *st =3D iio_priv(indio_dev);
-> @@ -995,19 +987,9 @@ static int at91_adc_buffer_postdisable(struct iio_de=
-v *indio_dev)
->  	return 0;
->  }
-> =20
-> -static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-> -{
-> -	if (at91_adc_current_chan_is_touch(indio_dev))
-> -		return 0;
-> -
-> -	return iio_triggered_buffer_predisable(indio_dev);
-> -}
-> -
->  static const struct iio_buffer_setup_ops at91_buffer_setup_ops =3D {
->  	.preenable =3D &at91_adc_buffer_preenable,
->  	.postdisable =3D &at91_adc_buffer_postdisable,
-> -	.postenable =3D &at91_adc_buffer_postenable,
-> -	.predisable =3D &at91_adc_buffer_predisable,
->  };
-> =20
->  static struct iio_trigger *at91_adc_allocate_trigger(struct iio_dev *ind=
-io,
-
+The simplest to use is:
+	- make allmodconfig
+	- make -j8 drivers/staging/
+This will just compile all the files without running sparse.
+So all warnings will be from the compiler.
+The you can run:
+	- make C=2 drivers/staging/
+which will only run sparse (and will thus be much faster).
+ 
+Best regards,
+-- Luc
