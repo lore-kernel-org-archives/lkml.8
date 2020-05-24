@@ -2,73 +2,76 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20083C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1B02085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6262077D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="yql8zbdx"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="b6xr7DEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388276AbgEXCOC (ORCPT
+        id S2388313AbgEXCOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 22:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
+        Sat, 23 May 2020 22:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387932AbgEXCOB (ORCPT
+        with ESMTP id S2387932AbgEXCOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 22:14:01 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3C4C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:01 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id z80so14761743qka.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:01 -0700 (PDT)
+        Sat, 23 May 2020 22:14:03 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB18AC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:02 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id s1so14671679qkf.9
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dAvMUr5VDe0uNAxODcg8+zSeRgKSv9N5mSpKXFgOC4A=;
-        b=yql8zbdxjGHPj6B6azXNxw4GasqS2Kh88s2Xd6xjxQP6dMCQi/Sq+TAJHcc8VHnQ4k
-         xl6RChxRJPPv1vV5jy3sRn0U3atL1812e8JL66PApjPX13VDqGb0EGtR/+Cv+v+FDaCL
-         pf+vqieVO/m1MRVlYn1r9G0dzbSo49csViUHBiKECZTRLmY6VjRXSsEjcp4y87PD8YkO
-         5/ftqlnodB5IJIKOWLqyPHLKfVFBhcPNXPKGlN1iiG71AK7h8SEuTnQub8iek9siMrEZ
-         vAX77e8uGh4M3s8bSiOyrz1ecFpk8GgjbOwdWhymKaqlGaJpZnhMgYhsxhk57AwbDfJG
-         rfCg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SQG1405vlMxJB5LTufwruUYPH565hE4parz44qc1FEU=;
+        b=b6xr7DEnaNELcP00re+6JPwISuERG1NNsUpdysV3vGKQRaFU48OCrb8h616HGV9gLM
+         hajhXubDPUCJ9iRtZeWNqksEuv2q6RdR891HAipSOmu6dKvQsPn4C+Z8rV3Tr96IMiiu
+         DCZRswv3ch2JVZ1ik8y5xWDuxH0Ad628haAstGBWM0am5vZaKRXNCUbWsmE4sFCmJWMD
+         y7bB4qVNEp3NTyP0DYLm2MQA4hcO+3MSzePeg5goB0iBR9/M6tjCy1x3Caqzm1rDyn4f
+         vQAX9zEpZXODXgjP7TOGKjDJEdBIXklXHDUoKVfdOYcQiu2ITHraTy/rjlg5/W66Gq3p
+         /JtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dAvMUr5VDe0uNAxODcg8+zSeRgKSv9N5mSpKXFgOC4A=;
-        b=jd0Fy4VroXJiggsLDbqmENcxEEEfZiMmuHR61HwhCh623oZZAq+QaylW7LXQOvFmqn
-         0xw7g7R1FakCCJc5fIp6+ka1oQnEQyrD2OLZsENP+TfTQpuLZAPZ1YQSGj4E8mM6kMUl
-         ppagMFJlAIXAr/t53MLUZr1POCv92mCeN06LjDFwaKwpnarZ1qfueA0U3QBBo7dJmivg
-         Tp3Za5rLMawt1vWSaGubY3BS8+XKxC4y7pDKnmjVsCAsc1bU+a3tXIOZGHbpz7VZFJr+
-         17xgL9iLEfWV1hU2FSsxyHWmfsMQ+abxN6vmH9ufh6sIkOiLmfZMaOx1vbLDq+Oye9k1
-         mytg==
-X-Gm-Message-State: AOAM533Cn5D81K6oChEOl9HgCVx1NiscWdetNHtxIS965ut1h27qu+EI
-        oIHRRHgBzww/k1j/vUTOoKi5EQ==
-X-Google-Smtp-Source: ABdhPJzItXRfhNbsVaGbhWFsucdV/K81Di3YGSNeb2CVAdiYAqttvwZdkx5l6oHApiM9AXYrtCgVug==
-X-Received: by 2002:a37:68ca:: with SMTP id d193mr19318692qkc.148.1590286440708;
-        Sat, 23 May 2020 19:14:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SQG1405vlMxJB5LTufwruUYPH565hE4parz44qc1FEU=;
+        b=O6RDBGvPESmeVtxfSm0ESfkja17H51wWC/sBNHbnmSDmvvXBmpGL5x9LbbTyzBK6Ix
+         CMjuL+VmmsZ29rBBXvgY5jujlj0ue3Ckb/IqtasrmS246QgWpWgef4mukKUWE2ZfKmH0
+         SJOyYyjpq7a7F3PIF0w+KFtRb4hhZEvBq9Gremjy+r2TgedThmF6CLwDU07rGwTEaCrq
+         VBBGMw/lJTtrB8KLvVaDcNTO/hA5kZCRZ4GcSrmCpJeXYss6826N3uBE2pcW0BVfhqaL
+         yFmRJMsllnjMA2bxFOQUo5wJ7xwLZe6SMfIVbVaN+ezVWsBvM0fQo9FhAdTkcvjhk1IE
+         VStw==
+X-Gm-Message-State: AOAM531CVQQpx3U6Wjee8cU6mHaAB38T0r/gm7imNzR1qRsEDichecSJ
+        Pplnr8nxqA2efJG6cS3R/B8DPw==
+X-Google-Smtp-Source: ABdhPJxw7PcLq/tSQe54mBTqx+UcuW46bAp2/c0vfel4RD31ZWeZHjOh/owF55EUvVLHvY60fPFbUA==
+X-Received: by 2002:a37:4e81:: with SMTP id c123mr20852532qkb.467.1590286442086;
+        Sat, 23 May 2020 19:14:02 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id t189sm1625501qkc.87.2020.05.23.19.13.59
+        by smtp.gmail.com with ESMTPSA id t189sm1625501qkc.87.2020.05.23.19.14.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 19:14:00 -0700 (PDT)
+        Sat, 23 May 2020 19:14:01 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org (open list:GENERIC PHY FRAMEWORK),
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 0/3] phy: qcom-qmp: add V4 USB PHYs
-Date:   Sat, 23 May 2020 22:14:12 -0400
-Message-Id: <20200524021416.17049-1-jonathan@marek.ca>
+        Vinod Koul <vkoul@kernel.org>,
+        linux-kernel@vger.kernel.org (open list:GENERIC PHY FRAMEWORK)
+Subject: [PATCH 1/3] phy: qcom-qmp: Allow different values for second lane
+Date:   Sat, 23 May 2020 22:14:13 -0400
+Message-Id: <20200524021416.17049-2-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200524021416.17049-1-jonathan@marek.ca>
+References: <20200524021416.17049-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,17 +79,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for sm8150 secondary USB PHY and both sm8250 USB PHYs.
+The primary USB PHY on sm8250 sets some values differently for the second
+lane. This makes it possible to represent that.
 
-Jonathan Marek (3):
-  phy: qcom-qmp: Allow different values for second lane
-  phy: qcom-qmp: Add QMP V4 USB3 UNIPHY
-  phy: qcom-qmp: Add QMP V4 USB3 PHY support for sm8250
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 52 ++++++++++++++++++++++-------
+ 1 file changed, 40 insertions(+), 12 deletions(-)
 
- drivers/phy/qualcomm/phy-qcom-qmp.c | 408 +++++++++++++++++++++++++++-
- drivers/phy/qualcomm/phy-qcom-qmp.h |   7 +
- 2 files changed, 403 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index e91040af3394..b3e07afca3ca 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -82,20 +82,34 @@ struct qmp_phy_init_tbl {
+ 	 * register part of layout ?
+ 	 * if yes, then offset gives index in the reg-layout
+ 	 */
+-	int in_layout;
++	bool in_layout;
++	/*
++	 * mask of lanes for which this register is written
++	 * for cases when second lane needs different values
++	 */
++	u8 lane_mask;
+ };
+ 
+ #define QMP_PHY_INIT_CFG(o, v)		\
+ 	{				\
+ 		.offset = o,		\
+ 		.val = v,		\
++		.lane_mask = 0xff,	\
+ 	}
+ 
+ #define QMP_PHY_INIT_CFG_L(o, v)	\
+ 	{				\
+ 		.offset = o,		\
+ 		.val = v,		\
+-		.in_layout = 1,		\
++		.in_layout = true,	\
++		.lane_mask = 0xff,	\
++	}
++
++#define QMP_PHY_INIT_CFG_LANE(o, v, l)	\
++	{				\
++		.offset = o,		\
++		.val = v,		\
++		.lane_mask = l,		\
+ 	}
+ 
+ /* set of registers with offsets different per-PHY */
+@@ -1986,10 +2000,11 @@ static const struct qmp_phy_cfg sm8150_usb3phy_cfg = {
+ 	.is_dual_lane_phy	= true,
+ };
+ 
+-static void qcom_qmp_phy_configure(void __iomem *base,
+-				   const unsigned int *regs,
+-				   const struct qmp_phy_init_tbl tbl[],
+-				   int num)
++static void qcom_qmp_phy_configure_lane(void __iomem *base,
++					const unsigned int *regs,
++					const struct qmp_phy_init_tbl tbl[],
++					int num,
++					u8 lane_mask)
+ {
+ 	int i;
+ 	const struct qmp_phy_init_tbl *t = tbl;
+@@ -1998,6 +2013,9 @@ static void qcom_qmp_phy_configure(void __iomem *base,
+ 		return;
+ 
+ 	for (i = 0; i < num; i++, t++) {
++		if (!(t->lane_mask & lane_mask))
++			continue;
++
+ 		if (t->in_layout)
+ 			writel(t->val, base + regs[t->offset]);
+ 		else
+@@ -2005,6 +2023,14 @@ static void qcom_qmp_phy_configure(void __iomem *base,
+ 	}
+ }
+ 
++static void qcom_qmp_phy_configure(void __iomem *base,
++				   const unsigned int *regs,
++				   const struct qmp_phy_init_tbl tbl[],
++				   int num)
++{
++	qcom_qmp_phy_configure_lane(base, regs, tbl, num, 0xff);
++}
++
+ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+ {
+ 	struct qcom_qmp *qmp = qphy->qmp;
+@@ -2219,16 +2245,18 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+ 	}
+ 
+ 	/* Tx, Rx, and PCS configurations */
+-	qcom_qmp_phy_configure(tx, cfg->regs, cfg->tx_tbl, cfg->tx_tbl_num);
++	qcom_qmp_phy_configure_lane(tx, cfg->regs,
++				    cfg->tx_tbl, cfg->tx_tbl_num, 1);
+ 	/* Configuration for other LANE for USB-DP combo PHY */
+ 	if (cfg->is_dual_lane_phy)
+-		qcom_qmp_phy_configure(qphy->tx2, cfg->regs,
+-				       cfg->tx_tbl, cfg->tx_tbl_num);
++		qcom_qmp_phy_configure_lane(qphy->tx2, cfg->regs,
++					    cfg->tx_tbl, cfg->tx_tbl_num, 2);
+ 
+-	qcom_qmp_phy_configure(rx, cfg->regs, cfg->rx_tbl, cfg->rx_tbl_num);
++	qcom_qmp_phy_configure_lane(rx, cfg->regs,
++				    cfg->rx_tbl, cfg->rx_tbl_num, 1);
+ 	if (cfg->is_dual_lane_phy)
+-		qcom_qmp_phy_configure(qphy->rx2, cfg->regs,
+-				       cfg->rx_tbl, cfg->rx_tbl_num);
++		qcom_qmp_phy_configure_lane(qphy->rx2, cfg->regs,
++					    cfg->rx_tbl, cfg->rx_tbl_num, 2);
+ 
+ 	qcom_qmp_phy_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+ 	ret = reset_control_deassert(qmp->ufs_reset);
 -- 
 2.26.1
 
