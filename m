@@ -7,69 +7,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4360C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75492207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C8E207D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Ov+Iyd3j"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ppJWH4TW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388314AbgEXVGf (ORCPT
+        id S2388331AbgEXVGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53206 "EHLO
+        Sun, 24 May 2020 17:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388210AbgEXVGc (ORCPT
+        with ESMTP id S2388311AbgEXVGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:06:32 -0400
+        Sun, 24 May 2020 17:06:35 -0400
 Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1962DC05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:32 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id l1so12546358qtp.6
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22FA5C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:34 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o19so12527467qtr.10
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1f0bZOCrNDQD1BgcSuvHzQUw/NbgiO0y7n44i+Xs86Y=;
-        b=Ov+Iyd3jUECOrf6AlWkJIoSeCGeZyKMaNfayf0Ug2Rq7f3gtF4mG6loCxUGdkU6PA+
-         RDXTgB5lyV4UQbspLHxpsPcSYvqSoD+Xad17pwMBL+rfkfS+KPBanv+Via12ux8YJq57
-         h+LKR9PZGPPW6Ov4cNPRLxq+YdvCOVfidInpMGkUF6mQsLPMS/1J2tdL9/UKNilc03oU
-         Uj/NMClMmb2+t9GOfPRNw/pLy7yt8q9mTalE+lFP6QdK5cKk3MSKhQ638E+PaLVI2Iw4
-         P+2eUVmodt+S7q2P/jaSgQrsrp+eGKH8/TxE/+XEgXnSSoysOGYITRWt0nCE5F2h8Ca1
-         b1Kg==
+        bh=K0FV4gDWANQPDDk3Qcqd7n0WZF5nF9QpVrxzsC0+ROQ=;
+        b=ppJWH4TWXQrqBS1oqnCG5bBN51rlxhSS7K+fr4P8jI5cdDcWagjBIyFe6mTTLJJXu3
+         EHvB3OtgFISr77VZGLcFr5z39GTQ4vdFNll7UGScjCN4b0mjN9WHscll0mkxiL67V0EG
+         Jh3lAY8ICqHfQeojBpFghjPkO3nXJPmhtZ+5RnZur1fO3GjjOXpe44eqQp/cmzcKTPJN
+         F05Q8YdvnDX/9j4BR3yFMRbvFMsPraYHS8hLN7S6M7SXqerW8HGTbDmZmnr30HH769ba
+         PCn1zLw67jE3UWVqn5iAcIdUtesCTxHZFPpT/+0G6YTfbexgskErcbFeRKozrT6gNoeo
+         AJ9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1f0bZOCrNDQD1BgcSuvHzQUw/NbgiO0y7n44i+Xs86Y=;
-        b=XDlh8qVO8zd+S3Mv4sJPDMl+GAAZKgWIWxoOcZTzK3Phc5A/KQgoYSjRNGRk6YyRZH
-         BpvRrMSZES0fIWwPsYmKJkqVRYK+qyo69QK+13VUYiLYg885L6uYXXUwQyQ2ltwpvc2m
-         jYVK/l8uqnZcrbIz8pWzxyVdUYKalk1dDpsi1Jjc8q5/dVW8Y4C2Kub7xSkhVMeYtgWu
-         HyVEqT75ZU82yS6m0p22ri2S18SaPBvTczTfNFHk3hxabzOCPIrNETQoI2J3iRj4suvq
-         3BoJHIxQ15nP6l2m6Hi7Vcvd5KzoXtTFAa0+YLLisTHSjLL/IDQBgJMfDCns5m6JhF6g
-         QSJA==
-X-Gm-Message-State: AOAM533KHnk1CW0a0mAx0dzQ8Pnq+vaR2FxAio7IwVCdgyitaa9Cxddv
-        1f2api7DhLjwa12ZTsJAuBo8rA==
-X-Google-Smtp-Source: ABdhPJyT3kCBcwPRkq6i2/uRsGubCkRUuH6rbLeIZ0nah2IRc7WSfnQTJA/BfKVp6pW3Xb4tKOMR3w==
-X-Received: by 2002:aed:37ca:: with SMTP id j68mr25581505qtb.276.1590354391125;
-        Sun, 24 May 2020 14:06:31 -0700 (PDT)
+        bh=K0FV4gDWANQPDDk3Qcqd7n0WZF5nF9QpVrxzsC0+ROQ=;
+        b=Ft4x6YSVpo/SLM02gfeYJ6NQFU2E2Bx0e8yKmVtkj3wMIgT8P4sTJUNd9YaAG+62PO
+         mCpoZJu7oxf5JzzSJFyTe9451QPuCsZtMUNeEaFnNb6QQPQQlJp9FlLJLN1cV6VV4dMS
+         Oi3Eal8NY7q/K9Hpa++DgpkhkQPBeXcWRmWL9NIQYmfjT8JCe9QyrcFff+bb9zwTiaOe
+         0ePfru8nngs42OW+Y3Dff+AtM3WIkFuLop+EY0hW68Ye4tf2wx3ZaOZOuptrP0PHx6ed
+         MrYwa2Vi4HIVqLtXQMjHvq5+DXSKnfCEF4wQoxi4Y/IFHO42BpEp9gFSSwuQV0cN54AM
+         UNWw==
+X-Gm-Message-State: AOAM533ICkSFtZI97eWhKQl9KgRkNpHlQK2Ctz+8nCnsELs4fZLtfQIi
+        p5Ndsjaqji7s/f0KRbMReylfEcD5Kys=
+X-Google-Smtp-Source: ABdhPJzHUDxBBjtUNeq8JlCgH/w/+qn1imv9TCQck3AoNbnMGzYBC+Dy/Twnm8Arw+Zbq1XNxZdLyg==
+X-Received: by 2002:ac8:340b:: with SMTP id u11mr25926922qtb.38.1590354393351;
+        Sun, 24 May 2020 14:06:33 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.30
+        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:06:30 -0700 (PDT)
+        Sun, 24 May 2020 14:06:32 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK)
-Subject: [PATCH 08/10] clk: qcom: Add graphics clock controller driver for SM8250
-Date:   Sun, 24 May 2020 17:06:09 -0400
-Message-Id: <20200524210615.17035-9-jonathan@marek.ca>
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 10/10] arm64: dts: qcom: add sm8250 GPU nodes
+Date:   Sun, 24 May 2020 17:06:11 -0400
+Message-Id: <20200524210615.17035-11-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200524210615.17035-1-jonathan@marek.ca>
 References: <20200524210615.17035-1-jonathan@marek.ca>
@@ -80,516 +79,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the graphics clock controller found on SM8250
-based devices. This would allow graphics drivers to probe and
-control their clocks.
-
-This is copied from the downstream kernel, adapted for upstream.
-For example, GDSCs have been added.
+This brings up the GPU. Tested on HDK865 by running vulkan CTS.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- drivers/clk/qcom/Kconfig        |   8 +
- drivers/clk/qcom/Makefile       |   1 +
- drivers/clk/qcom/gpucc-sm8250.c | 458 ++++++++++++++++++++++++++++++++
- 3 files changed, 467 insertions(+)
- create mode 100644 drivers/clk/qcom/gpucc-sm8250.c
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 139 +++++++++++++++++++++++++++
+ 1 file changed, 139 insertions(+)
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 02c1317a747a..ef3b5dd782a0 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -391,6 +391,14 @@ config SM_GPUCC_8150
- 	  Say Y if you want to support graphics controller devices and
- 	  functionality such as 3D graphics.
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 3bdce658c08a..a55d0e5d7425 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -5,6 +5,7 @@
  
-+config SM_GPUCC_8250
-+	tristate "SM8250 Graphics Clock Controller"
-+	select SM_GCC_8250
-+	help
-+	  Support for the graphics clock controller on SM8250 devices.
-+	  Say Y if you want to support graphics controller devices and
-+	  functionality such as 3D graphics.
-+
- config SPMI_PMIC_CLKDIV
- 	tristate "SPMI PMIC clkdiv Support"
- 	depends on SPMI || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 4a53cc32ec6b..606e45a36481 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
- obj-$(CONFIG_SM_GCC_8150) += gcc-sm8150.o
- obj-$(CONFIG_SM_GCC_8250) += gcc-sm8250.o
- obj-$(CONFIG_SM_GPUCC_8150) += gpucc-sm8150.o
-+obj-$(CONFIG_SM_GPUCC_8250) += gpucc-sm8250.o
- obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
- obj-$(CONFIG_KPSS_XCC) += kpss-xcc.o
- obj-$(CONFIG_QCOM_HFPLL) += hfpll.o
-diff --git a/drivers/clk/qcom/gpucc-sm8250.c b/drivers/clk/qcom/gpucc-sm8250.c
-new file mode 100644
-index 000000000000..e0ac8305c40e
---- /dev/null
-+++ b/drivers/clk/qcom/gpucc-sm8250.c
-@@ -0,0 +1,458 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-sm8250.h>
 +#include <dt-bindings/clock/qcom,gpucc-sm8250.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+@@ -387,6 +388,144 @@ tcsr_mutex: hwlock@1f40000 {
+ 			#hwlock-cells = <1>;
+ 		};
+ 
++		gpu: gpu@3d00000 {
++			/*
++			 * note: the amd,imageon compatible makes it possible
++			 * to use the drm/msm driver without the display node,
++			 * make sure to remove it when display node is added
++			 */
++			compatible = "qcom,adreno-650.2",
++				     "qcom,adreno",
++				     "amd,imageon";
++			#stream-id-cells = <16>;
 +
-+#include "common.h"
-+#include "clk-alpha-pll.h"
-+#include "clk-branch.h"
-+#include "clk-pll.h"
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+#include "reset.h"
-+#include "gdsc.h"
++			reg = <0 0x3d00000 0 0x40000>;
++			reg-names = "kgsl_3d0_reg_memory";
 +
-+#define CX_GMU_CBCR_SLEEP_MASK		0xf
-+#define CX_GMU_CBCR_SLEEP_SHIFT		4
-+#define CX_GMU_CBCR_WAKE_MASK		0xf
-+#define CX_GMU_CBCR_WAKE_SHIFT		8
++			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
 +
-+enum {
-+	P_BI_TCXO,
-+	P_CORE_BI_PLL_TEST_SE,
-+	P_GPLL0_OUT_MAIN,
-+	P_GPLL0_OUT_MAIN_DIV,
-+	P_GPU_CC_PLL0_OUT_MAIN,
-+	P_GPU_CC_PLL1_OUT_MAIN,
-+};
++			iommus = <&adreno_smmu 0 0x401>;
 +
-+static const struct parent_map gpu_cc_parent_map_0[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_GPU_CC_PLL0_OUT_MAIN, 1 },
-+	{ P_GPU_CC_PLL1_OUT_MAIN, 3 },
-+	{ P_GPLL0_OUT_MAIN, 5 },
-+	{ P_GPLL0_OUT_MAIN_DIV, 6 },
-+	{ P_CORE_BI_PLL_TEST_SE, 7 },
-+};
++			operating-points-v2 = <&gpu_opp_table>;
 +
-+static const char * const gpu_cc_parent_names_0[] = {
-+	"bi_tcxo",
-+	"gpu_cc_pll0",
-+	"gpu_cc_pll1",
-+	"gcc_gpu_gpll0_clk_src",
-+	"gcc_gpu_gpll0_div_clk_src",
-+	"core_bi_pll_test_se",
-+};
++			qcom,gmu = <&gmu>;
 +
-+static struct pll_vco lucid_vco[] = {
-+	{ 249600000, 2000000000, 0 },
-+};
++			zap-shader {
++				memory-region = <&gpu_mem>;
++			};
 +
-+static const struct alpha_pll_config gpu_cc_pll1_config = {
-+	.l = 0x1a,
-+	.alpha = 0xaaa,
-+	.config_ctl_val = 0x20485699,
-+	.config_ctl_hi_val = 0x00002261,
-+	.config_ctl_hi1_val = 0x029a699c,
-+	.user_ctl_val = 0x00000000,
-+	.user_ctl_hi_val = 0x00000805,
-+	.user_ctl_hi1_val = 0x00000000,
-+};
++			/* note: downstream checks gpu binning for 670 Mhz */
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
 +
-+static struct clk_alpha_pll gpu_cc_pll1 = {
-+	.offset = 0x100,
-+	.vco_table = lucid_vco,
-+	.num_vco = ARRAY_SIZE(lucid_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID],
-+	.clkr = {
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_pll1",
-+			.parent_names = (const char *[]){ "bi_tcxo" },
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_lucid_ops,
-+		},
-+	},
-+};
++				opp-670000000 {
++					opp-hz = /bits/ 64 <670000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++				};
 +
-+static const struct freq_tbl ftbl_gpu_cc_gmu_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	F(200000000, P_GPLL0_OUT_MAIN_DIV, 1.5, 0, 0),
-+	F(500000000, P_GPU_CC_PLL1_OUT_MAIN, 1, 0, 0),
-+	{ }
-+};
++				opp-587000000 {
++					opp-hz = /bits/ 64 <587000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++				};
 +
-+static struct clk_rcg2 gpu_cc_gmu_clk_src = {
-+	.cmd_rcgr = 0x1120,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = gpu_cc_parent_map_0,
-+	.freq_tbl = ftbl_gpu_cc_gmu_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gpu_cc_gmu_clk_src",
-+		.parent_names = gpu_cc_parent_names_0,
-+		.num_parents = 6,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
++				opp-525000000 {
++					opp-hz = /bits/ 64 <525000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
++				};
 +
-+static struct clk_branch gpu_cc_ahb_clk = {
-+	.halt_reg = 0x1078,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x1078,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_ahb_clk",
-+			.flags = CLK_IS_CRITICAL,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++				opp-490000000 {
++					opp-hz = /bits/ 64 <490000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++				};
 +
-+static struct clk_branch gpu_cc_crc_ahb_clk = {
-+	.halt_reg = 0x107c,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x107c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_crc_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++				/* opp-441600000 {
++					opp-hz = /bits/ 64 <441600000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L0>;
++				}; */
 +
-+static struct clk_branch gpu_cc_cx_apb_clk = {
-+	.halt_reg = 0x1088,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1088,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_apb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++				opp-400000000 {
++					opp-hz = /bits/ 64 <400000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++				};
 +
-+static struct clk_branch gpu_cc_cx_gmu_clk = {
-+	.halt_reg = 0x1098,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1098,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_gmu_clk",
-+			.parent_names = (const char *[]){
-+				"gpu_cc_gmu_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++				opp-305000000 {
++					opp-hz = /bits/ 64 <305000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++				};
++			};
++		};
 +
-+static struct clk_branch gpu_cc_cx_qdss_at_clk = {
-+	.halt_reg = 0x1080,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1080,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_qdss_at_clk",
-+			.parent_names = (const char *[]){
-+				"qdss_qmp_clk",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++		gmu: gmu@3d6a000 {
++			compatible="qcom,adreno-gmu-650.2", "qcom,adreno-gmu";
 +
-+static struct clk_branch gpu_cc_cx_qdss_trig_clk = {
-+	.halt_reg = 0x1094,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1094,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_qdss_trig_clk",
-+			.parent_names = (const char *[]){
-+				"qdss_qmp_clk",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			reg = <0 0x3d6a000 0 0x30000>,
++			      <0 0x3de0000 0 0x10000>,
++			      <0 0xb290000 0 0x10000>,
++			      <0 0xb490000 0 0x10000>;
++			reg-names = "gmu", "rscc", "gmu_pdc", "gmu_pdc_seq";
 +
-+static struct clk_branch gpu_cc_cx_qdss_tsctr_clk = {
-+	.halt_reg = 0x1084,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1084,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_qdss_tsctr_clk",
-+			.parent_names = (const char *[]){
-+				"qdss_qmp_clk",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hfi", "gmu";
 +
-+static struct clk_branch gpu_cc_cx_snoc_dvm_clk = {
-+	.halt_reg = 0x108c,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x108c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cx_snoc_dvm_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			clocks = <&gpucc GPU_CC_AHB_CLK>,
++				 <&gpucc GPU_CC_CX_GMU_CLK>,
++			         <&gpucc GPU_CC_CXO_CLK>,
++				 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
++				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
++			clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
 +
-+static struct clk_branch gpu_cc_cxo_aon_clk = {
-+	.halt_reg = 0x1004,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cxo_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			power-domains = <&gpucc GPU_CX_GDSC>,
++					<&gpucc GPU_GX_GDSC>;
++			power-domain-names = "cx", "gx";
 +
-+static struct clk_branch gpu_cc_cxo_clk = {
-+	.halt_reg = 0x109c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x109c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_cxo_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			iommus = <&adreno_smmu 5 0x400>;
 +
-+static struct clk_branch gpu_cc_gx_gmu_clk = {
-+	.halt_reg = 0x1064,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1064,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_gx_gmu_clk",
-+			.parent_names = (const char *[]){
-+				"gpu_cc_gmu_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			operating-points-v2 = <&gmu_opp_table>;
 +
-+static struct clk_branch gpu_cc_gx_qdss_tsctr_clk = {
-+	.halt_reg = 0x105c,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x105c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_gx_qdss_tsctr_clk",
-+			.parent_names = (const char *[]){
-+				"qdss_qmp_clk",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++			gmu_opp_table: opp-table {
++				compatible = "operating-points-v2";
 +
-+static struct clk_branch gpu_cc_gx_vsense_clk = {
-+	.halt_reg = 0x1058,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1058,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_gx_vsense_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++				};
++			};
++		};
 +
-+static struct clk_branch gpu_cc_sleep_clk = {
-+	.halt_reg = 0x1090,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1090,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpu_cc_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++		gpucc: clock-controller@3d90000 {
++			compatible = "qcom,sm8250-gpucc";
++			reg = <0 0x3d90000 0 0x9000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "xo";
++		};
 +
-+static struct clk_branch gpu_cc_hlos1_vote_gpu_smmu_clk = {
-+	.halt_reg = 0x5000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x5000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			 .name = "gpu_cc_hlos1_vote_gpu_smmu_clk",
-+			 .ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++		adreno_smmu: iommu@3da0000 {
++			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
++			reg = <0 0x3da0000 0 0x10000>;
++			#iommu-cells = <2>;
++			#global-interrupts = <2>;
++			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gpucc GPU_CC_AHB_CLK>,
++				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
++				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
++			clock-names = "ahb", "bus", "iface";
 +
-+static struct gdsc gpu_cx_gdsc = {
-+	.gdscr = 0x106c,
-+	.gds_hw_ctrl = 0x1540,
-+	.pd = {
-+		.name = "gpu_cx_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
-+};
++			power-domains = <&gpucc GPU_CX_GDSC>;
++		};
 +
-+/* see comment in gpucc-sdm845 about this */
-+static int gx_gdsc_enable(struct generic_pm_domain *domain)
-+{
-+	/* Do nothing but give genpd the impression that we were successful */
-+	return 0;
-+}
-+
-+static struct gdsc gpu_gx_gdsc = {
-+	.gdscr = 0x100c,
-+	.clamp_io_ctrl = 0x1508,
-+	.pd = {
-+		.name = "gpu_gx_gdsc",
-+		.power_on = gx_gdsc_enable,
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
-+};
-+
-+static struct clk_regmap *gpu_cc_sm8250_clocks[] = {
-+	[GPU_CC_AHB_CLK] = &gpu_cc_ahb_clk.clkr,
-+	[GPU_CC_CRC_AHB_CLK] = &gpu_cc_crc_ahb_clk.clkr,
-+	[GPU_CC_CX_APB_CLK] = &gpu_cc_cx_apb_clk.clkr,
-+	[GPU_CC_CX_GMU_CLK] = &gpu_cc_cx_gmu_clk.clkr,
-+	[GPU_CC_CX_QDSS_AT_CLK] = &gpu_cc_cx_qdss_at_clk.clkr,
-+	[GPU_CC_CX_QDSS_TRIG_CLK] = &gpu_cc_cx_qdss_trig_clk.clkr,
-+	[GPU_CC_CX_QDSS_TSCTR_CLK] = &gpu_cc_cx_qdss_tsctr_clk.clkr,
-+	[GPU_CC_CX_SNOC_DVM_CLK] = &gpu_cc_cx_snoc_dvm_clk.clkr,
-+	[GPU_CC_CXO_AON_CLK] = &gpu_cc_cxo_aon_clk.clkr,
-+	[GPU_CC_CXO_CLK] = &gpu_cc_cxo_clk.clkr,
-+	[GPU_CC_GMU_CLK_SRC] = &gpu_cc_gmu_clk_src.clkr,
-+	[GPU_CC_GX_GMU_CLK] = &gpu_cc_gx_gmu_clk.clkr,
-+	[GPU_CC_GX_QDSS_TSCTR_CLK] = &gpu_cc_gx_qdss_tsctr_clk.clkr,
-+	[GPU_CC_GX_VSENSE_CLK] = &gpu_cc_gx_vsense_clk.clkr,
-+	[GPU_CC_PLL1] = &gpu_cc_pll1.clkr,
-+	[GPU_CC_SLEEP_CLK] = &gpu_cc_sleep_clk.clkr,
-+	[GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK] = &gpu_cc_hlos1_vote_gpu_smmu_clk.clkr,
-+};
-+
-+static const struct qcom_reset_map gpu_cc_sm8250_resets[] = {
-+	[GPUCC_GPU_CC_ACD_BCR] = { 0x1160 },
-+	[GPUCC_GPU_CC_CX_BCR] = { 0x1068 },
-+	[GPUCC_GPU_CC_GFX3D_AON_BCR] = { 0x10a0 },
-+	[GPUCC_GPU_CC_GMU_BCR] = { 0x111c },
-+	[GPUCC_GPU_CC_GX_BCR] = { 0x1008 },
-+	[GPUCC_GPU_CC_XO_BCR] = { 0x1000 },
-+};
-+
-+static struct gdsc *gpu_cc_sm8250_gdscs[] = {
-+	[GPU_CX_GDSC] = &gpu_cx_gdsc,
-+	[GPU_GX_GDSC] = &gpu_gx_gdsc,
-+};
-+
-+static const struct regmap_config gpu_cc_sm8250_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = 0x8008,
-+	.fast_io = true,
-+};
-+
-+static const struct qcom_cc_desc gpu_cc_sm8250_desc = {
-+	.config = &gpu_cc_sm8250_regmap_config,
-+	.clks = gpu_cc_sm8250_clocks,
-+	.num_clks = ARRAY_SIZE(gpu_cc_sm8250_clocks),
-+	.resets = gpu_cc_sm8250_resets,
-+	.num_resets = ARRAY_SIZE(gpu_cc_sm8250_resets),
-+	.gdscs = gpu_cc_sm8250_gdscs,
-+	.num_gdscs = ARRAY_SIZE(gpu_cc_sm8250_gdscs),
-+};
-+
-+static const struct of_device_id gpu_cc_sm8250_match_table[] = {
-+	{ .compatible = "qcom,sm8250-gpucc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpu_cc_sm8250_match_table);
-+
-+static int gpu_cc_sm8250_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+	unsigned int value, mask;
-+
-+	regmap = qcom_cc_map(pdev, &gpu_cc_sm8250_desc);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	clk_lucid_pll_configure(&gpu_cc_pll1, regmap, &gpu_cc_pll1_config);
-+
-+	/*
-+	 * Configure gpu_cc_cx_gmu_clk with recommended
-+	 * wakeup/sleep settings
-+	 */
-+	mask = CX_GMU_CBCR_WAKE_MASK << CX_GMU_CBCR_WAKE_SHIFT;
-+	mask |= CX_GMU_CBCR_SLEEP_MASK << CX_GMU_CBCR_SLEEP_SHIFT;
-+	value = 0xf << CX_GMU_CBCR_WAKE_SHIFT | 0xf << CX_GMU_CBCR_SLEEP_SHIFT;
-+	regmap_update_bits(regmap, 0x1098, mask, value);
-+
-+	return qcom_cc_really_probe(pdev, &gpu_cc_sm8250_desc, regmap);;
-+}
-+
-+static struct platform_driver gpu_cc_sm8250_driver = {
-+	.probe = gpu_cc_sm8250_probe,
-+	.driver = {
-+		.name = "sm8250-gpucc",
-+		.of_match_table = gpu_cc_sm8250_match_table,
-+	},
-+};
-+
-+static int __init gpu_cc_sm8250_init(void)
-+{
-+	return platform_driver_register(&gpu_cc_sm8250_driver);
-+}
-+subsys_initcall(gpu_cc_sm8250_init);
-+
-+static void __exit gpu_cc_sm8250_exit(void)
-+{
-+	platform_driver_unregister(&gpu_cc_sm8250_driver);
-+}
-+module_exit(gpu_cc_sm8250_exit);
-+
-+MODULE_DESCRIPTION("QTI GPU_CC SM8250 Driver");
-+MODULE_LICENSE("GPL v2");
+ 		usb_1_hsphy: phy@88e3000 {
+ 			compatible = "qcom,sm8250-usb-hs-phy",
+ 				     "qcom,usb-snps-hs-7nm-phy";
 -- 
 2.26.1
 
