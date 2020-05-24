@@ -3,171 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0403AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA93EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE71F20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDCE20787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgEXIv7 (ORCPT
+        id S1728619AbgEXIxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 04:51:59 -0400
-Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:40226 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727848AbgEXIv7 (ORCPT
+        Sun, 24 May 2020 04:53:22 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:53393 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgEXIxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 04:51:59 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 2FA4C52C1;
-        Sun, 24 May 2020 08:51:57 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: run46_151812526d37
-X-Filterd-Recvd-Size: 5163
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 24 May 2020 08:51:53 +0000 (UTC)
-Message-ID: <cc610c7f97dfd5899ab8b751fdfb9670a0cc761e.camel@perches.com>
-Subject: Re: [PATCH] staging: rtl8188eu: clean up some declarations
-From:   Joe Perches <joe@perches.com>
-To:     Michael Straube <straube.linux@gmail.com>,
-        gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 24 May 2020 01:51:50 -0700
-In-Reply-To: <20200524082748.12901-1-straube.linux@gmail.com>
-References: <20200524082748.12901-1-straube.linux@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Sun, 24 May 2020 04:53:21 -0400
+Received: from localhost.localdomain (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5C8BB200006;
+        Sun, 24 May 2020 08:53:08 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Zong Li <zong.li@sifive.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v3 0/3] vmalloc kernel mapping and relocatable kernel
+Date:   Sun, 24 May 2020 04:52:56 -0400
+Message-Id: <20200524085259.24784-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-05-24 at 10:27 +0200, Michael Straube wrote:
-> Clean up some array declarations in phy_iq_calibrate() to reduce
-> indentation and clear line over 80 characters checkpatch warnings.
+This patchset originally implemented relocatable kernel support but now
+also moves the kernel mapping into the vmalloc zone.
 
-Better still would be to mark these as static const
-and also mark the functions that use them to take
-const pointers
+The first patch explains why we need to move the kernel into vmalloc
+zone (instead of memcpying it around). That patch should ease KASLR
+implementation a lot.
 
-Something like:
----
- drivers/staging/rtl8188eu/hal/phy.c | 52 ++++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 24 deletions(-)
+The second patch allows to build relocatable kernels but is not selected
+by default.
 
-diff --git a/drivers/staging/rtl8188eu/hal/phy.c b/drivers/staging/rtl8188eu/hal/phy.c
-index 5eca3625d5a8..9a4f1b84fefc 100644
---- a/drivers/staging/rtl8188eu/hal/phy.c
-+++ b/drivers/staging/rtl8188eu/hal/phy.c
-@@ -786,7 +786,7 @@ static void pathb_fill_iqk(struct adapter *adapt, bool iqkok, s32 result[][8],
- 	}
- }
- 
--static void save_adda_registers(struct adapter *adapt, u32 *addareg,
-+static void save_adda_registers(struct adapter *adapt, const u32 *addareg,
- 				u32 *backup, u32 register_num)
- {
- 	u32 i;
-@@ -795,7 +795,7 @@ static void save_adda_registers(struct adapter *adapt, u32 *addareg,
- 		backup[i] = phy_query_bb_reg(adapt, addareg[i], bMaskDWord);
- }
- 
--static void save_mac_registers(struct adapter *adapt, u32 *mac_reg,
-+static void save_mac_registers(struct adapter *adapt, const u32 *mac_reg,
- 			       u32 *backup)
- {
- 	u32 i;
-@@ -806,7 +806,7 @@ static void save_mac_registers(struct adapter *adapt, u32 *mac_reg,
- 	backup[i] = usb_read32(adapt, mac_reg[i]);
- }
- 
--static void reload_adda_reg(struct adapter *adapt, u32 *adda_reg,
-+static void reload_adda_reg(struct adapter *adapt, const u32 *adda_reg,
- 			    u32 *backup, u32 regiester_num)
- {
- 	u32 i;
-@@ -816,7 +816,7 @@ static void reload_adda_reg(struct adapter *adapt, u32 *adda_reg,
- }
- 
- static void reload_mac_registers(struct adapter *adapt,
--				 u32 *mac_reg, u32 *backup)
-+				 const u32 *mac_reg, u32 *backup)
- {
- 	u32 i;
- 
-@@ -826,7 +826,7 @@ static void reload_mac_registers(struct adapter *adapt,
- 	usb_write32(adapt, mac_reg[i], backup[i]);
- }
- 
--static void path_adda_on(struct adapter *adapt, u32 *adda_reg,
-+static void path_adda_on(struct adapter *adapt, const u32 *adda_reg,
- 			 bool is_path_a_on, bool is2t)
- {
- 	u32 path_on;
-@@ -844,7 +844,8 @@ static void path_adda_on(struct adapter *adapt, u32 *adda_reg,
- 		phy_set_bb_reg(adapt, adda_reg[i], bMaskDWord, path_on);
- }
- 
--static void mac_setting_calibration(struct adapter *adapt, u32 *mac_reg, u32 *backup)
-+static void mac_setting_calibration(struct adapter *adapt, const u32 *mac_reg,
-+				    u32 *backup)
- {
- 	u32 i = 0;
- 
-@@ -952,26 +953,29 @@ static void phy_iq_calibrate(struct adapter *adapt, s32 result[][8],
- 	struct odm_dm_struct *dm_odm = &adapt->HalData->odmpriv;
- 	u32 i;
- 	u8 path_a_ok, path_b_ok;
--	u32 adda_reg[IQK_ADDA_REG_NUM] = {
--					  rFPGA0_XCD_SwitchControl, rBlue_Tooth,
--					  rRx_Wait_CCA, rTx_CCK_RFON,
--					  rTx_CCK_BBON, rTx_OFDM_RFON,
--					  rTx_OFDM_BBON, rTx_To_Rx,
--					  rTx_To_Tx, rRx_CCK,
--					  rRx_OFDM, rRx_Wait_RIFS,
--					  rRx_TO_Rx, rStandby,
--					  rSleep, rPMPD_ANAEN};
--
--	u32 iqk_mac_reg[IQK_MAC_REG_NUM] = {
--					    REG_TXPAUSE, REG_BCN_CTRL,
--					    REG_BCN_CTRL_1, REG_GPIO_MUXCFG};
-+	static const u32 adda_reg[IQK_ADDA_REG_NUM] = {
-+		rFPGA0_XCD_SwitchControl, rBlue_Tooth,
-+		rRx_Wait_CCA, rTx_CCK_RFON,
-+		rTx_CCK_BBON, rTx_OFDM_RFON,
-+		rTx_OFDM_BBON, rTx_To_Rx,
-+		rTx_To_Tx, rRx_CCK,
-+		rRx_OFDM, rRx_Wait_RIFS,
-+		rRx_TO_Rx, rStandby,
-+		rSleep, rPMPD_ANAEN
-+	};
-+
-+	static const u32 iqk_mac_reg[IQK_MAC_REG_NUM] = {
-+		REG_TXPAUSE, REG_BCN_CTRL,
-+		REG_BCN_CTRL_1, REG_GPIO_MUXCFG
-+	};
- 
- 	/* since 92C & 92D have the different define in IQK_BB_REG */
--	u32 iqk_bb_reg_92c[IQK_BB_REG_NUM] = {
--					      rOFDM0_TRxPathEnable, rOFDM0_TRMuxPar,
--					      rFPGA0_XCD_RFInterfaceSW, rConfig_AntA, rConfig_AntB,
--					      rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
--					      rFPGA0_XB_RFInterfaceOE, rFPGA0_RFMOD};
-+	static const u32 iqk_bb_reg_92c[IQK_BB_REG_NUM] = {
-+		rOFDM0_TRxPathEnable, rOFDM0_TRMuxPar,
-+		rFPGA0_XCD_RFInterfaceSW, rConfig_AntA, rConfig_AntB,
-+		rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
-+		rFPGA0_XB_RFInterfaceOE, rFPGA0_RFMOD
-+	};
- 
- 	u32 retry_count = 9;
- 
+The third patch takes advantage of an already existing powerpc script
+that checks relocations at compile-time, and uses it for riscv.
 
+Alexandre Ghiti (3):
+  riscv: Move kernel mapping to vmalloc zone
+  riscv: Introduce CONFIG_RELOCATABLE
+  arch, scripts: Add script to check relocations at compile time
+
+ arch/powerpc/tools/relocs_check.sh |  18 +----
+ arch/riscv/Kconfig                 |  12 +++
+ arch/riscv/Makefile                |   5 +-
+ arch/riscv/Makefile.postlink       |  36 +++++++++
+ arch/riscv/boot/loader.lds.S       |   3 +-
+ arch/riscv/include/asm/page.h      |  10 ++-
+ arch/riscv/include/asm/pgtable.h   |  37 ++++++---
+ arch/riscv/kernel/head.S           |   3 +-
+ arch/riscv/kernel/module.c         |   4 +-
+ arch/riscv/kernel/vmlinux.lds.S    |   9 ++-
+ arch/riscv/mm/Makefile             |   4 +
+ arch/riscv/mm/init.c               | 121 +++++++++++++++++++++++++----
+ arch/riscv/mm/physaddr.c           |   2 +-
+ arch/riscv/tools/relocs_check.sh   |  26 +++++++
+ scripts/relocs_check.sh            |  20 +++++
+ 15 files changed, 258 insertions(+), 52 deletions(-)
+ create mode 100644 arch/riscv/Makefile.postlink
+ create mode 100755 arch/riscv/tools/relocs_check.sh
+ create mode 100755 scripts/relocs_check.sh
+
+-- 
+2.20.1
 
