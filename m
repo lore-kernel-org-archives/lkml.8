@@ -2,154 +2,92 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E384C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1528E207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F57207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GMzjp5jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgE0BjR (ORCPT
+        id S1726563AbgE0BkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:39:17 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:53386 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbgE0BjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:39:16 -0400
-Received: from localhost.localdomain (unknown [222.205.60.151])
-        by mail-app3 (Coremail) with SMTP id cC_KCgCXSECuxM1ejBQOAA--.22651S4;
-        Wed, 27 May 2020 09:38:57 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] i2c: stm32f7: Fix runtime PM imbalance on error
-Date:   Wed, 27 May 2020 09:38:53 +0800
-Message-Id: <20200527013853.30252-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgCXSECuxM1ejBQOAA--.22651S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFW8AFyxJF4UWw15Ar4xWFg_yoW5Wr4xpr
-        W5KayakFWUt3yvqFn3ArnIqF98W3yft34DZFyF93WS9Fs5X3WDtFy8JFyYvF48XrZ5A3WU
-        A39FywsrC3Wrt3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCF
-        04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
-        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-        fUOMKZDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0MBlZdtOUT6wAHsg
+        Tue, 26 May 2020 21:40:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29857 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725801AbgE0BkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:40:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590543601;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=s8b1sFICMI5A7PdJVz4IhbVxMortS5XfFgwiWiuDWQg=;
+        b=GMzjp5jxHhkv2UWtvy1oETbiGrDV+W8hIaZTW+Et2azasGPjwIH7oX5uxj4g5urYp0usHZ
+        Ti6EfGpFDwVS1/xvAfvlxs23yjCyhgvu/7sHwd+0lRC+HjEqyN7Fq3xAYN/xBcNvl4w+zc
+        LrAKHhS8db21lgdxZiF2LAMVy0xmKhU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-2G8aw3L8M0qtZ8UEq1XpvA-1; Tue, 26 May 2020 21:39:58 -0400
+X-MC-Unique: 2G8aw3L8M0qtZ8UEq1XpvA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44C1110524FF;
+        Wed, 27 May 2020 01:39:57 +0000 (UTC)
+Received: from localhost (ovpn-113-43.phx2.redhat.com [10.3.113.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 81B8C6ED98;
+        Wed, 27 May 2020 01:39:56 +0000 (UTC)
+From:   Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.9.224-rt144
+Date:   Sun, 24 May 2020 02:45:05 -0000
+Message-ID: <159028830562.475413.6970946289050349925@theseus.lan>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
+Hello RT-list!
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+I'm pleased to announce the 4.9.224-rt144 stable release.
+Note that since 4.9-rt is in maintenance mode, this is just the
+merge/rebase to the latest upstream stable releases with no changes
+to the RT patchset.
 
-Changelog:
+You can get this release via the git tree at:
 
-v2: - Use pm_runtime_put_noidle() instead of
-      pm_runtime_put_autosuspend(). Fix 5 more
-      similar cases within this dirver.
----
- drivers/i2c/busses/i2c-stm32f7.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 330ffed011e0..822fd1f5b5ae 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1620,8 +1620,10 @@ static int stm32f7_i2c_xfer(struct i2c_adapter *i2c_adap,
- 	f7_msg->smbus = false;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c_dev->dev);
- 		return ret;
-+	}
- 
- 	ret = stm32f7_i2c_wait_free_bus(i2c_dev);
- 	if (ret)
-@@ -1666,8 +1668,10 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
- 	f7_msg->smbus = true;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
- 		return ret;
-+	}
- 
- 	ret = stm32f7_i2c_wait_free_bus(i2c_dev);
- 	if (ret)
-@@ -1767,8 +1771,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
- 		return ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
- 		return ret;
-+	}
- 
- 	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
- 		stm32f7_i2c_enable_wakeup(i2c_dev, true);
-@@ -1837,8 +1843,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
- 	WARN_ON(!i2c_dev->slave[id]);
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c_dev->dev);
- 		return ret;
-+	}
- 
- 	if (id == 0) {
- 		mask = STM32F7_I2C_OAR1_OA1EN;
-@@ -2182,8 +2190,10 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
- 	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c_dev->dev);
- 		return ret;
-+	}
- 
- 	backup_regs->cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
- 	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
-@@ -2204,8 +2214,10 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
- 	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c_dev->dev);
- 		return ret;
-+	}
- 
- 	cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
- 	if (cr1 & STM32F7_I2C_CR1_PE)
--- 
-2.17.1
+  branch: v4.9-rt
+  Head SHA1: e0d43c3f28cd182c191c76fcfe5578784d4566c6
+
+Or to build 4.9.224-rt144 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.9.224.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/patch-4.9.224-rt144.patch.xz
+
+
+You can also build from 4.9.220-rt143 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.9/incr/patch-4.9.220-rt143-rt144.patch.xz
+
+Enjoy!
+Clark
 
