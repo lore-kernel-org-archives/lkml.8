@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0247A2075F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C996A20825
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kcK3yrH4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuqs1pzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbgEXTZj (ORCPT
+        id S2388258AbgEXTZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 15:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37492 "EHLO
+        Sun, 24 May 2020 15:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387807AbgEXTZi (ORCPT
+        with ESMTP id S2387755AbgEXTZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 15:25:38 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D138AC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:25:36 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l15so18194832lje.9
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:25:36 -0700 (PDT)
+        Sun, 24 May 2020 15:25:41 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95544C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:25:40 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 202so9379813lfe.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xeJmQRJvkh8fRKHXAH/W536lRiSffIGCx+R099ed5PQ=;
-        b=kcK3yrH4g4ts5H42rI7JP7vzXPX5ac10GjBC78+fEwYXQ3xZZpe9hpb7780Aet7sPu
-         xaOopB6kTv3WLbIteq/l/ZlkTGa0IIAljayEsDG5Xhf/lutDdWeg6GFCGpjOr2Vvo2B3
-         qPhOFBVuH/CquAHzfHkFJFtlHJ9ice2Wgsbb5A6DxzbPeQmJQ4INkwahmq/0YipuFFT0
-         GeSvG0rKpIesgav6Oft8aO4BWDVkaW9fvA+h+VgH3GXCnJjN8Q3BpRjj703BjzvdbX9K
-         2A5OKmiM6aZ2Y9bR9xuRVHh3eeBWjw5O3qbZhtwhlJwCQk4aJxXA0M75OZYXxJni35qu
-         tyHg==
+        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
+        b=cuqs1pzV9wFff2GzAa77a4DoEBOaiwUw4k6/Z5KiNk0rPbw2WWyS87P6oE987eiUQY
+         dvFFcbBp3yAMwXas2jEHznl6OFbqR/glhEu7tjtzqv+AihXa/K9aVZ9wKqE9C3qDu6Tf
+         iOy2cw+Im3uOdJdsrheiW7bJGH8bgwHa5jzwSC0bZE649ZGdSLvLvllqMKYn5/wPUqEd
+         aR6SLXLiJ6w5zAuwDbPp0nCu4VoWqHjhT9v67s22giW0KTfTuSNcTu7U0ExBx5TorhW/
+         Y9bZc50QE3GpJhp6lfvQ0y2K4HWFw3Q9QeeCWvvXR4EPplzkihdAw0xE5vLuBQleYb1m
+         I7pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xeJmQRJvkh8fRKHXAH/W536lRiSffIGCx+R099ed5PQ=;
-        b=DtGOIm6X0SuFArAVbDeBvWIk9+To/KrSiZ+M8gSLrlM7AAB7YY5GxPouIsrzuclCBf
-         4ssN1YaPegXmqdawzRCr/KwSH9C0MFWdoxYO11mhR39nHGE3b2rC97VM/yJ6mRcobpQL
-         H1NVcSwfeYEdgNWh33U+jMeYWJ8tt0Ljp6+c8V+QlrLFjpleFGrZXebtuElLxFreKw3A
-         g1AkyfuvuXzhEGAvRHIEmuyOqofcBCd/1+DFL+fc+QgF8mxYFRt/vMU6B8hxWxs1BDJJ
-         BkyMatqfXvUSUep1AKe4IVlY/DpkpQpDsrD1ZCyI72/3+C0BmSpeQo5e0TjgFUTqM2E6
-         habg==
-X-Gm-Message-State: AOAM5338l+RvSQtqzIw9Lw+xbsez1NES09eGBG3uTIceJ46z4QxcT92o
-        /bBd3C7yyCAK+HwugzoY3pD5Ug==
-X-Google-Smtp-Source: ABdhPJyZWmTTulqXDsNX7SFmBuKS+wkGmszWbb8/SsBCZAbUcqm2vhW7VXLbW742ya3E0gZXk1U0Lg==
-X-Received: by 2002:a2e:b6cd:: with SMTP id m13mr12974189ljo.242.1590348335341;
-        Sun, 24 May 2020 12:25:35 -0700 (PDT)
+        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
+        b=aUJFrPapEAl+E5J8UFe/TYaixNEoS2CclnZs/L6FesZLNgb8Lkve6ktGCtrGYlLxwi
+         RNAAgJKT+UOSOFPEwoA7tsuDBjnuDZMMaCIh3iOyYGaiJYzFQLSPzNfhJPThs7lHJDgq
+         UDJXVTqwFVX21bjNiSx3Fo5RQoDhxdzoscV9FWitI6ojzQDTccad25Nw+ifoLLj7uUXG
+         QVqdXMxLWEyfCVZmfBy6Pnt1s/ksOLQlEEZonr3X8i41RCs9EBaZxL/dsYNYVtfxtgb1
+         zpOfJDvsMUWQBv/IvH/O9YghG1HqfN02+bJNTw9gyMzZjDghDGISOhvHRDpPfSI78Op7
+         qAuw==
+X-Gm-Message-State: AOAM532ueJZQ0zgaxzux1hHAvKYtxlxGiFXuPbR4juNInD3uRojvegkK
+        UxnKgA86vTbXOTcIqyM9lDMPwA==
+X-Google-Smtp-Source: ABdhPJyLX3K9NnfpRP83wKssyR/D1UCw4Vs0QqPtZAFmHi4f7xcRBgxDMaLRhHDA/s5sdZNPyS0D5Q==
+X-Received: by 2002:ac2:5597:: with SMTP id v23mr12527697lfg.42.1590348339139;
+        Sun, 24 May 2020 12:25:39 -0700 (PDT)
 Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id v10sm3878137lja.23.2020.05.24.12.25.34
+        by smtp.googlemail.com with ESMTPSA id v10sm3878137lja.23.2020.05.24.12.25.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 12:25:34 -0700 (PDT)
+        Sun, 24 May 2020 12:25:38 -0700 (PDT)
 From:   Andrey Konovalov <andrey.konovalov@linaro.org>
 To:     mchehab@kernel.org, sakari.ailus@iki.fi,
         manivannan.sadhasivam@linaro.org
@@ -65,9 +65,9 @@ Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
         Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v3 01/10] media: i2c: imx290: set the format before VIDIOC_SUBDEV_G_FMT is called
-Date:   Sun, 24 May 2020 22:24:56 +0300
-Message-Id: <20200524192505.20682-2-andrey.konovalov@linaro.org>
+Subject: [PATCH v3 02/10] media: i2c: imx290: fix the order of the args in SET_RUNTIME_PM_OPS()
+Date:   Sun, 24 May 2020 22:24:57 +0300
+Message-Id: <20200524192505.20682-3-andrey.konovalov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200524192505.20682-1-andrey.konovalov@linaro.org>
 References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
@@ -76,48 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the current driver 'media-ctl -p' issued right after the imx290 driver
-is loaded prints:
-pad0: Source
-             [fmt:unknown/0x0]
-
-The format value of zero is due to the current_format field of the imx290
-struct not being initialized yet.
-
-As imx290_entity_init_cfg() calls imx290_set_fmt(), the current_mode field
-is also initialized, so the line which set current_mode to a default value
-in driver's probe() function is no longer needed.
+This macro is defined as SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn),
+so imx290_power_off must be the 1st arg, and imx290_power_on the 2nd.
 
 Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/media/i2c/imx290.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/i2c/imx290.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index f7678e5a5d87..2d8c38ffe2f0 100644
+index 2d8c38ffe2f0..d0322f9a8856 100644
 --- a/drivers/media/i2c/imx290.c
 +++ b/drivers/media/i2c/imx290.c
-@@ -722,9 +722,6 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_err;
- 	}
+@@ -648,7 +648,7 @@ static int imx290_power_off(struct device *dev)
+ }
  
--	/* Set default mode to max resolution */
--	imx290->current_mode = &imx290_modes[0];
--
- 	/* get system clock (xclk) */
- 	imx290->xclk = devm_clk_get(dev, "xclk");
- 	if (IS_ERR(imx290->xclk)) {
-@@ -809,6 +806,9 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_ctrl;
- 	}
+ static const struct dev_pm_ops imx290_pm_ops = {
+-	SET_RUNTIME_PM_OPS(imx290_power_on, imx290_power_off, NULL)
++	SET_RUNTIME_PM_OPS(imx290_power_off, imx290_power_on, NULL)
+ };
  
-+	/* Initialize the frame format (this also sets imx290->current_mode) */
-+	imx290_entity_init_cfg(&imx290->sd, NULL);
-+
- 	ret = v4l2_async_register_subdev(&imx290->sd);
- 	if (ret < 0) {
- 		dev_err(dev, "Could not register v4l2 device\n");
+ static const struct v4l2_subdev_video_ops imx290_video_ops = {
 -- 
 2.17.1
 
