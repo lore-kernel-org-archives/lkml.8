@@ -2,124 +2,91 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C21C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20083C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00B5B207F7
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1B02085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 02:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J786UewE"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="yql8zbdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388306AbgEXCLM (ORCPT
+        id S2388276AbgEXCOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 22:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47042 "EHLO
+        Sat, 23 May 2020 22:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388225AbgEXCLL (ORCPT
+        with ESMTP id S2387932AbgEXCOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 22:11:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40444C061A0E;
-        Sat, 23 May 2020 19:11:11 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x10so6006247plr.4;
-        Sat, 23 May 2020 19:11:11 -0700 (PDT)
+        Sat, 23 May 2020 22:14:01 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3C4C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:01 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id z80so14761743qka.0
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 19:14:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1NYHauUBWTQgbc43oFTAJCreNKv+baIo/68K96Zs4rc=;
-        b=J786UewExllUKHofcVvgLTI358KCYatvgJpAOm0F2OufvL+pVNAtJGo1pj6JUBbbpC
-         3NF7ePvGe1k+NcGAVJWA2jqXhGQgat6fKQL9C+cfS+HDIRW3Ap1PV2RjfeIRroac1Ezk
-         KhFr6z8QBUa1W8cUNJnD/40ivm8kFHrTlkiHK7cocLe4YIU63lxvhlKVJLa1uVkKSRXG
-         K5T/3uWMrNaxJoDU2eQqFcsAoD5BLt9X90hzco/4eRKjYTM1gkTYB1q7X53w991RSW2v
-         1MVV+EKruZWQnr+ZrRghABtNQQDfIE7Sfy1pYYOvIS3EeWc8l92vFliiDW9EjpixaL1h
-         Qflg==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dAvMUr5VDe0uNAxODcg8+zSeRgKSv9N5mSpKXFgOC4A=;
+        b=yql8zbdxjGHPj6B6azXNxw4GasqS2Kh88s2Xd6xjxQP6dMCQi/Sq+TAJHcc8VHnQ4k
+         xl6RChxRJPPv1vV5jy3sRn0U3atL1812e8JL66PApjPX13VDqGb0EGtR/+Cv+v+FDaCL
+         pf+vqieVO/m1MRVlYn1r9G0dzbSo49csViUHBiKECZTRLmY6VjRXSsEjcp4y87PD8YkO
+         5/ftqlnodB5IJIKOWLqyPHLKfVFBhcPNXPKGlN1iiG71AK7h8SEuTnQub8iek9siMrEZ
+         vAX77e8uGh4M3s8bSiOyrz1ecFpk8GgjbOwdWhymKaqlGaJpZnhMgYhsxhk57AwbDfJG
+         rfCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1NYHauUBWTQgbc43oFTAJCreNKv+baIo/68K96Zs4rc=;
-        b=Qb9sNV064AArRV05HIGQ6y9u5uXrTjVSEBDbki/iMQ+pi6j7p0mSaz7zYpV8sJK7F1
-         SnAKETVrr1kiqND/xtpj4rTmJ9vDJM+gDlH52p7fXgi4gG8VYHHviqdgh/Q4pxlqmAE+
-         2Ggp+8zUpP/PC7mDAtUyCoKozvF6tWfXW9FGgI9Ladfgltn3de2A83j8bmyweAdp4IFd
-         5IJA7kOiPgVGF/fMG9bwkVtorZ6tqIR6U+ZV0GYyMR10vbPUM0ylo0BttwhPdmmdw2Vs
-         BxwwMcRtOUFn79f+TZkIWI9NrvKLHRHNyWiPEiQcaMQ5OPE4RrqRbsoBPLixUJVgMUsV
-         DrtQ==
-X-Gm-Message-State: AOAM533jwINdWIdx6a8eKtZ9wcS5OrU277jRE5R+DietqyoGPCTLCQ8w
-        YqCuEBXqLwmNMfVyen4AWDM=
-X-Google-Smtp-Source: ABdhPJzjaswgBjGeZOebznwn3ru9lufOX3WhHax+o+4Bd9NRfLzG3TqcRXoKe1CoWCEUQMaErKCTqQ==
-X-Received: by 2002:a17:90a:10c1:: with SMTP id b1mr7863131pje.232.1590286270773;
-        Sat, 23 May 2020 19:11:10 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id p1sm1961780pjz.36.2020.05.23.19.11.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dAvMUr5VDe0uNAxODcg8+zSeRgKSv9N5mSpKXFgOC4A=;
+        b=jd0Fy4VroXJiggsLDbqmENcxEEEfZiMmuHR61HwhCh623oZZAq+QaylW7LXQOvFmqn
+         0xw7g7R1FakCCJc5fIp6+ka1oQnEQyrD2OLZsENP+TfTQpuLZAPZ1YQSGj4E8mM6kMUl
+         ppagMFJlAIXAr/t53MLUZr1POCv92mCeN06LjDFwaKwpnarZ1qfueA0U3QBBo7dJmivg
+         Tp3Za5rLMawt1vWSaGubY3BS8+XKxC4y7pDKnmjVsCAsc1bU+a3tXIOZGHbpz7VZFJr+
+         17xgL9iLEfWV1hU2FSsxyHWmfsMQ+abxN6vmH9ufh6sIkOiLmfZMaOx1vbLDq+Oye9k1
+         mytg==
+X-Gm-Message-State: AOAM533Cn5D81K6oChEOl9HgCVx1NiscWdetNHtxIS965ut1h27qu+EI
+        oIHRRHgBzww/k1j/vUTOoKi5EQ==
+X-Google-Smtp-Source: ABdhPJzItXRfhNbsVaGbhWFsucdV/K81Di3YGSNeb2CVAdiYAqttvwZdkx5l6oHApiM9AXYrtCgVug==
+X-Received: by 2002:a37:68ca:: with SMTP id d193mr19318692qkc.148.1590286440708;
+        Sat, 23 May 2020 19:14:00 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id t189sm1625501qkc.87.2020.05.23.19.13.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2020 19:11:10 -0700 (PDT)
-Date:   Sat, 23 May 2020 19:11:06 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Jianyong Wu <jianyong.wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com,
-        steven.price@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com,
-        justin.he@arm.com, Wei.Chen@arm.com, nd@arm.com
-Subject: Re: [RFC PATCH v12 10/11] arm64: add mechanism to let user choose
- which counter to return
-Message-ID: <20200524021106.GC335@localhost>
-References: <20200522083724.38182-1-jianyong.wu@arm.com>
- <20200522083724.38182-11-jianyong.wu@arm.com>
+        Sat, 23 May 2020 19:14:00 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org (open list:GENERIC PHY FRAMEWORK),
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 0/3] phy: qcom-qmp: add V4 USB PHYs
+Date:   Sat, 23 May 2020 22:14:12 -0400
+Message-Id: <20200524021416.17049-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522083724.38182-11-jianyong.wu@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:37:23PM +0800, Jianyong Wu wrote:
-> In general, vm inside will use virtual counter compered with host use
-> phyical counter. But in some special scenarios, like nested
-> virtualization, phyical counter maybe used by vm. A interface added in
-> ptp_kvm driver to offer a mechanism to let user choose which counter
-> should be return from host.
+Add support for sm8150 secondary USB PHY and both sm8250 USB PHYs.
 
-Sounds like you have two time sources, one for normal guest, and one
-for nested.  Why not simply offer the correct one to user space
-automatically?  If that cannot be done, then just offer two PHC
-devices with descriptive names.
+Jonathan Marek (3):
+  phy: qcom-qmp: Allow different values for second lane
+  phy: qcom-qmp: Add QMP V4 USB3 UNIPHY
+  phy: qcom-qmp: Add QMP V4 USB3 PHY support for sm8250
 
-> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
-> index fef72f29f3c8..8b0a7b328bcd 100644
-> --- a/drivers/ptp/ptp_chardev.c
-> +++ b/drivers/ptp/ptp_chardev.c
-> @@ -123,6 +123,9 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  	struct timespec64 ts;
->  	int enable, err = 0;
->  
-> +#ifdef CONFIG_ARM64
-> +	static long flag;
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 408 +++++++++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h |   7 +
+ 2 files changed, 403 insertions(+), 12 deletions(-)
 
-static?  This is not going to fly.
+-- 
+2.26.1
 
-> +		 * In most cases, we just need virtual counter from host and
-> +		 * there is limited scenario using this to get physical counter
-> +		 * in guest.
-> +		 * Be careful to use this as there is no way to set it back
-> +		 * unless you reinstall the module.
-
-How on earth is the user supposed to know this?
-
-From your description, this "flag" really should be a module
-parameter.
-
-Thanks,
-Richard
