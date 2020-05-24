@@ -2,162 +2,357 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8564AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF681C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544B5207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoGMH3vB"
+	by mail.kernel.org (Postfix) with ESMTP id 91DEB2088E
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590327518;
+	bh=rgDtiiZkuP0WaMXUBcY+ZQBNE08tb64n4l11jGM/PRM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wFlTgpkMC70awPvfuajz01v2+zkGCn4l2hNQxR8Ln9fgdkIReHdZnEBzPKfnhzDrt
+	 5kTMaiG/v5i/D9g1t+FVrOUSzG65NZ9BjvDPMOlZrF4qfX/sqSNx9s8M+q7qUJmBat
+	 RtmJ8jrHTMhk+zkkMo8HF32+p3jucRpGRSfFkPsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgEXNc2 (ORCPT
+        id S1729293AbgEXNii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 09:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgEXNc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 09:32:27 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B667AC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:32:27 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id e11so6699416pfn.3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 06:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8P08CbbNlN5WCUXv/BNCisqhSof+4zFGpgMMgUbe9tk=;
-        b=uoGMH3vBZ3swLnuwlu3/5/GyoIknUx5d+ckVHEY3ko2ITGEnYhSadgqrIsBZxW4L6G
-         IYE5PaIeqfA6x5OrGMRwSUGrYk9WZ0giut/IaFPU5lW400L0v+greFtRajf3miCsAHAy
-         pdgTcwOueZFN3p01ysE+YtJlNy/30kBUUeWM0TAIzEn4R0bNvk4rqsDKXRXdKedRTj3V
-         bDrbroQfnmQEPNuA6qIfE0W6TPSgimKAd7fGfFqLQn5CbrSxX/9RGtUPNc/3Wa7B9sLE
-         zCEmnI4U/w9pwvty2SRoojomqBJBcRJ4xgkyQ4AqJ5EJHc2xOJ4KqOxxCHZ3HaUeJN7j
-         d1jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8P08CbbNlN5WCUXv/BNCisqhSof+4zFGpgMMgUbe9tk=;
-        b=KBe7mIeiC7kDwfQjE3BUa6EiNV0wFyZtK2ui7XJ2X/cw3rGmw0wLLWnSBY87fgaDg9
-         R8FzNShFTZIX5PMjBvLQ3DF4+KUml2pJptG++AUHkJJfavcls1fs5a0DRq1m4qUclrse
-         mT2KPjouzcwIDbWMiRApwdf1GN2d1SKT8tFiz5kxek4y+73SzJ/u8PN5DK/kWZtVZ3wI
-         MoRsJF5eNt85QFWiebqhFsf6ZWMGYeljydAmMV8BdArZG3yUTCWsL2C5AkzB61Ak873u
-         2LPq0Po84DsImpX5aKJRBJ3cZYrxBIfkJpMHLcjC4pdZomqcQiy2xqaxHZ1L58exnIhr
-         MtDg==
-X-Gm-Message-State: AOAM531p2fJVfVbkhqzkSO2RnbTGwePLj+99bSdq/DL9wzGhZGZcATFM
-        4SobpGLVRFjNqj/dgJXej2w=
-X-Google-Smtp-Source: ABdhPJwpQGJWBf/p9NEJobAQPYUJvU5mJ6qqZMBpqRI+5DZyR4qrOIz0gc7juI3mglQYcN1dj/V4yQ==
-X-Received: by 2002:a63:4c1f:: with SMTP id z31mr21909272pga.143.1590327147004;
-        Sun, 24 May 2020 06:32:27 -0700 (PDT)
-Received: from xebrium.com ([182.70.106.85])
-        by smtp.gmail.com with ESMTPSA id k2sm11305483pfd.108.2020.05.24.06.32.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 24 May 2020 06:32:26 -0700 (PDT)
-Date:   Sun, 24 May 2020 19:02:20 +0530
-From:   GAURAV PATHAK <gauravpathak129@gmail.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     abbotti@mev.co.uk, gregkh@linuxfoundation.org,
-        hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH] Removing ununsed variable int lo, hi, int data and int i
- from comedi/drivers/dt2814.c.
-Message-ID: <20200524133218.GA1391@xebrium.com>
-References: <20200524113613.GA19734@xebrium.com>
- <20200524121044.fzpm6hkqrrpa2yhc@ltop.local>
+        Sun, 24 May 2020 09:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgEXNih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 09:38:37 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E9BE20878;
+        Sun, 24 May 2020 13:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590327515;
+        bh=rgDtiiZkuP0WaMXUBcY+ZQBNE08tb64n4l11jGM/PRM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JEay15jsDP5myvzwvbjr2GWxsJlw0tTb3ZiauAt5bqJlWFVevOzd14iI49yfq56ri
+         pyGnS47DCoaMJBDHRBswz3o4xBrma7QYO1z17JdTbMPjfytlqElJJm7U3QI2aOYSob
+         0PB7pWz76gqkUDQcwgCQcAKJhN/5D9J3sHWffC0o=
+Date:   Sun, 24 May 2020 14:38:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linus.walleij@linaro.org>,
+        <lorenzo.bianconi83@gmail.com>, <songqiang1304521@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 3/3] iio: remove
+ iio_triggered_buffer_postenable()/iio_triggered_buffer_predisable()
+Message-ID: <20200524143830.11c2d97e@archlinux>
+In-Reply-To: <20200522104632.517470-3-alexandru.ardelean@analog.com>
+References: <20200522104632.517470-1-alexandru.ardelean@analog.com>
+        <20200522104632.517470-3-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200524121044.fzpm6hkqrrpa2yhc@ltop.local>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nevermind, my sparse version was broken. Installed sparse 0.6.1, but
-still no warnings from sparse in any of the directories in drivers staging.
+On Fri, 22 May 2020 13:46:32 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-E.g.:
-
-make C=2 M=drivers/staging/sm750fb
-  CHECK   drivers/staging/sm750fb/sm750.c
-  CHECK   drivers/staging/sm750fb/sm750_hw.c
-  CHECK   drivers/staging/sm750fb/sm750_accel.c
-  CHECK   drivers/staging/sm750fb/sm750_cursor.c
-  CHECK   drivers/staging/sm750fb/ddk750_chip.c
-  CHECK   drivers/staging/sm750fb/ddk750_power.c
-  CHECK   drivers/staging/sm750fb/ddk750_mode.c
-  CHECK   drivers/staging/sm750fb/ddk750_display.c
-  CHECK   drivers/staging/sm750fb/ddk750_swi2c.c
-  CHECK   drivers/staging/sm750fb/ddk750_sii164.c
-  CHECK   drivers/staging/sm750fb/ddk750_dvi.c
-  CHECK   drivers/staging/sm750fb/ddk750_hwi2c.c
-  MODPOST 1 modules
-
-
-For few drivers, I am getting:
-
-CC [M]  drivers/staging/vt6656/key.o
-  CHECK   drivers/staging/vt6656/rf.c
-/usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h:417:9: warning: preprocessor token offsetof redefined
-./include/linux/stddef.h:17:9: this was the original definition
-
-but I guess these are false positive, as #undef offsetof is already present in ./include/linux/stddef.h.
-
-On Sun, May 24, 2020 at 02:10:44PM +0200, Luc Van Oostenryck wrote:
-> Hi,
+> From: Lars-Peter Clausen <lars@metafoo.de>
 > 
-> On Sun, May 24, 2020 at 05:06:18PM +0530, Gaurav Pathak wrote:
-> > Silence following sparse warning:
-> > drivers/staging/comedi/drivers/dt2814.c: In function ‘dt2814_interrupt’:
-> > drivers/staging/comedi/drivers/dt2814.c:193:6: warning: variable ‘data’ set but not used [-Wunused-but-set-variable]
-> >   int data;
-> >       ^~~~
-> > drivers/staging/comedi/drivers/dt2814.c: In function ‘dt2814_attach’:
-> > drivers/staging/comedi/drivers/dt2814.c:232:6: warning: variable ‘i’ set but not used [-Wunused-but-set-variable]
-> >   int i;
-> >       ^
+> This patch should be squashed into the first one, as the first one is
+> breaking the build (intentionally) to make the IIO core files easier to
+> review.
 > 
-> These warnings are not from sparse but simply from the compiler.
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Yeah!  Didn't realise you'd finally gotten to the end of your mammoth rework
+leading to this.
+
+A few really minor things inline to tidy up.
+
+Thanks,
+
+Jonathan
+
+ 
+> diff --git a/drivers/iio/accel/st_accel_buffer.c b/drivers/iio/accel/st_accel_buffer.c
+> index b5c814ef1637..c87f9a7d2453 100644
+> --- a/drivers/iio/accel/st_accel_buffer.c
+> +++ b/drivers/iio/accel/st_accel_buffer.c
+> @@ -33,13 +33,9 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	int err;
 >  
-> >  static irqreturn_t dt2814_interrupt(int irq, void *d)
-> >  {
-> > -	int lo, hi;
-> >  	struct comedi_device *dev = d;
-> >  	struct dt2814_private *devpriv = dev->private;
-> >  	struct comedi_subdevice *s = dev->read_subdev;
-> > -	int data;
-> >  
-> >  	if (!dev->attached) {
-> >  		dev_err(dev->class_dev, "spurious interrupt\n");
-> >  		return IRQ_HANDLED;
-> >  	}
-> >  
-> > -	hi = inb(dev->iobase + DT2814_DATA);
-> > -	lo = inb(dev->iobase + DT2814_DATA);
-> > -
-> > -	data = (hi << 4) | (lo >> 4);
-> 
-> OK, 'data' is unused but are these 2 'inb(dev->iobase + DT2814_DATA)'
-> needed or not? I would guess that they're needed but I don't know
-> this hardware.
-> 
-> > @@ -241,8 +233,6 @@ static int dt2814_attach(struct comedi_device *dev, struct comedi_devconfig *it)
-> >  		dev_err(dev->class_dev, "reset error (fatal)\n");
-> >  		return -EIO;
-> >  	}
-> > -	i = inb(dev->iobase + DT2814_DATA);
-> > -	i = inb(dev->iobase + DT2814_DATA);
-> 
-> Same here.
-> 
-> -- Luc
+> -	err = iio_triggered_buffer_postenable(indio_dev);
+> -	if (err < 0)
+> -		return err;
+> -
+>  	err = st_sensors_set_axis_enable(indio_dev, indio_dev->active_scan_mask[0]);
+>  	if (err < 0)
+> -		goto st_accel_buffer_predisable;
+> +		return err;
+>  
+>  	err = st_sensors_set_enable(indio_dev, true);
+>  	if (err < 0)
+> @@ -49,8 +45,6 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
+>  
+>  st_accel_buffer_enable_all_axis:
+>  	st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+> -st_accel_buffer_predisable:
+> -	iio_triggered_buffer_predisable(indio_dev);
+>  	return err;
+>  }
+>  
+> @@ -60,12 +54,10 @@ static int st_accel_buffer_predisable(struct iio_dev *indio_dev)
+>  
+>  	err = st_sensors_set_enable(indio_dev, false);
+>  	if (err < 0)
+> -		goto st_accel_buffer_predisable;
+> -
+> -	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+> +		return err;
+>  
+> -st_accel_buffer_predisable:
+> -	err2 = iio_triggered_buffer_predisable(indio_dev);
+> +	err2 = st_sensors_set_axis_enable(indio_dev,
+> +					  ST_SENSORS_ENABLE_ALL_AXIS);
+>  	if (!err)
+I don't think you can get here with err set.
+>  		err = err2;
+>  
+
+
+...
+  
+> diff --git a/drivers/iio/gyro/st_gyro_buffer.c b/drivers/iio/gyro/st_gyro_buffer.c
+> index 9c92ff7a82be..7b86502d5da3 100644
+> --- a/drivers/iio/gyro/st_gyro_buffer.c
+> +++ b/drivers/iio/gyro/st_gyro_buffer.c
+> @@ -33,13 +33,9 @@ static int st_gyro_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>  	int err;
+>  
+> -	err = iio_triggered_buffer_postenable(indio_dev);
+> -	if (err < 0)
+> -		return err;
+> -
+>  	err = st_sensors_set_axis_enable(indio_dev, indio_dev->active_scan_mask[0]);
+>  	if (err < 0)
+> -		goto st_gyro_buffer_predisable;
+> +		return err;
+>  
+>  	err = st_sensors_set_enable(indio_dev, true);
+>  	if (err < 0)
+> @@ -49,8 +45,6 @@ static int st_gyro_buffer_postenable(struct iio_dev *indio_dev)
+>  
+>  st_gyro_buffer_enable_all_axis:
+>  	st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+> -st_gyro_buffer_predisable:
+> -	iio_triggered_buffer_predisable(indio_dev);
+>  	return err;
+>  }
+>  
+> @@ -59,13 +53,8 @@ static int st_gyro_buffer_predisable(struct iio_dev *indio_dev)
+>  	int err, err2;
+>  
+>  	err = st_sensors_set_enable(indio_dev, false);
+> -	if (err < 0)
+> -		goto st_gyro_buffer_predisable;
+
+Previously we didn't bother trying to carry on if this failed. I don't think we
+should start doing so now.
+
+> -
+> -	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+>  
+> -st_gyro_buffer_predisable:
+> -	err2 = iio_triggered_buffer_predisable(indio_dev);
+> +	err2 = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+>  	if (!err)
+>  		err = err2;
+>  
+
+...
+
+> diff --git a/drivers/iio/light/gp2ap020a00f.c b/drivers/iio/light/gp2ap020a00f.c
+> index 070d4cd0cf54..29d7af33efa1 100644
+> --- a/drivers/iio/light/gp2ap020a00f.c
+> +++ b/drivers/iio/light/gp2ap020a00f.c
+> @@ -1390,12 +1390,6 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
+>  
+>  	mutex_lock(&data->lock);
+I guess it doesn't matter, but no idea why this was ever under the local lock!
+
+>  
+> -	err = iio_triggered_buffer_postenable(indio_dev);
+> -	if (err < 0) {
+> -		mutex_unlock(&data->lock);
+> -		return err;
+> -	}
+> -
+>  	/*
+>  	 * Enable triggers according to the scan_mask. Enabling either
+>  	 * LIGHT_CLEAR or LIGHT_IR scan mode results in enabling ALS
+> @@ -1430,8 +1424,6 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
+>  		err = -ENOMEM;
+>  
+>  error_unlock:
+> -	if (err < 0)
+> -		iio_triggered_buffer_predisable(indio_dev);
+>  	mutex_unlock(&data->lock);
+>  
+>  	return err;
+> @@ -1465,8 +1457,6 @@ static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
+>  	if (err == 0)
+>  		kfree(data->buffer);
+>  
+> -	iio_triggered_buffer_predisable(indio_dev);
+> -
+>  	mutex_unlock(&data->lock);
+>  
+>  	return err;
+  
+...
+
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 2a4b3d331055..0fee767af026 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -957,29 +957,20 @@ static int vcnl4010_buffer_postenable(struct iio_dev *indio_dev)
+>  	int ret;
+>  	int cmd;
+>  
+> -	ret = iio_triggered_buffer_postenable(indio_dev);
+> -	if (ret)
+> -		return ret;
+> -
+>  	/* Do not enable the buffer if we are already capturing events. */
+> -	if (vcnl4010_is_in_periodic_mode(data)) {
+> -		ret = -EBUSY;
+> -		goto end;
+> -	}
+> +	if (vcnl4010_is_in_periodic_mode(data))
+> +		return -EBUSY;
+>  
+>  	ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL,
+>  					VCNL4010_INT_PROX_EN);
+>  	if (ret < 0)
+> -		goto end;
+> +		return ret;
+>  
+>  	cmd = VCNL4000_SELF_TIMED_EN | VCNL4000_PROX_EN;
+> +	
+>  	ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, cmd);
+>  	if (ret < 0)
+> -		goto end;
+> -
+> -	return 0;
+> -end:
+> -	iio_triggered_buffer_predisable(indio_dev);
+> +		i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
+>  
+>  	return ret;
+>  }
+> @@ -987,18 +978,14 @@ static int vcnl4010_buffer_postenable(struct iio_dev *indio_dev)
+>  static int vcnl4010_buffer_predisable(struct iio_dev *indio_dev)
+>  {
+>  	struct vcnl4000_data *data = iio_priv(indio_dev);
+> -	int ret, ret_disable;
+> +	int ret, ret2;
+>  
+>  	ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
+> -	if (ret < 0)
+> -		goto end;
+>  
+> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
+> +	ret2 = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
+
+hmm. This does change the flow a tiny bit.   I wonder if we really
+care about carrying on if we get an error on the first write?
+We are device not responding territory at that point.   Maybe just return
+immediately and avoid the dance with the two ret variables?
+
+>  
+> -end:
+> -	ret_disable = iio_triggered_buffer_predisable(indio_dev);
+>  	if (ret == 0)
+> -		ret = ret_disable;
+> +		ret = ret2;
+>  
+>  	return ret;
+>  }
+
+...
+  
+>  static const struct iio_buffer_setup_ops st_press_buffer_setup_ops = {
+> diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
+> index 37fe851f89af..e082ad007b22 100644
+> --- a/drivers/iio/pressure/zpa2326.c
+> +++ b/drivers/iio/pressure/zpa2326.c
+> @@ -1240,12 +1240,7 @@ static int zpa2326_preenable_buffer(struct iio_dev *indio_dev)
+>  static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+>  {
+>  	const struct zpa2326_private *priv = iio_priv(indio_dev);
+> -	int                           err;
+> -
+> -	/* Plug our own trigger event handler. */
+> -	err = iio_triggered_buffer_postenable(indio_dev);
+> -	if (err)
+> -		goto err;
+> +	int                           err = 0;
+>  
+>  	if (!priv->waken) {
+>  		/*
+> @@ -1254,7 +1249,7 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+>  		 */
+>  		err = zpa2326_clear_fifo(indio_dev, 0);
+>  		if (err)
+> -			goto err_buffer_predisable;
+> +			goto out;
+>  	}
+>  
+>  	if (!iio_trigger_using_own(indio_dev) && priv->waken) {
+> @@ -1264,14 +1259,10 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+>  		 */
+>  		err = zpa2326_config_oneshot(indio_dev, priv->irq);
+>  		if (err)
+> -			goto err_buffer_predisable;
+> +			goto out;
+>  	}
+>  
+> -	return 0;
+> -
+> -err_buffer_predisable:
+> -	iio_triggered_buffer_predisable(indio_dev);
+> -err:
+> +out:
+>  	zpa2326_err(indio_dev, "failed to enable buffering (%d)", err);
+
+Doesn't this now print the error in the good path?
+
+Probably still want the return 0.   It's a bit messier but I'd
+just move the prints into the error paths and return directly from
+each.   Will be cleaner code that this.
+
+
+>  
+>  	return err;
+> @@ -1287,7 +1278,6 @@ static int zpa2326_postdisable_buffer(struct iio_dev *indio_dev)
+>  static const struct iio_buffer_setup_ops zpa2326_buffer_setup_ops = {
+>  	.preenable   = zpa2326_preenable_buffer,
+>  	.postenable  = zpa2326_postenable_buffer,
+> -	.predisable  = iio_triggered_buffer_predisable,
+>  	.postdisable = zpa2326_postdisable_buffer
+>  };
+>  
