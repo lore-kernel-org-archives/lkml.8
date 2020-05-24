@@ -2,125 +2,272 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4EDC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC30C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44779207D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFB82076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q/S5yvkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgEXGC6 (ORCPT
+        id S1727848AbgEXGWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 02:02:58 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:63402 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbgEXGC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 02:02:58 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgC3nwrwDcpee6wbAg--.17220S4;
-        Sun, 24 May 2020 14:02:27 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: stm32-dmamux: Fix runtime PM imbalance on error
-Date:   Sun, 24 May 2020 14:02:23 +0800
-Message-Id: <20200524060224.16189-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgC3nwrwDcpee6wbAg--.17220S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw47Zr18AF13Cr1fXrWDArb_yoW8uFW7pr
-        W8tFWFvr4jqaySy3yDJr4kXFZa934fKr97trW8Gwn3Zw45XFyDt3WrJrWj9F18XF95Ar4D
-        Kr17A3yxCF1UuFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
-        wVAFwVW8AwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUndb1UUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAbsb
+        Sun, 24 May 2020 02:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgEXGWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 02:22:24 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C892C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:22:24 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id w4so13307823oia.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3qlSjb7Ei/x9qd8KQ7QRxYOlpQIZj8+odUUmDu647yk=;
+        b=q/S5yvkVVybx5H6i1wV1gnfaS6TRnh7d6B/tfdUnmCqhQ/dLDhQ4THaUZf8gFPxU1u
+         jPWhHfJ7DnUL2gJhmrcYbRv3vvipdx8Y0nScRt4ZDDaO/UwZdHC4l52UhdWRvNowItdb
+         6zPlSL4Qg9K4Y2zhdO4jYwvOe6oiTh9A6c7gtoknWGJSPibaK2MIJF1qLa9DEqTVXECG
+         +eoIDwNvztQd+jh7FFvu2stnuzDCt93mZ0ZE048GDdS0ffASXuiaL2TikJ/pMwcGXSZC
+         jzd+B8tVveq1H7yKhBmCC2KRvRsjPH41K5nB2NV44KzF+i6txo7BFcGtXOjjbSJ6htDE
+         K/VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3qlSjb7Ei/x9qd8KQ7QRxYOlpQIZj8+odUUmDu647yk=;
+        b=bt2D5fZcHt13UEaXPRWIr+VlIuavScf6cEuFX2+FVsmvND/mN5gcqqy7dXDPhqlx9y
+         1o+w9Hss/RFz0Eugz/Nzb1eAvmus6+lPilz5Zv9mVQYRiofRzOt99LBO+WNXaLSNUx+i
+         el3dgiK+56oFVS/ddPo9cL/GLYOG0goX7jclAd/0c4EzcMYYQLNujl69XVP74Ar1TNE9
+         6mnn4N4oJzZLUF7QEKzSRfqnts7Pvvf8HJ61Ajk0plMvvtNSHiyobS5IWtxn9iqUfPXy
+         Yyq6ojQ1FCVoyYvFwzTcBZvCrhU2aeveGyHwts2cCcYGjsJCuVu/zIBCj9Tm7B7qrpm8
+         t8ug==
+X-Gm-Message-State: AOAM530Vb/CX/zIrBv0MbhV/e2fa52MAzVBdbM29eDW8BZhdMSjU5h/h
+        hQKhoiRVStFS2IEJ1gHeC+fkJxmsulg9cilUH1aCfg==
+X-Google-Smtp-Source: ABdhPJwwOmnAuUFeqjFIXuR6p5rPR3A+H/vEznsVop4gc7BgeJ0Hcd2A31vi6oM8POELfmx/7i+VND9YRq3KOCNayK0=
+X-Received: by 2002:aca:c341:: with SMTP id t62mr8042580oif.5.1590301343183;
+ Sat, 23 May 2020 23:22:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200521064743.4769-1-maxim.uvarov@linaro.org> <20200521064743.4769-2-maxim.uvarov@linaro.org>
+In-Reply-To: <20200521064743.4769-2-maxim.uvarov@linaro.org>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Sun, 24 May 2020 08:22:12 +0200
+Message-ID: <CAHUa44Fp0e0Q_ZPX_5RuX+6xO_yGQ0n_+Kh207ZV1GZteXKf1w@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] optee: do drivers initialization before and after
+ tee-supplicant run
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In stm32_dmamux_route_allocate(),  pm_runtime_get_sync() increments
-the runtime PM usage counter even when it returns an error code.
-Thus a pairing decrement is needed on the error handling path to
-keep the counter balanced.
+Hi Maxim,
 
-In stm32_dmamux_probe(), when platform_get_resource() returns an
-error code, a pairing runtime PM usage counter decrement is needed
-to keep the counter balanced. For error paths after this call,
-things are the same.
+On Thu, May 21, 2020 at 8:47 AM Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> Some drivers (like ftpm) can operate only after tee-supplicant
+> runs becase of tee-supplicant provides things like storage
+> services.  This patch splits probe of non tee-supplicant dependable
+> drivers to early stage, and after tee-supplicant run probe other
+> drivers.
+>
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
+> Suggested-by: Arnd Bergmann <arnd@linaro.org>
+> ---
+>  drivers/tee/optee/core.c          | 25 ++++++++++++++++++++++---
+>  drivers/tee/optee/device.c        | 17 +++++++++++------
+>  drivers/tee/optee/optee_private.h |  8 +++++++-
+>  3 files changed, 40 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> index 99698b8a3a74..dd2265c44907 100644
+> --- a/drivers/tee/optee/core.c
+> +++ b/drivers/tee/optee/core.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/tee_drv.h>
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/workqueue.h>
+>  #include "optee_private.h"
+>  #include "optee_smc.h"
+>  #include "shm_pool.h"
+> @@ -218,6 +219,15 @@ static void optee_get_version(struct tee_device *teedev,
+>         *vers = v;
+>  }
+>
+> +static void optee_bus_scan(struct work_struct *work)
+> +{
+> +       int rc;
+> +
+> +       rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP);
+> +       if (rc)
+> +               pr_err("optee_enumerate_devices failed %d\n", rc);
+> +}
+> +
+>  static int optee_open(struct tee_context *ctx)
+>  {
+>         struct optee_context_data *ctxdata;
+> @@ -241,8 +251,15 @@ static int optee_open(struct tee_context *ctx)
+>                         kfree(ctxdata);
+>                         return -EBUSY;
+>                 }
+> -       }
+>
+> +               INIT_WORK(&optee->scan_bus_work, optee_bus_scan);
+> +               optee->scan_bus_wq = create_workqueue("optee_bus_scan");
+> +               if (!optee->scan_bus_wq) {
+> +                       pr_err("optee: couldn't create workqueue\n");
+> +                       return -ECHILD;
+> +               }
+> +               queue_work(optee->scan_bus_wq, &optee->scan_bus_work);
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/dma/stm32-dmamux.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Shouldn't this be done only the first time tee-supplicant opens the
+device? Normally tee-supplicant only does this once, but it might get
+restarted for some reason.
 
-diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
-index 12f7637e13a1..e68e7078ff94 100644
---- a/drivers/dma/stm32-dmamux.c
-+++ b/drivers/dma/stm32-dmamux.c
-@@ -139,6 +139,7 @@ static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
- 	spin_lock_irqsave(&dmamux->lock, flags);
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		spin_unlock_irqrestore(&dmamux->lock, flags);
- 		goto error;
- 	}
-@@ -246,8 +247,10 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	iomem = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(iomem))
-+	if (IS_ERR(iomem)) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		return PTR_ERR(iomem);
-+	}
- 
- 	spin_lock_init(&stm32_dmamux->lock);
- 
-@@ -256,12 +259,14 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(stm32_dmamux->clk);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "Missing clock controller\n");
-+		pm_runtime_put_noidle(&pdev->dev);
- 		return ret;
- 	}
- 
- 	ret = clk_prepare_enable(stm32_dmamux->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "clk_prep_enable error: %d\n", ret);
-+		pm_runtime_put_noidle(&pdev->dev);
- 		return ret;
- 	}
- 
-@@ -300,6 +305,7 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_clk:
-+	pm_runtime_put_noidle(&pdev->dev);
- 	clk_disable_unprepare(stm32_dmamux->clk);
- 
- 	return ret;
--- 
-2.17.1
-
+> +       }
+>         mutex_init(&ctxdata->mutex);
+>         INIT_LIST_HEAD(&ctxdata->sess_list);
+>
+> @@ -296,8 +313,10 @@ static void optee_release(struct tee_context *ctx)
+>
+>         ctx->data = NULL;
+>
+> -       if (teedev == optee->supp_teedev)
+> +       if (teedev == optee->supp_teedev) {
+> +               destroy_workqueue(optee->scan_bus_wq);
+>                 optee_supp_release(&optee->supp);
+> +       }
+>  }
+>
+>  static const struct tee_driver_ops optee_ops = {
+> @@ -675,7 +694,7 @@ static int optee_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, optee);
+>
+> -       rc = optee_enumerate_devices();
+> +       rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES);
+>         if (rc) {
+>                 optee_remove(pdev);
+>                 return rc;
+> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> index e3a148521ec1..d4931dad07aa 100644
+> --- a/drivers/tee/optee/device.c
+> +++ b/drivers/tee/optee/device.c
+> @@ -21,7 +21,6 @@
+>   * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
+>   * TEE_ERROR_SHORT_BUFFER - Output buffer size less than required
+>   */
+> -#define PTA_CMD_GET_DEVICES            0x0
+>
+>  static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
+>  {
+> @@ -32,7 +31,8 @@ static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
+>  }
+>
+>  static int get_devices(struct tee_context *ctx, u32 session,
+> -                      struct tee_shm *device_shm, u32 *shm_size)
+> +                      struct tee_shm *device_shm, u32 *shm_size,
+> +                      u32 func)
+>  {
+>         int ret = 0;
+>         struct tee_ioctl_invoke_arg inv_arg;
+> @@ -42,7 +42,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+>         memset(&param, 0, sizeof(param));
+>
+>         /* Invoke PTA_CMD_GET_DEVICES function */
+> -       inv_arg.func = PTA_CMD_GET_DEVICES;
+> +       inv_arg.func = func;
+>         inv_arg.session = session;
+>         inv_arg.num_params = 4;
+>
+> @@ -87,7 +87,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+>         return rc;
+>  }
+>
+> -int optee_enumerate_devices(void)
+> +static int __optee_enumerate_devices(u32 func)
+>  {
+>         const uuid_t pta_uuid =
+>                 UUID_INIT(0x7011a688, 0xddde, 0x4053,
+> @@ -118,7 +118,7 @@ int optee_enumerate_devices(void)
+>                 goto out_ctx;
+>         }
+>
+> -       rc = get_devices(ctx, sess_arg.session, NULL, &shm_size);
+> +       rc = get_devices(ctx, sess_arg.session, NULL, &shm_size, func);
+>         if (rc < 0 || !shm_size)
+>                 goto out_sess;
+>
+> @@ -130,7 +130,7 @@ int optee_enumerate_devices(void)
+>                 goto out_sess;
+>         }
+>
+> -       rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size);
+> +       rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size, func);
+>         if (rc < 0)
+>                 goto out_shm;
+>
+> @@ -158,3 +158,8 @@ int optee_enumerate_devices(void)
+>
+>         return rc;
+>  }
+> +
+> +int optee_enumerate_devices(u32 func)
+> +{
+> +       return  __optee_enumerate_devices(func);
+> +}
+> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
+> index d9c5037b4e03..6cdac4bb7253 100644
+> --- a/drivers/tee/optee/optee_private.h
+> +++ b/drivers/tee/optee/optee_private.h
+> @@ -78,6 +78,8 @@ struct optee_supp {
+>   * @memremaped_shm     virtual address of memory in shared memory pool
+>   * @sec_caps:          secure world capabilities defined by
+>   *                     OPTEE_SMC_SEC_CAP_* in optee_smc.h
+> + * @scan_bus_wq                workqueue to scan optee bus and register optee drivers
+> + * @scan_bus_work      workq to scan optee bus and register optee drivers
+>   */
+>  struct optee {
+>         struct tee_device *supp_teedev;
+> @@ -89,6 +91,8 @@ struct optee {
+>         struct tee_shm_pool *pool;
+>         void *memremaped_shm;
+>         u32 sec_caps;
+> +       struct workqueue_struct *scan_bus_wq;
+> +       struct work_struct scan_bus_work;
+>  };
+>
+>  struct optee_session {
+> @@ -173,7 +177,9 @@ void optee_free_pages_list(void *array, size_t num_entries);
+>  void optee_fill_pages_list(u64 *dst, struct page **pages, int num_pages,
+>                            size_t page_offset);
+>
+> -int optee_enumerate_devices(void);
+> +#define PTA_CMD_GET_DEVICES            0x0
+> +#define PTA_CMD_GET_DEVICES_SUPP       0x1
+> +int optee_enumerate_devices(u32 func);
+>
+>  /*
+>   * Small helpers
+> --
+> 2.17.1
+>
