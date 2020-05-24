@@ -2,170 +2,109 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1242075F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 10:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3897B207FB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 11:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgEXKvW (ORCPT
+        id S1728618AbgEXLPK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 06:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbgEXKvW (ORCPT
+        Sun, 24 May 2020 07:15:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:37371 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728092AbgEXLPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 06:51:22 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B6BC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 03:51:22 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jcoDK-0002V9-Oz; Sun, 24 May 2020 12:50:42 +0200
-Date:   Sun, 24 May 2020 12:50:42 +0200
-From:   "Sebastian A. Siewior" <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 07/25] lockdep: Add preemption disabled assertion API
-Message-ID: <20200524105042.7k3i4klu4oyhlfiv@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-8-a.darwish@linutronix.de>
- <20200522175503.GQ325280@hirez.programming.kicks-ass.net>
- <20200523145942.vjk3z6pbj6yicqa4@linutronix.de>
- <20200523224132.GD2483@worktop.programming.kicks-ass.net>
+        Sun, 24 May 2020 07:15:08 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MowOm-1jFK8C3lGw-00qOwI for <linux-kernel@vger.kernel.org>; Sun, 24 May
+ 2020 13:15:07 +0200
+Received: by mail-qt1-f174.google.com with SMTP id m44so11916097qtm.8
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 04:15:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530+dCrqfy+5KrGLuTjRJH8Gb29jVT86eupn/6NEILofjhNzSRzy
+        knNXqiggzE5xPKcqTr7ROh0ymzUjk/q1nJgNiL8=
+X-Google-Smtp-Source: ABdhPJzLa7acitFD9xvGhwFgsyhGkTphi6Wcqu/pQU40QEW+DA8DKggWRsmYhNkmqGbzLOwBirNaXJMcJ7YBNL4WB6M=
+X-Received: by 2002:ac8:474f:: with SMTP id k15mr15122856qtp.18.1590318905777;
+ Sun, 24 May 2020 04:15:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200523224132.GD2483@worktop.programming.kicks-ass.net>
+References: <000000000000861e3305a65e9d74@google.com> <768166145.263589.1590307748272.JavaMail.zimbra@nod.at>
+In-Reply-To: <768166145.263589.1590307748272.JavaMail.zimbra@nod.at>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 24 May 2020 13:14:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1VwDCAbzVXomsqOON+xyKC6XNNzpjEh9rgXJ9Dgb4V-Q@mail.gmail.com>
+Message-ID: <CAK8P3a1VwDCAbzVXomsqOON+xyKC6XNNzpjEh9rgXJ9Dgb4V-Q@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in uif_close
+To:     Richard Weinberger <richard@nod.at>
+Cc:     syzbot <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>,
+        daniel baluta <daniel.baluta@nxp.com>,
+        festevam <festevam@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel <kernel@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-imx <linux-imx@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        shawnguo <shawnguo@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:O9szvi+71zuEMXhDoHRODeJhxBFpfzASVZxCr1AC4q2A7kKRjfO
+ Z5TAHMM4C7+mqvrRT8gT7FPIX052UZVNyZxuCXv8n5IFK2vsfO3N6huYfvCaw2/ddrcJSX6
+ JZV1Od+acWHDp7MLSTNLO4wggDVkFC53pzhbtPPKNgBegukzAR4oueXIspu5jGA7S9+gpve
+ CRLnloPaX8Hm960LY5u1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8YPIMLk+Bh8=:GRI14NeWjKG2VMt2p3i1IC
+ 7pVeCwT2Vdz9thkCRvL3Tb4v0VKqappRKL5Zeojoz+dR8ZP+EkrfhzrrvLQ4D4A6Sqqx/Ue0C
+ H620R9Id1s+ZOoZGxQTAsQYrSin4fcq7Y7LHaogdNdG8iGHmQZPkEud3sCKWAKg/u9ISTJ/uH
+ mxzuwBVpZf0VcZDL8WViRfHir7Bb9WaHQ0iwByB+DO0mbk43Ni7vmMRCtlCS3S0FKLkOGyImv
+ kFS6QR8T42L5Kqk21fcrOktdDYcdx/s12I5pw8u08MSz/CV/Qizf3dYyb2tq7Nn2FYRQaZE/L
+ Jql9fNuWiWLBjDQx3xUizmFg96hG8HiB5AtshPddDQ9CMetlZc5EaE41qRffRsitJPo00ztaG
+ 7R+yubARlNgud5HOGoFCcRsc6PAx8JJ/op2LX0Ctcy4+DiiMJiJP0cyPkdH3JQx0UQXkhOPjr
+ lClmgVcvyVETy1EyZrwavE/3oMhumIyZ1dI5NMbaYh/i+TQj5YRV0JDD3nM2vbNrrWFZK40FE
+ b7VDMocMB/YxkxMzA/+9+XSKLfg54jzQoYaafIpMVLj5BJqRNU4StNtBJrNyJNjfmT35dSfSN
+ oAjvkD3bm4g79t1/OcHBhyLzDuJwgo3WO5FuSzwLTzGvW7B/kzKolOwN6NQA1/YE1ppRfYnO0
+ QTUxDC04R42cerbJN+OWaRuNcF/LxZUSt0bxvS2++NZGgvpx119izPaHHMgL8Bq2N0NVrMdHf
+ eEP7uFtg3AcVzY+ytfPGwaVZwm8QWovWBUQOhAW1bpcsNxHISwwobU7AWE1YXhvVzEqtOYUgJ
+ GHHhSKzClzK+gCFTxGhiRNFyWBJ6fo8yUz9KfyIdw5PQUutK8k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-24 00:41:32 [+0200], Peter Zijlstra wrote:
-> Because...? /me rummages around.. Ah you're proposing sticking this in
-> seqcount itself and then header hell.
-> 
-> Moo.. ok I'll go have another look on Monday.
+On Sun, May 24, 2020 at 10:09 AM Richard Weinberger <richard@nod.at> wrote:
+>
+> ----- Ursprüngliche Mail -----
+> > Von: "syzbot" <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>
+> > An: "Arnd Bergmann" <arnd@arndb.de>, "daniel baluta" <daniel.baluta@nxp.com>, "festevam" <festevam@gmail.com>, "Greg
+> > Kroah-Hartman" <gregkh@linuxfoundation.org>, "kernel" <kernel@pengutronix.de>, "linux-arm-kernel"
+> > <linux-arm-kernel@lists.infradead.org>, "linux-imx" <linux-imx@nxp.com>, "linux-kernel" <linux-kernel@vger.kernel.org>,
+> > "linux-mtd" <linux-mtd@lists.infradead.org>, linux@rempel-privat.de, "Miquel Raynal" <miquel.raynal@bootlin.com>,
+> > "richard" <richard@nod.at>, "Sascha Hauer" <s.hauer@pengutronix.de>, "shawnguo" <shawnguo@kernel.org>,
+> > syzkaller-bugs@googlegroups.com, "Vignesh Raghavendra" <vigneshr@ti.com>
+> > Gesendet: Sonntag, 24. Mai 2020 08:03:03
+> > Betreff: Re: KASAN: use-after-free Read in uif_close
+>
+> > syzbot has bisected this bug to:
+> >
+> > commit 32ec783ae19d48084b893cc54747fed37b07eb0c
+> > Author: Arnd Bergmann <arnd@arndb.de>
+> > Date:   Wed Apr 8 19:02:57 2020 +0000
+> >
+> >    firmware: imx: fix compile-testing
+>
+> Hmm, from a quick check I don't see how this is related.
+> Arnd?
 
-if you have a look on Monday you might want to start with the patch at
-the bottom on top of the series. Both sched.h includes are needed also
-you need to avoid write_seqcount_t_begin_nested() as static inline in
-header files.
+I suppose this was a randconfig build for a configuration that did not build
+until I fixed the build stage, and then it failed at runtime, so the bug would
+have been in earlier releases as well, it was just not observed.
 
-diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
-index c12df59d3f5fc..c0f88f08371d7 100644
---- a/include/linux/flex_proportions.h
-+++ b/include/linux/flex_proportions.h
-@@ -12,6 +12,7 @@
- #include <linux/spinlock.h>
- #include <linux/seqlock.h>
- #include <linux/gfp.h>
-+#include <linux/sched.h>
- 
- /*
-  * When maximum proportion of some event type is specified, this is the
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 54c929ea5b982..76385e599a9cb 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -702,13 +702,13 @@ do {									\
- 			  "Not in hardirq as expected\n");		\
- 	} while (0)
- 
--/*
-- * Don't define this assertion here to avoid a call-site's header file
-- * dependency on sched.h task_struct current. This is needed by call
-- * sites that are inline defined at header files already included by
-- * sched.h.
-- */
--void lockdep_assert_preemption_disabled(void);
-+#define lockdep_assert_preemption_disabled() do {			\
-+	WARN_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)      &&		\
-+		  debug_locks                           &&		\
-+		  !current->lockdep_recursion           &&		\
-+		  (preempt_count() == 0 && current->hardirqs_enabled),	\
-+		  "preemption not disabled as expected\n");		\
-+       } while (0)
- 
- #else
- # define might_lock(lock) do { } while (0)
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index eca464ecf012f..7f1261376110a 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -423,11 +423,11 @@ static inline void __write_seqcount_t_begin_nested(seqcount_t *s, int subclass)
- 	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
- }
- 
--static inline void write_seqcount_t_begin_nested(seqcount_t *s, int subclass)
--{
--	lockdep_assert_preemption_disabled();
--	__write_seqcount_t_begin_nested(s, subclass);
--}
-+#define write_seqcount_t_begin_nested(__s, __subclass)		\
-+	do {							\
-+		lockdep_assert_preemption_disabled();		\
-+		__write_seqcount_t_begin_nested(__s, __subclass);\
-+	} while (0)
- 
- /*
-  * write_seqcount_t_begin() without lockdep non-preemptibility check.
-@@ -450,10 +450,7 @@ static inline void __write_seqcount_t_begin(seqcount_t *s)
-  */
- #define write_seqcount_begin(s)		do_write_seqcount_begin(s)
- 
--static inline void write_seqcount_t_begin(seqcount_t *s)
--{
--	write_seqcount_t_begin_nested(s, 0);
--}
-+#define write_seqcount_t_begin(_s)	write_seqcount_t_begin_nested(_s, 0);
- 
- /**
-  * write_seqcount_end() - end a seqcount write-side critical section
-diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
-index 30358ce3d8fe1..d0fd3edcdc50b 100644
---- a/include/linux/u64_stats_sync.h
-+++ b/include/linux/u64_stats_sync.h
-@@ -62,6 +62,7 @@
-  * Example of use in drivers/net/loopback.c, using per_cpu containers,
-  * in BH disabled context.
-  */
-+#include <linux/sched.h>
- #include <linux/seqlock.h>
- 
- struct u64_stats_sync {
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4dae65bc65c24..ac10db66cc63f 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -5857,18 +5857,3 @@ void lockdep_rcu_suspicious(const char *file, const int line, const char *s)
- 	dump_stack();
- }
- EXPORT_SYMBOL_GPL(lockdep_rcu_suspicious);
--
--#ifdef CONFIG_PROVE_LOCKING
--
--void lockdep_assert_preemption_disabled(void)
--{
--	WARN_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&
--		  debug_locks				&&
--		  !current->lockdep_recursion		&&
--		  (preempt_count() == 0 && current->hardirqs_enabled),
--		  "preemption not disabled as expected\n");
--}
--EXPORT_SYMBOL_GPL(lockdep_assert_preemption_disabled);
--NOKPROBE_SYMBOL(lockdep_assert_preemption_disabled);
--
--#endif
-
-Sebastian
+     Arnd
