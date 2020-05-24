@@ -2,92 +2,115 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13EBC2072C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CF92072C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UkZ5fwVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgEXIJO convert rfc822-to-8bit (ORCPT
+        id S1728252AbgEXIKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 04:09:14 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:46674 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgEXIJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 04:09:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 3CEC861D8DF0;
-        Sun, 24 May 2020 10:09:11 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id hjO1QG7WQrtF; Sun, 24 May 2020 10:09:08 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 8DEEB6071A74;
-        Sun, 24 May 2020 10:09:08 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ocJ1eMPe1I_U; Sun, 24 May 2020 10:09:08 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 64D2761D8DEE;
-        Sun, 24 May 2020 10:09:08 +0200 (CEST)
-Date:   Sun, 24 May 2020 10:09:08 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     syzbot <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        daniel baluta <daniel.baluta@nxp.com>,
-        festevam <festevam@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel <kernel@pengutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux@rempel-privat.de, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        shawnguo <shawnguo@kernel.org>, syzkaller-bugs@googlegroups.com,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <768166145.263589.1590307748272.JavaMail.zimbra@nod.at>
-In-Reply-To: <000000000000861e3305a65e9d74@google.com>
-References: <000000000000861e3305a65e9d74@google.com>
-Subject: Re: KASAN: use-after-free Read in uif_close
+        Sun, 24 May 2020 04:10:20 -0400
+Received: from mout.gmx.net ([212.227.15.15]:55429 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbgEXIKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 04:10:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590307797;
+        bh=Yh4A99YJCgkA9UbuO3RfCVtF8HiYdKwmMW3V19IImEM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=UkZ5fwVEuQEPo519I9Bim3bwomLEMCwU16ReQvnBT1hYayPucK9Kd/yr2CyAsCfsP
+         cttCbWQFQ+AwXocbrl/2yj2bOPxeQILT1EJ4VN6HvtCFnMNjIHAmeqNFd5LCOMtyGP
+         ty0Qy/7xjEr6EN2mDa78Ajhq/ex8OuT/Dtbn6Sgc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MbAcs-1j1V0v2EQK-00bXzT; Sun, 24 May 2020 10:09:57 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH] drivers/irqchip: Remove function callback casts
+Date:   Sun, 24 May 2020 10:09:10 +0200
+Message-Id: <20200524080910.13087-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: KASAN: use-after-free Read in uif_close
-Thread-Index: IdpTiJPobSmrVYjHxyHltpNxiv96sg==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DPSzdRpyRux4A5kUtqLHMEMr9pHGkwQE+bKYyADNmfAZpC447sS
+ BVR1oCo6gXQUg+ZC3B0H4u04qrR/36ilTAe4FoXmoduPjLqwXF8dgtNgUX7zQfXCaDLMl9U
+ oz9L2o6IP2ZpdOHJ79dk10pmPl8bLERfuJOzdfmR/oZMiqlr7HgSMGiXXXPiKGSEveS1lFn
+ hljV+i1ABOCLBauvj1Kcw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2CgksPlfxEg=:lbVsvV8SCTgDDaPaOCYklz
+ OyoJ6CqTZX6vsMElVRTIXKQwIb3GZdtmDPZDs9f/O/96geY1kGCEiqcYmC7CedcxyBpwFr2aX
+ RCuQT4JR2Wyj0Wy70477E/I4TmTwLiu8gvL13Ep9+LjfMj+EWq8wyBXCQKGh0NAdT7ZM1trs1
+ 2H4f7T5JO1YBNnSJ4OazykSas5qGy1P/0F9GHi46HbHW0vHQ0QjfTmsXIfZzMNQIMh0CsXfI2
+ na6JQTMFrQfAfwtR2To6AHhqdiPNGeVTnEWtd4FA3XPvr7S+1ryLSideOgaFmrnDGRhuxmNAI
+ wdk73/mK63o/ucMKYgVTwcZO2rnsq7G9j9Fcb5vfPXtArZpdm5iUYYr9Qka6giv2Pokl8slQ/
+ gXZWJBpcggcBpPJIEeKdXfryDuOiAgxWhRH7wzR3458FMyxgD/fZM27BqRLAGLd7ieLU/nmHo
+ 6JcfeCYyKqxoegB3iqbdPB8xjkPjxeMQ79nMf4/u2Fs4WQqe4/PcFZ3LqNf+vG3t24Mlxf+d2
+ U6HoYDNSU7RRG7Gac9ZEFwc+jK6cKdHzhnXShBr5L57xBhQ83uLHjkH0oLuEbsONdVZeElBJh
+ 2ZsqJmwCJPcQn/t7v/EGCnMM659/FCkxRqTSuVNj+OVvQbrJqSxIkJo4/38eg6d656wTrUkn+
+ PChQmeMS7PBLoIiuUPhqMPCEas/xFGR/sZ2dk0i8tMXurbIWxzHBthGtLghuJ3SuJFkuBawie
+ yeIs2j2KjFvs4jZy/BmfJMg8BNWCx1UJXD9QS/sPF0b89IY0LSa6N2Fv2URQwOIvYCbz9Co5D
+ yP75P5QmwF6bTFNune7Z37zG82/UhUwDxqrOmqwGbLmwMFZ8YXDtSg9b7sXzfRyGs1K8ihISy
+ WB5h/sPxKrWwUleT+Vdn4YUFlXs29iwc7yFsvWUJzpAZDhPXpum+2IZOw8cSt+7xf/1O+RlHG
+ RuhDlB7F8ERpxPd80LqKSuv99HmhUSkvHNiFv/q2WjvTrhnmES2Uy7T7aEsxaL5P4N/PmyRxm
+ cWAMc5ng/qSMQ26ItQkTq+SfTLw9aWwqZSjxeftA0KqnxpZ0NRs7kHqq/GKDe4cy9i430bJbP
+ qwkM8mxZpOcwCGgWbqA9xPu/LyYn6HZoUvdc+Iz/mm0eabzMqmXGQLiSsXrY6CW51kLz9eQ32
+ MlsBGLENs4MZcXsYLBrpSsb7ilQnPGG160geMK6xFdZbEgCAaK7gv2CearH0mPtDkhCopX63C
+ +sfOsXti/aMf+X76y
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "syzbot" <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>
-> An: "Arnd Bergmann" <arnd@arndb.de>, "daniel baluta" <daniel.baluta@nxp.com>, "festevam" <festevam@gmail.com>, "Greg
-> Kroah-Hartman" <gregkh@linuxfoundation.org>, "kernel" <kernel@pengutronix.de>, "linux-arm-kernel"
-> <linux-arm-kernel@lists.infradead.org>, "linux-imx" <linux-imx@nxp.com>, "linux-kernel" <linux-kernel@vger.kernel.org>,
-> "linux-mtd" <linux-mtd@lists.infradead.org>, linux@rempel-privat.de, "Miquel Raynal" <miquel.raynal@bootlin.com>,
-> "richard" <richard@nod.at>, "Sascha Hauer" <s.hauer@pengutronix.de>, "shawnguo" <shawnguo@kernel.org>,
-> syzkaller-bugs@googlegroups.com, "Vignesh Raghavendra" <vigneshr@ti.com>
-> Gesendet: Sonntag, 24. Mai 2020 08:03:03
-> Betreff: Re: KASAN: use-after-free Read in uif_close
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, remove all the function callback
+casts.
 
-> syzbot has bisected this bug to:
-> 
-> commit 32ec783ae19d48084b893cc54747fed37b07eb0c
-> Author: Arnd Bergmann <arnd@arndb.de>
-> Date:   Wed Apr 8 19:02:57 2020 +0000
-> 
->    firmware: imx: fix compile-testing
+To do this, modify the IRQCHIP_ACPI_DECLARE macro initializing the
+acpi_probe_entry struct directly instead of use the existent macro
+ACPI_DECLARE_PROBE_ENTRY.
 
-Hmm, from a quick check I don't see how this is related.
-Arnd?
+In this new initialization use the probe_subtbl field instead of the
+probe_table field use in the ACPI_DECLARE_PROBE_ENTRY macro.
 
-Thanks,
-//richard
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ include/linux/irqchip.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
+index 950e4b2458f0..1f464fd10df0 100644
+=2D-- a/include/linux/irqchip.h
++++ b/include/linux/irqchip.h
+@@ -39,8 +39,14 @@
+  * @fn: initialization function
+  */
+ #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
+-	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
+-				 subtable, validate, data, fn)
++	static const struct acpi_probe_entry __acpi_probe_##name	\
++		__used __section(__irqchip_acpi_probe_table) =3D {	\
++			.id =3D ACPI_SIG_MADT,				\
++			.type =3D subtable,				\
++			.subtable_valid =3D validate,			\
++			.probe_subtbl =3D (acpi_tbl_entry_handler)fn,	\
++			.driver_data =3D data,				\
++		}
+
+ #ifdef CONFIG_IRQCHIP
+ void irqchip_init(void);
+=2D-
+2.20.1
+
