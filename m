@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A663C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B15C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D37F20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3087020787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335082;
-	bh=RoTe57T952gzJJRMklw5Brw5qGGDa9PgPFCpZt6dUqo=;
+	s=default; t=1590335086;
+	bh=xKPHzKay6k2r3n50d4X2uT2Nz8qgig7Im1XmCOjd64w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fDY02CR9SOnD3Og3F48odKUZdHl5sh3plSWBpzDoy9HpW4J4jZXieKf0v8tfaceIM
-	 xZjOxUZeK3iGA8hYQ+6eyYAF+csfcQfRvXX22C8LjLlCWRcpZWY6tHtkmxToAgqTcH
-	 iUByM2QjEzkwdP+MhAeW2HddvR99dtgikqYtUeew=
+	b=sPgTNd9/usogVo+scNtRMnAoQFG80qly2j3cRKEHKFqLJ1koXGBkbfgut+oiyN36l
+	 hSrVScjnCKbKRFReFcvxlE5nO1urw20y58uawwYMZm69rpng3Rq17NY0NjcV27rK+7
+	 jCDmyr7izIWpxqk/Kdom1re3wHfYP7V10/ZPUHZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388029AbgEXPok (ORCPT
+        id S2388055AbgEXPop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:44:40 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19689 "EHLO
+        Sun, 24 May 2020 11:44:45 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19701 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgEXPnX (ORCPT
+        with ESMTP id S1728399AbgEXPnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:43:23 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcUv017561;
-        Mon, 25 May 2020 00:42:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUv017561
+        by conuserg-09.nifty.com with ESMTP id 04OFgcUr017561;
+        Mon, 25 May 2020 00:42:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUr017561
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334965;
-        bh=e5cNZhuJWGjYQhLE3zJEZvqPyhXGtlqsBeU1XazTH3w=;
+        s=dec2015msa; t=1590334963;
+        bh=gluhb44Vf90fefpnqsQIOxJvzgiBOySQWJIDyHg2TIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tnPE8RZMALif53DQzefYiBNlRP3kj8xK/GnBfZl+VFtFfa97wOSc+TAUR2UagNNOp
-         FnMR4ZNXjVBYeos/BHoF8DQVa5LjfUESLnaBs4LGSz4MoIfz0oKTlJbc+Kb5Nznzgc
-         8ZgB941yntaV2heZ2uZqrewLWLv/slzt+oUxCP8VewlQlPhnouoV2jVRWkwRCtlRVF
-         6zs4U2CuIVBmjZe9qKZ0d/Apj/6Rb5LaJsmJQ3OFuDkTGzEKxgwcGF4e6+pHXXK2DQ
-         EI7wWiu6DIkJa0cEeefRBrg35I5tki9sFrYIuQzV/gLVXzY4ZzVlclTOL4utthstx3
-         AxKePH1sXCiJQ==
+        b=tZ40vNoqZTyVt9fDzB5L/0JQ33WeXl80xFBRGUg3dFZCB8kNqa+Q3CijBFEcbML4s
+         XTVuZG3IDt/5cw/8jn+oNJOvql2D9fP+uEg8rc72re6+ZplGCFIQJxVEcFYDeZY6eK
+         o4Az8ib2EmnavXXu4TBO+Spky+mWaPwzLDR05WpIeHD6HAqYgYhFmjGK0XKezbGz9N
+         0opsvafBUqi+xcBJ1EQlJFC5USvTbsUZWZThBKhE76SS5GR9M2bYjq2TGlOz3RVrrj
+         zOird6UzzIW4so4ykSKtG+HdxbWLQWCqBD5dNt65FenCdC5UJZtzA+czbUld6T4ukE
+         6v6aI1LXKtLEQ==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 12/29] modpost: move external module options
-Date:   Mon, 25 May 2020 00:42:18 +0900
-Message-Id: <20200524154235.380482-13-masahiroy@kernel.org>
+Subject: [PATCH v2 08/29] modpost: remove get_next_text() and make {grab,release_}file static
+Date:   Mon, 25 May 2020 00:42:14 +0900
+Message-Id: <20200524154235.380482-9-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
 References: <20200524154235.380482-1-masahiroy@kernel.org>
@@ -61,50 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Separate out the external-only code for readability.
+get_next_line() is no longer used. Remove.
+
+grab_file() and release_file() are only used in modpost.c. Make them
+static.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- scripts/Makefile.modpost | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ scripts/mod/modpost.c | 38 ++------------------------------------
+ scripts/mod/modpost.h |  3 ---
+ 2 files changed, 2 insertions(+), 39 deletions(-)
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index bc5561aedb24..8321068abb31 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -44,14 +44,11 @@ include include/config/auto.conf
- include scripts/Kbuild.include
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 40c6414aaeec..33cdb78a4ba1 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -462,7 +462,7 @@ static void sym_set_crc(const char *name, unsigned int crc)
+ 	s->crc_valid = 1;
+ }
  
- kernelsymfile := $(objtree)/Module.symvers
--modulesymfile := $(KBUILD_EXTMOD)/Module.symvers
+-void *grab_file(const char *filename, unsigned long *size)
++static void *grab_file(const char *filename, unsigned long *size)
+ {
+ 	struct stat st;
+ 	void *map = MAP_FAILED;
+@@ -484,41 +484,7 @@ void *grab_file(const char *filename, unsigned long *size)
+ 	return map;
+ }
  
- MODPOST = scripts/mod/modpost								\
- 	$(if $(CONFIG_MODVERSIONS),-m)							\
- 	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)					\
--	$(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)					\
--	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))			\
--	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))					\
-+	$(if $(KBUILD_EXTMOD),,-o $(kernelsymfile))					\
- 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
- 	$(if $(KBUILD_MODPOST_WARN),-w)
+-/**
+-  * Return a copy of the next line in a mmap'ed file.
+-  * spaces in the beginning of the line is trimmed away.
+-  * Return a pointer to a static buffer.
+-  **/
+-char *get_next_line(unsigned long *pos, void *file, unsigned long size)
+-{
+-	static char line[4096];
+-	int skip = 1;
+-	size_t len = 0;
+-	signed char *p = (signed char *)file + *pos;
+-	char *s = line;
+-
+-	for (; *pos < size ; (*pos)++) {
+-		if (skip && isspace(*p)) {
+-			p++;
+-			continue;
+-		}
+-		skip = 0;
+-		if (*p != '\n' && (*pos < size)) {
+-			len++;
+-			*s++ = *p++;
+-			if (len > 4095)
+-				break; /* Too long, stop */
+-		} else {
+-			/* End of string */
+-			*s = '\0';
+-			return line;
+-		}
+-	}
+-	/* End of buffer */
+-	return NULL;
+-}
+-
+-void release_file(void *file, unsigned long size)
++static void release_file(void *file, unsigned long size)
+ {
+ 	munmap(file, size);
+ }
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index dfadaa0c01ec..232a0e11fcaa 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -192,9 +192,6 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen);
+ /* from modpost.c */
+ char *read_text_file(const char *filename);
+ char *get_line(char **stringp);
+-void *grab_file(const char *filename, unsigned long *size);
+-char* get_next_line(unsigned long *pos, void *file, unsigned long size);
+-void release_file(void *file, unsigned long size);
  
-@@ -81,6 +78,13 @@ src := $(obj)
- # Include the module's Makefile to find KBUILD_EXTRA_SYMBOLS
- include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
-              $(KBUILD_EXTMOD)/Kbuild, $(KBUILD_EXTMOD)/Makefile)
-+
-+# modpost options for external modules
-+MODPOST += \
-+	-i Module.symvers \
-+	$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)) \
-+	-o $(KBUILD_EXTMOD)/Module.symvers
-+
- endif
- 
- # find all modules listed in modules.order
+ enum loglevel {
+ 	LOG_WARN,
 -- 
 2.25.1
 
