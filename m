@@ -2,272 +2,173 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC30C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98989C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFB82076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4992076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:32:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q/S5yvkV"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="DSE8S2ur";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yele04aE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgEXGWZ (ORCPT
+        id S1728422AbgEXGcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 02:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgEXGWY (ORCPT
+        Sun, 24 May 2020 02:32:17 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:55757 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbgEXGcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 02:22:24 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C892C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:22:24 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id w4so13307823oia.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:22:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3qlSjb7Ei/x9qd8KQ7QRxYOlpQIZj8+odUUmDu647yk=;
-        b=q/S5yvkVVybx5H6i1wV1gnfaS6TRnh7d6B/tfdUnmCqhQ/dLDhQ4THaUZf8gFPxU1u
-         jPWhHfJ7DnUL2gJhmrcYbRv3vvipdx8Y0nScRt4ZDDaO/UwZdHC4l52UhdWRvNowItdb
-         6zPlSL4Qg9K4Y2zhdO4jYwvOe6oiTh9A6c7gtoknWGJSPibaK2MIJF1qLa9DEqTVXECG
-         +eoIDwNvztQd+jh7FFvu2stnuzDCt93mZ0ZE048GDdS0ffASXuiaL2TikJ/pMwcGXSZC
-         jzd+B8tVveq1H7yKhBmCC2KRvRsjPH41K5nB2NV44KzF+i6txo7BFcGtXOjjbSJ6htDE
-         K/VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3qlSjb7Ei/x9qd8KQ7QRxYOlpQIZj8+odUUmDu647yk=;
-        b=bt2D5fZcHt13UEaXPRWIr+VlIuavScf6cEuFX2+FVsmvND/mN5gcqqy7dXDPhqlx9y
-         1o+w9Hss/RFz0Eugz/Nzb1eAvmus6+lPilz5Zv9mVQYRiofRzOt99LBO+WNXaLSNUx+i
-         el3dgiK+56oFVS/ddPo9cL/GLYOG0goX7jclAd/0c4EzcMYYQLNujl69XVP74Ar1TNE9
-         6mnn4N4oJzZLUF7QEKzSRfqnts7Pvvf8HJ61Ajk0plMvvtNSHiyobS5IWtxn9iqUfPXy
-         Yyq6ojQ1FCVoyYvFwzTcBZvCrhU2aeveGyHwts2cCcYGjsJCuVu/zIBCj9Tm7B7qrpm8
-         t8ug==
-X-Gm-Message-State: AOAM530Vb/CX/zIrBv0MbhV/e2fa52MAzVBdbM29eDW8BZhdMSjU5h/h
-        hQKhoiRVStFS2IEJ1gHeC+fkJxmsulg9cilUH1aCfg==
-X-Google-Smtp-Source: ABdhPJwwOmnAuUFeqjFIXuR6p5rPR3A+H/vEznsVop4gc7BgeJ0Hcd2A31vi6oM8POELfmx/7i+VND9YRq3KOCNayK0=
-X-Received: by 2002:aca:c341:: with SMTP id t62mr8042580oif.5.1590301343183;
- Sat, 23 May 2020 23:22:23 -0700 (PDT)
+        Sun, 24 May 2020 02:32:17 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id 283E2A54;
+        Sun, 24 May 2020 02:32:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Sun, 24 May 2020 02:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=+9HzwLQSbQfYn3g9WBAL+QyA/zS
+        EfIyEySNaCOOLJtQ=; b=DSE8S2urYUF3yKuGMCVBRHZnmBO3fLOW58BIbytOY9g
+        dxEjWsEHkFuvDT5JhGyzzbFxQP0Twr9YGFR2kMGlRWiyrqUv70f0ESdlDMjzh4KE
+        yzHvj+Cjhfmw1bnznaJGkq+4RrjUnBADlgoT8NZAWu6ypSH9LVV7h4wzWaQleDgC
+        rpwQtUqaEcXCBt8lI2kywDY0sY4dt1rvUQeMw2Vbvie3CzFnkYOUk3WfDvGwDQ1p
+        X9E/2hIr6QJmaR0HjFVAI6y+HCjxtNEhGrXkhUsW7LniXZ2ueND616AGhJ5K+cL6
+        Y7zi/Tw1LaIuQr9jNzt3OYGCuYYR23Qakl3/h0D3W6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+9HzwL
+        QSbQfYn3g9WBAL+QyA/zSEfIyEySNaCOOLJtQ=; b=yele04aEwz9btCbpulaeeW
+        WXfjh5wU9s7y+4+Fknuw5veAfmbbn0X/vJMKGk433LjLvOLZO875cAYMVkDAk6ZW
+        rRVsqpxhVbijBxi4ERFBZVl11gzjo1mN7T5A+tmW1ptL6nMF3bnRegJLS48yg4Bh
+        CUZwRcTR7JjMRF6t+sqgBiTdjeEJIkgwWYXguwh6pSoWVRRlJ14Wwu8dGDvoG4WL
+        aW/OO2KQhIbFHBiOVuHcCH8LoVNGWcdlxP4m8+3MN8F9pVTiRuEwuWLEyRBRZx1O
+        ZMFX5U+Izg9cxQWzX8P/GnpX+me3aIcK7jSiUg3GVQUsqoUVNP49Wa5Q4Js24qUg
+        ==
+X-ME-Sender: <xms:7hTKXlxAVDK5bF3MvIkv7iSxjRAbQ6jbBR4KGMGwblTahGaDhra_Dw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddujedgudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
+    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
+    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:7hTKXlQreIS6z1gUEM3WqNS3XadRWNXTjDSSm1JT47KUes_d1XUU0g>
+    <xmx:7hTKXvVC6B5XKX7BYbuIM5XaFER0dmk2nW8RZnCT7h6fl4B_hn1qUA>
+    <xmx:7hTKXngMzElnSVcKdDrrqvE4KE5LY-3bZWK-nrp9ca8OHsWqkInaww>
+    <xmx:7hTKXpQAzwRPw_n7ZO_26S_Wq1DOQe2sGLmVLT8Qm8sMzCGjkcrgG8582_M>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 104F930664F8;
+        Sun, 24 May 2020 02:32:14 -0400 (EDT)
+Date:   Sun, 24 May 2020 08:32:10 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Alexander Graf <graf@amazon.de>
+Cc:     Andra Paraschiv <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v2 04/18] nitro_enclaves: Init PCI device driver
+Message-ID: <20200524063210.GA1369260@kroah.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
+ <20200522062946.28973-5-andraprs@amazon.com>
+ <20200522070414.GB771317@kroah.com>
+ <68b86d32-1255-f9ce-4366-12219ce07ba6@amazon.de>
 MIME-Version: 1.0
-References: <20200521064743.4769-1-maxim.uvarov@linaro.org> <20200521064743.4769-2-maxim.uvarov@linaro.org>
-In-Reply-To: <20200521064743.4769-2-maxim.uvarov@linaro.org>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Sun, 24 May 2020 08:22:12 +0200
-Message-ID: <CAHUa44Fp0e0Q_ZPX_5RuX+6xO_yGQ0n_+Kh207ZV1GZteXKf1w@mail.gmail.com>
-Subject: Re: [PATCHv2 1/2] optee: do drivers initialization before and after
- tee-supplicant run
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68b86d32-1255-f9ce-4366-12219ce07ba6@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxim,
+On Sat, May 23, 2020 at 10:25:25PM +0200, Alexander Graf wrote:
+> Hey Greg,
+> 
+> On 22.05.20 09:04, Greg KH wrote:
+> > 
+> > On Fri, May 22, 2020 at 09:29:32AM +0300, Andra Paraschiv wrote:
+> > > +/**
+> > > + * ne_setup_msix - Setup MSI-X vectors for the PCI device.
+> > > + *
+> > > + * @pdev: PCI device to setup the MSI-X for.
+> > > + *
+> > > + * @returns: 0 on success, negative return value on failure.
+> > > + */
+> > > +static int ne_setup_msix(struct pci_dev *pdev)
+> > > +{
+> > > +     struct ne_pci_dev *ne_pci_dev = NULL;
+> > > +     int nr_vecs = 0;
+> > > +     int rc = -EINVAL;
+> > > +
+> > > +     if (WARN_ON(!pdev))
+> > > +             return -EINVAL;
+> > 
+> > How can this ever happen?  If it can not, don't test for it.  If it can,
+> > don't warn for it as that will crash systems that do panic-on-warn, just
+> > test and return an error.
+> 
+> I think the point here is to catch situations that should never happen, but
+> keep a sanity check in in case they do happen. This would've usually been a
+> BUG_ON, but people tend to dislike those these days because they can bring
+> down your system ...
 
-On Thu, May 21, 2020 at 8:47 AM Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
->
-> Some drivers (like ftpm) can operate only after tee-supplicant
-> runs becase of tee-supplicant provides things like storage
-> services.  This patch splits probe of non tee-supplicant dependable
-> drivers to early stage, and after tee-supplicant run probe other
-> drivers.
->
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-> Suggested-by: Arnd Bergmann <arnd@linaro.org>
-> ---
->  drivers/tee/optee/core.c          | 25 ++++++++++++++++++++++---
->  drivers/tee/optee/device.c        | 17 +++++++++++------
->  drivers/tee/optee/optee_private.h |  8 +++++++-
->  3 files changed, 40 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> index 99698b8a3a74..dd2265c44907 100644
-> --- a/drivers/tee/optee/core.c
-> +++ b/drivers/tee/optee/core.c
-> @@ -17,6 +17,7 @@
->  #include <linux/tee_drv.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> +#include <linux/workqueue.h>
->  #include "optee_private.h"
->  #include "optee_smc.h"
->  #include "shm_pool.h"
-> @@ -218,6 +219,15 @@ static void optee_get_version(struct tee_device *teedev,
->         *vers = v;
->  }
->
-> +static void optee_bus_scan(struct work_struct *work)
-> +{
-> +       int rc;
-> +
-> +       rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP);
-> +       if (rc)
-> +               pr_err("optee_enumerate_devices failed %d\n", rc);
-> +}
-> +
->  static int optee_open(struct tee_context *ctx)
->  {
->         struct optee_context_data *ctxdata;
-> @@ -241,8 +251,15 @@ static int optee_open(struct tee_context *ctx)
->                         kfree(ctxdata);
->                         return -EBUSY;
->                 }
-> -       }
->
-> +               INIT_WORK(&optee->scan_bus_work, optee_bus_scan);
-> +               optee->scan_bus_wq = create_workqueue("optee_bus_scan");
-> +               if (!optee->scan_bus_wq) {
-> +                       pr_err("optee: couldn't create workqueue\n");
-> +                       return -ECHILD;
-> +               }
-> +               queue_work(optee->scan_bus_wq, &optee->scan_bus_work);
+Same for WARN_ON when you run with panic-on-warn enabled :(
 
-Shouldn't this be done only the first time tee-supplicant opens the
-device? Normally tee-supplicant only does this once, but it might get
-restarted for some reason.
+> So in this particular case here I agree that it's a bit silly to check
+> whether pdev is != NULL. In other device code internal APIs though it's not
+> quite as clear of a cut. I by far prefer code that tells me it's broken over
+> reverse engineering stray pointer accesses ...
 
-> +       }
->         mutex_init(&ctxdata->mutex);
->         INIT_LIST_HEAD(&ctxdata->sess_list);
->
-> @@ -296,8 +313,10 @@ static void optee_release(struct tee_context *ctx)
->
->         ctx->data = NULL;
->
-> -       if (teedev == optee->supp_teedev)
-> +       if (teedev == optee->supp_teedev) {
-> +               destroy_workqueue(optee->scan_bus_wq);
->                 optee_supp_release(&optee->supp);
-> +       }
->  }
->
->  static const struct tee_driver_ops optee_ops = {
-> @@ -675,7 +694,7 @@ static int optee_probe(struct platform_device *pdev)
->
->         platform_set_drvdata(pdev, optee);
->
-> -       rc = optee_enumerate_devices();
-> +       rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES);
->         if (rc) {
->                 optee_remove(pdev);
->                 return rc;
-> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> index e3a148521ec1..d4931dad07aa 100644
-> --- a/drivers/tee/optee/device.c
-> +++ b/drivers/tee/optee/device.c
-> @@ -21,7 +21,6 @@
->   * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
->   * TEE_ERROR_SHORT_BUFFER - Output buffer size less than required
->   */
-> -#define PTA_CMD_GET_DEVICES            0x0
->
->  static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
->  {
-> @@ -32,7 +31,8 @@ static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
->  }
->
->  static int get_devices(struct tee_context *ctx, u32 session,
-> -                      struct tee_shm *device_shm, u32 *shm_size)
-> +                      struct tee_shm *device_shm, u32 *shm_size,
-> +                      u32 func)
->  {
->         int ret = 0;
->         struct tee_ioctl_invoke_arg inv_arg;
-> @@ -42,7 +42,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
->         memset(&param, 0, sizeof(param));
->
->         /* Invoke PTA_CMD_GET_DEVICES function */
-> -       inv_arg.func = PTA_CMD_GET_DEVICES;
-> +       inv_arg.func = func;
->         inv_arg.session = session;
->         inv_arg.num_params = 4;
->
-> @@ -87,7 +87,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
->         return rc;
->  }
->
-> -int optee_enumerate_devices(void)
-> +static int __optee_enumerate_devices(u32 func)
->  {
->         const uuid_t pta_uuid =
->                 UUID_INIT(0x7011a688, 0xddde, 0x4053,
-> @@ -118,7 +118,7 @@ int optee_enumerate_devices(void)
->                 goto out_ctx;
->         }
->
-> -       rc = get_devices(ctx, sess_arg.session, NULL, &shm_size);
-> +       rc = get_devices(ctx, sess_arg.session, NULL, &shm_size, func);
->         if (rc < 0 || !shm_size)
->                 goto out_sess;
->
-> @@ -130,7 +130,7 @@ int optee_enumerate_devices(void)
->                 goto out_sess;
->         }
->
-> -       rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size);
-> +       rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size, func);
->         if (rc < 0)
->                 goto out_shm;
->
-> @@ -158,3 +158,8 @@ int optee_enumerate_devices(void)
->
->         return rc;
->  }
-> +
-> +int optee_enumerate_devices(u32 func)
-> +{
-> +       return  __optee_enumerate_devices(func);
-> +}
-> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-> index d9c5037b4e03..6cdac4bb7253 100644
-> --- a/drivers/tee/optee/optee_private.h
-> +++ b/drivers/tee/optee/optee_private.h
-> @@ -78,6 +78,8 @@ struct optee_supp {
->   * @memremaped_shm     virtual address of memory in shared memory pool
->   * @sec_caps:          secure world capabilities defined by
->   *                     OPTEE_SMC_SEC_CAP_* in optee_smc.h
-> + * @scan_bus_wq                workqueue to scan optee bus and register optee drivers
-> + * @scan_bus_work      workq to scan optee bus and register optee drivers
->   */
->  struct optee {
->         struct tee_device *supp_teedev;
-> @@ -89,6 +91,8 @@ struct optee {
->         struct tee_shm_pool *pool;
->         void *memremaped_shm;
->         u32 sec_caps;
-> +       struct workqueue_struct *scan_bus_wq;
-> +       struct work_struct scan_bus_work;
->  };
->
->  struct optee_session {
-> @@ -173,7 +177,9 @@ void optee_free_pages_list(void *array, size_t num_entries);
->  void optee_fill_pages_list(u64 *dst, struct page **pages, int num_pages,
->                            size_t page_offset);
->
-> -int optee_enumerate_devices(void);
-> +#define PTA_CMD_GET_DEVICES            0x0
-> +#define PTA_CMD_GET_DEVICES_SUPP       0x1
-> +int optee_enumerate_devices(u32 func);
->
->  /*
->   * Small helpers
-> --
-> 2.17.1
->
+For static calls where you control the callers, don't do checks like
+this.  Otherwise the kernel would just be full of these all over the
+place and things would slow down.  It's just not needed.
+
+> > > +     ne_pci_dev = pci_get_drvdata(pdev);
+> > > +     if (WARN_ON(!ne_pci_dev))
+> > > +             return -EINVAL;
+> > 
+> > Same here, don't use WARN_ON if at all possible.
+> > 
+> > > +
+> > > +     nr_vecs = pci_msix_vec_count(pdev);
+> > > +     if (nr_vecs < 0) {
+> > > +             rc = nr_vecs;
+> > > +
+> > > +             dev_err_ratelimited(&pdev->dev,
+> > > +                                 NE "Error in getting vec count [rc=%d]\n",
+> > > +                                 rc);
+> > > +
+> > 
+> > Why ratelimited, can this happen over and over and over?
+> 
+> In this particular function, no, so here it really should just be dev_err.
+> Other functions are implicitly callable from user space through an ioctl,
+> which means they really need to stay rate limited.
+
+Think through these as the driver seems to ONLY use these ratelimited
+calls right now, which is not correct.
+
+Also, if a user can create a printk, that almost always is not a good
+idea.  But yes, those should be ratelimited.
+
+thanks,
+
+greg k-h
