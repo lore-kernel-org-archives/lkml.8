@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87582C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7A9207CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67057207CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335033;
-	bh=zJE+Xu0Li1naEmHkAwcknRNDrOnOs4BBRM/fewTOkPU=;
+	s=default; t=1590335036;
+	bh=NHG4bxp6+qKSP+XWEt0cAQvOmQgb7wdkZc4sOi24DeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HN3dthKInwkJhJU5Roj0YTi19OBz9Zd5kNDOLUmEx/3xcV4Hl+hXrBYBV9+Yg5L7A
-	 OUKtLCjNGY+Ppn/b54e3TNXPyVJHTUfU9NyU1qDgKe4JqEfJaTjSF6uV5EEob6Vz3z
-	 9kwVsbrtCQNjSdyKA2BmOrIf3W7aVYPmbcqJgxq4=
+	b=p0CRXcxWOjkkrsZd7WJoEjlEvmdkxs0WzgAvQs4nnGruteZzC4oV4QhbIHEPGT/Lg
+	 JF5cnU4UXcjPkm+ahzpcKJ/ysxlmXNTHJUSf6wE3B8IIsNEFdGyAB893koGbDYfQYv
+	 FZHaVqvK3re/l4pl2EZc0ugVHn0pDMeFgUa7g6lE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbgEXPnw (ORCPT
+        id S2387701AbgEXPnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:43:52 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19712 "EHLO
+        Sun, 24 May 2020 11:43:46 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19713 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728564AbgEXPnY (ORCPT
+        with ESMTP id S1728584AbgEXPnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:43:24 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcV0017561;
-        Mon, 25 May 2020 00:42:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcV0017561
+        by conuserg-09.nifty.com with ESMTP id 04OFgcVC017561;
+        Mon, 25 May 2020 00:42:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcVC017561
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334967;
-        bh=P3Qv1z0zgKjuZ3WCh10Ov8B8BC+PfGx7hBhH7ci8pxU=;
+        s=dec2015msa; t=1590334973;
+        bh=yUj5Ws3WkKKXaLwrUzHeEtDsUInB1hdig+Me2Av4724=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kmEK0vM4ivml2OScf3Psi9Hko0+Gd7QXueYfTJMyYOaponvM7zPlu6Ce3WU19xg7g
-         PlWg/xPlLgd+JQ81ztFLneLjG9wHh/oEwTAOmLfiD2DZujyHVRT/1r5CUR0uUiio47
-         +QBiGnYUg8+YCntpCxRCwppsbH3FNQpkH4jWrZu1nfZVX96j4r8z9mBHN16gv3jJZt
-         saRMGiRQXFcYvjSJV4lzf/Os8IcRIv/VQJ8MRQ2Pt9Wj3+DXopwLsfgNjX6qT8ndhs
-         3g94r4bwOAEYW8nrwEDXtF7ADBlxAVTJw8k6KkKJ35UarYpTn13oXm0/Ck63K/EMGP
-         PizcBMTC8I/8g==
+        b=SJxBhAWRgWMoFClDMRc8JhI1KK92/HdamHroNt6xQFiWCX2nfUTh44PDhqikgAJwg
+         K0/WY8rjbmY/s3zQ1k2ECFQ3I/RlYI0XsEcyR29EMnaNKnep+g+Y2z2qx46f0wEPaD
+         pawZmoyecQnDZQsELE91hYEJGS7LwJMGV49l9CvvMYTtaxigjeL+IZsFC47M7DA/us
+         xmQu5599B+olsaTCAw06nlVMbXidFgF37Uhif9883dqTW2klJkn/8L9/M2mFmgRYdw
+         xO/U35xLRWnXOx/w+DnI53NJR7FNm3JWK52SJr42wkpWcNbkD13GDOYJK9DqCHkjuT
+         T4DMb+bZOJaUA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/29] modpost: allow to pass -i option multiple times remove -e option
-Date:   Mon, 25 May 2020 00:42:21 +0900
-Message-Id: <20200524154235.380482-16-masahiroy@kernel.org>
+Subject: [PATCH v2 27/29] modpost: strip .o from modname before calling new_module()
+Date:   Mon, 25 May 2020 00:42:33 +0900
+Message-Id: <20200524154235.380482-28-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
 References: <20200524154235.380482-1-masahiroy@kernel.org>
@@ -61,71 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there is no difference in the functionality of -i and -e,
-they can be unified.
+new_module() conditionally strips the .o because the modname has .o
+suffix when it is called from read_symbols(), but no .o when it is
+called from read_dump().
 
-Make modpost accept the -i option multiple times, then remove -e.
+It is clearer to strip .o in read_symbols().
 
-I will reuse -e for a different purpose.
+I also used flexible-array for mod->name.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- scripts/Makefile.modpost | 2 +-
- scripts/mod/modpost.c    | 9 +--------
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ scripts/mod/modpost.c | 20 +++++++++++---------
+ scripts/mod/modpost.h |  2 +-
+ 2 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 8321068abb31..a316095c843c 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -82,7 +82,7 @@ include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
- # modpost options for external modules
- MODPOST += \
- 	-i Module.symvers \
--	$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)) \
-+	$(addprefix -i ,$(KBUILD_EXTRA_SYMBOLS)) \
- 	-o $(KBUILD_EXTMOD)/Module.symvers
- 
- endif
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 76599dd44bae..2ecf72a176cf 100644
+index 662dc1ca10f8..2c783adbfc34 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -2558,7 +2558,6 @@ int main(int argc, char **argv)
+@@ -174,18 +174,12 @@ static struct module *find_module(const char *modname)
+ static struct module *new_module(const char *modname)
  {
  	struct module *mod;
- 	struct buffer buf = { };
--	char *kernel_read = NULL;
- 	char *missing_namespace_deps = NULL;
- 	char *dump_write = NULL, *files_source = NULL;
- 	int opt;
-@@ -2567,13 +2566,9 @@ int main(int argc, char **argv)
- 	struct ext_sym_list *extsym_start = NULL;
- 	struct ext_sym_list **extsym_iter = &extsym_start;
+-	char *p;
  
--	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
-+	while ((opt = getopt(argc, argv, "i:mnsT:o:awENd:")) != -1) {
- 		switch (opt) {
- 		case 'i':
--			kernel_read = optarg;
--			external_module = 1;
--			break;
--		case 'e':
- 			external_module = 1;
- 			*extsym_iter = NOFAIL(calloc(1, sizeof(**extsym_iter)));
- 			(*extsym_iter)->file = optarg;
-@@ -2614,8 +2609,6 @@ int main(int argc, char **argv)
- 		}
- 	}
+-	mod = NOFAIL(malloc(sizeof(*mod)));
++	mod = NOFAIL(malloc(sizeof(*mod) + strlen(modname) + 1));
+ 	memset(mod, 0, sizeof(*mod));
+-	p = NOFAIL(strdup(modname));
+-
+-	/* strip trailing .o */
+-	if (strends(p, ".o"))
+-		p[strlen(p) - 2] = '\0';
  
--	if (kernel_read)
--		read_dump(kernel_read);
- 	while (extsym_start) {
- 		struct ext_sym_list *tmp;
+ 	/* add to list */
+-	mod->name = p;
++	strcpy(mod->name, modname);
+ 	mod->is_vmlinux = is_vmlinux(modname);
+ 	mod->gpl_compatible = -1;
+ 	mod->next = modules;
+@@ -2013,7 +2007,15 @@ static void read_symbols(const char *modname)
+ 	if (!parse_elf(&info, modname))
+ 		return;
  
+-	mod = new_module(modname);
++	{
++		char *tmp;
++
++		/* strip trailing .o */
++		tmp = NOFAIL(strdup(modname));
++		tmp[strlen(tmp) - 2] = '\0';
++		mod = new_module(tmp);
++		free(tmp);
++	}
+ 
+ 	if (!mod->is_vmlinux) {
+ 		license = get_modinfo(&info, "license");
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index 264c0c51defa..1df87d204c9a 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -116,7 +116,6 @@ struct namespace_list {
+ 
+ struct module {
+ 	struct module *next;
+-	const char *name;
+ 	int gpl_compatible;
+ 	struct symbol *unres;
+ 	int from_dump;  /* 1 if module was loaded from *.symver */
+@@ -130,6 +129,7 @@ struct module {
+ 	struct namespace_list *missing_namespaces;
+ 	// Actual imported namespaces
+ 	struct namespace_list *imported_namespaces;
++	char name[];
+ };
+ 
+ struct elf_info {
 -- 
 2.25.1
 
