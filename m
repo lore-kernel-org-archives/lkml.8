@@ -8,69 +8,69 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE996C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D063FC433E1
 	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9481F2076C
+	by mail.kernel.org (Postfix) with ESMTP id B207F207D8
 	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 09:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdR8VeUT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFZf9mZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgEXJzh (ORCPT
+        id S2387600AbgEXJzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 05:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33818 "EHLO
+        Sun, 24 May 2020 05:55:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgEXJzg (ORCPT
+        with ESMTP id S1728766AbgEXJzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 05:55:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895BCC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 02:55:36 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so17730507ljp.4
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 02:55:36 -0700 (PDT)
+        Sun, 24 May 2020 05:55:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B746BC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 02:55:38 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id c11so15523780ljn.2
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 02:55:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fZ5rNx2mKHea6ziFpnpByE/+bvm4N/4KCV6x0MsWCGg=;
-        b=KdR8VeUTaxaBmMtt74YwPZa9dv1fO+5MfbIbg8qwK3cIv7i6h2+f5LGtYc8bjpsvPy
-         sTQbgnSDJXFNhbRgt/NgHg9PYUjnNz9CZwg32ZM7OYb77yyiZeTa3rPOnXRMbLZ5NW/r
-         XFSIk20QRo203k5XMticqZe8miywq7VutGsF714/HuV1omTZuxDyUVFCYOdwOQ56gTGd
-         xLoqbT+R9GLR8X3Pcv/ZRvdsko7qvQ4DLnzkw7Lvxhet+VJQ0z7q9DZDPWKJXVFzlJy/
-         fXGR2m/ddGkrGM8bKPqESObkBiF3ABI9GsKEaaGqtygjhwd4PKcjQY8Cg+JdyqAYpIrr
-         uiYw==
+        bh=20J0Zyi7H89b27FZ6alPYdrkpj1cugpWlECqKNB+gFQ=;
+        b=bFZf9mZ2MBOhnulImpT28rXFlgzoJGFfxPyvKwuuIggITayKLKjkPu3o5CcPYxqBqd
+         iky4LyNIB3KbRxkmvI85TJXrXcE0AtZ3YFeNzS1/4sADd6gEQH5ABF99zkYRzsW9x08R
+         K9U1qhArN1n7Pzd1EkHC56D9TEbHuiarvKyLk9u+DR1FFpxG4DW8UVEF1F8RqithbzIN
+         +hKuYTHr6yX+UuZMaFYOQC/z/ATQbklW3mKuib/YFuuWD1X3KtR73D0dNnFZi3G1Gig4
+         sYYFBsWnXtfXj8W8KmU2iRrvVoJXSRb/+WuAi0WE3fQWVBPmIu7MfmctPF+3XBWE3CJQ
+         ay0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fZ5rNx2mKHea6ziFpnpByE/+bvm4N/4KCV6x0MsWCGg=;
-        b=i/17g8ZVdRxwSCRuEelJhIVysPybzHk1S3k2/2340ksfdM44ZtXn2Sdaah7SLXLORT
-         tFm8Rs1TPaf4dLjI5njVZLebDaDgwdRhCFxIkNHzrWheRO2/t9nE6GUKsaoYSzLbOphL
-         B3SU3K5tOkRyERgS4gmIW1To5N2tgYPme5EJxn+nedFD++Kz8rL58eSzxyvg7SIhc7b6
-         guzc9jDFu4Rtax+89d1eJR9rwm/s5/PtFYvcsMqvTb9xFs+Txm/vD54fRuBtc3ElQldL
-         TbU8Imyfbki1zqTyDfQ9pBSb62Er93HeCImUHQqyZXiuvr5aemgyClYNYlWnOhmUjFxd
-         m2Ug==
-X-Gm-Message-State: AOAM533HAhguvtNOrRHQV7J89XsWe+MBWxa4+SDbZLdr5MM3CEZW/yrW
-        zSXfFrhbh6o6657rUvyX6v8=
-X-Google-Smtp-Source: ABdhPJxRaljo2ochm3Lm4mSsTCgSrdmFwtxxR+/bQX9dA8t4gL3njOF3kPfIOoNXBWf7UBJ1uuTC7A==
-X-Received: by 2002:a2e:81d1:: with SMTP id s17mr11923751ljg.91.1590314135112;
-        Sun, 24 May 2020 02:55:35 -0700 (PDT)
+        bh=20J0Zyi7H89b27FZ6alPYdrkpj1cugpWlECqKNB+gFQ=;
+        b=TgifyO3IyAHa4lOjOzLsGq6nZNySEb2koxZyJGzzsnwwO6Q9ItWedCMyv4MhLBK/Bm
+         lf78osYVuGDE3kVVuVZnqWxNE7IuAgdGtQ7p3F/xDnqMD3kabEpewFO/ATv+TMjU3i9M
+         k6aIU7ktvKXaL0si5/Gy7OcndPYXClP6UM26gwp7H7pYJbBLS9kX2tuSezVILayOn9zA
+         LCdR/cO74QDdS53+6L9DTDAtiyDmJToYJEwrmS6rY07UedCEX/4vp0pAuw7QVbZUnyGu
+         WEOag8yFzxwQWzDDaQwe9CEowuD/Id/lHbmr3FwnhzODegD9ro5jm+4WL/1IaEXAtAxu
+         sEFg==
+X-Gm-Message-State: AOAM532F25frm1wVHd/YSEnp9EmTcUx+NC2sUS+hto0IEMWH5kEIyD5p
+        YYX453SxPPuW8HXMqlR5fKs=
+X-Google-Smtp-Source: ABdhPJzzyaGMN/yo9AQ7CQjqS/6PO21Bn4HTS/xLMf+oJ5yJO/d27WKDICYfTrXYjFR/BoKck1jvxQ==
+X-Received: by 2002:a2e:854d:: with SMTP id u13mr8876248ljj.295.1590314137244;
+        Sun, 24 May 2020 02:55:37 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
-        by smtp.gmail.com with ESMTPSA id 72sm2153576lfa.52.2020.05.24.02.55.34
+        by smtp.gmail.com with ESMTPSA id 72sm2153576lfa.52.2020.05.24.02.55.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 02:55:34 -0700 (PDT)
+        Sun, 24 May 2020 02:55:36 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH 1/2] phy: ti: am654-serdes: Constify regmap_config
-Date:   Sun, 24 May 2020 11:55:15 +0200
-Message-Id: <20200524095516.25227-2-rikard.falkeborn@gmail.com>
+        Jyri Sarha <jsarha@ti.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH 2/2]  phy: ti: j721e-wiz: Constify structs
+Date:   Sun, 24 May 2020 11:55:16 +0200
+Message-Id: <20200524095516.25227-3-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200524095516.25227-1-rikard.falkeborn@gmail.com>
 References: <20200524095516.25227-1-rikard.falkeborn@gmail.com>
@@ -81,32 +81,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-regmap_config is not modified and can be made static to allow the compiler
-to put it in read-only memory.
+clk_div_table and wiz_regmap_config are not modified and can therefore
+be made const to allow the compiler to put them in read-only memory.
 
 Before:
    text    data     bss     dec     hex filename
-  12328    3644      64   16036    3ea4 drivers/phy/ti/phy-am654-serdes.o
+  20265    7044      64   27373    6aed drivers/phy/ti/phy-j721e-wiz.o
 
 After:
    text    data     bss     dec     hex filename
-  12648    3324      64   16036    3ea4 drivers/phy/ti/phy-am654-serdes.o
+  20649    6660      64   27373    6aed drivers/phy/ti/phy-j721e-wiz.o
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/phy/ti/phy-am654-serdes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/ti/phy-j721e-wiz.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-index 0a166d5a6414..a174b3c3f010 100644
---- a/drivers/phy/ti/phy-am654-serdes.c
-+++ b/drivers/phy/ti/phy-am654-serdes.c
-@@ -72,7 +72,7 @@ struct serdes_am654_clk_mux {
- #define to_serdes_am654_clk_mux(_hw)	\
- 		container_of(_hw, struct serdes_am654_clk_mux, hw)
+diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
+index 30ea5b207285..33c4cf0105a4 100644
+--- a/drivers/phy/ti/phy-j721e-wiz.c
++++ b/drivers/phy/ti/phy-j721e-wiz.c
+@@ -117,7 +117,7 @@ struct wiz_clk_mux {
+ struct wiz_clk_divider {
+ 	struct clk_hw		hw;
+ 	struct regmap_field	*field;
+-	struct clk_div_table	*table;
++	const struct clk_div_table	*table;
+ 	struct clk_init_data	clk_data;
+ };
  
--static struct regmap_config serdes_am654_regmap_config = {
-+static const struct regmap_config serdes_am654_regmap_config = {
+@@ -131,7 +131,7 @@ struct wiz_clk_mux_sel {
+ 
+ struct wiz_clk_div_sel {
+ 	struct regmap_field	*field;
+-	struct clk_div_table	*table;
++	const struct clk_div_table	*table;
+ 	const char		*node_name;
+ };
+ 
+@@ -173,7 +173,7 @@ static struct wiz_clk_mux_sel clk_mux_sel_10g[] = {
+ 	},
+ };
+ 
+-static struct clk_div_table clk_div_table[] = {
++static const struct clk_div_table clk_div_table[] = {
+ 	{ .val = 0, .div = 1, },
+ 	{ .val = 1, .div = 2, },
+ 	{ .val = 2, .div = 4, },
+@@ -559,7 +559,7 @@ static const struct clk_ops wiz_clk_div_ops = {
+ 
+ static int wiz_div_clk_register(struct wiz *wiz, struct device_node *node,
+ 				struct regmap_field *field,
+-				struct clk_div_table *table)
++				const struct clk_div_table *table)
+ {
+ 	struct device *dev = wiz->dev;
+ 	struct wiz_clk_divider *div;
+@@ -756,7 +756,7 @@ static const struct reset_control_ops wiz_phy_reset_ops = {
+ 	.deassert = wiz_phy_reset_deassert,
+ };
+ 
+-static struct regmap_config wiz_regmap_config = {
++static const struct regmap_config wiz_regmap_config = {
  	.reg_bits = 32,
  	.val_bits = 32,
  	.reg_stride = 4,
