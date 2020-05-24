@@ -2,173 +2,147 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98989C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4992076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982852076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="DSE8S2ur";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yele04aE"
+	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="sKmEqVf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgEXGcR (ORCPT
+        id S1728422AbgEXG5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 02:32:17 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:55757 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbgEXGcR (ORCPT
+        Sun, 24 May 2020 02:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgEXG5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 02:32:17 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id 283E2A54;
-        Sun, 24 May 2020 02:32:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Sun, 24 May 2020 02:32:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=+9HzwLQSbQfYn3g9WBAL+QyA/zS
-        EfIyEySNaCOOLJtQ=; b=DSE8S2urYUF3yKuGMCVBRHZnmBO3fLOW58BIbytOY9g
-        dxEjWsEHkFuvDT5JhGyzzbFxQP0Twr9YGFR2kMGlRWiyrqUv70f0ESdlDMjzh4KE
-        yzHvj+Cjhfmw1bnznaJGkq+4RrjUnBADlgoT8NZAWu6ypSH9LVV7h4wzWaQleDgC
-        rpwQtUqaEcXCBt8lI2kywDY0sY4dt1rvUQeMw2Vbvie3CzFnkYOUk3WfDvGwDQ1p
-        X9E/2hIr6QJmaR0HjFVAI6y+HCjxtNEhGrXkhUsW7LniXZ2ueND616AGhJ5K+cL6
-        Y7zi/Tw1LaIuQr9jNzt3OYGCuYYR23Qakl3/h0D3W6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+9HzwL
-        QSbQfYn3g9WBAL+QyA/zSEfIyEySNaCOOLJtQ=; b=yele04aEwz9btCbpulaeeW
-        WXfjh5wU9s7y+4+Fknuw5veAfmbbn0X/vJMKGk433LjLvOLZO875cAYMVkDAk6ZW
-        rRVsqpxhVbijBxi4ERFBZVl11gzjo1mN7T5A+tmW1ptL6nMF3bnRegJLS48yg4Bh
-        CUZwRcTR7JjMRF6t+sqgBiTdjeEJIkgwWYXguwh6pSoWVRRlJ14Wwu8dGDvoG4WL
-        aW/OO2KQhIbFHBiOVuHcCH8LoVNGWcdlxP4m8+3MN8F9pVTiRuEwuWLEyRBRZx1O
-        ZMFX5U+Izg9cxQWzX8P/GnpX+me3aIcK7jSiUg3GVQUsqoUVNP49Wa5Q4Js24qUg
-        ==
-X-ME-Sender: <xms:7hTKXlxAVDK5bF3MvIkv7iSxjRAbQ6jbBR4KGMGwblTahGaDhra_Dw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddujedgudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:7hTKXlQreIS6z1gUEM3WqNS3XadRWNXTjDSSm1JT47KUes_d1XUU0g>
-    <xmx:7hTKXvVC6B5XKX7BYbuIM5XaFER0dmk2nW8RZnCT7h6fl4B_hn1qUA>
-    <xmx:7hTKXngMzElnSVcKdDrrqvE4KE5LY-3bZWK-nrp9ca8OHsWqkInaww>
-    <xmx:7hTKXpQAzwRPw_n7ZO_26S_Wq1DOQe2sGLmVLT8Qm8sMzCGjkcrgG8582_M>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 104F930664F8;
-        Sun, 24 May 2020 02:32:14 -0400 (EDT)
-Date:   Sun, 24 May 2020 08:32:10 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Alexander Graf <graf@amazon.de>
-Cc:     Andra Paraschiv <andraprs@amazon.com>,
-        linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v2 04/18] nitro_enclaves: Init PCI device driver
-Message-ID: <20200524063210.GA1369260@kroah.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-5-andraprs@amazon.com>
- <20200522070414.GB771317@kroah.com>
- <68b86d32-1255-f9ce-4366-12219ce07ba6@amazon.de>
+        Sun, 24 May 2020 02:57:12 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E9F1C061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:57:12 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id f3so15857791ioj.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=noxFunX2uI/FVRTYdrIrdHqbpc9T4lCMyDInJvvG8rs=;
+        b=sKmEqVf0g2OLue9Rp1A/WkSXf70RjVaTuI3MbjU8wS/C7acN/fmBvNE67EieNmqvMf
+         jRe1vfe9CkK76yclpUEWyB5YXYSqHDFJ772rO2kUs4rM8fmV6bBR7xZPMoIXLwN4m3hq
+         81SmFj/W6fm/8MOEpkzOpx48SdpvSfHm/VTOXCmuHsaFKpvKF9qbFyprxsq8P8Gd2i8i
+         3MT3a3JnCibxEtC7K1Gjrw0WVb8WJpIPXqWIPvI9qnsqInY1p0gQ7hSWbyLLxNTNn1ta
+         ezpvkeuMoxqR9Um0oPBP4N58/efb+RFrBlPbDxXOdHsAe7izw0VhQD7R3e4ueAIVhQX9
+         VlPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=noxFunX2uI/FVRTYdrIrdHqbpc9T4lCMyDInJvvG8rs=;
+        b=Nv/tSBMUqpREV+XQ0PWzJJ2m/KAB6LdNVm6bg9HU3WtSw9coFub2JfXvAluKpO82/V
+         0AMA52pQaLKRPvAZbOI5EVZ/2rrOnbNH4B49UnR0qGPEAqzo4kDgNpT7pk6L1nx8IJv1
+         m5aNiBDdKcThDkXufZnj2UkFQVH9K24DrpYSOFpBK2KVKNigMMACnCtKhtyjmYE3FLwR
+         cMb3bvWzy8x3OZvECeQySLnqSFPOql3ARmF6asic8gqt1gd/f8i7eykZYeAW2IxdFr0w
+         35uBSkNt/50vd/QPx3VgRbJEV/7JhuMsr2GBo5jFG6iYd0pO0YBZwdxbM/DlfQfXLES2
+         XwzA==
+X-Gm-Message-State: AOAM5309SUiih/il20ICY2k9av6g/vbW1ZvF1tTXe88kJ8ZIiaBEtVnx
+        DcoXuBH8bo4VcfbNLUw1xL8Xj5opavARcPdVDwwV0w==
+X-Google-Smtp-Source: ABdhPJxsTmfAXqCTWeb8LCoLtGraNutbh1nU/LqHMh/NN3fmkihgGKjA1xwD+BPQlycsQL4PiIDH6n1Yr02j9d+i0Mo=
+X-Received: by 2002:a6b:6b04:: with SMTP id g4mr9182371ioc.75.1590303430943;
+ Sat, 23 May 2020 23:57:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68b86d32-1255-f9ce-4366-12219ce07ba6@amazon.de>
+References: <CABV8kRz0mKSc=u1LeonQSLroKJLOKWOWktCoGji2nvEBc=e7=w@mail.gmail.com>
+ <20200519081551.GA9980@willie-the-truck> <CABV8kRzYzBrdzC1_opmmdpW63N2htfOsAUZ+RjiSDsy=SJW6Yg@mail.gmail.com>
+ <20200520174149.GB27629@willie-the-truck> <CABV8kRzjCCsjVeRsBD7U_Lo0==sBw9EKm=1z7g=60KyJvJLZBQ@mail.gmail.com>
+In-Reply-To: <CABV8kRzjCCsjVeRsBD7U_Lo0==sBw9EKm=1z7g=60KyJvJLZBQ@mail.gmail.com>
+From:   Keno Fischer <keno@juliacomputing.com>
+Date:   Sun, 24 May 2020 02:56:35 -0400
+Message-ID: <CABV8kRxfet2RXXNcUoTKwfVzFWEQfxAkXUX4M5XhkP3nc-0+rQ@mail.gmail.com>
+Subject: Re: arm64: Register modification during syscall entry/exit stop
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kyle Huey <khuey@pernos.co>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 10:25:25PM +0200, Alexander Graf wrote:
-> Hey Greg,
-> 
-> On 22.05.20 09:04, Greg KH wrote:
-> > 
-> > On Fri, May 22, 2020 at 09:29:32AM +0300, Andra Paraschiv wrote:
-> > > +/**
-> > > + * ne_setup_msix - Setup MSI-X vectors for the PCI device.
-> > > + *
-> > > + * @pdev: PCI device to setup the MSI-X for.
-> > > + *
-> > > + * @returns: 0 on success, negative return value on failure.
-> > > + */
-> > > +static int ne_setup_msix(struct pci_dev *pdev)
-> > > +{
-> > > +     struct ne_pci_dev *ne_pci_dev = NULL;
-> > > +     int nr_vecs = 0;
-> > > +     int rc = -EINVAL;
-> > > +
-> > > +     if (WARN_ON(!pdev))
-> > > +             return -EINVAL;
-> > 
-> > How can this ever happen?  If it can not, don't test for it.  If it can,
-> > don't warn for it as that will crash systems that do panic-on-warn, just
-> > test and return an error.
-> 
-> I think the point here is to catch situations that should never happen, but
-> keep a sanity check in in case they do happen. This would've usually been a
-> BUG_ON, but people tend to dislike those these days because they can bring
-> down your system ...
+Just ran into this issue again, with what I think may be most compelling
+example yet why this is problematic:
 
-Same for WARN_ON when you run with panic-on-warn enabled :(
+The tracee incurred a signal, we PTRACE_SYSEMU'd to the rt_sigreturn,
+which the tracer tried to emulate by applying the state from the signal frame.
+However, the PTRACE_SYSEMU stop is a syscall-stop, so the tracer's write
+to x7 was ignored and x7 retained the value it had in the signal handler,
+which broke the tracee.
 
-> So in this particular case here I agree that it's a bit silly to check
-> whether pdev is != NULL. In other device code internal APIs though it's not
-> quite as clear of a cut. I by far prefer code that tells me it's broken over
-> reverse engineering stray pointer accesses ...
+Keno
 
-For static calls where you control the callers, don't do checks like
-this.  Otherwise the kernel would just be full of these all over the
-place and things would slow down.  It's just not needed.
-
-> > > +     ne_pci_dev = pci_get_drvdata(pdev);
-> > > +     if (WARN_ON(!ne_pci_dev))
-> > > +             return -EINVAL;
-> > 
-> > Same here, don't use WARN_ON if at all possible.
-> > 
-> > > +
-> > > +     nr_vecs = pci_msix_vec_count(pdev);
-> > > +     if (nr_vecs < 0) {
-> > > +             rc = nr_vecs;
-> > > +
-> > > +             dev_err_ratelimited(&pdev->dev,
-> > > +                                 NE "Error in getting vec count [rc=%d]\n",
-> > > +                                 rc);
-> > > +
-> > 
-> > Why ratelimited, can this happen over and over and over?
-> 
-> In this particular function, no, so here it really should just be dev_err.
-> Other functions are implicitly callable from user space through an ioctl,
-> which means they really need to stay rate limited.
-
-Think through these as the driver seems to ONLY use these ratelimited
-calls right now, which is not correct.
-
-Also, if a user can create a printk, that almost always is not a good
-idea.  But yes, those should be ratelimited.
-
-thanks,
-
-greg k-h
+On Sat, May 23, 2020 at 1:35 AM Keno Fischer <keno@juliacomputing.com> wrote:
+>
+> I got bitten by this again, so I decided to write up a simple example
+> that shows the problem:
+>
+> https://gist.github.com/Keno/cde691b26e32373307fb7449ad305739
+>
+> This runs the same child twice. First vanilla where it prints "Hello world".
+> The second time, using a textbook ptrace example, to only print "world".
+> The problem here is that by the time the ptracer gets around to restoring
+> the registers, it's no longer in a syscall stop, so the write to x7 does not
+> get ignored and the correct value of x7 gets clobbered.
+> I copied the syscall definition from musl, so the compiler thinks x7 is
+> live, and we can see an assertion.
+>
+> Output on my machine (will depend on compiler version, etc.):
+> ```
+> $ gcc -g3 -O3 ptrace_lies.c
+> $ ./a.out
+> Hello World
+> World
+> a.out: ptrace_lies.c:49: do_child: Assertion `v3 == values[2]' failed.
+> a.out: ptrace_lies.c:134: main: Assertion `WIFEXITED(status) &&
+> WEXITSTATUS(status) == 0' failed.
+> Aborted (core dumped)
+> ```
+>
+> However, I don't think that whether or not the compiler thinks that x7 is
+> live is the problem here. The problem is entirely that this mechanism
+> prevents the ptracer from precisely controlling the register state. While
+> basic ptracers don't need this feature (strace),
+> more advanced ptracers (think criu, etc.) absolutely do want to precisely
+> control what the register state is.
+> The ptracer I'm working on (https://rr-project.org/)
+> happens to be an extreme case of this, where it wants *bitwise* equivalent
+> register states such that it can run the same code many times and get
+> the exact same results.
+>
+> Also, if the issue was just that the kernel clobbered x7, that would be fine
+> we could deal with that no problem. However, it's much worse than that,
+> because the behavior of the kernel with respect to x7 depends on what
+> kind of ptrace stop we're in and even worse, in some kinds of stop,
+> there's absolutely no way to get at the actual value of x7.
+>
+> > Hmm, does that actually result in the SVC instruction getting inlined? I
+> > think that's quite dangerous, since we document that we can trash the SVE
+> > register state on a system call, for example. I'm also surprised that
+> > the register variables are honoured by compilers if that inlining can occur.
+>
+> I haven't gotten to trying SVE yet, so I appreciate the warning :). That said,
+> deterministic clobbering of registers is fine. Even changing the registers to
+> random junk is fine. We're happy to read those registers through ptrace.
+> The problem here is that the kernel lies about what the contents of the x7
+> register is and discards any writes to it.
+>
+> I really hope we can come up with a solution here, I'm already dreading
+> the next time I unexpectedly run into this and have to add yet
+> another special case :(.
+>
+> Keno
