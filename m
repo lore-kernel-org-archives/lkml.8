@@ -2,73 +2,71 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C88C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3B8207C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE9620787
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FrXCWih/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QoOW0b+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388322AbgEXTWw (ORCPT
+        id S2388045AbgEXTWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 15:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36980 "EHLO
+        Sun, 24 May 2020 15:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388214AbgEXTWY (ORCPT
+        with ESMTP id S2387744AbgEXTWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 15:22:24 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1315C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:22:23 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q16so6696249plr.2
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:22:23 -0700 (PDT)
+        Sun, 24 May 2020 15:22:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B98C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:22:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v2so2857438pfv.7
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 12:22:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4QX6izj81MoWvGB/E4/khaJEguGwrdsEfxjduXmAWvc=;
-        b=FrXCWih/fqy5rFigNvFp2soetQnTjk3UWgjf1t5Fq9zUKajb6xucJmoe4faadG/Dmc
-         Lj7A8hdDcSd7cwHUcnjgUu9TkCTHTVgWOuBdk6bdc2aSoswqnHSy3nb37tiShQKrRgwU
-         kQGRSX/5Ki0ECJ1FKNiSS5m/Un75CkOharfLmwwahvohU6GmkkVM8hyoaWdv2bMn8DL+
-         UUnlV+L9+B+Jj9LPHpFsrshojMI4VFzFwwfeQ/C5Uc0g/CKzE2PcxT0SqhVO8/D14I3X
-         LUxExRTj+3BF9xbf6ZL8baH0FFQafDwnYkxJYf311W2Wnbkzfk3xuzawz1p9wlX71+uX
-         ZuyA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRgTWBIUIof3K+e/CBH42LWEIO1ioATTUwPeCqp2UHQ=;
+        b=QoOW0b+9anaSH1PynN6EMvziqcD6SYQPSEyhxExvJ4fIbobZWkV+qjOWZY58TVG7/j
+         XFzrw/TO8ZNuU9Wy1Kf0MtJNqmALcX1/fJ/5NQp7C3CXyHN9qTAhMDHMuZ1P5N0QLICT
+         SPtZkbXpx1yp8TjNzUYVx5kDRq5UU+8wJ4/KNP5CVFR4UX6FTCLFGCgQ1D3Lsqx7QjuV
+         tYMuVOBoMg+OEnWFCvHKiMZQ4b/JUMaF2BwDINXvScHsgfWF3j0okK8Xtc5dWYKAP6mD
+         Gfl8OHlvFdVv3AnJaeKNPTRCWKLc+m5FLCtY12XqW+yTOwdElb93BOVQczWu3zRG1Tfj
+         7hbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4QX6izj81MoWvGB/E4/khaJEguGwrdsEfxjduXmAWvc=;
-        b=Ra3aW70TEmR/goFXUa9p1gCQ40tVpvVvzjaGjiihnKRGMS8cPZdiLWqRaFV6mKxa0O
-         rSY9nGKHq6YOSD35klMmSYmwmRgbXtWqWvVY+XFMo3BisVFsG9imK4Sc6WCdi1ZmdJ8k
-         WcOBzVgrPjHYYmnZ7h+wlze3GqluVJwkvpnGbSnx/sS+CLhroUop+V5RyGpQjEgRmfd1
-         ocR1g4ibztLWNaLjA79CDJEBKzmMRkjnewmjFMzQC4dFV7CBJAi4TmePnzKBGP5RELhj
-         snlayOEpKvyIOwVDNLdj/FXcrmX3TC5kTZatrA7VYLK54KXauifQxoMlBPx0kc19t8iX
-         9apQ==
-X-Gm-Message-State: AOAM53036OJhi9A4Jy5OjPl021VCivpH1U5ZEuxs5i2OvAk5M8YK3SLO
-        Vqh7Zej3Ul4rFLGNiAIFyxZNrQ==
-X-Google-Smtp-Source: ABdhPJyjDCYHAk0AUhemwGeKPxGqOTLpvrciZlQVB8VBWPs9J2AE+uiuLeGMBoKTiCckFgaWydI+aw==
-X-Received: by 2002:a17:90a:1303:: with SMTP id h3mr15729181pja.44.1590348143383;
-        Sun, 24 May 2020 12:22:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PRgTWBIUIof3K+e/CBH42LWEIO1ioATTUwPeCqp2UHQ=;
+        b=nwhOXDoDJEekx9Sv6hNrDNp4aDHBz0cR1IC05SXuajb20eFmjsHxKzVeQ2mdxozTjw
+         /jJHHRzYeA16WtXzAyK8SXI7FVoUsHZ+61NxIWx2Gmq8PcIAMx93Qh0rGnxFlIXFdhrb
+         RJPgivbaknh0WZgcbWiaPPlLn7ra5+KSFvCexYLXhENm2QA5r/GgaNltIDn0hkEKqX3I
+         0WeW87WIJXoiFmzIys3tU3C6lxUD6dG3Dp53BfsBftIDwNEAGgoqNJNwSOhY/O5pDDS+
+         6/SZ6dVyulG1YRQbe/oET2UAhNgofN5GnP9w0n2UIiipgv0GuDGBhRTnm7SipdUYaaEb
+         8ITA==
+X-Gm-Message-State: AOAM531ePMhFiS/GO1PV1+x0G1TpLofd2JNFnpkzHM+vJHP1TAcr4RNt
+        h6Az1JRDzsdInUnRItv63qOwZcnmdwhhfg==
+X-Google-Smtp-Source: ABdhPJxpWNMA85eA4BcwCQuyHmnnwKmYr9/iXxe1Qr6NlCvQdWZu5puz/A2BlfDne/CKV/J4XCu1QA==
+X-Received: by 2002:a63:1207:: with SMTP id h7mr17624890pgl.241.1590348132344;
+        Sun, 24 May 2020 12:22:12 -0700 (PDT)
 Received: from x1.lan ([2605:e000:100e:8c61:c871:e701:52fa:2107])
-        by smtp.gmail.com with ESMTPSA id t21sm10312426pgu.39.2020.05.24.12.22.22
+        by smtp.gmail.com with ESMTPSA id t21sm10312426pgu.39.2020.05.24.12.22.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 12:22:22 -0700 (PDT)
+        Sun, 24 May 2020 12:22:11 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     io-uring@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 08/12] block: flag block devices as supporting IOCB_WAITQ
-Date:   Sun, 24 May 2020 13:22:02 -0600
-Message-Id: <20200524192206.4093-9-axboe@kernel.dk>
+        linux-mm@kvack.org
+Subject: [PATCHSET v4 0/12] Add support for async buffered reads
+Date:   Sun, 24 May 2020 13:21:54 -0600
+Message-Id: <20200524192206.4093-1-axboe@kernel.dk>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200524192206.4093-1-axboe@kernel.dk>
-References: <20200524192206.4093-1-axboe@kernel.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,24 +74,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/block_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We technically support this already through io_uring, but it's
+implemented with a thread backend to support cases where we would
+block. This isn't ideal.
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 86e2a7134513..ec8dccc81b65 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1851,7 +1851,7 @@ static int blkdev_open(struct inode * inode, struct file * filp)
- 	 */
- 	filp->f_flags |= O_LARGEFILE;
- 
--	filp->f_mode |= FMODE_NOWAIT;
-+	filp->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;
- 
- 	if (filp->f_flags & O_NDELAY)
- 		filp->f_mode |= FMODE_NDELAY;
+After a few prep patches, the core of this patchset is adding support
+for async callbacks on page unlock. With this primitive, we can simply
+retry the IO operation. With io_uring, this works a lot like poll based
+retry for files that support it. If a page is currently locked and
+needed, -EIOCBQUEUED is returned with a callback armed. The callers
+callback is responsible for restarting the operation.
+
+With this callback primitive, we can add support for
+generic_file_buffered_read(), which is what most file systems end up
+using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
+trivial to add more.
+
+The file flags support for this by setting FMODE_BUF_RASYNC, similar
+to what we do for FMODE_NOWAIT. Open to suggestions here if this is
+the preferred method or not.
+
+In terms of results, I wrote a small test app that randomly reads 4G
+of data in 4K chunks from a file hosted by ext4. The app uses a queue
+depth of 32. If you want to test yourself, you can just use buffered=1
+with ioengine=io_uring with fio. No application changes are needed to
+use the more optimized buffered async read.
+
+preadv for comparison:
+	real    1m13.821s
+	user    0m0.558s
+	sys     0m11.125s
+	CPU	~13%
+
+Mainline:
+	real    0m12.054s
+	user    0m0.111s
+	sys     0m5.659s
+	CPU	~32% + ~50% == ~82%
+
+This patchset:
+	real    0m9.283s
+	user    0m0.147s
+	sys     0m4.619s
+	CPU	~52%
+
+The CPU numbers are just a rough estimate. For the mainline io_uring
+run, this includes the app itself and all the threads doing IO on its
+behalf (32% for the app, ~1.6% per worker and 32 of them). Context
+switch rate is much smaller with the patchset, since we only have the
+one task performing IO.
+
+Also ran a simple fio based test case, varying the queue depth from 1
+to 16, doubling every time:
+
+[buf-test]
+filename=/data/file
+direct=0
+ioengine=io_uring
+norandommap
+rw=randread
+bs=4k
+iodepth=${QD}
+randseed=89
+runtime=10s
+
+QD/Test		Patchset IOPS		Mainline IOPS
+1		9046			8294
+2		19.8k			18.9k
+4		39.2k			28.5k
+8		64.4k			31.4k
+16		65.7k			37.8k
+
+Outside of my usual environment, so this is just running on a virtualized
+NVMe device in qemu, using ext4 as the file system. NVMe isn't very
+efficient virtualized, so we run out of steam at ~65K which is why we
+flatline on the patched side (nvme_submit_cmd() eats ~75% of the test app
+CPU). Before that happens, it's a linear increase. Not shown is context
+switch rate, which is massively lower with the new code. The old thread
+offload adds a blocking thread per pending IO, so context rate quickly
+goes through the roof.
+
+The goal here is efficiency. Async thread offload adds latency, and
+it also adds noticable overhead on items such as adding pages to the
+page cache. By allowing proper async buffered read support, we don't
+have X threads hammering on the same inode page cache, we have just
+the single app actually doing IO.
+
+Been beating on this and it's solid for me, and I'm now pretty happy
+with how it all turned out. Not aware of any missing bits/pieces or
+code cleanups that need doing.
+
+Series can also be found here:
+
+https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.4
+
+or pull from:
+
+git://git.kernel.dk/linux-block async-buffered.4
+
+ fs/block_dev.c            |   2 +-
+ fs/btrfs/file.c           |   2 +-
+ fs/ext4/file.c            |   2 +-
+ fs/io_uring.c             | 114 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_file.c         |   2 +-
+ include/linux/blk_types.h |   3 +-
+ include/linux/fs.h        |  10 +++-
+ include/linux/pagemap.h   |  67 ++++++++++++++++++++++
+ mm/filemap.c              | 111 ++++++++++++++++++++++++-------------
+ 9 files changed, 267 insertions(+), 46 deletions(-)
+
+Changes since v3:
+- io_uring: don't retry if REQ_F_NOWAIT is set
+- io_uring: alloc req->io if the request type didn't already
+- Add iocb->ki_waitq instead of (ab)using iocb->private
+Changes since v2:
+- Get rid of unnecessary wait_page_async struct, just use wait_page_async
+- Add another prep handler, adding wake_page_match()
+- Use wake_page_match() in both callers
+Changes since v1:
+- Fix an issue with inline page locking
+- Fix a potential race with __wait_on_page_locked_async()
+- Fix a hang related to not setting page_match, thus missing a wakeup
+
 -- 
-2.26.2
+Jens Axboe
+
 
