@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2C1207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216C72076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 19:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbgEXTDE (ORCPT
+        id S2388061AbgEXTDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 15:03:04 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:34891 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387823AbgEXTDE (ORCPT
+        Sun, 24 May 2020 15:03:12 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43065 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387823AbgEXTDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 15:03:04 -0400
+        Sun, 24 May 2020 15:03:12 -0400
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 1566F200003;
-        Sun, 24 May 2020 19:03:00 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3AA2B240002;
+        Sun, 24 May 2020 19:03:07 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
 Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH] mtd: rawnand: Fix runtime PM imbalance on error
-Date:   Sun, 24 May 2020 21:02:59 +0200
-Message-Id: <20200524190259.3429-1-miquel.raynal@bootlin.com>
+        Han Xu <han.xu@nxp.com>
+Subject: Re: [PATCH] mtd: rawnand: gpmi: Fix runtime PM imbalance in gpmi_nand_probe
+Date:   Sun, 24 May 2020 21:03:06 +0200
+Message-Id: <20200524190306.3492-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200522104008.28340-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200522101713.24350-1-dinghao.liu@zju.edu.cn>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 9caf04a04b4513a48e4d6df4b1a0a5fdcc23e8d6
+X-linux-mtd-patch-commit: 3a868cb6bd60e43c87c5318fd9b7e0ccf05f54b3
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-22 at 10:40:06 UTC, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
+On Fri, 2020-05-22 at 10:17:13 UTC, Dinghao Liu wrote:
+> There is no reason that the failure of __gpmi_enable_clk()
+> could lead to PM usage counter decrement.
 > 
 > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
