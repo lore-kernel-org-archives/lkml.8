@@ -2,300 +2,160 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0064FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C19FF207C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3362076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 05:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uflyzSAj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h0X98o+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgEXFEc (ORCPT
+        id S1728082AbgEXFFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 01:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45452 "EHLO
+        Sun, 24 May 2020 01:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgEXFEb (ORCPT
+        with ESMTP id S1725805AbgEXFFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 01:04:31 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D63C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 22:04:31 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id e11so6257464pfn.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 22:04:31 -0700 (PDT)
+        Sun, 24 May 2020 01:05:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F080CC061A0E
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 22:05:39 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id h4so12425800wmb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 22:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SG/Bv/Aw0zdk8jUii+TXQLtSrOOylEZqrhUbfPceguE=;
-        b=uflyzSAj6KZ1yqMnHH+y/k/pfZIDvebfpVCwijaHELUKDpmNbpIb/rsWSbstSM1csE
-         PJx/qXnvGGIr90IFCMCXsJUaynjNYVYtjRkqfERSsQ46GbTItZBG6L5LALBmS/gMye4S
-         oC9JDN0BcR6oA3/rxeAN4QDX5PPGlxZJtKViCn43TLZBouC8nfIGeLvpccIOL67tidwp
-         ksbYawY3/vFMV2N5tcJjecOy+IzN/bXZnx0G4lGiT7HlOV4C+fsPHyelDbmalnsUTu00
-         Hj0ge018ex9UUYygZxCQFfpl7xKcHdTLWdJf400uFLd/ha8XA+R0zROVCJRo4/f6ryBc
-         VMkA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yOIx32DzV9Yk/O3q4NLhph8Gyjxz3HGsJqmaZP5BXsg=;
+        b=h0X98o+dRzjFWkvGg+RVmrUh81Ek8j36zAZtYtaLmx/I5qzSvxxpXToFKCvDnAmiwt
+         4a8QEoW1hYjKF7mQxdP//+r98T0Saps4B16lcvA/xxDRC4tmjNyrddvVD21yllEM4WPX
+         SA9Mh/jDUtVXRs8uN54riWl0nZGpRNVlApCSIXVIwlhmkGkRRN+zSxSSxHqHVANheISQ
+         J42Wjgo0n/l6BipOl8pqdgbkAiglrtQso5igL+bn5ZS2Z1QYMNt9ZsLIemb6cZXoEMNc
+         7QBoiRd2LMPeZmy+iu+2ZlnE6AKP4D87/XyLuRLPlN1K1KiXfEZX1iaEcHbtOUuvLYAi
+         yrhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SG/Bv/Aw0zdk8jUii+TXQLtSrOOylEZqrhUbfPceguE=;
-        b=QV38jiueOL9t1oWQ2D2nfDbnGCToQMAZNivgr1wC8BHCrdOLmwg8amQXx9N3EhGmiu
-         39JYWu+2ZmX/XmyoBtRYuJMc8m7d1JanLI65iYm7rg9zgXF35E7imuYgO9FfBBq0x4Bu
-         +5T0rUUEJACVvpL3RI6MKmPZLfj/2w9JAP4H5FTkQX7WQJJxFPcNwuNbM5Ay/pN0sExG
-         NAFzk0uMRmeSeEBXs7ME3SgGh1s8IuHa/2kVP2LsYSPFWRpmlyKM2NH29SB4xfajpmZX
-         mhjHO7JN5csdfOsl+yBjzrgQS4RnedKyW6QxR2KRWL4k7HckHB3bAOG+wiofROfcgsPI
-         Or0Q==
-X-Gm-Message-State: AOAM533sBWN3a2FhscIIhzvgDXRZ2tsxO4XRMeEv2dth52j0TH6sHjgd
-        id2A+iPBf40SPea1FSiZrHI=
-X-Google-Smtp-Source: ABdhPJymmbhw3QEZnO43x2DHx5pp6Edcgbvr2/NqXQzu6TsoGWul4I54fYwHXUa151J4SnBID3xuFg==
-X-Received: by 2002:a62:b503:: with SMTP id y3mr11492679pfe.3.1590296671299;
-        Sat, 23 May 2020 22:04:31 -0700 (PDT)
-Received: from syed ([106.223.122.111])
-        by smtp.gmail.com with ESMTPSA id w12sm8841110pjb.11.2020.05.23.22.04.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 May 2020 22:04:30 -0700 (PDT)
-Date:   Sun, 24 May 2020 10:34:14 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     linus.walleij@linaro.org, akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
-Message-ID: <042eddd4b87f0db3588a79d829afe6b23fa8365c.1590017578.git.syednwaris@gmail.com>
-References: <cover.1590017578.git.syednwaris@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yOIx32DzV9Yk/O3q4NLhph8Gyjxz3HGsJqmaZP5BXsg=;
+        b=t/EmrW8swloAD3GiA4POt4TTLOwdarbgUvguLMDmz24yfJoSFj40XteWNjlEHK4ljz
+         PGJWjvWthKjWQ8t6R1p6Y60xOiCbnUYdy39C9GOAsWSyWQw09uEAfS/EsZJ0/nStV2T9
+         Ga86fbIn2jzj6xNIOlkgquDPKzzeY4iDGQJYahnEfNfFskm6DO5b+poTecyY9+s7VRsK
+         SVzseBDopdnW0G8D68aExKbPay/WoARQz1ftGJa7qV620rEIK6Fr2Sdd+YeUzUVVxis1
+         AuolFiVMyXD5fJtuKNhz9AwR348rQYC6ClM2LMwMVG9pCMwstThkU0UItuaBUXMwyhrH
+         n7dQ==
+X-Gm-Message-State: AOAM530hfbjws3wR8sHtCW1oQqH2YME1yvE0iM4cMBbLOA5IrpginhTd
+        FCGI9tob3dZ/FjF06IKfRrPi8A==
+X-Google-Smtp-Source: ABdhPJy5BIy2yzNSXBycuVdf4capa9hemit9Tyinx3iO/bYzMEVC0j8+1ysL4G44A6HziAp/xv3PTw==
+X-Received: by 2002:a1c:27c2:: with SMTP id n185mr21596506wmn.68.1590296738569;
+        Sat, 23 May 2020 22:05:38 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:c871:e070:f68d:a4f7? ([2a01:e34:ed2f:f020:c871:e070:f68d:a4f7])
+        by smtp.googlemail.com with ESMTPSA id h1sm14766532wme.42.2020.05.23.22.05.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2020 22:05:37 -0700 (PDT)
+Subject: Re: [PATCH V3] thermal: imx: Add missing of_node_put()
+To:     Anson Huang <anson.huang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1588128570-12917-1-git-send-email-Anson.Huang@nxp.com>
+ <DB3PR0402MB391639FE30CD00F3371A0763F5B20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <e824c7a9-91ba-b44c-8e3f-f6dc39d6ec0e@linaro.org>
+Date:   Sun, 24 May 2020 07:05:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1590017578.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <DB3PR0402MB391639FE30CD00F3371A0763F5B20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The introduction of the generic for_each_set_clump macro need test
-cases to verify the implementation. This patch adds test cases for
-scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
-The cases contain situations where clump is getting split at the word
-boundary and also when zeroes are present in the start and middle of
-bitmap.
+On 24/05/2020 05:26, Anson Huang wrote:
+> Gentle ping...
 
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
-Changes in v7:
- - Minor changes: Use macro 'DECLARE_BITMAP()' and split 'struct'
-   definition and test data.
+It is applied, sorry for not letting you know.
 
-Changes in v6:
- - Make 'for loop' inside 'test_for_each_set_clump' more succinct.
+>> Subject: [PATCH V3] thermal: imx: Add missing of_node_put()
+>>
+>> After finishing using cpu node got from of_get_cpu_node(), of_node_put()
+>> needs to be called, the cpufreq policy also needs to be put unconditionally.
+>>
+>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>> ---
+>> Changes since V2:
+>> 	- call cpufreq_cpu_put() unconditionally after cooling register done.
+>> ---
+>>  drivers/thermal/imx_thermal.c | 13 ++++++-------
+>>  1 file changed, 6 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+>> index e761c9b..8764cb5 100644
+>> --- a/drivers/thermal/imx_thermal.c
+>> +++ b/drivers/thermal/imx_thermal.c
+>> @@ -649,7 +649,7 @@ MODULE_DEVICE_TABLE(of, of_imx_thermal_match);
+>> static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+>> {
+>>  	struct device_node *np;
+>> -	int ret;
+>> +	int ret = 0;
+>>
+>>  	data->policy = cpufreq_cpu_get(0);
+>>  	if (!data->policy) {
+>> @@ -661,20 +661,19 @@ static int
+>> imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+>>
+>>  	if (!np || !of_find_property(np, "#cooling-cells", NULL)) {
+>>  		data->cdev = cpufreq_cooling_register(data->policy);
+>> -		if (IS_ERR(data->cdev)) {
+>> +		if (IS_ERR(data->cdev))
+>>  			ret = PTR_ERR(data->cdev);
+>> -			cpufreq_cpu_put(data->policy);
+>> -			return ret;
+>> -		}
+>>  	}
+>>
+>> -	return 0;
+>> +	cpufreq_cpu_put(data->policy);
+>> +	of_node_put(np);
+>> +
+>> +	return ret;
+>>  }
+>>
+>>  static void imx_thermal_unregister_legacy_cooling(struct imx_thermal_data
+>> *data)  {
+>>  	cpufreq_cooling_unregister(data->cdev);
+>> -	cpufreq_cpu_put(data->policy);
+>>  }
+>>
+>>  #else
+>> --
+>> 2.7.4
+> 
 
-Changes in v5:
- - No change.
 
-Changes in v4:
- - Use 'for' loop in test function of 'for_each_set_clump'.
-
-Changes in v3:
- - No Change.
-
-Changes in v2:
- - Unify different tests for 'for_each_set_clump'. Pass test data as
-   function parameters.
- - Remove unnecessary bitmap_zero calls.
-
- lib/test_bitmap.c | 144 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
-
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 6b13150667f5..31b3cd920c93 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -155,6 +155,38 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
- 	return true;
- }
- 
-+static bool __init __check_eq_clump(const char *srcfile, unsigned int line,
-+				    const unsigned int offset,
-+				    const unsigned int size,
-+				    const unsigned long *const clump_exp,
-+				    const unsigned long *const clump,
-+				    const unsigned long clump_size)
-+{
-+	unsigned long exp;
-+
-+	if (offset >= size) {
-+		pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
-+			srcfile, line, size, offset);
-+		return false;
-+	}
-+
-+	exp = clump_exp[offset / clump_size];
-+	if (!exp) {
-+		pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
-+			srcfile, line, offset);
-+		return false;
-+	}
-+
-+	if (*clump != exp) {
-+		pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
-+			srcfile, line, exp, *clump);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+
- #define __expect_eq(suffix, ...)					\
- 	({								\
- 		int result = 0;						\
-@@ -172,6 +204,7 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
- #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
- #define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
- #define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
-+#define expect_eq_clump(...)		__expect_eq(clump, ##__VA_ARGS__)
- 
- static void __init test_zero_clear(void)
- {
-@@ -577,6 +610,28 @@ static void noinline __init test_mem_optimisations(void)
- 	}
- }
- 
-+static const unsigned long clump_bitmap_data[] __initconst = {
-+	0x38000201,
-+	0x05ff0f38,
-+	0xeffedcba,
-+	0xbbbbabcd,
-+	0x000000aa,
-+	0x000000aa,
-+	0x00ff0000,
-+	0xaaaaaa00,
-+	0xff000000,
-+	0x00aa0000,
-+	0x00000000,
-+	0x00000000,
-+	0x00000000,
-+	0x0f000000,
-+	0x00ff0000,
-+	0xaaaaaa00,
-+	0xff000000,
-+	0x00aa0000,
-+	0x00000ac0,
-+};
-+
- static const unsigned char clump_exp[] __initconst = {
- 	0x01,	/* 1 bit set */
- 	0x02,	/* non-edge 1 bit set */
-@@ -588,6 +643,94 @@ static const unsigned char clump_exp[] __initconst = {
- 	0x05,	/* non-adjacent 2 bits set */
- };
- 
-+static const unsigned long clump_exp1[] __initconst = {
-+	0x01,	/* 1 bit set */
-+	0x02,	/* non-edge 1 bit set */
-+	0x00,	/* zero bits set */
-+	0x38,	/* 3 bits set across 4-bit boundary */
-+	0x38,	/* Repeated clump */
-+	0x0F,	/* 4 bits set */
-+	0xFF,	/* all bits set */
-+	0x05,	/* non-adjacent 2 bits set */
-+};
-+
-+static const unsigned long clump_exp2[] __initconst = {
-+	0xfedcba,	/* 24 bits */
-+	0xabcdef,
-+	0xaabbbb,	/* Clump split between 2 words */
-+	0x000000,	/* zeroes in between */
-+	0x0000aa,
-+	0x000000,
-+	0x0000ff,
-+	0xaaaaaa,
-+	0x000000,
-+	0x0000ff,
-+};
-+
-+static const unsigned long clump_exp3[] __initconst = {
-+	0x00000000,	/* starting with 0s*/
-+	0x00000000,	/* All 0s */
-+	0x00000000,
-+	0x00000000,
-+	0x3f00000f,     /* Non zero set */
-+	0x2aa80003,
-+	0x00000aaa,
-+	0x00003fc0,
-+};
-+
-+static const unsigned long clump_exp4[] __initconst = {
-+	0x00,
-+	0x2b,
-+};
-+
-+struct clump_test_data_params {
-+	DECLARE_BITMAP(data, 256);
-+	unsigned long count;
-+	unsigned long offset;
-+	unsigned long limit;
-+	unsigned long clump_size;
-+	unsigned long const *exp;
-+};
-+
-+struct clump_test_data_params clump_test_data[] = { {{0}, 2, 0, 64, 8, clump_exp1},
-+					{{0}, 8, 2, 240, 24, clump_exp2},
-+					{{0}, 8, 10, 240, 30, clump_exp3},
-+					{{0}, 1, 18, 18, 6, clump_exp4} };
-+
-+static void __init prepare_test_data(unsigned int index)
-+{
-+	int i;
-+	unsigned long width = 0;
-+
-+	for(i = 0; i < clump_test_data[index].count; i++)
-+	{
-+		bitmap_set_value(clump_test_data[index].data,
-+			clump_bitmap_data[(clump_test_data[index].offset)++], width, 32);
-+		width += 32;
-+	}
-+}
-+
-+static void __init execute_for_each_set_clump_test(unsigned int index)
-+{
-+	unsigned long start, clump;
-+
-+	for_each_set_clump(start, clump, clump_test_data[index].data,
-+						clump_test_data[index].limit,
-+						clump_test_data[index].clump_size)
-+	expect_eq_clump(start, clump_test_data[index].limit, clump_test_data[index].exp,
-+						&clump, clump_test_data[index].clump_size);
-+}
-+
-+static void __init test_for_each_set_clump(void)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(clump_test_data); i++) {
-+		prepare_test_data(i);
-+		execute_for_each_set_clump_test(i);
-+	}
-+}
-+
- static void __init test_for_each_set_clump8(void)
- {
- #define CLUMP_EXP_NUMBITS 64
-@@ -623,6 +766,7 @@ static void __init selftest(void)
- 	test_bitmap_parselist_user();
- 	test_mem_optimisations();
- 	test_for_each_set_clump8();
-+	test_for_each_set_clump();
- }
- 
- KSTM_MODULE_LOADERS(test_bitmap);
 -- 
-2.26.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
