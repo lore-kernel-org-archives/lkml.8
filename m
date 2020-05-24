@@ -2,162 +2,113 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39539C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2157720787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0637C20812
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 16:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590338962;
-	bh=PDkjexY8AfjLouSaQQn51C7oydZJEO+f1bQf/PF6xFs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XnhRHzNXh4x8WQC7T9JCTeyOKhl55c+y0nJwqOWcYsJO6JuAgRVgK8Z3frLD5ESvh
-	 PP1h2SDhybWdITo4PV84u7gGgQTC02Q79QGObOD3AI2AGWsIMEDqiQJaf2ZdGVMzSV
-	 TWjp20FOsIUojbvAojTYxmnojWlmDoxH/6PulYbc=
+	s=default; t=1590339247;
+	bh=tbfyF8Gc0VJZg/qt06s+XuPIZbuK7GsvX8u3HOrwBQY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=m0A8GbU7rITOV9kVVnjmbMNNHw0xEcbtVS/v6hoCCYOaFegwT+ZKzgoaYgOt0xShu
+	 KHJkY986ETIOwd21EyZwiU/787d2pbOdICOProaX7ZhB4tfXrJGZ4ZkkiaXZc+RtiB
+	 MMLEOJWLk9wnM6mEVCboKqyXuTpF1Ws2Mb/hxDcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgEXQtV (ORCPT
+        id S2387760AbgEXQyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 12:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33178 "EHLO mail.kernel.org"
+        Sun, 24 May 2020 12:54:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbgEXQtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 12:49:21 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728375AbgEXQyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 12:54:05 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBDE92065F;
-        Sun, 24 May 2020 16:49:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5264B2073B;
+        Sun, 24 May 2020 16:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590338960;
-        bh=PDkjexY8AfjLouSaQQn51C7oydZJEO+f1bQf/PF6xFs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G5VLLK49bfpHQoTu1wjYSdr5vw6FNF7eMh2+Yig08zXtQ9AYCZ2NkiuNXoO8MNEhJ
-         JyQGQAYjlW4AqoQGtaYckUzwT6WGixxjInl2BB7CxU+OBNpi77hv1CJxHOWIbzIvKX
-         isvfCpArXEaj6RHBs4wCbskTpwPcc/wFGtzxcjak=
-Date:   Sun, 24 May 2020 17:49:16 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [RFC PATCH 09/14] iio: buffer: split buffer sysfs creation to
- take buffer as primary arg
-Message-ID: <20200524174916.2ff91965@archlinux>
-In-Reply-To: <20200508135348.15229-10-alexandru.ardelean@analog.com>
-References: <20200508135348.15229-1-alexandru.ardelean@analog.com>
-        <20200508135348.15229-10-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1590339245;
+        bh=tbfyF8Gc0VJZg/qt06s+XuPIZbuK7GsvX8u3HOrwBQY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lgVmuHWzTKcfFO926HF7v+JvUBv/SAafc4WDxcrRf1btKKf9XdaKY99pxOWRYvR3o
+         cScRHiUgRP1zyTfdcx5N0AS1O53w6n/k9rY4271Bk2ptxtvsMFCW0A6E9BlPTGqL4Y
+         2TEXdt6SqEojy7Nvm6HJ9m+wBUQ2ofw1Cdz0N1j4=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>, sparclinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] sparc32: register memory occupied by kernel as memblock.memory
+Date:   Sun, 24 May 2020 19:53:58 +0300
+Message-Id: <20200524165358.27188-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 16:53:43 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-> Currently the iio_buffer_{alloc,free}_sysfs_and_mask() take 'indio_dev' as
-> primary argument. This change converts to take an IIO buffer as a primary
-> argument.
-> 
-> That will allow the functions to get called for multiple buffers.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+sparc32 never registered the memory occupied by the kernel image with
+memblock_add() and it only reserved this memory with meblock_reserve().
 
-Looks good to me.  We'll need this whatever the interface ends up being as
-need the separate control infrastructure.
+With openbios as system firmware, the memory occupied by the kernel is
+reserved in openbios and removed from mem.available. The prom setup code in
+the kernel uses mem.available to set up the memory banks and essentially
+there is a hole for the memory occupied by the kernel image.
 
-Jonathan
+Later in bootmem_init() this memory is memblock_reserve()d.
 
-> ---
->  drivers/iio/industrialio-buffer.c | 46 ++++++++++++++++++++-----------
->  1 file changed, 30 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index e7a847e7b103..6b1b5d5387bd 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -1312,26 +1312,14 @@ static struct attribute *iio_buffer_attrs[] = {
->  	&dev_attr_data_available.attr,
->  };
->  
-> -int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
-> +static int __iio_buffer_alloc_sysfs_and_mask(struct iio_buffer *buffer)
->  {
-> +	struct iio_dev *indio_dev = buffer->indio_dev;
->  	struct iio_dev_attr *p;
->  	struct attribute **attr;
-> -	struct iio_buffer *buffer = indio_dev->buffer;
->  	int ret, i, attrn, attrcount, attrcount_orig = 0;
->  	const struct iio_chan_spec *channels;
->  
-> -	channels = indio_dev->channels;
-> -	if (channels) {
-> -		int ml = indio_dev->masklength;
-> -
-> -		for (i = 0; i < indio_dev->num_channels; i++)
-> -			ml = max(ml, channels[i].scan_index + 1);
-> -		indio_dev->masklength = ml;
-> -	}
-> -
-> -	if (!buffer)
-> -		return 0;
-> -
->  	attrcount = 0;
->  	if (buffer->attrs) {
->  		while (buffer->attrs[attrcount] != NULL)
-> @@ -1411,19 +1399,45 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
->  	return ret;
->  }
->  
-> -void iio_buffer_free_sysfs_and_mask(struct iio_dev *indio_dev)
-> +int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
->  {
->  	struct iio_buffer *buffer = indio_dev->buffer;
-> +	const struct iio_chan_spec *channels;
-> +	int i;
-> +
-> +	channels = indio_dev->channels;
-> +	if (channels) {
-> +		int ml = indio_dev->masklength;
-> +
-> +		for (i = 0; i < indio_dev->num_channels; i++)
-> +			ml = max(ml, channels[i].scan_index + 1);
-> +		indio_dev->masklength = ml;
-> +	}
->  
->  	if (!buffer)
-> -		return;
-> +		return 0;
-> +
-> +	return __iio_buffer_alloc_sysfs_and_mask(buffer);
-> +}
->  
-> +static void __iio_buffer_free_sysfs_and_mask(struct iio_buffer *buffer)
-> +{
->  	iio_buffer_free_scanmask(buffer);
->  	kfree(buffer->buffer_group.attrs);
->  	kfree(buffer->scan_el_group.attrs);
->  	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
->  }
->  
-> +void iio_buffer_free_sysfs_and_mask(struct iio_dev *indio_dev)
-> +{
-> +	struct iio_buffer *buffer = indio_dev->buffer;
-> +
-> +	if (!buffer)
-> +		return;
-> +
-> +	__iio_buffer_free_sysfs_and_mask(buffer);
-> +}
-> +
->  static const struct file_operations iio_buffer_fileops = {
->  	.read = iio_buffer_read_outer,
->  	.release = iio_buffer_chrdev_release,
+Up until recently, memmap initialization would call __init_single_page()
+for the pages in that hole, the free_low_memory_core_early() would mark
+them as reserved and everything would be Ok.
+
+After the change in memmap initialization introduced by the commit "mm:
+memmap_init: iterate over memblock regions rather that check each PFN", the
+hole is skipped and the page structs for it are not initialized. And when
+they are passed from memblock to page allocator as reserved, the latter
+gets confused.
+
+Simply registering the memory occupied by the kernel with memblock_add()
+resolves this issue.
+
+Tested on qemu-system-sparc with Debian Etch [1] userspace.
+
+[1] https://people.debian.org/~aurel32/qemu/sparc/debian_etch_sparc_small.qcow2
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Link: https://lkml.kernel.org/r/20200517000050.GA87467@roeck-us.nlllllet/ 
+---
+
+David,
+
+I'd really appreciate your Ack or an explanation where my analysis is wrong :)
+
+ arch/sparc/mm/init_32.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/sparc/mm/init_32.c b/arch/sparc/mm/init_32.c
+index e45160839f79..eb2946b1df8a 100644
+--- a/arch/sparc/mm/init_32.c
++++ b/arch/sparc/mm/init_32.c
+@@ -192,6 +192,7 @@ unsigned long __init bootmem_init(unsigned long *pages_avail)
+ 	/* Reserve the kernel text/data/bss. */
+ 	size = (start_pfn << PAGE_SHIFT) - phys_base;
+ 	memblock_reserve(phys_base, size);
++	memblock_add(phys_base, size);
+ 
+ 	size = memblock_phys_mem_size() - memblock_reserved_size();
+ 	*pages_avail = (size >> PAGE_SHIFT) - high_pages;
+-- 
+2.26.2
 
