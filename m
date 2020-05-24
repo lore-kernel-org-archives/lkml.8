@@ -2,100 +2,113 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 01:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63008C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 01:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B648F20787
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 01:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3215D20735
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 01:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtZPJ7jM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgEXBKQ (ORCPT
+        id S2388255AbgEXBm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 May 2020 21:10:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:58198 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726849AbgEXBKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 May 2020 21:10:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3E0230E;
-        Sat, 23 May 2020 18:10:14 -0700 (PDT)
-Received: from [10.163.75.81] (unknown [10.163.75.81])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E24C23F52E;
-        Sat, 23 May 2020 18:10:12 -0700 (PDT)
-Subject: Re: [PATCH V4 13/17] arm64/cpufeature: Add remaining feature bits in
- ID_AA64MMFR1 register
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
- <1589881254-10082-14-git-send-email-anshuman.khandual@arm.com>
- <6ad2dde0-455f-90a6-7b76-eda4fe8d6efe@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ca5e8fe6-b36f-dc22-bc6f-b96a845a399d@arm.com>
-Date:   Sun, 24 May 2020 06:39:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sat, 23 May 2020 21:42:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726849AbgEXBmZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 May 2020 21:42:25 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945A4C061A0E;
+        Sat, 23 May 2020 18:42:25 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id q8so7053137pfu.5;
+        Sat, 23 May 2020 18:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WOxnSmEbJ8sld8voIH7dFeotuFTK+vKmyxU3MIIUb6w=;
+        b=GtZPJ7jMgTd975u9HvJI8Vb4cQ0PF/kILo5F96YhAHphc7CWosNo5glezVlXxhXmfe
+         2gU8cK7Y8pxzBSBxL2vGV0mECSCAAp8pkJw0+o85UREcMBs5pU34VmV2PquiuIlMBZVS
+         I6mX64GzgFs+eJMW1wOvV1EV776L2G42DYYbsYCNlRri+pFm1GFU598QW95NFZbyWUIv
+         mkxS+NW/iDwbC1BzK0EnISSbg2E5G/UhDnndhRbKFe1rh3EbsWJYpuQ85dqvt96abTs7
+         h0rIdsreV3awAzUw83FAk+0u4QFJaMqks/RfYUAH6W3qqEF3vq6g7HD6yqmDacd3ngUG
+         boqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WOxnSmEbJ8sld8voIH7dFeotuFTK+vKmyxU3MIIUb6w=;
+        b=MrNZTLBwjzgF1XEaKZQeXlnLDwIhtmEM8VlqrszzVuyt2yjqIUKgPZjoBksSD4v3U7
+         U4tzNKsTsGmOir0aueA/S4OvQ5mVb9qk/GiIbOD81RNENxHU6o+SpnshxkZ73ULoq4uj
+         OYXHYOWxCMBTw7ZpGBlMSRiiQEBzWhiVdIwqEzz0HG1CCLj4UkLcrMhx2H0x3MjhxHz4
+         aLFtkWqvEyRZ6wayU3QPBZW6avURIi0MDi+GDLQ8EOskffA0ccaAk/UlyH8wsWsAnsAj
+         BV2TdSCh3JM9ln8Jk7O/t6XKPCgCtkLBkXewkv1vbI6a+nt2j5HX908G1UPDa2qTbHpb
+         q4/A==
+X-Gm-Message-State: AOAM531nl3FHRZu3mTsZ1c06VI8r305Iw4eEd9vj+/VoO2zc2ATZoGxn
+        Ieh3m1xAuw7/sjvTGknFI+o=
+X-Google-Smtp-Source: ABdhPJz/r2ARO1+zFfzMU6tmLJif4eacW94VQyHfz5ZBMq8FJBOIwE90YKcA4DCDXFxeOk1t1yVKbQ==
+X-Received: by 2002:a62:c5c2:: with SMTP id j185mr3837671pfg.74.1590284544972;
+        Sat, 23 May 2020 18:42:24 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id y18sm9957798pfr.100.2020.05.23.18.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 May 2020 18:42:24 -0700 (PDT)
+Date:   Sat, 23 May 2020 18:42:20 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Jianyong Wu <jianyong.wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com,
+        steven.price@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com,
+        justin.he@arm.com, Wei.Chen@arm.com, nd@arm.com
+Subject: Re: [RFC PATCH v12 09/11] ptp: extend input argument for
+ getcrosstimestamp API
+Message-ID: <20200524014220.GA335@localhost>
+References: <20200522083724.38182-1-jianyong.wu@arm.com>
+ <20200522083724.38182-10-jianyong.wu@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <6ad2dde0-455f-90a6-7b76-eda4fe8d6efe@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522083724.38182-10-jianyong.wu@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 22, 2020 at 04:37:22PM +0800, Jianyong Wu wrote:
+> sometimes we may need tell getcrosstimestamp call back how to perform
+> itself. Extending input arguments for getcrosstimestamp API to offer more
+> exquisite control for the operation.
+
+This text does not offer any justification for the change in API.
+ 
+> diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
+> index c602670bbffb..ba765647e54b 100644
+> --- a/include/linux/ptp_clock_kernel.h
+> +++ b/include/linux/ptp_clock_kernel.h
+> @@ -133,7 +133,8 @@ struct ptp_clock_info {
+>  	int (*gettimex64)(struct ptp_clock_info *ptp, struct timespec64 *ts,
+>  			  struct ptp_system_timestamp *sts);
+>  	int (*getcrosststamp)(struct ptp_clock_info *ptp,
+> -			      struct system_device_crosststamp *cts);
+> +			      struct system_device_crosststamp *cts,
+> +			      long *flag);
+
+Well, you ignored the kernel doc completely.  But in any case, I must
+NAK this completely opaque and mysterious change.  You want to add a
+random pointer to some flag?  I don't think so.
+
+Thanks,
+Richard
 
 
-On 05/19/2020 07:14 PM, Suzuki K Poulose wrote:
-> On 05/19/2020 10:40 AM, Anshuman Khandual wrote:
->> Enable ETS, TWED, XNX and SPECSEI features bits in ID_AA64MMFR1 register as
->> per ARM DDI 0487F.a specification.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->>
->> Suggested-by: Will Deacon <will@kernel.org>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>   arch/arm64/include/asm/sysreg.h | 4 ++++
->>   arch/arm64/kernel/cpufeature.c  | 4 ++++
->>   2 files changed, 8 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index 95fdfc5e9bd0..f9dd2c5ab074 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -734,6 +734,10 @@
->>   #endif
->>     /* id_aa64mmfr1 */
->> +#define ID_AA64MMFR1_ETS_SHIFT        36
->> +#define ID_AA64MMFR1_TWED_SHIFT        32
->> +#define ID_AA64MMFR1_XNX_SHIFT        28
->> +#define ID_AA64MMFR1_SPECSEI_SHIFT    24
->>   #define ID_AA64MMFR1_PAN_SHIFT        20
->>   #define ID_AA64MMFR1_LOR_SHIFT        16
->>   #define ID_AA64MMFR1_HPD_SHIFT        12
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 7ce19f97ba73..1f10ff7df705 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -299,6 +299,10 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
->>   };
->>     static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
->> +    ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_ETS_SHIFT, 4, 0),
->> +    ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_TWED_SHIFT, 4, 0),
->> +    ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_XNX_SHIFT, 4, 0),
->> +    ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_SPECSEI_SHIFT, 4, 0),
-> 
-> SpecSEI must be HIGHER_SAFE, like we did for MMFR4 ?
-
-Sure, will change.
