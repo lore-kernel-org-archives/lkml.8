@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE502C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE211207CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7A9207CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 15:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590335030;
-	bh=Jbnr0myTiMWsMUmCwq8bRYwt6i1Ih9hFBGVvavr6QaM=;
+	s=default; t=1590335033;
+	bh=zJE+Xu0Li1naEmHkAwcknRNDrOnOs4BBRM/fewTOkPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C15EnHUtICqu/aR1LSIugYyOkGbjVa31zGG1Aj2GYe3y/i+0gdvpeMWhWclj0Bx1p
-	 MsoxQuqQtPVXSfIlEEwYZwn8HCNufcZFXsjxmEDRKRciANgtoVMXt9CnAxY0OjyXY5
-	 7ZAixOSOxlKyV/49jVOq1e6KPSgJy0lmFWsLzxN4=
+	b=HN3dthKInwkJhJU5Roj0YTi19OBz9Zd5kNDOLUmEx/3xcV4Hl+hXrBYBV9+Yg5L7A
+	 OUKtLCjNGY+Ppn/b54e3TNXPyVJHTUfU9NyU1qDgKe4JqEfJaTjSF6uV5EEob6Vz3z
+	 9kwVsbrtCQNjSdyKA2BmOrIf3W7aVYPmbcqJgxq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbgEXPnt (ORCPT
+        id S2387767AbgEXPnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 11:43:49 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19709 "EHLO
+        Sun, 24 May 2020 11:43:52 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:19712 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728508AbgEXPnY (ORCPT
+        with ESMTP id S1728564AbgEXPnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 11:43:24 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04OFgcUw017561;
-        Mon, 25 May 2020 00:42:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcUw017561
+        by conuserg-09.nifty.com with ESMTP id 04OFgcV0017561;
+        Mon, 25 May 2020 00:42:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04OFgcV0017561
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590334966;
-        bh=Pe8hfxDjRGUZwydN8j8H7B1RhdHPopr2dmjeMw9MlSc=;
+        s=dec2015msa; t=1590334967;
+        bh=P3Qv1z0zgKjuZ3WCh10Ov8B8BC+PfGx7hBhH7ci8pxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUIhpfd+chEgZcG0avG81gcQ7wrL+fAhRJPj25CpVNt9dEpZpspYCKgb7Tom4L7He
-         FYeH4tK7O4QR+2GAGwINgIK1Xp3ESbsSggR9qVigLRUF8OXs3rbjE3WiGmK4w4mYjz
-         fgmHV6TQK+6B9qf6JVITWH+wL7Gq0o+4fdFEIMGxCOkQBt+bRKG8XOvdm1sDowt+BO
-         90YqdAA50kTl/mKNswt/H479vbpkHncj2BIUS9PA/1zhSi+mxkgqA9xOlaxXcfQEyX
-         gYNfYxv3eSCmpO/5AGKrxef9ZZhG9NTVt10vgRtTVHy7RBTdhmpXk3w3dkCgYkGsGO
-         R83dVAZMIrDDQ==
+        b=kmEK0vM4ivml2OScf3Psi9Hko0+Gd7QXueYfTJMyYOaponvM7zPlu6Ce3WU19xg7g
+         PlWg/xPlLgd+JQ81ztFLneLjG9wHh/oEwTAOmLfiD2DZujyHVRT/1r5CUR0uUiio47
+         +QBiGnYUg8+YCntpCxRCwppsbH3FNQpkH4jWrZu1nfZVX96j4r8z9mBHN16gv3jJZt
+         saRMGiRQXFcYvjSJV4lzf/Os8IcRIv/VQJ8MRQ2Pt9Wj3+DXopwLsfgNjX6qT8ndhs
+         3g94r4bwOAEYW8nrwEDXtF7ADBlxAVTJw8k6KkKJ35UarYpTn13oXm0/Ck63K/EMGP
+         PizcBMTC8I/8g==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/29] modpost: load KBUILD_EXTRA_SYMBOLS files in order
-Date:   Mon, 25 May 2020 00:42:19 +0900
-Message-Id: <20200524154235.380482-14-masahiroy@kernel.org>
+Subject: [PATCH v2 15/29] modpost: allow to pass -i option multiple times remove -e option
+Date:   Mon, 25 May 2020 00:42:21 +0900
+Message-Id: <20200524154235.380482-16-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200524154235.380482-1-masahiroy@kernel.org>
 References: <20200524154235.380482-1-masahiroy@kernel.org>
@@ -61,64 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, modpost reads extra symbol dump files in the reverse order.
-If '-e foo -e bar' is given, modpost reads bar, foo, in this order.
+Now that there is no difference in the functionality of -i and -e,
+they can be unified.
 
-This is probably not a big deal, but there is no good reason to reverse
-the order. Read files in the given order.
+Make modpost accept the -i option multiple times, then remove -e.
+
+I will reuse -e for a different purpose.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- scripts/mod/modpost.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ scripts/Makefile.modpost | 2 +-
+ scripts/mod/modpost.c    | 9 +--------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 8321068abb31..a316095c843c 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -82,7 +82,7 @@ include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
+ # modpost options for external modules
+ MODPOST += \
+ 	-i Module.symvers \
+-	$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)) \
++	$(addprefix -i ,$(KBUILD_EXTRA_SYMBOLS)) \
+ 	-o $(KBUILD_EXTMOD)/Module.symvers
+ 
+ endif
 diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 33cdb78a4ba1..2f5fab40d859 100644
+index 76599dd44bae..2ecf72a176cf 100644
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -2569,8 +2569,8 @@ int main(int argc, char **argv)
+@@ -2558,7 +2558,6 @@ int main(int argc, char **argv)
+ {
+ 	struct module *mod;
+ 	struct buffer buf = { };
+-	char *kernel_read = NULL;
+ 	char *missing_namespace_deps = NULL;
+ 	char *dump_write = NULL, *files_source = NULL;
  	int opt;
- 	int err;
- 	int n;
--	struct ext_sym_list *extsym_iter;
+@@ -2567,13 +2566,9 @@ int main(int argc, char **argv)
  	struct ext_sym_list *extsym_start = NULL;
-+	struct ext_sym_list **extsym_iter = &extsym_start;
+ 	struct ext_sym_list **extsym_iter = &extsym_start;
  
- 	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
+-	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
++	while ((opt = getopt(argc, argv, "i:mnsT:o:awENd:")) != -1) {
  		switch (opt) {
-@@ -2580,11 +2580,9 @@ int main(int argc, char **argv)
- 			break;
- 		case 'e':
+ 		case 'i':
+-			kernel_read = optarg;
+-			external_module = 1;
+-			break;
+-		case 'e':
  			external_module = 1;
--			extsym_iter =
--			   NOFAIL(malloc(sizeof(*extsym_iter)));
--			extsym_iter->next = extsym_start;
--			extsym_iter->file = optarg;
--			extsym_start = extsym_iter;
-+			*extsym_iter = NOFAIL(calloc(1, sizeof(**extsym_iter)));
-+			(*extsym_iter)->file = optarg;
-+			extsym_iter = &(*extsym_iter)->next;
- 			break;
- 		case 'm':
- 			modversions = 1;
-@@ -2624,10 +2622,12 @@ int main(int argc, char **argv)
- 	if (kernel_read)
- 		read_dump(kernel_read, 1);
- 	while (extsym_start) {
-+		struct ext_sym_list *tmp;
-+
- 		read_dump(extsym_start->file, 0);
--		extsym_iter = extsym_start->next;
-+		tmp = extsym_start->next;
- 		free(extsym_start);
--		extsym_start = extsym_iter;
-+		extsym_start = tmp;
+ 			*extsym_iter = NOFAIL(calloc(1, sizeof(**extsym_iter)));
+ 			(*extsym_iter)->file = optarg;
+@@ -2614,8 +2609,6 @@ int main(int argc, char **argv)
+ 		}
  	}
  
- 	while (optind < argc)
+-	if (kernel_read)
+-		read_dump(kernel_read);
+ 	while (extsym_start) {
+ 		struct ext_sym_list *tmp;
+ 
 -- 
 2.25.1
 
