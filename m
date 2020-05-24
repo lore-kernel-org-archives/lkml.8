@@ -2,149 +2,303 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6696BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F133207FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E62F20812
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WbcDYwGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbgEXV3D (ORCPT
+        id S2388316AbgEXVcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:29:03 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46946 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388250AbgEXV2U (ORCPT
+        Sun, 24 May 2020 17:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387879AbgEXVcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:28:20 -0400
-Received: by mail-qt1-f194.google.com with SMTP id p12so12557666qtn.13
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:28:19 -0700 (PDT)
+        Sun, 24 May 2020 17:32:04 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93632C061A0E;
+        Sun, 24 May 2020 14:32:04 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 190so16083072qki.1;
+        Sun, 24 May 2020 14:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zsTKP6UPCyjc3gedPSTiX+Hw4fSD23Gy2TgvwORJtZI=;
+        b=WbcDYwGhcm7jTcpYsw7Uxi8nCjwbcze3sDcocME48h3tDO1Q7VdThjO3mT9nZrpjOt
+         A/5Ugjl0WHy8J95fuBA9b7z8/NiuzPoQSpPzht4z9djsNxsxVsrOI2uMmwUU+MHw3GXE
+         EsvINxgU6yBaDDmDV5YzXTDE3UfoppBUgL0R9uT0zN499lY9XXBf8Y/FH4HfswMlAiCe
+         +l6pq2lhzmNzsBIsfb4/APiIy8s6huWB/+/NOWQo3DATC9lyUDeSakBxwmrzxjOHEdla
+         kAa7/Kio89/prvuSyYvsQIuodjrJ4cgWUvhdf+bNN1Nbxol9Pth3VvkxRYVKps8bfbog
+         tg3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aMU0eZ8AgltZAHYm5/2XnSEtaaUEJG/1Tqz8iUjHDdI=;
-        b=RHM+ArrjrNBPSyiTDb4eGk34rqenCwaMgMdgnJU1vqlo7bRX4CB0Ai+j8C2VOx4Al3
-         EiowD+mcbAAm71FnzsY+AmSKa34D/v4XG46cq3+0rqTYoE6gm9E1lLYojKWMrtrghODl
-         q340+fmZHJ4HSfX1u9HCTGklBfp1GgIH993ZAlKYwkUw8oJ4IuWUukwAB1q+ZXhBii63
-         w7cCfSZ+fLeHy7fi7/e2fGZ3g5cvhN4k8GqjUVv584g19362/py6m430pKOQJyHbl4+R
-         pW5vOH//5nnTp1/XUDDMgY5fVfzJxSu06kMRbzL0mhCj4x8Ymi9o48z32OVuSmAS+vwQ
-         +dDw==
-X-Gm-Message-State: AOAM533SvmX9bqzoz7jTrb5TJWbooGTMyqdXHypLq21SiJ4UIhc54dqa
-        IsGWl4AF4SdhdI0Hq+Kg5TQ=
-X-Google-Smtp-Source: ABdhPJwKradsMnea6WErQVGnCa5GibnMpjlDjYf6YpOzFP6tGr3NIvxUIi5OQzLCOeCi65Bot2ooYw==
-X-Received: by 2002:ac8:9d:: with SMTP id c29mr26158295qtg.288.1590355699390;
-        Sun, 24 May 2020 14:28:19 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d14sm3665729qkg.25.2020.05.24.14.28.18
+        bh=zsTKP6UPCyjc3gedPSTiX+Hw4fSD23Gy2TgvwORJtZI=;
+        b=pRXQItmpRBwUKdBiWl85hDg6mCxsbXDtz2q2uDmZhXzOrcHuxS2QoD5VlAQ4AD2UXw
+         b6RW7WYl0BDPJjiodxmY2XbKR+mNe6L4L0rAu5J8yvrKpyxgfVSMftvZkRQtIt0V9/FY
+         TYtnUmD9ZCLTTbm/7M2IGRmxokFfXaaksg1nv75/dD72tqVfv/mPg9fs9R4iK7ab7GzB
+         6mcwC94lLTpN1opqmaP78ASzjRK9pszmTjNQXr4irCFtV73Z5e2j7oHVYOGW6g2IjjfF
+         5yPhrJk8svgUJXM5HaR6Ju2neuoQdzNPbknigGaGEfiiHyCmWWlthyUqiRL+OlRhYobo
+         1Bhg==
+X-Gm-Message-State: AOAM532X02ImU/VrgaAsOSHO7luPg1ApYqjuCPNtMUbGSCMTP1XsAX6K
+        qArbbH4544m4PHdGDraHohs=
+X-Google-Smtp-Source: ABdhPJwN6C5sOR0YlCVooSvLA7ctJR5Lw+j/WHrsTM1GIgdU94ksuZcgYt/CUIHOBpimjH5OPJmAPQ==
+X-Received: by 2002:a37:6389:: with SMTP id x131mr18589657qkb.160.1590355923525;
+        Sun, 24 May 2020 14:32:03 -0700 (PDT)
+Received: from localhost.localdomain (toroon0411w-lp130-02-64-231-189-42.dsl.bell.ca. [64.231.189.42])
+        by smtp.googlemail.com with ESMTPSA id n13sm2110197qtb.20.2020.05.24.14.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:28:19 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] x86/boot: Add .text.startup to setup.ld
-Date:   Sun, 24 May 2020 17:28:13 -0400
-Message-Id: <20200524212816.243139-2-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
-References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+        Sun, 24 May 2020 14:32:02 -0700 (PDT)
+From:   Andrew Sy Kim <kim.andrewsy@gmail.com>
+Cc:     kim.andrewsy@gmail.com, Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: [PATCH] netfilter/ipvs: immediately expire no destination connections in kthread if expire_nodest_conn=1
+Date:   Sun, 24 May 2020 17:31:05 -0400
+Message-Id: <20200524213105.14805-1-kim.andrewsy@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <alpine.LFD.2.21.2005192139500.3504@ja.home.ssi.bg>
+References: <alpine.LFD.2.21.2005192139500.3504@ja.home.ssi.bg>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc puts the main function into .text.startup when compiled with -Os (or
--O2). This results in arch/x86/boot/main.c having a .text.startup
-section which is currently not included explicitly in the linker script
-setup.ld in the same directory.
+If expire_nodest_conn=1 and a destination is deleted, IPVS should
+also expire all matching connections immiediately instead of waiting for
+the next matching packet. This is particulary useful when there are a
+lot of packets coming from a few number of clients. Those clients are
+likely to match against existing entries if a source port in the
+connection hash is reused. When the number of entries in the connection
+tracker is large, we can significantly reduce the number of dropped
+packets by expiring all connections upon deletion in a kthread.
 
-The BFD linker places this orphan section immediately after .text, so
-this still works. However, LLD git, since [1], is choosing to place it
-immediately after the .bstext section instead (this is the first code
-section). This plays havoc with the section layout that setup.elf
-requires to create the setup header, for eg on 64-bit:
-
-    LD      arch/x86/boot/setup.elf
-  ld.lld: error: section .text.startup file range overlaps with .header
-  >>> .text.startup range is [0x200040, 0x2001FE]
-  >>> .header range is [0x2001EF, 0x20026B]
-
-  ld.lld: error: section .header file range overlaps with .bsdata
-  >>> .header range is [0x2001EF, 0x20026B]
-  >>> .bsdata range is [0x2001FF, 0x200398]
-
-  ld.lld: error: section .bsdata file range overlaps with .entrytext
-  >>> .bsdata range is [0x2001FF, 0x200398]
-  >>> .entrytext range is [0x20026C, 0x2002D3]
-
-  ld.lld: error: section .text.startup virtual address range overlaps
-  with .header
-  >>> .text.startup range is [0x40, 0x1FE]
-  >>> .header range is [0x1EF, 0x26B]
-
-  ld.lld: error: section .header virtual address range overlaps with
-  .bsdata
-  >>> .header range is [0x1EF, 0x26B]
-  >>> .bsdata range is [0x1FF, 0x398]
-
-  ld.lld: error: section .bsdata virtual address range overlaps with
-  .entrytext
-  >>> .bsdata range is [0x1FF, 0x398]
-  >>> .entrytext range is [0x26C, 0x2D3]
-
-  ld.lld: error: section .text.startup load address range overlaps with
-  .header
-  >>> .text.startup range is [0x40, 0x1FE]
-  >>> .header range is [0x1EF, 0x26B]
-
-  ld.lld: error: section .header load address range overlaps with
-  .bsdata
-  >>> .header range is [0x1EF, 0x26B]
-  >>> .bsdata range is [0x1FF, 0x398]
-
-  ld.lld: error: section .bsdata load address range overlaps with
-  .entrytext
-  >>> .bsdata range is [0x1FF, 0x398]
-  >>> .entrytext range is [0x26C, 0x2D3]
-
-Explicitly pull .text.startup into the .text output section to avoid
-this.
-
-[1] https://reviews.llvm.org/D75225
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reviewed-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
 ---
- arch/x86/boot/setup.ld | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/ip_vs.h             | 12 +++++++++
+ net/netfilter/ipvs/ip_vs_conn.c | 48 +++++++++++++++++++++++++++++++++
+ net/netfilter/ipvs/ip_vs_core.c | 45 +++++++++++++------------------
+ net/netfilter/ipvs/ip_vs_ctl.c  | 16 +++++++++++
+ 4 files changed, 95 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
-index 24c95522f231..ed60abcdb089 100644
---- a/arch/x86/boot/setup.ld
-+++ b/arch/x86/boot/setup.ld
-@@ -20,7 +20,7 @@ SECTIONS
- 	.initdata	: { *(.initdata) }
- 	__end_init = .;
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index 83be2d93b407..d1fbead6965d 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -1049,6 +1049,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
+ 	return ipvs->sysctl_conn_reuse_mode;
+ }
  
--	.text		: { *(.text) }
-+	.text		: { *(.text.startup) *(.text) }
- 	.text32		: { *(.text32) }
++static inline int sysctl_expire_nodest_conn(struct netns_ipvs *ipvs)
++{
++	return ipvs->sysctl_expire_nodest_conn;
++}
++
+ static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
+ {
+ 	return ipvs->sysctl_schedule_icmp;
+@@ -1209,6 +1214,13 @@ struct ip_vs_conn * ip_vs_conn_out_get_proto(struct netns_ipvs *ipvs, int af,
+ 					     const struct sk_buff *skb,
+ 					     const struct ip_vs_iphdr *iph);
  
- 	. = ALIGN(16);
++
++int ip_vs_conn_flush_dest(void *data);
++struct ip_vs_conn_flush_dest_tinfo {
++	struct netns_ipvs *ipvs;
++	struct ip_vs_dest *dest;
++};
++
+ /* Get reference to gain full access to conn.
+  * By default, RCU read-side critical sections have access only to
+  * conn fields and its PE data, see ip_vs_conn_rcu_free() for reference.
+diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
+index 02f2f636798d..111fa0e287a2 100644
+--- a/net/netfilter/ipvs/ip_vs_conn.c
++++ b/net/netfilter/ipvs/ip_vs_conn.c
+@@ -1366,6 +1366,54 @@ static void ip_vs_conn_flush(struct netns_ipvs *ipvs)
+ 		goto flush_again;
+ 	}
+ }
++
++/*	Thread function to flush all the connection entries in the
++ *	ip_vs_conn_tab with a matching destination.
++ */
++int ip_vs_conn_flush_dest(void *data)
++{
++	struct ip_vs_conn_flush_dest_tinfo *tinfo = data;
++	struct netns_ipvs *ipvs = tinfo->ipvs;
++	struct ip_vs_dest *dest = tinfo->dest;
++
++	int idx;
++	struct ip_vs_conn *cp, *cp_c;
++
++	IP_VS_DBG_BUF(4, "flushing all connections with destination %s:%d",
++		      IP_VS_DBG_ADDR(dest->af, &dest->addr), ntohs(dest->port));
++
++	rcu_read_lock();
++	for (idx = 0; idx < ip_vs_conn_tab_size; idx++) {
++		hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_list) {
++			if (cp->ipvs != ipvs)
++				continue;
++
++			if (cp->dest != dest)
++				continue;
++
++			/* As timers are expired in LIFO order, restart
++			 * the timer of controlling connection first, so
++			 * that it is expired after us.
++			 */
++			cp_c = cp->control;
++			/* cp->control is valid only with reference to cp */
++			if (cp_c && __ip_vs_conn_get(cp)) {
++				IP_VS_DBG(4, "del controlling connection\n");
++				ip_vs_conn_expire_now(cp_c);
++				__ip_vs_conn_put(cp);
++			}
++
++			IP_VS_DBG(4, "del connection\n");
++			ip_vs_conn_expire_now(cp);
++		}
++		cond_resched_rcu();
++	}
++	rcu_read_unlock();
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ip_vs_conn_flush_dest);
++
+ /*
+  * per netns init and exit
+  */
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index aa6a603a2425..ff052e57e054 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -24,6 +24,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/kernel.h>
++#include <linux/kthread.h>
+ #include <linux/ip.h>
+ #include <linux/tcp.h>
+ #include <linux/sctp.h>
+@@ -694,11 +695,6 @@ static int sysctl_nat_icmp_send(struct netns_ipvs *ipvs)
+ 	return ipvs->sysctl_nat_icmp_send;
+ }
+ 
+-static int sysctl_expire_nodest_conn(struct netns_ipvs *ipvs)
+-{
+-	return ipvs->sysctl_expire_nodest_conn;
+-}
+-
+ #else
+ 
+ static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0; }
+@@ -2095,36 +2091,33 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 		}
+ 	}
+ 
+-	if (unlikely(!cp)) {
+-		int v;
+-
+-		if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
+-			return v;
+-	}
+-
+-	IP_VS_DBG_PKT(11, af, pp, skb, iph.off, "Incoming packet");
+-
+ 	/* Check the server status */
+-	if (cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
++	if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
+ 		/* the destination server is not available */
+ 
+-		__u32 flags = cp->flags;
+-
+-		/* when timer already started, silently drop the packet.*/
+-		if (timer_pending(&cp->timer))
+-			__ip_vs_conn_put(cp);
+-		else
+-			ip_vs_conn_put(cp);
++		if (sysctl_expire_nodest_conn(ipvs)) {
++			bool uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
+ 
+-		if (sysctl_expire_nodest_conn(ipvs) &&
+-		    !(flags & IP_VS_CONN_F_ONE_PACKET)) {
+-			/* try to expire the connection immediately */
+ 			ip_vs_conn_expire_now(cp);
++			__ip_vs_conn_put(cp);
++			if (uses_ct)
++				return NF_DROP;
++			cp = NULL;
++		} else {
++			__ip_vs_conn_put(cp);
++			return NF_DROP;
+ 		}
++	}
+ 
+-		return NF_DROP;
++	if (unlikely(!cp)) {
++		int v;
++
++		if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
++			return v;
+ 	}
+ 
++	IP_VS_DBG_PKT(11, af, pp, skb, iph.off, "Incoming packet");
++
+ 	ip_vs_in_stats(cp, skb);
+ 	ip_vs_set_state(cp, IP_VS_DIR_INPUT, skb, pd);
+ 	if (cp->packet_xmit)
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 8d14a1acbc37..fa48268368fc 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -1163,6 +1163,22 @@ static void __ip_vs_del_dest(struct netns_ipvs *ipvs, struct ip_vs_dest *dest,
+ 	list_add(&dest->t_list, &ipvs->dest_trash);
+ 	dest->idle_start = 0;
+ 	spin_unlock_bh(&ipvs->dest_trash_lock);
++
++	/*	If expire_nodest_conn is enabled, expire all connections
++	 *	immediately in a kthread.
++	 */
++	if (sysctl_expire_nodest_conn(ipvs)) {
++		struct ip_vs_conn_flush_dest_tinfo *tinfo = NULL;
++
++		tinfo = kcalloc(1, sizeof(struct ip_vs_conn_flush_dest_tinfo),
++				GFP_KERNEL);
++		tinfo->ipvs = ipvs;
++		tinfo->dest = dest;
++
++		IP_VS_DBG(3, "flushing connections in kthread\n");
++		kthread_run(ip_vs_conn_flush_dest,
++			    tinfo, "ipvs-flush-dest-conn");
++	}
+ }
+ 
+ 
 -- 
-2.26.2
+2.20.1
 
