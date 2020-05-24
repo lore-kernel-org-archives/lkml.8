@@ -2,172 +2,153 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD67C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F12C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E1C2078B
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:07:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="BFKfNLAB"
+	by mail.kernel.org (Postfix) with ESMTP id CBBEF2078B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 21:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388391AbgEXVHC (ORCPT
+        id S2388401AbgEXVHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 17:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388065AbgEXVGY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 17:06:24 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31064C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:24 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n141so3567134qke.2
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 14:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0ufJ+qo3NfI0pabE9TlU5wbhOS8NacG5qNuj9VUJYPk=;
-        b=BFKfNLABuzuZTG0xkJCMJZeoHRguGqKuCDT64Pfm4TtNs73uFBoSwhQQRDCIAIO4Uz
-         6VZQEmxQ+WH+t+GkS3u5iIQrcLfV7V52XxVxXii9MQ7cSlvUy5fAb9gG2TsWZ7tAHcfh
-         ORZ5Y4NgPWja7GLtTSsJiNGqRqCDPQTYUbHVLlg3R9nCdbtI/6KRkqZ0r964wkhlHHc1
-         /NAPMYe/aFYSsZDdc9eibXJ72sGh567au84Zn5dCmZ+ha2fFeS2Lwh3en0eIFA2zpUf5
-         IbzLn0TisFLh0zxzaBOsfMcDiiwEPP4eqteAgoYerW5Awa7VLQ25zzM0fcR+vv63eYQP
-         znKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0ufJ+qo3NfI0pabE9TlU5wbhOS8NacG5qNuj9VUJYPk=;
-        b=hEvO82fYehwnputrKTch8bLHYk1Q+7QmC9wvdpMuBvNrULv29GZsndJEzIqDn7QB3J
-         qL4GDM36z0gEAn7lEHJihmYFwCk02ePWSVm41+e8nWV/tBEcF6jxe2tmA3Idw3h6Bfkw
-         6yaAjXyWMFXfzIBBNuZr2z+TSL0ev71JlvrvhvvJPFfVagXjNMtwZ/HDZictLTBqgpci
-         wEVTMu8ZhJzba6UrObDUG7TJvUyzHJxZ80732Hk15C24tdjcmj/dccPByXCBdt4EBJ3p
-         kmfGNqhPB6y+umeoR+/T33k6W7LNo4gzhiyGjheTNgLwoa/UckSo5Lpq2/0KfcDJ5cey
-         mZIw==
-X-Gm-Message-State: AOAM530+46yxsaIgWWDhcT9hJHfe8+w3FUMNRGlxtJQ2FEctG9JY3yRU
-        zE/paac1aqWzv81JOhn9J/XNXQ==
-X-Google-Smtp-Source: ABdhPJwkMnnEeCxs087HL1CMEY0o8DOI7flIwSCAkc4uaHwARWXkOuywtGGcg+tgvVuJW/T27dy7Ow==
-X-Received: by 2002:a37:bd47:: with SMTP id n68mr24463300qkf.379.1590354383433;
-        Sun, 24 May 2020 14:06:23 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id g51sm4401769qtb.69.2020.05.24.14.06.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 14:06:23 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 03/10] clk: qcom: clk-alpha-pll: use the right PCAL_DONE value for lucid pll
-Date:   Sun, 24 May 2020 17:06:04 -0400
-Message-Id: <20200524210615.17035-4-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200524210615.17035-1-jonathan@marek.ca>
-References: <20200524210615.17035-1-jonathan@marek.ca>
+        Sun, 24 May 2020 17:07:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41060 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388211AbgEXVHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 17:07:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8046FAD85;
+        Sun, 24 May 2020 21:07:01 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 8F7E2604C8; Sun, 24 May 2020 23:06:53 +0200 (CEST)
+Date:   Sun, 24 May 2020 23:06:53 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     netdev@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Auke Kok <auke-jan.h.kok@intel.com>,
+        Jeff Garzik <jeff@garzik.org>,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
+        Len Brown <len.brown@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Neftin, Sasha" <sasha.neftin@intel.com>,
+        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+        Stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] e1000e: Make WOL info in ethtool consistent with
+ device wake up ability
+Message-ID: <20200524210653.2bzmotjbsknm6zhn@lion.mk-sys.cz>
+References: <cover.1590081982.git.yu.c.chen@intel.com>
+ <725bad2f3ce7f7b7f1667d53b6527dc059f9e419.1590081982.git.yu.c.chen@intel.com>
+ <20200521192342.GE8771@lion.mk-sys.cz>
+ <20200523090950.GA20370@chenyu-office.sh.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200523090950.GA20370@chenyu-office.sh.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lucid PCAL_DONE is different from trion.
+On Sat, May 23, 2020 at 05:09:50PM +0800, Chen Yu wrote:
+> Hi Michal,
+> Thanks for reviewing,
+> and sorry for late reply.
+> On Thu, May 21, 2020 at 09:23:42PM +0200, Michal Kubecek wrote:
+> > On Fri, May 22, 2020 at 01:59:13AM +0800, Chen Yu wrote:
+> > > Currently the ethtool shows that WOL(Wake On Lan) is enabled
+> > > even if the device wakeup ability has been disabled via sysfs:
+> > >   cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
+> > >    disabled
+> > > 
+> > >   ethtool eno1
+> > >   ...
+> > >   Wake-on: g
+> > > 
+> > > Fix this in ethtool to check if the user has explicitly disabled the
+> > > wake up ability for this device.
+> > 
+> > Wouldn't this lead to rather unexpected and inconsistent behaviour when
+> > the wakeup is disabled? As you don't touch the set_wol handler, I assume
+> > it will still allow setting enabled modes as usual so that you get e.g.
+> > 
+> >   ethtool -s eth0 wol g   # no error or warning, returns 0
+> >   ethtool eth0            # reports no modes enabled
+> > 
+> > The first command would set the enabled wol modes but that would be
+> > hidden from user and even the netlink notification would claim something
+> > different. Another exampe (with kernel and ethtool >= 5.6):
+> > 
+> >   ethtool -s eth0 wol g
+> >   ethtool -s eth0 wol +m
+> > 
+> > resulting in "mg" if device wakeup is enabled but "m" when it's disabled
+> > (but the latter would be hidden from user and only revealed when you
+> > enable the device wakeup).
+> > 
+> I've tested ethtool v5.6 on top of kernel v5.7-rc6, it looks like
+> the scenario you described will not happen as it will not allow
+> the user to enable the wol options with device wakeup disabled,
+> not sure if I missed something:
+> 
+> /sys/devices/pci0000:00/0000:00:1f.6/power# echo disabled > wakeup
+> 
+> ethtool -s eno1 wol g
+> netlink error: cannot enable unsupported WoL mode (offset 36)
+> netlink error: Invalid argument
+> 
+> I've not digged into the code too much, but according to
+> ethhl_set_wol(), it will first get the current wol options
+> via dev->ethtool_ops->get_wol(), and both the wolopts and
+> wol.supported are 0 when device wake up are disabled. Then
+> ethnl_update_bitset32 might manipulate on wolopts and
+> make it non-zero each is controdict with the precondition that
+> no opts should be enabled due to 0 wol.supported.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- drivers/clk/qcom/clk-alpha-pll.c | 28 ++++++++++++++++++++++++++--
- drivers/clk/qcom/clk-alpha-pll.h |  2 +-
- 2 files changed, 27 insertions(+), 3 deletions(-)
+You are right, I didn't realize that you report 0 even for supported WoL
+modes. However, this feels even more wrong from my point of view as then
+even the list of supported WoL modes would be hidden from user when the
+sysfs switch is off.
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index be7ffeae21b1..26139ef005e4 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -143,6 +143,9 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
- #define TRION_PLL_CAL_VAL	0x44
- #define TRION_PCAL_DONE		BIT(26)
- 
-+/* LUCID PLL specific settings and offsets */
-+#define LUCID_PCAL_DONE		BIT(27)
-+
- #define pll_alpha_width(p)					\
- 		((PLL_ALPHA_VAL_U(p) - PLL_ALPHA_VAL(p) == 4) ?	\
- 				 ALPHA_REG_BITWIDTH : ALPHA_REG_16BIT_WIDTH)
-@@ -1447,7 +1450,7 @@ EXPORT_SYMBOL_GPL(clk_trion_pll_configure);
-  * The TRION PLL requires a power-on self-calibration which happens when the
-  * PLL comes out of reset. Calibrate in case it is not completed.
-  */
--static int alpha_pll_trion_prepare(struct clk_hw *hw)
-+static int __alpha_pll_trion_prepare(struct clk_hw *hw, u32 pcal_done)
- {
- 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
- 	u32 regval;
-@@ -1455,7 +1458,7 @@ static int alpha_pll_trion_prepare(struct clk_hw *hw)
- 
- 	/* Return early if calibration is not needed. */
- 	regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
--	if (regval & TRION_PCAL_DONE)
-+	if (regval & pcal_done)
- 		return 0;
- 
- 	/* On/off to calibrate */
-@@ -1466,6 +1469,16 @@ static int alpha_pll_trion_prepare(struct clk_hw *hw)
- 	return ret;
- }
- 
-+static int alpha_pll_trion_prepare(struct clk_hw *hw)
-+{
-+	return __alpha_pll_trion_prepare(hw, TRION_PCAL_DONE);
-+}
-+
-+static int alpha_pll_lucid_prepare(struct clk_hw *hw)
-+{
-+	return __alpha_pll_trion_prepare(hw, LUCID_PCAL_DONE);
-+}
-+
- static int alpha_pll_trion_set_rate(struct clk_hw *hw, unsigned long rate,
- 				    unsigned long prate)
- {
-@@ -1529,6 +1542,17 @@ const struct clk_ops clk_alpha_pll_trion_ops = {
- 	.round_rate = clk_alpha_pll_round_rate,
- 	.set_rate = alpha_pll_trion_set_rate,
- };
-+EXPORT_SYMBOL_GPL(clk_alpha_pll_trion_ops);
-+
-+const struct clk_ops clk_alpha_pll_lucid_ops = {
-+	.prepare = alpha_pll_lucid_prepare,
-+	.enable = clk_trion_pll_enable,
-+	.disable = clk_trion_pll_disable,
-+	.is_enabled = clk_trion_pll_is_enabled,
-+	.recalc_rate = clk_trion_pll_recalc_rate,
-+	.round_rate = clk_alpha_pll_round_rate,
-+	.set_rate = alpha_pll_trion_set_rate,
-+};
- EXPORT_SYMBOL_GPL(clk_alpha_pll_lucid_ops);
- 
- const struct clk_ops clk_alpha_pll_postdiv_lucid_ops = {
-diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-index 67f1fd271931..69337c1b5850 100644
---- a/drivers/clk/qcom/clk-alpha-pll.h
-+++ b/drivers/clk/qcom/clk-alpha-pll.h
-@@ -132,7 +132,7 @@ extern const struct clk_ops clk_alpha_pll_trion_ops;
- extern const struct clk_ops clk_alpha_pll_fixed_trion_ops;
- extern const struct clk_ops clk_alpha_pll_postdiv_trion_ops;
- 
--#define clk_alpha_pll_lucid_ops clk_alpha_pll_trion_ops
-+extern const struct clk_ops clk_alpha_pll_lucid_ops;
- #define clk_alpha_pll_fixed_lucid_ops clk_alpha_pll_fixed_trion_ops
- extern const struct clk_ops clk_alpha_pll_postdiv_lucid_ops;
- 
--- 
-2.26.1
+Also, AFAICS "ethtool -s <dev> wol d" would be still allowed but the
+behaviour would differ between ioctl and netlink code path: netlink
+would identify the operation as no-op and do nothing. But ioctl does not
+check new value against old one so that it would call your set_wol()
+handler which would set the (hidden) set of enabled WoL modes to empty
+which would mean WoL would stay disabled even after enabling the wakeup
+via sysctl. In other words, you would allow disabling all WoL modes
+(via ioctl) but not setting them to anything else.
 
+> > This is a general problem discussed recently for EEE and pause
+> > autonegotiation: if setting A can be effectively used only when B is
+> > enabled, should we hide actual setting of A from userspace when B is
+> > disabled or even reset the value of A whenever B gets toggled or rather
+> > allow setting A and B independently? AFAICS the consensus seemed to be
+> > that A should be allowed to be set and queried independently of the
+> > value of B.
+> 
+> But then there would be an inconsistence between A and B. I was
+> thinking if there's a way to align them in kernel space and  maintain
+> the difference in user space?
+
+I'm not sure what exactly you mean by maintaining the difference in
+userspace but there are many situations like this and we usually do not
+block the ability to query or set A when the "main switch" is off.
+For example, you can add IPv4/6 addresses to an interface when it is
+down, even if you cannot receive or transmit packets with these
+addresses. Or you can set up netlilter rules in FORWARDING chain
+independently of the global ip_forward sysctl which can block all
+IPv4 forwarding.
+
+Moreover, if we really wanted to report no supported and enabled WoL
+modes when device wakeup is disabled, it should be done for all network
+devices, not only in one driver.
+
+Michal
