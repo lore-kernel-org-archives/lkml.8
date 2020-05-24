@@ -2,82 +2,125 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A66C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4EDC433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5722620812
+	by mail.kernel.org (Postfix) with ESMTP id 44779207D8
 	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 06:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgEXGDE (ORCPT
+        id S1727848AbgEXGC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 02:03:04 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:47068 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgEXGDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 02:03:04 -0400
-Received: by mail-il1-f199.google.com with SMTP id x2so1075556ill.13
-        for <linux-kernel@vger.kernel.org>; Sat, 23 May 2020 23:03:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=f8cm7i+6DZaPSRKesHef9xX2E7QNOPynTMGv2aqlP84=;
-        b=PtqG8tn/FO+vBeP796Wt/AFV0OEdNh1sfciSSd7hzCBtj1AiQlA4HfKDWI6x+rNnkI
-         1KWGBgJtPBCMPgvl8eEss6VIjK0l1/XcOuMkSJWUCf6qWhtRmKgCP4c6SpIOCu2d0ywA
-         TCfY+PCRa9rZ6yGypXbNrQnnMl6EgSCS1a8xfcM0OhwDI7a5ZMcZyQ75Wk4+DipFyYLh
-         YQHDwhxcCRH6yQGCyrbo+hbq/uynViYJpwPKlQzAovQBjvI118Oejz+iIZzhGtjPb88/
-         4upklYXrKJmJH5d0WtdWMNV+ldadnU9y0NAy7SFbPtbptX+2vTQMALWGIjS1QdCHuss0
-         qPtw==
-X-Gm-Message-State: AOAM5326BobOJuKCjJb2LjWsFflwAqjkf4HFGLvwxpF9omGT8ztLn9in
-        kjojXatEchRrNutRtYi3/V0WPTLu0llfHBk73Jkrtdv8eCxe
-X-Google-Smtp-Source: ABdhPJwGqcUvFi9kw0HhVexHTCTsxhtssXwOhzWwTlRVW0bo6dxr+flQYWuUIA+M7jdwFMz5UWSgckDGMnoq58SrEydxAK0FWUZP
-MIME-Version: 1.0
-X-Received: by 2002:a92:914f:: with SMTP id t76mr20627206ild.238.1590300183500;
- Sat, 23 May 2020 23:03:03 -0700 (PDT)
-Date:   Sat, 23 May 2020 23:03:03 -0700
-In-Reply-To: <000000000000ba47b705a6443a0d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000861e3305a65e9d74@google.com>
-Subject: Re: KASAN: use-after-free Read in uif_close
-From:   syzbot <syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, daniel.baluta@nxp.com, festevam@gmail.com,
-        gregkh@linuxfoundation.org, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux@rempel-privat.de, miquel.raynal@bootlin.com, richard@nod.at,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 24 May 2020 02:02:58 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:63402 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbgEXGC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 02:02:58 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgC3nwrwDcpee6wbAg--.17220S4;
+        Sun, 24 May 2020 14:02:27 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: stm32-dmamux: Fix runtime PM imbalance on error
+Date:   Sun, 24 May 2020 14:02:23 +0800
+Message-Id: <20200524060224.16189-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgC3nwrwDcpee6wbAg--.17220S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw47Zr18AF13Cr1fXrWDArb_yoW8uFW7pr
+        W8tFWFvr4jqaySy3yDJr4kXFZa934fKr97trW8Gwn3Zw45XFyDt3WrJrWj9F18XF95Ar4D
+        Kr17A3yxCF1UuFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW8AwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUndb1UUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAbsb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+In stm32_dmamux_route_allocate(),  pm_runtime_get_sync() increments
+the runtime PM usage counter even when it returns an error code.
+Thus a pairing decrement is needed on the error handling path to
+keep the counter balanced.
 
-commit 32ec783ae19d48084b893cc54747fed37b07eb0c
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Wed Apr 8 19:02:57 2020 +0000
+In stm32_dmamux_probe(), when platform_get_resource() returns an
+error code, a pairing runtime PM usage counter decrement is needed
+to keep the counter balanced. For error paths after this call,
+things are the same.
 
-    firmware: imx: fix compile-testing
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/dma/stm32-dmamux.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15b22972100000
-start commit:   c11d28ab Add linux-next specific files for 20200522
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17b22972100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13b22972100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-dashboard link: https://syzkaller.appspot.com/bug?extid=0ce97ea45b008ba3b8bd
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b23f06100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111b0172100000
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index 12f7637e13a1..e68e7078ff94 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -139,6 +139,7 @@ static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+ 	spin_lock_irqsave(&dmamux->lock, flags);
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0) {
++		pm_runtime_put_noidle(&pdev->dev);
+ 		spin_unlock_irqrestore(&dmamux->lock, flags);
+ 		goto error;
+ 	}
+@@ -246,8 +247,10 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	iomem = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(iomem))
++	if (IS_ERR(iomem)) {
++		pm_runtime_put_noidle(&pdev->dev);
+ 		return PTR_ERR(iomem);
++	}
+ 
+ 	spin_lock_init(&stm32_dmamux->lock);
+ 
+@@ -256,12 +259,14 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ 		ret = PTR_ERR(stm32_dmamux->clk);
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Missing clock controller\n");
++		pm_runtime_put_noidle(&pdev->dev);
+ 		return ret;
+ 	}
+ 
+ 	ret = clk_prepare_enable(stm32_dmamux->clk);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "clk_prep_enable error: %d\n", ret);
++		pm_runtime_put_noidle(&pdev->dev);
+ 		return ret;
+ 	}
+ 
+@@ -300,6 +305,7 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_clk:
++	pm_runtime_put_noidle(&pdev->dev);
+ 	clk_disable_unprepare(stm32_dmamux->clk);
+ 
+ 	return ret;
+-- 
+2.17.1
 
-Reported-by: syzbot+0ce97ea45b008ba3b8bd@syzkaller.appspotmail.com
-Fixes: 32ec783ae19d ("firmware: imx: fix compile-testing")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
