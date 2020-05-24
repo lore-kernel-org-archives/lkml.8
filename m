@@ -2,252 +2,136 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D99C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C743C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC7220885
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590327721;
-	bh=8eQG/BYGAjic6GRVvVa9VAujJMvySuULM0CvvRUSoWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mUIqptPVppvzQGdvbFlWAfpRaL+6JGkbjvMNwpUtGa/QaqUT37XO0XoVxSMKfCH8H
-	 CoJ5RI1Q+r55ovy850bbn79W54WagxIT64IWN94I0nssiughcnJ8AWvcfonY4YZMiY
-	 4tFyELNiogbe8fezc925chK2GRSFlmyklYE24O88=
+	by mail.kernel.org (Postfix) with ESMTP id F0B6F20899
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 13:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="zg3yyA1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgEXNmA (ORCPT
+        id S1729588AbgEXNn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 09:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgEXNmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 09:42:00 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C77C206D5;
-        Sun, 24 May 2020 13:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590327719;
-        bh=8eQG/BYGAjic6GRVvVa9VAujJMvySuULM0CvvRUSoWw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ofrsYUDJy3fWUH87qiM1P8x3MXh32cNQ6zQQwdSyOnr9jOiGu4ykW5tMpdX7kL5nZ
-         qvuWGZ930N/SAZxVnAdkqhG+mPqmauFslc2qjiefLZJphIcqEpcStPBjLERNmzeB2D
-         H0DVUjOBJ+jCSltHoPSEOiIoPwSPrgXRsGLeOUME=
-Date:   Sun, 24 May 2020 14:41:54 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linus.walleij@linaro.org>,
-        <lorenzo.bianconi83@gmail.com>, <songqiang1304521@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 1/3] iio: Move attach/detach of the poll func to the
- core
-Message-ID: <20200524144154.76fdfbdc@archlinux>
-In-Reply-To: <20200522104632.517470-1-alexandru.ardelean@analog.com>
-References: <20200522104632.517470-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 May 2020 09:43:26 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:33966 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725873AbgEXNnY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 09:43:24 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 77A062E1476;
+        Sun, 24 May 2020 16:43:21 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id YtsQiugMXN-hJY4qd4m;
+        Sun, 24 May 2020 16:43:21 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1590327801; bh=3pIP3m8WwwbsJ4SnIjjtWyOI/ntT/CeolRaAW4AnY8Q=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=zg3yyA1AORDir5t5mLzATTqL15mEAKO+fwToV62hSav7ujKDBcTfCzhckdxMXmsvu
+         uDmgrBNqzpi1A/NLrqW1OEup5obqipU38YcpDOxiJrTF/QYQW3UKwxD2pyCme+nYMF
+         ML4j4LT2APgcccrFzhZWmXbhPc+drFXgfMcKW1TA=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:606::1:1])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4roCE1W5A4-hJX4fh2O;
+        Sun, 24 May 2020 16:43:19 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: [PATCH v2] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date:   Sun, 24 May 2020 16:43:18 +0300
+Message-ID: <159032779896.957378.7852761411265662220.stgit@buzz>
+User-Agent: StGit/0.22-39-gd257
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 13:46:30 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Replace superfluous VM_BUG_ON() with comment about correct usage.
 
-> From: Lars-Peter Clausen <lars@metafoo.de>
-> 
-> All devices using a triggered buffer need to attach and detach the trigger
-> to the device in order to properly work. Instead of doing this in each and
-> every driver by hand move this into the core.
-> 
-> At this point in time, all drivers should have been resolved to
-> attach/detach the poll-function in the same order.
-> 
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Technically reverts commit 1d148e218a0d0566b1c06f2f45f1436d53b049b2
+("mm: add VM_BUG_ON_PAGE() to page_mapcount()"), but context have changed.
 
-Looks good to me.
+Function isolate_migratepages_block() runs some checks out of lru_lock
+when choose pages for migration. After checking PageLRU() it checks extra
+page references by comparing page_count() and page_mapcount(). Between
+these two checks page could be removed from lru, freed and taken by slab.
 
-Jonathan
+As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
+Race window is tiny. For certain workload this happens around once a year.
 
 
-> ---
->  .../buffer/industrialio-triggered-buffer.c    | 10 +--------
->  drivers/iio/iio_core_trigger.h                | 17 ++++++++++++++
->  drivers/iio/industrialio-buffer.c             | 13 +++++++++++
->  drivers/iio/industrialio-trigger.c            | 22 ++++---------------
->  include/linux/iio/trigger_consumer.h          |  7 ------
->  5 files changed, 35 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/iio/buffer/industrialio-triggered-buffer.c b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> index e8046c1ecd6b..6c20a83f887e 100644
-> --- a/drivers/iio/buffer/industrialio-triggered-buffer.c
-> +++ b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> @@ -13,11 +13,6 @@
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/trigger_consumer.h>
->  
-> -static const struct iio_buffer_setup_ops iio_triggered_buffer_setup_ops = {
-> -	.postenable = &iio_triggered_buffer_postenable,
-> -	.predisable = &iio_triggered_buffer_predisable,
-> -};
-> -
->  /**
->   * iio_triggered_buffer_setup() - Setup triggered buffer and pollfunc
->   * @indio_dev:		IIO device structure
-> @@ -67,10 +62,7 @@ int iio_triggered_buffer_setup(struct iio_dev *indio_dev,
->  	}
->  
->  	/* Ring buffer functions - here trigger setup related */
-> -	if (setup_ops)
-> -		indio_dev->setup_ops = setup_ops;
-> -	else
-> -		indio_dev->setup_ops = &iio_triggered_buffer_setup_ops;
-> +	indio_dev->setup_ops = setup_ops;
->  
->  	/* Flag that polled ring buffering is possible */
->  	indio_dev->modes |= INDIO_BUFFER_TRIGGERED;
-> diff --git a/drivers/iio/iio_core_trigger.h b/drivers/iio/iio_core_trigger.h
-> index e59fe2f36bbb..9d1a92cc6480 100644
-> --- a/drivers/iio/iio_core_trigger.h
-> +++ b/drivers/iio/iio_core_trigger.h
-> @@ -18,6 +18,12 @@ void iio_device_register_trigger_consumer(struct iio_dev *indio_dev);
->   **/
->  void iio_device_unregister_trigger_consumer(struct iio_dev *indio_dev);
->  
-> +
-> +int iio_trigger_attach_poll_func(struct iio_trigger *trig,
-> +				 struct iio_poll_func *pf);
-> +int iio_trigger_detach_poll_func(struct iio_trigger *trig,
-> +				 struct iio_poll_func *pf);
-> +
->  #else
->  
->  /**
-> @@ -37,4 +43,15 @@ static void iio_device_unregister_trigger_consumer(struct iio_dev *indio_dev)
->  {
->  }
->  
-> +static inline int iio_trigger_attach_poll_func(struct iio_trigger *trig,
-> +					       struct iio_poll_func *pf)
-> +{
-> +	return 0;
-> +}
-> +static inline int iio_trigger_detach_poll_func(struct iio_trigger *trig,
-> +					       struct iio_poll_func *pf)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif /* CONFIG_TRIGGER_CONSUMER */
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index ec4f531994fa..88d756107fb2 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -20,6 +20,7 @@
->  
->  #include <linux/iio/iio.h>
->  #include "iio_core.h"
-> +#include "iio_core_trigger.h"
->  #include <linux/iio/sysfs.h>
->  #include <linux/iio/buffer.h>
->  #include <linux/iio/buffer_impl.h>
-> @@ -972,6 +973,13 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
->  		}
->  	}
->  
-> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> +		ret = iio_trigger_attach_poll_func(indio_dev->trig,
-> +						   indio_dev->pollfunc);
-> +		if (ret)
-> +			goto err_disable_buffers;
-> +	}
-> +
->  	return 0;
->  
->  err_disable_buffers:
-> @@ -998,6 +1006,11 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
->  	if (list_empty(&indio_dev->buffer_list))
->  		return 0;
->  
-> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> +		iio_trigger_detach_poll_func(indio_dev->trig,
-> +					     indio_dev->pollfunc);
-> +	}
-> +
->  	/*
->  	 * If things go wrong at some step in disable we still need to continue
->  	 * to perform the other steps, otherwise we leave the device in a
-> diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
-> index 53d1931f6be8..6f16357fd732 100644
-> --- a/drivers/iio/industrialio-trigger.c
-> +++ b/drivers/iio/industrialio-trigger.c
-> @@ -239,8 +239,8 @@ static void iio_trigger_put_irq(struct iio_trigger *trig, int irq)
->   * the relevant function is in there may be the best option.
->   */
->  /* Worth protecting against double additions? */
-> -static int iio_trigger_attach_poll_func(struct iio_trigger *trig,
-> -					struct iio_poll_func *pf)
-> +int iio_trigger_attach_poll_func(struct iio_trigger *trig,
-> +				 struct iio_poll_func *pf)
->  {
->  	int ret = 0;
->  	bool notinuse
-> @@ -290,8 +290,8 @@ static int iio_trigger_attach_poll_func(struct iio_trigger *trig,
->  	return ret;
->  }
->  
-> -static int iio_trigger_detach_poll_func(struct iio_trigger *trig,
-> -					 struct iio_poll_func *pf)
-> +int iio_trigger_detach_poll_func(struct iio_trigger *trig,
-> +				 struct iio_poll_func *pf)
->  {
->  	int ret = 0;
->  	bool no_other_users
-> @@ -705,17 +705,3 @@ void iio_device_unregister_trigger_consumer(struct iio_dev *indio_dev)
->  	if (indio_dev->trig)
->  		iio_trigger_put(indio_dev->trig);
->  }
-> -
-> -int iio_triggered_buffer_postenable(struct iio_dev *indio_dev)
-> -{
-> -	return iio_trigger_attach_poll_func(indio_dev->trig,
-> -					    indio_dev->pollfunc);
-> -}
-> -EXPORT_SYMBOL(iio_triggered_buffer_postenable);
-> -
-> -int iio_triggered_buffer_predisable(struct iio_dev *indio_dev)
-> -{
-> -	return iio_trigger_detach_poll_func(indio_dev->trig,
-> -					     indio_dev->pollfunc);
-> -}
-> -EXPORT_SYMBOL(iio_triggered_buffer_predisable);
-> diff --git a/include/linux/iio/trigger_consumer.h b/include/linux/iio/trigger_consumer.h
-> index c3c6ba5ec423..3aa2f132dd67 100644
-> --- a/include/linux/iio/trigger_consumer.h
-> +++ b/include/linux/iio/trigger_consumer.h
-> @@ -50,11 +50,4 @@ irqreturn_t iio_pollfunc_store_time(int irq, void *p);
->  
->  void iio_trigger_notify_done(struct iio_trigger *trig);
->  
-> -/*
-> - * Two functions for common case where all that happens is a pollfunc
-> - * is attached and detached from a trigger
-> - */
-> -int iio_triggered_buffer_postenable(struct iio_dev *indio_dev);
-> -int iio_triggered_buffer_predisable(struct iio_dev *indio_dev);
-> -
->  #endif
+ page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
+ flags: 0x500000000008100(slab|head)
+ raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
+ raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
+ page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
+ ------------[ cut here ]------------
+ kernel BUG at ./include/linux/mm.h:628!
+ invalid opcode: 0000 [#1] SMP NOPTI
+ CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
+ Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
+ RIP: 0010:isolate_migratepages_block+0x986/0x9b0
+
+
+Code in isolate_migratepages_block() was added in commit 119d6d59dcc0
+("mm, compaction: avoid isolating pinned pages") before adding VM_BUG_ON
+into page_mapcount().
+
+This race has been predicted in 2015 by Vlastimil Babka (see link below).
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
+Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
+Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
+---
+ include/linux/mm.h |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5a323422d783..95f777f482ac 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -782,6 +782,11 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+ 
+ extern void kvfree(const void *addr);
+ 
++/*
++ * Mapcount of compound page as a whole, not includes mapped sub-pages.
++ *
++ * Must be called only for compound pages or any their tail sub-pages.
++ */
+ static inline int compound_mapcount(struct page *page)
+ {
+ 	VM_BUG_ON_PAGE(!PageCompound(page), page);
+@@ -801,10 +806,15 @@ static inline void page_mapcount_reset(struct page *page)
+ 
+ int __page_mapcount(struct page *page);
+ 
++/*
++ * Mapcount of 0-order page, for sub-page includes compound_mapcount().
++ *
++ * Result is undefined for pages which cannot be mapped into userspace.
++ * For example SLAB or special types of pages. See function page_has_type().
++ * They use this place in struct page differently.
++ */
+ static inline int page_mapcount(struct page *page)
+ {
+-	VM_BUG_ON_PAGE(PageSlab(page), page);
+-
+ 	if (unlikely(PageCompound(page)))
+ 		return __page_mapcount(page);
+ 	return atomic_read(&page->_mapcount) + 1;
 
