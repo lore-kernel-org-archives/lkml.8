@@ -2,115 +2,124 @@ Return-Path: <SRS0=XgUW=7G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51CF92072C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AC92073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 May 2020 08:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UkZ5fwVE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOftp8Lu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgEXIKU (ORCPT
+        id S1728502AbgEXILh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 04:10:20 -0400
-Received: from mout.gmx.net ([212.227.15.15]:55429 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbgEXIKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 04:10:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590307797;
-        bh=Yh4A99YJCgkA9UbuO3RfCVtF8HiYdKwmMW3V19IImEM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=UkZ5fwVEuQEPo519I9Bim3bwomLEMCwU16ReQvnBT1hYayPucK9Kd/yr2CyAsCfsP
-         cttCbWQFQ+AwXocbrl/2yj2bOPxeQILT1EJ4VN6HvtCFnMNjIHAmeqNFd5LCOMtyGP
-         ty0Qy/7xjEr6EN2mDa78Ajhq/ex8OuT/Dtbn6Sgc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MbAcs-1j1V0v2EQK-00bXzT; Sun, 24 May 2020 10:09:57 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
+        Sun, 24 May 2020 04:11:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgEXILe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 04:11:34 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B95C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 01:11:32 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t8so4974661pju.3
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 01:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3HmigCjALU51rYyyBGLBKoAkAQrHtdUuG74Co9AoT2k=;
+        b=bOftp8LuT45vtlcgLJtjpOry5/pv7Z9eYAW/kDJ4hv9mL1zH6kBeG9rGtJO/SUkxKD
+         AhjB9/hQYWO2IvXPAYBQveWvNSMAV7Bi9GyK1m3yDD8ZY11At5npkesASAhZRT5EyiAi
+         2ZwJwciZQSZM3eastyOWAcDaCExSo1HNsXVpgDfakIz1I0hnBc3jXebsZnvqj2FINutY
+         6un9yGg+cRgpaQOhel7BuhW3f0DmtTJHBaOAca1Rs0jhlVQ1Kkwa65ZozwBS4Y/f8iyb
+         nLw11kV+l7FTvOV2lr/HLGPwbUF/HgpexqTQMqFBQbpMFXMaqeZTemVIVg2ks1U1RLrl
+         hbLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3HmigCjALU51rYyyBGLBKoAkAQrHtdUuG74Co9AoT2k=;
+        b=oybLdZtG72QGdh0B6K0yFkWKDm1abTMuhtVuE3JDo999tiEaDcJ3ZhPPrZeCc7NW41
+         kqhiTWI0kpwHyHxROA1gAA6j9kKuvRTO0NJ/OMQ+9jzxnWyOLna57swBrOHXdbb1x+XD
+         xWzcx6fX6AN45fk/VBQAWnjSd3GPB0iuISXVQFQXah4mNQCCV6krp1mJmKMsA8EgcJG9
+         cPAmvNJocga+fi1zXdO7qL179FyTaIMFf9DuX3hYoT+A094cDqJozwr5iEUw9yoNFZV+
+         AkMt/QB1dnxtJirke2q9wObmd79pE+UxmIdBOSSXxRmGk+RM7Vb4/KPf4Bay3IYSmDCR
+         HeQA==
+X-Gm-Message-State: AOAM5316TwkFP6qxeRkNQACKsYQkzbCtM2rMaqcp/MtJIqsuK5UogV34
+        1kHxhNtjmcU9MQQT8dJozjE=
+X-Google-Smtp-Source: ABdhPJxZfKElYBNI4glOcgWKrPyJxs5PiTsJpx+QFxqGsjUJty7CXioEENo2hycw40fd49jQga2ajg==
+X-Received: by 2002:a17:90a:8989:: with SMTP id v9mr14838930pjn.180.1590307892183;
+        Sun, 24 May 2020 01:11:32 -0700 (PDT)
+Received: from workstation-LAP.localdomain ([103.87.57.241])
+        by smtp.gmail.com with ESMTPSA id p190sm10520227pfp.207.2020.05.24.01.11.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 24 May 2020 01:11:31 -0700 (PDT)
+Date:   Sun, 24 May 2020 13:41:17 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        James Morris <jamorris@linux.microsoft.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH] drivers/irqchip: Remove function callback casts
-Date:   Sun, 24 May 2020 10:09:10 +0200
-Message-Id: <20200524080910.13087-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@redhat.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-audit@redhat.com,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH 1/3 RESEND] sched: Remove __rcu annotation from cred
+ pointer
+Message-ID: <20200524081117.GA29@workstation-LAP.localdomain>
+References: <20200402055640.6677-1-frextrite@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DPSzdRpyRux4A5kUtqLHMEMr9pHGkwQE+bKYyADNmfAZpC447sS
- BVR1oCo6gXQUg+ZC3B0H4u04qrR/36ilTAe4FoXmoduPjLqwXF8dgtNgUX7zQfXCaDLMl9U
- oz9L2o6IP2ZpdOHJ79dk10pmPl8bLERfuJOzdfmR/oZMiqlr7HgSMGiXXXPiKGSEveS1lFn
- hljV+i1ABOCLBauvj1Kcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2CgksPlfxEg=:lbVsvV8SCTgDDaPaOCYklz
- OyoJ6CqTZX6vsMElVRTIXKQwIb3GZdtmDPZDs9f/O/96geY1kGCEiqcYmC7CedcxyBpwFr2aX
- RCuQT4JR2Wyj0Wy70477E/I4TmTwLiu8gvL13Ep9+LjfMj+EWq8wyBXCQKGh0NAdT7ZM1trs1
- 2H4f7T5JO1YBNnSJ4OazykSas5qGy1P/0F9GHi46HbHW0vHQ0QjfTmsXIfZzMNQIMh0CsXfI2
- na6JQTMFrQfAfwtR2To6AHhqdiPNGeVTnEWtd4FA3XPvr7S+1ryLSideOgaFmrnDGRhuxmNAI
- wdk73/mK63o/ucMKYgVTwcZO2rnsq7G9j9Fcb5vfPXtArZpdm5iUYYr9Qka6giv2Pokl8slQ/
- gXZWJBpcggcBpPJIEeKdXfryDuOiAgxWhRH7wzR3458FMyxgD/fZM27BqRLAGLd7ieLU/nmHo
- 6JcfeCYyKqxoegB3iqbdPB8xjkPjxeMQ79nMf4/u2Fs4WQqe4/PcFZ3LqNf+vG3t24Mlxf+d2
- U6HoYDNSU7RRG7Gac9ZEFwc+jK6cKdHzhnXShBr5L57xBhQ83uLHjkH0oLuEbsONdVZeElBJh
- 2ZsqJmwCJPcQn/t7v/EGCnMM659/FCkxRqTSuVNj+OVvQbrJqSxIkJo4/38eg6d656wTrUkn+
- PChQmeMS7PBLoIiuUPhqMPCEas/xFGR/sZ2dk0i8tMXurbIWxzHBthGtLghuJ3SuJFkuBawie
- yeIs2j2KjFvs4jZy/BmfJMg8BNWCx1UJXD9QS/sPF0b89IY0LSa6N2Fv2URQwOIvYCbz9Co5D
- yP75P5QmwF6bTFNune7Z37zG82/UhUwDxqrOmqwGbLmwMFZ8YXDtSg9b7sXzfRyGs1K8ihISy
- WB5h/sPxKrWwUleT+Vdn4YUFlXs29iwc7yFsvWUJzpAZDhPXpum+2IZOw8cSt+7xf/1O+RlHG
- RuhDlB7F8ERpxPd80LqKSuv99HmhUSkvHNiFv/q2WjvTrhnmES2Uy7T7aEsxaL5P4N/PmyRxm
- cWAMc5ng/qSMQ26ItQkTq+SfTLw9aWwqZSjxeftA0KqnxpZ0NRs7kHqq/GKDe4cy9i430bJbP
- qwkM8mxZpOcwCGgWbqA9xPu/LyYn6HZoUvdc+Iz/mm0eabzMqmXGQLiSsXrY6CW51kLz9eQ32
- MlsBGLENs4MZcXsYLBrpSsb7ilQnPGG160geMK6xFdZbEgCAaK7gv2CearH0mPtDkhCopX63C
- +sfOsXti/aMf+X76y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402055640.6677-1-frextrite@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an effort to enable -Wcast-function-type in the top-level Makefile to
-support Control Flow Integrity builds, remove all the function callback
-casts.
+On Thu, Apr 02, 2020 at 11:26:38AM +0530, Amol Grover wrote:
+> task_struct::cred (subjective credentials) is *always* used
+> task-synchronously, hence, does not require RCU semantics.
+> 
+> task_struct::real_cred (objective credentials) can be used in
+> RCU context and its __rcu annotation is retained.
+> 
+> However, task_struct::cred and task_struct::real_cred *may*
+> point to the same object, hence, the object pointed to by
+> task_struct::cred *may* have RCU delayed freeing.
+> 
+> Suggested-by: Jann Horn <jannh@google.com>
+> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 
-To do this, modify the IRQCHIP_ACPI_DECLARE macro initializing the
-acpi_probe_entry struct directly instead of use the existent macro
-ACPI_DECLARE_PROBE_ENTRY.
+Hello everyone,
 
-In this new initialization use the probe_subtbl field instead of the
-probe_table field use in the ACPI_DECLARE_PROBE_ENTRY macro.
+Could you please go through patches 1/3 and 2/3 and if deemed OK, give
+your acks. I sent the original patch in beginning of February (~4 months
+back) and resent the patches again in beginning of April due to lack of
+traffic. Paul Moore was kind enough to ack twice - the 3/3 and its
+resend patch. However these 2 patches still remain. I'd really
+appreciate if someone reviewed them.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- include/linux/irqchip.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
-index 950e4b2458f0..1f464fd10df0 100644
-=2D-- a/include/linux/irqchip.h
-+++ b/include/linux/irqchip.h
-@@ -39,8 +39,14 @@
-  * @fn: initialization function
-  */
- #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
--	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
--				 subtable, validate, data, fn)
-+	static const struct acpi_probe_entry __acpi_probe_##name	\
-+		__used __section(__irqchip_acpi_probe_table) =3D {	\
-+			.id =3D ACPI_SIG_MADT,				\
-+			.type =3D subtable,				\
-+			.subtable_valid =3D validate,			\
-+			.probe_subtbl =3D (acpi_tbl_entry_handler)fn,	\
-+			.driver_data =3D data,				\
-+		}
-
- #ifdef CONFIG_IRQCHIP
- void irqchip_init(void);
-=2D-
-2.20.1
-
+Thanks
+Amol
