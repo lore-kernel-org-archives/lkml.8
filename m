@@ -2,89 +2,80 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEECEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5A62075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EF6206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590389426;
+	bh=vepi29L8xECw5cOAnl/gvGmG8/ppufRGsRSVfQXE6lY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vgJ0MEH2rdNbdDhQSDwuE6Z+rO1Aog6um9l560epPcf7KnlqO1BfzaRzbCLWuqiqd
+	 VlDQrk3phIQVzsA/x84/xkerSlt59/WHO+vWxCnIrlwPEm/STjzksrNl/8IjEWcIFM
+	 iwsPpONwipX046YessgUAgdluiw04nDHfVbs82hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388925AbgEYGqi (ORCPT
+        id S2388913AbgEYGuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 02:46:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56790 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388385AbgEYGqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 02:46:38 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C22CEDDD0DEDD6AD6D3;
-        Mon, 25 May 2020 14:46:35 +0800 (CST)
-Received: from [10.174.151.115] (10.174.151.115) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 25 May
- 2020 14:46:25 +0800
-Subject: Re: [PATCH 1/2] crypto: virtio: Fix src/dst scatterlist calculation
- in __virtio_crypto_skcipher_do_req()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        <linux-crypto@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Arei Gonglei <arei.gonglei@huawei.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-References: <21478291-9191-1da3-a7e5-65e87c743a3c@web.de>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <7b2ac2f8-7d92-1bd7-8ad8-9866d9b1d634@huawei.com>
-Date:   Mon, 25 May 2020 14:46:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 25 May 2020 02:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388487AbgEYGuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 02:50:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3C8206B6;
+        Mon, 25 May 2020 06:50:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590389425;
+        bh=vepi29L8xECw5cOAnl/gvGmG8/ppufRGsRSVfQXE6lY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TvF6gphGg1uFONlusq+LEA9nAmStZXptnZZR+LQydYLhOvCR2loi5Qx6Kom4zTmCc
+         LoOWAmHvI9W4oHGlgAX+d00BH6hw4dzx1elZk45IES8wtwpIbcNkJLTyAndwebgKde
+         Ei5tnlQWYYdSLUb8pyTwGTd9zLuqtGnX/7qpny2I=
+Date:   Mon, 25 May 2020 08:50:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs second pull request for kernel 5.8
+Message-ID: <20200525065015.GA61627@kroah.com>
+References: <20200525052819.GA19318@ogabbay-VM>
 MIME-Version: 1.0
-In-Reply-To: <21478291-9191-1da3-a7e5-65e87c743a3c@web.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525052819.GA19318@ogabbay-VM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+On Mon, May 25, 2020 at 08:28:19AM +0300, Oded Gabbay wrote:
+> Hello Greg,
+> 
+> This is the second pull request for habanalabs driver for kernel 5.8.
+> 
+> It contains important improvements to our MMU code and our ASIC reset code.
+> 
+> Please see the tag message for more details on what this pull request
+> contains.
+> 
+> Thanks,
+> Oded
+> 
+> The following changes since commit 709b41b56a16a5901a89dcaeb75d2233f80d9e55:
+> 
+>   misc: rtsx: Remove unnecessary rts5249_set_aspm(), rts5260_set_aspm() (2020-05-22 09:38:14 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-05-25
 
-On 2020/5/25 14:05, Markus Elfring wrote:
->> The system will crash when we insmod crypto/tcrypt.ko whit mode=38.
-> 
-> * I suggest to use the word “with” in this sentence.
-> 
-OK, it's a typo.
+Pulled and pushed out, thanks.
 
-> * Will it be helpful to explain the passed mode number?
-> 
-> 
->> BTW I add a check for sg_nents_for_len() its return value since
->> sg_nents_for_len() function could fail.
-> 
-> Please reconsider also development consequences for this suggestion.
-> Will a separate update step be more appropriate for the addition of
-> an input parameter validation?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=9cb1fd0efd195590b828b9b865421ad345a4a145#n138
-> 
-> Would you like to add the tag “Fixes” to the commit message?
->
-Will take all of your suggestions in v2, thanks.
-
-> Regards,
-> Markus
-> 
-
--- 
----
-Regards,
-Longpeng(Mike)
+greg k-h
