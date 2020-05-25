@@ -2,200 +2,148 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEDEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7159CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBA42075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjlDtBWN"
+	by mail.kernel.org (Postfix) with ESMTP id 5A933206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388852AbgEYDlq (ORCPT
+        id S2388564AbgEYDpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 23:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388397AbgEYDlo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 23:41:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963C8C061A0E;
-        Sun, 24 May 2020 20:41:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cx22so8001900pjb.1;
-        Sun, 24 May 2020 20:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iDnn3wwO4wgWkpXGhO1cGw9dx9qYzbrC+ZSQIhZHNL0=;
-        b=jjlDtBWN/16JQmSFYC7TV23yXD3qJz4n3xV2sK420hC1YiK8ETGR0y4wpyWU8RukLV
-         SqpSatLDtBr7+WKFLAtoAkTbwa+WhbfL5AYZ7w+KUr6QIKQmLmku6iJ38zSp8M0Z/Cmb
-         hKSkvngi8kBBa0Uh4QpCznTFNcEKIpDxWa8XTYNfX6aZpDJbqeyQi/XT2VgZ6YCNtA71
-         Kk+9tQIvVgA+nGLKNCEIlkz72uIXo0pi6PgjKOpf3LUWBR5m7B1SHBllrMxYIHcrn2t+
-         14ZUIRRDAACib2/IOewbL8Gax9yeRir0geDiwg624a9kv4FvwO67JcFRQwvKBnOI8/kB
-         Iweg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iDnn3wwO4wgWkpXGhO1cGw9dx9qYzbrC+ZSQIhZHNL0=;
-        b=qzygH3QDi+ScDaRfoFzDwroyZUDcwXtrT+Dr6aowjESzz+dSR1bS3ZRXu54G4gYHzg
-         YmW2fIW4h7aWldnyyzQKxx6Mx5DEHL1XSz1+XpyvDrP4A2PQRmnDQNGtxNtYIhCu+70C
-         6PqSrSf7RVQfsIirIcFPlV5yguzGx6Raee5w66jKuvkwZ7Xt8plOOD2dXyu1NBTriThS
-         Xz1QEGO/2p8TZ5xJCInKiHAIVnqpc1acQt+Fyl+cNa7ykn1Hf9FYhff5fsfJiYAIuVWz
-         8BoQCZK0nw+okxDtw4lTJDfHoDDfXhBu21PzISQM9SkewFDp/V6avqBDeLcEe/VOYepm
-         v9IQ==
-X-Gm-Message-State: AOAM530aTDvtS1XmX2Eq1szJpafTOjUeV3ZpU1Pqb1dYiZanyyV5C4Os
-        zqRcEbFCmvGdKkCxtrFqm6o=
-X-Google-Smtp-Source: ABdhPJxoKIdtw415DByT7hwTPxxjMmM+Hxr8JYe3K494S5OCo3VeF502e2OXLD2FZhSXNulrXDX2cg==
-X-Received: by 2002:a17:90a:4497:: with SMTP id t23mr18625927pjg.88.1590378104137;
-        Sun, 24 May 2020 20:41:44 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.44])
-        by smtp.gmail.com with ESMTPSA id 7sm11981695pfc.203.2020.05.24.20.41.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 May 2020 20:41:43 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     robh+dt@kernel.org, p.zabel@pengutronix.de,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
-        daniel@ffwll.ch, mturquette@baylibre.com, sboyd@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH v5 7/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
-Date:   Mon, 25 May 2020 11:41:01 +0800
-Message-Id: <1590378062-7965-8-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
-References: <broonie@kernel.org>
- <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
+        Sun, 24 May 2020 23:45:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5276 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388211AbgEYDpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 23:45:38 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 55077FD852DCAC4B1805;
+        Mon, 25 May 2020 11:45:32 +0800 (CST)
+Received: from [10.174.151.115] (10.174.151.115) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 25 May
+ 2020 11:45:24 +0800
+Subject: Re: [PATCH 1/2] crypto: virtio: fix src/dst scatterlist calculation
+To:     Jason Wang <jasowang@redhat.com>, <linux-crypto@vger.kernel.org>
+CC:     Gonglei <arei.gonglei@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        LABBE Corentin <clabbe@baylibre.com>
+References: <20200525005627.707-1-longpeng2@huawei.com>
+ <20200525005627.707-2-longpeng2@huawei.com>
+ <25cff618-601c-e899-a3cc-b289863a7407@redhat.com>
+From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+Message-ID: <bd31398c-e81b-993f-99ae-37dc364b0e40@huawei.com>
+Date:   Mon, 25 May 2020 11:45:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <25cff618-601c-e899-a3cc-b289863a7407@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.151.115]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+Hi Jason,
 
-in l3gd20 driver startup, there is a setup failed error return from
-stm32 spi driver
+On 2020/5/25 11:12, Jason Wang wrote:
+> 
+> On 2020/5/25 上午8:56, Longpeng(Mike) wrote:
+>> The system will crash when we insmod crypto/tcrypt.ko whit mode=38.
+>>
+>> Usually the next entry of one sg will be @sg@ + 1, but if this sg element
+>> is part of a chained scatterlist, it could jump to the start of a new
+>> scatterlist array. Let's fix it by sg_next() on calculation of src/dst
+>> scatterlist.
+>>
+>> BTW I add a check for sg_nents_for_len() its return value since
+>> sg_nents_for_len() function could fail.
+>>
+>> Cc: Gonglei <arei.gonglei@huawei.com>
+>> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+>> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+>> Cc: Jason Wang <jasowang@redhat.com>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: virtualization@lists.linux-foundation.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Reported-by: LABBE Corentin <clabbe@baylibre.com>
+>> Signed-off-by: Gonglei <arei.gonglei@huawei.com>
+>> Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+>> ---
+>>   drivers/crypto/virtio/virtio_crypto_algs.c | 14 ++++++++++----
+>>   1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c
+>> b/drivers/crypto/virtio/virtio_crypto_algs.c
+>> index 372babb44112..2fa1129f96d6 100644
+>> --- a/drivers/crypto/virtio/virtio_crypto_algs.c
+>> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+>> @@ -359,8 +359,14 @@ __virtio_crypto_skcipher_do_req(struct
+>> virtio_crypto_sym_request *vc_sym_req,
+>>       unsigned int num_out = 0, num_in = 0;
+>>       int sg_total;
+>>       uint8_t *iv;
+>> +    struct scatterlist *sg;
+>>         src_nents = sg_nents_for_len(req->src, req->cryptlen);
+>> +    if (src_nents < 0) {
+>> +        pr_err("Invalid number of src SG.\n");
+>> +        return src_nents;
+>> +    }
+>> +
+>>       dst_nents = sg_nents(req->dst);
+>>         pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
+>> @@ -446,12 +452,12 @@ __virtio_crypto_skcipher_do_req(struct
+>> virtio_crypto_sym_request *vc_sym_req,
+>>       vc_sym_req->iv = iv;
+>>         /* Source data */
+>> -    for (i = 0; i < src_nents; i++)
+>> -        sgs[num_out++] = &req->src[i];
+>> +    for (sg = req->src, i = 0; sg && i < src_nents; sg = sg_next(sg), i++)
+> 
+> 
+> Any reason sg is checked here?
+> 
+> I believe it should be checked in sg_nents_for_len().
+> 
+Do you means：
+for (sg = req->src, i = 0; i < src_nents; sg = sg_next(sg), i++) ?
 
-     "
-     [    2.687630] st-gyro-spi spi0.0: supply vdd not found, using dummy
-     regulator
-     [    2.696869] st-gyro-spi spi0.0: supply vddio not found, using dummy
-     regulator
-     [    2.706707] spi_stm32 40015000.spi: SPI transfer setup failed
-     [    2.713741] st-gyro-spi spi0.0: SPI transfer failed: -22
-     [    2.721096] spi_master spi0: failed to transfer one message from queue
-     [    2.729268] iio iio:device0: failed to read Who-Am-I register.
-     [    2.737504] st-gyro-spi: probe of spi0.0 failed with error -22
-     "
+> 
+>> +        sgs[num_out++] = sg;
+>>         /* Destination data */
+>> -    for (i = 0; i < dst_nents; i++)
+>> -        sgs[num_out + num_in++] = &req->dst[i];
+>> +    for (sg = req->dst, i = 0; sg && i < dst_nents; sg = sg_next(sg), i++)
+>> +        sgs[num_out + num_in++] = sg;
+> 
+> 
+> I believe sg should be checked in sg_nents().
+>
+How about
+for (sg = req->dst; sg; sg = sg_next(sg)) ?
 
-after debug into spi-stm32 driver, st-gyro-spi split two steps to read
-l3gd20 id
+> Thanks
+> 
+> 
+>>         /* Status */
+>>       sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
+> 
+> .
+> 
 
-first: send command to l3gd20 with read id command in tx_buf, rx_buf
-is null.
-second: read id with tx_buf is null, rx_buf not null.
-
-so, for second step, stm32 driver recongise this process as 'SPI_SIMPLE_RX'
-from stm32_spi_communication_type(), but there is no related process for this
-type in stm32f4_spi_set_mode(), then we get error from
-stm32_spi_transfer_one_setup().
-
-we can use two method to fix this bug.
-1, use stm32 spi's "In unidirectional receive-only mode (BIDIMODE=0 and
-RXONLY=1)". but as our code running in sdram, the read latency is too large
-to get so many receive overrun error in interrupts handler.
-
-2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
-null, so add flag 'SPI_MASTER_MUST_TX' to spi master.
-
-Change since V4:
-1 remove dummy data sent out by stm32 spi driver
-2 add flag 'SPI_MASTER_MUST_TX' to spi master
-
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
-
-Hi Mark,
-
-This changes add 'SPI_MASTER_MUST_TX' for stm32 spi controller
-
-thanks.
-
-
- drivers/spi/spi-stm32.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 44ac6eb3..4c643df 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -811,7 +811,9 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
- 		mask |= STM32F4_SPI_SR_TXE;
- 	}
- 
--	if (!spi->cur_usedma && spi->cur_comm == SPI_FULL_DUPLEX) {
-+	if (!spi->cur_usedma && (spi->cur_comm == SPI_FULL_DUPLEX ||
-+				spi->cur_comm == SPI_SIMPLEX_RX ||
-+				spi->cur_comm == SPI_3WIRE_RX)) {
- 		/* TXE flag is set and is handled when RXNE flag occurs */
- 		sr &= ~STM32F4_SPI_SR_TXE;
- 		mask |= STM32F4_SPI_SR_RXNE | STM32F4_SPI_SR_OVR;
-@@ -850,7 +852,7 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
- 		stm32f4_spi_read_rx(spi);
- 		if (spi->rx_len == 0)
- 			end = true;
--		else /* Load data for discontinuous mode */
-+		else if (spi->tx_buf)/* Load data for discontinuous mode */
- 			stm32f4_spi_write_tx(spi);
- 	}
- 
-@@ -1151,7 +1153,9 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- 	/* Enable the interrupts relative to the current communication mode */
- 	if (spi->cur_comm == SPI_SIMPLEX_TX || spi->cur_comm == SPI_3WIRE_TX) {
- 		cr2 |= STM32F4_SPI_CR2_TXEIE;
--	} else if (spi->cur_comm == SPI_FULL_DUPLEX) {
-+	} else if (spi->cur_comm == SPI_FULL_DUPLEX ||
-+				spi->cur_comm == SPI_SIMPLEX_RX ||
-+				spi->cur_comm == SPI_3WIRE_RX) {
- 		/* In transmit-only mode, the OVR flag is set in the SR register
- 		 * since the received data are never read. Therefore set OVR
- 		 * interrupt only when rx buffer is available.
-@@ -1462,10 +1466,16 @@ static int stm32f4_spi_set_mode(struct stm32_spi *spi, unsigned int comm_type)
- 		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIMODE |
- 					STM32F4_SPI_CR1_BIDIOE);
--	} else if (comm_type == SPI_FULL_DUPLEX) {
-+	} else if (comm_type == SPI_FULL_DUPLEX ||
-+				comm_type == SPI_SIMPLEX_RX) {
- 		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIMODE |
- 					STM32F4_SPI_CR1_BIDIOE);
-+	} else if (comm_type == SPI_3WIRE_RX) {
-+		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
-+					STM32F4_SPI_CR1_BIDIMODE);
-+		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
-+					STM32F4_SPI_CR1_BIDIOE);
- 	} else {
- 		return -EINVAL;
- 	}
-@@ -1906,6 +1916,7 @@ static int stm32_spi_probe(struct platform_device *pdev)
- 	master->prepare_message = stm32_spi_prepare_msg;
- 	master->transfer_one = stm32_spi_transfer_one;
- 	master->unprepare_message = stm32_spi_unprepare_msg;
-+	master->flags = SPI_MASTER_MUST_TX;
- 
- 	spi->dma_tx = dma_request_chan(spi->dev, "tx");
- 	if (IS_ERR(spi->dma_tx)) {
 -- 
-2.7.4
-
+---
+Regards,
+Longpeng(Mike)
