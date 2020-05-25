@@ -2,77 +2,96 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243A62073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590434477;
-	bh=dOetpQWCFCq4GaGnPj9d7Xjvd6fSObj/WCvcJX9OwdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mILMRHJzH+N56QCggEJEq07WuSVz0TxWxG3hdgvUvH9n34i6kEfSgfk9PxAqmmKWa
-	 KBLr+eJwlF5u1151pS2lzp3eSCKN+GTx+Xo+br8KfiJGuUGujSRPd8/bv+sbF4Ahxi
-	 e/JDetjeIMsMYbg6Wc2jN9Iobe+wL9lMrOSBMpp8=
+	by mail.kernel.org (Postfix) with ESMTP id DA3A22070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BWwkSFn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390026AbgEYTVQ (ORCPT
+        id S2390047AbgEYTVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 15:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389460AbgEYTVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 15:21:15 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        Mon, 25 May 2020 15:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389460AbgEYTVr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 15:21:47 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C736CC061A0E;
+        Mon, 25 May 2020 12:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=aSyd7Ks+R9jE8AEEQmkCXKqSftrCpG8jlbljNIExdqw=; b=BWwkSFn9VhfEAfEk+BxrpC5gJL
+        QuabQWUhNlCyVUY11jPxH9i0mji0la1hyMl1qiqLbrTtg76/aSydvL5geCd4IAdEY17ytDzqwYqyS
+        olGJs9P76N0dKb2XazS63xkwRKYZodtvI2FUZWtirLEb+1EkGOf9cZgWotG4ijTVKzQJnEuYOEo2u
+        wFc9utzGsln6xJRkxmkHEDAACcqzm6WncY9UT8h5AqM6gMR2PywTYSen5r6IuZ2WMLtqdfVBWhB4y
+        c5GhKNqzi+ARdgjd0Nt1DRReiKWONXz/y/CrivnFjfmEasIU28rttP53pVfTG2ujqSKbXLF6SgbWI
+        hmhCExSQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdIfS-0007l7-Cm; Mon, 25 May 2020 19:21:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 227472070A;
-        Mon, 25 May 2020 19:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590434475;
-        bh=dOetpQWCFCq4GaGnPj9d7Xjvd6fSObj/WCvcJX9OwdQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TK7NAFbFyM5EDaOkX8cTCfDbbRG+Y5iBXKvEfZGm+DTQYM0pdGKFREkAY57zOaPXP
-         EO8/UM/M1vNW31VsLqVeTGV4cWYXq/7dE1DQBcAHQ47CMYJDDnC5hVAIDAHkXHinbB
-         V9yZt7akxzGPgULyuuTxRnWjlVgYy+pmL856dgqA=
-Date:   Mon, 25 May 2020 14:26:09 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] m68k: tools: Replace zero-length array with
- flexible-array member
-Message-ID: <20200525192609.GC9247@embeddedor>
-References: <20200521185707.GA3661@embeddedor>
- <CAMuHMdUGPMrPTqypGpnhe2wdpnbtUOsdUacnrHAapBM_996F5A@mail.gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3C8573011E6;
+        Mon, 25 May 2020 21:21:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E6C8220BD4F38; Mon, 25 May 2020 21:21:43 +0200 (CEST)
+Date:   Mon, 25 May 2020 21:21:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: io_uring: BUG: kernel NULL pointer dereference
+Message-ID: <20200525192143.GG317569@hirez.programming.kicks-ass.net>
+References: <20200525103051.lztpbl33hsgv6grz@steredhat>
+ <20200525134552.5dyldwmeks3t6vj6@steredhat>
+ <b1689238-b236-cc93-9909-c09120e7975c@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUGPMrPTqypGpnhe2wdpnbtUOsdUacnrHAapBM_996F5A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b1689238-b236-cc93-9909-c09120e7975c@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 10:49:02AM +0200, Geert Uytterhoeven wrote:
-> >
-> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > [2] https://github.com/KSPP/linux/issues/21
-> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Mon, May 25, 2020 at 08:10:27AM -0600, Jens Axboe wrote:
+> I think the odd part here is that task_tick_numa() checks for a
+> valid mm, and queues work if the task has it. But for the sqpoll
+> kthread, the mm can come and go. By the time the task work is run,
+> the mm is gone and we oops on current->mm == NULL.
 > 
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> i.e. will queue in the m68k for-v5.8 branch.
+> I think the below should fix it:
 > 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 538ba5d94e99..24a8557f001f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -2908,7 +2908,8 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+>  	/*
+>  	 * We don't care about NUMA placement if we don't have memory.
+>  	 */
+> -	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
+> +	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
+> +	    work->next != work)
+>  		return;
 
-Thanks, Geert.
+Ah, I think that's one more instance of '!p->mm' != is_kthread(). A
+while ago someone went and cleaned a bunch of them up. Clearly this one
+was missed.
 
---
-Gustavo
+I'm thinking just:
+
+	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+
+should be enough.
