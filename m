@@ -2,105 +2,97 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED14C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A812DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067EC20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590406349;
-	bh=wiKO9ZZ2xlGA++fntc5tHue7H7VM7k0ZGV0z0X7E/BE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qIQyEjqSF4zGvUxsYDTBj94QzDh5bkq6lUbnlark2W1ost9wpGnAo1MaT/jHBqp/P
-	 gpgwFHz5z114cIIZobGlwN7WqtwwRipHCEEx+hECcQedHTWz5us5+0BntxLhU/WESc
-	 3UMJBFXWo2r43WLioGV8J3XNnbj8ik/117nxrjRU=
+	by mail.kernel.org (Postfix) with ESMTP id 8400120723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y+pESXNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390230AbgEYLc2 (ORCPT
+        id S2390189AbgEYLfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:32:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388733AbgEYLc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:32:27 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D195F20787;
-        Mon, 25 May 2020 11:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590406346;
-        bh=wiKO9ZZ2xlGA++fntc5tHue7H7VM7k0ZGV0z0X7E/BE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bjbxUQ+9O7AIW3rZSJ2V/MYQ7lfowjf+b01Pg8o9Y7sbrMjFunOJQ+kqyed9Ow3yB
-         0SW7Ws7esp2tIDjPUJpY7byOGS64erfIYdee/cphuPChMCnSUZLSFY/BUicdS6b6cW
-         kfWopQodjT0h1otwWiKfY5hReiFK21iA4NaUhk1w=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>,
-        Anton Vorontsov <cbouatmailru@gmail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
-Subject: [RFC] power: supply: bq27xxx_battery: Fix polling interval after re-bind
-Date:   Mon, 25 May 2020 13:32:19 +0200
-Message-Id: <20200525113220.369-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 25 May 2020 07:35:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388733AbgEYLe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:34:59 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19BC8C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:34:58 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id o14so20446285ljp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wi+gk3CC8jugnfSNVoMn5WXhzhJYTbdK21k8+STJk6k=;
+        b=Y+pESXNupJYz2M2etZnKieO/VeNhDEch9p7SVInZEB86XRO8h8M0GoDFaLeaBHge/W
+         Xp9kIUqUEkWWSw7pjtUsHwOtULbYumcsJXagBz9Ug1w/NyvSgP0CQ3BbjxCv+HgrB1fH
+         v0FMESlvZPYhwTC1m2O/dm7zggf8bAm563//moUatJJH3uVnOVQ1G5LKgQlw+V4pmaQE
+         nFAU4UIJmnE5qEc7JF6agjan+4tXxbuDF5lKRg0yWE12MncRS99VJLMnqTN2QXnDp6Ne
+         9pZ90O0+wuTvskb5fFW0cpQxlH0kvGuiwxPPgcUyNGvUm478ynq1TcZi70/WmqqsQyp4
+         NTyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wi+gk3CC8jugnfSNVoMn5WXhzhJYTbdK21k8+STJk6k=;
+        b=DRu0qxTKqAnzVynF0l9KltSzdBxxWPjqn2+bSxW49BJocCRqsCw7J8UDpzt7BQmKiD
+         HMvHsb8uThNZcmrhM840xkE4vCXEYL5i51wmnV7If8f5wUfZz6XAOAfUBIDNI+86GcKx
+         h6w2LgmfOkmOfSFDRClMu4pVuEAZlLXCTO4o9KMB/DM0s9yvdxeooujFgXiVKj2AEeg6
+         I495Ko05avu7DwfUg3RExCbTq5kmB3qzuhQ9zyM943nwsZ9YD1V4jdDlwkAScr02kOQR
+         469DHnHQA60rk7EP1t0uWsnzVPxh3q9dLB4yLXjxdHIdNeJrW5g4sU7KKxYYz768d+lP
+         QkZg==
+X-Gm-Message-State: AOAM533IoopegsSHcks0k5wBad0O/xPPzFgjDeq60lmWQLwySkieBrqA
+        MYipgjPcxEkqxYRp3gBti8ip1m0MZoDamYMD4GatS/CJ
+X-Google-Smtp-Source: ABdhPJxFW58LmjFQ2sV+aQMAz5AdRkRbkgO4NOt9cugPGtvFDYY4xWr6++WnNjKk6nO+SbTF8QVEWA7J+F6+Lk6vtb4=
+X-Received: by 2002:a2e:8703:: with SMTP id m3mr14339462lji.286.1590406496492;
+ Mon, 25 May 2020 04:34:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 13:34:45 +0200
+Message-ID: <CACRpkdbpbOPfMfgjF17C=ET1SCiY49Wu55fgO6-kjBwR0mmQrg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] irqchip: qcom: pdc: Introduce irq_set_wake call
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 8cfaaa811894a3ae2d7360a15a6cfccff3ebc7db.
+On Fri, May 22, 2020 at 3:20 PM Maulik Shah <mkshah@codeaurora.org> wrote:
 
-If device was unbound and bound, the polling interval would be set to 0.
-This is both unexpected and messes up with other bq27xxx devices (if
-more than one battery device is used).
+>   pinctrl: qcom: Remove irq_disable callback from msmgpio irqchip
+>   pinctrl: qcom: Add msmgpio irqchip flags
 
-This reset of polling interval was added in commit 8cfaaa811894
-("bq27x00_battery: Fix OOPS caused by unregistring bq27x00 driver")
-stating that power_supply_unregister() calls get_property().  However in
-Linux kernel v3.1 and newer, such call trace does not exist.
-Unregistering power supply does not call get_property() on unregistered
-power supply.
+For these two:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+so the irqchip maintainers can merge them.
 
-Fixes: 8cfaaa811894 ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00 driver")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+But you ideally also need Bj=C3=B6rn's ACKs.
 
----
-
-I really could not identify the issue being fixed in offending commit
-8cfaaa811894 ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00
-driver"), therefore maybe I missed here something important.
-
-Please share your thoughts on this.
----
- drivers/power/supply/bq27xxx_battery.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 942c92127b6d..4c94ee72de95 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -1905,14 +1905,6 @@ EXPORT_SYMBOL_GPL(bq27xxx_battery_setup);
- 
- void bq27xxx_battery_teardown(struct bq27xxx_device_info *di)
- {
--	/*
--	 * power_supply_unregister call bq27xxx_battery_get_property which
--	 * call bq27xxx_battery_poll.
--	 * Make sure that bq27xxx_battery_poll will not call
--	 * schedule_delayed_work again after unregister (which cause OOPS).
--	 */
--	poll_interval = 0;
--
- 	cancel_delayed_work_sync(&di->work);
- 
- 	power_supply_unregister(di->bat);
--- 
-2.17.1
-
+Yours,
+Linus Walleij
