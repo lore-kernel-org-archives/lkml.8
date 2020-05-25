@@ -2,88 +2,119 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD87C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD7D208B3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0B82084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389758AbgEYKDR (ORCPT
+        id S2389540AbgEYKD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:03:17 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44051 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389398AbgEYKDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:03:16 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y85so15531140oie.11;
-        Mon, 25 May 2020 03:03:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5rzJZvRESUr8hiAmOR4T4JGtHLkJfQBVgwOEzfB30oU=;
-        b=KHoDJ1g06/9ablSyj4avenCZf2up7IuyJYDx+cIlXBdZUWWge/THMRt6IF4318Nlgq
-         ozT9niJe3XRDpRmF9NOnKarxPlDSylywOZZB17F5qh7Bs/VJ3TSG/HUvZksCU/QSdHy5
-         TVgvfL8Ym1AqECVkPBKS3IQ7LF+YT5JOgSayta7R/fNii7A3NGHqrSym2o3HW1rKvJj+
-         WNKn5xCumIUmI1l9P1Kz1q4H/+WmRXHem7/GxE79s2POCVdFmP+Et3gUzGJgKOAD0bVB
-         DKjLcNIsfdh0fjjPvUyandc90wa5N+jlpt45UEvsXSsnnVqvIabMH3NfphqdM0O+uP5T
-         j/IQ==
-X-Gm-Message-State: AOAM5303uk8wSAs9kYOkb4ALaD7yU6Py8QDiIkIbD2r4yRgB5/yIBZNF
-        7U8TN0kXU1i6Cnoxr7+KUKrr6h4IXR1DT7Veqgw=
-X-Google-Smtp-Source: ABdhPJxmoibk6taNOVQvIwHEcuzy16d0/dYI+MONoveQW1Ozul7ByEVdsRtpuOLDqvoDPswLKdn/hZl/HLC/7sEoNxE=
-X-Received: by 2002:aca:cd93:: with SMTP id d141mr10141334oig.148.1590400995429;
- Mon, 25 May 2020 03:03:15 -0700 (PDT)
+        Mon, 25 May 2020 06:03:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38038 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389302AbgEYKD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:03:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AC81CB1FE;
+        Mon, 25 May 2020 10:03:26 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 024BF6032A; Mon, 25 May 2020 12:03:22 +0200 (CEST)
+Date:   Mon, 25 May 2020 12:03:22 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        davem@davemloft.net, kuba@kernel.org, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, bridge@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: MRP netlink interface
+Message-ID: <20200525100322.sjlfxhz2ztrfjia7@lion.mk-sys.cz>
+References: <20200525112827.t4nf4lamz6g4g2c5@soft-dev3.localdomain>
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590356277-19993-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 12:03:04 +0200
-Message-ID: <CAMuHMdVb-c4QKx-wBK352LKEJAPhZK+=A9R=j=XAEVfsONEgfw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] dt-bindings: PCI: pci-rcar-gen2: Add device tree
- support for r8a7742
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525112827.t4nf4lamz6g4g2c5@soft-dev3.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:39 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add internal PCI bridge support for r8a7742 SoC. The Renesas RZ/G1H
-> (R8A7742) internal PCI bridge is identical to the R-Car Gen2 family.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Mon, May 25, 2020 at 11:28:27AM +0000, Horatiu Vultur wrote:
+[...]
+> My first approach was to extend the 'struct br_mrp_instance' with a field that
+> contains the priority of the node. But this breaks the backwards compatibility,
+> and then every time when I need to change something, I will break the backwards
+> compatibility. Is this a way to go forward?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+No, I would rather say it's an example showing why passing data
+structures as binary data via netlink is a bad idea. I definitely
+wouldn't advice this approach for any new interface. One of the
+strengths of netlink is the ability to use structured and extensible
+messages.
 
-Gr{oetje,eeting}s,
+> Another approach is to restructure MRP netlink interface. What I was thinking to
+> keep the current attributes (IFLA_BRIDGE_MRP_INSTANCE,
+> IFLA_BRIDGE_MRP_PORT_STATE,...) but they will be nested attributes and each of
+> this attribute to contain the fields of the structures they represents.
+> For example:
+> [IFLA_AF_SPEC] = {
+>     [IFLA_BRIDGE_FLAGS]
+>     [IFLA_BRIDGE_MRP]
+>         [IFLA_BRIDGE_MRP_INSTANCE]
+>             [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]
+>             [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]
+>             [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]
+>         [IFLA_BRIDGE_MRP_RING_ROLE]
+>             [IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]
+>             [IFLA_BRIDGE_MRP_RING_ROLE_ROLE]
+>         ...
+> }
+> And then I can parse each field separately and then fill up the structure
+> (br_mrp_instance, br_mrp_port_role, ...) which will be used forward.
+> Then when this needs to be extended with the priority it would have the
+> following format:
+> [IFLA_AF_SPEC] = {
+>     [IFLA_BRIDGE_FLAGS]
+>     [IFLA_BRIDGE_MRP]
+>         [IFLA_BRIDGE_MRP_INSTANCE]
+>             [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]
+>             [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]
+>             [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]
+>             [IFLA_BRIDGE_MRP_INSTANCE_PRIO]
+>         [IFLA_BRIDGE_MRP_RING_ROLE]
+>             [IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]
+>             [IFLA_BRIDGE_MRP_RING_ROLE_ROLE]
+>         ...
+> }
+> And also the br_mrp_instance will have a field called prio.
+> So now, if the userspace is not updated to have support for setting the prio
+> then the kernel will use a default value. Then if the userspace contains a field
+> that the kernel doesn't know about, then it would just ignore it.
+> So in this way every time when the netlink interface will be extended it would
+> be backwards compatible.
 
-                        Geert
+Silently ignoring unrecognized attributes in userspace requests is what
+most kernel netlink based interfaces have been doing traditionally but
+it's not really a good idea. Essentially it ties your hands so that you
+can only add new attributes which can be silently ignored without doing
+any harm, otherwise you risk that kernel will do something different
+than userspace asked and userspace does not even have a way to find out
+if the feature is supported or not. (IIRC there are even some places
+where ignoring an attribute changes the nature of the request but it is
+still ignored by older kernels.)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+That's why there have been an effort, mostly by Johannes Berg, to
+introduce and promote strict checking for new netlink interfaces and new
+attributes in existing netlink attributes. If you don't have strict
+checking for unknown attributes enabled yet, there isn't much that can
+be done for already released kernels but I would suggest to enable it as
+soon as possible.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Michal
