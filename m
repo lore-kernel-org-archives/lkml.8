@@ -2,92 +2,126 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E14C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E82152054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A6A2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s27kr2eq"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="iKYRZLN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390578AbgEYMUh (ORCPT
+        id S2390530AbgEYMWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390568AbgEYMUg (ORCPT
+        Mon, 25 May 2020 08:22:35 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34673 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390488AbgEYMWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:20:36 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 609C7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:20:36 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h188so10419243lfd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2uL/BTgbcmhuM5YoKw/xsIFunhmdvIl/vJd/r4JhQGI=;
-        b=s27kr2eqyPVVUBlXSvFGIQr/trFb1G9zTpaZkf+2EZG3Hx2n20tojKndnRmHxnFm5B
-         ASp5qUZUcNhgDtSz05MKDEc0AhNM7RX+XqKC4RcH+dueKzNuzdA9UUtfJm3QObywiyNn
-         gLyUfwWbN87noM3TipQ1xxzLT/qC8suP8C2ItO0uKVBLZF7gkDhYZYdyWaPhGsZlURx5
-         dC7jiymi5TrHLn3WrjWoWbTG/vN0K0XXq9T9jya4WAVmkhAW4KU3DPDDLxbaJk+51A8y
-         NPUY8Y3/kWXC5iqcAEtXLI21yhLyJybrVzQtHPxoRDO5FDHaT8xNMF10qM6k/sr2ih0m
-         THuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2uL/BTgbcmhuM5YoKw/xsIFunhmdvIl/vJd/r4JhQGI=;
-        b=oKjNLSn6kOzoGtvIVqAAh2cTh/RXdhyJVd2ClswKNbxwAKMfD9q6p67NPgl6FKmeZO
-         X5GwkxGrjhkuKfoiJfjZ7+ekV6c7PmFGFtuyWtdUsAmCBXuanf7AM68dttwiDtb+sV89
-         eB/MyfHDGOhVp0T+810MeYjj8F5q3fY6GnIKwtYWolQnhohVjGwd8yPExxp3YOrMR+ip
-         incCkzUIDWMDgtAL57XBmej7nN35fWp7g5FRXmj3psiu/Ru77LtsyC2WinjsFxp4QR9x
-         xhIvkCFMmkYSu/IWpR7EoYgAl55/0bQsmN4zLx382f220wIcgwqHleb8X7Iu7n3N9aWD
-         7znA==
-X-Gm-Message-State: AOAM533uCzVRg+aJsWg3onSY+vgzHLS4TxBRXvUtUdPAy+EWGpTkyvCD
-        z/t1Tu1gXucH7+lwKHhF0Ypyn+O6NPuWqOR9/Z3kcA==
-X-Google-Smtp-Source: ABdhPJzzn4cmibq9OV9VwB1X2PlikxB9SvAFGTTF5EB8YLtQ3tUTqPOcsUIpd9PFnnM7N1+NhdQzLiY+0rFB4yQUkHM=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr14251823lfn.21.1590409234803;
- Mon, 25 May 2020 05:20:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com> <1590378348-8115-5-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1590378348-8115-5-git-send-email-dillon.minfei@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 14:20:23 +0200
-Message-ID: <CACRpkdb=+T0jSzBkrViHnuXGNhD4F3d_VX1t-hkqMG0CSdDhnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/8] dt-bindings: display: panel: Add ilitek ili9341
- panel bindings
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mon, 25 May 2020 08:22:34 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id dC7fj8fagdPgTdC7ijaZQo; Mon, 25 May 2020 14:22:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1590409351; bh=B004EXCgq5FrmDeibsrHD2vF8zO47mml9XuJ8YnmPBQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=iKYRZLN0U0CQNPfS5AXa4jjimA9eaomJkUa2wkjeWE5ZnZkSI4PTbjCVhKKJCSddh
+         rMwqG3oGB0g7RzXqBaxUrsvGJl+upwNmlzpHl05FZo96sREURbXOZboeJDjjQLgpYH
+         mYEEKAffzQ3n9IisUK/1R49OMQvrnSTYkDSNdUu4qqVIbbQX+Tq4xBsxgfSVF4drcM
+         7VPhkkhNuJqsTTCdddpphL9rl23YZLjpwBn1gZDNTEK5Hl6m14RknIoF8hCgsMYCXu
+         jn2ENJSmwtQdilS7ZiE6pDsNg0qIL2XCfimgSFm8FG32gchMQIckSd8u683IH/cNCU
+         ylym6wnDvFgmA==
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <e4ebd476-1c34-0c58-bba0-14dfd4d31941@xs4all.nl>
+Date:   Mon, 25 May 2020 14:22:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOGdb2RJOxdUV50pu4jnoPs5bZNeYuMlblQqlhIhssLZRmK5wQA0xb9Rm7/40hdvblQdz0Kb59N1KM362w7jtAh4KEHh2xtaGge1gIv38uJ9stTMJ+fB
+ 2d9RBuCzmC/HvkVoNwEEa77G16IuQpXqcpdojxRMeFgz0I2MLZbUyKK99Fpbl/fQYNzrKG5DX1sQqJS5Isq1hH+NjuwTG9BOp2YM2NMzYglSYxylS0RVf17X
+ VVq6+QAWQf55rXB1yf9ahsKGJjZZm0HchaQA794/RPJDZA9hxsTO427mQ2leGiGA8eGMDSpOqc8G5g8P9iJbhMi6zljI+4W+836MCc0Rp5Sp7U0frjwS3eDL
+ z39sMoL3JFrSCbPHhIKpGwYWAV39eF8ftDzL1rEUyjkqRhIwxMMtA920vVuFIhXzBRsUuvBaR/8VHczH9QLuZujouYmyvj4KL9x9aEjSD4wmg4TVUMldOxAQ
+ Yd9bbgJ5D4YIZ0bmGu/5fVWb60+++5VQvjQSeNJdMCTj4dl/xqOXoAMW1Dw7PYaS0RQ4Nw6exPIzzICGKbGaQmVEp9nxROHF6XufAKunk+Z98sVPccrN2a7M
+ nZNSetq3KERNU5rc9Tyl7WWSgAVDsaeTJkqzhyyZ3Rvd2jM5meMyfytFPz3Uoy0kK8skMVIZdYeqk/dRLY1QuuXCZvIGydMUmO8IS+zlUJ9FxcnUtdGUwGkP
+ ayqvEtVpjJA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 5:46 AM <dillon.minfei@gmail.com> wrote:
+On 25/05/2020 13:55, Linus Walleij wrote:
+> On Sat, May 23, 2020 at 7:11 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+> 
+>> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
+>> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
+>> callback is implemented then genirq takes unlazy path to disable irq.
+>>
+>> Underlying irqchip may not want to implement irq_disable callback to lazy
+>> disable irq when client drivers invokes disable_irq(). By overriding
+>> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
+>>
+>> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
+>> if irqchip implemented irq_disable. In cases where irq_disable is not
+>> implemented irq_mask is overridden. Similarly override irq_enable callback
+>> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
+>>
+>> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> 
+> I definitely want Hans Verkuils test and review on this, since it
+> is a usecase that he is really dependent on.
 
-> From: dillon min <dillon.minfei@gmail.com>
->
-> Add documentation for "ilitek,ili9341" panel.
->
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+Maulik, since I am no longer subscribed to linux-gpio, can you mail the
+series to me?
 
-This looks good to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I have two use-cases, but I can only test one (I don't have access to the
+SBC I need to test the other use-case for the next few months).
 
-Yours,
-Linus Walleij
+Once I have the whole series I'll try to test the first use-case and at
+least look into the code if this series could affect the second use-case.
+
+Regards,
+
+	Hans
+
+> 
+> Also the irqchip people preferredly.
+> 
+> But it does seem to mop up my mistakes and fix this up properly!
+> 
+> So with some testing I'll be happy to merge it, even this one
+> patch separately if Hans can verify that it works.
+> 
+> Yours,
+> Linus Walleij
+> 
+
