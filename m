@@ -2,167 +2,115 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F582C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54A132076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3617B2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="kkqXywBz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rQyUpMEI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="DjVcPAoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388372AbgEYBpG (ORCPT
+        id S2388351AbgEYBwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:45:06 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:42407 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728324AbgEYBpG (ORCPT
+        Sun, 24 May 2020 21:52:38 -0400
+Received: from gateway30.websitewelcome.com ([192.185.152.11]:26985 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388054AbgEYBwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:45:06 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id ACDD278C;
-        Sun, 24 May 2020 21:45:04 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sun, 24 May 2020 21:45:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=w8gtuLdhRhjlG/R+K3KScUqE3pg
-        NDvo53M+1qyJesbk=; b=kkqXywBzEe6SfCh5kXCpWUHn5r/0p3WrB/XkL3kYbgc
-        /Yzs9rzjUBej5g3GDMC8rEa19tPMjGptGBufe4xgYECp73zXbCZKqmu+RUpsI9eK
-        lExlWPNPxyrqQFgtwR4yBFR9fy/zO2Ug611xP6Ceo1wVUx65rTlDZf6COOdVm8LW
-        Hiq1Aphahf2Bk7rPgI1P3F0tWrX3mOwX5BafjbXaOImClCirQcGmEh6HoCeZtw6k
-        NLbV+Uh1IbO5mYGmWa7VCgxcn6w5hQab2merp8KsLzxiFKe0ajrrvQX/HXS58Ke4
-        9rRYjliwAH1te4ucMzhnASQav3vQwUsDrSAIjn3s7jw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=w8gtuL
-        dhRhjlG/R+K3KScUqE3pgNDvo53M+1qyJesbk=; b=rQyUpMEIuZ923uXnaBkmWp
-        q8fumpUSSS4mI6wb0VAAa9eLGtg7wzzjPt1do/I4JqxZ4heKfpt4+rHp/keN75Fi
-        gefHESPEIEwLM1Cgpg6GA+0s2i0AxumtMgCQG9T1vAxWeDfJRM2ywxyGkJx7Mfki
-        CI0GLJnKPJjKoOD9y9mcLyKWkfbN8spKTvBhkukzxcMhtLUkI9edMomhSz3+sKln
-        Q7Ic1z0uQ6u1zk/wdfoiG9hGgBHWEsZNBNsQGf3j8eKB7E7fU2vfEu8hvVOACARk
-        Bm0TCmjClBYimHDBx2IF89jYfxULx6wc5cLKwinxbCGR2phRhVJ8+DbEwzmls6iw
-        ==
-X-ME-Sender: <xms:HyPLXsO6B2wXlrpoG3Aw25ILI5-SNnPlX_pS28GFP4A-L08TtSYqMg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudduledggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
-    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
-    hpqeenucggtffrrghtthgvrhhnpeelhfeugedvjefgjefgudekfedutedvtddutdeuieev
-    tddtgeetjeekvdefgeefhfenucfkphepudektddrvdefhedrfedrheegnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihes
-    shgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:HyPLXi_Tz36pYaNV4MPPjzsXMK48sdEFXUY7Wk3LeQ3UiaQdH1QPaQ>
-    <xmx:HyPLXjR97R5quMcaCIIyX5gKsldl1D0Ytsj-DNz_BhYd6fE0DiEPtg>
-    <xmx:HyPLXktzblJ3P5EeqKJqemTL7S6OAmJS8sMj7_NUz9Nm16C-VwJmSw>
-    <xmx:ICPLXj6mkXxd-0uffftvQfE6qMQFl6Jdp9htaltvYtx5PAP3DUX57Q>
-Received: from workstation (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0511C3066544;
-        Sun, 24 May 2020 21:45:00 -0400 (EDT)
-Date:   Mon, 25 May 2020 10:44:58 +0900
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     Greg KH <greg@kroah.com>, oscar.carter@gmx.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, clemens@ladisch.de
-Subject: Re: [PATCH v2] firewire-core: remove cast of function callback
-Message-ID: <20200525014458.GA252667@workstation>
-Mail-Followup-To: Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Greg KH <greg@kroah.com>, oscar.carter@gmx.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        clemens@ladisch.de
-References: <20200524132048.243223-1-o-takashi@sakamocchi.jp>
- <20200524152301.GB21163@kroah.com>
- <20200525015532.0055f9df@kant>
+        Sun, 24 May 2020 21:52:37 -0400
+X-Greylist: delayed 1334 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 May 2020 21:52:37 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id D795646F3
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 20:30:21 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id d1wbjPPvH8vkBd1wbj2VJG; Sun, 24 May 2020 20:30:21 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qyCTWA8alWH3T1OHxtqJqh8fX9ZMRzay2l/chLycdQ8=; b=DjVcPAoGwpjHhJk9TrOvDCpKVf
+        jXKI0r2K8HNoSNHSe4EqDW6qZZDhs+Mr5WcqDss632tc5TxaUzLYBJmiSwNVGTgLd7Ef67aDKlXwR
+        MTq2OXMn2bzE03r6xMGH3WhTvayuHz5HoJBj718I1j/XSV5J+FoCSzaE7TyMxan8LaLbkWQjdqZmh
+        TYOCx1acl0DD9YYAEBwOfwYQsA8xh9PkZ8JRAogjrNyhWCv2pr3u4CCPzSn+OFjKvNGoNmCGIxl5m
+        SXznW2rLj8z0G2Z1sCsHgmiQV13pQtNJMHMqnEMvUa+ghIHg9/paOw1yiScvuLMBP+r+rN0AMVI9J
+        Kevli81A==;
+Received: from [191.31.196.240] (port=34284 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jd1wb-004Dik-8u; Sun, 24 May 2020 22:30:21 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v5 0/3] Add Caninos Loucos Labrador CoM and Base Board Device Tree
+Date:   Sun, 24 May 2020 22:30:05 -0300
+Message-Id: <20200525013008.108750-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525015532.0055f9df@kant>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.240
+X-Source-L: No
+X-Exim-ID: 1jd1wb-004Dik-8u
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.196.240]:34284
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 2
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Sorry for the delay.
+Thanks Andreas, Mani and Rob for your time reviewing it.
 
-On Mon, May 25, 2020 at 01:55:32AM +0200, Stefan Richter wrote:
-> > Why is this in a .h file?  What's wrong with just putting it in the .c
-> > file as a static function?  There's no need to make this an inline,
-> > right?
-> 
-> There is no need for this in a header.
-> Furthermore, I prefer the original switch statement over the nested if/else.
-> 
-> Here is another proposal; I will resend it later as a proper patch.
-> 
-> diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-> index 719791819c24..bece1b69b43f 100644
-> --- a/drivers/firewire/core-cdev.c
-> +++ b/drivers/firewire/core-cdev.c
-> @@ -957,7 +957,6 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
->  {
->  	struct fw_cdev_create_iso_context *a = &arg->create_iso_context;
->  	struct fw_iso_context *context;
-> -	fw_iso_callback_t cb;
->  	int ret;
->  
->  	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT != FW_ISO_CONTEXT_TRANSMIT ||
-> @@ -969,20 +968,15 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
->  	case FW_ISO_CONTEXT_TRANSMIT:
->  		if (a->speed > SCODE_3200 || a->channel > 63)
->  			return -EINVAL;
-> -
-> -		cb = iso_callback;
->  		break;
->  
->  	case FW_ISO_CONTEXT_RECEIVE:
->  		if (a->header_size < 4 || (a->header_size & 3) ||
->  		    a->channel > 63)
->  			return -EINVAL;
-> -
-> -		cb = iso_callback;
->  		break;
->  
->  	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
-> -		cb = (fw_iso_callback_t)iso_mc_callback;
->  		break;
->  
->  	default:
-> @@ -990,9 +984,15 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
->  	}
->  
->  	context = fw_iso_context_create(client->device->card, a->type,
-> -			a->channel, a->speed, a->header_size, cb, client);
-> +			a->channel, a->speed, a->header_size, NULL, client);
->  	if (IS_ERR(context))
->  		return PTR_ERR(context);
-> +
-> +	if (a->type == FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL)
-> +		context->callback.mc = iso_mc_callback;
-> +	else
-> +		context->callback.sc = iso_callback;
-> +
->  	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
->  		context->drop_overflow_headers = true;
+Changes since v4:
+(Suggested by Rob Herring)
+- Fix issues with yaml indentation
 
-At first place, I wrote the similar patch but judged it's a bit ad-hoc
-way that callback functions are assigned after the call of
-fw_iso_context_create() in raw code. For explicitness in a point of things
-being declarative, I put the inline function into header, and avoid
-someone's misfortune for future even if IEEE 1394 is enough legacy.
+Changes since v3:
+(Suggested by Andreas Färber)
+- Fix sort on actions.yaml
+- Change the file owl-s500-labrador-bb.dts to owl-s500-labrador-base-m.dts
+- Add description for both the SoM and Base Board
+- Add Model description for both the SoM and Base Board
 
-Anyway, I don't mind Stefan's proposal since it works well. It depends
-on developers' fashion to choose policy to write codes.
+Matheus Castello (3):
+  dt-bindings: Add vendor prefix for Caninos Loucos
+  dt-bindings: arm: actions: Document Caninos Loucos Labrador
+  ARM: dts: Add Caninos Loucos Labrador
 
+ .../devicetree/bindings/arm/actions.yaml      |  5 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 ++
+ arch/arm/boot/dts/Makefile                    |  1 +
+ .../arm/boot/dts/owl-s500-labrador-base-m.dts | 34 +++++++++++++++++++
+ arch/arm/boot/dts/owl-s500-labrador-v2.dtsi   | 22 ++++++++++++
+ 5 files changed, 64 insertions(+)
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-base-m.dts
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
 
-Thanks
+--
+2.26.2
 
-Takashi Sakamoto
