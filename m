@@ -2,201 +2,172 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22EDF206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E962071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnNW/doW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgEYXWX (ORCPT
+        id S1729016AbgEYX1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:22:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:45122 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgEYXWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:22:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40D3E31B;
-        Mon, 25 May 2020 16:22:20 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E726F3F305;
-        Mon, 25 May 2020 16:22:19 -0700 (PDT)
-Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-5-jeremy.linton@arm.com>
- <20200523183731.GZ1551@shell.armlinux.org.uk>
- <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
- <20200525100612.GM1551@shell.armlinux.org.uk>
- <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
- <20200525220127.GO1551@shell.armlinux.org.uk>
- <a9490c28-ebe1-ed6d-e65e-2e1d0a06386b@arm.com>
- <20200525230946.GR1551@shell.armlinux.org.uk>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <ab756571-b269-ba7f-8e23-053098d9f470@arm.com>
-Date:   Mon, 25 May 2020 18:22:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 19:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgEYX1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 19:27:43 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6398DC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:27:43 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k22so7916316pls.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=YztR7HplbxQ7LgSZiF2gBF8J+ZDPdJj2iwdzAUHkXHE=;
+        b=YnNW/doWLujhEydk8v0KvCVsf+LdytAaMcEaXtBFuaPRvTWr+gCrtNWWJstF3lP5Fr
+         lh9K4N/kbzcjTLu/qgyaIODEKy9zFEVeqVew7ApNTYFB3eHrvRE6SJHg1PrLz6oYDTt9
+         rlo4g3qAd/PJUs3IsoSHvtep5Mx6LJBnpio39kUxSA5C9u/CrsjtJYBURuYSwRqslrIi
+         9nPraIqOhLiGGohW4Y+VUztPDGcvWQoZnn2CvWCzYnHo0xGZxl3/pSx2UEnuUqgwJgoh
+         rkbgyH4AABJNnYApGIbmi3d11El4HNAdrepYyWVAN4lwEBlTOvRiyyN4/elwrCNm9hb7
+         lB3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=YztR7HplbxQ7LgSZiF2gBF8J+ZDPdJj2iwdzAUHkXHE=;
+        b=lpmiUAXOQGnkNchQc749wadEI5nrMbvre5AuNnaJYDNXgVXa2ZRvixEXMx3Si9xfmj
+         vkPgu/1pj73LsAtUsFbYhrccbU5IbEEmaSXxlN4fGiROIRoHGPGaSlPQ+VpsL2czyUvj
+         WhUFm9ZnwZYOfsL4obgLQhvD5pd4INCkGXiBFLOKhb/yj28s1Uuwgu1FcnKkinc4MoO8
+         DEM6np0Rn5uyw/9mR9f7cJ7BKiygJi4LzLksVUr7K28awR+sVlPqWXwu7mMWu3+mOBCN
+         q9LEzEhe7HoAALX8KLqI7gFSlhN0hn+TqPLuW/5/PUvZQFXVN5tUorrbE2/AeAtC97Sw
+         WHGQ==
+X-Gm-Message-State: AOAM531vrdlEM3zqQRdPP74jwbuacyq/gTjaHtwPpPx0RZDUxL+5X3am
+        q6q0Qt/yzf9iy2QnDY0qE0U=
+X-Google-Smtp-Source: ABdhPJzdk4UHRfMeaRg1LafDe/aiawXLaGPJQKCHj17G5Am/PSgTZbJ9/URNacXc6L2BhSWT02fd4A==
+X-Received: by 2002:a17:902:fe04:: with SMTP id g4mr30225518plj.327.1590449262731;
+        Mon, 25 May 2020 16:27:42 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id l10sm13815985pfd.70.2020.05.25.16.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 16:27:42 -0700 (PDT)
+Date:   Mon, 25 May 2020 16:27:40 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] vt: keyboard: avoid signed integer overflow in k_ascii
+Message-ID: <20200525232740.GA262061@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <20200525230946.GR1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 6:09 PM, Russell King - ARM Linux admin wrote:
-> On Mon, May 25, 2020 at 05:22:07PM -0500, Jeremy Linton wrote:
->> On 5/25/20 5:01 PM, Russell King - ARM Linux admin wrote:
->>> On Mon, May 25, 2020 at 04:51:16PM -0500, Jeremy Linton wrote:
->>>> Hi,
->>>>
->>>> On 5/25/20 5:06 AM, Russell King - ARM Linux admin wrote:
->>>>> On Sun, May 24, 2020 at 10:34:13PM -0500, Jeremy Linton wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 5/23/20 1:37 PM, Russell King - ARM Linux admin wrote:
->>>>>>> On Fri, May 22, 2020 at 04:30:52PM -0500, Jeremy Linton wrote:
->>>>>>>> Until this point, we have been sanitizing the c22
->>>>>>>> regs presence bit out of all the MMD device lists.
->>>>>>>> This is incorrect as it causes the 0xFFFFFFFF checks
->>>>>>>> to incorrectly fail. Further, it turns out that we
->>>>>>>> want to utilize this flag to make a determination that
->>>>>>>> there is actually a phy at this location and we should
->>>>>>>> be accessing it using c22.
->>>>>>>>
->>>>>>>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->>>>>>>> ---
->>>>>>>>      drivers/net/phy/phy_device.c | 16 +++++++++++++---
->>>>>>>>      1 file changed, 13 insertions(+), 3 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->>>>>>>> index f0761fa5e40b..2d677490ecab 100644
->>>>>>>> --- a/drivers/net/phy/phy_device.c
->>>>>>>> +++ b/drivers/net/phy/phy_device.c
->>>>>>>> @@ -689,9 +689,6 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
->>>>>>>>      		return -EIO;
->>>>>>>>      	*devices_in_package |= phy_reg;
->>>>>>>> -	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
->>>>>>>> -	*devices_in_package &= ~BIT(0);
->>>>>>>> -
->>>>>>>>      	return 0;
->>>>>>>>      }
->>>>>>>> @@ -742,6 +739,8 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->>>>>>>>      	int i;
->>>>>>>>      	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
->>>>>>>>      	u32 *devs = &c45_ids->devices_in_package;
->>>>>>>> +	bool c22_present = false;
->>>>>>>> +	bool valid_id = false;
->>>>>>>>      	/* Find first non-zero Devices In package. Device zero is reserved
->>>>>>>>      	 * for 802.3 c45 complied PHYs, so don't probe it at first.
->>>>>>>> @@ -770,6 +769,10 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->>>>>>>>      		return 0;
->>>>>>>>      	}
->>>>>>>> +	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
->>>>>>>> +	c22_present = *devs & BIT(0);
->>>>>>>> +	*devs &= ~BIT(0);
->>>>>>>> +
->>>>>>>>      	/* Now probe Device Identifiers for each device present. */
->>>>>>>>      	for (i = 1; i < num_ids; i++) {
->>>>>>>>      		if (!(c45_ids->devices_in_package & (1 << i)))
->>>>>>>> @@ -778,6 +781,13 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->>>>>>>>      		ret = _get_phy_id(bus, addr, i, &c45_ids->device_ids[i], true);
->>>>>>>>      		if (ret < 0)
->>>>>>>>      			return ret;
->>>>>>>> +		if (valid_phy_id(c45_ids->device_ids[i]))
->>>>>>>> +			valid_id = true;
->>>>>>>
->>>>>>> Here you are using your "devices in package" validator to validate the
->>>>>>> PHY ID value.  One of the things it does is mask this value with
->>>>>>> 0x1fffffff.  That means you lose some of the vendor OUI.  To me, this
->>>>>>> looks completely wrong.
->>>>>>
->>>>>> I think in this case I was just using it like the comment in
->>>>>> get_phy_device() "if the phy_id is mostly F's, there is no device here".
->>>>>>
->>>>>> My understanding is that the code is trying to avoid the 0xFFFFFFFF returns
->>>>>> that seem to indicate "bus ok, phy didn't respond".
->>>>>>
->>>>>> I just checked the OUI registration, and while there are a couple OUI's
->>>>>> registered that have a number of FFF's in them, none of those cases seems to
->>>>>> overlap sufficiently to cause this to throw them out. Plus a phy would also
->>>>>> have to have model+revision set to 'F's. So while might be possible, if
->>>>>> unlikely, at the moment I think the OUI registration keeps this from being a
->>>>>> problem. Particularly, if i'm reading the mapping correctly, the OUI mapping
->>>>>> guarantees that the field cannot be all '1's due to the OUI having X & M
->>>>>> bits cleared. It sort of looks like the mapping is trying to lose those
->>>>>> bits, by tossing bit 1 & 2, but the X & M are in the wrong octet (AFAIK, I
->>>>>> just read it three times cause it didn't make any sense).
->>>>>
->>>>> I should also note that we have at least one supported PHY where one
->>>>> of the MMDs returns 0xfffe for even numbered registers and 0x0000 for
->>>>> odd numbered registers in one of the vendor MMDs for addresses 0
->>>>> through 0xefff - which has a bit set in the devices-in-package.
->>>>>
->>>>> It also returns 0x0082 for almost every register in MMD 2, but MMD 2's
->>>>> devices-in-package bit is clear in most of the valid MMDs, so we
->>>>> shouldn't touch it.
->>>>>
->>>>> These reveal the problem of randomly probing MMDs - they can return
->>>>> unexpected values and not be as well behaved as we would like them to
->>>>> be.  Using register 8 to detect presence may be beneficial, but that
->>>>> may also introduce problems as we haven't used that before (and we
->>>>> don't know whether any PHY that wrong.)  I know at least the 88x3310
->>>>> gets it right for all except the vendor MMDs, where the low addresses
->>>>> appear non-confromant to the 802.3 specs.  Both vendor MMDs are
->>>>> definitely implemented, just not with anything conforming to 802.3.
->>>>
->>>> Yes, we know even for the NXP reference hardware, one of the phy's doesn't
->>>> probe out correctly because it doesn't respond to the ieee defined
->>>> registers. I think at this point, there really isn't anything we can do
->>>> about that unless we involve the (ACPI) firmware in currently nonstandard
->>>> behaviors.
->>>>
->>>> So, my goals here have been to first, not break anything, and then do a
->>>> slightly better job finding phy's that are (mostly?) responding correctly to
->>>> the 802.3 spec. So we can say "if you hardware is ACPI conformant, and you
->>>> have IEEE conformant phy's you should be ok". So, for your example phy, I
->>>> guess the immediate answer is "use DT" or "find a conformant phy", or even
->>>> "abstract it in the firmware and use a mailbox interface".
->>>
->>> You haven't understood.  The PHY does conform for most of the MMDs,
->>> but there are a number that do not conform.
->>
->> Probably...
->>
->> Except that i'm not sure how that is a problem at the moment, its still
->> going to trigger as a found phy, and walk the same mmd list as before
->> requesting drivers. Those drivers haven't changed their behavior so where is
->> the problem? If there is a problem its in 7/11 where things are getting
->> kicked due to seemingly invalid Ids.
->>
->> The 1/11 devices=0 case actually appears to be a bug i'm fixing because you
->> won't get an ID or a MMD list from that (before or after).
-> 
-> I think I've just flattened that argument in my immediately preceding
-> reply on the Cortina situation; I think you've grossly misread that
-> through not fully researching the history and then finding the
-> existing users.
-> 
-> There is no bug that you are fixing from what I can see.
+When k_ascii is invoked several times in a row there is a potential for
+signed integer overflow:
 
-One of us is missing something,
+UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19 signed integer overflow:
+10 * 1111111111 cannot be represented in type 'int'
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
+ handle_overflow+0xdc/0xf0 lib/ubsan.c:184
+ __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
+ k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
+ kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
+ kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
 
-The "cortina" solution is broken in the current kernel. That is because 
-lines 726-742 are dead code due to line 693.
+While it can be worked around by using check_mul_overflow()/
+check_add_overflow(), it is better to introduce a separate flag to
+signal that number pad is being used to compose a symbol, and
+change type of the accumulator from signed to unsigned, thus
+avoiding undefined behavior when it overflows.
 
-I believe I've understood the problem there, and corrected it in this 
-set along with a few others, but its distinctly possible that isn't true.
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+
+- marking the patch as v3 as it is a successor of Kyungtae's patches.
+
+ drivers/tty/vt/keyboard.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
+index 15d33fa0c925..568b2171f335 100644
+--- a/drivers/tty/vt/keyboard.c
++++ b/drivers/tty/vt/keyboard.c
+@@ -127,7 +127,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
+ static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
+ static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
+ static bool dead_key_next;
+-static int npadch = -1;					/* -1 or number assembled on pad */
++
++/* Handles a number being assembled on the number pad */
++static bool npadch_active;
++static unsigned int npadch_value;
++
+ static unsigned int diacr;
+ static char rep;					/* flag telling character repeat */
+ 
+@@ -845,12 +849,12 @@ static void k_shift(struct vc_data *vc, unsigned char value, char up_flag)
+ 		shift_state &= ~(1 << value);
+ 
+ 	/* kludge */
+-	if (up_flag && shift_state != old_state && npadch != -1) {
++	if (up_flag && shift_state != old_state && npadch_active) {
+ 		if (kbd->kbdmode == VC_UNICODE)
+-			to_utf8(vc, npadch);
++			to_utf8(vc, npadch_value);
+ 		else
+-			put_queue(vc, npadch & 0xff);
+-		npadch = -1;
++			put_queue(vc, npadch_value & 0xff);
++		npadch_active = false;
+ 	}
+ }
+ 
+@@ -868,7 +872,7 @@ static void k_meta(struct vc_data *vc, unsigned char value, char up_flag)
+ 
+ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+ {
+-	int base;
++	unsigned int base;
+ 
+ 	if (up_flag)
+ 		return;
+@@ -882,10 +886,12 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+ 		base = 16;
+ 	}
+ 
+-	if (npadch == -1)
+-		npadch = value;
+-	else
+-		npadch = npadch * base + value;
++	if (!npadch_active) {
++		npadch_value = 0;
++		npadch_active = true;
++	}
++
++	npadch_value = npadch_value * base + value;
+ }
+ 
+ static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
 
 
+-- 
+Dmitry
