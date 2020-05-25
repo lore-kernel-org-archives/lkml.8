@@ -2,95 +2,112 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CA5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D12512078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JKmmwVcf"
+	by mail.kernel.org (Postfix) with ESMTP id 81CC420723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390242AbgEYLZq (ORCPT
+        id S2390201AbgEYLZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390222AbgEYLZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:25:35 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2B9C061A0E;
-        Mon, 25 May 2020 04:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ANDzJv60v//5Dwat0pXngs482cz+pE/nrDBtCUUbCnc=; b=JKmmwVcfb+OxJwCjR8JlLiHTiL
-        cLHYQstgQJXP6arayZjaNXdaBg3QVX0PiBFwouZg8p/u0uzELExb3XCePi7Mfx0A5LyUAsJ/YfOL+
-        J0ZB3CsTq7I0OpnERiJjMzZU3oX31GXbB7e/jW4ZDw5dVf1Y1T7ts9fHdhQ3/oKCaITYRC4J9C8mH
-        m5rix7E+G6EAhOhuND9zGic+WD6MkIqXDVeq3qLrVyCvGtU/9vyD1kaHwMEdN/yBEU6L90S8DV+4S
-        JDhrhlFkd+5Ar2rnZvjefAuMMtlmqTko8UhZX1OSn46ObtW4wB2PM8aU5/q6SsQ2Co0XfDamzNFyG
-        Nj31Neog==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdBER-00069t-Kp; Mon, 25 May 2020 11:25:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 71A54302753;
-        Mon, 25 May 2020 13:25:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5B21D285ECE65; Mon, 25 May 2020 13:25:21 +0200 (CEST)
-Date:   Mon, 25 May 2020 13:25:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrii Nakryiko <andriin@fb.com>
-Cc:     paulmck@kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        parri.andrea@gmail.com, will@kernel.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com, dlustig@nvidia.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        "andrii.nakryiko@gmail.com" <andrii.nakryiko@gmail.com>
-Subject: Re: Some -serious- BPF-related litmus tests
-Message-ID: <20200525112521.GD317569@hirez.programming.kicks-ass.net>
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
- <20200522094407.GK325280@hirez.programming.kicks-ass.net>
- <20200522143201.GB32434@rowland.harvard.edu>
- <20200522174352.GJ2869@paulmck-ThinkPad-P72>
- <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+        Mon, 25 May 2020 07:25:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47048 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390174AbgEYLZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:25:17 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8459C6C346A43648B102;
+        Mon, 25 May 2020 19:25:14 +0800 (CST)
+Received: from DESKTOP-5IS4806.china.huawei.com (10.173.221.230) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 25 May 2020 19:25:07 +0800
+From:   Keqian Zhu <zhukeqian1@huawei.com>
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        <wanghaibin.wang@huawei.com>, <zhengxiang9@huawei.com>,
+        Keqian Zhu <zhukeqian1@huawei.com>,
+        Peng Liang <liangpeng10@huawei.com>
+Subject: [RFC PATCH 7/7] KVM: arm64: Enable stage2 hardware DBM
+Date:   Mon, 25 May 2020 19:24:06 +0800
+Message-ID: <20200525112406.28224-8-zhukeqian1@huawei.com>
+X-Mailer: git-send-email 2.8.4.windows.1
+In-Reply-To: <20200525112406.28224-1-zhukeqian1@huawei.com>
+References: <20200525112406.28224-1-zhukeqian1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+Content-Type: text/plain
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 12:38:21PM -0700, Andrii Nakryiko wrote:
-> On 5/22/20 10:43 AM, Paul E. McKenney wrote:
-> > On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+We are ready to support hw management of dirty state, enable it if
+hardware support it.
 
-> > > Also, what use is a spinlock that is accessed in only one thread?
-> > 
-> > Multiple writers synchronize via the spinlock in this case.  I am
-> > guessing that his larger 16-hour test contended this spinlock.
-> 
-> Yes, spinlock is for coordinating multiple producers. 2p1c cases (bounded
-> and unbounded) rely on this already. 1p1c cases are sort of subsets (but
-> very fast to verify) checking only consumer/producer interaction.
+Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+Signed-off-by: Peng Liang <liangpeng10@huawei.com>
+---
+ arch/arm64/include/asm/sysreg.h | 2 ++
+ arch/arm64/kvm/reset.c          | 9 ++++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-Does that spinlock imply that we can now never fix that atrocious
-bpf_prog_active trainwreck ?
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index ebc622432831..371ea6d65c16 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -721,6 +721,8 @@
+ #define ID_AA64MMFR1_VMIDBITS_8		0
+ #define ID_AA64MMFR1_VMIDBITS_16	2
+ 
++#define ID_AA64MMFR1_HADBS_DBS		2
++
+ /* id_aa64mmfr2 */
+ #define ID_AA64MMFR2_E0PD_SHIFT		60
+ #define ID_AA64MMFR2_FWB_SHIFT		40
+diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+index 30b7ea680f66..cb727e1fb581 100644
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -392,7 +392,7 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
+ {
+ 	u64 vtcr = VTCR_EL2_FLAGS;
+ 	u32 parange, phys_shift;
+-	u8 lvls;
++	u8 lvls, hadbs;
+ 
+ 	if (type & ~KVM_VM_TYPE_ARM_IPA_SIZE_MASK)
+ 		return -EINVAL;
+@@ -428,6 +428,13 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
+ 	 */
+ 	vtcr |= VTCR_EL2_HA;
+ 
++	hadbs = (read_sysreg(id_aa64mmfr1_el1) >>
++			ID_AA64MMFR1_HADBS_SHIFT) & 0xf;
++#ifdef CONFIG_ARM64_HW_AFDBM
++	if (hadbs == ID_AA64MMFR1_HADBS_DBS)
++		vtcr |= VTCR_EL2_HD;
++#endif
++
+ 	/* Set the vmid bits */
+ 	vtcr |= (kvm_get_vmid_bits() == 16) ?
+ 		VTCR_EL2_VS_16BIT :
+-- 
+2.19.1
 
-How does that spinlock not trigger the USED <- IN-NMI lockdep check:
-
-  f6f48e180404 ("lockdep: Teach lockdep about "USED" <- "IN-NMI" inversions")
-
-?
-
-That is; how can you use a spinlock on the producer side at all?
