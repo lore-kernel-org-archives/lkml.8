@@ -2,174 +2,101 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E318F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0168206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eM2jHiGk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcspBIgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388465AbgEYWl7 (ORCPT
+        id S2388724AbgEYWtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 18:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39908 "EHLO
+        Mon, 25 May 2020 18:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgEYWl6 (ORCPT
+        with ESMTP id S1725834AbgEYWtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 18:41:58 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030EFC061A0E;
-        Mon, 25 May 2020 15:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I1jsfxQxg8/0M8jxBoZOf8MeHDidrG9cd+KR/1LiYCE=; b=eM2jHiGkN5ZuTNjWg/5E6Ol/d
-        Kb4twahmdSvxv+d5YKtJYE3AsebccbeHrF2fLqXP8yQwFIVjlJgPPSRB8doMKiKoP5HWW/hKjmreb
-        8YAQubVU/ftfMuRN9yOBwqFusjByhhIZ3tc/xYF2APiSesM0yfHjzzcIXIzO4y0kzkRDVCAoTgnkY
-        ZISQ1ppDKzanXOC4fbDYc7n558VAqW+R8bV1vpGfsplyH08vZ6S5RIqJZ8p+X9QGZcoOlUUK6Qx1C
-        POrbiyHytvQLrL0HaZw07qVkoyrH5w2skWm2NcizcLqdDXG36eUS7Q7AboGqX3eVKCCvfwwTYpyxd
-        G/yIXIFUA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:34514)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jdLn2-0006AM-GS; Mon, 25 May 2020 23:41:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jdLmx-0004k4-AM; Mon, 25 May 2020 23:41:43 +0100
-Date:   Mon, 25 May 2020 23:41:43 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 08/11] net: phy: Allow mdio buses to auto-probe c45 devices
-Message-ID: <20200525224143.GP1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-9-jeremy.linton@arm.com>
- <20200524144449.GP610998@lunn.ch>
- <ec63b0d4-2abc-0d32-69c0-ed1a822162cf@arm.com>
- <20200525082510.GH1551@shell.armlinux.org.uk>
- <8567710f-b4d3-5ce6-225f-b932b4ffc97c@arm.com>
+        Mon, 25 May 2020 18:49:13 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3B3C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 15:49:13 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id h10so20028524iob.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 15:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qgfzii3w4zBhvnSFy6hm9tLH31EQbAkoo9v7Tojqwbc=;
+        b=dcspBIgNn/n4OLoNx3KKRZ66ueSb6eWqZolM0FVquT/3iWMhiEe+yBJPMqZi5AhbDf
+         sqm7xOSB3IypKAsszu4WTRG+CRTLKC87w/ZpisO7ci8c3VsRRIySgLkJKQ3d5+Cr9KqN
+         +EOQbiNJ0sDJ377mplG30dbr8n/HPo+Nt02nnVAN48OUP/GmM9UPvHMIkqD67mNhM8/K
+         LZRYNE1HVKo9wFaQJe0sQPLWaqSR7dL+Ta2upQFAErghBhlLApnRWWJHoVRLJkIjeUrU
+         ftObvDVuEdnJxmTpltYfe8s8RBkb06JpEevRPoQCaHPlTv1bhS8Vsznn/ZOKghz8kJhB
+         bsaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qgfzii3w4zBhvnSFy6hm9tLH31EQbAkoo9v7Tojqwbc=;
+        b=auC5VIyENHBilH14CzPzyXk5iFRljuXXXWmgKM1sV4ZR3YFIz0wFs1wBH+SwVrGJoM
+         19y0HG7XwNBWWhI+vojsxsnvroLOve0o/EQr1aoDlwM9SFviY7wlg1qiqcBR0dzmyfFR
+         sClIoTTAsuXD77AKRR8r8biIJlkl+xvPVC6SRyy0N/ObRQuWYNPk8Y6s8ep4q5Ju/ktH
+         YIkCqmYPBf5jfRjrZ6RUxJrDQ+1T8i4kAijCY/GC1b/slhvJOAz1x7x1Ma6G/klvZ8of
+         Vel5CP6zFiykAmwirABJTHYvfDhv/lxHl/g3fedIL6RwPBaVUSEanD1b46u50UTIQ+63
+         wa0A==
+X-Gm-Message-State: AOAM530B6Yva+rMKCW2WGEOi+l6Jtzs1l7BH5DO4pYwJDiUWfROoZoeC
+        b/0XJXQDc3TxB4yGlfRRgmw6X2mhYZnP0sqlT7M=
+X-Google-Smtp-Source: ABdhPJztsYgUbkCWngAwxh/Lx7y5ACZYOEPYTEbCI+HYpVGCWOA2qdhLgOE4jnZOw43NOPUBDlvxGYOjg9XfN1Xgz2U=
+X-Received: by 2002:a02:4d:: with SMTP id 74mr21385989jaa.141.1590446952614;
+ Mon, 25 May 2020 15:49:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8567710f-b4d3-5ce6-225f-b932b4ffc97c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org> <20200524153041.2361-2-gregkh@linuxfoundation.org>
+In-Reply-To: <20200524153041.2361-2-gregkh@linuxfoundation.org>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Mon, 25 May 2020 15:49:01 -0700
+Message-ID: <CAKdAkRShA2sAMH12H_zpCm=9XJn_yEcnAaaZhLgvhaUMxC-EMw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kobject: send KOBJ_REMOVE uevent when the object is
+ removed from sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 05:09:56PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/25/20 3:25 AM, Russell King - ARM Linux admin wrote:
-> > On Sun, May 24, 2020 at 11:28:52PM -0500, Jeremy Linton wrote:
-> > > Hi,
-> > > 
-> > > On 5/24/20 9:44 AM, Andrew Lunn wrote:
-> > > > > +++ b/include/linux/phy.h
-> > > > > @@ -275,6 +275,11 @@ struct mii_bus {
-> > > > >    	int reset_delay_us;
-> > > > >    	/* RESET GPIO descriptor pointer */
-> > > > >    	struct gpio_desc *reset_gpiod;
-> > > > > +	/* bus capabilities, used for probing */
-> > > > > +	enum {
-> > > > > +		MDIOBUS_C22_ONLY = 0,
-> > > > > +		MDIOBUS_C45_FIRST,
-> > > > > +	} probe_capabilities;
-> > > > >    };
-> > > > 
-> > > > 
-> > > > I'm not so keen on _FIRST. It suggest _LAST would also be valid.  But
-> > > > that then suggests this is not a bus property, but a PHY property, and
-> > > > some PHYs might need _FIRST and other phys need _LAST, and then you
-> > > > have a bus which has both sorts of PHY on it, and you have a problem.
-> > > > 
-> > > > So i think it would be better to have
-> > > > 
-> > > > 	enum {
-> > > > 		MDIOBUS_UNKNOWN = 0,
-> > > > 		MDIOBUS_C22,
-> > > > 		MDIOBUS_C45,
-> > > > 		MDIOBUS_C45_C22,
-> > > > 	} bus_capabilities;
-> > > > 
-> > > > Describe just what the bus master can support.
-> > > 
-> > > Yes, the naming is reasonable and I will update it in the next patch. I went
-> > > around a bit myself with this naming early on, and the problem I saw was
-> > > that a C45 capable master, can have C45 electrical phy's that only respond
-> > > to c22 requests (AFAIK).
-> > 
-> > If you have a master that can only generate clause 45 cycles, and
-> > someone is daft enough to connect a clause 22 only PHY to it, the
-> > result is hardware that doesn't work - there's no getting around
-> > that.  The MDIO interface can't generate the appropriate cycles to
-> > access the clause 22 PHY.  So, this is not something we need care
-> > about.
-> > 
-> > > So the MDIOBUS_C45 (I think I was calling it
-> > > C45_ONLY) is an invalid selection. Not, that it wouldn't be helpful to have
-> > > a C45_ONLY case, but that the assumption is that you wouldn't try and probe
-> > > c22 registers, which I thought was a mistake.
-> > 
-> > MDIOBUS_C45 means "I can generate clause 45 cycles".
-> > MDIOBUS_C22 means "I can generate clause 22 cycles".
-> > MDIOBUS_C45_C22 means "I can generate both clause 45 and clause 22
-> > cycles."
-> 
-> Hi, to be clear, we are talking about c45 controllers that can access the
-> c22 register space via c45, or controllers which are electrically/level
-> shifting to be compatible with c22 voltages/etc?
+On Sun, May 24, 2020 at 8:34 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> It is possible for a KOBJ_REMOVE uevent to be sent to userspace way
+> after the files are actually gone from sysfs, due to how reference
+> counting for kobjects work.  This should not be a problem, but it would
+> be good to properly send the information when things are going away, not
+> at some later point in time in the future.
+>
+> Before this move, if a kobject's parent was torn down before the child,
 
-To me, Andrew was quite clear that these flags should describe what
-the MDIO controller can support, and what I understand from Andrew's
-email is:
+^^^^ And this is the root of the problem and what has to be fixed.
 
-If it can't support clause 45 accesses, then it should not advertise
-MDIOBUS_C45 nor MDIOBUS_C45_C22.
+> when the call to kobject_uevent() happened, the parent walk to try to
+> reconstruct the full path of the kobject could be a total mess and cause
+> crashes.  It's not good to try to tear down a kobject tree from top
+> down, but let's at least try to not to crash if a user does so.
 
-If it can't support clause 22 accesses, then it should not advertise
-MDIOBUS_C22.
+One can try, but if we keep proper reference counting then kobject
+core should take care of actually releasing objects in the right
+order. I do not think you should keep this patch, and instead see if
+we can push call to kobject_put(kobj->parent) into kobject_cleanup().
 
-And that's all there is to it.
-
-If you want to talk about clause 45 access via the clause 22 register
-set, that is a property of the PHY, not of the MDIO controller, and
-the MDIO controller has no business attempting to describe that
-property in any shape or form since it is a PHY property.
-
-If you have access to clause 22 registers, then you likely have the
-clause 22 ID registers, and the way phylib currently works, that will
-also match a PHY driver.
-
-Once we have a PHY and a driver bound, then even if it is a C45
-driver, accesses using the phy_*_mmd() functions will _automatically_
-switch to using C22 cycles to the indirect C45 access registers if
-the PHY has not been detected as a C45 PHY (phydev->is_c45 is false.)
-
-So, I'm coming to the conclusion that you're making way more work
-here than is necessary, your changes to gratuitously change the way
-stuff in phylib work which is not risk-free are completely unnecessary
-and really not a risk worth taking when it's likely that we already
-have the code mostly in place to be able to support your PHY.
-
-I think there are some questionable uses of phydev->is_c45 that
-your point about accessing C45 PHYs through C22 indirect registers
-brings up which need to be resolved, but I really don't think that's
-a completely separate issue.
+Thanks.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+Dmitry
