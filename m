@@ -2,143 +2,118 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48174C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 201092071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3A12071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DwtyaKIS"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cGJZeWd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389556AbgEYJbt (ORCPT
+        id S2389538AbgEYJbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:31:49 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:47328 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389462AbgEYJbr (ORCPT
+        Mon, 25 May 2020 05:31:48 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:11425 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389514AbgEYJbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 25 May 2020 05:31:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590399106; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=rcy53dhh00j/cAlkf1xHyg4tWgvBbT8cJ1wghUEPwrA=; b=DwtyaKIS9GfLiN0L9M+mb0+KwuI28CeYg/fKyIwtIHFP+tzYQZGZ3qikOE+v0cDM36RiQooU
- 6GUhRmg9c9+jIlKmTtmv+A+rSqV8qFOgigI67BX0gu8UMyJY2zkpVA40CyBs1wRc5sMsM27G
- bnIfxvRCygMG9CbmQ/Mz+RAeEw0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ecb907c7171b6d7e4bc3082 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 09:31:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 13391C433CA; Mon, 25 May 2020 09:31:40 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1767EC433C9;
-        Mon, 25 May 2020 09:31:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1767EC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v1] bluetooth: hci_qca: Fix qca6390 enable failure after warm reboot
-Date:   Mon, 25 May 2020 17:31:12 +0800
-Message-Id: <1590399072-32407-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590399107; x=1621935107;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=EhBVAsDs98qhULlRXqAfS/sAw/8j0NvB9F91fcrKmCM=;
+  b=cGJZeWd+FbcAun2LyZlL0vaEIC41vlIibEuOz/wPJrlrGlN9JAiYgZ5W
+   6Azx+rbKEUW1u9obiLYWoSN9EsGaOwr1N1Gj3Soqg7A3xoaEuUyQjoYuJ
+   0Dd+1R3PJlGR+KdmV6Km377BMzuLfIo3lBUqTEooGsq2jJOEnJ5F+bufZ
+   0=;
+IronPort-SDR: /RbCI2gbLMK/BHdAHLO4QcFAhG+IkZBT7l6kTAwS0pqcD/4K1yBUlugXwNdeSTbFpeip8zyKgu
+ NhdYf2l9I+JQ==
+X-IronPort-AV: E=Sophos;i="5.73,432,1583193600"; 
+   d="scan'208";a="47147033"
+Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 25 May 2020 09:31:44 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id AB695A1C81;
+        Mon, 25 May 2020 09:31:32 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 09:31:31 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.200) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 09:31:15 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v13 15/15] MAINTAINERS: Update for DAMON
+Date:   Mon, 25 May 2020 11:31:01 +0200
+Message-ID: <20200525093101.1550-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200525091512.30391-1-sjpark@amazon.com>
+References: <20200525091512.30391-1-sjpark@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.200]
+X-ClientProxiedBy: EX13D08UWB003.ant.amazon.com (10.43.161.186) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warm reboot can not restore qca6390 controller baudrate
-to default due to lack of controllable BT_EN pin or power
-supply, so fails to download firmware after warm reboot.
+From: SeongJae Park <sjpark@amazon.de>
 
-Fixed by sending EDL_SOC_RESET VSC to reset controller
-within added device shutdown implementation.
+This commit updates MAINTAINERS file for DAMON related files.
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- drivers/bluetooth/btqca.c   |  8 ++++----
- drivers/bluetooth/hci_qca.c | 27 +++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ MAINTAINERS | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 3ea866d..7bbdf4d 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -74,10 +74,10 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5a5332b3591d..586513e92b65 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4661,6 +4661,18 @@ F:	net/ax25/ax25_out.c
+ F:	net/ax25/ax25_timer.c
+ F:	net/ax25/sysctl_net_ax25.c
  
- 	ver = (struct qca_btsoc_version *)(edl->data);
- 
--	BT_DBG("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
--	BT_DBG("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
--	BT_DBG("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
--	BT_DBG("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
-+	BT_INFO("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
-+	BT_INFO("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
-+	BT_INFO("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
-+	BT_INFO("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
- 
- 	/* QCA chipset version can be decided by patch and SoC
- 	 * version, combination with upper 2 bytes from SoC
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index e4a6823..a4f86e4 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1975,6 +1975,32 @@ static void qca_serdev_remove(struct serdev_device *serdev)
- 	hci_uart_unregister_device(&qcadev->serdev_hu);
- }
- 
-+static void qca_serdev_shutdown(struct device *dev)
-+{
-+	int res;
-+	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
-+	struct serdev_device *serdev = to_serdev_device(dev);
-+	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-+	u8 ibs_wake_cmd[] = {0xfd};
-+	u8 edl_reset_soc_cmd[] = {0x01, 0x00, 0xfc, 0x01, 0x05};
++DATA ACCESS MONITOR
++M:	SeongJae Park <sjpark@amazon.de>
++L:	linux-mm@kvack.org
++S:	Maintained
++F:	Documentation/admin-guide/mm/damon/*
++F:	include/linux/damon.h
++F:	include/trace/events/damon.h
++F:	mm/damon-test.h
++F:	mm/damon.c
++F:	tools/damon/*
++F:	tools/testing/selftests/damon/*
 +
-+	if (qcadev->btsoc_type == QCA_QCA6390) {
-+		serdev_device_write_flush(serdev);
-+		res = serdev_device_write_buf(serdev,
-+				ibs_wake_cmd, sizeof(ibs_wake_cmd));
-+		BT_INFO("%s: send ibs_wake_cmd res = %d", __func__, res);
-+		serdev_device_wait_until_sent(serdev, timeout);
-+		usleep_range(8000, 10000);
-+
-+		serdev_device_write_flush(serdev);
-+		res = serdev_device_write_buf(serdev,
-+				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
-+		BT_INFO("%s: send edl_reset_soc_cmd res = %d", __func__, res);
-+		serdev_device_wait_until_sent(serdev, timeout);
-+		usleep_range(8000, 10000);
-+	}
-+}
-+
- static int __maybe_unused qca_suspend(struct device *dev)
- {
- 	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-@@ -2100,6 +2126,7 @@ static struct serdev_device_driver qca_serdev_driver = {
- 		.name = "hci_uart_qca",
- 		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
- 		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
-+		.shutdown = qca_serdev_shutdown,
- 		.pm = &qca_pm_ops,
- 	},
- };
+ DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
+ L:	netdev@vger.kernel.org
+ S:	Orphan
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+2.17.1
 
