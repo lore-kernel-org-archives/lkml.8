@@ -2,61 +2,130 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64628C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108D42068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD1120787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbgEYJHT (ORCPT
+        id S2389293AbgEYJHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:07:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57230 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388611AbgEYJHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:07:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7B9BCACAC;
-        Mon, 25 May 2020 09:07:19 +0000 (UTC)
-Date:   Mon, 25 May 2020 11:07:14 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] printk: Remove pr_cont_once()
-Message-ID: <20200525090714.GD5300@linux-b0ei>
-References: <20200524153243.11690-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200525084110.GE755@jagdpanzerIV.localdomain>
+        Mon, 25 May 2020 05:07:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57094 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388611AbgEYJHV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:07:21 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 925E81C02B1; Mon, 25 May 2020 11:07:19 +0200 (CEST)
+Date:   Mon, 25 May 2020 11:07:18 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        robh+dt@kernel.org, andrew@lunn.ch,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/8] dt-bindings: net: meson-dwmac: Add the
+ amlogic,rx-delay-ns property
+Message-ID: <20200525090718.GB16796@amd>
+References: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
+ <20200512211103.530674-2-martin.blumenstingl@googlemail.com>
+ <20200524212843.GF1192@bug>
+ <d3f596d7-fb7f-5da7-4406-b5c0e9e9dc3f@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
 Content-Disposition: inline
-In-Reply-To: <20200525084110.GE755@jagdpanzerIV.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d3f596d7-fb7f-5da7-4406-b5c0e9e9dc3f@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-05-25 17:41:10, Sergey Senozhatsky wrote:
-> On (20/05/25 00:32), Tetsuo Handa wrote:
-> > pr_cont_once() does not make sense; at least emitting module name using
-> > pr_fmt() into middle of a line (after e.g. pr_info_once()) does not make
-> > sense. Let's remove unused pr_cont_once().
-> > 
-> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> > Cc: Joe Perches <joe@perches.com>
-> 
-> Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-The patch is committed into printk/linux.git, branch for-5.8.
+--OwLcNYc0lM97+oe1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best Regards,
-Petr
+Hi!
+
+> > On Tue 2020-05-12 23:10:56, Martin Blumenstingl wrote:
+> >> The PRG_ETHERNET registers on Meson8b and newer SoCs can add an RX
+> >> delay. Add a property with the known supported values so it can be
+> >> configured according to the board layout.
+> >>
+> >> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> >> ---
+> >>  .../bindings/net/amlogic,meson-dwmac.yaml           | 13 +++++++++++++
+> >>  1 file changed, 13 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac=
+=2Eyaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> >> index ae91aa9d8616..66074314e57a 100644
+> >> --- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> >> +++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> >> @@ -67,6 +67,19 @@ allOf:
+> >>              PHY and MAC are adding a delay).
+> >>              Any configuration is ignored when the phy-mode is set to =
+"rmii".
+> >> =20
+> >> +        amlogic,rx-delay-ns:
+> >> +          enum:
+> >=20
+> > Is it likely other MACs will need rx-delay property, too? Should we get=
+ rid of the amlogic,
+> > prefix?
+>=20
+> Yes, there are several MAC bindings that already define a delay property:
+>=20
+> Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml:
+>      allwinner,rx-delay-ps:
+> Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml:
+>      allwinner,rx-delay-ps:
+> Documentation/devicetree/bindings/net/apm-xgene-enet.txt:- rx-delay:
+> Delay value for RGMII bridge RX clock.
+> Documentation/devicetree/bindings/net/apm-xgene-enet.txt:       rx-delay
+> =3D <2>;
+> Documentation/devicetree/bindings/net/cavium-pip.txt:- rx-delay: Delay
+> value for RGMII receive clock. Optional. Disabled if 0.
+> Documentation/devicetree/bindings/net/mediatek-dwmac.txt:-
+> mediatek,rx-delay-ps: RX clock delay macro value. Default is 0.
+> Documentation/devicetree/bindings/net/mediatek-dwmac.txt:
+> mediatek,rx-delay-ps =3D <1530>;
+>=20
+> standardizing on rx-delay-ps and tx-delay-ps would make sense since that
+> is the lowest resolution and the property would be correctly named with
+> an unit in the name.
+
+Seems like similar patch is already being reviewed from Dan Murphy (?)
+=66rom TI.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OwLcNYc0lM97+oe1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7LisYACgkQMOfwapXb+vJCzACfcW9RZlns94NhbAXsafn1CBvX
+orcAoL3pNyoH5KhUL0FoV+EGTKQVEBDM
+=yjue
+-----END PGP SIGNATURE-----
+
+--OwLcNYc0lM97+oe1--
