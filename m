@@ -2,205 +2,227 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB64BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 873342078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DIl+OHBR"
+	by mail.kernel.org (Postfix) with ESMTP id DBAC02071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbgEYXkI (ORCPT
+        id S1728888AbgEYXmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:40:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24588 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726029AbgEYXkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:40:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590450006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mNOHdFyOR1+/V7085DfdiHGVU4eJXGBMIjXwIcz4T1k=;
-        b=DIl+OHBRAsIoYgvuqkEHbdu1RMpPu3Dn+JccN3xWixfml0XcgyBs5rR95QzPMsLEwHkX66
-        3mkyKWT1vuDgsq7fg3j9ap7yLHjuQqFJ6JDINAvj4NC9SvItr0IVpYr3XYl1RiHz2gc2GM
-        CHRzAo6PrmAwezEoJCcdtR193JNP//Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-PK4Y-qa6OICb2LhK_eN3rA-1; Mon, 25 May 2020 19:40:01 -0400
-X-MC-Unique: PK4Y-qa6OICb2LhK_eN3rA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDA7C1005510;
-        Mon, 25 May 2020 23:39:59 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-149.bne.redhat.com [10.64.54.149])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 291835C1BB;
-        Mon, 25 May 2020 23:39:51 +0000 (UTC)
-Subject: Re: [PATCH RFCv2 0/9] kvm/arm64: Support Async Page Fault
-From:   Gavin Shan <gshan@redhat.com>
-To:     kvmarm@lists.cs.columbia.edu
-Cc:     mark.rutland@arm.com, aarcange@redhat.com, drjones@redhat.com,
-        suzuki.poulose@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org, eric.auger@redhat.com,
-        james.morse@arm.com, shan.gavin@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200508032919.52147-1-gshan@redhat.com>
-Message-ID: <2063b7bb-ff68-f515-db00-7e9c0ca8d339@redhat.com>
-Date:   Tue, 26 May 2020 09:39:48 +1000
+        Mon, 25 May 2020 19:42:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:45214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgEYXmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 19:42:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7902131B;
+        Mon, 25 May 2020 16:42:51 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28BC03F305;
+        Mon, 25 May 2020 16:42:51 -0700 (PDT)
+Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
+        linux-kernel@vger.kernel.org
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-5-jeremy.linton@arm.com>
+ <20200523183731.GZ1551@shell.armlinux.org.uk>
+ <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
+ <20200525100612.GM1551@shell.armlinux.org.uk>
+ <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
+ <20200525220127.GO1551@shell.armlinux.org.uk>
+ <a9490c28-ebe1-ed6d-e65e-2e1d0a06386b@arm.com>
+ <20200525230946.GR1551@shell.armlinux.org.uk>
+ <ab756571-b269-ba7f-8e23-053098d9f470@arm.com>
+ <20200525233335.GT1551@shell.armlinux.org.uk>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <269de1a4-57cf-b175-3184-2f4604255bf7@arm.com>
+Date:   Mon, 25 May 2020 18:42:50 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200508032919.52147-1-gshan@redhat.com>
+In-Reply-To: <20200525233335.GT1551@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 1:29 PM, Gavin Shan wrote:
-> There are two stages of page faults and the stage one page fault is
-> handled by guest itself. The guest is trapped to host when the page
-> fault is caused by stage 2 page table, for example missing. The guest
-> is suspended until the requested page is populated. There might be
-> IO activities involved for host to populate the requested page. For
-> instance, the requested page has been swapped out previously. In this
-> case, the guest (vCPU) has to suspend for a few of milliseconds, which
-> depends on the swapping media, regardless of the overall system load.
-> 
-> The series adds asychornous page fault to improve the situation. A
-> signal (PAGE_NOT_PRESENT) is sent from host to the guest if the requested
-> page isn't absent immediately. In the mean while, a worker is started
-> to populate the requested page in background. Guest either picks another
-> available process to run or puts current (faulting) process to power
-> saving mode when receiving the (PAGE_NOT_PRESENT) signal. After the
-> requested page is populated by the worker, another signal (PAGE_READY)
-> is sent from host to guest. Guest wakes up the (faulting) process when
-> receiving the (PAGE_READY) signal.
-> 
-> The signals are conveyed through control block. The control block physical
-> address is passed from guest to host through dedicated KVM vendor specific
-> hypercall. The control block is visible and accessible by host and guest
-> in the mean while. The hypercall is also used to enable, disable, configure
-> the functionality. Notifications, by injected abort data exception, are
-> fired when there are pending signals. The exception handler will be invoked
-> in guest kernel.
-> 
-> Testing
-> =======
-> The tests are carried on the following machine. A guest with single vCPU
-> and 4GB memory is started. Also, the QEMU process is put into memory cgroup
-> (v1) whose memory limit is set to 2GB. In the guest, there are two threads,
-> which are memory bound and CPU bound separately. The memory bound thread
-> allocates all available memory, accesses and them free them. The CPU bound
-> thread simply executes block of "nop". The test is carried out for 5 time
-> continuously and the average number (per minute) of executed blocks in the
-> CPU bound thread is taken as indicator of improvement.
-> 
->     Vendor: GIGABYTE   CPU: 224 x Cavium ThunderX2(R) CPU CN9975 v2.2 @ 2.0GHz
->     Memory: 32GB       Disk: Fusion-MPT SAS-3 (PCIe3.0 x8)
-> 
->     Without-APF: 7029030180/minute = avg(7559625120 5962155840 7823208540
->                                          7629633480 6170527920)
->     With-APF:    8286827472/minute = avg(8464584540 8177073360 8262723180
->                                          8095084020 8434672260)
->     Outcome:     +17.8%
-> 
-> Another test case is to measure the time consumed by the application, but
-> with the CPU-bound thread disabled.
-> 
->     Without-APF: 40.3s = avg(40.6 39.3 39.2 41.6 41.2)
->     With-APF:    40.8s = avg(40.6 41.1 40.9 41.0 40.7)
->     Outcome:     +1.2%
-> 
-> I also have some code in the host to capture the number of async page faults,
-> time used to do swapin and its maximal/minimal values when async page fault
-> is enabled. During the test, the CPU-bound thread is disabled. There is about
-> 30% of the time used to do swapin.
-> 
->     Number of async page fault:     7555 times
->     Total time used by application: 42.2 seconds
->     Total time used by swapin:      12.7 seconds   (30%)
->           Minimal swapin time:      36.2 us
->           Maximal swapin time:      55.7 ms
-> 
+Hi,
 
-A kindly ping... Marc/Mark/Will, please let me know your comments
-on this. thanks in advance!
+On 5/25/20 6:33 PM, Russell King - ARM Linux admin wrote:
+> On Mon, May 25, 2020 at 06:22:19PM -0500, Jeremy Linton wrote:
+>> On 5/25/20 6:09 PM, Russell King - ARM Linux admin wrote:
+>>> On Mon, May 25, 2020 at 05:22:07PM -0500, Jeremy Linton wrote:
+>>>> On 5/25/20 5:01 PM, Russell King - ARM Linux admin wrote:
+>>>>> On Mon, May 25, 2020 at 04:51:16PM -0500, Jeremy Linton wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 5/25/20 5:06 AM, Russell King - ARM Linux admin wrote:
+>>>>>>> On Sun, May 24, 2020 at 10:34:13PM -0500, Jeremy Linton wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 5/23/20 1:37 PM, Russell King - ARM Linux admin wrote:
+>>>>>>>>> On Fri, May 22, 2020 at 04:30:52PM -0500, Jeremy Linton wrote:
+>>>>>>>>>> Until this point, we have been sanitizing the c22
+>>>>>>>>>> regs presence bit out of all the MMD device lists.
+>>>>>>>>>> This is incorrect as it causes the 0xFFFFFFFF checks
+>>>>>>>>>> to incorrectly fail. Further, it turns out that we
+>>>>>>>>>> want to utilize this flag to make a determination that
+>>>>>>>>>> there is actually a phy at this location and we should
+>>>>>>>>>> be accessing it using c22.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>>>>>>>>>> ---
+>>>>>>>>>>       drivers/net/phy/phy_device.c | 16 +++++++++++++---
+>>>>>>>>>>       1 file changed, 13 insertions(+), 3 deletions(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>>>>>>>>>> index f0761fa5e40b..2d677490ecab 100644
+>>>>>>>>>> --- a/drivers/net/phy/phy_device.c
+>>>>>>>>>> +++ b/drivers/net/phy/phy_device.c
+>>>>>>>>>> @@ -689,9 +689,6 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
+>>>>>>>>>>       		return -EIO;
+>>>>>>>>>>       	*devices_in_package |= phy_reg;
+>>>>>>>>>> -	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
+>>>>>>>>>> -	*devices_in_package &= ~BIT(0);
+>>>>>>>>>> -
+>>>>>>>>>>       	return 0;
+>>>>>>>>>>       }
+>>>>>>>>>> @@ -742,6 +739,8 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>>>>>>>>>       	int i;
+>>>>>>>>>>       	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
+>>>>>>>>>>       	u32 *devs = &c45_ids->devices_in_package;
+>>>>>>>>>> +	bool c22_present = false;
+>>>>>>>>>> +	bool valid_id = false;
+>>>>>>>>>>       	/* Find first non-zero Devices In package. Device zero is reserved
+>>>>>>>>>>       	 * for 802.3 c45 complied PHYs, so don't probe it at first.
+>>>>>>>>>> @@ -770,6 +769,10 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>>>>>>>>>       		return 0;
+>>>>>>>>>>       	}
+>>>>>>>>>> +	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
+>>>>>>>>>> +	c22_present = *devs & BIT(0);
+>>>>>>>>>> +	*devs &= ~BIT(0);
+>>>>>>>>>> +
+>>>>>>>>>>       	/* Now probe Device Identifiers for each device present. */
+>>>>>>>>>>       	for (i = 1; i < num_ids; i++) {
+>>>>>>>>>>       		if (!(c45_ids->devices_in_package & (1 << i)))
+>>>>>>>>>> @@ -778,6 +781,13 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>>>>>>>>>       		ret = _get_phy_id(bus, addr, i, &c45_ids->device_ids[i], true);
+>>>>>>>>>>       		if (ret < 0)
+>>>>>>>>>>       			return ret;
+>>>>>>>>>> +		if (valid_phy_id(c45_ids->device_ids[i]))
+>>>>>>>>>> +			valid_id = true;
+>>>>>>>>>
+>>>>>>>>> Here you are using your "devices in package" validator to validate the
+>>>>>>>>> PHY ID value.  One of the things it does is mask this value with
+>>>>>>>>> 0x1fffffff.  That means you lose some of the vendor OUI.  To me, this
+>>>>>>>>> looks completely wrong.
+>>>>>>>>
+>>>>>>>> I think in this case I was just using it like the comment in
+>>>>>>>> get_phy_device() "if the phy_id is mostly F's, there is no device here".
+>>>>>>>>
+>>>>>>>> My understanding is that the code is trying to avoid the 0xFFFFFFFF returns
+>>>>>>>> that seem to indicate "bus ok, phy didn't respond".
+>>>>>>>>
+>>>>>>>> I just checked the OUI registration, and while there are a couple OUI's
+>>>>>>>> registered that have a number of FFF's in them, none of those cases seems to
+>>>>>>>> overlap sufficiently to cause this to throw them out. Plus a phy would also
+>>>>>>>> have to have model+revision set to 'F's. So while might be possible, if
+>>>>>>>> unlikely, at the moment I think the OUI registration keeps this from being a
+>>>>>>>> problem. Particularly, if i'm reading the mapping correctly, the OUI mapping
+>>>>>>>> guarantees that the field cannot be all '1's due to the OUI having X & M
+>>>>>>>> bits cleared. It sort of looks like the mapping is trying to lose those
+>>>>>>>> bits, by tossing bit 1 & 2, but the X & M are in the wrong octet (AFAIK, I
+>>>>>>>> just read it three times cause it didn't make any sense).
+>>>>>>>
+>>>>>>> I should also note that we have at least one supported PHY where one
+>>>>>>> of the MMDs returns 0xfffe for even numbered registers and 0x0000 for
+>>>>>>> odd numbered registers in one of the vendor MMDs for addresses 0
+>>>>>>> through 0xefff - which has a bit set in the devices-in-package.
+>>>>>>>
+>>>>>>> It also returns 0x0082 for almost every register in MMD 2, but MMD 2's
+>>>>>>> devices-in-package bit is clear in most of the valid MMDs, so we
+>>>>>>> shouldn't touch it.
+>>>>>>>
+>>>>>>> These reveal the problem of randomly probing MMDs - they can return
+>>>>>>> unexpected values and not be as well behaved as we would like them to
+>>>>>>> be.  Using register 8 to detect presence may be beneficial, but that
+>>>>>>> may also introduce problems as we haven't used that before (and we
+>>>>>>> don't know whether any PHY that wrong.)  I know at least the 88x3310
+>>>>>>> gets it right for all except the vendor MMDs, where the low addresses
+>>>>>>> appear non-confromant to the 802.3 specs.  Both vendor MMDs are
+>>>>>>> definitely implemented, just not with anything conforming to 802.3.
+>>>>>>
+>>>>>> Yes, we know even for the NXP reference hardware, one of the phy's doesn't
+>>>>>> probe out correctly because it doesn't respond to the ieee defined
+>>>>>> registers. I think at this point, there really isn't anything we can do
+>>>>>> about that unless we involve the (ACPI) firmware in currently nonstandard
+>>>>>> behaviors.
+>>>>>>
+>>>>>> So, my goals here have been to first, not break anything, and then do a
+>>>>>> slightly better job finding phy's that are (mostly?) responding correctly to
+>>>>>> the 802.3 spec. So we can say "if you hardware is ACPI conformant, and you
+>>>>>> have IEEE conformant phy's you should be ok". So, for your example phy, I
+>>>>>> guess the immediate answer is "use DT" or "find a conformant phy", or even
+>>>>>> "abstract it in the firmware and use a mailbox interface".
+>>>>>
+>>>>> You haven't understood.  The PHY does conform for most of the MMDs,
+>>>>> but there are a number that do not conform.
+>>>>
+>>>> Probably...
+>>>>
+>>>> Except that i'm not sure how that is a problem at the moment, its still
+>>>> going to trigger as a found phy, and walk the same mmd list as before
+>>>> requesting drivers. Those drivers haven't changed their behavior so where is
+>>>> the problem? If there is a problem its in 7/11 where things are getting
+>>>> kicked due to seemingly invalid Ids.
+>>>>
+>>>> The 1/11 devices=0 case actually appears to be a bug i'm fixing because you
+>>>> won't get an ID or a MMD list from that (before or after).
+>>>
+>>> I think I've just flattened that argument in my immediately preceding
+>>> reply on the Cortina situation; I think you've grossly misread that
+>>> through not fully researching the history and then finding the
+>>> existing users.
+>>>
+>>> There is no bug that you are fixing from what I can see.
+>>
+>> One of us is missing something,
+>>
+>> The "cortina" solution is broken in the current kernel. That is because
+>> lines 726-742 are dead code due to line 693.
+>>
+>> I believe I've understood the problem there, and corrected it in this set
+>> along with a few others, but its distinctly possible that isn't true.
+> 
+> The code you refer to above is NOT used on the platforms that I have
+> identified use the Cortina PHY.  If this code is not used, it has not
+> caused any issue, and there is no breakage due to the change you are
+> referring to.
+> 
+Right, which is what I sort of expected. Because its falling back to a 
+device list of 0xFFFFFFFF, which means probe every single MMD.
 
-> Changelog
-> =========
-> RFCv1 -> RFCv2
->     * Rebase to 5.7.rc3
->     * Performance data                                                   (Marc Zyngier)
->     * Replace IMPDEF system register with KVM vendor specific hypercall  (Mark Rutland)
->     * Based on Will's KVM vendor hypercall probe mechanism               (Will Deacon)
->     * Don't use IMPDEF DFSC (0x43). Async page fault reason is conveyed
->       by the control block                                               (Mark Rutland)
->     * Delayed wakeup mechanism in guest kernel                           (Gavin Shan)
->     * Stability improvement in the guest kernel: delayed wakeup mechanism,
->       external abort disallowed region, lazily clear async page fault,
->       disabled interrupt on acquiring the head's lock and so on          (Gavin Shan)
->     * Stability improvement in the host kernel: serialized async page
->       faults etc.                                                        (Gavin Shan)
->     * Performance improvement in guest kernel: percpu sleeper head       (Gavin Shan)
-> 
-> Gavin Shan (7):
->    kvm/arm64: Rename kvm_vcpu_get_hsr() to kvm_vcpu_get_esr()
->    kvm/arm64: Detach ESR operator from vCPU struct
->    kvm/arm64: Replace hsr with esr
->    kvm/arm64: Export kvm_handle_user_mem_abort() with prefault mode
->    kvm/arm64: Support async page fault
->    kernel/sched: Add cpu_rq_is_locked()
->    arm64: Support async page fault
-> 
-> Will Deacon (2):
->    arm64: Probe for the presence of KVM hypervisor services during boot
->    arm/arm64: KVM: Advertise KVM UID to guests via SMCCC
-> 
->   arch/arm64/Kconfig                       |  11 +
->   arch/arm64/include/asm/exception.h       |   3 +
->   arch/arm64/include/asm/hypervisor.h      |  11 +
->   arch/arm64/include/asm/kvm_emulate.h     |  83 +++--
->   arch/arm64/include/asm/kvm_host.h        |  47 +++
->   arch/arm64/include/asm/kvm_para.h        |  40 +++
->   arch/arm64/include/uapi/asm/Kbuild       |   2 -
->   arch/arm64/include/uapi/asm/kvm_para.h   |  22 ++
->   arch/arm64/kernel/entry.S                |  33 ++
->   arch/arm64/kernel/process.c              |   4 +
->   arch/arm64/kernel/setup.c                |  35 ++
->   arch/arm64/kvm/Kconfig                   |   1 +
->   arch/arm64/kvm/Makefile                  |   2 +
->   arch/arm64/kvm/handle_exit.c             |  48 +--
->   arch/arm64/kvm/hyp/switch.c              |  33 +-
->   arch/arm64/kvm/hyp/vgic-v2-cpuif-proxy.c |   7 +-
->   arch/arm64/kvm/inject_fault.c            |   4 +-
->   arch/arm64/kvm/sys_regs.c                |  38 +-
->   arch/arm64/mm/fault.c                    | 434 +++++++++++++++++++++++
->   include/linux/arm-smccc.h                |  32 ++
->   include/linux/sched.h                    |   1 +
->   kernel/sched/core.c                      |   8 +
->   virt/kvm/arm/arm.c                       |  40 ++-
->   virt/kvm/arm/async_pf.c                  | 335 +++++++++++++++++
->   virt/kvm/arm/hyp/aarch32.c               |   4 +-
->   virt/kvm/arm/hyp/vgic-v3-sr.c            |   7 +-
->   virt/kvm/arm/hypercalls.c                |  37 +-
->   virt/kvm/arm/mmio.c                      |  27 +-
->   virt/kvm/arm/mmu.c                       |  69 +++-
->   29 files changed, 1264 insertions(+), 154 deletions(-)
->   create mode 100644 arch/arm64/include/asm/kvm_para.h
->   create mode 100644 arch/arm64/include/uapi/asm/kvm_para.h
->   create mode 100644 virt/kvm/arm/async_pf.c
-> 
+Combined with the lack of filtering means that your getting a bunch of 
+MMD IDs that potentially are invalid, along with any that happen to be 
+valid. Its that behavior (and some others) which were what blew this set 
+up from a couple lines of tweaks into this mess.
+
+I don't really see a way to guess at all the "wrong" ids that are being 
+pushed into the system. Which is why I started to think about a "strict" 
+mode later in the set. Maybe at this point the only way around some of 
+these bugs/side effects/etc is just a second c45 probe routine if we 
+don't think its possible to implement a variable strictness scanner in 
+this code path without losing phys that previously were detected.
+
 
