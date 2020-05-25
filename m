@@ -2,141 +2,131 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A98C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B006A206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1454207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="obG00Qt7"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uC/DUKVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388755AbgEYIKB (ORCPT
+        id S1730759AbgEYIMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:10:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
+        Mon, 25 May 2020 04:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387668AbgEYIKA (ORCPT
+        with ESMTP id S1725809AbgEYIMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:10:00 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4644C061A0E;
-        Mon, 25 May 2020 01:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LC2ca7J4tElTk2I/heSRPcYgSgFbGqANS02K/NJWcDo=; b=obG00Qt7LQTfPOiPNqgMB7Lvr
-        gq83/vZzbzlg5mouAAvLKFbLgc0VcWr27b14tkBDW9DCo4bZCAHWFREQrBaurrNqlTQq7Eo6kSDG2
-        NQs0q2u44yun3ewZ19FPfJNxrVIc0OxXjx5pR1L1eV3/78zxVoy9qsajDsbDduochmjhxHlZnByKl
-        fw2qx2CpTrP9lXthA+gOrdCBdQG4keOiE7wc7BowJ+N9744grNA3GU1mRoxRxXGV611dp2ZhRGEuS
-        F4oibzA/z9cF7BSFDCDSPanameeYNT6MMxQ8TV8l1RQfFdu3oIA/4sL9SYjZairGTg5u/HOdYeYJy
-        eRa2rQ9Aw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:34252)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jd8B8-0004fj-8m; Mon, 25 May 2020 09:09:46 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jd8B2-0004C5-AC; Mon, 25 May 2020 09:09:40 +0100
-Date:   Mon, 25 May 2020 09:09:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 02/11] net: phy: Simplify MMD device list termination
-Message-ID: <20200525080940.GF1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-3-jeremy.linton@arm.com>
- <20200523183610.GY1551@shell.armlinux.org.uk>
- <e25080cd-420a-da87-e13c-fa7e2ffb93a6@arm.com>
+        Mon, 25 May 2020 04:12:35 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5A8C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:12:35 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w10so19834101ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mQlv94/UsIcWqqoQiFz4Gmt5TSCy0PaSYRGYfGZ8ASE=;
+        b=uC/DUKVPr4AEHq5tZ0tk/8BJui59Ip+3Hv4adGb5DQ14R3VOvZPglrknK3jEuEDUri
+         0d/s8L/nPTs2TjywXIwDlAjAl0pbo1y4d4KL36xuI94CirTpSML2vZQUsvsl4pKnfCT/
+         N1Dr1x0yKT+NPvdkJagD16frkkV4x2sD0QXMuT8oRsZpcVs7WIynSnod8WL8W7zEpzVp
+         9VYGC1iie7CLhJuFTjwO+eudzrsEauJNzNODWYn+/OMtBZijYLasRQSg6Mccp6nvsS7K
+         yPzPRVs3STK0Cn+lL+DaqTkrNgfUs+i/dYHTpAqH/NTlrp/7vli8ofSqHDlLR/MYqwVQ
+         KVrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mQlv94/UsIcWqqoQiFz4Gmt5TSCy0PaSYRGYfGZ8ASE=;
+        b=Cqe1LVuVuG3THhIwevcCXuY3b//lpqJr07Y7nxFq4Q1UvhjpOnJmfkSMFcOi+Gbl4Y
+         XIQeqKrG/5u6zygO5z6kNB7yuCzxVgLMQa5qw1/cnjOIZoQiCSvcRPXjbODJkylXs54c
+         0Rr9Fd0Xo0y6v7a2H3IsXhOd6uiVPuLymIk6RUy1MRMU0pkSSJ/QRYqxY5O8Ym8Yxiy/
+         NP1TNzbgrDWa8FflMaq8egIOwMT3IyLrs4xrkrHp8qDv+gEprTdtaAkYFLJyXAVV9dNi
+         cg0ShuaCkvU9R6pKMB+NlmTeiXVujMWS95CKdsDLhTxY8w0fa3FHH75vqireNTexQdeX
+         RdmA==
+X-Gm-Message-State: AOAM5316GQc5AIQIh8YW0ausg94kAuhIyC3vJN/GJEALHl7LfYUy/DWx
+        5vEW2IaBpRDrc1q7JOz33f/epVAWgZUqUQ==
+X-Google-Smtp-Source: ABdhPJyJtREc8uUJDAMfpETQ8xnMzoK/Y5+TXrGnZ2HOaSMhu/3tzdRc4VuGqCS4FTW3P1QcfIskmw==
+X-Received: by 2002:a2e:2a02:: with SMTP id q2mr11637583ljq.311.1590394353496;
+        Mon, 25 May 2020 01:12:33 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:425b:15e7:251c:5b3:d625:2d43? ([2a00:1fa0:425b:15e7:251c:5b3:d625:2d43])
+        by smtp.gmail.com with ESMTPSA id m10sm4627606lfd.15.2020.05.25.01.12.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 01:12:32 -0700 (PDT)
+Subject: Re: [PATCH v6 1/4] MIPS: Do not flush tlb page when updating PTE
+ entry
+To:     Bibo Mao <maobibo@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <79778fc3-c029-272b-358e-4f8f8e5772d3@cogentembedded.com>
+Date:   Mon, 25 May 2020 11:12:25 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e25080cd-420a-da87-e13c-fa7e2ffb93a6@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 09:48:55PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/23/20 1:36 PM, Russell King - ARM Linux admin wrote:
-> > On Fri, May 22, 2020 at 04:30:50PM -0500, Jeremy Linton wrote:
-> > > Since we are already checking for *devs == 0 after
-> > > the loop terminates, we can add a mostly F's check
-> > > as well. With that change we can simplify the return/break
-> > > sequence inside the loop.
-> > > 
-> > > Add a valid_phy_id() macro for this, since we will be using it
-> > > in a couple other places.
-> > 
-> > I'm not sure you have the name of this correct, and your usage layer
-> > in your patch series is correct.
-> 
-> Or the name is poor..
-> 
-> > 
-> > > 
-> > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > ---
-> > >   drivers/net/phy/phy_device.c | 15 +++++++--------
-> > >   1 file changed, 7 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> > > index 245899b58a7d..7746c07b97fe 100644
-> > > --- a/drivers/net/phy/phy_device.c
-> > > +++ b/drivers/net/phy/phy_device.c
-> > > @@ -695,6 +695,11 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
-> > >   	return 0;
-> > >   }
-> > > +static bool valid_phy_id(int val)
-> > > +{
-> > > +	return (val > 0 && ((val & 0x1fffffff) != 0x1fffffff));
-> > > +}
-> > > +
-> > >   /**
-> > >    * get_phy_c45_ids - reads the specified addr for its 802.3-c45 IDs.
-> > >    * @bus: the target MII bus
-> > > @@ -732,18 +737,12 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > >   			phy_reg = get_phy_c45_devs_in_pkg(bus, addr, 0, devs);
-> > >   			if (phy_reg < 0)
-> > >   				return -EIO;
-> > > -			/* no device there, let's get out of here */
-> > > -			if ((*devs & 0x1fffffff) == 0x1fffffff) {
-> > > -				*phy_id = 0xffffffff;
-> > > -				return 0;
-> > > -			} else {
-> > > -				break;
-> > > -			}
-> > > +			break;
-> > >   		}
-> > >   	}
-> > >   	/* no reported devices */
-> > > -	if (*devs == 0) {
-> > > +	if (!valid_phy_id(*devs)) {
-> > 
-> > You are using this to validate the "devices in package" value, not the
-> > PHY ID value.  So, IMHO this should be called "valid_devs_in_package()"
-> > or similar.
-> 
-> Hmmm, its more "valid_phy_reg()" since it ends up being used to validate
-> both the devs in package as well as phy id.
+Hello!
 
-I don't think that is a valid use of the code you've put in
-valid_phy_id().
+On 25.05.2020 5:52, Bibo Mao wrote:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+> It is not necessary to flush tlb page on all CPUs if suitable PTE
+> entry exists already during page fault handling, just updating
+> TLB is fine.
+> 
+> Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
+
+    Need empty line here.
+
+> V6:
+> - Add update_mmu_tlb function as empty on all platform except mips
+>    system, we use this function to update local tlb for page fault
+>    smp-race handling
+> V5:
+> - define update_mmu_cache function specified on MIPS platform, and
+>    add page fault smp-race stats info
+> V4:
+> - add pte_sw_mkyoung function to implement readable privilege, and
+>    this function is  only in effect on MIPS system.
+> - add page valid bit judgement in function pte_modify
+> V3:
+> - add detailed changelog, modify typo issue in patch V2
+> v2:
+> - split flush_tlb_fix_spurious_fault and tlb update into two patches
+> - comments typo modification
+> - separate tlb update and add pte readable privilege into two patches
+
+   It was a bad idea to keep the version change log in the 1st patch only,
+we have either cover letter for that, or all the individual patches...
+
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+[...]
+
+MBR, Sergei
