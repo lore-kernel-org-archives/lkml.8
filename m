@@ -2,434 +2,357 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98238C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 693942071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bdhr2H6x"
+	by mail.kernel.org (Postfix) with ESMTP id 367352071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388375AbgEYIGJ (ORCPT
+        id S2388473AbgEYIGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:06:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25546 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388112AbgEYIGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:06:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590393961;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z+opzIRNoYb9OnlfPQTVpRV9gxLXN2N/oIbR4/2XJL4=;
-        b=bdhr2H6xkKbXCUcUcr30wOKSSAlYDkfx+V4FkIBCCfFPs55rGDhrPoKEkdH7ZI+SMwpyu1
-        skSQgSVvTWmOrYduwuM9SSxoCE1YkcnXQsIVUF/9Mp3ra99nG4X0pWVdlIBsfxDu8WH4pp
-        zoIdZ2UMhfxsb7Wa2h9H9oV5OMMoFao=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-C6rZBi3eNGWN9IGUps9eaw-1; Mon, 25 May 2020 04:05:57 -0400
-X-MC-Unique: C6rZBi3eNGWN9IGUps9eaw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0C901855A01;
-        Mon, 25 May 2020 08:05:54 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-112-116.ams2.redhat.com [10.36.112.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBA726EDAF;
-        Mon, 25 May 2020 08:05:43 +0000 (UTC)
-Date:   Mon, 25 May 2020 10:05:41 +0200
-From:   Adrian Reber <areber@redhat.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
-Message-ID: <20200525080541.GF104922@dcbz.redhat.com>
-References: <20200522055350.806609-1-areber@redhat.com>
- <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
+        Mon, 25 May 2020 04:06:13 -0400
+Received: from mga09.intel.com ([134.134.136.24]:29983 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388112AbgEYIGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 04:06:10 -0400
+IronPort-SDR: x19lBClHuFdKcGgxCRfttcyoe3YrjoGq1RNx3kj2bSGR9WAvgecqNdgZKdLVWOPkKACHG1LHOo
+ DpxcO2XRnwsw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 01:06:10 -0700
+IronPort-SDR: zUuwWxJbVfFlsRsbjminmJ06Nf2oDDZeGsw3hkBf2DL5Kh3LOwFSX2SnYJK2FHfAOZAg2VLDCu
+ 7x96ES2Db92A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
+   d="scan'208";a="441658176"
+Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
+  by orsmga005.jf.intel.com with ESMTP; 25 May 2020 01:06:06 -0700
+From:   alexander.antonov@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
+Cc:     alexander.antonov@linux.intel.com
+Subject: [RESEND PATCH v9 3/3] perf/x86/intel/uncore: Expose an Uncore unit to IIO PMON mapping
+Date:   Mon, 25 May 2020 11:05:54 +0300
+Message-Id: <20200525080554.21313-4-alexander.antonov@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200525080554.21313-1-alexander.antonov@linux.intel.com>
+References: <20200525080554.21313-1-alexander.antonov@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
-X-Operating-System: Linux (5.6.11-300.fc32.x86_64)
-X-Load-Average: 0.84 0.48 0.30
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 09:40:37AM -0700, Casey Schaufler wrote:
-> On 5/21/2020 10:53 PM, Adrian Reber wrote:
-> > This enables CRIU to checkpoint and restore a process as non-root.
-> 
-> I know it sounds pedantic, but could you spell out CRIU once?
-> While I know that everyone who cares either knows or can guess
-> what you're talking about, it may be a mystery to some of the
-> newer kernel developers.
+From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 
-Sure. CRIU - Checkpoint/Restore In Userspace.
+Current version supports a server line starting Intel® Xeon® Processor
+Scalable Family and introduces mapping for IIO Uncore units only.
+Other units can be added on demand.
 
-> > Over the last years CRIU upstream has been asked a couple of time if it
-> > is possible to checkpoint and restore a process as non-root. The answer
-> > usually was: 'almost'.
-> >
-> > The main blocker to restore a process was that selecting the PID of the
-> > restored process, which is necessary for CRIU, is guarded by CAP_SYS_ADMIN.
-> 
-> What are the other blockers? Are you going to suggest additional new
-> capabilities to clear them?
+IIO stack to PMON mapping is exposed through:
+    /sys/devices/uncore_iio_<pmu_idx>/dieX
+    where dieX is file which holds "Segment:Root Bus" for PCIe root port,
+    which can be monitored by that IIO PMON block.
 
-As mentioned somewhere else access to /proc/<pid>/map_files/ would be
-helpful. Right now I am testing with a JVM and it works without root
-just with the attached patch. Without access to /proc/<pid>/map_files/
-not everything CRIU can do will actually work, but we are a lot closer
-to what our users have been asking for.
+Details are explained in Documentation/ABI/testing/sysfs-devices-mapping
 
-> > In the last two years the questions about checkpoint/restore as non-root
-> > have increased and especially in the last few months we have seen
-> > multiple people inventing workarounds.
-> 
-> Giving a process CAP_SYS_ADMIN is a non-root solution.
+Co-developed-by: Alexander Antonov <alexander.antonov@linux.intel.com>
+Signed-off-by: Alexander Antonov <alexander.antonov@linux.intel.com>
+Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ .../ABI/testing/sysfs-devices-mapping         |  33 +++
+ arch/x86/events/intel/uncore.h                |   9 +
+ arch/x86/events/intel/uncore_snbep.c          | 191 ++++++++++++++++++
+ 3 files changed, 233 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
 
-Yes, but like mentioned somewhere else not a solution that actually
-works, because CAP_SYS_ADMIN allows too much. Especially for the
-checkpoint/restore case, we really need one (setting the PID of a new
-process) and to make it complete a second (reading map_files).
-
-Reading the comments in include/uapi/linux/capability.h concerning
-CAP_SYS_ADMIN it allows the binary to do at least 35 things. The two
-(three) I mentioned above (ns_last_pid (clone3) map_files) are not
-mentioned in that list, so CAP_SYS_ADMIN allows probably much more.
-
-To allow checkpoint/restore as non-root nobody will give CRIU
-CAP_SYS_ADMIN because it is too wide.
-
-> > The use-cases so far and their workarounds:
-> >
-> >  * Checkpoint/Restore in an HPC environment in combination with
-> >    a resource manager distributing jobs. Users are always running
-> >    as non root, but there was the desire to provide a way to
-> >    checkpoint and restore long running jobs.
-> >    Workaround: setuid wrapper to start CRIU as root as non-root
-> >    https://github.com/FredHutch/slurm-examples/blob/master/checkpointer/lib/checkpointer/checkpointer-suid.c
-> 
-> This is a classic and well understood mechanism for dealing with
-> this kind of situation. You could have checkpointer-filecap-sys_admin.c
-> instead, if you want to reduce use of the super-user.
-> 
-> > * Another use case to checkpoint/restore processes as non-root
-> >    uses as workaround a non privileged process which cycles through
-> >    PIDs by calling fork() as fast as possible with a rate of
-> >    100,000 pids/s instead of writing to ns_last_pid
-> >    https://github.com/twosigma/set_ns_last_pid
-> 
-> Oh dear.
-> 
-> >  * Fast Java startup using checkpoint/restore.
-> >    We have been in contact with JVM developers who are integrating
-> >    CRIU into a JVM to decrease the startup time.
-> >    Workaround so far: patch out CAP_SYS_ADMIN checks in the kernel
-> 
-> That's not a workaround, it's a policy violation.
-> Bad JVM! No biscuit!
-
-This was used as a proof of concept to see if we can checkpoint and
-restore a JVM without root. Only the ns_last_pid check was removed to
-see if it works and it does.
-
-> >  * Container migration as non root. There are people already
-> >    using CRIU to migrate containers as non-root. The solution
-> >    there is to run it in a user namespace. So if you are able
-> >    to carefully setup your environment with the namespaces
-> >    it is already possible to restore a container/process as non-root.
-> 
-> This is exactly the kind of situation that user namespaces are
-> supposed to address.
-> 
-> >    Unfortunately it is not always possible to setup an environment
-> >    in such a way and for easier access to non-root based container
-> >    migration this patch is also required.
-> 
-> If a user namespace solution is impossible or (more likely) too
-> expensive, there's always the checkpointer-filecap-sys_admin option.
-
-But then again we open up all of CAP_SYS_ADMIN, which is not necessary.
-
-> > There are probably a few more things guarded by CAP_SYS_ADMIN required
-> > to run checkpoint/restore as non-root,
-> 
-> If you need CAP_SYS_ADMIN anyway you're not gaining anything by
-> separating out CAP_RESTORE.
-
-No, as described we can checkpoint and restore a JVM with this patch and
-it also solves the problem the set_ns_last_pid fork() loop daemon tries
-to solve. It is not enough to support the full functionality of CRIU as
-map_files is also important, but we do not need CAP_SYS_ADMIN and
-CAP_RESTORE. Only CAP_RESTORE would be necessary.
-
-With a new capability users can enable checkpoint/restore as non-root
-without giving CRIU access to any of the other possibilities offered by
-CAP_SYS_ADMIN. Setting a PID and map_files have been introduced for CRIU
-and used to live behind CONFIG_CHECKPOINT_RESTORE. Having a capability
-for checkpoint/restore would make it easier for CRIU users to run it as
-non-root and make it very clear what is possible when giving CRIU the
-new capability. No other things would be allowed than necessary for
-checkpoint/restore. Setting a PID is most important for the restore part
-and reading map_files would be helpful during checkpoint. So it actually
-should be called CAP_CHECKPOINT_RESTORE as Christian mentioned in
-another email.
-
-> >  but by applying this patch I can
-> > already checkpoint and restore processes as non-root. As there are
-> > already multiple workarounds I would prefer to do it correctly in the
-> > kernel to avoid that CRIU users are starting to invent more workarounds.
-> 
-> You've presented a couple of really inappropriate implementations
-> that would qualify as workarounds. But the other two are completely
-> appropriate within the system security policy. They don't "get around"
-> the problem, they use existing mechanisms as they are intended.
-
-I agree with the user namespace approach to be appropriate, but not the
-CAP_SYS_ADMIN approach as CRIU only needs a tiny subset (2 things) of
-what CAP_SYS_ADMIN allows.
-
-> > I have used the following tests to verify that this change works as
-> > expected by setting the new capability CAP_RESTORE on the two resulting
-> > test binaries:
-> >
-> > $ cat ns_last_pid.c
-> >  // http://efiop-notes.blogspot.com/2014/06/how-to-set-pid-using-nslastpid.html
-> >  #include <stdio.h>
-> >  #include <stdlib.h>
-> >  #include <string.h>
-> >  #include <sys/file.h>
-> >  #include <sys/types.h>
-> >  #include <unistd.h>
-> >
-> > int main(int argc, char *argv[])
-> > {
-> > 	pid_t pid, new_pid;
-> > 	char buf[32];
-> > 	int fd;
-> >
-> > 	if (argc != 2)
-> > 		return 1;
-> >
-> > 	printf("Opening ns_last_pid...\n");
-> > 	fd = open("/proc/sys/kernel/ns_last_pid", O_RDWR | O_CREAT, 0644);
-> > 	if (fd < 0) {
-> > 		perror("Cannot open ns_last_pid");
-> > 		return 1;
-> > 	}
-> >
-> > 	printf("Locking ns_last_pid...\n");
-> > 	if (flock(fd, LOCK_EX)) {
-> > 		close(fd);
-> > 		printf("Cannot lock ns_last_pid\n");
-> > 		return 1;
-> > 	}
-> >
-> > 	pid = atoi(argv[1]);
-> > 	snprintf(buf, sizeof(buf), "%d", pid - 1);
-> > 	printf("Writing pid-1 to ns_last_pid...\n");
-> > 	if (write(fd, buf, strlen(buf)) != strlen(buf)) {
-> > 		printf("Cannot write to buf\n");
-> > 		return 1;
-> > 	}
-> >
-> > 	printf("Forking...\n");
-> > 	new_pid = fork();
-> > 	if (new_pid == 0) {
-> > 		printf("I am the child!\n");
-> > 		exit(0);
-> > 	} else if (new_pid == pid)
-> > 		printf("I am the parent. My child got the pid %d!\n", new_pid);
-> > 	else
-> > 		printf("pid (%d) does not match expected pid (%d)\n", new_pid, pid);
-> >
-> > 	printf("Cleaning up...\n");
-> > 	if (flock(fd, LOCK_UN))
-> > 		printf("Cannot unlock\n");
-> > 	close(fd);
-> > 	return 0;
-> > }
-> > $ id -u; /home/libcap/ns_last_pid 300000
-> > 1001
-> > Opening ns_last_pid...
-> > Locking ns_last_pid...
-> > Writing pid-1 to ns_last_pid...
-> > Forking...
-> > I am the parent. My child got the pid 300000!
-> > I am the child!
-> > Cleaning up...
-> >
-> > For the clone3() based approach:
-> > $ cat clone3_set_tid.c
-> >  #define _GNU_SOURCE
-> >  #include <linux/sched.h>
-> >  #include <stdint.h>
-> >  #include <stdio.h>
-> >  #include <stdlib.h>
-> >  #include <string.h>
-> >  #include <sys/types.h>
-> >  #include <sys/stat.h>
-> >  #include <sys/syscall.h>
-> >  #include <unistd.h>
-> >
-> >  #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-> >
-> > int main(int argc, char *argv[])
-> > {
-> > 	struct clone_args c_args = { };
-> > 	pid_t pid, new_pid;
-> >
-> > 	if (argc != 2)
-> > 		return 1;
-> >
-> > 	pid = atoi(argv[1]);
-> > 	c_args.set_tid = ptr_to_u64(&pid);
-> > 	c_args.set_tid_size = 1;
-> >
-> > 	printf("Forking...\n");
-> > 	new_pid = syscall(__NR_clone3, &c_args, sizeof(c_args));
-> > 	if (new_pid == 0) {
-> > 		printf("I am the child!\n");
-> > 		exit(0);
-> > 	} else if (new_pid == pid)
-> > 		printf("I am the parent. My child got the pid %d!\n", new_pid);
-> > 	else
-> > 		printf("pid (%d) does not match expected pid (%d)\n", new_pid, pid);
-> > 	printf("Done\n");
-> >
-> > 	return 0;
-> > }
-> > $ id -u; /home/libcap/clone3_set_tid 300000
-> > 1001
-> > Forking...
-> > I am the parent. My child got the pid 300000!
-> > Done
-> > I am the child!
-> >
-> > Signed-off-by: Adrian Reber <areber@redhat.com>
-> > ---
-> >  include/linux/capability.h          | 5 +++++
-> >  include/uapi/linux/capability.h     | 9 ++++++++-
-> >  kernel/pid.c                        | 2 +-
-> >  kernel/pid_namespace.c              | 2 +-
-> >  security/selinux/include/classmap.h | 5 +++--
-> >  5 files changed, 18 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/include/linux/capability.h b/include/linux/capability.h
-> > index b4345b38a6be..1278313cb2bc 100644
-> > --- a/include/linux/capability.h
-> > +++ b/include/linux/capability.h
-> > @@ -261,6 +261,11 @@ static inline bool bpf_capable(void)
-> >  	return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
-> >  }
-> >  
-> > +static inline bool restore_ns_capable(struct user_namespace *ns)
-> > +{
-> > +	return ns_capable(ns, CAP_RESTORE) || ns_capable(ns, CAP_SYS_ADMIN);
-> > +}
-> > +
-> >  /* audit system wants to get cap info from files as well */
-> >  extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
-> >  
-> > diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> > index c7372180a0a9..4bcc4e3d41ff 100644
-> > --- a/include/uapi/linux/capability.h
-> > +++ b/include/uapi/linux/capability.h
-> > @@ -406,7 +406,14 @@ struct vfs_ns_cap_data {
-> >   */
-> >  #define CAP_BPF			39
-> >  
-> > -#define CAP_LAST_CAP         CAP_BPF
-> > +
-> > +/* Allow checkpoint/restore related operations */
-> > +/* Allow PID selection during clone3() */
-> > +/* Allow writing to ns_last_pid */
-> > +
-> > +#define CAP_RESTORE		40
-> > +
-> > +#define CAP_LAST_CAP         CAP_RESTORE
-> >  
-> >  #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
-> >  
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 3122043fe364..bbc26f2bcff6 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -198,7 +198,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
-> >  			if (tid != 1 && !tmp->child_reaper)
-> >  				goto out_free;
-> >  			retval = -EPERM;
-> > -			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-> > +			if (!restore_ns_capable(tmp->user_ns))
-> >  				goto out_free;
-> >  			set_tid_size--;
-> >  		}
-> > diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> > index 0e5ac162c3a8..f58186b31ce6 100644
-> > --- a/kernel/pid_namespace.c
-> > +++ b/kernel/pid_namespace.c
-> > @@ -269,7 +269,7 @@ static int pid_ns_ctl_handler(struct ctl_table *table, int write,
-> >  	struct ctl_table tmp = *table;
-> >  	int ret, next;
-> >  
-> > -	if (write && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
-> > +	if (write && !restore_ns_capable(pid_ns->user_ns))
-> >  		return -EPERM;
-> >  
-> >  	/*
-> > diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-> > index 98e1513b608a..f8b8f12a6ebd 100644
-> > --- a/security/selinux/include/classmap.h
-> > +++ b/security/selinux/include/classmap.h
-> > @@ -27,9 +27,10 @@
-> >  	    "audit_control", "setfcap"
-> >  
-> >  #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
-> > -		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf"
-> > +		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf", \
-> > +		"restore"
-> >  
-> > -#if CAP_LAST_CAP > CAP_BPF
-> > +#if CAP_LAST_CAP > CAP_RESTORE
-> >  #error New capability defined, please update COMMON_CAP2_PERMS.
-> >  #endif
-> >  
-> >
-> > base-commit: e8f3274774b45b5f4e9e3d5cad7ff9f43ae3add5
-> 
+diff --git a/Documentation/ABI/testing/sysfs-devices-mapping b/Documentation/ABI/testing/sysfs-devices-mapping
+new file mode 100644
+index 000000000000..490ccfd67f12
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-devices-mapping
+@@ -0,0 +1,33 @@
++What:           /sys/devices/uncore_iio_x/dieX
++Date:           February 2020
++Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
++Description:
++                Each IIO stack (PCIe root port) has its own IIO PMON block, so
++                each dieX file (where X is die number) holds "Segment:Root Bus"
++                for PCIe root port, which can be monitored by that IIO PMON
++                block.
++                For example, on 4-die Xeon platform with up to 6 IIO stacks per
++                die and, therefore, 6 IIO PMON blocks per die, the mapping of
++                IIO PMON block 0 exposes as the following:
++
++                $ ls /sys/devices/uncore_iio_0/die*
++                -r--r--r-- /sys/devices/uncore_iio_0/die0
++                -r--r--r-- /sys/devices/uncore_iio_0/die1
++                -r--r--r-- /sys/devices/uncore_iio_0/die2
++                -r--r--r-- /sys/devices/uncore_iio_0/die3
++
++                $ tail /sys/devices/uncore_iio_0/die*
++                ==> /sys/devices/uncore_iio_0/die0 <==
++                0000:00
++                ==> /sys/devices/uncore_iio_0/die1 <==
++                0000:40
++                ==> /sys/devices/uncore_iio_0/die2 <==
++                0000:80
++                ==> /sys/devices/uncore_iio_0/die3 <==
++                0000:c0
++
++                Which means:
++                IIO PMU 0 on die 0 belongs to PCI RP on bus 0x00, domain 0x0000
++                IIO PMU 0 on die 1 belongs to PCI RP on bus 0x40, domain 0x0000
++                IIO PMU 0 on die 2 belongs to PCI RP on bus 0x80, domain 0x0000
++                IIO PMU 0 on die 3 belongs to PCI RP on bus 0xc0, domain 0x0000
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 8621b66c49ef..61a7eaa81224 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -181,6 +181,15 @@ int uncore_pcibus_to_physid(struct pci_bus *bus);
+ ssize_t uncore_event_show(struct kobject *kobj,
+ 			  struct kobj_attribute *attr, char *buf);
+ 
++static inline struct intel_uncore_pmu *dev_to_uncore_pmu(struct device *dev)
++{
++	return container_of(dev_get_drvdata(dev), struct intel_uncore_pmu, pmu);
++}
++
++#define to_device_attribute(n)	container_of(n, struct device_attribute, attr)
++#define to_dev_ext_attribute(n)	container_of(n, struct dev_ext_attribute, attr)
++#define attr_to_ext_attr(n)	to_dev_ext_attribute(to_device_attribute(n))
++
+ extern int __uncore_max_dies;
+ #define uncore_max_dies()	(__uncore_max_dies)
+ 
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 07652fa20ebb..8cd3539028ae 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -273,6 +273,30 @@
+ #define SKX_CPUNODEID			0xc0
+ #define SKX_GIDNIDMAP			0xd4
+ 
++/*
++ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
++ * that BIOS programmed. MSR has package scope.
++ * |  Bit  |  Default  |  Description
++ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
++ *                       numbers have been initialized. (RO)
++ * |[62:48]|    ---    | Reserved
++ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(5). (RO)
++ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(4). (RO)
++ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(3). (RO)
++ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(2). (RO)
++ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(1). (RO)
++ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(0). (RO)
++ */
++#define SKX_MSR_CPU_BUS_NUMBER		0x300
++#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
++#define BUS_NUM_STRIDE			8
++
+ /* SKX CHA */
+ #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
+ #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
+@@ -3612,6 +3636,170 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
+ 	.read_counter		= uncore_msr_read_counter,
+ };
+ 
++static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
++{
++	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
++}
++
++static umode_t
++skx_iio_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
++{
++	struct intel_uncore_pmu *pmu = dev_to_uncore_pmu(kobj_to_dev(kobj));
++
++	/* Root bus 0x00 is valid only for die 0 AND pmu_idx = 0. */
++	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx) ? 0 : attr->mode;
++}
++
++static ssize_t skx_iio_mapping_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct pci_bus *bus = pci_find_next_bus(NULL);
++	struct intel_uncore_pmu *uncore_pmu = dev_to_uncore_pmu(dev);
++	struct dev_ext_attribute *ea = to_dev_ext_attribute(attr);
++	long die = (long)ea->var;
++
++	/*
++	 * Current implementation is for single segment configuration hence it's
++	 * safe to take the segment value from the first available root bus.
++	 */
++	return sprintf(buf, "%04x:%02x\n", pci_domain_nr(bus),
++					   skx_iio_stack(uncore_pmu, die));
++}
++
++static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
++{
++	u64 msr_value;
++
++	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
++			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
++		return -ENXIO;
++
++	*topology = msr_value;
++
++	return 0;
++}
++
++static int die_to_cpu(int die)
++{
++	int res = 0, cpu, current_die;
++	/*
++	 * Using cpus_read_lock() to ensure cpu is not going down between
++	 * looking at cpu_online_mask.
++	 */
++	cpus_read_lock();
++	for_each_online_cpu(cpu) {
++		current_die = topology_logical_die_id(cpu);
++		if (current_die == die) {
++			res = cpu;
++			break;
++		}
++	}
++	cpus_read_unlock();
++	return res;
++}
++
++static int skx_iio_get_topology(struct intel_uncore_type *type)
++{
++	int i, ret;
++	struct pci_bus *bus = NULL;
++
++	/*
++	 * Verified single-segment environments only; disabled for multiple
++	 * segment topologies for now except VMD domains.
++	 * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
++	 */
++	while ((bus = pci_find_next_bus(bus))
++		&& (!pci_domain_nr(bus) || pci_domain_nr(bus) > 0xffff))
++		;
++	if (bus)
++		return -EPERM;
++
++	type->topology = kcalloc(uncore_max_dies(), sizeof(u64), GFP_KERNEL);
++	if (!type->topology)
++		return -ENOMEM;
++
++	for (i = 0; i < uncore_max_dies(); i++) {
++		ret = skx_msr_cpu_bus_read(die_to_cpu(i), &type->topology[i]);
++		if (ret) {
++			kfree(type->topology);
++			type->topology = NULL;
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static struct attribute_group skx_iio_mapping_group = {
++	.is_visible	= skx_iio_mapping_visible,
++};
++
++const static struct attribute_group *skx_iio_attr_update[] = {
++	&skx_iio_mapping_group,
++	NULL,
++};
++
++static int skx_iio_set_mapping(struct intel_uncore_type *type)
++{
++	char buf[64];
++	int ret;
++	long die = -1;
++	struct attribute **attrs = NULL;
++	struct dev_ext_attribute *eas = NULL;
++
++	ret = skx_iio_get_topology(type);
++	if (ret)
++		return ret;
++
++	/* One more for NULL. */
++	attrs = kcalloc((uncore_max_dies() + 1), sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		goto err;
++
++	eas = kcalloc(uncore_max_dies(), sizeof(*eas), GFP_KERNEL);
++	if (!eas)
++		goto err;
++
++	for (die = 0; die < uncore_max_dies(); die++) {
++		sprintf(buf, "die%ld", die);
++		sysfs_attr_init(&eas[die].attr.attr);
++		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
++		if (!eas[die].attr.attr.name)
++			goto err;
++		eas[die].attr.attr.mode = 0444;
++		eas[die].attr.show = skx_iio_mapping_show;
++		eas[die].attr.store = NULL;
++		eas[die].var = (void *)die;
++		attrs[die] = &eas[die].attr.attr;
++	}
++	skx_iio_mapping_group.attrs = attrs;
++
++	return 0;
++err:
++	for (; die >= 0; die--)
++		kfree(eas[die].attr.attr.name);
++	kfree(eas);
++	kfree(attrs);
++	kfree(type->topology);
++	type->attr_update = NULL;
++	return -ENOMEM;
++}
++
++static void skx_iio_cleanup_mapping(struct intel_uncore_type *type)
++{
++	struct attribute **attr = skx_iio_mapping_group.attrs;
++
++	if (!attr)
++		return;
++
++	for (; *attr; attr++)
++		kfree((*attr)->name);
++	kfree(attr_to_ext_attr(*skx_iio_mapping_group.attrs));
++	kfree(skx_iio_mapping_group.attrs);
++	skx_iio_mapping_group.attrs = NULL;
++	kfree(type->topology);
++}
++
+ static struct intel_uncore_type skx_uncore_iio = {
+ 	.name			= "iio",
+ 	.num_counters		= 4,
+@@ -3626,6 +3814,9 @@ static struct intel_uncore_type skx_uncore_iio = {
+ 	.constraints		= skx_uncore_iio_constraints,
+ 	.ops			= &skx_uncore_iio_ops,
+ 	.format_group		= &skx_uncore_iio_format_group,
++	.attr_update		= skx_iio_attr_update,
++	.set_mapping		= skx_iio_set_mapping,
++	.cleanup_mapping	= skx_iio_cleanup_mapping,
+ };
+ 
+ enum perf_uncore_iio_freerunning_type_id {
+-- 
+2.19.1
 
