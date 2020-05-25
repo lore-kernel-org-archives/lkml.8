@@ -2,110 +2,167 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F582C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED56A20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A132076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mODj/zYa"
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="kkqXywBz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rQyUpMEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbgEYBnN (ORCPT
+        id S2388372AbgEYBpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728357AbgEYBnN (ORCPT
+        Sun, 24 May 2020 21:45:06 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:42407 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728324AbgEYBpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:43:13 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDC59C05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:43:12 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q8so15855998iow.7
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aqz94/+7e1RiM5o+h+HIR5TE0upbQHfvoZz9aXKyiXs=;
-        b=mODj/zYaEfVJeQKqnlvU8U0thUA054KETDD+0ZJLi/WUHfuJCiUK+YSmFFrpzDEb2T
-         qfvn1pEwu7ZiV5+l6WMtrkMTLo5vrGse/ywkJHZgM302nWAn3p3P89mZ7AdaS5okO5z+
-         B0zQERPodLWyTeyc3I30uPgJtEMgR1Nk3d+XD3yOBFmh+1B9cEOpKQZlRARDCHFn0mO7
-         MWXJX34skcUgAi+UliZvPi6mvfe5Id4PHa7lQEJR9F2Ml57zrSYcjgO1bxTqd+lqQCpz
-         vLdpgx9e++1DVTlk0l0QsBLh1xR07qXZH/cJFC69qYM58i7uTFqSHjreyKCnhqwwsKrt
-         V5nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aqz94/+7e1RiM5o+h+HIR5TE0upbQHfvoZz9aXKyiXs=;
-        b=grVk9i8GhKfsUh5Qgi/aPUsD3vDGFx3Es9tIPCcLi+KiYBlAf/TLgkczP02yulvGJ6
-         wlzXpdxIjVxspxcguUIohQoQSX60/y410cFkhxxdSLvMZajq9LetJFtf+izV7CH94wrd
-         BELMGkuSVEcCQ8vSUIaKSw1Nh6DBp8W3Lb2rETX2N+1LDdj+fN5/7eg6xVB38qK+M88n
-         CXcpSb6a2Cmdruq2znj1ERMHm7D2NF4B9AW09EUODs2WrS2eXEEAUdXRttDLaTGZ28wA
-         3chJt0tQ1raah42t+XAXYMRQsdFVBheo/urqmSJefKnuomJFHdw5kxeT27lB/ee0rZNv
-         yFPg==
-X-Gm-Message-State: AOAM531gV6Yi3SOLsC/HWtCi9b4WSkzt/gQxtVg0UtiaCPlgBPTLlQQ+
-        ygYrsNZuZnbmLfz6spX3Rxzc78OaJR/cn9TvGsfe7w==
-X-Google-Smtp-Source: ABdhPJxf+6uLG/Y2ljHcsChPE+oY3J+gk3Kl1nNxYTtxiBfoP4oERbrxXXoZVsfQmFgE4AI8sPfu7fwDiECsZIJ+Pkw=
-X-Received: by 2002:a02:942a:: with SMTP id a39mr17381196jai.50.1590370991729;
- Sun, 24 May 2020 18:43:11 -0700 (PDT)
+        Sun, 24 May 2020 21:45:06 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id ACDD278C;
+        Sun, 24 May 2020 21:45:04 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 24 May 2020 21:45:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+         h=date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=w8gtuLdhRhjlG/R+K3KScUqE3pg
+        NDvo53M+1qyJesbk=; b=kkqXywBzEe6SfCh5kXCpWUHn5r/0p3WrB/XkL3kYbgc
+        /Yzs9rzjUBej5g3GDMC8rEa19tPMjGptGBufe4xgYECp73zXbCZKqmu+RUpsI9eK
+        lExlWPNPxyrqQFgtwR4yBFR9fy/zO2Ug611xP6Ceo1wVUx65rTlDZf6COOdVm8LW
+        Hiq1Aphahf2Bk7rPgI1P3F0tWrX3mOwX5BafjbXaOImClCirQcGmEh6HoCeZtw6k
+        NLbV+Uh1IbO5mYGmWa7VCgxcn6w5hQab2merp8KsLzxiFKe0ajrrvQX/HXS58Ke4
+        9rRYjliwAH1te4ucMzhnASQav3vQwUsDrSAIjn3s7jw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=w8gtuL
+        dhRhjlG/R+K3KScUqE3pgNDvo53M+1qyJesbk=; b=rQyUpMEIuZ923uXnaBkmWp
+        q8fumpUSSS4mI6wb0VAAa9eLGtg7wzzjPt1do/I4JqxZ4heKfpt4+rHp/keN75Fi
+        gefHESPEIEwLM1Cgpg6GA+0s2i0AxumtMgCQG9T1vAxWeDfJRM2ywxyGkJx7Mfki
+        CI0GLJnKPJjKoOD9y9mcLyKWkfbN8spKTvBhkukzxcMhtLUkI9edMomhSz3+sKln
+        Q7Ic1z0uQ6u1zk/wdfoiG9hGgBHWEsZNBNsQGf3j8eKB7E7fU2vfEu8hvVOACARk
+        Bm0TCmjClBYimHDBx2IF89jYfxULx6wc5cLKwinxbCGR2phRhVJ8+DbEwzmls6iw
+        ==
+X-ME-Sender: <xms:HyPLXsO6B2wXlrpoG3Aw25ILI5-SNnPlX_pS28GFP4A-L08TtSYqMg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudduledggeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
+    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
+    hpqeenucggtffrrghtthgvrhhnpeelhfeugedvjefgjefgudekfedutedvtddutdeuieev
+    tddtgeetjeekvdefgeefhfenucfkphepudektddrvdefhedrfedrheegnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihes
+    shgrkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:HyPLXi_Tz36pYaNV4MPPjzsXMK48sdEFXUY7Wk3LeQ3UiaQdH1QPaQ>
+    <xmx:HyPLXjR97R5quMcaCIIyX5gKsldl1D0Ytsj-DNz_BhYd6fE0DiEPtg>
+    <xmx:HyPLXktzblJ3P5EeqKJqemTL7S6OAmJS8sMj7_NUz9Nm16C-VwJmSw>
+    <xmx:ICPLXj6mkXxd-0uffftvQfE6qMQFl6Jdp9htaltvYtx5PAP3DUX57Q>
+Received: from workstation (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0511C3066544;
+        Sun, 24 May 2020 21:45:00 -0400 (EDT)
+Date:   Mon, 25 May 2020 10:44:58 +0900
+From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     Greg KH <greg@kroah.com>, oscar.carter@gmx.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, clemens@ladisch.de
+Subject: Re: [PATCH v2] firewire-core: remove cast of function callback
+Message-ID: <20200525014458.GA252667@workstation>
+Mail-Followup-To: Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Greg KH <greg@kroah.com>, oscar.carter@gmx.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        clemens@ladisch.de
+References: <20200524132048.243223-1-o-takashi@sakamocchi.jp>
+ <20200524152301.GB21163@kroah.com>
+ <20200525015532.0055f9df@kant>
 MIME-Version: 1.0
-References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
- <20200513122012.v3.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid> <87a71y93lr.fsf@linux.intel.com>
-In-Reply-To: <87a71y93lr.fsf@linux.intel.com>
-From:   "Anand K. Mistry" <amistry@google.com>
-Date:   Mon, 25 May 2020 11:43:00 +1000
-Message-ID: <CAATStaOY+JJ7mXWRwfXWuR_imhwsv=PecKSWiuZUetHTcz3EXg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf record: Use an eventfd to wakeup when done
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525015532.0055f9df@kant>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 May 2020 at 23:35, Andi Kleen <ak@linux.intel.com> wrote:
->
-> Anand K Mistry <amistry@google.com> writes:
-> >       }
-> >
-> > +     done_fd = eventfd(0, EFD_NONBLOCK);
->
-> This will make perf depend on a recent glibc or other library
-> that implements eventfd. Wouldn't surprise me if some kind
-> of build time check is needed for this to pass all of Arnaldo's
-> built tests.
+Hi,
 
-Looks like Arnaldo made that change when merging:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=e9db221d37f91409040cf7f3fbed08b44e055ae9
+On Mon, May 25, 2020 at 01:55:32AM +0200, Stefan Richter wrote:
+> > Why is this in a .h file?  What's wrong with just putting it in the .c
+> > file as a static function?  There's no need to make this an inline,
+> > right?
+> 
+> There is no need for this in a header.
+> Furthermore, I prefer the original switch statement over the nested if/else.
+> 
+> Here is another proposal; I will resend it later as a proper patch.
+> 
+> diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+> index 719791819c24..bece1b69b43f 100644
+> --- a/drivers/firewire/core-cdev.c
+> +++ b/drivers/firewire/core-cdev.c
+> @@ -957,7 +957,6 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+>  {
+>  	struct fw_cdev_create_iso_context *a = &arg->create_iso_context;
+>  	struct fw_iso_context *context;
+> -	fw_iso_callback_t cb;
+>  	int ret;
+>  
+>  	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT != FW_ISO_CONTEXT_TRANSMIT ||
+> @@ -969,20 +968,15 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+>  	case FW_ISO_CONTEXT_TRANSMIT:
+>  		if (a->speed > SCODE_3200 || a->channel > 63)
+>  			return -EINVAL;
+> -
+> -		cb = iso_callback;
+>  		break;
+>  
+>  	case FW_ISO_CONTEXT_RECEIVE:
+>  		if (a->header_size < 4 || (a->header_size & 3) ||
+>  		    a->channel > 63)
+>  			return -EINVAL;
+> -
+> -		cb = iso_callback;
+>  		break;
+>  
+>  	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
+> -		cb = (fw_iso_callback_t)iso_mc_callback;
+>  		break;
+>  
+>  	default:
+> @@ -990,9 +984,15 @@ static int ioctl_create_iso_context(struct client *client, union ioctl_arg *arg)
+>  	}
+>  
+>  	context = fw_iso_context_create(client->device->card, a->type,
+> -			a->channel, a->speed, a->header_size, cb, client);
+> +			a->channel, a->speed, a->header_size, NULL, client);
+>  	if (IS_ERR(context))
+>  		return PTR_ERR(context);
+> +
+> +	if (a->type == FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL)
+> +		context->callback.mc = iso_mc_callback;
+> +	else
+> +		context->callback.sc = iso_callback;
+> +
+>  	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
+>  		context->drop_overflow_headers = true;
 
-This makes me curious. How old a kernel should modern tools support?
-From the man page, eventfd was added in 2.6.22 (and eventfd2 in
-2.6.27), which was 2007 (or 2008 for eventfd2) and glibc-2.8 which was
-2008. I understand the kernel's policy of never breaking userspace,
-but what about userspace tools?
+At first place, I wrote the similar patch but judged it's a bit ad-hoc
+way that callback functions are assigned after the call of
+fw_iso_context_create() in raw code. For explicitness in a point of things
+being declarative, I put the inline function into header, and avoid
+someone's misfortune for future even if IEEE 1394 is enough legacy.
 
->
->
-> -Andi
-
+Anyway, I don't mind Stefan's proposal since it works well. It depends
+on developers' fashion to choose policy to write codes.
 
 
--- 
-Anand K. Mistry
-Software Engineer
-Google Australia
+Thanks
+
+Takashi Sakamoto
