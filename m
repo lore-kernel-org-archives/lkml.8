@@ -2,237 +2,230 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD14207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B592071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJBFbAz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388960AbgEYQKu (ORCPT
+        id S2391174AbgEYQKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
+        Mon, 25 May 2020 12:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388556AbgEYQKu (ORCPT
+        with ESMTP id S2388556AbgEYQKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:10:50 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA83C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:10:50 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=vostro)
-        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jdFgY-00059p-Mv; Mon, 25 May 2020 18:10:43 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v1 02/25] mm/swap: Don't abuse the seqcount latching API
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
-        <20200519214547.352050-3-a.darwish@linutronix.de>
-        <20200522145707.GO325280@hirez.programming.kicks-ass.net>
-Date:   Mon, 25 May 2020 18:10:40 +0200
-In-Reply-To: <20200522145707.GO325280@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 22 May 2020 16:57:07 +0200")
-Message-ID: <87y2pg9erj.fsf@vostro.fn.ogness.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 25 May 2020 12:10:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA60C061A0E;
+        Mon, 25 May 2020 09:10:51 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j16so5086914wrb.7;
+        Mon, 25 May 2020 09:10:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=px/njuUbPJNIeuxyph7bwd75Gah1TBMi+Lmzgv8MVl8=;
+        b=pJBFbAz5mSqvZC7etJVDD6PgHcmXOuzzATWpr3aN1dMMx4A+WxA/M3/YLFm2IhZYL1
+         hXKDZ6NumFGQ2UzcC5Dab5MMBW79dNqtcZbv9zLiv8saFik0g4mn2NroyLIpxcSrcY98
+         BXv5zPt3CyLzTpoI0nDC1kNQjhNBSE8txCuARi/QjHjZSd8kU9Q/7xFrI3O1J40wW74W
+         KH5XFcMow51lt7M2RGizJOlAlc+JCXHsCdMG8GzkDPwNL76WGtrVZ639vGWw+IGmBx01
+         MGs7TlSmbh6khmIbCvp84lBrlO1BxISZpEVSmcoY32HS1BLBAf9rXnvcoWZ1Cg5FHgdr
+         ZDdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=px/njuUbPJNIeuxyph7bwd75Gah1TBMi+Lmzgv8MVl8=;
+        b=qvUuPZ2CAetL6B64OUMQkDSQtyoAtpcKRdmAuqD/eZeKktCTtTwFtXg/wQc43Xd4kh
+         z/k7khAAtfnqZZCisNyFFjOTZisQ9rRTlhkOe+Hgu1z3OxPC+bAw1UvHEuQlcSKKv0wf
+         0V7jmubH0LbtYXegHGzf71HuwBpF14zNbI2uSolF8EKJTbiVKP4s5rbKW06ahciVzX7S
+         3D2xLrvsJ7RyyIYUVwWDI8+7x/NgQ1eOn+qAIpujlpVMMjxc1HKnyiw2IjB3CXaAFxO0
+         L/1u2XXC1MSzBSXgOFj0lona0IXKUoLaj9bqcSP88nbBmEhyjUwdD9j2YKq+7DG/3Am6
+         TAhw==
+X-Gm-Message-State: AOAM532hUOpMtTzcBs6/9xGjxtVLbe3zT5CHk8tjDb5Epb0ML7W9dJQM
+        1zar+ZOC7VmHx11k2OcvEHXIrYrAXW3BAFI2fR0=
+X-Google-Smtp-Source: ABdhPJz9u/aVM2aVCRuDGzesMHeteS6tuQ6+ayhYjJphlqnO9dSEqRCdlcq4nOaIxFWXeVxYAR49Mivo9quAZ2zZDjc=
+X-Received: by 2002:a5d:6b83:: with SMTP id n3mr658524wrx.395.1590423049639;
+ Mon, 25 May 2020 09:10:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
+References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
+ <20200513160116.GA2491@localhost.localdomain> <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
+ <20200513213230.GE2491@localhost.localdomain> <CABUN9aBoxXjdPk9piKAZV-2dYOCEnuXr-4H5ZVVvqeMMFRsf7A@mail.gmail.com>
+ <20200519204229.GQ2491@localhost.localdomain> <CABUN9aD85O3mF8j72QfrC8vbXPzj5Q=L801t2M6XsbDHn+9D1A@mail.gmail.com>
+ <CADvbK_fpZWexYckNtmsEatb+JU_EW4=Xn9OpcL=Tk-a8odDHuw@mail.gmail.com> <20200525131036.GA2491@localhost.localdomain>
+In-Reply-To: <20200525131036.GA2491@localhost.localdomain>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Tue, 26 May 2020 00:17:55 +0800
+Message-ID: <CADvbK_fGCKg1jB86MTJmkPXaLmdDV191vpgfs1YomJ5_0zgONA@mail.gmail.com>
+Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED} event
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     Jonas Falkevik <jonas.falkevik@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
+        network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Hi,
-
-This optimization is broken. The main concern here: Is it possible that
-lru_add_drain_all() _would_ have drained pagevec X, but then aborted
-because another lru_add_drain_all() is underway and that other task will
-_not_ drain pagevec X? I claim the answer is yes!
-
-My suggested changes are inline below.
-
-I attached a litmus test to verify it.
-
-On 2020-05-22, Peter Zijlstra <peterz@infradead.org> wrote:
-> On Tue, May 19, 2020 at 11:45:24PM +0200, Ahmed S. Darwish wrote:
->> @@ -713,10 +713,20 @@ static void lru_add_drain_per_cpu(struct work_struct *dummy)
->>   */
->>  void lru_add_drain_all(void)
->>  {
+On Mon, May 25, 2020 at 9:10 PM Marcelo Ricardo Leitner
+<marcelo.leitner@gmail.com> wrote:
 >
->> +	static unsigned int lru_drain_gen;
->>  	static struct cpumask has_work;
->> +	static DEFINE_MUTEX(lock);
->> +	int cpu, this_gen;
->>  
->>  	/*
->>  	 * Make sure nobody triggers this path before mm_percpu_wq is fully
->> @@ -725,21 +735,48 @@ void lru_add_drain_all(void)
->>  	if (WARN_ON(!mm_percpu_wq))
->>  		return;
->>  
-
-An smp_mb() is needed here.
-
-	/*
-	 * Guarantee the pagevec counter stores visible by
-	 * this CPU are visible to other CPUs before loading
-	 * the current drain generation.
-	 */
-	smp_mb();
-
->> +	this_gen = READ_ONCE(lru_drain_gen);
->> +	smp_rmb();
+> On Mon, May 25, 2020 at 04:42:16PM +0800, Xin Long wrote:
+> > On Sat, May 23, 2020 at 8:04 PM Jonas Falkevik <jonas.falkevik@gmail.com> wrote:
+> > >
+> > > On Tue, May 19, 2020 at 10:42 PM Marcelo Ricardo Leitner
+> > > <marcelo.leitner@gmail.com> wrote:
+> > > >
+> > > > On Fri, May 15, 2020 at 10:30:29AM +0200, Jonas Falkevik wrote:
+> > > > > On Wed, May 13, 2020 at 11:32 PM Marcelo Ricardo Leitner
+> > > > > <marcelo.leitner@gmail.com> wrote:
+> > > > > >
+> > > > > > On Wed, May 13, 2020 at 10:11:05PM +0200, Jonas Falkevik wrote:
+> > > > > > > On Wed, May 13, 2020 at 6:01 PM Marcelo Ricardo Leitner
+> > > > > > > <marcelo.leitner@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
+> > > > > > > > > Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
+> > > > > > > >
+> > > > > > > > How did you get them?
+> > > > > > > >
+> > > > > > >
+> > > > > > > I think one case is when receiving INIT chunk in sctp_sf_do_5_1B_init().
+> > > > > > > Here a closed association is created, sctp_make_temp_assoc().
+> > > > > > > Which is later used when calling sctp_process_init().
+> > > > > > > In sctp_process_init() one of the first things are to call
+> > > > > > > sctp_assoc_add_peer()
+> > > > > > > on the closed / temp assoc.
+> > > > > > >
+> > > > > > > sctp_assoc_add_peer() are generating the SCTP_ADDR_ADDED event on the socket
+> > > > > > > for the potentially new association.
+> > > > > >
+> > > > > > I see, thanks. The SCTP_FUTURE_ASSOC means something different. It is
+> > > > > > for setting/getting socket options that will be used for new asocs. In
+> > > > > > this case, it is just a coincidence that asoc_id is not set (but
+> > > > > > initialized to 0) and SCTP_FUTURE_ASSOC is also 0.
+> > > > >
+> > > > > yes, you are right, I overlooked that.
+> > > > >
+> > > > > > Moreso, if I didn't
+> > > > > > miss anything, it would block valid events, such as those from
+> > > > > >  sctp_sf_do_5_1D_ce
+> > > > > >    sctp_process_init
+> > > > > > because sctp_process_init will only call sctp_assoc_set_id() by its
+> > > > > > end.
+> > > > >
+> > > > > Do we want these events at this stage?
+> > > > > Since the association is a newly established one, have the peer address changed?
+> > > > > Should we enqueue these messages with sm commands instead?
+> > > > > And drop them if we don't have state SCTP_STATE_ESTABLISHED?
+> > > > >
+> > > > > >
+> > > > > > I can't see a good reason for generating any event on temp assocs. So
+> > > > > > I'm thinking the checks on this patch should be on whether the asoc is
+> > > > > > a temporary one instead. WDYT?
+> > > > > >
+> > > > >
+> > > > > Agree, we shouldn't rely on coincidence.
+> > > > > Either check temp instead or the above mentioned state?
+> > > > >
+> > > > > > Then, considering the socket is locked, both code points should be
+> > > > > > allocating the IDR earlier. It's expensive, yes (point being, it could
+> > > > > > be avoided in case of other failures), but it should be generating
+> > > > > > events with the right assoc id. Are you interested in pursuing this
+> > > > > > fix as well?
+> > > > >
+> > > > > Sure.
+> > > > >
+> > > > > If we check temp status instead, we would need to allocate IDR earlier,
+> > > > > as you mention. So that we send the notification with correct assoc id.
+> > > > >
+> > > > > But shouldn't the SCTP_COMM_UP, for a newly established association, be the
+> > > > > first notification event sent?
+> > > > > The SCTP_COMM_UP notification is enqueued later in sctp_sf_do_5_1D_ce().
+> > > >
+> > > > The RFC doesn't mention any specific ordering for them, but it would
+> > > > make sense. Reading the FreeBSD code now (which I consider a reference
+> > > > implementation), it doesn't raise these notifications from
+> > > > INIT_ACK/COOKIE_ECHO at all. The only trigger for SCTP_ADDR_ADDED
+> > > > event is ASCONF ADD command itself. So these are extra in Linux, and
+> > > > I'm afraid we got to stick with them.
+> > > >
+> > > > Considering the error handling it already has, looks like the
+> > > > reordering is feasible and welcomed. I'm thinking the temp check and
+> > > > reordering is the best way forward here.
+> > > >
+> > > > Thoughts? Neil? Xin? The assoc_id change might be considered an UAPI
+> > > > breakage.
+> > >
+> > > Some order is mentioned in RFC 6458 Chapter 6.1.1.
+> > >
+> > >       SCTP_COMM_UP:  A new association is now ready, and data may be
+> > >          exchanged with this peer.  When an association has been
+> > >          established successfully, this notification should be the
+> > >          first one.
 >
-> 	this_gen = smp_load_acquire(&lru_drain_gen);
->>  
->>  	mutex_lock(&lock);
->>  
->>  	/*
->> +	 * (C) Exit the draining operation if a newer generation, from another
->> +	 * lru_add_drain_all(), was already scheduled for draining. Check (A).
->>  	 */
->> +	if (unlikely(this_gen != lru_drain_gen))
->>  		goto done;
->>  
+> Oh, nice finding.
 >
->> +	WRITE_ONCE(lru_drain_gen, lru_drain_gen + 1);
->> +	smp_wmb();
-
-Instead of smp_wmb(), this needs to be a full memory barrier.
-
-	/*
-	 * Guarantee the new drain generation is stored before
-	 * loading the pagevec counters.
-	 */
-	smp_mb();
-
-> You can leave this smp_wmb() out and rely on the smp_mb() implied by
-> queue_work_on()'s test_and_set_bit().
+> > If this is true, as SCTP_COMM_UP event is always followed by state changed
+> > to ESTABLISHED. So I'm thinking to NOT make addr events by checking the
+> > state:
+> >
+> > @@ -343,6 +343,9 @@ void sctp_ulpevent_nofity_peer_addr_change(struct
+> > sctp_transport *transport,
+> >         struct sockaddr_storage addr;
+> >         struct sctp_ulpevent *event;
+> >
+> > +       if (asoc->state < SCTP_STATE_ESTABLISHED)
+> > +               return;
+> > +
+> >         memset(&addr, 0, sizeof(struct sockaddr_storage));
+> >         memcpy(&addr, &transport->ipaddr, transport->af_specific->sockaddr_len);
 >
->>  	cpumask_clear(&has_work);
->> -
->>  	for_each_online_cpu(cpu) {
->>  		struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
->>  
+> With the above said, yep. Thanks.
 >
-> While you're here, do:
+> >
+> > It's not easy to completely do assoc_id change/event reordering/temp check.
+> > As:
 >
-> 	s/cpumask_set_cpu/__&/
+> Temp check should be fine, but agree re the others. Anyhow, the above
+> will be good already. :-)
+Hi Jonas,
+
+What do you think? If you agree, can you please continue to go with it
+after testing?
+
+Thanks.
+
 >
->> @@ -766,7 +803,7 @@ void lru_add_drain_all(void)
->>  {
->>  	lru_add_drain();
->>  }
->> -#endif
->> +#endif /* CONFIG_SMP */
->>  
->>  /**
->>   * release_pages - batched put_page()
-
-For the litmus test:
-
-1:rx=0             (P1 did not see the pagevec counter)
-2:rx=1             (P2 _would_ have seen the pagevec counter)
-2:ry1=0 /\ 2:ry2=1 (P2 aborted due to optimization)
-
-Changing the smp_mb() back to smp_wmb() in P1 and removing the smp_mb()
-in P2 represents this patch. And it shows that sometimes P2 will abort
-even though it would have drained the pagevec and P1 did not drain the
-pagevec.
-
-This is ugly as hell. And there maybe other memory barrier types to make
-it pretty. But as is, memory barriers are missing.
-
-John Ogness
-
-
---=-=-=
-Content-Type: text/plain
-Content-Disposition: attachment; filename=lru_add_drain_all.litmus
-
-C lru_add_drain_all
-
-(*
- * x is a pagevec counter
- * y is @lru_drain_gen
- * z is @lock
- *)
-
-{ }
-
-P0(int *x)
-{
-	// mark pagevec for draining
-	WRITE_ONCE(*x, 1);
-}
-
-P1(int *x, int *y, int *z)
-{
-	int rx;
-	int rz;
-
-	// mutex_lock(&lock);
-	rz = cmpxchg_acquire(z, 0, 1);
-	if (rz == 0) {
-
-		// WRITE_ONCE(lru_drain_gen, lru_drain_gen + 1);
-		WRITE_ONCE(*y, 1);
-
-		// guarantee lru_drain_gen store before loading pagevec
-		smp_mb();
-
-		// if (pagevec_count(...))
-		rx = READ_ONCE(*x);
-
-		// mutex_unlock(&lock);
-		rz = cmpxchg_release(z, 1, 2);
-	}
-}
-
-P2(int *x, int *y, int *z)
-{
-	int rx;
-	int ry1;
-	int ry2;
-	int rz;
-
-	// the pagevec counter as visible now to this CPU
-	rx = READ_ONCE(*x);
-
-	// guarantee pagevec store before loading lru_drain_gen
-	smp_mb();
-
-	// this_gen = READ_ONCE(lru_drain_gen); smp_rmb();
-	ry1 = smp_load_acquire(y);
-
-	// mutex_lock(&lock) - acquired after P1
-	rz = cmpxchg_acquire(z, 2, 3);
-	if (rz == 2) {
-
-		// if (unlikely(this_gen != lru_drain_gen))
-		ry2 = READ_ONCE(*y);
-	}
-}
-
-locations [x; y; z]
-exists (1:rx=0 /\ 2:rx=1 /\ 2:ry1=0 /\ 2:ry2=1)
-
---=-=-=--
+> >
+> > 1. sctp_assoc_add_peer() is called in quite a few places where assoc_id is
+> >    not set.
+> > 2. it's almost impossible to move SCTP_ADDR_ADDED from sctp_assoc_add_peer()
+> >    after SCTP_COMM_UP.
+> >
+> > >
+> > > I can make a patch with a check on temp and make COMM_UP event first.
+> > > Currently the COMM_UP event is enqueued via commands
+> > > while the SCTP_ADDR_ADDED event is enqueued directly.
+> > >
+> > > sctp_add_cmd_sf(commands, SCTP_CMD_EVENT_ULP, SCTP_ULPEVENT(ev));
+> > > vs.
+> > > asoc->stream.si->enqueue_event(&asoc->ulpq, event);
+> > >
+> > > Do you want me to change to use commands instead of enqueing?
+> > > Or should we enqueue the COMM_UP event directly?
+> > >
+> > > -Jonas
