@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7894A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DC520787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nvRJ+9IE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cNF/lXeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389428AbgEYJRF (ORCPT
+        id S2389437AbgEYJRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:17:05 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52414 "EHLO
+        Mon, 25 May 2020 05:17:07 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52436 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389395AbgEYJRB (ORCPT
+        with ESMTP id S2389427AbgEYJRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:17:01 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P9GZYn105196;
-        Mon, 25 May 2020 04:16:35 -0500
+        Mon, 25 May 2020 05:17:05 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P9GqTc105362;
+        Mon, 25 May 2020 04:16:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590398195;
-        bh=8U5j3EpmZjALS0efVhhezXkuXnpSFM9S8zpuLAfKQGc=;
+        s=ti-com-17Q1; t=1590398212;
+        bh=c7C3r3QF/TMH/epmeuxUZDNfTYW7xsLdZE5YulWo4ZQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nvRJ+9IElC/wpZL/NOAP/T29ZRWX/5apcUWTb71GS9lp1lfmdrMUjTtZl8Ya6iHRH
-         5uMRNGD7ujeJCkVH/iUOMMRBtOxIbUMNyd+H4zslT8UcPy4oN+L0f0fanmbh+IlpHL
-         uIVfx+j2+/ML/vbo6iugFpOxGGo7PYgezs6d1b3A=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04P9GZI3013888
+        b=cNF/lXeq34ay/S7wLZJv8rzbuUT39HDcOhoYJdlLF8FisRCdw+oP+kyUoN9rxZ73g
+         9X/5ytiSBZ2QRhxEYxnAshYu7QMDcyVZhkfpqAxyCmZ58jOdR+obYoUIthz/QnU0U0
+         Mb3cp4R1QxMWYr7im7Ep5Zh57SgKX1bEWSJMC2sQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04P9Gqxl098695
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 May 2020 04:16:35 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 May 2020 04:16:52 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 25
- May 2020 04:16:35 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 04:16:51 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 25 May 2020 04:16:35 -0500
+ Frontend Transport; Mon, 25 May 2020 04:16:51 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9FjA8034800;
-        Mon, 25 May 2020 04:16:30 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9FjAB034800;
+        Mon, 25 May 2020 04:16:46 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -66,9 +66,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v9 08/19] mtd: spi-nor: sfdp: get command opcode extension type from BFPT
-Date:   Mon, 25 May 2020 14:45:33 +0530
-Message-ID: <20200525091544.17270-9-p.yadav@ti.com>
+Subject: [PATCH v9 11/19] mtd: spi-nor: core: do 2 byte reads for SR and FSR in DTR mode
+Date:   Mon, 25 May 2020 14:45:36 +0530
+Message-ID: <20200525091544.17270-12-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200525091544.17270-1-p.yadav@ti.com>
 References: <20200525091544.17270-1-p.yadav@ti.com>
@@ -81,63 +81,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices in DTR mode expect an extra command byte called the
-extension. The extension can either be same as the opcode, bitwise
-inverse of the opcode, or another additional byte forming a 16-byte
-opcode. Get the extension type from the BFPT. For now, only flashes with
-"repeat" and "inverse" extensions are supported.
+Some controllers, like the cadence qspi controller, have trouble reading
+only 1 byte in DTR mode. So, do 2 byte reads for SR and FSR commands in
+DTR mode, and then discard the second byte.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/sfdp.c | 17 +++++++++++++++++
- drivers/mtd/spi-nor/sfdp.h |  6 ++++++
- 2 files changed, 23 insertions(+)
+ drivers/mtd/spi-nor/core.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-index 96960f2f3d7a..ab086aa4746f 100644
---- a/drivers/mtd/spi-nor/sfdp.c
-+++ b/drivers/mtd/spi-nor/sfdp.c
-@@ -609,6 +609,23 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
- 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
- 						params);
-+	/* 8D-8D-8D command extension. */
-+	switch (bfpt.dwords[BFPT_DWORD(18)] & BFPT_DWORD18_CMD_EXT_MASK) {
-+	case BFPT_DWORD18_CMD_EXT_REP:
-+		nor->cmd_ext_type = SPI_NOR_EXT_REPEAT;
-+		break;
-+
-+	case BFPT_DWORD18_CMD_EXT_INV:
-+		nor->cmd_ext_type = SPI_NOR_EXT_INVERT;
-+		break;
-+
-+	case BFPT_DWORD18_CMD_EXT_RES:
-+		return -EINVAL;
-+
-+	case BFPT_DWORD18_CMD_EXT_16B:
-+		dev_err(nor->dev, "16-bit opcodes not supported\n");
-+		return -ENOTSUPP;
-+	}
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 2ad248140b6c..5cb7e391cd29 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -350,7 +350,7 @@ int spi_nor_write_disable(struct spi_nor *nor)
+  * spi_nor_read_sr() - Read the Status Register.
+  * @nor:	pointer to 'struct spi_nor'.
+  * @sr:		pointer to a DMA-able buffer where the value of the
+- *              Status Register will be written.
++ *              Status Register will be written. Should be at least 2 bytes.
+  *
+  * Return: 0 on success, -errno otherwise.
+  */
+@@ -371,6 +371,11 @@ static int spi_nor_read_sr(struct spi_nor *nor, u8 *sr)
+ 			op.addr.nbytes = addr_bytes;
+ 			op.addr.val = 0;
+ 			op.dummy.nbytes = dummy;
++			/*
++			 * We don't want to read only one byte in DTR mode. So,
++			 * read 2 and then discard the second byte.
++			 */
++			op.data.nbytes = 2;
+ 		}
  
- 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
- }
-diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
-index f8198af43a63..e15e30796d62 100644
---- a/drivers/mtd/spi-nor/sfdp.h
-+++ b/drivers/mtd/spi-nor/sfdp.h
-@@ -84,6 +84,12 @@ struct sfdp_bfpt {
- #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
- #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
+ 		spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
+@@ -394,7 +399,8 @@ static int spi_nor_read_sr(struct spi_nor *nor, u8 *sr)
+  * spi_nor_read_fsr() - Read the Flag Status Register.
+  * @nor:	pointer to 'struct spi_nor'
+  * @fsr:	pointer to a DMA-able buffer where the value of the
+- *              Flag Status Register will be written.
++ *              Flag Status Register will be written. Should be at least 2
++ *              bytes.
+  *
+  * Return: 0 on success, -errno otherwise.
+  */
+@@ -415,6 +421,11 @@ static int spi_nor_read_fsr(struct spi_nor *nor, u8 *fsr)
+ 			op.addr.nbytes = addr_bytes;
+ 			op.addr.val = 0;
+ 			op.dummy.nbytes = dummy;
++			/*
++			 * We don't want to read only one byte in DTR mode. So,
++			 * read 2 and then discard the second byte.
++			 */
++			op.data.nbytes = 2;
+ 		}
  
-+#define BFPT_DWORD18_CMD_EXT_MASK		GENMASK(30, 29)
-+#define BFPT_DWORD18_CMD_EXT_REP		(0x0UL << 29) /* Repeat */
-+#define BFPT_DWORD18_CMD_EXT_INV		(0x1UL << 29) /* Invert */
-+#define BFPT_DWORD18_CMD_EXT_RES		(0x2UL << 29) /* Reserved */
-+#define BFPT_DWORD18_CMD_EXT_16B		(0x3UL << 29) /* 16-bit opcode */
-+
- struct sfdp_parameter_header {
- 	u8		id_lsb;
- 	u8		minor;
+ 		spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
 -- 
 2.26.2
 
