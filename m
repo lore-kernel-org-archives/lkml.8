@@ -2,139 +2,368 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C46EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F12C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377BB2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6774B2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nVwxpcLF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXoh4IbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388061AbgEYXat (ORCPT
+        id S2388187AbgEYXbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
+        Mon, 25 May 2020 19:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgEYXas (ORCPT
+        with ESMTP id S1726408AbgEYXbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:30:48 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEE1C061A0E;
-        Mon, 25 May 2020 16:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U1Ygj3xrhTKKUdcGnGrhi0Eqb0ZBnKIT+SrxZH8LzP8=; b=nVwxpcLFDDiMw8ugil1Y/JY82
-        e4LhWefOQaoHrpw/MZsIu+JMG6MXLWJ03SxtjzklRxAbMhJiTslUyk/EZG3iv4Q6gn+jGaEEDP94X
-        rw8yPG8M8N0zDTqCuDo1iaBPzMj8YMO8tOhB9L1Al1XyejOjjV4zpajlPv6YGtC/HbE31Uk9cAEbm
-        lBgt4d5UtFxtvda5HX0j+kxPpr+iHFBnb2pHY80z9j9u20dy00j67gi6P3txDrxWngD0MAZnMWLRx
-        WQ6goX5R9/I+0QZPIe8PXwAtl10LT0LOtLJFrjXamroOcVFzdJqTy1BK2o3QU89ZEBvfDMxG6Hlru
-        528jMUWqA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36976)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jdMYM-0006Er-8o; Tue, 26 May 2020 00:30:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jdMYK-0004mb-BB; Tue, 26 May 2020 00:30:40 +0100
-Date:   Tue, 26 May 2020 00:30:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
-Message-ID: <20200525233040.GS1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-5-jeremy.linton@arm.com>
- <20200523183731.GZ1551@shell.armlinux.org.uk>
- <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
- <20200525100612.GM1551@shell.armlinux.org.uk>
- <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
- <20200525220127.GO1551@shell.armlinux.org.uk>
- <bcffde0b-d87f-b615-7484-5d25ade1fb48@arm.com>
+        Mon, 25 May 2020 19:31:17 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC326C061A0E;
+        Mon, 25 May 2020 16:31:16 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 205so5747906qkg.3;
+        Mon, 25 May 2020 16:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B05sP4Y1TR+BRkd0nFh6rwEnkm37VrvtAc9cPEzlqnM=;
+        b=WXoh4IbDa153ZHovbj+K3NOedCEkkEpC4AMAiFkdoahkX3CzCagx1HyvlJiLr/LDqn
+         abPyBGaCahHeV5OwgUHFUKBIROKJkxgDz9vwjFHVY7LzIzLHyuY1a37JyrCypTlDtvaK
+         q1R4o0GxTVzKWw5N82oesXeHCHgOYkwJ8bguBGeCjtbJtw9LmhRgJG/10ZHtDoLu8R4p
+         ynkplUCSEkF/kPAHmF0ybhFxwgD7jgLBO8oGsACLn97OiyQstsC8bjqHlhNy2HKeGWDA
+         m4VuRMfaffJmGIatz2I+V7dmV2xdXlb62R/F0Qq5ig0SUtRrLrPuONx/4dVLbTtCm6cr
+         /3QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B05sP4Y1TR+BRkd0nFh6rwEnkm37VrvtAc9cPEzlqnM=;
+        b=g3YBwrskwTo8PDhZXP7cvYRWIaWG1uCompDz0Nbydkiy/hDDLV4Mwy99QbxeqE+kpt
+         IDzUJSvBc+35kI3v/qG/oNASp+ddh0NR7PXpkVXc+q4qSfpm9Qa7lIZMaJ+8ONRDEHOx
+         nLM6NIknfFnmHofh5cKHWaZ4aiDuuLuZUf426tE5Kx3E8qOldErE2hnwtXuOLLn+dEPD
+         DKPt+s6fY8fd70wCrnAHLeYzCeuJbnqnB0+0gSmyoZwfaSn8Y+5hEmBBrtcO5NDjn++V
+         FvWdJ7L1WnqJkqXX3ukaYq5Ky3OdS1KeGoQz+4qo71MIVbgrPUs7/KLC7g+LiNB5c5at
+         bY4Q==
+X-Gm-Message-State: AOAM532Vp60jo+bahp6LRRlOC6qY3eeCXYYeVA2AX52F5AxdxHgcY9nC
+        tTEd+axXdDRH++imGYqQYIbVp7+okybUEI9ju0I=
+X-Google-Smtp-Source: ABdhPJyL3E29nY2D4Pm4KsYnZCW6qFjeOSeWFRshQMG2s1UG4byzRHuqNO25goIufuJMl3Lu1yzxL1xJlDEsrgALrdM=
+X-Received: by 2002:a05:620a:247:: with SMTP id q7mr23539343qkn.36.1590449475979;
+ Mon, 25 May 2020 16:31:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bcffde0b-d87f-b615-7484-5d25ade1fb48@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
+ <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com> <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com>
+In-Reply-To: <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 25 May 2020 16:31:05 -0700
+Message-ID: <CAEf4BzajE6jCkbBQ+f0cG=Y+vAEPWGNhfOMFVVhoDZWjNV-oGA@mail.gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 06:16:18PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/25/20 5:01 PM, Russell King - ARM Linux admin wrote:
-> > On Mon, May 25, 2020 at 04:51:16PM -0500, Jeremy Linton wrote:
-> > > So, my goals here have been to first, not break anything, and then do a
-> > > slightly better job finding phy's that are (mostly?) responding correctly to
-> > > the 802.3 spec. So we can say "if you hardware is ACPI conformant, and you
-> > > have IEEE conformant phy's you should be ok". So, for your example phy, I
-> > > guess the immediate answer is "use DT" or "find a conformant phy", or even
-> > > "abstract it in the firmware and use a mailbox interface".
-> > 
-> > You haven't understood.  The PHY does conform for most of the MMDs,
-> > but there are a number that do not conform.
-> > 
-> 
-> Maybe I should clarify. This set is still terminating the search for a valid
-> MMD device list on the first MMD that responds. It then probes the same ID
-> registers of the flagged MMDs as before. What has changed is that we search
-> higher into the MMD address space for a device list. So previously if a
-> device didn't respond to MMD0-8 it was ignored. Now it needs to fail all of
-> 0-31 to be ignored. Similarly for the ID's, if we find what appears to be a
-> valid MMD device list, then we will probe not only the original 1-8 MMDs for
-> IDs, but 1-31 MMDs for IDs.
+On Mon, May 25, 2020 at 3:01 PM Akira Yokosawa <akiyks@gmail.com> wrote:
+>
+> On Mon, 25 May 2020 11:31:27 -0700, Andrii Nakryiko wrote:
+> > On Sun, May 24, 2020 at 5:09 AM Akira Yokosawa <akiyks@gmail.com> wrote=
+:
+> >>
+> >> On Fri, 22 May 2020 12:38:21 -0700, Andrii Nakryiko wrote:
+> >>> On 5/22/20 10:43 AM, Paul E. McKenney wrote:
+> >>>> On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+> >>>>> On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+> >>>>>> On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+> >>>>>>> Hello!
+> >>>>>>>
+> >>>>>>> Just wanted to call your attention to some pretty cool and pretty=
+ serious
+> >>>>>>> litmus tests that Andrii did as part of his BPF ring-buffer work:
+> >>>>>>>
+> >>>>>>> https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.co=
+m/
+> >>>>>>>
+> >>>>>>> Thoughts?
+> >>>>>>
+> >>>>>> I find:
+> >>>>>>
+> >>>>>>     smp_wmb()
+> >>>>>>     smp_store_release()
+> >>>>>>
+> >>>>>> a _very_ weird construct. What is that supposed to even do?
+> >>>>>
+> >>>>> Indeed, it looks like one or the other of those is redundant (depen=
+ding
+> >>>>> on the context).
+> >>>>
+> >>>> Probably.  Peter instead asked what it was supposed to even do.  ;-)
+> >>>
+> >>> I agree, I think smp_wmb() is redundant here. Can't remember why I th=
+ought that it's necessary, this algorithm went through a bunch of iteration=
+s, starting as completely lockless, also using READ_ONCE/WRITE_ONCE at some=
+ point, and settling on smp_read_acquire/smp_store_release, eventually. May=
+be there was some reason, but might be that I was just over-cautious. See r=
+eply on patch thread as well ([0]).
+> >>>
+> >>>   [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5YJ8z=
+O+SoAJCDtp1jVhcQ@mail.gmail.com/
+> >>>
+> >>>
+> >>>>
+> >>>>> Also, what use is a spinlock that is accessed in only one thread?
+> >>>>
+> >>>> Multiple writers synchronize via the spinlock in this case.  I am
+> >>>> guessing that his larger 16-hour test contended this spinlock.
+> >>>
+> >>> Yes, spinlock is for coordinating multiple producers. 2p1c cases (bou=
+nded and unbounded) rely on this already. 1p1c cases are sort of subsets (b=
+ut very fast to verify) checking only consumer/producer interaction.
+> >>>
+> >>>>
+> >>>>> Finally, I doubt that these tests belong under tools/memory-model.
+> >>>>> Shouldn't they go under the new Documentation/ directory for litmus
+> >>>>> tests?  And shouldn't the patch update a README file?
+> >>>>
+> >>>> Agreed, and I responded to that effect to his original patch:
+> >>>>
+> >>>> https://lore.kernel.org/bpf/20200522003433.GG2869@paulmck-ThinkPad-P=
+72/
+> >>>
+> >>> Yep, makes sense, I'll will move.
+> >>
+> >> Hi Andrii,
+> >>
+> >> Andrea reported off-the-list that your litmus tests are incompatible
+> >> with the to-be-released version 7.56 of herd7 and currently available
+> >> versions of klitmus7.
+> >>
+> >> This is due to a couple of C-language level issues.
+> >>
+> >> herd7 used to be fairly generous in parsing C litmus tests.
+> >> On the other hand, klitmus7 converts a litmus test into a
+> >> kernel module.  The converted code is built by an actual C compiler
+> >> with kernel headers included, and can fail to build due to syntax erro=
+rs
+> >> or serious warnings.
+> >> herd7 HEAD is getting slightly stricter on uninitialized variable and
+> >> it emits an error to mpsc-rb+1p1c+bounded.litmus:
+> >>
+> >> Warning: File "mpsc-rb+1p1c+bounded.litmus": read on location 0 does n=
+ot match any write
+> >>
+> >> Converted code by klitmus7 fails to build with the following warning m=
+essages:
+> >>
+> >> $ make
+> >> make -C /lib/modules/5.3.0-53-generic/build/ M=3D/home/akira/bpf-rb/kl=
+itmus modules
+> >> make[1]: Entering directory '/usr/src/linux-headers-5.3.0-53-generic'
+> >>   CC [M]  /home/akira/bpf-rb/klitmus/litmus000.o
+> >> /home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98code1=E2=
+=80=99:
+> >> /home/akira/bpf-rb/klitmus/litmus000.c:426:14: error: passing argument=
+ 1 of =E2=80=98atomic_inc=E2=80=99
+> >>   from incompatible pointer type [-Werror=3Dincompatible-pointer-types=
+]
+> >>    atomic_inc(dropped);
+> >>               ^~~~~~~
+> >> In file included from ./arch/x86/include/asm/atomic.h:265:0,
+> >>                  from ./arch/x86/include/asm/msr.h:67,
+> >>                  from ./arch/x86/include/asm/processor.h:21,
+> >>                  from ./arch/x86/include/asm/cpufeature.h:5,
+> >>                  from ./arch/x86/include/asm/thread_info.h:53,
+> >>                  from ./include/linux/thread_info.h:38,
+> >>                  from ./arch/x86/include/asm/preempt.h:7,
+> >>                  from ./include/linux/preempt.h:78,
+> >>                  from ./include/linux/spinlock.h:51,
+> >>                  from ./include/linux/seqlock.h:36,
+> >>                  from ./include/linux/time.h:6,
+> >>                  from ./include/linux/stat.h:19,
+> >>                  from ./include/linux/module.h:10,
+> >>                  from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+> >> ./include/asm-generic/atomic-instrumented.h:237:1: note: expected =E2=
+=80=98atomic_t * {aka struct <anonymous> *}=E2=80=99 but argument is of typ=
+e =E2=80=98int *=E2=80=99
+> >>  atomic_inc(atomic_t *v)
+> >>  ^~~~~~~~~~
+> >> In file included from ./include/linux/export.h:45:0,
+> >>                  from ./include/linux/linkage.h:7,
+> >>                  from ./include/linux/kernel.h:8,
+> >>                  from ./include/linux/list.h:9,
+> >>                  from ./include/linux/module.h:9,
+> >>                  from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+> >> /home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98thread0=
+=E2=80=99:
+> >> ./include/linux/compiler.h:187:26: warning: =E2=80=98rLenPtr=E2=80=99 =
+may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >>   case 4: *(__u32 *)res =3D *(volatile __u32 *)p; break;  \
+> >>                           ^
+> >> /home/akira/bpf-rb/klitmus/litmus000.c:365:7: note: =E2=80=98rLenPtr=
+=E2=80=99 was declared here
+> >>   int *rLenPtr;
+> >>        ^~~~~~~
+> >> In file included from ./include/linux/export.h:45:0,
+> >>                  from ./include/linux/linkage.h:7,
+> >>                  from ./include/linux/kernel.h:8,
+> >>                  from ./include/linux/list.h:9,
+> >>                  from ./include/linux/module.h:9,
+> >>                  from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+> >> /home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98thread1=
+=E2=80=99:
+> >> ./include/linux/compiler.h:225:31: warning: =E2=80=98rLenPtr=E2=80=99 =
+may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >>   case 4: *(volatile __u32 *)p =3D *(__u32 *)res; break;
+> >>           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+> >> /home/akira/bpf-rb/klitmus/litmus000.c:417:7: note: =E2=80=98rLenPtr=
+=E2=80=99 was declared here
+> >>   int *rLenPtr;
+> >>        ^~~~~~~
+> >> cc1: some warnings being treated as errors
+> >> scripts/Makefile.build:288: recipe for target '/home/akira/bpf-rb/klit=
+mus/litmus000.o' failed
+> >> make[2]: *** [/home/akira/bpf-rb/klitmus/litmus000.o] Error 1
+> >> Makefile:1656: recipe for target '_module_/home/akira/bpf-rb/klitmus' =
+failed
+> >> make[1]: *** [_module_/home/akira/bpf-rb/klitmus] Error 2
+> >> make[1]: Leaving directory '/usr/src/linux-headers-5.3.0-53-generic'
+> >> Makefile:8: recipe for target 'all' failed
+> >> make: *** [all] Error 2
+> >>
+> >> Appended below is a patch I applied to mpsc-rb+1p1c+bounded.litmus to =
+make
+> >> herd7 HEAD and klitmus7 happy. (Give or take the redundant memory barr=
+ier.)
+> >>
+> >> The other variants need similar changes.
+> >
+> > Ok, cool, thanks for letting me know. I'll see if I can upgrade
+> > everything and test on my side (if you have a pointer to instructions
+> > how to use klitmus7, that would be greatly appreaciated!)
+> >
+> >>
+> >> What I did here are:
+> >>
+> >>     - Remove unnecessary initialization (shared variables are 0 by def=
+ault)
+> >>     - Declare "dropped" as atomic_t
+> >
+> > These two look good.
+> >
+> >>     - Promote rLenPtr to a shared variable LenPtr
+> >
+> > This one might work for single producer litmus tests, but it's wrong
+> > for 2- and 3-producer cases, because it has to be local to producer.
+>
+> Ah, I knew I had missed something...
+>
+> > But I think I can work around unitialized read warning by assigning it
+> > to 0 in failure case.
+>
+> Yes, that should work.
 
-Clarification is not required; I understand what you're doing, but you
-are not understanding my points.
+Ok, assigning to zero didn't work (it still complained about
+uninitialized read), but using a separate int *lenFail to assign to
+rLenPtr worked. Curiously, if I used rLenPtr =3D len1; in error case, it
+actually takes a bit more time to verify.
 
-For the 88x3310, your change means that the list of IDs for this PHY
-will not only 0x002b09aX, 0x01410daX (the official IDs), but also
-0x00000000 and 0xfffe0000 from MMD 30 and 31 respectively, which are
-not real IDs.  That's two incorrect IDs that should actually not be
-there.
+So I've converted everything else as you suggested. I compiled latest
+herd7 and it doesn't produce any warnings. But it's also extremely
+slow, compared to the herd7 that I get by default. Validating simple
+1p1c cases takes about 2.5x times longer (0.03s vs 0.07), but trying
+to validate 2p1c case, which normally validates in 42s (unbounded) and
+110s (bounded), it took more than 20 minutes and hasn't finished,
+before I gave up. So I don't know what's going on there...
 
-Here's what the first few registers from MMD 30 and 31 look like on
-this PHY:
+As for klitmus7, I managed to generate everything without warnings,
+but couldn't make it build completely due to:
 
-MMD30:
- Addr  Data
- 0000  0000 0000 0000 0000 0000 0000 0000 0000
- 0008  0000 0000 0000 0000 0000 0000 0000 0000
- 0010  0000 0000 0000 0000 0000 0000 0000 0000
+$ make
+make -C /lib/modules/5.6.13-01802-g938d64da97c6/build/
+M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules modules
+make[1]: Entering directory `/data/users/andriin/linux-build/fb-config'
+make[2]: Entering directory `/data/users/andriin/linux-build/default-x86_64=
+'
+  CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodules/litm=
+us000.o
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:
+In function =E2=80=98zyva=E2=80=99:
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:50=
+7:12:
+warning: ISO C90 forbids variable length array =E2=80=98th=E2=80=99 [-Wvla]
+     struct task_struct *th[nth];
+            ^~~~~~~~~~~
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:
+In function =E2=80=98litmus_init=E2=80=99:
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:60=
+5:67:
+error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from incompatibl=
+e pointer
+type [-Werror=3Dincompatible-pointer-types]
+   struct proc_dir_entry *litmus_pde =3D
+proc_create("litmus",0,NULL,&litmus_proc_fops);
 
-MMD31:
- 0000  fffe 0000 fffe 0000 fffe 0000 fffe 0000
- 0008  fffe 0000 fffe 0000 fffe 0000 fffe 0000
- 0010  fffe 0000 fffe 0000 fffe 0000 fffe 0000
+^~~~~~~~~~~~~~~~~
+In file included from
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:15=
+:
+/data/users/andriin/linux-fb/include/linux/proc_fs.h:64:24: note:
+expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is of type =
+=E2=80=98const
+struct file_operations *=E2=80=99
+ struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
+                        ^~~~~~~~~~~
+cc1: some warnings being treated as errors
+make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodules/=
+litmus000.o]
+Error 1
+make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodules]
+Error 2
+make[2]: Leaving directory `/data/users/andriin/linux-build/default-x86_64'
+make[1]: *** [sub-make] Error 2
+make[1]: Leaving directory `/data/users/andriin/linux-build/fb-config'
+make: *** [all] Error 2
 
-We've got away with it so far on several counts:
-1. The code doesn't probe that high for IDs.
-2. We have no driver that may match those IDs.
 
-You're taking away (1), so now all it takes is for condition (2) to
-be broken, and we can end up with a regression if another driver
-appears that may match using those.
+But at least it doesn't complain about atomic_t anymore. So anyways,
+I'm going to post updated litmus tests separately from BPF ringbuf
+patches, because Documentation/litmus-tests is not yet present in
+bpf-next.
 
-So, I would suggest that you avoid reading IDs from MMD 30/31, or
-maybe only read the ID from MMDs > 8 if register 8 indicates that
-there is a device present at that MMD.  That would be compliant
-with IEEE 802.3, preserve our existing behaviour, while allowing
-us to expand the IDs that we probe for to have a better chance of
-only detecting truely valid IDs.
+>
+> You can find a basic introduction of klitmus7 in tools/memory-model/READM=
+E.
+>
+>         Thanks, Akira
+>
+> >
+> >>
+> >> Please note that if you are on Linux 5.6 (or later), you need an up-to=
+-date
+> >> klitmus7 due to a change in kernel API.
+> >>
+> >> Any question is welcome!
+> >>
+> >>         Thanks, Akira
+> >>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+[...]
