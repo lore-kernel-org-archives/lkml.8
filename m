@@ -2,184 +2,160 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57EB2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872F8207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OX+SXYOo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gUae7FOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389631AbgEYJsD (ORCPT
+        id S2389659AbgEYJsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:48:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33330 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389333AbgEYJsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:48:02 -0400
-Received: from zn.tnic (p200300ec2f06f30089d08c3691e46ece.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:f300:89d0:8c36:91e4:6ece])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 70AFA1EC0118;
-        Mon, 25 May 2020 11:48:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590400080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3y3jg68vy6yb8x/l2uE4EytiivitkVVGn0MCFGvcVrI=;
-        b=OX+SXYOo7rf6Yz3kc38j0qTOsFjaZVHPSTqIcgJnz64n7aJmXMRxTsVY2Y/hr2J7HxVQ7i
-        ipOhdTCTXChcvJ6EHpaChhQXCseTDbCmOXPxlkGQuXwWmDjHgCD1OwlBJSiH14Nc0JSUAh
-        MNyzs/BRMaNSA4rQ0EsQbMgPZw8em3U=
-Date:   Mon, 25 May 2020 11:47:54 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 52/75] x86/sev-es: Handle MMIO String Instructions
-Message-ID: <20200525094747.GE25636@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-53-joro@8bytes.org>
+        Mon, 25 May 2020 05:48:30 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:54048 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389374AbgEYJsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:48:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590400110; x=1621936110;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pzdPx7JJBtptXyJ27Cg1HGCXEq6YG6KTHhH6ZH3PCY0=;
+  b=gUae7FOFA1XC9I+yxVz1+qwsJXjlifx03l0WZrAYFw5mLr7H7dpsP58R
+   k9jsrzyiwonDezJ465FV1nA6fuvPC12XPy/4f0U4vQB32DhLE8QqmfylO
+   Oid81qR1YoaGbJjOIepamM3lM3yu0oR4iH5n/Pgy29KGpMMn0C+5Wh8X8
+   PApwOuYyOuGLGVHovOGyOV6SyepLDUqWyqglqMCW19eMQ6DQ4MR39EqJm
+   qjQ/D/BoKWInWPRZ5V8iKs63mvJ5T25Lnrps+xHenpxIA2+usALAXXmdW
+   LSH02JPS3yp7UDk3OFdlDjVV7Mj5N6LpWSPs+N4EK8cPqhtltDtsh0BoR
+   w==;
+IronPort-SDR: izbUyP2AtLDrW6QFy3/RCBzlNSwb3grEN3w1QZCgpBLNy3K/Cno44uevHOqUtBtkIIyNOLwGCr
+ oywkInRRb7KfB6eW1AjAT5qEos7RmmpQge4Ek3h4w0zbTXxrGr+n0+7J3J9yxOMh1zq71LTvYM
+ H5xy/h3aN1HNJs1LsxlPmxgbz9OavGIuQukOODhSxEyZrfq+tCQ1kxErEkIkMr0u1E94tON8MT
+ IIzZkQl6C3Kr8sEy/X6XSqYRI/aYTsIuZZZcSQTAF15DPftOSOlC39h9UfNUXzCo45KN+qtKRP
+ Htc=
+X-IronPort-AV: E=Sophos;i="5.73,433,1583218800"; 
+   d="scan'208";a="76964008"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 May 2020 02:48:30 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 25 May 2020 02:48:30 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 25 May 2020 02:48:28 -0700
+Date:   Mon, 25 May 2020 11:48:07 +0000
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <andrew@lunn.ch>,
+        <UNGLinuxDriver@microchip.com>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: MRP netlink interface
+Message-ID: <20200525114807.w7g77ybflb67en3h@soft-dev3.localdomain>
+References: <20200525112827.t4nf4lamz6g4g2c5@soft-dev3.localdomain>
+ <2176b58f-35f3-36c1-8ba7-d18649eb29f7@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-53-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2176b58f-35f3-36c1-8ba7-d18649eb29f7@cumulusnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:17:02PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+The 05/25/2020 12:33, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 > 
-> Add handling for emulation the MOVS instruction on MMIO regions, as done
-> by the memcpy_toio() and memcpy_fromio() functions.
+> On 25/05/2020 14:28, Horatiu Vultur wrote:
+> > Hi,
+> >
+> > While I was working on adding support for MRA role to MRP, I noticed that I
+> > might have some issues with the netlink interface, so it would be great if you
+> > can give me an advice on how to continue.
+> >
+> > First a node with MRA role can behave as a MRM(Manager) or as a
+> > MRC(Client). The behaviour is decided by the priority of each node. So
+> > to have this functionality I have to extend the MRP netlink interface
+> > and this brings me to my issues.
+> >
+> > My first approach was to extend the 'struct br_mrp_instance' with a field that
+> > contains the priority of the node. But this breaks the backwards compatibility,
+> > and then every time when I need to change something, I will break the backwards
+> > compatibility. Is this a way to go forward?
+> >
+> > Another approach is to restructure MRP netlink interface. What I was thinking to
+> > keep the current attributes (IFLA_BRIDGE_MRP_INSTANCE,
+> > IFLA_BRIDGE_MRP_PORT_STATE,...) but they will be nested attributes and each of
+> > this attribute to contain the fields of the structures they represents.
+> > For example:
+> > [IFLA_AF_SPEC] = {
+> >     [IFLA_BRIDGE_FLAGS]
+> >     [IFLA_BRIDGE_MRP]
+> >         [IFLA_BRIDGE_MRP_INSTANCE]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]
+> >         [IFLA_BRIDGE_MRP_RING_ROLE]
+> >             [IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]
+> >             [IFLA_BRIDGE_MRP_RING_ROLE_ROLE]
+> >         ...
+> > }
+> > And then I can parse each field separately and then fill up the structure
+> > (br_mrp_instance, br_mrp_port_role, ...) which will be used forward.
+> > Then when this needs to be extended with the priority it would have the
+> > following format:
+> > [IFLA_AF_SPEC] = {
+> >     [IFLA_BRIDGE_FLAGS]
+> >     [IFLA_BRIDGE_MRP]
+> >         [IFLA_BRIDGE_MRP_INSTANCE]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]
+> >             [IFLA_BRIDGE_MRP_INSTANCE_PRIO]
+> >         [IFLA_BRIDGE_MRP_RING_ROLE]
+> >             [IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]
+> >             [IFLA_BRIDGE_MRP_RING_ROLE_ROLE]
+> >         ...
+> > }
+> > And also the br_mrp_instance will have a field called prio.
+> > So now, if the userspace is not updated to have support for setting the prio
+> > then the kernel will use a default value. Then if the userspace contains a field
+> > that the kernel doesn't know about, then it would just ignore it.
+> > So in this way every time when the netlink interface will be extended it would
+> > be backwards compatible.
+> >
+> > If it is not possible to break the compatibility then the safest way is to
+> > just add more attributes under IFLA_BRIDGE_MRP but this would just complicate
+> > the kernel and the userspace and it would make it much harder to be extended in
+> > the future.
+> >
+> > My personal choice would be the second approach, even if it breaks the backwards
+> > compatibility. Because it is the easier to go forward and there are only 3
+> > people who cloned the userspace application
+> > (https://github.com/microchip-ung/mrp/graphs/traffic). And two of
+> > these unique cloners is me and Allan.
+> >
+> > So if you have any advice on how to go forward it would be great.
+> >
 > 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/sev-es.c | 78 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
+> IIRC this is still in net-next only, right? If so - now would be the time to change it.
+> Once it goes into a release, we'll be stuck with workarounds. So I'd go for solution 2).
+
+Yes, this is only in net-next. Then I should ASAP update this with
+solution 2.
+
 > 
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index e3662723ed76..84958a82f8e0 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -552,6 +552,74 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
->  	return ret;
->  }
->  
-> +/*
-> + * The MOVS instruction has two memory operands, which raises the
-> + * problem that it is not known whether the access to the source or the
-> + * destination caused the #VC exception (and hence whether an MMIO read
-> + * or write operation needs to be emulated).
-> + *
-> + * Instead of playing games with walking page-tables and trying to guess
-> + * whether the source or destination is an MMIO range, this code splits
-
-s/this code splits/split/
-
-> + * the move into two operations, a read and a write with only one
-> + * memory operand. This will cause a nested #VC exception on the MMIO
-> + * address which can then be handled.
-> + *
-> + * This implementation has the benefit that it also supports MOVS where
-> + * source _and_ destination are MMIO regions.
-> + *
-> + * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
-> + * rare operation. If it turns out to be a performance problem the split
-> + * operations can be moved to memcpy_fromio() and memcpy_toio().
-> + */
-> +static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
-> +					  unsigned int bytes)
-> +{
-> +	unsigned long ds_base, es_base;
-> +	unsigned char *src, *dst;
-> +	unsigned char buffer[8];
-> +	enum es_result ret;
-> +	bool rep;
-> +	int off;
-> +
-> +	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
-> +	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
-> +
-> +	if (ds_base == -1L || es_base == -1L) {
-> +		ctxt->fi.vector = X86_TRAP_GP;
-> +		ctxt->fi.error_code = 0;
-> +		return ES_EXCEPTION;
-> +	}
-> +
-> +	src = ds_base + (unsigned char *)ctxt->regs->si;
-> +	dst = es_base + (unsigned char *)ctxt->regs->di;
-> +
-> +	ret = vc_read_mem(ctxt, src, buffer, bytes);
-> +	if (ret != ES_OK)
-> +		return ret;
-> +
-> +	ret = vc_write_mem(ctxt, dst, buffer, bytes);
-> +	if (ret != ES_OK)
-> +		return ret;
-> +
-> +	if (ctxt->regs->flags & X86_EFLAGS_DF)
-> +		off = -bytes;
-> +	else
-> +		off =  bytes;
-> +
-> +	ctxt->regs->si += off;
-> +	ctxt->regs->di += off;
-> +
-> +	rep = insn_has_rep_prefix(&ctxt->insn);
-> +
-
-^ Superfluous newline.
-
-> +	if (rep)
-> +		ctxt->regs->cx -= 1;
-> +
-> +	if (!rep || ctxt->regs->cx == 0)
-> +		return ES_OK;
-> +	else
-> +		return ES_RETRY;
-> +}
-> +
->  static enum es_result vc_handle_mmio(struct ghcb *ghcb,
->  				     struct es_em_ctxt *ctxt)
->  {
-> @@ -606,6 +674,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
->  		memcpy(reg_data, ghcb->shared_buffer, bytes);
->  		break;
->  
-> +		/* MOVS instruction */
-> +	case 0xa4:
-> +		bytes = 1;
-> +		/* Fallthrough */
-
-WARNING: Prefer 'fallthrough;' over fallthrough comment
-#120: FILE: arch/x86/kernel/sev-es.c:680:
-+               /* Fallthrough */
-
+> I haven't cloned it, but I do sync your user-space mrp repo to check against the patches. :)
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+/Horatiu
