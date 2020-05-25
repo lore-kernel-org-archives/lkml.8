@@ -2,102 +2,166 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC4F2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B82920776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="u809ssKv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kDa5WFM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbgEYWRv (ORCPT
+        id S2389488AbgEYWR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 18:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388054AbgEYWRv (ORCPT
+        Mon, 25 May 2020 18:17:57 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7188 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388054AbgEYWR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 18:17:51 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49A1C061A0E;
-        Mon, 25 May 2020 15:17:50 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WBL337K4z9sRY;
-        Tue, 26 May 2020 08:17:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590445067;
-        bh=0ysS2z+yNChls6FS1HzZSfYyyT2HJw9ck/dqhQ7SXwQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=u809ssKvVscfArVyqxEosS7XXAPqZrT1IkBQXkNSEIvEU01xA6lUYxfj+TbRR6N8/
-         Tiqak1hki7S46RQvPHRS17h8MH+Ia+YdSnDlWSxFS9s4LNE3XiwUgqMzLYUJmWGqI1
-         A1qtHS2gimV4dWRfTXg38r0vtqVdk4bgfgtZ9Qq3CTdCoIo27bAIpIyVHFBbZHj/aK
-         FuMwhin/C8HUOwM73FhQzU9zVOhif5VwfH2Sk+lklPefJaXF+53O6nIPk86ZTwfFPp
-         oJUT3lBNGiPdaNOuo5mA0trJu++A0IeZ1gMX9hrQ73auyL007GMd5DhjX0o2WJurGQ
-         EE80OZftQSj8g==
-Date:   Tue, 26 May 2020 08:17:45 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michel Lespinasse <walken@google.com>
-Subject: Re: linux-next: build failure after merge of the akpm tree
-Message-ID: <20200526081745.53d45f01@canb.auug.org.au>
-In-Reply-To: <4e1d8a9d-e308-df6a-6921-dbbe8d5f8389@nvidia.com>
-References: <20200525221700.0aa347f7@canb.auug.org.au>
-        <4e1d8a9d-e308-df6a-6921-dbbe8d5f8389@nvidia.com>
+        Mon, 25 May 2020 18:17:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecc43c10000>; Mon, 25 May 2020 15:16:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 25 May 2020 15:17:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 25 May 2020 15:17:55 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
+ 2020 22:17:55 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 25 May 2020 22:17:55 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.58.199]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ecc44130000>; Mon, 25 May 2020 15:17:55 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     John Hubbard <jhubbard@nvidia.com>, Xu Yilun <yilun.xu@intel.com>,
+        Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
+        <linux-fpga@vger.kernel.org>
+Subject: [PATCH v3] fpga: dfl: afu: convert get_user_pages() --> pin_user_pages()
+Date:   Mon, 25 May 2020 15:17:54 -0700
+Message-ID: <20200525221754.433023-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6T++Jexwpt1_=Kq9gfJzKp3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590444993; bh=4ahN1Psg8kTbEIZNqr1dmwwmSlPtEFCt1AcWooHiPdU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=kDa5WFM5rbreLXpsPa0TciRz+ysOGYu+j8CR8els8GvIDpZKuEZwTHn8dUJNqoJLU
+         fOUu1y3QwiydJlBBHRuPPboQBibLrc8CIMTRuBoxlNnz9thFJwRv2gMZ/iqJUp2Zmq
+         wX7lBFW8Iv4WG6QXnNH8sN+AlqaphmmlIXqnOChgeDz0s0cw961D/aLWE73V0bxFXN
+         asWOr/g6g36nwzNlRPBzxjVPOSD3MqO+Crme23pZa64BdFdpLKSAkE02ObazJoOZnl
+         bB6AuSWzwMvnzg9HToK6JtyndvNj6xWbqOa1KYFr2pEcVzNFrxUM/m2erWr+UkojEv
+         SNiB+wZzbAmyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6T++Jexwpt1_=Kq9gfJzKp3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This code was using get_user_pages_fast(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages_fast() + put_page() calls to
+pin_user_pages_fast() + unpin_user_pages() calls.
 
-Hi John,
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-On Mon, 25 May 2020 11:18:46 -0700 John Hubbard <jhubbard@nvidia.com> wrote:
->
-> Yes, looks good. And in fact, Andrew has the same fix-up in the mmotm bra=
-nch of
-> linux-next.git, as
->=20
->      commit a76c281a8ddd ("mmap-locking-api-rename-mmap_sem-to-mmap_lock-=
-fix").
+[1] Documentation/core-api/pin_user_pages.rst
 
-For some reason that was not included in the section that gets applied
-to linux-next :-(
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
-I have added it to the akpm tree today.
+Cc: Xu Yilun <yilun.xu@intel.com>
+Cc: Wu Hao <hao.wu@intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>
+Cc: linux-fpga@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+
+Hi,
+
+This is the same logical change as in v2, but it is applied to
+char-misc-next, in order to avoid a merge problem with Souptick's
+commit c9d7e3da1f3c ("fpga: dfl: afu: Corrected error handling levels <Soup=
+tick Joarder>")
+
+thanks,
+John Hubbard
+NVIDIA
+
+
+ drivers/fpga/dfl-afu-dma-region.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-r=
+egion.c
+index 5942343a5d6e..0b817b722920 100644
+--- a/drivers/fpga/dfl-afu-dma-region.c
++++ b/drivers/fpga/dfl-afu-dma-region.c
+@@ -16,15 +16,6 @@
+=20
+ #include "dfl-afu.h"
+=20
+-static void put_all_pages(struct page **pages, int npages)
+-{
+-	int i;
+-
+-	for (i =3D 0; i < npages; i++)
+-		if (pages[i])
+-			put_page(pages[i]);
+-}
+-
+ void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
+ {
+ 	struct dfl_afu *afu =3D dfl_fpga_pdata_get_private(pdata);
+@@ -57,22 +48,22 @@ static int afu_dma_pin_pages(struct dfl_feature_platfor=
+m_data *pdata,
+ 		goto unlock_vm;
+ 	}
+=20
+-	pinned =3D get_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
++	pinned =3D pin_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
+ 				     region->pages);
+ 	if (pinned < 0) {
+ 		ret =3D pinned;
+ 		goto free_pages;
+ 	} else if (pinned !=3D npages) {
+ 		ret =3D -EFAULT;
+-		goto put_pages;
++		goto unpin_pages;
+ 	}
+=20
+ 	dev_dbg(dev, "%d pages pinned\n", pinned);
+=20
+ 	return 0;
+=20
+-put_pages:
+-	put_all_pages(region->pages, pinned);
++unpin_pages:
++	unpin_user_pages(region->pages, pinned);
+ free_pages:
+ 	kfree(region->pages);
+ unlock_vm:
+@@ -94,7 +85,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platfo=
+rm_data *pdata,
+ 	long npages =3D region->length >> PAGE_SHIFT;
+ 	struct device *dev =3D &pdata->dev->dev;
+=20
+-	put_all_pages(region->pages, npages);
++	unpin_user_pages(region->pages, npages);
+ 	kfree(region->pages);
+ 	account_locked_vm(current->mm, npages, false);
+=20
 --=20
-Cheers,
-Stephen Rothwell
+2.26.2
 
---Sig_/6T++Jexwpt1_=Kq9gfJzKp3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7MRAkACgkQAVBC80lX
-0GzemAf+OLYeVgHg8oYOZkzb4wVt0XAmdFwRO/Qpv5dhgDEpELizzPInrM75rIKV
-qeRMR6+B0hgBOp4Iwgf7LT+rydlk06t2N/hVfWfSf36IEaLAn4An8r2fHahcS+S8
-a51YYsTsWcfhk3DHXqGYclTDOjmpiSkVldmGHCIYMJAdFVsJvlxwH3WWWUvL+pVR
-hkrNB32kfpzc+MIBo2rxHeSg2ofXKWQk5H3joQLLqs3Y0EC8MuwizGuUlLMOg42o
-J/XAmkl7mdVMEYXvwko8bKV31zvFsfKgAfuoY6wvqdmOA8OlvSSzGVvTtLwK4mbl
-k8Lt/SjIlRgjgXQCMZPOz1rBMu4ZvA==
-=as/T
------END PGP SIGNATURE-----
-
---Sig_/6T++Jexwpt1_=Kq9gfJzKp3--
