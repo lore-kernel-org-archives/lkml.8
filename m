@@ -2,113 +2,110 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 139B4207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590377240;
-	bh=8e3jh3bZdGATOCnKBrKDXIxxoT45/hVK4lQxxIz2yY0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=OH9IXeDG/KlO3U/A4s32zYsLjXbLVJoATTIvKtQuyCYqCVekmYqW6szdg71IFKaKw
-	 FgvMedxjYK/0rIXNIwxegmhd2qIej/PeykHIAhTe7p5G5JjhdFS9Nk3XaTAIOra/bG
-	 Zrp/B0HWrpYRzQZZekuv72B9dR+Qe4JFrcZmPtm0=
+	by mail.kernel.org (Postfix) with ESMTP id B746C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HPCy/TGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388786AbgEYD1T (ORCPT
+        id S2388787AbgEYDbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 23:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388466AbgEYD1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 23:27:18 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 282C72073B;
-        Mon, 25 May 2020 03:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590377238;
-        bh=8e3jh3bZdGATOCnKBrKDXIxxoT45/hVK4lQxxIz2yY0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=xY45brw2iaBl1vMDI1prK92l6gDN9y5D9qgXIdA2mnNIZg2oeadMb4vAtnmplbRLF
-         kszKYSUehId2+43wb+xRanEklEO1o3eG1ZTFobssgQ+tvQJFTs02/XJ4TYT8RqwEJe
-         kslDhIUa2fqUqq7U0WCFhMRwJQVR2xpwbGTW0SMw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 056413522681; Sun, 24 May 2020 20:27:18 -0700 (PDT)
-Date:   Sun, 24 May 2020 20:27:17 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
- access
-Message-ID: <20200525032717.GV2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-4-bigeasy@linutronix.de>
- <20200520102407.GF317569@hirez.programming.kicks-ass.net>
- <20200520120608.mwros5jurmidxxfv@linutronix.de>
- <20200520184345.GU2869@paulmck-ThinkPad-P72>
- <20200522151255.rtqnuk2cl3dpruou@linutronix.de>
- <20200522173953.GI2869@paulmck-ThinkPad-P72>
- <20200523150831.wdrthklakwm6wago@linutronix.de>
- <20200524190356.eqohmrmbilonm4u7@linutronix.de>
+        Sun, 24 May 2020 23:31:06 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36096 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388450AbgEYDbF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 23:31:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P3Uesi113639;
+        Sun, 24 May 2020 22:30:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590377440;
+        bh=9cexhtub3y0goU+WxGAF1+hYEGx59cbcY4t24Ede1Qk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HPCy/TGnaj9AFsCDRYeU4e8AbQKzxIv+Ulz6d4L0iD75o0+7AFtzurQl+H6ZE6cDv
+         wYIDMBOtwch3ToHPnkYhLM5/Dr08XIPnZ7TLOX4Nj8LTnFwj/SruOqHPSNA2ijY+Xt
+         ullPKfZ6kT/C8faITmUgokmBqbEeO/mHNimFxkQo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04P3UeK1037735
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 24 May 2020 22:30:40 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 24
+ May 2020 22:30:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 24 May 2020 22:30:40 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P3UaY4024489;
+        Sun, 24 May 2020 22:30:37 -0500
+Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
+ perform only 32-bit accesses
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devicetree@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200522033631.32574-1-kishon@ti.com>
+ <20200522033631.32574-4-kishon@ti.com>
+ <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
+Date:   Mon, 25 May 2020 09:00:36 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200524190356.eqohmrmbilonm4u7@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 09:03:56PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-05-23 17:08:32 [+0200], To Paul E. McKenney wrote:
-> > On 2020-05-22 10:39:53 [-0700], Paul E. McKenney wrote:
-> > > It looks good to me, but I have not yet tested it.  (Happy to let you
-> > > take the first crack at rcutorture in any case, scenarios SRCU-P and
-> > > SRCU-N.)
-> > 
-> > on it.
-> 
-> |tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 32 --duration 240 --configs 8*SRCU-N
-> |SRCU-N ------- 2127126 GPs (147.717/s) [srcu: g26566592 f0x0 ]
-> |SRCU-N.2 ------- 2123520 GPs (147.467/s) [srcu: g26563696 f0x0 ]
-> |SRCU-N.3 ------- 2122181 GPs (147.374/s) [srcu: g26549140 f0x0 ]
-> |SRCU-N.4 ------- 2126099 GPs (147.646/s) [srcu: g26564232 f0x0 ]
-> |SRCU-N.5 ------- 2127107 GPs (147.716/s) [srcu: g26590168 f0x0 ]
-> |SRCU-N.6 ------- 2125489 GPs (147.603/s) [srcu: g26545616 f0x0 ]
-> |SRCU-N.7 ------- 2128308 GPs (147.799/s) [srcu: g26591524 f0x0 ]
-> |SRCU-N.8 ------- 2126432 GPs (147.669/s) [srcu: g26586816 f0x0 ]
-> |
-> |tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 32 --duration 240 --configs 8*SRCU-P
-> |SRCU-P ------- 565751 GPs (39.2883/s) [srcud: g5034676 f0x0 ]
-> |SRCU-P.2 ------- 569508 GPs (39.5492/s) [srcud: g5062872 f0x0 ]
-> |SRCU-P.3 ------- 574240 GPs (39.8778/s) [srcud: g5098488 f0x0 ]
-> |SRCU-P.4 ------- 564376 GPs (39.1928/s) [srcud: g5031244 f0x0 ]
-> |SRCU-P.5 ------- 563705 GPs (39.1462/s) [srcud: g5024720 f0x0 ]
-> |SRCU-P.6 ------- 565043 GPs (39.2391/s) [srcud: g5030272 f0x0 ]
-> |SRCU-P.7 ------- 567450 GPs (39.4062/s) [srcud: g5046392 f0x0 ]
-> |SRCU-P.8 ------- 566496 GPs (39.34/s) [srcud: g5039396 f0x0 ]
-> 
-> Results at
->    https://breakpoint.cc/res.tar.xz
+Hi Rob,
 
-Looks good, thank you!
+On 5/22/2020 9:24 PM, Rob Herring wrote:
+> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+>> 32-bit accesses for reading or writing to Cadence registers. Convert all
+>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
+>> for adding PCIe support in TI's J721E SoC.
+> 
+> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
+> with this and never can be given the PCI_COMMAND and PCI_STATUS
+> registers are in the same word (IIRC, that's the main reason 32-bit
+> config space accesses are broken). So this isn't going to work at
 
-							Thanx, Paul
+right, PCI_STATUS has write '1' to clear bits and there's a chance that it
+could be reset while raising legacy interrupt. While this cannot be avoided for
+TI's J721E, other platforms doesn't have to have this limitation.
+> least for EP accesses. And maybe you need a custom .raise_irq() hook
+> to minimize any problems (such as making the RMW atomic at least from
+> the endpoint's perspective).
+
+This is to make sure EP doesn't update in-consistent state when RC is updating
+the PCI_STATUS register? Since this involves two different systems, how do we
+make this atomic?
+
+Thanks
+Kishon
