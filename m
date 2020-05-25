@@ -2,143 +2,149 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C26C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2343206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:09:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="jeszRHgx"
+	by mail.kernel.org (Postfix) with ESMTP id 5BB162078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389728AbgEYKJ0 (ORCPT
+        id S2389734AbgEYKKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389398AbgEYKJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:09:25 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D13EC08C5C0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:09:25 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n141so4606776qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mmSKZLegHlAcDBUlIzHam8wKkEWO4T7rBCLsE3QaNq4=;
-        b=jeszRHgxD7Oxhg6M7LbMxHAWGne9QEOsMhqXeIa+AATrHr61QLFVPIEHqxDgsoiDrh
-         J31TBEqNAJp3c9WRAsqbtOuY/hIE+hapOkmbvyNO32ZSfptpXlI0We9gyNk0qy/mBTSK
-         T6Gc8w8TMPptcUbJb/Lm9DSm0YT+M9jDzAk2URz/cr1AAKqeEbreOZWIAkZUCE3PhHId
-         b534L+xbxh2vIxaogC1ghZcXCzxx7bApbqHnaeQsFAs/4v9ln/ukM4SHPKx4xxDEkjog
-         4ydyOt/5Rx2RcDPLLCbaB/hBpONY8FHI/VU3q5mrdCT1QP+lkn6JsS1JD9gcbPY+mPIk
-         OJnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mmSKZLegHlAcDBUlIzHam8wKkEWO4T7rBCLsE3QaNq4=;
-        b=eELTIL07zMu2NChnFMVpO7cou3OeUucEJh4cEM3w8w9xD2woI1c9B/jOxYTG6Bmizt
-         ozkparFNVAA21fbbpQgVFfObSftBMS/8inSZScpqKSrS/NDVN4qE3JP9CppgJQYhIGO9
-         m7aZkyezCLG29TRp+kG6ZjoGXN+vCPZprhTlSR4Tfhp4nbbDEamcGrBr8+YN14+WXCey
-         W/ScG7iWZ56ZX6evmBuWy1cpVzVQe35guJmVlhA9arKYIkuX7gPrKPW+2AuqouImTh5q
-         p6sxUua+udzmxmGOyEXR21P4TgOMdgTzRVuDiK7XPEnXAzLn4fy/fLZHZRMOtcvBw/Kp
-         CH/A==
-X-Gm-Message-State: AOAM533t9huFhPAcCsG8oGuJpNgI5bBVKLBRSRajdC2C+YkQFJKRC3WW
-        MH3MTkeZiSfCNT3QqCMSW2Kyeg==
-X-Google-Smtp-Source: ABdhPJxb3OvPieEdva8jtks4EbjSxctQTZww+YeaGRp3mJtL1NrniFckZt3WEvrli9/NlJmowthvIA==
-X-Received: by 2002:ae9:f442:: with SMTP id z2mr24828736qkl.116.1590401364127;
-        Mon, 25 May 2020 03:09:24 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id e16sm4429488qtc.71.2020.05.25.03.09.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 03:09:23 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-3-jonathan@marek.ca>
- <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
-Date:   Mon, 25 May 2020 06:09:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 25 May 2020 06:10:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42446 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389356AbgEYKKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:10:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3A29DAA35;
+        Mon, 25 May 2020 10:10:37 +0000 (UTC)
+Date:   Mon, 25 May 2020 12:10:33 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Randy Dunlap <rdunlap@infradead.org>
+cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for May 21 (objtool warnings)
+In-Reply-To: <22332d9b-5e9f-5474-adac-9b3e39861aee@infradead.org>
+Message-ID: <alpine.LSU.2.21.2005251101030.24984@pobox.suse.cz>
+References: <20200522001209.07c19400@canb.auug.org.au> <22332d9b-5e9f-5474-adac-9b3e39861aee@infradead.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 21 May 2020, Randy Dunlap wrote:
 
-On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
-> Hi Jonathan,
-> 
-> On 2020-05-24 08:08, Jonathan Marek wrote:
->> Add the apps_smmu node for sm8250. Note that adding the iommus field for
->> UFS is required because initializing the iommu removes the bypass mapping
->> that created by the bootloader.
->>
-> 
-> This statement doesn't seem right, you can just say since the bypass is 
-> disabled
-> by default now, we need to add this property to enable translation and 
-> avoid global faults.
-> 
+> On 5/21/20 7:12 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200519:
+> > 
 
-If I use this patch [1] then the UFS iommu property isn't needed. In 
-downstream, the identity (bypass?) stream mapping is inherited from the 
-bootloader, and UFS is used without any iommu property. Setting 
-ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own 
-(without the UFS iommu property), so there's more to it than just 
-"bypass is disabled by default now".
+These are indeed caused by -flive-patching
+ 
+> on x86_64:
+> 
+> fs/open.o: warning: objtool: chmod_common()+0x104: unreachable instruction
+> fs/namei.o: warning: objtool: do_renameat2()+0x482: unreachable instruction
 
-https://patchwork.kernel.org/patch/11310757/
+Two "funny" ones. When CONFIG_FILE_LOCKING is not set, break_deleg_wait() 
+is just BUG(). GCC decides to isra optimize it to break_deleg_wait.isra.0 
+and call it in chmod_common() and do_renameat2() instead of just inline 
+it.
 
->> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->> ---
->>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 107 +++++++++++++++++++++++++++
->>  1 file changed, 107 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> index 2f99c350c287..43c5e48c15e2 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> @@ -323,6 +323,8 @@ ufs_mem_hc: ufshc@1d84000 {
->>
->>              power-domains = <&gcc UFS_PHY_GDSC>;
->>
->> +            iommus = <&apps_smmu 0x0e0 0>, <&apps_smmu 0x4e0 0>;
->> +
->>              clock-names =
->>                  "core_clk",
->>                  "bus_aggr_clk",
->> @@ -428,6 +430,111 @@ tlmm: pinctrl@f100000 {
->>              wakeup-parent = <&pdc>;
->>          };
->>
->> +        apps_smmu: iommu@15000000 {
->> +            compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+chmod_common() with -flive-patching:
+
+     981:       e8 f7 fe ff ff          callq  87d <break_deleg_wait.isra.0>
+     986:       41 89 c4                mov    %eax,%r12d
+     989:       85 c0                   test   %eax,%eax
+     98b:       0f 84 76 ff ff ff       je     907 <chmod_common+0x7b>
+     991:       48 89 df                mov    %rbx,%rdi
+     994:       e8 00 00 00 00          callq  999 <chmod_common+0x10d>
+                        995: R_X86_64_PLT32     __tsan_read8-0x4
+
+without:
+
+     985:       e8 f3 fe ff ff          callq  87d <break_deleg_wait.isra.0>
+     98a:       48 89 df                mov    %rbx,%rdi
+     98d:       e8 00 00 00 00          callq  992 <chmod_common+0x106>
+                        98e: R_X86_64_PLT32     __tsan_read8-0x4
+
+The error checking of break_deleg_wait() is correctly compiled out, 
+because it is unreachable.
+
+I wondered how come objtool (correctly) says the instructions are 
+unreachable. It means it knows that break_deleg_wait.isra.0 is a dead end
+(dead_end_function() returns true while checking INSN_CALL). And of course
+"return 0;" in break_deleg_wait() is compiled out.
+
+000000000000087d <break_deleg_wait.isra.0>:
+     87d:       55                      push   %rbp
+     87e:       48 89 e5                mov    %rsp,%rbp
+     881:       48 8b 7d 08             mov    0x8(%rbp),%rdi
+     885:       e8 00 00 00 00          callq  88a <break_deleg_wait.isra.0+0xd>
+                        886: R_X86_64_PLT32     __tsan_func_entry-0x4
+     88a:       0f 0b                   ud2    
+
+One way to fix it is to mark break_deleg_wait() as __always_inline. Then 
+it all works.
+
+Note: there are more functions calling break_deleg_wait() with this 
+pattern.
+
+I'll try to find out which optimization does this, because it is a 
+slightly different scenario than hiding __noreturn from the callees. 
+Probably -fno-ipa-pure-const again.
+
+> kernel/exit.o: warning: objtool: __ia32_sys_exit_group()+0x2e: unreachable instruction
+
+Easy one. do_group_exit() is noreturn and should be marked as such.
+
+> Full randconfig file is attached.
 > 
-> This should be qcom,sm8250-smmu-500 and also you need to update the 
-> arm-smmu
-> binding with this compatible in a separate patch.
 > 
-> -Sai
-> 
+> -- 
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks for reporting, Randy.
+
+Miroslav
+
+---
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index ac8bd95b5fe8..2b79932e924d 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2546,7 +2546,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
+ 	return 0;
+ }
+ 
+-static inline int break_deleg_wait(struct inode **delegated_inode)
++static __always_inline int break_deleg_wait(struct inode **delegated_inode)
+ {
+ 	BUG();
+ 	return 0;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index ed56917d50e3..9437c1ca37c5 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -876,7 +876,7 @@ SYSCALL_DEFINE1(exit, int, error_code)
+  * Take down every thread in the group.  This is called by fatal signals
+  * as well as by sys_exit_group (below).
+  */
+-void
++void __noreturn
+ do_group_exit(int exit_code)
+ {
+ 	struct signal_struct *sig = current->signal;
