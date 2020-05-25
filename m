@@ -2,116 +2,83 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB25C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711B72073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:55:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="a6KU2szu"
+	by mail.kernel.org (Postfix) with ESMTP id DB0FB20885
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388681AbgEYBzo (ORCPT
+        id S2388610AbgEYB7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:55:44 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.162]:48886 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388090AbgEYBzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:55:44 -0400
-X-Greylist: delayed 1495 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 May 2020 21:55:43 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 12A66BF14
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 20:30:47 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id d1x1jCYObXVkQd1x1jFSXQ; Sun, 24 May 2020 20:30:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E45E1Vj+A/NTDChq03v5v3U7lpRMI2oRWZNhEsEFnGQ=; b=a6KU2szuPIjfoOQt8Wu2X8q5VP
-        LuAZEH+8p+NDoRRABl0NlePlU3NLsWKsM1Uh8wj2alIjrzDoRNibqMB3T4ko21Rvd7j+FxFLdCmb/
-        DTtSMucvKYUvieP94F5iBe8bfOUHTcFgXksWgdAcBWcupioVeezVIzIm9sAAeWHCESv6gyqmjew1G
-        jrVsG1XXEFecb3EAp43A20UWoul2WcUGT4xP3w7QgJ00HJGLnN7H9FCTbBi7E6qIpjAjFZjHNoG/u
-        CxTKG5XQ4/0LBoPPssSBu3ZVvcCftDmlmZSYNUOdzYfEa+4MVLK34IvsNyHYo0YC8p1Uw1CjpDemk
-        LGDYjOQA==;
-Received: from [191.31.196.240] (port=34284 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jd1x0-004Dik-F5; Sun, 24 May 2020 22:30:46 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
-        Matheus Castello <matheus@castello.eng.br>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 2/3] dt-bindings: arm: actions: Document Caninos Loucos Labrador
-Date:   Sun, 24 May 2020 22:30:07 -0300
-Message-Id: <20200525013008.108750-3-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200525013008.108750-1-matheus@castello.eng.br>
-References: <20200525013008.108750-1-matheus@castello.eng.br>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.240
-X-Source-L: No
-X-Exim-ID: 1jd1x0-004Dik-F5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.196.240]:34284
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 26
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+        Sun, 24 May 2020 21:59:18 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56642 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388090AbgEYB7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 21:59:17 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2hlJstexro4AA--.1093S2;
+        Mon, 25 May 2020 09:59:01 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH] thermal: sprd: Fix return value of sprd_thm_probe()
+Date:   Mon, 25 May 2020 09:59:01 +0800
+Message-Id: <1590371941-25430-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxn2hlJstexro4AA--.1093S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykArW3GF45Wrg_yoWDJrg_Cw
+        1fZr4xXr1rZr1jy3W2yw43u39FkFZ09Fs5GanYy3yak34UWay3Xrn8Zrn0vayDZ3yfAry2
+        k3srGrs2vw1xujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6w4l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbF1v3UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the documentation to add the Caninos Loucos Labrador. Labrador
-project consists of a computer on module based on the Actions Semi S500
-processor and the Labrador base board.
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: 554fdbaf19b1 ("thermal: sprd: Add Spreadtrum thermal driver support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/thermal/sprd_thermal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-index ace3fdaa8396..2187e1c5bc73 100644
---- a/Documentation/devicetree/bindings/arm/actions.yaml
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -19,6 +19,11 @@ properties:
-               - allo,sparky # Allo.com Sparky
-               - cubietech,cubieboard6 # Cubietech CubieBoard6
-           - const: actions,s500
-+      - items:
-+          - enum:
-+              - caninos,labrador-v2 # Labrador Core v2
-+              - caninos,labrador-base-m # Labrador Base Board M v1
-+          - const: actions,s500
-       - items:
-           - enum:
-               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
---
-2.26.2
+diff --git a/drivers/thermal/sprd_thermal.c b/drivers/thermal/sprd_thermal.c
+index a340374..4cde70d 100644
+--- a/drivers/thermal/sprd_thermal.c
++++ b/drivers/thermal/sprd_thermal.c
+@@ -348,8 +348,8 @@ static int sprd_thm_probe(struct platform_device *pdev)
+ 
+ 	thm->var_data = pdata;
+ 	thm->base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!thm->base)
+-		return -ENOMEM;
++	if (IS_ERR(thm->base))
++		return PTR_ERR(thm->base);
+ 
+ 	thm->nr_sensors = of_get_child_count(np);
+ 	if (thm->nr_sensors == 0 || thm->nr_sensors > SPRD_THM_MAX_SENSOR) {
+-- 
+2.1.0
 
