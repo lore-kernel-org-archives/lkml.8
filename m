@@ -6,38 +6,36 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4134CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5728A20723
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BF4207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731484AbgEYQb2 (ORCPT
+        id S1731524AbgEYQdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729338AbgEYQb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:31:27 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53136C061A0E;
-        Mon, 25 May 2020 09:31:27 -0700 (PDT)
+        Mon, 25 May 2020 12:33:12 -0400
+Received: from ms.lwn.net ([45.79.88.28]:60820 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731503AbgEYQdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 12:33:12 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E7EC82DC;
-        Mon, 25 May 2020 16:31:26 +0000 (UTC)
-Date:   Mon, 25 May 2020 10:31:26 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 8D3EB4A2;
+        Mon, 25 May 2020 16:33:11 +0000 (UTC)
+Date:   Mon, 25 May 2020 10:33:10 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        greg@wind.rmcc.com, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] Documentation: admin-guide: update bug-hunting.rst
-Message-ID: <20200525103126.60941f34@lwn.net>
-In-Reply-To: <c629a9ef-3867-c3d1-f6c9-2c3b0e4ac68a@infradead.org>
-References: <c629a9ef-3867-c3d1-f6c9-2c3b0e4ac68a@infradead.org>
+To:     Ben Boeckel <me@benboeckel.net>
+Cc:     keyrings@vger.kernel.org, Ben Boeckel <mathstuf@gmail.com>,
+        dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Documentation: security: core.rst: add missing
+ argument
+Message-ID: <20200525103310.455f50e0@lwn.net>
+In-Reply-To: <20200516003917.2035545-2-list.lkml.keyrings@me.benboeckel.net>
+References: <20200516003917.2035545-1-list.lkml.keyrings@me.benboeckel.net>
+        <20200516003917.2035545-2-list.lkml.keyrings@me.benboeckel.net>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,25 +45,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 May 2020 20:43:39 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, 15 May 2020 20:39:17 -0400
+Ben Boeckel <me@benboeckel.net> wrote:
 
-> From: Randy Dunlap <rdunlap@infradead.org>
+> From: Ben Boeckel <mathstuf@gmail.com>
 > 
-> Update Documentation/admin-guide/bug-hunting.rst:
+> This argument was just never documented in the first place.
 > 
-> - add a small section on "Modules linked in" and their possible flags;
-> - delete all references to ksymoops since it is no longer applicable;
-> - fix spello, grammar, and punctuation;
-> - note that get_maintainers.pl only provides recent patchers if it is
->   run inside a git tree;
-> - add mention of scripts/decode_stacktrace.sh;
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: greg@wind.rmcc.com
+> Signed-off-by: Ben Boeckel <mathstuf@gmail.com>
 > ---
->  Documentation/admin-guide/bug-hunting.rst |   53 +++++++++++---------
->  1 file changed, 31 insertions(+), 22 deletions(-)
+>  Documentation/security/keys/core.rst | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 
 Applied, thanks.
 
