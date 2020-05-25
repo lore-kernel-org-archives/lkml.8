@@ -2,234 +2,135 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79318C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3132073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1652078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:55:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XZpDmpDs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tMRZ7p3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389992AbgEYKyg (ORCPT
+        id S2390001AbgEYKy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:54:36 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:9583 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYKyg (ORCPT
+        Mon, 25 May 2020 06:54:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54990 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389970AbgEYKy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:54:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590404075; x=1621940075;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=YZXVPXx8/JGG9AEhALoXW9By1UveU76YAUvx4WMsOfY=;
-  b=XZpDmpDsQ2/LwsLZTxEAPXU17FyMhmm8XPwd4tw1upKUtCuym2RK9SsM
-   AY3uyOK3eRmkHEO4LJJHj4N6aMtgxheZou7k2wbLJfhroEYkUQtqraj38
-   4lkQWA5BUlrjTQvRVLVbpA67DfRB/WG8IUeq/L1hrph9zDq9s4ldaK9MH
-   Y=;
-IronPort-SDR: kj7Azeev9qKw/dZ/3ckVrWD5Ajk4/I5HT6G6wLnEIBWl+dXCbPPvGhLnE2AJXp/doh6M99q7DI
- UwUv2LkSv6RQ==
-X-IronPort-AV: E=Sophos;i="5.73,433,1583193600"; 
-   d="scan'208";a="37443593"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 25 May 2020 10:54:33 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 81CBCA2012;
-        Mon, 25 May 2020 10:54:31 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 10:54:31 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.100) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 10:54:22 +0000
-Subject: Re: [PATCH v2 04/18] nitro_enclaves: Init PCI device driver
-To:     Greg KH <greg@kroah.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-5-andraprs@amazon.com>
- <20200522070414.GB771317@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <7a3189cc-0ae4-3d3a-6070-43c2ecc9d8be@amazon.com>
-Date:   Mon, 25 May 2020 13:54:10 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Mon, 25 May 2020 06:54:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590404098; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=URAxEGJXgPJ5x2QnGveL6/kEbz97aXCsDNyyWBJbK4E=;
+ b=tMRZ7p3Tcs5L0WIWj14DD2G1mWBdWA0wgHLqX2gu9+Sfxzckt+ahNUXB7cgvHZlyxKxSy2fD
+ aiZwR67E4Sn+PEQE0Ci1hJJyBm+vulUby34yFTx5Pr3dZpq8ySolXS5QsXAZIFP/DdMupsqO
+ Lbyvbknv5TvhV0SjuR7RAas16TQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ecba3ff4c3faf51e2e18f7e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 10:54:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 06EB3C43387; Mon, 25 May 2020 10:54:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A53CEC433C6;
+        Mon, 25 May 2020 10:54:54 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200522070414.GB771317@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D11UWC002.ant.amazon.com (10.43.162.174) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 16:24:54 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
+In-Reply-To: <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-3-jonathan@marek.ca>
+ <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
+ <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+Message-ID: <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMi8wNS8yMDIwIDEwOjA0LCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgTWF5IDIyLCAy
-MDIwIGF0IDA5OjI5OjMyQU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gKy8qKgo+
-PiArICogbmVfc2V0dXBfbXNpeCAtIFNldHVwIE1TSS1YIHZlY3RvcnMgZm9yIHRoZSBQQ0kgZGV2
-aWNlLgo+PiArICoKPj4gKyAqIEBwZGV2OiBQQ0kgZGV2aWNlIHRvIHNldHVwIHRoZSBNU0ktWCBm
-b3IuCj4+ICsgKgo+PiArICogQHJldHVybnM6IDAgb24gc3VjY2VzcywgbmVnYXRpdmUgcmV0dXJu
-IHZhbHVlIG9uIGZhaWx1cmUuCj4+ICsgKi8KPj4gK3N0YXRpYyBpbnQgbmVfc2V0dXBfbXNpeChz
-dHJ1Y3QgcGNpX2RldiAqcGRldikKPj4gK3sKPj4gKwlzdHJ1Y3QgbmVfcGNpX2RldiAqbmVfcGNp
-X2RldiA9IE5VTEw7Cj4+ICsJaW50IG5yX3ZlY3MgPSAwOwo+PiArCWludCByYyA9IC1FSU5WQUw7
-Cj4+ICsKPj4gKwlpZiAoV0FSTl9PTighcGRldikpCj4+ICsJCXJldHVybiAtRUlOVkFMOwo+IEhv
-dyBjYW4gdGhpcyBldmVyIGhhcHBlbj8gIElmIGl0IGNhbiBub3QsIGRvbid0IHRlc3QgZm9yIGl0
-LiAgSWYgaXQgY2FuLAo+IGRvbid0IHdhcm4gZm9yIGl0IGFzIHRoYXQgd2lsbCBjcmFzaCBzeXN0
-ZW1zIHRoYXQgZG8gcGFuaWMtb24td2FybiwganVzdAo+IHRlc3QgYW5kIHJldHVybiBhbiBlcnJv
-ci4KCkl0IHNob3VsZG4ndCBoYXBwZW4sIG9ubHkgdXNlZCB0aGlzIGFuZCBzdWJzZXF1ZW50IG9j
-Y3VycmVuY2VzIGluIHRoZSAKb3RoZXIgZnVuY3Rpb25zIGZvciBzYW5pdHkgY2hlY2tzLgoKSSBy
-ZW1vdmVkIHRoZSBXQVJOX09OcyBmcm9tIHRoZSBwYXRjaCBzZXJpZXMgYW5kIHVwZGF0ZWQgdGhl
-IHN0YXRpYyAKY2FsbHMgY2hlY2tzLgoKPgo+PiArCj4+ICsJbmVfcGNpX2RldiA9IHBjaV9nZXRf
-ZHJ2ZGF0YShwZGV2KTsKPj4gKwlpZiAoV0FSTl9PTighbmVfcGNpX2RldikpCj4+ICsJCXJldHVy
-biAtRUlOVkFMOwo+IFNhbWUgaGVyZSwgZG9uJ3QgdXNlIFdBUk5fT04gaWYgYXQgYWxsIHBvc3Np
-YmxlLgoKRG9uZS4KCj4KPj4gKwo+PiArCW5yX3ZlY3MgPSBwY2lfbXNpeF92ZWNfY291bnQocGRl
-dik7Cj4+ICsJaWYgKG5yX3ZlY3MgPCAwKSB7Cj4+ICsJCXJjID0gbnJfdmVjczsKPj4gKwo+PiAr
-CQlkZXZfZXJyX3JhdGVsaW1pdGVkKCZwZGV2LT5kZXYsCj4+ICsJCQkJICAgIE5FICJFcnJvciBp
-biBnZXR0aW5nIHZlYyBjb3VudCBbcmM9JWRdXG4iLAo+PiArCQkJCSAgICByYyk7Cj4+ICsKPiBX
-aHkgcmF0ZWxpbWl0ZWQsIGNhbiB0aGlzIGhhcHBlbiBvdmVyIGFuZCBvdmVyIGFuZCBvdmVyPwoK
-VGhhdCdzIGNvcnJlY3QsIG5vdCBpbiB0aGlzIGNhc2UuIEkgdXBkYXRlZCB0aGUgZGV2X2Vycm9y
-IC8gcHJfZXJyb3IgCmNhbGxzIHRvIGluY2x1ZGUgcmF0ZWxpbWl0ZWTCoCBvbmx5IGluIHRoZSBj
-YWxsIHBhdGhzIG9mIHRoZSBpb2N0bCBjb21tYW5kcy4KCj4KPj4gKwkJcmV0dXJuIHJjOwo+PiAr
-CX0KPj4gKwo+PiArCXJjID0gcGNpX2FsbG9jX2lycV92ZWN0b3JzKHBkZXYsIG5yX3ZlY3MsIG5y
-X3ZlY3MsIFBDSV9JUlFfTVNJWCk7Cj4+ICsJaWYgKHJjIDwgMCkgewo+PiArCQlkZXZfZXJyX3Jh
-dGVsaW1pdGVkKCZwZGV2LT5kZXYsCj4+ICsJCQkJICAgIE5FICJFcnJvciBpbiBhbGxvYyBNU0kt
-WCB2ZWNzIFtyYz0lZF1cbiIsCj4+ICsJCQkJICAgIHJjKTsKPiBTYW1lIGhlcmUuCgpVcGRhdGVk
-IHRvIGRldl9lcnIoKS4KCj4KPj4gKwo+PiArCQlyZXR1cm4gcmM7Cj4+ICsJfQo+PiArCj4+ICsJ
-cmV0dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gKy8qKgo+PiArICogbmVfdGVhcmRvd25fbXNpeCAtIFRl
-YXJkb3duIE1TSS1YIHZlY3RvcnMgZm9yIHRoZSBQQ0kgZGV2aWNlLgo+PiArICoKPj4gKyAqIEBw
-ZGV2OiBQQ0kgZGV2aWNlIHRvIHRlYXJkb3duIHRoZSBNU0ktWCBmb3IuCj4+ICsgKi8KPj4gK3N0
-YXRpYyB2b2lkIG5lX3RlYXJkb3duX21zaXgoc3RydWN0IHBjaV9kZXYgKnBkZXYpCj4+ICt7Cj4+
-ICsJc3RydWN0IG5lX3BjaV9kZXYgKm5lX3BjaV9kZXYgPSBOVUxMOwo+ID1OVUxMIG5vdCBuZWVk
-ZWQuCgpVcGRhdGVkIHRvIGluaXQgdmlhIHBjaV9nZXRfZHJ2ZGF0YSgpIGRpcmVjdGx5LgoKPgo+
-PiArCj4+ICsJaWYgKFdBUk5fT04oIXBkZXYpKQo+PiArCQlyZXR1cm47Cj4gQWdhaW4sIHlvdSBj
-b250cm9sIHRoZSBjYWxsZXJzLCBob3cgY2FuIHRoaXMgZXZlciBiZSB0cnVlPwoKU2FuaXR5IGNo
-ZWNrLCBzaG91bGQgbmV2ZXIgaGFwcGVuLgoKPgo+PiArCj4+ICsJbmVfcGNpX2RldiA9IHBjaV9n
-ZXRfZHJ2ZGF0YShwZGV2KTsKPj4gKwlpZiAoV0FSTl9PTighbmVfcGNpX2RldikpCj4+ICsJCXJl
-dHVybjsKPiBBZ2Fpbiwgc2FtZSB0aGluZy4gIEknbSBqdXN0IGdvaW5nIHRvIGxldCB5b3UgZml4
-IHVwIGFsbCBpbnN0YW5jZXMgb2YKPiB0aGlzIHBhdHRlcm4gZnJvbSBub3cgb24gYW5kIG5vdCBj
-YWxsIGl0IG91dCBhZ2Fpbi4KClllcCwgSSB1cGRhdGVkIGFsbCB0aGUgb2NjdXJyZW5jZXMuCgo+
-Cj4+ICsKPj4gKwlwY2lfZnJlZV9pcnFfdmVjdG9ycyhwZGV2KTsKPj4gK30KPj4gKwo+PiArLyoq
-Cj4+ICsgKiBuZV9wY2lfZGV2X2VuYWJsZSAtIFNlbGVjdCBQQ0kgZGV2aWNlIHZlcnNpb24gYW5k
-IGVuYWJsZSBpdC4KPj4gKyAqCj4+ICsgKiBAcGRldjogUENJIGRldmljZSB0byBzZWxlY3QgdmVy
-c2lvbiBmb3IgYW5kIHRoZW4gZW5hYmxlLgo+PiArICoKPj4gKyAqIEByZXR1cm5zOiAwIG9uIHN1
-Y2Nlc3MsIG5lZ2F0aXZlIHJldHVybiB2YWx1ZSBvbiBmYWlsdXJlLgo+PiArICovCj4+ICtzdGF0
-aWMgaW50IG5lX3BjaV9kZXZfZW5hYmxlKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQo+PiArewo+PiAr
-CXU4IGRldl9lbmFibGVfcmVwbHkgPSAwOwo+PiArCXUxNiBkZXZfdmVyc2lvbl9yZXBseSA9IDA7
-Cj4+ICsJc3RydWN0IG5lX3BjaV9kZXYgKm5lX3BjaV9kZXYgPSBOVUxMOwo+PiArCj4+ICsJaWYg
-KFdBUk5fT04oIXBkZXYpKQo+PiArCQlyZXR1cm4gLUVJTlZBTDsKPj4gKwo+PiArCW5lX3BjaV9k
-ZXYgPSBwY2lfZ2V0X2RydmRhdGEocGRldik7Cj4+ICsJaWYgKFdBUk5fT04oIW5lX3BjaV9kZXYp
-IHx8IFdBUk5fT04oIW5lX3BjaV9kZXYtPmlvbWVtX2Jhc2UpKQo+PiArCQlyZXR1cm4gLUVJTlZB
-TDsKPj4gKwo+PiArCWlvd3JpdGUxNihORV9WRVJTSU9OX01BWCwgbmVfcGNpX2Rldi0+aW9tZW1f
-YmFzZSArIE5FX1ZFUlNJT04pOwo+PiArCj4+ICsJZGV2X3ZlcnNpb25fcmVwbHkgPSBpb3JlYWQx
-NihuZV9wY2lfZGV2LT5pb21lbV9iYXNlICsgTkVfVkVSU0lPTik7Cj4+ICsJaWYgKGRldl92ZXJz
-aW9uX3JlcGx5ICE9IE5FX1ZFUlNJT05fTUFYKSB7Cj4+ICsJCWRldl9lcnJfcmF0ZWxpbWl0ZWQo
-JnBkZXYtPmRldiwKPj4gKwkJCQkgICAgTkUgIkVycm9yIGluIHBjaSBkZXYgdmVyc2lvbiBjbWRc
-biIpOwo+IFNhbWUgaGVyZSwgd2h5IGFsbCB0aGUgcmF0ZWxpbWl0ZWQgc3R1ZmY/ICBTaG91bGQg
-anVzdCBiZSBkZXZfZXJyKCksCj4gcmlnaHQ/CgpUcnVlLCBJIG1vZGlmaWVkIHRvIGRldl9lcnIo
-KS4KCj4KPj4gKwo+PiArCQlyZXR1cm4gLUVJTzsKPj4gKwl9Cj4+ICsKPj4gKwlpb3dyaXRlOChO
-RV9FTkFCTEVfT04sIG5lX3BjaV9kZXYtPmlvbWVtX2Jhc2UgKyBORV9FTkFCTEUpOwo+PiArCj4+
-ICsJZGV2X2VuYWJsZV9yZXBseSA9IGlvcmVhZDgobmVfcGNpX2Rldi0+aW9tZW1fYmFzZSArIE5F
-X0VOQUJMRSk7Cj4+ICsJaWYgKGRldl9lbmFibGVfcmVwbHkgIT0gTkVfRU5BQkxFX09OKSB7Cj4+
-ICsJCWRldl9lcnJfcmF0ZWxpbWl0ZWQoJnBkZXYtPmRldiwKPj4gKwkJCQkgICAgTkUgIkVycm9y
-IGluIHBjaSBkZXYgZW5hYmxlIGNtZFxuIik7Cj4+ICsKPj4gKwkJcmV0dXJuIC1FSU87Cj4+ICsJ
-fQo+PiArCj4+ICsJcmV0dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gKy8qKgo+PiArICogbmVfcGNpX2Rl
-dl9kaXNhYmxlIC0gRGlzYWJsZSBQQ0kgZGV2aWNlLgo+PiArICoKPj4gKyAqIEBwZGV2OiBQQ0kg
-ZGV2aWNlIHRvIGRpc2FibGUuCj4+ICsgKi8KPj4gK3N0YXRpYyB2b2lkIG5lX3BjaV9kZXZfZGlz
-YWJsZShzdHJ1Y3QgcGNpX2RldiAqcGRldikKPj4gK3sKPj4gKwl1OCBkZXZfZGlzYWJsZV9yZXBs
-eSA9IDA7Cj4+ICsJc3RydWN0IG5lX3BjaV9kZXYgKm5lX3BjaV9kZXYgPSBOVUxMOwo+PiArCWNv
-bnN0IHVuc2lnbmVkIGludCBzbGVlcF90aW1lID0gMTA7IC8vIDEwIG1zCj4+ICsJdW5zaWduZWQg
-aW50IHNsZWVwX3RpbWVfY291bnQgPSAwOwo+PiArCj4+ICsJaWYgKFdBUk5fT04oIXBkZXYpKQo+
-PiArCQlyZXR1cm47Cj4+ICsKPj4gKwluZV9wY2lfZGV2ID0gcGNpX2dldF9kcnZkYXRhKHBkZXYp
-Owo+PiArCWlmIChXQVJOX09OKCFuZV9wY2lfZGV2KSB8fCBXQVJOX09OKCFuZV9wY2lfZGV2LT5p
-b21lbV9iYXNlKSkKPj4gKwkJcmV0dXJuOwo+PiArCj4+ICsJaW93cml0ZTgoTkVfRU5BQkxFX09G
-RiwgbmVfcGNpX2Rldi0+aW9tZW1fYmFzZSArIE5FX0VOQUJMRSk7Cj4+ICsKPj4gKwkvKgo+PiAr
-CSAqIENoZWNrIGZvciBORV9FTkFCTEVfT0ZGIGluIGEgbG9vcCwgdG8gaGFuZGxlIGNhc2VzIHdo
-ZW4gdGhlIGRldmljZQo+PiArCSAqIHN0YXRlIGlzIG5vdCBpbW1lZGlhdGVseSBzZXQgdG8gZGlz
-YWJsZWQgYW5kIGdvaW5nIHRocm91Z2ggYQo+PiArCSAqIHRyYW5zaXRvcnkgc3RhdGUgb2YgZGlz
-YWJsaW5nLgo+PiArCSAqLwo+PiArCXdoaWxlIChzbGVlcF90aW1lX2NvdW50IDwgREVGQVVMVF9U
-SU1FT1VUX01TRUNTKSB7Cj4+ICsJCWRldl9kaXNhYmxlX3JlcGx5ID0gaW9yZWFkOChuZV9wY2lf
-ZGV2LT5pb21lbV9iYXNlICsgTkVfRU5BQkxFKTsKPj4gKwkJaWYgKGRldl9kaXNhYmxlX3JlcGx5
-ID09IE5FX0VOQUJMRV9PRkYpCj4+ICsJCQlyZXR1cm47Cj4+ICsKPj4gKwkJbXNsZWVwX2ludGVy
-cnVwdGlibGUoc2xlZXBfdGltZSk7Cj4+ICsJCXNsZWVwX3RpbWVfY291bnQgKz0gc2xlZXBfdGlt
-ZTsKPj4gKwl9Cj4+ICsKPj4gKwlkZXZfZGlzYWJsZV9yZXBseSA9IGlvcmVhZDgobmVfcGNpX2Rl
-di0+aW9tZW1fYmFzZSArIE5FX0VOQUJMRSk7Cj4+ICsJaWYgKGRldl9kaXNhYmxlX3JlcGx5ICE9
-IE5FX0VOQUJMRV9PRkYpCj4+ICsJCWRldl9lcnJfcmF0ZWxpbWl0ZWQoJnBkZXYtPmRldiwKPj4g
-KwkJCQkgICAgTkUgIkVycm9yIGluIHBjaSBkZXYgZGlzYWJsZSBjbWRcbiIpOwo+PiArfQo+PiAr
-Cj4+ICtzdGF0aWMgaW50IG5lX3BjaV9wcm9iZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwgY29uc3Qg
-c3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQo+PiArewo+PiArCXN0cnVjdCBuZV9wY2lfZGV2ICpu
-ZV9wY2lfZGV2ID0gTlVMTDsKPj4gKwlpbnQgcmMgPSAtRUlOVkFMOwo+PiArCj4+ICsJbmVfcGNp
-X2RldiA9IGt6YWxsb2Moc2l6ZW9mKCpuZV9wY2lfZGV2KSwgR0ZQX0tFUk5FTCk7Cj4+ICsJaWYg
-KCFuZV9wY2lfZGV2KQo+PiArCQlyZXR1cm4gLUVOT01FTTsKPj4gKwo+PiArCXJjID0gcGNpX2Vu
-YWJsZV9kZXZpY2UocGRldik7Cj4+ICsJaWYgKHJjIDwgMCkgewo+PiArCQlkZXZfZXJyX3JhdGVs
-aW1pdGVkKCZwZGV2LT5kZXYsCj4+ICsJCQkJICAgIE5FICJFcnJvciBpbiBwY2kgZGV2IGVuYWJs
-ZSBbcmM9JWRdXG4iLCByYyk7Cj4+ICsKPj4gKwkJZ290byBmcmVlX25lX3BjaV9kZXY7Cj4+ICsJ
-fQo+PiArCj4+ICsJcmMgPSBwY2lfcmVxdWVzdF9yZWdpb25zX2V4Y2x1c2l2ZShwZGV2LCAibmVf
-cGNpX2RldiIpOwo+PiArCWlmIChyYyA8IDApIHsKPj4gKwkJZGV2X2Vycl9yYXRlbGltaXRlZCgm
-cGRldi0+ZGV2LAo+PiArCQkJCSAgICBORSAiRXJyb3IgaW4gcGNpIHJlcXVlc3QgcmVnaW9ucyBb
-cmM9JWRdXG4iLAo+PiArCQkJCSAgICByYyk7Cj4+ICsKPj4gKwkJZ290byBkaXNhYmxlX3BjaV9k
-ZXY7Cj4+ICsJfQo+PiArCj4+ICsJbmVfcGNpX2Rldi0+aW9tZW1fYmFzZSA9IHBjaV9pb21hcChw
-ZGV2LCBQQ0lfQkFSX05FLCAwKTsKPj4gKwlpZiAoIW5lX3BjaV9kZXYtPmlvbWVtX2Jhc2UpIHsK
-Pj4gKwkJcmMgPSAtRU5PTUVNOwo+PiArCj4+ICsJCWRldl9lcnJfcmF0ZWxpbWl0ZWQoJnBkZXYt
-PmRldiwKPj4gKwkJCQkgICAgTkUgIkVycm9yIGluIHBjaSBpb21hcCBbcmM9JWRdXG4iLCByYyk7
-Cj4+ICsKPj4gKwkJZ290byByZWxlYXNlX3BjaV9yZWdpb25zOwo+PiArCX0KPj4gKwo+PiArCXBj
-aV9zZXRfZHJ2ZGF0YShwZGV2LCBuZV9wY2lfZGV2KTsKPj4gKwo+PiArCXJjID0gbmVfc2V0dXBf
-bXNpeChwZGV2KTsKPj4gKwlpZiAocmMgPCAwKSB7Cj4+ICsJCWRldl9lcnJfcmF0ZWxpbWl0ZWQo
-JnBkZXYtPmRldiwKPj4gKwkJCQkgICAgTkUgIkVycm9yIGluIHBjaSBkZXYgbXNpeCBzZXR1cCBb
-cmM9JWRdXG4iLAo+PiArCQkJCSAgICByYyk7Cj4+ICsKPj4gKwkJZ290byBpb3VubWFwX3BjaV9i
-YXI7Cj4+ICsJfQo+PiArCj4+ICsJbmVfcGNpX2Rldl9kaXNhYmxlKHBkZXYpOwo+PiArCj4+ICsJ
-cmMgPSBuZV9wY2lfZGV2X2VuYWJsZShwZGV2KTsKPj4gKwlpZiAocmMgPCAwKSB7Cj4+ICsJCWRl
-dl9lcnJfcmF0ZWxpbWl0ZWQoJnBkZXYtPmRldiwKPj4gKwkJCQkgICAgTkUgIkVycm9yIGluIG5l
-X3BjaV9kZXYgZW5hYmxlIFtyYz0lZF1cbiIsCj4+ICsJCQkJICAgIHJjKTsKPj4gKwo+PiArCQln
-b3RvIHRlYXJkb3duX21zaXg7Cj4+ICsJfQo+PiArCj4+ICsJYXRvbWljX3NldCgmbmVfcGNpX2Rl
-di0+Y21kX3JlcGx5X2F2YWlsLCAwKTsKPj4gKwlpbml0X3dhaXRxdWV1ZV9oZWFkKCZuZV9wY2lf
-ZGV2LT5jbWRfcmVwbHlfd2FpdF9xKTsKPj4gKwlJTklUX0xJU1RfSEVBRCgmbmVfcGNpX2Rldi0+
-ZW5jbGF2ZXNfbGlzdCk7Cj4+ICsJbXV0ZXhfaW5pdCgmbmVfcGNpX2Rldi0+ZW5jbGF2ZXNfbGlz
-dF9tdXRleCk7Cj4+ICsJbXV0ZXhfaW5pdCgmbmVfcGNpX2Rldi0+cGNpX2Rldl9tdXRleCk7Cj4+
-ICsKPj4gKwlyZXR1cm4gMDsKPj4gKwo+PiArdGVhcmRvd25fbXNpeDoKPj4gKwluZV90ZWFyZG93
-bl9tc2l4KHBkZXYpOwo+PiAraW91bm1hcF9wY2lfYmFyOgo+PiArCXBjaV9zZXRfZHJ2ZGF0YShw
-ZGV2LCBOVUxMKTsKPj4gKwlwY2lfaW91bm1hcChwZGV2LCBuZV9wY2lfZGV2LT5pb21lbV9iYXNl
-KTsKPj4gK3JlbGVhc2VfcGNpX3JlZ2lvbnM6Cj4+ICsJcGNpX3JlbGVhc2VfcmVnaW9ucyhwZGV2
-KTsKPj4gK2Rpc2FibGVfcGNpX2RldjoKPj4gKwlwY2lfZGlzYWJsZV9kZXZpY2UocGRldik7Cj4+
-ICtmcmVlX25lX3BjaV9kZXY6Cj4+ICsJa3pmcmVlKG5lX3BjaV9kZXYpOwo+PiArCj4+ICsJcmV0
-dXJuIHJjOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgdm9pZCBuZV9wY2lfcmVtb3ZlKHN0cnVjdCBw
-Y2lfZGV2ICpwZGV2KQo+PiArewo+PiArCXN0cnVjdCBuZV9wY2lfZGV2ICpuZV9wY2lfZGV2ID0g
-cGNpX2dldF9kcnZkYXRhKHBkZXYpOwo+PiArCj4+ICsJaWYgKCFuZV9wY2lfZGV2IHx8ICFuZV9w
-Y2lfZGV2LT5pb21lbV9iYXNlKQo+PiArCQlyZXR1cm47Cj4+ICsKPj4gKwluZV9wY2lfZGV2X2Rp
-c2FibGUocGRldik7Cj4+ICsKPj4gKwluZV90ZWFyZG93bl9tc2l4KHBkZXYpOwo+PiArCj4+ICsJ
-cGNpX3NldF9kcnZkYXRhKHBkZXYsIE5VTEwpOwo+PiArCj4+ICsJcGNpX2lvdW5tYXAocGRldiwg
-bmVfcGNpX2Rldi0+aW9tZW1fYmFzZSk7Cj4+ICsKPj4gKwlwY2lfcmVsZWFzZV9yZWdpb25zKHBk
-ZXYpOwo+PiArCj4+ICsJcGNpX2Rpc2FibGVfZGV2aWNlKHBkZXYpOwo+PiArCj4+ICsJa3pmcmVl
-KG5lX3BjaV9kZXYpOwo+IFdoeSBremZyZWUoKT8gIEl0J3MgYSBwY2kgZGV2aWNlIHN0cnVjdHVy
-ZT8gIFdoYXQgInNwZWNpYWwiIGluZm8gd2FzIGluCj4gaXQ/CgpJdCdzIGEgZGF0YSBzdHJ1Y3R1
-cmUgdGhhdCBpbmNsdWRlcyBtZXRhZGF0YSBmb3IgZW5jbGF2ZXMgYm9va2tlZXBpbmcgCmFuZCBO
-RSBQQ0kgZGV2IGFjY2VzcyBlLmcuIGlvbWVtIG9mIHRoZSBORSBQQ0kgZGV2LCBQQ0kgZGV2IGNt
-ZCByZXBseSAKd2FpdHF1ZXVlLiBJIHVwZGF0ZWQgdG8ga2ZyZWUoKS4KClRoYW5rcyBmb3IgdGhl
-IG92ZXJhbGwgcmV2aWV3LgoKQW5kcmEKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9t
-YW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJD
-NSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJl
-ZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
+On 2020-05-25 15:39, Jonathan Marek wrote:
+> Hi,
+> 
+> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
+>> Hi Jonathan,
+>> 
+>> On 2020-05-24 08:08, Jonathan Marek wrote:
+>>> Add the apps_smmu node for sm8250. Note that adding the iommus field 
+>>> for
+>>> UFS is required because initializing the iommu removes the bypass 
+>>> mapping
+>>> that created by the bootloader.
+>>> 
+>> 
+>> This statement doesn't seem right, you can just say since the bypass 
+>> is disabled
+>> by default now, we need to add this property to enable translation and 
+>> avoid global faults.
+>> 
+> 
+> If I use this patch [1] then the UFS iommu property isn't needed. In
+> downstream, the identity (bypass?) stream mapping is inherited from
+> the bootloader, and UFS is used without any iommu property. Setting
+> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
+> (without the UFS iommu property), so there's more to it than just
+> "bypass is disabled by default now".
+> 
+> https://patchwork.kernel.org/patch/11310757/
+> 
 
+"iommus" property is not about inheriting stream mapping from 
+bootloader,
+it is used to enable SMMU address translation for the corresponding
+master when specified. So when you have disabled bypass, i.e.,
+ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
+"arm-smmu.disable_bypass=1"
+and iommus property with SID and mask is not specified, then it will 
+result
+in SMMU global faults.
+
+Downstream has bypass enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so 
+you
+won't see any global faults if you do not have iommus property.
+
+Patch in your link is for display because of the usecase for splash 
+screen
+on android and some other devices where the bootloader will configure 
+SMMU,
+it has not yet merged and not likely to get merged in the current state.
+
+So yes "there is *not* much more to it than bypass is disabled by 
+default now"
+and you have to specify "iommus" for the master devices or you should 
+enable bypass,
+i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or arm-smmu.disable_bypass=n
+
+Try without the patch in the link and without iommus for UFS and
+ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
+
+-Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
