@@ -2,107 +2,155 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B520C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C58FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A54E2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEF52071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vAUCFGxD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nU79SSkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403779AbgEYMls (ORCPT
+        id S2390622AbgEYMoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:41:48 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45538 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403768AbgEYMlr (ORCPT
+        Mon, 25 May 2020 08:44:00 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:51476 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390595AbgEYMn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:41:47 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04PCX5Ta020540;
-        Mon, 25 May 2020 14:41:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=ChULY1QgKwE4f/d6zUXepILX21n8fYToZxGhGbwvtdU=;
- b=vAUCFGxD86/MhLh7yzlXoaybtvtKDU3bv6fGkkfNXo4ci18h/1hl1xI2oRbO+ALqnNYn
- 1HCvcol7GeTu8Yw8Pwlpe+9pRaKCsIvz1KjEBZnRtT6hf1E0BX/cDOywTmVntHSThhP2
- leIquisqFDDnAxLSZsuYdT/vSFWrOpnyj9oYjl9JK4C3U8Qv9MofuD/fFPKVpbUOZg4p
- rucC0ZS/ZM37mGcKmenY29ZwW3Duh7yxUTEklxQVoviCiZl52kUWgS3I/LvWn4nSQTQg
- L7xbqvaX7b5Xi6J+wMVacTvyVIhFBwnqpf2pawq4+TcBA9ZNwwrdcWcVkf+HpCxjqDkg 5w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316tqgt0hs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 May 2020 14:41:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E9DCE100034;
-        Mon, 25 May 2020 14:41:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DD8D6221C76;
-        Mon, 25 May 2020 14:41:18 +0200 (CEST)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
- 2020 14:41:18 +0200
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Mon, 25 May 2020 14:41:18 +0200
-From:   Fabien DESSENNE <fabien.dessenne@st.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, "kjlu@umn.edu" <kjlu@umn.edu>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: bdisp: Fix runtime PM imbalance on error
-Thread-Topic: [PATCH] media: bdisp: Fix runtime PM imbalance on error
-Thread-Index: AQHWL1arwAZV4b7b6Uaa5LImasJTuqi4o1yA
-Date:   Mon, 25 May 2020 12:41:18 +0000
-Message-ID: <85657433-659c-ca96-b77b-697eb8b9d702@st.com>
-References: <20200521100021.12461-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200521100021.12461-1-dinghao.liu@zju.edu.cn>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <028C62B8CDA0654AAFF3B9F8FB75A63C@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 25 May 2020 08:43:58 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200525124356euoutp013dbce197ddc411583f2ad76c68030187~SRgw-RSOt0293702937euoutp013
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 12:43:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200525124356euoutp013dbce197ddc411583f2ad76c68030187~SRgw-RSOt0293702937euoutp013
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590410636;
+        bh=WSbY84KbUGFbLyo6SUqTrYaZH9Ab/qZiVUsKoLI42iw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nU79SSkESRoSeFaLsdTqupsE9qSA1wJhg2vElk9ARFXXq2/JGPWtc9+pgKQYb6hsA
+         50WJlf35pMJNO0+Sz6Igorq7izAUsb16oEz/rAcI6gmPfQw/zGxKowNn8b7UAZRQfR
+         Q3ozL8bnCUhOBR6Bm3z4mYBIC3bGz0iCtfbsb2gk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200525124356eucas1p1d14dd0b7bf2919bdbe1f1bef094c0634~SRgwvW9Yk1354113541eucas1p10;
+        Mon, 25 May 2020 12:43:56 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B4.CC.61286.C8DBBCE5; Mon, 25
+        May 2020 13:43:56 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200525124355eucas1p28f232f83f79fee234635a64270e4dd32~SRgwFl-M92127721277eucas1p2J;
+        Mon, 25 May 2020 12:43:55 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200525124355eusmtrp27a65ce5361bfea56fc7aeda010be4b81~SRgwE6aPp0100701007eusmtrp2j;
+        Mon, 25 May 2020 12:43:55 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-41-5ecbbd8cbbf3
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 60.43.08375.B8DBBCE5; Mon, 25
+        May 2020 13:43:55 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200525124355eusmtip2f220baba69d595fe546ae2255a0cf363~SRgvfJiAM0854808548eusmtip2D;
+        Mon, 25 May 2020 12:43:55 +0000 (GMT)
+Subject: Re: [PATCH] i2c: core: fix NULL pointer dereference in
+ suspend/resume callbacks
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <77f41c67-cd6f-59c5-15b4-c7d8756ca28a@samsung.com>
+Date:   Mon, 25 May 2020 14:43:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-25_07:2020-05-25,2020-05-25 signatures=0
+In-Reply-To: <CAAFQd5DdiKDGsodJF_KW8H6YYwAkeaJLE7CoJ=cEX5KeTzO5mw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djP87o9e0/HGew4Km2xccZ6Vosvc0+x
+        WMzcMIPFouPvF0aLy7vmsFl87j3CaDHj/D4mi+l3hSw+t/5js1h5YhazA5fH+xut7B6zGy6y
+        eLSc3M/i0bdlFaPHyVNPWDw+b5ILYIvisklJzcksSy3St0vgyphzaCFLwQmuil2HZrA1MJ7n
+        6GLk5JAQMJHofzWfrYuRi0NIYAWjxLx9JxkhnC+MEhtXtLBCOJ8ZJQ43TAZyOMBaZnXlQMSX
+        M0r8PHufHcJ5zyjx/Pk3NpAiYYEoiSMf+UBWiAj4SPyf2AA2lVmgiVni2s0XTCAJNgFDia63
+        XWwgNq+AncTH60uZQWwWAVWJBbMXgdmiArESpxdvZoSoEZQ4OfMJC4jNKRAo8ezdMbAaZgF5
+        ie1v50DZ4hK3nsxnAlkmIXCOXeLV/gcsEI+6SJx+/IMJwhaWeHV8CzuELSPxfydMQzOjxMNz
+        a9khnB5GictNMxghqqwl7pz7BfYas4CmxPpd+hBhR4lNf68wQ4KFT+LGW0GII/gkJm2bDhXm
+        lehoE4KoVpOYdXwd3NqDFy4xT2BUmoXktVlI3pmF5J1ZCHsXMLKsYhRPLS3OTU8tNsxLLdcr
+        TswtLs1L10vOz93ECExVp/8d/7SD8eulpEOMAhyMSjy8FmtOxwmxJpYVV+YeYpTgYFYS4W1z
+        BwrxpiRWVqUW5ccXleakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXAuG15bZfZ
+        HL3lrx/mT018MSVK2dFvQzf7iaWt8TdbFOQWiJQ6xV1nd+vcVrSjMidSereW7QXutru2hjY8
+        cmmCuoLr4pVWHOf567g+2GvPsy8/52yY9UvA80NduPrlI9tkv7lum6RT0c6UsJL714q9Lq1T
+        n54rL41cnf5mEaN8xsJKm4WGtlOjlViKMxINtZiLihMBFpiN7VEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xe7rde0/HGfxZpmexccZ6Vosvc0+x
+        WMzcMIPFouPvF0aLy7vmsFl87j3CaDHj/D4mi+l3hSw+t/5js1h5YhazA5fH+xut7B6zGy6y
+        eLSc3M/i0bdlFaPHyVNPWDw+b5ILYIvSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
+        tTIyVdK3s0lJzcksSy3St0vQy5hzaCFLwQmuil2HZrA1MJ7n6GLk4JAQMJGY1ZXTxcjFISSw
+        lFFi+5sPbF2MnEBxGYmT0xpYIWxhiT/Xutggit4ySsyY0cYCkhAWiJKYfuAAO4gtIuAj8X9i
+        AyNIEbNAC7PEqTcrmCA6epkkLuyZDdbBJmAo0fW2C2wFr4CdxMfrS5lBbBYBVYkFsxeB2aIC
+        sRKrr7UyQtQISpyc+QSsl1MgUOLZu2NgNcwCZhLzNj+EsuUltr+dA2WLS9x6Mp9pAqPQLCTt
+        s5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5mxiB0bnt2M/NOxgvbQw+xCjA
+        wajEw2ux5nScEGtiWXFl7iFGCQ5mJRHeNnegEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucD
+        E0deSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGmozVvptYUpQS
+        8vY9Mjp+qW+/5ImiRZ4izufSygILmFQ2ZC5jseXTkZ1+Xu7V6d3beD7XTjUTWFMhd6nOVUHn
+        zu/UngqZxz23nwi93ms3wdVALHvfquu2P3JFYx1fy015KTX5tajSpPzWbyLfS25XxlwVP7Y+
+        v0v6zZaIjd+3fz4+zdPKX5FDiaU4I9FQi7moOBEAlwxD7eQCAAA=
+X-CMS-MailID: 20200525124355eucas1p28f232f83f79fee234635a64270e4dd32
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7
+References: <CGME20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7@eucas1p1.samsung.com>
+        <20200522101327.13456-1-m.szyprowski@samsung.com>
+        <34736047-3fc8-385b-cdea-79b061deb7b4@samsung.com>
+        <CAAFQd5DdiKDGsodJF_KW8H6YYwAkeaJLE7CoJ=cEX5KeTzO5mw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkxvb2tzIGdvb2QgdG8gbWUuDQoNClJldmlld2VkLWJ5OiBGYWJpZW4gRGVzc2VubmUg
-PGZhYmllbi5kZXNzZW5uZUBzdC5jb20+DQoNCkJSDQoNCkZhYmllbg0KDQoNCk9uIDIxLzA1LzIw
-MjAgMTI6MDAgcG0sIERpbmdoYW8gTGl1IHdyb3RlOg0KPiBwbV9ydW50aW1lX2dldF9zeW5jKCkg
-aW5jcmVtZW50cyB0aGUgcnVudGltZSBQTSB1c2FnZSBjb3VudGVyIGV2ZW4NCj4gd2hlbiBpdCBy
-ZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQg
-b24NCj4gdGhlIGVycm9yIGhhbmRsaW5nIHBhdGggdG8ga2VlcCB0aGUgY291bnRlciBiYWxhbmNl
-ZC4NCj4NCj4gU2lnbmVkLW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUu
-Y24+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2JkaXNwLXY0
-bDIuYyB8IDMgKy0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0
-aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRp
-c3AvYmRpc3AtdjRsMi5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3At
-djRsMi5jDQo+IGluZGV4IGFmMmQ1ZWI3ODJjZS4uZTFkMTUwNTg0YmRjIDEwMDY0NA0KPiAtLS0g
-YS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC12NGwyLmMNCj4gKysrIGIv
-ZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtdjRsMi5jDQo+IEBAIC0xMzcx
-LDcgKzEzNzEsNyBAQCBzdGF0aWMgaW50IGJkaXNwX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpDQo+ICAgCXJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoZGV2KTsNCj4gICAJaWYg
-KHJldCA8IDApIHsNCj4gICAJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHNldCBQTVxuIik7DQo+
-IC0JCWdvdG8gZXJyX2RiZzsNCj4gKwkJZ290byBlcnJfcG07DQo+ICAgCX0NCj4gICANCj4gICAJ
-LyogRmlsdGVycyAqLw0KPiBAQCAtMTM5OSw3ICsxMzk5LDYgQEAgc3RhdGljIGludCBiZGlzcF9w
-cm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAliZGlzcF9od19mcmVlX2Zp
-bHRlcnMoYmRpc3AtPmRldik7DQo+ICAgZXJyX3BtOg0KPiAgIAlwbV9ydW50aW1lX3B1dChkZXYp
-Ow0KPiAtZXJyX2RiZzoNCj4gICAJYmRpc3BfZGVidWdmc19yZW1vdmUoYmRpc3ApOw0KPiAgIGVy
-cl92NGwyOg0KPiAgIAl2NGwyX2RldmljZV91bnJlZ2lzdGVyKCZiZGlzcC0+djRsMl9kZXYpOw==
+Hi Tomasz
+
+On 25.05.2020 14:28, Tomasz Figa wrote:
+> On Fri, May 22, 2020 at 1:15 PM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+>> On 22.05.2020 12:13, Marek Szyprowski wrote:
+>>> Commit 6fe12cdbcfe3 ("i2c: core: support bus regulator controlling in
+>>> adapter") added generic suspend and resume functions for i2c devices.
+>>> Those functions unconditionally access an i2c_client structure assigned
+>>> to the given i2c device. However, there exist i2c devices in the system
+>>> without a valid i2c_client. Add the needed check before accessing the
+>>> i2c_client.
+>> Just one more comment. The devices without i2c_client structure are the
+>> i2c 'devices' associated with the respective i2c bus. They are visible
+>> in /sys:
+>>
+>> ls -l /sys/bus/i2c/devices/i2c-*
+>>
+>> I wonder if this patch has been ever tested with system suspend/resume,
+>> as those devices are always available in the system...
+> Sorry for the trouble and thanks a lot for the fix. We'll make sure to
+> do more thorough testing, including suspend/resume before relanding
+> this change.
+>
+> Since the patch was reverted, can we squash your fix with the next
+> revision together with your Co-developed-by and Signed-off-by tags?
+Sure, no problem. The fix is trivial.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
