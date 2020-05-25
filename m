@@ -2,175 +2,102 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94386C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF6120870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:58:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNQq63iU"
+	by mail.kernel.org (Postfix) with ESMTP id 705E5207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgEYQ6i (ORCPT
+        id S2388230AbgEYRDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgEYQ6h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:58:37 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA25C061A0E;
-        Mon, 25 May 2020 09:58:36 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id n18so9027003pfa.2;
-        Mon, 25 May 2020 09:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aPMULKZDeq0BX+s9zNJj5lw/mRPJ8V62Bi00UZ2hLPQ=;
-        b=JNQq63iU315TudbF0LDZbx0/ESdXGRQ+JL6Q8ov8UoVeiVwyyIzm0oBHPCwmXZzuvs
-         xnf7opyTEzKm/Ipk769HDtPHEhmuPMBMiFybuXo2NewIjgQbZ2tUv2JRc43WWqYc3yZ9
-         xJ3nkjKYoQFJgR7tVH4OJthhyecWG5WTE9Wkuf9TRujPbxby4YVsPnrYsnNVtlMyqeAM
-         HEuiuXFX4Ezr6HR6tyzTDaNauY4TjnrvnoG/BEfOTgglxrJgVUDSP+Bc2+Xf9UcjgcAU
-         vKZaPSahzBHFnvb/FO6EtDJHqAyKBvuTicmJl4bBYl1OxTuZtbXJVmPZNzBrLshZbfPN
-         KopQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aPMULKZDeq0BX+s9zNJj5lw/mRPJ8V62Bi00UZ2hLPQ=;
-        b=Xvlc2EUH/caUJCsrjlKWXWNvCo5+z2u58lBfiIAXAQhmk8b67HBg2kUzxAVV/FpnFK
-         9GKjmwaAa+bwXDFlzsZ8CDyQx3ydT/Yb2BOJEeAGcsR+AcwNV+8qB44kSVpUCZAT9yqE
-         gSHW0Q6s4QndT7SCtfbKFMZpIZuQKjvJJrq5JeOGThkPN8OsvQ979mLqQTmYp9zi6lTK
-         CCailk6ysoyTfZDAP9l0WvhbIKbzY4MFkIUS/eP9S1BY6pRSkOpRmNzyG1qCqEGz2dSW
-         PI3+LkgntyYf47HZjK5YVD6ZOSUCZmS5tx+wfT4ditrBWgg8qcb8DJpVaEFxBwGD+n/l
-         xlQg==
-X-Gm-Message-State: AOAM5313AnsYyT5kQZ7cZWoEt7Sj7DY62n8hnW3F3teYsWQ6G5xNOp1K
-        6kdVBkAVEKhXudWRSbiMyG3+9yUg
-X-Google-Smtp-Source: ABdhPJyamdUHEpVQmhep6MniCPNxtcfAdKYfTqv1tOet1bkSJFZ/NVZIoCCC18ASwCtIF3W4ZjUrBg==
-X-Received: by 2002:a63:5116:: with SMTP id f22mr16311686pgb.100.1590425915574;
-        Mon, 25 May 2020 09:58:35 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e21sm11825840pga.71.2020.05.25.09.58.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 09:58:34 -0700 (PDT)
-Subject: Re: [PATCH 07/15] PCI: brcmstb: Add control of rescal reset
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-8-james.quinlan@broadcom.com>
- <20200520072747.GB5213@pengutronix.de>
- <CA+-6iNxtW66QLrb5BaOOCPJwG-1fShdfZqiLSkKfi6Y669dn5w@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c76cc2e6-fcc5-5d42-5ff1-770a99cb9b13@gmail.com>
-Date:   Mon, 25 May 2020 09:58:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        Mon, 25 May 2020 13:03:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42250 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgEYRDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 13:03:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C713FAA7C;
+        Mon, 25 May 2020 17:03:15 +0000 (UTC)
+Subject: Re: [PATCH v3 11/19] mm: memcg/slab: move memcg_kmem_bypass() to
+ memcontrol.h
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-12-guro@fb.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <b85f8b6a-86d2-cce2-630f-4023ae3632c3@suse.cz>
+Date:   Mon, 25 May 2020 19:03:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CA+-6iNxtW66QLrb5BaOOCPJwG-1fShdfZqiLSkKfi6Y669dn5w@mail.gmail.com>
+In-Reply-To: <20200422204708.2176080-12-guro@fb.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/22/20 10:47 PM, Roman Gushchin wrote:
+> To make the memcg_kmem_bypass() function available outside of
+> the memcontrol.c, let's move it to memcontrol.h. The function
+> is small and nicely fits into static inline sort of functions.
+> 
+> It will be used from the slab code.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 5/21/2020 2:48 PM, Jim Quinlan wrote:
-> On Wed, May 20, 2020 at 3:27 AM Philipp Zabel <pza@pengutronix.de> wrote:
->>
->> Hi Jim,
->>
->> On Tue, May 19, 2020 at 04:34:05PM -0400, Jim Quinlan wrote:
->>> From: Jim Quinlan <jquinlan@broadcom.com>
->>>
->>> Some STB chips have a special purpose reset controller named
->>> RESCAL (reset calibration).  This commit adds the control
->>> of RESCAL as well as the ability to start and stop its
->>> operation for PCIe HW.
->>>
->>> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
->>> ---
->>>  drivers/pci/controller/pcie-brcmstb.c | 81 ++++++++++++++++++++++++++-
->>>  1 file changed, 80 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
->>> index 2c470104ba38..0787e8f6f7e5 100644
->>> --- a/drivers/pci/controller/pcie-brcmstb.c
->>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->> [...]
->>> @@ -1100,6 +1164,21 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>>               dev_err(&pdev->dev, "could not enable clock\n");
->>>               return ret;
->>>       }
->>> +     pcie->rescal = devm_reset_control_get_shared(&pdev->dev, "rescal");
->>> +     if (IS_ERR(pcie->rescal)) {
->>> +             if (PTR_ERR(pcie->rescal) == -EPROBE_DEFER)
->>> +                     return -EPROBE_DEFER;
->>> +             pcie->rescal = NULL;
->>
->> This is effectively an optional reset control, so it is better to use:
->> ↵
->>         pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev,
->>                                                               "rescal");↵
->>         if (IS_ERR(pcie->rescal))
->>                 return PTR_ERR(pcie->rescal);
->>
->>> +     } else {
->>> +             ret = reset_control_deassert(pcie->rescal);
->>> +             if (ret)
->>> +                     dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
->>> +     }
->>
->> reset_control_* can handle rstc == NULL parameters for optional reset
->> controls, so this can be done unconditionally:
->>
->>         ret = reset_control_deassert(pcie->rescal);↵
->>         if (ret)↵
->>                 dev_err(&pdev->dev, "failed to deassert 'rescal'\n");↵
->>
->> Is rescal handled by the reset-brcmstb-rescal driver? Since that only
->> implements the .reset op, I would expect reset_control_reset() here.
-> Where exactly?  "reset.h" says that "Calling reset_control_rese()t is
-> not allowed on a shared reset control." so I'm not sure why  you would
-> want me to invoke it.
+> ---
+>  include/linux/memcontrol.h | 7 +++++++
+>  mm/memcontrol.c            | 7 -------
+>  2 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 44b7d1244620..840eb8d486a8 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -1462,6 +1462,13 @@ static inline bool memcg_kmem_enabled(void)
+>  	return static_branch_unlikely(&memcg_kmem_enabled_key);
+>  }
+>  
+> +static inline bool memcg_kmem_bypass(void)
+> +{
+> +	if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
+> +		return true;
+> +	return false;
+> +}
+> +
+>  static inline int memcg_kmem_charge_page(struct page *page, gfp_t gfp,
+>  					 int order)
+>  {
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index f957b029a62f..06a5929f4872 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2941,13 +2941,6 @@ static void memcg_schedule_kmem_cache_create(struct mem_cgroup *memcg,
+>  	queue_work(memcg_kmem_cache_wq, &cw->work);
+>  }
+>  
+> -static inline bool memcg_kmem_bypass(void)
+> -{
+> -	if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
+> -		return true;
+> -	return false;
+> -}
+> -
+>  /**
+>   * memcg_kmem_get_cache: select the correct per-memcg cache for allocation
+>   * @cachep: the original global kmem cache
+> 
 
-Yes this is handled by drivers/reset/reset-brcmstb-rescal.c which only
-implements a .reset() callback, what would be the appropriate API usage
-here given that this is a shared reset between AHCI and PCIe, should
-drivers/reset/reset-brcmstb-rescal.c not implement a .reset() callback
-and .assert() callback instead?
-
->> Otherwise this looks like it'd be missing a reset_control_assert in
->> remove.
-> I can add this.
-> Thanks,
-> Jim
->>
->> regards
->> Philipp
-
--- 
-Florian
