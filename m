@@ -2,108 +2,92 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A887C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF71AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDF42071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D2F2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ShmAblQJ"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="iZsC/fm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391174AbgEYQFO (ORCPT
+        id S2391190AbgEYQH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388432AbgEYQFN (ORCPT
+        Mon, 25 May 2020 12:07:56 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:45263 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391148AbgEYQHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:05:13 -0400
-Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6336C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:05:13 -0700 (PDT)
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 9C0F52E152E;
-        Mon, 25 May 2020 19:05:09 +0300 (MSK)
-Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id Z7kgGVoVQI-582aU5bh;
-        Mon, 25 May 2020 19:05:09 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1590422709; bh=3jjWtTMGhPjbcVtg1vx9q6LAmq5WMdmzmKwCRrGUnXY=;
-        h=In-Reply-To:Message-ID:Date:References:To:From:Subject:Cc;
-        b=ShmAblQJNrB/m8kYudhCcdYABE5rOPwX7rwEN/qmbozIaPXffxJheetH9txX4dmRQ
-         xApC3NJx5O8/zc5g8CEMLlyb9QthU3l3bQvOj2wbtBFUbB7noxKNiwY8s1mP+xmkdr
-         1mdAWXL3Z8mNtjaIit05w0yLxvoPcyU0WzKBR7mQ=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:603::1:c])
-        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id WUrga2wuLw-58XSDtYm;
-        Mon, 25 May 2020 19:05:08 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm: dump_page: add debugfs file for dumping page state by
- pfn
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <159041635119.987025.7321864888027213705.stgit@buzz>
- <20200525153315.GC17206@bombadil.infradead.org>
- <a5d3f702-62e0-f683-da52-33bc3d1e5976@yandex-team.ru>
-Message-ID: <f2c3e93a-6e43-8ce3-d711-2018c7be3063@yandex-team.ru>
-Date:   Mon, 25 May 2020 19:05:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 12:07:55 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8E99422F2E;
+        Mon, 25 May 2020 18:07:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590422873;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Lhl17HX17vWOiAlEkuHl4r5UHiKHh3vCeJE3HYnlJGQ=;
+        b=iZsC/fm+utR+kq8WB1bSsEV+ti1j0PGfpqToTT0yvfxt4vjP4VNICJHj6tNi7Xb+gQ738S
+        40gsMGgXg6w/OdqzyKa8M8A1muCd8G4HEymcAbQF1ZgNQGhQDUe6XwN9BVvR9Od1G15HYT
+        GlTBceIx4Oc404S0p5xAWSb01XxPn+k=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v4 0/2] gpio: generic regmap implementation
+Date:   Mon, 25 May 2020 18:07:39 +0200
+Message-Id: <20200525160741.21729-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <a5d3f702-62e0-f683-da52-33bc3d1e5976@yandex-team.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-b
+This series is a split off of the sl28cpld series:
+https://lore.kernel.org/linux-gpio/20200423174543.17161-1-michael@walle.cc/
 
-On 25/05/2020 19.03, Konstantin Khlebnikov wrote:
-> 
-> 
-> On 25/05/2020 18.33, Matthew Wilcox wrote:
->> On Mon, May 25, 2020 at 05:19:11PM +0300, Konstantin Khlebnikov wrote:
->>> Tool 'page-types' could list pages mapped by process or file cache pages,
->>> but it shows only limited amount of state exported via procfs.
->>>
->>> Let's employ existing helper dump_page() to reach remaining information:
->>> writing pfn into /sys/kernel/debug/dump_page dumps state into kernel log.
->>>
->>> # echo 0x37c43c > /sys/kernel/debug/dump_page
->>> # dmesg | tail -6
->>>   page:ffffcb0b0df10f00 refcount:1 mapcount:0 mapping:000000007755d3d9 index:0x30
->>>   0xffffffffae4239e0 name:"libGeoIP.so.1.6.9"
->>>   flags: 0x200000000020014(uptodate|lru|mappedtodisk)
->>>   raw: 0200000000020014 ffffcb0b187fd288 ffffcb0b189e6248 ffff9528a04afe10
->>>   raw: 0000000000000030 0000000000000000 00000001ffffffff 0000000000000000
->>>   page dumped because: debugfs request
->>
->> This makes me deeply uncomfortable.  We're using %px, and %lx
->> (for the 'raw' lines) so we actually get to see kernel addresses.
->> We've rationalised this in the past as being acceptable because you're
->> already in an "assert triggered" kind of situation.  Now you're adding
->> a way for any process with CAP_SYS_ADMIN to get kernel addresses dumped
->> into the syslog.
->>
->> I think we need a different function for this, or we need to re-audit
->> dump_page() for exposing kernel pointers, and not expose the raw data
->> in struct page.
->>
-> 
-> It's better to add switch for disabling paranoia if bad things happening.
-> I.e. keep everything safe by default (or whatever sysctl/config set) and
-> flip the switch when needed.
+I wasn't sure if I should also include the gpiochip_irqchip_add_domain()
+patch here. So feel free to skip it. OTOH if you use interrupts with
+gpio-regmap it is quite handy.
 
-Also I'm ok to seal this interface if kernel in mode of serious paranoia.
+For an actual user see the patch 11/16 ("gpio: add support for the sl28cpld
+GPIO controller") of the series above.
+
+Changes since v3:
+ - set reg_dat_base, that was actually broken
+ - fix typo
+ - fix swapped reg_in_dir/reg_out_dir documentation
+ - use "goto err" in error path in gpio_regmap_register()
+
+Changes since v2:
+ See changelog in the former patch series.
+
+Michael Walle (2):
+  gpiolib: Introduce gpiochip_irqchip_add_domain()
+  gpio: add a reusable generic gpio_chip using regmap
+
+ drivers/gpio/Kconfig        |   4 +
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-regmap.c  | 343 ++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib.c      |  20 +++
+ include/linux/gpio-regmap.h |  69 ++++++++
+ include/linux/gpio/driver.h |   3 +
+ 6 files changed, 440 insertions(+)
+ create mode 100644 drivers/gpio/gpio-regmap.c
+ create mode 100644 include/linux/gpio-regmap.h
+
+-- 
+2.20.1
+
