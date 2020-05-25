@@ -2,168 +2,235 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4903CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E9C20890
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2260020723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGkGvRfe"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="kOFxbK1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391143AbgEYPOD (ORCPT
+        id S2391108AbgEYPP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
+        Mon, 25 May 2020 11:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390911AbgEYPN7 (ORCPT
+        with ESMTP id S2390911AbgEYPP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:13:59 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2890CC061A0E;
-        Mon, 25 May 2020 08:13:59 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id i68so13973505qtb.5;
-        Mon, 25 May 2020 08:13:59 -0700 (PDT)
+        Mon, 25 May 2020 11:15:27 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA94BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:15:26 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u16so8924594lfl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ru/VedSe7R+1+BFX/X1C1fyozp4gv15sJxfe6kqv7eI=;
-        b=hGkGvRfewXL/XVWCtw/1yM4HGdq4xhSFVnp57d6slIupYO/QR5w7vJivFODHlLHKKi
-         h1CqjJY4dfAhIMj1aYJvLOj1Bj+E5cfR30dEJDBuVpvXGoUjk9mEly+3jgnBdwr44e2i
-         NmWguyEsnH6vor/uPdkzOIPNh5a/fSfnCq8oa7os3Zhu6QOBNwyOyUdeF4X6K4fvyfaw
-         0VIwvas5sfEsTByqiwKzY9wSSzi5wPg04gWyfoYSzvWZ7Ex4emUV25inzq1Y8GKw6K5j
-         KANBO0YpDh83xUwgZvQDH5lmChv0m91bdBg2YOO6lHfjjot5kQvKGqcGt+GqOIpDmG5i
-         bb4g==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kYBoEhN96Rd2bTOOCtpwhH5a3zXfbXb8vg+QY2lOxCg=;
+        b=kOFxbK1SPD4S5SY6soHeM+HeZetfnuSzhji+qxwHWT0CnYGiTqbZyd5Pheqma0e875
+         +MeqLFtQktc2cDAhBp28exGqp9SwAbHfgwh33X7Te8RypMFK9HWnQkL2MrzsNAqCScK6
+         JNLnQru0CXvZL1fQ60ltcd37sXmyjoIIwuA3QVgq6EEAGQFDP28U90KbysSCsAeJrZU+
+         l4sNaJTOLAogUGRzOYArKj/L5yRHfKyz6aiMa9ry//yHODMO8hQzJ+4yZO8KA70LH7Du
+         MKZy5UHT00e34txu1vJGIP8KP5A9zj1TgpxR4Y3ffECpWvGwe+FB9ovaeS2dyXSdWvZK
+         Ptqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ru/VedSe7R+1+BFX/X1C1fyozp4gv15sJxfe6kqv7eI=;
-        b=r3gc+PNhFGt/zfttalcDGTTUB8eGdg1PP2P7kl8r1mT/Gma8/hKdmI/HgFobMVb1ym
-         W1LUn02Kmh8p4D2nDwVRn7TZunZnQmCwIBKCV/7t9ScUaW2OrsbFS3PL2LwmHZJEGX5y
-         qgbJtVXg5juuIOoFsBMPNMBX7i4A/2jlr02Ris5iVJSnGwj2wXrlgo6qsLec6pR7xSQ5
-         wL/lsqA8fsT7envLn2ZN+EdmVEiU9vIQtSALbrvPE+zZXl4A4BJgjze95iuUe0uwgfgP
-         ruSaNUoXgHCj5o7L4olTGm37uesvegFyjMOa6kJz0d1F6jy05kcLVcudOWIl6AYlfcKi
-         UrVA==
-X-Gm-Message-State: AOAM530dOFO0gko5ISawoJ4MbYhTlaKWAmPrsMrvqL6QpQf9BN4AtAR1
-        zv27raH3KGJRI+sPKihJvWsenQTd+xI=
-X-Google-Smtp-Source: ABdhPJy1vWV3DAXN8xTdYv6MZ+TxlR/V+rZo1l1GwaSal+Gx42Ve0EDaKggl5gGSOvGddZ7GwM8ZuQ==
-X-Received: by 2002:ac8:7659:: with SMTP id i25mr16544452qtr.270.1590419637841;
-        Mon, 25 May 2020 08:13:57 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id m59sm15161709qtd.46.2020.05.25.08.13.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kYBoEhN96Rd2bTOOCtpwhH5a3zXfbXb8vg+QY2lOxCg=;
+        b=eGJ3K7HMsDF8Yq1FfDo2j2vEfHiJJUEJbJzUh/FoY5s+x/8qPqAWI27BSOuoemCjbm
+         TeQhkHpdO3TuAtumfVpuJ5I2PCg1hF9jIuIbp4NL/HCVhTv3G+8TWhL3L/414y21JWxx
+         hlg4LtIFe9ewtF0A+VNmzOCxQruQAuY9XJ98BLrtqz0AmuVSBjiLoY7brcXjJNUw4Lzs
+         9PBJI+7JKM8zfO6T5x7cRWzuDIeQuKJJgDKkJ9XmZgNYXy9rJ0tqI3kOsJnm3otBMDun
+         Ctt9BsNTBH5WbaQD+LjOyhDsw3eqtNj9HpypNUMk8k7PRccK1IxgaVajDeIYoq265pDd
+         FlzQ==
+X-Gm-Message-State: AOAM532NwZn0IiO2xts1LwekYOf3tRvZ/Ts6AHhMuRGfB5cWGmvkPPyY
+        BWpMAX0QF0Yv5bK6CC0Ekift7A==
+X-Google-Smtp-Source: ABdhPJzXLUWIYgQQ8mQTCK0ROPNDbamXhbZpVXtVtJCcCUP29y0cVktOsqQ6gbXEx34Ez3amGKFUwA==
+X-Received: by 2002:a19:c505:: with SMTP id w5mr2287001lfe.201.1590419725196;
+        Mon, 25 May 2020 08:15:25 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f6sm4673999ljn.91.2020.05.25.08.15.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 08:13:57 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v6 5/5] iio: magnetometer: ak8975: Add gpio reset support
-Date:   Mon, 25 May 2020 17:10:39 +0200
-Message-Id: <20200525151117.32540-6-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
-References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
+        Mon, 25 May 2020 08:15:24 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 79D1410230F; Mon, 25 May 2020 18:15:25 +0300 (+03)
+Date:   Mon, 25 May 2020 18:15:25 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
+Message-ID: <20200525151525.qmfvzxbl7sq46cdq@box>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+ <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
+ <87d06s83is.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d06s83is.fsf@vitty.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to AK09911 datasheet, if reset gpio is provided then
-deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
+On Mon, May 25, 2020 at 04:58:51PM +0200, Vitaly Kuznetsov wrote:
+> "Kirill A. Shutemov" <kirill@shutemov.name> writes:
+> 
+> > Provide basic helpers, KVM_FEATURE and a hypercall.
+> >
+> > Host side doesn't provide the feature yet, so it is a dead code for now.
+> >
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/kvm_para.h      |  5 +++++
+> >  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
+> >  arch/x86/kernel/kvm.c                | 16 ++++++++++++++++
+> >  include/uapi/linux/kvm_para.h        |  3 ++-
+> >  4 files changed, 25 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+> > index 9b4df6eaa11a..3ce84fc07144 100644
+> > --- a/arch/x86/include/asm/kvm_para.h
+> > +++ b/arch/x86/include/asm/kvm_para.h
+> > @@ -10,11 +10,16 @@ extern void kvmclock_init(void);
+> >  
+> >  #ifdef CONFIG_KVM_GUEST
+> >  bool kvm_check_and_clear_guest_paused(void);
+> > +bool kvm_mem_protected(void);
+> >  #else
+> >  static inline bool kvm_check_and_clear_guest_paused(void)
+> >  {
+> >  	return false;
+> >  }
+> > +static inline bool kvm_mem_protected(void)
+> > +{
+> > +	return false;
+> > +}
+> >  #endif /* CONFIG_KVM_GUEST */
+> >  
+> >  #define KVM_HYPERCALL \
+> > diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> > index 2a8e0b6b9805..c3b499acc98f 100644
+> > --- a/arch/x86/include/uapi/asm/kvm_para.h
+> > +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> > @@ -28,9 +28,10 @@
+> >  #define KVM_FEATURE_PV_UNHALT		7
+> >  #define KVM_FEATURE_PV_TLB_FLUSH	9
+> >  #define KVM_FEATURE_ASYNC_PF_VMEXIT	10
+> > -#define KVM_FEATURE_PV_SEND_IPI	11
+> > +#define KVM_FEATURE_PV_SEND_IPI		11
+> 
+> Nit: spurrious change
+> 
 
-Without reset's deassertion during ak8975_power_on(), driver's probe fails
-on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+I fixed indentation while there. (Look at the file, not the diff to see
+what I mean).
 
-AK09911 has an active low reset gpio to handle register's reset.
-AK09911 datasheet says that, if not used, reset pin should be connected
-to VID. This patch emulates this situation.
+> >  #define KVM_FEATURE_POLL_CONTROL	12
+> >  #define KVM_FEATURE_PV_SCHED_YIELD	13
+> > +#define KVM_FEATURE_MEM_PROTECTED	14
+> >  
+> >  #define KVM_HINTS_REALTIME      0
+> >  
+> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > index 6efe0410fb72..bda761ca0d26 100644
+> > --- a/arch/x86/kernel/kvm.c
+> > +++ b/arch/x86/kernel/kvm.c
+> > @@ -35,6 +35,13 @@
+> >  #include <asm/tlb.h>
+> >  #include <asm/cpuidle_haltpoll.h>
+> >  
+> > +static bool mem_protected;
+> > +
+> > +bool kvm_mem_protected(void)
+> > +{
+> > +	return mem_protected;
+> > +}
+> > +
+> 
+> Honestly, I don't see a need for kvm_mem_protected(), just rename the
+> bool if you need kvm_ prefix :-)
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
----
- drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+For !CONFIG_KVM_GUEST it would not be a variable. We may want to change it
+to static branch or something in the future.
 
-diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index fd368455cd7b..a23422aad97d 100644
---- a/drivers/iio/magnetometer/ak8975.c
-+++ b/drivers/iio/magnetometer/ak8975.c
-@@ -358,6 +358,7 @@ struct ak8975_data {
- 	u8			asa[3];
- 	long			raw_to_gauss[3];
- 	struct gpio_desc	*eoc_gpiod;
-+	struct gpio_desc	*reset_gpiod;
- 	int			eoc_irq;
- 	wait_queue_head_t	data_ready_queue;
- 	unsigned long		flags;
-@@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
- 			 "Failed to enable specified Vid supply\n");
- 		return ret;
- 	}
-+
-+	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-+
- 	/*
- 	 * According to the datasheet the power supply rise time is 200us
- 	 * and the minimum wait time before mode setting is 100us, in
-@@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
- /* Disable attached power regulator if any. */
- static void ak8975_power_off(const struct ak8975_data *data)
- {
-+	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-+
- 	regulator_disable(data->vid);
- 	regulator_disable(data->vdd);
- }
-@@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
- 	struct ak8975_data *data;
- 	struct iio_dev *indio_dev;
- 	struct gpio_desc *eoc_gpiod;
-+	struct gpio_desc *reset_gpiod;
- 	const void *match;
- 	unsigned int i;
- 	int err;
-@@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
- 	if (eoc_gpiod)
- 		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
- 
-+	/*
-+	 * According to AK09911 datasheet, if reset GPIO is provided then
-+	 * deassert reset on ak8975_power_on() and assert reset on
-+	 * ak8975_power_off().
-+	 */
-+	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-+					      "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpiod))
-+		return PTR_ERR(reset_gpiod);
-+
- 	/* Register with IIO */
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (indio_dev == NULL)
-@@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
- 
- 	data->client = client;
- 	data->eoc_gpiod = eoc_gpiod;
-+	data->reset_gpiod = reset_gpiod;
- 	data->eoc_irq = 0;
- 
- 	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
+> >  static int kvmapf = 1;
+> >  
+> >  static int __init parse_no_kvmapf(char *arg)
+> > @@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
+> >  {
+> >  	kvmclock_init();
+> >  	x86_platform.apic_post_init = kvm_apic_init;
+> > +
+> > +	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
+> > +		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
+> > +			pr_err("Failed to enable KVM memory protection\n");
+> > +			return;
+> > +		}
+> > +
+> > +		mem_protected = true;
+> > +	}
+> >  }
+> 
+> Personally, I'd prefer to do this via setting a bit in a KVM-specific
+> MSR instead. The benefit is that the guest doesn't need to remember if
+> it enabled the feature or not, it can always read the config msr. May
+> come handy for e.g. kexec/kdump.
+
+I think we would need to remember it anyway. Accessing MSR is somewhat
+expensive. But, okay, I can rework it MSR if needed.
+
+Note, that we can avoid the enabling algother, if we modify BIOS to deal
+with private/shared memory. Currently BIOS get system crash if we enable
+the feature from time zero.
+
+> >  const __initconst struct hypervisor_x86 x86_hyper_kvm = {
+> > diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
+> > index 8b86609849b9..1a216f32e572 100644
+> > --- a/include/uapi/linux/kvm_para.h
+> > +++ b/include/uapi/linux/kvm_para.h
+> > @@ -27,8 +27,9 @@
+> >  #define KVM_HC_MIPS_EXIT_VM		7
+> >  #define KVM_HC_MIPS_CONSOLE_OUTPUT	8
+> >  #define KVM_HC_CLOCK_PAIRING		9
+> > -#define KVM_HC_SEND_IPI		10
+> > +#define KVM_HC_SEND_IPI			10
+> 
+> Same spurrious change detected.
+
+The same justification :)
+
+> >  #define KVM_HC_SCHED_YIELD		11
+> > +#define KVM_HC_ENABLE_MEM_PROTECTED	12
+> >  
+> >  /*
+> >   * hypercalls use architecture specific
+> 
+> -- 
+> Vitaly
+> 
+> 
+
 -- 
-2.17.1
-
+ Kirill A. Shutemov
