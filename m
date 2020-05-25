@@ -2,105 +2,107 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCAE20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9582075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YG0i9AGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388660AbgEYB1s (ORCPT
+        id S2388348AbgEYB3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:27:48 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:51184 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388574AbgEYB1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:27:48 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax5ukKH8teHrg4AA--.338S3;
-        Mon, 25 May 2020 09:27:39 +0800 (CST)
-Subject: Re: [PATCH 1/2] rtc: goldfish: Fix return value of
- goldfish_rtc_probe()
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-References: <1590227782-32249-1-git-send-email-yangtiezhu@loongson.cn>
- <20200523195006.GB3429@piout.net>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <58568aec-d964-bae4-b837-106747a034a4@loongson.cn>
-Date:   Mon, 25 May 2020 09:27:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Sun, 24 May 2020 21:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388104AbgEYB3f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 21:29:35 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B922C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:29:34 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id j3so15988776ilk.11
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R71dV7S9rJQPlMHMjk6Vu0NBsTKVA0V6AR1/+ijdTXU=;
+        b=YG0i9AGd6c2S5ULFReX3uDyCO0YWpEQCkwusIvHlXGkiFJT+GtuhdBKe9bqYDEGHPb
+         E3+x+B/bMoy6IQPVjsI7AggtSBmpul1UTgun/A+Q2EOnJlbgXz7On0eFGyvM62Jcq7TB
+         0e6p3z/qn1cDJ54BSMybkDq/gImwKoRitLte8r8ujFU5kvQuKUP/haYS5ztBh5IQkiDh
+         eBo7a6dG4doC9fuPhpq6/5Veb5dmh532DftU9nhEHXRZwxNZ3Cxd0qrGxDy/Q1dv6Smw
+         mYrc1BOsvh5Me6Ghy6A/PUZTwGaIkt67xwxK5HvPqmsw4BnfM8sJ5IpaaJ+eBhTnJ38Z
+         AM+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R71dV7S9rJQPlMHMjk6Vu0NBsTKVA0V6AR1/+ijdTXU=;
+        b=rck1+bCWeMBy0DMyFYSZY0S/7Bfqr+3OXx6dVvU00PHkduQMVz/DA3LNmbiJDrtw+Z
+         jG4T3jaUQ2suqlXskGunZDZQcZ2CNCBpKkVfZxx/s1JWSJNK10hDgReAo6eI59lom1mn
+         2eDBY7qI+ng3Jht2K/52G9rX8T7bJUwDDVpPKUy49ukNVXoZXmOn/QzcFRu90CUtsHG6
+         nkq0B/ADrv52iH6fkHlpSXs3D7tSOn2uOxJVT/AlBTG2DzmRDay9Q4+XJ6BRxWMmI/TP
+         Y+dBGK7xbw4A8VUwfT3hYj0juynk4qsjvkoMtkRA+fYDEVeYfVnyrt22ewu1WrXB0CeJ
+         fK4Q==
+X-Gm-Message-State: AOAM531R22Xk2Os5QuZPtMCdIUUWI5kQgcg3upR+P12kSPch5Y1gwYxb
+        /iCeUl72apb948kCn1kwRuc=
+X-Google-Smtp-Source: ABdhPJypDVQv9J77hH8HwSGLN96MDsXiBlnK/6+cLrJxFiV/47Xdl8IvjqMmRo6j1STXYHmMcm0URg==
+X-Received: by 2002:a92:da52:: with SMTP id p18mr23324203ilq.173.1590370173505;
+        Sun, 24 May 2020 18:29:33 -0700 (PDT)
+Received: from james-x399.localdomain (71-218-100-23.hlrn.qwest.net. [71.218.100.23])
+        by smtp.gmail.com with ESMTPSA id t10sm8396302ilq.62.2020.05.24.18.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 18:29:32 -0700 (PDT)
+From:   James Hilliard <james.hilliard1@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     James Hilliard <james.hilliard1@gmail.com>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] drm/vc4: hdmi: Silence pixel clock error on -EPROBE_DEFER
+Date:   Sun, 24 May 2020 19:28:59 -0600
+Message-Id: <20200525012859.267433-1-james.hilliard1@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200523195006.GB3429@piout.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Ax5ukKH8teHrg4AA--.338S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFyUZrW7XFWxJw13Wr15urg_yoW8Gw48pr
-        s7CFWUur15KFyUKasrA3WDZF4rurW7KrW0kr9Fq39aqwn8Ary3ArZ7JF40kasY9r18t3WS
-        qrs8try3Za909FUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYDGYDU
-        UUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/24/2020 03:50 AM, Alexandre Belloni wrote:
-> Hi,
->
-> On 23/05/2020 17:56:21+0800, Tiezhu Yang wrote:
->> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
->> to check the return value and return PTR_ERR() if failed.
->>
->> Fixes: 89576bebbc17 ("rtc: Use devm_platform_ioremap_resource()")
-> This doesn't fix an issue and it was anyway not introduced by that
-> commit. Please correct your commit message and subject.
+If the vc4 hdmi driver loads before the pixel clock is available we
+see a spurious "*ERROR* Failed to get pixel clock" error.
 
-OK, thanks for your reply.
+Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+---
+no response in over 2 weeks
+---
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-I will remove the fixes tag and use the following patch subjects:
-"rtc: goldfish: Use correct return value for goldfish_rtc_probe()"
-"rtc: mpc5121: Use correct return value for mpc5121_rtc_probe()"
-
-Thanks,
-Tiezhu Yang
-
->
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   drivers/rtc/rtc-goldfish.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
->> index cb6b0ad..2779715 100644
->> --- a/drivers/rtc/rtc-goldfish.c
->> +++ b/drivers/rtc/rtc-goldfish.c
->> @@ -174,7 +174,7 @@ static int goldfish_rtc_probe(struct platform_device *pdev)
->>   	platform_set_drvdata(pdev, rtcdrv);
->>   	rtcdrv->base = devm_platform_ioremap_resource(pdev, 0);
->>   	if (IS_ERR(rtcdrv->base))
->> -		return -ENODEV;
->> +		return PTR_ERR(rtcdrv->base);
->>   
->>   	rtcdrv->irq = platform_get_irq(pdev, 0);
->>   	if (rtcdrv->irq < 0)
->> -- 
->> 2.1.0
->>
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index 340719238753..6d4ee3f6b445 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -1338,8 +1338,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	hdmi->pixel_clock = devm_clk_get(dev, "pixel");
+ 	if (IS_ERR(hdmi->pixel_clock)) {
+-		DRM_ERROR("Failed to get pixel clock\n");
+-		return PTR_ERR(hdmi->pixel_clock);
++		ret = PTR_ERR(hdmi->pixel_clock);
++		if (ret != -EPROBE_DEFER)
++			DRM_ERROR("Failed to get pixel clock\n");
++		return ret;
+ 	}
+ 	hdmi->hsm_clock = devm_clk_get(dev, "hdmi");
+ 	if (IS_ERR(hdmi->hsm_clock)) {
+-- 
+2.25.1
 
