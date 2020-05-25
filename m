@@ -2,260 +2,159 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70862C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59615C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9042073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3857720723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:31:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ueZAhikS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TyUplGI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389804AbgEYK2J (ORCPT
+        id S2389764AbgEYKbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389373AbgEYK2I (ORCPT
+        Mon, 25 May 2020 06:31:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37155 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389373AbgEYKbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:28:08 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711AEC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:28:08 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id u79so9678111vsu.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=u9FmgI2eqhoebtGwkcoRcMTx910T2B58Vf0ogAnRIS8=;
-        b=ueZAhikSW57y5bST4zr2luN3yPnxaIw9iaC1m3u94CBXF76nTBQbRw87kowR4BttgW
-         pQvtJ4t0YbHo7B3SZy76NjVvugWaYi1N2q+9FzM4Y6+Ri5gn1WkyEtwUDa66g+wLuuES
-         RU7lSfW/kPtb6lxwlDRc8fRgwIABmxFzCXqmspJd69KC7KBzsduSXC7WGeAx8JxyB1A0
-         fz0hsMKFH7IWVE8JxaNZdm65hT7oTvJcCts5YsxG/1hhj4FVz8M3vZrWOrQcnjJC+vSQ
-         5QC90SRohNHmUv+FwKWRPmuIljKsbBTdR0EWh0ce4Kn+HDZGhHF4mwf5vyBG40U26/S+
-         bT4g==
+        Mon, 25 May 2020 06:31:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590402658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=Tjh+ltjJrGCNlnFU+WVmr7LcnYdZcqi33gjE65+/QHI=;
+        b=TyUplGI8c2ZP5h66rD62WcIHOW+kleU1/MP1bBsmvxgtf5RwECGsyKiZtX8t5G/ARCT2UZ
+        /m+dd5XgFuPO5V9ObveMZiUzbwUxDUQZFeoXYewrQd3sJ5cputqpRr22ynEDJ+XUCvzlEs
+        gFqSYMZd+uIV6+EV3wCvIeoZPkFNSOA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169--Oede7yyPZCuFjZcwIraWw-1; Mon, 25 May 2020 06:30:56 -0400
+X-MC-Unique: -Oede7yyPZCuFjZcwIraWw-1
+Received: by mail-wm1-f71.google.com with SMTP id g84so233428wmf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:30:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=u9FmgI2eqhoebtGwkcoRcMTx910T2B58Vf0ogAnRIS8=;
-        b=jqXVHQc6UQxmoJoAsBBApn6h+YykUhZXAiVhV549fWxNu9vVGojIvB1/J2p4UHPNgh
-         3CDbWks/voRy+oiFU3aWa71O2gkgorYnIq5BOkd8ZLfPBiJiXbHRR8V+CLvx954p1b35
-         2k6tk3umg+fH/7hT8NzDkiPjZaErPj0HjkCzyDmwVNk9iiGCZIjVnbtrGzsPwr+2qyL+
-         4WFgDJGbkrRiC8eTSaXu6rxr3oYKRlo+GgBBTiWy6mYMdJVFFLkH+I3IpWVd/hdOjwCE
-         rn/xqgELBqgD8hkVyjR28D0uxkg6Ep/yXCILmISp0IvI7CGKpoYRxbhsa+t4QV1gZwAD
-         6l+w==
-X-Gm-Message-State: AOAM5320PvHkZ6nzMIs4Nb+IuVW1iNkm9Mv0AEFvwPRVeIs6OHyE5SJv
-        4xv9DRnSLEdEBXxtTnaSWa9HhZzKeKN0PeoclNZERA==
-X-Google-Smtp-Source: ABdhPJzYMaRs6n2PuNzo6z/5Y5t4FVXvCjpFY1FaYqBP5Fgoft2PnzkwAZ0kW3waJOOIJgTUM0Fm4sONxBRf1ffzqwA=
-X-Received: by 2002:a67:1486:: with SMTP id 128mr13291744vsu.191.1590402487589;
- Mon, 25 May 2020 03:28:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Tjh+ltjJrGCNlnFU+WVmr7LcnYdZcqi33gjE65+/QHI=;
+        b=lIk1Y+9Wt/yngiZc0rcYC4ga6cUoJxFyeJSSERse6Y9K1/TFUfdb3uji1jQtD7vAwu
+         kEaSVVdrUU8f0yJ/5hCb2l31W5Xi6hPngXDdtAt/cKf4Rp8RiRmI5eZR5yz7Ubw35Glh
+         ESdnchBvEHeJg856bczaUDpBdCh78zCEl+xWqCotL024hGg9k/D6snhX3QHzYbP/dmg5
+         xGiPuqVdXAR8TjBXQKupG9Yl287NRyYk2YIpnELLQtQBJJS9Xqde+/8SGUo/1uHy8EnU
+         7WWURliQo2QBfLkLxnPFpOK/B5tFkk/tWckCZnb9EsSahMeTlNsEzn5JgaYGqpHLG8tB
+         4sbw==
+X-Gm-Message-State: AOAM530lkZueM952Lo2B9ZydgG1LCq9QOxnE1KNZ2CMq1D7zlMGE95/L
+        C0OcfHiHgWcxWyv5jQFGmYoVoflfmjds/d+QGXUYELxvnNJUK3zyvq2YacetiLqNUtRlXdgwp6/
+        50pJFWVdWxKfbeTffX04YJfMa
+X-Received: by 2002:a5d:40d2:: with SMTP id b18mr12013297wrq.131.1590402655376;
+        Mon, 25 May 2020 03:30:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzgOrrF27/Hn0VM1GmU3rUqzoyOepUfPocXD27ULwMBIu2ooviKdrTTzCDQq+mFLo1bwXdzwQ==
+X-Received: by 2002:a5d:40d2:: with SMTP id b18mr12013273wrq.131.1590402655030;
+        Mon, 25 May 2020 03:30:55 -0700 (PDT)
+Received: from steredhat ([79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id o15sm4356417wmm.31.2020.05.25.03.30.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 03:30:54 -0700 (PDT)
+Date:   Mon, 25 May 2020 12:30:51 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: io_uring: BUG: kernel NULL pointer dereference
+Message-ID: <20200525103051.lztpbl33hsgv6grz@steredhat>
 MIME-Version: 1.0
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org> <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
- <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
- <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com> <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
-In-Reply-To: <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 25 May 2020 12:27:31 +0200
-Message-ID: <CAPDyKFo9X9ghjCeF_kGE2BhB+3QiMAMbD1Qz53saXshxy9odVg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-To:     =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 at 11:18, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.cn> =
-wrote:
->
-> > On Tue, 28 Apr 2020 at 05:44, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.=
-cn> wrote:
-> > >
-> > > >
-> > > > On Mon, Apr 27, 2020 at 11:41 AM =E5=86=AF=E9=94=90 <rui_feng@reals=
-il.com.cn>
-> > wrote:
-> > > > >
-> > > > >
-> > > > > > On Sun, Apr 26, 2020 at 09:25:46AM +0800,
-> > > > > > rui_feng@realsil.com.cn
-> > > > wrote:
-> > > > > > > From: Rui Feng <rui_feng@realsil.com.cn>
-> > > > > > >
-> > > > > > > RTS5261 support legacy SD mode and SD Express mode.
-> > > > > > > In SD7.x, SD association introduce SD Express as a new mode.
-> > > > > > > SD Express mode is distinguished by CMD8.
-> > > > > > > Therefore, CMD8 has new bit for SD Express.
-> > > > > > > SD Express is based on PCIe/NVMe.
-> > > > > > > RTS5261 uses CMD8 to switch to SD Express mode.
-> > > > > >
-> > > > > > So how does this bit work?  They way I imagined SD Express to
-> > > > > > work is that the actual SD Card just shows up as a real PCIe
-> > > > > > device, similar to say Thunderbolt.
-> > > > >
-> > > > > New SD Express card has dual mode. One is SD mode and another is
-> > > > > PCIe
-> > > > mode.
-> > > > > In PCIe mode, it act as a PCIe device and use PCIe protocol not
-> > > > > Thunderbolt
-> > > > protocol.
-> > > >
-> > > > I think what Christoph was asking about is why you need to issue an=
-y
-> > > > commands at all in SD mode when you want to use PCIe mode instead.
-> > > > What happens if you load the NVMe dthriver before loading the rts52=
-61
-> > driver?
-> > > >
-> > > >        Arnd
-> > > >
-> > > > ------Please consider the environment before printing this e-mail.
-> > >
-> > > RTS5261 support SD mode and PCIe/NVMe mode. The workflow is as follow=
-s.
-> > > 1.RTS5261 work in SD mode.
-> > > 2.If card is plugged in, Host send CMD8 to ask card's PCIe availabili=
-ty.
-> >
-> > This sounds like the card insert/removal needs to be managed by the
-> > rtsx_pci_sdmmc driver (mmc).
-> >
-> > > 3.If the card has PCIe availability, RTS5261 switch to PCIe/NVMe mode=
-.
-> >
-> > This switch is done by the mmc driver, but how does the PCIe/NVMe drive=
-r
-> > know when to take over? Isn't there a synchronization point needed?
-> >
-> > > 4.Mmc driver exit and NVMe driver start working.
-> >
-> > Having the mmc driver to exit seems wrong to me. Else how would you han=
-dle
-> > a card being removed and inserted again?
-> >
-> > In principle you want the mmc core to fail to detect the card and then =
-do a
-> > handover, somehow. No?
-> >
-> > Although, to make this work there are a couple of problems you need to =
-deal
-> > with.
-> >
-> > 1. If the mmc core doesn't successfully detect a card, it will request =
-the mmc
-> > host to power off the card. In this situation, you want to keep the pow=
-er to the
-> > card, but leave it to be managed by the PCIe/NVMe driver in some way.
-> >
-> > 2. During system resume, the mmc core may try to restore power for a ca=
-rd,
-> > especially if it's a removable slot, as to make sure it gets detected i=
-f someone
-> > inserted a card while the system was suspended.
-> > Not sure if this plays well with the PCIe/NVMe driver's behaviour.
-> > Again, I think some kind of synchronization is needed.
-> >
-> > > 5.If card is unplugged, RTS5261 will switch to SD mode.
-> >
-> > Alright, clearly the mmc driver is needed to manage card insert/removal=
-.
-> >
-> > > We should send CMD8 in SD mode to ask card's PCIe availability, and t=
-he
-> > order of NVMe driver and rts5261 driver doesn't matter.
-> >
-> > That assumes there's another synchronization mechanism. Maybe there is,=
- but
-> > I don't understand how.
-> >
-> If no card in RTS5261, RTS5261 works in SD mode. If you run command lspci=
-, you can see the RTS5261 device.
+Hi Jens,
+using fio and io_uring engine with SQPOLL and IOPOLL enabled, I had the
+following issue that happens after 4/5 seconds fio has started.
+Initially I had this issue on Linux v5.7-rc6, but I just tried also
+Linux v5.7-rc7:
 
-Right.
+[   75.343479] nvme nvme0: pci function 0000:04:00.0
+[   75.355110] nvme nvme0: 16/0/15 default/read/poll queues
+[   75.364946]  nvme0n1: p1
+[   82.739285] BUG: kernel NULL pointer dereference, address: 00000000000003b0
+[   82.747054] #PF: supervisor read access in kernel mode
+[   82.752785] #PF: error_code(0x0000) - not-present page
+[   82.758516] PGD 800000046c042067 P4D 800000046c042067 PUD 461fcf067 PMD 0 
+[   82.766186] Oops: 0000 [#1] SMP PTI
+[   82.770076] CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+[   82.777939] Hardware name: Dell Inc. PowerEdge R430/03XKDV, BIOS 1.2.6 06/08/2015
+[   82.786290] RIP: 0010:task_numa_work+0x4f/0x2c0
+[   82.791341] Code: 18 4c 8b 25 e3 f0 8e 01 49 8b 9f 00 08 00 00 4d 8b af c8 00 00 00 49 39 c7 0f 85 e8 01 00 00 48 89 6d 00 41 f6 47 24 04 75 67 <48> 8b ab b0 03 00 00 48 85 ed 75 16 8b 3d 6f 68 94 01 e8 aa fb 04
+[   82.812296] RSP: 0018:ffffaaa98415be10 EFLAGS: 00010246
+[   82.818123] RAX: ffff953ee36b8000 RBX: 0000000000000000 RCX: 0000000000000000
+[   82.826083] RDX: 0000000000000001 RSI: ffff953ee36b8000 RDI: ffff953ee36b8dc8
+[   82.834042] RBP: ffff953ee36b8dc8 R08: 00000000001200db R09: ffff9542e3ad2e08
+[   82.842002] R10: ffff9542ecd20070 R11: 0000000000000000 R12: 00000000fffca35b
+[   82.849962] R13: 000000012a06a949 R14: ffff9542e3ad2c00 R15: ffff953ee36b8000
+[   82.857922] FS:  0000000000000000(0000) GS:ffff953eefc40000(0000) knlGS:0000000000000000
+[   82.866948] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   82.873357] CR2: 00000000000003b0 CR3: 000000046bbd0002 CR4: 00000000001606e0
+[   82.881316] Call Trace:
+[   82.884046]  task_work_run+0x68/0xa0
+[   82.888026]  io_sq_thread+0x252/0x3d0
+[   82.892111]  ? finish_wait+0x80/0x80
+[   82.896097]  kthread+0xf9/0x130
+[   82.899598]  ? __ia32_sys_io_uring_enter+0x370/0x370
+[   82.905134]  ? kthread_park+0x90/0x90
+[   82.909217]  ret_from_fork+0x35/0x40
+[   82.913203] Modules linked in: nvme nvme_core xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ip6table_mangle ip6table_nat iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter rfkill sunrpc intel_rapl_msr intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul iTCO_wdt crc32_pclmul dcdbas ghash_clmulni_intel iTCO_vendor_support intel_cstate intel_uncore pcspkr intel_rapl_perf ipmi_ssif ixgbe mei_me mdio tg3 dca mei lpc_ich ipmi_si acpi_power_meter ipmi_devintf ipmi_msghandler ip_tables xfs libcrc32c mgag200 drm_kms_helper drm_vram_helper drm_ttm_helper ttm drm megaraid_sas crc32c_intel i2c_algo_bit wmi
+[   82.990613] CR2: 00000000000003b0
+[   82.994307] ---[ end trace 6d1725e8f60fece7 ]---
+[   83.039157] RIP: 0010:task_numa_work+0x4f/0x2c0
+[   83.044211] Code: 18 4c 8b 25 e3 f0 8e 01 49 8b 9f 00 08 00 00 4d 8b af c8 00 00 00 49 39 c7 0f 85 e8 01 00 00 48 89 6d 00 41 f6 47 24 04 75 67 <48> 8b ab b0 03 00 00 48 85 ed 75 16 8b 3d 6f 68 94 01 e8 aa fb 04
+[   83.065165] RSP: 0018:ffffaaa98415be10 EFLAGS: 00010246
+[   83.070993] RAX: ffff953ee36b8000 RBX: 0000000000000000 RCX: 0000000000000000
+[   83.078953] RDX: 0000000000000001 RSI: ffff953ee36b8000 RDI: ffff953ee36b8dc8
+[   83.086913] RBP: ffff953ee36b8dc8 R08: 00000000001200db R09: ffff9542e3ad2e08
+[   83.094873] R10: ffff9542ecd20070 R11: 0000000000000000 R12: 00000000fffca35b
+[   83.102833] R13: 000000012a06a949 R14: ffff9542e3ad2c00 R15: ffff953ee36b8000
+[   83.110793] FS:  0000000000000000(0000) GS:ffff953eefc40000(0000) knlGS:0000000000000000
+[   83.119821] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   83.126230] CR2: 00000000000003b0 CR3: 000000046bbd0002 CR4: 00000000001606e0
+[  113.113624] nvme nvme0: I/O 219 QID 19 timeout, aborting
+[  113.120135] nvme nvme0: Abort status: 0x0
 
-The rtsx_pci_driver (drivers/misc/cardreader/rtsx_pcr.c) has
-registered itself as a pci driver and been probed successfully, I
-assume. Then during rtsx_pci_probe() an mfd device is added via
-mfd_add_devices(), which corresponds to the rtsx_pci_sdmmc
-(drivers/mmc/host/rtsx_pci_sdmmc.c) platform driver.
+Steps I did:
 
-> When insert a SD Express card, Mmc driver will send CMD8 to ask the card'=
-s PCIe availability, because it's a SD EXPRESS card,
+  $ modprobe nvme poll_queues=15
+  $ fio fio_iou.job
 
-Okay, so this will then be a part of the rtsx_pci_sdmmc driver's probe
-sequence. Or more exactly, when rtsx_pci_sdmmc_drv_probe() completes
-successfully, a mmc rescan work becomes scheduled to try to detect an
-SD/MMC card. Then the CMD8 command is sent...
+This is the fio_iou.job that I used:
 
-> RTS5261 will switch to NVMe mode, after switch if you run lspci, you can =
-see RTS5261 disappeared and a NVMe device replaces RTS5261.
+  [global]
+  filename=/dev/nvme0n1
+  ioengine=io_uring
+  direct=1
+  runtime=60
+  ramp_time=5
+  gtod_reduce=1
 
-Can you elaborate more exactly how this managed?
+  cpus_allowed=4
 
-It kind of sounds like the original PCI device is being deleted? How
-is this managed?
+  [job1]
+  rw=randread
+  bs=4K
+  iodepth=1
+  registerfiles
+  sqthread_poll=1
+  sqthread_poll_cpu=2
+  hipri
 
-In any case, the rtsx_pci_driver's ->remove() callback,
-rtsx_pci_remove(), should be invoked, I assume?
+I'll try to bisect, but I have some suspicions about:
+b41e98524e42 io_uring: add per-task callback handler
 
-That would then lead to that mfd_remove_devices() gets called, which
-makes the ->remove() callback of the rtsx_pci_sdmmc driver,
-rtsx_pci_sdmmc_drv_remove(), to be invoked. Correct?
+Thanks,
+Stefano
 
-> In NVMe mode, RTS5261 only provide a bridge between SD Express card and P=
-CIe. For NVMe driver, just like a new NVMe device is inserted.
-
-I don't understand what that means, but I am also not an expert on
-PCI/NVMe. Care to explain more?
-
-> Mmc core doesn't successfully detect the card and handover to NVMe driver=
-. Because of detect the card failed,
-
-How do you make sure that the rtsx_pci_sdmmc driver is leaving the
-card in the correct state for NVMe?
-
-For example, the mmc core has a loop re-trying with a lower
-initialization frequency for the card (400KHz, 300KHz, 200KHz,
-100KHz). This will cause additional requests to the rtsx_pci_sdmmc
-driver.
-
-> Mmc driver will request the RTS5261 to power off the card, but at that ti=
-me power off the card will not succeed.
-
-Yes, assuming no card was found, the mmc core calls mmc_power_off().
-Ths leads to the rtsx_pci_sdmmc driver's ->set_ios() callback being
-invoked, requesting the card to be powered off. I don't see how you
-are managing this, what am I missing?
-
-As stated above, I assume you the corresponding platform device for
-rtsx_pci_sdmmc being deleted and thus triggering the
-rtsx_pci_sdmmc_drv_remove() being called. Correct? If not, how does
-the driver manage this?
-
-> When the card is unplugged, RTS5261 will switch to SD mode by itself and =
-don't need mmc driver to do anything,
-
-Okay.
-
-So that means the rtsx_pci_sdmmc driver is being probed again?
-
-> If you run lspci, you can see NVMe device disappeared and RTS5261 appeare=
-d again.
-
-I see.
-
-Kind regards
-Uffe
