@@ -2,307 +2,162 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4262D20899
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E5F2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:20:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="WuGyrHUz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T8I/C9fD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404076AbgEYPR6 (ORCPT
+        id S2404108AbgEYPUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404028AbgEYPR5 (ORCPT
+        Mon, 25 May 2020 11:20:31 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27177 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403999AbgEYPUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:17:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558D2C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:17:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w10so21190610ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KmCwnA7a5dVJlIQoJdDfHmomwFfTjqYUrhRIWlT2Nyk=;
-        b=WuGyrHUzog4bt26/4hOGUWDImSEp43kS8zG/1GJTSqmzUyTPyXIuKgZFMo4Sp080SY
-         fX35jcmj9TBOukdtUSSzCyyweXoAU+OtgxRlhrX18a6u2IIdlI0HWc0YD/uihmNkARC6
-         FFTTZ7e093d3qTTm3OghNQHI7gph1gQ7tvOAVxA5OQVWY0+BuWHpdmk5bkRwE7Qayxz6
-         GQGEVgrMr1mFs+J5zx84vFQaUUig81891dMsKvu23wBViUbwF3eCeU9rY3q1ED2q6i/7
-         znqGwrvifOcSNfzyygJK1Vecby2bQR340gP0iACEkEq+9faR2GYQ964je3o/conEY8DO
-         lcRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KmCwnA7a5dVJlIQoJdDfHmomwFfTjqYUrhRIWlT2Nyk=;
-        b=itu+ENXUTvXAw/GnFdb7I4kW94UQhx5H1w65tEG0QJDK0M/3XDqByPp0GcTioF1Zpb
-         V42NIvLI0VTR9jPKseYcsWhlIO6zU4Uh69mMWf40a6nYjZxm3o1uR1Vcwrd2bo3QDAil
-         kSoo/K8Z1FR3MCrxFCuD3e9yjEb8Zvp3wWVxtoGMtWFVpulCUBya5+Q3mhmNoovJcsfW
-         lSCG1FnSJa4QkkOs4+beNb5lAY1T3sGurthX9nIL5f31TAgNRyXzqZ/ENTKDYh/kYgn+
-         haLOxzF1O6CzMgrDK7irubcMGzz4lE+sa2SYEjjpoQR8O+pVE8yoC8PYzMaQdPEoXCaH
-         VlKw==
-X-Gm-Message-State: AOAM5338vkMYJRgSmPNjDh22W0UJanZn/aRA6RJHungNsH/BuWF40NId
-        ZaG3of6kfYp7HdBKrbwRZ6bFIg==
-X-Google-Smtp-Source: ABdhPJz4Z11nGMXKBdzLwDq5RYdn3XVkZC6lsZEQkZwhYr4AviDn5phADtHDSbzOkyRQItFlkiSDBQ==
-X-Received: by 2002:a2e:8e91:: with SMTP id z17mr11191455ljk.144.1590419875635;
-        Mon, 25 May 2020 08:17:55 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id k27sm4373301lfe.88.2020.05.25.08.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 08:17:55 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 0498010230F; Mon, 25 May 2020 18:17:56 +0300 (+03)
-Date:   Mon, 25 May 2020 18:17:55 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Mon, 25 May 2020 11:20:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590420029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HYjKBsVG8/aQRDDWxnpTEgM4JQmNET1Q9YOObHs51wo=;
+        b=T8I/C9fDoU/ROi3tZkI3ciQdHfZQXLRq0RDv/pNCdqsv3GLoFgJMX2p4ii5v7uckugTq3k
+        U1hkpCit2aXvvHJI8DxS7BKk140wNFSlBnrJchLYEqKJJFpjA0MDL4rHFvgl3gkYNnxeaH
+        NObu1xhLpdxYxD5cMMJcu/zvMGwc4Nw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-491-c78kMZeNNO2R3tqKxuLtLA-1; Mon, 25 May 2020 11:20:27 -0400
+X-MC-Unique: c78kMZeNNO2R3tqKxuLtLA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92B0B80183C;
+        Mon, 25 May 2020 15:20:24 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-121.ams2.redhat.com [10.36.112.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A4AB5798D;
+        Mon, 25 May 2020 15:20:21 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     libc-alpha <libc-alpha@sourceware.org>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 06/16] KVM: Use GUP instead of copy_from/to_user() to
- access guest memory
-Message-ID: <20200525151755.yzbmemtrii455s6k@box>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200522125214.31348-7-kirill.shutemov@linux.intel.com>
- <87a71w832c.fsf@vitty.brq.redhat.com>
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup and thread creation (v19)
+References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com>
+        <20200501021439.2456-2-mathieu.desnoyers@efficios.com>
+        <87v9kqbzse.fsf@oldenburg2.str.redhat.com>
+        <941087675.33347.1590418305398.JavaMail.zimbra@efficios.com>
+Date:   Mon, 25 May 2020 17:20:19 +0200
+In-Reply-To: <941087675.33347.1590418305398.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Mon, 25 May 2020 10:51:45 -0400
+        (EDT)")
+Message-ID: <87367ovy6k.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a71w832c.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 05:08:43PM +0200, Vitaly Kuznetsov wrote:
-> "Kirill A. Shutemov" <kirill@shutemov.name> writes:
-> 
-> > New helpers copy_from_guest()/copy_to_guest() to be used if KVM memory
-> > protection feature is enabled.
-> >
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  include/linux/kvm_host.h |  4 +++
-> >  virt/kvm/kvm_main.c      | 78 ++++++++++++++++++++++++++++++++++------
-> >  2 files changed, 72 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index 131cc1527d68..bd0bb600f610 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -503,6 +503,7 @@ struct kvm {
-> >  	struct srcu_struct srcu;
-> >  	struct srcu_struct irq_srcu;
-> >  	pid_t userspace_pid;
-> > +	bool mem_protected;
-> >  };
-> >  
-> >  #define kvm_err(fmt, ...) \
-> > @@ -727,6 +728,9 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn);
-> >  void kvm_set_pfn_accessed(kvm_pfn_t pfn);
-> >  void kvm_get_pfn(kvm_pfn_t pfn);
-> >  
-> > +int copy_from_guest(void *data, unsigned long hva, int len);
-> > +int copy_to_guest(unsigned long hva, const void *data, int len);
-> > +
-> >  void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache);
-> >  int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
-> >  			int len);
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 731c1e517716..033471f71dae 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -2248,8 +2248,48 @@ static int next_segment(unsigned long len, int offset)
-> >  		return len;
-> >  }
-> >  
-> > +int copy_from_guest(void *data, unsigned long hva, int len)
-> > +{
-> > +	int offset = offset_in_page(hva);
-> > +	struct page *page;
-> > +	int npages, seg;
-> > +
-> > +	while ((seg = next_segment(len, offset)) != 0) {
-> > +		npages = get_user_pages_unlocked(hva, 1, &page, 0);
-> > +		if (npages != 1)
-> > +			return -EFAULT;
-> > +		memcpy(data, page_address(page) + offset, seg);
-> > +		put_page(page);
-> > +		len -= seg;
-> > +		hva += seg;
-> > +		offset = 0;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int copy_to_guest(unsigned long hva, const void *data, int len)
-> > +{
-> > +	int offset = offset_in_page(hva);
-> > +	struct page *page;
-> > +	int npages, seg;
-> > +
-> > +	while ((seg = next_segment(len, offset)) != 0) {
-> > +		npages = get_user_pages_unlocked(hva, 1, &page, FOLL_WRITE);
-> > +		if (npages != 1)
-> > +			return -EFAULT;
-> > +		memcpy(page_address(page) + offset, data, seg);
-> > +		put_page(page);
-> > +		len -= seg;
-> > +		hva += seg;
-> > +		offset = 0;
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> >  static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
-> > -				 void *data, int offset, int len)
-> > +				 void *data, int offset, int len,
-> > +				 bool protected)
-> >  {
-> >  	int r;
-> >  	unsigned long addr;
-> > @@ -2257,7 +2297,10 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
-> >  	addr = gfn_to_hva_memslot_prot(slot, gfn, NULL);
-> >  	if (kvm_is_error_hva(addr))
-> >  		return -EFAULT;
-> > -	r = __copy_from_user(data, (void __user *)addr + offset, len);
-> > +	if (protected)
-> > +		r = copy_from_guest(data, addr + offset, len);
-> > +	else
-> > +		r = __copy_from_user(data, (void __user *)addr + offset, len);
-> >  	if (r)
-> >  		return -EFAULT;
-> >  	return 0;
-> > @@ -2268,7 +2311,8 @@ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
-> >  {
-> >  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
-> >  
-> > -	return __kvm_read_guest_page(slot, gfn, data, offset, len);
-> > +	return __kvm_read_guest_page(slot, gfn, data, offset, len,
-> > +				     kvm->mem_protected);
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_read_guest_page);
-> >  
-> > @@ -2277,7 +2321,8 @@ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data,
-> >  {
-> >  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-> >  
-> > -	return __kvm_read_guest_page(slot, gfn, data, offset, len);
-> > +	return __kvm_read_guest_page(slot, gfn, data, offset, len,
-> > +				     vcpu->kvm->mem_protected);
-> 
-> Personally, I would've just added 'struct kvm' pointer to 'struct
-> kvm_memory_slot' to be able to extract 'mem_protected' info when
-> needed. This will make the patch much smaller.
+* Mathieu Desnoyers:
 
-Okay, can do.
+> The larger question here is: considering that we re-implement the entire
+> uapi header within glibc (which includes the uptr addition), do we still
+> care about using the header provided by the Linux kernel ?
 
-Other thing I tried is to have per-slot flag to indicate that it's
-protected. But Sean pointed that it's all-or-nothing feature and having
-the flag in the slot would be misleading.
+We don't care, but our users do.  Eventually, they want to include
+<sys/rseq.h> and <linux/rseq.h> to get new constants that are not yet
+known to glibc.
 
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_page);
-> >  
-> > @@ -2350,7 +2395,8 @@ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
-> >  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_atomic);
-> >  
-> >  static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
-> > -			          const void *data, int offset, int len)
-> > +			          const void *data, int offset, int len,
-> > +				  bool protected)
-> >  {
-> >  	int r;
-> >  	unsigned long addr;
-> > @@ -2358,7 +2404,11 @@ static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
-> >  	addr = gfn_to_hva_memslot(memslot, gfn);
-> >  	if (kvm_is_error_hva(addr))
-> >  		return -EFAULT;
-> > -	r = __copy_to_user((void __user *)addr + offset, data, len);
-> > +
-> > +	if (protected)
-> > +		r = copy_to_guest(addr + offset, data, len);
-> > +	else
-> > +		r = __copy_to_user((void __user *)addr + offset, data, len);
-> 
-> All users of copy_to_guest() will have to have the same 'if (protected)'
-> check, right? Why not move the check to copy_to/from_guest() then?
+> Having different definitions depending on whether a kernel header is
+> installed or not when including a glibc header seems rather unexpected.
 
-Good point.
+Indeed.
 
-> >  	if (r)
-> >  		return -EFAULT;
-> >  	mark_page_dirty_in_slot(memslot, gfn);
-> > @@ -2370,7 +2420,8 @@ int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
-> >  {
-> >  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
-> >  
-> > -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
-> > +	return __kvm_write_guest_page(slot, gfn, data, offset, len,
-> > +				      kvm->mem_protected);
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_write_guest_page);
-> >  
-> > @@ -2379,7 +2430,8 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
-> >  {
-> >  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-> >  
-> > -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
-> > +	return __kvm_write_guest_page(slot, gfn, data, offset, len,
-> > +				      vcpu->kvm->mem_protected);
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
-> >  
-> > @@ -2495,7 +2547,10 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
-> >  	if (unlikely(!ghc->memslot))
-> >  		return kvm_write_guest(kvm, gpa, data, len);
-> >  
-> > -	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
-> > +	if (kvm->mem_protected)
-> > +		r = copy_to_guest(ghc->hva + offset, data, len);
-> > +	else
-> > +		r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
-> >  	if (r)
-> >  		return -EFAULT;
-> >  	mark_page_dirty_in_slot(ghc->memslot, gpa >> PAGE_SHIFT);
-> > @@ -2530,7 +2585,10 @@ int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
-> >  	if (unlikely(!ghc->memslot))
-> >  		return kvm_read_guest(kvm, ghc->gpa, data, len);
-> >  
-> > -	r = __copy_from_user(data, (void __user *)ghc->hva, len);
-> > +	if (kvm->mem_protected)
-> > +		r = copy_from_guest(data, ghc->hva, len);
-> > +	else
-> > +		r = __copy_from_user(data, (void __user *)ghc->hva, len);
-> >  	if (r)
-> >  		return -EFAULT;
-> 
-> -- 
-> Vitaly
-> 
-> 
+> *If* we want to use the uapi header, I think something is semantically
+> missing. Here is the scheme I envision. We could rely on the kernel header
+> version.h to figure out which of glibc or kernel uapi header is more
+> recent. Any new concept we try to integrate into glibc (e.g. uptr)
+> should go into the upstream Linux uapi header first.
 
--- 
- Kirill A. Shutemov
+I think we should always prefer the uapi header.  The Linux version
+check does not tell you anything about backports.
+
+> For the coming glibc e.g. 2.32, we use the kernel uapi header if
+> kernel version is >= 4.18.0. Within glibc, the fallback implements
+> exactly the API exposed by the kernel rseq.h header.
+
+Agreed.
+
+> As we eventually introduce the uptr change into the Linux kernel, and
+> say it gets merged for Linux 5.9.0, we mirror this change into glibc
+> (e.g. release 2.33), and bump the Linux kernel version cutoff to 5.9.0.
+> So starting from that version, we use the Linux kernel header only if
+> version >= 5.9.0, else we fallback on glibc's own implementation.
+
+Fortunately, we don't need to settle this today. 8-)
+
+Let's stick to the 4.18 definitions for the fallback for now, and
+discuss the incorporation of future changes later.
+
+>>> +/* Ensure the compiler supports __attribute__ ((aligned)).  */
+>>> +_Static_assert (__alignof__ (struct rseq_cs) >= 32, "alignment");
+>>> +_Static_assert (__alignof__ (struct rseq) >= 32, "alignment");
+>> 
+>> This needs #ifndef __cplusplus or something like that.  I'm surprised
+>> that this passes the installed header tests.
+>
+> Would the following be ok ?
+>
+> #ifdef __cplusplus
+> #define rseq_static_assert      static_assert
+> #else
+> #define rseq_static_assert      _Static_assert
+> #endif
+>
+> /* Ensure the compiler supports __attribute__ ((aligned)).  */
+> rseq_static_assert (__alignof__ (struct rseq_cs) >= 32, "alignment");
+> rseq_static_assert (__alignof__ (struct rseq) >= 32, "alignment");
+
+Seems reasonable, yes.  __alignof__ is still a GCC extension.  C++11 has
+alignof, C11 has _Alignof.  So you could use something like this
+(perhaps without indentation for the kernel header version):
+
+#ifdef __cplusplus
+# if  __cplusplus >= 201103L
+#  define rseq_static_assert(x)      static_assert x;
+#  define rseq_alignof alignof
+# endif
+#elif __STDC_VERSION__ >= 201112L
+# define rseq_static_assert(x)      _Static_assert x;
+# define rseq_alignof _Alignof
+#endif
+#ifndef rseq_static_assert
+# define rseq_static_assert /* nothing */
+#endif
+rseq_static_assert ((rseq_alignof__ (struct rseq_cs) >= 32, "alignment"))
+rseq_static_assert ((rseq_alignof (struct rseq) >= 32, "alignment"))
+
+And something similar for _Alignas/attribute aligned, with an error for
+older standards and !__GNUC__ compilers (because neither the type nor
+__thread can be represented there).
+
+Thanks,
+Florian
+
