@@ -2,125 +2,84 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71829C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC962071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590391875;
-	bh=xMXUOo0qUlfkTmmWrZzTeNI+eU0+PvvQaCHgKt8XDkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TMq/cQ0N5KL2+fkDdGq4kBWGG2UyOY5V/R5Lo8v9CQSM8XzmqJ8w3lwU5lpNETBHS
-	 E8jEoX08YY+VfGpiP5pXaWzqLkUOW7rDxPH3PJfCHssL2Qrc6s6Xx/3PsD2pfcJnPM
-	 0TzYQQfm0OF5+G3Aj5DqaPTV5NdZOURpG+i0kTOA=
+	by mail.kernel.org (Postfix) with ESMTP id 393AA2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389125AbgEYHbO (ORCPT
+        id S2389134AbgEYHbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388947AbgEYHbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:31:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C8022065F;
-        Mon, 25 May 2020 07:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590391873;
-        bh=xMXUOo0qUlfkTmmWrZzTeNI+eU0+PvvQaCHgKt8XDkc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agf9JwW0RDZBYiOQLSQdTc0qCLL5zwkRyDEOOreXtPGgaUrEPwijD5pfsk9qWjneJ
-         X+a1D0vI3vpN3eAMEG0hBBAyrne7sGZeHNqHfakRDalj07fIs2Wp25UfiENzRlO4ER
-         Qh01qkK7REPf1xLBV4wRcGe4jvVFxegm6rdzE2dI=
-Date:   Mon, 25 May 2020 09:31:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] kernfs: proposed locking and concurrency improvement
-Message-ID: <20200525073111.GA261205@kroah.com>
-References: <159038508228.276051.14042452586133971255.stgit@mickey.themaw.net>
- <20200525061616.GA57080@kroah.com>
- <b9e8f8171096813c76df3719719bdda87033fd78.camel@themaw.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9e8f8171096813c76df3719719bdda87033fd78.camel@themaw.net>
+        Mon, 25 May 2020 03:31:24 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57104 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388947AbgEYHbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:31:24 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2k7dMte4NI4AA--.483S2;
+        Mon, 25 May 2020 15:31:07 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH] watchdog: bcm_kona_wdt: Use correct return value for bcm_kona_wdt_probe()
+Date:   Mon, 25 May 2020 15:31:04 +0800
+Message-Id: <1590391864-308-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxf2k7dMte4NI4AA--.483S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykWFyrtrykuFg_yoW3twb_Ga
+        17CrZ3urykGr1vvF1qvayUZrW2qF15uF1kXw1xKay3X347Jry3CrWqvr1xJw13Xw4Yyr9x
+        CFyUXr4a9rn3GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
+        42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjfUYgAwDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 03:23:35PM +0800, Ian Kent wrote:
-> On Mon, 2020-05-25 at 08:16 +0200, Greg Kroah-Hartman wrote:
-> > On Mon, May 25, 2020 at 01:46:59PM +0800, Ian Kent wrote:
-> > > For very large systems with hundreds of CPUs and TBs of RAM booting
-> > > can
-> > > take a very long time.
-> > > 
-> > > Initial reports showed that booting a configuration of several
-> > > hundred
-> > > CPUs and 64TB of RAM would take more than 30 minutes and require
-> > > kernel
-> > > parameters of udev.children-max=1024
-> > > systemd.default_timeout_start_sec=3600
-> > > to prevent dropping into emergency mode.
-> > > 
-> > > Gathering information about what's happening during the boot is a
-> > > bit
-> > > challenging. But two main issues appeared to be, a large number of
-> > > path
-> > > lookups for non-existent files, and high lock contention in the VFS
-> > > during
-> > > path walks particularly in the dentry allocation code path.
-> > > 
-> > > The underlying cause of this was believed to be the sheer number of
-> > > sysfs
-> > > memory objects, 100,000+ for a 64TB memory configuration.
-> > 
-> > Independant of your kernfs changes, why do we really need to
-> > represent
-> > all of this memory with that many different "memory objects"?  What
-> > is
-> > that providing to userspace?
-> > 
-> > I remember Ben Herrenschmidt did a lot of work on some of the kernfs
-> > and
-> > other functions to make large-memory systems boot faster to remove
-> > some
-> > of the complexity in our functions, but that too did not look into
-> > why
-> > we needed to create so many objects in the first place.
-> > 
-> > Perhaps you might want to look there instead?
-> 
-> I presumed it was a hardware design requirement or IBM VM design
-> requirement.
-> 
-> Perhaps Rick can find out more on that question.
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Also, why do you need to create the devices _when_ you create them?  Can
-you wait until after init is up and running to start populating the
-device tree with them?  That way boot can be moving on and disks can be
-spinning up earlier?
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/watchdog/bcm_kona_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also, what about just hot-adding all of that memory after init happens?
+diff --git a/drivers/watchdog/bcm_kona_wdt.c b/drivers/watchdog/bcm_kona_wdt.c
+index eb850a8..8237c4e 100644
+--- a/drivers/watchdog/bcm_kona_wdt.c
++++ b/drivers/watchdog/bcm_kona_wdt.c
+@@ -279,7 +279,7 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
+ 
+ 	wdt->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(wdt->base))
+-		return -ENODEV;
++		return PTR_ERR(wdt->base);
+ 
+ 	wdt->resolution = SECWDOG_DEFAULT_RESOLUTION;
+ 	ret = bcm_kona_wdt_set_resolution_reg(wdt);
+-- 
+2.1.0
 
-Those two options only delay the long delay, but it could allow other
-things to be moving and speed up the overall boot process.
-
-thanks,
-
-greg k-h
