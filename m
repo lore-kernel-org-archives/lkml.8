@@ -2,137 +2,93 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE56C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183842073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDB22073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Y9HnJnaI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YOCI/MFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389623AbgEYJpw (ORCPT
+        id S2389629AbgEYJrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389333AbgEYJpw (ORCPT
+        Mon, 25 May 2020 05:47:09 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15772 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389333AbgEYJrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:45:52 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05DB5C061A0E;
-        Mon, 25 May 2020 02:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3bACHP/iXQB5QepDjM2EEIvav5CoPo/q4qnp/hrIGzA=; b=Y9HnJnaI/t+3UiP3Fjrk+7Aam
-        wUXPN9RAY8XMQC64F7dkhR1KWMVsoTts1DdUL+JaE12D/JOgMZgLS8XyNVVbKW7oHK4H67EyzsiK5
-        iDTk2BtJbLNCieC024X7146iSUhFh7m942L422Dk6c9ip+0zcwTe15K4+j+qOMCz8CjKOkawgrqCb
-        AOr0Ey2R9b/gdI4TqpFLIS4dOxbIaHpJK3YOwiATeUsC6PZwx2y8SIwpn5AwzXi+B0sSrlFlyrPUt
-        5PW4IkIfraWeJDlcRu/n7qzHhGPeQuvlNMR/M7v3KdqQV/sFVr7gpxWiCpsW1iO1vC2jbu1pG+43c
-        JGGbrGj6A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36734)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jd9fy-0004sg-GE; Mon, 25 May 2020 10:45:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jd9fs-0004GD-Fs; Mon, 25 May 2020 10:45:36 +0100
-Date:   Mon, 25 May 2020 10:45:36 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 01/11] net: phy: Don't report success if devices weren't
- found
-Message-ID: <20200525094536.GK1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-2-jeremy.linton@arm.com>
- <20200523182054.GW1551@shell.armlinux.org.uk>
- <e6e08ca4-5a6d-5ea3-0f97-946f1d403568@arm.com>
+        Mon, 25 May 2020 05:47:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590400028; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=nzc2bGnfZw3EYhLsT6vL//x7Kf1J15GGIKlmgweEp8c=;
+ b=YOCI/MFacC/yvl3v/Qyn6JuZA2kPSxYOnlygybphYFEXhtT9G1U29T3//u8ejWKsGIWhPiYT
+ mjezvCyLtfbWhXEFlf6d+pdz3LWPABdTco34hE7eh32OsPgsvFOVe52Sbjh4o9tecPZ/kPFV
+ y6CCLHrn/lhK0JWIjoSa1CcdKno=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5ecb9416c60c306cc85162b3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 09:47:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8BCA4C43391; Mon, 25 May 2020 09:47:02 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08818C433C9;
+        Mon, 25 May 2020 09:47:02 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6e08ca4-5a6d-5ea3-0f97-946f1d403568@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 15:17:01 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 08/10] clk: qcom: Add graphics clock controller driver for
+ SM8250
+In-Reply-To: <20200524210615.17035-9-jonathan@marek.ca>
+References: <20200524210615.17035-1-jonathan@marek.ca>
+ <20200524210615.17035-9-jonathan@marek.ca>
+Message-ID: <c4d43cf01b6d014fdc2258abb94eb2c5@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 09:46:55PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> Thanks for taking a look at this.
-> 
-> On 5/23/20 1:20 PM, Russell King - ARM Linux admin wrote:
-> > On Fri, May 22, 2020 at 04:30:49PM -0500, Jeremy Linton wrote:
-> > > C45 devices are to return 0 for registers they haven't
-> > > implemented. This means in theory we can terminate the
-> > > device search loop without finding any MMDs. In that
-> > > case we want to immediately return indicating that
-> > > nothing was found rather than continuing to probe
-> > > and falling into the success state at the bottom.
-> > 
-> > This is a little confusing when you read this comment:
-> > 
-> >                          /*  If mostly Fs, there is no device there,
-> >                           *  then let's continue to probe more, as some
-> >                           *  10G PHYs have zero Devices In package,
-> >                           *  e.g. Cortina CS4315/CS4340 PHY.
-> >                           */
-> > 
-> > Since it appears to be talking about the case of a PHY where *devs will
-> > be zero.  However, tracking down the original submission, it seems this
-> > is not the case at all, and the comment is grossly misleading.
-> > 
-> > It seems these PHYs only report a valid data in the Devices In Package
-> > registers for devad=0 - it has nothing to do with a zero Devices In
-> > Package.
-> 
-> Yes, this ended up being my understanding of this commit, and is part of my
-> justification for starting the devices search at the reserved address 0
-> rather than 1.
-> 
-> > 
-> > Can I suggest that this comment is fixed while we're changing the code
-> > to explicitly reject this "zero Devices In package" so that it's not
-> > confusing?
-> 
-> Its probably better to kill it in 5/11 with a mention that we are starting
-> at a reserved address?
-> 
-> OTOH, I'm a bit concerned that reading at 0 as the first address will cause
-> problems because the original code was only triggering it after a read
-> returning 0xFFFFFFFF at a valid MMD address. It does simplify/clarify the
-> loop though. If it weren't for this 0 read, I would have tried to avoid some
-> of the additional MMD reserved addresses.
+Hi Jonathan,
 
-Yes, that is the worry, and as MMD 0 is marked as reserved, I don't
-think we should routinely probe it.
+On 2020-05-25 02:36, Jonathan Marek wrote:
+> Add support for the graphics clock controller found on SM8250
+> based devices. This would allow graphics drivers to probe and
+> control their clocks.
+> 
+> This is copied from the downstream kernel, adapted for upstream.
+> For example, GDSCs have been added.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 
-As I've already mentioned, note that bit 0 of devices-in-package does
-not mean that there is a MMD 0 implemented, even if bit 0 is set.  Bit
-0 means that the clause 22 register set is available through clause 22
-cycles.  So, simplifying the loop to start at 0 and removing the work-
-around could end up breaking Cortina PHYs if they don't set bit 0 in
-their devices in package - but I don't see why we should depend on bit 0
-being set for their workaround.
+Since this is taken from downstream, maintain the original author's
+signed-off and add yourself as the co-developer if you have done
+any modifications. Same applies to all other patches.
 
-So, I think you're going to have to add a work-around to ignore bit 0,
-which brings up the question whether this is worth it or not.
-
-Hence, I think this is a "simplifcation" too far.
+-Sai
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
