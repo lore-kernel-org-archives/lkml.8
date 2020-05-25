@@ -2,153 +2,163 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02ED32071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBEB20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9WtkIyU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U6Wktnat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389757AbgEYSih (ORCPT
+        id S2389892AbgEYSkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 14:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
+        Mon, 25 May 2020 14:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgEYSih (ORCPT
+        with ESMTP id S2389714AbgEYSkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 14:38:37 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF48C061A0E;
-        Mon, 25 May 2020 11:38:35 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f83so18157670qke.13;
-        Mon, 25 May 2020 11:38:35 -0700 (PDT)
+        Mon, 25 May 2020 14:40:35 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51B0C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 11:40:35 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id o13so14469094otl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 11:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=23DAPcqB8Q8glew0dfYa48Kx+LlIJmfeo7vNARJB7AA=;
-        b=Q9WtkIyUVNd2Pb9MZCAhVASeWTUzdTuaOlGjhMoF5DeQW/jDNjGpXnO+t++hjlAFJJ
-         59WDE5JQJGAYs2YLkxr5MG8x5s+krrbxgt8qFVoMyffffrc6LeoEn58Ix+6RC2qVuhnO
-         yotWt+uTDHyboglsZ894o2Bpi5P/zWzyQE5eDlaK050+pFIubx2WouJfa972MzBPttri
-         CEMNpCuKPnuyJK+A8fAs94UfHupxBxIJGHKv/WDNCmqv7BwptIE5h4qocq1pxYUoD6yZ
-         4CiUGM5EW1i+iTHuI0KjbF8QAQ9888ynYxSfGD0SYuY+bW9VCMaNQPryX+Z398ezofRI
-         aIuw==
+        bh=G1Jbxag3vYMxCRlwKX8F3vereBNRVPySTcbvXbszZAI=;
+        b=U6WktnatSX0eMuD9yoVKjFvInc4SGDL2hoEbG65zEw/w+FxHose/ikOV6g4t38ePi0
+         4oSiNqj6R3/3k9NIVlDbdd8Ua+W3U01BDPPDnRs0oAsKAEymk7oosYmW/4D92zRkMhQF
+         oikQWenuVHTY0BwHXYjbzsH8QC/GJ/ZGOmMNHsF1GPtp1ARx7BLZzNv5WDHeYEcTm+gK
+         ivwvOMojL7u4q/I4epggCIxCvVgFM+QCDxgJQzlOU81UefdOx2bAHNRIDzOoZAyUOKle
+         KUDBBSvE7dfzjCIQ5ZSP0C9DBwLV6HwHfLOQyNVLBh2iI3B2JFx1VIjeHKd0EsgX5Tqt
+         5sEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=23DAPcqB8Q8glew0dfYa48Kx+LlIJmfeo7vNARJB7AA=;
-        b=O3Hd6nH38yMs0C/AgM87Zc6og9jeg1XnJfIZDqKWhJWluD9VCDQ4sjc8mBc1mZ49WN
-         CWV0YhNm3LNv/1uFL4cLzoeR14yEuVrGCrYhvxQukEeiiuDN5OyplwsdcHZmKbZijNl+
-         4tHXchobATByVF2WiEGQOMhABUQHSEY6ESXmL8W3hTcYS+/mN0lK/5ihG331pRs5q91S
-         n54IA28NWfQz/ed3xkre27Lbvk12n/yO66lR9GDLefWJmPdGq5fxqbEpLGHUHdQgYRzM
-         eoZdfTPaU7iLfawH4BF/tnLQxEKnxmELR8rveJYbKwr1uw/LxYwSfSIpF1iy8c0GrAA4
-         AHaA==
-X-Gm-Message-State: AOAM532HPOeoxG83UbFhFcUtVS/QdYoeCFssSnCP2x0Pkb9Tz9R8MeWU
-        nUbWB1r6GetzX4+kvN/v9xGdMcxZ2UYYH/P19LE=
-X-Google-Smtp-Source: ABdhPJwMfrtH8cPne04OGQ3D5FvI0JVTIXl2dWCVYZjYzhoq2xHZIC8lG2H9sBGAlv+sUgdilK2rysiIBY3caDPWXVo=
-X-Received: by 2002:a05:620a:12d2:: with SMTP id e18mr2952336qkl.437.1590431914563;
- Mon, 25 May 2020 11:38:34 -0700 (PDT)
+        bh=G1Jbxag3vYMxCRlwKX8F3vereBNRVPySTcbvXbszZAI=;
+        b=h5grzRJ6qxY7gct3PTqKIbxDqp8dCPrHwfyb2mVLiK5YKX+IpahCgvaLgmNSFZFcUt
+         FI2WRP85Gi2wpYjsw2uV9mf/Yx5OTC14keYWfQUZx9KTQgcWBDma6hf5Q2Ez4zkVbT0r
+         yiQcHcrLxgGJJzWkiqDXKye8JcGYXeZ2Fz6BnIzwTEbK5gw1HAi6i8DJTnTU6ZGCkaBW
+         tmI69cG52adsHgtTx4ADMHwPmxJ302OkkEuSE5RB4EkY4A8DICcWkUgiT4oJvUaYdbwA
+         n8LXVagmUmsblRpUIkJM2fVFqKzz8jz4mSqYoANJLGy+hS+CXoHGnXwXaT/jU5drAJlo
+         wLbQ==
+X-Gm-Message-State: AOAM530vjBsLIDHWW0zAFR7IX+8Ufqli/PZXCH5S5iia9oqqyyXKkMF3
+        alSCCB5imCcf03rNmko/aoU24lk+XNAU3j9aYyw4Tw==
+X-Google-Smtp-Source: ABdhPJzam0mG4uOv8MmedvhgJLl9ggYXxYDG8GXq5o99MTJIVmTTjBqXRNh/Yt3dbsn55c+dlNswUhjU9TN8VNjXy6w=
+X-Received: by 2002:a9d:66d5:: with SMTP id t21mr20056603otm.231.1590432034497;
+ Mon, 25 May 2020 11:40:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
- <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
- <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <20200525145325.GB2066@tardis>
-In-Reply-To: <20200525145325.GB2066@tardis>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 25 May 2020 11:38:23 -0700
-Message-ID: <CAEf4BzYCjbnU=cNyLnYRoZdMPKnBP4w8t+VRkXrC1GW-aFVkEA@mail.gmail.com>
-Subject: Re: Some -serious- BPF-related litmus tests
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
-        will@kernel.org, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
-        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org
+References: <20200518080327.GA3126260@kroah.com> <20200519063000.128819-1-saravanak@google.com>
+ <20200522204120.3b3c9ed6@apollo> <CAGETcx85trw=rCM1+dmemMGKstFCq=Nn7HR2fyDyV0rTTQYtEQ@mail.gmail.com>
+ <41760105c011f9382f4d5fdc9feed017@walle.cc> <86f3036b44941870d12e432948a7cbb6@walle.cc>
+In-Reply-To: <86f3036b44941870d12e432948a7cbb6@walle.cc>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 25 May 2020 11:39:58 -0700
+Message-ID: <CAGETcx-MbMXz-vw_1+EPKQMdeWXNFvhiP2UAJN=-563Y25VJDw@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Fix SYNC_STATE_ONLY device link implementation
+To:     Michael Walle <michael@walle.cc>
+Cc:     stable <stable@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 7:53 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+On Mon, May 25, 2020 at 4:31 AM Michael Walle <michael@walle.cc> wrote:
 >
-> Hi Andrii,
->
-> On Fri, May 22, 2020 at 12:38:21PM -0700, Andrii Nakryiko wrote:
-> > On 5/22/20 10:43 AM, Paul E. McKenney wrote:
-> > > On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
-> > > > On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
-> > > > > On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
-> > > > > > Hello!
-> > > > > >
-> > > > > > Just wanted to call your attention to some pretty cool and pretty serious
-> > > > > > litmus tests that Andrii did as part of his BPF ring-buffer work:
-> > > > > >
-> > > > > > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
-> > > > > >
-> > > > > > Thoughts?
-> > > > >
-> > > > > I find:
-> > > > >
-> > > > >         smp_wmb()
-> > > > >         smp_store_release()
-> > > > >
-> > > > > a _very_ weird construct. What is that supposed to even do?
-> > > >
-> > > > Indeed, it looks like one or the other of those is redundant (depending
-> > > > on the context).
-> > >
-> > > Probably.  Peter instead asked what it was supposed to even do.  ;-)
+> Am 2020-05-23 00:47, schrieb Michael Walle:
+> > Am 2020-05-23 00:21, schrieb Saravana Kannan:
+> >> On Fri, May 22, 2020 at 11:41 AM Michael Walle <michael@walle.cc>
+> >> wrote:
+> >>>
+> >>> Am Mon, 18 May 2020 23:30:00 -0700
+> >>> schrieb Saravana Kannan <saravanak@google.com>:
+> >>>
+> >>> > When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+> >>> > core: Add device link support for SYNC_STATE_ONLY flag"),
+> >>> > device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
+> >>> > device link to the supplier's and consumer's "device link" list.
+> >>> >
+> >>> > This causes multiple issues:
+> >>> > - The device link is lost forever from driver core if the caller
+> >>> >   didn't keep track of it (caller typically isn't expected to). This
+> >>> > is a memory leak.
+> >>> > - The device link is also never visible to any other code path after
+> >>> >   device_link_add() returns.
+> >>> >
+> >>> > If we fix the "device link" list handling, that exposes a bunch of
+> >>> > issues.
+> >>> >
+> >>> > 1. The device link "status" state management code rightfully doesn't
+> >>> > handle the case where a DL_FLAG_MANAGED device link exists between a
+> >>> > supplier and consumer, but the consumer manages to probe successfully
+> >>> > before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links
+> >>> > break this assumption. This causes device_links_driver_bound() to
+> >>> > throw a warning when this happens.
+> >>> >
+> >>> > Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for
+> >>> > creating proxy device links for child device dependencies and aren't
+> >>> > useful once the consumer device probes successfully, this patch just
+> >>> > deletes DL_FLAG_SYNC_STATE_ONLY device links once its consumer device
+> >>> > probes. This way, we avoid the warning, free up some memory and avoid
+> >>> > complicating the device links "status" state management code.
+> >>> >
+> >>> > 2. Creating a DL_FLAG_STATELESS device link between two devices that
+> >>> > already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
+> >>> > DL_FLAG_STATELESS flag not getting set correctly. This patch also
+> >>> > fixes this.
+> >>> >
+> >>> > Lastly, this patch also fixes minor whitespace issues.
+> >>>
+> >>> My board triggers the
+> >>>   WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
+> >>>
+> >>> Full bootlog:
+> > [..]
 > >
-> > I agree, I think smp_wmb() is redundant here. Can't remember why I thought
-> > that it's necessary, this algorithm went through a bunch of iterations,
-> > starting as completely lockless, also using READ_ONCE/WRITE_ONCE at some
-> > point, and settling on smp_read_acquire/smp_store_release, eventually. Maybe
-> > there was some reason, but might be that I was just over-cautious. See reply
-> > on patch thread as well ([0]).
+> >> Thanks for the log and report. I haven't spent too much time thinking
+> >> about this, but can you give this a shot?
+> >> https://lore.kernel.org/lkml/20200520043626.181820-1-saravanak@google.com/
 > >
-> >   [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5YJ8zO+SoAJCDtp1jVhcQ@mail.gmail.com/
-> >
+> > I've already tried that, as this is already in linux-next. Doesn't fix
+> > it,
+> > though.
 >
-> While we are at it, could you explain a bit on why you use
-> smp_store_release() on consumer_pos? I ask because IIUC, consumer_pos is
-> only updated at consumer side, and there is no other write at consumer
-> side that we want to order with the write to consumer_pos. So I fail
-> to find why smp_store_release() is necessary.
->
-> I did the following modification on litmus tests, and I didn't see
-> different results (on States) between two versions of litmus tests.
->
+> btw. this only happens on linux-next (tested with next-20200522), not on
+> 5.7-rc7 (which has the same two patches of yours)
 
-This is needed to ensure that producer can reliably detect whether it
-needs to trigger poll notification. Basically, consumer caught up at
-about same time as producer commits new record, we need to make sure
-that:
-  - either consumer sees updated producer_pos > consumer_pos, and thus
-knows that there is more data to consumer (but producer might not send
-notification of new data in this case);
-  - or producer sees that consumer already caught up (i.e.,
-consumer_pos == producer_pos before currently committed record), and
-in such case will definitely send notifications.
+I wouldn't be surprised if the difference is due to
+fw_devlink_pause/resume() calls in driver/of/property.c. It chops off
+~1s in boot time by changing the order in which device links are
+created from DT. So, I think it's just masking the issue.
 
-This is critical for correctness of epoll notifications.
-Unfortunately, litmus tests don't test this notification aspect, as I
-haven't originally figured out the invariant that can be defined to
-validate this. I'll give it another thought, though, maybe this time
-I'll come up with something.
+On linux-next where you see the issue, can you get the logs with this change:
++++ b/drivers/base/core.c
+@@ -907,7 +907,10 @@ void device_links_driver_bound(struct device *dev)
+                         */
+                        device_link_drop_managed(link);
+                } else {
+-                       WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
++                       WARN(link->status != DL_STATE_CONSUMER_PROBE,
++                               "sup:%s - con:%s f:%d s:%d\n",
++                               dev_name(supplier), dev_name(link->consumer),
++                               link->flags, link->status);
+                        WRITE_ONCE(link->status, DL_STATE_ACTIVE);
+                }
 
-> Regards,
-> Boqun
->
+My goal is to figure out the order in which the device links between
+the supplier and consumers devices are created and how that's changing
+the flag and status. Then I can come up with a fix.
 
-[...]
+Thanks,
+Saravana
