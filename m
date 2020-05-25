@@ -2,135 +2,180 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F14C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1652078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tMRZ7p3T"
+	by mail.kernel.org (Postfix) with ESMTP id 1F4562078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590404138;
+	bh=tijjKaQGw1GCkKwwvpL3QGBA9oFShZay8rBCAWS2hlI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ix/S7XFS9I25v/Mz6YZdvv3FiMI5k6M3G/ypJ2T00FftkfV19BQCrP2GuweN82X8f
+	 rpmsDKOUKWQQ1n4pGBjYjKQ0cxMhKhQqFXpn49pJWeLEhvcTJW6RjIyytznHuCCx54
+	 IKQDcG0A+j6gxV2NoIAHp9FecsYu02gvriPQK7ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390001AbgEYKy7 (ORCPT
+        id S2390005AbgEYKzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:54:59 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:54990 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389970AbgEYKy7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:54:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590404098; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=URAxEGJXgPJ5x2QnGveL6/kEbz97aXCsDNyyWBJbK4E=;
- b=tMRZ7p3Tcs5L0WIWj14DD2G1mWBdWA0wgHLqX2gu9+Sfxzckt+ahNUXB7cgvHZlyxKxSy2fD
- aiZwR67E4Sn+PEQE0Ci1hJJyBm+vulUby34yFTx5Pr3dZpq8ySolXS5QsXAZIFP/DdMupsqO
- Lbyvbknv5TvhV0SjuR7RAas16TQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ecba3ff4c3faf51e2e18f7e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 10:54:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 06EB3C43387; Mon, 25 May 2020 10:54:54 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 25 May 2020 06:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389897AbgEYKzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:55:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A53CEC433C6;
-        Mon, 25 May 2020 10:54:54 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 May 2020 16:24:54 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
-In-Reply-To: <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-3-jonathan@marek.ca>
- <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
- <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
-Message-ID: <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA942073B;
+        Mon, 25 May 2020 10:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590404136;
+        bh=tijjKaQGw1GCkKwwvpL3QGBA9oFShZay8rBCAWS2hlI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fSLDSNxRP5ppZlNQU3AtSn7fwMWkuL+my77sSo9NOVls+WS1zcFOQYIODUeotZfBA
+         SEKZwcENx/mcWHy+46fT320nXCEYHVw/BIfdrvJqcJdFbF/ySxGDKKz++3D5HHbq2R
+         azIOIQ7slcmjfjac92eW+lJDoJImSmaBqr4/lIJ8=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jdAla-00F8XK-85; Mon, 25 May 2020 11:55:34 +0100
+Date:   Mon, 25 May 2020 11:55:33 +0100
+Message-ID: <87tv04z3kq.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers/irqchip: Remove function callback casts
+In-Reply-To: <20200524162220.10186-1-oscar.carter@gmx.com>
+References: <20200524162220.10186-1-oscar.carter@gmx.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-25 15:39, Jonathan Marek wrote:
-> Hi,
+On Sun, 24 May 2020 17:22:20 +0100,
+Oscar Carter <oscar.carter@gmx.com> wrote:
 > 
-> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
->> Hi Jonathan,
->> 
->> On 2020-05-24 08:08, Jonathan Marek wrote:
->>> Add the apps_smmu node for sm8250. Note that adding the iommus field 
->>> for
->>> UFS is required because initializing the iommu removes the bypass 
->>> mapping
->>> that created by the bootloader.
->>> 
->> 
->> This statement doesn't seem right, you can just say since the bypass 
->> is disabled
->> by default now, we need to add this property to enable translation and 
->> avoid global faults.
->> 
+> In an effort to enable -Wcast-function-type in the top-level Makefile to
+> support Control Flow Integrity builds, remove all the function callback
+> casts.
 > 
-> If I use this patch [1] then the UFS iommu property isn't needed. In
-> downstream, the identity (bypass?) stream mapping is inherited from
-> the bootloader, and UFS is used without any iommu property. Setting
-> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
-> (without the UFS iommu property), so there's more to it than just
-> "bypass is disabled by default now".
+> To do this, create a new macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+> to initialize the acpi_probe_entry struct using the probe_subtbl field
+> instead of the probe_table field. Then, modify the IRQCHIP_ACPI_DECLARE
+> macro to use this new defined macro.
 > 
-> https://patchwork.kernel.org/patch/11310757/
+> Even though these two commented fields are part of a union, this is
+> necessary to avoid function cast mismatches. That is, due to the
+> IRQCHIP_ACPI_DECLARE invocations use as last parameter a function with
+> the protoype "int (*func)(struct acpi_subtable_header *, const unsigned
+> long)" it's necessary that this macro initialize the probe_subtbl field
+> of the acpi_probe_entry struct and not the probe_table field.
 > 
+> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> ---
+> Changelog v1->v2
+> - Add more details in the commit changelog to clarify the changes (Marc
+>   Zyngier)
+> - Declare a new macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY (Marc
+>   Zyngier)
+> - In the IRQCHIP_ACPI_DECLARE use the new defined macro (Marc Zyngier)
+> 
+>  include/linux/acpi.h    | 11 +++++++++++
 
-"iommus" property is not about inheriting stream mapping from 
-bootloader,
-it is used to enable SMMU address translation for the corresponding
-master when specified. So when you have disabled bypass, i.e.,
-ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
-"arm-smmu.disable_bypass=1"
-and iommus property with SID and mask is not specified, then it will 
-result
-in SMMU global faults.
+You now need to Cc the ACPI maintainers.
 
-Downstream has bypass enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so 
-you
-won't see any global faults if you do not have iommus property.
+>  include/linux/irqchip.h |  5 +++--
+>  2 files changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index d661cd0ee64d..fed49b276a90 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1154,6 +1154,17 @@ struct acpi_probe_entry {
+>  			.driver_data = data, 				\
+>  		   }
+> 
+> +#define ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(table, name, table_id,	\
+> +					  subtable, valid, data, fn)	\
+> +	static const struct acpi_probe_entry __acpi_probe_##name	\
+> +		__used __section(__##table##_acpi_probe_table) = {	\
+> +			.id = table_id,					\
+> +			.type = subtable,				\
+> +			.subtable_valid = valid,			\
+> +			.probe_subtbl = (acpi_tbl_entry_handler)fn,	\
 
-Patch in your link is for display because of the usecase for splash 
-screen
-on android and some other devices where the bootloader will configure 
-SMMU,
-it has not yet merged and not likely to get merged in the current state.
+It strikes me that under the guise of removing function casts, you are
+actually adding one! And this cast is actually hiding all sorts of
+sins (remove it, and see things exploding). I've fixed it with the
+patch below (ACPI is such a mess of data structure case...).
 
-So yes "there is *not* much more to it than bypass is disabled by 
-default now"
-and you have to specify "iommus" for the master devices or you should 
-enable bypass,
-i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or arm-smmu.disable_bypass=n
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index d7006ef18a0d..3870e9d4d3a8 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -2117,7 +2117,7 @@ static void __init gic_acpi_setup_kvm_info(void)
+ }
+ 
+ static int __init
+-gic_acpi_init(struct acpi_subtable_header *header, const unsigned long end)
++gic_acpi_init(union acpi_subtable_headers *header, const unsigned long end)
+ {
+ 	struct acpi_madt_generic_distributor *dist;
+ 	struct fwnode_handle *domain_handle;
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 30ab623343d3..fc431857ce90 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1593,7 +1593,7 @@ static void __init gic_acpi_setup_kvm_info(void)
+ 	gic_set_kvm_info(&gic_v2_kvm_info);
+ }
+ 
+-static int __init gic_v2_acpi_init(struct acpi_subtable_header *header,
++static int __init gic_v2_acpi_init(union acpi_subtable_headers *header,
+ 				   const unsigned long end)
+ {
+ 	struct acpi_madt_generic_distributor *dist;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index fed49b276a90..4f4ddbfce3d3 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1150,7 +1150,7 @@ struct acpi_probe_entry {
+ 			.id = table_id,					\
+ 			.type = subtable,				\
+ 			.subtable_valid = valid,			\
+-			.probe_table = (acpi_tbl_table_handler)fn,	\
++			.probe_table = fn,				\
+ 			.driver_data = data, 				\
+ 		   }
+ 
+@@ -1161,7 +1161,7 @@ struct acpi_probe_entry {
+ 			.id = table_id,					\
+ 			.type = subtable,				\
+ 			.subtable_valid = valid,			\
+-			.probe_subtbl = (acpi_tbl_entry_handler)fn,	\
++			.probe_subtbl = fn,				\
+ 			.driver_data = data,				\
+ 		}
+ 
+Thanks,
 
-Try without the patch in the link and without iommus for UFS and
-ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
+	M.
 
--Sai
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Without deviation from the norm, progress is not possible.
