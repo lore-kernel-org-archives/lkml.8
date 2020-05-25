@@ -2,126 +2,163 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B620C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2142070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SdktWP6P"
+	by mail.kernel.org (Postfix) with ESMTP id B78B3207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590424707;
+	bh=tyXYVbZ/KHxp0iFJ0teaN0huGpPC0vGPMko7EezkrzA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Ovagz/D4JkdzAt3Iy1AvGfQUZF7XQe1KC9NOmJ1B3ipStKCGEDBBdvsWCcqD20uyM
+	 3sGqLq8v/IFEW5AYUsmXGEZ2Xp5FmZHEHoPgSlwVR+HCFOHyoTs8uvtoKn3t0N0aqM
+	 wQpa5cjFda25r8aq15nUDEZKFycQg/SSgZs8KxWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbgEYQfg (ORCPT
+        id S1731551AbgEYQi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgEYQfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:35:36 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C59C061A0E;
-        Mon, 25 May 2020 09:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=e814a3EwSDU3bTXSkEJNT6vgHjnf2VYqudoUR9H3+xs=; b=SdktWP6PZa9zrpTlTUji6q0oiy
-        4TsCxIy09JUsM/HEmw5WtMl0HOZgepyTMECTkAfIxRGwe1SBftrkD7UNo2bnGl7QM7DRgOnw0aeVH
-        +85/Nudmw/nz4nDA0DrJ8GxceNwPcLgPdcGD9FaKLhgfzK8Pu+GBnUSKwaT3F32JehrYBo9FjdQng
-        hVAzTqRFhmQAzk4zc9gsWZEjhe1m+Fj9mFXGRtSeicpt1/pLrHSM0j87g7e6rgWlVhycUx+WLVwks
-        2rXksbf3s+JRr3YDB3ixW9XHhUbKq/GIoxboPArfvw8LYnonxR+YKcxuYfDutNsz4i36fjuWhNZ4H
-        uBoSmPrA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdG4d-0006u7-8a; Mon, 25 May 2020 16:35:35 +0000
-Subject: Re: linux-next: Tree for May 25 (fs/io_uring)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        io-uring@vger.kernel.org, axboe <axboe@kernel.dk>
-References: <20200525224923.41fb5a47@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7fbfc86d-bda1-362b-b682-1a9aefa8560e@infradead.org>
-Date:   Mon, 25 May 2020 09:35:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 12:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbgEYQi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 12:38:26 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C2962070A;
+        Mon, 25 May 2020 16:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590424706;
+        bh=tyXYVbZ/KHxp0iFJ0teaN0huGpPC0vGPMko7EezkrzA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=T5N6Hm3fxSQ5UoU82qWAI8fyzyz3qLy2aRJsMML8xP/fjw/9NH2FS6WgCyA+itScw
+         HphVELVjW+M0hBu75OhUstD59nBKTjTujkMIHqjnLROltItOJ5tW+d5Nl6RcM2MF9L
+         ns+FcR3ZgCwGQHbXYRRIPva1kJYhiv/JioPTow/s=
+Date:   Mon, 25 May 2020 11:43:19 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] PCI: hv: Use struct_size() helper
+Message-ID: <20200525164319.GA13596@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200525224923.41fb5a47@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 5:49 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200522:
-> 
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
+struct hv_dr_state {
+	...
+        struct hv_pcidev_description func[];
+};
 
-on i386:
+struct pci_bus_relations {
+	...
+        struct pci_function_description func[];
+} __packed;
 
-../fs/io_uring.c:500:26: error: field ‘wpq’ has incomplete type
-  struct wait_page_queue  wpq;
-                          ^~~
-In file included from ../include/linux/export.h:43:0,
-                 from ../include/linux/linkage.h:7,
-                 from ../include/linux/kernel.h:8,
-                 from ../fs/io_uring.c:42:
-../fs/io_uring.c: In function ‘io_async_buf_func’:
-../include/linux/kernel.h:1003:51: error: dereferencing pointer to incomplete type ‘struct wait_page_queue’
-  BUILD_BUG_ON_MSG(!__same_type(*(ptr), ((type *)0)->member) && \
-                                                   ^
-../include/linux/compiler.h:372:9: note: in definition of macro ‘__compiletime_assert’
-   if (!(condition))     \
-         ^~~~~~~~~
-../include/linux/compiler.h:392:2: note: in expansion of macro ‘_compiletime_assert’
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-  ^~~~~~~~~~~~~~~~~~~
-../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-../include/linux/kernel.h:1003:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-  BUILD_BUG_ON_MSG(!__same_type(*(ptr), ((type *)0)->member) && \
-  ^~~~~~~~~~~~~~~~
-../include/linux/kernel.h:1003:20: note: in expansion of macro ‘__same_type’
-  BUILD_BUG_ON_MSG(!__same_type(*(ptr), ((type *)0)->member) && \
-                    ^~~~~~~~~~~
-../fs/io_uring.c:2618:8: note: in expansion of macro ‘container_of’
-  wpq = container_of(wait, struct wait_page_queue, wait);
-        ^~~~~~~~~~~~
-In file included from <command-line>:0:0:
-./../include/linux/compiler_types.h:133:35: error: invalid use of undefined type ‘struct wait_page_queue’
- #define __compiler_offsetof(a, b) __builtin_offsetof(a, b)
-                                   ^
-../include/linux/stddef.h:17:32: note: in expansion of macro ‘__compiler_offsetof’
- #define offsetof(TYPE, MEMBER) __compiler_offsetof(TYPE, MEMBER)
-                                ^~~~~~~~~~~~~~~~~~~
-../include/linux/kernel.h:1006:21: note: in expansion of macro ‘offsetof’
-  ((type *)(__mptr - offsetof(type, member))); })
-                     ^~~~~~~~
-../fs/io_uring.c:2618:8: note: in expansion of macro ‘container_of’
-  wpq = container_of(wait, struct wait_page_queue, wait);
-        ^~~~~~~~~~~~
-../fs/io_uring.c:2620:8: error: implicit declaration of function ‘wake_page_match’; did you mean ‘huge_page_mask’? [-Werror=implicit-function-declaration]
-  ret = wake_page_match(wpq, key);
-        ^~~~~~~~~~~~~~~
-        huge_page_mask
-  AR      sound/pci/ac97/built-in.a
-../fs/io_uring.c: In function ‘io_rw_should_retry’:
-../fs/io_uring.c:2667:8: error: implicit declaration of function ‘kiocb_wait_page_queue_init’; did you mean ‘pgdat_page_ext_init’? [-Werror=implicit-function-declaration]
-  ret = kiocb_wait_page_queue_init(kiocb, &req->io->rw.wpq,
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~
-        pgdat_page_ext_init
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
+So, replace the following forms:
 
+offsetof(struct hv_dr_state, func) +
+	(sizeof(struct hv_pcidev_description) *
+	(relations->device_count))
+
+offsetof(struct pci_bus_relations, func) +
+	(sizeof(struct pci_function_description) *
+	(bus_rel->device_count))
+
+with:
+
+struct_size(dr, func, relations->device_count)
+
+and
+
+struct_size(bus_rel, func, bus_rel->device_count)
+
+respectively.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 892f3a742117a..bf40ff09c99d6 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2213,10 +2213,8 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 	struct hv_dr_state *dr;
+ 	int i;
+ 
+-	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+-		     (sizeof(struct hv_pcidev_description) *
+-		      (relations->device_count)), GFP_NOWAIT);
+-
++	dr = kzalloc(struct_size(dr, func, relations->device_count),
++		     GFP_NOWAIT);
+ 	if (!dr)
+ 		return;
+ 
+@@ -2250,10 +2248,8 @@ static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
+ 	struct hv_dr_state *dr;
+ 	int i;
+ 
+-	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+-		     (sizeof(struct hv_pcidev_description) *
+-		      (relations->device_count)), GFP_NOWAIT);
+-
++	dr = kzalloc(struct_size(dr, func, relations->device_count),
++		     GFP_NOWAIT);
+ 	if (!dr)
+ 		return;
+ 
+@@ -2447,9 +2443,8 @@ static void hv_pci_onchannelcallback(void *context)
+ 
+ 				bus_rel = (struct pci_bus_relations *)buffer;
+ 				if (bytes_recvd <
+-				    offsetof(struct pci_bus_relations, func) +
+-				    (sizeof(struct pci_function_description) *
+-				     (bus_rel->device_count))) {
++					struct_size(bus_rel, func,
++						    bus_rel->device_count)) {
+ 					dev_err(&hbus->hdev->device,
+ 						"bus relations too small\n");
+ 					break;
+@@ -2462,9 +2457,8 @@ static void hv_pci_onchannelcallback(void *context)
+ 
+ 				bus_rel2 = (struct pci_bus_relations2 *)buffer;
+ 				if (bytes_recvd <
+-				    offsetof(struct pci_bus_relations2, func) +
+-				    (sizeof(struct pci_function_description2) *
+-				     (bus_rel2->device_count))) {
++					struct_size(bus_rel2, func,
++						    bus_rel2->device_count)) {
+ 					dev_err(&hbus->hdev->device,
+ 						"bus relations v2 too small\n");
+ 					break;
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.26.2
+
