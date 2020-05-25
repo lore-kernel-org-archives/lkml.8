@@ -2,232 +2,137 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07652078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p+McVV8n"
+	by mail.kernel.org (Postfix) with ESMTP id 07D962071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390387AbgEYL6e (ORCPT
+        id S2390448AbgEYMBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:58:34 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38044 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390169AbgEYL6d (ORCPT
+        Mon, 25 May 2020 08:01:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390299AbgEYMBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:58:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590407912; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=iUPQaE6hIMSYWleF1I3d+RF+YMf3UfFsu6Hw+yi3dqk=;
- b=p+McVV8nsP070A8KykEhaLoW5yBKd3LMZHfM1PJxY735EO16MuJaGfh3tOlivTRCGB2/1zFk
- PJ7luJHJsPwvQNqGRh715gFakBtqd0W+FiX7mt0bTetA9U5pdLoweIm08Vk5Z4StnmItifzW
- k+V9EVntPFnkEnMWqnqDmGuz5SU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ecbb2d7.7fa95c82bf48-smtp-out-n02;
- Mon, 25 May 2020 11:58:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 311E4C433CB; Mon, 25 May 2020 11:58:15 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60CB2C433C9;
-        Mon, 25 May 2020 11:58:14 +0000 (UTC)
+        Mon, 25 May 2020 08:01:30 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04PBVAUQ035241;
+        Mon, 25 May 2020 08:00:50 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 316weudjhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 May 2020 08:00:50 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04PBvJuB031814;
+        Mon, 25 May 2020 12:00:48 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 316uf8v17p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 May 2020 12:00:48 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04PC0kQq60424296
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 May 2020 12:00:46 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F2834C050;
+        Mon, 25 May 2020 12:00:46 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 163AE4C046;
+        Mon, 25 May 2020 12:00:43 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.102.3.198])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 25 May 2020 12:00:42 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 25 May 2020 17:30:42 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Ira Weiny <ira.weiny@intel.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, linux-nvdimm@lists.01.org
+Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm, uapi: Add support for PAPR nvdimm specific methods
+In-Reply-To: <87ftbswhb6.fsf@linux.ibm.com>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-5-vaibhav@linux.ibm.com> <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com> <87367t941j.fsf@mpe.ellerman.id.au> <87ftbswhb6.fsf@linux.ibm.com>
+Date:   Mon, 25 May 2020 17:30:42 +0530
+Message-ID: <87a71ww7f9.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 May 2020 17:28:14 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
-In-Reply-To: <8f9a5750-7909-4be7-6780-198d8c242af3@marek.ca>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-3-jonathan@marek.ca>
- <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
- <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
- <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
- <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
- <72d771390af9a68759d3f81cb79e46a6@codeaurora.org>
- <33b34a58-46d2-80ec-1d79-8e02aa5ae026@marek.ca>
- <1adedb96a999a08809afe62416e80075@codeaurora.org>
- <8f9a5750-7909-4be7-6780-198d8c242af3@marek.ca>
-Message-ID: <d87d527e38ce256ec32fd63b777c98e6@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-25_05:2020-05-25,2020-05-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ bulkscore=0 mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ suspectscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005250087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-25 17:23, Jonathan Marek wrote:
-> On 5/25/20 7:40 AM, Sai Prakash Ranjan wrote:
->> On 2020-05-25 16:57, Jonathan Marek wrote:
->>> On 5/25/20 7:17 AM, Sai Prakash Ranjan wrote:
->>>> Hi,
->>>> 
->>>> On 2020-05-25 16:38, Jonathan Marek wrote:
->>>>> On 5/25/20 6:54 AM, Sai Prakash Ranjan wrote:
->>>>>> On 2020-05-25 15:39, Jonathan Marek wrote:
->>>>>>> Hi,
->>>>>>> 
->>>>>>> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
->>>>>>>> Hi Jonathan,
->>>>>>>> 
->>>>>>>> On 2020-05-24 08:08, Jonathan Marek wrote:
->>>>>>>>> Add the apps_smmu node for sm8250. Note that adding the iommus 
->>>>>>>>> field for
->>>>>>>>> UFS is required because initializing the iommu removes the 
->>>>>>>>> bypass mapping
->>>>>>>>> that created by the bootloader.
->>>>>>>>> 
->>>>>>>> 
->>>>>>>> This statement doesn't seem right, you can just say since the 
->>>>>>>> bypass is disabled
->>>>>>>> by default now, we need to add this property to enable 
->>>>>>>> translation and avoid global faults.
->>>>>>>> 
->>>>>>> 
->>>>>>> If I use this patch [1] then the UFS iommu property isn't needed. 
->>>>>>> In
->>>>>>> downstream, the identity (bypass?) stream mapping is inherited 
->>>>>>> from
->>>>>>> the bootloader, and UFS is used without any iommu property. 
->>>>>>> Setting
->>>>>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its 
->>>>>>> own
->>>>>>> (without the UFS iommu property), so there's more to it than just
->>>>>>> "bypass is disabled by default now".
->>>>>>> 
->>>>>>> https://patchwork.kernel.org/patch/11310757/
->>>>>>> 
->>>>>> 
->>>>>> "iommus" property is not about inheriting stream mapping from 
->>>>>> bootloader,
->>>>>> it is used to enable SMMU address translation for the 
->>>>>> corresponding
->>>>>> master when specified. So when you have disabled bypass, i.e.,
->>>>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
->>>>>> "arm-smmu.disable_bypass=1"
->>>>>> and iommus property with SID and mask is not specified, then it 
->>>>>> will result
->>>>>> in SMMU global faults.
->>>>>> 
->>>>>> Downstream has bypass 
->>>>>> enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so you
->>>>>> won't see any global faults if you do not have iommus property.
->>>>>> 
->>>>>> Patch in your link is for display because of the usecase for 
->>>>>> splash screen
->>>>>> on android and some other devices where the bootloader will 
->>>>>> configure SMMU,
->>>>>> it has not yet merged and not likely to get merged in the current 
->>>>>> state.
->>>>>> 
->>>>>> So yes "there is *not* much more to it than bypass is disabled by 
->>>>>> default now"
->>>>>> and you have to specify "iommus" for the master devices or you 
->>>>>> should enable bypass,
->>>>>> i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or 
->>>>>> arm-smmu.disable_bypass=n
->>>>>> 
->>>>>> Try without the patch in the link and without iommus for UFS and
->>>>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
->>>>>> 
->>>>>> -Sai
->>>>> 
->>>>> I know that the "iommus" property is not about inheriting stream
->>>>> mapping. Probing the iommu removes the stream mapping created by 
->>>>> the
->>>>> bootloader, the iommus property is added so that new mappings are
->>>>> created to replace what was removed.
->>>>> 
->>>>> You seem to be under the impression that the SM8150/SM8250 
->>>>> bootloader
->>>>> does not configure SMMU. It does, for both UFS and SDHC, just like 
->>>>> it
->>>>> does for display/splash screen on some devices.
->>>>> 
->>>> 
->>>> It could be that bootloader does configure SMMU for UFS and SDHC, 
->>>> but the
->>>> upstream SMMU driver doesnt allow to inherit stream mapping from the 
->>>> bootloader
->>>> yet, so adding iommus property based on the assumption that it is 
->>>> inherited seems
->>>> wrong.
->>>> 
->>> 
->>> I never said adding the iommus property is for inheriting stream
->>> mapping. I mentioned inheriting to say UFS works without the iommus
->>> property on downstream (it inherits a identity/bypass mapping).
->>> 
->> 
->> Your commit description says "adding the iommus field for UFS is 
->> required
->> because initializing the iommu removes the bypass mapping that created 
->> by the
->> bootloader". So here it would mean like iommus property for UFS is not 
->> for
->> enabling address translation by SMMU for UFS but to avoid removing 
->> mappings
->> created by the bootloader which is not exactly what iommus property is 
->> for.
->> 
-> 
-> I guess the commit message is ambiguous, that's not what I meant. Is
-> "Now that the kernel initializes the iommu, the bypass mappings set by
-> the bootloader are cleared. Adding the iommus property is required so
-> that new mappings are created for UFS." better?
-> 
+Hi Ira, Mpe and Aneesh,
 
-Yes looks good.
+Vaibhav Jain <vaibhav@linux.ibm.com> writes:
 
->>>>> With either value of ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT, it will 
->>>>> not
->>>>> work without the iommus property.
->>>> 
->>>> I'm pretty sure that if you have 
->>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n and
->>>> without iommus, it should work.
->>>> 
->>> 
->>> It doesn't work, with either ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or
->>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y.
->>> 
->> 
->> Ok since you are very sure about this, I will try with your patches on
->> SM8150 MTP tomorrow since I do not have access to one now.
->> Also just to make sure, please remove all the extra SMMU patches you 
->> have
->> in your tree which are not yet merged or from downstream kernel.
->> 
-> 
-> FYI, I have a branch [1] integrating patches for upstream. All the
-> patches up to 34fff8a519cc075933 ("arm64: dts: qcom: add sm8250 GPU
-> nodes") have been submitted (and the patches after that are
-> unnecessary for testing on sm8150).
-> 
-> [1] https://github.com/flto/linux/commits/sm8x50-upstream
-> 
+> Michael Ellerman <mpe@ellerman.id.au> writes:
+>
+>> Ira Weiny <ira.weiny@intel.com> writes:
+>>> On Wed, May 20, 2020 at 12:30:57AM +0530, Vaibhav Jain wrote:
+>>>> Introduce support for Papr nvDimm Specific Methods (PDSM) in papr_scm
+>>>> modules and add the command family to the white list of NVDIMM command
+>>>> sets. Also advertise support for ND_CMD_CALL for the dimm
+>>>> command mask and implement necessary scaffolding in the module to
+>>>> handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+>> ...
+>>>> + *
+>>>> + * Payload Version:
+>>>> + *
+>>>> + * A 'payload_version' field is present in PDSM header that indicates a specific
+>>>> + * version of the structure present in PDSM Payload for a given PDSM command.
+>>>> + * This provides backward compatibility in case the PDSM Payload structure
+>>>> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
+>>>> + *
+>>>> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
+>>>> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
+>>>> + * module when servicing the PDSM envelope checks the 'payload_version' and then
+>>>> + * uses 'payload struct version' == MIN('payload_version field',
+>>>> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
+>>>> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
+>>>> + * struct in returned 'payload_version' field.
+>>>
+>>> FWIW many people believe using a size rather than version is more sustainable.
+>>> It is expected that new payload structures are larger (more features) than the
+>>> previous payload structure.
+>>>
+>>> I can't find references at the moment through.
+>>
+>> I think clone_args is a good modern example:
+>>
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/sched.h#n88
+>>
+>> cheers
+>
+> Thank Ira and Mpe for pointing this out. I looked into how clone3 sycall
+> handles clone_args and few differences came out:
+>
+> * Unlike clone_args that are always transferred in one direction from
+>   user-space to kernel, payload contents of pdsms are transferred in both
+>   directions. Having a single version number makes it easier for
+>   user-space and kernel to determine what data will be exchanged.
+>
+> * For PDSMs, the version number is negotiated between libndctl and
+>   kernel. For example in case kernel only supports an older version of
+>   a structure, its free to send a lower version number back to
+>   libndctl. Such negotiations doesnt happen with clone3 syscall.
 
-Thanks, I will test this out.
+If you are ok with the explaination above please let me know. I will
+quickly spin off a v8 addressing your review comments.
 
--Sai
+Thanks,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Cheers
+~ Vaibhav
