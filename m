@@ -2,114 +2,88 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFDCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B36A20812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:41:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YWisdnil"
+	by mail.kernel.org (Postfix) with ESMTP id 12A662073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390817AbgEYNlW (ORCPT
+        id S2390827AbgEYNmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390752AbgEYNlV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:41:21 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6782BC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:41:20 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f18so688377qkh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gPDO3X5exveNuQB33sqGwYFDtLpn1MHpqh7qgx9Ds0U=;
-        b=YWisdnilIhfDrM+E+SxMXaOOM3S8J0owofy6L63tPMKNlQpTOnDBXaJIGIpfLVuv8e
-         RPwFtQIUH3v7EOrCTGWLmLB0H7YbUEomLIfmYte8O6ZPx64QjusgkIxmiTn0/Veefq7M
-         pGEt8yH0t/vwgIpSl+RtDysE0yr6nJS4JK3YSde04NTeyPjZmiEOJpHUKytYk9YebMaP
-         ZBwTqRWOlcbPbyxbCtPg/99VSLhwlIy3blfpxEsFWPNLZqUxUrAIQcRPOOcELjbAp/DY
-         UMb0QDSHWVMTyUFW5IIroZvxqvroUZ4aOu//kLYALqNBVGf71IaS4QGAehurQ0LEWc+H
-         VK9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gPDO3X5exveNuQB33sqGwYFDtLpn1MHpqh7qgx9Ds0U=;
-        b=DhPoAzMktrMf6JbjlLjAdT3wM5xL+qcBV5oaZFsLHw4RcAmWmVIBG2bblLj1yRmost
-         VUoH9SSXvkc71/JUmZUajwbDETYVBuak+rfMb5ZdNwTQrqrI28aN/SXQZaUsTmbmNOqv
-         E3mENRYpT5f3800MXcMo4SJs7X2G/4YcbZej9QHFz8QRlWQF8QjaFULhbIYGbTjMn/IJ
-         NPjPRB7D6sidNymUbImSbB1XZD7upyGtOq7O2u9gK3nyBAD+A2bKS20VtAAcpw8Sqifz
-         ZQSDgrbtX6NjTIrGICRpulR04t3GO+8zW1bo17XG7M+xi//HMTbpsxDxr9khSCTXNOk4
-         SNZg==
-X-Gm-Message-State: AOAM5312LTKRuSgBFtEwzSvIkwmc/5aXku3xfC9kCJYTOWnVWhbljUIF
-        XJ2V0maso9uBYyrLopML6eHT3g==
-X-Google-Smtp-Source: ABdhPJztwwj2Lmnes/knDFhWm/x9ekYq2TGHNL3KtgNw4hZnEPBap7aZFzv7gZ3WmAGU8iH6kzNbLg==
-X-Received: by 2002:a37:2dc4:: with SMTP id t187mr3763851qkh.166.1590414079640;
-        Mon, 25 May 2020 06:41:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id r15sm2718512qtt.42.2020.05.25.06.41.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 06:41:19 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jdDLy-0000hA-Jv; Mon, 25 May 2020 10:41:18 -0300
-Date:   Mon, 25 May 2020 10:41:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@linuxfoundation.org>
-Subject: Re: [PATCH 0/6] nouveau/hmm: add support for mapping large pages
-Message-ID: <20200525134118.GA2536@ziepe.ca>
-References: <20200508192009.15302-1-rcampbell@nvidia.com>
+        Mon, 25 May 2020 09:42:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52678 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390752AbgEYNmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:42:22 -0400
+IronPort-SDR: 2mJyGc4DUto9zzv9PPlx+qHEoNf7SXkxytbVXHQI6WdSWdqRx70LB0pGUKNdEP/xWVJfxooaFt
+ DCJ72WqDfqKg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:42:20 -0700
+IronPort-SDR: 3ahJSY+WGJJJL30AHT0RjfuA8GbpndCYboJhLj5auNonIf3UK1WzfXVbmt5TsM2f+/YaVPBve3
+ c8UhP5cU6vZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
+   d="scan'208";a="468055300"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 25 May 2020 06:42:17 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdDMx-008nMy-GZ; Mon, 25 May 2020 16:42:19 +0300
+Date:   Mon, 25 May 2020 16:42:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers
+ glue layer interface
+Message-ID: <20200525134219.GB1634618@smile.fi.intel.com>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+ <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
+ <20200521023735.mja62ujmxebgwyef@mobilestation>
+ <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508192009.15302-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:20:03PM -0700, Ralph Campbell wrote:
-> hmm_range_fault() returns an array of page frame numbers and flags for
-> how the pages are mapped in the requested process' page tables. The PFN
-> can be used to get the struct page with hmm_pfn_to_page() and the page size
-> order can be determined with compound_order(page) but if the page is larger
-> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
-> using a larger page size. To be fully general, hmm_range_fault() would need
-> to return the mapping size to handle cases like a 1GB compound page being
-> mapped with 2MB PMD entries. However, the most common case is the mapping
-> size the same as the underlying compound page size.
-> This series adds a new output flag to indicate this so that callers know it
-> is safe to use a large device page table mapping if one is available.
-> Nouveau and the HMM tests are updated to use the new flag.
-> 
-> Note that this series depends on a patch queued in Ben Skeggs' nouveau
-> tree ("nouveau/hmm: map pages after migration") and the patches queued
-> in Jason's HMM tree.
-> There is also a patch outstanding ("nouveau/hmm: fix nouveau_dmem_chunk
-> allocations") that is independent of the above and could be applied
-> before or after.
+On Mon, May 25, 2020 at 04:16:05PM +0300, Jarkko Nikula wrote:
+> On 5/21/20 5:37 AM, Serge Semin wrote:
 
-Did Christoph and Matt's remarks get addressed here?
+> For this patchset I'd like more if changes are done to
+> i2c-designware-platdrv.c since it's not too complicated yet :-)
 
-I think ODP could use something like this, currently it checks every
-page to get back to the huge page size and this flag would optimze
-that
+And after moving ACPI stuff to common code, the one has even been shrunk significantly.
 
-Jason
+> If it starts to look too messy in the future then it's time split I think.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
