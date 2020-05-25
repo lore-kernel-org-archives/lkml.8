@@ -2,100 +2,132 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B67C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24190C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198CD2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7742073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403767AbgEYMxB (ORCPT
+        id S2390596AbgEYMxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:53:01 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:11326 "EHLO zju.edu.cn"
+        Mon, 25 May 2020 08:53:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35710 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390567AbgEYMxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:53:01 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 25 May 2020 20:52:49
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Mon, 25 May 2020 20:52:49 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Philipp Zabel" <pza@pengutronix.de>
-Cc:     kjlu@umn.edu, "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] media: coda: Fix runtime PM imbalance in coda_probe
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200525123838.GA12983@pengutronix.de>
-References: <20200523100332.32626-1-dinghao.liu@zju.edu.cn>
- <20200525123838.GA12983@pengutronix.de>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        id S2388721AbgEYMxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 08:53:30 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 291083DA6DF6A7432E22;
+        Mon, 25 May 2020 20:53:27 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 25 May 2020 20:53:19 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <catalin.marinas@arm.com>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [PATCH v3 1/6] arm64: Detect the ARMv8.4 TTL feature
+Date:   Mon, 25 May 2020 20:52:55 +0800
+Message-ID: <20200525125300.794-2-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200525125300.794-1-yezhenyu2@huawei.com>
+References: <20200525125300.794-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Message-ID: <1c556c11.c8944.1724be4906f.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgDn7wehv8teYMsHAA--.1843W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsLBlZdtOTA+QABsn
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXIS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r4j6F4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6ryUMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
-        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
-        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
-        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUAVWUtwCS07vEIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
-        0EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvEx4A2jsIE14v26r4j6F4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBIaSBEaW5naGFvLAo+IAo+IHRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoISBUaGUgZmlyc3QgcGFy
-dCBpcyBmaW5lLCBidXQgSSB0aGluayB0aGUgc2Vjb25kCj4gcGFydCBpcyBub3QgbmVjZXNzYXJ5
-LCBzZWUgYmVsb3c6Cj4gCj4gT24gU2F0LCBNYXkgMjMsIDIwMjAgYXQgMDY6MDM6MzJQTSArMDgw
-MCwgRGluZ2hhbyBMaXUgd3JvdGU6Cj4gPiBXaGVuIGNvZGFfZmlybXdhcmVfcmVxdWVzdCgpIHJl
-dHVybnMgYW4gZXJyb3IgY29kZSwKPiA+IGEgcGFpcmluZyBydW50aW1lIFBNIHVzYWdlIGNvdW50
-ZXIgZGVjcmVtZW50IGlzIG5lZWRlZAo+ID4gdG8ga2VlcCB0aGUgY291bnRlciBiYWxhbmNlZC4K
-PiA+IAo+ID4gQWxzbywgdGhlIGNhbGxlciBleHBlY3RzIGNvZGFfcHJvYmUoKSB0byBpbmNyZWFz
-ZSBQTQo+ID4gdXNhZ2UgY291bnRlciwgdGhlcmUgc2hvdWxkIGJlIGEgcmVmY291bnQgZGVjcmVt
-ZW50Cj4gPiBpbiBjb2RhX3JlbW92ZSgpIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4g
-Cj4gY29kYV9wcm9iZSgpIGluY3JlbWVudHMgdGhlIHVzYWdlIGNvdW50ZXIgb25seSB1bnRpbCBj
-b2RhX2Z3X2NhbGxiYWNrKCkKPiBkZWNyZW1lbnRzIGl0IGFnYWluLiBXaGVyZSBpcyB0aGUgaW1i
-YWxhbmNlPwo+IAoKWW91IGFyZSByaWdodCwgSSBtaXNzZWQgY29kYV9maXJtd2FyZV9yZXF1ZXN0
-KCkgYmVmb3JlIGFuZCAKdGhhbmsgeW91IGZvciB5b3VyIGNvcnJlY3Rpb24hIEkgd2lsbCBmaXgg
-dGhpcyBpbiB0aGUgbmV4dAplZGl0aW9uIG9mIHBhdGNoLgoKUmVnYXJkcywKRGluZ2hhbwoKPiA+
-IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPgo+ID4g
-LS0tCj4gPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jb2RhL2NvZGEtY29tbW9uLmMgfCAzICsr
-Kwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY29kYS9jb2RhLWNvbW1vbi5jIGIvZHJpdmVycy9t
-ZWRpYS9wbGF0Zm9ybS9jb2RhL2NvZGEtY29tbW9uLmMKPiA+IGluZGV4IGQwZDA5M2RkOGY3Yy4u
-NTUwZTlhMTI2NmRhIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jb2Rh
-L2NvZGEtY29tbW9uLmMKPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY29kYS9jb2Rh
-LWNvbW1vbi5jCj4gPiBAQCAtMzExOSw2ICszMTE5LDggQEAgc3RhdGljIGludCBjb2RhX3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAgCXJldHVybiAwOwo+ID4gIAo+ID4g
-IGVycl9hbGxvY193b3JrcXVldWU6Cj4gPiArCXBtX3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+ZGV2
-KTsKPiA+ICsJcG1fcnVudGltZV9wdXRfbm9pZGxlKCZwZGV2LT5kZXYpOwo+IAo+IFRoZXNlIHNl
-ZW0gcmlnaHQsIHRoZXkgYmFsYW5jZSBvdXQgdGhlIHBtX3J1bnRpbWVfZW5hYmxlKCkKPiBhbmQg
-cG1fcnVudGltZV9nZXRfbm9yZXN1bWUoKSByaWdodCBiZWZvcmUgdGhlIGVycm9yLgo+IAo+ID4g
-IAlkZXN0cm95X3dvcmtxdWV1ZShkZXYtPndvcmtxdWV1ZSk7Cj4gPiAgZXJyX3Y0bDJfcmVnaXN0
-ZXI6Cj4gPiAgCXY0bDJfZGV2aWNlX3VucmVnaXN0ZXIoJmRldi0+djRsMl9kZXYpOwo+ID4gQEAg
-LTMxMzYsNiArMzEzOCw3IEBAIHN0YXRpYyBpbnQgY29kYV9yZW1vdmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikKPiA+ICAJfQo+ID4gIAlpZiAoZGV2LT5tMm1fZGV2KQo+ID4gIAkJdjRs
-Ml9tMm1fcmVsZWFzZShkZXYtPm0ybV9kZXYpOwo+ID4gKwlwbV9ydW50aW1lX3B1dF9ub2lkbGUo
-JnBkZXYtPmRldik7Cj4gCj4gSSB0aGluayB0aGlzIGlzIGluY29ycmVjdC4gVGhlcmUgaXMgb25l
-IHBtX3J1bnRpbWVfZ2V0X25vcmVzdW1lKCkgaW4KPiBjb2RhX3Byb2JlKCksIGFuZCBvbmUgcG1f
-cnVudGltZV9wdXRfc3luYygpIGluIGNvZGFfZndfY2FsbGJhY2soKS4KPiBCeSB0aGUgdGltZSBj
-b2RhX3JlbW92ZSgpIGlzIGNhbGxlZCwgYmFsYW5jZSBpcyBhbHJlYWR5IHJlc3RvcmVkLgo+IAo+
-IHJlZ2FyZHMKPiBQaGlsaXBwCg==
+From: Marc Zyngier <maz@kernel.org>
+
+In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
+feature allows TLBs to be issued with a level allowing for quicker
+invalidation.
+
+Let's detect the feature for now. Further patches will implement
+its actual usage.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ arch/arm64/include/asm/cpucaps.h |  3 ++-
+ arch/arm64/include/asm/sysreg.h  |  1 +
+ arch/arm64/kernel/cpufeature.c   | 11 +++++++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+index 8eb5a088ae65..cabb0c49a1d1 100644
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -61,7 +61,8 @@
+ #define ARM64_HAS_AMU_EXTN			51
+ #define ARM64_HAS_ADDRESS_AUTH			52
+ #define ARM64_HAS_GENERIC_AUTH			53
++#define ARM64_HAS_ARMv8_4_TTL			54
+ 
+-#define ARM64_NCAPS				54
++#define ARM64_NCAPS				55
+ 
+ #endif /* __ASM_CPUCAPS_H */
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index c4ac0ac25a00..477d84ba1056 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -725,6 +725,7 @@
+ 
+ /* id_aa64mmfr2 */
+ #define ID_AA64MMFR2_E0PD_SHIFT		60
++#define ID_AA64MMFR2_TTL_SHIFT		48
+ #define ID_AA64MMFR2_FWB_SHIFT		40
+ #define ID_AA64MMFR2_AT_SHIFT		32
+ #define ID_AA64MMFR2_LVA_SHIFT		16
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9fac745aa7bb..d993dc6dc7d5 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -244,6 +244,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
+ 
+ static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_E0PD_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_TTL_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_FWB_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_AT_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
+@@ -1622,6 +1623,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		.cpu_enable = cpu_has_fwb,
+ 	},
++	{
++		.desc = "ARMv8.4 Translation Table Level",
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.capability = ARM64_HAS_ARMv8_4_TTL,
++		.sys_reg = SYS_ID_AA64MMFR2_EL1,
++		.sign = FTR_UNSIGNED,
++		.field_pos = ID_AA64MMFR2_TTL_SHIFT,
++		.min_field_value = 1,
++		.matches = has_cpuid_feature,
++	},
+ #ifdef CONFIG_ARM64_HW_AFDBM
+ 	{
+ 		/*
+-- 
+2.19.1
+
+
