@@ -2,85 +2,164 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2592C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9650BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9AD20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6929B20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RlvVOG4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbgEYQW1 (ORCPT
+        id S1731443AbgEYQYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35938 "EHLO
+        Mon, 25 May 2020 12:24:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731228AbgEYQW0 (ORCPT
+        with ESMTP id S1729338AbgEYQYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:22:26 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42492C061A0E;
-        Mon, 25 May 2020 09:22:26 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jdFrd-0005Gl-0Q; Mon, 25 May 2020 18:22:09 +0200
-Date:   Mon, 25 May 2020 18:22:07 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     kbuild@lists.01.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        lkp@intel.com, kbuild-all@lists.01.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
- a seqcount
-Message-ID: <20200525162206.GB375786@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-2-a.darwish@linutronix.de>
- <20200520143706.GB30374@kadam>
+        Mon, 25 May 2020 12:24:17 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA5EC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:24:15 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so14066661qts.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KS0a12ZGAlis5FGjzq3oVpbX/YM5oeodYRXZXqWm+i8=;
+        b=RlvVOG4oquelW/QHisprTnJ5+AE3nog67eWlbiiRX9LiPSKxC/6WMrf4vBwM2ErSEA
+         uGKS5APVknW5P/Eg7MNjU54ZkvnfNQuwclevWvDHkRjNzv894NaIgXAMlbKgPzA71l3c
+         a6MuKd+gpTBCLRNLEkltvuJ1CT4jW5xM6g88pj36tRDQ4X2CsVs1yTVdtZ2XkFiq5WwK
+         42M8ef7/aC02RxBECMt7j8ZDHCGmqRgSgOauDfgM3qr76a9cdAsOwTb/o2x8+ePIvCHd
+         FAgs3MxfFbcrL5J3KwW7D3Xk2eBr1ydZzVVYI0K5LhnslAgzFRhFJTuy/gV+xQPG1Ib6
+         zCsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KS0a12ZGAlis5FGjzq3oVpbX/YM5oeodYRXZXqWm+i8=;
+        b=HTrBuA2Hs4rwm2Kme2RMi1uoCLjfV5RNmtIA40whDXID6GxSmDsIj3OuJqcV9Td/yA
+         pUxq4OVDRmllqyR9ta6YxlhDxDtKENVTEcQ4grlyhsWocGuYGxnY2gXGvOTa/3N8fV1I
+         gAy3xJGAnqifX9ZlyQJv4O89ahM8hbdXz4zVWkXaaswVHc229VvnzbiCHdoNkfz2y9mI
+         am6vMwsODAaYQjRb2HGJ3wudIwOJbq+cugeM4B+isnOPMLg9wGgRv7r94GwPBfIAg+iL
+         1ryjBQV+S5QQWCoPLj40UTO7bha7ylyf7yPm2Xh68TxX2OhIHmuVCFz7aqBfkMRvWUoX
+         MpPA==
+X-Gm-Message-State: AOAM530mAsnxA5emoAGm9wijaJY2bZtzq7nejYQnSYiPgZ1raY+24MTm
+        S3l7OA1a9vaJW00qwT86IrQ6i0fx/a/FXubU+K3LRQ==
+X-Google-Smtp-Source: ABdhPJxYcTFzk+NnfbAyKyadYyHL8dD0oRsGhvmc+Ujfz5lo4N1zqIz3HC7BJfc99USbyutgzQiNmAf4feRkGvtv8CE=
+X-Received: by 2002:ac8:2242:: with SMTP id p2mr19187641qtp.27.1590423855112;
+ Mon, 25 May 2020 09:24:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520143706.GB30374@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200516064507.19058-1-warthog618@gmail.com>
+In-Reply-To: <20200516064507.19058-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 25 May 2020 18:24:04 +0200
+Message-ID: <CAMpxmJX51PNHucOUnZ3GbA+RxmZto9NXruBmjUYoFHz5D1Nbqw@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:37:07PM +0300, Dan Carpenter wrote:
-...
+sob., 16 maj 2020 o 08:45 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
+):
 >
-> smatch warnings:
-> net/core/dev.c:953 netdev_get_name() warn: inconsistent returns 'devnet_rename_sem'.
+> Add a new version of the uAPI to address existing 32/64bit alignment
+> issues, add support for debounce, and provide some future proofing by
+> adding padding reserved for future use.
 >
-...
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 >
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  935  int netdev_get_name(struct net *net, char *name, int ifindex)
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  936  {
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  937  	struct net_device *dev;
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  938
-> 2354e271ada778b Ahmed S. Darwish 2020-05-19  939  	down_read(&devnet_rename_sem);
->                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> ---
 >
-> 2354e271ada778b Ahmed S. Darwish 2020-05-19  940
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  941  	rcu_read_lock();
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  942  	dev = dev_get_by_index_rcu(net, ifindex);
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  943  	if (!dev) {
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  944  		rcu_read_unlock();
-> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  945  		return -ENODEV;
->                                                               ^^^^^^^^^^^^^^
+> This patch is a proposal to replace the majority of the uAPI, so some
+> background and justification is in order.
+>
+> The alignment issue relates to the gpioevent_data, which packs to differe=
+nt
+> sizes on 32bit and 64bit platforms. That creates problems for 32bit apps
+> running on 64bit kernels.  The patch addresses that particular issue, and
+> the problem more generally, by adding pad fields that explicitly pad
+> structs out to 64bit boundaries, so they will pack to the same size now,
+> and even if some of the reserved padding is used for __u64 fields in the
+> future.
+>
+> The lack of future proofing in v1 makes it impossible to, for example,
+> add the debounce feature that is included in v2.
+> The future proofing is addressed by providing reserved padding in all
+> structs for future features.  Specifically, the line request,
+> config and info structs get updated versions and ioctls.
+>
+> I haven't added any padding to gpiochip_info, as I haven't seen any calls
+> for new features for the corresponding ioctl, but I'm open to updating th=
+at
+> as well.
+>
+> As the majority of the structs and ioctls were being replaced, it seemed
+> opportune to rework some of the other aspects of the uAPI.
+>
+> Firstly, I've reworked the flags field throughout.  v1 has three differen=
+t
+> flags fields, each with their own separate bit definitions.  In v2 that i=
+s
+> collapsed to one.  Further, the bits of the v2 flags field are used
+> as feature enable flags, with any other necessary configuration fields en=
+coded
+> separately.  This is simpler and clearer, while also providing a foundati=
+on
+> for adding features in the future.
+>
+> I've also merged the handle and event requests into a single request, the
+> line request, as the two requests where mostly the same, other than the
+> edge detection provided by event requests.  As a byproduct, the v2 uAPI
+> allows for multiple lines producing edge events on the same line handle.
+> This is a new capability as v1 only supports a single line in an event re=
+quest.
+>
+> This means there are now only two types of file handle to be concerned wi=
+th,
+> the chip and the line, and it is clearer which ioctls apply to which type
+> of handle.
+>
+> There is also some minor renaming of fields for consistency compared to t=
+heir
+> v1 counterparts, e.g. offset rather than lineoffset or line_offset, and
+> consumer rather than consumer_label.
+>
+> And v1 GPIOHANDLES_MAX and gpiohandle_data become GPIOLINES_MAX and
+> gpioline_values for v2 - the only change being the renaming for clarity.
+>
+> The v2 uAPI is mostly just a reorganisation of v1, so userspace code,
+> particularly libgpiod, should easily port to it.
+>
+> This patch is obviously only one patch in a much bigger series that
+> will actually implement it, but I would appreciate a review and any feedb=
+ack,
+> as it is foundational to the rest of that series.
+>
+> Thanks,
+> Kent.
+>
 
-Oh, shouldn't have missed that. Will fix in v2.
+Hi Kent,
 
-Thanks,
+Thanks for posting this. I like the general direction a lot. I'll
+review this in detail later this week.
+
+Seeing the speed at which you make progress I think I won't be
+implementing support for the v1 of the watch ioctl() in libgpiod after
+all. Once the v2 is live I will probably bump the API version in
+libgpiod to v2.0.0 and make some non-compatible changes anyway.
+
+Bart
