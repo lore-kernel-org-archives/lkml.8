@@ -2,133 +2,118 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC94C206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772192068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="u22PWsRg"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="WiBv6Jwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgEYIbV (ORCPT
+        id S2388112AbgEYIeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46486 "EHLO
+        Mon, 25 May 2020 04:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgEYIbU (ORCPT
+        with ESMTP id S1727894AbgEYIeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:31:20 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8A7C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:31:19 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so10072212lfb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:31:19 -0700 (PDT)
+        Mon, 25 May 2020 04:34:23 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8463CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:34:21 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id n5so15932224wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UN2FWfxtmTvTgPTJlbLtgk/SxaHl1REeGMaSieqXqSI=;
-        b=u22PWsRgh+Pany9OAxyDn2k94bv97PI6epfpRyZTQ+fViTRdQoEWDoPfZzo00mjeQ+
-         sSXDFsUPY11Hq37eVFahHLar+m4navcmilAJ6lHVJr14/NAxtb7uol3s8fenjfX69Tid
-         tyFdSa1jyTlsTjKnVHLKq35ReM2tiKILhe5V/NnN9/lF/Vutj+6IRjqxiN9dpU1gIPy1
-         qE0hDBb/efmwgpzi9WSf+D6vKPRbM1zWt3Mmoz9wW9CiFwbEqv2fkxQ+n1VUqotExZeA
-         kTL9MH9VOsFLthgd6KICtDowzmrYhtgfVWs7pVjlgE/eP2AL6Jb0clDxgGunf26jpRko
-         dYXQ==
+        bh=xsaSOL3nxn5UWojYLGHf0GidZv1f0eBsy1Kan4mSPis=;
+        b=WiBv6JwgwoGFabLxJtlkNV2QTT18NNEhPH3iMNUS8TNvE4V38+UFSMP4ahMe76Z26m
+         3WZNnG0LPNH7VrsaC39jgTQrROurGyfDpKw9DM/HRotlOw/dSjLuFAmFmcccTchAX/FM
+         JBqeHfDHPNhynj+Szb4t+GSyQIGsQ902ccVIA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=UN2FWfxtmTvTgPTJlbLtgk/SxaHl1REeGMaSieqXqSI=;
-        b=Kw3uLtVMqznAoh0CUuhdFQsDtcp9TdzyxZSu1PLxFghsjWzFcksR6LWCrE30sKkSWJ
-         B7Q/xtPMGep8PwrX/vIzQzHzpJBDj0DGghA4GRfqsODrQS0O93CW/PQc3OLlk5rof0Fd
-         0uZJi8W9RPDfUpWORtq3Jm7jNjnpe+FQiWLdUYCitH7N9q/TC1GNKlJdLiKhIyk/4ntO
-         kO/bBt9qBX+EMx+gHJ5DwRi1vu+DBpKi0cn/sFsrfHgk76O2Ab2qLzoLRDGpxClKO9BP
-         5u+C+qF2Ey0HDeXCzn8ang2d38rHDnBblIT0CViXC77Vkq5kHv80aKnG8sN4+auFrd9v
-         UcRw==
-X-Gm-Message-State: AOAM531NYjgmtqZ1hHRAviKb8HJnNVqjftuxFzspUO9RzHWNAnP2b2Iz
-        W6NKDpVB7vg1lYd5kypRFk1Jzw==
-X-Google-Smtp-Source: ABdhPJyR5fkxUwkWlOiAAx7vI6e0PEUGQvedASQSlIpBX120GGr9MWkesmZ8ZC1n5xD0Ynqz+r28HQ==
-X-Received: by 2002:a19:8447:: with SMTP id g68mr14007451lfd.132.1590395477604;
-        Mon, 25 May 2020 01:31:17 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:425b:15e7:251c:5b3:d625:2d43? ([2a00:1fa0:425b:15e7:251c:5b3:d625:2d43])
-        by smtp.gmail.com with ESMTPSA id b15sm4643322lfa.74.2020.05.25.01.31.15
+        bh=xsaSOL3nxn5UWojYLGHf0GidZv1f0eBsy1Kan4mSPis=;
+        b=aWHEObx9UkLX5EDMiwvWlzZ2wTzJkqDJ+J/MY1aR9gbSkmdnRxa3E0TO5sQ9vZvWag
+         lS5TmdjKgd0bkPk0UZODhOwSiZnfdMSsjNtonm7de/flhS/vjqT70kH5kARg1SrMaUeE
+         YxGsiQy00Yaun0p1CBytfZH/52c4PG7RFkLUV5kU/z4dZVmNGFxqaYqNlwvLk/vn+adQ
+         X3zonYz0IQ/CWlBoJg9LMTyYYbLoLAcT5iYQL4d56p0DuzfiiDSrvxT0ybZ3rCt6kkN+
+         nlB+P+vb9ltz0OhsqoqK7+mFZZEqQpfrs0DSuEgycAFNLfEO0r3nNd9RKBPLzvGLbY4M
+         LDAA==
+X-Gm-Message-State: AOAM530bO97q5gQVwsWoYyJaM5KaqRkUAlJGIoXq/rg1O6rE0ONJ9vpp
+        EGNmF9fgy18wVFqii8JPPnxLLA==
+X-Google-Smtp-Source: ABdhPJw2JzSdmK+zGATfwn4L+ZqcmuGdyIA8qCQDbzPpHHsPfwKHLuj/teLJ0K9DtYwDmAbqpesjOw==
+X-Received: by 2002:a1c:808d:: with SMTP id b135mr1598301wmd.94.1590395660196;
+        Mon, 25 May 2020 01:34:20 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id p4sm17583856wrq.31.2020.05.25.01.34.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 01:31:16 -0700 (PDT)
-Subject: Re: [PATCH v6 1/4] MIPS: Do not flush tlb page when updating PTE
- entry
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Bibo Mao <maobibo@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
- <79778fc3-c029-272b-358e-4f8f8e5772d3@cogentembedded.com>
-Message-ID: <0a38f25d-dba0-688f-4588-345c861325aa@cogentembedded.com>
-Date:   Mon, 25 May 2020 11:31:10 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 25 May 2020 01:34:19 -0700 (PDT)
+Subject: Re: [PATCH] bridge: mrp: Fix out-of-bounds read in br_mrp_parse
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        andrew@lunn.ch, UNGLinuxDriver@microchip.com,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     syzbot+9c6f0f1f8e32223df9a4@syzkaller.appspotmail.com
+References: <20200525095541.46673-1-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <a44f412e-dbde-93e9-be72-78515fa5b9d4@cumulusnetworks.com>
+Date:   Mon, 25 May 2020 11:34:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <79778fc3-c029-272b-358e-4f8f8e5772d3@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200525095541.46673-1-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.05.2020 11:12, Sergei Shtylyov wrote:
-
->> It is not necessary to flush tlb page on all CPUs if suitable PTE
->> entry exists already during page fault handling, just updating
->> TLB is fine.
->>
->> Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
+On 25/05/2020 12:55, Horatiu Vultur wrote:
+> The issue was reported by syzbot. When the function br_mrp_parse was
+> called with a valid net_bridge_port, the net_bridge was an invalid
+> pointer. Therefore the check br->stp_enabled could pass/fail
+> depending where it was pointing in memory.
+> The fix consists of setting the net_bridge pointer if the port is a
+> valid pointer.
 > 
->     Need empty line here.
+> Reported-by: syzbot+9c6f0f1f8e32223df9a4@syzkaller.appspotmail.com
+> Fixes: 6536993371fa ("bridge: mrp: Integrate MRP into the bridge")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  net/bridge/br_mrp_netlink.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
->> V6:
->> - Add update_mmu_tlb function as empty on all platform except mips
->>    system, we use this function to update local tlb for page fault
->>    smp-race handling
->> V5:
->> - define update_mmu_cache function specified on MIPS platform, and
->>    add page fault smp-race stats info
->> V4:
->> - add pte_sw_mkyoung function to implement readable privilege, and
->>    this function is  only in effect on MIPS system.
->> - add page valid bit judgement in function pte_modify
->> V3:
->> - add detailed changelog, modify typo issue in patch V2
->> v2:
->> - split flush_tlb_fix_spurious_fault and tlb update into two patches
->> - comments typo modification
->> - separate tlb update and add pte readable privilege into two patches
+> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+> index 397e7f710772a..4a08a99519b04 100644
+> --- a/net/bridge/br_mrp_netlink.c
+> +++ b/net/bridge/br_mrp_netlink.c
+> @@ -27,6 +27,12 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+>  	struct nlattr *tb[IFLA_BRIDGE_MRP_MAX + 1];
+>  	int err;
+>  
+> +	/* When this function is called for a port then the br pointer is
+> +	 * invalid, therefor set the br to point correctly
+> +	 */
+> +	if (p)
+> +		br = p->br;
+> +
+>  	if (br->stp_enabled != BR_NO_STP) {
+>  		NL_SET_ERR_MSG_MOD(extack, "MRP can't be enabled if STP is already enabled");
+>  		return -EINVAL;
 > 
->    It was a bad idea to keep the version change log in the 1st patch only,
-> we have either cover letter for that, or all the individual patches...
 
-    Sorry for noticing this only now. With 4 patches, you should have a cover 
-letter anyway...
+You should tag the fix for net-next when it's intended for it.
 
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> [...]
-
-MBR, Sergei
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
