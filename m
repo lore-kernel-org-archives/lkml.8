@@ -2,158 +2,94 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5706AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCB52071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5642071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Tr5Is/tF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YyhrYJdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404177AbgEYPbM (ORCPT
+        id S2404180AbgEYPcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
+        Mon, 25 May 2020 11:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403996AbgEYPbL (ORCPT
+        with ESMTP id S2404117AbgEYPcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:31:11 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA9EDC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:31:10 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id f18so14036335otq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:31:10 -0700 (PDT)
+        Mon, 25 May 2020 11:32:04 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82A2C08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:32:02 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z7so17608126ybn.21
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bAUJzoc7IqUjSn+yo0peq2R8rxLuXszL8v1+SHoHNg4=;
-        b=Tr5Is/tFfhBcNvoJFDbRu5Ln8A76+CnG+YDW2gJrWDvyNGkCXJ7tLlLksMoNneiC/G
-         JQcpPGhoKYZL1sU8qtPMsxurg5u2WpN3lkX8GcIcMGy67IE5X9Z/KXbl7mWg/wzgEVa5
-         0YNI55NOQ1RqN/Ren3NRDgb8W+ScMuN+eyqoU=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1aPJAz4aiRZJLGo9Zppdv6l/2UMHYuCErqh9nEDAlVw=;
+        b=YyhrYJdxW7Th9HHCMfEcljW9TMcq6yqlKP+g09M04H46XosgqxYKIuqivVkfRagJGi
+         4HTa7IJEqMafGxMXU3Q8BuJ1IhHwNQWzWXkQ2iuDaRO8GUQaddO29sVikEIflBpLPrpm
+         8TFsfR9ugSx6M5yULIhqDrhkDrTTrYvx7ImnKAAf8qsyYAnw+mNMpt4KHO976WzlVF2b
+         pAXf4hJESkFxemlW/aqX1fdCYU5gr06w4Np2N9F3Y3l2yuQo//qtxTZZ79w4GOeszwHk
+         Mt2rUdbpQcGYj89Af9cnHInj8RHz2Bx/HS4SJv4H37vQZWE+OVxeCz6XtAktkzty70jk
+         d5lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bAUJzoc7IqUjSn+yo0peq2R8rxLuXszL8v1+SHoHNg4=;
-        b=L1G4CrKhUaGpLMKeJiZEmqRuhSGzywLDxXVym0e3Cqh4ib8iaACV9MXgsCG03eTAyu
-         7wIoLhZO922cgToBzZPFFIYE2kiq8lbduGXjVZzg+D+1YICnu4p6tH6cYo+UaUzRXWGd
-         sx+1HlIvQJFKIsIwbi9x0JZsyO/ngSyAvFUBVNXMKXZrq9ZSfviNfvvUIJ2JEZYJwn1b
-         IS04ncgKgAe08qM/lznHqqsCbS0txckX9l0nmE0S3GMj6Tpp3IKzIef0Mjl4Wy37/kXa
-         2pPz9OmVl/KCuY5UKEabPgJN4OMO9tufkMc7xIn46sBeMVUA/R10WunCh4xgcQWfGpHK
-         nKog==
-X-Gm-Message-State: AOAM530NbsCMaOibO57Kf2LKWC/E5jkzHMrrGlDlmtgA/fPeLajUMHVX
-        afjP0fbwnnaugJqEwsP2WU6DAU2IS3sXLJ95ki1+uGVK
-X-Google-Smtp-Source: ABdhPJzkcrR3yAMwEAELXE9cys4iQedV/n7q7FwrzlUwqN0x19DN2aghlSLeBpaRXuxxoHbrXZYQHIFlGr+0T8f9mVM=
-X-Received: by 2002:a9d:768a:: with SMTP id j10mr5068453otl.188.1590420670094;
- Mon, 25 May 2020 08:31:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch> <20200512085944.222637-9-daniel.vetter@ffwll.ch>
-In-Reply-To: <20200512085944.222637-9-daniel.vetter@ffwll.ch>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Mon, 25 May 2020 17:30:59 +0200
-Message-ID: <CAKMK7uHXjFcVZuV-gF-mGYZVG8CbosoxWKN5MKV+rBXwEr3JZw@mail.gmail.com>
-Subject: Re: [RFC 08/17] drm/scheduler: use dma-fence annotations in main thread
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Qiang Yu <yuq825@gmail.com>, Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <Steven.Price@arm.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        "Anholt, Eric" <eric@anholt.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1aPJAz4aiRZJLGo9Zppdv6l/2UMHYuCErqh9nEDAlVw=;
+        b=PgCNiPaed0NsjR8CdcXir7CC4kNjmRY6w/ZLcsNhULizQojRgRjOrbbIQOZ7viOAim
+         o1pigCOW3JVYmL/A7/eNdap12XsZiDdvq/p/8PcDN4b/SSWNv4IeC93jE6ZPop8AFM2m
+         VIFWiF0m9goIQRkVu8BYg1EHhgN/vJDYKxEDJ6Fae8NCmb7kvFdmq2skyWIAfjg7tVli
+         XxPjFso8G1TUWJbdm09rKCi6z67H4XsMbxbne4TbOejaECcuB/G7qQFo1hRYXfItjN/G
+         nDl/7cvXD+t+Q6UGulCEeRl3mep4U63e67r1cpn0wUe46NDa5nCdRGasFCLkSliX7DBk
+         ZYww==
+X-Gm-Message-State: AOAM5302HAb9Fmbn9/1Jq3F+ZlL3z1jwwUSwmF64YGC1jTEbEyBJAyvh
+        oOZMXdlV8uzSv7FOB186WyS8MNo/f5NT
+X-Google-Smtp-Source: ABdhPJya/2GUziXPBk3NUocIvSMoZVWhlGIJuvfXIr49RmOkgaE3thIWHR39GaNnOmRGCJdlKCJr2u4JSiWD
+X-Received: by 2002:a5b:5c6:: with SMTP id w6mr44787174ybp.339.1590420721796;
+ Mon, 25 May 2020 08:32:01 -0700 (PDT)
+Date:   Mon, 25 May 2020 17:31:58 +0200
+Message-Id: <20200525153158.247394-1-dvyukov@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH] net/smc: mark smc_pnet_policy as const
+From:   Dmitry Vyukov <dvyukov@google.com>
+To:     ubraun@linux.ibm.com, kgraul@linux.ibm.com,
+        linux-s390@vger.kernel.org
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:00 AM Daniel Vetter <daniel.vetter@ffwll.ch> wro=
-te:
->
-> If the scheduler rt thread gets stuck on a mutex that we're holding
-> while waiting for gpu workloads to complete, we have a problem.
->
-> Add dma-fence annotations so that lockdep can check this for us.
->
-> I've tried to quite carefully review this, and I think it's at the
-> right spot. But obviosly no expert on drm scheduler.
->
-> Cc: linux-media@vger.kernel.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Netlink policies are generally declared as const.
+This is safer and prevents potential bugs.
 
-Adding a bunch more people from drivers using the drm/scheduler (so
-that's maintainers for etnaviv, lima, panfrost, and v3d on top of
-amdgpu folks arlready on cc). Any takes or testing on this and well
-the entire series very much appreciated, there's also another patch to
-anotate the tdr work in this series. Plus ofc the prep work.
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+---
+ net/smc/smc_pnet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks, Daniel
+diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
+index 2a5ed47c3e08..45d5ea570293 100644
+--- a/net/smc/smc_pnet.c
++++ b/net/smc/smc_pnet.c
+@@ -32,7 +32,7 @@
+ 
+ static struct net_device *pnet_find_base_ndev(struct net_device *ndev);
+ 
+-static struct nla_policy smc_pnet_policy[SMC_PNETID_MAX + 1] = {
++static const struct nla_policy smc_pnet_policy[SMC_PNETID_MAX + 1] = {
+ 	[SMC_PNETID_NAME] = {
+ 		.type = NLA_NUL_STRING,
+ 		.len = SMC_MAX_PNETID_LEN
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
 
-> ---
->  drivers/gpu/drm/scheduler/sched_main.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/sch=
-eduler/sched_main.c
-> index 2f319102ae9f..06a736e506ad 100644
-> --- a/drivers/gpu/drm/scheduler/sched_main.c
-> +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> @@ -763,9 +763,12 @@ static int drm_sched_main(void *param)
->         struct sched_param sparam =3D {.sched_priority =3D 1};
->         struct drm_gpu_scheduler *sched =3D (struct drm_gpu_scheduler *)p=
-aram;
->         int r;
-> +       bool fence_cookie;
->
->         sched_setscheduler(current, SCHED_FIFO, &sparam);
->
-> +       fence_cookie =3D dma_fence_begin_signalling();
-> +
->         while (!kthread_should_stop()) {
->                 struct drm_sched_entity *entity =3D NULL;
->                 struct drm_sched_fence *s_fence;
-> @@ -823,6 +826,9 @@ static int drm_sched_main(void *param)
->
->                 wake_up(&sched->job_scheduled);
->         }
-> +
-> +       dma_fence_end_signalling(fence_cookie);
-> +
->         return 0;
->  }
->
-> --
-> 2.26.2
->
-
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
