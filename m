@@ -2,132 +2,235 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D747C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 014762075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79752071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DV/WS2SE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbgEYWJ6 (ORCPT
+        id S1731322AbgEYWOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 18:09:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:44694 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729183AbgEYWJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 18:09:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E41B631B;
-        Mon, 25 May 2020 15:09:56 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A1653F6C4;
-        Mon, 25 May 2020 15:09:56 -0700 (PDT)
-Subject: Re: [RFC 08/11] net: phy: Allow mdio buses to auto-probe c45 devices
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-9-jeremy.linton@arm.com>
- <20200524144449.GP610998@lunn.ch>
- <ec63b0d4-2abc-0d32-69c0-ed1a822162cf@arm.com>
- <20200525082510.GH1551@shell.armlinux.org.uk>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <8567710f-b4d3-5ce6-225f-b932b4ffc97c@arm.com>
-Date:   Mon, 25 May 2020 17:09:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 18:14:05 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:8233 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729589AbgEYWOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 18:14:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590444842; x=1621980842;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=J+W1uF/+pHzCPt7+R5eOTYXFdxlNyATSaaicqu0ygi4=;
+  b=DV/WS2SEsl6SN7mojgkKHKccRJXPIQQYjY7shJa+vE+S+cX1aC53pA6K
+   C91u0weH7SxRkcT8iLVXYqyR4K99jIyO1FMpmBccSc2WXGszsX6YIuJH6
+   LsizebSBWExKRHFqKOJGcbEeKPKi5O+EvsxUelnwGNDFq+DlGIlIkErQc
+   M=;
+IronPort-SDR: ufGBgo4KxIqswKpBp10OaHci71Oh2zVMMMtxLHse5CRqI8VsWAEmGO9NwwFAnlutgpp/CTWwuS
+ 1aWhJXJcC2Ag==
+X-IronPort-AV: E=Sophos;i="5.73,435,1583193600"; 
+   d="scan'208";a="32159712"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 25 May 2020 22:14:01 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 33E3CA1B68;
+        Mon, 25 May 2020 22:14:00 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 22:13:59 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 22:13:49 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v3 01/18] nitro_enclaves: Add ioctl interface definition
+Date:   Tue, 26 May 2020 01:13:17 +0300
+Message-ID: <20200525221334.62966-2-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200525221334.62966-1-andraprs@amazon.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200525082510.GH1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D12UWC004.ant.amazon.com (10.43.162.182) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The Nitro Enclaves driver handles the enclave lifetime management. This
+includes enclave creation, termination and setting up its resources such
+as memory and CPU.
 
-On 5/25/20 3:25 AM, Russell King - ARM Linux admin wrote:
-> On Sun, May 24, 2020 at 11:28:52PM -0500, Jeremy Linton wrote:
->> Hi,
->>
->> On 5/24/20 9:44 AM, Andrew Lunn wrote:
->>>> +++ b/include/linux/phy.h
->>>> @@ -275,6 +275,11 @@ struct mii_bus {
->>>>    	int reset_delay_us;
->>>>    	/* RESET GPIO descriptor pointer */
->>>>    	struct gpio_desc *reset_gpiod;
->>>> +	/* bus capabilities, used for probing */
->>>> +	enum {
->>>> +		MDIOBUS_C22_ONLY = 0,
->>>> +		MDIOBUS_C45_FIRST,
->>>> +	} probe_capabilities;
->>>>    };
->>>
->>>
->>> I'm not so keen on _FIRST. It suggest _LAST would also be valid.  But
->>> that then suggests this is not a bus property, but a PHY property, and
->>> some PHYs might need _FIRST and other phys need _LAST, and then you
->>> have a bus which has both sorts of PHY on it, and you have a problem.
->>>
->>> So i think it would be better to have
->>>
->>> 	enum {
->>> 		MDIOBUS_UNKNOWN = 0,
->>> 		MDIOBUS_C22,
->>> 		MDIOBUS_C45,
->>> 		MDIOBUS_C45_C22,
->>> 	} bus_capabilities;
->>>
->>> Describe just what the bus master can support.
->>
->> Yes, the naming is reasonable and I will update it in the next patch. I went
->> around a bit myself with this naming early on, and the problem I saw was
->> that a C45 capable master, can have C45 electrical phy's that only respond
->> to c22 requests (AFAIK).
-> 
-> If you have a master that can only generate clause 45 cycles, and
-> someone is daft enough to connect a clause 22 only PHY to it, the
-> result is hardware that doesn't work - there's no getting around
-> that.  The MDIO interface can't generate the appropriate cycles to
-> access the clause 22 PHY.  So, this is not something we need care
-> about.
-> 
->> So the MDIOBUS_C45 (I think I was calling it
->> C45_ONLY) is an invalid selection. Not, that it wouldn't be helpful to have
->> a C45_ONLY case, but that the assumption is that you wouldn't try and probe
->> c22 registers, which I thought was a mistake.
-> 
-> MDIOBUS_C45 means "I can generate clause 45 cycles".
-> MDIOBUS_C22 means "I can generate clause 22 cycles".
-> MDIOBUS_C45_C22 means "I can generate both clause 45 and clause 22
-> cycles."
+An enclave runs alongside the VM that spawned it. It is abstracted as a
+process running in the VM that launched it. The process interacts with
+the NE driver, that exposes an ioctl interface for creating an enclave
+and setting up its resources.
 
-Hi, to be clear, we are talking about c45 controllers that can access 
-the c22 register space via c45, or controllers which are 
-electrically/level shifting to be compatible with c22 voltages/etc?
+Include part of the KVM ioctls in the provided ioctl interface, with
+additional NE ioctl commands that e.g. triggers the enclave run.
 
-The nxp hardware in question has 1, 10 and 40Gbit phys on the same MDIO, 
-the 1gbit we fall back to c22 registers because it doesn't respond 
-correctly to c45 registers. Which is AFAIK what the bit0 C22 regs bit is 
-for..
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+---
+Changelog
 
-The general logic right now for a C45_FIRST is attempt to detect a c45 
-phy and if nothing is detected fall back and attempt c22 register 
-access. That is whats picking up the 1G phys. If for whatever reason the 
-MDIO controller can't do the right thing to access the c22 regs, I guess 
-there really isn't anything we can do about it.
+v2 -> v3
+
+* Remove the GPL additional wording as SPDX-License-Identifier is already in
+place.
+
+v1 -> v2
+
+* Add ioctl for getting enclave image load metadata.
+* Update NE_ENCLAVE_START ioctl name to NE_START_ENCLAVE. 
+* Add entry in Documentation/userspace-api/ioctl/ioctl-number.rst for NE ioctls.
+* Update NE ioctls definition based on the updated ioctl range for major and
+minor.
+---
+ .../userspace-api/ioctl/ioctl-number.rst      |  5 +-
+ include/linux/nitro_enclaves.h                | 11 ++++
+ include/uapi/linux/nitro_enclaves.h           | 65 +++++++++++++++++++
+ 3 files changed, 80 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/nitro_enclaves.h
+ create mode 100644 include/uapi/linux/nitro_enclaves.h
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index f759edafd938..8a19b5e871d3 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -325,8 +325,11 @@ Code  Seq#    Include File                                           Comments
+ 0xAC  00-1F  linux/raw.h
+ 0xAD  00                                                             Netfilter device in development:
+                                                                      <mailto:rusty@rustcorp.com.au>
+-0xAE  all    linux/kvm.h                                             Kernel-based Virtual Machine
++0xAE  00-1F  linux/kvm.h                                             Kernel-based Virtual Machine
+                                                                      <mailto:kvm@vger.kernel.org>
++0xAE  40-FF  linux/kvm.h                                             Kernel-based Virtual Machine
++                                                                     <mailto:kvm@vger.kernel.org>
++0xAE  20-3F  linux/nitro_enclaves.h                                  Nitro Enclaves
+ 0xAF  00-1F  linux/fsl_hypervisor.h                                  Freescale hypervisor
+ 0xB0  all                                                            RATIO devices in development:
+                                                                      <mailto:vgo@ratio.de>
+diff --git a/include/linux/nitro_enclaves.h b/include/linux/nitro_enclaves.h
+new file mode 100644
+index 000000000000..d91ef2bfdf47
+--- /dev/null
++++ b/include/linux/nitro_enclaves.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#ifndef _LINUX_NITRO_ENCLAVES_H_
++#define _LINUX_NITRO_ENCLAVES_H_
++
++#include <uapi/linux/nitro_enclaves.h>
++
++#endif /* _LINUX_NITRO_ENCLAVES_H_ */
+diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nitro_enclaves.h
+new file mode 100644
+index 000000000000..3413352baf32
+--- /dev/null
++++ b/include/uapi/linux/nitro_enclaves.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
++#define _UAPI_LINUX_NITRO_ENCLAVES_H_
++
++#include <linux/kvm.h>
++#include <linux/types.h>
++
++/* Nitro Enclaves (NE) Kernel Driver Interface */
++
++/**
++ * The command is used to get information needed for in-memory enclave image
++ * loading e.g. offset in enclave memory to start placing the enclave image.
++ *
++ * The image load metadata is an in / out data structure. It includes info
++ * provided by the caller - flags - and returns the offset in enclave memory
++ * where to start placing the enclave image.
++ */
++#define NE_GET_IMAGE_LOAD_METADATA _IOWR(0xAE, 0x20, struct image_load_metadata)
++
++/**
++ * The command is used to trigger enclave start after the enclave resources,
++ * such as memory and CPU, have been set.
++ *
++ * The enclave start metadata is an in / out data structure. It includes info
++ * provided by the caller - enclave cid and flags - and returns the slot uid
++ * and the cid (if input cid is 0).
++ */
++#define NE_START_ENCLAVE _IOWR(0xAE, 0x21, struct enclave_start_metadata)
++
++/* Metadata necessary for in-memory enclave image loading. */
++struct image_load_metadata {
++	/**
++	 * Flags to determine the enclave image type e.g. Enclave Image Format
++	 * (EIF) (in).
++	 */
++	__u64 flags;
++
++	/**
++	 * Offset in enclave memory where to start placing the enclave image
++	 * (out).
++	 */
++	__u64 memory_offset;
++};
++
++/* Setup metadata necessary for enclave start. */
++struct enclave_start_metadata {
++	/* Flags for the enclave to start with (e.g. debug mode) (in). */
++	__u64 flags;
++
++	/**
++	 * Context ID (CID) for the enclave vsock device. If 0 as input, the
++	 * CID is autogenerated by the hypervisor and returned back as output
++	 * by the driver (in/out).
++	 */
++	__u64 enclave_cid;
++
++	/* Slot unique id mapped to the enclave to start (out). */
++	__u64 slot_uid;
++};
++
++#endif /* _UAPI_LINUX_NITRO_ENCLAVES_H_ */
+-- 
+2.20.1 (Apple Git-117)
 
 
-> 
-> Notice carefully the values these end up with - MDIOBUS_C22 = BIT(0),
-> MDIOBUS_C45 = BIT(1), MDIOBUS_C45_C22 = BIT(0) | BIT(1).  I suspect
-> that was no coincidence in Andrew's suggestion.
-> 
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
