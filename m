@@ -2,198 +2,140 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5968C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995A52071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA6C2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:28:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfUPCVhU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgEYF1M (ORCPT
+        id S1729782AbgEYF2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 01:27:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46592 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgEYF1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 01:27:11 -0400
-IronPort-SDR: gtHPSKWX4gfNEWkgD+EO4FVcER8/zsz7eaOw6QdHKOR2+WQsNUaEYzgSFQc+pLDqWvF3TCHiDX
- aC5fLU+zP7UQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 22:27:10 -0700
-IronPort-SDR: iJgO3NPxbSQrde39Pl/sGd3uIpknDtkS1Z6bF9xo+xNLMwaEOMKfpi1qnscwN4yVnKqkqnWG39
- FlfTk6lI7Z/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
-   d="scan'208";a="467949545"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 24 May 2020 22:27:06 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 3F116D7; Mon, 25 May 2020 08:27:04 +0300 (EEST)
-Date:   Mon, 25 May 2020 08:27:04 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Marius Hillenbrand <mhillenb@amazon.de>
-Subject: Re: [RFC 00/16] KVM protected memory extension
-Message-ID: <20200525052704.phyk5olkykncj3bj@black.fi.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+        Mon, 25 May 2020 01:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgEYF2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 01:28:21 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9559AC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 22:28:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j16so3465435wrb.7
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 22:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=L9KTCL62miysC4G9LaoSTZdB/dtWNH8pIG+LiC5Re3g=;
+        b=LfUPCVhUEg8m8lN/MQlL4GekJ0tWuoTKvrPgj1T0qzw8Ya8iwRgfKjCLCgN8fkvL6P
+         KhahjR4Jx/RywbjFjEc8J75iyhZgoCueb9l8JOYkWH9G+1Umx8z6JsDhTt3vkImUrEdc
+         G67lwoN9+uGdZyVGCuxRUeSdS9RrDOXPNqlRItFaDTs1WKMwQAMlSlxRyk6mzWWeaP+p
+         hp9e83P9nN60y8Qvxi+rnLVX5W/pI5vNSum14Boo8mRzyz8uQNrkMcIzMEcOWaFP1+Yb
+         jY/+1GnK3C+W/acCALgy05q9NIX9sN2Ut6fNwQOiI29mSN2scskgSevqx2a8Q+vmYyaA
+         ISqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=L9KTCL62miysC4G9LaoSTZdB/dtWNH8pIG+LiC5Re3g=;
+        b=uUgSAcWszrGLKivsGCrbPdE2Ayla6ClKGvMhSFohG/CS6QonP+uZY1htyg/IoFKsCF
+         KqGlDZ+7EvYgxJEoqSQaxCaTNI6iipg+oKAEx+8oN+N4isEffemaYCWsmtue7MGHSZya
+         nPkcv6Mvxfl+MXN462rRKf5j9moVMliNEcnetOvLQ3bdkNA0UsnQW6KTXMnpOPe7sGw6
+         Yrz6uNxury+QwIR9FjEVjp8ZYCFYsQGDAqcXFEmi3fYyJRBYqWXjUb6C8WUrIYNoqvwn
+         RMZEpijaWNYlgbLoJGCbNwLlbz0YmsT2/N7nBH/L6UJIErqTjkAzS1j5HcEgYsD/nPn2
+         PcRQ==
+X-Gm-Message-State: AOAM530tPujRHIMtPsBh7jZPdQxYV70Qx4zPHXWY8US6vH3cXV94ZD89
+        B3vDOcijN3tW5FqsJ/CI7at0tLXZ
+X-Google-Smtp-Source: ABdhPJz6Ho4ysYOj9vnw0hQaV+nZQP8o21HmsdEOaodoaJi6EWigG9E9TzsF5Kwt+pGNGpbjgmyG4Q==
+X-Received: by 2002:a5d:5048:: with SMTP id h8mr13457735wrt.293.1590384499194;
+        Sun, 24 May 2020 22:28:19 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id j4sm15257962wrx.24.2020.05.24.22.28.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 24 May 2020 22:28:18 -0700 (PDT)
+Date:   Mon, 25 May 2020 08:28:19 +0300
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs second pull request for kernel 5.8
+Message-ID: <20200525052819.GA19318@ogabbay-VM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:51:58PM +0300, Kirill A. Shutemov wrote:
-> == Background / Problem ==
-> 
-> There are a number of hardware features (MKTME, SEV) which protect guest
-> memory from some unauthorized host access. The patchset proposes a purely
-> software feature that mitigates some of the same host-side read-only
-> attacks.
+Hello Greg,
 
-CC people who worked on the related patchsets.
- 
-> == What does this set mitigate? ==
-> 
->  - Host kernel ”accidental” access to guest data (think speculation)
-> 
->  - Host kernel induced access to guest data (write(fd, &guest_data_ptr, len))
-> 
->  - Host userspace access to guest data (compromised qemu)
-> 
-> == What does this set NOT mitigate? ==
-> 
->  - Full host kernel compromise.  Kernel will just map the pages again.
-> 
->  - Hardware attacks
-> 
-> 
-> The patchset is RFC-quality: it works but has known issues that must be
-> addressed before it can be considered for applying.
-> 
-> We are looking for high-level feedback on the concept.  Some open
-> questions:
-> 
->  - This protects from some kernel and host userspace read-only attacks,
->    but does not place the host kernel outside the trust boundary. Is it
->    still valuable?
-> 
->  - Can this approach be used to avoid cache-coherency problems with
->    hardware encryption schemes that repurpose physical bits?
-> 
->  - The guest kernel must be modified for this to work.  Is that a deal
->    breaker, especially for public clouds?
-> 
->  - Are the costs of removing pages from the direct map too high to be
->    feasible?
-> 
-> == Series Overview ==
-> 
-> The hardware features protect guest data by encrypting it and then
-> ensuring that only the right guest can decrypt it.  This has the
-> side-effect of making the kernel direct map and userspace mapping
-> (QEMU et al) useless.  But, this teaches us something very useful:
-> neither the kernel or userspace mappings are really necessary for normal
-> guest operations.
-> 
-> Instead of using encryption, this series simply unmaps the memory. One
-> advantage compared to allowing access to ciphertext is that it allows bad
-> accesses to be caught instead of simply reading garbage.
-> 
-> Protection from physical attacks needs to be provided by some other means.
-> On Intel platforms, (single-key) Total Memory Encryption (TME) provides
-> mitigation against physical attacks, such as DIMM interposers sniffing
-> memory bus traffic.
-> 
-> The patchset modifies both host and guest kernel. The guest OS must enable
-> the feature via hypercall and mark any memory range that has to be shared
-> with the host: DMA regions, bounce buffers, etc. SEV does this marking via a
-> bit in the guest’s page table while this approach uses a hypercall.
-> 
-> For removing the userspace mapping, use a trick similar to what NUMA
-> balancing does: convert memory that belongs to KVM memory slots to
-> PROT_NONE: all existing entries converted to PROT_NONE with mprotect() and
-> the newly faulted in pages get PROT_NONE from the updated vm_page_prot.
-> The new VMA flag -- VM_KVM_PROTECTED -- indicates that the pages in the
-> VMA must be treated in a special way in the GUP and fault paths. The flag
-> allows GUP to return the page even though it is mapped with PROT_NONE, but
-> only if the new GUP flag -- FOLL_KVM -- is specified. Any userspace access
-> to the memory would result in SIGBUS. Any GUP access without FOLL_KVM
-> would result in -EFAULT.
-> 
-> Any anonymous page faulted into the VM_KVM_PROTECTED VMA gets removed from
-> the direct mapping with kernel_map_pages(). Note that kernel_map_pages() only
-> flushes local TLB. I think it's a reasonable compromise between security and
-> perfromance.
-> 
-> Zapping the PTE would bring the page back to the direct mapping after clearing.
-> At least for now, we don't remove file-backed pages from the direct mapping.
-> File-backed pages could be accessed via read/write syscalls. It adds
-> complexity.
-> 
-> Occasionally, host kernel has to access guest memory that was not made
-> shared by the guest. For instance, it happens for instruction emulation.
-> Normally, it's done via copy_to/from_user() which would fail with -EFAULT
-> now. We introduced a new pair of helpers: copy_to/from_guest(). The new
-> helpers acquire the page via GUP, map it into kernel address space with
-> kmap_atomic()-style mechanism and only then copy the data.
-> 
-> For some instruction emulation copying is not good enough: cmpxchg
-> emulation has to have direct access to the guest memory. __kvm_map_gfn()
-> is modified to accommodate the case.
-> 
-> The patchset is on top of v5.7-rc6 plus this patch:
-> 
-> https://lkml.kernel.org/r/20200402172507.2786-1-jimmyassarsson@gmail.com
-> 
-> == Open Issues ==
-> 
-> Unmapping the pages from direct mapping bring a few of issues that have
-> not rectified yet:
-> 
->  - Touching direct mapping leads to fragmentation. We need to be able to
->    recover from it. I have a buggy patch that aims at recovering 2M/1G page.
->    It has to be fixed and tested properly
-> 
->  - Page migration and KSM is not supported yet.
-> 
->  - Live migration of a guest would require a new flow. Not sure yet how it
->    would look like.
-> 
->  - The feature interfere with NUMA balancing. Not sure yet if it's
->    possible to make them work together.
-> 
->  - Guests have no mechanism to ensure that even a well-behaving host has
->    unmapped its private data.  With SEV, for instance, the guest only has
->    to trust the hardware to encrypt a page after the C bit is set in a
->    guest PTE.  A mechanism for a guest to query the host mapping state, or
->    to constantly assert the intent for a page to be Private would be
->    valuable.
--- 
- Kirill A. Shutemov
+This is the second pull request for habanalabs driver for kernel 5.8.
+
+It contains important improvements to our MMU code and our ASIC reset code.
+
+Please see the tag message for more details on what this pull request
+contains.
+
+Thanks,
+Oded
+
+The following changes since commit 709b41b56a16a5901a89dcaeb75d2233f80d9e55:
+
+  misc: rtsx: Remove unnecessary rts5249_set_aspm(), rts5260_set_aspm() (2020-05-22 09:38:14 +0200)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-05-25
+
+for you to fetch changes up to 8ff5f4fd40df9525675ea0e512da4cec65d646eb:
+
+  habanalabs: handle MMU cache invalidation timeout (2020-05-25 08:17:57 +0300)
+
+----------------------------------------------------------------
+This tag contains the following changes for kernel 5.8:
+
+- Improve MMU cache invalidation code and handle case where the
+  invalidation doesn't finish in a reasonable time.
+
+- Remove the option to perform soft-reset to GAUDI. Soft-reset is where the
+  driver only resets the compute and DMA engines of the ASIC. This is not
+  relevant to GAUDI as we must also reset the NIC ports. And when we reset
+  the NIC ports, we must also reset other stuff so we prefer to just do
+  hard-reset (where we reset the entire ASIC except for PCIe).
+
+- Fail the hard-reset procedure in case we still have user processes which
+  have active file-descriptors on a device. Doing hard-reset in that case
+  can result in a kernel panic because of gen_pool checks
+
+- Don't initialize the default wait callback of dma_buf with the default
+  wait function as that's the default...
+
+----------------------------------------------------------------
+Daniel Vetter (1):
+      habanalabs: don't set default fence_ops->wait
+
+Oded Gabbay (1):
+      habanalabs: GAUDI does not support soft-reset
+
+Omer Shpigelman (4):
+      habanalabs: improve MMU cache invalidation code
+      habanalabs: add print for soft reset due to event
+      habanalabs: don't allow hard reset with open processes
+      habanalabs: handle MMU cache invalidation timeout
+
+ drivers/misc/habanalabs/command_submission.c |  1 -
+ drivers/misc/habanalabs/device.c             | 23 ++++++---
+ drivers/misc/habanalabs/gaudi/gaudi.c        | 74 ++++++++++++++++++----------
+ drivers/misc/habanalabs/goya/goya.c          | 35 ++++++++-----
+ drivers/misc/habanalabs/habanalabs.h         | 10 ++--
+ drivers/misc/habanalabs/memory.c             | 35 ++++++++++---
+ drivers/misc/habanalabs/sysfs.c              |  5 ++
+ 7 files changed, 126 insertions(+), 57 deletions(-)
