@@ -2,144 +2,143 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48174C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0845B2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201092071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oOVlDGly"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DwtyaKIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbgEYJb2 (ORCPT
+        id S2389556AbgEYJbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389192AbgEYJb1 (ORCPT
+        Mon, 25 May 2020 05:31:49 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47328 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389462AbgEYJbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:31:27 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CF1C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:31:25 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id l15so9607777vsr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2SJy3teeS/DAEycN8FRbgylUfmtHnW0QUGPznK0vKdk=;
-        b=oOVlDGlyYvsjt9O70aWettNvYp5QuWpirQw83njS4tN9OVs1QOHpQ6l4kTXcQxSSyH
-         Nhslhcled0cALdykwKEM9G2EaYphVlW+R4mq2rsKBu1pBFetLlagvOXR8qS+HhpbLsfv
-         EfsZ8lsKt84cOgjPFwv4DmDm0ZPvnauZJpxKpOo+OpMGpvtMwjQ6XKPlh3MotvunFVL9
-         WD2yTLvNTyCG/2t90ne8LWfZc32BozQ1R2+QEeYjj/yC2M0mLjdFEr7Rpjxhx3xSEYoq
-         8v/VxK+F4xDjizjBPUPqFQu56jScEuiwTQ1LcqmVtKUa1VPGxM84KBhaYWAlwlkXpfRC
-         itEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2SJy3teeS/DAEycN8FRbgylUfmtHnW0QUGPznK0vKdk=;
-        b=gSI2OCue7c98Q/oHEGTwCW2jsBprENbcirQQIkxBFqGwH52DYDZPde6DWnYAvKc7uA
-         QiQwwlCztAAVNOHuYSNR2/LArh6wh4Lku+pGz/05U2zN37kj8c5Xxo+etwh6ZvpSV6zD
-         qLB2JCdCAWfri09XN6Pn5PKFU953u6d8a1q2FeTtPFcO1oH6CqyqCQtLimDLywstBcGK
-         uOLjKJ6qHiU5ajTEj99QRlJrY4mhA8lHRmJREwTwYTtLIGyUtuskoxRDMF814GpXQR7k
-         l9Yg+p12WD4d8vtFHraXCexYScckA/Zt1HcIFmlkLuayohspopeOK+St1PM8+Z84CSaR
-         N7/A==
-X-Gm-Message-State: AOAM533Drel2/EHVKPQWf4v1nMWbmiBBNqfV+4mPtiqvU9tJaZOQW6OR
-        uokL3uNRa1y5fFKgRvkoB4GdEC3EIihVb8Va5xew+A==
-X-Google-Smtp-Source: ABdhPJzdToedW+b7g2VJmgHmi3EXlqTSzajnqP28mVcwwaT9fRa4OEbfVkWvnBRvi/o5+XV/vwN09H2AFAdUDE1INz4=
-X-Received: by 2002:a67:1486:: with SMTP id 128mr13187332vsu.191.1590399084957;
- Mon, 25 May 2020 02:31:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20200521170817eucas1p13d9477a0a5d13d2df876134cf41131d8@eucas1p1.samsung.com>
- <5127441.yGvM1JjtLk@kreacher> <e9130ce8-fd22-c871-c089-585585c7133f@samsung.com>
- <CAJZ5v0j+bsHaQcxK41yph8eRpMZ3DoerqA7uwS2B8De41Jwi7Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j+bsHaQcxK41yph8eRpMZ3DoerqA7uwS2B8De41Jwi7Q@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 25 May 2020 11:30:48 +0200
-Message-ID: <CAPDyKFrHcvhi+qZk-65+FpDMu6y_ZU-K=nRWQY63qMR21m9yMg@mail.gmail.com>
-Subject: Re: [PATCH] PM: runtime: clk: Fix clk_pm_runtime_get() error path
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 25 May 2020 05:31:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590399106; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=rcy53dhh00j/cAlkf1xHyg4tWgvBbT8cJ1wghUEPwrA=; b=DwtyaKIS9GfLiN0L9M+mb0+KwuI28CeYg/fKyIwtIHFP+tzYQZGZ3qikOE+v0cDM36RiQooU
+ 6GUhRmg9c9+jIlKmTtmv+A+rSqV8qFOgigI67BX0gu8UMyJY2zkpVA40CyBs1wRc5sMsM27G
+ bnIfxvRCygMG9CbmQ/Mz+RAeEw0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ecb907c7171b6d7e4bc3082 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 09:31:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 13391C433CA; Mon, 25 May 2020 09:31:40 +0000 (UTC)
+Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1767EC433C9;
+        Mon, 25 May 2020 09:31:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1767EC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+From:   Zijun Hu <zijuhu@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org, zijuhu@codeaurora.org
+Subject: [PATCH v1] bluetooth: hci_qca: Fix qca6390 enable failure after warm reboot
+Date:   Mon, 25 May 2020 17:31:12 +0800
+Message-Id: <1590399072-32407-1-git-send-email-zijuhu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 20:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Fri, May 22, 2020 at 7:19 AM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
-> >
-> > Hi Rafael,
-> >
-> > On 21.05.2020 19:08, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > clk_pm_runtime_get() assumes that the PM-runtime usage counter will
-> > > be dropped by pm_runtime_get_sync() on errors, which is not the case,
-> > > so PM-runtime references to devices acquired by the former are leaked
-> > > on errors returned by the latter.
-> > >
-> > > Fix this by modifying clk_pm_runtime_get() to drop the reference if
-> > > pm_runtime_get_sync() returns an error.
-> > >
-> > > Fixes: 9a34b45397e5 clk: Add support for runtime PM
-> > > Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Frankly, I would rather fix the runtime_get_sync() instead of fixing the
-> > return path everywhere in the kernel. The current behavior of the
-> > pm_runtime_get_sync() is completely counter-intuitive then. I bet that
-> > in the 99% of the places where it is being called assume that no special
-> > fixup is needed in case of failure. This is one of the most common
-> > runtime PM related function and it is really a common pattern in the
-> > drivers to call:
-> >
-> > pm_runtime_get_sync()
-> >
-> > do something with the hardware
-> >
-> > pm_runtime_put()
-> >
-> > Do you really want to fix the error paths of the all such calls?
->
-> No, I don't, and that's why I'm proposing this patch.
->
-> The caller that does what you said above is OK now and if the behavior
-> of pm_runtime_get_sync() changed, that caller would need to be
-> updated.
->
-> OTOH, a caller that fails to drop the reference on an error returned
-> by pm_runtime_get_sync() is buggy (and has ever been so).
->
-> I'd rather update the buggy callers than the ones that are OK.
+Warm reboot can not restore qca6390 controller baudrate
+to default due to lack of controllable BT_EN pin or power
+supply, so fails to download firmware after warm reboot.
 
-I agree.
+Fixed by sending EDL_SOC_RESET VSC to reset controller
+within added device shutdown implementation.
 
-In hindsight we should have dropped the usage count in
-pm_runtime_get_sync(), when it fails. However, that's too late,
-especially since there are many cases having no error handling at all
-- and in those cases, that would mean the subsequent call to
-pm_runtime_put() can mess up the usage count (if pm_runtime_get_sync()
-failed and has already dropped the count).
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+---
+ drivers/bluetooth/btqca.c   |  8 ++++----
+ drivers/bluetooth/hci_qca.c | 27 +++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 4 deletions(-)
 
-So, feel free to add:
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 3ea866d..7bbdf4d 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -74,10 +74,10 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
+ 
+ 	ver = (struct qca_btsoc_version *)(edl->data);
+ 
+-	BT_DBG("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
+-	BT_DBG("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
+-	BT_DBG("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
+-	BT_DBG("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
++	BT_INFO("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
++	BT_INFO("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
++	BT_INFO("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
++	BT_INFO("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
+ 
+ 	/* QCA chipset version can be decided by patch and SoC
+ 	 * version, combination with upper 2 bytes from SoC
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index e4a6823..a4f86e4 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1975,6 +1975,32 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+ 	hci_uart_unregister_device(&qcadev->serdev_hu);
+ }
+ 
++static void qca_serdev_shutdown(struct device *dev)
++{
++	int res;
++	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
++	u8 ibs_wake_cmd[] = {0xfd};
++	u8 edl_reset_soc_cmd[] = {0x01, 0x00, 0xfc, 0x01, 0x05};
++
++	if (qcadev->btsoc_type == QCA_QCA6390) {
++		serdev_device_write_flush(serdev);
++		res = serdev_device_write_buf(serdev,
++				ibs_wake_cmd, sizeof(ibs_wake_cmd));
++		BT_INFO("%s: send ibs_wake_cmd res = %d", __func__, res);
++		serdev_device_wait_until_sent(serdev, timeout);
++		usleep_range(8000, 10000);
++
++		serdev_device_write_flush(serdev);
++		res = serdev_device_write_buf(serdev,
++				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
++		BT_INFO("%s: send edl_reset_soc_cmd res = %d", __func__, res);
++		serdev_device_wait_until_sent(serdev, timeout);
++		usleep_range(8000, 10000);
++	}
++}
++
+ static int __maybe_unused qca_suspend(struct device *dev)
+ {
+ 	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+@@ -2100,6 +2126,7 @@ static struct serdev_device_driver qca_serdev_driver = {
+ 		.name = "hci_uart_qca",
+ 		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
+ 		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
++		.shutdown = qca_serdev_shutdown,
+ 		.pm = &qca_pm_ops,
+ 	},
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-[...]
-
-Kind regards
-Uffe
