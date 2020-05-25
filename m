@@ -2,101 +2,219 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD786C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBFF020812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8224520812
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="M8B6svJX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbHF0I8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390571AbgEYM0K (ORCPT
+        id S2390581AbgEYM2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+        Mon, 25 May 2020 08:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390505AbgEYM0J (ORCPT
+        with ESMTP id S2390500AbgEYM2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:26:09 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53917C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:26:09 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id i68so13647849qtb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:26:09 -0700 (PDT)
+        Mon, 25 May 2020 08:28:07 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C422C061A0E;
+        Mon, 25 May 2020 05:28:07 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u5so8639679pgn.5;
+        Mon, 25 May 2020 05:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v+B1785OZUouPASW2jrMekMBCWgZaLFpUTHdleb2VxA=;
-        b=M8B6svJXr54wgpkQnxJoxOPnFoG3xoaPb76kANRmbKzt4nMw3qxD/q1sXASpcEEWgF
-         gHuA1+7j+0GHGEQqXQhNV3CKJGJ9y8q3jm3bRbRkWZKx1ilA8ceQcZUG0kUCYhtO2MZ7
-         o4kqO2LyZq2faf/NlIVIMBkKLeXoa88R/AW3tpprsWHR3SjzEi7iaSys03D2VbMtewxD
-         KWhdY5a9O/4fZ5uesQirQ2lMyaFJfuB2R2HsT37n64J/gUu+48rbi4zf1W71+HPlLCgg
-         RS6kJEq84BAk2ESnQHLB8txIWUSWrjJBBQcE2f/WAF2FVslapUIbMMvrwY16wMa3EvYc
-         Oywg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+E+o+aNk0CHjmIBkGKHgmosMQQyVO/7BF9hxr8UpXao=;
+        b=gbHF0I8l8bVjcUzFdEYW48thV0WucozZhYw8JGmAmLv4MFXm2Fo/2sG9J+9swMgfJB
+         H8BvwFudl25lv3J9Vmr4L1PuMaOjt6AVEnwVJFQQ3ojsKBPtbvLyh9Nv3KtvpEo/63LX
+         UOatZ58ylsIBXCED3SJtycPD+z5Q6GWuuweu12iBZAOfBPtEPrqgmzQDRDTMtpeRyznV
+         SrlXp+Z8rDnWUcbHCeY0tWOpLRBboBWQHzfJJf5YuBHRtM8LfPJC1lkajYImz3bNIHUw
+         eV/JTX6Vx0pwj6HSA9f2yrrYhAxX7HNhMuZXiWlTh3kZQqBCR9zyY4fLlEEFksTgqyfO
+         XsxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v+B1785OZUouPASW2jrMekMBCWgZaLFpUTHdleb2VxA=;
-        b=oC7WKjOyRX1sPtMYcz5URt5vsWLUAyK1jnhK7rHw4kcUtO7Qr8dyRDQHzjjMcGrjLu
-         Jese0AVGs3tJYJvFNldPUOkRtjtep2jZjNEjSCYSsLBWPRuyxV8ZA7JiY1keyM/8o18E
-         S55mUmqMGBMpeHUQJH1A7wkj7ClNTZn4gSG+CB/TQTYLhk94a87gwpwg2V3nI3/OJ+9T
-         HpQI+/mIO7RD876R3/Q6Qm9lZFn/1dlMzQS7pqUmZYqGVS6eOC//lWrTALHl9UREfd5Q
-         iRfjbqe+KdiPK8VdRcyj+zZNHtpfm9cVk/gjjhhb9PbrPobhHuSbIkluPN3kEpUluX2l
-         whYA==
-X-Gm-Message-State: AOAM531HqMUbeaUsi4NRiEC55wW7z7ACv6bK/4YGeWPZOaYC2QQlEx4E
-        vsfrdpyyA05vF8NJz6mzpBzY9w==
-X-Google-Smtp-Source: ABdhPJwk7SIlqGjBIUWz/0hGbccyh9qfHeyY8qv0Rau9jFzIYCDNLUkjNci7H9c03NXVt63ilIK9QA==
-X-Received: by 2002:aed:278d:: with SMTP id a13mr2961124qtd.23.1590409568569;
-        Mon, 25 May 2020 05:26:08 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id l2sm13637889qkd.57.2020.05.25.05.26.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 05:26:08 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jdCBD-0007ON-FH; Mon, 25 May 2020 09:26:07 -0300
-Date:   Mon, 25 May 2020 09:26:07 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com, cai@lca.pw
-Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
- on disabled memory
-Message-ID: <20200525122607.GC744@ziepe.ca>
-References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
- <159017506369.18853.17306023099999811263.stgit@gimli.home>
- <20200523193417.GI766834@xz-x1>
- <20200523170602.5eb09a66@x1.home>
- <20200523235257.GC939059@xz-x1>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+E+o+aNk0CHjmIBkGKHgmosMQQyVO/7BF9hxr8UpXao=;
+        b=BqJIiD8euteXp5524Tzw7CZM0m4CIzIF3pUyhAVC7DPJBLLWe9aRt4Mmu0QY5GFIGa
+         W6mCIpHgOA3pgpizs63LmV9aKj9TVeURMyJitKQ2/KKSVUU1oA/RVIKaRalcLYmbghom
+         nvjpN+vgCRkTYnvmbVwsAWv6qa14LHpGOBC7rI3zSX5rWhcUVf2xmk7yWN/S5ldQOKff
+         884rQ5wSS9IUgLE+6ZVG3vgHSwiSDFDL0eU6nzPbmNjoe24vpvZrHayrisClq+Hdz7dP
+         O3BOBX1APC+yuongS8Ey+pgtgJo+iQJvSym9CmLF7AxOq8M3mLnfm2ZKLthNW0z1CnOl
+         FO6w==
+X-Gm-Message-State: AOAM530eweiVSxe6uBkgInvKOA0hJIWLQ1IuujNW/U6HKNWu6jyR8O/Q
+        phoiQirBAy27HrCqoBznXAA=
+X-Google-Smtp-Source: ABdhPJwTEJ27OYACa1+AlYAvcPMWB9JsfTWTgmrQEgc6lVISLR09tt4cnP0umhCR/NNEkHAOniSX1Q==
+X-Received: by 2002:a05:6a00:150c:: with SMTP id q12mr16628282pfu.270.1590409686633;
+        Mon, 25 May 2020 05:28:06 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.209])
+        by smtp.gmail.com with ESMTPSA id r21sm12635055pjo.2.2020.05.25.05.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 05:28:05 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>, rjw@rjwysocki.net
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        jesse.brandeburg@intel.com, intel-wired-lan@lists.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2] e1000: use generic power management
+Date:   Mon, 25 May 2020 17:57:10 +0530
+Message-Id: <20200525122710.25064-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523235257.GC939059@xz-x1>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
+compile-tested only
 
-> For what I understand now, IMHO we should still need all those handlings of
-> FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
-> try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
-> not sure what would be the side effect of that if fault() blocked it.  E.g.,
-> the caller could be in an atomic context.
+With legacy PM hooks, it was the responsibility of a driver to manage PCI
+states and also the device's power state. The generic approach is to let PCI
+core handle the work.
 
-AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
-VM_FAULT_RETRY is returned, which this doesn't do?
+e1000_suspend() calls __e1000_shutdown() to perform intermediate tasks.
+__e1000_shutdown() modifies the value of "wake" (device should be wakeup
+enabled or not), responsible for controlling the flow of legacy PM.
 
-It is not a generic 'do not sleep'
+Since, PCI core has no idea about the value of "wake", new code for generic
+PM may produce unexpected results. Thus, use "device_set_wakeup_enable()"
+to wakeup-enable the device accordingly.
 
-Do you know different?
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 49 +++++--------------
+ 1 file changed, 13 insertions(+), 36 deletions(-)
 
-Jason
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 0d51cbc88028..011509709b3f 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -151,10 +151,8 @@ static int e1000_vlan_rx_kill_vid(struct net_device *netdev,
+ 				  __be16 proto, u16 vid);
+ static void e1000_restore_vlan(struct e1000_adapter *adapter);
+ 
+-#ifdef CONFIG_PM
+-static int e1000_suspend(struct pci_dev *pdev, pm_message_t state);
+-static int e1000_resume(struct pci_dev *pdev);
+-#endif
++static int __maybe_unused e1000_suspend(struct device *dev);
++static int __maybe_unused e1000_resume(struct device *dev);
+ static void e1000_shutdown(struct pci_dev *pdev);
+ 
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+@@ -179,16 +177,16 @@ static const struct pci_error_handlers e1000_err_handler = {
+ 	.resume = e1000_io_resume,
+ };
+ 
++static SIMPLE_DEV_PM_OPS(e1000_pm_ops, e1000_suspend, e1000_resume);
++
+ static struct pci_driver e1000_driver = {
+ 	.name     = e1000_driver_name,
+ 	.id_table = e1000_pci_tbl,
+ 	.probe    = e1000_probe,
+ 	.remove   = e1000_remove,
+-#ifdef CONFIG_PM
+-	/* Power Management Hooks */
+-	.suspend  = e1000_suspend,
+-	.resume   = e1000_resume,
+-#endif
++	.driver = {
++		.pm = &e1000_pm_ops,
++	},
+ 	.shutdown = e1000_shutdown,
+ 	.err_handler = &e1000_err_handler
+ };
+@@ -5048,9 +5046,6 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool *enable_wake)
+ 	struct e1000_hw *hw = &adapter->hw;
+ 	u32 ctrl, ctrl_ext, rctl, status;
+ 	u32 wufc = adapter->wol;
+-#ifdef CONFIG_PM
+-	int retval = 0;
+-#endif
+ 
+ 	netif_device_detach(netdev);
+ 
+@@ -5064,12 +5059,6 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool *enable_wake)
+ 		e1000_down(adapter);
+ 	}
+ 
+-#ifdef CONFIG_PM
+-	retval = pci_save_state(pdev);
+-	if (retval)
+-		return retval;
+-#endif
+-
+ 	status = er32(STATUS);
+ 	if (status & E1000_STATUS_LU)
+ 		wufc &= ~E1000_WUFC_LNKC;
+@@ -5130,37 +5119,26 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool *enable_wake)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int e1000_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused e1000_suspend(struct device *dev)
+ {
+ 	int retval;
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	bool wake;
+ 
+ 	retval = __e1000_shutdown(pdev, &wake);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
++	device_set_wakeup_enable(dev, wake);
+ 
+-	return 0;
++	return retval;
+ }
+ 
+-static int e1000_resume(struct pci_dev *pdev)
++static int __maybe_unused e1000_resume(struct device *dev)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
+ 	struct e1000_hw *hw = &adapter->hw;
+ 	u32 err;
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	pci_save_state(pdev);
+-
+ 	if (adapter->need_ioport)
+ 		err = pci_enable_device(pdev);
+ 	else
+@@ -5197,7 +5175,6 @@ static int e1000_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static void e1000_shutdown(struct pci_dev *pdev)
+ {
+-- 
+2.26.2
+
