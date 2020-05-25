@@ -2,168 +2,297 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC55DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4900F206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vT1rlakz"
+	by mail.kernel.org (Postfix) with ESMTP id 9731F206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590401288;
+	bh=LYTWl4TrlGylIRalFsrDUx0A/NrT0unSPfBfFVDv/Bc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HvvoJ5TPWxnY0aGaJWl1pu/xHLZJ334YHeVOFYRAVL+ToP4NM1Z+Jj50htUQ7+DBG
+	 pV2Fp9dnpBZ187t/15JG+X9L9x4EqApOT0ocaEnQbJ6YhATA+wFyWIsTq60xxUkngk
+	 fTpgu7OwOjRKWamEYQkNttbZfeFPitcysLgGfsq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389752AbgEYKGV (ORCPT
+        id S2389532AbgEYKII convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389490AbgEYKGV (ORCPT
+        Mon, 25 May 2020 06:08:08 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32779 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389337AbgEYKIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:06:21 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B6EC061A0E;
-        Mon, 25 May 2020 03:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Dqn2ng20zbfw83d4cd9J1CGxHLx509RjA4dWqy5bjlM=; b=vT1rlakzxVU8RhV8AQrWC0DBg
-        eMAO8ysp6ooFV3+5nxenSIjfA8WbVEYjovRcMnuViP2bp2CEYrmKlziRkMYgw04F5sNfTlpAuav5B
-        LNjkjjFBZR6Y256CKHDegox2QjXvQhewytn4Xb+EOBoxqOidpJ97AYwAXIutHVlgBNqB+R5CQdqpp
-        LQU9wTglm/2+3Z1LnEBjaf06RLPynqi+ZNOTiiqzMYn4BQGL0ogrL5sR3lxiWPfaFFEPP58vvUBdE
-        mYdfBU27KARSSOhYw2Crpe1D5fFhZYh1iAJVKxF8Olik0TGweo83reEdwiWS1QaYGP6e5E9JiNqQs
-        VEterxtzA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:34300)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jd9zq-0004vN-NX; Mon, 25 May 2020 11:06:14 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jd9zo-0004Gd-Vw; Mon, 25 May 2020 11:06:13 +0100
-Date:   Mon, 25 May 2020 11:06:12 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
-Message-ID: <20200525100612.GM1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-5-jeremy.linton@arm.com>
- <20200523183731.GZ1551@shell.armlinux.org.uk>
- <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
+        Mon, 25 May 2020 06:08:07 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v17so13515461ote.0;
+        Mon, 25 May 2020 03:08:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bs8SY7K+8kAbWexYTPELQF/AeX+ik4rZbO2DNGcsIM8=;
+        b=O7aFSnOzP7vEUWoEihmnlgN4SCxd/rOC8RqzmbJggomCCdvycO5hwVhUJvsgIhtHjT
+         f7Ve/46mEt/WxlE4fueHEEfdZoVsV7bmB4pTGQjJGoXlbaAkpKhaLTkADGLnxHB9j3gV
+         0Bz2XaJNJQI9syXlP8AHU3sGDWoVADwBOzaBnx3LXUTJhdQRQGiDEt0hmSBVBRTzOoFy
+         roMB1anAK5botPR3T607cTEMwZ1BUcKpnBGX78Y28xqFqLCbawqARpgOijGqEJY7CvzV
+         w/Km8zfb/N0g5kv9rtgV5oAwujWQrYfwvJLTuz0HorUpDhuNAIALMjIbEg/zehvZG3B9
+         wffQ==
+X-Gm-Message-State: AOAM530n7EMFr526f2fqitb/0B62lkrzZO8D3JeZqPPrbHllsFnT3TNN
+        4P+etpgI/Tqgpsbv/8/h+bsHvOl85q1U8KPVPx9voA==
+X-Google-Smtp-Source: ABdhPJxJbD0MPRC2BDp/QCMf+BfHXnYNLuLxLR1QuVtwVFXXDyVUmOEQqsEX+89XiBMZ6VcZS3rtVjODE1Zccd8weLs=
+X-Received: by 2002:a9d:4713:: with SMTP id a19mr1290811otf.167.1590401285696;
+ Mon, 25 May 2020 03:08:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200521203015.959915-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20200521203015.959915-1-srinivas.pandruvada@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 25 May 2020 12:07:48 +0200
+Message-ID: <CAJZ5v0i7bQDVZT4k==v=BKJOaXmxH3DBaP5GgSYpmwB8X8mo3g@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI / DPTF: Add additional attributes to power
+ participant driver
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 10:34:13PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/23/20 1:37 PM, Russell King - ARM Linux admin wrote:
-> > On Fri, May 22, 2020 at 04:30:52PM -0500, Jeremy Linton wrote:
-> > > Until this point, we have been sanitizing the c22
-> > > regs presence bit out of all the MMD device lists.
-> > > This is incorrect as it causes the 0xFFFFFFFF checks
-> > > to incorrectly fail. Further, it turns out that we
-> > > want to utilize this flag to make a determination that
-> > > there is actually a phy at this location and we should
-> > > be accessing it using c22.
-> > > 
-> > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > ---
-> > >   drivers/net/phy/phy_device.c | 16 +++++++++++++---
-> > >   1 file changed, 13 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> > > index f0761fa5e40b..2d677490ecab 100644
-> > > --- a/drivers/net/phy/phy_device.c
-> > > +++ b/drivers/net/phy/phy_device.c
-> > > @@ -689,9 +689,6 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
-> > >   		return -EIO;
-> > >   	*devices_in_package |= phy_reg;
-> > > -	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
-> > > -	*devices_in_package &= ~BIT(0);
-> > > -
-> > >   	return 0;
-> > >   }
-> > > @@ -742,6 +739,8 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > >   	int i;
-> > >   	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
-> > >   	u32 *devs = &c45_ids->devices_in_package;
-> > > +	bool c22_present = false;
-> > > +	bool valid_id = false;
-> > >   	/* Find first non-zero Devices In package. Device zero is reserved
-> > >   	 * for 802.3 c45 complied PHYs, so don't probe it at first.
-> > > @@ -770,6 +769,10 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > >   		return 0;
-> > >   	}
-> > > +	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
-> > > +	c22_present = *devs & BIT(0);
-> > > +	*devs &= ~BIT(0);
-> > > +
-> > >   	/* Now probe Device Identifiers for each device present. */
-> > >   	for (i = 1; i < num_ids; i++) {
-> > >   		if (!(c45_ids->devices_in_package & (1 << i)))
-> > > @@ -778,6 +781,13 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > >   		ret = _get_phy_id(bus, addr, i, &c45_ids->device_ids[i], true);
-> > >   		if (ret < 0)
-> > >   			return ret;
-> > > +		if (valid_phy_id(c45_ids->device_ids[i]))
-> > > +			valid_id = true;
-> > 
-> > Here you are using your "devices in package" validator to validate the
-> > PHY ID value.  One of the things it does is mask this value with
-> > 0x1fffffff.  That means you lose some of the vendor OUI.  To me, this
-> > looks completely wrong.
-> 
-> I think in this case I was just using it like the comment in
-> get_phy_device() "if the phy_id is mostly F's, there is no device here".
-> 
-> My understanding is that the code is trying to avoid the 0xFFFFFFFF returns
-> that seem to indicate "bus ok, phy didn't respond".
-> 
-> I just checked the OUI registration, and while there are a couple OUI's
-> registered that have a number of FFF's in them, none of those cases seems to
-> overlap sufficiently to cause this to throw them out. Plus a phy would also
-> have to have model+revision set to 'F's. So while might be possible, if
-> unlikely, at the moment I think the OUI registration keeps this from being a
-> problem. Particularly, if i'm reading the mapping correctly, the OUI mapping
-> guarantees that the field cannot be all '1's due to the OUI having X & M
-> bits cleared. It sort of looks like the mapping is trying to lose those
-> bits, by tossing bit 1 & 2, but the X & M are in the wrong octet (AFAIK, I
-> just read it three times cause it didn't make any sense).
+On Thu, May 21, 2020 at 10:30 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> Add two additional attributes to the existing power participant driver:
+> rest_of_platform_power_mw: (RO) Shows the rest of worst case platform
+> power in mW outside of S0C. This will help in power distribution to SoC
+> and rest of the system. For example on a test system, this value is 2.5W
+> with a 15W TDP SoC. Based on the adapter rating (adapter_rating_mw), user
+> space software can decide on proper power allocation to SoC to improve
+> short term performance via powercap/RAPL interface.
+>
+> prochot_confirm: (WO) Confirm EC about a prochot notification.
+>
+> Also userspace is notified via sysfs_notify(), whenever power source or
+> rest of the platform power is changed. So user space can use poll()
+> system call on those attributes.
+>
+> The ACPI methods used in this patch are as follows:
+>
+> PROP
+> This object evaluates to the rest of worst case platform power in mW.
+> Bits:
+> 23:0 Worst case rest of platform power in mW.
+>
+> PBOK
+> PBOK is a method designed to provide a mechanism for OSPM to change power
+> setting before EC can de-assert a PROCHOT from a device. The EC may
+> receive several PROCHOTs, so it has a sequence number attached to PSRC
+> (read via existing attribute "platform_power_source"). Once OSPM takes
+> action for a PSRC change notification, it can call PBOK method to confirm
+> with the sequence number.
+> Bits:
+> 3:0 Power Delivery State Change Sequence number
+> 30  Reserved
+> 31  0 – Not OK to de-assert PROCHOT
+>     1 – OK to de-assert PROCHOT
+>
+> PSRC (Platform Power Source): Not new in this patch but for
+> documentation for new bits
+> This object evaluates to an integer that represents the system power
+> source as well as the power delivery state change sequence number.
+> Bits:
+> 3:0 The current power source as an integer for AC, DC, USB, Wireless.
+> 0 = DC, 1 = AC, 2 = USB, 3 = Wireless Charging
+> 7:4 Power Delivery State Change Sequence Number. Default value is 0
+>
+> Notifications:
+> 0x81: (Power State Change) Used to notify when the power source has
+> changed.
+> 0x84: (PROP change) Used to notify when the platform rest of power has
+> changed.
+>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> v2
+>  Change rest_of_platform_power_mw explanation.
+>
+>  Documentation/ABI/testing/sysfs-platform-dptf | 24 +++++--
+>  drivers/acpi/dptf/dptf_power.c                | 69 ++++++++++++++++++-
+>  2 files changed, 88 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
+> index 325dc0667dbb..e83a9d208849 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-dptf
+> +++ b/Documentation/ABI/testing/sysfs-platform-dptf
+> @@ -27,10 +27,12 @@ KernelVersion:      v4.10
+>  Contact:       linux-acpi@vger.kernel.org
+>  Description:
+>                 (RO) Display the platform power source
+> -               0x00 = DC
+> -               0x01 = AC
+> -               0x02 = USB
+> -               0x03 = Wireless Charger
+> +               bits[3:0] Current power source
+> +                       0x00 = DC
+> +                       0x01 = AC
+> +                       0x02 = USB
+> +                       0x03 = Wireless Charger
+> +               bits[7:4] Power source sequence number
+>
+>  What:          /sys/bus/platform/devices/INT3407:00/dptf_power/battery_steady_power
+>  Date:          Jul, 2016
+> @@ -38,3 +40,17 @@ KernelVersion:       v4.10
+>  Contact:       linux-acpi@vger.kernel.org
+>  Description:
+>                 (RO) The maximum sustained power for battery in milliwatts.
+> +
+> +What:          /sys/bus/platform/devices/INT3407:00/dptf_power/rest_of_platform_power_mw
+> +Date:          June, 2020
+> +KernelVersion: v5.8
+> +Contact:       linux-acpi@vger.kernel.org
+> +Description:
+> +               (RO) Shows the rest of worst case platform power outside of SoC.
+> +
+> +What:          /sys/bus/platform/devices/INT3407:00/dptf_power/prochot_confirm
+> +Date:          June, 2020
+> +KernelVersion: v5.8
+> +Contact:       linux-acpi@vger.kernel.org
+> +Description:
+> +               (WO) Confirm embedded controller about a prochot notification.
+> diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
+> index e4e8b75d39f0..abe99039af74 100644
+> --- a/drivers/acpi/dptf/dptf_power.c
+> +++ b/drivers/acpi/dptf/dptf_power.c
+> @@ -16,6 +16,7 @@
+>   * ARTG : Adapter rating
+>   * CTYP : Charger type
+>   * PBSS : Battery steady power
+> + * PROP : Rest of worst case platform Power
+>   */
+>  #define DPTF_POWER_SHOW(name, object) \
+>  static ssize_t name##_show(struct device *dev,\
+> @@ -39,12 +40,34 @@ DPTF_POWER_SHOW(platform_power_source, PSRC)
+>  DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
+>  DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
+>  DPTF_POWER_SHOW(charger_type, CTYP)
+> +DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
+>
+>  static DEVICE_ATTR_RO(max_platform_power_mw);
+>  static DEVICE_ATTR_RO(platform_power_source);
+>  static DEVICE_ATTR_RO(adapter_rating_mw);
+>  static DEVICE_ATTR_RO(battery_steady_power_mw);
+>  static DEVICE_ATTR_RO(charger_type);
+> +static DEVICE_ATTR_RO(rest_of_platform_power_mw);
+> +
+> +static ssize_t prochot_confirm_store(struct device *dev,
+> +                                    struct device_attribute *attr,
+> +                                    const char *buf, size_t count)
+> +{
+> +       struct acpi_device *acpi_dev = dev_get_drvdata(dev);
+> +       acpi_status status;
+> +       int seq_no;
+> +
+> +       if (kstrtouint(buf, 0, &seq_no) < 0)
+> +               return -EINVAL;
+> +
+> +       status = acpi_execute_simple_method(acpi_dev->handle, "PBOK", seq_no);
+> +       if (ACPI_SUCCESS(status))
+> +               return count;
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +static DEVICE_ATTR_WO(prochot_confirm);
+>
+>  static struct attribute *dptf_power_attrs[] = {
+>         &dev_attr_max_platform_power_mw.attr,
+> @@ -52,6 +75,8 @@ static struct attribute *dptf_power_attrs[] = {
+>         &dev_attr_adapter_rating_mw.attr,
+>         &dev_attr_battery_steady_power_mw.attr,
+>         &dev_attr_charger_type.attr,
+> +       &dev_attr_rest_of_platform_power_mw.attr,
+> +       &dev_attr_prochot_confirm.attr,
+>         NULL
+>  };
+>
+> @@ -60,6 +85,33 @@ static const struct attribute_group dptf_power_attribute_group = {
+>         .name = "dptf_power"
+>  };
+>
+> +#define POWER_STATE_CHANGED            0x81
+> +#define POWER_PROP_CHANGE_EVENT        0x84
+> +
+> +static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
+> +{
+> +       struct platform_device *pdev = data;
+> +       char *attr;
+> +
+> +       switch (event) {
+> +       case POWER_STATE_CHANGED:
+> +               attr = "platform_power_source";
+> +               break;
+> +       case POWER_PROP_CHANGE_EVENT:
+> +               attr = "rest_of_platform_power_mw";
+> +               break;
+> +       default:
+> +               dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
+> +               return;
+> +       }
+> +
+> +       /*
+> +        * Notify that an attribute is changed, so that user space can read
+> +        * again.
+> +        */
+> +       sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
+> +}
+> +
+>  static int dptf_power_add(struct platform_device *pdev)
+>  {
+>         struct acpi_device *acpi_dev;
+> @@ -78,10 +130,21 @@ static int dptf_power_add(struct platform_device *pdev)
+>         if (ptype != 0x11)
+>                 return -ENODEV;
+>
+> +       result = acpi_install_notify_handler(acpi_dev->handle,
+> +                                            ACPI_DEVICE_NOTIFY,
+> +                                            dptf_power_notify,
+> +                                            (void *)pdev);
+> +       if (result)
+> +               return result;
+> +
+>         result = sysfs_create_group(&pdev->dev.kobj,
+>                                     &dptf_power_attribute_group);
+> -       if (result)
+> +       if (result) {
+> +               acpi_remove_notify_handler(acpi_dev->handle,
+> +                                          ACPI_DEVICE_NOTIFY,
+> +                                          dptf_power_notify);
+>                 return result;
+> +       }
+>
+>         platform_set_drvdata(pdev, acpi_dev);
+>
+> @@ -90,7 +153,11 @@ static int dptf_power_add(struct platform_device *pdev)
+>
+>  static int dptf_power_remove(struct platform_device *pdev)
+>  {
+> +       struct acpi_device *acpi_dev = platform_get_drvdata(pdev);
+>
+> +       acpi_remove_notify_handler(acpi_dev->handle,
+> +                                  ACPI_DEVICE_NOTIFY,
+> +                                  dptf_power_notify);
+>         sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
+>
+>         return 0;
+> --
 
-I should also note that we have at least one supported PHY where one
-of the MMDs returns 0xfffe for even numbered registers and 0x0000 for
-odd numbered registers in one of the vendor MMDs for addresses 0
-through 0xefff - which has a bit set in the devices-in-package.
+Applied as 5.8 material under edited subject and with a minor
+modification in the "rest of power" attribute ABI documentation.
 
-It also returns 0x0082 for almost every register in MMD 2, but MMD 2's
-devices-in-package bit is clear in most of the valid MMDs, so we
-shouldn't touch it.
-
-These reveal the problem of randomly probing MMDs - they can return
-unexpected values and not be as well behaved as we would like them to
-be.  Using register 8 to detect presence may be beneficial, but that
-may also introduce problems as we haven't used that before (and we
-don't know whether any PHY that wrong.)  I know at least the 88x3310
-gets it right for all except the vendor MMDs, where the low addresses
-appear non-confromant to the 802.3 specs.  Both vendor MMDs are
-definitely implemented, just not with anything conforming to 802.3.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+Thanks!
