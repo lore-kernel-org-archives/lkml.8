@@ -2,133 +2,114 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57533C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C58E2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C8C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FTGZhnUS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O1USJP9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390501AbgEYMRG (ORCPT
+        id S2390507AbgEYMRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:17:06 -0400
-Received: from ozlabs.org ([203.11.71.1]:35999 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390196AbgEYMRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:17:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Vx0t2sHtz9sRK;
-        Mon, 25 May 2020 22:17:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590409023;
-        bh=fYfq6YA5ZEavJZmtkIPGM1/uqwRFCyotFeFe+s7lg6s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FTGZhnUSi5nrV+vrD9Wl/IZbHqC0qLz0UUJRzmIEliqAy2jCoHOJWiOWJ+KUm/XfS
-         FEfEfj3zE7RA03lgEpvzGOIGJdNhSZrQEjuH+Q63ak6uWHueIcfQt1DxjS+3kkhDMu
-         E3Ri/zwZX6wm3AzHPC58Itg7AxzBhPgHg/rQK2ZqH2aej3gXiAyGCattkqHhDZ+f+V
-         +Dpi4qSKZ6FHgXRV8upOB5ff1ACtnwurIsuLgp43KBGUg+iIPoaf0oydnrpwSUQ4i/
-         oeTUdEg1wz5g/asreuqYehWaA6tpczzwO62kGCh8GgaPQng7zQr2hhFe7O/Zll4DhO
-         3MlWXIvuacoFQ==
-Date:   Mon, 25 May 2020 22:17:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michel Lespinasse <walken@google.com>
-Subject: linux-next: build failure after merge of the akpm tree
-Message-ID: <20200525221700.0aa347f7@canb.auug.org.au>
+        Mon, 25 May 2020 08:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390196AbgEYMRy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 08:17:54 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE84CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:17:53 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id c12so10396050lfc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f8DvzM1LUfYPJBdMAba0GyfRQVQc3MJGiW7Qheov8do=;
+        b=O1USJP9FRD9ErvJk3j1Wo8/HZnbUh1dbudkEcMZXs9b3+JA5YSohAmpC2l0A5R4WWL
+         8so9pDmwPcsjzarfj/TurajHvn8PinNRJqIzYAWXoRh0o1P/KZMjN4gHRfQ5L29Ag0S8
+         gH6mlXvB0OpNB2GH/Q2fzreA9V5QYcgyCSL7cX+gKpcFGo2YdciQwGo3SwkV7SzIJYOG
+         Erprmj3VK8nXAAkN9QAixd6ql85fBt1oCgyLo/uhDq6g3ytZUFFkorM0ixnpGxe0cJVy
+         MYUZulcB6jGK/7mCxKWXDk7u4tlfjSwT7Onm2xSYpVCTm9qTZnFmMs5B7VVxzUIwRjRe
+         17aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f8DvzM1LUfYPJBdMAba0GyfRQVQc3MJGiW7Qheov8do=;
+        b=cbnWZP14rXZPywd6Rnv4URWDJEFezIHQv5xMR8W7q9ZLcsnb8XBAlWENDj5sPWp29V
+         upeQsvFjYXVVvEJ4VTTs7RzCgoe35y9C7xUrm8haao7J2OwGHWTtTsew7+eFCMB2rsJA
+         0K/oTjGpL1xj+vo160GkDPITk2JiJquRgAmf18rrwnVum5q5lddwGVbcUS5ttOGk2GCu
+         xoCXSK5LQSmNvbYx9Y9+IdWoNFZCC4A4q38P5Nr4YMHuaYKShocFohoN8jwfBfvezPYw
+         cmISJwK57f2otcNT+t42pmlGkmYGpsH7pjzxuxAPzoqD2IupMjFvVVqfyeJeczeAJirv
+         T7Yg==
+X-Gm-Message-State: AOAM530sdxOfY5aK6SlSvjnBIXE8mILo+2/AzEnSeQuQhlGHFevyRLXH
+        8/xOJDDvg3TWwp9V8M+W2KgjO2hoxSmlsAGgj8jWwA==
+X-Google-Smtp-Source: ABdhPJxPDl9RyoQe3gqtH2MDfzTuuUWC4/u0qXYZhxm+OrC7Hsr2aIclDWKtcuxX69PwCj0+z88e+AhBN+oSI0bEVbo=
+X-Received: by 2002:a19:be87:: with SMTP id o129mr10724914lff.217.1590409072296;
+ Mon, 25 May 2020 05:17:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com> <20200525022252.GA22956@sol>
+In-Reply-To: <20200525022252.GA22956@sol>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 14:17:41 +0200
+Message-ID: <CACRpkdagkhbULGVGJqcS55m=X2EaH_iK0Khr8+6M7ATWrC3hOQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Bujanda <hector.bujanda@digi.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, May 25, 2020 at 4:22 AM Kent Gibson <warthog618@gmail.com> wrote:
 
-Hi all,
+> You mention timers for the gpio pins that cannot provide debounce,
+> so I'm confused. Could you clarify which strategy you have in mind?
 
-After merging the akpm tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+My idea is that the callback gpiod_set_debounce() for in-kernel consumers
+should more or less always return success. Either the hardware does
+the debounce,  or gpiolib sets up a timer.
 
-In file included from include/linux/kernel.h:14,
-                 from mm/gup.c:2:
-mm/gup.c: In function 'internal_get_user_pages_fast':
-mm/gup.c:2732:33: error: 'struct mm_struct' has no member named 'mmap_sem';=
- did you mean 'mmap_base'?
- 2732 |   might_lock_read(&current->mm->mmap_sem);
-      |                                 ^~~~~~~~
+> I've also had a quick look at the possibility of providing the software
+> debounce for in-kernel consumers.
 
-Caused by commit
+That is where I think it should start.
 
-  64fe66e8a95e ("mmap locking API: rename mmap_sem to mmap_lock")
+>  Are you anticipating new API for
+> that?  e.g. allowing consumers to request gpio events?  Cos, gpio_keys
+> grabs the irq itself - and that would bypass the software debouncer,
+> or even conflict with it.
 
-fron the akpm tree interacting with commit
+It may be hard or impossible.
 
-  b1fc8b5ddb4e ("mm/gup: might_lock_read(mmap_sem) in get_user_pages_fast()=
-")
+I suppose gpiolib would have to steal or intercept the interrupt
+by using e.g. IRQF_SHARED and then just return IRQ_HANDLED
+on the first IRQ so the underlying irq handler does not get called.
 
-from the akpm-current tree.
+After the timer times out it needs to retrigger the IRQ.
 
-I added the following patch for today.
+So the consuming driver would se a "debounced and ready"
+IRQ so when it gets this IRQ it knows for sure there is
+no bounciness on it because gpiolib already took care
+of that.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 25 May 2020 22:11:51 +1000
-Subject: [PATCH] mm/gup: update for mmap_sem rename
+The above is in no way trivial, but it follows the design pattern
+of "narrow and deep" APIs.
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- mm/gup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Failure is an option! Sorry if I push too complex ideas.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 8977e5fe9843..f4bca3de0b4b 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2729,7 +2729,7 @@ static int internal_get_user_pages_fast(unsigned long=
- start, int nr_pages,
- 		return -EINVAL;
-=20
- 	if (!(gup_flags & FOLL_FAST_ONLY))
--		might_lock_read(&current->mm->mmap_sem);
-+		might_lock_read(&current->mm->mmap_lock);
-=20
- 	start =3D untagged_addr(start) & PAGE_MASK;
- 	addr =3D start;
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7LtzwACgkQAVBC80lX
-0GxCqAf8CMQxqEoEeB0A9cquiky5dJtTg8uOtMvLSuKnwgwU2PC/PXw28rohfJcU
-OpWtNENKV20HsCQ8L4fp5i/0DFOe2Y8GInsVgIUiEqjYN8qB/x/tRNpvumGnwJ9M
-/7wFv+V0oQ8T5D4zur1ODysYeJ5dC63Z6JS+xBXWUqA2kW944a7SwJGw1L+Ch7XG
-5+Z2N2V1Um4nGZ9/qNCoGPeEVIz7H0FG0bDNZzZ4QuxtD2SIqffLGGAWfNaqCnrc
-Mjt3o6f5LFuXF1H5dZxIUtWkzzv1e4ZvbvHAR56CD3D7DGBvOEF1bS/mqKNAcoOY
-/EYOwnm6OysnTaH+z92kkT5nfFBlJg==
-=AlaN
------END PGP SIGNATURE-----
-
---Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f--
+Yours,
+Linus Walleij
