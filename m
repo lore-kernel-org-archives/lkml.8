@@ -2,144 +2,84 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B54CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEAC2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590406896;
-	bh=Hp5SiSFZMaHLwFF7pNYpwJfqMDexLWEuy8QzRMos6CY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uBSI+JikX6+ffdkhuel7mazWv+ad8e24Kb0ZwG9nEBt47DujRYrtH6MaIRBnRb3QF
-	 epQKZ+osWGS3NN5jjclIfb+r6ZuwVRRtLX8PeUEloFub3pNpmW8kXQPt6Oc5GwQyt1
-	 6Ga6TtD6zR98qb3WACMJDgmqj2VgZhojl5ACX3Go=
+	by mail.kernel.org (Postfix) with ESMTP id D51BB20723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:41:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jaoRXRcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390249AbgEYLlg (ORCPT
+        id S2390260AbgEYLlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:41:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388696AbgEYLlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:41:35 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B81B20723;
-        Mon, 25 May 2020 11:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590406894;
-        bh=Hp5SiSFZMaHLwFF7pNYpwJfqMDexLWEuy8QzRMos6CY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QR/t+rfcpu+xpGud6KiaYPoqcRDfD0mP8LpY3rE2FAa7K6C0ccQj/KXn71xC81MM8
-         dg9FHuQKOEuoLn2jD3+VZvMpNnliDD+eMMCCzOfWxgVonT1DwYmWbMO8MQiIMAxWFw
-         x+9D1+0ajdS/O4YG8X28gbj0eALubKj7VxqurXDE=
-Date:   Mon, 25 May 2020 12:41:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200525114132.GC4544@sirena.org.uk>
-References: <20200522121820.GG5801@sirena.org.uk>
- <20200522123427.GD1634618@smile.fi.intel.com>
- <20200522124406.co7gmteojfsooerc@mobilestation>
- <20200522131013.GH5801@sirena.org.uk>
- <20200522132742.taf2ixfjpyd5u3dt@mobilestation>
- <20200522140025.bmd6bhpjjk5msvsm@mobilestation>
- <20200522143639.GG1634618@smile.fi.intel.com>
- <20200522144542.brhibh453wid2d6v@mobilestation>
- <20200522152241.GK5801@sirena.org.uk>
- <20200523083410.3qarkfkwsmodvxwk@mobilestation>
+        Mon, 25 May 2020 07:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388696AbgEYLln (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:41:43 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EF7C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:41:42 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v16so20442477ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:41:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DwdjF0Ue67Sj/Pl5fSyKVWCmeyW6oEYcnXakGvQJHew=;
+        b=jaoRXRcLC5ll4JhxX10uEVRJ41Q5RkA27cdh9uS3nKRej2LciDH6hzpvyUxipgi+U5
+         gGEs5JM0h649U0962y9zxwKiEK9IhGlqgX9hr+iZfj4D9okOridFVnkhOZQT9aM6uKp4
+         wKs53j3bIOKcr8Cg+1W/pbSgpwMmYbKoWrSO++MBe/+ieemSnRvP6HPyGTivWuWuHGZo
+         Plou4TMB0zl9fqMtOdpZQTGHdysntDU7bfqdaQ8DkkpDH45NuPn/1WIJV2SzMCSdzEsK
+         ZtssI9eE1l2buaJ6jL6BgbIWWKZGocl6SR3LjWdyBx5G3MiwEBjEsP/yXjSqn3zIz+so
+         vYaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DwdjF0Ue67Sj/Pl5fSyKVWCmeyW6oEYcnXakGvQJHew=;
+        b=TZRsAIQ3kWot+8V13rOksj6Zl0jIYCAE2AZvndzUT7xjPV/km0wkn7GSOOcKGCUB/P
+         MWnTefzNKZSVwCOsKQdDxx93cmGWBM9ryli9nIk4c9XILYJ9RQTS9/M5Rz7dXJKKBSC9
+         xmeo78AFbejEMEkhdjenc90Ey5GtBqEssxlP7AqR49yeDz5pvPB4jwFnODOIkvC01NKB
+         nAgH+JHzg/o985RWvFgZ4P6funKuJkBVKMYTEgveMtsQ/1zG3wE8vq4yT7I0SDH/Dvhj
+         ZN1JftoI3I4SmWL0XJi487S7bg0oIcNWXJKgfoQgksfsUykMSp8njhQ3+kb6oTum2sqc
+         GQ9Q==
+X-Gm-Message-State: AOAM5300bapgZaA/QAi4A97DD+2XMg5Htg3Qz/6C37nOpon0bFpcp6HX
+        6Jg06hArT0Qfj8p8Kvjo6DorXGpmBdr0PJUMrF/6i+J3
+X-Google-Smtp-Source: ABdhPJzmAF2fPYPuX08EOV6Ek1vROzWyd4lTeFHVNjZzIF6Goyz2gdDExdfIB4Roq7kbyBarCt6itfaazrSXen7+9BU=
+X-Received: by 2002:a05:651c:32d:: with SMTP id b13mr3226363ljp.283.1590406900778;
+ Mon, 25 May 2020 04:41:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/Uq4LBwYP4y1W6pO"
-Content-Disposition: inline
-In-Reply-To: <20200523083410.3qarkfkwsmodvxwk@mobilestation>
-X-Cookie: Help a swallow land at Capistrano.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 13:41:29 +0200
+Message-ID: <CACRpkdYOrdXDMq8MJ2dPQSUf--zaX_tWZd9RYR2FQPHc0pujJQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: Fix return value about devm_platform_ioremap_resource()
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 23, 2020 at 1:45 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
---/Uq4LBwYP4y1W6pO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+> to check the return value and return PTR_ERR() if failed.
+>
+> Fixes: 4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-On Sat, May 23, 2020 at 11:34:10AM +0300, Serge Semin wrote:
-> On Fri, May 22, 2020 at 04:22:41PM +0100, Mark Brown wrote:
+Patch applied!
 
-> > Right, that definitely needs to be fixed then - 8MHz is indeed a totally
-> > normal clock rate for SPI so people will hit it.  I guess if there's a
-> > noticable performance hit to defer to thread then we could implement
-> > both and look at how long the delay is going to be to decide which to
-> > use, that's annoyingly complicated though so if the overhead is small
-> > enough we could just not bother.
-
-> As I suggested before we can implement a solution without performance drop.
-> Just wait for the DMA completion locally in the dw_spi_dma_transfer() method and
-> return 0 instead of 1 from the transfer_one() callback. In that function we'll
-> wait while DMA finishes its business, after that we can check the Tx/Rx FIFO
-> emptiness and wait for the data to be completely transferred with delays or
-> sleeps or whatever.
-
-No extra context switches there at least, that's the main issue.
-
-> NOTE Currently the DW APB SSI driver doesn't set xfer->effective_speed_hz, though as
-> far as I can see that field exists there to be initialized by the SPI controller
-> driver, right? If so, strange it isn't done in any SPI drivers...
-
-Yes.  Not that many people are concerned about the exact timing it turns
-out, the work that was being used for never fully made it upstream.
-
-> What do think about this?
-
-Sure.
-
-> patchset "spi: dw: Add generic DW DMA controller support" (it's being under
-> review in this email thread) ? Anyway, if the fixup is getting to be that
-> complicated, will it have to be backported to another stable kernels?
-
-No, if it's too invasive it shouldn't be (though the stable people might
-decide they want it anyway these days :/ ).
-
---/Uq4LBwYP4y1W6pO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7LrusACgkQJNaLcl1U
-h9BHkwf/TTTAJk2mHPdO5NZrQT9dQh5jsvRQzSpRd0zmXjPtwJ4/eFABGGqh4ROh
-PuBqrhJIHo4857AEsNADaQ7jct/N7UUXVSd/GcksNFlY1SqW09orfSC2g4quX5D6
-uVWDk2ezt0ee4jSYGQA+xOEftZnSHgkQcX+DH3lpCDyHSVir15pGwsR8WwsUsm5k
-ufa+Q7VF205bhagfk/BP+0GH8eB9C7E1F6jFfxyoYhIJPTsssbaDi+V75L83HW4F
-FmGcX8cOPnpVu2teCxZiklIY2IeoWrka1lCv6MwrSP/h7efD25ruOV4mTdy4QfYl
-srza2PJPnAviEJAwMyJgE5zpVaMC/Q==
-=PX1y
------END PGP SIGNATURE-----
-
---/Uq4LBwYP4y1W6pO--
+Yours,
+Linus Walleij
