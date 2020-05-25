@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41519C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50510C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 181122071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FFB2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403897AbgEYOVV (ORCPT
+        id S2403936AbgEYOWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:21:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1393 "EHLO mga06.intel.com"
+        Mon, 25 May 2020 10:22:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:11431 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388714AbgEYOVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:21:20 -0400
-IronPort-SDR: Ho4BCFvLN8RebHh8Fb8PMyMtRTAUWzJA1ZWKdGu13Snb8JQHxzi0daWbnigTY7KeYx7+aM+sHi
- 1XloRxEgYKyw==
+        id S2403901AbgEYOWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 10:22:04 -0400
+IronPort-SDR: 1V10DtNLCC721KP7oaOKHwFUmvC+I+N5fdzSsAGgc2Hd4WEecM5Upty/Zc338E5TY7BoTNMQvF
+ 7AB+xnGOGO7g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 07:21:19 -0700
-IronPort-SDR: te3/EHRADyWGPH+xTSkNXEWXi1yblOPNgjpeuSRwTOR9wxHwOSQhyw31u5hHXZ50nRhMCX7F8C
- 1MFLbHR/RlTg==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 07:22:03 -0700
+IronPort-SDR: QeUxyEsN8Iwb7+4/tM3BhY/guOL4G5vo6//qPJh6xT2xFMySn+QqTCuOeKxjjeHzbhvVgxv8n7
+ cle/rfaNofrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="256234130"
+   d="scan'208";a="468064232"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 25 May 2020 07:21:19 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 25 May 2020 07:22:03 -0700
 Received: from [10.249.227.191] (abudanko-mobl.ccr.corp.intel.com [10.249.227.191])
-        by linux.intel.com (Postfix) with ESMTP id 18C7258056A;
-        Mon, 25 May 2020 07:21:16 -0700 (PDT)
-Subject: [PATCH v4 06/10] perf stat: implement control commands handling
+        by linux.intel.com (Postfix) with ESMTP id 1B376580101;
+        Mon, 25 May 2020 07:22:00 -0700 (PDT)
+Subject: [PATCH v4 07/10] perf stat: introduce --ctl-fd[-ack] options
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -46,8 +46,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <51635bc5-4396-0b87-4150-bc272754af9c@linux.intel.com>
-Date:   Mon, 25 May 2020 17:21:15 +0300
+Message-ID: <1acee82c-5a75-2e14-c7d7-004872771aae@linux.intel.com>
+Date:   Mon, 25 May 2020 17:21:59 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
@@ -61,91 +61,125 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Implement handling of 'enable' and 'disable' control commands
-coming from control file descriptor.
+Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
+from command line. Extend perf-stat.txt file with --ctl-fd[-ack] options
+description. Document possible usage model introduced by --ctl-fd[-ack]
+options by providing example bash shell script.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-stat.c | 45 +++++++++++++++++++++++++++++++++------
- 1 file changed, 39 insertions(+), 6 deletions(-)
+ tools/perf/Documentation/perf-stat.txt | 40 ++++++++++++++++++++++++++
+ tools/perf/builtin-stat.c              | 11 +++++++
+ tools/perf/util/stat.h                 |  2 ++
+ 3 files changed, 53 insertions(+)
 
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index b4d2434584f5..4b15373af800 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -164,6 +164,46 @@ with it.  --append may be used here.  Examples:
+      3>results  perf stat --log-fd 3          -- $cmd
+      3>>results perf stat --log-fd 3 --append -- $cmd
+ 
++--ctl-fd::
++--ctl-fd-ack::
++
++Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
++'disable': disable events). Optionally send control command completion ('ack') to fd-ack
++descriptor to synchronize with the controlling process. Example of bash shell script
++to enable and disable events during measurements:
++
++#!/bin/bash
++
++ctl_dir=/tmp/
++
++ctl_fifo=${ctl_dir}perf_ctl.fifo
++test -p ${ctl_fifo} && unlink ${ctl_fifo}
++mkfifo ${ctl_fifo}
++exec {ctl_fd}<>${ctl_fifo}
++
++ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
++test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
++mkfifo ${ctl_ack_fifo}
++exec {ctl_fd_ack}<>${ctl_ack_fifo}
++
++perf stat -D -1 -e cpu-cycles -a -I 1000                \
++          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
++          -- sleep 30 &
++perf_pid=$!
++
++sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
++sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
++
++exec {ctl_fd_ack}>&-
++unlink ${ctl_ack_fifo}
++
++exec {ctl_fd}>&-
++unlink ${ctl_fifo}
++
++wait -n ${perf_pid}
++exit $?
++
++
+ --pre::
+ --post::
+ 	Pre and post measurement hooks, e.g.:
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 70b48a279b75..c06c2b701a15 100644
+index c06c2b701a15..69b0e4f498c6 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -439,6 +439,31 @@ static bool process_timeout(bool timeout, unsigned int interval, int *times)
- 		return print_interval(interval, times);
- }
+@@ -187,6 +187,8 @@ static struct perf_stat_config stat_config = {
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+ 	.big_num		= true,
++	.ctl_fd			= -1,
++	.ctl_fd_ack		= -1
+ };
  
-+static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
-+{
-+	bool stop = false;
-+	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+@@ -1065,6 +1067,10 @@ static struct option stat_options[] = {
+ 		    "Use with 'percore' event qualifier to show the event "
+ 		    "counts of one hardware thread by sum up total hardware "
+ 		    "threads of same physical core"),
++	OPT_INTEGER(0, "ctl-fd", &stat_config.ctl_fd,
++		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
++	OPT_INTEGER(0, "ctl-fd-ack", &stat_config.ctl_fd_ack,
++		    "Send control command completion ('ack') to fd ack descriptor"),
+ 	OPT_END()
+ };
+ 
+@@ -2232,6 +2238,9 @@ int cmd_stat(int argc, const char **argv)
+ 	signal(SIGALRM, skip_signal);
+ 	signal(SIGABRT, skip_signal);
+ 
++	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
++		goto out;
 +
-+	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
-+		switch (cmd) {
-+		case EVLIST_CTL_CMD_ENABLE:
-+			pr_info(EVLIST_ENABLED_MSG);
-+			stop = print_interval(interval, times);
-+			break;
-+		case EVLIST_CTL_CMD_DISABLE:
-+			stop = print_interval(interval, times);
-+			pr_info(EVLIST_DISABLED_MSG);
-+			break;
-+		case EVLIST_CTL_CMD_ACK:
-+		case EVLIST_CTL_CMD_UNSUPPORTED:
-+		default:
-+			break;
-+		}
-+	}
+ 	status = 0;
+ 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
+ 		if (stat_config.run_count != 1 && verbose > 0)
+@@ -2251,6 +2260,8 @@ int cmd_stat(int argc, const char **argv)
+ 	if (!forever && status != -1 && (!interval || stat_config.summary))
+ 		print_counters(NULL, argc, argv);
+ 
++	evlist__finalize_ctlfd(evsel_list);
 +
-+	return stop;
-+}
-+
- static void enable_counters(void)
- {
- 	if (stat_config.initial_delay < 0) {
-@@ -518,8 +543,8 @@ static int dispatch_events(pid_t pid, struct perf_stat_config *config)
- {
- 	pid_t child = 0;
- 	bool stop = false;
--	struct timespec time_to_sleep;
--	int sleep_time, status = 0;
-+	int time_to_sleep, sleep_time, status = 0;
-+	struct timespec time_start, time_stop, time_diff;
- 	int times = config->times;
+ 	if (STAT_RECORD) {
+ 		/*
+ 		 * We synthesize the kernel mmap record just so that older tools
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index b00d64f0ca26..65f42a04d9ef 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -131,6 +131,8 @@ struct perf_stat_config {
+ 	struct perf_cpu_map		*cpus_aggr_map;
+ 	u64			*walltime_run;
+ 	struct rblist		 metric_events;
++	int			 ctl_fd;
++	int			 ctl_fd_ack;
+ };
  
- 	if (config->interval)
-@@ -529,8 +554,7 @@ static int dispatch_events(pid_t pid, struct perf_stat_config *config)
- 	else
- 		sleep_time = 1000;
- 
--	time_to_sleep.tv_sec  = sleep_time / MSEC_PER_SEC;
--	time_to_sleep.tv_nsec = (sleep_time % MSEC_PER_SEC) * NSEC_PER_MSEC;
-+	time_to_sleep = sleep_time;
- 
- 	do {
- 		if (pid != -1) {
-@@ -543,8 +567,17 @@ static int dispatch_events(pid_t pid, struct perf_stat_config *config)
- 		if (child || stop || done)
- 			break;
- 
--		nanosleep(&time_to_sleep, NULL);
--		stop = process_timeout(config->timeout, config->interval, &times);
-+		clock_gettime(CLOCK_MONOTONIC, &time_start);
-+		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
-+			stop = process_timeout(config->timeout, config->interval, &times);
-+			time_to_sleep = sleep_time;
-+		} else { /* fd revent */
-+			stop = process_evlist(evsel_list, config->interval, &times);
-+			clock_gettime(CLOCK_MONOTONIC, &time_stop);
-+			diff_timespec(&time_diff, &time_stop, &time_start);
-+			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
-+					time_diff.tv_nsec / NSEC_PER_MSEC;
-+		}
- 	} while (1);
- 
- 	return status;
+ void update_stats(struct stats *stats, u64 val);
 -- 
 2.24.1
 
