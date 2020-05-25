@@ -2,108 +2,135 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A632073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fuRxqLaU"
+	by mail.kernel.org (Postfix) with ESMTP id CA290206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389590AbgEYJgr (ORCPT
+        id S2389604AbgEYJhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
+        Mon, 25 May 2020 05:37:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388437AbgEYJgr (ORCPT
+        with ESMTP id S2389251AbgEYJhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:36:47 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE680C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:36:46 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id i68so13405311qtb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RrCJYv2CMkjmXgxh4luY1jGTleOro3sZ8PAwMM7JZE8=;
-        b=fuRxqLaU5g8a+KV52JfO8iIc6Dpzv7xH8zEcUSQ/EPvQBP7xuZujlB1Zqe487JQ3Kq
-         07LoVBHsy1UXVK+h1466jj5fLf4k0US9SOPw/xkahZeYDz6NXGm5hSOhNSrUBtmqhLWK
-         KpGTM4RgelTirb7PDz/hSax3IAD2wQczpkOEfKXlM0XO/X+ySXMhXr8sWjHil9VXwp4a
-         gjc6rD/Jhv2tYnFrfXg8taOWar/FQPrbAQeQRe+RXkie2tW8wVIJTOK74bsrPbGDoPrG
-         lezjk7vKK6+6lpnEOFAUY+wGVeHzj2KdWfnZ/xg9pSOhTX2lpNrlKoV/wVcAJES3+lOl
-         9t6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RrCJYv2CMkjmXgxh4luY1jGTleOro3sZ8PAwMM7JZE8=;
-        b=bG95pY5S/eNh/xECFWLhRZCSfQ4Z+L/xas8hXajrPKCZNVzWv6t6breRbuA8y08TzB
-         RLop682CihDMI9blVshUYgIrMqegPxwpjoO9YZwwQ5oomlwniJAAe1OKTescqln9QUbj
-         EUeMR0BIPo71vJ4kCiLcQeYbf3PPf3phHe0MEP0IdVc8f8MwMjTXtVInBVSGoNqxzdFo
-         rPOP5AVhXDORuO7vjqavF5bPibg4YUWkW+q7TwQNSOzyOCE+sV6QRFKo9X0MZhGMuQQH
-         JdGpI2nLJpgzkIQEKgZMee/nZLL3Pi65ZFwklwbhhVUK0sLelaa7+InnsQrpJ7FYPrJX
-         nT9Q==
-X-Gm-Message-State: AOAM530cnTAP38ZAnxEbZ+BLjApQvEgCoeORiA+RD5mqsdeJpsfgvLl6
-        vZGz/k2eJMbP5T7DeW97x+PwD2KFoO+HdGAu1XxaSg==
-X-Google-Smtp-Source: ABdhPJxH6RRcuaHYqO3WxxeIfwE81GyLqMO/ChAPMvFcbjmN7sgsVd4B4nKXJegt6FTlMqeYNykQPLynPcScd/lVDDo=
-X-Received: by 2002:aed:257c:: with SMTP id w57mr26966940qtc.208.1590399406112;
- Mon, 25 May 2020 02:36:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1590017578.git.syednwaris@gmail.com>
-In-Reply-To: <cover.1590017578.git.syednwaris@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 May 2020 11:36:35 +0200
-Message-ID: <CAMpxmJUrC270rgWcADYruqA_qVeh9-N8mCVPWgJkL-8kU2bO1A@mail.gmail.com>
-Subject: Re: [PATCH v7 0/4] Introduce the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arch@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+        Mon, 25 May 2020 05:37:07 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9E5C061A0E;
+        Mon, 25 May 2020 02:37:06 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jd9XP-00062M-Es; Mon, 25 May 2020 11:36:51 +0200
+Date:   Mon, 25 May 2020 11:36:49 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 10/25] seqlock: Add RST directives to kernel-doc code
+ samples and notes
+Message-ID: <20200525093649.GA370823@debian-buster-darwi.lab.linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200519214547.352050-11-a.darwish@linutronix.de>
+ <20200522180254.GS325280@hirez.programming.kicks-ass.net>
+ <20200522180336.GD325303@hirez.programming.kicks-ass.net>
+ <871rnbsu57.fsf@nanos.tec.linutronix.de>
+ <20200522183216.GT325280@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522183216.GT325280@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 24 maj 2020 o 07:00 Syed Nayyar Waris <syednwaris@gmail.com> napisa=
-=C5=82(a):
+Peter Zijlstra <peterz@infradead.org> wrote:
+> On Fri, May 22, 2020 at 08:26:44PM +0200, Thomas Gleixner wrote:
+> > Peter Zijlstra <peterz@infradead.org> writes:
+> > > On Fri, May 22, 2020 at 08:02:54PM +0200, Peter Zijlstra wrote:
+> > >> On Tue, May 19, 2020 at 11:45:32PM +0200, Ahmed S. Darwish wrote:
+> > >> > Mark all C code samples inside seqlock.h kernel-doc text with the RST
+> > >> > 'code-block: c' directive. Sphinx won't properly format the example code
+> > >> > and will produce noisy text indentation warnings otherwise.
+> > >>
+> > >> I so bloody hate RST.. and now it's infecting perfectly sane comments
+> > >> and turning them into unreadable junk :-(
+> > >
+> > > The correct fix is, as always, to remove the kernel-doc marker.
+> >
+> > Get over it already.
 >
-> Hello Linus,
+> I will not let sensible code comments deteriorate to the benefit of some
+> external piece of crap.
 >
-> Since this patchset primarily affects GPIO drivers, would you like
-> to pick it up through your GPIO tree?
+> As a programmer the primary interface to all this is a text editor, not
+> a web broswer or a pdf file or whatever other bullshit.
 >
-> This patchset introduces a new generic version of for_each_set_clump.
-> The previous version of for_each_set_clump8 used a fixed size 8-bit
-> clump, but the new generic version can work with clump of any size but
-> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro
-> in several GPIO drivers.
->
-> The earlier 8-bit for_each_set_clump8 facilitated a
-> for-loop syntax that iterates over a memory region entire groups of set
-> bits at a time.
->
+> If comments are unreadable in your text editor, they're useless.
 
-The GPIO part looks good to me. Linus: how do we go about merging it
-given the bitops dependency?
+Wait.
 
-Bart
+Most of the patch in question is just substituting the code snippet's
+leading white spaces to tabs. For illustration purposes, if we remove
+these white space hunks from the diff, it becomes:
+
+  --- a/include/linux/seqlock.h
+  +++ b/include/linux/seqlock.h
+  @@ -232,6 +232,8 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
+  + * .. code-block:: c
+  ...
+  + * .. code-block:: c
+  ...
+  - * NOTE: The non-requirement for atomic modifications does _NOT_ include
+  - *       the publishing of new entries in the case where data is a dynamic
+  - *       data structure.
+  + * .. attention::
+  + *
+  + *     The non-requirement for atomic modifications does _NOT_ include
+  + *     the publishing of new entries in the case where data is a dynamic
+  + *     data structure.
+  ...
+
+Are you trying to tell me that, good heavens, these directives are
+really hurting your eyes so much?
+
+Putting kernel-doc aside... That huge raw_write_seqcount_latch() comment
+is actually *way more readable from any text editor* after applying this
+patch. Go figure.
+
+>>> The correct fix is, as always, to remove the kernel-doc marker.
+
+Sorry, that's not the correct fix.
+
+In the following patches, kernel-doc for the entire seqlock.h API is
+added. Singling out raw_write_seqcount_latch() doesn't make any sense.
+
+If you look at the top of this patch series, a lot of seqlock.h
+seqcount_t call sites were badly broken. The 0day kernel test bot sent
+me even more erroneous call sites due to the added lockdep checks. This
+is an extra argument for the added documentation: the existing one is
+horrible.
+
+So, please, don't claim that the current situation is fine. It is not.
+
+Thanks,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
