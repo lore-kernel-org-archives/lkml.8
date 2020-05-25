@@ -2,112 +2,102 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A288C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D47206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27686206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="E6EtCHK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390243AbgEYU3J (ORCPT
+        id S2390392AbgEYUb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 16:29:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54673 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389950AbgEYU3G (ORCPT
+        Mon, 25 May 2020 16:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389950AbgEYUbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 16:29:06 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MoOMq-1jFEJU0njE-00olip; Mon, 25 May 2020 22:29:04 +0200
-Received: by mail-qv1-f49.google.com with SMTP id x13so8508923qvr.2;
-        Mon, 25 May 2020 13:29:03 -0700 (PDT)
-X-Gm-Message-State: AOAM53354/FjqDVE2E0MeaCUZ4WUC4x+OxDr2p8v0DimfsIElLoVp51M
-        5DI4+GAnTP6pe1Kvh1/MwvHVbkuHL+L2hTpDNLA=
-X-Google-Smtp-Source: ABdhPJw3ixSwVawsVi4CGH//MbxLoWCZi8tO5hD8Ikb+gJoYfkAWT1jokkk1m8UMTmioBGv2fet83IOg36WWRNYGJvk=
-X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr16173417qvz.210.1590438542881;
- Mon, 25 May 2020 13:29:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200525195606.2941649-1-olivier.sobrie@silexinsight.com> <20200525195606.2941649-4-olivier.sobrie@silexinsight.com>
-In-Reply-To: <20200525195606.2941649-4-olivier.sobrie@silexinsight.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 25 May 2020 22:28:46 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
-Message-ID: <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] hwrng: ba431-rng: add support for BA431 hwrng
-To:     Olivier Sobrie <olivier.sobrie@silexinsight.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Waleed Ziad <waleed94ziad@gmail.com>,
-        sebastien.rabou@silexinsight.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HjOeeDg52uqVQNhDzmwNgO7Ruuyf0K2G7zBd0h/UNxvX4tz7qce
- H/rCLmgJRVPcYmiin6JM4Iwk/yspeiiA7qaiuttYG4BkSMCGcOqMERssbS/zsDNbelKaBqP
- 9BUqJdvc5MSifyRCGU8RE2AvF0M6/IeNE6oaxOQ7QoPteXynnMypMiVyZH0QCb0XCGd+LmU
- +1kOr4clcCWJfUTJydKMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QI8ewv8YUBI=:uXGY/Kg9NBA6rbzRAKgcIY
- 5tVwfdwS+MZIJJ2wOl7QTqq8NncelVzuWrF7IMqX8tBS/owDpOJlgEJBidkk49cnX7aNo13z4
- hXEGP+/se9iIxSokfCdHmK91YbdHOdI1m35p7NOYO/MTKx0dcicNYSwouLmbfiSJy7aof1q7y
- 55JmwbFn7zYDQx+MtivTJQ1WKqSVCETym52k1QQ+WYZMwsNA4gQMR5m7mcrQZjw0gyyk8M/2L
- CdNRrJRZ9j96dUpG2YZUoIXX7+gBbK8RkI0gg+zA8cXReJ58qcqEfM31F0RGI0QCYlBzBaWv1
- bfq2fvL5d2WuUvG/pbL1/ueuMSmLH8IBgmjg1+SYL6HZf/1lCybACitkIGW0eNjcVFBrp2jZT
- 1sbFck0z5WbDR4DgvBnKQbi3FD2m+Dw1r+CCGurTQxZ0DMoe3UdPmqAdmRMOTecTtpKkUr4L3
- HtmLXVJ2aQLNZkuOdOltOkAZyL5HXGJ8d7o7l26IHiplUfkkmYefD9GwtA9zuC33iOZxKG1Kr
- wj7tqRXEq1PRX2XP22YdrORpIxPwrdwocR2evhchxibHm9Ypv+0xO1dtaVkvXSSJj5YBHK6NZ
- cz37Qndcg4TRvL28FESAYZrjoffDJKEsE1ImT61APcoVBNMbbGBIiGh8nf4buNDqXressk9/Z
- TpivR99RSKQJyA95K5CmQR54UeLuyyfGlQrjsD27d+3yUD5Pbv9UH9MiQmtmBkeQRB4Xwz2Je
- Pyad2YJKnvGNUHkan4PXylHrfnSaskswVYidX+T2QPohPqffrGvUgwxE7caQDl6RxHSI339Xa
- UvgNfwpSIx871SCAPrp6wm32m7+OgCRw81vPIUqGV++NIvGPkA=
+        Mon, 25 May 2020 16:31:55 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B999C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 13:31:54 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id se13so21577071ejb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 13:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=RdmBZk3wWhWdfLnacS8DUs6RlId0X8/5siZUx0HN8Ng=;
+        b=E6EtCHK3HwZjnoHerbcIjxe44Wozrz2D/brrhHJbbAQmbbDh6Q4BxS8hBiMb/MhDcH
+         0N9Lqmt+JwQgXPK0hqyZ5S+DmE09cHYF252zw2ynmQV6L9JDZy4kS9Xkmcfc6zj4PeXy
+         2uGRpMofC8DWSxwfDrE3xPpukIp5+GScVw471V90b19TjAicLvBOKy2vtveU0x4BfyKl
+         0/sS7krOro164PEO/UHiabl24e7NbIy3ehmVoeDLwhyLhPyjVYcRByT4fY/rqtCuzxUD
+         QG3rm8Tq+JKIU/5Q7CxMZBgweU8hfSwbpIaSnn2nEKJwqKbjrRk4tVJPJHWKnxJ0GzrH
+         Ss6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RdmBZk3wWhWdfLnacS8DUs6RlId0X8/5siZUx0HN8Ng=;
+        b=bMieonDwER3+AER9LMRMww0IYvzLFahMnpWvzKqdDYPSmAQFGeRXiOTrEvfVQRrdYl
+         w+LuHntj2Yiz/vwcLKT2d9ZOe5H+ya9x+JArVOC4jA1m3UxY7QD0OLpev/mv0aW0oVRl
+         2+pyy+GkbVhTwva7eyUa6P/7NzYa9zOb3Q+3Xo5o0wKpb5KELCVBtSc4o8fByqK2ZdIe
+         2D/jzOfoLdnbP36uaO3dKZliAxqw2FvZ8XP+5uPCn9T/53dvHJCBjqmROM8+ZU5DAkih
+         BuWPs7sFJYwAvZcvsC1E4dh+Z14W8MG6gNz2CVp2i0/6nyE59mOo/5mES8k0M+gmCDbh
+         xwyw==
+X-Gm-Message-State: AOAM532hx2OpKR/tBvYDBxBgalFkcuimyzSdTO8AaU2wT9HgQmjDLzZu
+        4LpjHF7XzVbjUkMGkWdacCH6Rg==
+X-Google-Smtp-Source: ABdhPJyWU1kzWG3OXBGnLiZYT9Vi96JvKEJATvbFYfkxB5ca2OLlQ6pldcYkZGl1gmB01Q36RwIhSA==
+X-Received: by 2002:a17:906:3597:: with SMTP id o23mr19545286ejb.174.1590438712716;
+        Mon, 25 May 2020 13:31:52 -0700 (PDT)
+Received: from ls00508.pb.local ([2001:1438:4010:2540:a9f3:8576:8bb4:4392])
+        by smtp.gmail.com with ESMTPSA id s1sm17014881ejh.81.2020.05.25.13.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 13:31:52 -0700 (PDT)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH] mm_types.h: change set_page_private to inline function
+Date:   Mon, 25 May 2020 22:31:49 +0200
+Message-Id: <20200525203149.18802-1-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 10:07 PM Olivier Sobrie
-<olivier.sobrie@silexinsight.com> wrote:
->
-> Silex insight BA431 is an IP designed to generate random numbers that
-> can be integrated in various FPGA.
-> This driver adds support for it through the hwrng interface.
->
-> This driver is used in Silex Insight Viper OEM boards.
->
-> Signed-off-by: Olivier Sobrie <olivier.sobrie@silexinsight.com>
-> Signed-off-by: Waleed Ziad <waleed94ziad@gmail.com>
+Change it to inline function to make callers use the proper argument.
+And no need for it to be macro per Andrew's comment [1].
 
-The driver looks good to me.
+[1] https://lore.kernel.org/lkml/20200518221235.1fa32c38e5766113f78e3f0d@linux-foundation.org/
 
-Acked-by: Arnd Bergmann  <arnd@arndb.de>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+ include/linux/mm_types.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
->  drivers/char/hw_random/Kconfig     |  10 ++
->  drivers/char/hw_random/Makefile    |   1 +
->  drivers/char/hw_random/ba431-rng.c | 240 +++++++++++++++++++++++++++++
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index e88dc5c65c01..64ede5f150dc 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -240,7 +240,11 @@ static inline atomic_t *compound_pincount_ptr(struct page *page)
+ #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
+ 
+ #define page_private(page)		((page)->private)
+-#define set_page_private(page, v)	((page)->private = (v))
++
++static inline void set_page_private(struct page *page, unsigned long private)
++{
++	page->private = private;
++}
+ 
+ struct page_frag_cache {
+ 	void * va;
+-- 
+2.17.1
 
-I wonder if we should move drivers/char/hw_random to its own top-level drivers
-subsystem outside of drivers/char. It seems to be growing steadily and is larger
-than a lot of other subsystems with currently 34 drivers in there.
-
-Not your problem though.
-
-> +       /* Wait until the state changed */
-> +       for (i = 0; i < BA431_RESET_READ_STATUS_RETRIES; ++i) {
-> +               state = ba431_trng_get_state(ba431);
-> +               if (state >= BA431_STATE_STARTUP)
-> +                       break;
-> +
-> +               udelay(BA431_RESET_READ_STATUS_INTERVAL);
-> +       }
-
-Looking for something to improve, I noticed that this loop can take over
-a millisecond to time out, and it always runs in non-atomic context.
-It may be better to use usleep_range() than udelay().
-
-      Arnd
