@@ -2,104 +2,114 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4317A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B36A20812
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YWisdnil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390800AbgEYNk3 (ORCPT
+        id S2390817AbgEYNlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:40:29 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32840 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388794AbgEYNk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:40:28 -0400
-IronPort-SDR: 97YWSA+OHdIUc+yjrho8MGmUxHkCuEivFLNCaH//GJM2q1CHoXDeOESY/HrJ/p+uZkzdn81gVa
- gJNMcY+6azzg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:40:27 -0700
-IronPort-SDR: NNxlW114Pgv6T09M/uQc3/OErRaRyawJdQ2EvjhndITWCYbTuEhp8nu1cA0/hl+r5Od1Vi9gGS
- SI6MRzYZlYCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="255110394"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 25 May 2020 06:40:25 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdDLA-008nLx-58; Mon, 25 May 2020 16:40:28 +0300
-Date:   Mon, 25 May 2020 16:40:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
-        jslaby@suse.com, lukas@wunner.de, heikki.krogerus@linux.intel.com,
-        vigneshr@ti.com, linux-kernel@vger.kernel.org, fido_max@inbox.ru,
-        radu-andrei.bulie@nxp.com
-Subject: Re: [PATCH] serial: 8250: probe all 16550A variants by default
-Message-ID: <20200525134028.GA1634618@smile.fi.intel.com>
-References: <20200525130238.3614179-1-olteanv@gmail.com>
+        Mon, 25 May 2020 09:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390752AbgEYNlV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:41:21 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6782BC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:41:20 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f18so688377qkh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gPDO3X5exveNuQB33sqGwYFDtLpn1MHpqh7qgx9Ds0U=;
+        b=YWisdnilIhfDrM+E+SxMXaOOM3S8J0owofy6L63tPMKNlQpTOnDBXaJIGIpfLVuv8e
+         RPwFtQIUH3v7EOrCTGWLmLB0H7YbUEomLIfmYte8O6ZPx64QjusgkIxmiTn0/Veefq7M
+         pGEt8yH0t/vwgIpSl+RtDysE0yr6nJS4JK3YSde04NTeyPjZmiEOJpHUKytYk9YebMaP
+         ZBwTqRWOlcbPbyxbCtPg/99VSLhwlIy3blfpxEsFWPNLZqUxUrAIQcRPOOcELjbAp/DY
+         UMb0QDSHWVMTyUFW5IIroZvxqvroUZ4aOu//kLYALqNBVGf71IaS4QGAehurQ0LEWc+H
+         VK9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gPDO3X5exveNuQB33sqGwYFDtLpn1MHpqh7qgx9Ds0U=;
+        b=DhPoAzMktrMf6JbjlLjAdT3wM5xL+qcBV5oaZFsLHw4RcAmWmVIBG2bblLj1yRmost
+         VUoH9SSXvkc71/JUmZUajwbDETYVBuak+rfMb5ZdNwTQrqrI28aN/SXQZaUsTmbmNOqv
+         E3mENRYpT5f3800MXcMo4SJs7X2G/4YcbZej9QHFz8QRlWQF8QjaFULhbIYGbTjMn/IJ
+         NPjPRB7D6sidNymUbImSbB1XZD7upyGtOq7O2u9gK3nyBAD+A2bKS20VtAAcpw8Sqifz
+         ZQSDgrbtX6NjTIrGICRpulR04t3GO+8zW1bo17XG7M+xi//HMTbpsxDxr9khSCTXNOk4
+         SNZg==
+X-Gm-Message-State: AOAM5312LTKRuSgBFtEwzSvIkwmc/5aXku3xfC9kCJYTOWnVWhbljUIF
+        XJ2V0maso9uBYyrLopML6eHT3g==
+X-Google-Smtp-Source: ABdhPJztwwj2Lmnes/knDFhWm/x9ekYq2TGHNL3KtgNw4hZnEPBap7aZFzv7gZ3WmAGU8iH6kzNbLg==
+X-Received: by 2002:a37:2dc4:: with SMTP id t187mr3763851qkh.166.1590414079640;
+        Mon, 25 May 2020 06:41:19 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id r15sm2718512qtt.42.2020.05.25.06.41.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 06:41:19 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jdDLy-0000hA-Jv; Mon, 25 May 2020 10:41:18 -0300
+Date:   Mon, 25 May 2020 10:41:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@linuxfoundation.org>
+Subject: Re: [PATCH 0/6] nouveau/hmm: add support for mapping large pages
+Message-ID: <20200525134118.GA2536@ziepe.ca>
+References: <20200508192009.15302-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525130238.3614179-1-olteanv@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200508192009.15302-1-rcampbell@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:02:38PM +0300, Vladimir Oltean wrote:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Fri, May 08, 2020 at 12:20:03PM -0700, Ralph Campbell wrote:
+> hmm_range_fault() returns an array of page frame numbers and flags for
+> how the pages are mapped in the requested process' page tables. The PFN
+> can be used to get the struct page with hmm_pfn_to_page() and the page size
+> order can be determined with compound_order(page) but if the page is larger
+> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
+> using a larger page size. To be fully general, hmm_range_fault() would need
+> to return the mapping size to handle cases like a 1GB compound page being
+> mapped with 2MB PMD entries. However, the most common case is the mapping
+> size the same as the underlying compound page size.
+> This series adds a new output flag to indicate this so that callers know it
+> is safe to use a large device page table mapping if one is available.
+> Nouveau and the HMM tests are updated to use the new flag.
 > 
-> On NXP T1040, the UART is typically detected as 16550A_FSL64. After said
-> patch, it gets detected as plain 16550A and the Linux console is
-> completely garbled and missing characters.
-> 
-> So clearly, introducing the SERIAL_8250_16550A_VARIANTS config option
-> has broken many existing users because it has changed the default
-> behavior. Restore that by adding a 'default y' to this option. Users who
-> care about 20 ms shorter boot time can always disable it, but stop
-> wasting many debugging hours for people who don't care all that much.
+> Note that this series depends on a patch queued in Ben Skeggs' nouveau
+> tree ("nouveau/hmm: map pages after migration") and the patches queued
+> in Jason's HMM tree.
+> There is also a patch outstanding ("nouveau/hmm: fix nouveau_dmem_chunk
+> allocations") that is independent of the above and could be applied
+> before or after.
 
-While this sounds like a good enough fix of the regression, the proper one
-seems to have a separate quirk driver which avoids auto probe and uses
-compatible strings or whatever that board can supply. 8250_port historically
-has a burden of old and buggy hardware, that's why the above mentioned patch
-exposed that.
+Did Christoph and Matt's remarks get addressed here?
 
-That said, I have no objections, but had to note about possible approaches.
+I think ODP could use something like this, currently it checks every
+page to get back to the huge page size and this flag would optimze
+that
 
-> Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  drivers/tty/serial/8250/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-> index af0688156dd0..89c7ecb55619 100644
-> --- a/drivers/tty/serial/8250/Kconfig
-> +++ b/drivers/tty/serial/8250/Kconfig
-> @@ -63,6 +63,7 @@ config SERIAL_8250_PNP
->  config SERIAL_8250_16550A_VARIANTS
->  	bool "Support for variants of the 16550A serial port"
->  	depends on SERIAL_8250
-> +	default y
->  	help
->  	  The 8250 driver can probe for many variants of the venerable 16550A
->  	  serial port. Doing so takes additional time at boot.
-> -- 
-> 2.25.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jason
