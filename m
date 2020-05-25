@@ -2,110 +2,131 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B746C2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:31:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HPCy/TGn"
+	by mail.kernel.org (Postfix) with ESMTP id E95122073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388787AbgEYDbG (ORCPT
+        id S2388795AbgEYDcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 23:31:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36096 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388450AbgEYDbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 23:31:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P3Uesi113639;
-        Sun, 24 May 2020 22:30:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590377440;
-        bh=9cexhtub3y0goU+WxGAF1+hYEGx59cbcY4t24Ede1Qk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HPCy/TGnaj9AFsCDRYeU4e8AbQKzxIv+Ulz6d4L0iD75o0+7AFtzurQl+H6ZE6cDv
-         wYIDMBOtwch3ToHPnkYhLM5/Dr08XIPnZ7TLOX4Nj8LTnFwj/SruOqHPSNA2ijY+Xt
-         ullPKfZ6kT/C8faITmUgokmBqbEeO/mHNimFxkQo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04P3UeK1037735
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 24 May 2020 22:30:40 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 24
- May 2020 22:30:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sun, 24 May 2020 22:30:40 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P3UaY4024489;
-        Sun, 24 May 2020 22:30:37 -0500
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200522033631.32574-1-kishon@ti.com>
- <20200522033631.32574-4-kishon@ti.com>
- <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
-Date:   Mon, 25 May 2020 09:00:36 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Sun, 24 May 2020 23:32:02 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48326 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388450AbgEYDcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 23:32:01 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD94sPMte3cI4AA--.386S2;
+        Mon, 25 May 2020 11:31:56 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 1/2] clk: hisilicon: Use correct return value about hisi_reset_init()
+Date:   Mon, 25 May 2020 11:31:55 +0800
+Message-Id: <1590377516-32117-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxD94sPMte3cI4AA--.386S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFW3WFWfGrW8uw1rJryfXrb_yoW5XrWkpF
+        48JFW2ya4Yga17X3ZrXr90yFy5Za42gayUGFW8Z3srZwn8JrWUZr1fury8Zayqqrs3KFWa
+        9r40kr48ua1jyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+        GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1NVyDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+The return value about hisi_reset_init() is not correct, fix it.
 
-On 5/22/2020 9:24 PM, Rob Herring wrote:
-> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
->> 32-bit accesses for reading or writing to Cadence registers. Convert all
->> read and write accesses to 32-bit in Cadence PCIe driver in preparation
->> for adding PCIe support in TI's J721E SoC.
-> 
-> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
-> with this and never can be given the PCI_COMMAND and PCI_STATUS
-> registers are in the same word (IIRC, that's the main reason 32-bit
-> config space accesses are broken). So this isn't going to work at
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/clk/hisilicon/clk-hi3519.c      | 4 ++--
+ drivers/clk/hisilicon/crg-hi3516cv300.c | 4 ++--
+ drivers/clk/hisilicon/crg-hi3798cv200.c | 4 ++--
+ drivers/clk/hisilicon/reset.c           | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-right, PCI_STATUS has write '1' to clear bits and there's a chance that it
-could be reset while raising legacy interrupt. While this cannot be avoided for
-TI's J721E, other platforms doesn't have to have this limitation.
-> least for EP accesses. And maybe you need a custom .raise_irq() hook
-> to minimize any problems (such as making the RMW atomic at least from
-> the endpoint's perspective).
+diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
+index ad0c7f3..803fa66 100644
+--- a/drivers/clk/hisilicon/clk-hi3519.c
++++ b/drivers/clk/hisilicon/clk-hi3519.c
+@@ -149,8 +149,8 @@ static int hi3519_clk_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	crg->rstc = hisi_reset_init(pdev);
+-	if (!crg->rstc)
+-		return -ENOMEM;
++	if (IS_ERR(crg->rstc))
++		return PTR_ERR(crg->rstc);
+ 
+ 	crg->clk_data = hi3519_clk_register(pdev);
+ 	if (IS_ERR(crg->clk_data)) {
+diff --git a/drivers/clk/hisilicon/crg-hi3516cv300.c b/drivers/clk/hisilicon/crg-hi3516cv300.c
+index 5d4e61c..c2af03d 100644
+--- a/drivers/clk/hisilicon/crg-hi3516cv300.c
++++ b/drivers/clk/hisilicon/crg-hi3516cv300.c
+@@ -271,8 +271,8 @@ static int hi3516cv300_crg_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 
+ 	crg->rstc = hisi_reset_init(pdev);
+-	if (!crg->rstc)
+-		return -ENOMEM;
++	if (IS_ERR(crg->rstc))
++		return PTR_ERR(crg->rstc);
+ 
+ 	crg->clk_data = crg->funcs->register_clks(pdev);
+ 	if (IS_ERR(crg->clk_data)) {
+diff --git a/drivers/clk/hisilicon/crg-hi3798cv200.c b/drivers/clk/hisilicon/crg-hi3798cv200.c
+index 08a19ba..66fd6a9 100644
+--- a/drivers/clk/hisilicon/crg-hi3798cv200.c
++++ b/drivers/clk/hisilicon/crg-hi3798cv200.c
+@@ -354,8 +354,8 @@ static int hi3798cv200_crg_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 
+ 	crg->rstc = hisi_reset_init(pdev);
+-	if (!crg->rstc)
+-		return -ENOMEM;
++	if (IS_ERR(crg->rstc))
++		return PTR_ERR(crg->rstc);
+ 
+ 	crg->clk_data = crg->funcs->register_clks(pdev);
+ 	if (IS_ERR(crg->clk_data)) {
+diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
+index 93cee17..f17d15f 100644
+--- a/drivers/clk/hisilicon/reset.c
++++ b/drivers/clk/hisilicon/reset.c
+@@ -93,11 +93,11 @@ struct hisi_reset_controller *hisi_reset_init(struct platform_device *pdev)
+ 
+ 	rstc = devm_kmalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
+ 	if (!rstc)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	rstc->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rstc->membase))
+-		return NULL;
++		return rstc->membase;
+ 
+ 	spin_lock_init(&rstc->lock);
+ 	rstc->rcdev.owner = THIS_MODULE;
+-- 
+2.1.0
 
-This is to make sure EP doesn't update in-consistent state when RC is updating
-the PCI_STATUS register? Since this involves two different systems, how do we
-make this atomic?
-
-Thanks
-Kishon
