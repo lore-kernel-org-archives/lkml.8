@@ -2,155 +2,82 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CE8206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77982071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQt1HWBC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lqW+siR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389764AbgEYSEj (ORCPT
+        id S2389782AbgEYSIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 14:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
+        Mon, 25 May 2020 14:08:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388621AbgEYSEj (ORCPT
+        with ESMTP id S2388621AbgEYSIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 14:04:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1483AC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 11:04:39 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z26so9066286pfk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 11:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PAB8InMNdHtw1sY8dxXS0+RSR7K8nRd/W2k8ffZ4Q3w=;
-        b=dQt1HWBCWLmDUW4sY0Mjq7AsizTnXYbIqlA07X17hC7kRvqZXOW0r5uLSBi7HIboJy
-         1oaEhozTeWEe0OMESdA0thK5z5GakMN70IXUvYQptEkgg6WxQ3OF/ZtuzZ5QLrDwvxE9
-         Jzlu2CivysdX9LI7xIfqdUKF2roCZCnzYPwtnWUJyVt4ddzDV1MUwy5zxdOUrBnx9wDM
-         PGCkHPAt5bZp95Z+al59oUl1263zfkAQWD7cCBlM2WAXvB8POff8EF+5wMtPIpGMdg7F
-         coqtJIBArB+oepQtEqTJszeDkudWjkWEHw76Jkuqd+LljrBB0qFp3UQT/MlNKFd0/OGM
-         HyyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PAB8InMNdHtw1sY8dxXS0+RSR7K8nRd/W2k8ffZ4Q3w=;
-        b=gDtoVJbqrp42/IEYLmmQLUcPYAFsCkoMWAJOfzBVoCH201ph9OzTAk4LLoJsiO2VV/
-         01mAJHvDjcaTl8DFZABnYuVQ3AckUy1AcdriXy+SGecDgAN+edsvM0WPPdK5Y9KOZw+E
-         Rm9gIsRaExWNngqK0Z/UDNkBro5kaHOR6gakYa5VIsmYUzvqzfFhYNJT0NwUJ0BJBT+l
-         70F4lGjJmIV4y7+busokT2UFNcFYkgUVWAeVVPTaET36yvgF2hA/2Hzgp0FMWhBXIXiP
-         BbwcbZw7qjZlCbsSitwgVYKHLnzwKUYckSDI9YR7thQbUE+4QrgB6gidw225IKHD/gK0
-         3D9Q==
-X-Gm-Message-State: AOAM530Kg/Dxu67KBfLPiUA/BpIa4kMRimEtFPs2SeIExEujQ0CzkrQY
-        8vSyQHoOH6wAtAC0s/dbDIs=
-X-Google-Smtp-Source: ABdhPJyezKLdoitt2fakdRXnl6cL2BqFHQ3TU7kenobJ/b2iPakDh/rya/euYiDtrb6NEdZdJ/Onzg==
-X-Received: by 2002:a63:4cc:: with SMTP id 195mr27470706pge.294.1590429878562;
-        Mon, 25 May 2020 11:04:38 -0700 (PDT)
-Received: from workstation-LAP.localdomain ([103.87.56.138])
-        by smtp.gmail.com with ESMTPSA id k2sm13946901pfd.108.2020.05.25.11.04.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 11:04:37 -0700 (PDT)
-Date:   Mon, 25 May 2020 23:34:21 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        James Morris <jamorris@linux.microsoft.com>,
+        Mon, 25 May 2020 14:08:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC08C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 11:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=KtQ2SC4NpHGImf+Tkc9R2teElcvTerbBEl4X1UzaM28=; b=lqW+siR8qtiAMM7Ddod74VaBie
+        aKsujkrzo3JVXxk/qIICnnccnJVJQt884GIWER0zPUzXJx2nqGRAaNsxMYV8Sq6Q/SEEGo0XkPDGZ
+        /EJvlWvTNo1OW7TwjorFNCsMZnnwVc0WmjxVSUXHy8V1ZyVlr8uQ7YU4BrKmAF9keKI60F6cjpSNg
+        an2IerjCCfGD+L39XIeikvdlcQdIiZOWtxTy40xrRZxC6jNg7FnMWiSLlWJA/aDKrheGokOqDoKtm
+        SkSbxJdQZexIBIGyFAH6W4D0YCbhbsX5YwUmOyZ60cOtstxHtc8GrwuxBawUvvZepEO7UwJX52gKD
+        MuSgxKyQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdHWe-0004PD-Vv; Mon, 25 May 2020 18:08:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D698300478;
+        Mon, 25 May 2020 20:08:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5847720BD4F43; Mon, 25 May 2020 20:08:34 +0200 (CEST)
+Date:   Mon, 25 May 2020 20:08:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@redhat.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        linux-audit@redhat.com, Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 1/3 RESEND] sched: Remove __rcu annotation from cred
- pointer
-Message-ID: <20200525180421.GA19@workstation-LAP.localdomain>
-References: <20200402055640.6677-1-frextrite@gmail.com>
- <20200524081117.GA29@workstation-LAP.localdomain>
- <20200525131741.s6lgb263fpo5uszk@madcap2.tricolour.ca>
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Subject: Re: [RFC][PATCH 0/4] x86/entry: disallow #DB more
+Message-ID: <20200525180834.GF317569@hirez.programming.kicks-ass.net>
+References: <20200525110101.GG325303@hirez.programming.kicks-ass.net>
+ <2E6DBDE0-FEEA-467F-A380-4ED736B6C912@amacapital.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200525131741.s6lgb263fpo5uszk@madcap2.tricolour.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2E6DBDE0-FEEA-467F-A380-4ED736B6C912@amacapital.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 09:17:41AM -0400, Richard Guy Briggs wrote:
-> On 2020-05-24 13:41, Amol Grover wrote:
-> > On Thu, Apr 02, 2020 at 11:26:38AM +0530, Amol Grover wrote:
-> > > task_struct::cred (subjective credentials) is *always* used
-> > > task-synchronously, hence, does not require RCU semantics.
-> > > 
-> > > task_struct::real_cred (objective credentials) can be used in
-> > > RCU context and its __rcu annotation is retained.
-> > > 
-> > > However, task_struct::cred and task_struct::real_cred *may*
-> > > point to the same object, hence, the object pointed to by
-> > > task_struct::cred *may* have RCU delayed freeing.
-> > > 
-> > > Suggested-by: Jann Horn <jannh@google.com>
-> > > Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > 
-> > Hello everyone,
-> > 
-> > Could you please go through patches 1/3 and 2/3 and if deemed OK, give
-> > your acks. I sent the original patch in beginning of February (~4 months
-> > back) and resent the patches again in beginning of April due to lack of
-> > traffic. Paul Moore was kind enough to ack twice - the 3/3 and its
-> > resend patch. However these 2 patches still remain. I'd really
-> > appreciate if someone reviewed them.
-> 
-> I asked on April 3 which upstream tree you expect this patchset to go
-> through and I did not see a reply.  Do you have a specific target or is
-> the large addressee list assuming someone else is taking this set?  All
-> we have seen is that it is not intended to go through the audit tree.
-> 
+On Mon, May 25, 2020 at 10:19:08AM -0700, Andy Lutomirski wrote:
 
-Apologies for it. As Paul Moore replied, initially I assumed this
-patchset to not go through the audit tree as the audit specific changes
-were secondary to the main change (though certainly I did not think
-which upstream tree the patchset would go through). But now I am okay
-with the patchset making it to upstream via audit tree if it is fine by
-the maintainers.
+> How about adding it to cpu_tlbstate?  A lot of NMIs are going to read
+> that anyway to check CR3.
 
-Thanks
-Amol
+That might work I suppose; we're really pushing the name of it though.
+Also, that's PTI specific IIRC, and we're getting to the point where a
+significant number of CPUs no longer need that, right?
 
-> > Thanks
-> > Amol
-> 
-> - RGB
-> 
-> --
-> Richard Guy Briggs <rgb@redhat.com>
-> Sr. S/W Engineer, Kernel Security, Base Operating Systems
-> Remote, Ottawa, Red Hat Canada
-> IRC: rgb, SunRaycer
-> Voice: +1.647.777.2635, Internal: (81) 32635
-> 
+> And blaming KVM is a bit misplaced. This isn’t KVM’s fault — it’s
+> Intel’s. VT-x has two modes: DR access exits and DR access doesn’t
+> exit. There’s no shadow mode.
+
+It's virt, I can't be arsed to care, whoever misdesigned it.
+We already have debugreg pvops, they can do shadow there.
