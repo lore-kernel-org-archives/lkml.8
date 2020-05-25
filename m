@@ -2,280 +2,131 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ADAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E02BC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C9620812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C15F2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590412464;
+	bh=h59g/FWKiLO/S5qsGnm95+KrT3FhntaQraRQRXiYPEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iBDYl1lng7NYvuOCd+lzRRx/nsFi33y9PAD3ZxAheZbpHvYcHt2nBc87RxGmae3MH
+	 XDGexd36ILUZIb11d9MRdxfUUrS4bEVKFI4Hx2xi5ngjWs/Zj7onZP7mLSQjjfsLG6
+	 xCQThYQeQCD6jukIQ9Ei+HpgotLowR0xKgIwO2OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403816AbgEYNOT (ORCPT
+        id S2390719AbgEYNOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:14:19 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57137 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390674AbgEYNOS (ORCPT
+        Mon, 25 May 2020 09:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390626AbgEYNOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:14:18 -0400
-Received: from [78.134.112.142] (port=42672 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jdCvk-0072GJ-Oc; Mon, 25 May 2020 15:14:12 +0200
-Subject: Re: [PATCH v13 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-To:     Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Hyun Kwon <hyun.kwon@xilinx.com>
-References: <20200512151947.120348-1-vishal.sagar@xilinx.com>
- <20200512151947.120348-3-vishal.sagar@xilinx.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e3ccf942-0a0d-1c4c-30bf-db9f127126f4@lucaceresoli.net>
-Date:   Mon, 25 May 2020 15:14:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 09:14:22 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E657DC061A0E;
+        Mon, 25 May 2020 06:14:21 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l26so1100922wme.3;
+        Mon, 25 May 2020 06:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lLb0og4tlG0+5ScJbZjLWh8El6oOSBuFzon5WeuLTO4=;
+        b=i96jkpDU/ButrseZ7QFSuoa+G4ZzhfXIIph4o9JxLPuUrH4KjK86b3q2zr5C3AN3Qk
+         K3tKbBD3D0ecBH47eTU1BKqPyq5McNWKNvoyNHqmPl8usDeeohnwsXLi977SE7RD2WK/
+         ttoqwdNAotGk46M12G+dGyPXgNGEoLHXR3zfBmJL/g9PPTaqNUyFRRb1uD7vypNTbdHF
+         toQtk3P8zMbL9pUEYlDkpdvfiI4C2O86E3pHcjjBGz4/94vAiSSvg5xsfQctnmG8LpVc
+         lJQLoCtEUYYlLhRMSZi0TsllFBZMiBpqdgmiGEvZl/kdfGJqCDkys2YMdP4NOwm5FWlc
+         3cvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=lLb0og4tlG0+5ScJbZjLWh8El6oOSBuFzon5WeuLTO4=;
+        b=Fn0AQeJxEbIU5FZRTdNZXdGWAGGevry25gSDSD8GLKN+jw6Sa/l1dlU5w0Q32DhteX
+         oejCEmtEOdJRh0xI//u0SUWfDY4fj9IVg+3+0PevimEEzunXwwbG3E9dmEKIQqfqpLiJ
+         cujYjHsSN9G9G5ElcjqbyLUFUqyzNg2el+g6gFUBQ15g/Z1EGoVZWzfFW9js0sOUa2HU
+         Qgy7bR2nooZnB/GkF0x6+fewGWoiHRnzn6TyfPyuGQRZq84viG3iQRrHic3MeBsd0fuR
+         a57+DC9ImrcweN1BFzzxNcAt+xBZc1T9KssPzBn2nedK86oLnof0wKI4Kws3dUhXbh7p
+         NeLw==
+X-Gm-Message-State: AOAM530ci4HQuieUcY6COgSUN362NVsm8hJdNUScR5+cVJPRXeXC1Kbr
+        8QHDHZj9RWSjBv1+6H2P80arIy/v
+X-Google-Smtp-Source: ABdhPJylPg58OihdBLTiDOTMZiAMnlp4GjxJTJedis+A0Gvf6fegBNgbpQBUr6txkuYengzMpcy/HQ==
+X-Received: by 2002:a1c:29c4:: with SMTP id p187mr25142690wmp.73.1590412460688;
+        Mon, 25 May 2020 06:14:20 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 23sm10133992wmo.18.2020.05.25.06.14.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 06:14:19 -0700 (PDT)
+Date:   Mon, 25 May 2020 15:14:17 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [GIT PULL] EFI changes for v5.8
+Message-ID: <20200525131417.GA3066456@gmail.com>
+References: <20200525080714.23228-1-ardb@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200512151947.120348-3-vishal.sagar@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525080714.23228-1-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vishal,
 
-thanks. I have only a few minor nitpicking comments.
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-On 12/05/20 17:19, Vishal Sagar wrote:
-> The Xilinx MIPI CSI-2 Rx Subsystem soft IP is used to capture images
-> from MIPI CSI-2 camera sensors and output AXI4-Stream video data ready
-> for image processing. Please refer to PG232 for details.
+> Ingo, Thomsd, Boris,
 > 
-> The CSI2 Rx controller filters out all packets except for the packets
-> with data type fixed in hardware. RAW8 packets are always allowed to
-> pass through.
+> Please pull the changes below. Note that I did not incorporate the GOT
+> handling changes for the x86 decompressor - Arvind has some changes on
+> top that might just as well go in at the same time, and they are not
+> really EFI changes anyway.
 > 
-> It is also used to setup and handle interrupts and enable the core. It
-> logs all the events in respective counters between streaming on and off.
+> The following changes since commit 4da0b2b7e67524cc206067865666899bc02e1cb0:
 > 
-> The driver supports only the video format bridge enabled configuration.
-> Some data types like YUV 422 10bpc, RAW16, RAW20 are supported when the
-> CSI v2.0 feature is enabled in design. When the VCX feature is enabled,
-> the maximum number of virtual channels becomes 16 from 4.
+>   efi/libstub: Re-enable command line initrd loading for x86 (2020-04-25 12:26:32 +0200)
 > 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-changes-for-v5.8
+> 
+> for you to fetch changes up to 9241dfe7f2772fc73c82eb950afb1c795d2c012c:
+> 
+>   efi/x86: Drop the special GDT for the EFI thunk (2020-05-24 00:25:15 +0200)
+> 
+> Cc: Ingo Molnar <mingo@redhat.com>,
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> ----------------------------------------------------------------
+> More EFI changes for v5.8:
+> - Rename pr_efi/pr_efi_err to efi_info/efi_err, and use them consistently
+> - Simplify and unify initrd loading
+> - Parse the builtin command line on x86 (if provided)
+> - Implement printk() support, including support for wide character strings
+> - Some fixes for issues introduced by the first batch of v5.8 changes
+> - Fix a missing prototypes warning
+> - Simplify GDT handling in early mixed mode thunking code
+> - Some other minor fixes and cleanups
 
-[...]
+>  24 files changed, 1211 insertions(+), 313 deletions(-)
 
-> +static int xcsi2rxss_start_stream(struct xcsi2rxss_state *state)
-> +{
-> +	int ret = 0;
-> +
-> +	/* enable core */
-> +	xcsi2rxss_set(state, XCSI_CCR_OFFSET, XCSI_CCR_ENABLE);
-> +
-> +	ret = xcsi2rxss_soft_reset(state);
-> +	if (ret < 0) {
+Pulled, thanks a lot Ard! Will push it out after a bit of testing.
 
-'if (ret)' is enough, it's a classic nonzero-on-error return value.
+There was one conflict, in drivers/firmware/efi/libstub/efistub.h, 
+with a straightforward resolution.
 
-> +/**
-> + * xcsi2rxss_irq_handler - Interrupt handler for CSI-2
-> + * @irq: IRQ number
-> + * @data: Pointer to device state
-> + *
-> + * In the interrupt handler, a list of event counters are updated for
-> + * corresponding interrupts. This is useful to get status / debug.
-> + *
-> + * Return: IRQ_HANDLED after handling interrupts
-> + */
-> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *data)
-> +{
-> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)data;
-> +	struct device *dev = state->dev;
-> +	u32 status;
-> +
-> +	status = xcsi2rxss_read(state, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
-> +	xcsi2rxss_write(state, XCSI_ISR_OFFSET, status);
-> +
-> +	/* Received a short packet */
-> +	if (status & XCSI_ISR_SPFIFONE) {
-> +		u32 count = 0;
-> +
-> +		/*
-> +		 * Drain generic short packet FIFO by reading max 31
-> +		 * (fifo depth) short packets from fifo or till fifo is empty.
-> +		 */
-> +		for (count = 0; count < XCSI_SPKT_FIFO_DEPTH; ++count) {
-> +			u32 spfifostat, spkt;
-> +
-> +			spkt = xcsi2rxss_read(state, XCSI_SPKTR_OFFSET);
-> +			dev_dbg(dev, "Short packet = 0x%08x\n", spkt);
-> +			spfifostat = xcsi2rxss_read(state, XCSI_ISR_OFFSET);
-> +			spfifostat &= XCSI_ISR_SPFIFONE;
-> +			if (!spfifostat)
-> +				break;
-> +			xcsi2rxss_write(state, XCSI_ISR_OFFSET, spfifostat);
-> +		}
-> +	}
-> +
-> +	/* Short packet FIFO overflow */
-> +	if (status & XCSI_ISR_SPFIFOF)
-> +		dev_dbg_ratelimited(dev, "Short packet FIFO overflowed\n");
-> +
-> +	/*
-> +	 * Stream line buffer full
-> +	 * This means there is a backpressure from downstream IP
-> +	 */
-> +	if (status & XCSI_ISR_SLBF) {
-> +		dev_alert_ratelimited(dev, "Stream Line Buffer Full!\n");
-> +
-> +		/* disable interrupts */
-> +		xcsi2rxss_clr(state, XCSI_IER_OFFSET, XCSI_IER_INTR_MASK);
-> +		xcsi2rxss_clr(state, XCSI_GIER_OFFSET, XCSI_GIER_GIE);
-> +
-> +		/* disable core */
-> +		xcsi2rxss_clr(state, XCSI_CCR_OFFSET, XCSI_CCR_ENABLE);
-> +		state->streaming = false;
-> +
-> +		/*
-> +		 * The IP needs to be hard reset before it can be used now.
-> +		 * This will be done in streamoff.
-> +		 */
-> +
-> +		/*
-> +		 * TODO: Notify the whole pipeline with v4l2_subdev_notify() to
-> +		 * inform userspace.
-> +		 */
-> +	}
-> +
-> +	/* Increment event counters */
-> +	if (status & XCSI_ISR_ALLINTR_MASK) {
-> +		unsigned int i;
-> +
-> +		for (i = 0; i < XCSI_NUM_EVENTS; i++) {
-> +			if (!(status & xcsi2rxss_events[i].mask))
-> +				continue;
-> +			state->events[i]++;
-> +			dev_dbg_ratelimited(dev, "%s: %u\n",
-> +					    xcsi2rxss_events[i].name,
-> +					    state->events[i]);
-> +		}
-> +
-> +		if (status & XCSI_ISR_VCXFE && state->en_vcx) {
-> +			u32 vcxstatus;
-> +
-> +			vcxstatus = xcsi2rxss_read(state, XCSI_VCXR_OFFSET);
-> +			vcxstatus &= XCSI_VCXR_VCERR;
-> +			for (i = 0; i < XCSI_VCX_NUM_EVENTS; i++) {
-> +				if (!(vcxstatus & (1 << i)))
-
-You can use BIT(i) instead of (1 << i).
-
-> +/**
-> + * xcsi2rxss_set_format - This is used to set the pad format
-> + * @sd: Pointer to V4L2 Sub device structure
-> + * @cfg: Pointer to sub device pad information structure
-> + * @fmt: Pointer to pad level media bus format
-> + *
-> + * This function is used to set the pad format. Since the pad format is fixed
-> + * in hardware, it can't be modified on run time. So when a format set is
-> + * requested by application, all parameters except the format type is saved
-> + * for the pad and the original pad format is sent back to the application.
-> + *
-> + * Return: 0 on success
-> + */
-> +static int xcsi2rxss_set_format(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_pad_config *cfg,
-> +				struct v4l2_subdev_format *fmt)
-> +{
-> +	struct xcsi2rxss_state *xcsi2rxss = to_xcsi2rxssstate(sd);
-> +	struct v4l2_mbus_framefmt *__format;
-> +	u32 dt;
-> +
-> +	/* only sink pad format can be updated */
-
-This comment should be placed...
-
-> +	mutex_lock(&xcsi2rxss->lock);
-> +
-> +	/*
-> +	 * Only the format->code parameter matters for CSI as the
-> +	 * CSI format cannot be changed at runtime.
-> +	 * Ensure that format to set is copied to over to CSI pad format
-> +	 */
-> +	__format = __xcsi2rxss_get_pad_format(xcsi2rxss, cfg,
-> +					      fmt->pad, fmt->which);
-> +
-
-...here.
-
-> +	if (fmt->pad == XVIP_PAD_SOURCE) {
-> +		fmt->format = *__format;
-> +		mutex_unlock(&xcsi2rxss->lock);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * RAW8 is supported in all datatypes. So if requested media bus format
-> +	 * is of RAW8 type, then allow to be set. In case core is configured to
-> +	 * other RAW, YUV422 8/10 or RGB888, set appropriate media bus format.
-> +	 */
-> +	dt = xcsi2rxss_get_dt(fmt->format.code);
-> +	if (dt != xcsi2rxss->datatype && dt != XCSI_DT_RAW8) {
-> +		dev_dbg(xcsi2rxss->dev, "Unsupported media bus format");
-> +		/* set the default format for the data type */
-> +		fmt->format.code = xcsi2rxss_get_nth_mbus(xcsi2rxss->datatype,
-> +							  0);
-> +	}
-> +
-> +	*__format = fmt->format;
-> +	mutex_unlock(&xcsi2rxss->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * xcsi2rxss_enum_mbus_code - Handle pixel format enumeration
-> + * @sd : pointer to v4l2 subdev structure
-> + * @cfg: V4L2 subdev pad configuration
-> + * @code : pointer to v4l2_subdev_mbus_code_enum structure
-
-Remove space before colon here.
-
-Looks good otherwise, and my comments are minor details so:
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-
-I tried to runtime test this driver as well replacing the v10 driver
-that I'm using at the moment, but ran into many problems, apparently in
-the media entity navigation. The diff between v10 and v13 does not
-justify these problems, so I'm assuming v13 needs a more recent kernel
-than the 4.19 I'm currentl stuck on.
-
--- 
-Luca Ceresoli
+	Ingo
