@@ -2,222 +2,485 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69174C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3568F2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mPlvlPps";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mPlvlPps"
+	by mail.kernel.org (Postfix) with ESMTP id 593C22076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388448AbgEYBiP (ORCPT
+        id S2388512AbgEYBjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:38:15 -0400
-Received: from mail-eopbgr00053.outbound.protection.outlook.com ([40.107.0.53]:33024
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728324AbgEYBiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:38:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKpqPWiXwX1s9oHxaslGI9pPpxzD4WzD+JjXBLEXAPk=;
- b=mPlvlPpsypkcTTy3bE5rLRARa6PKR2zVzdFADqh58TmohK8o9DcaXE1kyN5ZvVFWfieg39PiyRIyCSxMO21gf+bav+Kx+MXWqUa1ja7UUP31rXAxqhZ5X7ZtokpAsH1sfkYO5s58Jhqg+J4bKeu49/z/iJd4ZVowfFYs8dj58YA=
-Received: from DB6PR0802CA0045.eurprd08.prod.outlook.com (2603:10a6:4:a3::31)
- by VI1PR08MB5374.eurprd08.prod.outlook.com (2603:10a6:803:12f::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Mon, 25 May
- 2020 01:38:07 +0000
-Received: from DB5EUR03FT064.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:a3:cafe::29) by DB6PR0802CA0045.outlook.office365.com
- (2603:10a6:4:a3::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
- Transport; Mon, 25 May 2020 01:38:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT064.mail.protection.outlook.com (10.152.21.199) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 01:38:06 +0000
-Received: ("Tessian outbound 14e212f6ce41:v57"); Mon, 25 May 2020 01:38:06 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from c2b5a79ceaa6.3
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 693EC451-4575-4919-98F1-8F17DF37F683.1;
-        Mon, 25 May 2020 01:38:01 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c2b5a79ceaa6.3
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 25 May 2020 01:38:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h6jCtbtPIBNyIY40zKtu/lhZsWJPyOGCDI2BTGWq75zPYGVrsU+sVv62vf2lnJW/PgT5yjTN/8fERaLFo8G9noE5D5rmPKCoWCe3EaRmS03RQ2A/rMsAKf2BRkVLieuEAa6TrYFxGkdHlhQlcNKS+XH4wrHuuEow3B40Wl2QsFLZkpgwj7ZdXwJHOKcWrlxfupENOg+30X4qaioBKyiYiesf4moouRQkeaNolZvI0p+7sETVuILxbi0aOT5KdxpnIWhB34HJvLBG3Z0mn7tvdpCEf5IZJFUHnZJxu+fYbVxXMFQrXNpC2yBs5wTC2Fz76Oo9Zc2jo9UsQmTx6Vybww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKpqPWiXwX1s9oHxaslGI9pPpxzD4WzD+JjXBLEXAPk=;
- b=hmih+ze/ueyMQMevSSm2Sd41Ujcu4RjeiWJt0hEmZRZcvLihyN61eXROvx+PSCY1gZZdIcby6FYDKmhICCf48PNSryvHk67zDuYskxm5jtmEJS+xRPXtesZIY2jCHqlTES7jmke7leYyC9RYCoFaEnyd9pb755hhll/6nXaml5Wi/vE6QUJ0xHDcvHpCcc+3U1ZzmB9O4dwdESmQijdFmOxuUzdMtSONjryYfMllN57vsln1gpQEvVnI1anHNoCkTHOTzKvoRwOKKObbDep/q7up+fHQDjCpY52MdQpSHkdS3xydDtm+177aUfAxQs7Ppl7Ic04SWtywhZxqfJW7ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKpqPWiXwX1s9oHxaslGI9pPpxzD4WzD+JjXBLEXAPk=;
- b=mPlvlPpsypkcTTy3bE5rLRARa6PKR2zVzdFADqh58TmohK8o9DcaXE1kyN5ZvVFWfieg39PiyRIyCSxMO21gf+bav+Kx+MXWqUa1ja7UUP31rXAxqhZ5X7ZtokpAsH1sfkYO5s58Jhqg+J4bKeu49/z/iJd4ZVowfFYs8dj58YA=
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7)
- by HE1PR0802MB2571.eurprd08.prod.outlook.com (2603:10a6:3:e2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Mon, 25 May
- 2020 01:37:56 +0000
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::b1eb:9515:4851:8be]) by HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::b1eb:9515:4851:8be%6]) with mapi id 15.20.3021.029; Mon, 25 May 2020
- 01:37:56 +0000
-From:   Jianyong Wu <Jianyong.Wu@arm.com>
-To:     Sudeep Holla <Sudeep.Holla@arm.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        Justin He <Justin.He@arm.com>, Wei Chen <Wei.Chen@arm.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kaly Xin <Kaly.Xin@arm.com>, nd <nd@arm.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
-Thread-Topic: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
-Thread-Index: AQHWMBRUBAdOXBezXUymOTKynRIElai0FQYAgAP0TiA=
-Date:   Mon, 25 May 2020 01:37:56 +0000
-Message-ID: <HE1PR0802MB255537CD21C5E7F7F4A899A2F4B30@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200522083724.38182-1-jianyong.wu@arm.com>
- <20200522083724.38182-4-jianyong.wu@arm.com> <20200522131206.GA15171@bogus>
-In-Reply-To: <20200522131206.GA15171@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: aa67b612-5610-41a8-b27b-75dee5aeebf7.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
-x-originating-ip: [203.126.0.111]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e09abb7b-5dd2-4e6b-92d1-08d8004c4649
-x-ms-traffictypediagnostic: HE1PR0802MB2571:|VI1PR08MB5374:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR08MB53748069697CAB9430528A72F4B30@VI1PR08MB5374.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
-x-forefront-prvs: 0414DF926F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: He+6Q0V00nxFHrY1xEK0fd8S4PAkqovfrtOloOzV0luMwAELHPf4X6nPfCL9SVzUvdWgvdb3vNTOJzHLHDYwSnKaJKTiwCVVdSZXmo5Dvkrq4sWWXuEyFRxchgXXJLAIojvYiq4EgqSOL8wm+IBhmhyJCj/6adMhpou3Ku2qoLMsoYVRZYD3zav/TiLqwvvn3E5ts/0f8tIjuGPIRVAIFbeAVX0G3OFwDbHRXiBBK48+mGhZV6Mbx6cGH1rZv+k8rcH3k+4sR1IqhPEzeRtnEOrueuuwy/UAObe4RZ0J92RMqA2zxNCZ7V89+poUATqhYs7GWwdO6kzKo8zO+vIrbH1+WCVOunexMFwIx9SFwXOHghxtL1K7LPjvGkHk4uxKAdovr28V3XJ4n3wLuSc7rg==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0802MB2555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39850400004)(376002)(396003)(366004)(346002)(66946007)(7696005)(186003)(4326008)(6862004)(316002)(26005)(71200400001)(966005)(478600001)(6506007)(66556008)(76116006)(64756008)(66476007)(53546011)(66446008)(2906002)(6636002)(8676002)(52536014)(5660300002)(33656002)(8936002)(86362001)(7416002)(55016002)(9686003)(54906003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: IX4exGaJJO0u81zqwTPgVsxsRWpw8zIg7OH2kYV02gHPbNmdRp3/+eqer3cVv0ux1Eyha29s+giRxo2AFA0b2ZkslOygM0Exu+8Mf5om+aREiwzzOm8cUvo9TUeoHbQpQ66TKV5wIG51/bABpbI6TT1cOiwts28uKhc2yRICVUJRhru7K7kYBMYuhsMnFtVFkB+m7zWcFI9rKZdgdY+kHiFN6J9U00OQkhXCjEyRZoCalO5EqD5eOtYNvwchRDBUT1zjMOh0Sids2Dbbun6oqA2lGM/HxZp2umqKimwxJhS2ITT+jcFzoHQs2ng7B84RXI+FMwPjFhVaat0LFVcLlSCdeUCkGjto1cXsYmWXTdD63/z1nqdizl7psZ95qoJhG+yCb57QEzn7dGFqiIK/PS9IWduFADyMuboLdgGvmvaM1VdtPtjcS2qH17LRnSuIbLGK7K/EMQ5rwl76LcQhJwY6KjGXrVYPXGvjtHWzrpw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 24 May 2020 21:39:23 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12420 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387925AbgEYBjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 21:39:22 -0400
+IronPort-SDR: Qi7dwveCaFErghmEvQGQP9pKW3Ah9IrAt4clye/4/q6jyQQzgQxstGY1dWTkLc7bUTk/A2O7E6
+ HU5WB00/TVMw==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 18:36:20 -0700
+IronPort-SDR: 62+a4nNYyBnk/NTBXI1zDdYzjxkDQVpiKcQFKb4z9b1c2t2K8unZpNhpQCuxJTx6JLeXXfKVs1
+ kCZ/wa2y+Cnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,431,1583222400"; 
+   d="asc'?scan'208";a="375300188"
+Received: from grauter-mobl1.ger.corp.intel.com (HELO otredad) ([10.252.56.65])
+  by fmsmga001.fm.intel.com with ESMTP; 24 May 2020 18:36:16 -0700
+From:   Francisco Jerez <francisco.jerez.plata@intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
+In-Reply-To: <3169564.ZRsPWhXyMD@kreacher>
+References: <3169564.ZRsPWhXyMD@kreacher>
+Date:   Sun, 24 May 2020 18:36:28 -0700
+Message-ID: <87mu5wre1v.fsf@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2571
-Original-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT064.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39850400004)(396003)(346002)(136003)(46966005)(33656002)(86362001)(8676002)(9686003)(54906003)(478600001)(336012)(186003)(8936002)(82310400002)(356005)(52536014)(6636002)(55016002)(107886003)(26005)(81166007)(6862004)(47076004)(4326008)(7696005)(2906002)(82740400003)(5660300002)(70586007)(450100002)(53546011)(316002)(6506007)(966005)(70206006);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: d651fffb-09ca-4a5c-058f-08d8004c4036
-X-Forefront-PRVS: 0414DF926F
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WTyctWUDk2F9PCS6MYNfoxw5WTalp9lLgHP6ZSs6fAx3O98Ol/KxymDaCN/G7+4tjtjKgQiY29s+9/aLqXuqn5hLqnqLz+yIavbOI0XaeXju/Y+qKcgdJjK6uuH+93VNEKA3lmu+MUteSMqm22vIhXm9nRYmyp1qU6CF4+n1+4dVuWjTsrbl3HjQ3Qjwvx976+FQO5oRhMWXvbZrQEfK05gs2ZG1VufUAz6qOqlugd1AAxHribAu/e9oc30MKVOjbOu0Q23+yRJHIONcgGDBQFX5HM87l0zyXHM0G2JHZhOHhzCI5NxawwxSv5TZbFFSLIQbBpqnK6k0Gg/V8Jtuug6+ZNfO1bj/ERY/ATPNO0crTPPfTOpkTsBip0HhLZJp1zsG13AxW1qrGxexTOmdl9JxoOzK792RfIwaAxHbBuf8J3aILIOrC6yVnDHfBh/zJFI3M2gWmgQkQvi93yQkwvwR4piiwL9IqlnB5CPfEb8=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 01:38:06.9246
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e09abb7b-5dd2-4e6b-92d1-08d8004c4649
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB5374
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
 
-> -----Original Message-----
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> Sent: Friday, May 22, 2020 9:12 PM
-> To: Jianyong Wu <Jianyong.Wu@arm.com>
-> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
-> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
-> maz@kernel.org; richardcochran@gmail.com; Mark Rutland
-> <Mark.Rutland@arm.com>; will@kernel.org; Suzuki Poulose
-> <Suzuki.Poulose@arm.com>; Steven Price <Steven.Price@arm.com>; Justin
-> He <Justin.He@arm.com>; Wei Chen <Wei.Chen@arm.com>;
-> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; linux-
-> kernel@vger.kernel.org; Kaly Xin <Kaly.Xin@arm.com>; nd <nd@arm.com>;
-> Sudeep Holla <Sudeep.Holla@arm.com>; kvmarm@lists.cs.columbia.edu;
-> linux-arm-kernel@lists.infradead.org
-> Subject: Re: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
->=20
-> On Fri, May 22, 2020 at 04:37:16PM +0800, Jianyong Wu wrote:
-> > Export arm_smccc_1_1_get_conduit then modules can use smccc helper
-> > which adopts it.
-> >
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> > ---
-> >  drivers/firmware/psci/psci.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/firmware/psci/psci.c
-> > b/drivers/firmware/psci/psci.c index 2937d44b5df4..fd3c88f21b6a 100644
-> > --- a/drivers/firmware/psci/psci.c
-> > +++ b/drivers/firmware/psci/psci.c
-> > @@ -64,6 +64,7 @@ enum arm_smccc_conduit
-> > arm_smccc_1_1_get_conduit(void)
-> >
-> >  	return psci_ops.conduit;
-> >  }
-> > +EXPORT_SYMBOL(arm_smccc_1_1_get_conduit);
-> >
->=20
-> I have moved this into drivers/firmware/smccc/smccc.c [1] Please update
-> this accordingly.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, I will remove this patch next version.
->=20
-> Also this series is floating on the list for a while now, it is time to d=
-rop "RFC"
-> unless anyone has strong objection to the idea here.
-Yeah.
->=20
-Thanks
-Jianyong=20
-> --
-> Regards,
-> Sudeep
->=20
-> [1] https://git.kernel.org/arm64/c/f2ae97062a48
+"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Allow intel_pstate to work in the passive mode with HWP enabled and
+> make it translate the target frequency supplied by the cpufreq
+> governor in use into an EPP value to be written to the HWP request
+> MSR (high frequencies are mapped to low EPP values that mean more
+> performance-oriented HWP operation) as a hint for the HWP algorithm
+> in the processor, so as to prevent it and the CPU scheduler from
+> working against each other at least when the schedutil governor is
+> in use.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>
+> This is a prototype not intended for production use (based on linux-next).
+>
+> Please test it if you can (on HWP systems, of course) and let me know the
+> results.
+>
+> The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very=
+ well
+> may turn out to be either too high or too low for the general use, which =
+is one
+> reason why getting as much testing coverage as possible is key here.
+>
+> If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
+> please do so and let me know the conclusions.
+>
+> Cheers,
+> Rafael
+>
+> ---
+>  drivers/cpufreq/intel_pstate.c |  169 +++++++++++++++++++++++++++++++---=
+-------
+>  1 file changed, 131 insertions(+), 38 deletions(-)
+>
+> Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> @@ -36,6 +36,7 @@
+>  #define INTEL_PSTATE_SAMPLING_INTERVAL	(10 * NSEC_PER_MSEC)
+>=20=20
+>  #define INTEL_CPUFREQ_TRANSITION_LATENCY	20000
+> +#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP	5000
+>  #define INTEL_CPUFREQ_TRANSITION_DELAY		500
+>=20=20
+>  #ifdef CONFIG_ACPI
+> @@ -95,6 +96,8 @@ static inline int32_t percent_ext_fp(int
+>  	return div_ext_fp(percent, 100);
+>  }
+>=20=20
+> +#define HWP_EPP_TO_BYTE(x)	(((u64)x >> 24) & 0xFF)
+> +
+>  /**
+>   * struct sample -	Store performance sample
+>   * @core_avg_perf:	Ratio of APERF/MPERF which is the actual average
+> @@ -2175,7 +2178,10 @@ static int intel_pstate_verify_policy(st
+>=20=20
+>  static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
+>  {
+> -	intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+> +	if (hwp_active)
+> +		intel_pstate_hwp_force_min_perf(policy->cpu);
+> +	else
+> +		intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+>  }
+>=20=20
+>  static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+> @@ -2183,12 +2189,10 @@ static void intel_pstate_stop_cpu(struct
+>  	pr_debug("CPU %d exiting\n", policy->cpu);
+>=20=20
+>  	intel_pstate_clear_update_util_hook(policy->cpu);
+> -	if (hwp_active) {
+> +	if (hwp_active)
+>  		intel_pstate_hwp_save_state(policy);
+> -		intel_pstate_hwp_force_min_perf(policy->cpu);
+> -	} else {
+> -		intel_cpufreq_stop_cpu(policy);
+> -	}
+> +
+> +	intel_cpufreq_stop_cpu(policy);
+>  }
+>=20=20
+>  static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
+> @@ -2296,7 +2300,8 @@ static int intel_cpufreq_verify_policy(s
+>  #define	INTEL_PSTATE_TRACE_TARGET 10
+>  #define	INTEL_PSTATE_TRACE_FAST_SWITCH 90
+>=20=20
+> -static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_=
+type, int old_pstate)
+> +static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_=
+type,
+> +				int from, int to)
+>  {
+>  	struct sample *sample;
+>=20=20
+> @@ -2309,8 +2314,8 @@ static void intel_cpufreq_trace(struct c
+>  	sample =3D &cpu->sample;
+>  	trace_pstate_sample(trace_type,
+>  		0,
+> -		old_pstate,
+> -		cpu->pstate.current_pstate,
+> +		from,
+> +		to,
+>  		sample->mperf,
+>  		sample->aperf,
+>  		sample->tsc,
+> @@ -2318,40 +2323,110 @@ static void intel_cpufreq_trace(struct c
+>  		fp_toint(cpu->iowait_boost * 100));
+>  }
+>=20=20
+> -static int intel_cpufreq_target(struct cpufreq_policy *policy,
+> -				unsigned int target_freq,
+> -				unsigned int relation)
+> +static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u8 new=
+_epp)
+>  {
+> -	struct cpudata *cpu =3D all_cpu_data[policy->cpu];
+> -	struct cpufreq_freqs freqs;
+> -	int target_pstate, old_pstate;
+> +	u64 value, prev;
+>=20=20
+> -	update_turbo_state();
+> +	prev =3D READ_ONCE(cpu->hwp_req_cached);
+> +	value =3D prev;
+>=20=20
+> -	freqs.old =3D policy->cur;
+> -	freqs.new =3D target_freq;
+> +	/*
+> +	 * The entire MSR needs to be updated in order to update the EPP field
+> +	 * in it, so opportunistically update the min and max too if needed.
+> +	 */
+> +	value &=3D ~HWP_MIN_PERF(~0L);
+> +	value |=3D HWP_MIN_PERF(cpu->min_perf_ratio);
+> +
+> +	value &=3D ~HWP_MAX_PERF(~0L);
+> +	value |=3D HWP_MAX_PERF(cpu->max_perf_ratio);
+> +
+> +	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+> +		intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET,
+> +				    HWP_EPP_TO_BYTE(prev), new_epp);
+> +
+> +		value &=3D ~GENMASK_ULL(31, 24);
+> +		value |=3D HWP_ENERGY_PERF_PREFERENCE(new_epp);
+> +	}
+> +
+> +	if (value !=3D prev) {
+> +		WRITE_ONCE(cpu->hwp_req_cached, value);
+> +		wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
+> +	}
+> +}
+> +
+> +/**
+> + * intel_cpufreq_adjust_hwp_request - Adjust the HWP reuqest register.
+> + * @cpu: Target CPU.
+> + * @max_freq: Maximum frequency to consider.
+> + * @target_freq: Target frequency selected by the governor.
+> + *
+> + * Translate the target frequency into a new EPP value to be written int=
+o the
+> + * HWP request MSR of @cpu as a hint for the HW-driven P-state selection.
+> + *
+> + * The purpose of this is to avoid situations in which the kernel and th=
+e HWP
+> + * algorithm work against each other by giving a hint about the expectat=
+ions of
+> + * the former to the latter.
+> + *
+> + * The mapping betweeen the target frequencies and the hint values need =
+not be
+> + * exact, but it must be monotonic, so that higher target frequencies al=
+ways
+> + * indicate more performance-oriented P-state selection.
+> + */
+> +static void intel_cpufreq_adjust_hwp_request(struct cpudata *cpu, s64 ma=
+x_freq,
+> +					     unsigned int target_freq)
+> +{
+> +	s64 epp_fp =3D div_fp(255 * (max_freq - target_freq), max_freq);
+> +
+> +	intel_cpufreq_update_hwp_request(cpu, fp_toint(epp_fp));
+> +}
+> +
+
+Hey Rafael, I'm building a kernel with this in order to give it a try on
+my system, but I'm skeptical that translating the target frequency to an
+EPP value will work reliably.  AFAIA the EPP value only has an indirect
+influence on the processor's performance by adjusting the trade-off
+between its responsiveness (rather than the actual clock frequency which
+it will sustain in the long run) and its energy usage, in a largely
+unspecified and non-linear way (non-linear like the effect of switching
+CPU energy optimization features on and off, or like its effect on the
+energy balancing behavior of the processor which can have a paradoxical
+effect on performance).
+
+I doubt that the scheduling-based CPU utilization is a good predictor
+for the optimal trade-off between those two variables.  Consider the
+following scenarios where this would deviate from the typical default
+EPP of 0x80:
+
+ - The application has low CPU utilization (say 10%) but it's
+   latency-bound, the current default EPP value allows the CPU to ramp
+   up during each burst and deliver reasonable average performance.
+   With this code in effect you may end up at an EPP > 0xE0 which will
+   severely limit the responsiveness of the HWP during each burst of
+   work, possibly reducing performance (since the application was
+   latency-bound), which will cause the CPU utilization of the process
+   to further decrease, leading to a further increase in EPP and further
+   decrease in performance (IOW this failure mode would have positive
+   feedback rather than being somehow self-correcting).
+
+ - The application has medium to high CPU utilization (say 60%), but
+   it's IO-bound (e.g. a database server with a hard-drive bottleneck).
+   This would cause you to program an EPP value around 0x60 which will
+   cause the HWP to respond more aggressively than currently to each
+   burst of work, increasing energy usage without a corresponding
+   increase in performance (since the application was IO-bound).
+
+ - Same as the last point, but the application is TDP-bound instead
+   (e.g. a computer game running on an integrated GPU).  Not only will
+   CPU energy usage increase, but performance will decrease with it, due
+   to the TDP budget being stolen from the GPU.
+
+ - The application has medium to low CPU utilization and frequently
+   migrates between CPU cores.  This would end up at an EPP >=3D 0x80
+   which won't give the application any CPU responsiveness advantage
+   during migration over the current behavior (but possibly quite the
+   opposite), even though the scheduler might know exactly what CPU
+   frequency the application was able to average, and could have saved
+   it some significant amount of ramp-up time.
+
+It seems to me that hooking this up to the HWP_MIN_PERF control instead
+of EPP would have a more deterministic effect and avoid the failure
+scenarios described above.  E.g. upon migration you would be able to
+instantly set up the new CPU core to the same P-state you knew the
+application was averaging before migration.  No performance is
+sacrificed in latency-bound applications since you wouldn't be limiting
+the HWP's responsiveness.  No energy efficiency is sacrificed in the
+steady state since you would be programming the most energy-efficient
+(minimum constant) P-state which is able to deliver the observed
+performance of the application -- It might make sense to program that
+value *minus* some small margin though, in order to give the HWP the
+chance to clock down in cases where the load fluctuates discontinuously
+before the next update of the HWP request.
+
+Of course it would also be nice to give schedutil control of
+HWP_MAX_PERF eventually, e.g. by implementing the energy efficiency
+optimization I've been proposing [1] in schedutil too.
+
+[1] https://lwn.net/Articles/818827/
+
+> +static int intel_cpufreq_adjust_pstate(struct cpudata *cpu,
+> +				       unsigned int target_freq,
+> +				       unsigned int relation)
+> +{
+> +	int old_pstate =3D cpu->pstate.current_pstate;
+> +	int target_pstate;
+>=20=20
+> -	cpufreq_freq_transition_begin(policy, &freqs);
+>  	switch (relation) {
+>  	case CPUFREQ_RELATION_L:
+> -		target_pstate =3D DIV_ROUND_UP(freqs.new, cpu->pstate.scaling);
+> +		target_pstate =3D DIV_ROUND_UP(target_freq, cpu->pstate.scaling);
+>  		break;
+>  	case CPUFREQ_RELATION_H:
+> -		target_pstate =3D freqs.new / cpu->pstate.scaling;
+> +		target_pstate =3D target_freq / cpu->pstate.scaling;
+>  		break;
+>  	default:
+> -		target_pstate =3D DIV_ROUND_CLOSEST(freqs.new, cpu->pstate.scaling);
+> +		target_pstate =3D DIV_ROUND_CLOSEST(target_freq, cpu->pstate.scaling);
+>  		break;
+>  	}
+>  	target_pstate =3D intel_pstate_prepare_request(cpu, target_pstate);
+> -	old_pstate =3D cpu->pstate.current_pstate;
+> -	if (target_pstate !=3D cpu->pstate.current_pstate) {
+> +	if (target_pstate !=3D old_pstate) {
+>  		cpu->pstate.current_pstate =3D target_pstate;
+> -		wrmsrl_on_cpu(policy->cpu, MSR_IA32_PERF_CTL,
+> +		wrmsrl_on_cpu(cpu->cpu, MSR_IA32_PERF_CTL,
+>  			      pstate_funcs.get_val(cpu, target_pstate));
+>  	}
+> -	freqs.new =3D target_pstate * cpu->pstate.scaling;
+> -	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET, old_pstate);
+> +	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET, old_pstate, target_=
+pstate);
+> +	return target_pstate * cpu->pstate.scaling;
+> +}
+> +
+> +static int intel_cpufreq_target(struct cpufreq_policy *policy,
+> +				unsigned int target_freq,
+> +				unsigned int relation)
+> +{
+> +	struct cpudata *cpu =3D all_cpu_data[policy->cpu];
+> +	struct cpufreq_freqs freqs;
+> +
+> +	update_turbo_state();
+> +
+> +	freqs.old =3D policy->cur;
+> +	freqs.new =3D target_freq;
+> +
+> +	cpufreq_freq_transition_begin(policy, &freqs);
+> +
+> +	if (hwp_active)
+> +		intel_cpufreq_adjust_hwp_request(cpu, policy->cpuinfo.max_freq,
+> +						 target_freq);
+> +	else
+> +		freqs.new =3D intel_cpufreq_adjust_pstate(cpu, target_freq, relation);
+> +
+>  	cpufreq_freq_transition_end(policy, &freqs, false);
+>=20=20
+>  	return 0;
+> @@ -2365,11 +2440,18 @@ static unsigned int intel_cpufreq_fast_s
+>=20=20
+>  	update_turbo_state();
+>=20=20
+> +	if (hwp_active) {
+> +		intel_cpufreq_adjust_hwp_request(cpu, policy->cpuinfo.max_freq,
+> +						 target_freq);
+> +		return target_freq;
+> +	}
+> +
+>  	target_pstate =3D DIV_ROUND_UP(target_freq, cpu->pstate.scaling);
+>  	target_pstate =3D intel_pstate_prepare_request(cpu, target_pstate);
+>  	old_pstate =3D cpu->pstate.current_pstate;
+>  	intel_pstate_update_pstate(cpu, target_pstate);
+> -	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_FAST_SWITCH, old_pstate);
+> +	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_FAST_SWITCH, old_pstate,
+> +			    target_pstate);
+>  	return target_pstate * cpu->pstate.scaling;
+>  }
+>=20=20
+> @@ -2389,7 +2471,6 @@ static int intel_cpufreq_cpu_init(struct
+>  		return ret;
+>=20=20
+>  	policy->cpuinfo.transition_latency =3D INTEL_CPUFREQ_TRANSITION_LATENCY;
+> -	policy->transition_delay_us =3D INTEL_CPUFREQ_TRANSITION_DELAY;
+>  	/* This reflects the intel_pstate_get_cpu_pstates() setting. */
+>  	policy->cur =3D policy->cpuinfo.min_freq;
+>=20=20
+> @@ -2401,10 +2482,19 @@ static int intel_cpufreq_cpu_init(struct
+>=20=20
+>  	cpu =3D all_cpu_data[policy->cpu];
+>=20=20
+> -	if (hwp_active)
+> +	if (hwp_active) {
+> +		u64 value;
+> +
+> +		rdmsrl_on_cpu(policy->cpu, MSR_HWP_REQUEST, &value);
+> +		WRITE_ONCE(cpu->hwp_req_cached, value);
+> +		cpu->epp_saved =3D HWP_EPP_TO_BYTE(value);
+> +
+>  		intel_pstate_get_hwp_max(policy->cpu, &turbo_max, &max_state);
+> -	else
+> +		policy->transition_delay_us =3D INTEL_CPUFREQ_TRANSITION_DELAY_HWP;
+> +	} else {
+>  		turbo_max =3D cpu->pstate.turbo_pstate;
+> +		policy->transition_delay_us =3D INTEL_CPUFREQ_TRANSITION_DELAY;
+> +	}
+>=20=20
+>  	min_freq =3D DIV_ROUND_UP(turbo_max * global.min_perf_pct, 100);
+>  	min_freq *=3D cpu->pstate.scaling;
+> @@ -2449,6 +2539,13 @@ static int intel_cpufreq_cpu_exit(struct
+>  	freq_qos_remove_request(req);
+>  	kfree(req);
+>=20=20
+> +	if (hwp_active) {
+> +		struct cpudata *cpu =3D all_cpu_data[policy->cpu];
+> +
+> +		/* Restore the original HWP EPP value. */
+> +		intel_cpufreq_update_hwp_request(cpu, cpu->epp_saved);
+> +	}
+> +
+>  	return intel_pstate_cpu_exit(policy);
+>  }
+>=20=20
+> @@ -2505,9 +2602,6 @@ static int intel_pstate_register_driver(
+>=20=20
+>  static int intel_pstate_unregister_driver(void)
+>  {
+> -	if (hwp_active)
+> -		return -EBUSY;
+> -
+>  	cpufreq_unregister_driver(intel_pstate_driver);
+>  	intel_pstate_driver_cleanup();
+>=20=20
+> @@ -2815,12 +2909,11 @@ static int __init intel_pstate_setup(cha
+>  	if (!str)
+>  		return -EINVAL;
+>=20=20
+> -	if (!strcmp(str, "disable")) {
+> +	if (!strcmp(str, "disable"))
+>  		no_load =3D 1;
+> -	} else if (!strcmp(str, "passive")) {
+> +	else if (!strcmp(str, "passive"))
+>  		default_driver =3D &intel_cpufreq;
+> -		no_hwp =3D 1;
+> -	}
+> +
+>  	if (!strcmp(str, "no_hwp")) {
+>  		pr_info("HWP disabled\n");
+>  		no_hwp =3D 1;
+
+--=-=-=--
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXsshHAAKCRCDmTidfVK/
+Wy/MAP998cc0Ec/kAmm1qXN+z4GU5Mik5erwsG8HCsgt7mfYjQEAoQdkFgenBH8a
+a8VtqumBFPLedbBtwVTWv0Gw6FVN3L8=
+=yUY1
+-----END PGP SIGNATURE-----
+--==-=-=--
