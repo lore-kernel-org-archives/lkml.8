@@ -2,74 +2,85 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2592C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A7A20812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9AD20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbgEYQTP (ORCPT
+        id S1731427AbgEYQW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35446 "EHLO
+        Mon, 25 May 2020 12:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgEYQTP (ORCPT
+        with ESMTP id S1731228AbgEYQW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:19:15 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584A3C061A0E;
-        Mon, 25 May 2020 09:19:15 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id DBA9C2DC;
-        Mon, 25 May 2020 16:19:14 +0000 (UTC)
-Date:   Mon, 25 May 2020 10:19:13 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] nvdimm: fixes to maintainter-entry-profile
-Message-ID: <20200525101913.07735d91@lwn.net>
-In-Reply-To: <103a0e71-28b5-e4c2-fdf2-80d2dd005b44@infradead.org>
-References: <103a0e71-28b5-e4c2-fdf2-80d2dd005b44@infradead.org>
-Organization: LWN.net
+        Mon, 25 May 2020 12:22:26 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42492C061A0E;
+        Mon, 25 May 2020 09:22:26 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jdFrd-0005Gl-0Q; Mon, 25 May 2020 18:22:09 +0200
+Date:   Mon, 25 May 2020 18:22:07 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     kbuild@lists.01.org, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        lkp@intel.com, kbuild-all@lists.01.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
+ a seqcount
+Message-ID: <20200525162206.GB375786@debian-buster-darwi.lab.linutronix.de>
+References: <20200519214547.352050-2-a.darwish@linutronix.de>
+ <20200520143706.GB30374@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520143706.GB30374@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 09:51:37 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Wed, May 20, 2020 at 05:37:07PM +0300, Dan Carpenter wrote:
+...
+>
+> smatch warnings:
+> net/core/dev.c:953 netdev_get_name() warn: inconsistent returns 'devnet_rename_sem'.
+>
+...
+>
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  935  int netdev_get_name(struct net *net, char *name, int ifindex)
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  936  {
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  937  	struct net_device *dev;
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  938
+> 2354e271ada778b Ahmed S. Darwish 2020-05-19  939  	down_read(&devnet_rename_sem);
+>                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>
+> 2354e271ada778b Ahmed S. Darwish 2020-05-19  940
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  941  	rcu_read_lock();
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  942  	dev = dev_get_by_index_rcu(net, ifindex);
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  943  	if (!dev) {
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  944  		rcu_read_unlock();
+> 5dbe7c178d3f0a4 Nicolas Schichan 2013-06-26  945  		return -ENODEV;
+>                                                               ^^^^^^^^^^^^^^
 
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix punctuation and wording in a few places.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: linux-nvdimm@lists.01.org
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> ---
->  Documentation/nvdimm/maintainer-entry-profile.rst |   14 ++++++------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+Oh, shouldn't have missed that. Will fix in v2.
 
-Applied, thanks.
-
-jon
+Thanks,
