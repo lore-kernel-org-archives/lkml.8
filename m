@@ -2,225 +2,218 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D46CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 562C12071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D682071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PRCtLRgr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uFkP7s0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390453AbgEYLww (ORCPT
+        id S2390461AbgEYLwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
+        Mon, 25 May 2020 07:52:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390294AbgEYLwu (ORCPT
+        with ESMTP id S2390383AbgEYLws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:52:50 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8399C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:52:49 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id n11so11728722qkn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:52:49 -0700 (PDT)
+        Mon, 25 May 2020 07:52:48 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E87C08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:52:47 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v16so20473443ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q/QKo3tmpgjQwDSs+a91HPTk7Dk4PisvAkttzNO5a1c=;
-        b=PRCtLRgriOJQ+O5+tLzSioEsRXz9b1qDAcTlJs/k3JUOGchxeS+RNxvodZyPNFQ6RZ
-         9Pf1mszqeuLcQbyg4EVPggdUYDY2LR6Ehef7SuGBUsp7tAKd6riuu17HHbXLUju+IQTw
-         2sEtF/wBIIuBvYQr480uEc1xaveHawm3FJC6T2UB91nHkXc+ZRiHDxbvfiOYgUyoGjVP
-         uUc4t6KcLCwR5zKSI6luk+ewhGwXTTlgy+uRgeefItDCa4QrZwuqsSSuwfH47bpeioif
-         /0jTtCBZxH5PtdLhTlnElfkLJjLHFlMrXa3uDxkUgD4rWqkopiHH1h5Kf0aGWCHHqumm
-         2tVw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=s8XJcyDics6QppGAwov3ce/mqEK9W5Tv5D45BwQleJ0=;
+        b=uFkP7s0aVfiHwOUSOTG958fE3r4sUYDia2xIAZKxVV97pdFN/NhkC9s2DOEsMBcpBA
+         2i+8rxjlSUOIbzToBI29IvJdHy4nAj6J0TBIn39IsEo+7oQu6PLs8R0hN580dMSsSaj1
+         XArlSMJdVOxWh6J76GgNfbKYqmwdSCMUOVMXcSrtMIDbpnvkq87s2Ue23kkPsOPHQ5wK
+         Bfpbqs75jLWOAaF94GOkG1PAKa4taM2u8UUf8rsQaTo3JjGfY/gr2z7Bs58GL9ehk/dS
+         jm/BnnEglE12+NZ9aI159HB8x8F6iB84SyrKlVtqeKdY1m7nNV42yUVEkLNMEqBt2zNh
+         gNhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q/QKo3tmpgjQwDSs+a91HPTk7Dk4PisvAkttzNO5a1c=;
-        b=g9a6GwFTCvwjE3QkHJhC6cshsavYmRw/W3Ns3qRvvArl0fhDSSJV3GM4C/DdgdT1Hj
-         QIQVDXaEb1EufhiCYi0XOf4IcT1/XogM0xb3lEHmWRarEKvfw1Zx+VbYM+z2zuZcHJ0R
-         +GHLc0tI44YgV/P8oMQ/AbhX7ELAItCeC+SnFb8EoY2pe5xfCQsuJKhZl2SB540N+vEK
-         3EwBusYz3RWBS5sYkPQewvLLgf7A4nRed9lTniuLS0Ee7ZbG+xjHeN2vSucYHP0gJTax
-         9YgvxPUEN1N8OKjgLymgnrwrDBHy6+mZZaa9BBhSMEWFOiHLKHJoNByaT4Meygn6FiBo
-         eOiQ==
-X-Gm-Message-State: AOAM530hneS9fX1T+FDOOreVfwjQ9QqO0rQIOJ16+Hw1h9jdMF/rHeOS
-        H+L4P+VCWSG3jI097q29JZAV1w==
-X-Google-Smtp-Source: ABdhPJyRuhlxmvJNL/aTtwVkWUOKs1cHj+khjE3HpQ+6YJmG1M+K2VJqHfBnPYCadqZeRE/p7pIchg==
-X-Received: by 2002:a37:664a:: with SMTP id a71mr4889090qkc.428.1590407569108;
-        Mon, 25 May 2020 04:52:49 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id f7sm14126864qtg.96.2020.05.25.04.52.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 04:52:48 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-3-jonathan@marek.ca>
- <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
- <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
- <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
- <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
- <72d771390af9a68759d3f81cb79e46a6@codeaurora.org>
- <33b34a58-46d2-80ec-1d79-8e02aa5ae026@marek.ca>
- <1adedb96a999a08809afe62416e80075@codeaurora.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <8f9a5750-7909-4be7-6780-198d8c242af3@marek.ca>
-Date:   Mon, 25 May 2020 07:53:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1adedb96a999a08809afe62416e80075@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=s8XJcyDics6QppGAwov3ce/mqEK9W5Tv5D45BwQleJ0=;
+        b=j4TAXyAPV+lf18d9/g7E5tZwkzcHIjaXzwfqRHz97OZF+LLukx12vn/oqijsePl4A2
+         XEt858NsM0Q9/9rqj+2q1UWxU6R7LdFyRpOyYgMvbcI+oBJhi+gi0gR7t3jeLnqLpuJz
+         5z3UCuUNI5Pn5c9iQiaGy0f6k7eGUtfHdortAZXmBYBxu6ZiDmxcOHHtRuHRcnpGLnFn
+         j9NXZKEHWcZeEC3sLbCCbHveNFqg9imWujwHF+dDI/TaKaWlQ61D1CJSA3h30n9I5Dsz
+         swD6l8lIIgjUTNM/uJ9X54JiKxjiSnL6dhPxaL0PSTyz/pIPsttNypofsXeEdhrpeuKi
+         oyuQ==
+X-Gm-Message-State: AOAM532KaSWyr+dHvrshSNIhD5PbyoQICdfeZdebs8/s8ZAXEzYadFOw
+        z8g6obbOJjbGAh4WnLr7o68AflSuKgk=
+X-Google-Smtp-Source: ABdhPJzPlpLdeAuCQdLkckFQzUH5bSPNlAdrnEhWBcy8VHuoiY+5i2K5dsOzxw8c3RP5KrX2GYQDdw==
+X-Received: by 2002:a2e:780c:: with SMTP id t12mr8667835ljc.240.1590407565554;
+        Mon, 25 May 2020 04:52:45 -0700 (PDT)
+Received: from localhost.localdomain ([176.59.41.83])
+        by smtp.gmail.com with ESMTPSA id y130sm4847756lfc.22.2020.05.25.04.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 04:52:45 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv3 3/3] tpm_ftpm_tee: register driver on TEE bus
+Date:   Mon, 25 May 2020 14:52:35 +0300
+Message-Id: <20200525115235.5405-4-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200525115235.5405-1-maxim.uvarov@linaro.org>
+References: <20200525115235.5405-1-maxim.uvarov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 7:40 AM, Sai Prakash Ranjan wrote:
-> On 2020-05-25 16:57, Jonathan Marek wrote:
->> On 5/25/20 7:17 AM, Sai Prakash Ranjan wrote:
->>> Hi,
->>>
->>> On 2020-05-25 16:38, Jonathan Marek wrote:
->>>> On 5/25/20 6:54 AM, Sai Prakash Ranjan wrote:
->>>>> On 2020-05-25 15:39, Jonathan Marek wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
->>>>>>> Hi Jonathan,
->>>>>>>
->>>>>>> On 2020-05-24 08:08, Jonathan Marek wrote:
->>>>>>>> Add the apps_smmu node for sm8250. Note that adding the iommus 
->>>>>>>> field for
->>>>>>>> UFS is required because initializing the iommu removes the 
->>>>>>>> bypass mapping
->>>>>>>> that created by the bootloader.
->>>>>>>>
->>>>>>>
->>>>>>> This statement doesn't seem right, you can just say since the 
->>>>>>> bypass is disabled
->>>>>>> by default now, we need to add this property to enable 
->>>>>>> translation and avoid global faults.
->>>>>>>
->>>>>>
->>>>>> If I use this patch [1] then the UFS iommu property isn't needed. In
->>>>>> downstream, the identity (bypass?) stream mapping is inherited from
->>>>>> the bootloader, and UFS is used without any iommu property. Setting
->>>>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
->>>>>> (without the UFS iommu property), so there's more to it than just
->>>>>> "bypass is disabled by default now".
->>>>>>
->>>>>> https://patchwork.kernel.org/patch/11310757/
->>>>>>
->>>>>
->>>>> "iommus" property is not about inheriting stream mapping from 
->>>>> bootloader,
->>>>> it is used to enable SMMU address translation for the corresponding
->>>>> master when specified. So when you have disabled bypass, i.e.,
->>>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
->>>>> "arm-smmu.disable_bypass=1"
->>>>> and iommus property with SID and mask is not specified, then it 
->>>>> will result
->>>>> in SMMU global faults.
->>>>>
->>>>> Downstream has bypass 
->>>>> enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so you
->>>>> won't see any global faults if you do not have iommus property.
->>>>>
->>>>> Patch in your link is for display because of the usecase for splash 
->>>>> screen
->>>>> on android and some other devices where the bootloader will 
->>>>> configure SMMU,
->>>>> it has not yet merged and not likely to get merged in the current 
->>>>> state.
->>>>>
->>>>> So yes "there is *not* much more to it than bypass is disabled by 
->>>>> default now"
->>>>> and you have to specify "iommus" for the master devices or you 
->>>>> should enable bypass,
->>>>> i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or 
->>>>> arm-smmu.disable_bypass=n
->>>>>
->>>>> Try without the patch in the link and without iommus for UFS and
->>>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
->>>>>
->>>>> -Sai
->>>>
->>>> I know that the "iommus" property is not about inheriting stream
->>>> mapping. Probing the iommu removes the stream mapping created by the
->>>> bootloader, the iommus property is added so that new mappings are
->>>> created to replace what was removed.
->>>>
->>>> You seem to be under the impression that the SM8150/SM8250 bootloader
->>>> does not configure SMMU. It does, for both UFS and SDHC, just like it
->>>> does for display/splash screen on some devices.
->>>>
->>>
->>> It could be that bootloader does configure SMMU for UFS and SDHC, but 
->>> the
->>> upstream SMMU driver doesnt allow to inherit stream mapping from the 
->>> bootloader
->>> yet, so adding iommus property based on the assumption that it is 
->>> inherited seems
->>> wrong.
->>>
->>
->> I never said adding the iommus property is for inheriting stream
->> mapping. I mentioned inheriting to say UFS works without the iommus
->> property on downstream (it inherits a identity/bypass mapping).
->>
-> 
-> Your commit description says "adding the iommus field for UFS is required
-> because initializing the iommu removes the bypass mapping that created 
-> by the
-> bootloader". So here it would mean like iommus property for UFS is not for
-> enabling address translation by SMMU for UFS but to avoid removing mappings
-> created by the bootloader which is not exactly what iommus property is for.
-> 
+Register driver on the TEE bus. The :module tee registers bus,
+and module optee calls optee_enumerate_devices() to scan
+all devices on the bus. Trusted Application for this driver
+can be Early TA's (can be compiled into optee-os). In that
+case it will be on OPTEE bus before linux booting. Also
+optee-suplicant application is needed to be loaded between
+OPTEE module and ftpm module to maintain functionality
+for fTPM driver.
 
-I guess the commit message is ambiguous, that's not what I meant. Is 
-"Now that the kernel initializes the iommu, the bypass mappings set by 
-the bootloader are cleared. Adding the iommus property is required so 
-that new mappings are created for UFS." better?
+Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+Suggested-by: Sumit Garg <sumit.garg@linaro.org>
+Suggested-by: Arnd Bergmann <arnd@linaro.org>
+---
+ drivers/char/tpm/tpm_ftpm_tee.c | 70 ++++++++++++++++++++++++++++-----
+ 1 file changed, 60 insertions(+), 10 deletions(-)
 
->>>> With either value of ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT, it will not
->>>> work without the iommus property.
->>>
->>> I'm pretty sure that if you have ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n 
->>> and
->>> without iommus, it should work.
->>>
->>
->> It doesn't work, with either ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or
->> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y.
->>
-> 
-> Ok since you are very sure about this, I will try with your patches on
-> SM8150 MTP tomorrow since I do not have access to one now.
-> Also just to make sure, please remove all the extra SMMU patches you have
-> in your tree which are not yet merged or from downstream kernel.
-> 
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 22bf553ccf9d..28da638360d8 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+  * Return:
+  *	On success, 0. On failure, -errno.
+  */
+-static int ftpm_tee_probe(struct platform_device *pdev)
++static int ftpm_tee_probe(struct device *dev)
+ {
+ 	int rc;
+ 	struct tpm_chip *chip;
+-	struct device *dev = &pdev->dev;
+ 	struct ftpm_tee_private *pvt_data = NULL;
+ 	struct tee_ioctl_open_session_arg sess_arg;
+ 
+@@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+ 	return rc;
+ }
+ 
++static int ftpm_plat_tee_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	return ftpm_tee_probe(dev);
++}
++
+ /**
+  * ftpm_tee_remove() - remove the TPM device
+  * @pdev: the platform_device description.
+@@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+  * Return:
+  *	0 always.
+  */
+-static int ftpm_tee_remove(struct platform_device *pdev)
++static int ftpm_tee_remove(struct device *dev)
+ {
+-	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
++	struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
+ 
+ 	/* Release the chip */
+ 	tpm_chip_unregister(pvt_data->chip);
+@@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int ftpm_plat_tee_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	return ftpm_tee_remove(dev);
++}
++
+ /**
+  * ftpm_tee_shutdown() - shutdown the TPM device
+  * @pdev: the platform_device description.
+  */
+-static void ftpm_tee_shutdown(struct platform_device *pdev)
++static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
+ {
+ 	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
+ 
+@@ -347,17 +360,54 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
+ 
+-static struct platform_driver ftpm_tee_driver = {
++static struct platform_driver ftpm_tee_plat_driver = {
+ 	.driver = {
+ 		.name = "ftpm-tee",
+ 		.of_match_table = of_match_ptr(of_ftpm_tee_ids),
+ 	},
+-	.probe = ftpm_tee_probe,
+-	.remove = ftpm_tee_remove,
+-	.shutdown = ftpm_tee_shutdown,
++	.shutdown = ftpm_plat_tee_shutdown,
++	.probe = ftpm_plat_tee_probe,
++	.remove = ftpm_plat_tee_remove,
++};
++
++/* UUID of the fTPM TA */
++static const struct tee_client_device_id optee_ftpm_id_table[] = {
++	{UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
++		   0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
++	{}
+ };
+ 
+-module_platform_driver(ftpm_tee_driver);
++MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
++
++static struct tee_client_driver ftpm_tee_driver = {
++	.id_table	= optee_ftpm_id_table,
++	.driver		= {
++		.name		= "optee-ftpm",
++		.bus		= &tee_bus_type,
++		.probe		= ftpm_tee_probe,
++		.remove		= ftpm_tee_remove,
++	},
++};
++
++static int __init ftpm_mod_init(void)
++{
++	int rc;
++
++	rc = platform_driver_register(&ftpm_tee_plat_driver);
++	if (rc)
++		return rc;
++
++	return driver_register(&ftpm_tee_driver.driver);
++}
++
++static void __exit ftpm_mod_exit(void)
++{
++	platform_driver_unregister(&ftpm_tee_plat_driver);
++	driver_unregister(&ftpm_tee_driver.driver);
++}
++
++module_init(ftpm_mod_init);
++module_exit(ftpm_mod_exit);
+ 
+ MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
+ MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
+-- 
+2.17.1
 
-FYI, I have a branch [1] integrating patches for upstream. All the 
-patches up to 34fff8a519cc075933 ("arm64: dts: qcom: add sm8250 GPU 
-nodes") have been submitted (and the patches after that are unnecessary 
-for testing on sm8150).
-
-[1] https://github.com/flto/linux/commits/sm8x50-upstream
-
-> -Sai
-> 
