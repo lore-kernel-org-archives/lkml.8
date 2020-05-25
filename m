@@ -2,164 +2,228 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9650BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6929B20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A8420723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RlvVOG4o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smwQ83X7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbgEYQYR (ORCPT
+        id S1731447AbgEYQ0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        Mon, 25 May 2020 12:26:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729338AbgEYQYR (ORCPT
+        with ESMTP id S1729338AbgEYQ0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:24:17 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA5EC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:24:15 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id x12so14066661qts.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:24:15 -0700 (PDT)
+        Mon, 25 May 2020 12:26:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5CC5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:26:32 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nu7so149794pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KS0a12ZGAlis5FGjzq3oVpbX/YM5oeodYRXZXqWm+i8=;
-        b=RlvVOG4oquelW/QHisprTnJ5+AE3nog67eWlbiiRX9LiPSKxC/6WMrf4vBwM2ErSEA
-         uGKS5APVknW5P/Eg7MNjU54ZkvnfNQuwclevWvDHkRjNzv894NaIgXAMlbKgPzA71l3c
-         a6MuKd+gpTBCLRNLEkltvuJ1CT4jW5xM6g88pj36tRDQ4X2CsVs1yTVdtZ2XkFiq5WwK
-         42M8ef7/aC02RxBECMt7j8ZDHCGmqRgSgOauDfgM3qr76a9cdAsOwTb/o2x8+ePIvCHd
-         FAgs3MxfFbcrL5J3KwW7D3Xk2eBr1ydZzVVYI0K5LhnslAgzFRhFJTuy/gV+xQPG1Ib6
-         zCsA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7P+69zSItFSaF7MzlKMuY5SXRy3EOvJEQAB8khNVn2Y=;
+        b=smwQ83X7PBxPy0PNhNlQu4hj6xx/fOpBxOInlzTZKqCi8W2Hrh4CYmCiSMq/l4x7MQ
+         52zt8G1a3ltYmEv3PxZrAfrOTQ/Siu1NdleMCVSK9lml3BHQrZmU3fg2mhGdrDMzIUnu
+         QfWCr3TJS7tm+WyJC4pw9jVlPfj7EDIFEubH6xx26N1bW5gEEiIE1hcpvplu49jEo6As
+         8e3toxFOG8lltO6W2wgJ4oYM+/ZM9WwO54/ZPoi3X+RbHv4jE/MTqPmufnKuiZC2OIaE
+         r0RtCUOofJX0cimRWmagivU3B5ukWdNEBW5yLSrzP6eX1Fl5DOC1aVJHPl+T0P91VHBa
+         VKiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KS0a12ZGAlis5FGjzq3oVpbX/YM5oeodYRXZXqWm+i8=;
-        b=HTrBuA2Hs4rwm2Kme2RMi1uoCLjfV5RNmtIA40whDXID6GxSmDsIj3OuJqcV9Td/yA
-         pUxq4OVDRmllqyR9ta6YxlhDxDtKENVTEcQ4grlyhsWocGuYGxnY2gXGvOTa/3N8fV1I
-         gAy3xJGAnqifX9ZlyQJv4O89ahM8hbdXz4zVWkXaaswVHc229VvnzbiCHdoNkfz2y9mI
-         am6vMwsODAaYQjRb2HGJ3wudIwOJbq+cugeM4B+isnOPMLg9wGgRv7r94GwPBfIAg+iL
-         1ryjBQV+S5QQWCoPLj40UTO7bha7ylyf7yPm2Xh68TxX2OhIHmuVCFz7aqBfkMRvWUoX
-         MpPA==
-X-Gm-Message-State: AOAM530mAsnxA5emoAGm9wijaJY2bZtzq7nejYQnSYiPgZ1raY+24MTm
-        S3l7OA1a9vaJW00qwT86IrQ6i0fx/a/FXubU+K3LRQ==
-X-Google-Smtp-Source: ABdhPJxYcTFzk+NnfbAyKyadYyHL8dD0oRsGhvmc+Ujfz5lo4N1zqIz3HC7BJfc99USbyutgzQiNmAf4feRkGvtv8CE=
-X-Received: by 2002:ac8:2242:: with SMTP id p2mr19187641qtp.27.1590423855112;
- Mon, 25 May 2020 09:24:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7P+69zSItFSaF7MzlKMuY5SXRy3EOvJEQAB8khNVn2Y=;
+        b=qlkYDADdBVGcTKcitC4OPOKPQrjah8NyBMfBNOlg4REZDCzc4USXhPMJcTiU+oDEL3
+         fNoKkVV7dJ1NgCu9/dV7DxMhVQc6ymG9xYPkQP+gtWC5p7lDR9QZj/WrDEij2EpQ3+o2
+         QaJHhdRijhFFVbu5hbExDequV0dcM/4lfWBnlssRu+6le5JU1HBxdAjEWNLZUaFnbHSI
+         J5nwwaMgap4fpPO2G5N8M4KS6TSmHaleZqjOxIZkODiHnqvKcnr5MIOP01RyJndl/702
+         8OvnA6CrETcNo+GKCluL9cCwFxj7WyaG8lOn/lVXA5cnh1aH7j77giy2P3S/CVJqdeQZ
+         yM9w==
+X-Gm-Message-State: AOAM532yoxzKSeHd1wUsj8fU1RDisVY89NFdUYLjsOEJa/7JlydgoKTK
+        7AAkEmF/svsVXD+m0PiZK21Psw==
+X-Google-Smtp-Source: ABdhPJzgO+c8zWQueJr7WqetohWK80T6oapYODm8rGJ28Aif+JKTgxn02KLsW8fmGmH4m0T1q9seSA==
+X-Received: by 2002:a17:902:c38b:: with SMTP id g11mr29768262plg.189.1590423991775;
+        Mon, 25 May 2020 09:26:31 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id n38sm2952792pgm.1.2020.05.25.09.26.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 09:26:31 -0700 (PDT)
+Date:   Mon, 25 May 2020 09:26:26 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] x86/boot: Check that there are no runtime relocations
+Message-ID: <20200525162626.4covxuycii6bvmjg@google.com>
+References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+ <20200524212816.243139-5-nivedita@alum.mit.edu>
+ <CAMj1kXFjDMuLekYKiPoKDqJhfkY8UViApdMd3JaPmGbnKLO+NA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200516064507.19058-1-warthog618@gmail.com>
-In-Reply-To: <20200516064507.19058-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 May 2020 18:24:04 +0200
-Message-ID: <CAMpxmJX51PNHucOUnZ3GbA+RxmZto9NXruBmjUYoFHz5D1Nbqw@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFjDMuLekYKiPoKDqJhfkY8UViApdMd3JaPmGbnKLO+NA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 16 maj 2020 o 08:45 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
+On 2020-05-25, Ard Biesheuvel wrote:
+>On Sun, 24 May 2020 at 23:28, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>>
+>> Add a linker script check that there are no runtime relocations, and
+>> remove the old one that tries to check via looking for specially-named
+>> sections in the object files.
+>>
+>> Drop the tests for -fPIE compiler option and -pie linker option, as they
+>> are available in all supported gcc and binutils versions (as well as
+>> clang and lld).
+>>
+>> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+>> ---
+>>  arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+>>  arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++
+>>  2 files changed, 14 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+>> index d3e882e855ee..679a2b383bfe 100644
+>> --- a/arch/x86/boot/compressed/Makefile
+>> +++ b/arch/x86/boot/compressed/Makefile
+>> @@ -27,7 +27,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+>>         vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
+>>
+>>  KBUILD_CFLAGS := -m$(BITS) -O2
+>> -KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+>> +KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+>>  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+>>  cflags-$(CONFIG_X86_32) := -march=i386
+>>  cflags-$(CONFIG_X86_64) := -mcmodel=small
+>> @@ -49,7 +49,7 @@ UBSAN_SANITIZE :=n
+>>  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+>>  # Compressed kernel should be built as PIE since it may be loaded at any
+>>  # address by the bootloader.
+>> -KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
+>> +KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
+>>  LDFLAGS_vmlinux := -T
+>>
+>>  hostprogs      := mkpiggy
+>> @@ -84,30 +84,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+>>  vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+>>  vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+>>
+>> -# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+>> -# can place it anywhere in memory and it will still run. However, since
+>> -# it is executed as-is without any ELF relocation processing performed
+>> -# (and has already had all relocation sections stripped from the binary),
+>> -# none of the code can use data relocations (e.g. static assignments of
+>> -# pointer values), since they will be meaningless at runtime. This check
+>> -# will refuse to link the vmlinux if any of these relocations are found.
+>> -quiet_cmd_check_data_rel = DATAREL $@
+>> -define cmd_check_data_rel
+>> -       for obj in $(filter %.o,$^); do \
+>> -               $(READELF) -S $$obj | grep -qF .rel.local && { \
+>> -                       echo "error: $$obj has data relocations!" >&2; \
+>> -                       exit 1; \
+>> -               } || true; \
+>> -       done
+>> -endef
+>> -
+>> -# We need to run two commands under "if_changed", so merge them into a
+>> -# single invocation.
+>> -quiet_cmd_check-and-link-vmlinux = LD      $@
+>> -      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+>> -
+>>  $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+>> -       $(call if_changed,check-and-link-vmlinux)
+>> +       $(call if_changed,ld)
+>>
+>>  OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+>>  $(obj)/vmlinux.bin: vmlinux FORCE
+>> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+>> index d826ab38a8f9..0ac14feacb24 100644
+>> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+>> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+>> @@ -11,9 +11,15 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
+>>  #ifdef CONFIG_X86_64
+>>  OUTPUT_ARCH(i386:x86-64)
+>>  ENTRY(startup_64)
+>> +
+>> +#define REL .rela
+>> +
+>>  #else
+>>  OUTPUT_ARCH(i386)
+>>  ENTRY(startup_32)
+>> +
+>> +#define REL .rel
+>> +
+>>  #endif
+>>
+>>  SECTIONS
+>> @@ -42,6 +48,9 @@ SECTIONS
+>>                 *(.rodata.*)
+>>                 _erodata = . ;
+>>         }
+>> +       REL.dyn : {
+>> +               *(REL.*)
+>> +       }
 >
-> Add a new version of the uAPI to address existing 32/64bit alignment
-> issues, add support for debounce, and provide some future proofing by
-> adding padding reserved for future use.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
->
-> ---
->
-> This patch is a proposal to replace the majority of the uAPI, so some
-> background and justification is in order.
->
-> The alignment issue relates to the gpioevent_data, which packs to differe=
-nt
-> sizes on 32bit and 64bit platforms. That creates problems for 32bit apps
-> running on 64bit kernels.  The patch addresses that particular issue, and
-> the problem more generally, by adding pad fields that explicitly pad
-> structs out to 64bit boundaries, so they will pack to the same size now,
-> and even if some of the reserved padding is used for __u64 fields in the
-> future.
->
-> The lack of future proofing in v1 makes it impossible to, for example,
-> add the debounce feature that is included in v2.
-> The future proofing is addressed by providing reserved padding in all
-> structs for future features.  Specifically, the line request,
-> config and info structs get updated versions and ioctls.
->
-> I haven't added any padding to gpiochip_info, as I haven't seen any calls
-> for new features for the corresponding ioctl, but I'm open to updating th=
-at
-> as well.
->
-> As the majority of the structs and ioctls were being replaced, it seemed
-> opportune to rework some of the other aspects of the uAPI.
->
-> Firstly, I've reworked the flags field throughout.  v1 has three differen=
-t
-> flags fields, each with their own separate bit definitions.  In v2 that i=
-s
-> collapsed to one.  Further, the bits of the v2 flags field are used
-> as feature enable flags, with any other necessary configuration fields en=
-coded
-> separately.  This is simpler and clearer, while also providing a foundati=
-on
-> for adding features in the future.
->
-> I've also merged the handle and event requests into a single request, the
-> line request, as the two requests where mostly the same, other than the
-> edge detection provided by event requests.  As a byproduct, the v2 uAPI
-> allows for multiple lines producing edge events on the same line handle.
-> This is a new capability as v1 only supports a single line in an event re=
-quest.
->
-> This means there are now only two types of file handle to be concerned wi=
-th,
-> the chip and the line, and it is clearer which ioctls apply to which type
-> of handle.
->
-> There is also some minor renaming of fields for consistency compared to t=
-heir
-> v1 counterparts, e.g. offset rather than lineoffset or line_offset, and
-> consumer rather than consumer_label.
->
-> And v1 GPIOHANDLES_MAX and gpiohandle_data become GPIOLINES_MAX and
-> gpioline_values for v2 - the only change being the renaming for clarity.
->
-> The v2 uAPI is mostly just a reorganisation of v1, so userspace code,
-> particularly libgpiod, should easily port to it.
->
-> This patch is obviously only one patch in a much bigger series that
-> will actually implement it, but I would appreciate a review and any feedb=
-ack,
-> as it is foundational to the rest of that series.
->
-> Thanks,
-> Kent.
->
+>Do we really need the macro here? Could we just do
 
-Hi Kent,
+The output section name does not matter: it will be discarded by the linker.
 
-Thanks for posting this. I like the general direction a lot. I'll
-review this in detail later this week.
+>.rel.dyn : { *(.rel.* .rela.*) }
 
-Seeing the speed at which you make progress I think I won't be
-implementing support for the v1 of the watch ioctl() in libgpiod after
-all. Once the v2 is live I will probably bump the API version in
-libgpiod to v2.0.0 and make some non-compatible changes anyway.
+If for some reasons there is at least one SHT_REL and at least one
+SHT_RELA, LLD will error "section type mismatch for .rel.dyn", while the
+intended diagnostic is the assert below.
 
-Bart
+>(or even
+>
+>.rel.dyn  : { *(.rel.* }
+>.rela.dyn : { *(.rela.*) }
+>
+>if the output section name matters, and always assert that both are empty)?
+
+   .rel.dyn  : { *(.rel.* }
+   .rela.dyn : { *(.rela.*) }
+
+looks good to me.
+
+
+FWIW I intend to add -z rel and -z rela to LLD: https://reviews.llvm.org/D80496#inline-738804
+(binutils thread https://sourceware.org/pipermail/binutils/2020-May/111244.html)
+
+In case someone builds the x86-64 kernel with -z rel, your suggested
+input section description will work out of the box...
+
+
+>>         .got : {
+>>                 *(.got)
+>>         }
+>> @@ -83,3 +92,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+>>  #else
+>>  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+>>  #endif
+>> +
+>> +ASSERT(SIZEOF(REL.dyn) == 0, "Unexpected runtime relocations detected!")
+>> --
+>> 2.26.2
+>>
