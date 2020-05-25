@@ -2,105 +2,133 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87BEC207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590402849;
-	bh=MG2Epf9GxtpVUDkLwTj5VEsqY3T5JqhCUdlnQIBLM8Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A7hyi6seWaX8ck3JoSU/3OrQxV0tNmUtfbcIqJq/B/9g0Fkbn+/lTfiCKGe4z985K
-	 yxC5FuTf131CzAHJ9TSThNyTwiuf1NgEib7deWIFEN0n02QjE5eDqPiBJoffil+6OX
-	 DJ4fi7rCyOQLGwn/+EjaJz8pnG0npxUAmRsBbdeI=
+	by mail.kernel.org (Postfix) with ESMTP id B05F820787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jDCk8ckn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389804AbgEYKeJ (ORCPT
+        id S2389835AbgEYKhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:34:09 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:40903 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389781AbgEYKeI (ORCPT
+        Mon, 25 May 2020 06:37:39 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:19946 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389801AbgEYKhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:34:08 -0400
-Received: by mail-oo1-f65.google.com with SMTP id f39so177043ooi.7;
-        Mon, 25 May 2020 03:34:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BjMPWMCD4/ms3xeffCL8OqWKsyazuZCpK4C7dZThzLM=;
-        b=nEkqjuIykSBKGe+RHXBkooG+ga/2OXGbnRJRC7fRx/a8BqBBUKZNdkCI6tdnjMbWHK
-         f8Iuz23d+m3c0nu7yDyN1fZeozcWodHu5g8h5ha3W4JSMAk2Bfyi4bSy76N73jMiZhIo
-         Wfj2SdW1Yt0B0g5Ix6ZB0BjvJbEdFpDGn8N/RGE+5BQyJhJaXznOI7Z/QD0mI+Qklk0Q
-         u/MFXXBpwf+KUKw5kR5j9P+0eipROLmaFaHO6wTdKzLVhTo5IVIZlX+rFwG9ApnPvE10
-         fsTJwUDHR25jEkecRxy3g8aq+HY8e0rh+fbCmWjmwIdvO1CKK9Dn61FtU+VrvNrpZAKT
-         wvRg==
-X-Gm-Message-State: AOAM531rtMndD7z9soqDKaK+IRIveDM4dd0rZKUIlaApcBKzRZsOHwlt
-        qUtUav1UORLaKXkk6uZesIYbDUYnFaJxq/Ena244Z2nH
-X-Google-Smtp-Source: ABdhPJzFEaaABlZi0ZZ8/w6NAJuysnEm/zE41Tzt7tOtIyxUChOExPgjQOSAL/A60gxyCB3PPxBiUKhCCSwd2CsVGJE=
-X-Received: by 2002:a4a:e759:: with SMTP id n25mr12553301oov.75.1590402846269;
- Mon, 25 May 2020 03:34:06 -0700 (PDT)
+        Mon, 25 May 2020 06:37:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590403057; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=Xa+V2K2B+f2/pjJ0gvv7y9F+pJuL30zRLv90omb/sWY=; b=jDCk8cknrA+j3vbO/ZvrcaX9gyB/uJ1KcmRUWMEaxBp9ZyJp7DHhV8dc3GbSnnJIWQ1Fw0E2
+ uJQ/TgM3tTT4AjIJnuoMo2Yla8bbF8/FDrXsSm8QTenWbl+GZN5xwcxkdsTlazJVvPptCXnk
+ Oy1I4p3ICKRsJ7YkHjpGaeby0aI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ecb9fdd67bb73a129912e38 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 10:37:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1BC66C433C6; Mon, 25 May 2020 10:37:17 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DCD1C433C9;
+        Mon, 25 May 2020 10:37:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DCD1C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
+        <ryder.lee@mediatek.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <matthias.bgg@gmail.com>, <shayne.chen@mediatek.com>,
+        <chih-min.chen@mediatek.com>, <yf.luo@mediatek.com>,
+        <yiwei.chung@mediatek.com>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] mt76: mt7915: Fix build error
+References: <20200522034533.61716-1-yuehaibing@huawei.com>
+        <87a720b7p7.fsf@codeaurora.org>
+        <cf5a8e36-2fc6-3f3a-823f-a2fac6c11d30@huawei.com>
+Date:   Mon, 25 May 2020 13:37:10 +0300
+In-Reply-To: <cf5a8e36-2fc6-3f3a-823f-a2fac6c11d30@huawei.com>
+        (yuehaibing@huawei.com's message of "Fri, 22 May 2020 19:34:28 +0800")
+Message-ID: <87k1109u7d.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20200520074309.19366-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200520074309.19366-1-dinghao.liu@zju.edu.cn>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 25 May 2020 12:33:49 +0200
-Message-ID: <CAJZ5v0j5XB_me9YSUemUaz6URair4CtRVSU1U6F62FWCi2SRJg@mail.gmail.com>
-Subject: Re: [PATCH] power: supply: bq24190_charger: fix runtime pm imbalance
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>, Sebastian Reichel <sre@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:01 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
->
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/power/supply/bq24190_charger.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
-> index 453d6332d43a..4f7c6b6abb56 100644
-> --- a/drivers/power/supply/bq24190_charger.c
-> +++ b/drivers/power/supply/bq24190_charger.c
-> @@ -481,8 +481,10 @@ static ssize_t bq24190_sysfs_store(struct device *dev,
->                 return ret;
->
->         ret = pm_runtime_get_sync(bdi->dev);
-> -       if (ret < 0)
-> +       if (ret < 0) {
-> +               pm_runtime_put_autosuspend(bdi->dev);
+Yuehaibing <yuehaibing@huawei.com> writes:
 
-The autosuspend thing is not necessary here, because the suspend is
-not going to work anyway due to the resume error, so this can be
-_put_noidle().
-
-You might as well do something like
-
-count = ret;
-goto out;
-
-here and add an "out" label before the pm_runtime_mark_last_busy() call, though.
-
->                 return ret;
-> +       }
+> On 2020/5/22 18:11, Kalle Valo wrote:
+>> YueHaibing <yuehaibing@huawei.com> writes:
+>>=20
+>>> In file included from ./include/linux/firmware.h:6:0,
+>>>                  from drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:4:
+>>> In function =E2=80=98__mt7915_mcu_msg_send=E2=80=99,
+>>>     inlined from =E2=80=98mt7915_mcu_send_message=E2=80=99 at drivers/n=
+et/wireless/mediatek/mt76/mt7915/mcu.c:370:6:
+>>> ./include/linux/compiler.h:396:38: error: call to =E2=80=98__compiletim=
+e_assert_545=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: c=
+md =3D=3D MCU_EXT_CMD_EFUSE_ACCESS && mcu_txd->set_query !=3D MCU_Q_QUERY
+>>>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
+_)
+>>>                                       ^
+>>> ./include/linux/compiler.h:377:4: note: in definition of macro =E2=80=
+=98__compiletime_assert=E2=80=99
+>>>     prefix ## suffix();    \
+>>>     ^~~~~~
+>>> ./include/linux/compiler.h:396:2: note: in expansion of macro =E2=80=98=
+_compiletime_assert=E2=80=99
+>>>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
+_)
+>>>   ^~~~~~~~~~~~~~~~~~~
+>>> ./include/linux/build_bug.h:39:37: note: in expansion of macro =E2=80=
+=98compiletime_assert=E2=80=99
+>>>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>>>                                      ^~~~~~~~~~~~~~~~~~
+>>> ./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98=
+BUILD_BUG_ON_MSG=E2=80=99
+>>>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>>>   ^~~~~~~~~~~~~~~~
+>>> drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:280:2: note: in expansi=
+on of macro =E2=80=98BUILD_BUG_ON=E2=80=99
+>>>   BUILD_BUG_ON(cmd =3D=3D MCU_EXT_CMD_EFUSE_ACCESS &&
+>>>   ^~~~~~~~~~~~
+>>>
+>>> BUILD_BUG_ON is meaningless here, chang it to WARN_ON.
+>>>
+>>> Fixes: e57b7901469f ("mt76: add mac80211 driver for MT7915 PCIe-based c=
+hipsets")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>=20
+>> I'm curious why I don't see this build error? I was about to send a pull
+>> request to Dave, should I hold off the pull request due to this problem?
 >
->         ret = bq24190_write_mask(bdi, info->reg, info->mask, info->shift, v);
->         if (ret)
-> --
-> 2.17.1
+> The config is attached
 >
+> gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+
+Thanks, I was able to reproduce the error with gcc-10 using your config
+but didn't have time to investigate what was different in my config and
+why I didn't see it.
+
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
