@@ -2,134 +2,111 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A5AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E192DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79FB207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2ADC2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlUGNB3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390799AbgEYNcL (ORCPT
+        id S2390815AbgEYNdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:32:11 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54183 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390754AbgEYNcK (ORCPT
+        Mon, 25 May 2020 09:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388794AbgEYNdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:32:10 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 244513C057C;
-        Mon, 25 May 2020 15:32:07 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1IwUF-psCmTU; Mon, 25 May 2020 15:32:01 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id E8C5E3C0022;
-        Mon, 25 May 2020 15:32:01 +0200 (CEST)
-Received: from lxhi-065.adit-jv.com (10.72.94.46) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 25 May
- 2020 15:32:01 +0200
-Date:   Mon, 25 May 2020 15:31:57 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] media: vsp1: dl: Fix NULL pointer dereference on unbind
-Message-ID: <20200525133157.GA19608@lxhi-065.adit-jv.com>
-References: <20200523081334.23531-1-erosca@de.adit-jv.com>
- <d4544b1b-a695-bd70-0ccb-e2fb1838f3f8@ideasonboard.com>
+        Mon, 25 May 2020 09:33:54 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1BAC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:33:54 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id l67so4721292ybl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xqk0bIefrw2vrIZWbzj16crB43IedLWQvwRJlQvaA9c=;
+        b=TlUGNB3o2IkqFANinGJ4SF9BF23MV1OzUqvIAlYVssnHiOkJLgD+ffpmo76rGWwPFN
+         G3+EW5xsxAsXWBDaNYx84Ees2f97TtFaAXjD3Smn0Ue5VgvubIsYLn5w2+/lxNR3VRvj
+         /w/qrDLCMmbJ2xjXg5qXiZld7SPYkppeFX12mD9mkiDomh1hKYa0dQdsjZVRJgK8l5lH
+         7T7SNCCXaC//rhbu8pviX4qu5c9bkWaHxZf9RbBrOI+JX8Pn1+cepnZ6zfGaVKr5YRr+
+         EHVEWjH9Bgr5LqPRbgS5fjlSBj8qMt8v/MXAxbUdNMKAaQWwjrofLZpd0gAHEXtdmYBe
+         hj8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xqk0bIefrw2vrIZWbzj16crB43IedLWQvwRJlQvaA9c=;
+        b=SQnI6ehVYq6lEgPxZCcrLerQoRsJ8HcUjZabSlEUaOsRFouDPj71AaSZU7QVqZR040
+         h+IBTKEi/Btk2CyGjRbsP9rsyW3cfMlkEEDfU2L0vPii8wxvUp9dw/t3aC8YCAdbA7Md
+         /Q4d1SfgACXDn+PdV524LeWniBpIfZCyK/OeMAyKuevJMYRJZ0hSEVokidTJWLr/OG3A
+         NzXQYJGa4UouKA+aDs4M3joiw4akYJ0PkM1ZxhAsXc88GxyjLt/VYaRNSZI23kOqgjdS
+         xadv9sN8md0qGlAotjxXVeatpF8o5e876nptT0xS72bCkiMh7SwoMBGnpXcxXuK3SM/r
+         HY9A==
+X-Gm-Message-State: AOAM533DT2PaqCTITx2Evh3Y1iNu9j/9KIgQteIv+Ydgt5k1VVyTa2h6
+        t/18jmIzI0z2z2Ks1B6cfvCoVlXO5dU3jAMGkACP7rC4Inc=
+X-Google-Smtp-Source: ABdhPJwDKforc+9M9yVo4pMMOxCDDVaBSg9Mmj8MRXwgkKD3wKlS43421pLmS6F4n5e6h0CCLqm5fY5bIHD4XPZICPw=
+X-Received: by 2002:a25:8202:: with SMTP id q2mr42946369ybk.243.1590413633559;
+ Mon, 25 May 2020 06:33:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <d4544b1b-a695-bd70-0ccb-e2fb1838f3f8@ideasonboard.com>
-X-Originating-IP: [10.72.94.46]
+References: <20200525115235.5405-1-maxim.uvarov@linaro.org>
+ <20200525115235.5405-3-maxim.uvarov@linaro.org> <20200525124753.GA797117@kroah.com>
+In-Reply-To: <20200525124753.GA797117@kroah.com>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Mon, 25 May 2020 16:33:42 +0300
+Message-ID: <CAD8XO3ach_G31vkqbVoio2H2yosdoLicu4SLk6nKdGmihUukgw@mail.gmail.com>
+Subject: Re: [PATCHv3 2/3] optee: use uuid for sysfs driver entry
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+On Mon, 25 May 2020 at 15:47, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, May 25, 2020 at 02:52:34PM +0300, Maxim Uvarov wrote:
+> > Optee device names for sysfs needed to be unique
+> > and it's better if they will mean something. UUID for name
+> > looks like good solution:
+> > /sys/bus/tee/devices/optee-clnt-<uuid>
+>
+> Can you document that in Documentation/ABI/ ?
+>
+yes, sure if we agree to go with uuid.
 
-On Mon, May 25, 2020 at 02:19:02PM +0100, Kieran Bingham wrote:
-> Hi Eugeniu,
-> 
-> Yeouch. Looks like I really missed a trick there!
+> And why UUID?  Those are usually huge, is that easier than just a unique
+> number?
+>
 
-Not a big deal. The good part is that it can be proactively fixed and
-shared across the community.
+UUID here is connected to Trusted Application (TA) in a secure world.
+If you need to 'find'  sysfs entry for the corresponding driver
+becomes very easy.
+Also UUID here are not really huge, like:
+/sys/bus/tee/devices/optee-clnt-71d950bc-c9d4-c442-82cb-343fb7f37896
+/sys/bus/tee/devices/optee-clnt-ba3ac5b6-6996-6846-a7f2-205629d00f86
 
-> 
-> We should probably update the $SUBJECT to match what is performed in the
-> patch, which is perhaps more like:
-> 
-> "media: vsp1: dl: Store VSP reference when creating cmd pools"
+I think that is better then optee-clnt-0, optee-clnt-1.. which can be
+reordered on each boot and does not carry any information. And on
+module unload there will be missing numbers.
 
-To be honest, I am not a big fan of WHAT summary lines.
-Rather, I prefer the WHY summary lines (and I think everyone should).
+Regards,
+Maxim.
 
-> 
-> On 23/05/2020 09:13, Eugeniu Rosca wrote:
-> 
-> And then we can explain here:
-> 
-> In commit f3b98e3c4d2e16 ("media: vsp1: Provide support for extended
-> command pools"), the vsp pointer used for referencing the VSP1 device
-> structure from a command pool during vsp1_dl_ext_cmd_pool_destroy() was
-> not populated.
-> 
-> Correctly assign the pointer to prevent the following
-> null-pointer-dereference when removing the device:
-
-That sounds good and I can push this improved description as v2.
-
-> > Fixes: f3b98e3c4d2e16 ("media: vsp1: Provide support for extended command pools")
-> > Cc: stable@vger.kernel.org # v4.19+
-> > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> 
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> > ---
-> > 
-> > How about adding a new unit test perfoming unbind/rebind to
-> > http://git.ideasonboard.com/renesas/vsp-tests.git, to avoid
-> > such issues in future? 
-> 
-> Yes, now I wish I had done so back at 4.19! I hope this wasn't too
-> painful to diagnose and fix, and thank you for being so thorough in your
-> report!
-> 
-> 
-> > Locally, below command has been used to identify the problem:
-> > 
-> > for f in $(find /sys/bus/platform/devices/ -name "*vsp*" -o -name "*fdp*"); do \
-> >      b=$(basename $f); \
-> >      echo $b > $f/driver/unbind; \
-> > done
-> > 
-> 
-> I've created a test to add to vsp-tests, which I'll post next, thank you
-> for the suggestion.
-> 
-> Before your patch is applied, I experience the same crash you have seen,
-> and after your patch - I can successfully unbind/bind all of the VSP1
-> instances.
-> 
-> So I think you can have this too:
-> 
-> Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-Awesome. Thanks!
-
--- 
-Best regards,
-Eugeniu Rosca
+> thanks,
+>
+> greg k-h
