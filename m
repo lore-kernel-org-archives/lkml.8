@@ -2,190 +2,387 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F68C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9726C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9984C2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995DF2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iDCzlo91"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8UqmuZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbgEYWBh (ORCPT
+        id S1731420AbgEYWBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 18:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
+        Mon, 25 May 2020 18:01:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgEYWBh (ORCPT
+        with ESMTP id S1726937AbgEYWBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 18:01:37 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DE0C061A0E;
-        Mon, 25 May 2020 15:01:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZtM3sWNpPRIGai+yzN8mIIMz8cMvbCBA40vpGmubNyA=; b=iDCzlo91sx+/jAahLcRYfiRNl
-        rG0a0LK7ANWpwKYgNvF15pRy+zSPT1EHazoZaptKo8/CSEVULht5VhnLe4iEe3LsteoQAFurcOqeT
-        4MR49l9wT4mizG2fw2wKM4yBIP0KxqlSgcUsnzjE2ltb5k29Lsf3yrlXFi9kwubqLoji+8OiisgKb
-        EBixS5ZCbKDyPFLqqUoL7h4V0ea40WfJHT6d94RE6EecrvIH2QZlfrpkhBCN5Kp8SihObVkR/2U1B
-        rhS+8P2PqTzq9zV46i4scx4Kr0N2fUJvmBT+XHWJCJrDpJNrMPjI+JbN8cI8YDr/QLlkC2Ymphs7F
-        rhNjxE1hQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36944)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jdLA1-000670-8F; Mon, 25 May 2020 23:01:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jdL9z-0004hu-Et; Mon, 25 May 2020 23:01:27 +0100
-Date:   Mon, 25 May 2020 23:01:27 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
-Message-ID: <20200525220127.GO1551@shell.armlinux.org.uk>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-5-jeremy.linton@arm.com>
- <20200523183731.GZ1551@shell.armlinux.org.uk>
- <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
- <20200525100612.GM1551@shell.armlinux.org.uk>
- <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
+        Mon, 25 May 2020 18:01:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4F90C061A0E;
+        Mon, 25 May 2020 15:01:42 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x13so9232463pfn.11;
+        Mon, 25 May 2020 15:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YBIiyFfcc/oUhJ5zxfUFLELo7oHdr2aEDXWVrjxKEJs=;
+        b=N8UqmuZn9G0iUnnNmDboCffcRKDn7+f94+6eZFWHPokZJT4IBJjVtT/f5QUX8Z2JRb
+         Mgr+YtQh0RZHNzJFHPz8giI0MI2uqofk33lmthuWEo3o9eXL2rluq4Cdpt/ZvY8suTNd
+         vF75nBCO+USjt6atW6a2zhe79ZFqlwC2YHrSbBXKY0RuzZjY8acQ+5mc9ZwCABJDPpj4
+         C7QEWzPKVmovt0txnxTecmuKJHMR4CmViBhE5PIXQPKCkbBKs2TnEEbec88ySy1yHqwL
+         CKxBSPW/SaJ+oo1COizeJR4Y6covwfcoV7jGrnHnhHKvwDTs2GCFshZSOnxZ0OP7yFyR
+         U3VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YBIiyFfcc/oUhJ5zxfUFLELo7oHdr2aEDXWVrjxKEJs=;
+        b=ucNYl8ODOuOC4+hO93ospAJGZZN5o/zqbdl5ivbHqV1BluxYBvPPkd++R1gbjAu04i
+         XOxzwMMoY8r/X4FrLZigrO6/3SXewKmVYYoYPf62XKILaLaPuJSFAfAjFlr5WWJwnJw6
+         ii1bJw761jpd+WbuxFr7DbAF31v0uWoXxGPMTrnvS4M5ysZy4FbXAzD7lcd2+5JrIW/c
+         /61YtYI+tNXEhz6PsTAoA03+242wLcEVNoJJWphwfgCAxFsTwbnLXPEWOZ2VbaDR+s59
+         xkPYKb0Xb++Xm5Q96bXhLDbZkSLTQOEFXUJLt2qjHFY2/tPIUFmR6gwU/HK/8BKcchuI
+         Cpeg==
+X-Gm-Message-State: AOAM5312NdLXWu0bcGFMnLQDI0u0X6RrAmmiNplm2/TUXS7pwkLMWNu2
+        w8wRtCIIuxBYugCGVPQcyuY=
+X-Google-Smtp-Source: ABdhPJyMJkDx16jz7bja59HMM+QqtXTBvmQMjIYz9tb17s2c8WOgQGgR5HPRMJWRYhg0FYPamkVQ8g==
+X-Received: by 2002:a65:67d0:: with SMTP id b16mr6261414pgs.91.1590444102013;
+        Mon, 25 May 2020 15:01:42 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id s8sm11218111pjz.44.2020.05.25.15.01.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 15:01:41 -0700 (PDT)
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
+ <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu>
+ <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+ <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
+ <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com>
+Date:   Tue, 26 May 2020 07:01:35 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:51:16PM -0500, Jeremy Linton wrote:
-> Hi,
-> 
-> On 5/25/20 5:06 AM, Russell King - ARM Linux admin wrote:
-> > On Sun, May 24, 2020 at 10:34:13PM -0500, Jeremy Linton wrote:
-> > > Hi,
-> > > 
-> > > On 5/23/20 1:37 PM, Russell King - ARM Linux admin wrote:
-> > > > On Fri, May 22, 2020 at 04:30:52PM -0500, Jeremy Linton wrote:
-> > > > > Until this point, we have been sanitizing the c22
-> > > > > regs presence bit out of all the MMD device lists.
-> > > > > This is incorrect as it causes the 0xFFFFFFFF checks
-> > > > > to incorrectly fail. Further, it turns out that we
-> > > > > want to utilize this flag to make a determination that
-> > > > > there is actually a phy at this location and we should
-> > > > > be accessing it using c22.
-> > > > > 
-> > > > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > > > ---
-> > > > >    drivers/net/phy/phy_device.c | 16 +++++++++++++---
-> > > > >    1 file changed, 13 insertions(+), 3 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> > > > > index f0761fa5e40b..2d677490ecab 100644
-> > > > > --- a/drivers/net/phy/phy_device.c
-> > > > > +++ b/drivers/net/phy/phy_device.c
-> > > > > @@ -689,9 +689,6 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
-> > > > >    		return -EIO;
-> > > > >    	*devices_in_package |= phy_reg;
-> > > > > -	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
-> > > > > -	*devices_in_package &= ~BIT(0);
-> > > > > -
-> > > > >    	return 0;
-> > > > >    }
-> > > > > @@ -742,6 +739,8 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > > > >    	int i;
-> > > > >    	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
-> > > > >    	u32 *devs = &c45_ids->devices_in_package;
-> > > > > +	bool c22_present = false;
-> > > > > +	bool valid_id = false;
-> > > > >    	/* Find first non-zero Devices In package. Device zero is reserved
-> > > > >    	 * for 802.3 c45 complied PHYs, so don't probe it at first.
-> > > > > @@ -770,6 +769,10 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > > > >    		return 0;
-> > > > >    	}
-> > > > > +	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
-> > > > > +	c22_present = *devs & BIT(0);
-> > > > > +	*devs &= ~BIT(0);
-> > > > > +
-> > > > >    	/* Now probe Device Identifiers for each device present. */
-> > > > >    	for (i = 1; i < num_ids; i++) {
-> > > > >    		if (!(c45_ids->devices_in_package & (1 << i)))
-> > > > > @@ -778,6 +781,13 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
-> > > > >    		ret = _get_phy_id(bus, addr, i, &c45_ids->device_ids[i], true);
-> > > > >    		if (ret < 0)
-> > > > >    			return ret;
-> > > > > +		if (valid_phy_id(c45_ids->device_ids[i]))
-> > > > > +			valid_id = true;
-> > > > 
-> > > > Here you are using your "devices in package" validator to validate the
-> > > > PHY ID value.  One of the things it does is mask this value with
-> > > > 0x1fffffff.  That means you lose some of the vendor OUI.  To me, this
-> > > > looks completely wrong.
-> > > 
-> > > I think in this case I was just using it like the comment in
-> > > get_phy_device() "if the phy_id is mostly F's, there is no device here".
-> > > 
-> > > My understanding is that the code is trying to avoid the 0xFFFFFFFF returns
-> > > that seem to indicate "bus ok, phy didn't respond".
-> > > 
-> > > I just checked the OUI registration, and while there are a couple OUI's
-> > > registered that have a number of FFF's in them, none of those cases seems to
-> > > overlap sufficiently to cause this to throw them out. Plus a phy would also
-> > > have to have model+revision set to 'F's. So while might be possible, if
-> > > unlikely, at the moment I think the OUI registration keeps this from being a
-> > > problem. Particularly, if i'm reading the mapping correctly, the OUI mapping
-> > > guarantees that the field cannot be all '1's due to the OUI having X & M
-> > > bits cleared. It sort of looks like the mapping is trying to lose those
-> > > bits, by tossing bit 1 & 2, but the X & M are in the wrong octet (AFAIK, I
-> > > just read it three times cause it didn't make any sense).
-> > 
-> > I should also note that we have at least one supported PHY where one
-> > of the MMDs returns 0xfffe for even numbered registers and 0x0000 for
-> > odd numbered registers in one of the vendor MMDs for addresses 0
-> > through 0xefff - which has a bit set in the devices-in-package.
-> > 
-> > It also returns 0x0082 for almost every register in MMD 2, but MMD 2's
-> > devices-in-package bit is clear in most of the valid MMDs, so we
-> > shouldn't touch it.
-> > 
-> > These reveal the problem of randomly probing MMDs - they can return
-> > unexpected values and not be as well behaved as we would like them to
-> > be.  Using register 8 to detect presence may be beneficial, but that
-> > may also introduce problems as we haven't used that before (and we
-> > don't know whether any PHY that wrong.)  I know at least the 88x3310
-> > gets it right for all except the vendor MMDs, where the low addresses
-> > appear non-confromant to the 802.3 specs.  Both vendor MMDs are
-> > definitely implemented, just not with anything conforming to 802.3.
-> 
-> Yes, we know even for the NXP reference hardware, one of the phy's doesn't
-> probe out correctly because it doesn't respond to the ieee defined
-> registers. I think at this point, there really isn't anything we can do
-> about that unless we involve the (ACPI) firmware in currently nonstandard
-> behaviors.
-> 
-> So, my goals here have been to first, not break anything, and then do a
-> slightly better job finding phy's that are (mostly?) responding correctly to
-> the 802.3 spec. So we can say "if you hardware is ACPI conformant, and you
-> have IEEE conformant phy's you should be ok". So, for your example phy, I
-> guess the immediate answer is "use DT" or "find a conformant phy", or even
-> "abstract it in the firmware and use a mailbox interface".
+On Mon, 25 May 2020 11:31:27 -0700, Andrii Nakryiko wrote:
+> On Sun, May 24, 2020 at 5:09 AM Akira Yokosawa <akiyks@gmail.com> wrote=
+:
+>>
+>> On Fri, 22 May 2020 12:38:21 -0700, Andrii Nakryiko wrote:
+>>> On 5/22/20 10:43 AM, Paul E. McKenney wrote:
+>>>> On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+>>>>> On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+>>>>>> On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+>>>>>>> Hello!
+>>>>>>>
+>>>>>>> Just wanted to call your attention to some pretty cool and pretty=
+ serious
+>>>>>>> litmus tests that Andrii did as part of his BPF ring-buffer work:=
 
-You haven't understood.  The PHY does conform for most of the MMDs,
-but there are a number that do not conform.
+>>>>>>>
+>>>>>>> https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.co=
+m/
+>>>>>>>
+>>>>>>> Thoughts?
+>>>>>>
+>>>>>> I find:
+>>>>>>
+>>>>>>     smp_wmb()
+>>>>>>     smp_store_release()
+>>>>>>
+>>>>>> a _very_ weird construct. What is that supposed to even do?
+>>>>>
+>>>>> Indeed, it looks like one or the other of those is redundant (depen=
+ding
+>>>>> on the context).
+>>>>
+>>>> Probably.  Peter instead asked what it was supposed to even do.  ;-)=
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+>>>
+>>> I agree, I think smp_wmb() is redundant here. Can't remember why I th=
+ought that it's necessary, this algorithm went through a bunch of iterati=
+ons, starting as completely lockless, also using READ_ONCE/WRITE_ONCE at =
+some point, and settling on smp_read_acquire/smp_store_release, eventuall=
+y. Maybe there was some reason, but might be that I was just over-cautiou=
+s. See reply on patch thread as well ([0]).
+>>>
+>>>   [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5YJ8z=
+O+SoAJCDtp1jVhcQ@mail.gmail.com/
+>>>
+>>>
+>>>>
+>>>>> Also, what use is a spinlock that is accessed in only one thread?
+>>>>
+>>>> Multiple writers synchronize via the spinlock in this case.  I am
+>>>> guessing that his larger 16-hour test contended this spinlock.
+>>>
+>>> Yes, spinlock is for coordinating multiple producers. 2p1c cases (bou=
+nded and unbounded) rely on this already. 1p1c cases are sort of subsets =
+(but very fast to verify) checking only consumer/producer interaction.
+>>>
+>>>>
+>>>>> Finally, I doubt that these tests belong under tools/memory-model.
+>>>>> Shouldn't they go under the new Documentation/ directory for litmus=
+
+>>>>> tests?  And shouldn't the patch update a README file?
+>>>>
+>>>> Agreed, and I responded to that effect to his original patch:
+>>>>
+>>>> https://lore.kernel.org/bpf/20200522003433.GG2869@paulmck-ThinkPad-P=
+72/
+>>>
+>>> Yep, makes sense, I'll will move.
+>>
+>> Hi Andrii,
+>>
+>> Andrea reported off-the-list that your litmus tests are incompatible
+>> with the to-be-released version 7.56 of herd7 and currently available
+>> versions of klitmus7.
+>>
+>> This is due to a couple of C-language level issues.
+>>
+>> herd7 used to be fairly generous in parsing C litmus tests.
+>> On the other hand, klitmus7 converts a litmus test into a
+>> kernel module.  The converted code is built by an actual C compiler
+>> with kernel headers included, and can fail to build due to syntax erro=
+rs
+>> or serious warnings.
+>> herd7 HEAD is getting slightly stricter on uninitialized variable and
+>> it emits an error to mpsc-rb+1p1c+bounded.litmus:
+>>
+>> Warning: File "mpsc-rb+1p1c+bounded.litmus": read on location 0 does n=
+ot match any write
+>>
+>> Converted code by klitmus7 fails to build with the following warning m=
+essages:
+>>
+>> $ make
+>> make -C /lib/modules/5.3.0-53-generic/build/ M=3D/home/akira/bpf-rb/kl=
+itmus modules
+>> make[1]: Entering directory '/usr/src/linux-headers-5.3.0-53-generic'
+>>   CC [M]  /home/akira/bpf-rb/klitmus/litmus000.o
+>> /home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98code1=E2=80=
+=99:
+>> /home/akira/bpf-rb/klitmus/litmus000.c:426:14: error: passing argument=
+ 1 of =E2=80=98atomic_inc=E2=80=99
+>>   from incompatible pointer type [-Werror=3Dincompatible-pointer-types=
+]
+>>    atomic_inc(dropped);
+>>               ^~~~~~~
+>> In file included from ./arch/x86/include/asm/atomic.h:265:0,
+>>                  from ./arch/x86/include/asm/msr.h:67,
+>>                  from ./arch/x86/include/asm/processor.h:21,
+>>                  from ./arch/x86/include/asm/cpufeature.h:5,
+>>                  from ./arch/x86/include/asm/thread_info.h:53,
+>>                  from ./include/linux/thread_info.h:38,
+>>                  from ./arch/x86/include/asm/preempt.h:7,
+>>                  from ./include/linux/preempt.h:78,
+>>                  from ./include/linux/spinlock.h:51,
+>>                  from ./include/linux/seqlock.h:36,
+>>                  from ./include/linux/time.h:6,
+>>                  from ./include/linux/stat.h:19,
+>>                  from ./include/linux/module.h:10,
+>>                  from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+>> ./include/asm-generic/atomic-instrumented.h:237:1: note: expected =E2=80=
+=98atomic_t * {aka struct <anonymous> *}=E2=80=99 but argument is of type=
+ =E2=80=98int *=E2=80=99
+>>  atomic_inc(atomic_t *v)
+>>  ^~~~~~~~~~
+>> In file included from ./include/linux/export.h:45:0,
+>>                  from ./include/linux/linkage.h:7,
+>>                  from ./include/linux/kernel.h:8,
+>>                  from ./include/linux/list.h:9,
+>>                  from ./include/linux/module.h:9,
+>>                  from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+>> /home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98thread0=E2=
+=80=99:
+>> ./include/linux/compiler.h:187:26: warning: =E2=80=98rLenPtr=E2=80=99 =
+may be used uninitialized in this function [-Wmaybe-uninitialized]
+>>   case 4: *(__u32 *)res =3D *(volatile __u32 *)p; break;  \
+>>                           ^
+>> /home/akira/bpf-rb/klitmus/litmus000.c:365:7: note: =E2=80=98rLenPtr=E2=
+=80=99 was declared here
+>>   int *rLenPtr;
+>>        ^~~~~~~
+>> In file included from ./include/linux/export.h:45:0,
+>>                  from ./include/linux/linkage.h:7,
+>>                  from ./include/linux/kernel.h:8,
+>>                  from ./include/linux/list.h:9,
+>>                  from ./include/linux/module.h:9,
+>>                  from /home/akira/bpf-rb/klitmus/litmus000.c:11:
+>> /home/akira/bpf-rb/klitmus/litmus000.c: In function =E2=80=98thread1=E2=
+=80=99:
+>> ./include/linux/compiler.h:225:31: warning: =E2=80=98rLenPtr=E2=80=99 =
+may be used uninitialized in this function [-Wmaybe-uninitialized]
+>>   case 4: *(volatile __u32 *)p =3D *(__u32 *)res; break;
+>>           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+>> /home/akira/bpf-rb/klitmus/litmus000.c:417:7: note: =E2=80=98rLenPtr=E2=
+=80=99 was declared here
+>>   int *rLenPtr;
+>>        ^~~~~~~
+>> cc1: some warnings being treated as errors
+>> scripts/Makefile.build:288: recipe for target '/home/akira/bpf-rb/klit=
+mus/litmus000.o' failed
+>> make[2]: *** [/home/akira/bpf-rb/klitmus/litmus000.o] Error 1
+>> Makefile:1656: recipe for target '_module_/home/akira/bpf-rb/klitmus' =
+failed
+>> make[1]: *** [_module_/home/akira/bpf-rb/klitmus] Error 2
+>> make[1]: Leaving directory '/usr/src/linux-headers-5.3.0-53-generic'
+>> Makefile:8: recipe for target 'all' failed
+>> make: *** [all] Error 2
+>>
+>> Appended below is a patch I applied to mpsc-rb+1p1c+bounded.litmus to =
+make
+>> herd7 HEAD and klitmus7 happy. (Give or take the redundant memory barr=
+ier.)
+>>
+>> The other variants need similar changes.
+>=20
+> Ok, cool, thanks for letting me know. I'll see if I can upgrade
+> everything and test on my side (if you have a pointer to instructions
+> how to use klitmus7, that would be greatly appreaciated!)
+>=20
+>>
+>> What I did here are:
+>>
+>>     - Remove unnecessary initialization (shared variables are 0 by def=
+ault)
+>>     - Declare "dropped" as atomic_t
+>=20
+> These two look good.
+>=20
+>>     - Promote rLenPtr to a shared variable LenPtr
+>=20
+> This one might work for single producer litmus tests, but it's wrong
+> for 2- and 3-producer cases, because it has to be local to producer.
+
+Ah, I knew I had missed something...
+
+> But I think I can work around unitialized read warning by assigning it
+> to 0 in failure case.
+
+Yes, that should work.
+
+You can find a basic introduction of klitmus7 in tools/memory-model/READM=
+E.
+
+        Thanks, Akira
+
+>=20
+>>
+>> Please note that if you are on Linux 5.6 (or later), you need an up-to=
+-date
+>> klitmus7 due to a change in kernel API.
+>>
+>> Any question is welcome!
+>>
+>>         Thanks, Akira
+>>
+>> -----------------------
+>> diff --git a/mpsc-rb+1p1c+bounded.litmus b/mpsc-rb+1p1c+bounded.litmus=
+
+>> index cafd17a..5af43c1 100644
+>> --- a/mpsc-rb+1p1c+bounded.litmus
+>> +++ b/mpsc-rb+1p1c+bounded.litmus
+>> @@ -17,15 +17,11 @@ C mpsc-rb+1p1c+bounded
+>>
+>>  {
+>>         max_len =3D 1;
+>> -       len1 =3D 0;
+>> -       px =3D 0;
+>> -       cx =3D 0;
+>> -       dropped =3D 0;
+>> +       atomic_t dropped;
+>>  }
+>>
+>> -P0(int *len1, int *cx, int *px)
+>> +P0(int *len1, int *cx, int *px, int *LenPtr)
+>>  {
+>> -       int *rLenPtr;
+>>         int rLen;
+>>         int rPx;
+>>         int rCx;
+>> @@ -37,11 +33,11 @@ P0(int *len1, int *cx, int *px)
+>>         rPx =3D smp_load_acquire(px);
+>>         if (rCx < rPx) {
+>>                 if (rCx =3D=3D 0)
+>> -                       rLenPtr =3D len1;
+>> +                       LenPtr =3D len1;
+>>                 else
+>>                         rFail =3D 1;
+>>
+>> -               rLen =3D smp_load_acquire(rLenPtr);
+>> +               rLen =3D smp_load_acquire(LenPtr);
+>>                 if (rLen =3D=3D 0) {
+>>                         rFail =3D 1;
+>>                 } else if (rLen =3D=3D 1) {
+>> @@ -51,12 +47,11 @@ P0(int *len1, int *cx, int *px)
+>>         }
+>>  }
+>>
+>> -P1(int *len1, spinlock_t *rb_lock, int *px, int *cx, int *dropped, in=
+t *max_len)
+>> +P1(int *len1, spinlock_t *rb_lock, int *px, int *cx, atomic_t *droppe=
+d, int *max_len, int *LenPtr)
+>>  {
+>>         int rPx;
+>>         int rCx;
+>>         int rFail;
+>> -       int *rLenPtr;
+>>
+>>         rFail =3D 0;
+>>         rCx =3D smp_load_acquire(cx);
+>> @@ -69,17 +64,17 @@ P1(int *len1, spinlock_t *rb_lock, int *px, int *c=
+x, int *dropped, int *max_len)
+>>                 spin_unlock(rb_lock);
+>>         } else {
+>>                 if (rPx =3D=3D 0)
+>> -                       rLenPtr =3D len1;
+>> +                       LenPtr =3D len1;
+>>                 else
+>>                         rFail =3D 1;
+>>
+>> -               *rLenPtr =3D -1;
+>> +               *LenPtr =3D -1;
+>>                 smp_wmb();
+>>                 smp_store_release(px, rPx + 1);
+>>
+>>                 spin_unlock(rb_lock);
+>>
+>> -               smp_store_release(rLenPtr, 1);
+>> +               smp_store_release(LenPtr, 1);
+>>         }
+>>  }
+>>
+>> ----------------
+>>
+
