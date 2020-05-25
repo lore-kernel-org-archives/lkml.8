@@ -2,177 +2,113 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB5C2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A322F2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pT4+h8fC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EerNxe3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390942AbgEYOi6 (ORCPT
+        id S2390985AbgEYOjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:38:58 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:8276 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEYOi6 (ORCPT
+        Mon, 25 May 2020 10:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390944AbgEYOjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:38:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590417537; x=1621953537;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=S99rpstexzLZC2qjsjZJhCbIgtSPGJorenKaanjakaE=;
-  b=pT4+h8fCaIn96oklBnQTxFWI/OHuOUFUc+pPvkE3Ke3mn6clzggjOsf8
-   7vPKANeLlkhnPSdmO5aSdGIKmBBEJQv78jGCZKZLVAZwaC1cpyo0sRlVW
-   XUNoAqJRHUl0gfH4YoIYEL2J0OWYxim+S2q5DXXuNraDkwv+pFWGiuAZm
-   1F6l/Wl4Qyg/oaK6Ouq0/myKH0Ng0criMb+bthTz5qswhXTGWbRghLEzd
-   Qc5c2NywQXj5ViYRrFpzJ/RMz91kJwqLFm7rAGCatDLn2gXvJrCEjQydK
-   xnyxTzPr8Oj3EBjNt5b0VY52ADIpmuv58+y8W7ZzNHMZHSRR7+e7KlOid
-   g==;
-IronPort-SDR: LwW1A8ByBD+yBQ/Mc7nwGC0gUUpS4Zyp18/VCWuBjvzcMjQ/rEekYWeunGRQeW5G0mAYzSZEqO
- /cjuIUTRDbGV75TNsQADzOHlMoauPmPg373Goh/msbCft2ZFui8BtaWTiair59yBATkZ9D3CI8
- LfWxNnNy0wiUWuCaLU/H/or2Jyq2G0YBCoGNhILyKx3hl7ugIYuiRPwKmM1ilZjskJ5JQ8hBYU
- fgYi0kGYXyr6/pN0fcvJzfUQwCj8Nlu4Ei4Dw5gp2HLmBFNhjfq+xGKbHlnlBWjHt0mol8W3IJ
- L78=
-X-IronPort-AV: E=Sophos;i="5.73,433,1583218800"; 
-   d="scan'208";a="74411981"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 May 2020 07:38:56 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 25 May 2020 07:38:58 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 25 May 2020 07:38:49 -0700
-References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com> <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
-In-Reply-To: <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
-Date:   Mon, 25 May 2020 16:38:52 +0200
-Message-ID: <87r1v8oz9f.fsf@soft-dev15.microsemi.net>
+        Mon, 25 May 2020 10:39:19 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF51C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sDmy5Xm2F2pY2KhwGXNcV6+J3j89es51xHtTpy+cA+A=; b=EerNxe3smaAc3YWerSP2Lw+Npr
+        tFZ8sQaFtxsOb746sxudWvYOKBpBmZArB9MeYtZyCdI7JxOYogp1YFwif7kF+W6eubgzeaPlDYfZ7
+        mpuchARpKoY0U/x7lncesvfyIRe7TxxaR1mgsoLlp459I9SptO5dMVSiVZzaQU8PZPvFyrxvNBnJ+
+        5/SJQNk2nO9Br7ajHJO+rCGLWC91fkjWpFEvebYohEYV5jIB3UQ082WzxdEDn4F0k/3uD4Fuk9+lP
+        k7gAu3DiVqtBhknvniOaWGeNCpeTG/dkMyTQZfvl0dngm0Oqy7wVgO+CiGsSPJTZRqXHbXDRCPRP7
+        Q11KbcNQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdEFq-000050-T9; Mon, 25 May 2020 14:39:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0E6B300B38;
+        Mon, 25 May 2020 16:38:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D689D2389FE1F; Mon, 25 May 2020 16:38:59 +0200 (CEST)
+Date:   Mon, 25 May 2020 16:38:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: Endless soft-lockups for compiling workload since next-20200519
+Message-ID: <20200525143859.GX325280@hirez.programming.kicks-ass.net>
+References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
+ <20200520125056.GC325280@hirez.programming.kicks-ass.net>
+ <20200521004035.GA15455@lenoir>
+ <20200521093938.GG325280@hirez.programming.kicks-ass.net>
+ <20200521104937.GB325303@hirez.programming.kicks-ass.net>
+ <20200521110027.GC325303@hirez.programming.kicks-ass.net>
+ <20200521124113.GC15455@lenoir>
+ <20200525132105.GW325280@hirez.programming.kicks-ass.net>
+ <20200525140541.GA28923@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525140541.GA28923@lenoir>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 25, 2020 at 04:05:49PM +0200, Frederic Weisbecker wrote:
+> On Mon, May 25, 2020 at 03:21:05PM +0200, Peter Zijlstra wrote:
+> > @@ -2320,7 +2304,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+> >  
+> >  	if (llist_add(&p->wake_entry, &rq->wake_list)) {
+> >  		if (!set_nr_if_polling(rq->idle))
+> > -			smp_call_function_single_async(cpu, &rq->wake_csd);
+> > +			smp_call_function_single_async(cpu, &p->wake_csd);
+> >  		else
+> >  			trace_sched_wake_idle_without_ipi(cpu);
+> 
+> Ok that's of course very unlikely but could it be possible to have the
+> following:
+> 
+> CPU 0                         CPU 1                                     CPU 2
+> -----       
+> 
+> //Wake up A
+> ttwu_queue(TASK A, CPU 1)     idle_loop {
+>                                   ttwu_queue_pending {
+>                                       ....
+>                                       raw_spin_unlock_irqrestore(rq)
+>                                       # VMEXIT (with IPI still pending)
+>                                                                         //task A migrates here
+>                                                                         wait_event(....)
+>                                                                         //sleep
+> 
+> //Wake up A
+> ttwu_queue(TASK A, CPU 2) {
+>     //IPI on CPU 2 ignored
+>     // due to csd->flags == CSD_LOCK
+> 
 
-Linus Walleij writes:
+Right you are.
 
-> On Mon, May 18, 2020 at 10:50 PM Lars Povlsen
-> <lars.povlsen@microchip.com> wrote:
->> Linus Walleij writes:
->>
->> > On Wed, May 13, 2020 at 4:11 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->> >
->> >> This adds DT bindings for the Microsemi SGPIO controller, bindings
->> >> mscc,ocelot-sgpio and mscc,luton-sgpio.
->> >>
->> >> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> >> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> >
->> >> +  microchip,sgpio-ports:
->> >> +    description: This is a 32-bit bitmask, configuring whether a
->> >> +      particular port in the controller is enabled or not. This allows
->> >> +      unused ports to be removed from the bitstream and reduce latency.
->> >> +    $ref: "/schemas/types.yaml#/definitions/uint32"
->> >
->> > I don't know about this.
->> >
->> > You are saying this pin controller can have up to 32 GPIO "ports"
->> > (also known as banks).
->> >
->> > Why can't you just represent each such port as a separate GPIO
->> > node:
->> >
->> > pinctrl@nnn {
->> >     gpio@0 {
->> >         ....
->> >     };
->> >     gpio@1 {
->> >         ....
->> >     };
->> >     ....
->> >     gpio@31 {
->> >         ....
->> >     };
->> > };
->> >
->> > Then if some of them are unused just set it to status = "disabled";
->> >
->> > This also makes your Linux driver simpler because each GPIO port
->> > just becomes a set of 32bit registers and you can use
->> > select GPIO_GENERIC and bgpio_init() and save a whole
->> > slew of standard stock code.
->> >
->>
->> Linus, thank you for your input.
->>
->> The controller handles an array of 32*n signals, where n >= 1 && n <=
->> 4.
->>
->> The problem with the above approach is that the ports are disabled
->> *port*-wise - so they remove all (upto) 4 bits. That would be across the
->> banks.
->>
->> You could of course have the "implied" semantics that a disabled port at
->> any bit position disabled all (bit positions for the same port).
->
-> I don't understand this, you would have to elaborate...
->
-> In any case microchip,sgpio-ports is probably not the right thing,
-> use ngpios which is documented and just divide by 32 to get the
-> number of ports I think? But that is just in case they get
-> enabled strictly in sequence, otherwise you'd need a custom
-> property.
->
+Bah!
 
-Hi Linus,
-
-Yes, the problem is they're not in sequence. F.ex. you could have ports
-0,1 enabled, skip 2,3,4 and have 5,6,7 enabled.
-
-In the data stream you would then have:
-
-p0.0 p0.1 p0.2 p0.3
-p1.0 p1.1 p1.2 p1.3
-p5.0 p5.1 p5.2 p5.3
-p6.0 p6.1 p6.2 p6.3
-p7.0 p7.1 p7.2 p7.3
-
-I will mull about this and try to come up with something better and more
-understandable.
-
-Luckily, this is not gating for integrating sparx5, so its possible
-we'll just skip the SGPIO driver for now.
-
-I'll provide an update as soon as possible.
-
----Lars
-
-> Yours,
-> Linus Walleij
-
--- 
-Lars Povlsen,
-Microchip
+More thinking....
