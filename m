@@ -2,98 +2,87 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A77AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36698206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5B3206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GxmWhRd+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="d4fo5X/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbgEYVF3 (ORCPT
+        id S1730056AbgEYVIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 17:05:29 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:5460 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEYVF3 (ORCPT
+        Mon, 25 May 2020 17:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729550AbgEYVII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 17:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590440729; x=1621976729;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=1n+I3mPL5hNUzJVuNNkOpxeWUEKMBt4cI3CmHKVnros=;
-  b=GxmWhRd+mIB/9zoYxiSimVvdYnwCkCIKjHOy98JKVb6PIaYAJDT6su/D
-   S4IjWPUHBl8c4vE01o7JV/QTaEDfIoaaVXtNToyejMe8ChGWM9Fw5ecLO
-   7XkzUvXwTzMe2c9ZozBxYrmiFfcNuGgpVtmsQFYPULd0ELAyR2fyFa4uG
-   Q=;
-IronPort-SDR: 3IJpAbAI/wH8D6RsabAHTQOjNyODVeNotnMatAfSnlDm0xsq4LjjnnwM+wuge6S+hCc2iSuGiN
- SsEhqF1BwLZA==
-X-IronPort-AV: E=Sophos;i="5.73,434,1583193600"; 
-   d="scan'208";a="32153806"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 25 May 2020 21:05:15 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id C53FDA1FCB;
-        Mon, 25 May 2020 21:05:13 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 21:05:13 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.100) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 21:05:03 +0000
-Subject: Re: [PATCH v2 17/18] nitro_enclaves: Add overview documentation
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-18-andraprs@amazon.com>
- <20200522070937.GH771317@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <2b9d1ff0-9403-e42c-32b5-e7b38ab95d55@amazon.com>
-Date:   Tue, 26 May 2020 00:04:58 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Mon, 25 May 2020 17:08:08 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C06C061A0E;
+        Mon, 25 May 2020 14:08:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CM3xbvfT6889wPKnUUjils4zHkgMqAlAinbEADPEzjg=; b=d4fo5X/icyYj5Xn8uC1O6UBcs
+        /c2uultrJSj6riGRJtx5DqN7YU3CLvhEDk+7l6i2sBln/Uqj9h8nV0uMToJK6fC/wKkPzf3bE1Y9n
+        vC5FWqWJZ5CLELKEg2d3qd7dQRhxYlY6MK1YpXNkz3VTH6dst/yMtQk1POklsUVRTs/un0hYAv1yf
+        W18mphu+Hgm9ivVgCqHVC5gpasHesJoqR77lR4PZ1+04lw+phtuAuf9uCVKRka1bm1tUE6LiTtw1F
+        t2No96ghT8LJ2dryRg/SITKaACHnkvS5rjg+oI02tHy0SqM2PdIkOcjgrBae07BgXDztD+Lo3v0i4
+        bMeYXTsxg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44992)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jdKKD-00062L-7c; Mon, 25 May 2020 22:07:57 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jdKK7-0004fb-G0; Mon, 25 May 2020 22:07:51 +0100
+Date:   Mon, 25 May 2020 22:07:51 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 01/11] net: phy: Don't report success if devices weren't
+ found
+Message-ID: <20200525210751.GN1551@shell.armlinux.org.uk>
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-2-jeremy.linton@arm.com>
+ <20200523182054.GW1551@shell.armlinux.org.uk>
+ <e6e08ca4-5a6d-5ea3-0f97-946f1d403568@arm.com>
+ <20200525094536.GK1551@shell.armlinux.org.uk>
+ <be729566-5c63-a711-9a99-acc53d871b88@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200522070937.GH771317@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D29UWC001.ant.amazon.com (10.43.162.143) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be729566-5c63-a711-9a99-acc53d871b88@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMi8wNS8yMDIwIDEwOjA5LCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgTWF5IDIyLCAy
-MDIwIGF0IDA5OjI5OjQ1QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gU2lnbmVk
-LW9mZi1ieTogQW5kcmEgUGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+IE5vIGNoYW5n
-ZWxvZz8KSSBpbmNsdWRlZCB0aGUgY2hhbmdlbG9nIGluIHYzLgoKVGhhbmtzLApBbmRyYQoKCgoK
-QW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2Zm
-aWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3Vu
-dHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24g
-bnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
+On Mon, May 25, 2020 at 04:02:13PM -0500, Jeremy Linton wrote:
+> > So, I think you're going to have to add a work-around to ignore bit 0,
+> > which brings up the question whether this is worth it or not.
+> 
+> It does ignore bit 0, it gets turned into the C22 regs flag, and
+> cleared/ignored in the remainder of the code (do to MMD loop indexes
+> starting at 1).
 
+However, I've already pointed out that that isn't the case in a
+number of functions that I listed in another email, and I suspect
+was glossed over.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
