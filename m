@@ -2,83 +2,140 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FACE2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17392065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="M+NHqWcV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0wtSGzV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389050AbgEYHWf (ORCPT
+        id S2389064AbgEYHXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:22:35 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:39570 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388944AbgEYHWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:22:34 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgB3EAQicsteGY4DAA--.10156S4;
-        Mon, 25 May 2020 15:22:13 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: ti: Fix runtime PM imbalance in omap2_mcbsp_set_clks_src
-Date:   Mon, 25 May 2020 15:22:09 +0800
-Message-Id: <20200525072209.6935-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgB3EAQicsteGY4DAA--.10156S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw4UCw4UCF45tr15Jw13Arb_yoWxKFb_ta
-        1DWr1YgryDtFW29345ta90ga4FvrW7Crn8GrZ7trW7tFWUCF4rJF1rAF93ur43X3y8Wry3
-        JwnYgFnxZFyjkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbaAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
-        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
-        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15
-        McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-        1lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAF
-        wVW8CwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4I
-        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3
-        JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-        UvcSsGvfC2KfnxnUUI43ZEXa7VU10tC7UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQArsr
+        Mon, 25 May 2020 03:23:46 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52133 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388951AbgEYHXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:23:45 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 54ECB5C0073;
+        Mon, 25 May 2020 03:23:44 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 25 May 2020 03:23:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        qw3U0CcqTo0cQeMDt+HS3gLTNE8CpK3Apl/Gtn5gyiw=; b=M+NHqWcV3e6Dl6cX
+        MmzZCPQf3JaTVzLakiNvkneJQUA5WA9R+kWATP62u0feYzRH6GWcDRSA+psz8pNa
+        hAOU1yKWdQiOMoqCfEQdj0uFRX4uEj+QyIZVS+yN9KLfpT2U+MV4sBt+LC4jX4ZW
+        QT63eoHRMMokTBqbCa6G/2/m+AEqaUCNgopyU6NvSH0mQRhhKnfDcmaNclD5kjRC
+        YmGXbjmao+YDGlX2SG0m5PJkMEZ7XR25Hf1BKINCiSP6l7NJtWa6Oo1fylLYG2xG
+        xiVzePIPK+EXzd28VwVRYO90nWOQimYcMEzL8pf2XtOyhYOPrZJIHeXdHhuAMNmK
+        uCldTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=qw3U0CcqTo0cQeMDt+HS3gLTNE8CpK3Apl/Gtn5gy
+        iw=; b=0wtSGzV1CP6240VoYMM4RT9ZZFuQpRETg6vGRPUjqOMU3Ca08HSIzDSdk
+        spwXYraB1Fwy5SxZ1kCPdPR9viQIAAsFKXVFGEZ8E8JvyYos4Gpk4dkhCxPstgZK
+        PT05ZhVNCsovXD+/yqAjz7OE8RbE5G5J01x8NBJKYxVlvd4K79lhHKKYlkcowWDE
+        i/Fkk2jidF9GdBjpLz+0YjoD/ByVCXWasQ9XcgnwhC5hgd44ArVEFF7pn+nk9IOe
+        mrfcU3qxfUJCzoVAg9J//b7njrw5V+q+cXWroVYixTN6fTJ4tU+2Pcz5r+hhpQcu
+        5nqNjKH5Rya0qZvCZGFOq4IiYqfQQ==
+X-ME-Sender: <xms:f3LLXs1zI0Q62uDw2dghUkhOGvR1tuCn0JjNeGWnBQvFekqEancsUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudduledguddujecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghn
+    ucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnh
+    epfeefteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecu
+    kfhppeduudekrddvtdekrddujeekrddukeenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:f3LLXnGYFKy91zeZ2ss4hglmbL2KTU8gxQ-adUXizPXG8R1l6qi4AQ>
+    <xmx:f3LLXk7GRkOz31e7ASSubgJ-587PmRXRnfANdUaJsF3Ci_995-7w2Q>
+    <xmx:f3LLXl3vF_RzAGWoJxq7AJZYvdyqGH1_eAyvsx91iGTgIy63pLK23Q>
+    <xmx:gHLLXgPS_9gYpCZ0-xtk-nhZ4niLrVPWtRfK4x5UAZKJNPvecwbYVA>
+Received: from mickey.themaw.net (unknown [118.208.178.18])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 71ADD3066552;
+        Mon, 25 May 2020 03:23:39 -0400 (EDT)
+Message-ID: <b9e8f8171096813c76df3719719bdda87033fd78.camel@themaw.net>
+Subject: Re: [PATCH 0/4] kernfs: proposed locking and concurrency improvement
+From:   Ian Kent <raven@themaw.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 25 May 2020 15:23:35 +0800
+In-Reply-To: <20200525061616.GA57080@kroah.com>
+References: <159038508228.276051.14042452586133971255.stgit@mickey.themaw.net>
+         <20200525061616.GA57080@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When clk_set_parent() returns an error code, a pairing
-runtime PM usage counter increment is needed to keep the
-counter balanced.
+On Mon, 2020-05-25 at 08:16 +0200, Greg Kroah-Hartman wrote:
+> On Mon, May 25, 2020 at 01:46:59PM +0800, Ian Kent wrote:
+> > For very large systems with hundreds of CPUs and TBs of RAM booting
+> > can
+> > take a very long time.
+> > 
+> > Initial reports showed that booting a configuration of several
+> > hundred
+> > CPUs and 64TB of RAM would take more than 30 minutes and require
+> > kernel
+> > parameters of udev.children-max=1024
+> > systemd.default_timeout_start_sec=3600
+> > to prevent dropping into emergency mode.
+> > 
+> > Gathering information about what's happening during the boot is a
+> > bit
+> > challenging. But two main issues appeared to be, a large number of
+> > path
+> > lookups for non-existent files, and high lock contention in the VFS
+> > during
+> > path walks particularly in the dentry allocation code path.
+> > 
+> > The underlying cause of this was believed to be the sheer number of
+> > sysfs
+> > memory objects, 100,000+ for a 64TB memory configuration.
+> 
+> Independant of your kernfs changes, why do we really need to
+> represent
+> all of this memory with that many different "memory objects"?  What
+> is
+> that providing to userspace?
+> 
+> I remember Ben Herrenschmidt did a lot of work on some of the kernfs
+> and
+> other functions to make large-memory systems boot faster to remove
+> some
+> of the complexity in our functions, but that too did not look into
+> why
+> we needed to create so many objects in the first place.
+> 
+> Perhaps you might want to look there instead?
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- sound/soc/ti/omap-mcbsp.c | 1 +
- 1 file changed, 1 insertion(+)
+I presumed it was a hardware design requirement or IBM VM design
+requirement.
 
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index 3d41ca2238d4..84b4de9b670c 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -80,6 +80,7 @@ static int omap2_mcbsp_set_clks_src(struct omap_mcbsp *mcbsp, u8 fck_src_id)
- 	if (r) {
- 		dev_err(mcbsp->dev, "CLKS: could not clk_set_parent() to %s\n",
- 			src);
-+		pm_runtime_get_sync(mcbsp->dev);
- 		clk_put(fck_src);
- 		return r;
- 	}
--- 
-2.17.1
+Perhaps Rick can find out more on that question.
+
+Ian
 
