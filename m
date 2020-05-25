@@ -2,116 +2,159 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A02C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB12F2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624FB207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qvMmSe1X"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="djMQu8Ht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389701AbgEYJ5H (ORCPT
+        id S2389702AbgEYJ6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59998 "EHLO
+        Mon, 25 May 2020 05:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389492AbgEYJ5G (ORCPT
+        with ESMTP id S2389407AbgEYJ6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:57:06 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93363C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:57:06 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id z5so7833834qvw.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lXJcON4uIxpNxBwaXZsOO47XJesOn1/BpUPO8EArG+w=;
-        b=qvMmSe1XAwiiXDHUShXrjRlC8kHXfgYHjV+edzVEs9diOiTb51gVIu8DIFR7Kl1EEw
-         5Y6sFR/4qt/etZj+zXMQpnJBCOEpUeTwjkyvlO8aenAuL6yYXWj5/o20G1wXUq4flko1
-         0Adu+aOLsPFZhSXfJTg9dh9NB1pX3j29lBaIeuFGFuoJIBmUZdgqF8H4jTnEgquDqytC
-         ME1ipTZN5l8O/AB/Fdssqx02XGyIdC7XSoDAlDbHzQ/3e7envCluBo7IUnF4+C/82B+t
-         JcEk4VlBKK5Unrbf4qGqJeVpeleWSKtRNitNo1bP6Ul6mHjKPR/3XdUzUOIYp4Q/Az14
-         0fTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lXJcON4uIxpNxBwaXZsOO47XJesOn1/BpUPO8EArG+w=;
-        b=WVFsQGO/Uzbl5XN+dfw7mYdjJIZjQE9iioyf6IhgOz02afWDl4b6OKHloufMno0wH8
-         7e7DGfd0I3QautuuORJv1znBGfQtRTrlmBK6yQyIUG5/d+xqxmEReyjFteuEGb5GQ/Di
-         E2+usda9NE7MtyLJOno6MaipUOzPzTQ1bfqXS9W8JftDbNPvG1HchwwR5w3+bu6ejqDz
-         sT3msZAP9F43JJRgatmQGHh7M74tntDcNKl8ZLDeVmAESCtAdT08uH/sNjh1x9kT5wu6
-         FSl2UG7pfGZVo/9i/kl6DRzMpcgrmkElzyDSDaCEqE7ETsjhw7S7MHhq4uyrmEnKCJZU
-         Fk7w==
-X-Gm-Message-State: AOAM532YAFaZAbctAE+ID6kAqAhnCVp+Lh+DcVo4Gh/Xr+JQljM8JJfu
-        /1ikrf9gsS2pd/em1+/YxKSYiDIGXC66xM74C9BWag==
-X-Google-Smtp-Source: ABdhPJwu98seAlM8B/W6iEB7Cgc17dFjE0Ji2BN+7kajKF3ry3QeBw893G/4FHc1aJT4/bDywXnEMDItzUTJpwb33p8=
-X-Received: by 2002:a05:6214:15ce:: with SMTP id p14mr15030956qvz.159.1590400624833;
- Mon, 25 May 2020 02:57:04 -0700 (PDT)
+        Mon, 25 May 2020 05:58:19 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A88C061A0E;
+        Mon, 25 May 2020 02:58:19 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Vswm5fnrz9sRK;
+        Mon, 25 May 2020 19:58:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590400697;
+        bh=C5bGOXdSwpoXj/ZvUi/2ELa8jGqYdbWahmElM6nSh5A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=djMQu8Ht/SaWlEGZDqarXlwGVKijTdoIi9u1SogHphHBVshrLdg3KQDPDmtI18m6b
+         q4sjobZ1I06pSB7tNChmLck12mIucN1gMVX9oXMxkkBjZn/yvAy/hlGml6L5P45wMC
+         +FcBa/z/q+eoWuqGYLqRhmaTQZsGd0KZWLJ6yyMuIz6+kWx7ZjCZU/yWiQlFeyQl0L
+         sQPkIgqRIa2IQZ1rog//40UEBNMG+fEBp7keMwMG6Ci74BVPtnNaTV8GcFbcNPzxht
+         IuP6QNpcvXwmT4Wrn4SYU8aS9UcQKm5XAeNhgju5D7SqQP5VNegwJRlq0XzltPNVLw
+         8rVTQ7GZzrD8w==
+Date:   Mon, 25 May 2020 19:58:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build failure after merge of the notifications tree
+Message-ID: <20200525195813.0e76ac56@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200522020212.23460-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200522020212.23460-1-walter-zh.wu@mediatek.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 25 May 2020 11:56:53 +0200
-Message-ID: <CACT4Y+agmL5ZOWmNBJyLSTuhy7ekp4HTafABUsqqP+XFd7ErKw@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] kasan: update documentation for generic kasan
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 4:02 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> Generic KASAN will support to record the last two call_rcu() call stacks
-> and print them in KASAN report. So that need to update documentation.
+--Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-and-tested-by: Dmitry Vyukov <dvyukov@google.com>
+Hi all,
 
-> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> ---
->  Documentation/dev-tools/kasan.rst | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-> index c652d740735d..fede42e6536b 100644
-> --- a/Documentation/dev-tools/kasan.rst
-> +++ b/Documentation/dev-tools/kasan.rst
-> @@ -193,6 +193,9 @@ function calls GCC directly inserts the code to check the shadow memory.
->  This option significantly enlarges kernel but it gives x1.1-x2 performance
->  boost over outline instrumented kernel.
->
-> +Generic KASAN prints up to 2 call_rcu() call stacks in reports, the last one
-> +and the second to last.
-> +
->  Software tag-based KASAN
->  ~~~~~~~~~~~~~~~~~~~~~~~~
->
-> --
-> 2.18.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200522020212.23460-1-walter-zh.wu%40mediatek.com.
+After merging the notifications tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+kernel/watch_queue.c:67:13: error: 'generic_pipe_buf_confirm' undeclared he=
+re (not in a function); did you mean 'generic_pipe_buf_release'?
+   67 |  .confirm =3D generic_pipe_buf_confirm,
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+      |             generic_pipe_buf_release
+kernel/watch_queue.c:69:3: error: 'const struct pipe_buf_operations' has no=
+ member named 'steal'
+   69 |  .steal  =3D watch_queue_pipe_buf_steal,
+      |   ^~~~~
+kernel/watch_queue.c:69:12: error: initialization of 'bool (*)(struct pipe_=
+inode_info *, struct pipe_buffer *)' {aka '_Bool (*)(struct pipe_inode_info=
+ *, struct pipe_buffer *)'} from incompatible pointer type 'int (*)(struct =
+pipe_inode_info *, struct pipe_buffer *)' [-Werror=3Dincompatible-pointer-t=
+ypes]
+   69 |  .steal  =3D watch_queue_pipe_buf_steal,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/watch_queue.c:69:12: note: (near initialization for 'watch_queue_pip=
+e_buf_ops.try_steal')
+
+Caused by commit
+
+  c73be61cede5 ("pipe: Add general notification queue support")
+
+from the notifications tree interacting with commits
+
+  76887c256744 ("fs: make the pipe_buf_operations ->steal operation optiona=
+l")
+  b8d9e7f2411b ("fs: make the pipe_buf_operations ->confirm operation optio=
+nal")
+
+from the vfs tree.
+
+I have applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 25 May 2020 19:53:40 +1000
+Subject: [PATCH] pipe: update for pipe_buf_operations changes
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ kernel/watch_queue.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index 9a9699c06709..d7a369eab613 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -56,17 +56,9 @@ static void watch_queue_pipe_buf_release(struct pipe_ino=
+de_info *pipe,
+ 	set_bit(bit, wqueue->notes_bitmap);
+ }
+=20
+-static int watch_queue_pipe_buf_steal(struct pipe_inode_info *pipe,
+-				      struct pipe_buffer *buf)
+-{
+-	return -1; /* No. */
+-}
+-
+ /* New data written to a pipe may be appended to a buffer with this type. =
+*/
+ static const struct pipe_buf_operations watch_queue_pipe_buf_ops =3D {
+-	.confirm	=3D generic_pipe_buf_confirm,
+ 	.release	=3D watch_queue_pipe_buf_release,
+-	.steal		=3D watch_queue_pipe_buf_steal,
+ 	.get		=3D generic_pipe_buf_get,
+ };
+=20
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7LlrUACgkQAVBC80lX
+0GzuDAf+LZceR3VHP4/7LUemV6cqzQTSlUzb+50eSRfyI/Kv7XfEq/ZQNaTKYYS5
+ONh+C1OID0KqRuXrJGpMpScwl4ZM21ys8nPGi3fmwPWhGq1pPSikWdU3KAxZPawH
+uFVaEQtRCwaE8bqiieN6elL4mTM1wi8zGfKgiakvrpmah77pCHGrfojXqKnwQDur
+1KVpJLVMT0cLPoXGWVN572VGEMrQ29HZqi3YOH5p/ZFa63Z0dCC8j1zrPIGzcPgi
+H6t2jbv1Hdjo9XXNqJruL9nBE2kKt8XeGZwssXf6ZYENm9QlmvRHynnsOl2efrEQ
+w7CxYO9F3fHZdIyOkejNHcDQ7Ybsrg==
+=+kXf
+-----END PGP SIGNATURE-----
+
+--Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd--
