@@ -2,433 +2,126 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBABFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A04DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1B8207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A266207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389328AbgEYJHf (ORCPT
+        id S2389347AbgEYJH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:07:35 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:24782 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389294AbgEYJHe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:07:34 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04P8tMWp020442;
-        Mon, 25 May 2020 05:07:23 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 316wp7x7j0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 May 2020 05:07:23 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 04P97MUa020845
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 25 May 2020 05:07:22 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 25 May
- 2020 05:07:21 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 25 May 2020 05:07:21 -0400
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04P97Hse010998;
-        Mon, 25 May 2020 05:07:17 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <olivier.moysan@st.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2] iio: stm32-adc:  remove usage of iio_priv_to_dev() helper
-Date:   Mon, 25 May 2020 12:07:20 +0300
-Message-ID: <20200525090720.72696-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522130719.630714-1-alexandru.ardelean@analog.com>
-References: <20200522130719.630714-1-alexandru.ardelean@analog.com>
+        Mon, 25 May 2020 05:07:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18280 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389329AbgEYJH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:07:56 -0400
+IronPort-SDR: TwTGpNA9I0nt35eU9+sFcIXDiLghL9hQ99AStf5mZH78yEhh8ApDE3dRF017AnoOcYXNUk5wqX
+ wVDIK0gmBEfQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 02:07:55 -0700
+IronPort-SDR: 2hLbY16UNixp9uKwA+HoIovAgK51uxmidktw1TbuKfD5n9hRLrdAJfizedCATlB4/xfOf6J+bL
+ +7VHvJIgi+Cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
+   d="scan'208";a="301770713"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 25 May 2020 02:07:47 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jd95J-008ktF-4y; Mon, 25 May 2020 12:07:49 +0300
+Date:   Mon, 25 May 2020 12:07:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Steve deRosier <derosier@gmail.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org, jiri@resnulli.us,
+        briannorris@chromium.org
+Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
+Message-ID: <20200525090749.GJ1634618@smile.fi.intel.com>
+References: <20200519010530.GS11244@42.do-not-panic.com>
+ <20200519211531.3702593-1-kuba@kernel.org>
+ <20200522052046.GY11244@42.do-not-panic.com>
+ <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
+ <20200522215145.GC11244@42.do-not-panic.com>
+ <CALLGbR+QPcECtJbYmzztV_Qysc5qtwujT_qc785zvhZMCH50fg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-25_04:2020-05-22,2020-05-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 impostorscore=0 clxscore=1011
- malwarescore=0 mlxscore=0 lowpriorityscore=0 cotscore=-2147483648
- spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005250071
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALLGbR+QPcECtJbYmzztV_Qysc5qtwujT_qc785zvhZMCH50fg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We may want to get rid of the iio_priv_to_dev() helper. The reason is that
-we will hide some of the members of the iio_dev structure (to prevent
-drivers from accessing them directly), and that will also mean hiding the
-implementation of the iio_priv_to_dev() helper inside the IIO core.
+On Fri, May 22, 2020 at 04:23:55PM -0700, Steve deRosier wrote:
+> On Fri, May 22, 2020 at 2:51 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
 
-Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
-may not be fast anymore, so a general idea is to try to get rid of the
-iio_priv_to_dev() altogether.
-The iio_priv() helper won't be affected by the rework, as the iio_dev
-struct will keep a reference to the private information.
+> I had to go RTFM re: kernel taints because it has been a very long
+> time since I looked at them. It had always seemed to me that most were
+> caused by "kernel-unfriendly" user actions.  The most famous of course
+> is loading proprietary modules, out-of-tree modules, forced module
+> loads, etc...  Honestly, I had forgotten the large variety of uses of
+> the taint flags. For anyone who hasn't looked at taints recently, I
+> recommend: https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
+> 
+> In light of this I don't object to setting a taint on this anymore.
+> I'm a little uneasy, but I've softened on it now, and now I feel it
+> depends on implementation.
+> 
+> Specifically, I don't think we should set a taint flag when a driver
+> easily handles a routine firmware crash and is confident that things
+> have come up just fine again. In other words, triggering the taint in
+> every driver module where it spits out a log comment that it had a
+> firmware crash and had to recover seems too much. Sure, firmware
+> shouldn't crash, sure it should be open source so we can fix it,
+> whatever...
 
-For this driver, not using iio_priv_to_dev(), means reworking some paths to
-pass the iio device and using iio_priv() to access the private information.
+While it may sound idealistic the firmware for the end-user, and even for mere
+kernel developer like me, is a complete blackbox which has more access than
+root user in the kernel. We have tons of firmwares and each of them potentially
+dangerous beast. As a user I really care about my data and privacy (hacker can
+oops a firmware in order to set a specific vector attack). So, tainting kernel
+is _a least_ we can do there, the strict rules would be to reboot immediately.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/stm32-adc.c | 108 +++++++++++++++++++-----------------
- 1 file changed, 58 insertions(+), 50 deletions(-)
+> those sort of wishful comments simply ignore reality and
+> our ability to affect effective change.
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index ae622ee6d08c..9428c5c22712 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -162,10 +162,10 @@ struct stm32_adc_cfg {
- 	struct stm32_adc_trig_info	*trigs;
- 	bool clk_required;
- 	bool has_vregready;
--	int (*prepare)(struct stm32_adc *);
--	void (*start_conv)(struct stm32_adc *, bool dma);
--	void (*stop_conv)(struct stm32_adc *);
--	void (*unprepare)(struct stm32_adc *);
-+	int (*prepare)(struct iio_dev *);
-+	void (*start_conv)(struct iio_dev *, bool dma);
-+	void (*stop_conv)(struct iio_dev *);
-+	void (*unprepare)(struct iio_dev *);
- 	const unsigned int *smp_cycles;
- };
- 
-@@ -538,10 +538,11 @@ static void stm32_adc_set_res(struct stm32_adc *adc)
- 
- static int stm32_adc_hw_stop(struct device *dev)
- {
--	struct stm32_adc *adc = dev_get_drvdata(dev);
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 
- 	if (adc->cfg->unprepare)
--		adc->cfg->unprepare(adc);
-+		adc->cfg->unprepare(indio_dev);
- 
- 	if (adc->clk)
- 		clk_disable_unprepare(adc->clk);
-@@ -551,7 +552,8 @@ static int stm32_adc_hw_stop(struct device *dev)
- 
- static int stm32_adc_hw_start(struct device *dev)
- {
--	struct stm32_adc *adc = dev_get_drvdata(dev);
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int ret;
- 
- 	if (adc->clk) {
-@@ -563,7 +565,7 @@ static int stm32_adc_hw_start(struct device *dev)
- 	stm32_adc_set_res(adc);
- 
- 	if (adc->cfg->prepare) {
--		ret = adc->cfg->prepare(adc);
-+		ret = adc->cfg->prepare(indio_dev);
- 		if (ret)
- 			goto err_clk_dis;
- 	}
-@@ -587,8 +589,10 @@ static int stm32_adc_hw_start(struct device *dev)
-  * conversions, in IIO buffer modes. Otherwise, use ADC interrupt with direct
-  * DR read instead (e.g. read_raw, or triggered buffer mode without DMA).
-  */
--static void stm32f4_adc_start_conv(struct stm32_adc *adc, bool dma)
-+static void stm32f4_adc_start_conv(struct iio_dev *indio_dev, bool dma)
- {
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+
- 	stm32_adc_set_bits(adc, STM32F4_ADC_CR1, STM32F4_SCAN);
- 
- 	if (dma)
-@@ -605,8 +609,10 @@ static void stm32f4_adc_start_conv(struct stm32_adc *adc, bool dma)
- 		stm32_adc_set_bits(adc, STM32F4_ADC_CR2, STM32F4_SWSTART);
- }
- 
--static void stm32f4_adc_stop_conv(struct stm32_adc *adc)
-+static void stm32f4_adc_stop_conv(struct iio_dev *indio_dev)
- {
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+
- 	stm32_adc_clr_bits(adc, STM32F4_ADC_CR2, STM32F4_EXTEN_MASK);
- 	stm32_adc_clr_bits(adc, STM32F4_ADC_SR, STM32F4_STRT);
- 
-@@ -615,8 +621,9 @@ static void stm32f4_adc_stop_conv(struct stm32_adc *adc)
- 			   STM32F4_ADON | STM32F4_DMA | STM32F4_DDS);
- }
- 
--static void stm32h7_adc_start_conv(struct stm32_adc *adc, bool dma)
-+static void stm32h7_adc_start_conv(struct iio_dev *indio_dev, bool dma)
- {
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	enum stm32h7_adc_dmngt dmngt;
- 	unsigned long flags;
- 	u32 val;
-@@ -635,9 +642,9 @@ static void stm32h7_adc_start_conv(struct stm32_adc *adc, bool dma)
- 	stm32_adc_set_bits(adc, STM32H7_ADC_CR, STM32H7_ADSTART);
- }
- 
--static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
-+static void stm32h7_adc_stop_conv(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int ret;
- 	u32 val;
- 
-@@ -652,9 +659,9 @@ static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
- 	stm32_adc_clr_bits(adc, STM32H7_ADC_CFGR, STM32H7_DMNGT_MASK);
- }
- 
--static int stm32h7_adc_exit_pwr_down(struct stm32_adc *adc)
-+static int stm32h7_adc_exit_pwr_down(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int ret;
- 	u32 val;
- 
-@@ -690,9 +697,9 @@ static void stm32h7_adc_enter_pwr_down(struct stm32_adc *adc)
- 	stm32_adc_set_bits(adc, STM32H7_ADC_CR, STM32H7_DEEPPWD);
- }
- 
--static int stm32h7_adc_enable(struct stm32_adc *adc)
-+static int stm32h7_adc_enable(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int ret;
- 	u32 val;
- 
-@@ -713,9 +720,9 @@ static int stm32h7_adc_enable(struct stm32_adc *adc)
- 	return ret;
- }
- 
--static void stm32h7_adc_disable(struct stm32_adc *adc)
-+static void stm32h7_adc_disable(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int ret;
- 	u32 val;
- 
-@@ -733,9 +740,9 @@ static void stm32h7_adc_disable(struct stm32_adc *adc)
-  * @adc: stm32 adc instance
-  * Note: Must be called once ADC is enabled, so LINCALRDYW[1..6] are writable
-  */
--static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
-+static int stm32h7_adc_read_selfcalib(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int i, ret;
- 	u32 lincalrdyw_mask, val;
- 
-@@ -777,9 +784,9 @@ static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
-  * @adc: stm32 adc instance
-  * Note: ADC must be enabled, with no on-going conversions.
-  */
--static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
-+static int stm32h7_adc_restore_selfcalib(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int i, ret;
- 	u32 lincalrdyw_mask, val;
- 
-@@ -850,9 +857,9 @@ static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
-  * @adc: stm32 adc instance
-  * Note: Must be called once ADC is out of power down.
-  */
--static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
-+static int stm32h7_adc_selfcalib(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int ret;
- 	u32 val;
- 
-@@ -912,30 +919,31 @@ static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
-  * - Only one input is selected for single ended (e.g. 'vinp')
-  * - Two inputs are selected for differential channels (e.g. 'vinp' & 'vinn')
-  */
--static int stm32h7_adc_prepare(struct stm32_adc *adc)
-+static int stm32h7_adc_prepare(struct iio_dev *indio_dev)
- {
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	int calib, ret;
- 
--	ret = stm32h7_adc_exit_pwr_down(adc);
-+	ret = stm32h7_adc_exit_pwr_down(indio_dev);
- 	if (ret)
- 		return ret;
- 
--	ret = stm32h7_adc_selfcalib(adc);
-+	ret = stm32h7_adc_selfcalib(indio_dev);
- 	if (ret < 0)
- 		goto pwr_dwn;
- 	calib = ret;
- 
- 	stm32_adc_writel(adc, STM32H7_ADC_DIFSEL, adc->difsel);
- 
--	ret = stm32h7_adc_enable(adc);
-+	ret = stm32h7_adc_enable(indio_dev);
- 	if (ret)
- 		goto pwr_dwn;
- 
- 	/* Either restore or read calibration result for future reference */
- 	if (calib)
--		ret = stm32h7_adc_restore_selfcalib(adc);
-+		ret = stm32h7_adc_restore_selfcalib(indio_dev);
- 	else
--		ret = stm32h7_adc_read_selfcalib(adc);
-+		ret = stm32h7_adc_read_selfcalib(indio_dev);
- 	if (ret)
- 		goto disable;
- 
-@@ -944,16 +952,18 @@ static int stm32h7_adc_prepare(struct stm32_adc *adc)
- 	return 0;
- 
- disable:
--	stm32h7_adc_disable(adc);
-+	stm32h7_adc_disable(indio_dev);
- pwr_dwn:
- 	stm32h7_adc_enter_pwr_down(adc);
- 
- 	return ret;
- }
- 
--static void stm32h7_adc_unprepare(struct stm32_adc *adc)
-+static void stm32h7_adc_unprepare(struct iio_dev *indio_dev)
- {
--	stm32h7_adc_disable(adc);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+
-+	stm32h7_adc_disable(indio_dev);
- 	stm32h7_adc_enter_pwr_down(adc);
- }
- 
-@@ -1160,7 +1170,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
- 
- 	stm32_adc_conv_irq_enable(adc);
- 
--	adc->cfg->start_conv(adc, false);
-+	adc->cfg->start_conv(indio_dev, false);
- 
- 	timeout = wait_for_completion_interruptible_timeout(
- 					&adc->completion, STM32_ADC_TIMEOUT);
-@@ -1173,7 +1183,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
- 		ret = IIO_VAL_INT;
- 	}
- 
--	adc->cfg->stop_conv(adc);
-+	adc->cfg->stop_conv(indio_dev);
- 
- 	stm32_adc_conv_irq_disable(adc);
- 
-@@ -1227,8 +1237,8 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
- 
- static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
- {
--	struct stm32_adc *adc = data;
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct iio_dev *indio_dev = data;
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
- 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
- 
-@@ -1240,8 +1250,8 @@ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
- 
- static irqreturn_t stm32_adc_isr(int irq, void *data)
- {
--	struct stm32_adc *adc = data;
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct iio_dev *indio_dev = data;
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
- 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
- 
-@@ -1514,7 +1524,7 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
- 	if (!adc->dma_chan)
- 		stm32_adc_conv_irq_enable(adc);
- 
--	adc->cfg->start_conv(adc, !!adc->dma_chan);
-+	adc->cfg->start_conv(indio_dev, !!adc->dma_chan);
- 
- 	return 0;
- 
-@@ -1547,7 +1557,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
- 	struct stm32_adc *adc = iio_priv(indio_dev);
- 	struct device *dev = indio_dev->dev.parent;
- 
--	adc->cfg->stop_conv(adc);
-+	adc->cfg->stop_conv(indio_dev);
- 	if (!adc->dma_chan)
- 		stm32_adc_conv_irq_disable(adc);
- 
-@@ -1891,7 +1901,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	indio_dev->info = &stm32_adc_iio_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE | INDIO_HARDWARE_TRIGGERED;
- 
--	platform_set_drvdata(pdev, adc);
-+	platform_set_drvdata(pdev, indio_dev);
- 
- 	ret = of_property_read_u32(pdev->dev.of_node, "reg", &adc->offset);
- 	if (ret != 0) {
-@@ -1905,7 +1915,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, adc->irq, stm32_adc_isr,
- 					stm32_adc_threaded_isr,
--					0, pdev->name, adc);
-+					0, pdev->name, indio_dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to request IRQ\n");
- 		return ret;
-@@ -1989,8 +1999,8 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 
- static int stm32_adc_remove(struct platform_device *pdev)
- {
--	struct stm32_adc *adc = platform_get_drvdata(pdev);
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct stm32_adc *adc = iio_priv(indio_dev);
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 	iio_device_unregister(indio_dev);
-@@ -2012,8 +2022,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
- #if defined(CONFIG_PM_SLEEP)
- static int stm32_adc_suspend(struct device *dev)
- {
--	struct stm32_adc *adc = dev_get_drvdata(dev);
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
- 
- 	if (iio_buffer_enabled(indio_dev))
- 		__stm32_adc_buffer_predisable(indio_dev);
-@@ -2023,8 +2032,7 @@ static int stm32_adc_suspend(struct device *dev)
- 
- static int stm32_adc_resume(struct device *dev)
- {
--	struct stm32_adc *adc = dev_get_drvdata(dev);
--	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
- 	int ret;
- 
- 	ret = pm_runtime_force_resume(dev);
+We can encourage users not to buy cheap crap for the starter.
+
+> A lot of WiFi firmware crashes
+> and for well-known cases the drivers handle them well. And in some
+> cases, not so well and that should be a place the driver should detect
+> and thus raise a red flag.  If a WiFi firmware crash can bring down
+> the kernel, there's either a major driver bug or some very funky
+> hardware crap going on. That sort of thing we should be able to
+> detect, mark with a taint (or something), and fix if within our sphere
+> of influence. I guess what it comes down to me is how aggressive we
+> are about setting the flag.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
