@@ -2,143 +2,307 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41BAA2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4262D20899
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9adz5zO"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="WuGyrHUz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404016AbgEYPRn (ORCPT
+        id S2404076AbgEYPR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54008 "EHLO
+        Mon, 25 May 2020 11:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390998AbgEYPRn (ORCPT
+        with ESMTP id S2404028AbgEYPR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:17:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45459C061A0E;
-        Mon, 25 May 2020 08:17:43 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 131so561044pfv.13;
-        Mon, 25 May 2020 08:17:43 -0700 (PDT)
+        Mon, 25 May 2020 11:17:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558D2C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:17:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w10so21190610ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JgdxX2C74TdDmjeVY9HQN2a/yq7wOSbOdwxkkYCYXyQ=;
-        b=N9adz5zOwkTSECpw8gScK2pWCHzS2JXKrK0SWR5uk5+0ARWhw5rdzsPascizMaKx5J
-         Mi5jklMWhTLlXpSZWJPhU8KLwex4X+dJUT8dpDlpb5vwIcWUPbBNi3uz38tNQZKXPSX5
-         SLdsG+G5/FitBcp28xwyWZXm+CnuzG/428JvNVcXov2lVq3dd9vNC6mx7j1tgByf2SYl
-         Op8bvijIDGefF5eWmo4yx5mh8TbKlHwdmi96W5eqaF3eZm/Wge/ZCZxL8nPIvXaNI19h
-         iZMjs0rjfgJ+26iiQK02Hzvvxz9FcTe3qgtqTIkHEchq6EXIVJdjg6xv+6qe3WG/qfVl
-         7REg==
+         :content-disposition:in-reply-to;
+        bh=KmCwnA7a5dVJlIQoJdDfHmomwFfTjqYUrhRIWlT2Nyk=;
+        b=WuGyrHUzog4bt26/4hOGUWDImSEp43kS8zG/1GJTSqmzUyTPyXIuKgZFMo4Sp080SY
+         fX35jcmj9TBOukdtUSSzCyyweXoAU+OtgxRlhrX18a6u2IIdlI0HWc0YD/uihmNkARC6
+         FFTTZ7e093d3qTTm3OghNQHI7gph1gQ7tvOAVxA5OQVWY0+BuWHpdmk5bkRwE7Qayxz6
+         GQGEVgrMr1mFs+J5zx84vFQaUUig81891dMsKvu23wBViUbwF3eCeU9rY3q1ED2q6i/7
+         znqGwrvifOcSNfzyygJK1Vecby2bQR340gP0iACEkEq+9faR2GYQ964je3o/conEY8DO
+         lcRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JgdxX2C74TdDmjeVY9HQN2a/yq7wOSbOdwxkkYCYXyQ=;
-        b=b67OcIOQKKuPYSF99W6jaYxI8/D/XsC9D7komow8yw+8w4QUEursWOKJHA/Haz8yIY
-         OOgKGknbvKsgeao86SQ5xVkVQfpFCjvZ8/+naknou0PZ91c7UOy2ryL3En2vcVowT8/o
-         jVh+V2yz7VaJgDjDMvSXfzSSWrX+M+TdoRib9PHKdDEskj95PUDVFibm5MMGTsezyV4r
-         8b33dJM/lTWz0AIrXkm+kcJFMJRj/J++x/8jtPcUEz21D2ASlSHsdh/PH0JKTM7eFkS9
-         1sv8HoRKsDdnijPzWIcSpJlENfOaCxxyzlTG0xJjBfd31RD3JuJSQX3sS4uBpdRmzSMY
-         /+kA==
-X-Gm-Message-State: AOAM5324RIA6JBslBR7EWctrWYHPOHvla2VdVLPOHoJlDBmetoMJqXY+
-        2zk18GI8qEwMd2wQoNFCeLYh41CDbWA=
-X-Google-Smtp-Source: ABdhPJzyrvfjMW1Z89guWcSUG6SP/b4006FtLKB7GKkz56yag7CQCPbh+mpzA+Z+rDjLdjAdA6JcQw==
-X-Received: by 2002:aa7:9aa8:: with SMTP id x8mr16954629pfi.182.1590419862613;
-        Mon, 25 May 2020 08:17:42 -0700 (PDT)
-Received: from sol (220-235-68-201.dyn.iinet.net.au. [220.235.68.201])
-        by smtp.gmail.com with ESMTPSA id k4sm5288767pfp.173.2020.05.25.08.17.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 08:17:41 -0700 (PDT)
-Date:   Mon, 25 May 2020 23:17:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Bujanda <hector.bujanda@digi.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-Message-ID: <20200525151736.GA32461@sol>
-References: <20200419001858.105281-1-hector.bujanda@digi.com>
- <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
- <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
- <20200525022252.GA22956@sol>
- <CACRpkdagkhbULGVGJqcS55m=X2EaH_iK0Khr8+6M7ATWrC3hOQ@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=KmCwnA7a5dVJlIQoJdDfHmomwFfTjqYUrhRIWlT2Nyk=;
+        b=itu+ENXUTvXAw/GnFdb7I4kW94UQhx5H1w65tEG0QJDK0M/3XDqByPp0GcTioF1Zpb
+         V42NIvLI0VTR9jPKseYcsWhlIO6zU4Uh69mMWf40a6nYjZxm3o1uR1Vcwrd2bo3QDAil
+         kSoo/K8Z1FR3MCrxFCuD3e9yjEb8Zvp3wWVxtoGMtWFVpulCUBya5+Q3mhmNoovJcsfW
+         lSCG1FnSJa4QkkOs4+beNb5lAY1T3sGurthX9nIL5f31TAgNRyXzqZ/ENTKDYh/kYgn+
+         haLOxzF1O6CzMgrDK7irubcMGzz4lE+sa2SYEjjpoQR8O+pVE8yoC8PYzMaQdPEoXCaH
+         VlKw==
+X-Gm-Message-State: AOAM5338vkMYJRgSmPNjDh22W0UJanZn/aRA6RJHungNsH/BuWF40NId
+        ZaG3of6kfYp7HdBKrbwRZ6bFIg==
+X-Google-Smtp-Source: ABdhPJz4Z11nGMXKBdzLwDq5RYdn3XVkZC6lsZEQkZwhYr4AviDn5phADtHDSbzOkyRQItFlkiSDBQ==
+X-Received: by 2002:a2e:8e91:: with SMTP id z17mr11191455ljk.144.1590419875635;
+        Mon, 25 May 2020 08:17:55 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id k27sm4373301lfe.88.2020.05.25.08.17.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 08:17:55 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 0498010230F; Mon, 25 May 2020 18:17:56 +0300 (+03)
+Date:   Mon, 25 May 2020 18:17:55 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [RFC 06/16] KVM: Use GUP instead of copy_from/to_user() to
+ access guest memory
+Message-ID: <20200525151755.yzbmemtrii455s6k@box>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+ <20200522125214.31348-7-kirill.shutemov@linux.intel.com>
+ <87a71w832c.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdagkhbULGVGJqcS55m=X2EaH_iK0Khr8+6M7ATWrC3hOQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87a71w832c.fsf@vitty.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 02:17:41PM +0200, Linus Walleij wrote:
-> On Mon, May 25, 2020 at 4:22 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Mon, May 25, 2020 at 05:08:43PM +0200, Vitaly Kuznetsov wrote:
+> "Kirill A. Shutemov" <kirill@shutemov.name> writes:
 > 
-> > You mention timers for the gpio pins that cannot provide debounce,
-> > so I'm confused. Could you clarify which strategy you have in mind?
+> > New helpers copy_from_guest()/copy_to_guest() to be used if KVM memory
+> > protection feature is enabled.
+> >
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  include/linux/kvm_host.h |  4 +++
+> >  virt/kvm/kvm_main.c      | 78 ++++++++++++++++++++++++++++++++++------
+> >  2 files changed, 72 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > index 131cc1527d68..bd0bb600f610 100644
+> > --- a/include/linux/kvm_host.h
+> > +++ b/include/linux/kvm_host.h
+> > @@ -503,6 +503,7 @@ struct kvm {
+> >  	struct srcu_struct srcu;
+> >  	struct srcu_struct irq_srcu;
+> >  	pid_t userspace_pid;
+> > +	bool mem_protected;
+> >  };
+> >  
+> >  #define kvm_err(fmt, ...) \
+> > @@ -727,6 +728,9 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn);
+> >  void kvm_set_pfn_accessed(kvm_pfn_t pfn);
+> >  void kvm_get_pfn(kvm_pfn_t pfn);
+> >  
+> > +int copy_from_guest(void *data, unsigned long hva, int len);
+> > +int copy_to_guest(unsigned long hva, const void *data, int len);
+> > +
+> >  void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache);
+> >  int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+> >  			int len);
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 731c1e517716..033471f71dae 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -2248,8 +2248,48 @@ static int next_segment(unsigned long len, int offset)
+> >  		return len;
+> >  }
+> >  
+> > +int copy_from_guest(void *data, unsigned long hva, int len)
+> > +{
+> > +	int offset = offset_in_page(hva);
+> > +	struct page *page;
+> > +	int npages, seg;
+> > +
+> > +	while ((seg = next_segment(len, offset)) != 0) {
+> > +		npages = get_user_pages_unlocked(hva, 1, &page, 0);
+> > +		if (npages != 1)
+> > +			return -EFAULT;
+> > +		memcpy(data, page_address(page) + offset, seg);
+> > +		put_page(page);
+> > +		len -= seg;
+> > +		hva += seg;
+> > +		offset = 0;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int copy_to_guest(unsigned long hva, const void *data, int len)
+> > +{
+> > +	int offset = offset_in_page(hva);
+> > +	struct page *page;
+> > +	int npages, seg;
+> > +
+> > +	while ((seg = next_segment(len, offset)) != 0) {
+> > +		npages = get_user_pages_unlocked(hva, 1, &page, FOLL_WRITE);
+> > +		if (npages != 1)
+> > +			return -EFAULT;
+> > +		memcpy(page_address(page) + offset, data, seg);
+> > +		put_page(page);
+> > +		len -= seg;
+> > +		hva += seg;
+> > +		offset = 0;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> >  static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+> > -				 void *data, int offset, int len)
+> > +				 void *data, int offset, int len,
+> > +				 bool protected)
+> >  {
+> >  	int r;
+> >  	unsigned long addr;
+> > @@ -2257,7 +2297,10 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+> >  	addr = gfn_to_hva_memslot_prot(slot, gfn, NULL);
+> >  	if (kvm_is_error_hva(addr))
+> >  		return -EFAULT;
+> > -	r = __copy_from_user(data, (void __user *)addr + offset, len);
+> > +	if (protected)
+> > +		r = copy_from_guest(data, addr + offset, len);
+> > +	else
+> > +		r = __copy_from_user(data, (void __user *)addr + offset, len);
+> >  	if (r)
+> >  		return -EFAULT;
+> >  	return 0;
+> > @@ -2268,7 +2311,8 @@ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+> >  {
+> >  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+> >  
+> > -	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+> > +	return __kvm_read_guest_page(slot, gfn, data, offset, len,
+> > +				     kvm->mem_protected);
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_read_guest_page);
+> >  
+> > @@ -2277,7 +2321,8 @@ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data,
+> >  {
+> >  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+> >  
+> > -	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+> > +	return __kvm_read_guest_page(slot, gfn, data, offset, len,
+> > +				     vcpu->kvm->mem_protected);
 > 
-> My idea is that the callback gpiod_set_debounce() for in-kernel consumers
-> should more or less always return success. Either the hardware does
-> the debounce,  or gpiolib sets up a timer.
+> Personally, I would've just added 'struct kvm' pointer to 'struct
+> kvm_memory_slot' to be able to extract 'mem_protected' info when
+> needed. This will make the patch much smaller.
+
+Okay, can do.
+
+Other thing I tried is to have per-slot flag to indicate that it's
+protected. But Sean pointed that it's all-or-nothing feature and having
+the flag in the slot would be misleading.
+
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_page);
+> >  
+> > @@ -2350,7 +2395,8 @@ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
+> >  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_atomic);
+> >  
+> >  static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
+> > -			          const void *data, int offset, int len)
+> > +			          const void *data, int offset, int len,
+> > +				  bool protected)
+> >  {
+> >  	int r;
+> >  	unsigned long addr;
+> > @@ -2358,7 +2404,11 @@ static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
+> >  	addr = gfn_to_hva_memslot(memslot, gfn);
+> >  	if (kvm_is_error_hva(addr))
+> >  		return -EFAULT;
+> > -	r = __copy_to_user((void __user *)addr + offset, data, len);
+> > +
+> > +	if (protected)
+> > +		r = copy_to_guest(addr + offset, data, len);
+> > +	else
+> > +		r = __copy_to_user((void __user *)addr + offset, data, len);
 > 
-> > I've also had a quick look at the possibility of providing the software
-> > debounce for in-kernel consumers.
+> All users of copy_to_guest() will have to have the same 'if (protected)'
+> check, right? Why not move the check to copy_to/from_guest() then?
+
+Good point.
+
+> >  	if (r)
+> >  		return -EFAULT;
+> >  	mark_page_dirty_in_slot(memslot, gfn);
+> > @@ -2370,7 +2420,8 @@ int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
+> >  {
+> >  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+> >  
+> > -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
+> > +	return __kvm_write_guest_page(slot, gfn, data, offset, len,
+> > +				      kvm->mem_protected);
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_write_guest_page);
+> >  
+> > @@ -2379,7 +2430,8 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+> >  {
+> >  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+> >  
+> > -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
+> > +	return __kvm_write_guest_page(slot, gfn, data, offset, len,
+> > +				      vcpu->kvm->mem_protected);
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
+> >  
+> > @@ -2495,7 +2547,10 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+> >  	if (unlikely(!ghc->memslot))
+> >  		return kvm_write_guest(kvm, gpa, data, len);
+> >  
+> > -	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
+> > +	if (kvm->mem_protected)
+> > +		r = copy_to_guest(ghc->hva + offset, data, len);
+> > +	else
+> > +		r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
+> >  	if (r)
+> >  		return -EFAULT;
+> >  	mark_page_dirty_in_slot(ghc->memslot, gpa >> PAGE_SHIFT);
+> > @@ -2530,7 +2585,10 @@ int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+> >  	if (unlikely(!ghc->memslot))
+> >  		return kvm_read_guest(kvm, ghc->gpa, data, len);
+> >  
+> > -	r = __copy_from_user(data, (void __user *)ghc->hva, len);
+> > +	if (kvm->mem_protected)
+> > +		r = copy_from_guest(data, ghc->hva, len);
+> > +	else
+> > +		r = __copy_from_user(data, (void __user *)ghc->hva, len);
+> >  	if (r)
+> >  		return -EFAULT;
 > 
-> That is where I think it should start.
+> -- 
+> Vitaly
 > 
-> >  Are you anticipating new API for
-> > that?  e.g. allowing consumers to request gpio events?  Cos, gpio_keys
-> > grabs the irq itself - and that would bypass the software debouncer,
-> > or even conflict with it.
-> 
-> It may be hard or impossible.
-> 
-> I suppose gpiolib would have to steal or intercept the interrupt
-> by using e.g. IRQF_SHARED and then just return IRQ_HANDLED
-> on the first IRQ so the underlying irq handler does not get called.
 > 
 
-And how would gpiolib ensure that it was first in the chain?
-
-> After the timer times out it needs to retrigger the IRQ.
-> 
-> So the consuming driver would se a "debounced and ready"
-> IRQ so when it gets this IRQ it knows for sure there is
-> no bounciness on it because gpiolib already took care
-> of that.
-> 
-> The above is in no way trivial, but it follows the design pattern
-> of "narrow and deep" APIs.
-> 
-
-Totally agree with the concept - just trying to work out how to
-implement it seemlessly given the existing API and usage, and given my
-limited knowledge of the kernel internals.
-
-> Failure is an option! Sorry if I push too complex ideas.
-> 
-
-I'm not as concerned about complexity as I am about fragility.
-
-I don't see any problem adding debounce for gpiolib-cdev.
-Adding a more complete solution to gpiolib itself is certainly
-non-trivial, if it is possible at all. 
-
-The path I'll probably be taking is adding a debouncer to gpiolib-cdev,
-so at least we have a solution for userspace, then take a longer look at
-the more general solution.
-
-Cheers,
-Kent.
+-- 
+ Kirill A. Shutemov
