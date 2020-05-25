@@ -2,131 +2,115 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0195BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F11FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F3C20849
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590385652;
-	bh=5k6xz6TuiGF+ullAgZUvDOvOMPBANbKX9OHAS2NHpS0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=leVu9muIJ4ONW5/tlnVnlCYm+J211wGtl3BlTiDckFBdO2tAGCW0Mf4KHN911Uh6a
-	 6h/lPLvvmpFhI3jbK9dkrfznRajXdrOf2+isHbrFaWJU1uVy8Bz0Fu0UP4cXLLstkg
-	 tacrbY4guqm6E/M6T9MYnOiD/J4IFVZApA2+ziqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 385542075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="PDcyP29S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388824AbgEYFrc (ORCPT
+        id S2388579AbgEYFuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 01:47:32 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:62121 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388745AbgEYFr2 (ORCPT
+        Mon, 25 May 2020 01:50:22 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:40232 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgEYFuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 01:47:28 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 04P5l9A0013208;
-        Mon, 25 May 2020 14:47:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 04P5l9A0013208
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590385629;
-        bh=U5HG07zP7ca2X4TcXFbTL58H0LBgSxaGOS7/4KlXXDA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tJu2whngR2eETQTKf6XrEQ1x1oU4lWGbp0+qxZY3OyjIafyL0Zqx4Dv54dXAId8AI
-         fym6mc89UU9m9IoFCIPMc0AQWbPWRCPMVSy6KigYe/Gd7TMo2plCWnzvMJ4+C7dE7f
-         sdcIysmx6GXVdbpBE1n5Qb+DALmLnTZzVcql3SBFVlVLr7FLiF7J+zkCtyOxNjApgK
-         C70Um/Z4sXJfn3O0Q4XfidDrSm2DXnpQGnz91kBUE+fMLk9GlBGvfmpUNVSNRAWkDn
-         bJEzKHwmL8mkqVdFQYaLlZ43D0OvgbadIOtTeSt5VG8Jl0sjTfHrTkV9yp4W1jOSa3
-         cuVKTbahF5QnQ==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] modpost: fix potential segmentation fault for addend_i386_rel()
-Date:   Mon, 25 May 2020 14:47:04 +0900
-Message-Id: <20200525054705.1066033-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 25 May 2020 01:50:21 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49VmQh1t0Xz9vYxd
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:50:20 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id gIU_ZhEbVUYS for <linux-kernel@vger.kernel.org>;
+        Mon, 25 May 2020 00:50:20 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49VmQh09vmz9vYxC
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:50:19 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49VmQh09vmz9vYxC
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49VmQh09vmz9vYxC
+Received: by mail-io1-f70.google.com with SMTP id c2so11887653iod.9
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 22:50:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=s1PLoI3BYnuHW+tq6e8bnQsz6IJssVuc+GfzJdDnocQ=;
+        b=PDcyP29SwoLIDjCEu+mQYBkoFYGGgzPZqrs0xOcUyTc0uNZsmZ8liDO7rYSRtiGNHZ
+         1u0obWXk+9dzxlf/GlFAw3ly1LOyXgKp9To8H4YTtY59jDRleQCgctgXLprzEy1WVg8O
+         vP6ts+rLk+7ThZmGZh/zsA7LaErqS7f29sPxrDfNbsF9GScdndErVKJLfNFLTAj6vRbA
+         3HTV4ix1yYAMIbFXDIt2fCWhJu1vw50EYy7+vwXLb+w7hMUMZ/ikj2ZXJULnJJlYXnbN
+         t2eo7kM6yNyCVoarwIUYFV7JppZf4vEC0/dLG7fuyRVFv5CGeh5UHAbFO1bfXLPDvQf7
+         2TAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=s1PLoI3BYnuHW+tq6e8bnQsz6IJssVuc+GfzJdDnocQ=;
+        b=Rd2rK1Q7QYdXPavTcrVbmcJi+JNiDynQjSfPlLGM9RtXSoADsvzvi/OjqAd3GA4C1u
+         azbKHeZTdDo18YbrVW8HnLidb/BQrvMWQs7DLKDoGujCwOZfjcXKsIitgeDO60GugJQS
+         4y7QJcCtznhwSxmZJRF5Kb+lokfgGIKWtPghEfNIAsKiQ7lMgFukCOPPebE3Ffl8OzW8
+         M6DTE0cVgknirKn1Bpsvdgdy7r0cxsDmso7hRrw4haAl2MueTqv7ZISwzFG3fToPhOEO
+         f+knIdw151ZSLFEqLSuYvXNxKre+lIc133WKmDstNiu/0muqhXw/ihukbjZ1ZwWAqyXi
+         s30g==
+X-Gm-Message-State: AOAM530DjDcCqJvhmJ09Uiz80fYFUd6hldUgUZ7NraAVSXbSmHUSgscQ
+        s9WvvSCYl1EvN85QeEeNXoiy18j4FkcN/ciWUHywbZbQfn8CEtv8apHP/8qjMwoLY7ZF0v79AvN
+        8QDYv7/G1udDlDRCr+UwgbAXJqd87
+X-Received: by 2002:a92:7ec3:: with SMTP id q64mr23015538ill.193.1590385819295;
+        Sun, 24 May 2020 22:50:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyGlSxzGUEmcJBt32sUvhEZspFL//Slv8pG8zcK9wheEsFQye9nHBg9maWxYiXMpKUkbuVOPA==
+X-Received: by 2002:a92:7ec3:: with SMTP id q64mr23015524ill.193.1590385818875;
+        Sun, 24 May 2020 22:50:18 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id p7sm7129330iob.7.2020.05.24.22.50.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 22:50:18 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        p.zabel@pengutronix.de, tglx@linutronix.de,
+        lsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH] treewide: fix incomplete error-handling in img_i2s_in_probe.
+Date:   Mon, 25 May 2020 00:50:11 -0500
+Message-Id: <20200525055011.31925-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This may not be a practical problem, but the second pass of ARCH=i386
-modpost causes segmentation fault if the -s option is not passed.
+From: Qiushi Wu <wu000273@umn.edu>
 
-    MODPOST 12 modules
-  Segmentation fault (core dumped)
-  make[2]: *** [scripts/Makefile.modpost:94: __modpost] Error 139
-  make[1]: *** [Makefile:1339: modules] Error 2
-  make[1]: *** Waiting for unfinished jobs....
+Function "pm_runtime_get_sync()" is not handled by "pm_runtime_put()"
+if "PTR_ERR(rst) == -EPROBE_DEFER". Fix this issue by adding
+"pm_runtime_put()" into this error path.
 
-The segmentation fault occurs when section_rel() is called for vmlinux,
-which is untested in regular builds. The cause of the problem is
-reloc_location() returns a wrong pointer for ET_EXEC object type.
-In this case, you need to subtract sechdr->sh_addr, otherwise it would
-get access beyond the mmap'ed memory.
-
-Add sym_get_data_offset() helper to avoid code duplication.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: f65bb92ca12e ("ASoC: img-i2s-in: Add runtime PM")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 ---
+ sound/soc/img/img-i2s-in.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- scripts/mod/modpost.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 34f2aa3a021f..a8306adb3554 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -345,19 +345,23 @@ static const char *sec_name(struct elf_info *elf, int secindex)
- 	return sech_name(elf, &elf->sechdrs[secindex]);
- }
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index a495d1050d49..e30b66b94bf6 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -482,6 +482,7 @@ static int img_i2s_in_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rst)) {
+ 		if (PTR_ERR(rst) == -EPROBE_DEFER) {
+ 			ret = -EPROBE_DEFER;
++			pm_runtime_put(&pdev->dev);
+ 			goto err_suspend;
+ 		}
  
--static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
-+static void *sym_get_data_offset(const struct elf_info *info,
-+				 unsigned int secindex, unsigned long offset)
- {
--	unsigned int secindex = get_secindex(info, sym);
- 	Elf_Shdr *sechdr = &info->sechdrs[secindex];
--	unsigned long offset;
- 
--	offset = sym->st_value;
- 	if (info->hdr->e_type != ET_REL)
- 		offset -= sechdr->sh_addr;
- 
- 	return (void *)info->hdr + sechdr->sh_offset + offset;
- }
- 
-+static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
-+{
-+	return sym_get_data_offset(info, get_secindex(info, sym),
-+				   sym->st_value);
-+}
-+
- #define strstarts(str, prefix) (strncmp(str, prefix, strlen(prefix)) == 0)
- 
- static enum export export_from_secname(struct elf_info *elf, unsigned int sec)
-@@ -1761,11 +1765,7 @@ static void check_section_mismatch(const char *modname, struct elf_info *elf,
- static unsigned int *reloc_location(struct elf_info *elf,
- 				    Elf_Shdr *sechdr, Elf_Rela *r)
- {
--	Elf_Shdr *sechdrs = elf->sechdrs;
--	int section = sechdr->sh_info;
--
--	return (void *)elf->hdr + sechdrs[section].sh_offset +
--		r->r_offset;
-+	return sym_get_data_offset(elf, sechdr->sh_info, r->r_offset);
- }
- 
- static int addend_386_rel(struct elf_info *elf, Elf_Shdr *sechdr, Elf_Rela *r)
 -- 
-2.25.1
+2.17.1
 
