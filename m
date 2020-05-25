@@ -2,40 +2,36 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7CF20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED01B20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbgEYQ22 (ORCPT
+        id S1731483AbgEYQaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731458AbgEYQ21 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:28:27 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9906FC061A0E;
-        Mon, 25 May 2020 09:28:27 -0700 (PDT)
+        Mon, 25 May 2020 12:30:06 -0400
+Received: from ms.lwn.net ([45.79.88.28]:60786 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731458AbgEYQaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 12:30:06 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id DCC394A2;
-        Mon, 25 May 2020 16:28:26 +0000 (UTC)
-Date:   Mon, 25 May 2020 10:28:25 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id DF4A04A2;
+        Mon, 25 May 2020 16:30:05 +0000 (UTC)
+Date:   Mon, 25 May 2020 10:30:04 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     Stephen Kitt <steve@sk2.org>
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: documentation
-Message-ID: <20200525102825.63d72ed2@lwn.net>
-In-Reply-To: <20200520200037.88705-1-grandmaster@al2klimov.de>
-References: <20200520200037.88705-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH v2] docs: sysctl/kernel: document ngroups_max
+Message-ID: <20200525103004.71372d36@lwn.net>
+In-Reply-To: <20200518145836.15816-1-steve@sk2.org>
+References: <20200518145836.15816-1-steve@sk2.org>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,68 +41,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 22:00:37 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+On Mon, 18 May 2020 16:58:36 +0200
+Stephen Kitt <steve@sk2.org> wrote:
 
-> Rationale: Reduces attack surface on kernel devs for MITM.
+> This is a read-only export of NGROUPS_MAX.
 > 
-> Deterministic algorithm:
-> For each file:
->   For each line:
->     If doesn't contain `\bxmlns\b`:
->       For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->         If both the HTTP and HTTPS versions
->         return 200 OK and serve the same content:
->           Replace HTTP with HTTPS.
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 > ---
->  Documentation/COPYING-logo                       |  2 +-
->  Documentation/admin-guide/LSM/tomoyo.rst         | 16 ++++++++--------
->  .../admin-guide/acpi/initrd_table_override.rst   |  2 +-
->  Documentation/admin-guide/bcache.rst             |  4 ++--
->  Documentation/admin-guide/devices.rst            |  2 +-
->  Documentation/admin-guide/initrd.rst             |  2 +-
->  Documentation/admin-guide/md.rst                 |  2 +-
->  Documentation/admin-guide/mono.rst               |  4 ++--
->  Documentation/admin-guide/reporting-bugs.rst     |  2 +-
->  Documentation/admin-guide/unicode.rst            |  4 ++--
->  Documentation/conf.py                            |  2 +-
->  Documentation/dev-tools/gdb-kernel-debugging.rst |  2 +-
->  Documentation/doc-guide/parse-headers.rst        |  2 +-
->  .../driver-api/acpi/linuxized-acpica.rst         |  6 +++---
->  Documentation/driver-api/usb/bulk-streams.rst    |  4 ++--
->  .../driver-api/usb/writing_musb_glue_layer.rst   |  6 +++---
->  Documentation/filesystems/path-lookup.txt        |  2 +-
->  Documentation/filesystems/seq_file.txt           |  4 ++--
->  Documentation/misc-devices/c2port.txt            |  6 +++---
->  Documentation/process/3.Early-stage.rst          |  2 +-
->  Documentation/process/7.AdvancedTopics.rst       |  8 ++++----
->  Documentation/process/8.Conclusion.rst           | 14 +++++++-------
->  Documentation/process/adding-syscalls.rst        |  4 ++--
->  Documentation/process/applying-patches.rst       |  4 ++--
->  .../process/volatile-considered-harmful.rst      |  4 ++--
->  Documentation/rbtree.txt                         |  4 ++--
->  Documentation/security/SCTP.rst                  |  2 +-
->  Documentation/sphinx/kfigure.py                  |  6 +++---
->  Documentation/static-keys.txt                    |  2 +-
->  Documentation/trace/events-msr.rst               |  2 +-
->  Documentation/trace/mmiotrace.rst                |  2 +-
->  Documentation/vm/ksm.rst                         |  2 +-
->  Documentation/xz.txt                             |  6 +++---
->  scripts/kernel-doc                               |  2 +-
->  34 files changed, 69 insertions(+), 69 deletions(-)
+> Changes since v1:
+>   - drop changes to kernel/sysctl.c
+> 
+>  Documentation/admin-guide/sysctl/kernel.rst | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 0d427fd10941..5f12ee07665c 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -459,6 +459,15 @@ Notes:
+>       successful IPC object allocation. If an IPC object allocation syscall
+>       fails, it is undefined if the value remains unmodified or is reset to -1.
+>  
+> +
+> +ngroups_max
+> +===========
+> +
+> +Maximum number of supplementary groups, _i.e._ the maximum size which
+> +``setgroups`` will accept. Exports ``NGROUPS_MAX`` from the kernel.
 
-OK, so this is still pretty large; I had asked you to narrow things
-further.  And the rationale is still pretty thin.  And I would *really*
-rather see the docs updated in a more thoughtful way that considers the
-value of the links rather than just the protocol used.
-
-But this does not seem to do harm at this point, so I have gone ahead and
-applied it.
-
-If you proceed with this work, I'd encourage you to be narrow in your
-focus, be sure to copy the right people, and to justify the changes well,
-or you may well run into pushback.
-
-Thanks,
+Applied, thanks.
 
 jon
