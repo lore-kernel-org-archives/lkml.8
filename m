@@ -2,89 +2,142 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F19C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2F2207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45572075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n1htx9JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgEYFD5 (ORCPT
+        id S2388648AbgEYFIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 01:03:57 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53000 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgEYFD4 (ORCPT
+        Mon, 25 May 2020 01:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388211AbgEYFIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 01:03:56 -0400
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04P53sDK065057;
-        Mon, 25 May 2020 14:03:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
- Mon, 25 May 2020 14:03:54 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04P53rFU065032
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 25 May 2020 14:03:53 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
- printk(KERN_DEBUG)
-To:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
- <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <94f7ce4f-74fb-bccc-2e87-749e0c8da92c@i-love.sakura.ne.jp>
-Date:   Mon, 25 May 2020 14:03:48 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 25 May 2020 01:08:54 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67ABEC061A0E;
+        Sun, 24 May 2020 22:08:50 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49VlVj0b3qz9sSg;
+        Mon, 25 May 2020 15:08:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590383327;
+        bh=F+DJJAfNWOCcSHZcR2Yj5hkGS2U1BgJDwkdg9LBXq5c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=n1htx9JQiezUvnpufuv61/+O2hTe5aQzE7L6HJG+6xnzH073neKdT9fvdn8kHf+zO
+         ec91O71NFuZyq3/Jh25S14A0vmq3RbImBG3Ofl3PRDch2CroZLy65OgWB1N8N6EwXR
+         RjWvgPtKTzHZn7zwueXngv648s0twWLGNgi1Fs1Of2zfP24wP6QyXGwjABKFZOjypl
+         qZ4KmvAjB/KE+m092GHQQA9k7HrX7zaa1rMwkVoys7Y1XJMD4fMg3vN71c7Pba6zIu
+         pcfT/PfQ4EMoYI1tVrXyKyPLZ1FztSCVJRMS/TpL36hcNmRN26wIRd73odGGLxpCzP
+         NKKLHMSo3MFOw==
+Date:   Mon, 25 May 2020 15:08:37 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20200525150837.54fe6977@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/7gBx1a6cPvmeoXQ7VXvq9OV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/25 4:18, Ondrej Mosnacek wrote:
-> I'm also not sure if this is really worth it... It would help localize
-> the bug in this specific case, but there is nothing systematic about
-> it. Are there that many debug print statements that dereference
-> pointers that are later passed to functions, but not dereferenced
-> otherwise? Maybe yes, but it seems to be quite an optimistic
-> assumption... I don't consider it such a big problem that a bug in
-> function X only manifests itself deeper in the callchain. There will
-> always be such bugs, no matter how many moles you whack.
+--Sig_/7gBx1a6cPvmeoXQ7VXvq9OV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-There are about 1400 pr_debug() callers. About 1000 pr_debug() callers seem
-to pass plain '%p' (which is now likely useless for debugging purpose due to
-default ptr_to_id() conversion inside pointer()), and about 400 pr_debug()
-callers seem to pass '%p[a-zA-Z]' (which does some kind of dereference inside
-pointer()). Thus, we might find some bugs by evaluating '%p[a-zA-Z]'.
+Hi all,
 
+After merging the block tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
+mm/filemap.c: In function 'generic_file_buffered_read':
+mm/filemap.c:2075:9: error: 'written' undeclared (first use in this functio=
+n); did you mean 'writeb'?
+ 2075 |     if (written) {
+      |         ^~~~~~~
+      |         writeb
 
-On Sun, May 24, 2020 at 7:38 PM Joe Perches <joe@perches.com> wrote:
-> While I think this is rather unnecessary,
-> what about dev_dbg/netdev_dbg/netif_dbg et al ?
+Caused by commit
 
-Maybe a good idea, for there are about 24000 *dev_dbg() callers, and
-479 callers pass '%p[a-zA-Z]'. But we can defer to another patch, in
-case this patch finds crashes before fuzz testing process starts.
+  23d513106fd8 ("mm: support async buffered reads in generic_file_buffered_=
+read()")
 
+from the block tree interacting with commit
+
+  6e66f10f2cac ("fs: export generic_file_buffered_read()")
+
+from the btrfs tree.
+
+[Aside: that btrfs tree commit talks about "correct the comments and variab=
+le
+    names", but changes "written" to "copied" in the function definition
+    but to "already_read" in the header file declaration ...]
+
+I ave applied the following merge fix patch:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 25 May 2020 15:00:44 +1000
+Subject: [PATCH] mm: fix up for "fs: export generic_file_buffered_read()" m=
+erge
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 742998883d9c..208095551a17 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2072,7 +2072,7 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 			 * serialisations and why it's safe.
+ 			 */
+ 			if (iocb->ki_flags & IOCB_WAITQ) {
+-				if (written) {
++				if (copied) {
+ 					put_page(page);
+ 					goto out;
+ 				}
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7gBx1a6cPvmeoXQ7VXvq9OV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7LUtUACgkQAVBC80lX
+0GwWdAgAlG7GWe4av20SGsQef429kNxCI2e2YZDzj4Vh0OZOQpSSuD8vzFFUpO0H
+RlyfnpMcIhHxhd0hrU7995vEfUz13+nty5oViOGbd4eX7L3nJr9Btf1EEAMKZ/FG
+b3VnvC4JA5ZwgVfB17lCcDhDHrKhO52QKdrUcxBLIg3OXV3mUjslM32H9/JQnPx/
+PZKz/UAOvqmDAjYo1PdoL4FKdwRerKV3KORDCZCSIXjhBJ3tvsFWDfZfVnNkIGwp
+jftYrog/AHSRtfQBr+F3+BXlWKYjX2nDqOXhdAHeYP37h3n7cuowrpCClF99S42z
+2Wr6jp7R719uLkGSKEisZpoOrAWhBQ==
+=+/BU
+-----END PGP SIGNATURE-----
+
+--Sig_/7gBx1a6cPvmeoXQ7VXvq9OV--
