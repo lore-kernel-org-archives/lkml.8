@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A185C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F74C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D5E20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE40207C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388766AbgEYCxZ (ORCPT
+        id S2388773AbgEYCxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 22:53:25 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:40800 "EHLO loongson.cn"
+        Sun, 24 May 2020 22:53:33 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40798 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388398AbgEYCxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388471AbgEYCxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 May 2020 22:53:23 -0400
 Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj974MsteoL84AA--.426S5;
-        Mon, 25 May 2020 10:52:42 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj974MsteoL84AA--.426S2;
+        Mon, 25 May 2020 10:52:40 +0800 (CST)
 From:   Bibo Mao <maobibo@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -38,63 +38,74 @@ Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
         "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
         David Hildenbrand <david@redhat.com>
-Subject: [PATCH v6 4/4] MIPS: mm: add page valid judgement in function pte_modify
-Date:   Mon, 25 May 2020 10:52:40 +0800
-Message-Id: <1590375160-6997-4-git-send-email-maobibo@loongson.cn>
+Subject: [PATCH v6 1/4] MIPS: Do not flush tlb page when updating PTE entry
+Date:   Mon, 25 May 2020 10:52:37 +0800
+Message-Id: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
-References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxj974MsteoL84AA--.426S5
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFW8AryxtFWfuw43ur4DJwb_yoWDWwbEkw
-        47Zw4fCr95JF13uFW7A3Z5Jry2ga4Uu3Wqva4xJw1ayFyqgr45CFW8WryUArZ8uFsFyr40
-        qa95G347CF47KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbgxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
-        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
-        kF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
-        aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
-        kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm
-        72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI
-        1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E
-        5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZV
-        WrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
-        1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-        v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-        07j138nUUUUU=
+X-CM-TRANSID: AQAAf9Dxj974MsteoL84AA--.426S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFW3ZryxtrWkKr4DAF43Wrg_yoW8Xw1kpF
+        ZrArykKw4DG3y0yFy8Ar1v9r43J3yDKrWUKryDAryDZanrXF1kKrs3t3WIyry8XFyak3W0
+        gF4jqr4DZw42v3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxa
+        n2IY04v7MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2
+        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+        UI43ZEXa7IU5q385UUUUU==
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If original PTE has _PAGE_ACCESSED bit set, and new pte has no
-_PAGE_NO_READ bit set, we can add _PAGE_SILENT_READ bit to enable
-page valid bit.
+It is not necessary to flush tlb page on all CPUs if suitable PTE
+entry exists already during page fault handling, just updating
+TLB is fine.
+
+Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
+V6:
+- Add update_mmu_tlb function as empty on all platform except mips
+  system, we use this function to update local tlb for page fault
+  smp-race handling
+V5:
+- define update_mmu_cache function specified on MIPS platform, and
+  add page fault smp-race stats info
+V4:
+- add pte_sw_mkyoung function to implement readable privilege, and
+  this function is  only in effect on MIPS system.
+- add page valid bit judgement in function pte_modify
+V3:
+- add detailed changelog, modify typo issue in patch V2
+v2:
+- split flush_tlb_fix_spurious_fault and tlb update into two patches
+- comments typo modification
+- separate tlb update and add pte readable privilege into two patches
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/mips/include/asm/pgtable.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index 0743087..dfe79f4 100644
+index 9b01d2d..0d625c2 100644
 --- a/arch/mips/include/asm/pgtable.h
 +++ b/arch/mips/include/asm/pgtable.h
-@@ -529,8 +529,11 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- #else
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- {
--	return __pte((pte_val(pte) & _PAGE_CHG_MASK) |
--		     (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
-+	pte_val(pte) &= _PAGE_CHG_MASK;
-+	pte_val(pte) |= pgprot_val(newprot) & ~_PAGE_CHG_MASK;
-+	if ((pte_val(pte) & _PAGE_ACCESSED) && !(pte_val(pte) & _PAGE_NO_READ))
-+		pte_val(pte) |= _PAGE_SILENT_READ;
-+	return pte;
+@@ -478,6 +478,8 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ 	return __pgprot(prot);
  }
- #endif
  
++#define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
++
+ /*
+  * Conversion functions: convert a page and protection to a page entry,
+  * and a page entry and page directory to the page they refer to.
 -- 
 1.8.3.1
 
