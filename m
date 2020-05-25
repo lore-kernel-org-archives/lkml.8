@@ -2,180 +2,203 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B192BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95D4C2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CF52071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgLthuD3"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ljaUWVc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390350AbgEYT4z (ORCPT
+        id S2390378AbgEYT7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 15:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        Mon, 25 May 2020 15:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388737AbgEYT4z (ORCPT
+        with ESMTP id S2390316AbgEYT7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 15:56:55 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E423CC061A0E;
-        Mon, 25 May 2020 12:56:54 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 82so11072430lfh.2;
-        Mon, 25 May 2020 12:56:54 -0700 (PDT)
+        Mon, 25 May 2020 15:59:43 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF55BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 12:59:41 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so7788302plr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 12:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RfuCHKTNwaWG0c1gzxYwDnFHu5cJwWR/Dhzr/q0GiRw=;
-        b=lgLthuD3Ld85JCIhPPZXcc8lF1lDUPUO+ueiGkF5X/sPrWlsszmqCWXWampG6miusl
-         2srBFOe/fjJeFzZmwUgt11DY8EbMcLLXXrdQ1G6zKKGZ27Z2pSTMSd4fc5JRHQJOVFDf
-         59dDsbf+UBIgFc7MFm6J756ZyXChxi2jkBRBu3VQ9Lee8bqOSih4bu9PbojTTjFSC/A7
-         iejiNvUCmFneoMP+Iyf+QH08DCm1Rul7fHjltQQBFeqPE4lruc3ybApD/n2TX21mMc5V
-         6JfHsyESU+9A3DlDrryCvFL8zZLvJrZvEB+eSMpyQNWE+fiwvlDqqdv7rQtksK3zrkaR
-         hdmg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9QyaJyq91Y21TWm2mWkWyDIqO2sYo0+Z1NrqQRUgE7I=;
+        b=ljaUWVc5kIlmJQUxPYKdrG6BE7ChLk5cxtVZHrDO/iKFgRVeR8sCGvDiLiJ7PdjYMq
+         skBIof5jY//HbHYTMpHrjUqvSqJnTaRZ2I/DRCmcSLhY7X25HgI2DyEWArWJe8zc1klo
+         i2MeTI3lRNAD4GSrXtizBZGz9MZWYzvILEzBSynARIxp/Z+5yJWcdz6Pz8Ur9tmUAbkU
+         8VoDQdnPzU0/sjPlZjuzfuqlFF7aVEcVrs5Yoj9Gn6kSZ6w6rMwivhKMWGBthwlWPre0
+         viG7280TWn22JpuLyygLzIsUTnbpQCNThKW2khSm64E2PoxFf/ihBqAqoPDH6FWcpGD/
+         66Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=RfuCHKTNwaWG0c1gzxYwDnFHu5cJwWR/Dhzr/q0GiRw=;
-        b=H44WCMk5qff/uNGs8VYKy6UmC+7sv4oNHM8FdpzX2hCPSUOtSJfuOiIIB4d5716veB
-         CnAyDSpbGUTawicPZYiSLtIlFJ6gxHZAxJJzZsN8T2KIfqajqBQIc7aFmgfBlfXvv0C3
-         eYBazea9EJeWHfs/fdnUhtDF89POt/1CyQaLLMBMY5joB1k7EHSwHYe32rIbfJ+5tCvM
-         vWmRcVYccwD0I4uYO3iARwccmmIJX+7TfXOwk4KkKUevWWUfmVBxC41QG+ucKQQPh1/5
-         syqgIRqqhwjJKvb74Mb4ffPXPe0pIdumRspyADB+ieRACrw3SFCrgtq2uFL76hCBm030
-         bFcw==
-X-Gm-Message-State: AOAM532KIkviL9fEe32h6RS6ucVQP74nKwQ2ugr160qqENL2F0el9Nxl
-        vHFT9GZg73NzJzc0h/NYBMQ=
-X-Google-Smtp-Source: ABdhPJx9UAHgWJ2dxnysys+OcIQSSLPgoqP+qo2oC8iiHOzMR+KSp1wVnhO5Hq7jBtEyUsruf78VQg==
-X-Received: by 2002:a05:6512:3e7:: with SMTP id n7mr15253609lfq.118.1590436613238;
-        Mon, 25 May 2020 12:56:53 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-76-17-204.pppoe.mtu-net.ru. [91.76.17.204])
-        by smtp.gmail.com with ESMTPSA id u4sm2889969lfl.18.2020.05.25.12.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 12:56:52 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iommu/tegra-smmu: Add missing locks around mapping operations
-Date:   Mon, 25 May 2020 22:54:37 +0300
-Message-Id: <20200525195437.14341-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        bh=9QyaJyq91Y21TWm2mWkWyDIqO2sYo0+Z1NrqQRUgE7I=;
+        b=YoyE2hqzAh+eHpJY5aJY7e3kRFgPSHmqmTr669VdDputsVmSRuINDzKsXgnWikUOZ1
+         QkdSu7UvwD47xP6JLiRUIK9agNoScoEfS0mdAWsjkloftPcBq6iiLUrOlfrEc0kdEz2j
+         fIo6/JoqqFiTYt1UnmurUOPRb6sJ3A7WuZAM2T5oUYhaqtppdQenMbpOpNkzq8LLth5E
+         L+QHtGKnONxn1ko5i7gIO5lLOjZtqL5Wz7QLpVowB2tcaZPcwo2fzwQx9p0abU/bJpQ1
+         DCAmXVoT7HP8RKUBWigQH4TyestE92rtOyTHQeQNY9HZyFjSteNQQcKdZ9uVW2z2zxop
+         bjdA==
+X-Gm-Message-State: AOAM5323UFdJMo6agRcIuq0QM7gnEhz452BcN5XYG6IbmH9i2NpvXLgQ
+        qxOGEF5jzNUe5TxNh5GnY+tkAg==
+X-Google-Smtp-Source: ABdhPJyY+QwGKRIjKWxot2txvsWSCPAcuOYNxRHnVVq+NncrgyPaB5T+Hy9x86k3ekiQxKGDgZe9Hg==
+X-Received: by 2002:a17:90a:e016:: with SMTP id u22mr22462041pjy.28.1590436780796;
+        Mon, 25 May 2020 12:59:40 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:3c00:cb1c:41a3:c8d? ([2605:e000:100e:8c61:3c00:cb1c:41a3:c8d])
+        by smtp.gmail.com with ESMTPSA id q25sm13482591pfh.94.2020.05.25.12.59.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 12:59:40 -0700 (PDT)
+Subject: Re: [PATCH 12/12] io_uring: support true async buffered reads, if
+ file provides it
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200523185755.8494-1-axboe@kernel.dk>
+ <20200523185755.8494-13-axboe@kernel.dk>
+ <8d429d6b-81ee-0a28-8533-2e1d4faa6b37@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <717e474a-5168-8e1e-2e02-c1bdff007bd9@kernel.dk>
+Date:   Mon, 25 May 2020 13:59:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d429d6b-81ee-0a28-8533-2e1d4faa6b37@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mapping operations of the Tegra SMMU driver are subjected to a race
-condition issues because SMMU Address Space isn't allocated and freed
-atomically, while it should be. This patch makes the mapping operations
-atomic, it fixes an accidentally released Host1x Address Space problem
-which happens while running multiple graphics tests in parallel on
-Tegra30, i.e. by having multiple threads racing with each other in the
-Host1x's submission and completion code paths, performing IOVA mappings
-and unmappings in parallel.
+On 5/25/20 1:29 AM, Pavel Begunkov wrote:
+> On 23/05/2020 21:57, Jens Axboe wrote:
+>> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
+>> the buffered read to an io-wq worker. Instead we can rely on page
+>> unlocking callbacks to support retry based async IO. This is a lot more
+>> efficient than doing async thread offload.
+>>
+>> The retry is done similarly to how we handle poll based retry. From
+>> the unlock callback, we simply queue the retry to a task_work based
+>> handler.
+>>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  fs/io_uring.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 99 insertions(+)
+>>
+> ...
+>> +
+>> +	init_task_work(&rw->task_work, io_async_buf_retry);
+>> +	/* submit ref gets dropped, acquire a new one */
+>> +	refcount_inc(&req->refs);
+>> +	tsk = req->task;
+>> +	ret = task_work_add(tsk, &rw->task_work, true);
+>> +	if (unlikely(ret)) {
+>> +		/* queue just for cancelation */
+>> +		init_task_work(&rw->task_work, io_async_buf_cancel);
+>> +		tsk = io_wq_get_task(req->ctx->io_wq);
+> 
+> IIRC, task will be put somewhere around io_free_req(). Then shouldn't here be
+> some juggling with reassigning req->task with task_{get,put}()?
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+Not sure I follow? Yes, we'll put this task again when the request
+is freed, but not sure what you mean with juggling?
 
-Changelog:
+>> +		task_work_add(tsk, &rw->task_work, true);
+>> +	}
+>> +	wake_up_process(tsk);
+>> +	return 1;
+>> +}
+> ...
+>>  static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  {
+>>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+>> @@ -2601,6 +2696,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  	if (!ret) {
+>>  		ssize_t ret2;
+>>  
+>> +retry:
+>>  		if (req->file->f_op->read_iter)
+>>  			ret2 = call_read_iter(req->file, kiocb, &iter);
+>>  		else
+>> @@ -2619,6 +2715,9 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  			if (!(req->flags & REQ_F_NOWAIT) &&
+>>  			    !file_can_poll(req->file))
+>>  				req->flags |= REQ_F_MUST_PUNT;
+>> +			if (io_rw_should_retry(req))
+> 
+> It looks like a state machine with IOCB_WAITQ and gotos. Wouldn't it be cleaner
+> to call call_read_iter()/loop_rw_iter() here directly instead of "goto retry" ?
 
-v2: - Now using mutex instead of spinlock.
+We could, probably making that part a separate helper then. How about the
+below incremental?
 
-    - The _locked postfix is replaced with the underscores prefix.
+> BTW, can this async stuff return -EAGAIN ?
 
- drivers/iommu/tegra-smmu.c | 38 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
+Probably? Prefer not to make any definitive calls on that being possible or
+not, as it's sure to disappoint. If it does and IOCB_WAITQ is already set,
+then we'll punt to a thread like before.
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 7426b7666e2b..9cf06acb00ce 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -49,6 +49,7 @@ struct tegra_smmu_as {
- 	struct iommu_domain domain;
- 	struct tegra_smmu *smmu;
- 	unsigned int use_count;
-+	struct mutex lock;
- 	u32 *count;
- 	struct page **pts;
- 	struct page *pd;
-@@ -308,6 +309,8 @@ static struct iommu_domain *tegra_smmu_domain_alloc(unsigned type)
- 		return NULL;
- 	}
- 
-+	mutex_init(&as->lock);
-+
- 	/* setup aperture */
- 	as->domain.geometry.aperture_start = 0;
- 	as->domain.geometry.aperture_end = 0xffffffff;
-@@ -655,8 +658,9 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
- 	smmu_flush(smmu);
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index a5a4d9602915..669dccd81207 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2677,6 +2677,13 @@ static bool io_rw_should_retry(struct io_kiocb *req)
+ 	return false;
  }
  
--static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
--			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+static int
-+__tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
-+		 phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
- {
- 	struct tegra_smmu_as *as = to_smmu_as(domain);
- 	dma_addr_t pte_dma;
-@@ -685,8 +689,9 @@ static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
- 	return 0;
- }
- 
--static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
--			       size_t size, struct iommu_iotlb_gather *gather)
-+static size_t
-+__tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+		   size_t size, struct iommu_iotlb_gather *gather)
- {
- 	struct tegra_smmu_as *as = to_smmu_as(domain);
- 	dma_addr_t pte_dma;
-@@ -702,6 +707,31 @@ static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
- 	return size;
- }
- 
-+static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
-+			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
++static int __io_read(struct io_kiocb *req, struct iov_iter *iter)
 +{
-+	struct tegra_smmu_as *as = to_smmu_as(domain);
-+	int ret;
-+
-+	mutex_lock(&as->lock);
-+	ret = __tegra_smmu_map(domain, iova, paddr, size, prot, gfp);
-+	mutex_unlock(&as->lock);
-+
-+	return ret;
++	if (req->file->f_op->read_iter)
++		return call_read_iter(req->file, &req->rw.kiocb, iter);
++	return loop_rw_iter(READ, req->file, &req->rw.kiocb, iter);
 +}
 +
-+static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+			       size_t size, struct iommu_iotlb_gather *gather)
-+{
-+	struct tegra_smmu_as *as = to_smmu_as(domain);
-+
-+	mutex_lock(&as->lock);
-+	size = __tegra_smmu_unmap(domain, iova, size, gather);
-+	mutex_unlock(&as->lock);
-+
-+	return size;
-+}
-+
- static phys_addr_t tegra_smmu_iova_to_phys(struct iommu_domain *domain,
- 					   dma_addr_t iova)
+ static int io_read(struct io_kiocb *req, bool force_nonblock)
  {
+ 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+@@ -2710,11 +2717,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+ 	if (!ret) {
+ 		ssize_t ret2;
+ 
+-retry:
+-		if (req->file->f_op->read_iter)
+-			ret2 = call_read_iter(req->file, kiocb, &iter);
+-		else
+-			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
++		ret2 = __io_read(req, &iter);
+ 
+ 		/* Catch -EAGAIN return for forced non-blocking submission */
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+@@ -2729,8 +2732,11 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+ 			if (!(req->flags & REQ_F_NOWAIT) &&
+ 			    !file_can_poll(req->file))
+ 				req->flags |= REQ_F_MUST_PUNT;
+-			if (io_rw_should_retry(req))
+-				goto retry;
++			if (io_rw_should_retry(req)) {
++				ret2 = __io_read(req, &iter);
++				if (ret2 != -EAGAIN)
++					goto out_free;
++			}
+ 			kiocb->ki_flags &= ~IOCB_WAITQ;
+ 			return -EAGAIN;
+ 		}
+
 -- 
-2.26.0
+Jens Axboe
 
