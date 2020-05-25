@@ -2,222 +2,90 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07A8C2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590403953;
-	bh=24hX/Yb+DywHjGzMbYljhgdBdyT07mNudIb4lqa+DJc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YKLs736s1Wd3kCcd4VW564CMSSJfPZJGD7BhCOleVTnSmSnw2yIqrt9Q5gDBVqYAb
-	 JD5UAcOdnMqrOkLbW9hwh+YB3AGqA2CK0/bvD0z/4n05IDQ6HDZCnxnndd7oG3NWBy
-	 K8uqmndH5Kw9fsOkonp9nQ2O+uprcHEFainB7dGs=
+	by mail.kernel.org (Postfix) with ESMTP id 3189D2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389951AbgEYKwc (ORCPT
+        id S2389962AbgEYKwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:52:32 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46935 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYKwb (ORCPT
+        Mon, 25 May 2020 06:52:40 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41032 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389484AbgEYKwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:52:31 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g25so13488349otp.13;
-        Mon, 25 May 2020 03:52:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kn5DgIdG1SurfUunm0E75UQw8EiNvkA9Al8xtkzW3es=;
-        b=UrKk+sGLLOqKUM0I9Yzn8/p9A6G03dglUjaJDaKWpT55VLa31e2zTQpeo9SR5sSlP8
-         3iGYvP5OkRyA2p0t8F19ubqEAOeCsA8O0juP+hI4Al8kFHTfHpekk/sEULzHvOD/8dht
-         0nkGytgVaTQ6X8seCifi+8SbK/MHjQdjPtzfAFbn7giW+d1GYMZBBGfivXJEuVFdNla/
-         o4G/arelHUP2CT80jLNtpgpaHRARCUE8QbshXxKBQ2nRvAbgBNpKAH77BuLdkCDtz4uN
-         EQnbjnQVfSeocYqPPmeRZ342ZKkO8AKsCDcgts1cFGAue9EXw+s+6et+wVz2wn5n0Sww
-         5icw==
-X-Gm-Message-State: AOAM532OdJQlbCKSKpRc/5oQEPPQLYl/Jr92tBpsu3fNuSad41G20PP9
-        uiEC/iTc37aiHsbOJpW43mPGnrLzB9D6WORTqKgzfg==
-X-Google-Smtp-Source: ABdhPJzN9NDd9Y5vYW/zlgzrOQQ9k3eQjez5M7ybDE92g5OjVQvouP6M4mQN1W/hmM1/gB1byI9HMS7SGlnZuagf08A=
-X-Received: by 2002:a9d:3d05:: with SMTP id a5mr20639639otc.262.1590403948925;
- Mon, 25 May 2020 03:52:28 -0700 (PDT)
+        Mon, 25 May 2020 06:52:39 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A87A21C02C1; Mon, 25 May 2020 12:52:37 +0200 (CEST)
+Date:   Mon, 25 May 2020 12:52:37 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     nikitos.tr@gmail.com, dmurphy@ti.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Shanghai Awinic
+ Technology Co., Ltd.
+Message-ID: <20200525105236.GB27989@amd>
+References: <20200511111128.16210-1-nikitos.tr@gmail.com>
+ <20200518221435.GA6734@bogus>
 MIME-Version: 1.0
-References: <20200519181410.GA1963@dumbo>
-In-Reply-To: <20200519181410.GA1963@dumbo>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 25 May 2020 12:52:17 +0200
-Message-ID: <CAJZ5v0jgA3hh3nB60ANKN1WG9py9BoBqp8N8BuM2W-gpcUaPpg@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: hibernate: restrict writes to the resume device
-To:     Domenico Andreoli <domenico.andreoli@linux.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, "Ted Ts'o" <tytso@mit.edu>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="QTprm0S8XgL7H0Dt"
+Content-Disposition: inline
+In-Reply-To: <20200518221435.GA6734@bogus>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 8:14 PM Domenico Andreoli
-<domenico.andreoli@linux.com> wrote:
->
-> From: Domenico Andreoli <domenico.andreoli@linux.com>
->
-> Hibernation via snapshot device requires write permission to the swap
-> block device, the one that more often (but not necessarily) is used to
-> store the hibernation image.
->
-> With this patch, such permissions are granted iff:
->
-> 1) snapshot device config option is enabled
-> 2) swap partition is used as resume device
->
-> In other circumstances the swap device is not writable from userspace.
->
-> In order to achieve this, every write attempt to a swap device is
-> checked against the device configured as part of the uswsusp API [0]
-> using a pointer to the inode struct in memory. If the swap device being
-> written was not configured for resuming, the write request is denied.
->
-> NOTE: this implementation works only for swap block devices, where the
-> inode configured by swapon (which sets S_SWAPFILE) is the same used
-> by SNAPSHOT_SET_SWAP_AREA.
->
-> In case of swap file, SNAPSHOT_SET_SWAP_AREA indeed receives the inode
-> of the block device containing the filesystem where the swap file is
-> located (+ offset in it) which is never passed to swapon and then has
-> not set S_SWAPFILE.
->
-> As result, the swap file itself (as a file) has never an option to be
-> written from userspace. Instead it remains writable if accessed directly
-> from the containing block device, which is always writeable from root.
->
-> [0] Documentation/power/userland-swsusp.rst
->
-> v2:
->  - rename is_hibernate_snapshot_dev() to is_hibernate_resume_dev()
->  - fix description so to correctly refer to the resume device
->
-> Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Darrick J. Wong <darrick.wong@oracle.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: viro@zeniv.linux.org.uk
-> Cc: tytso@mit.edu
-> Cc: len.brown@intel.com
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-xfs@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
->
-> ---
->  fs/block_dev.c          |    3 +--
->  include/linux/suspend.h |    6 ++++++
->  kernel/power/user.c     |   14 +++++++++++++-
->  3 files changed, 20 insertions(+), 3 deletions(-)
->
-> Index: b/include/linux/suspend.h
-> ===================================================================
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -466,6 +466,12 @@ static inline bool system_entering_hiber
->  static inline bool hibernation_available(void) { return false; }
->  #endif /* CONFIG_HIBERNATION */
->
-> +#ifdef CONFIG_HIBERNATION_SNAPSHOT_DEV
-> +int is_hibernate_resume_dev(const struct inode *);
-> +#else
-> +static inline int is_hibernate_resume_dev(const struct inode *i) { return 0; }
-> +#endif
-> +
->  /* Hibernation and suspend events */
->  #define PM_HIBERNATION_PREPARE 0x0001 /* Going to hibernate */
->  #define PM_POST_HIBERNATION    0x0002 /* Hibernation finished */
-> Index: b/kernel/power/user.c
-> ===================================================================
-> --- a/kernel/power/user.c
-> +++ b/kernel/power/user.c
-> @@ -35,8 +35,14 @@ static struct snapshot_data {
->         bool ready;
->         bool platform_support;
->         bool free_bitmaps;
-> +       struct inode *bd_inode;
->  } snapshot_state;
->
-> +int is_hibernate_resume_dev(const struct inode *bd_inode)
-> +{
-> +       return hibernation_available() && snapshot_state.bd_inode == bd_inode;
-> +}
-> +
->  static int snapshot_open(struct inode *inode, struct file *filp)
->  {
->         struct snapshot_data *data;
-> @@ -95,6 +101,7 @@ static int snapshot_open(struct inode *i
->         data->frozen = false;
->         data->ready = false;
->         data->platform_support = false;
-> +       data->bd_inode = NULL;
->
->   Unlock:
->         unlock_system_sleep();
-> @@ -110,6 +117,7 @@ static int snapshot_release(struct inode
->
->         swsusp_free();
->         data = filp->private_data;
-> +       data->bd_inode = NULL;
->         free_all_swap_pages(data->swap);
->         if (data->frozen) {
->                 pm_restore_gfp_mask();
-> @@ -202,6 +210,7 @@ struct compat_resume_swap_area {
->  static int snapshot_set_swap_area(struct snapshot_data *data,
->                 void __user *argp)
->  {
-> +       struct block_device *bdev;
->         sector_t offset;
->         dev_t swdev;
->
-> @@ -232,9 +241,12 @@ static int snapshot_set_swap_area(struct
->                 data->swap = -1;
->                 return -EINVAL;
->         }
-> -       data->swap = swap_type_of(swdev, offset, NULL);
-> +       data->swap = swap_type_of(swdev, offset, &bdev);
->         if (data->swap < 0)
->                 return -ENODEV;
-> +
-> +       data->bd_inode = bdev->bd_inode;
-> +       bdput(bdev);
->         return 0;
->  }
->
-> Index: b/fs/block_dev.c
-> ===================================================================
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -2023,8 +2023,7 @@ ssize_t blkdev_write_iter(struct kiocb *
->         if (bdev_read_only(I_BDEV(bd_inode)))
->                 return -EPERM;
->
-> -       /* uswsusp needs write permission to the swap */
-> -       if (IS_SWAPFILE(bd_inode) && !hibernation_available())
-> +       if (IS_SWAPFILE(bd_inode) && !is_hibernate_resume_dev(bd_inode))
->                 return -ETXTBSY;
->
->         if (!iov_iter_count(from))
->
-> --
 
-The patch looks OK to me.
+--QTprm0S8XgL7H0Dt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Darrick, what do you think?
+On Mon 2020-05-18 16:14:35, Rob Herring wrote:
+> On Mon, 11 May 2020 16:11:26 +0500,  wrote:
+> > From: Nikita Travkin <nikitos.tr@gmail.com>
+> >=20
+> > Add the "awinic" vendor prefix for Shanghai Awinic Technology Co., Ltd.
+> > Website: https://www.awinic.com/
+> >=20
+> > Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+I can take 2/ and 3/ of the series, but I believe we'll get conflicts
+if I change vendor-prefixes.yaml in the LED tree. Can you take this
+one?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--QTprm0S8XgL7H0Dt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7Lo3QACgkQMOfwapXb+vIXcQCgwzeqqb2RBF4DwjAchybzAzL2
+eBwAnA8T0LcV9sK0bhIpwF/M37uhjgj9
+=JbAo
+-----END PGP SIGNATURE-----
+
+--QTprm0S8XgL7H0Dt--
