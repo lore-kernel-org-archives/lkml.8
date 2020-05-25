@@ -2,161 +2,105 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D915C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED14C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267F120723
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZDq8JkNm"
+	by mail.kernel.org (Postfix) with ESMTP id 067EC20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590406349;
+	bh=wiKO9ZZ2xlGA++fntc5tHue7H7VM7k0ZGV0z0X7E/BE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qIQyEjqSF4zGvUxsYDTBj94QzDh5bkq6lUbnlark2W1ost9wpGnAo1MaT/jHBqp/P
+	 gpgwFHz5z114cIIZobGlwN7WqtwwRipHCEEx+hECcQedHTWz5us5+0BntxLhU/WESc
+	 3UMJBFXWo2r43WLioGV8J3XNnbj8ik/117nxrjRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390452AbgEYLbq (ORCPT
+        id S2390230AbgEYLc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:31:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390264AbgEYLan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:30:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECAEC061A0E;
-        Mon, 25 May 2020 04:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Ju83TeQ/a5s++s4zWiPymbSjggIpghIm/3R9cYH8aH8=; b=ZDq8JkNmhMYAQKJ8aZthvN3oNS
-        qYsriW0/RVNjmztjsCls7TmQ63+J/VV/RGXeO8EL7J0v+/vKr944B9pkcoM0PWqLUiAfh1Yyxwyg/
-        GY7HbaP2ZH4zUCbdZ93RPuGS8TAX3ZmWurweUqN2+hWhRHZoFItfsVD38o3jqCbOv2S94r2SL2lmV
-        SXnEhm2LJoyoeNvH2454sWtGiueam2EABWP69RjdJ+C9GYcETGLz7XYZdy7ZGdl+WxBwE1HWYP0iM
-        dsQoLKQWbO9jB0vKAdETb4sWTBPRfWOOlHGBYhusjx9B7dp0WZuQi3hSUUyMO3bWEhYbpr/rFbrAe
-        IROkxnqw==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdBJY-0002SD-Gd; Mon, 25 May 2020 11:30:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 08/16] zram: nvdimm: use bio_{start,end}_io_acct and disk_{start,end}_io_acct
-Date:   Mon, 25 May 2020 13:30:06 +0200
-Message-Id: <20200525113014.345997-9-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200525113014.345997-1-hch@lst.de>
-References: <20200525113014.345997-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 25 May 2020 07:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388733AbgEYLc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:32:27 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D195F20787;
+        Mon, 25 May 2020 11:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590406346;
+        bh=wiKO9ZZ2xlGA++fntc5tHue7H7VM7k0ZGV0z0X7E/BE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bjbxUQ+9O7AIW3rZSJ2V/MYQ7lfowjf+b01Pg8o9Y7sbrMjFunOJQ+kqyed9Ow3yB
+         0SW7Ws7esp2tIDjPUJpY7byOGS64erfIYdee/cphuPChMCnSUZLSFY/BUicdS6b6cW
+         kfWopQodjT0h1otwWiKfY5hReiFK21iA4NaUhk1w=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>,
+        Anton Vorontsov <cbouatmailru@gmail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
+Subject: [RFC] power: supply: bq27xxx_battery: Fix polling interval after re-bind
+Date:   Mon, 25 May 2020 13:32:19 +0200
+Message-Id: <20200525113220.369-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch zram to use the nicer bio accounting helpers, and as part of that
-ensure each bio is counted as a single I/O request.
+This reverts commit 8cfaaa811894a3ae2d7360a15a6cfccff3ebc7db.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+If device was unbound and bound, the polling interval would be set to 0.
+This is both unexpected and messes up with other bq27xxx devices (if
+more than one battery device is used).
+
+This reset of polling interval was added in commit 8cfaaa811894
+("bq27x00_battery: Fix OOPS caused by unregistring bq27x00 driver")
+stating that power_supply_unregister() calls get_property().  However in
+Linux kernel v3.1 and newer, such call trace does not exist.
+Unregistering power supply does not call get_property() on unregistered
+power supply.
+
+Fixes: 8cfaaa811894 ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00 driver")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
 ---
- drivers/block/zram/zram_drv.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index ebb234f36909c..6e2ad90b17a37 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1510,13 +1510,8 @@ static void zram_bio_discard(struct zram *zram, u32 index,
- static int zram_bvec_rw(struct zram *zram, struct bio_vec *bvec, u32 index,
- 			int offset, unsigned int op, struct bio *bio)
+I really could not identify the issue being fixed in offending commit
+8cfaaa811894 ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00
+driver"), therefore maybe I missed here something important.
+
+Please share your thoughts on this.
+---
+ drivers/power/supply/bq27xxx_battery.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index 942c92127b6d..4c94ee72de95 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -1905,14 +1905,6 @@ EXPORT_SYMBOL_GPL(bq27xxx_battery_setup);
+ 
+ void bq27xxx_battery_teardown(struct bq27xxx_device_info *di)
  {
--	unsigned long start_time = jiffies;
--	struct request_queue *q = zram->disk->queue;
- 	int ret;
- 
--	generic_start_io_acct(q, op, bvec->bv_len >> SECTOR_SHIFT,
--			&zram->disk->part0);
+-	/*
+-	 * power_supply_unregister call bq27xxx_battery_get_property which
+-	 * call bq27xxx_battery_poll.
+-	 * Make sure that bq27xxx_battery_poll will not call
+-	 * schedule_delayed_work again after unregister (which cause OOPS).
+-	 */
+-	poll_interval = 0;
 -
- 	if (!op_is_write(op)) {
- 		atomic64_inc(&zram->stats.num_reads);
- 		ret = zram_bvec_read(zram, bvec, index, offset, bio);
-@@ -1526,8 +1521,6 @@ static int zram_bvec_rw(struct zram *zram, struct bio_vec *bvec, u32 index,
- 		ret = zram_bvec_write(zram, bvec, index, offset, bio);
- 	}
+ 	cancel_delayed_work_sync(&di->work);
  
--	generic_end_io_acct(q, op, &zram->disk->part0, start_time);
--
- 	zram_slot_lock(zram, index);
- 	zram_accessed(zram, index);
- 	zram_slot_unlock(zram, index);
-@@ -1548,6 +1541,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
- 	u32 index;
- 	struct bio_vec bvec;
- 	struct bvec_iter iter;
-+	unsigned long start_time;
- 
- 	index = bio->bi_iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
- 	offset = (bio->bi_iter.bi_sector &
-@@ -1563,6 +1557,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
- 		break;
- 	}
- 
-+	start_time = bio_start_io_acct(bio);
- 	bio_for_each_segment(bvec, bio, iter) {
- 		struct bio_vec bv = bvec;
- 		unsigned int unwritten = bvec.bv_len;
-@@ -1571,8 +1566,10 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
- 			bv.bv_len = min_t(unsigned int, PAGE_SIZE - offset,
- 							unwritten);
- 			if (zram_bvec_rw(zram, &bv, index, offset,
--					 bio_op(bio), bio) < 0)
--				goto out;
-+					 bio_op(bio), bio) < 0) {
-+				bio->bi_status = BLK_STS_IOERR;
-+				break;
-+			}
- 
- 			bv.bv_offset += bv.bv_len;
- 			unwritten -= bv.bv_len;
-@@ -1580,12 +1577,8 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
- 			update_position(&index, &offset, &bv);
- 		} while (unwritten);
- 	}
--
-+	bio_end_io_acct(bio, start_time);
- 	bio_endio(bio);
--	return;
--
--out:
--	bio_io_error(bio);
- }
- 
- /*
-@@ -1633,6 +1626,7 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
- 	u32 index;
- 	struct zram *zram;
- 	struct bio_vec bv;
-+	unsigned long start_time;
- 
- 	if (PageTransHuge(page))
- 		return -ENOTSUPP;
-@@ -1651,7 +1645,9 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
- 	bv.bv_len = PAGE_SIZE;
- 	bv.bv_offset = 0;
- 
-+	start_time = disk_start_io_acct(bdev->bd_disk, SECTORS_PER_PAGE, op);
- 	ret = zram_bvec_rw(zram, &bv, index, offset, op, NULL);
-+	disk_end_io_acct(bdev->bd_disk, op, start_time);
- out:
- 	/*
- 	 * If I/O fails, just return error(ie, non-zero) without
+ 	power_supply_unregister(di->bat);
 -- 
-2.26.2
+2.17.1
 
