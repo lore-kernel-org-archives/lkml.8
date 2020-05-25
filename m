@@ -2,235 +2,146 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4903CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2260020723
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E7520878
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="kOFxbK1S"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="HOrHzc54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391108AbgEYPP2 (ORCPT
+        id S2391147AbgEYPPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:15:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390911AbgEYPP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:15:27 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA94BC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:15:26 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u16so8924594lfl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kYBoEhN96Rd2bTOOCtpwhH5a3zXfbXb8vg+QY2lOxCg=;
-        b=kOFxbK1SPD4S5SY6soHeM+HeZetfnuSzhji+qxwHWT0CnYGiTqbZyd5Pheqma0e875
-         +MeqLFtQktc2cDAhBp28exGqp9SwAbHfgwh33X7Te8RypMFK9HWnQkL2MrzsNAqCScK6
-         JNLnQru0CXvZL1fQ60ltcd37sXmyjoIIwuA3QVgq6EEAGQFDP28U90KbysSCsAeJrZU+
-         l4sNaJTOLAogUGRzOYArKj/L5yRHfKyz6aiMa9ry//yHODMO8hQzJ+4yZO8KA70LH7Du
-         MKZy5UHT00e34txu1vJGIP8KP5A9zj1TgpxR4Y3ffECpWvGwe+FB9ovaeS2dyXSdWvZK
-         Ptqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kYBoEhN96Rd2bTOOCtpwhH5a3zXfbXb8vg+QY2lOxCg=;
-        b=eGJ3K7HMsDF8Yq1FfDo2j2vEfHiJJUEJbJzUh/FoY5s+x/8qPqAWI27BSOuoemCjbm
-         TeQhkHpdO3TuAtumfVpuJ5I2PCg1hF9jIuIbp4NL/HCVhTv3G+8TWhL3L/414y21JWxx
-         hlg4LtIFe9ewtF0A+VNmzOCxQruQAuY9XJ98BLrtqz0AmuVSBjiLoY7brcXjJNUw4Lzs
-         9PBJI+7JKM8zfO6T5x7cRWzuDIeQuKJJgDKkJ9XmZgNYXy9rJ0tqI3kOsJnm3otBMDun
-         Ctt9BsNTBH5WbaQD+LjOyhDsw3eqtNj9HpypNUMk8k7PRccK1IxgaVajDeIYoq265pDd
-         FlzQ==
-X-Gm-Message-State: AOAM532NwZn0IiO2xts1LwekYOf3tRvZ/Ts6AHhMuRGfB5cWGmvkPPyY
-        BWpMAX0QF0Yv5bK6CC0Ekift7A==
-X-Google-Smtp-Source: ABdhPJzXLUWIYgQQ8mQTCK0ROPNDbamXhbZpVXtVtJCcCUP29y0cVktOsqQ6gbXEx34Ez3amGKFUwA==
-X-Received: by 2002:a19:c505:: with SMTP id w5mr2287001lfe.201.1590419725196;
-        Mon, 25 May 2020 08:15:25 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f6sm4673999ljn.91.2020.05.25.08.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 08:15:24 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 79D1410230F; Mon, 25 May 2020 18:15:25 +0300 (+03)
-Date:   Mon, 25 May 2020 18:15:25 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
-Message-ID: <20200525151525.qmfvzxbl7sq46cdq@box>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
- <87d06s83is.fsf@vitty.brq.redhat.com>
+        Mon, 25 May 2020 11:15:45 -0400
+Received: from mout.web.de ([212.227.15.3]:40297 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391078AbgEYPPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 11:15:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590419719;
+        bh=G5ZC3hkiNNLw8VXok8dxp9CrF/rmQS0pYa2GIW0XHA4=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=HOrHzc547fsb2vvr8FqdPFbSW/3M/2qQXSazoDA+lLhLkEv7cG2D5jVoaFfDUI0Uk
+         jz/wFYa0Ut1ViWxrvs2Xj0AfAtlkvfV5eloAR0hU0fO7b2JkWQ6pH8Q9QbfagXYeZ7
+         KjgXdtHGWhq70RA68H1KfOA0Vh96hfvgz/hfyCLU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.186.124]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MPpD8-1jh6hw3hMg-0052ic; Mon, 25
+ May 2020 17:15:19 +0200
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] media: coda: Fix runtime PM imbalance in coda_probe()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <783be816-9e46-057c-47e6-ccc26abfe1a8@web.de>
+Date:   Mon, 25 May 2020 17:15:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d06s83is.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zsQZJ5ssGoBfiMMZSCDKzioMzQ8k9YCM+wz0RmYbQ5U5bw0BbUk
+ vhtOYyheQKKUxJKfMB5siZmCpifiwQ0fLGHOXGDVuIkUfT2QxlwlyKJduu2sxb0t0ztBdbR
+ C9TM201czh9lXNMB8M1b75VoYT0fdpyeFR56PrNmwtEGp4CL3tcbUis8YFXY24EbAWfjHq9
+ RZTEZJcEiu2f4NEQGZpUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wOa/2wGkpk4=:hnxn41nOUEdGWV1nsM22L3
+ zv0ColYGWRfsjK6AYI6lnxnmPe6AajgI6PE2H0Jdt1AbKGCEGd3BeuNC708AlmeYJhhMWoK3m
+ iGn+gdSJGraw/psFdsBtX4heNiVpWAyUeLbuvoSO68yub4XXHLkGPI4IcSkA+5tW3C041W4Yc
+ 1kLENjTUCzNayqnmMyngsNccA/ofK7S+2F+V402yk7hgX/nwFFd14u1Wy7wLpuVlXfBODyxag
+ vUxQxDMayhWFpsHFgvTfcZ4eif5dthkwgF62dXTLHcn49mNm78l+CbDgERusraLClWF6UBIfr
+ U3NWAVHERQyxC+eG3l7lj2MvRQVz8OXcC+ZUwu3MadvU0CLeSIzSYXpprWmfUgJGEvtWn+LD7
+ 0mD8PnywndQGJzaL63HcmjiPKFvYsJLfgAhTQXnlSR6h4EWwu/rdoJLeXlxuvTEE9d/PMUS3B
+ +BDgurwQE/MQ2tPxPT9r5WcUs/A1SQM+rgftegHqMHpoWEGOkOHeQ1mVrxkl/kJE2BfdLW3T6
+ duLmRIEu/Oj+kb5a3QArnwS6iCLB8hIeqGylgLi811JJdpLWAZIhI5/neDYRNaOhPjac0NynR
+ FVFL5Cl3qyBbx4BbN86xtgtX+nI/9QDMLs2UtJrfMinX0tFOoMdxz+e5Mk2IfcxQuKxk/kjeq
+ oJ0H5zy9Yos8oeSrYGxooixmJuvFez+i6DCUx2smV4lXobFWYFFEAzJu95Kz7W/DaOjTmAOa6
+ udq66fZulk9Pc7str2WXGbctL3FUkSFQZ3wbP3rjHWvG/Ir2Jd3UY1k24bdGjH8VreQ9/GI36
+ EpNpYoSXclOXYV7fhQB1RAQPvSerXs025FYhcwyIY6qYn/qR4OP8bQLIR8FH8YSimMymnrPUc
+ xrayjCGrbB7j+p7trop3bR54rKb93vC/dQwa38IaVJqHipWUPkttWZx1Q4LBeIteibnPMcUeD
+ fpMe36E1bhrCjlC5wl7gJeG1mmdmUrHE7OK5w5HeBZ/X31Z5/R/38uUIDYtIddOJVaiYqf8hn
+ v1q5+YuN5LDtLOKc/CIZ/3fHTeuN0i3aWz3oOrSO8EtoWMNOcj+M4+7lG6OptP6pXJLu7QeS5
+ KbXMduESZgzQKWSz13ZuZ51veJrf/9Z1EpanBhAVMD0gsCLfaYyc1Cd2L2qaTLPo6I9/5kwhK
+ iWTnIK7wN4oq/9wZuoe7xfTOcp61qA6cdfB8E0GRV76Qp6R/Jw2CZUQ71GhzDap2Iv9sP5H5i
+ PQ+DEbMqRBwxJ4l/k
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:58:51PM +0200, Vitaly Kuznetsov wrote:
-> "Kirill A. Shutemov" <kirill@shutemov.name> writes:
-> 
-> > Provide basic helpers, KVM_FEATURE and a hypercall.
-> >
-> > Host side doesn't provide the feature yet, so it is a dead code for now.
-> >
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/include/asm/kvm_para.h      |  5 +++++
-> >  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
-> >  arch/x86/kernel/kvm.c                | 16 ++++++++++++++++
-> >  include/uapi/linux/kvm_para.h        |  3 ++-
-> >  4 files changed, 25 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-> > index 9b4df6eaa11a..3ce84fc07144 100644
-> > --- a/arch/x86/include/asm/kvm_para.h
-> > +++ b/arch/x86/include/asm/kvm_para.h
-> > @@ -10,11 +10,16 @@ extern void kvmclock_init(void);
-> >  
-> >  #ifdef CONFIG_KVM_GUEST
-> >  bool kvm_check_and_clear_guest_paused(void);
-> > +bool kvm_mem_protected(void);
-> >  #else
-> >  static inline bool kvm_check_and_clear_guest_paused(void)
-> >  {
-> >  	return false;
-> >  }
-> > +static inline bool kvm_mem_protected(void)
-> > +{
-> > +	return false;
-> > +}
-> >  #endif /* CONFIG_KVM_GUEST */
-> >  
-> >  #define KVM_HYPERCALL \
-> > diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-> > index 2a8e0b6b9805..c3b499acc98f 100644
-> > --- a/arch/x86/include/uapi/asm/kvm_para.h
-> > +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> > @@ -28,9 +28,10 @@
-> >  #define KVM_FEATURE_PV_UNHALT		7
-> >  #define KVM_FEATURE_PV_TLB_FLUSH	9
-> >  #define KVM_FEATURE_ASYNC_PF_VMEXIT	10
-> > -#define KVM_FEATURE_PV_SEND_IPI	11
-> > +#define KVM_FEATURE_PV_SEND_IPI		11
-> 
-> Nit: spurrious change
-> 
+> When coda_firmware_request() returns an error code,
+> a pairing runtime PM usage counter decrement is needed
+> to keep the counter balanced.
 
-I fixed indentation while there. (Look at the file, not the diff to see
-what I mean).
+* I suggest to add an imperative wording.
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?id=3D9cb1fd0efd195590b828b9b8=
+65421ad345a4a145#n151
 
-> >  #define KVM_FEATURE_POLL_CONTROL	12
-> >  #define KVM_FEATURE_PV_SCHED_YIELD	13
-> > +#define KVM_FEATURE_MEM_PROTECTED	14
-> >  
-> >  #define KVM_HINTS_REALTIME      0
-> >  
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index 6efe0410fb72..bda761ca0d26 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -35,6 +35,13 @@
-> >  #include <asm/tlb.h>
-> >  #include <asm/cpuidle_haltpoll.h>
-> >  
-> > +static bool mem_protected;
-> > +
-> > +bool kvm_mem_protected(void)
-> > +{
-> > +	return mem_protected;
-> > +}
-> > +
-> 
-> Honestly, I don't see a need for kvm_mem_protected(), just rename the
-> bool if you need kvm_ prefix :-)
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit mess=
+age?
 
-For !CONFIG_KVM_GUEST it would not be a variable. We may want to change it
-to static branch or something in the future.
 
-> >  static int kvmapf = 1;
-> >  
-> >  static int __init parse_no_kvmapf(char *arg)
-> > @@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
-> >  {
-> >  	kvmclock_init();
-> >  	x86_platform.apic_post_init = kvm_apic_init;
-> > +
-> > +	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
-> > +		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
-> > +			pr_err("Failed to enable KVM memory protection\n");
-> > +			return;
-> > +		}
-> > +
-> > +		mem_protected = true;
-> > +	}
-> >  }
-> 
-> Personally, I'd prefer to do this via setting a bit in a KVM-specific
-> MSR instead. The benefit is that the guest doesn't need to remember if
-> it enabled the feature or not, it can always read the config msr. May
-> come handy for e.g. kexec/kdump.
+> Changelog:
 
-I think we would need to remember it anyway. Accessing MSR is somewhat
-expensive. But, okay, I can rework it MSR if needed.
+I propose to omit this line.
 
-Note, that we can avoid the enabling algother, if we modify BIOS to deal
-with private/shared memory. Currently BIOS get system crash if we enable
-the feature from time zero.
 
-> >  const __initconst struct hypervisor_x86 x86_hyper_kvm = {
-> > diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-> > index 8b86609849b9..1a216f32e572 100644
-> > --- a/include/uapi/linux/kvm_para.h
-> > +++ b/include/uapi/linux/kvm_para.h
-> > @@ -27,8 +27,9 @@
-> >  #define KVM_HC_MIPS_EXIT_VM		7
-> >  #define KVM_HC_MIPS_CONSOLE_OUTPUT	8
-> >  #define KVM_HC_CLOCK_PAIRING		9
-> > -#define KVM_HC_SEND_IPI		10
-> > +#define KVM_HC_SEND_IPI			10
-> 
-> Same spurrious change detected.
+> ---
+>  drivers/media/platform/coda/coda-common.c | 2 ++
 
-The same justification :)
+I find it nicer to replace the triple dashes before this diffstat
+by a blank line.
 
-> >  #define KVM_HC_SCHED_YIELD		11
-> > +#define KVM_HC_ENABLE_MEM_PROTECTED	12
-> >  
-> >  /*
-> >   * hypercalls use architecture specific
-> 
-> -- 
-> Vitaly
-> 
-> 
-
--- 
- Kirill A. Shutemov
+Regards,
+Markus
