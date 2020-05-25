@@ -2,101 +2,101 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E8BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C6720878
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFF020812
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHchiWv9"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="M8B6svJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390569AbgEYMX5 (ORCPT
+        id S2390571AbgEYM0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54908 "EHLO
+        Mon, 25 May 2020 08:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390488AbgEYMX4 (ORCPT
+        with ESMTP id S2390505AbgEYM0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:23:56 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EECC2C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:23:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v16so20569139ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:23:55 -0700 (PDT)
+        Mon, 25 May 2020 08:26:09 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53917C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:26:09 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id i68so13647849qtb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1neDSVvo2exAwO7XG1Q7asHC8C/uLbtbXAanu+QhUvY=;
-        b=mHchiWv9d+bl7TypEyswUYJoJBznRNEzkaqNXJ6yZYcwVhCmDlHeQE5uaH/HclG1/A
-         Bx4Cg9tDzYVicfaKmVDBhYVOUgLefRTuPj7YFVjqzZ8YnTP/1LLLJTykYqXl+FHN2pZL
-         g8xP1m6SXMaHEiGtmqiEB2IP7G+kpZcs9VS8hZv85N+n3X6CdpddRhU6y1nCKsAQzFCY
-         4rfmeLIz/oOwhxkepv8pd1oS85BdwpikntEpMCfo0gVE3d09pfC4AhwFL/nAFV+L4+Zb
-         mwcQqn4CqSg3gj+nOH2kk2AibQMFcCPYOzlGhx/9SXJpErxweRkVif+GCa4LGQO8gvT9
-         9trw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v+B1785OZUouPASW2jrMekMBCWgZaLFpUTHdleb2VxA=;
+        b=M8B6svJXr54wgpkQnxJoxOPnFoG3xoaPb76kANRmbKzt4nMw3qxD/q1sXASpcEEWgF
+         gHuA1+7j+0GHGEQqXQhNV3CKJGJ9y8q3jm3bRbRkWZKx1ilA8ceQcZUG0kUCYhtO2MZ7
+         o4kqO2LyZq2faf/NlIVIMBkKLeXoa88R/AW3tpprsWHR3SjzEi7iaSys03D2VbMtewxD
+         KWhdY5a9O/4fZ5uesQirQ2lMyaFJfuB2R2HsT37n64J/gUu+48rbi4zf1W71+HPlLCgg
+         RS6kJEq84BAk2ESnQHLB8txIWUSWrjJBBQcE2f/WAF2FVslapUIbMMvrwY16wMa3EvYc
+         Oywg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1neDSVvo2exAwO7XG1Q7asHC8C/uLbtbXAanu+QhUvY=;
-        b=KwG927CvdKv9oPKBcjpLCD5XGsAOh1GUiaTOMn085gX+9tWb8e3xzqusqaC80rM1RK
-         4lUqlcyDTsvQwV/tmwPPdtHL4YH4fsUHPckBsLwsyBaa8GOsIou+nLstlLPF35LUzb/Q
-         dM41zM2E5QUg9BSAXgIehKs8QzateE3NHDLXckQJrUnTza3Y43EPIZ8G6Wz6ETbrzK51
-         3YHvtml+qhMxnFM6lwcP0ILui3QmxtB/npiywqa09FbK054+N8XBtLojwSVon5kS4cmZ
-         Wt4moA35ZQWbUvTF4MO0AH6IjgCSBmBQx1NL/mp5dPJI4mu7D7/kC37UgH0fVuThM3Ka
-         vv2A==
-X-Gm-Message-State: AOAM5329Gj7XZH4q4Wn5Pa2ZIoV4Hd4rLDsRRDELAgNSvH7Iqfx5pk+s
-        aEE1GMAg2RzJsT8VoaCzx9s1BHaccwbvKgS6gVmGNw==
-X-Google-Smtp-Source: ABdhPJyf5wZA8Fh7xQjtaNnLLHBTpAkEbLAQIKhyb7JglaMhaJDSU7UOMtER0/cndL74Gsc/vcIt53XFGmKsX5AJ0t0=
-X-Received: by 2002:a2e:711c:: with SMTP id m28mr13451102ljc.104.1590409434478;
- Mon, 25 May 2020 05:23:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v+B1785OZUouPASW2jrMekMBCWgZaLFpUTHdleb2VxA=;
+        b=oC7WKjOyRX1sPtMYcz5URt5vsWLUAyK1jnhK7rHw4kcUtO7Qr8dyRDQHzjjMcGrjLu
+         Jese0AVGs3tJYJvFNldPUOkRtjtep2jZjNEjSCYSsLBWPRuyxV8ZA7JiY1keyM/8o18E
+         S55mUmqMGBMpeHUQJH1A7wkj7ClNTZn4gSG+CB/TQTYLhk94a87gwpwg2V3nI3/OJ+9T
+         HpQI+/mIO7RD876R3/Q6Qm9lZFn/1dlMzQS7pqUmZYqGVS6eOC//lWrTALHl9UREfd5Q
+         iRfjbqe+KdiPK8VdRcyj+zZNHtpfm9cVk/gjjhhb9PbrPobhHuSbIkluPN3kEpUluX2l
+         whYA==
+X-Gm-Message-State: AOAM531HqMUbeaUsi4NRiEC55wW7z7ACv6bK/4YGeWPZOaYC2QQlEx4E
+        vsfrdpyyA05vF8NJz6mzpBzY9w==
+X-Google-Smtp-Source: ABdhPJwk7SIlqGjBIUWz/0hGbccyh9qfHeyY8qv0Rau9jFzIYCDNLUkjNci7H9c03NXVt63ilIK9QA==
+X-Received: by 2002:aed:278d:: with SMTP id a13mr2961124qtd.23.1590409568569;
+        Mon, 25 May 2020 05:26:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id l2sm13637889qkd.57.2020.05.25.05.26.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 05:26:08 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jdCBD-0007ON-FH; Mon, 25 May 2020 09:26:07 -0300
+Date:   Mon, 25 May 2020 09:26:07 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com, cai@lca.pw
+Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
+ on disabled memory
+Message-ID: <20200525122607.GC744@ziepe.ca>
+References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
+ <159017506369.18853.17306023099999811263.stgit@gimli.home>
+ <20200523193417.GI766834@xz-x1>
+ <20200523170602.5eb09a66@x1.home>
+ <20200523235257.GC939059@xz-x1>
 MIME-Version: 1.0
-References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com> <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 14:23:43 +0200
-Message-ID: <CACRpkda26eQZGMfbq-FL9X532mK=Z87GotjYMu2MWNGgNohp7A@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] drm/panel: Add ilitek ili9341 panel driver
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200523235257.GC939059@xz-x1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 5:46 AM <dillon.minfei@gmail.com> wrote:
+On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
 
-> From: dillon min <dillon.minfei@gmail.com>
->
->     This driver combine tiny/ili9341.c mipi_dbi_interface driver
->     with mipi_dpi_interface driver, can support ili9341 with serial
->     mode or parallel rgb interface mode by register configuration.
->
-> Changes since V3:
->
->     accoding to Linus Walleij's suggestion.
->     1 add more comments to driver.
->     2 reduce magic number usage in the driver.
->     3 move panel configuration from common place to system configuration.
->     4 reuse MIPI_DCS_* as more as possible.
->
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> For what I understand now, IMHO we should still need all those handlings of
+> FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
+> try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
+> not sure what would be the side effect of that if fault() blocked it.  E.g.,
+> the caller could be in an atomic context.
 
-This looks good to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
+VM_FAULT_RETRY is returned, which this doesn't do?
 
-Yours,
-Linus Walleij
+It is not a generic 'do not sleep'
+
+Do you know different?
+
+Jason
