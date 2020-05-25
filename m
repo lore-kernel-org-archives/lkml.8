@@ -2,144 +2,212 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D53DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A184C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B132071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Mwylmx8z"
+	by mail.kernel.org (Postfix) with ESMTP id 15A232071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390125AbgEYLPY (ORCPT
+        id S2390137AbgEYLRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:15:24 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:15585 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389897AbgEYLPY (ORCPT
+        Mon, 25 May 2020 07:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390128AbgEYLRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:15:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590405323; x=1621941323;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=FQoNC3ACJjy2r4SC1nWNDrTuHvYpfnKuYAOFLdtZyPA=;
-  b=Mwylmx8zmgVUkFjbSGVeiEzRNZsDbyks3Jt2CeP6JXasSbDq5P2ilATF
-   7YY4ryBqZHa6D2t1La/63eNeIcX4iwHdqJrLXUKS1Jns4LR1IHnDz0bqY
-   zf+XJeaV0gUUyPOVFBbUET+E/xuHixtdaI3r8hMedx0BlitPqUdHFzE9f
-   M=;
-IronPort-SDR: UwKIpxQKZVeNmqAwu7Uu5PkPbE2BydfyUbj/Qv3MvP4I3P8AGoeMb6gU1yE+jZe5C3wmR9bKdw
- 2/l9406a7FUw==
-X-IronPort-AV: E=Sophos;i="5.73,433,1583193600"; 
-   d="scan'208";a="37449369"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 25 May 2020 11:15:22 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id 821E5A1F05;
-        Mon, 25 May 2020 11:15:20 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 11:15:20 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.50) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 11:15:11 +0000
-Subject: Re: [PATCH v2 04/18] nitro_enclaves: Init PCI device driver
-To:     Greg KH <greg@kroah.com>, Alexander Graf <graf@amazon.de>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-5-andraprs@amazon.com>
- <20200522070414.GB771317@kroah.com>
- <68b86d32-1255-f9ce-4366-12219ce07ba6@amazon.de>
- <20200524063210.GA1369260@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <c86d5b9e-778f-9357-1519-64ef59b8cfcc@amazon.com>
-Date:   Mon, 25 May 2020 14:15:02 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Mon, 25 May 2020 07:17:15 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA12FC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:17:14 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jdB6Q-0002IF-Jj; Mon, 25 May 2020 13:17:06 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:d406:10d7:6286:51e5] (unknown [IPv6:2a03:f580:87bc:d400:d406:10d7:6286:51e5])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 7C801505AAD;
+        Mon, 25 May 2020 11:17:03 +0000 (UTC)
+Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
+        =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Jan Glauber <jglauber@marvell.com>,
+        Robert Richter <rrichter@marvell.com>
+References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
+ <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
+ <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
+ <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
+ <7b85e098-b9a9-dd14-203f-100cdf2e703e@pengutronix.de>
+ <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <e0f641bc-5473-792d-fea9-0a2e81fe1e38@pengutronix.de>
+Date:   Mon, 25 May 2020 13:17:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200524063210.GA1369260@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.50]
-X-ClientProxiedBy: EX13D42UWA001.ant.amazon.com (10.43.160.153) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNC8wNS8yMDIwIDA5OjMyLCBHcmVnIEtIIHdyb3RlOgo+IE9uIFNhdCwgTWF5IDIzLCAy
-MDIwIGF0IDEwOjI1OjI1UE0gKzAyMDAsIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+PiBIZXkgR3Jl
-ZywKPj4KPj4gT24gMjIuMDUuMjAgMDk6MDQsIEdyZWcgS0ggd3JvdGU6Cj4+PiBPbiBGcmksIE1h
-eSAyMiwgMjAyMCBhdCAwOToyOTozMkFNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+
-Pj4gKy8qKgo+Pj4+ICsgKiBuZV9zZXR1cF9tc2l4IC0gU2V0dXAgTVNJLVggdmVjdG9ycyBmb3Ig
-dGhlIFBDSSBkZXZpY2UuCj4+Pj4gKyAqCj4+Pj4gKyAqIEBwZGV2OiBQQ0kgZGV2aWNlIHRvIHNl
-dHVwIHRoZSBNU0ktWCBmb3IuCj4+Pj4gKyAqCj4+Pj4gKyAqIEByZXR1cm5zOiAwIG9uIHN1Y2Nl
-c3MsIG5lZ2F0aXZlIHJldHVybiB2YWx1ZSBvbiBmYWlsdXJlLgo+Pj4+ICsgKi8KPj4+PiArc3Rh
-dGljIGludCBuZV9zZXR1cF9tc2l4KHN0cnVjdCBwY2lfZGV2ICpwZGV2KQo+Pj4+ICt7Cj4+Pj4g
-KyAgICAgc3RydWN0IG5lX3BjaV9kZXYgKm5lX3BjaV9kZXYgPSBOVUxMOwo+Pj4+ICsgICAgIGlu
-dCBucl92ZWNzID0gMDsKPj4+PiArICAgICBpbnQgcmMgPSAtRUlOVkFMOwo+Pj4+ICsKPj4+PiAr
-ICAgICBpZiAoV0FSTl9PTighcGRldikpCj4+Pj4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZB
-TDsKPj4+IEhvdyBjYW4gdGhpcyBldmVyIGhhcHBlbj8gIElmIGl0IGNhbiBub3QsIGRvbid0IHRl
-c3QgZm9yIGl0LiAgSWYgaXQgY2FuLAo+Pj4gZG9uJ3Qgd2FybiBmb3IgaXQgYXMgdGhhdCB3aWxs
-IGNyYXNoIHN5c3RlbXMgdGhhdCBkbyBwYW5pYy1vbi13YXJuLCBqdXN0Cj4+PiB0ZXN0IGFuZCBy
-ZXR1cm4gYW4gZXJyb3IuCj4+IEkgdGhpbmsgdGhlIHBvaW50IGhlcmUgaXMgdG8gY2F0Y2ggc2l0
-dWF0aW9ucyB0aGF0IHNob3VsZCBuZXZlciBoYXBwZW4sIGJ1dAo+PiBrZWVwIGEgc2FuaXR5IGNo
-ZWNrIGluIGluIGNhc2UgdGhleSBkbyBoYXBwZW4uIFRoaXMgd291bGQndmUgdXN1YWxseSBiZWVu
-IGEKPj4gQlVHX09OLCBidXQgcGVvcGxlIHRlbmQgdG8gZGlzbGlrZSB0aG9zZSB0aGVzZSBkYXlz
-IGJlY2F1c2UgdGhleSBjYW4gYnJpbmcKPj4gZG93biB5b3VyIHN5c3RlbSAuLi4KPiBTYW1lIGZv
-ciBXQVJOX09OIHdoZW4geW91IHJ1biB3aXRoIHBhbmljLW9uLXdhcm4gZW5hYmxlZCA6KAo+Cj4+
-IFNvIGluIHRoaXMgcGFydGljdWxhciBjYXNlIGhlcmUgSSBhZ3JlZSB0aGF0IGl0J3MgYSBiaXQg
-c2lsbHkgdG8gY2hlY2sKPj4gd2hldGhlciBwZGV2IGlzICE9IE5VTEwuIEluIG90aGVyIGRldmlj
-ZSBjb2RlIGludGVybmFsIEFQSXMgdGhvdWdoIGl0J3Mgbm90Cj4+IHF1aXRlIGFzIGNsZWFyIG9m
-IGEgY3V0LiBJIGJ5IGZhciBwcmVmZXIgY29kZSB0aGF0IHRlbGxzIG1lIGl0J3MgYnJva2VuIG92
-ZXIKPj4gcmV2ZXJzZSBlbmdpbmVlcmluZyBzdHJheSBwb2ludGVyIGFjY2Vzc2VzIC4uLgo+IEZv
-ciBzdGF0aWMgY2FsbHMgd2hlcmUgeW91IGNvbnRyb2wgdGhlIGNhbGxlcnMsIGRvbid0IGRvIGNo
-ZWNrcyBsaWtlCj4gdGhpcy4gIE90aGVyd2lzZSB0aGUga2VybmVsIHdvdWxkIGp1c3QgYmUgZnVs
-bCBvZiB0aGVzZSBhbGwgb3ZlciB0aGUKPiBwbGFjZSBhbmQgdGhpbmdzIHdvdWxkIHNsb3cgZG93
-bi4gIEl0J3MganVzdCBub3QgbmVlZGVkLgo+Cj4+Pj4gKyAgICAgbmVfcGNpX2RldiA9IHBjaV9n
-ZXRfZHJ2ZGF0YShwZGV2KTsKPj4+PiArICAgICBpZiAoV0FSTl9PTighbmVfcGNpX2RldikpCj4+
-Pj4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPj4+IFNhbWUgaGVyZSwgZG9uJ3QgdXNl
-IFdBUk5fT04gaWYgYXQgYWxsIHBvc3NpYmxlLgo+Pj4KPj4+PiArCj4+Pj4gKyAgICAgbnJfdmVj
-cyA9IHBjaV9tc2l4X3ZlY19jb3VudChwZGV2KTsKPj4+PiArICAgICBpZiAobnJfdmVjcyA8IDAp
-IHsKPj4+PiArICAgICAgICAgICAgIHJjID0gbnJfdmVjczsKPj4+PiArCj4+Pj4gKyAgICAgICAg
-ICAgICBkZXZfZXJyX3JhdGVsaW1pdGVkKCZwZGV2LT5kZXYsCj4+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIE5FICJFcnJvciBpbiBnZXR0aW5nIHZlYyBjb3VudCBbcmM9JWRd
-XG4iLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByYyk7Cj4+Pj4gKwo+
-Pj4gV2h5IHJhdGVsaW1pdGVkLCBjYW4gdGhpcyBoYXBwZW4gb3ZlciBhbmQgb3ZlciBhbmQgb3Zl
-cj8KPj4gSW4gdGhpcyBwYXJ0aWN1bGFyIGZ1bmN0aW9uLCBubywgc28gaGVyZSBpdCByZWFsbHkg
-c2hvdWxkIGp1c3QgYmUgZGV2X2Vyci4KPj4gT3RoZXIgZnVuY3Rpb25zIGFyZSBpbXBsaWNpdGx5
-IGNhbGxhYmxlIGZyb20gdXNlciBzcGFjZSB0aHJvdWdoIGFuIGlvY3RsLAo+PiB3aGljaCBtZWFu
-cyB0aGV5IHJlYWxseSBuZWVkIHRvIHN0YXkgcmF0ZSBsaW1pdGVkLgo+IFRoaW5rIHRocm91Z2gg
-dGhlc2UgYXMgdGhlIGRyaXZlciBzZWVtcyB0byBPTkxZIHVzZSB0aGVzZSByYXRlbGltaXRlZAo+
-IGNhbGxzIHJpZ2h0IG5vdywgd2hpY2ggaXMgbm90IGNvcnJlY3QuCj4KPiBBbHNvLCBpZiBhIHVz
-ZXIgY2FuIGNyZWF0ZSBhIHByaW50aywgdGhhdCBhbG1vc3QgYWx3YXlzIGlzIG5vdCBhIGdvb2QK
-PiBpZGVhLiAgQnV0IHllcywgdGhvc2Ugc2hvdWxkIGJlIHJhdGVsaW1pdGVkLgoKSSB1cGRhdGVk
-IHRoZSBzdGF0aWMgY2FsbHMgY2hlY2tzIGFuZCByZW1vdmVkIHRoZSBXQVJOX09Ocy4gQW5kIApy
-YXRlbGltaXRlZCBpcyB1c2VkIG5vdyBvbmx5IGluIHRoZSBpb2N0bCBjYWxsIHBhdGhzLgoKVGhh
-bmsgeW91IGJvdGguCgpBbmRyYQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlh
-KSBTLlIuTC4gcmVnaXN0ZXJlZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBm
-bG9vciAyLCBJYXNpLCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGlu
-IFJvbWFuaWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
+On 5/21/20 10:19 PM, Tim Harvey wrote:
+> On Wed, Feb 26, 2020 at 2:19 AM Marc Kleine-Budde <mkl@pengutronix.de> wrote:
+> Sorry for the long delay... I'm finally getting back to this issue.
+> 
+> I'm told by Marvell/Cavium that the OcteonTX SPI hardware does not
+> support full duplex although I don't see this in any of their errata
+> or reference manuals. Perhaps someone familiar with the CN81xx/CN80xx
+> OcteonTX hardware from Marvell/Cavium can weigh in here as I'm not
+> clear if this limitation is in all hardware that uses the
+> spi-cavium-thunderx.c driver (I've added Jan to the list who authored
+> the driver)
 
+If the hardware doesn't support full duplex transfers you should add
+SPI_CONTROLLER_HALF_DUPLEX to the driver.
+
+If the hardware supports full duplex, but the driver doesn't the driver should
+be fixed, or SPI_CONTROLLER_HALF_DUPLEX with the appropriate explanation.
+
+> As you point out setting SPI_CONTROLLER_HALF_DUPLEX will cause
+> spi_{sync,async,async_locked} calls to fail with -EINVAL if they have
+> both a tx and rx buf, so this should be done to help catch these
+> issues:
+> diff --git a/drivers/spi/spi-cavium-thunderx.c
+> b/drivers/spi/spi-cavium-thunderx.c
+> index fd6b9ca..76fdb94 100644
+> --- a/drivers/spi/spi-cavium-thunderx.c
+> +++ b/drivers/spi/spi-cavium-thunderx.c
+> @@ -64,6 +65,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
+>                 p->sys_freq = SYS_FREQ_DEFAULT;
+>         dev_info(dev, "Set system clock to %u\n", p->sys_freq);
+> 
+> +       master->flags = SPI_MASTER_HALF_DUPLEX;
+>         master->num_chipselect = 4;
+>         master->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH |
+>                             SPI_LSB_FIRST | SPI_3WIRE;
+> 
+> Now, with regards to the mcp251x.c driver you were correct that I was
+> missing dealing with the full-duplex call from mcp251x_hw_rx_frame()
+> which indeed was causing data corruption on recieve.
+> 
+> So the following patch to mcp251x.c properly converts mcp251x to half-duplex:
+> 
+> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+> index 5009ff2..016c1e5 100644
+> --- a/drivers/net/can/spi/mcp251x.c
+> +++ b/drivers/net/can/spi/mcp251x.c
+> @@ -290,23 +290,23 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
+>         priv->spi_tx_buf[0] = INSTRUCTION_READ;
+>         priv->spi_tx_buf[1] = reg;
+> 
+> -       mcp251x_spi_trans(spi, 3);
+> -       val = priv->spi_rx_buf[2];
+> +       spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
+> 
+>         return val;
+>  }
+> 
+>  static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
+>  {
+> +       u8 val[2] = {0};
+>         struct mcp251x_priv *priv = spi_get_drvdata(spi);
+> 
+>         priv->spi_tx_buf[0] = INSTRUCTION_READ;
+>         priv->spi_tx_buf[1] = reg;
+> 
+> -       mcp251x_spi_trans(spi, 4);
+> +       spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
+> 
+> -       *v1 = priv->spi_rx_buf[2];
+> -       *v2 = priv->spi_rx_buf[3];
+> +       *v1 = val[0];
+> +       *v2 = val[1];
+>  }
+> 
+>  static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
+> @@ -409,8 +409,9 @@ static void mcp251x_hw_rx_frame(struct spi_device
+> *spi, u8 *buf,
+>                         buf[i] = mcp251x_read_reg(spi, RXBCTRL(buf_idx) + i);
+>         } else {
+>                 priv->spi_tx_buf[RXBCTRL_OFF] = INSTRUCTION_READ_RXB(buf_idx);
+> -               mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
+> -               memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
+> +               spi_write_then_read(spi, priv->spi_tx_buf, 1, priv->spi_rx_buf,
+> +                                   SPI_TRANSFER_BUF_LEN);
+> +               memcpy(buf + 1, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN - 1);
+>         }
+>  }
+> 
+> I do have hardware to test with and without this patch my CN80xx board
+> with an MCP25625 fails device probing (mcp251x spi0.1: MCP251x didn't
+> enter in conf mode after reset) because read values are corrupt. With
+> this patch my the MCP25625 works fine on the CN80xx detecting,
+> sending, and receiving frames.
+
+nice!
+
+> Should I be submitting this patch with logic that only does
+> half-duplex if the spi controller doesn't support it (if
+> (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX)) or is it
+> acceptable to simply make the driver half-duplex like this for all
+> cases?
+
+Please make half duplex transfers depending on SPI_CONTROLLER_HALF_DUPLEX as
+most drivers have a considerable overhead at the end of a transfer.
+
+Most of them wait for a transfer complete interrupt. Which might take longer
+than the actual SPI transfer. Splitting one full duplex read-register transfer
+(which is a write followed by a read) into two half duplex transfers would kill
+performance on full duplex capable controllers.
+
+regards,
+Marc
+
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
