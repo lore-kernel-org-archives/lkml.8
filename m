@@ -2,148 +2,162 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7159CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F07C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A933206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543C0206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujh4cQjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388564AbgEYDpi (ORCPT
+        id S2388716AbgEYDpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 23:45:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5276 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388211AbgEYDpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 23:45:38 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 55077FD852DCAC4B1805;
-        Mon, 25 May 2020 11:45:32 +0800 (CST)
-Received: from [10.174.151.115] (10.174.151.115) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 25 May
- 2020 11:45:24 +0800
-Subject: Re: [PATCH 1/2] crypto: virtio: fix src/dst scatterlist calculation
-To:     Jason Wang <jasowang@redhat.com>, <linux-crypto@vger.kernel.org>
-CC:     Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        LABBE Corentin <clabbe@baylibre.com>
-References: <20200525005627.707-1-longpeng2@huawei.com>
- <20200525005627.707-2-longpeng2@huawei.com>
- <25cff618-601c-e899-a3cc-b289863a7407@redhat.com>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <bd31398c-e81b-993f-99ae-37dc364b0e40@huawei.com>
-Date:   Mon, 25 May 2020 11:45:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <25cff618-601c-e899-a3cc-b289863a7407@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+        Sun, 24 May 2020 23:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728324AbgEYDpz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 23:45:55 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1698C061A0E;
+        Sun, 24 May 2020 20:45:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 23so8275129pfy.8;
+        Sun, 24 May 2020 20:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=V6bHngqzBjjcimyp4HxH/p2UMJo9dJvIc8PwFZSC+CA=;
+        b=ujh4cQjvO9LqYulZCLFG/EhC/ysEt3VzB4Cfqrtib0Uv000szrhWNJVAQqhnWwLmQj
+         KyI/c1CpyMwKTvIOtzl+DIOxWEqwg1/Ejr1NB2PDWObgdVWnJUKbfXYkj13FVI/OMInD
+         VjqW6yrac0hU+ZU6/6hqJLmGIbhEWTSxw8BFl+fksItTEg5jj2ijP9jOzYsgoG1v4d/k
+         UTpiVWLknc7v1Iyv2+wPDEa8Wi45AqiSaGZq52tE6dzgVdBFXYZ1BDH8VNbabbRflu6k
+         Z6Z7tQhYNL6SQS8PNFc/dVzmOzXvKO7ZaT4fraahv9czQoiNLNo+DODNQR2WolvAWSGw
+         Mz+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=V6bHngqzBjjcimyp4HxH/p2UMJo9dJvIc8PwFZSC+CA=;
+        b=ZfqDUDmD8djfHO3Mth4WsAIRyMs8Wjvg8c2MOsUjYrGBkd415oWd2lH4QH4bwj4EKe
+         mgU6Cw9mAkOWgyW5+S10jScmm9eZwv7RQrmzH8rw4a0GVuIGXJI6aIOfw/8JknSZtgiC
+         nQlR6TAWYSFgLq4PTP/8WKSTMMG0HIMs/nO79DNChpeP4VTvTwNw97nf7Key9qPrvolR
+         1qdJeXBvJ1oCBewnGjAz9cN13GfpaMqOEfp/tkul/EFoDYSZX4QwZvrdKFex7SM8NSRi
+         SC33lSiJNHnbGSwUnvs4YHnSFIdkXSLcQgbLqKEnkWE2WYh6tRaDcy6HOUnU8UdmgqAt
+         oV+A==
+X-Gm-Message-State: AOAM531MmFQIuggKvcapA+Hp1XENYCgm0XmigxxOJ8yJ/bR3uybaNhlQ
+        YOmw83FAs9xrD/oNi+MnpKQ=
+X-Google-Smtp-Source: ABdhPJzHOdNvEM+GtCSQLN0Rj3/3dq/dcwOzljG2N6BH2aAoIYChewg0WdqeD9k9WKyv/7C29tuJrg==
+X-Received: by 2002:a63:1a13:: with SMTP id a19mr24649723pga.350.1590378353414;
+        Sun, 24 May 2020 20:45:53 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.44])
+        by smtp.gmail.com with ESMTPSA id i98sm12152831pje.37.2020.05.24.20.45.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 May 2020 20:45:52 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     linus.walleij@linaro.org, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v5 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
+Date:   Mon, 25 May 2020 11:45:40 +0800
+Message-Id: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+From: dillon min <dillon.minfei@gmail.com>
 
-On 2020/5/25 11:12, Jason Wang wrote:
-> 
-> On 2020/5/25 上午8:56, Longpeng(Mike) wrote:
->> The system will crash when we insmod crypto/tcrypt.ko whit mode=38.
->>
->> Usually the next entry of one sg will be @sg@ + 1, but if this sg element
->> is part of a chained scatterlist, it could jump to the start of a new
->> scatterlist array. Let's fix it by sg_next() on calculation of src/dst
->> scatterlist.
->>
->> BTW I add a check for sg_nents_for_len() its return value since
->> sg_nents_for_len() function could fail.
->>
->> Cc: Gonglei <arei.gonglei@huawei.com>
->> Cc: Herbert Xu <herbert@gondor.apana.org.au>
->> Cc: "Michael S. Tsirkin" <mst@redhat.com>
->> Cc: Jason Wang <jasowang@redhat.com>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: virtualization@lists.linux-foundation.org
->> Cc: linux-kernel@vger.kernel.org
->>
->> Reported-by: LABBE Corentin <clabbe@baylibre.com>
->> Signed-off-by: Gonglei <arei.gonglei@huawei.com>
->> Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
->> ---
->>   drivers/crypto/virtio/virtio_crypto_algs.c | 14 ++++++++++----
->>   1 file changed, 10 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c
->> b/drivers/crypto/virtio/virtio_crypto_algs.c
->> index 372babb44112..2fa1129f96d6 100644
->> --- a/drivers/crypto/virtio/virtio_crypto_algs.c
->> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
->> @@ -359,8 +359,14 @@ __virtio_crypto_skcipher_do_req(struct
->> virtio_crypto_sym_request *vc_sym_req,
->>       unsigned int num_out = 0, num_in = 0;
->>       int sg_total;
->>       uint8_t *iv;
->> +    struct scatterlist *sg;
->>         src_nents = sg_nents_for_len(req->src, req->cryptlen);
->> +    if (src_nents < 0) {
->> +        pr_err("Invalid number of src SG.\n");
->> +        return src_nents;
->> +    }
->> +
->>       dst_nents = sg_nents(req->dst);
->>         pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
->> @@ -446,12 +452,12 @@ __virtio_crypto_skcipher_do_req(struct
->> virtio_crypto_sym_request *vc_sym_req,
->>       vc_sym_req->iv = iv;
->>         /* Source data */
->> -    for (i = 0; i < src_nents; i++)
->> -        sgs[num_out++] = &req->src[i];
->> +    for (sg = req->src, i = 0; sg && i < src_nents; sg = sg_next(sg), i++)
-> 
-> 
-> Any reason sg is checked here?
-> 
-> I believe it should be checked in sg_nents_for_len().
-> 
-Do you means：
-for (sg = req->src, i = 0; i < src_nents; sg = sg_next(sg), i++) ?
+V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
+for SPI_SIMPLEX_RX mode on stm32 spi controller.
 
-> 
->> +        sgs[num_out++] = sg;
->>         /* Destination data */
->> -    for (i = 0; i < dst_nents; i++)
->> -        sgs[num_out + num_in++] = &req->dst[i];
->> +    for (sg = req->dst, i = 0; sg && i < dst_nents; sg = sg_next(sg), i++)
->> +        sgs[num_out + num_in++] = sg;
-> 
-> 
-> I believe sg should be checked in sg_nents().
->
-How about
-for (sg = req->dst; sg; sg = sg_next(sg)) ?
+V5:
+1 instead of add send dummy data out under SIMPLEX_RX mode,
+   add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+'SPI_3WIRE' mode
 
-> Thanks
-> 
-> 
->>         /* Status */
->>       sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
-> 
-> .
-> 
+V4:
+According to alexandre torgue's suggestion, combine ili9341 and
+l3gd20's modification on stm32f429-disco board to one patchset.
+
+Changes:
+
+ili9341:
+
+1 update ili9341 panel driver according to Linus's suggestion
+2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+3 merge l3gd20's change to this patchset
+
+V3:
+1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+  to support serial spi & parallel rgb interface in one driver.
+2 update ilitek,ili9341.yaml dts binding documentation.
+3 update stm32f429-disco dts binding
+
+V2:
+1 verify ilitek,ili9341.yaml with make O=../linux-stm32
+  dt_binding_check
+  DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+  ilitek,ili9341.yaml
+
+V1:
+1 add ili9341 drm panel driver
+2 add ltdc, spi5 controller for stm32f429-disco
+3 add ltdc, spi5 pin map for stm32f429-disco
+4 add docs about ili9341
+5 fix ltdc driver loading hang in clk set rate bug
+
+
+L3gd20:
+V3:
+1 merge stm32f429-disco dtbs binding with ili9341 part
+
+V2:
+1 insert blank line at stm32f420-disco.dts line 143
+2 add more description for l3gd20 in commit message
+
+V1:
+1 enable spi5 controller on stm32f429-disco (dts)
+2 add spi5 pinmap for stm32f429-disco  (dts)
+3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+
+dillon min (8):
+  ARM: dts: stm32: Add dma config for spi5
+  ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+  ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on    
+    stm32429-disco board
+  dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+  clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,    
+    fix duplicated ltdc clock register to 'clk_core' case ltdc's clock  
+      turn off by clk_disable_unused()
+  drm/panel: Add ilitek ili9341 panel driver
+  spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+  spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+    be     coexit with 'SPI_3WIRE' mode
+
+ .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+ drivers/clk/clk-stm32f4.c                          |    7 +-
+ drivers/gpu/drm/panel/Kconfig                      |   12 +
+ drivers/gpu/drm/panel/Makefile                     |    1 +
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1301 ++++++++++++++++++++
+ drivers/spi/spi-stm32.c                            |   19 +-
+ drivers/spi/spi.c                                  |    3 +-
+ 10 files changed, 1521 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
 
 -- 
----
-Regards,
-Longpeng(Mike)
+2.7.4
+
