@@ -2,118 +2,205 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB64BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 113C32071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873342078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DIl+OHBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgEYXh4 (ORCPT
+        id S2387888AbgEYXkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgEYXhz (ORCPT
+        Mon, 25 May 2020 19:40:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24588 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726029AbgEYXkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:37:55 -0400
-Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E4AC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:37:55 -0700 (PDT)
-Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04PNbrKp011517
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 19:37:53 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04PNbmdl004792
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 19:37:53 -0400
-Received: by mail-qt1-f199.google.com with SMTP id n33so20641222qtd.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:37:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=0Y4uTL21HCKuXUBHqUrAWLjf+83eCCInE3zQVj/p+oM=;
-        b=cAhZ90yedBfruwO5rCGNsQemh8jw2NYIcyGj7qj+A6kN+ov7JKbNDSjj7fJSk8fZE7
-         QzZc+PWtEyHZD4TOEaFP9ecUIV2NDq8U8KaXPQEEPylueVOorYkVQs/63azjeQFjsCWw
-         U63o3LasES42kC4EOW3eKdXzqeTDD4nLUDcoCt1eKY4f25RL9Nm4lpOAU2DlBkrjWsRf
-         le/vKQfQio1ZGn02YScmvUos2w2DZaO1ipSa4/7+JERLTUHxBs82jvbWi0OF72EWQNDy
-         zdfCjzbk+TlQv6IOLeIs1YtvhFd2M5XG6V66OkH5rV5qmtToyGYI2wvJGqGZhmw5LwBR
-         n32g==
-X-Gm-Message-State: AOAM532qUV6NKJ4vjZ88fwLoxBOe1mv12DR35JlVF6ORtsubZmK2TUG7
-        4XnO5gUMIUM4UsCy2UbBcaIQjBkauDOBSwa2LY7rndgaEh3IwY0JZ9u73jB8fBFnZ+bOFxv8Cw+
-        7L6bf/Lp5KaJFA1muAoccCUZM8jgNAgM0PIU=
-X-Received: by 2002:ac8:3f5d:: with SMTP id w29mr30195871qtk.192.1590449868447;
-        Mon, 25 May 2020 16:37:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy/kIKFi+vyRhQzAcfWv1PgD82LNG4zT04fDiifrOM3PqyiRWxZEMlnOS00CB0w/QJOWPRl6Q==
-X-Received: by 2002:ac8:3f5d:: with SMTP id w29mr30195855qtk.192.1590449868128;
-        Mon, 25 May 2020 16:37:48 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id p12sm4199151qkp.129.2020.05.25.16.37.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 16:37:46 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, geert+renesas@glider.be,
-        magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org,
-        sre@kernel.org, robh@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: reset: vexpress: fix build issue
-In-Reply-To: <20200524222025.GA3116034@ubuntu-s3-xlarge-x86>
-References: <20200522220103.908307-1-anders.roxell@linaro.org>
- <20200524222025.GA3116034@ubuntu-s3-xlarge-x86>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1590449865_16657P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+        Mon, 25 May 2020 19:40:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590450006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mNOHdFyOR1+/V7085DfdiHGVU4eJXGBMIjXwIcz4T1k=;
+        b=DIl+OHBRAsIoYgvuqkEHbdu1RMpPu3Dn+JccN3xWixfml0XcgyBs5rR95QzPMsLEwHkX66
+        3mkyKWT1vuDgsq7fg3j9ap7yLHjuQqFJ6JDINAvj4NC9SvItr0IVpYr3XYl1RiHz2gc2GM
+        CHRzAo6PrmAwezEoJCcdtR193JNP//Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-PK4Y-qa6OICb2LhK_eN3rA-1; Mon, 25 May 2020 19:40:01 -0400
+X-MC-Unique: PK4Y-qa6OICb2LhK_eN3rA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDA7C1005510;
+        Mon, 25 May 2020 23:39:59 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-149.bne.redhat.com [10.64.54.149])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 291835C1BB;
+        Mon, 25 May 2020 23:39:51 +0000 (UTC)
+Subject: Re: [PATCH RFCv2 0/9] kvm/arm64: Support Async Page Fault
+From:   Gavin Shan <gshan@redhat.com>
+To:     kvmarm@lists.cs.columbia.edu
+Cc:     mark.rutland@arm.com, aarcange@redhat.com, drjones@redhat.com,
+        suzuki.poulose@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+        james.morse@arm.com, shan.gavin@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200508032919.52147-1-gshan@redhat.com>
+Message-ID: <2063b7bb-ff68-f515-db00-7e9c0ca8d339@redhat.com>
+Date:   Tue, 26 May 2020 09:39:48 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <20200508032919.52147-1-gshan@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 May 2020 19:37:45 -0400
-Message-ID: <292277.1590449865@turing-police>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1590449865_16657P
-Content-Type: text/plain; charset=us-ascii
+On 5/8/20 1:29 PM, Gavin Shan wrote:
+> There are two stages of page faults and the stage one page fault is
+> handled by guest itself. The guest is trapped to host when the page
+> fault is caused by stage 2 page table, for example missing. The guest
+> is suspended until the requested page is populated. There might be
+> IO activities involved for host to populate the requested page. For
+> instance, the requested page has been swapped out previously. In this
+> case, the guest (vCPU) has to suspend for a few of milliseconds, which
+> depends on the swapping media, regardless of the overall system load.
+> 
+> The series adds asychornous page fault to improve the situation. A
+> signal (PAGE_NOT_PRESENT) is sent from host to the guest if the requested
+> page isn't absent immediately. In the mean while, a worker is started
+> to populate the requested page in background. Guest either picks another
+> available process to run or puts current (faulting) process to power
+> saving mode when receiving the (PAGE_NOT_PRESENT) signal. After the
+> requested page is populated by the worker, another signal (PAGE_READY)
+> is sent from host to guest. Guest wakes up the (faulting) process when
+> receiving the (PAGE_READY) signal.
+> 
+> The signals are conveyed through control block. The control block physical
+> address is passed from guest to host through dedicated KVM vendor specific
+> hypercall. The control block is visible and accessible by host and guest
+> in the mean while. The hypercall is also used to enable, disable, configure
+> the functionality. Notifications, by injected abort data exception, are
+> fired when there are pending signals. The exception handler will be invoked
+> in guest kernel.
+> 
+> Testing
+> =======
+> The tests are carried on the following machine. A guest with single vCPU
+> and 4GB memory is started. Also, the QEMU process is put into memory cgroup
+> (v1) whose memory limit is set to 2GB. In the guest, there are two threads,
+> which are memory bound and CPU bound separately. The memory bound thread
+> allocates all available memory, accesses and them free them. The CPU bound
+> thread simply executes block of "nop". The test is carried out for 5 time
+> continuously and the average number (per minute) of executed blocks in the
+> CPU bound thread is taken as indicator of improvement.
+> 
+>     Vendor: GIGABYTE   CPU: 224 x Cavium ThunderX2(R) CPU CN9975 v2.2 @ 2.0GHz
+>     Memory: 32GB       Disk: Fusion-MPT SAS-3 (PCIe3.0 x8)
+> 
+>     Without-APF: 7029030180/minute = avg(7559625120 5962155840 7823208540
+>                                          7629633480 6170527920)
+>     With-APF:    8286827472/minute = avg(8464584540 8177073360 8262723180
+>                                          8095084020 8434672260)
+>     Outcome:     +17.8%
+> 
+> Another test case is to measure the time consumed by the application, but
+> with the CPU-bound thread disabled.
+> 
+>     Without-APF: 40.3s = avg(40.6 39.3 39.2 41.6 41.2)
+>     With-APF:    40.8s = avg(40.6 41.1 40.9 41.0 40.7)
+>     Outcome:     +1.2%
+> 
+> I also have some code in the host to capture the number of async page faults,
+> time used to do swapin and its maximal/minimal values when async page fault
+> is enabled. During the test, the CPU-bound thread is disabled. There is about
+> 30% of the time used to do swapin.
+> 
+>     Number of async page fault:     7555 times
+>     Total time used by application: 42.2 seconds
+>     Total time used by swapin:      12.7 seconds   (30%)
+>           Minimal swapin time:      36.2 us
+>           Maximal swapin time:      55.7 ms
+> 
 
-On Sun, 24 May 2020 15:20:25 -0700, Nathan Chancellor said:
+A kindly ping... Marc/Mark/Will, please let me know your comments
+on this. thanks in advance!
 
-> arm-linux-gnueabi-ld: drivers/power/reset/vexpress-poweroff.o: in function `vexpress_reset_probe':
-> vexpress-poweroff.c:(.text+0x36c): undefined reference to `devm_regmap_init_vexpress_config'
+> Changelog
+> =========
+> RFCv1 -> RFCv2
+>     * Rebase to 5.7.rc3
+>     * Performance data                                                   (Marc Zyngier)
+>     * Replace IMPDEF system register with KVM vendor specific hypercall  (Mark Rutland)
+>     * Based on Will's KVM vendor hypercall probe mechanism               (Will Deacon)
+>     * Don't use IMPDEF DFSC (0x43). Async page fault reason is conveyed
+>       by the control block                                               (Mark Rutland)
+>     * Delayed wakeup mechanism in guest kernel                           (Gavin Shan)
+>     * Stability improvement in the guest kernel: delayed wakeup mechanism,
+>       external abort disallowed region, lazily clear async page fault,
+>       disabled interrupt on acquiring the head's lock and so on          (Gavin Shan)
+>     * Stability improvement in the host kernel: serialized async page
+>       faults etc.                                                        (Gavin Shan)
+>     * Performance improvement in guest kernel: percpu sleeper head       (Gavin Shan)
+> 
+> Gavin Shan (7):
+>    kvm/arm64: Rename kvm_vcpu_get_hsr() to kvm_vcpu_get_esr()
+>    kvm/arm64: Detach ESR operator from vCPU struct
+>    kvm/arm64: Replace hsr with esr
+>    kvm/arm64: Export kvm_handle_user_mem_abort() with prefault mode
+>    kvm/arm64: Support async page fault
+>    kernel/sched: Add cpu_rq_is_locked()
+>    arm64: Support async page fault
+> 
+> Will Deacon (2):
+>    arm64: Probe for the presence of KVM hypervisor services during boot
+>    arm/arm64: KVM: Advertise KVM UID to guests via SMCCC
+> 
+>   arch/arm64/Kconfig                       |  11 +
+>   arch/arm64/include/asm/exception.h       |   3 +
+>   arch/arm64/include/asm/hypervisor.h      |  11 +
+>   arch/arm64/include/asm/kvm_emulate.h     |  83 +++--
+>   arch/arm64/include/asm/kvm_host.h        |  47 +++
+>   arch/arm64/include/asm/kvm_para.h        |  40 +++
+>   arch/arm64/include/uapi/asm/Kbuild       |   2 -
+>   arch/arm64/include/uapi/asm/kvm_para.h   |  22 ++
+>   arch/arm64/kernel/entry.S                |  33 ++
+>   arch/arm64/kernel/process.c              |   4 +
+>   arch/arm64/kernel/setup.c                |  35 ++
+>   arch/arm64/kvm/Kconfig                   |   1 +
+>   arch/arm64/kvm/Makefile                  |   2 +
+>   arch/arm64/kvm/handle_exit.c             |  48 +--
+>   arch/arm64/kvm/hyp/switch.c              |  33 +-
+>   arch/arm64/kvm/hyp/vgic-v2-cpuif-proxy.c |   7 +-
+>   arch/arm64/kvm/inject_fault.c            |   4 +-
+>   arch/arm64/kvm/sys_regs.c                |  38 +-
+>   arch/arm64/mm/fault.c                    | 434 +++++++++++++++++++++++
+>   include/linux/arm-smccc.h                |  32 ++
+>   include/linux/sched.h                    |   1 +
+>   kernel/sched/core.c                      |   8 +
+>   virt/kvm/arm/arm.c                       |  40 ++-
+>   virt/kvm/arm/async_pf.c                  | 335 +++++++++++++++++
+>   virt/kvm/arm/hyp/aarch32.c               |   4 +-
+>   virt/kvm/arm/hyp/vgic-v3-sr.c            |   7 +-
+>   virt/kvm/arm/hypercalls.c                |  37 +-
+>   virt/kvm/arm/mmio.c                      |  27 +-
+>   virt/kvm/arm/mmu.c                       |  69 +++-
+>   29 files changed, 1264 insertions(+), 154 deletions(-)
+>   create mode 100644 arch/arm64/include/asm/kvm_para.h
+>   create mode 100644 arch/arm64/include/uapi/asm/kvm_para.h
+>   create mode 100644 virt/kvm/arm/async_pf.c
+> 
 
-The part I can't figure out is that git blame tells me there's already an
-export:
-
-3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 154)   return regmap;
-3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 155) }
-b33cdd283bd91 (Arnd Bergmann   2014-05-26 17:25:22 +0200 156) EXPORT_SYMBOL_GPL(devm_regmap_init_vexpress_config);
-3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 157)
-
-but I can't figure out where or if drivers/power/reset/vexpress-poweroff.c gets
-a MODULE_LICENSE from...
-
---==_Exmh_1590449865_16657P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXsxWyQdmEQWDXROgAQKJMw/+LVSCrU+vJAzxclsrfbDe/OtM6Q9eNp6H
-gLk7jtHTVhF2gxHjIUDO1prxqP0UvjDIdFELT6wPM5tSLbnQ+LR2K4VmfO0Dnqay
-zzIhhfyCko81tYkF9vi44SIAQp4fVhousbwJYo5LQ8ukCeIzUgbxPqMBcsJwwZbq
-xiQxWuFv5K+QrXR/dPBSkv0DZ+nFjn8oqwo/HwXNeHOj2z/eYepzeG7FW/HvFwfI
-MG9J+CM8FPxvsOJRDHg9xP21CyEEGrnj61hQmZ7Otzhlfha5RIcWX/3JfArd2Ic5
-sRttZ+fI1g3+q0Sypyw0lYl0R1Sc0/ynnsjAKlqAuUp/hzW/v5jeMByAl1j2YTVO
-3QwDA+LhzpVU+erxgYq9B2Aqj38mJ/nBKvUdR8+CNeoAVcoHiYLv5KHy7wBPtF7O
-ES+yoq/yc6YFqzy8Um74Op1xgAg13D/wcxW8lfGnZn3IRggYC6HMG0W91CSJ+rg5
-xj/uimdjd6AGIxfnQbGZzoJEFOI3TzB3BLOyARliLqZIi1h6OosUATpvVUVqEHVL
-dQ95eyBGOzSaJ3LgvmdNbVTE8V+DkiV3y4eAI0F3kpZQqLFBgO13jiWiDC+n6dZ2
-ESirUcXrKRR0p++VDXZdMFI0rparnJmbNCmn2u2OHFwaFpe7NYEXY1uBNV0oYYFp
-sIubTjf8DqU=
-=nu0y
------END PGP SIGNATURE-----
-
---==_Exmh_1590449865_16657P--
