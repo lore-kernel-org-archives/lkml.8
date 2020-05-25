@@ -2,132 +2,91 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B29C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13EA206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S1w8YoBl"
+	by mail.kernel.org (Postfix) with ESMTP id 6C7AB20812
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389893AbgEYKpl (ORCPT
+        id S2389886AbgEYKsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYKpk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:45:40 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE004C061A0E;
-        Mon, 25 May 2020 03:45:39 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49VtzP0yzHz9sSg;
-        Mon, 25 May 2020 20:45:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590403537;
-        bh=6Q7JXlwF2Rcy26HZZvGUKpQSB/dFk+mz8rLmYPUDsq8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=S1w8YoBl4a/LvKGndnClVAUxDFa7K4P0Viucd/BPReV+BIV9/aD2LIKkOknTKGqtn
-         +xnMco+B8iBR7Irvv2SUB9dyg74CZOb8M5q9LU+r25XIG9IOsH/Kscf7d+boscoZV4
-         TNts9Cl3yD4ucAlnh6yYJvEFXjff+hb3zybMjdZnlC86YGuz8Snb0ZmB/jPb2k+k2V
-         WFu7SPsloaCaO0gXCgiZzBK+XXe1B1S3tcucJttpaWy+YKXT9HiWj3tSGY2xRqYW/N
-         CT1YQdgSe85HHNqotSn5iYUWpm7Mgjvq5zwVyIP7kyiqzVzoC2bXhpKUKlNUrxR1QR
-         giiHiJOY13N8w==
-Date:   Mon, 25 May 2020 20:45:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the nand tree
-Message-ID: <20200525204535.18e243d7@canb.auug.org.au>
+        Mon, 25 May 2020 06:48:38 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:52778 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389484AbgEYKsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:48:37 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jdAem-0007hV-QC; Mon, 25 May 2020 12:48:32 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 2/2] phy: Remove CONFIG_ARCH_ROCKCHIP check for subdir rockchip
+Date:   Mon, 25 May 2020 12:48:32 +0200
+Message-ID: <2687194.6AVWON70EC@diego>
+In-Reply-To: <1590379739-18729-2-git-send-email-yangtiezhu@loongson.cn>
+References: <1590379739-18729-1-git-send-email-yangtiezhu@loongson.cn> <1590379739-18729-2-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3geVHwl1tYIx_S6vKZI_F3q";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3geVHwl1tYIx_S6vKZI_F3q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Am Montag, 25. Mai 2020, 06:08:59 CEST schrieb Tiezhu Yang:
+> If CONFIG_ARCH_ROCKCHIP is not set but COMPILE_TEST is set, the file in
+> the subdir rockchip can not be built due to CONFIG_ARCH_ROCKCHIP check
+> in drivers/phy/Makefile.
+> 
+> Since the related configs in drivers/phy/rockchip/Kconfig depend on
+> ARCH_ROCKCHIP, so remove CONFIG_ARCH_ROCKCHIP check for subdir rockchip
+> in drivers/phy/Makefile.
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Hi all,
+wouldn't this make more sense to do for all subdirs?
 
-After merging the nand tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+- allwinner: also has arch_sunxi || compile_test in its Kconfig
+- amlogic: same
+- mediatek: same
+- renesas: same
+- tega: same
 
-drivers/mtd/nand/raw/pasemi_nand.c: In function 'pasemi_nand_probe':
-drivers/mtd/nand/raw/pasemi_nand.c:157:1: warning: label 'out_cleanup' defi=
-ned but not used [-Wunused-label]
-  157 | out_cleanup:
-      | ^~~~~~~~~~~
-drivers/mtd/nand/raw/pasemi_nand.c:149:3: error: label 'out_cleanup_nand' u=
-sed but not defined
-  149 |   goto out_cleanup_nand;
-      |   ^~~~
+So I think the right way would be to drop all the obj-$(CONFIG_ARCH_...)
+options and group the separate directories into the generic subdir
+listing below them.
 
-Caused by commit
+Heiko
 
-  d6a2207d79e3 ("mtd: rawnand: pasemi: Fix the probe error path")
+> ---
+>  drivers/phy/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 310c149..e5b4f58 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -12,7 +12,7 @@ obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
+>  obj-$(CONFIG_ARCH_MESON)		+= amlogic/
+>  obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
+>  obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
+> -obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
+> +obj-y					+= rockchip/
+>  obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
+>  obj-y					+= broadcom/	\
+>  					   cadence/	\
+> 
 
-I have applied the following patch for today.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 25 May 2020 20:41:22 +1000
-Subject: [PATCH] mtd: rawnand: pasemi: fix up label spelling
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/mtd/nand/raw/pasemi_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/pasemi_nand.c b/drivers/mtd/nand/raw/pase=
-mi_nand.c
-index 37570f0c3a36..d8eca8c3fdcd 100644
---- a/drivers/mtd/nand/raw/pasemi_nand.c
-+++ b/drivers/mtd/nand/raw/pasemi_nand.c
-@@ -154,7 +154,7 @@ static int pasemi_nand_probe(struct platform_device *of=
-dev)
-=20
- 	return 0;
-=20
--out_cleanup:
-+ out_cleanup_nand:
- 	nand_cleanup(chip);
-  out_lpc:
- 	release_region(lpcctl, 4);
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3geVHwl1tYIx_S6vKZI_F3q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Loc8ACgkQAVBC80lX
-0Gz/dgf/VsOmeJkK9N/mBkx+mpOQz4tCKEQRK0IH2391WEd0cupp7flpnLD+YIz3
-C7Om40haQRSkphj3iCGQbKYe/dZDKw341yH0072tjnFkgCIQmT3KYuGjvtq1CnkV
-XJ6QSWpOdjXOJyyOONldKgvw3ax/kPFELhKA/vrMDIk2iOnTPfg6lr9tF63crkdR
-ZnDG3mY28Eoe4DI0FJU3bM3+f+xFbBWs9tY1kDypeAx1/x/FIDZfZcgjCsJoZJrx
-7XOnVnonB92NKpVO0EAaxW3iueY/diM2Vq58BWXgvf3HtMFnQhGJd7ouFYJG9L2Z
-RMDDkih/glJGM9mCjpvVB/bMyPUdqg==
-=/5Pw
------END PGP SIGNATURE-----
-
---Sig_/3geVHwl1tYIx_S6vKZI_F3q--
