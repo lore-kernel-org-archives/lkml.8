@@ -2,88 +2,73 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E46F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA60207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590445959;
+	bh=U75/cbCcAyXfzuiFK7KXv+sfRvsN3iSpASew1Ubcwn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DGQ0H7GJW19r4VmhAVMBGMBFPzWdFg1FOdu7p4mnpXOeyQ96AebQKcApH+OEdI1Qo
+	 kFqBf00CRGITrvA7lzQwQg2aJkWIqkY9w8j5spZ4lLw62x9tHtAJo9NEv7buOh0F2a
+	 cB+inBJOGidX3TWorTt68yvoucVc41okRWv1Hm0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389546AbgEYWXO (ORCPT
+        id S1729554AbgEYWbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 18:23:14 -0400
-Received: from www62.your-server.de ([213.133.104.62]:52266 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgEYWXO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 18:23:14 -0400
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jdLUz-0002ho-34; Tue, 26 May 2020 00:23:09 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jdLUy-000Jyd-MG; Tue, 26 May 2020 00:23:08 +0200
-Subject: Re: [PATCH] MAINTAINERS: adjust entry in XDP SOCKETS to actual file
- name
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        maciej.fijalkowski@intel.com, Alexei Starovoitov <ast@kernel.org>,
-        bpf@vger.kernel.org
-Cc:     netdev@vger.kernel.org,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200525141553.7035-1-lukas.bulwahn@gmail.com>
- <9d930e0e-5c77-11b8-6a8b-982fac711f6d@intel.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <22339b06-2cf1-0a3a-5813-86651ecd8d03@iogearbox.net>
-Date:   Tue, 26 May 2020 00:23:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <9d930e0e-5c77-11b8-6a8b-982fac711f6d@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25823/Mon May 25 14:23:53 2020)
+        Mon, 25 May 2020 18:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725964AbgEYWbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 18:31:47 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2356F207CB;
+        Mon, 25 May 2020 22:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590445907;
+        bh=U75/cbCcAyXfzuiFK7KXv+sfRvsN3iSpASew1Ubcwn8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zFIAMLsxnzq3sufRj+2AkgYKks9Kc0bnKKuFfqIbeDy/c8dqMka8T76n+a1MftXQn
+         cdRmILx7yjnTnG/RQs3wOW5XKNUELtHk9Poa/ytnQcFLHen0aTN9BSbbs9exYo2Bj+
+         L94COAxZM2PJ73n1dXxxacGsf0vU0WAaPS5ZgRSw=
+Date:   Mon, 25 May 2020 15:31:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        christian.brauner@ubuntu.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bitops: simplify get_count_order_long()
+Message-Id: <20200525153146.c1337b1ca7af386ac30e5702@linux-foundation.org>
+In-Reply-To: <20200525215741.zd3gry4yyqqplix6@master>
+References: <20200524123551.9469-1-richard.weiyang@gmail.com>
+        <20200525091458.GK1634618@smile.fi.intel.com>
+        <20200525144312.mbw2z3ydncyasvss@master>
+        <20200525153216.GD1634618@smile.fi.intel.com>
+        <20200525134110.5737dd603d5fa1230e2f7ece@linux-foundation.org>
+        <20200525215741.zd3gry4yyqqplix6@master>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 4:42 PM, Björn Töpel wrote:
-> On 2020-05-25 16:15, Lukas Bulwahn wrote:
->> Commit 2b43470add8c ("xsk: Introduce AF_XDP buffer allocation API") added a
->> new header file include/net/xsk_buff_pool.h, but commit 28bee21dc04b
->> ("MAINTAINERS, xsk: Update AF_XDP section after moves/adds") added a file
->> entry referring to include/net/xsk_buffer_pool.h.
->>
->> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
->>
->>    warning: no file matches  F:  include/net/xsk_buffer_pool.h
->>
->> Adjust the entry in XDP SOCKETS to the actual file name.
->>
->> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
->> ---
->> Björn, please pick this minor non-urgent patch.
->>
->> applies to next-20200525 on top of the commits mentioned above
->>
-> 
-> Thanks Lukas!
-> 
-> Daniel/Alexei, this should go to the bpf-next tree.
+On Mon, 25 May 2020 21:57:41 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
 
-Yep, applied, thanks!
+> I see the patch just merged, so I suppose to add the above test code into that
+> one?
+
+Well, that's not really test code.
+
+But yes, something which tests both the 32-bit and 64-bit functions would be
+nice, sometime.
+
