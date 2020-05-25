@@ -2,157 +2,140 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8CAF2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590390911;
-	bh=YFgtG6huhkHRiOdwNZCAV+D12/UIoXk/fcLnM/lUdeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jAqNwZger0Ru4mxrlwNbSPlu/7v+QJpxEh88DIJebO7BXupEjLG+xZBBUSWiSvbJz
-	 z/7ug8OgVXEfRKoegJ6/4Jxy+5aZ1HgfEv9h1YZCY9v8Ecb4GbQSbqnpMUWcLrluBY
-	 OX7K8tQXmaUXeH+ixzLbJPGhUNGVp8+aS5kCVpe0=
+	by mail.kernel.org (Postfix) with ESMTP id 106DF2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X3f906WA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389054AbgEYHPL (ORCPT
+        id S2389026AbgEYHPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388982AbgEYHPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:15:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D01A2071A;
-        Mon, 25 May 2020 07:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590390910;
-        bh=YFgtG6huhkHRiOdwNZCAV+D12/UIoXk/fcLnM/lUdeg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vtrWywB3/mB0QEDRNMzGH93WaxvezI456K+fFbe0o2XNJnOjXOunVsfW2JXT4Bmkm
-         mU+uEh3a7fQ9AyHERKOZ4LmVbAnuKydoUcT1mJhDlYXIim/TJJWH9nBGVKlv5iD02K
-         YX/oZJ7wPu96i4zzcBYWv4lwXWz/3XO9hrCcncnw=
-Date:   Mon, 25 May 2020 09:15:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Kyungtae Kim <kt0755@gmail.com>, Jiri Slaby <jslaby@suse.com>,
-        syzkaller <syzkaller@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Tian <dave.jing.tian@gmail.com>
-Subject: Re: [PATCH v2] vt: keyboard: avoid integer overflow in k_ascii
-Message-ID: <20200525071507.GA169307@kroah.com>
-References: <20200523230928.GA17074@pizza01>
- <20200525000823.GE89269@dtor-ws>
+        Mon, 25 May 2020 03:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388978AbgEYHPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:15:53 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B75C03E96D
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:15:53 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id c17so5792951uaq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tW47sLPl7yvQUlpsqFGaRt0/eA0f/XtExRc8VNJ5L8s=;
+        b=X3f906WAm1B7znVikPVukV6tgsYYUkm8v+SSd0x+rtjZfgsQwXU/C5hodPsbUpzf+R
+         BsNenIyHnRQKNVI0gEyOsBlWkBG9l8kpemHYf5arLdSXoKccfSR3MFVTK8U28fiH6RFy
+         zpF/6oIiC1R937exP0cxNj+fLhwVY5mLbZLV4dAnb+aI8JqZcUh6rWxOf0f+av+GNbEO
+         Qno7YKLbvApPD9bO42MZre7gFikypcUpyT6VmJmffeKr84+gD7MR4Fb6R8cH1oPFWWTr
+         ICbH30dzo42Yu5VE2FUsF3x6DtchJd7jbvjnBmUjmQDi3KtvBDtnQfJBA4d0R3eKGEM7
+         ad7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tW47sLPl7yvQUlpsqFGaRt0/eA0f/XtExRc8VNJ5L8s=;
+        b=jff+65dF5Pc2FXQ5ym7Eq5L3KPCP3/dVkgM/fEixDH1j7zmaNkvOaOifNewBXEwz9+
+         bW4vI++P7z6YAcraALaqZw2rp4sIRa81KdI20syWniaCBdKiGjemwPcmM83+irOsZA5/
+         V9CHT1Yk8/Gz0VZky2a4xUz4YJP8Yb3TX2YZywgHHcbWhVROO0ZaGM3wW6YesA+6M3Zq
+         xmZ97EPktb+J8uegMujD6yj7Iw9dNjJQlTBX4WvjZ/OOCfludaZbiICN8C4VZ3nhd7q6
+         1+zf9Lm/Tpq8vdb0i86IrLpYkf9lG4Pnkv/U7WZJXN6B5qvZE3PuAa0HHuDlm1dlN9yn
+         rn4Q==
+X-Gm-Message-State: AOAM530P4LcZwe7ijrokrR/StqHBz6LIeIFKZgeyfg6Sm1dp/eDtnc55
+        uy3qlb32E4hRyFM3VPG4Ut2Bb6+y+oLO9VwUdOm73g==
+X-Google-Smtp-Source: ABdhPJyn+vBET+wry7tIEPuyPG84ngjDJAb2r8EvcfU02yuysMA8153T8p81LOO/yO3mggJ+Oo/TpwlvMW9/07YJ+KQ=
+X-Received: by 2002:ab0:7293:: with SMTP id w19mr17816123uao.129.1590390952511;
+ Mon, 25 May 2020 00:15:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525000823.GE89269@dtor-ws>
+References: <20200522144412.19712-1-pali@kernel.org>
+In-Reply-To: <20200522144412.19712-1-pali@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 25 May 2020 09:15:16 +0200
+Message-ID: <CAPDyKFqwrtJy2Ss0_KcBtpGP78d_BePTGJp01KtfuOaQqiwiHg@mail.gmail.com>
+Subject: Re: [PATCH 00/11] mmc: sdio: Move SDIO IDs from drivers to common
+ include file
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ath10k@lists.infradead.org, b43-dev@lists.infradead.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        libertas-dev@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 05:08:23PM -0700, Dmitry Torokhov wrote:
-> On Sat, May 23, 2020 at 11:09:35PM +0000, Kyungtae Kim wrote:
-> > @@ -884,8 +884,11 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
-> >  
-> >  	if (npadch == -1)
-> >  		npadch = value;
-> > +	else if (!check_mul_overflow(npadch, base, &new_npadch) &&
-> > +	    !check_add_overflow(new_npadch, value, &new_npadch))
-> > +		npadch = new_npadch;
-> >  	else
-> > -		npadch = npadch * base + value;
-> > +		return;
-> >  }
-> 
-> So thinking about it some more, if we use unsigned types, then there is
-> no issue with overflow UB, and thus maybe we should do something like
-> this:
-> 
-> diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-> index 15d33fa0c925..568b2171f335 100644
-> --- a/drivers/tty/vt/keyboard.c
-> +++ b/drivers/tty/vt/keyboard.c
-> @@ -127,7 +127,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
->  static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
->  static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
->  static bool dead_key_next;
-> -static int npadch = -1;					/* -1 or number assembled on pad */
-> +
-> +/* Handles a number being assembled on the number pad */
-> +static bool npadch_active;
+On Fri, 22 May 2020 at 16:45, Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>
+> Most SDIO IDs are defined in the common include file linux/mmc/sdio_ids.h=
+.
+> But some drivers define IDs locally or do not use existing macros from th=
+e
+> common include file.
+>
+> This patch series fixes above inconsistency. It defines missing macro nam=
+es
+> and moves all remaining SDIO IDs from drivers to the common include file.
+> Also some macro names are changed to follow existing naming conventions.
 
-Much nicer, thanks for that, -1 is not a good thing to try to understand :)
+Thanks - a nice cleanup!
 
-> +static unsigned int npadch_value;
+I guess this is best queued via my mmc tree, unless bluetooth/wireless
+maintainers think there are some problems with that. I will wait for
+an ack from them before applying.
 
-Nicer to just make this a u32 to be explicit about it?
+Kind regards
+Uffe
 
-> +
->  static unsigned int diacr;
->  static char rep;					/* flag telling character repeat */
->  
-> @@ -845,12 +849,12 @@ static void k_shift(struct vc_data *vc, unsigned char value, char up_flag)
->  		shift_state &= ~(1 << value);
->  
->  	/* kludge */
-> -	if (up_flag && shift_state != old_state && npadch != -1) {
-> +	if (up_flag && shift_state != old_state && npadch_active) {
->  		if (kbd->kbdmode == VC_UNICODE)
-> -			to_utf8(vc, npadch);
-> +			to_utf8(vc, npadch_value);
->  		else
-> -			put_queue(vc, npadch & 0xff);
-> -		npadch = -1;
-> +			put_queue(vc, npadch_value & 0xff);
-> +		npadch_active = false;
->  	}
->  }
->  
-> @@ -868,7 +872,7 @@ static void k_meta(struct vc_data *vc, unsigned char value, char up_flag)
->  
->  static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
->  {
-> -	int base;
-> +	unsigned int base;
-
-u32?
-
-
->  
->  	if (up_flag)
->  		return;
-> @@ -882,10 +886,12 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
->  		base = 16;
->  	}
->  
-> -	if (npadch == -1)
-> -		npadch = value;
-> -	else
-> -		npadch = npadch * base + value;
-> +	if (!npadch_active) {
-> +		npadch_value = 0;
-> +		npadch_active = true;
-> +	}
-> +
-> +	npadch_value = npadch_value * base + value;
->  }
->  
->  static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
-> 
-> 
-> I think if we stop overloading what npadch means, the code becomes more
-> clear. What do you think?
-
-I think it makes a lot more sense, care to turn this into a "real"
-patch?
-
-thanks,
-greg k-h
+>
+> Pali Roh=C3=A1r (11):
+>   mmc: sdio: Fix macro name for Marvell device with ID 0x9134
+>   mmc: sdio: Change macro names for Marvell 8688 modules
+>   mmc: sdio: Move SDIO IDs from mwifiex driver to common include file
+>   mmc: sdio: Move SDIO IDs from btmrvl driver to common include file
+>   mmc: sdio: Move SDIO IDs from btmtksdio driver to common include file
+>   mmc: sdio: Move SDIO IDs from smssdio driver to common include file
+>   mmc: sdio: Move SDIO IDs from ath6kl driver to common include file
+>   mmc: sdio: Move SDIO IDs from ath10k driver to common include file
+>   mmc: sdio: Move SDIO IDs from b43-sdio driver to common include file
+>   mmc: sdio: Fix Cypress SDIO IDs macros in common include file
+>   mmc: sdio: Sort all SDIO IDs in common include file
+>
+>  drivers/bluetooth/btmrvl_sdio.c               | 18 ++--
+>  drivers/bluetooth/btmtksdio.c                 |  4 +-
+>  drivers/media/mmc/siano/smssdio.c             | 10 +-
+>  drivers/mmc/core/quirks.h                     |  2 +-
+>  drivers/net/wireless/ath/ath10k/sdio.c        | 25 ++---
+>  drivers/net/wireless/ath/ath10k/sdio.h        |  8 --
+>  drivers/net/wireless/ath/ath6kl/hif.h         |  6 --
+>  drivers/net/wireless/ath/ath6kl/sdio.c        | 17 ++--
+>  drivers/net/wireless/broadcom/b43/sdio.c      |  4 +-
+>  .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  6 +-
+>  .../broadcom/brcm80211/brcmfmac/sdio.c        |  4 +-
+>  .../net/wireless/marvell/libertas/if_sdio.c   |  2 +-
+>  drivers/net/wireless/marvell/mwifiex/sdio.c   | 38 ++------
+>  include/linux/mmc/sdio_ids.h                  | 94 ++++++++++++++-----
+>  14 files changed, 120 insertions(+), 118 deletions(-)
+>
+> --
+> 2.20.1
+>
