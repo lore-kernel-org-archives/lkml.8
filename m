@@ -2,150 +2,193 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38087C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC645C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C90C206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2CC52084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590387033;
+	bh=AAZZMOwgYuHbhevAyyNIUV6liFjVPb2E2iBxUsLpYXU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yyzFMWvCXerppBViS0z1Lx1ZcDGSMT/5m2MtwAqcWtvpVWkxLF9wSQ5uyi7JOA1L3
+	 5hQuCh0vo2pF5dTXJLnBtVpuqgm+Fv1eQ+yB4kBLTKupjlMord3mw3n8EIgO8kNzez
+	 OZlilgKXJDzXxjh6bS39G9c985LrCiLDwL2RPqKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbgEYGHX (ORCPT
+        id S1729793AbgEYGKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 02:07:23 -0400
-Received: from smtprelay0013.hostedemail.com ([216.40.44.13]:56010 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729064AbgEYGHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 02:07:21 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 50FF91801E2FD;
-        Mon, 25 May 2020 06:07:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: tramp03_010d52726d3e
-X-Filterd-Recvd-Size: 4128
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 May 2020 06:07:16 +0000 (UTC)
-Message-ID: <b4d273ef6013069c6a68667a1e02204fc1e3ea39.camel@perches.com>
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
- printk(KERN_DEBUG)
-From:   Joe Perches <joe@perches.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Date:   Sun, 24 May 2020 23:07:15 -0700
-In-Reply-To: <94f7ce4f-74fb-bccc-2e87-749e0c8da92c@i-love.sakura.ne.jp>
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
-         <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
-         <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
-         <94f7ce4f-74fb-bccc-2e87-749e0c8da92c@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Mon, 25 May 2020 02:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728324AbgEYGKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 02:10:32 -0400
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96EF6208A7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590387031;
+        bh=AAZZMOwgYuHbhevAyyNIUV6liFjVPb2E2iBxUsLpYXU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KEedDt7h4gI7cMtbWw+1YX/0FJf2SwWSbOzXsRwG9XhrP6HcwWpSgFwHBXXMAQ2s2
+         yr2AvlrBBhF4mJh5WNRMJzpidKPvaF1WisRg0yLoJ9MZqyHPxavUSmZ8FycGcqot1z
+         d4IgietmGNRtUnlP/mEoXbWrYzsMxdqX0d/eIirA=
+Received: by mail-io1-f46.google.com with SMTP id s18so3655778ioe.2
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 23:10:31 -0700 (PDT)
+X-Gm-Message-State: AOAM53056m71EpuwdjGiX13K9wjvM8ZOYy3qtB5TdXdNjZRLBSA8MUPw
+        XF7E6fHv0aSHHPeOEfrV1E85QVWOrgG6tdThbrc=
+X-Google-Smtp-Source: ABdhPJy8D8hDbgtk8fpQ8Ntb6YEBqqJpzeujItn3lwvyAIPmSOKg8HNCtgzXc0u0SdmBRJFkttJWyC+QITv6kKa5ALM=
+X-Received: by 2002:a05:6602:2dcd:: with SMTP id l13mr12238753iow.203.1590387030826;
+ Sun, 24 May 2020 23:10:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+ <20200524212816.243139-5-nivedita@alum.mit.edu>
+In-Reply-To: <20200524212816.243139-5-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 25 May 2020 08:10:20 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFjDMuLekYKiPoKDqJhfkY8UViApdMd3JaPmGbnKLO+NA@mail.gmail.com>
+Message-ID: <CAMj1kXFjDMuLekYKiPoKDqJhfkY8UViApdMd3JaPmGbnKLO+NA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] x86/boot: Check that there are no runtime relocations
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-25 at 14:03 +0900, Tetsuo Handa wrote:
-> On 2020/05/25 4:18, Ondrej Mosnacek wrote:
-> > I'm also not sure if this is really worth it... It would help localize
-> > the bug in this specific case, but there is nothing systematic about
-> > it. Are there that many debug print statements that dereference
-> > pointers that are later passed to functions, but not dereferenced
-> > otherwise? Maybe yes, but it seems to be quite an optimistic
-> > assumption... I don't consider it such a big problem that a bug in
-> > function X only manifests itself deeper in the callchain. There will
-> > always be such bugs, no matter how many moles you whack.
-> 
-> There are about 1400 pr_debug() callers. About 1000 pr_debug() callers seem
-> to pass plain '%p' (which is now likely useless for debugging purpose due to
-> default ptr_to_id() conversion inside pointer()), and about 400 pr_debug()
-> callers seem to pass '%p[a-zA-Z]' (which does some kind of dereference inside
-> pointer()). Thus, we might find some bugs by evaluating '%p[a-zA-Z]'.
-> 
-> 
-> 
-> On Sun, May 24, 2020 at 7:38 PM Joe Perches <joe@perches.com> wrote:
-> > While I think this is rather unnecessary,
-> > what about dev_dbg/netdev_dbg/netif_dbg et al ?
-> 
-> Maybe a good idea, for there are about 24000 *dev_dbg() callers, and
-> 479 callers pass '%p[a-zA-Z]'. But we can defer to another patch, in
-> case this patch finds crashes before fuzz testing process starts.
+On Sun, 24 May 2020 at 23:28, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Add a linker script check that there are no runtime relocations, and
+> remove the old one that tries to check via looking for specially-named
+> sections in the object files.
+>
+> Drop the tests for -fPIE compiler option and -pie linker option, as they
+> are available in all supported gcc and binutils versions (as well as
+> clang and lld).
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+>  arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++
+>  2 files changed, 14 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index d3e882e855ee..679a2b383bfe 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -27,7 +27,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+>         vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
+>
+>  KBUILD_CFLAGS := -m$(BITS) -O2
+> -KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+> +KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+>  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+>  cflags-$(CONFIG_X86_32) := -march=i386
+>  cflags-$(CONFIG_X86_64) := -mcmodel=small
+> @@ -49,7 +49,7 @@ UBSAN_SANITIZE :=n
+>  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+>  # Compressed kernel should be built as PIE since it may be loaded at any
+>  # address by the bootloader.
+> -KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
+> +KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
+>  LDFLAGS_vmlinux := -T
+>
+>  hostprogs      := mkpiggy
+> @@ -84,30 +84,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+>  vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+>  vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+>
+> -# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+> -# can place it anywhere in memory and it will still run. However, since
+> -# it is executed as-is without any ELF relocation processing performed
+> -# (and has already had all relocation sections stripped from the binary),
+> -# none of the code can use data relocations (e.g. static assignments of
+> -# pointer values), since they will be meaningless at runtime. This check
+> -# will refuse to link the vmlinux if any of these relocations are found.
+> -quiet_cmd_check_data_rel = DATAREL $@
+> -define cmd_check_data_rel
+> -       for obj in $(filter %.o,$^); do \
+> -               $(READELF) -S $$obj | grep -qF .rel.local && { \
+> -                       echo "error: $$obj has data relocations!" >&2; \
+> -                       exit 1; \
+> -               } || true; \
+> -       done
+> -endef
+> -
+> -# We need to run two commands under "if_changed", so merge them into a
+> -# single invocation.
+> -quiet_cmd_check-and-link-vmlinux = LD      $@
+> -      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+> -
+>  $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+> -       $(call if_changed,check-and-link-vmlinux)
+> +       $(call if_changed,ld)
+>
+>  OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+>  $(obj)/vmlinux.bin: vmlinux FORCE
+> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> index d826ab38a8f9..0ac14feacb24 100644
+> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> @@ -11,9 +11,15 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
+>  #ifdef CONFIG_X86_64
+>  OUTPUT_ARCH(i386:x86-64)
+>  ENTRY(startup_64)
+> +
+> +#define REL .rela
+> +
+>  #else
+>  OUTPUT_ARCH(i386)
+>  ENTRY(startup_32)
+> +
+> +#define REL .rel
+> +
+>  #endif
+>
+>  SECTIONS
+> @@ -42,6 +48,9 @@ SECTIONS
+>                 *(.rodata.*)
+>                 _erodata = . ;
+>         }
+> +       REL.dyn : {
+> +               *(REL.*)
+> +       }
 
-There are a bunch more than that.
-Some use other macros, some are functions.
+Do we really need the macro here? Could we just do
 
-$ grep-2.5.4 --include=*.[ch] -n -rP '\w+_dbg\s*\((?:[^,"]+,){0,3}\s*"[^"]+%p\w+\b[^"]*"' * | \
-  perl -e 'local $/; while (<>) { s/\n\s+/ /g; print; }' | \
-  grep -o -P '\w+_dbg' | \
-  sort | uniq -c | sort -rn
-    415 dev_dbg
-    116 netdev_dbg
-    100 batadv_dbg
-     80 ath10k_dbg
-     53 mwifiex_dbg
-     49 ath11k_dbg
-     29 brcmf_dbg
-     28 ath_dbg
-     26 ht_dbg
-     20 ath6kl_dbg
-     17 wcn36xx_dbg
-     15 netif_dbg
-     15 cifs_dbg
-     14 tdls_dbg
-     13 ibss_dbg
-     11 mpl_dbg
-     10 memblock_dbg
-     10 bt_dev_dbg
-      9 ps_dbg
-      8 wiphy_dbg
-      8 mps_dbg
-      8 mlme_dbg
-      8 mhwmp_dbg
-      8 ipoib_dbg
-      7 sta_dbg
-      7 slave_dbg
-      7 pci_dbg
-      7 ibdev_dbg
-      6 mpath_dbg
-      6 en_dbg
-      6 drm_dbg
-      5 usnic_dbg
-      5 mlx5_core_dbg
-      4 vin_dbg
-      4 msync_dbg
-      3 rsi_dbg
-      3 cal_dbg
-      2 v4l2_dbg
-      2 siw_dbg
-      2 sdata_dbg
-      2 ocb_dbg
-      2 musb_dbg
-      2 hw_dbg
-      2 eeh_edev_dbg
-      2 cifs_server_dbg
-      2 at76_dbg
-      1 rt2x00_eeprom_dbg
-      1 pnp_dbg
-      1 mthca_dbg
-      1 mlx5_ib_dbg
-      1 mlx4_dbg
-      1 isp_dbg
-      1 gfs2_print_dbg
-      1 erofs_dbg
-      1 dynamic_drbd_dbg
-      1 ctx_dbg
-      1 cs89_dbg
+.rel.dyn : { *(.rel.* .rela.*) }
 
+(or even
+
+.rel.dyn  : { *(.rel.* }
+.rela.dyn : { *(.rela.*) }
+
+if the output section name matters, and always assert that both are empty)?
+
+>         .got : {
+>                 *(.got)
+>         }
+> @@ -83,3 +92,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+>  #else
+>  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+>  #endif
+> +
+> +ASSERT(SIZEOF(REL.dyn) == 0, "Unexpected runtime relocations detected!")
+> --
+> 2.26.2
+>
