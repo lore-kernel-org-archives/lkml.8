@@ -2,84 +2,86 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFC220878
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533F02078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391065AbgEYOv1 (ORCPT
+        id S2391078AbgEYOvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:51:27 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:33964 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390995AbgEYOvT (ORCPT
+        Mon, 25 May 2020 10:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390995AbgEYOvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:51:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TzckEPv_1590418275;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TzckEPv_1590418275)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 25 May 2020 22:51:15 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Mon, 25 May 2020 10:51:43 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28981C061A0E;
+        Mon, 25 May 2020 07:51:43 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jdERu-00028q-3I; Mon, 25 May 2020 16:51:30 +0200
+Date:   Mon, 25 May 2020 16:51:30 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [RFC PATCH 5/5] x86/hw_breakpoint: Prevent data breakpoints on debug_idt_table
-Date:   Mon, 25 May 2020 14:51:02 +0000
-Message-Id: <20200525145102.122557-6-laijs@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200525145102.122557-1-laijs@linux.alibaba.com>
-References: <20200525145102.122557-1-laijs@linux.alibaba.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Galbraith <umgwanakikbuti@gmail.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] connector/cn_proc: Protect send_msg() with a
+ local lock
+Message-ID: <20200525145130.przpqlspg6nnylke@linutronix.de>
+References: <20200524215739.551568-1-bigeasy@linutronix.de>
+ <20200524215739.551568-6-bigeasy@linutronix.de>
+ <20200525071819.GD329373@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200525071819.GD329373@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A data breakpoint on the IDT is terrifying and should be avoided.
-The IDT on CPU entry area is already protected. The debug IDT
-should be also protected, although it is seldom used and only
-used for short time.
+On 2020-05-25 09:18:19 [+0200], Ingo Molnar wrote:
+> > +static DEFINE_PER_CPU(struct local_evt, local_evt) = {
+> > +	.counts = 0,
+> 
+> I don't think zero initializations need to be written out explicitly.
+yes.
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
----
-Please drop this patch when Peter's work to remove debug_idt_table
-is merged.
+> > +	.lock = INIT_LOCAL_LOCK(lock),
+> > +};
+> >  
+> >  static inline void send_msg(struct cn_msg *msg)
+> >  {
+> > -	preempt_disable();
+> > +	local_lock(&local_evt.lock);
+> >  
+> > -	msg->seq = __this_cpu_inc_return(proc_event_counts) - 1;
+> > +	msg->seq = __this_cpu_inc_return(local_evt.counts) - 1;
+> 
+> Naming nit: renaming this from 'proc_event_counts' to 
+> 'local_evt.counts' is a step back IMO - what's an 'evt',
+> did we run out of e's? ;-)
+> 
+> Should be something like local_event.count? (Singular.)
 
- arch/x86/kernel/hw_breakpoint.c | 5 +++++
- 1 file changed, 5 insertions(+)
+okay.
 
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index 9579bd6fb589..83d8b1fcbc76 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -284,6 +284,11 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
- 			return true;
- 	}
- 
-+	/* debug_idt_table is used when load_debug_idt() */
-+	if (within_area(addr, end, (unsigned long)debug_idt_table,
-+			sizeof(debug_idt_table[0]) * IDT_ENTRIES))
-+		return true;
-+
- 	return false;
- }
- 
--- 
-2.20.1
+> Thanks,
+> 
+> 	Ingo
 
+Sebastian
