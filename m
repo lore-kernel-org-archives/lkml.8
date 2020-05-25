@@ -2,87 +2,149 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA982C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDDBC2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A004E20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:02:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jYzGloPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389728AbgEYKBf (ORCPT
+        id S2389738AbgEYKCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:01:35 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40500 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389407AbgEYKBe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:01:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id d26so13430475otc.7;
-        Mon, 25 May 2020 03:01:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VV/6l8WsyzC8FiWpUNY+r2Jtj3u8eeprICu82Hj0+XY=;
-        b=Ux4MSvsoa89TNIazEGpdFWwqCr9DEj+ZXhe2tXDSZ3qL1bR097MPSp8rISat8cffQe
-         +h1Tl7L05mez6fgQKShP4PMqmNQ6x2uR1Hh5Ttgi58PC1TS8zJj+z93yoIlPSVUz9l0f
-         +uHOFIuqglVCXfeuzemys3kKvtgc7/U78Q9QY92AjcNNehpCn6iAnuEyn7EgTK/Jpq0e
-         +cEIstKd8jCuWz0+PhKLMn/VeBM1Cwbhfny/hCimqufs4A2gxNAwB6W/dFWE5gJP+aQf
-         VwAkn9OSAaJBn3khhNkGBDZpZD4pW9QpMPMtE4Xl6snjqVcknvScZ/qg/ArIwb53NSJL
-         DNaQ==
-X-Gm-Message-State: AOAM530JxaI6ucoFgzCxWWDxCSnvXb01lkIp5XwFNlqfblFh1PDajmAD
-        EiKwaaBabCbVMyYZJWKqr4P7dGEuTPu/9CmC6VQ=
-X-Google-Smtp-Source: ABdhPJzes4OiyEEjnQUeTxYRLsuBzQ4vKfThl/Frl99MU9u9wmZ+pYZTwDk9xLH0jtn6Of53oQ19DFOqxZtclXHDOj8=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr19187412ote.107.1590400893283;
- Mon, 25 May 2020 03:01:33 -0700 (PDT)
+        Mon, 25 May 2020 06:02:08 -0400
+Received: from mout.web.de ([212.227.15.4]:33699 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389407AbgEYKCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:02:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590400920;
+        bh=I4AC220AsvLo1AfbrJuiQXJY0TZLYS/i5UQOwj/yE4M=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=jYzGloPJe0SLYyvc21IyK/j1R07xIoVZaIrHmbhPjsjE2kUBWaQID2HIqIuPsiIvz
+         zwKcPGiI1WmrytKo24kLYhyyVsoCY/3Zzhv4TV30n3ZE6KOpsXOugPQKu/B1Nop9Mx
+         6cP+lnZXLCD4zB7QibuWigfsB/21Y6FbvO0+77jA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.186.124]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LbIyo-1j9uj40lC6-00l0A9; Mon, 25
+ May 2020 12:02:00 +0200
+Subject: Re: [PATCH v3] workqueue: Fix double kfree for rescuer
+To:     Zhang Qiang <qiang.zhang@windriver.com>, Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200525093019.2253-1-qiang.zhang@windriver.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <167233e4-a389-5627-f5ad-3b21f337b7f7@web.de>
+Date:   Mon, 25 May 2020 12:01:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590356277-19993-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 12:01:21 +0200
-Message-ID: <CAMuHMdXhmxhYSsnzSMQYvUa8SYd-evFi=sfxqMgYuXtxvxdWVg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: phy: rcar-gen2: Add r8a7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200525093019.2253-1-qiang.zhang@windriver.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Md1GAGRj5JlDBAaAHiwR+oAh5JkziCypIQq+EnLN2dpoeE9fwm4
+ QVIsndg/vPBuZuZ6s01tF96ETSdDEKE8oQwDGwPqHrlCEksyPhr72VZDoGGL7W//ZBoKjQw
+ t+6szl5+PVaCvAou4e29X3sxkM9h3x2lebGF7HssrTbi2tWctUIzLd1IJpogehixu0AaFi6
+ rISwGnm0amRGGOZzxgfrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aA0XnEizI0o=:uIqUbdqHg21MGNe/wqpXXl
+ 970o1Nva8oAyBpP742uVFfEcONUE0jmGQO1UydyPXXTZtuUfet0Z2F8bbUgmr+l2XKnCQvhCs
+ fpwPtHAvtYvESzW8X1daKghQ62Sp3wO3XLX8uSg25+ZnoIk3HbluR3HIHlvnLHECHvtXZo8Ut
+ AhGfiea4vxXqgPrBtHzJOiIGHmgK1oNXt9iVI93CCob6vTrzTtoO6kqpaAuTU7XxhGU9IPP7h
+ Fbyt7UsTNEmJBZ0lMaNWEXHwr4zpqG9LmpGFiCb5d689Q/93KRms+OQP1gKXNiGNfYn6mqD66
+ SgynYekYDLAOnvb6dzdHzQM6XvcOXlvS9WvjJzd6ZW+UiMpSJhSfBvXVb5voycY5Tvzm2yZNx
+ zeYryRgrFdnKWjO+PDmJG/LkvwiQv6pigtwbkmbpKVoXDmRrAYcW9Qe1U8jAZmXBGu/rjJ0LD
+ ctKGaSfoAxrLduVnA1veO4+hO8jTvM0fvGZiiZZdr9jLN5TU7SCha28140Lp1bE1lqUFaqD3v
+ 52tlPrZsS1nAtXPrrK68fuabvftDYMBdKfEqCI+ljsx+ryyQNvig+bgLFfce14PYBKjgmIla3
+ e1ZrEbuDDM385P6d3OZLNZcWOYo5gb6uso4s6xNTU12NXoce507MkCaYKZ03I9j+SacaCIo8c
+ QpBP03JEFs2QNEeh06nq0zhs3XHX+coHXzONYJQUB3fOWz7NM9IOdLogdfD2HDmACscz5kLDR
+ T24zHsmCUCQIvTAQmW275zU8mIt4Zvrq2Xh4P1Rmb+pc3KH/iiU0zHaPuFiwc9Y5Ejh8OuwEH
+ YWl308dmQfSs56sNliNrbc19VS0zjtotzDIQp+SCgV3iy/zqodjR0zE/psbc0Cgq8pxv4dHqu
+ u9aB+t4Kz0F+GrMXCxQw//NHhIvL62wR5v2aU7tvoManqbzTnCCK/OPyg1RlhSaTqMVLMjWHH
+ WoL426u3GqD+P3NY8Ttl9cVplXYlji88oCwMHf1h4nWXJYWXGiALul/sVHA/dNMrXaZ3qa89Z
+ FDNVw55WC3BJmGjZdo8MU/GZLsrQdLW1h1X0m6K0gOuxakGTu4GEm6sglOf4pmVGyg0ptcZcg
+ jrMhe18Z/tGE3/fULCj5LIxTAsfFEYPq7/NsXOzHbVTl3WpOgGTjOyNSNEhCpjaTXc7Hxt0eu
+ Gr1RPDIHof7YES5898b3e5aO5xtUW59DYrZ5bCFZDJToJRCLlbRtlpjVJsLhST1FEXyv7ocCk
+ OtKpjhFtd4bBRh6mY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:38 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add USB PHY support for r8a7742 SoC. Renesas RZ/G1H (R8A7742)
-> USB PHY is identical to the R-Car Gen2 family.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> The callback function "rcu_free_wq" could be called after memory
+> was released for "rescuer" already, Thus delete a misplaced call
+> of the function "kfree".
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I got into the mood to follow your interpretation of the
+software situation for a moment.
 
-Gr{oetje,eeting}s,
+I have taken another look also at the implementation of the function =E2=
+=80=9Cdestroy_workqueue=E2=80=9D.
 
-                        Geert
+* The function call =E2=80=9Ckfree(rescuer)=E2=80=9D can be performed ther=
+e in an if branch
+  after the statement =E2=80=9Cwq->rescuer =3D NULL=E2=80=9D was executed.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+* This data processing is independent from a possible call of the
+  function =E2=80=9Ccall_rcu(&wq->rcu, rcu_free_wq)=E2=80=9D in another if=
+ branch.
+  Thus it seems that a null pointer is intentionally passed by a data stru=
+cture
+  member to this callback function on demand.
+  The corresponding call of the function =E2=80=9Ckfree=E2=80=9D can toler=
+ate this special case.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+Now I find that the proposed change can be inappropriate.
+I'm sorry for undesirable confusion because of this patch review.
+
+Regards,
+Markus
