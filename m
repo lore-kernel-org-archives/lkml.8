@@ -2,113 +2,124 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F266C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20D720812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3667820787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h5iYImgh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xuSjLVqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389457AbgEYJRP (ORCPT
+        id S2389467AbgEYJRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389438AbgEYJRJ (ORCPT
+        Mon, 25 May 2020 05:17:18 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53186 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389454AbgEYJRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:17:09 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BECC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:17:09 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q8so468225qkm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UPKAWDXzbYpZcHZzE/jvh4sEsCXtgHO9Rviklrj4c2Y=;
-        b=h5iYImghCJhux6GT4d2kO7zNAoMA8fEcSSkSURRXarw2tjaLULyyfuxuVY/52g3yz3
-         6kODCAB7qd44fe7EVjnkJU3QcnefChDGILeJaBR5sIW1L+egXZ2DLr3hDAzLUtLQunwG
-         eqrRDW/LuS29vX5ageDRPa2c1Q+vCrhIvkwv1bCPNoLEwhFuSZ7BlyChZ3sLdPgj6AsV
-         f6185DEYuUvH2iZYAvOotSKaTIPDe5z0godcIwSgpxDxjypOqtTjTWq6RvDxhSEe9Wpz
-         me/D89KNUT8EGL6Cm9qTKEdA8QRqR+5vNgWnR26pw4j2W5iKOzr8y7mulkdGIvYx2ViZ
-         No9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UPKAWDXzbYpZcHZzE/jvh4sEsCXtgHO9Rviklrj4c2Y=;
-        b=YTQjLDh1QHSYrUOa2GA2vIvoClrql3fStVxfrzLbftNj0HMrhWlV33fr/e+cFpnJx7
-         W5moqtxnOmrGy2P9Ukk0xCe8WTgGWBXP13QXnEdwHGEBguKg/HWdwwnUAT5wWrdR/Szt
-         /ioZ09u1Zml+JZFyd/AXD6PQ7laUHeEeSU8dGExHPYjOBgIUm3KzvVLHx0RtOH+Cvf26
-         kDYS+OadnAHyY15NnNPv7+4PjywNqtux/tCuFVdJ3y6Khlmofpcaz8wFMcAHEG5bvwPI
-         upKy2FR0DkvymR4teysqorV1XKc1ULa900LMtjbWM2KP9JzbJDAPuAOvTxmJQNTXG6XV
-         59AA==
-X-Gm-Message-State: AOAM533fNrZPXItfANCWRMciOlffWupegcpnfiyLihYRboQ50qUgU2Lc
-        Ezbb82h14UI9Q5yHZSRXlpqASlRdtqKNiDvhRx/pOg==
-X-Google-Smtp-Source: ABdhPJz7FwnxTWiLNqiIZD5a8zZv3R4oMP54vdsGuztkluwJWwXSbqlfJg38I7TnuuwobKL54EcMhe/ah8LeU9964M4=
-X-Received: by 2002:a37:dd6:: with SMTP id 205mr3484622qkn.323.1590398228936;
- Mon, 25 May 2020 02:17:08 -0700 (PDT)
+        Mon, 25 May 2020 05:17:15 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P9H3Va076879;
+        Mon, 25 May 2020 04:17:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590398223;
+        bh=vZHWXLCtyhdJG9oIb95lQ7NP/FmYNPGx8pS+OBRUJx0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xuSjLVqdL/uD6awLR/47Z619GCwtC2Dif5V8LIxo79ScdQzmwOPLk8pIosjOp6ieh
+         YpLTfax1YdafoLeAraxM1vxWxl5XayULQcuWIULzbRaF2lKWWIH7WWp7BaT909LPUg
+         Ya9NmSYYWkZIPXNfI0/9WTBa1r3m5OGvRZW7iPJI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9H2qe018675;
+        Mon, 25 May 2020 04:17:03 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 25
+ May 2020 04:17:02 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 25 May 2020 04:17:02 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9FjAD034800;
+        Mon, 25 May 2020 04:16:57 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v9 13/19] mtd: spi-nor: sfdp: do not make invalid quad enable fatal
+Date:   Mon, 25 May 2020 14:45:38 +0530
+Message-ID: <20200525091544.17270-14-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200525091544.17270-1-p.yadav@ti.com>
+References: <20200525091544.17270-1-p.yadav@ti.com>
 MIME-Version: 1.0
-References: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 May 2020 11:16:58 +0200
-Message-ID: <CAMpxmJVYPweUL9J5uitp6zCAniQAZ2+EBuxt-pYcDarLJkcqDQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 22 maj 2020 o 06:12 Tiezhu Yang <yangtiezhu@loongson.cn> napisa=C5=82(=
-a):
->
-> When call function devm_platform_ioremap_resource(), we should use IS_ERR=
-()
-> to check the return value and return PTR_ERR() if failed.
->
-> Fixes: 72d8cb715477 ("drivers: gpio: bcm-kona: use devm_platform_ioremap_=
-resource()")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  drivers/gpio/gpio-bcm-kona.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-> index baee8c3..cf3687a 100644
-> --- a/drivers/gpio/gpio-bcm-kona.c
-> +++ b/drivers/gpio/gpio-bcm-kona.c
-> @@ -625,7 +625,7 @@ static int bcm_kona_gpio_probe(struct platform_device=
- *pdev)
->
->         kona_gpio->reg_base =3D devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(kona_gpio->reg_base)) {
-> -               ret =3D -ENXIO;
-> +               ret =3D PTR_ERR(kona_gpio->reg_base);
->                 goto err_irq_domain;
->         }
->
-> --
-> 2.1.0
->
+The Micron MT35XU512ABA flash does not support the quad enable bit. But
+instead of programming the Quad Enable Require field to 000b ("Device
+does not have a QE bit"), it is programmed to 111b ("Reserved").
 
-I fixed the commit message, since this patch addresses the error code
-propagation, not the checking itself. Applied for fixes.
+While this is technically incorrect, it is not reason enough to abort
+BFPT parsing. Instead, continue BFPT parsing assuming there is no quad
+enable bit present.
 
-Bartosz
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/mtd/spi-nor/sfdp.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index 052cabb52df9..9fd3d8d9a127 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -576,10 +576,6 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 
+ 	/* Quad Enable Requirements. */
+ 	switch (bfpt.dwords[BFPT_DWORD(15)] & BFPT_DWORD15_QER_MASK) {
+-	case BFPT_DWORD15_QER_NONE:
+-		params->quad_enable = NULL;
+-		break;
+-
+ 	case BFPT_DWORD15_QER_SR2_BIT1_BUGGY:
+ 		/*
+ 		 * Writing only one byte to the Status Register has the
+@@ -616,8 +612,10 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 		params->quad_enable = spi_nor_sr2_bit1_quad_enable;
+ 		break;
+ 
++	case BFPT_DWORD15_QER_NONE:
+ 	default:
+-		return -EINVAL;
++		params->quad_enable = NULL;
++		break;
+ 	}
+ 
+ 	/* Stop here if JESD216 rev B. */
+-- 
+2.26.2
+
