@@ -2,120 +2,110 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D44792078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9242071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403783AbgEYNJM (ORCPT
+        id S2390723AbgEYNKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:09:12 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55274 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388757AbgEYNJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:09:10 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb2pqw8tegOs4AA--.606S3;
-        Mon, 25 May 2020 21:09:00 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v2 2/2] phy: Remove CONFIG_ARCH_* check for related subdir in Makefile
-Date:   Mon, 25 May 2020 21:08:58 +0800
-Message-Id: <1590412138-13903-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxb2pqw8tegOs4AA--.606S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr1DtF13XFWDKryUCrWfZrb_yoW8Ar47pr
-        s3trWUGrykGryUWFZFk390kF98tan7trWqgryfJ3W5JFn8CFWYqrnIgFy7JF1xXr4xJFW7
-        G3Z3Ga43CF1Yk37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9l14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-        vE14v26r1Y6r17McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-        6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-        AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUoGQDUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Mon, 25 May 2020 09:10:34 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:28886 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388757AbgEYNKe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:10:34 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04PD7c4t027485;
+        Mon, 25 May 2020 09:10:32 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3170r5xecg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 May 2020 09:10:32 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04PDAVWt032470
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 25 May 2020 09:10:31 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 25 May 2020 09:10:30 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 25 May 2020 09:10:30 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 25 May 2020 09:10:30 -0400
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04PDASNt016371;
+        Mon, 25 May 2020 09:10:29 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: dac: ad5592r: remove usage of iio_priv_to_dev() helper
+Date:   Mon, 25 May 2020 16:10:34 +0300
+Message-ID: <20200525131034.230738-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-25_08:2020-05-25,2020-05-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 cotscore=-2147483648 adultscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005250101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_ARCH_ROCKCHIP is not set but COMPILE_TEST is set, the file in
-the subdir rockchip can not be built due to CONFIG_ARCH_ROCKCHIP check
-in drivers/phy/Makefile.
+This was partially removed when the mlock cleanup was done. Only one more
+call is left in the ad5592r_alloc_channels() function.
+This one is simple. We just need to pass the iio_dev object and get the
+state via iio_priv().
 
-Since the related configs in drivers/phy/rockchip/Kconfig depend on
-ARCH_ROCKCHIP, so remove CONFIG_ARCH_ROCKCHIP check for subdir rockchip
-in drivers/phy/Makefile.
-
-The other CONFIG_ARCH_* about allwinner, amlogic, mediatek, renesas and
-tegra have the same situation, so remove them too.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
+ drivers/iio/dac/ad5592r-base.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-v2:
-  - Remove all the CONFIG_ARCH_* check for related subdir in Makefile
-  - Modify the patch subject and update commit message
-
- drivers/phy/Makefile | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 310c149..16e2622 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,24 +8,24 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
--obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
--obj-$(CONFIG_ARCH_MESON)		+= amlogic/
--obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
--obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
--obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
--obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
--obj-y					+= broadcom/	\
-+obj-y					+= allwinner/	\
-+					   amlogic/	\
-+					   broadcom/	\
- 					   cadence/	\
- 					   freescale/	\
- 					   hisilicon/	\
- 					   intel/	\
- 					   lantiq/	\
- 					   marvell/	\
-+					   mediatek/	\
- 					   motorola/	\
- 					   mscc/	\
- 					   qualcomm/	\
- 					   ralink/	\
-+					   renesas/	\
-+					   rockchip/	\
- 					   samsung/	\
- 					   socionext/	\
- 					   st/		\
-+					   tegra/	\
- 					   ti/
+diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
+index 410e90e5f75f..272c97bb841c 100644
+--- a/drivers/iio/dac/ad5592r-base.c
++++ b/drivers/iio/dac/ad5592r-base.c
+@@ -508,11 +508,11 @@ static void ad5592r_setup_channel(struct iio_dev *iio_dev,
+ 	chan->ext_info = ad5592r_ext_info;
+ }
+ 
+-static int ad5592r_alloc_channels(struct ad5592r_state *st)
++static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
+ {
++	struct ad5592r_state *st = iio_priv(iio_dev);
+ 	unsigned i, curr_channel = 0,
+ 		 num_channels = st->num_channels;
+-	struct iio_dev *iio_dev = iio_priv_to_dev(st);
+ 	struct iio_chan_spec *channels;
+ 	struct fwnode_handle *child;
+ 	u32 reg, tmp;
+@@ -636,7 +636,7 @@ int ad5592r_probe(struct device *dev, const char *name,
+ 	if (ret)
+ 		goto error_disable_reg;
+ 
+-	ret = ad5592r_alloc_channels(st);
++	ret = ad5592r_alloc_channels(iio_dev);
+ 	if (ret)
+ 		goto error_disable_reg;
+ 
 -- 
-2.1.0
+2.25.1
 
