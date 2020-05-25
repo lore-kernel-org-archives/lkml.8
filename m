@@ -2,151 +2,280 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ADAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 448CC2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C9620812
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403808AbgEYNMS (ORCPT
+        id S2403816AbgEYNOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390583AbgEYNMS (ORCPT
+        Mon, 25 May 2020 09:14:19 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57137 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390674AbgEYNOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:12:18 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE25C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:12:17 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jdCtl-00075J-DR; Mon, 25 May 2020 15:12:09 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:d406:10d7:6286:51e5] (unknown [IPv6:2a03:f580:87bc:d400:d406:10d7:6286:51e5])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 07A1B505BD0;
-        Mon, 25 May 2020 13:12:06 +0000 (UTC)
-Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Tim Harvey <tharvey@gateworks.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
-        =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-spi@vger.kernel.org, Jan Glauber <jglauber@marvell.com>,
-        Robert Richter <rrichter@marvell.com>
-References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
- <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
- <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
- <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
- <7b85e098-b9a9-dd14-203f-100cdf2e703e@pengutronix.de>
- <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
- <e0f641bc-5473-792d-fea9-0a2e81fe1e38@pengutronix.de>
- <20200525113106.GB4544@sirena.org.uk>
- <a337c8ea-66e2-13c2-f625-fbe93e367d44@pengutronix.de>
- <20200525125743.GF4544@sirena.org.uk>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <a663d610-56d8-1c2d-90ad-4d128a2fa3a8@pengutronix.de>
-Date:   Mon, 25 May 2020 15:12:05 +0200
+        Mon, 25 May 2020 09:14:18 -0400
+Received: from [78.134.112.142] (port=42672 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jdCvk-0072GJ-Oc; Mon, 25 May 2020 15:14:12 +0200
+Subject: Re: [PATCH v13 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+To:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Hyun Kwon <hyun.kwon@xilinx.com>
+References: <20200512151947.120348-1-vishal.sagar@xilinx.com>
+ <20200512151947.120348-3-vishal.sagar@xilinx.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <e3ccf942-0a0d-1c4c-30bf-db9f127126f4@lucaceresoli.net>
+Date:   Mon, 25 May 2020 15:14:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200525125743.GF4544@sirena.org.uk>
+In-Reply-To: <20200512151947.120348-3-vishal.sagar@xilinx.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 2:57 PM, Mark Brown wrote:
-> On Mon, May 25, 2020 at 02:41:31PM +0200, Marc Kleine-Budde wrote:
->> On 5/25/20 1:31 PM, Mark Brown wrote:
+Hi Vishal,
+
+thanks. I have only a few minor nitpicking comments.
+
+On 12/05/20 17:19, Vishal Sagar wrote:
+> The Xilinx MIPI CSI-2 Rx Subsystem soft IP is used to capture images
+> from MIPI CSI-2 camera sensors and output AXI4-Stream video data ready
+> for image processing. Please refer to PG232 for details.
 > 
->>> This isn't something that every individual driver should be doing, such
->>> rewriting should happen in the core so that everything sees the benefit.
+> The CSI2 Rx controller filters out all packets except for the packets
+> with data type fixed in hardware. RAW8 packets are always allowed to
+> pass through.
 > 
->> The core could merge several half duplex transfers (until there's as cs_change)
->> into a single full duplex transfer.
+> It is also used to setup and handle interrupts and enable the core. It
+> logs all the events in respective counters between streaming on and off.
 > 
-> Yes, that is what I am suggesting.
-
-Where in the SPI stack do you see such a "merge" function? One point to clarify
-is when and where to allocate and free the memory for the contiguous full duplex
-buffers.
-
->> I think it's not easy to detect and reliable to split a full duplex transfer
->> into half duplex ones. How can you tell, if the controller is supposed to tx 0x0
->> or actually receive.
+> The driver supports only the video format bridge enabled configuration.
+> Some data types like YUV 422 10bpc, RAW16, RAW20 are supported when the
+> CSI v2.0 feature is enabled in design. When the VCX feature is enabled,
+> the maximum number of virtual channels becomes 16 from 4.
 > 
-> I don't understand how that could possibly work or why it would make
-> sense?
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-ACK, I was just thinking loud about options.
+[...]
 
->> I think spi_write_then_read() can be extended to generate one full duplex
->> transfer instead on two half duplex ones it does a memcpy() anyways.
-> 
-> This has the same problem as doing it in any other driver code - it
-> causes a needless incompatibility with three wire and single duplex
-> devices.  
+> +static int xcsi2rxss_start_stream(struct xcsi2rxss_state *state)
+> +{
+> +	int ret = 0;
+> +
+> +	/* enable core */
+> +	xcsi2rxss_set(state, XCSI_CCR_OFFSET, XCSI_CCR_ENABLE);
+> +
+> +	ret = xcsi2rxss_soft_reset(state);
+> +	if (ret < 0) {
 
-What about the note "portable code should never use this for more than 32 bytes"
-in spi_write_then_read()? The CAN driver in question may read more than 32 bytes
-of data.
+'if (ret)' is enough, it's a classic nonzero-on-error return value.
 
->> To get a feeling for the use cases, this is what I do in the regmap read
->> function of a (not yet mainlined) CAN SPI driver.
-> 
-> Like I say it's probably better if code like this gets pushed into the
-> SPI core where we've got more information about what the controller can
-> do and there's more win from doing the tuning since more devices and
-> systems can take advantage of it.
+> +/**
+> + * xcsi2rxss_irq_handler - Interrupt handler for CSI-2
+> + * @irq: IRQ number
+> + * @data: Pointer to device state
+> + *
+> + * In the interrupt handler, a list of event counters are updated for
+> + * corresponding interrupts. This is useful to get status / debug.
+> + *
+> + * Return: IRQ_HANDLED after handling interrupts
+> + */
+> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *data)
+> +{
+> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)data;
+> +	struct device *dev = state->dev;
+> +	u32 status;
+> +
+> +	status = xcsi2rxss_read(state, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+> +	xcsi2rxss_write(state, XCSI_ISR_OFFSET, status);
+> +
+> +	/* Received a short packet */
+> +	if (status & XCSI_ISR_SPFIFONE) {
+> +		u32 count = 0;
+> +
+> +		/*
+> +		 * Drain generic short packet FIFO by reading max 31
+> +		 * (fifo depth) short packets from fifo or till fifo is empty.
+> +		 */
+> +		for (count = 0; count < XCSI_SPKT_FIFO_DEPTH; ++count) {
+> +			u32 spfifostat, spkt;
+> +
+> +			spkt = xcsi2rxss_read(state, XCSI_SPKTR_OFFSET);
+> +			dev_dbg(dev, "Short packet = 0x%08x\n", spkt);
+> +			spfifostat = xcsi2rxss_read(state, XCSI_ISR_OFFSET);
+> +			spfifostat &= XCSI_ISR_SPFIFONE;
+> +			if (!spfifostat)
+> +				break;
+> +			xcsi2rxss_write(state, XCSI_ISR_OFFSET, spfifostat);
+> +		}
+> +	}
+> +
+> +	/* Short packet FIFO overflow */
+> +	if (status & XCSI_ISR_SPFIFOF)
+> +		dev_dbg_ratelimited(dev, "Short packet FIFO overflowed\n");
+> +
+> +	/*
+> +	 * Stream line buffer full
+> +	 * This means there is a backpressure from downstream IP
+> +	 */
+> +	if (status & XCSI_ISR_SLBF) {
+> +		dev_alert_ratelimited(dev, "Stream Line Buffer Full!\n");
+> +
+> +		/* disable interrupts */
+> +		xcsi2rxss_clr(state, XCSI_IER_OFFSET, XCSI_IER_INTR_MASK);
+> +		xcsi2rxss_clr(state, XCSI_GIER_OFFSET, XCSI_GIER_GIE);
+> +
+> +		/* disable core */
+> +		xcsi2rxss_clr(state, XCSI_CCR_OFFSET, XCSI_CCR_ENABLE);
+> +		state->streaming = false;
+> +
+> +		/*
+> +		 * The IP needs to be hard reset before it can be used now.
+> +		 * This will be done in streamoff.
+> +		 */
+> +
+> +		/*
+> +		 * TODO: Notify the whole pipeline with v4l2_subdev_notify() to
+> +		 * inform userspace.
+> +		 */
+> +	}
+> +
+> +	/* Increment event counters */
+> +	if (status & XCSI_ISR_ALLINTR_MASK) {
+> +		unsigned int i;
+> +
+> +		for (i = 0; i < XCSI_NUM_EVENTS; i++) {
+> +			if (!(status & xcsi2rxss_events[i].mask))
+> +				continue;
+> +			state->events[i]++;
+> +			dev_dbg_ratelimited(dev, "%s: %u\n",
+> +					    xcsi2rxss_events[i].name,
+> +					    state->events[i]);
+> +		}
+> +
+> +		if (status & XCSI_ISR_VCXFE && state->en_vcx) {
+> +			u32 vcxstatus;
+> +
+> +			vcxstatus = xcsi2rxss_read(state, XCSI_VCXR_OFFSET);
+> +			vcxstatus &= XCSI_VCXR_VCERR;
+> +			for (i = 0; i < XCSI_VCX_NUM_EVENTS; i++) {
+> +				if (!(vcxstatus & (1 << i)))
 
-ACK
+You can use BIT(i) instead of (1 << i).
 
-Marc
+> +/**
+> + * xcsi2rxss_set_format - This is used to set the pad format
+> + * @sd: Pointer to V4L2 Sub device structure
+> + * @cfg: Pointer to sub device pad information structure
+> + * @fmt: Pointer to pad level media bus format
+> + *
+> + * This function is used to set the pad format. Since the pad format is fixed
+> + * in hardware, it can't be modified on run time. So when a format set is
+> + * requested by application, all parameters except the format type is saved
+> + * for the pad and the original pad format is sent back to the application.
+> + *
+> + * Return: 0 on success
+> + */
+> +static int xcsi2rxss_set_format(struct v4l2_subdev *sd,
+> +				struct v4l2_subdev_pad_config *cfg,
+> +				struct v4l2_subdev_format *fmt)
+> +{
+> +	struct xcsi2rxss_state *xcsi2rxss = to_xcsi2rxssstate(sd);
+> +	struct v4l2_mbus_framefmt *__format;
+> +	u32 dt;
+> +
+> +	/* only sink pad format can be updated */
+
+This comment should be placed...
+
+> +	mutex_lock(&xcsi2rxss->lock);
+> +
+> +	/*
+> +	 * Only the format->code parameter matters for CSI as the
+> +	 * CSI format cannot be changed at runtime.
+> +	 * Ensure that format to set is copied to over to CSI pad format
+> +	 */
+> +	__format = __xcsi2rxss_get_pad_format(xcsi2rxss, cfg,
+> +					      fmt->pad, fmt->which);
+> +
+
+...here.
+
+> +	if (fmt->pad == XVIP_PAD_SOURCE) {
+> +		fmt->format = *__format;
+> +		mutex_unlock(&xcsi2rxss->lock);
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * RAW8 is supported in all datatypes. So if requested media bus format
+> +	 * is of RAW8 type, then allow to be set. In case core is configured to
+> +	 * other RAW, YUV422 8/10 or RGB888, set appropriate media bus format.
+> +	 */
+> +	dt = xcsi2rxss_get_dt(fmt->format.code);
+> +	if (dt != xcsi2rxss->datatype && dt != XCSI_DT_RAW8) {
+> +		dev_dbg(xcsi2rxss->dev, "Unsupported media bus format");
+> +		/* set the default format for the data type */
+> +		fmt->format.code = xcsi2rxss_get_nth_mbus(xcsi2rxss->datatype,
+> +							  0);
+> +	}
+> +
+> +	*__format = fmt->format;
+> +	mutex_unlock(&xcsi2rxss->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * xcsi2rxss_enum_mbus_code - Handle pixel format enumeration
+> + * @sd : pointer to v4l2 subdev structure
+> + * @cfg: V4L2 subdev pad configuration
+> + * @code : pointer to v4l2_subdev_mbus_code_enum structure
+
+Remove space before colon here.
+
+Looks good otherwise, and my comments are minor details so:
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+
+I tried to runtime test this driver as well replacing the v10 driver
+that I'm using at the moment, but ran into many problems, apparently in
+the media entity navigation. The diff between v10 and v13 does not
+justify these problems, so I'm assuming v13 needs a more recent kernel
+than the 4.19 I'm currentl stuck on.
 
 -- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Luca Ceresoli
