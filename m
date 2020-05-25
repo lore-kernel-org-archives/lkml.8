@@ -7,116 +7,119 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A75C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83FB32078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BA42089D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="A1PSXXHP"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="X1hTfLoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390911AbgEYOec (ORCPT
+        id S1731284AbgEYOfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
+        Mon, 25 May 2020 10:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEYOec (ORCPT
+        with ESMTP id S1726579AbgEYOfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:34:32 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BA2C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:34:31 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f5so209473wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:34:31 -0700 (PDT)
+        Mon, 25 May 2020 10:35:42 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 849D0C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:35:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i15so17216142wrx.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:35:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uF/4fHZuH4O2kAyZbFgHJMIKMxQSq2SpjuNJFiGzN3c=;
-        b=A1PSXXHPnm4Ueqyin/tvwZ7Rw+EyRVcQ72yjHH2tOIZWkZdm260BiD248y5u2VThdf
-         esrRZqJYtt1Cc02PGRWeL0C7PcY4OwdjR9P8MVyQ+1pKNR8zkcA4uAq15zikLHkmz6bO
-         S+MSQa8dGaDGRX3CRZlQZ66t6bAtkDLjOvX2c=
+        bh=3OU2lYvY+SgqrcHfEfITErhSII62zeceqi2ma+ikPJY=;
+        b=X1hTfLoD64dbKVoSZ+vwSnV9fWQwb8cTzyukLe5M1BtHLmVBqrtcEIzfnkBf0/IVjB
+         25zaYqXUbaLAJ4EW2Wk4l/pEJnYzaZD3uvLuyqHus2MwSc0OITjhfOnFKNAnWUioWLQS
+         CpvRiIGR12yq9kOr25XfcmcBgA8J7bVvjwPF4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to;
-        bh=uF/4fHZuH4O2kAyZbFgHJMIKMxQSq2SpjuNJFiGzN3c=;
-        b=pVUjrlLR52OG1+JqGtPE+p17t+16XrgkA26m+Wf0Udchs/fl7ezwsSPj/J55Qdaqag
-         jEz4MxCGo9zLzaRC8xl6IP2TFc+fP1lzXslKisbAD1H5VkeWWAKV9V/c6XoDQSxLj9nx
-         d0p3AGPDJXqvatf8yRUAmSb/U4XcQeD1pSq0PwLMwDQakt/sQX+vojBdZjRaOPS3WxGq
-         Q8IpNgK0Ro0V1Aj97nuHW783vbhipqsdynM9KLA+ZscTwTq1Nqf1ZdQNrV98sh/af6Ix
-         PbtOjZllwXXYQRBgLuHE9CUHiuohIqdP+XdtvVOhZmHUqR/RIjtf3H6rNeToA3EkwET8
-         vU+Q==
-X-Gm-Message-State: AOAM5328IBth1LvOMsD5bqlvVBZqRo7GX0mMfrwP3psbfEWoldlGS8pG
-        JBSvvEuSmJvEJjMB8FPYmWo4WI3Srvg=
-X-Google-Smtp-Source: ABdhPJz6GW+J1xSrZI8dXuAtuxH1sDs6MqBa5pe6rLiXeB5g2ICOVcpjJLrHZ29PpphGyfBsHzuRgA==
-X-Received: by 2002:a1c:9654:: with SMTP id y81mr24769147wmd.46.1590417270737;
-        Mon, 25 May 2020 07:34:30 -0700 (PDT)
+        bh=3OU2lYvY+SgqrcHfEfITErhSII62zeceqi2ma+ikPJY=;
+        b=MsyigAvx8wFHsL/HgAAEYCDN456NLwE/jEkj3g0ppnl6OdcWyRxZeD3Y6QsfbxKYx7
+         a/P9aEhF0ExmT/ianycV0sHHUHUlq4ygLuIM0DdhSFfODPZkx9UuHzQ8+2qXYJKKT+Bh
+         FR7SC/Kh67dN12OGITMRD1JyIx3miBifgJUNw1rnh9uRCNHBL2mxjvCeWqXc4J1IGuKV
+         P+vYllnku1qwGKeIb6TRkGZpj2cUIRGcd0J2LNMZE06WLZ9mfU9pVjL//0imftyOfSmE
+         iBYHLNs7xZ/DJeVGCKfpMBEcA7jMsd+7olUC+LURlIM2pit/HWqn2k/tU60Pxp4kLSw2
+         /+HQ==
+X-Gm-Message-State: AOAM533UctoWvkAaVs88oAZjXTQbTwu/Ku4FDu1vmIEj7kWFuXbYtr3I
+        EJvcsehCI/rDMEvYQuBjLqcEVw==
+X-Google-Smtp-Source: ABdhPJwBXEHr/oPTzKNcxF+wDGOoNbeb15FlnUtmBXIYPHPQJpdKoGoFjeAH8PP4KrvL6dakayuN5g==
+X-Received: by 2002:a5d:56c7:: with SMTP id m7mr15249258wrw.256.1590417341101;
+        Mon, 25 May 2020 07:35:41 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id n1sm4595258wrp.10.2020.05.25.07.34.29
+        by smtp.gmail.com with ESMTPSA id i3sm13285293wrm.83.2020.05.25.07.35.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 07:34:30 -0700 (PDT)
-Date:   Mon, 25 May 2020 16:34:28 +0200
+        Mon, 25 May 2020 07:35:40 -0700 (PDT)
+Date:   Mon, 25 May 2020 16:35:38 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     chenxb_99091@126.com
-Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm: fix setting of plane_mask in pan_display_atomic()
- function for linux-4.4
-Message-ID: <20200525143428.GG206103@phenom.ffwll.local>
-Mail-Followup-To: chenxb_99091@126.com, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <1590205747-19599-1-git-send-email-chenxb_99091@126.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drm/auth: remove redundant assignment to variable
+ ret
+Message-ID: <20200525143538.GH206103@phenom.ffwll.local>
+Mail-Followup-To: Colin King <colin.king@canonical.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200524222715.27305-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590205747-19599-1-git-send-email-chenxb_99091@126.com>
+In-Reply-To: <20200524222715.27305-1-colin.king@canonical.com>
 X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 11:49:07AM +0800, chenxb_99091@126.com wrote:
-> From: Xuebing Chen <chenxb_99091@126.com>
+On Sun, May 24, 2020 at 11:27:15PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> The <include/drm/drm_crtc.h> provides drm_for_each_plane_mask macro and
-> plane_mask is defined as bitmask of plane indices, such as
-> 1<<drm_plane_index(plane). This patch fixes error setting of plane_mask
-> in pan_display_atomic() function.
+> The variable ret is being initialized with a value that is
+> never read and it is being updated later with a new value. The
+> initialization is redundant and can be removed.
 > 
-> Signed-off-by: Xuebing Chen <chenxb_99091@126.com>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-What kernel is this patch against? Latest upstream doesn't have any such
-code anymore ... I'm assuming that Ville fixed this in one of his patches,
-but I can't find the right one just now.
+Queued up, but probably for 5.9. Thanks for your patch.
 -Daniel
 
 > ---
->  drivers/gpu/drm/drm_fb_helper.c | 2 +-
+>  drivers/gpu/drm/drm_auth.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-> index e449f22..6a9f7ee 100644
-> --- a/drivers/gpu/drm/drm_fb_helper.c
-> +++ b/drivers/gpu/drm/drm_fb_helper.c
-> @@ -1256,7 +1256,7 @@ retry:
->  			goto fail;
+> diff --git a/drivers/gpu/drm/drm_auth.c b/drivers/gpu/drm/drm_auth.c
+> index 800ac39f3213..74ce0c29c960 100644
+> --- a/drivers/gpu/drm/drm_auth.c
+> +++ b/drivers/gpu/drm/drm_auth.c
+> @@ -282,7 +282,7 @@ static void drm_drop_master(struct drm_device *dev,
+>  int drm_dropmaster_ioctl(struct drm_device *dev, void *data,
+>  			 struct drm_file *file_priv)
+>  {
+> -	int ret = -EINVAL;
+> +	int ret;
 >  
->  		plane = mode_set->crtc->primary;
-> -		plane_mask |= drm_plane_index(plane);
-> +		plane_mask |= 1 << drm_plane_index(plane);
->  		plane->old_fb = plane->fb;
->  	}
+>  	mutex_lock(&dev->master_mutex);
 >  
 > -- 
-> 2.7.4
+> 2.25.1
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
 Daniel Vetter
