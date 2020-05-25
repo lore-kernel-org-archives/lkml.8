@@ -2,74 +2,113 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A151FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513CF207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7624A207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4yC8e6Bx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8NyCoap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388902AbgEYXNC (ORCPT
+        id S2388924AbgEYXOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:13:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48848 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388013AbgEYXNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:13:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=lEig+Fu9W7WSBV2e/0nipchiOVkFT8CZhyvFwP+PQ3Y=; b=4yC8e6BxuwD7pR0SoWi7UbtDFH
-        J520XoEk8T71u1kmcRWE9Q4BACqJVTwsAtAtfpgFcChFozjMe6aGJ23VoFUHAwEWVNJJZxD9pPNjp
-        6q4zvX+12x/HzLAaQl0vZ2nZQAnYASPe6cv9hyLzsQ+uA6suUZ3f0lk7GVyKK1iBOXg0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jdMH9-003EgC-VH; Tue, 26 May 2020 01:12:55 +0200
-Date:   Tue, 26 May 2020 01:12:55 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org,
-        davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
-Message-ID: <20200525231255.GF768009@lunn.ch>
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-5-jeremy.linton@arm.com>
- <20200523183731.GZ1551@shell.armlinux.org.uk>
- <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
- <20200525100612.GM1551@shell.armlinux.org.uk>
- <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
- <20200525220614.GC768009@lunn.ch>
- <8868af66-fc1a-8ec2-ab75-123bffe2d504@arm.com>
- <20200525230732.GQ1551@shell.armlinux.org.uk>
+        Mon, 25 May 2020 19:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388013AbgEYXOO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 19:14:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B118C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:14:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id c75so9163041pga.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KXpZjtA33KSAeFBaMx/sZjzq8ek7b0BlnIZs8ZtFBd8=;
+        b=M8NyCoapxGL6SWf0daXRYDmbgp5ssA6kTPKh5ITwM+xeslbVaXqYT7rgLg8lCnJmoA
+         td6+wHgKupdXmsTcpt5Xrn/nXopGpLE0dsYztyd3Ax5eRf4XMujfFfVUx88ZVIkzv0O1
+         A0WHJwJjCO5OnYI8C0/2P0EncOUZYQn2CRBCBYNLtYbNGNUYmwZDz5pvxSXikN7hooWE
+         GLdG3EQgI87fYy4aAuaTOzz+vY6IYXZavZSLR/GcZKSrY9CwI3NEykfnuWbdoD/i5wko
+         OT9Tjz5cqMhkT91vAFAuv2jyg9yWUS7x5ZgSQtcZ3NJqdPooJfECPOvtxMxXa3Vmf36H
+         x57w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KXpZjtA33KSAeFBaMx/sZjzq8ek7b0BlnIZs8ZtFBd8=;
+        b=Hfcsl5yE2A8Pq1Q/kRishFfsbUQJWcW2Nu0QpQlqWJCHk0Y/f+ZNudK2nuWk5kC9It
+         A88yWJf9PEXYTuHuk2zr+pc7BCSDLwiHxZ0mMvzvHIPBWB7prns23OYbt/IflQhXZq7I
+         uq1Rg1IjCEHcdZnic0eSDCmDWUg1MMY9GMNdZ0ZlWVDdtMy0EWvg0NW/xoyyWsE39QE1
+         Tipg04NfNIz8tAB3ALuOFn8bd3pUeK44VZBh4OwC9lXC8ZFBUhD5eghDQgUrJDeJ+aD4
+         DVrDBb6tvcyHIjzug1FtvRUlfy3rO9VcGba19GfgArnKtiKdm9eHX/FjS8bhyNLeqC3U
+         fbVg==
+X-Gm-Message-State: AOAM531JBJw9GpCdTdpzBLHPpoPKtqTCuOHVG9divRG+1KlEtBupEjBf
+        iEkurNTyeP4HirfRKfWQHzf/vJIdw3hnJhM9IxmpMQ==
+X-Google-Smtp-Source: ABdhPJySfBrqM7zjNHR2FOLFfzyepOL9+NQCt7U2EIMocpDsguLzLAczK7MGk94iz9VneIQwOqzKHmSXJVYiha5JTYQ=
+X-Received: by 2002:a63:a36e:: with SMTP id v46mr28099593pgn.378.1590448453647;
+ Mon, 25 May 2020 16:14:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525230732.GQ1551@shell.armlinux.org.uk>
+References: <20200525230413.15551-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200525230413.15551-1-chris.packham@alliedtelesis.co.nz>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Mon, 25 May 2020 16:14:02 -0700
+Message-ID: <CAMo8BfLtdfKYBm_b93i9tVsz5a_YyJaR3XmKMNbT37A1smpR5Q@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: Fix spelling/grammar in comment
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     0001-xtensa-Fix-spelling-grammar-in-comment.patch@alliedtelesis.co.nz,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>, trivial@kernel.org,
+        Chris Zankel <chris@zankel.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> arch/powerpc/boot/dts/fsl/t4240rdb.dts: compatible = "ethernet-phy-id13e5.1002";
-> arch/powerpc/boot/dts/fsl/t4240rdb.dts: compatible = "ethernet-phy-id13e5.1002";
-> arch/powerpc/boot/dts/fsl/t4240rdb.dts: compatible = "ethernet-phy-id13e5.1002";
-> arch/powerpc/boot/dts/fsl/t4240rdb.dts: compatible = "ethernet-phy-id13e5.1002";
-> arch/powerpc/boot/dts/fsl/t2080rdb.dts: compatible = "ethernet-phy-id13e5.1002";
-> arch/powerpc/boot/dts/fsl/t2080rdb.dts: compatible = "ethernet-phy-id13e5.1002";
+On Mon, May 25, 2020 at 4:04 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Change 'excpetion' to 'exception', 'handeled' to 'handled' and 'the the'
+> to 'the'.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  arch/xtensa/kernel/entry.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hi Jeremy
+Thanks, applied to my xtensa tree with an additional fix:
 
-You are doing this work for NXP right? Maybe you can ask them to go
-searching in the cellar and find you one of these boards?
+> diff --git a/arch/xtensa/kernel/entry.S b/arch/xtensa/kernel/entry.S
+> index 06fbb0a171f1..696b1e4b1a67 100644
+> --- a/arch/xtensa/kernel/entry.S
+> +++ b/arch/xtensa/kernel/entry.S
+> @@ -959,14 +959,14 @@ ENDPROC(unrecoverable_exception)
+>   * of the proper size instead.
+>   *
+>   * This algorithm simply backs out the register changes started by the user
+> - * excpetion handler, makes it appear that we have started a window underflow
+> + * exception handler, makes it appear that we have started a window underflow
+>   * by rotating the window back and then setting the old window base (OWB) in
+>   * the 'ps' register with the rolled back window base. The 'movsp' instruction
+>   * will be re-executed and this time since the next window frames is in the
+>   * active AR registers it won't cause an exception.
+>   *
+>   * If the WindowUnderflow code gets a TLB miss the page will get mapped
+> - * the the partial windeowUnderflow will be handeled in the double exception
+> + * the partial windeowUnderflow will be handled in the double exception
 
-	  Andrew
+I've changed windeowUnderflow here to WindowUnderflow.
+
+-- 
+Thanks.
+-- Max
