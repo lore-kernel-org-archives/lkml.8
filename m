@@ -2,157 +2,143 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F100C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6D120823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A56F20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="oxgQx9H9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389906AbgEYKoC (ORCPT
+        id S2389915AbgEYKoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:44:02 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63595 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389484AbgEYKoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:44:02 -0400
-Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04PAhF5Z018356;
-        Mon, 25 May 2020 19:43:15 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
- Mon, 25 May 2020 19:43:15 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04PAhAF7018283
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 25 May 2020 19:43:15 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
- printk(KERN_DEBUG)
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200525084218.GC5300@linux-b0ei>
- <20200525091157.GF755@jagdpanzerIV.localdomain>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <f02a71bc-0867-be60-182b-10d7377b2b04@i-love.sakura.ne.jp>
-Date:   Mon, 25 May 2020 19:43:04 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 25 May 2020 06:44:09 -0400
+Received: from mail-eopbgr20132.outbound.protection.outlook.com ([40.107.2.132]:24965
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389484AbgEYKoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:44:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MBr5yatC6JBs6/N/tDWdwBcB6sqwfBwQkQDAROGnzoZ1iQ4LBYAl5PNt7QIiD92uF5NFMVjkrxwsWCKKKJWAu9n9Zt6NTzfiMzYNGT5vbP9XIYVyqvC7X2iYkE6OCEKr6rr/V/eUEDTLBIovny+/GMOGtZmwakg0MqCw5rxt55ekfy2o2Bsj//L10TRAG1lkMFCf1l4GLiqCxjuQcAc5C7HOTeWm/epXR8qdZJmJI35eIU1dZ85TMImllWzh4xCjD4nnEsvPVUrVKupNxAu3+7TmHpulFIkB0NlMANY7dAIVR3jdiskZOLm1j55jk2zMkQrmc8mbuKV1WKbBIhwnEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ot6w2xQIhbjd277hYYAhRakjQIUnRHohWAcb43MtOJI=;
+ b=HffoP5Fn8Lj4RUEpEmxDwPitm1UaW4EYFZtf4WvHThRrEhE38P5eBeLikJvLx7lM9O7cAdQjUNVOypnYVvIQJILtkSCTiflNg4RkOYM11CWPXxmZqaMelp50vWy+VGL++LRemkt6bH42lWiEKZLr64h7f4dqNbYLTxc97YHpZDvuS0tj3Pd/yRZtzqKscwuwMxVTYe3HxzkNl4Y+DRqOAnUnWaRRW6HutIV2HAr3HRaU09oWO4uTIl6jIR8oPpcggsnvxn87KfxUWoi3ZiunwMFhduyIqCjbVQ/6XL4i/K5vJoH0rnOqHk/bagoegWJn4EqpglkEIjK6HKs6RFvidQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ot6w2xQIhbjd277hYYAhRakjQIUnRHohWAcb43MtOJI=;
+ b=oxgQx9H9X7IVE7cIlt4GnbS+NoK40J62ej3OoGvhlkcS57TKo2CABoKIaGjFKncFi5LNLgDTHOImdITeQvLrrHbjACqHtITXSh4/BD1PUahKjF37sqOjRi5UGOU3lCdZSkdN6DIYCNTVb8YT/TCdl8TcwcHyksn3+TRHH3jgyo8=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB8PR02MB5498.eurprd02.prod.outlook.com (2603:10a6:10:bf::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Mon, 25 May
+ 2020 10:44:04 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::ccd1:96b3:48dc:c5d1]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::ccd1:96b3:48dc:c5d1%7]) with mapi id 15.20.3021.029; Mon, 25 May 2020
+ 10:44:04 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Rosin <peda@axentia.se>, Mark Brown <broonie@kernel.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-spi@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] spi: mux: repair mux usage
+Date:   Mon, 25 May 2020 12:43:52 +0200
+Message-Id: <20200525104352.26807-1-peda@axentia.se>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HE1PR09CA0057.eurprd09.prod.outlook.com
+ (2603:10a6:7:3c::25) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-In-Reply-To: <20200525091157.GF755@jagdpanzerIV.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from orc.pedanet (213.112.138.116) by HE1PR09CA0057.eurprd09.prod.outlook.com (2603:10a6:7:3c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 10:44:03 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [213.112.138.116]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4f6301c1-97b2-4674-7c69-08d800988b41
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5498:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR02MB5498EF6B4C7452E53FFC3BD5BCB30@DB8PR02MB5498.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0414DF926F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: G7BfIcn5wGLnhMymTdpzv9Q+dM8er0rwjP2jQ7T5JJEnaV4l9ksNgWfr0ihKbAnFTln9VWGnGyNK5FU6FnVz2vy3FIwVHg/8T7huc1u6OVwJiE1ll0N765NhsELCOBVkqFICUChEru7uKCBRGT3v0VqOYOgzPu3xIuP9u5CgjU5rveinKALdRVku+kKTloR4vUARGL96EDMp3udVVZ63s1uqDT4GUkcc7LLRSlweHtpXJwivwn2ibK2+GLrP4Pb8Ent82JlJu1tN2nRTjuNZ40af6iWi3172PWVPGt5QuWXM1BKzfA7AFLWF0WkQmHQGSZZRqileRQnVKfM6fkNsHA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(39830400003)(396003)(366004)(346002)(66946007)(52116002)(186003)(4326008)(1076003)(26005)(6506007)(316002)(508600001)(36756003)(66556008)(16526019)(2906002)(6666004)(66476007)(8676002)(6916009)(956004)(2616005)(6486002)(5660300002)(86362001)(8936002)(6512007)(54906003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: chAp2z4ccFyza8OMK1uoBrY4JISCd084tEB8Lpn9bbnITmLjjdbyHEmw5Y64mMVrhGicLh8L8MLxtZk1MPBZwlle1ZHmUPYII55p9juqf+Exe16RLDArui+qtQjU/x7dq1lU6QiAHjuIJJCZrgpTCcEtYOx+PsITxY6KQABr3yX3RovvSUZgi6M4aMhUkhpm5RyRvzYqqY2bsvAz7CbgpmaMusA/HRgQhaGwB5hqMe3i95upBQOU+n6H1cvcWNKPiaWnwiosrHSakwSYAi8er9xvCzlhTmw5fPmwGLglQBjc1eZJirqS2EHFpMGJSqhDu5wpW3ATYVRH1HT/BFVVY4ARMgAXkFIJW8OGNFqHSC84X5YD6SZbuzOvIr8LZSv6V0CAwBlLGC28/oRZm92ZLM96m6QljVl9mplvIPZCV+zi1hZoAuB9G2bjrARlp7Bf/eCMeF3gtEDl684WEvmaZ89z5HvUvO2QNSURT6TIOuk=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f6301c1-97b2-4674-7c69-08d800988b41
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 10:44:04.5708
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MOveGtqF2nUHa50Q0dkdjllJrQ5jXAJoY2WwBybTmw7adDWRmetaJ5JN8/DyTBMU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5498
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/25 17:42, Petr Mladek wrote:
-> I see few drawbacks with this patch:
-> 
-> 1. It will cause adding much more messages into the logbuffer even
->    though they are not flushed to the console. It might cause that
->    more important messages will get overridden before they reach
->    console. They might also make hard to read the full log.
+It is not valid to cache/short out selection of the mux.
 
-Since the user of this twist option will select console loglevel in a way
-KERN_DEBUG messages are not printed to consoles, KERN_DEBUG messages will
-be immediately processed (and space for future messages will be reclaimed).
-Therefore, I don't think that more important messages will get overridden.
+mux_control_select() only locks the mux until mux_control_deselect()
+is called. mux_control_deselect() may put the mux in some low power
+state or some other user of the mux might select it for other purposes.
+These things are probably not happening in the original setting where
+this driver was developed, but it is said to be a generic SPI mux.
 
-This twist option might increase possibility of mixing KERN_DEBUG messages
-and non-KERN_DEBUG messages due to KERN_CONT case.
+Also, the mux framework will short out the actual low level muxing
+operation when/if that is possible.
 
-But if these concerns turn out to be a real problem, we can redirect
-pr_devel()/pr_debug() to simple snprintf() which evaluates arguments
-but discards the result without storing into the logbuffer.
+Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/spi/spi-mux.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> 
-> 2. Crash inside printk() causes recursive messages. They are currently
->    printed into the printk_safe() buffers and there is a bigger risk
->    that they will not reach the console.
-
-Currently "static char textbuf[LOG_LINE_MAX];" is "static" because it is used
-under logbuf_lock. If we remove "static", we can use "char textbuf[LOG_LINE_MAX];"
-without logbuf_lock. Then, we can bring potentially dangerous-and-slow vscnprintf()
-in vprintk_store() to earlier stage (and vprintk_store() will need to do simple
-copy) so that oops in printk() will happen before entering printk-safe context.
-I think that this change follows a direction which lockless logbuf will want.
-
-> 
-> 3. pr_debug() messages are not printed by default. It is possible that
->    nobody used them for ages. You might get many errors in less
->    maintained code instead in the really used one. I mean that you
->    will get more noise with less gain.
-
-Given that potentially dangerous-and-slow vscnprintf() is done outside of
-printk-safe context, we can get more test coverage without difficult things.
-
-> 
-> 
-> Have you tested this patch by the syzcaller with many runs, please?
-> Did it helped to actually discover more bugs?
-> Did it really made things easier?
-
-syzbot can't test with custom patches. The only way to test this patch is
-to send to e.g. linux-next.git which syzbot is testing.
-
-> 
-> I am not able to judge usefulness without more data. My intuition
-> tells me that we should keep the number of syzcaller-related twists
-> as small as possible. Otherwise, syscaller will diverge more and
-> more from reality.
-
-The twist options are not specific to syzkaller. Anyone can selectively
-enable the twist options.
-
-
-
-On 2020/05/25 18:11, Sergey Senozhatsky wrote:
-> On (20/05/25 10:42), Petr Mladek wrote:
->> On Sun 2020-05-24 23:50:34, Tetsuo Handa wrote:
->>> syzbot found a NULL pointer dereference bug inside mptcp_recvmsg() due to
->>> ssock == NULL, but this bug manifested inside selinux_socket_recvmsg()
->>> because pr_debug() was no-op [1].
->>>
->>>   pr_debug("fallback-read subflow=%p",
->>>            mptcp_subflow_ctx(ssock->sk));
->>>   copied = sock_recvmsg(ssock, msg, flags);
->>
->> The NULL pointer deference was found even without this patch.
->> This patch would just cause that it will manifest itself on another
->> place. What is the benefit, please?
-
-It would help localizing the bug in this specific case.
-
-It's not only about %p, even %d can crash kernel or leak sensitive
-info (if it happens after-free/out-of-bounds/uninit). Overall it
-increases code coverage and allows to catch more bugs earlier. 
-
-> 
-> Right, I don't get this patch. A NULL-deref is still a NULL pointer deref.
-> pr_debug() will fault reading one byte from the address and print something
-> like "fallback-read subflow=(efault)" to printk-safe buffer, but then
-> sock_recvmsg() is still going to do its thing.
-
-Since this NULL pointer dereference already happens before calling pr_debug(),
-we won't store "fallback-read subflow=(efault)" to printk-safe buffer.
-
-Just evaluating pr_devel()/pr_debug() arguments would help finding some bugs.
-Again, we can change this twist option to redirect pr_devel()/pr_debug() to
-simple snprintf() which evaluates arguments but discards the result without
-storing into the logbuffer.
+diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
+index 4f94c9127fc1..cc9ef371db14 100644
+--- a/drivers/spi/spi-mux.c
++++ b/drivers/spi/spi-mux.c
+@@ -51,6 +51,10 @@ static int spi_mux_select(struct spi_device *spi)
+ 	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
+ 	int ret;
+ 
++	ret = mux_control_select(priv->mux, spi->chip_select);
++	if (ret)
++		return ret;
++
+ 	if (priv->current_cs == spi->chip_select)
+ 		return 0;
+ 
+@@ -62,10 +66,6 @@ static int spi_mux_select(struct spi_device *spi)
+ 	priv->spi->mode = spi->mode;
+ 	priv->spi->bits_per_word = spi->bits_per_word;
+ 
+-	ret = mux_control_select(priv->mux, spi->chip_select);
+-	if (ret)
+-		return ret;
+-
+ 	priv->current_cs = spi->chip_select;
+ 
+ 	return 0;
+-- 
+2.20.1
 
