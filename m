@@ -5,63 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8292FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8532C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3BE2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9FF206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="DcdiVSV3"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="bQFUbSXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbgEYXAq (ORCPT
+        id S1731246AbgEYXCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgEYXAq (ORCPT
+        Mon, 25 May 2020 19:02:08 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50571 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgEYXCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:00:46 -0400
-X-Greylist: delayed 277 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 25 May 2020 16:00:45 PDT
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CBFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 16:00:45 -0700 (PDT)
+        Mon, 25 May 2020 19:02:08 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 126B083640;
-        Tue, 26 May 2020 11:00:44 +1200 (NZST)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DAFD8891B1;
+        Tue, 26 May 2020 11:02:05 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1590447644;
-        bh=Xne4K3RqtbPnQ+ea6EEqddntF/BSLVnRXKCdz++ZUVs=;
+        s=mail181024; t=1590447725;
+        bh=fH21vaeruc+kAM4fRkdYBDX8IezlA8s+rV2IxWRdUUQ=;
         h=From:To:Cc:Subject:Date;
-        b=DcdiVSV3snOO/4jZNyhqgCNWHeF4pdzEY1zcS148Xn/nLJzz3fN1BxyeP4BIgJJeu
-         +Sj06htHFGOyozp7Sn6aRpkW5O0YT1rkCcLLeA3ss5slwXQKnnbXaH8JFzo8En9u0u
-         Rc9+bCwmKuswhePWY1+bXHz69Aq/JBb2OSA0EVet9UtXa7s+2QM8MIo1oJzxRNzHrV
-         vzUH9aWJw3TAoTcStnBMXRxsGr4K4I68HpBm87VqOBjPAvk1Hix5bNARSDQ4l1A3Wm
-         DKvzsXPxtvtWSV3q5bKfpIb0TrAKyuKCagqjQlpGW0jAc3btnlg9ztzhGBZRGKGmAJ
-         Geakiq5O7jNOw==
+        b=bQFUbSXvHUFXQUnOjO7zu2nuk/5dZTo2scG6o2aQjXG+HyKgSwBbP3qmCyE4fC9zQ
+         bGDqRT2+Hkt1GbBtQpidXa6kEx9WD5GDHD3IZL1Q1ZAFzrTBJcxRIsEz+bu17qOdmF
+         bCqTt2A+dHFVXflilJ157r+2BJxBjd5NbYGsMZ3A0tgy/MkFhWYXt4DS1/l4ErMgIW
+         f4xm1khPvOi31Y9tXokMFC/LFPztkPgAinRtMGwNpEJKPk5aXd/Qc9SW021W054nNE
+         BCprFdFeEOtDUppl8PZRJvmkZ4CCetB/vxwd2E1qoxAwI42upQzOGODJhghklm96RS
+         TdjuT340RZEQA==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ecc4e180000>; Tue, 26 May 2020 11:00:44 +1200
+        id <B5ecc4e6c0000>; Tue, 26 May 2020 11:02:05 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 10F2813ED4B;
-        Tue, 26 May 2020 11:00:39 +1200 (NZST)
+        by smtp (Postfix) with ESMTP id DE20F13ED4B;
+        Tue, 26 May 2020 11:02:02 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 0535228006C; Tue, 26 May 2020 11:00:40 +1200 (NZST)
+        id D486C28006C; Tue, 26 May 2020 11:02:03 +1200 (NZST)
 From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     ast@kernel.org, daniel@iogearbox.net
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trivial@kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: [PATCH] bpf: Fix spelling in comment
-Date:   Tue, 26 May 2020 11:00:24 +1200
-Message-Id: <20200525230025.14470-1-chris.packham@alliedtelesis.co.nz>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] HID: logitech-dj: Fix spelling in comment
+Date:   Tue, 26 May 2020 11:02:01 +1200
+Message-Id: <20200525230201.14985-1-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -71,27 +62,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change 'handeled' to 'handled'.
+Change 'unhandeled' to 'unhandled'.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- kernel/bpf/core.c | 2 +-
+ drivers/hid/hid-logitech-dj.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 916f5132a984..1ff8e73e9b12 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1543,7 +1543,7 @@ static u64 __no_fgcse ___bpf_prog_run(u64 *regs, co=
-nst struct bpf_insn *insn, u6
+diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.=
+c
+index ed9b1c1f460d..51e1305cc375 100644
+--- a/drivers/hid/hid-logitech-dj.c
++++ b/drivers/hid/hid-logitech-dj.c
+@@ -820,7 +820,7 @@ static void logi_dj_recv_queue_unknown_work(struct dj=
+_receiver_dev *djrcv_dev)
+ {
+ 	struct dj_workitem workitem =3D { .type =3D WORKITEM_TYPE_UNKNOWN };
 =20
- 		/* ARG1 at this point is guaranteed to point to CTX from
- 		 * the verifier side due to the fact that the tail call is
--		 * handeled like a helper, that is, bpf_tail_call_proto,
-+		 * handled like a helper, that is, bpf_tail_call_proto,
- 		 * where arg1_type is ARG_PTR_TO_CTX.
- 		 */
- 		insn =3D prog->insnsi;
+-	/* Rate limit queries done because of unhandeled reports to 2/sec */
++	/* Rate limit queries done because of unhandled reports to 2/sec */
+ 	if (time_before(jiffies, djrcv_dev->last_query + HZ / 2))
+ 		return;
+=20
 --=20
 2.25.1
 
