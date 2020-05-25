@@ -2,114 +2,101 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F181FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E637C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6BAD20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590427316;
-	bh=qjdmVOIqRqo3sOlRUfcgEntQkhzxxq6U+VJ1HX37vfg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=I98U1kN78yPMnyy78wGaix4t5xvby5iq2FvopET6pTVxJ8Fn0rVvYOkmA8jWH/ONJ
-	 jPlezMJYi4gkFOJ9Xi3lDZ7AGp7iodrFSqpOYy8fOLC48RPmOdEfS0WnnCkkJ6qOgn
-	 bU8oq4UBYewHx4p0KUsQhI1N+JwNIU4g72P9zQmM=
+	by mail.kernel.org (Postfix) with ESMTP id 32B6420776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T1py55ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389569AbgEYRVz (ORCPT
+        id S2391318AbgEYRY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 13:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388230AbgEYRVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 13:21:55 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6E22070A;
-        Mon, 25 May 2020 17:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590427314;
-        bh=qjdmVOIqRqo3sOlRUfcgEntQkhzxxq6U+VJ1HX37vfg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=BFSdAKMh2JVYmQrOhs3VAjWh47ScTS/Px/6VBmd+nUNAt55M3C6fgt7loIk3IY8xt
-         IxvFvWCdKJPJ7VeukMDPahAopzg9wNb98FrBIqwfy+z5uTuPVL37+BFhDBBCDyXido
-         6UW0Pdy2GzXOJ4oRLqBN5lv6Rj59EnKI891WF20I=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A38AB3522846; Mon, 25 May 2020 10:21:54 -0700 (PDT)
-Date:   Mon, 25 May 2020 10:21:54 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
-        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        "andrii.nakryiko@gmail.com" <andrii.nakryiko@gmail.com>
-Subject: Re: Some -serious- BPF-related litmus tests
-Message-ID: <20200525172154.GZ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
- <20200522094407.GK325280@hirez.programming.kicks-ass.net>
- <20200522143201.GB32434@rowland.harvard.edu>
- <20200522174352.GJ2869@paulmck-ThinkPad-P72>
- <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
- <20200525112521.GD317569@hirez.programming.kicks-ass.net>
- <20200525154730.GW2869@paulmck-ThinkPad-P72>
- <20200525170257.GA325280@hirez.programming.kicks-ass.net>
+        Mon, 25 May 2020 13:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389370AbgEYRY4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 13:24:56 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7701C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 10:24:56 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f83so17967440qke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 10:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bvESvaLhhtdJGYqjlNfkZpxLTpkNUIrmn1w48gtvYac=;
+        b=T1py55mlsxBq628MiuFleZaRgFYOHjQ6EfTQhD+k4oVv+8/f18oDhYjFECMBxD4d00
+         ldCQ4gyeTwMuMwupGs4qyWt2k4Ub/Eit/LCdAKbn/+rRQSw5p+lIx4KKE4Mxhj6apM6N
+         KsTWKQUjSmfby8Oc1/B+7T6fTWD46YOMYFIj+7cfxI/8/z8ilH3jeyXSsf6B+u4JGC0p
+         BEaGO7mQ5euyrg56ziuWff04oTIIsdb7n1WYRsUfbf9SHTwIIXCgX6llBWT7jYb/ikI+
+         Ejkl52FUMjc/F58RXqVP7Bab1lH6EE0iOebK2MfHF0oI5x7sLBET/QIcIMbeeX1UjXVz
+         YSRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bvESvaLhhtdJGYqjlNfkZpxLTpkNUIrmn1w48gtvYac=;
+        b=aCaYdDHe8DczEc4im4oLSfYnejlps1HCZJPTqPjZhY+dbqmIIajJHab5/uhdlKAUrH
+         2PgHE/q8d4KMHYsO7oYHlhgXiZZeYLPduA7Xl4KJLLl0a8UECozZqH9GRIQcjIOcLV5r
+         qoeu3+2puVgcbwrTiJA56a3be4Sw40B340Eg945HNs2M7Ig+UvgtD5u8G2i52TAP+Wpy
+         w2nc0pYdrCekA/4xeST253f4ByxlCpCOICCKACsQ+cKf3RMnp2+kblJbQex5Xu6eb3eo
+         EfDgeu7MfY4Y9YrxwYKVHrRZcZwrVTND3AXzTWyNsuOgLkr5qY53JHOoaW7ej+ZdkLuB
+         DmlA==
+X-Gm-Message-State: AOAM533qZcg5EF9qdxTTcFuY8V5LTmVk5gF3NWDv1T4UGivvjmq1EKXD
+        /mp4COTsMsBnsrRvt9Dg7ITYxg==
+X-Google-Smtp-Source: ABdhPJwt8/BoSl0QE3JQ+vOSP7+bsmhmZCSKZlIhbS5D0sBTW4rLQ/3vprWwjhtpvRzmPRVEbzhz8A==
+X-Received: by 2002:a37:ef0e:: with SMTP id j14mr15376918qkk.292.1590427495958;
+        Mon, 25 May 2020 10:24:55 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id m13sm1361300qta.90.2020.05.25.10.24.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 10:24:55 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jdGqN-0007ja-5w; Mon, 25 May 2020 14:24:55 -0300
+Date:   Mon, 25 May 2020 14:24:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     wu000273@umn.edu
+Cc:     aditr@vmware.com, pv-drivers@vmware.com, dledford@redhat.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu
+Subject: Re: [PATCH] RDMA: fix missing pci disable in pvrdma_pci_probe()
+Message-ID: <20200525172455.GA29516@ziepe.ca>
+References: <20200523030457.16160-1-wu000273@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200525170257.GA325280@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200523030457.16160-1-wu000273@umn.edu>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 07:02:57PM +0200, Peter Zijlstra wrote:
-> On Mon, May 25, 2020 at 08:47:30AM -0700, Paul E. McKenney wrote:
-> > On Mon, May 25, 2020 at 01:25:21PM +0200, Peter Zijlstra wrote:
+On Fri, May 22, 2020 at 10:04:57PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
-> > > That is; how can you use a spinlock on the producer side at all?
-> > 
-> > So even trylock is now forbidden in NMI handlers?  If so, why?
+> In function pvrdma_pci_probe(), pdev was not disabled in one error
+> path. Thus replace the jump target “err_free_device” by
+> "err_disable_pdev".
 > 
-> The litmus tests don't have trylock.
+> Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
+>  drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fair point.
+Applied to for-next, thanks
 
-> But you made me look at the actual patch:
-> 
-> +static void *__bpf_ringbuf_reserve(struct bpf_ringbuf *rb, u64 size)
-> +{
-> +	unsigned long cons_pos, prod_pos, new_prod_pos, flags;
-> +	u32 len, pg_off;
-> +	struct bpf_ringbuf_hdr *hdr;
-> +
-> +	if (unlikely(size > RINGBUF_MAX_RECORD_SZ))
-> +		return NULL;
-> +
-> +	len = round_up(size + BPF_RINGBUF_HDR_SZ, 8);
-> +	cons_pos = smp_load_acquire(&rb->consumer_pos);
-> +
-> +	if (in_nmi()) {
-> +		if (!spin_trylock_irqsave(&rb->spinlock, flags))
-> +			return NULL;
-> +	} else {
-> +		spin_lock_irqsave(&rb->spinlock, flags);
-> +	}
-> 
-> And that is of course utter crap. That's like saying you don't care
-> about your NMI data.
-
-Almost.  It is really saying that -if- there is sufficient lock
-contention, printk()s will be lost.  Just as they always have been if
-there is more printk() volume than can be accommodated.
-
-							Thanx, Paul
+Jason
