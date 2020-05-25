@@ -2,93 +2,75 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD119C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9343CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B12CF207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB45207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590396564;
+	bh=5qd4JhElAe3z091uS7e1GwYMBB8ObuPCQBDSxEgdKVQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jZPhFhopEMk6BD3G9W2Fvox/T1/KKoR4SwIZmk60X+23y7nCuZQR5rJ6xwD25xpG0
+	 rBguLsnGwr3w/OgRn8kCwKvpcVbyeO7+bT5PkGA2DjfuxG4SDKZm1QhM/dchXbES4Z
+	 0jVkY6fm9Bvp9vSrNJXVGBbd1If6GF1W3Pjx7PBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389318AbgEYItV (ORCPT
+        id S2389328AbgEYItX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:49:21 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:50680 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388182AbgEYItU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:49:20 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 25 May 2020 16:48:47
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Mon, 25 May 2020 16:48:47 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Peter Ujfalusi" <peter.ujfalusi@ti.com>
-Cc:     kjlu@umn.edu, "Jarkko Nikula" <jarkko.nikula@bitmer.com>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] ASoC: ti: Fix runtime PM imbalance in
- omap2_mcbsp_set_clks_src
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <16f653b3-2a36-7b2c-60be-73d550e47774@ti.com>
-References: <20200525072209.6935-1-dinghao.liu@zju.edu.cn>
- <16f653b3-2a36-7b2c-60be-73d550e47774@ti.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Mon, 25 May 2020 04:49:23 -0400
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:42965 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388182AbgEYItW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 04:49:22 -0400
+Received: by mail-oi1-f171.google.com with SMTP id l6so15447015oic.9;
+        Mon, 25 May 2020 01:49:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5qd4JhElAe3z091uS7e1GwYMBB8ObuPCQBDSxEgdKVQ=;
+        b=LXU9Fo5RGtzNk+9BrnDFd0pmWSXZRiUn6QQGQ8TVkWqbuUp5n57jdOdnG8776h3vRk
+         QXeQrPWY3Q6B293ScWXnaAvWxh/nfgQ80BqOVeq2V3TuwAl0GNEahTQd7HfkTQ47JDwX
+         H96xeA7BO3nj8v0j4D7YXK+5I0YC0N6mkFxlOeMrJrkTKtlzVabkwbyfhKO7ULA2evj2
+         ZVp8D/M1SDXCJvFXrWnCn8pA8Lq1jtRyAs4h430hgjs74szsjLG5FyIvuhfOmJiVOtRr
+         m1X9PbuCPuXMgbEOVNuUrWrDbQ0Sn8fJ7J8Rq6JyGoItG4XuI9nsxNVEvAtPk1bFg2aQ
+         6mBw==
+X-Gm-Message-State: AOAM5314O82UfF4Ck1ocrsGqu1CtXS93t8O1c0dHLB8LrhqM+w3j0DL1
+        UfLc2asjKmxlqKS8gprQAH9kkLJFYiCbaIJ+NHESJw==
+X-Google-Smtp-Source: ABdhPJw6Spt4qqKfu2lRfdhTsKwOc4XO0GKpo/Kd1MOA5Wn8wzEu38xyveRCXSUkPYZZWyOce0+T4n6Uo42MYkhp4I0=
+X-Received: by 2002:aca:4254:: with SMTP id p81mr10082895oia.68.1590396561724;
+ Mon, 25 May 2020 01:49:21 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <46a95b71.c7abd.1724b0524b8.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgDn7wdvhster6sEAA--.1278W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQA2s2
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
-        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
-        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
-        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
-        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
-        43MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
-        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
-        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
-        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r1j6r4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvE
-        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73U
+References: <7bf4d518-5772-9615-f925-8f9af4751d10@linuxfoundation.org>
+In-Reply-To: <7bf4d518-5772-9615-f925-8f9af4751d10@linuxfoundation.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 25 May 2020 10:49:05 +0200
+Message-ID: <CAJZ5v0jDUvLuq8Zhj+Dx_=rd75Y9mg28yDyX76=mrQoC5bqAhw@mail.gmail.com>
+Subject: Re: [GIT PULL] cpupower update for Linux 5.8-rc1
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cj4gCj4gCj4gT24gMjUvMDUvMjAyMCAxMC4yMiwgRGluZ2hhbyBMaXUgd3JvdGU6Cj4gPiBXaGVu
-IGNsa19zZXRfcGFyZW50KCkgcmV0dXJucyBhbiBlcnJvciBjb2RlLCBhIHBhaXJpbmcKPiA+IHJ1
-bnRpbWUgUE0gdXNhZ2UgY291bnRlciBpbmNyZW1lbnQgaXMgbmVlZGVkIHRvIGtlZXAgdGhlCj4g
-PiBjb3VudGVyIGJhbGFuY2VkLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8
-ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIHNvdW5kL3NvYy90aS9vbWFwLW1j
-YnNwLmMgfCAxICsKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+IAo+ID4g
-ZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy90aS9vbWFwLW1jYnNwLmMgYi9zb3VuZC9zb2MvdGkvb21h
-cC1tY2JzcC5jCj4gPiBpbmRleCAzZDQxY2EyMjM4ZDQuLjg0YjRkZTliNjcwYyAxMDA2NDQKPiA+
-IC0tLSBhL3NvdW5kL3NvYy90aS9vbWFwLW1jYnNwLmMKPiA+ICsrKyBiL3NvdW5kL3NvYy90aS9v
-bWFwLW1jYnNwLmMKPiA+IEBAIC04MCw2ICs4MCw3IEBAIHN0YXRpYyBpbnQgb21hcDJfbWNic3Bf
-c2V0X2Nsa3Nfc3JjKHN0cnVjdCBvbWFwX21jYnNwICptY2JzcCwgdTggZmNrX3NyY19pZCkKPiA+
-ICAJaWYgKHIpIHsKPiA+ICAJCWRldl9lcnIobWNic3AtPmRldiwgIkNMS1M6IGNvdWxkIG5vdCBj
-bGtfc2V0X3BhcmVudCgpIHRvICVzXG4iLAo+ID4gIAkJCXNyYyk7Cj4gPiArCQlwbV9ydW50aW1l
-X2dldF9zeW5jKG1jYnNwLT5kZXYpOwo+IAo+ID4gIAkJY2xrX3B1dChmY2tfc3JjKTsKPiA+ICAJ
-CXJldHVybiByOwo+ID4gIAl9Cj4gCj4gSSB0aGluayBpdCB3b3VsZCBiZSBjbGVhbmVyIGluIHRo
-aXMgd2F5Ogo+IAo+IHBtX3J1bnRpbWVfcHV0X3N5bmMobWNic3AtPmRldik7Cj4gCj4gciA9IGNs
-a19zZXRfcGFyZW50KG1jYnNwLT5mY2xrLCBmY2tfc3JjKTsKPiBpZiAocikKPiAJZGV2X2Vyciht
-Y2JzcC0+ZGV2LCAiQ0xLUzogY291bGQgbm90IGNsa19zZXRfcGFyZW50KCkgdG8gJXNcbiIsCj4g
-CQlzcmMpOwo+IAo+IHBtX3J1bnRpbWVfZ2V0X3N5bmMobWNic3AtPmRldik7Cj4gY2xrX3B1dChm
-Y2tfc3JjKTsKPiAKPiByZXR1cm4gcjsKPiAKPiAtIFDDqXRlcgo+IAo+IFRleGFzIEluc3RydW1l
-bnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgo+IFktdHVu
-bnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtp
-CgpUaGFuayB5b3UgZm9yIHlvdXIgYWR2aWNlISBUaGlzIGlzIGJldHRlciBhbmQgSSB3aWxsIGZp
-eCB0aGlzCmluIHRoZSBuZXh0IHZlcnNpb24gb2YgcGF0Y2guCgpSZWdhcmRzLApEaW5naGFv
+On Sat, May 23, 2020 at 1:15 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> Hi Rafael,
+>
+> Please pull the following cpupower update for Linux 5.8-rc1.
+>
+> This cpupower update for Linux 5.8-rc1 consists of a single
+> patch to fix coccicheck unneeded semicolon warning.
+>
+> diff is attached.
+
+Pulled, thanks!
