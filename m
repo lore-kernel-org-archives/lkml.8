@@ -2,120 +2,149 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3088FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F00F02073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJoI8UB5"
+	by mail.kernel.org (Postfix) with ESMTP id 15EB02075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590392424;
+	bh=85HKHrS8vIZQ1Jx7+Y2oume7WqkdQxHcQQjHI0jNXSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iaWGyCQvKDydePmNd3elnK9FJtWo6xFJnw6SVv2YPbkUTpT9b3i2q1dXo0n6dKzmM
+	 ncuylC4lbCBzo4l3YvHpY/aEsA6a8tQRg+w6D7y88vmwdIeactXkolgFMXvR2OZAbP
+	 Ao9IlrRhArvbSCIq9XTDHX3ev/EuSkcgBq3lfHx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389145AbgEYHim (ORCPT
+        id S2389150AbgEYHkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388947AbgEYHil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:38:41 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA29C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:38:41 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id z1so1133150qtn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4r0lwsVRl4S0vhS+fSHZmivQY20nyQaqhWtNxq+9aiA=;
-        b=lJoI8UB5F5IHZE338Rs+oubjNR4y3WBw+PR57/IyeWUy2JWXJy0Usyyb4UN04T9fif
-         lt+biIAibSoPeD7cfXpvc4eXs1MIALUnZkGoacVfkYgSdsS6kQWSkFYH4V2smpQdolGK
-         6ng5hzAUwEZNvMxrZRfWFpHQbGyOYVarZcOqL+5+BwgGbCyVNbyOfGHbaBgHXWam6Hkh
-         swCdKBGJux5L39Egt0dfPOtsJN753j9CnofjI0/fPPDrga+JTf3/0DNwhFKjmrUKOXpp
-         Eb6aU8qeDwEpvUsG0nT78cwDFKHiGa38AppSEJIvi8dHhZb/waHJ2aaz9ILbvSjoSvOp
-         fGXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4r0lwsVRl4S0vhS+fSHZmivQY20nyQaqhWtNxq+9aiA=;
-        b=AXGmpu18OjKIRzwg5qAE2UsY2B/h5WzDDlcguSIVlwGeloUV3cHpSbX/+dqeP34dwv
-         th0ehJvIEydhr46JuRJZOVMeYS1YrLOf1AHk5xwXvT14xBbSFqzjvw7GxEEiWtTxvgjQ
-         klp8J0d88K8Gn+3Qxb+XmM4APXESFNij3xfAHXCUbzHwo/nbMOWR/oFbRK/0eHPTNghL
-         oJocZSXHvfts6m7xTbkKDjeUKonmu6NRxryqtw2rUMpyGGQezuaBR2ubXXiO+mOP4yT8
-         lODX3+MBYce2rONzewYa1e9KcvrcJV8ptd2Dona6/helHuSt1R7vtjOTTSf+Uhx//lSu
-         11nw==
-X-Gm-Message-State: AOAM530yMz0RM3QHG8aBunQvAXMyUUspWpQWpNBD6HTj2jN+M3Ddacby
-        m3qfqF66PMX1TJr1Mrjyj8h1vineEe+XyAmBM6qBOg==
-X-Google-Smtp-Source: ABdhPJyhySPyxlJ2+s2ci0PlmBqxOHy3F1zzRfXB2pz+38+bzn0pj+fo5SbBLVqwK38qQ9dR5twY4OBlkXiuubmOEcQ=
-X-Received: by 2002:ac8:74d9:: with SMTP id j25mr1356921qtr.257.1590392320250;
- Mon, 25 May 2020 00:38:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
- <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
- <94f7ce4f-74fb-bccc-2e87-749e0c8da92c@i-love.sakura.ne.jp> <b4d273ef6013069c6a68667a1e02204fc1e3ea39.camel@perches.com>
-In-Reply-To: <b4d273ef6013069c6a68667a1e02204fc1e3ea39.camel@perches.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 25 May 2020 09:38:28 +0200
-Message-ID: <CACT4Y+auXeBtBPAYA5sLXwbS8BZOMvet9ACya2ghZin4ufecyw@mail.gmail.com>
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into printk(KERN_DEBUG)
-To:     Joe Perches <joe@perches.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
+        Mon, 25 May 2020 03:40:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388947AbgEYHkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:40:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D27CA2073B;
+        Mon, 25 May 2020 07:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590392422;
+        bh=85HKHrS8vIZQ1Jx7+Y2oume7WqkdQxHcQQjHI0jNXSU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uvsLNP/Yi32PY/z61LzCg++53+OVsz9VE1sP8/eReDe7U2wfUMMdXVmo4v//xBjAW
+         MesOUUB03cWeP4e0Mjrb+Xqtho98Yq1miRcfF+4ovYOaCjPHxGszYyERsXD5OYfMDa
+         6D9NGNCAloOFFn2km4Uj3tlBs6e2y13HH4AP6PhY=
+Date:   Mon, 25 May 2020 09:40:20 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [GIT PULL] Driver core fixes for 5.7-rc7 - take 2
+Message-ID: <20200525074020.GC261205@kroah.com>
+References: <20200523131759.GA55886@kroah.com>
+ <20200523152922.GA224858@kroah.com>
+ <CAHk-=wih_B_8a48Au=6B+gwFcYnM7qF02dGX3R0QN_2bzVcjVA@mail.gmail.com>
+ <20200524150018.GB11262@kroah.com>
+ <CAHk-=wh4bZdCkhng3EsJCDhHLxHT6x4S66v5JQvusihVfYrc5Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh4bZdCkhng3EsJCDhHLxHT6x4S66v5JQvusihVfYrc5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 8:07 AM Joe Perches <joe@perches.com> wrote:
->
-> On Mon, 2020-05-25 at 14:03 +0900, Tetsuo Handa wrote:
-> > On 2020/05/25 4:18, Ondrej Mosnacek wrote:
-> > > I'm also not sure if this is really worth it... It would help localize
-> > > the bug in this specific case, but there is nothing systematic about
-> > > it. Are there that many debug print statements that dereference
-> > > pointers that are later passed to functions, but not dereferenced
-> > > otherwise? Maybe yes, but it seems to be quite an optimistic
-> > > assumption... I don't consider it such a big problem that a bug in
-> > > function X only manifests itself deeper in the callchain. There will
-> > > always be such bugs, no matter how many moles you whack.
+On Sun, May 24, 2020 at 10:05:28AM -0700, Linus Torvalds wrote:
+> On Sun, May 24, 2020 at 8:00 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 > >
-> > There are about 1400 pr_debug() callers. About 1000 pr_debug() callers seem
-> > to pass plain '%p' (which is now likely useless for debugging purpose due to
-> > default ptr_to_id() conversion inside pointer()), and about 400 pr_debug()
-> > callers seem to pass '%p[a-zA-Z]' (which does some kind of dereference inside
-> > pointer()). Thus, we might find some bugs by evaluating '%p[a-zA-Z]'.
+> > On Sat, May 23, 2020 at 11:14:28AM -0700, Linus Torvalds wrote:
+> > >
+> > > Hmm. That original patch looks obviously buggy: in kobject_cleanup()
+> > > it would end up doing "kobject_put(parent)" regardless of whether it
+> > > had actually done __kobject_del() or not.
+> > >
+> > > That _could_ have been intentional, but considering the commit
+> > > message, it clearly wasn't in this case.  It might be worth re-trying
+> > > to the commit, just with that fixed.
 > >
-> >
-> >
-> > On Sun, May 24, 2020 at 7:38 PM Joe Perches <joe@perches.com> wrote:
-> > > While I think this is rather unnecessary,
-> > > what about dev_dbg/netdev_dbg/netif_dbg et al ?
-> >
-> > Maybe a good idea, for there are about 24000 *dev_dbg() callers, and
-> > 479 callers pass '%p[a-zA-Z]'. But we can defer to another patch, in
-> > case this patch finds crashes before fuzz testing process starts.
->
-> There are a bunch more than that.
-> Some use other macros, some are functions.
+> > Turns out that wasn't the real problem here, the culprit is the
+> > lib/test_printf.c code trying to tear down a kobject tree from the
+> > parent down to the children (i.e. in the backwards order).
+> 
+> Note that the "obviously buggy or at least not documented" behavior of
+> that commit 4ef12f719802 ("kobject: Make sure the parent does not get
+> released before its children") that got reverted is true regardless.
+> 
+> Should the parent be released unconditionally (like that commit does),
+> or should it be released only when kobject_del() was called when it
+> had "state_in_sysfs" set?
+> 
+> Even if the problem Guenter reported was due to something else, that
+> other change is a rather fundamental change and should at least be
+> mentioned by the commit log.
+> 
+> It's entirely possible that the parent dropping should always be done,
+> but the way it was done in that reverted commit it looked kind of
+> accidental.
 
+I'll revisit this and try to figure it out, but I think what we have
+today is still correct.  The only "problem" that people were having with
+the original code is the kobject_uevent() path walk when a parent was
+gone before the child.  I've sent a patch to solve that problem, so we
+"should" be ok.
 
-I think this is a good idea overall and I don't mind enabling it on syzbot.
-It's not only about %p, even %d can crash kernel or leak sensitive
-info (if it happens after-free/out-of-bounds/uninit). Overall it
-increases code coverage and allows to catch more bugs earlier. That
-was the reason for enabling dynamic debug, but I wasn't aware that
-debug level is not included.
+Unfortunatly, it turns out that the owner of the kobject in question was
+assuming that it could always reach the parent when things were being
+cleaned up, but it was tearing things down in the backwards order.  So
+even if I did move the logic around "correctly" in this patch, it still
+died a horrible death (and there was other under-run errors reported as
+well by other subsystems.)
+
+So again, I think what we have today is ok.  But I'll beat on it for a
+while this week to ensure that.  Time to start using the kunit test
+framework for kobjects it seems :)
+
+> > What is really odd now, is that 'git log lib/kobject.c' does not show
+> > the change/revert at all.  Is that because there was a revert?  Or is it
+> > a git config option/default somewhere that prevents that from showing
+> > up?
+> 
+> No, it's fundamentally how git works.
+> 
+> Remember: git does _not_ track "changes".
+> 
+> Any SCM that tracks changes to a file is fundamentally broken, for
+> fundamental reasons. It mostly boils down to "what happens when the
+> source of the change the same file in two branches is different".
+> Think "rename to X" and "create X", and remember all the problems SVN
+> has when that happens.
+> 
+> So no, git never _ever_ tracks "what changed". Instead, git
+> fundamentally tracks "what is the state". The "change" is not
+> fundamental, it's something that gets computed afterwards when you
+> have a "before and after" state.
+
+Doh, ok, that makes more sense.  It's just that a apply/revert sequence
+does not happen a lot that I happen to notice this when digging through
+the logs for fixes.
+
+> If you want it all, use "git log --full-history", but then you will
+> _really_ get the full history and a lot of pointless noise. And even
+> then, things like "blame" won't waste time on following merges that
+> made no difference in the end.
+
+I'll use --full-history for now on when trying to dig up stable changes,
+as that should help.  But ugh, you are right, there is a lot more noise
+in there, loads of merge commits that shouldn't matter.  Will add
+--no-merges to the line as well, and that helps out.
+
+thanks,
+
+greg k-h
