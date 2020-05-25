@@ -2,105 +2,100 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FB5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB8B206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PwJNOUDM"
+	by mail.kernel.org (Postfix) with ESMTP id 220A320787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590397281;
+	bh=3VN/bUa/MBDwV2iu4hE1Z9d4H5IUUEl7ICGohpy9POU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tP7lwUQKoxRbBG56JW8kctJhZKpuKWx7n0ZsMN22VuFxdyGcPjENh26y8uaAX0iKS
+	 zMaJKjtIrcnn1q0kzrnKI5qn7eXSkU35vJFIElzJR97oz6IY3dp2+NXug7SvaCEgU1
+	 FJTKEq4tkI2bdYLrR47bbvGh7MmvTlNQxOZ89mIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389192AbgEYJAP (ORCPT
+        id S2389217AbgEYJBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388182AbgEYJAM (ORCPT
+        Mon, 25 May 2020 05:01:20 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:44450 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388182AbgEYJBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:00:12 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4CEC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:00:11 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c12so10093348lfc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AVbZ6tYIp/xVUyUP6VrSfGOnDOAgEBsy3lxuX9EX3i8=;
-        b=PwJNOUDMK950t1PfuawMkGO980h5X3fnR2kVKzF+h78exsLmBgyUZTDgfjkuJtNJIo
-         6CGui7qiJcCmRiDdMK8o4Z9KkdHcwbHjL7QqxUebvOgZbJZN7nzizdG9YQULLSQ8woe6
-         ruSUemnmuVFo1q01gnwjPxrBceAsMAOD2BKTgupqL0yFtR3FOjCvsuoJtyv5mYva5aVw
-         nGM0RzfqGAUIJZsBOvZ9dgiRA3HwLCtsR8lsp8LSiQqeLstZ2F35Tln1e1qRW/ZtRPBD
-         PJifdjeIxULrERGEzuNRt+cEmOtf47JF3XmjIJI+0E4L5DcIDQCHeBZADLoRMFTjGYYD
-         ktOQ==
+        Mon, 25 May 2020 05:01:20 -0400
+Received: by mail-oo1-f66.google.com with SMTP id u40so503020ooi.11;
+        Mon, 25 May 2020 02:01:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AVbZ6tYIp/xVUyUP6VrSfGOnDOAgEBsy3lxuX9EX3i8=;
-        b=Bj6Xsii0iZH8qyoC0nJ2msrLibtsp9F4G9SBE2ADvU/CXWvCs/OBBy911mH8SjAic9
-         153kLceKesU3yxMTsa21jSpHqZe46QksGrZEMtv4V2J5nnH/CZoKg+OEdcenNg6enyEf
-         n9Fa28tPnPt3svw9UfZMPYaa270KKCO5fyVrbL1WGFwWxLXiKsBhGfAOsKMgYGIy0K/q
-         BFCU2NmUA7FqXj2oMh+AzHaujrbLQukjcwjE5UM4fPB95B+uAZYffDPjKlAulaPykHhy
-         EJqgkvN+9F452lv2LJpedsP32mD5YhGYKsYWh0SR/AKc7TfZD8LmhTiTtGkD/yP64PYQ
-         XH2Q==
-X-Gm-Message-State: AOAM530z5ZJXXjYWi1Gcpn2vjZt6nEYfDvikZpim9iGQZhiRnGxe/dbU
-        D/K8RX9PXUwK9IHsP46YIjG9dsG/CO+ZPRqiarp2Mw==
-X-Google-Smtp-Source: ABdhPJz2MDg67phcWCgGRBiLChLazpbn+5pVTJlj3rgm6su0EUVsdTIKubrpCsJfhSdKOoK4q+eTkg8CxvrbUPGzl10=
-X-Received: by 2002:ac2:5cd1:: with SMTP id f17mr13019250lfq.4.1590397210185;
- Mon, 25 May 2020 02:00:10 -0700 (PDT)
+        bh=8vWyA0zi2Dx/7wa6PSD2ADmwVek1tPCdMhKzL6eGG4k=;
+        b=G/RYR+5/V62BiIHj2kXuC7wbWGVi9mHAn+pX2OUjiYnR6BJng7jqwU4lHh6GyCiqjx
+         vypo81n+FIcHwIt+dEoCRcDVB33M15/1Bv2xGPKF4LEuO8KnfIIeLFWxkQ244kwX+FTj
+         +O/t1/5I18qJx8vrIhLJpTeybsRbBQnu3LGCy0/JjOHaDs5PS7ibNZ6BH+Xdb+++H6hw
+         8r/pgyO50+6ZqVtO0CklDj+JoFhxeoPccGgJIK6Lig8l6I1QZ9TlPafyIe40jYETMh+Q
+         HAmGba/z0GBfkypjjR5+d4okdNsHE2tL37LHPLiLHrU4SToZc1YilL0xj4AP7n/oeLPx
+         P5Fw==
+X-Gm-Message-State: AOAM530Y3rv1AGhHxzcy1iY5vPTLhw+ma2+Lh5sGJlKPDlIlxOAFtoSD
+        feN071WWN46dcqI2hOt3U4ul59xPR3KALNDdiWg=
+X-Google-Smtp-Source: ABdhPJyzwX2iVrT6Qd3l9Fgc1FvAqYA6sYZDs1ME68NNegl3tYP9ebp9y13iR7l/9ojM1/K+7pi6N5fpXNoNobI++a0=
+X-Received: by 2002:a4a:e759:: with SMTP id n25mr12329240oov.75.1590397279123;
+ Mon, 25 May 2020 02:01:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200428195651.6793-1-mani@kernel.org> <20200428195651.6793-3-mani@kernel.org>
- <CACRpkdZ3b-VLvxN06H_4cDOtUEQTVbe=Zw+NA=YjssMzK2d2sQ@mail.gmail.com>
- <20200429124918.GC6443@Mani-XPS-13-9360> <20200519085703.GB27787@localhost>
-In-Reply-To: <20200519085703.GB27787@localhost>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 10:59:59 +0200
-Message-ID: <CACRpkdapMuMs_mEUHheGtaKYg97=nL1bH3zq4Tc3cnX9Jbw-Ew@mail.gmail.com>
-Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Manivannan Sadhasivam <mani@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <1590043466-11325-1-git-send-email-sumeet.r.pawnikar@intel.com>
+In-Reply-To: <1590043466-11325-1-git-send-email-sumeet.r.pawnikar@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 25 May 2020 11:01:02 +0200
+Message-ID: <CAJZ5v0jWtBK7jR3q64+4_9zVowORVp5rO9CMUDNhYVWMo_Yriw@mail.gmail.com>
+Subject: Re: [PATCH] powercap: remove unused local MSR define
+To:     Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+Cc:     "Zhang, Rui" <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:57 AM Johan Hovold <johan@kernel.org> wrote:
-> > On Wed, Apr 29, 2020 at 02:12:24PM +0200, Linus Walleij wrote:
-
-> > > to something that is device-unique, like "xr-gpios-<serial number>"
-> > > which makes it easy to locate the GPIOs on a specific serial converter
-> > > for lab use. However the USB serial maintainers know better what
-> > > to use here. Whatever makes a USB-to-serial unique from a TTY
-> > > point of view is probably fine with me too.
-> > >
-> > > My idea is that people might want to know which USB cable
-> > > this is sitting on, so I have this USB cable and from this label
-> > > I can always figure out which GPIO device it is.
+On Thu, May 21, 2020 at 8:38 AM Sumeet Pawnikar
+<sumeet.r.pawnikar@intel.com> wrote:
 >
-> I think we've had this discussion before. First, not every device has a
-> unique serial number. Second, we already have a universal way of
-> distinguishing devices namely by using the bus topology. That's
-> available through sysfs and shouldn't have to be be re-encoded by every
-> driver in the gpiochip name.
+> Remove unused PLATFORM_POWER_LIMIT MSR local definition from file
+> intel_rapl_common.c. This was missed while splitting old RAPL code
+> intel_rapl.c file into two new files intel_rapl_msr.c and
+> intel_rapl_common.c as per the commit 3382388d7148
+> ("intel_rapl: abstract RAPL common code"). Currently, this #define
+> entry is being used only in intel_rapl_msr.c file and local definition
+> present in this file.
+>
+> Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> ---
+>  drivers/powercap/intel_rapl_common.c |    3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+> index eb328655bc01..5527a7c76309 100644
+> --- a/drivers/powercap/intel_rapl_common.c
+> +++ b/drivers/powercap/intel_rapl_common.c
+> @@ -26,9 +26,6 @@
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+>
+> -/* Local defines */
+> -#define MSR_PLATFORM_POWER_LIMIT       0x0000065C
+> -
+>  /* bitmasks for RAPL MSRs, used by primitive access functions */
+>  #define ENERGY_STATUS_MASK      0xffffffff
+>
+> --
 
-I remember I even referred to this myself, but I've been waning a bit
-on it recently, because it turns out that userspace/users aren't very
-good at parsing sysfs for topology.
-
-For userspace other than udev there seems to be a kind of agreement
-gap. Dunno how best to bridge it though. Education maybe.
-
-Yours,
-Linus Walleij
+Applied as 5.8 material, thanks!
