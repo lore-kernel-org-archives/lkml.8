@@ -2,119 +2,267 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB98C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A59C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C94B2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590391614;
-	bh=r9OdalTMs700/aqIDgiJZ8RJ5okHeROR6URDpuZAV2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s9GL+FIJBNXBqDN8KpvG45i4l5LWsjFs0MWDq26jOsAU5hHMuf9VCXa7aYYMc0Q0j
-	 9meN1UaJpTE36UOK2aUWShUjndl7Wt1/8ui72pllG8TEE026sy/W06k5Nz4TQ0PeyG
-	 mrvVRg0HChPRUelr1DdFgGRmr4JUuHRLl8qzudJU=
+	by mail.kernel.org (Postfix) with ESMTP id A146520890
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:27:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2fVxMqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389060AbgEYH0x (ORCPT
+        id S2389090AbgEYH1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36520 "EHLO
+        Mon, 25 May 2020 03:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388948AbgEYH0w (ORCPT
+        with ESMTP id S2388948AbgEYH1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:26:52 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B21C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:26:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j16so3683391wrb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:26:52 -0700 (PDT)
+        Mon, 25 May 2020 03:27:13 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC2BC061A0E;
+        Mon, 25 May 2020 00:27:13 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i68so13231852qtb.5;
+        Mon, 25 May 2020 00:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C2c4UNQ+Kyk3q4svduIrEaGBN3fyWHwcY+p2JberCSg=;
-        b=ksU7Hcn06eL+mrm2LSsDf9e+5GL1HbO/0LWxvCzJbKNLJ+BSpA1TwD2E9FUH5jof1z
-         uzZ/dUCiMC+X/eZRyaFm3z0zzBxoGb/z8Y3ysgHvomuhD3zxQO4UKTIv68U6a0VORMe0
-         ZXNU5aQUwCxtoZqTG2rWNduFxw7yfThFOJ9DDJ14+tlPThTItTzygzfBk+b9nyVu1e69
-         Y+AfGj2DPi9JSUVe8NfnadNaf0IaHys9klDdCfLvVtXkCgOQ52hHGGDQwVb92t9XlB/1
-         v+LAlRpIn0ud4Nopx7O3exgUYZ1afB3AAtS+k2g/Ui2HTmcZhyb5gpfh7eYskyFnl6+M
-         0LNQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ajNAsOcF30eG4hqzyeyUa+xAGM7I/tH3z9ZvaPCi0Hs=;
+        b=M2fVxMqzJWTj9nG09QoCCO0x3CGpPIPDCEJXBd7mYtK10DN8F363Hl2sGFl16s/7VF
+         MUu4GknWz738PbJAO5JsvTicpFlCxb235wNKmSs/jbX7tfp3+FAMULjDyOt6HUWGEq2X
+         1uSgoC+hCH4YyfaJFgXAsoPyXIO0oENeuRamZf8NSVATr1otMLFXrIqYgFcfDdiD4pAF
+         DUUZrXQ35OmkhuL8L89qoUN9noLF6w+1M3ljyfX27Jx2SyyyN59RbxUZrimarjnEyRBe
+         82iXYebWod0GLcC/owOXWYniylb11Md2m4h9qdZ7V+gl0M5Xe+oHjKiXIcgYFpezp44J
+         S0Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=C2c4UNQ+Kyk3q4svduIrEaGBN3fyWHwcY+p2JberCSg=;
-        b=o2CvytbzmIy1v5ghaRSWFOcEuw23IhcaG5TpdpFhbhn79CQZ0JiyeTPUc53WyEqyC9
-         6ZgWxTNiapGD6sJbTAMv1FUMJoBSVWzBSr5GtNKIccDalVtoVcWEdp2R/3L+zzG6kGOb
-         YXVTekXfMZEogyfXOGQuFGHEHRSMw4AmWTcM4sQpe6GUtnCT1ewxYs2Qj9eeMydU9s7K
-         gyJTr2IsCIQc5KZVG/q3iD9xw7hkYhfFqSoeT05b8JYzBEcvDyz4jxARB6Rqj3zjOAqS
-         38GpwunQaLBiN9Q/E8K9aFK90msx9S1t6qITkUL8Q5blFX+0f//icHSnytmD41eObuuy
-         hi0A==
-X-Gm-Message-State: AOAM530DYaZjWYKF/FCHsbUGndlHHHBy5cc/On5UHfo4ImraRKSSptHr
-        H68Eo+yCzM7UVjF5I5E/sy0=
-X-Google-Smtp-Source: ABdhPJya2PJCdP5Teww82CMyV/7VtiGyAgwh0BI6pZekrGciF7z50gTRint7ljLC4i8P4XrAqnPx3Q==
-X-Received: by 2002:adf:a55c:: with SMTP id j28mr10340798wrb.369.1590391611360;
-        Mon, 25 May 2020 00:26:51 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id l13sm16998060wrm.55.2020.05.25.00.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 00:26:50 -0700 (PDT)
-Date:   Mon, 25 May 2020 09:26:48 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ajNAsOcF30eG4hqzyeyUa+xAGM7I/tH3z9ZvaPCi0Hs=;
+        b=NFJrQHuBZMqxIsVRAywzwuPp+yEhW1I7Z8uN5UNn3cRmrrrZtk8ghd5THhqqIfjzRA
+         aw2+OOmba/yG1PUvPMI4ix4lxNT9xYWA6Z05elX6rvl7VscMOHIuru8c/8B9CPNE+mZ2
+         LaYclBxWPH/+MA8QEvsNGBTWQ0mn6Zm2SCG1uiQ8d3NlHOyMo4ThxZTwj8AF+xR2sTnu
+         T8kanSrAiNU6OyxK2YMs4TPWOH5kzOl0xAiXrNNEso9DlWHjQDM4gC8/MYbVEz2V0/MF
+         wW2OUNkuPI3w9pqjUkyTscJcPVjW8c5F4u5orTqk2hJV5kVYCsAxP7POaICz0oBCInrk
+         7tVw==
+X-Gm-Message-State: AOAM533yH5EwfzSd/E/FfNKeRmWAhixYYLgFTlDcaicqofMCSjbYJhdU
+        RDRRtoIR1DxW4zP0G/s2YT0=
+X-Google-Smtp-Source: ABdhPJw2kYo4SMNynj5nfsDzzktvz1erwmL4xIZjc6aVXyE3UYv/RojUlPMncQ3dnRqR54OVXr/vmQ==
+X-Received: by 2002:ac8:670b:: with SMTP id e11mr27643877qtp.365.1590391632372;
+        Mon, 25 May 2020 00:27:12 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id n31sm15641781qtc.36.2020.05.25.00.27.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 00:27:11 -0700 (PDT)
+Date:   Mon, 25 May 2020 09:27:07 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Galbraith <umgwanakikbuti@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [PATCH v2 7/7] zram: Use local lock to protect per-CPU data
-Message-ID: <20200525072648.GF329373@gmail.com>
-References: <20200524215739.551568-1-bigeasy@linutronix.de>
- <20200524215739.551568-8-bigeasy@linutronix.de>
+        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@nxp.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: iio: imu: bmi160: convert txt format
+ to yaml
+Message-ID: <20200525072707.GB18690@ict14-OptiPlex-980>
+References: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
+ <20200520194656.16218-2-jonathan.albrieux@gmail.com>
+ <20200524124114.7f4e785d@archlinux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200524215739.551568-8-bigeasy@linutronix.de>
+In-Reply-To: <20200524124114.7f4e785d@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 24, 2020 at 12:41:14PM +0100, Jonathan Cameron wrote:
+> On Wed, 20 May 2020 21:46:40 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > Converts documentation from txt format to yaml.
+> > 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> 
+> A reminder on the maintainer bit as that thread crossed with
+> this one.  Also, drop the spi-max-frequency as we don't need
+> to mention it explicitly for this device.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
 
-* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+Thank you, I'll remove it today.
 
-> --- a/drivers/block/zram/zcomp.h
-> +++ b/drivers/block/zram/zcomp.h
-> @@ -5,11 +5,13 @@
->  
->  #ifndef _ZCOMP_H_
->  #define _ZCOMP_H_
-> +#include <linux/locallock.h>
->  
->  struct zcomp_strm {
->  	/* compression/decompression buffer */
->  	void *buffer;
->  	struct crypto_comp *tfm;
-> +	struct local_lock lock;
->  };
+> 
+> > ---
+> >  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 ---------
+> >  .../bindings/iio/imu/bosch,bmi160.yaml        | 76 +++++++++++++++++++
+> >  2 files changed, 76 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > deleted file mode 100644
+> > index 900c169de00f..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> > +++ /dev/null
+> > @@ -1,37 +0,0 @@
+> > -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
+> > -and externally connectable Magnetometer
+> > -
+> > -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> > -
+> > -Required properties:
+> > - - compatible : should be "bosch,bmi160"
+> > - - reg : the I2C address or SPI chip select number of the sensor
+> > - - spi-max-frequency : set maximum clock frequency (only for SPI)
+> > -
+> > -Optional properties:
+> > - - interrupts : interrupt mapping for IRQ
+> > - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
+> > -   input, set to "INT2" if INT2 pin should be used instead
+> > - - drive-open-drain : set if the specified interrupt pin should be configured as
+> > -   open drain. If not set, defaults to push-pull.
+> > -
+> > -Examples:
+> > -
+> > -bmi160@68 {
+> > -	compatible = "bosch,bmi160";
+> > -	reg = <0x68>;
+> > -
+> > -	interrupt-parent = <&gpio4>;
+> > -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+> > -	interrupt-names = "INT1";
+> > -};
+> > -
+> > -bmi160@0 {
+> > -	compatible = "bosch,bmi160";
+> > -	reg = <0>;
+> > -	spi-max-frequency = <10000000>;
+> > -
+> > -	interrupt-parent = <&gpio2>;
+> > -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+> > -	interrupt-names = "INT2";
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> > new file mode 100644
+> > index 000000000000..46cb4fde1165
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
+> > @@ -0,0 +1,76 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/imu/bosch,bmi160.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Bosch BMI160
+> > +
+> > +maintainers:
+> > +  - Daniel Baluta <daniel.baluta@nxp.com> (?)
+> 
+> Daniel's reply crossed with this.  Given he's moved on to other things
+> he's not happy to be listed as maintainer here.
+> 
+> Given other threads, either put yourself here if you are happy to maintain
+> the binding, or fall back to me but use my kernel.org address.
+> 
+> Jonathan Cameron <jic23@kernel.org>
+> 
+> I don't mind either way.
+> 
 
-I believe the general pattern is to put the lock in front of the 
-fields it protects.
+Thank you, I'll add you then for this binding.
 
-I'd also add a comment documenting that both fields ->buffer and ->tfm 
-are protected by the lock.
+Thank for your help,
 
-Thanks,
+Best regards,
+Jonathan Albrieux
 
-	Ingo
+> 
+> > +
+> > +description: |
+> > +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
+> > +  connectable Magnetometer
+> > +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: bosch,bmi160
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    maxItems: 1
+> 
+> spi-max-frequency doesn't need to be here at all.   We aren't trying to list
+> all of the properties that might be present - but rather those that
+> are either required or that are part of the description of the device.
+> This one is a generic spi binding that may or may not be present.
+> 
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  interrupt-names:
+> > +    enum:
+> > +      - INT1
+> > +      - INT2
+> > +    description: |
+> > +      set to "INT1" if INT1 pin should be used as interrupt input, set
+> > +      to "INT2" if INT2 pin should be used instead
+> > +
+> > +  drive-open-drain:
+> > +    description: |
+> > +      set if the specified interrupt pin should be configured as
+> > +      open drain. If not set, defaults to push-pull.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    // Example for I2C
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        bmi160@68 {
+> > +                compatible = "bosch,bmi160";
+> > +                reg = <0x68>;
+> > +                interrupt-parent = <&gpio4>;
+> > +                interrupts = <12 1>;
+> > +                interrupt-names = "INT1";
+> > +        };
+> > +    };
+> > +  - |
+> > +    // Example for SPI
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        bmi160@0 {
+> > +                compatible = "bosch,bmi160";
+> > +                reg = <0>;
+> > +                spi-max-frequency = <10000000>;
+> > +                interrupt-parent = <&gpio2>;
+> > +                interrupts = <12 1>;
+> > +                interrupt-names = "INT2";
+> > +        };
+> > +    };
+> 
