@@ -2,121 +2,175 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B11C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3053C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C07A2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806552071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u2CNIimp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SWe1pufS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390783AbgEYUxb (ORCPT
+        id S2390845AbgEYU4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 16:53:31 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:65014 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388714AbgEYUxb (ORCPT
+        Mon, 25 May 2020 16:56:30 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4222 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390817AbgEYU43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 16:53:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590440011; x=1621976011;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=KzX3JJFuQclynlosLD9NtvZTWnDtMffEO6pL3DzQ4sc=;
-  b=u2CNIimpqQoyPb+p15xwWNIlMA4ie8BObmxYYU/WQNMVglIW3+sdnkm6
-   g+iO4WEvEDfVf7Sl/+jk0UckK/G/n4VxsEF8D3wq/0Um3IVYlaEJHR7r/
-   OKoFDJh8hwvlaN6mJjtDwPh24fKId2WLEJusirk11EHWb5v+3Z0Xjn6QA
-   g=;
-IronPort-SDR: 0oQ21Kd8MxtYwKRdBpHSkjsCDOABvvyMksssdGqKxIC5CVd3J2wjE7m8QlO2r/uhLo1QvvMfIB
- OfNKZdIWm/rQ==
-X-IronPort-AV: E=Sophos;i="5.73,434,1583193600"; 
-   d="scan'208";a="45832664"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 25 May 2020 20:53:30 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 80C46A1C7A;
-        Mon, 25 May 2020 20:53:27 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 20:53:26 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.253) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 25 May 2020 20:53:18 +0000
-Subject: Re: [PATCH v2 08/18] nitro_enclaves: Add logic for enclave vm
- creation
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-9-andraprs@amazon.com>
- <20200522070828.GD771317@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <736f5245-af92-9d6d-6d17-7cd50fbe6c2a@amazon.com>
-Date:   Mon, 25 May 2020 23:53:13 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Mon, 25 May 2020 16:56:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecc30ab0000>; Mon, 25 May 2020 13:55:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 25 May 2020 13:56:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 25 May 2020 13:56:29 -0700
+Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
+ 2020 20:56:29 +0000
+Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
+ on disabled memory
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Peter Xu <peterx@redhat.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <cohuck@redhat.com>, <cai@lca.pw>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
+ <159017506369.18853.17306023099999811263.stgit@gimli.home>
+ <20200523193417.GI766834@xz-x1> <20200523170602.5eb09a66@x1.home>
+ <20200523235257.GC939059@xz-x1> <20200525122607.GC744@ziepe.ca>
+ <20200525142806.GC1058657@xz-x1> <20200525144651.GE744@ziepe.ca>
+ <20200525151142.GE1058657@xz-x1> <20200525165637.GG744@ziepe.ca>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <3d9c1c8b-5278-1c4d-0e9c-e6f8fdb75853@nvidia.com>
+Date:   Mon, 25 May 2020 13:56:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200522070828.GD771317@kroah.com>
+In-Reply-To: <20200525165637.GG744@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Originating-IP: [10.43.161.253]
-X-ClientProxiedBy: EX13D05UWC002.ant.amazon.com (10.43.162.92) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590440107; bh=mZysOd1QSiEigolQ8hgnjUdmLlF/gyT8pGtK6k3rS+I=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=SWe1pufSO5sOhzDhzw9FORr9IxV3d2pqwczuexNQ8i/rSIdTPJapPS+xjsVmjUx+j
+         8AexDFSia74cHhz9UOfLvRGUhDEp2cf7jkplVC3Mt/Rfk0FNuEUT4jxtPV2hgkMUOb
+         dc46G8WMaN9n2tvlh+JASE8owmtRpb8tJICS3M6z1ehjXHaZ+6MngGzLU4/+33s0O6
+         Vsq5pXorjAoY5UmdS3qZo1jAad4+XzjE4Ozuz76I/7GfeZTDA4demB8WyaXQz1Kt7I
+         ecRbj0Hvq4WglA9i7Po2nRX0unF41cf/93qAK5qhjyyEuaKbATmKUzrDCM2lxjQCGr
+         sEgX43LJiWtKg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMi8wNS8yMDIwIDEwOjA4LCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgTWF5IDIyLCAy
-MDIwIGF0IDA5OjI5OjM2QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gQWRkIGlv
-Y3RsIGNvbW1hbmQgbG9naWMgZm9yIGVuY2xhdmUgVk0gY3JlYXRpb24uIEl0IHRyaWdnZXJzIGEg
-c2xvdAo+PiBhbGxvY2F0aW9uLiBUaGUgZW5jbGF2ZSByZXNvdXJjZXMgd2lsbCBiZSBhc3NvY2lh
-dGVkIHdpdGggdGhpcyBzbG90IGFuZAo+PiBpdCB3aWxsIGJlIHVzZWQgYXMgYW4gaWRlbnRpZmll
-ciBmb3IgdHJpZ2dlcmluZyBlbmNsYXZlIHJ1bi4KPj4KPj4gUmV0dXJuIGEgZmlsZSBkZXNjcmlw
-dG9yLCBuYW1lbHkgZW5jbGF2ZSBmZC4gVGhpcyBpcyBmdXJ0aGVyIHVzZWQgYnkgdGhlCj4+IGFz
-c29jaWF0ZWQgdXNlciBzcGFjZSBlbmNsYXZlIHByb2Nlc3MgdG8gc2V0IGVuY2xhdmUgcmVzb3Vy
-Y2VzIGFuZAo+PiB0cmlnZ2VyIGVuY2xhdmUgdGVybWluYXRpb24uCj4+Cj4+IFRoZSBwb2xsIGZ1
-bmN0aW9uIGlzIGltcGxlbWVudGVkIGluIG9yZGVyIHRvIG5vdGlmeSB0aGUgZW5jbGF2ZSBwcm9j
-ZXNzCj4+IHdoZW4gYW4gZW5jbGF2ZSBleGl0cyB3aXRob3V0IGEgc3BlY2lmaWMgZW5jbGF2ZSB0
-ZXJtaW5hdGlvbiBjb21tYW5kCj4+IHRyaWdnZXIgZS5nLiB3aGVuIGFuIGVuY2xhdmUgY3Jhc2hl
-cy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1IFZhc2lsZSA8bGV4bnZAYW1hem9uLmNv
-bT4KPj4gU2lnbmVkLW9mZi1ieTogQW5kcmEgUGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29t
-Pgo+PiAtLS0KPj4gICBkcml2ZXJzL3ZpcnQvbml0cm9fZW5jbGF2ZXMvbmVfbWlzY19kZXYuYyB8
-IDE2OSArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDE2OSBpbnNl
-cnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpcnQvbml0cm9fZW5jbGF2ZXMv
-bmVfbWlzY19kZXYuYyBiL2RyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9uZV9taXNjX2Rldi5j
-Cj4+IGluZGV4IGUxODY2ZmFjODIyMC4uMTAzNjIyMTIzOGY0IDEwMDY0NAo+PiAtLS0gYS9kcml2
-ZXJzL3ZpcnQvbml0cm9fZW5jbGF2ZXMvbmVfbWlzY19kZXYuYwo+PiArKysgYi9kcml2ZXJzL3Zp
-cnQvbml0cm9fZW5jbGF2ZXMvbmVfbWlzY19kZXYuYwo+PiBAQCAtNjMsNiArNjMsMTQ2IEBAIHN0
-cnVjdCBuZV9jcHVfcG9vbCB7Cj4+ICAgCj4+ICAgc3RhdGljIHN0cnVjdCBuZV9jcHVfcG9vbCBu
-ZV9jcHVfcG9vbDsKPj4gICAKPj4gK3N0YXRpYyBpbnQgbmVfZW5jbGF2ZV9vcGVuKHN0cnVjdCBp
-bm9kZSAqbm9kZSwgc3RydWN0IGZpbGUgKmZpbGUpCj4+ICt7Cj4+ICsJcmV0dXJuIDA7Cj4+ICt9
-Cj4gQWdhaW4sIGlmIGEgZmlsZSBvcGVyYXRpb24gZG9lcyBub3RoaW5nLCBkb24ndCBldmVuIHBy
-b3ZpZGUgaXQuCgpJIHJlbW92ZWQgb3BlbigpIGluIHYzLgoKVGhhbmsgeW91LgoKQW5kcmEKCgoK
-QW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2Zm
-aWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3Vu
-dHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24g
-bnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
+On 2020-05-25 09:56, Jason Gunthorpe wrote:
+> On Mon, May 25, 2020 at 11:11:42AM -0400, Peter Xu wrote:
+>> On Mon, May 25, 2020 at 11:46:51AM -0300, Jason Gunthorpe wrote:
+>>> On Mon, May 25, 2020 at 10:28:06AM -0400, Peter Xu wrote:
+>>>> On Mon, May 25, 2020 at 09:26:07AM -0300, Jason Gunthorpe wrote:
+>>>>> On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
+>>>>>
+>>>>>> For what I understand now, IMHO we should still need all those handlings of
+>>>>>> FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
+>>>>>> try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
+>>>>>> not sure what would be the side effect of that if fault() blocked it.  E.g.,
+>>>>>> the caller could be in an atomic context.
+>>>>>
+>>>>> AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
+>>>>> VM_FAULT_RETRY is returned, which this doesn't do?
+>>>>
+>>>> Yes, that's why I think we should still properly return VM_FAULT_RETRY if
+>>>> needed..  because IMHO it is still possible that the caller calls with
+>>>> FAULT_FLAG_RETRY_NOWAIT.
+>>>>
+>>>> My understanding is that FAULT_FLAG_RETRY_NOWAIT majorly means:
+>>>>
+>>>>    - We cannot release the mmap_sem, and,
+>>>>    - We cannot sleep
+>>>
+>>> Sleeping looks fine, look at any FS implementation of fault, say,
+>>> xfs. The first thing it does is xfs_ilock() which does down_write().
+>>
+>> Yeah.  My wild guess is that maybe fs code will always be without
+>> FAULT_FLAG_RETRY_NOWAIT so it's safe to sleep unconditionally (e.g., I think
+>> the general #PF should be fine to sleep in fault(); gup should be special, but
+>> I didn't observe any gup code called upon file systems)?
+> 
+> get_user_pages is called on filesystem backed pages.
+> 
+> I have no idea what FAULT_FLAG_RETRY_NOWAIT is supposed to do. Maybe
+> John was able to guess when he reworked that stuff?
+> 
 
+Although I didn't end up touching that particular area, I'm sure it's going
+to come up sometime soon, so I poked around just now, and found that
+FAULT_FLAG_RETRY_NOWAIT was added almost exactly 9 years ago. This flag was
+intended to make KVM and similar things behave better when doing GUP on
+file-backed pages that might, or might not be in memory.
+
+The idea is described in the changelog, but not in the code comments or
+Documentation, sigh:
+
+commit 318b275fbca1ab9ec0862de71420e0e92c3d1aa7
+Author: Gleb Natapov <gleb@redhat.com>
+Date:   Tue Mar 22 16:30:51 2011 -0700
+
+     mm: allow GUP to fail instead of waiting on a page
+
+     GUP user may want to try to acquire a reference to a page if it is already
+     in memory, but not if IO, to bring it in, is needed.  For example KVM may
+     tell vcpu to schedule another guest process if current one is trying to
+     access swapped out page.  Meanwhile, the page will be swapped in and the
+     guest process, that depends on it, will be able to run again.
+
+     This patch adds FAULT_FLAG_RETRY_NOWAIT (suggested by Linus) and
+     FOLL_NOWAIT follow_page flags.  FAULT_FLAG_RETRY_NOWAIT, when used in
+     conjunction with VM_FAULT_ALLOW_RETRY, indicates to handle_mm_fault that
+     it shouldn't drop mmap_sem and wait on a page, but return VM_FAULT_RETRY
+     instead.
+
+If that helps, maybe documentation approximately like this might be welcome
+(against linux-next, so I'm using mmap_lock, instead of mmap_sem), below.
+Or is this overkill? People like minimal documentation in the code, so maybe
+this belongs in Documentation, if anywhere:
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8429d5aa31e44..e32e8e52a57ac 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -430,6 +430,15 @@ extern pgprot_t protection_map[16];
+   * continuous faults with flags (b).  We should always try to detect pending
+   * signals before a retry to make sure the continuous page faults can still be
+   * interrupted if necessary.
++ *
++ * About @FAULT_FLAG_RETRY_NOWAIT: this is intended for callers who would like
++ * to acquire a page, but only if the page is already in memory. If, on the
++ * other hand, the page requires IO in order to bring it into memory, then fault
++ * handlers will immediately return VM_FAULT_RETRY ("don't wait"), while leaving
++ * mmap_lock held ("don't drop mmap_lock"). For example, this is useful for
++ * virtual machines that have multiple guests running: if guest A attempts
++ * get_user_pages() on a swapped out page, another guest can be scheduled while
++ * waiting for IO to swap in guest A's page.
+   */
+  #define FAULT_FLAG_WRITE                       0x01
+  #define FAULT_FLAG_MKWRITE                     0x02
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
