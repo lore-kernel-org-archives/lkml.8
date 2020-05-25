@@ -2,171 +2,119 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A307C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E15C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D3F20812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251FA20878
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bl+2kqRC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hnhOWAjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390594AbgEYM2P (ORCPT
+        id S2390606AbgEYM2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:28:15 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:43432 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390500AbgEYM2N (ORCPT
+        Mon, 25 May 2020 08:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390505AbgEYM2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:28:13 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 9EE2C2E1382;
-        Mon, 25 May 2020 15:28:09 +0300 (MSK)
-Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id DQMsTfsjhQ-S7TS4oeT;
-        Mon, 25 May 2020 15:28:09 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1590409689; bh=YEG4z8qEcvv8kNO2YGjz6EufWfplHbPF3VC80TUbdQE=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=bl+2kqRCQsVFwc9oTK+K5T3oNcaVdrBTh8bHsU39tv2jjpDgfTTU+DaYxax9ko5mr
-         GkBjjARumtZaYQY+WluCS9B++huWYaI+1Kc/c/bUZQJoKuhSB7l6BMJKR9h9hxWZez
-         IRPdeajMC85tfdsFdxT0QjpQeA4oHy6Rq/6jCKlc=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:603::1:c])
-        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 2d5hQC4EbC-S7Xq4M1X;
-        Mon, 25 May 2020 15:28:07 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 01/16] block: add disk/bio-based accounting helpers
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <20200525113014.345997-1-hch@lst.de>
- <20200525113014.345997-2-hch@lst.de>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <fafb94a9-cdce-5ea0-e73f-9463766a9f19@yandex-team.ru>
-Date:   Mon, 25 May 2020 15:28:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 08:28:52 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056C9C08C5C1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:28:52 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l21so20309208eji.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4brhUMvajhqCMbsLZet6vC1Qy3ztqFVBNLV1y3fJ0Ok=;
+        b=hnhOWAjqAv1GZGWkwmr90o7yeD20DdB7e42yX7ajg/ZCxiJyFkeAtysH96F8mWj0a5
+         qEFDLtEu+h64FvqQnCfWlsaHd7VhN7vI5fg/UDW8ngyxV4/2boMBDLWOkkSzWgBV1vEH
+         zAGhmm2uShjKSYCQN2/RgtBN47hewG1wCB47Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4brhUMvajhqCMbsLZet6vC1Qy3ztqFVBNLV1y3fJ0Ok=;
+        b=tzYJKAFvbuXxOMMre1F5I8J4hMrFCCC3/uYHHmhjALFXlP2A4grV1jbqKAR0gV0a9A
+         2w3gmz49lvQCciGrfTAnP4m7SA3o2MJvbrTQvKG+l+xfLvKizET+VjB4FVgnS/Uj1UTB
+         BEHsP/qHE3qpXr0L/4BKYk8XJUBZY2JOYMxVvzu3DyxnWFtXZd6Wp2MvAw8HKBtO0Gq3
+         /EOZKc1id9dMKSht1A58QKsdv+XE5uITKDPo8yzQNJCEL+uGgME51T/Px1roeBj26SU1
+         eZFNF3HgTp/Giqtc0cjiXG0pPE5kbTUYt+IVwaUkuy8c4mp6SYjFB9X6JSZyjPiZ+Bq7
+         rbtA==
+X-Gm-Message-State: AOAM532ODRo0VJjAzJxVjtZN3E5R0AP1GW4TP+U480Saa9f6/iW4N/OR
+        mXVcmL2MD+XTVbdWTwI9+3L6q9x4wq5HxA==
+X-Google-Smtp-Source: ABdhPJyryPu2j8oUrymBcJcsp2xME61ZRbi+D/AtJe7jkYkAYmFOd//ZSXx8BcSjX8eWsX5KZiJbeQ==
+X-Received: by 2002:a17:906:f103:: with SMTP id gv3mr18033896ejb.226.1590409730430;
+        Mon, 25 May 2020 05:28:50 -0700 (PDT)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
+        by smtp.gmail.com with ESMTPSA id g61sm15861614ede.96.2020.05.25.05.28.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 05:28:49 -0700 (PDT)
+Received: by mail-wr1-f46.google.com with SMTP id e1so16921723wrt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:28:49 -0700 (PDT)
+X-Received: by 2002:a5d:66c5:: with SMTP id k5mr14649696wrw.17.1590409728561;
+ Mon, 25 May 2020 05:28:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200525113014.345997-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+References: <CGME20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7@eucas1p1.samsung.com>
+ <20200522101327.13456-1-m.szyprowski@samsung.com> <34736047-3fc8-385b-cdea-79b061deb7b4@samsung.com>
+In-Reply-To: <34736047-3fc8-385b-cdea-79b061deb7b4@samsung.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 25 May 2020 14:28:36 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5DdiKDGsodJF_KW8H6YYwAkeaJLE7CoJ=cEX5KeTzO5mw@mail.gmail.com>
+Message-ID: <CAAFQd5DdiKDGsodJF_KW8H6YYwAkeaJLE7CoJ=cEX5KeTzO5mw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: core: fix NULL pointer dereference in suspend/resume callbacks
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/2020 14.29, Christoph Hellwig wrote:
-> Add two new helpers to simplify I/O accounting for bio based drivers.
-> Currently these drivers use the generic_start_io_acct and
-> generic_end_io_acct helpers which have very cumbersome calling
-> conventions, don't actually return the time they started accounting,
-> and try to deal with accounting for partitions, which can't happen
-> for bio based drivers.  The new helpers will be used to subsequently
-> replace uses of the old helpers.
-> 
-> The main function is the bio based wrappes in blkdev.h, but for zram
-> which wants to account rw_page based I/O lower level routines are
-> provided as well.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   block/blk-core.c       | 34 ++++++++++++++++++++++++++++++++++
->   include/linux/blkdev.h | 26 ++++++++++++++++++++++++++
->   2 files changed, 60 insertions(+)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 77e57c2e8d602..8973104f88d90 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1432,6 +1432,40 @@ void blk_account_io_start(struct request *rq, bool new_io)
->   	part_stat_unlock();
->   }
->   
-> +unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,
-> +		unsigned int op)
-> +{
-> +	struct hd_struct *part = &disk->part0;
-> +	const int sgrp = op_stat_group(op);
-> +	unsigned long now = READ_ONCE(jiffies);
-> +
-> +	part_stat_lock();
-> +	update_io_ticks(part, now, false);
-> +	part_stat_inc(part, ios[sgrp]);
-> +	part_stat_add(part, sectors[sgrp], sectors);
-> +	part_stat_local_inc(part, in_flight[op_is_write(op)]);
-> +	part_stat_unlock();
-> +
-> +	return now;
-> +}
-> +EXPORT_SYMBOL(disk_start_io_acct);
-> +
-> +void disk_end_io_acct(struct gendisk *disk, unsigned int op,
-> +		unsigned long start_time)
-> +{
-> +	struct hd_struct *part = &disk->part0;
-> +	const int sgrp = op_stat_group(op);
-> +	unsigned long now = READ_ONCE(jiffies);
-> +	unsigned long duration = now - start_time;
+Hi Marek,
 
-I think it would be better to leave this jiffies legacy nonsense in
-callers and pass here request duration in nanoseconds.
+On Fri, May 22, 2020 at 1:15 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Hi All,
+>
+> On 22.05.2020 12:13, Marek Szyprowski wrote:
+> > Commit 6fe12cdbcfe3 ("i2c: core: support bus regulator controlling in
+> > adapter") added generic suspend and resume functions for i2c devices.
+> > Those functions unconditionally access an i2c_client structure assigned
+> > to the given i2c device. However, there exist i2c devices in the system
+> > without a valid i2c_client. Add the needed check before accessing the
+> > i2c_client.
+>
+> Just one more comment. The devices without i2c_client structure are the
+> i2c 'devices' associated with the respective i2c bus. They are visible
+> in /sys:
+>
+> ls -l /sys/bus/i2c/devices/i2c-*
+>
+> I wonder if this patch has been ever tested with system suspend/resume,
+> as those devices are always available in the system...
 
-So rewriting them to nanoseconds later wouldn't touch generic code.
+Sorry for the trouble and thanks a lot for the fix. We'll make sure to
+do more thorough testing, including suspend/resume before relanding
+this change.
 
-> +
-> +	part_stat_lock();
-> +	update_io_ticks(part, now, true);
-> +	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
-> +	part_stat_local_dec(part, in_flight[op_is_write(op)]);
-> +	part_stat_unlock();
-> +}
-> +EXPORT_SYMBOL(disk_end_io_acct);
-> +
->   /*
->    * Steal bios from a request and add them to a bio list.
->    * The request must not have been partially completed before.
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 7d10f4e632325..76d01a8a13b80 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -1892,4 +1892,30 @@ static inline void blk_wake_io_task(struct task_struct *waiter)
->   		wake_up_process(waiter);
->   }
->   
-> +unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,
-> +		unsigned int op);
-> +void disk_end_io_acct(struct gendisk *disk, unsigned int op,
-> +		unsigned long start_time);
-> +
-> +/**
-> + * bio_start_io_acct - start I/O accounting for bio based drivers
-> + * @bio:	bio to start account for
-> + *
-> + * Returns the start time that should be passed back to bio_end_io_acct().
-> + */
-> +static inline unsigned long bio_start_io_acct(struct bio *bio)
-> +{
-> +	return disk_start_io_acct(bio->bi_disk, bio_sectors(bio), bio_op(bio));
-> +}
-> +
-> +/**
-> + * bio_end_io_acct - end I/O accounting for bio based drivers
-> + * @bio:	bio to end account for
-> + * @start:	start time returned by bio_start_io_acct()
-> + */
-> +static inline void bio_end_io_acct(struct bio *bio, unsigned long start_time)
-> +{
-> +	return disk_end_io_acct(bio->bi_disk, bio_op(bio), start_time);
-> +}
-> +
->   #endif
-> 
+Since the patch was reverted, can we squash your fix with the next
+revision together with your Co-developed-by and Signed-off-by tags?
+
+Best regards,
+Tomasz
