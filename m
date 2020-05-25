@@ -2,121 +2,141 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319E32078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6C62078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="O46lawTe"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="A/B18SGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgEYGYP (ORCPT
+        id S2388630AbgEYG2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 02:24:15 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:64333 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730113AbgEYGYP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 02:24:15 -0400
-X-UUID: dc3d5c5a54ba4ee3bd05c71fa17d7cfb-20200525
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=P1I8TepixZCqsFw/5SDkpIp4t3EBgZjjh17TkYpSIn0=;
-        b=O46lawTeob/nLYdbqT5TlZGztNQNKqS0Nyyrh1WRftTrCWvWvBl3ZjxTqKnHeTtHe7ZyjScxXunVYnttekCchCl3OsTbqDyHn3b9oPelNaQGp7L4hM4TVdu3+KTJnCVy58RpIiTrwHjPEhOiAeYnekxPqmbn9AKeL7Ol/E1LV3U=;
-X-UUID: dc3d5c5a54ba4ee3bd05c71fa17d7cfb-20200525
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 775050014; Mon, 25 May 2020 14:24:05 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 25 May
- 2020 14:24:04 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 25 May 2020 14:24:04 +0800
-Message-ID: <1590387743.13912.11.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 4/7] iommu/mediatek: Move inv_sel_reg into the
- plat_data
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Chao Hao <chao.hao@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>, Jun Yan <jun.yan@mediatek.com>
-Date:   Mon, 25 May 2020 14:22:23 +0800
-In-Reply-To: <20200509083654.5178-5-chao.hao@mediatek.com>
-References: <20200509083654.5178-1-chao.hao@mediatek.com>
-         <20200509083654.5178-5-chao.hao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 25 May 2020 02:28:54 -0400
+Received: from mail-bn7nam10on2040.outbound.protection.outlook.com ([40.107.92.40]:26273
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730113AbgEYG2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 02:28:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nQdsbpQ2UHGdkOh59r6glEhshGyusqLcmu37NXXS4onxdxX9YjtXhfecSBiPeBz9TVuZXapBihPlQfMKTqVH4ZoxPgjuomi4Tdr1Hqq80drX8jCCUdYM/A1o9KEme4u1xsE9aQOazT6tfmDBWUYwUG/QxJpOOL77op+ser357Yxx8mGj/ajl4uzujsRR1hrXuFTBcLpSGntfrx0TeWQqbzn9QNtopV4yL28mPxI0+ji2SzpElNeH1dxiweftdInOG/9spTwvUOTG7QcwtWGOjHJIQ4vjeuX7VEL1/qRFesH7k9otXsGnhQZ+yYXYGZ/krUTiWAjkCAxxSbgHbnCF0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=44ETfCzMO2uG6HiMRKAwSTLcNoVE6oQydn0GVvJF0JA=;
+ b=KdK1ZgrfkjcajNp88TxLkACO8zhd3ru95YKvaM++NEksB234H+MRdOpeiYLkJgsvtU0vWkIZHv/uB49GCOs/G5ZXFQ0jITA3lzlBbSohaejzkfzRW5ieNSdFfWIxMAarx0sZVPYRwJldWxstf3GtA06LkVUlKV1AHEaO8tO7HoDPCrDb7uS5yAr+f5JObySNoSctdYfwc61RKcyRUbiyefbcEVxmwe1jejKUUkGdqQaETijuWok41S2+LYSjSzTeZCsjuia+pwQHAaxeHT5hyhMoj8GtQawc2PihK1xrZdYempmJVHP4fzNismj08PzIrT37IkBY2hpha+h6vo9fpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=44ETfCzMO2uG6HiMRKAwSTLcNoVE6oQydn0GVvJF0JA=;
+ b=A/B18SGBa+XH/2/m4ncZ9QamK7nqVCwUyGHJT6Taht96Q2YedY/fzNywhNbsY2X9VepiJiyLr/DGM0aK4TXI3PRzLFGTNd0916Bn41R5EMlmrzVAKSEAIHNnH3RqrnCYgPrTvhY0MyUp2+bHSjirQlyDDyD1z24lSeDL9hD/68M=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=windriver.com;
+Received: from BN6PR11MB3954.namprd11.prod.outlook.com (2603:10b6:405:79::35)
+ by BN6PR11MB1921.namprd11.prod.outlook.com (2603:10b6:404:104::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Mon, 25 May
+ 2020 06:28:48 +0000
+Received: from BN6PR11MB3954.namprd11.prod.outlook.com
+ ([fe80::c05b:5a81:29d8:6b7f]) by BN6PR11MB3954.namprd11.prod.outlook.com
+ ([fe80::c05b:5a81:29d8:6b7f%6]) with mapi id 15.20.3021.029; Mon, 25 May 2020
+ 06:28:48 +0000
+Subject: Re: [PATCH] workqueue: Fix double kfree(rescuer) in
+ destroy_workqueue()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <96b49f22-50a7-9c8f-7c9d-f178195de717@web.de>
+From:   qzhang2 <qiang.zhang@windriver.com>
+Message-ID: <d9dd0dc2-e169-6a63-9a79-d692994324f1@windriver.com>
+Date:   Mon, 25 May 2020 14:28:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+In-Reply-To: <96b49f22-50a7-9c8f-7c9d-f178195de717@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: HK2PR02CA0133.apcprd02.prod.outlook.com
+ (2603:1096:202:16::17) To BN6PR11MB3954.namprd11.prod.outlook.com
+ (2603:10b6:405:79::35)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 92AFEB32F57DC18BC921CA743F7ED817C952B9384976B2765F29D5F4525EE1A02000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.183] (60.247.85.82) by HK2PR02CA0133.apcprd02.prod.outlook.com (2603:1096:202:16::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Mon, 25 May 2020 06:28:46 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44aad4aa-dc63-4f77-bd0f-08d80074e211
+X-MS-TrafficTypeDiagnostic: BN6PR11MB1921:
+X-Microsoft-Antispam-PRVS: <BN6PR11MB19216E8D02661D5A22FE296BFFB30@BN6PR11MB1921.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0414DF926F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rnu+EnCOv0zQ4B6pF/uF3aoJxYYNqKZYA/p9eMaSg/fRnGWoPskoY4+/CUuoDRgZgD7/GyhHnPpW/cd8yAlzDYYOBtuqGRbz+C7RgdWwdmA1ASsx59YHQhPIi7diOX8r5la5fL336fdzwUUcwWHu8dEfBOM3LZD0UCYgIl31PDMPLUltudN1F2NVzGrrYr98YZxXsP9IoF3APXQqNCWHPsAcADzDAEYdocMCy4HLvpeNhGCj/clsnDwzAJlawE2Najxa/SAsD4WUn72ylcabOokdzStTtQEAkYgiljal6hTd7dO8mCfMRQPMNVMskLSy1b7awOThUVgysW5iaY/YzZvUFF/RPFq2KVGZaL6Qza4Z5Ym8A8xAMyNvhzOWfz+WVVXA/nOj/6rxQsuM+xf1rw7SMQ/y4jrByH4MvFJn8PcNh5SbvBSAreiE/cEfbktEUqo5RzPhqef4Wmxric1yBah+ZAD8aHIAshPSqS3H33c3Th+cyluRWmJ0vUxl2GxtwP9rUcuZ1AOHz2wunxmmWeWRAIEE1huvDwRXmFUGJgk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB3954.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(396003)(366004)(39840400004)(346002)(6706004)(6666004)(8676002)(2616005)(956004)(8936002)(31696002)(5660300002)(16576012)(478600001)(966005)(86362001)(4326008)(316002)(110136005)(31686004)(186003)(16526019)(36756003)(53546011)(52116002)(66556008)(66476007)(6486002)(66946007)(26005)(2906002)(78286006)(43062003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: AApfSbzYdwQV5g87E6RkS6eSaVlTNUW61OhX507VI3DR8ERJos5VgmdzGWBHrctZbs3lNmVygKToFCZUagJVINp33woZJgSs0G3baFiNNBJrQjOO6PSZeIb36xSRCt1pEyVcCXBVnhk369DUbWMJKNqBkAmicUM7dKZfy056ErTZYA4HIA2Ks0iwRxAaM8wYuBcmpIg4gqoHFMiug+GyX0ixfSR1S8UnSmTfJWm/Lkae3JToah1IU9xzPKJtmOU1QDxMSa8oiCvzW0mZ4jrm9YZgj5pXIHdVvXK7H/jR9w2veHFVVio358Wp4YduQ+I5D55T3eA62VOuk3d7Q+EB6Bw85xiGQ5BK+PSvJH3Rs6jYVyY//ihum7MyDmdzzHLVRKb4ftodzEKqRpBRNjA7vrQ1Kb9F3tFLlmE9YbovMtFdvHYqVYWPAMMU0m4WZuuiXM32wZUS87YAyvunQRdCQ/AWHQfeJewuX3M1MqCXwmM=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44aad4aa-dc63-4f77-bd0f-08d80074e211
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 06:28:48.4353
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lAePpH2QrhvmLJpgcUPwhF3VzRhBWBW88oA8C6iGjp64Aj7eq4St91FtXHPApVQYZo+dI4IiMO2cCELV8zNVyi9/nlYOU+0LElNfEYbDW5I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1921
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA1LTA5IGF0IDE2OjM2ICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gRm9y
-IG10Njc3OSwgTU1VX0lOVkxEVF9TRUwgcmVnaXN0ZXIncyBvZmZzZXQgaXMgY2hhbmdlZCBmcm9t
-DQoNCkF0IHRoaXMgcGF0Y2gsIHRoZSByZWdpc3RlciBpcyBzdGlsbCBjYWxsZWQgYnkgIk1NVV9J
-TlZfU0VMIi4NCg0KPiAweDM4IHRvIDB4MmMsIHNvIHdlIGNhbiBwdXQgaW52X3NlbF9yZWcgaW4g
-dGhlIHBsYXRfZGF0YSB0bw0KPiB1c2UgaXQuDQo+IEluIGFkZGl0aW9uLCB3ZSByZW5hbWVkIGl0
-IHRvIFJFR19NTVVfSU5WX1NFTF9HRU4xIGFuZCB1c2UgaXQNCj4gYmVmb3JlIG10Njc3OS4NCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IENoYW8gSGFvIDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYyB8IDkgKysrKysrLS0tDQo+ICBkcml2ZXJz
-L2lvbW11L210a19pb21tdS5oIHwgMSArDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDcgaW5zZXJ0aW9u
-cygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210
-a19pb21tdS5jIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiBpbmRleCA5ZWRlMzI3YTQx
-OGQuLmQ3M2RlOTg3ZjhiZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUu
-Yw0KPiArKysgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+IEBAIC0zNyw3ICszNyw3IEBA
-DQo+ICAjZGVmaW5lIFJFR19NTVVfSU5WTERfU1RBUlRfQQkJCTB4MDI0DQo+ICAjZGVmaW5lIFJF
-R19NTVVfSU5WTERfRU5EX0EJCQkweDAyOA0KPiAgDQo+IC0jZGVmaW5lIFJFR19NTVVfSU5WX1NF
-TAkJCQkweDAzOA0KPiArI2RlZmluZSBSRUdfTU1VX0lOVl9TRUxfR0VOMQkJCTB4MDM4DQo+ICAj
-ZGVmaW5lIEZfSU5WTERfRU4wCQkJCUJJVCgwKQ0KPiAgI2RlZmluZSBGX0lOVkxEX0VOMQkJCQlC
-SVQoMSkNCj4gIA0KPiBAQCAtMTY3LDcgKzE2Nyw3IEBAIHN0YXRpYyB2b2lkIG10a19pb21tdV90
-bGJfZmx1c2hfYWxsKHZvaWQgKmNvb2tpZSkNCj4gIA0KPiAgCWZvcl9lYWNoX200dShkYXRhKSB7
-DQo+ICAJCXdyaXRlbF9yZWxheGVkKEZfSU5WTERfRU4xIHwgRl9JTlZMRF9FTjAsDQo+IC0JCQkg
-ICAgICAgZGF0YS0+YmFzZSArIFJFR19NTVVfSU5WX1NFTCk7DQo+ICsJCQkgICAgICAgZGF0YS0+
-YmFzZSArIGRhdGEtPnBsYXRfZGF0YS0+aW52X3NlbF9yZWcpOw0KPiAgCQl3cml0ZWxfcmVsYXhl
-ZChGX0FMTF9JTlZMRCwgZGF0YS0+YmFzZSArIFJFR19NTVVfSU5WQUxJREFURSk7DQo+ICAJCXdt
-YigpOyAvKiBNYWtlIHN1cmUgdGhlIHRsYiBmbHVzaCBhbGwgZG9uZSAqLw0KPiAgCX0NCj4gQEAg
-LTE4NCw3ICsxODQsNyBAQCBzdGF0aWMgdm9pZCBtdGtfaW9tbXVfdGxiX2ZsdXNoX3JhbmdlX3N5
-bmModW5zaWduZWQgbG9uZyBpb3ZhLCBzaXplX3Qgc2l6ZSwNCj4gIAlmb3JfZWFjaF9tNHUoZGF0
-YSkgew0KPiAgCQlzcGluX2xvY2tfaXJxc2F2ZSgmZGF0YS0+dGxiX2xvY2ssIGZsYWdzKTsNCj4g
-IAkJd3JpdGVsX3JlbGF4ZWQoRl9JTlZMRF9FTjEgfCBGX0lOVkxEX0VOMCwNCj4gLQkJCSAgICAg
-ICBkYXRhLT5iYXNlICsgUkVHX01NVV9JTlZfU0VMKTsNCj4gKwkJCSAgICAgICBkYXRhLT5iYXNl
-ICsgZGF0YS0+cGxhdF9kYXRhLT5pbnZfc2VsX3JlZyk7DQo+ICANCj4gIAkJd3JpdGVsX3JlbGF4
-ZWQoaW92YSwgZGF0YS0+YmFzZSArIFJFR19NTVVfSU5WTERfU1RBUlRfQSk7DQo+ICAJCXdyaXRl
-bF9yZWxheGVkKGlvdmEgKyBzaXplIC0gMSwNCj4gQEAgLTc4NCw2ICs3ODQsNyBAQCBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQyNzEyX2RhdGEgPSB7DQo+ICAJLmhh
-c180Z2JfbW9kZSA9IHRydWUsDQo+ICAJLmhhc19iY2xrICAgICA9IHRydWUsDQo+ICAJLmhhc192
-bGRfcGFfcm5nICAgPSB0cnVlLA0KPiArCS5pbnZfc2VsX3JlZyA9IFJFR19NTVVfSU5WX1NFTF9H
-RU4xLA0KDQpuaXRwaWNrOiBhbGlnbiAnPScgd2l0aCB0aGUgbmV4dCBsaW5lLg0KDQo+ICAJLmxh
-cmJpZF9yZW1hcCA9IHswLCAxLCAyLCAzLCA0LCA1LCA2LCA3LCA4LCA5fSwNCj4gIH07DQo+ICAN
-Cj4gQEAgLTc5MiwxMiArNzkzLDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3Bs
-YXRfZGF0YSBtdDgxNzNfZGF0YSA9IHsNCj4gIAkuaGFzXzRnYl9tb2RlID0gdHJ1ZSwNCj4gIAku
-aGFzX2JjbGsgICAgID0gdHJ1ZSwNCj4gIAkucmVzZXRfYXhpICAgID0gdHJ1ZSwNCj4gKwkuaW52
-X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUxfR0VOMSwNCg0KYWxpZ24gJz0nDQoNCj4gIAkubGFy
-YmlkX3JlbWFwID0gezAsIDEsIDIsIDMsIDQsIDV9LCAvKiBMaW5lYXIgbWFwcGluZy4gKi8NCj4g
-IH07DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgx
-ODNfZGF0YSA9IHsNCj4gIAkubTR1X3BsYXQgICAgID0gTTRVX01UODE4MywNCj4gIAkucmVzZXRf
-YXhpICAgID0gdHJ1ZSwNCj4gKwkuaW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUxfR0VOMSwN
-Cj4gIAkubGFyYmlkX3JlbWFwID0gezAsIDQsIDUsIDYsIDcsIDIsIDMsIDF9LA0KPiAgfTsNCj4g
-IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCBiL2RyaXZlcnMvaW9t
-bXUvbXRrX2lvbW11LmgNCj4gaW5kZXggZDcxMWFjNjMwMDM3Li5hZmQ3YTJkZTVjMWUgMTAwNjQ0
-DQo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gKysrIGIvZHJpdmVycy9pb21t
-dS9tdGtfaW9tbXUuaA0KPiBAQCAtNDMsNiArNDMsNyBAQCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRf
-ZGF0YSB7DQo+ICAJYm9vbAkJICAgIGhhc19taXNjX2N0cmw7DQo+ICAJYm9vbCAgICAgICAgICAg
-ICAgICBoYXNfdmxkX3BhX3JuZzsNCj4gIAlib29sICAgICAgICAgICAgICAgIHJlc2V0X2F4aTsN
-Cj4gKwl1MzIgICAgICAgICAgICAgICAgIGludl9zZWxfcmVnOw0KPiAgCXVuc2lnbmVkIGNoYXIg
-ICAgICAgbGFyYmlkX3JlbWFwW01US19MQVJCX05SX01BWF07DQo+ICB9Ow0KPiAgDQoNCg==
+Sorry I didn't describe clearly
 
+I describe the meaning as follows:
+
+	destroy_workqueue
+		if(wq->rescuer)
+			struct worker *rescuer = wq->rescuer
+			kfree(rescuer)
+		..................
+                 if (!(wq->flags & WQ_UNBOUND))
+			call_rcu(&wq->rcu, rcu_free_wq)
+			......................
+			rcu_free_wq
+				kfree(wq->rescuer)
+
+there are double free.
+
+On 5/24/20 11:33 PM, Markus Elfring wrote:
+>> When destroy_workqueue if rescuer worker exist,wq->rescuer pointer be
+>> kfree. if sanity checks passed. the func call_rcu(&wq->rcu, rcu_free_wq)
+>> will be called if the wq->flags & WQ_UNBOUND is false,in rcu_free_wq
+>> func wq->rescuer pointer was kfree again.
+> 
+> 1. I suggest to improve also this change description.
+>     Do you try to explain here that a call of the function “free_workqueue_attrs”
+>     (or “free_percpu”) would perform sufficient clean-up of system resources
+>     in this use case?
+> 
+> 2. You proposed to delete the function call “kfree(wq->rescuer)” from
+>     the implementation of the function “rcu_free_wq”.
+>     https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/kernel/workqueue.c?id=c11d28ab4a691736e30b49813fb801847bd44e83#n3482
+>     https://elixir.bootlin.com/linux/v5.7-rc6/source/kernel/workqueue.c#L3482
+> 
+>     This function name should be specified also in the patch subject,
+>     shouldn't it?
+> 
+> 3. Would you like to add the tag “Fixes” to the commit message?
+> 
+> Regards,
+> Markus
+> 
