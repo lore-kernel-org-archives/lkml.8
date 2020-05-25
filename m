@@ -2,149 +2,81 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C26C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00482C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB162078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B172078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389734AbgEYKKg (ORCPT
+        id S2389740AbgEYKLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:10:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42446 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389356AbgEYKKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:10:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3A29DAA35;
-        Mon, 25 May 2020 10:10:37 +0000 (UTC)
-Date:   Mon, 25 May 2020 12:10:33 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for May 21 (objtool warnings)
-In-Reply-To: <22332d9b-5e9f-5474-adac-9b3e39861aee@infradead.org>
-Message-ID: <alpine.LSU.2.21.2005251101030.24984@pobox.suse.cz>
-References: <20200522001209.07c19400@canb.auug.org.au> <22332d9b-5e9f-5474-adac-9b3e39861aee@infradead.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 25 May 2020 06:11:55 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:46027 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389356AbgEYKLy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:11:54 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04PABiTT2029022, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04PABiTT2029022
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 25 May 2020 18:11:45 +0800
+Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS02.realsil.com.cn
+ ([::1]) with mapi id 14.03.0439.000; Mon, 25 May 2020 18:11:45 +0800
+From:   =?utf-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIFtWMl0gbW1jOiBydHN4OiBBZGQgU0QgRXhwcmVz?= =?utf-8?Q?s_mode_support_for_RTS5261?=
+Thread-Topic: [PATCH] [V2] mmc: rtsx: Add SD Express mode support for RTS5261
+Thread-Index: AQHWLbNp9MwhKj9p/EOP51J51uncK6izUesAgAAVIICABPHGMP//tYyAgACKUyA=
+Date:   Mon, 25 May 2020 10:11:44 +0000
+Message-ID: <2A308283684ECD4B896628E09AF5361E59ACF71F@RS-MBS01.realsil.com.cn>
+References: <1589875163-3367-1-git-send-email-rui_feng@realsil.com.cn>
+ <20200522091646.GA1201234@kroah.com>
+ <CAK8P3a3Uk_fmJ3UA1nuChHLC6w3p_wZfkqqRLvB01W0uLEE3-w@mail.gmail.com>
+ <2A308283684ECD4B896628E09AF5361E59ACF600@RS-MBS01.realsil.com.cn>
+ <CAK8P3a13P0NuogaQtvSAZRbJb5OaccVxegvqKpynWO65Ye3iKA@mail.gmail.com>
+In-Reply-To: <CAK8P3a13P0NuogaQtvSAZRbJb5OaccVxegvqKpynWO65Ye3iKA@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.29.40.150]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020, Randy Dunlap wrote:
-
-> On 5/21/20 7:12 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200519:
-> > 
-
-These are indeed caused by -flive-patching
- 
-> on x86_64:
-> 
-> fs/open.o: warning: objtool: chmod_common()+0x104: unreachable instruction
-> fs/namei.o: warning: objtool: do_renameat2()+0x482: unreachable instruction
-
-Two "funny" ones. When CONFIG_FILE_LOCKING is not set, break_deleg_wait() 
-is just BUG(). GCC decides to isra optimize it to break_deleg_wait.isra.0 
-and call it in chmod_common() and do_renameat2() instead of just inline 
-it.
-
-chmod_common() with -flive-patching:
-
-     981:       e8 f7 fe ff ff          callq  87d <break_deleg_wait.isra.0>
-     986:       41 89 c4                mov    %eax,%r12d
-     989:       85 c0                   test   %eax,%eax
-     98b:       0f 84 76 ff ff ff       je     907 <chmod_common+0x7b>
-     991:       48 89 df                mov    %rbx,%rdi
-     994:       e8 00 00 00 00          callq  999 <chmod_common+0x10d>
-                        995: R_X86_64_PLT32     __tsan_read8-0x4
-
-without:
-
-     985:       e8 f3 fe ff ff          callq  87d <break_deleg_wait.isra.0>
-     98a:       48 89 df                mov    %rbx,%rdi
-     98d:       e8 00 00 00 00          callq  992 <chmod_common+0x106>
-                        98e: R_X86_64_PLT32     __tsan_read8-0x4
-
-The error checking of break_deleg_wait() is correctly compiled out, 
-because it is unreachable.
-
-I wondered how come objtool (correctly) says the instructions are 
-unreachable. It means it knows that break_deleg_wait.isra.0 is a dead end
-(dead_end_function() returns true while checking INSN_CALL). And of course
-"return 0;" in break_deleg_wait() is compiled out.
-
-000000000000087d <break_deleg_wait.isra.0>:
-     87d:       55                      push   %rbp
-     87e:       48 89 e5                mov    %rsp,%rbp
-     881:       48 8b 7d 08             mov    0x8(%rbp),%rdi
-     885:       e8 00 00 00 00          callq  88a <break_deleg_wait.isra.0+0xd>
-                        886: R_X86_64_PLT32     __tsan_func_entry-0x4
-     88a:       0f 0b                   ud2    
-
-One way to fix it is to mark break_deleg_wait() as __always_inline. Then 
-it all works.
-
-Note: there are more functions calling break_deleg_wait() with this 
-pattern.
-
-I'll try to find out which optimization does this, because it is a 
-slightly different scenario than hiding __noreturn from the callees. 
-Probably -fno-ipa-pure-const again.
-
-> kernel/exit.o: warning: objtool: __ia32_sys_exit_group()+0x2e: unreachable instruction
-
-Easy one. do_group_exit() is noreturn and should be marked as such.
-
-> Full randconfig file is attached.
-> 
-> 
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks for reporting, Randy.
-
-Miroslav
-
----
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ac8bd95b5fe8..2b79932e924d 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2546,7 +2546,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
- 	return 0;
- }
- 
--static inline int break_deleg_wait(struct inode **delegated_inode)
-+static __always_inline int break_deleg_wait(struct inode **delegated_inode)
- {
- 	BUG();
- 	return 0;
-diff --git a/kernel/exit.c b/kernel/exit.c
-index ed56917d50e3..9437c1ca37c5 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -876,7 +876,7 @@ SYSCALL_DEFINE1(exit, int, error_code)
-  * Take down every thread in the group.  This is called by fatal signals
-  * as well as by sys_exit_group (below).
-  */
--void
-+void __noreturn
- do_group_exit(int exit_code)
- {
- 	struct signal_struct *sig = current->signal;
+PiBPbiBNb24sIE1heSAyNSwgMjAyMCBhdCA4OjU4IEFNIOWGr+mUkCA8cnVpX2ZlbmdAcmVhbHNp
+bC5jb20uY24+IHdyb3RlOg0KPiA+ID4gT24gRnJpLCBNYXkgMjIsIDIwMjAgYXQgMTE6MTYgQU0g
+R3JlZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+IHdyb3RlOg0KPiA+ID4gPg0K
+PiA+ID4gPiBJZiBJIGNhbiBnZXQgYW4gYWNrIGZyb20gdGhlIE1NQyBtYWludGFpbmVyLCBJIGNh
+biB0YWtlIHRoaXMgaW4gbXkNCj4gPiA+ID4gdHJlZS4uLg0KPiA+ID4gPg0KPiA+ID4gPiB7aGlu
+dH0NCj4gPiA+DQo+ID4gPiBJIHRoaW5rIHRoaXMgZmVhdHVyZSBuZWVkcyBtdWNoIG1vcmUgZGlz
+Y3Vzc2lvbiB0byBtYWtlIHN1cmUgd2UgZ2V0DQo+ID4gPiBhIGdvb2QgdXNlciBleHBlcmllbmNl
+IHdoZW4gaXQgZ2V0cyBhZGRlZCB0byBhbGwgbW1jIGNvbnRyb2xsZXJzLg0KPiA+ID4NCj4gPiBP
+bmx5IFJUUzUyNjEgaXMgYWZmZWN0ZWQgYnkgdGhpcyBwYXRjaC4gT3RoZXIgdmVuZG9yJ3MgcmVh
+ZGVyIHdvbid0IGJlDQo+IGFmZmVjdGVkLg0KPiANCj4gVGhhdCBzb3VuZHMgbGlrZSBhbm90aGVy
+IHByb2JsZW0gd2l0aCB0aGlzIHBhdGNoOg0KPiANCj4gVGhlIHRyYW5zaXRpb24gc2hvdWxkIHBy
+b2JhYmx5IGJlIGhhbmRsZWQgYnkgdGhlIE1NQyBjb3JlIGNoZWNraW5nIHdoZXRoZXINCj4gdGhl
+IGtlcm5lbCwgdGhlIG1tYyBob3N0IGFuZCBhbmQgdGhlIGNhcmQgYWxsIHN1cHBvcnQgU0QgZXhw
+cmVzcyBtb2RlLCBhbmQNCj4gdGhlbiBzdGFydCB0aGUgdHJhbnNpdGlvbiBhcyB3ZWxsIGFzIGZh
+bGxpbmcgYmFjayB0byBTRCBtb2RlIGlmIGl0IGRvZXNuJ3QgY29tZSB1cA0KPiBwcm9wZXJseS4N
+Cj4gDQpUaGUgcHVycG9zZSBvZiB0aGUgbW9kaWZpY2F0aW9uIGluIG1tYyBjb3JlIG9mIHRoaXMg
+cGF0Y2ggaXMgdG8gbGV0IHRoZSBrZXJuZWwgaGFzIHRoZSBhYmlsaXR5DQp0byBjaGVjayB3aGV0
+aGVyIHRoZSBjYXJkIHN1cHBvcnQgU0QgZXhwcmVzcyBtb2RlIGFjY29yZGluZyB0byBTRCBzcGVj
+aWZpY2F0aW9uLg0KSWYgUlRTNTI2MSBzd2l0Y2ggdG8gU0QgZXhwcmVzcyBtb2RlIGZhaWxlZCwg
+UlRTNTI2MSB3aWxsIGZhbGwgYmFjayB0byBTRCBtb2RlIGJ5IGl0c2VsZg0KYW5kIEl0IGRvZXNu
+J3QgbmVlZCBtbWMgZHJpdmVyIHRvIGRvIGFueXRoaW5nLiBBZnRlciBmYWxsaW5nIGJhY2sgdG8g
+U0QgbW9kZSwgbW1jIGRyaXZlcg0Kd2lsbCBoYW5kbGUgdGhlIFNEIGNhcmQgaW4gU0QgbW9kZSBh
+cyBiZWZvcmUgd2l0aG91dCB0aGlzIHBhdGNoLg0KDQpLaW5kIHJlZ2FyZHMNCg==
