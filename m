@@ -2,111 +2,128 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E192DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2ADC2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:33:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlUGNB3o"
+	by mail.kernel.org (Postfix) with ESMTP id D0945207C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590413694;
+	bh=LKwcpxkHQoO3E/8QaKt2bzjocoFx3vHlcNvLz/L4MiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eCxcnzrkbrSovcfdyhS4p/yIPS+Oei3s3e9uLFlRyXXzBpsyQqhV9KxVoybFYRFsu
+	 IYQCvsxGe0foELMRIO+cYSb3biga/PRugiiz+9fDfVkOoTw51dzSDQpOcLP260Grqr
+	 3zF2i7UvOxTMa5jeuIiRGLn8EbZGJveNgBMz4Fig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390815AbgEYNdz (ORCPT
+        id S2403831AbgEYNey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388794AbgEYNdy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:33:54 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1BAC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:33:54 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id l67so4721292ybl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xqk0bIefrw2vrIZWbzj16crB43IedLWQvwRJlQvaA9c=;
-        b=TlUGNB3o2IkqFANinGJ4SF9BF23MV1OzUqvIAlYVssnHiOkJLgD+ffpmo76rGWwPFN
-         G3+EW5xsxAsXWBDaNYx84Ees2f97TtFaAXjD3Smn0Ue5VgvubIsYLn5w2+/lxNR3VRvj
-         /w/qrDLCMmbJ2xjXg5qXiZld7SPYkppeFX12mD9mkiDomh1hKYa0dQdsjZVRJgK8l5lH
-         7T7SNCCXaC//rhbu8pviX4qu5c9bkWaHxZf9RbBrOI+JX8Pn1+cepnZ6zfGaVKr5YRr+
-         EHVEWjH9Bgr5LqPRbgS5fjlSBj8qMt8v/MXAxbUdNMKAaQWwjrofLZpd0gAHEXtdmYBe
-         hj8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xqk0bIefrw2vrIZWbzj16crB43IedLWQvwRJlQvaA9c=;
-        b=SQnI6ehVYq6lEgPxZCcrLerQoRsJ8HcUjZabSlEUaOsRFouDPj71AaSZU7QVqZR040
-         h+IBTKEi/Btk2CyGjRbsP9rsyW3cfMlkEEDfU2L0vPii8wxvUp9dw/t3aC8YCAdbA7Md
-         /Q4d1SfgACXDn+PdV524LeWniBpIfZCyK/OeMAyKuevJMYRJZ0hSEVokidTJWLr/OG3A
-         NzXQYJGa4UouKA+aDs4M3joiw4akYJ0PkM1ZxhAsXc88GxyjLt/VYaRNSZI23kOqgjdS
-         xadv9sN8md0qGlAotjxXVeatpF8o5e876nptT0xS72bCkiMh7SwoMBGnpXcxXuK3SM/r
-         HY9A==
-X-Gm-Message-State: AOAM533DT2PaqCTITx2Evh3Y1iNu9j/9KIgQteIv+Ydgt5k1VVyTa2h6
-        t/18jmIzI0z2z2Ks1B6cfvCoVlXO5dU3jAMGkACP7rC4Inc=
-X-Google-Smtp-Source: ABdhPJwDKforc+9M9yVo4pMMOxCDDVaBSg9Mmj8MRXwgkKD3wKlS43421pLmS6F4n5e6h0CCLqm5fY5bIHD4XPZICPw=
-X-Received: by 2002:a25:8202:: with SMTP id q2mr42946369ybk.243.1590413633559;
- Mon, 25 May 2020 06:33:53 -0700 (PDT)
+        Mon, 25 May 2020 09:34:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388794AbgEYNex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:34:53 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64B8E2078B;
+        Mon, 25 May 2020 13:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590413692;
+        bh=LKwcpxkHQoO3E/8QaKt2bzjocoFx3vHlcNvLz/L4MiQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wemD2NKWMlvPpTU9wb/1jYNbEK71jG9+ZVcp2HTG/Glq+tRQe5vaEYi5At27yiQDK
+         VHyxpangjdAiZ6PnRhwF5BtYkaGc9vRdGDGqBU77wkA0UsYL5N8LfDmuVSGJCdDAjQ
+         rWzrLpBSyPgaXCU8+I8CcnzSbnfR42rjlbvEhp1U=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A02E840AFD; Mon, 25 May 2020 10:34:48 -0300 (-03)
+Date:   Mon, 25 May 2020 10:34:48 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 0/7] Share events between metrics
+Message-ID: <20200525133448.GJ14034@kernel.org>
+References: <20200520182011.32236-1-irogers@google.com>
+ <20200521114325.GT157452@krava>
+ <20200521172235.GD14034@kernel.org>
+ <20200522101311.GA404187@krava>
+ <20200522144908.GI14034@kernel.org>
+ <CAP-5=fUaaNpi3RZd9-Q-uCaudop0tU5NN8HFek5e2XLoBZqt6w@mail.gmail.com>
+ <CAP-5=fWZYJ2RXeXGGmFXAW9CNnb2S6cGYKc_M=hUQyCng7KJBQ@mail.gmail.com>
+ <20200523221936.GA123450@krava>
 MIME-Version: 1.0
-References: <20200525115235.5405-1-maxim.uvarov@linaro.org>
- <20200525115235.5405-3-maxim.uvarov@linaro.org> <20200525124753.GA797117@kroah.com>
-In-Reply-To: <20200525124753.GA797117@kroah.com>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Mon, 25 May 2020 16:33:42 +0300
-Message-ID: <CAD8XO3ach_G31vkqbVoio2H2yosdoLicu4SLk6nKdGmihUukgw@mail.gmail.com>
-Subject: Re: [PATCHv3 2/3] optee: use uuid for sysfs driver entry
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200523221936.GA123450@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 at 15:47, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, May 25, 2020 at 02:52:34PM +0300, Maxim Uvarov wrote:
-> > Optee device names for sysfs needed to be unique
-> > and it's better if they will mean something. UUID for name
-> > looks like good solution:
-> > /sys/bus/tee/devices/optee-clnt-<uuid>
->
-> Can you document that in Documentation/ABI/ ?
->
-yes, sure if we agree to go with uuid.
+Em Sun, May 24, 2020 at 12:19:36AM +0200, Jiri Olsa escreveu:
+> On Fri, May 22, 2020 at 10:56:59AM -0700, Ian Rogers wrote:
+> 
+> SNIP
+> 
+> > >> >       #11 0x00000000004b6911 in cmd_test (argc=1, argv=0x7fffffffd7f0) at tests/builtin-test.c:772
+> > >> >       #12 0x00000000004e977b in run_builtin (p=0xa7eee8 <commands+552>, argc=3, argv=0x7fffffffd7f0) at perf.c:312
+> > >> >       #13 0x00000000004e99e8 in handle_internal_command (argc=3, argv=0x7fffffffd7f0) at perf.c:364
+> > >> >       #14 0x00000000004e9b2f in run_argv (argcp=0x7fffffffd64c, argv=0x7fffffffd640) at perf.c:408
+> > >> >       #15 0x00000000004e9efb in main (argc=3, argv=0x7fffffffd7f0) at perf.c:538
+> > >> >
+> > >> > attached patch fixes it for me, but I'm not sure this
+> > >> > should be necessary
+> > >>
+> > >> ... applying the patch below makes the segfault go away. Ian, Ack? I can
+> > >> fold it into the patch introducing the problem.
+> > >
+> > >
+> > > I suspect this patch is a memory leak. The underlying issue is likely the outstanding hashmap_clear fix in libbpf. Let me check.
+> > >
+> > > Thanks,
+> > > Ian
+> > 
+> > Tested:
+> > $ git checkout -b testing acme/tmp.perf/core
+> > $ make ...
+> > $ perf test 7
+> > 7: Simple expression parser                              : FAILED!
+> > $ git cherry-pick 6bca339175bf
+> > [acme-perf-expr-testing 4614bd252003] libbpf: Fix memory leak and
+> > possible double-free in hashmap__c
+> 
+> yep, it fixes the issue for me, but I see that under different commit number:
+> 
+>   229bf8bf4d91 libbpf: Fix memory leak and possible double-free in hashmap__clear
 
-> And why UUID?  Those are usually huge, is that easier than just a unique
-> number?
->
+Ok, so I'll just add a note mentioning that this test will pass as soon
+as the libbpf fix gets upstream.
 
-UUID here is connected to Trusted Application (TA) in a secure world.
-If you need to 'find'  sysfs entry for the corresponding driver
-becomes very easy.
-Also UUID here are not really huge, like:
-/sys/bus/tee/devices/optee-clnt-71d950bc-c9d4-c442-82cb-343fb7f37896
-/sys/bus/tee/devices/optee-clnt-ba3ac5b6-6996-6846-a7f2-205629d00f86
+Thanks,
 
-I think that is better then optee-clnt-0, optee-clnt-1.. which can be
-reordered on each boot and does not carry any information. And on
-module unload there will be missing numbers.
-
-Regards,
-Maxim.
-
-> thanks,
->
-> greg k-h
+- Arnaldo
