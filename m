@@ -2,107 +2,103 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96145C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE7F2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590440270;
-	bh=lR7NOEwZSW7Lg+I18yIGiKJF3iGfsiCFNOxqNlZ1mDc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=O7hdxg4bwEtazn/g6tMsq7xltMTDnl7BNUkfDTn9cghUge07m0QHukBAP5fpMPfgC
-	 OmtanpLx7MtiL6NQCjlJJBWwCCmhclXPjIopI5UvRPRT55PeZkpqSLTxzeys760+OO
-	 02wP3B2gBnYqxMNPQnUVbzksgU/rwkMmtSiYSedk=
+	by mail.kernel.org (Postfix) with ESMTP id A9A712071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="H9K86xLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390922AbgEYU5t (ORCPT
+        id S2390949AbgEYU56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 16:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390750AbgEYU5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 16:57:49 -0400
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (c-67-180-217-166.hsd1.ca.comcast.net [67.180.217.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B8262065F;
-        Mon, 25 May 2020 20:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590440268;
-        bh=lR7NOEwZSW7Lg+I18yIGiKJF3iGfsiCFNOxqNlZ1mDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=swt24vm+6Bdjwmpc/k3E1NGlCiAfDgyqBkQ3G8Ce/iyqkrFCZLuItGHYd7e+lhuit
-         2p/8FdJfvjSP6yy44RRgmPkzZ0fXJ6Hm3oE4qCNX4na//sgiBAFsr9XmKyyD1l5QJB
-         5v9UiseaC98juTrEUehmaFTAJxgDK718S2RLobhk=
-Date:   Mon, 25 May 2020 13:57:46 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, derosier@gmail.com,
-        greearb@candelatech.com, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, jiri@resnulli.us,
-        briannorris@chromium.org
-Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
-Message-ID: <20200525135746.45e764de@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
-References: <20200519010530.GS11244@42.do-not-panic.com>
-        <20200519211531.3702593-1-kuba@kernel.org>
-        <20200522052046.GY11244@42.do-not-panic.com>
-        <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
+        Mon, 25 May 2020 16:57:58 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:18116 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388880AbgEYU55 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 16:57:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590440276; x=1621976276;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=gFkQgAi+L2ZAXoihH38v8ZdLhtitzSj9jHCXCnZJqk0=;
+  b=H9K86xLhEuVQ0QbUZDnTIIkDWYqvzVrtKW72n9Q4Wf76qlDYejBpMN1o
+   xpHihPKtchYeZqGYv83m2CSSOxGm8WVm5X/qRDaAD3MAn27hIqZHBVjBn
+   e7FekRDw6MgYuQmdk5xpI/kLKHYQp4wEQs3/RG/rPCj1cYGisO1BPypGO
+   Y=;
+IronPort-SDR: eQJD8dZZ0oqi0CvDjMD3bU+XwWaUJv7IPMdeI0Qbf/rxbIHsOPzQYTfnpOapvFX7IgFgnlGG0C
+ v+d5uudM33bg==
+X-IronPort-AV: E=Sophos;i="5.73,434,1583193600"; 
+   d="scan'208";a="32212850"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 25 May 2020 20:57:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com (Postfix) with ESMTPS id 20982A1D6D;
+        Mon, 25 May 2020 20:57:41 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 20:57:40 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 20:57:32 +0000
+Subject: Re: [PATCH v2 16/18] nitro_enclaves: Add sample for ioctl interface
+ usage
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
+ <20200522062946.28973-17-andraprs@amazon.com>
+ <20200522070853.GE771317@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <09c68ec6-f0fd-e400-1ff2-681ac51c568c@amazon.com>
+Date:   Mon, 25 May 2020 23:57:26 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200522070853.GE771317@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D11UWB004.ant.amazon.com (10.43.161.90) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 22:46:07 +0200 Johannes Berg wrote:
-> > The irony is you have a problem with a networking device and all the
-> > devices your initial set touched are networking. Two of the drivers 
-> > you touched either have or will soon have devlink health reporters
-> > implemented.  
-> 
-> Like I said above, do you think it'd be feasible to make a devcoredump
-> out of devlink health reports? And can the report be in a way that we
-> control the file format, or are there limits? I guess I should read the
-> code to find out, but I figure you probably just know. But feel free to
-> tell me to read it :)
-> 
-> The reason I'm asking is that it's starting to sound like we really
-> ought to be implementing devlink, but we've got a bunch of
-> infrastructure that uses the devcoredump, and it'll take time
-> (significantly so) to change all that...
+CgpPbiAyMi8wNS8yMDIwIDEwOjA4LCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgTWF5IDIyLCAy
+MDIwIGF0IDA5OjI5OjQ0QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gU2lnbmVk
+LW9mZi1ieTogQWxleGFuZHJ1IFZhc2lsZSA8bGV4bnZAYW1hem9uLmNvbT4KPj4gU2lnbmVkLW9m
+Zi1ieTogQW5kcmEgUGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+IEkga25vdyBJIGRv
+bid0IHRha2UgY29tbWl0cyB3aXRoIG5vIGNoYW5nZWxvZyB0ZXh0IDooCgpJbmNsdWRlZCBpbiB2
+MyB0aGUgY2hhbmdlbG9nIGZvciBlYWNoIHBhdGNoIGluIHRoZSBzZXJpZXMsIGluIGFkZGl0aW9u
+IAp0byB0aGUgb25lIGluIHRoZSBjb3ZlciBsZXR0ZXI7IHdoZXJlIG5vIGNoYW5nZXMsIEkganVz
+dCBtZW50aW9uZWQgdGhhdC4gOikKClRoYW5rIHlvdS4KCkFuZHJhCgoKCkFtYXpvbiBEZXZlbG9w
+bWVudCBDZW50ZXIgKFJvbWFuaWEpIFMuUi5MLiByZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBM
+YXphciBTdHJlZXQsIFVCQzUsIGZsb29yIDIsIElhc2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJv
+bWFuaWEuIFJlZ2lzdGVyZWQgaW4gUm9tYW5pYS4gUmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYy
+MS8yMDA1Lgo=
 
-In devlink world pure FW core dumps are exposed by devlink regions.
-An API allowing reading device memory, registers, etc., but also 
-creating dumps of memory regions when things go wrong. It should be
-a fairly straightforward migration.
-
-Devlink health is more targeted, the dump is supposed to contain only
-relevant information, selected and formatted by the driver. When device
-misbehaves driver reads the relevant registers and FW state and creates
-a formatted state dump. I believe each element of the dump must fit
-into a netlink message (but there may be multiple elements, see
-devlink_fmsg_prepare_skb()).
-
-We should be able to convert dl-regions dumps and dl-health dumps into
-devcoredumps, but since health reporters are supposed to be more
-targeted there's usually multiple of them per device.
-
-Conversely devcoredumps can be trivially exposed as dl-region dumps,
-but I believe dl-health would require driver changes to format the
-information appropriately.
