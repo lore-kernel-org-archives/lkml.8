@@ -2,116 +2,85 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDD12073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590407020;
-	bh=ohGuMmEbw6jcckmjGuy7SWze+kKppKGgRxKK0h8JEr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sgfXgfnwcvDudEWlZSnMa9gjRx6DROHfqgSqjlC3IIaHniPUxlh3+tsl1A7bHurjH
-	 dMvWX3Lflm5nPqm+w9PyS3BkLZy/JLwSXCtdpnZ26IpFBKLbbwbJY4gqQER+Go8NNy
-	 kZetEQlcfji0OjwZTmqMT0znF4nDvsd6j5snG/oc=
+	by mail.kernel.org (Postfix) with ESMTP id 4F41D20723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:45:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cGvQN129"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390287AbgEYLnj (ORCPT
+        id S2390293AbgEYLpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390189AbgEYLnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:43:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36CE020723;
-        Mon, 25 May 2020 11:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590407018;
-        bh=ohGuMmEbw6jcckmjGuy7SWze+kKppKGgRxKK0h8JEr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KM80Gu8HAcmZ1l6c68I4DnrdiD57M88zpiXWycjvRd03XGvrbG2HqVCawIo5VHm3F
-         HJEWyIi+trARwAOz28eZPsmxmVUJW4EKfcNfq4Cq0gz0TOCHmckoj6KzZVgbzVQc1z
-         SfCVNxC1mpxzGiTSEs5yrLbejv0JMu2jkSzODsaQ=
-Date:   Mon, 25 May 2020 12:43:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
- support for stm32f4
-Message-ID: <20200525114336.GD4544@sirena.org.uk>
-References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
- <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
- <20200522113634.GE5801@sirena.org.uk>
- <CAL9mu0LAnT+AfjpGs0O-MD2HYrpnQRmrj6qXtJQrJi9kbQLPUw@mail.gmail.com>
- <CAL9mu0JZ4Qy+m2oF9TSTRqA_mM0J89huCt3t_Gs7qHa=3LxhBw@mail.gmail.com>
- <20200522162901.GP5801@sirena.org.uk>
- <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
+        Mon, 25 May 2020 07:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390245AbgEYLpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:45:09 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11E8C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:45:08 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id a4so10329468lfh.12
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bWYfxIAWJy3heGwDbod2HfNErYY2yOdF0+bL0dgrzOk=;
+        b=cGvQN129jZ03uNW9j+qvcX5jWlaAZ8AAzHOCfHxJTwvDjBuCB1OKZ8aidES7+y1FR7
+         gaRIB5wbOwxz0WcvkiNdMvNcp4RWIfM8L6nuFRsN8GM5hgK5GNj0bZeiopR+21N8XIp7
+         iXYdae1wOjFJXBmrSu6MYQh4vx5kseSvORdwT62G2VH838nh3AxAuraffLkLl2nBdE9E
+         wgfWBIm8zPbKBIWEk8sJfhlg5wTSsHHuZ6PbEPdG5tKEj4HV+wWHCwerT3L4I33gbmUm
+         qBXO9Uv40r4m8Mg1l1d7deYJMVg6yi4y/znpWijaCP7BvzsyLn9nwknen5BaSGd8sVg3
+         MkkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bWYfxIAWJy3heGwDbod2HfNErYY2yOdF0+bL0dgrzOk=;
+        b=gA5HUTBenoj4XrjVyvp+7cdeFp19kziWIThSItiydtdmI0fR8r4kP2Uf1JQeriE2HG
+         J+W4PLIdB2kQ5vKyVsqlYf26GVggJW/DXmGWq52cP1pHmUqINFTDBtXXR+epr/RtfjGV
+         CG5FWLZqUBx9Biy8rP7WGG1crkQ7J2Xrn/zZ9RBRIvmg6t6J8czupvkCaIb8YWlTRitR
+         OvqI2i8wvnqPGTxKAbI9o4/Gz9xkaYKA1J1dvUr6MPODWD2Bm7ePFovbyEocLRLmS3eQ
+         niFa2VQWWvdZmufzYv8BaqFc7wQS0yUK42G4L3xv6StxvBfKIaR5bVzKAuTG8WsZxb5W
+         kRfw==
+X-Gm-Message-State: AOAM5324+zgUlgB02ZlEEH8RdWEU+dQ/kOHHrzXbKrNTAELToF7A2Y3f
+        gKDlbnM23vn7Acy3nBcR8BeoSX2W1qAj5TYptYc9Zw==
+X-Google-Smtp-Source: ABdhPJzusZSjGYrEnidjjwfBSedPoPmO8dGLBM9cFYuYbatE3hBg4B6svhZ1k3sgXNKUJ+IluzbUuOsq5IvXBPu1/V0=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr14346771lfn.77.1590407107211;
+ Mon, 25 May 2020 04:45:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fXStkuK2IQBfcDe+"
-Content-Disposition: inline
-In-Reply-To: <CAL9mu0+E5R0mDUW3f+aKpfE_457VimS-ow2z_xVOmCfCAMnKuA@mail.gmail.com>
-X-Cookie: Help a swallow land at Capistrano.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200523170859.50003-1-sudeep.holla@arm.com> <20200523170859.50003-2-sudeep.holla@arm.com>
+In-Reply-To: <20200523170859.50003-2-sudeep.holla@arm.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 13:44:56 +0200
+Message-ID: <CACRpkdb251_0RoALAV+TFXcXPMZojKuJkZWm-67=Y7fNEB+=HA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] soc: realview: Switch to use DEVICE_ATTR_RO()
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 23, 2020 at 7:09 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
 
---fXStkuK2IQBfcDe+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Move device attributes to DEVICE_ATTR_RO() as that would make things
+> a lot more "obvious" what is happening over the existing __ATTR usage.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-On Sat, May 23, 2020 at 09:35:06AM +0800, dillon min wrote:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> -       if (ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) {
-> +       if ((ctlr->flags & (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX)) &&
-> +               !(msg->spi->mode & SPI_3WIRE)) {
->                 max_tx = 0;
->                 max_rx = 0;
-
-> for my board, lcd panel ilitek ill9341 use 3wire mode, gyro l3gd20 use
-> simplex rx mode.
-> it's has benefits to l3gd20, no impact to ili9341.
-
-> if it's fine to spi-core, i will include it to my next submits.
-
-Yes, looks reasonable.
-
---fXStkuK2IQBfcDe+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Lr2cACgkQJNaLcl1U
-h9Czfgf5AZokYX+RDns/ATZTiNwwtWO8zgdUKtvU2B95mvVnSoH/+u22jEMjyBEV
-VTql9iv86CkoWuw8ClYb6Ii3VcZhJlMJjs6f6TPlihKzhOKSAvVrUwf0GXQlWaS5
-+uyF6imcop10LBRU7tKfWP+LpK90XFTt8wGtpnHqquhnlvs4zDEFu/Yvp91raDXu
-FfWKf+2Aqu7xuWMGdHJjF/SiRINbFZVw70Rv9GM06ywcTkThXhrKpn5z4fCdWlEQ
-iDy1RvrcqNwjm9MtAgYmwoOF/NVEcZaygAE11tHi6JOjrXYW+29jJRQDn4N06CZZ
-tIaKNPu+scagmjfGwKU2PSW4mVUAuA==
-=Yagp
------END PGP SIGNATURE-----
-
---fXStkuK2IQBfcDe+--
+Yours,
+Linus Walleij
