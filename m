@@ -2,93 +2,94 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88948C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D81902075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686312075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:32:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="wTKtd1Vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgEYE2y (ORCPT
+        id S1728074AbgEYEcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 00:28:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:35830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgEYE2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 00:28:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCD8F30E;
-        Sun, 24 May 2020 21:28:52 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 674383F52E;
-        Sun, 24 May 2020 21:28:52 -0700 (PDT)
-Subject: Re: [RFC 08/11] net: phy: Allow mdio buses to auto-probe c45 devices
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
-        linux-kernel@vger.kernel.org
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-9-jeremy.linton@arm.com>
- <20200524144449.GP610998@lunn.ch>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <ec63b0d4-2abc-0d32-69c0-ed1a822162cf@arm.com>
-Date:   Sun, 24 May 2020 23:28:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 00:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgEYEcq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 00:32:46 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC30C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:32:44 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id b6so19314566ljj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WrUFOLt9W4X7+7Hr4QrlHwXipVvqxmvlL120XbBbrhs=;
+        b=wTKtd1Vjv/ulJ2FRNbEj/4hKXpRQgfTgnSQqG0fgNLk2kydwySZbE6RNq14Nz3V7mT
+         DRaLDFml1j37ovPWa4B0sMa7yINjDPda6OfVIj/IZN+DNBcp/rVx6TOlCRv64xmYWumE
+         M7NHUOVeEsTkw27kZokfduHNoW6jHGHHX08aczLzJiJv60S0E6ph+pMu7+jor0Y59A4H
+         Ix8vOh6ni0QJnJ69+/JY+ySU/SPP0tPNwyJtqxQuK/GB08xYdHAS/fPsuT2da1gGUumf
+         d6cRP7OtTKN4zBS3Zuh9USel6xHpJ51z8oxXrQmZtqP4gmY9X/RhMRI6KB2U7nKovb5Y
+         OCYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WrUFOLt9W4X7+7Hr4QrlHwXipVvqxmvlL120XbBbrhs=;
+        b=G3/KqgWu7820HTk+uZUbE0uug0bYFKPq5B5QQncHvOMToNof5n2I4FHBAcqZ6qH11a
+         638f/TzXRqgh8Gs5HfPsr55VfDmGjh13pnn38GUS3XXd4+18hBwaNKjkg/UMKO1AMb+x
+         XuNwaFgcucTZmjPK/YoROTERqj9GZmfO82rom3QN8bFm/lyYZ4Gd4YHU9Oei7RKJsXUD
+         UznJE5biqDFvM8ETep3F5AcxuI2Ic8pej0p2zFcdjdITkY/GPGNpCwD58LpJIO5o8CBy
+         ZhnZRJium3eJa3SCHYAv8Q/Tb/ZBdLu7W5d9hPlMkMGzZ7ogqOReRueuiUDdo8jcLuWw
+         13ZA==
+X-Gm-Message-State: AOAM531Ue7vsZmYmo49tc1gX2AMM5lYFZzHM6tH89aMnsmSvhnrmXXe7
+        1XimJ/Njn/J06Q56cB47U1M6Tg==
+X-Google-Smtp-Source: ABdhPJzZGWVnx2Ety9OdD8HfgyBX70TKROgXrdT6USIyGUjVgUaa7nqQ2ypUdkRt0MksjSbVn1uqnA==
+X-Received: by 2002:a2e:a586:: with SMTP id m6mr6713031ljp.318.1590381162883;
+        Sun, 24 May 2020 21:32:42 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f12sm4446255lfp.8.2020.05.24.21.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 21:32:42 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id D146B1012E6; Mon, 25 May 2020 07:32:42 +0300 (+03)
+Date:   Mon, 25 May 2020 07:32:42 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm,thp: stop leaking unreleased file pages
+Message-ID: <20200525043242.ef2uhn2a4w7xazcx@box>
+References: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
 MIME-Version: 1.0
-In-Reply-To: <20200524144449.GP610998@lunn.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 5/24/20 9:44 AM, Andrew Lunn wrote:
->> +++ b/include/linux/phy.h
->> @@ -275,6 +275,11 @@ struct mii_bus {
->>   	int reset_delay_us;
->>   	/* RESET GPIO descriptor pointer */
->>   	struct gpio_desc *reset_gpiod;
->> +	/* bus capabilities, used for probing */
->> +	enum {
->> +		MDIOBUS_C22_ONLY = 0,
->> +		MDIOBUS_C45_FIRST,
->> +	} probe_capabilities;
->>   };
+On Sat, May 23, 2020 at 06:50:15PM -0700, Hugh Dickins wrote:
+> When collapse_file() calls try_to_release_page(), it has already
+> isolated the page: so if releasing buffers happens to fail (as it
+> sometimes does), remember to putback_lru_page(): otherwise that page is
+> left unreclaimable and unfreeable, and the file extent uncollapsible.
 > 
-> 
-> I'm not so keen on _FIRST. It suggest _LAST would also be valid.  But
-> that then suggests this is not a bus property, but a PHY property, and
-> some PHYs might need _FIRST and other phys need _LAST, and then you
-> have a bus which has both sorts of PHY on it, and you have a problem.
-> 
-> So i think it would be better to have
-> 
-> 	enum {
-> 		MDIOBUS_UNKNOWN = 0,
-> 		MDIOBUS_C22,
-> 		MDIOBUS_C45,
-> 		MDIOBUS_C45_C22,
-> 	} bus_capabilities;
-> 
-> Describe just what the bus master can support.
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+> Cc: stable@vger.kernel.org # v5.4+
 
-Yes, the naming is reasonable and I will update it in the next patch. I 
-went around a bit myself with this naming early on, and the problem I 
-saw was that a C45 capable master, can have C45 electrical phy's that 
-only respond to c22 requests (AFAIK). So the MDIOBUS_C45 (I think I was 
-calling it C45_ONLY) is an invalid selection. Not, that it wouldn't be 
-helpful to have a C45_ONLY case, but that the assumption is that you 
-wouldn't try and probe c22 registers, which I thought was a mistake.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-
-Thanks,
-
+-- 
+ Kirill A. Shutemov
