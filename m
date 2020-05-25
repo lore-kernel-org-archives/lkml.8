@@ -2,87 +2,144 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11080C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C57206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4Bsj2P0"
+	by mail.kernel.org (Postfix) with ESMTP id EE8D22071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 22:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388384AbgEYW6e (ORCPT
+        id S1729945AbgEYW7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 18:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgEYW6d (ORCPT
+        Mon, 25 May 2020 18:59:23 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33600 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgEYW7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 18:58:33 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2996AC061A0E;
-        Mon, 25 May 2020 15:58:33 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id m44so14794111qtm.8;
-        Mon, 25 May 2020 15:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uzUb+ukWGDCHH4pn9DDFq+3Nj2avAM45L3+dHNrqfH0=;
-        b=F4Bsj2P0jh6i7yqWhmTHpA87KK78q4s7q2TPfqNpMdd/g2RDAtPQBd+RSEvO2AWw8J
-         uqPD2ak5F3q3RMzbJ0aRmA53y8Z7mYlS1jO78O3H89VePJ1e8vglinrdCf0gshy53sTJ
-         OwOOfmCoS1f2hSuw3eqqqgPDWkuDsUgPm7uxECHBTSizNRym2pZhr6H1cz7aDQq3IRv6
-         z2qpQp8cEZjF4DqL8XO07XEfjyEsZZ9UOZXp91oqW6rFL3rImISJG6ygsh4lbGBCmHHO
-         AWYEY8qjA7oZKLJGqwO7fELVcs6qcBzf3HvtESOev7XlNgPi7o1XXVwgJ+2+KR68gZ97
-         mXow==
+        Mon, 25 May 2020 18:59:22 -0400
+Received: by mail-qt1-f196.google.com with SMTP id e16so8922263qtg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 15:59:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uzUb+ukWGDCHH4pn9DDFq+3Nj2avAM45L3+dHNrqfH0=;
-        b=imRoxVmISPzo9o7Po0dRZoJOXnDunP8Q5miyHn+XBKC/4TeoJO+FHELEyRPDPL6ONL
-         DENbsiySPhItCU81+NZ0FG4eK//xA5clZa+TMCN/li4Jg1m8U7OgRqbussekhgaTTA7j
-         jW88uYuR3LHi1EcPhcljK88yExmUT9UFxck4kA9DNCOaLmSN/Vxa1336ZdXObHsB1H+U
-         QTGJg9PnrPaUokfcrYWF9FC/kYW1NtThQtKnr0xCcOMOgspGffO5A3Ppo6svWOprG1tk
-         wdSBRfZ70l6sCM2S9emiwR0Z54RI5co1e0Vb7/x8RKGwqbL27hY1W8VQpA1uQKtwp+Rp
-         Q/NQ==
-X-Gm-Message-State: AOAM532BOegEw9FvJ0YRsx22m3KnA4u1wx/Y0s4hggbcT+WIyIxstU0M
-        hAO9/+EMQjxuvFZLNS2D3Nif1rPWNc0xUg==
-X-Google-Smtp-Source: ABdhPJxe6paNiZ1gmAUKlHUK/xCO9hx6mo9/oSgAgJ7oNN5IUYFeT09GrA7s2u+N8X6YliVF807d4Q==
-X-Received: by 2002:ac8:5253:: with SMTP id y19mr7895143qtn.291.1590447512103;
-        Mon, 25 May 2020 15:58:32 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:8992:a39b:b6ab:3df8:5b60])
-        by smtp.gmail.com with ESMTPSA id y129sm15660104qkc.1.2020.05.25.15.58.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nkhs1vMkliVWrepyz3nCPdQswI/d3UMqurs0UD2o4Lc=;
+        b=J0wlypC/yxLo0v2RHdqhJsjY4tRUNUmqT5S+m0VJ0ps0eLEFSKr52h4StPkzP1VH86
+         DhIwU5kmNcrE8z/SXpDMFBZhbeXDpFTXCOZwThL3rQkjxJAs6QvE8ukgyvzFeHLXiV39
+         2UW1vFRgVmWLWNgt6h0d8PRk8wqsArBNJxjhlhbkCx9s+GlcNrfkFfLYa2ivlGaWx99J
+         sPckqIXNvNcoJHzXxfarULnrytfGm3K95LvsojhltTd5aklLaN2J60gPyFyyazt/XPpw
+         qIHRLm/6NNobExAF2bZUuJvIqj8XAUpphR3IzGCQ/RcJqO/1OPoAsToFZ1JFNpTMX30J
+         UMjg==
+X-Gm-Message-State: AOAM531jYc2GELt4oRRDXGMbxp3Jba5/lelyJl+C0HXgHVFa2yCtuows
+        cbEjo24oOOujoOqrVnTxeQg=
+X-Google-Smtp-Source: ABdhPJwemMCpixd/VkVsZpPjyun6nr8KM9JhDlrnpvWkKxuXa2chSkOpg5pHB8lvcIdb3Yv9qIYE4g==
+X-Received: by 2002:ac8:543:: with SMTP id c3mr29290586qth.8.1590447560082;
+        Mon, 25 May 2020 15:59:20 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d140sm15024585qkc.22.2020.05.25.15.59.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 15:58:31 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id D64A2C1B76; Mon, 25 May 2020 19:58:28 -0300 (-03)
-Date:   Mon, 25 May 2020 19:58:28 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        trivial@kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH] net: sctp: Fix spelling in Kconfig help
-Message-ID: <20200525225828.GE2491@localhost.localdomain>
-References: <20200525225559.13596-1-chris.packham@alliedtelesis.co.nz>
+        Mon, 25 May 2020 15:59:19 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] x86/boot: Remove runtime relocations from compressed kernel
+Date:   Mon, 25 May 2020 18:59:14 -0400
+Message-Id: <20200525225918.1624470-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200524212816.243139-1-nivedita@alum.mit.edu>
+References: <20200524212816.243139-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525225559.13596-1-chris.packham@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:55:59AM +1200, Chris Packham wrote:
-> Change 'handeled' to 'handled' in the Kconfig help for SCTP.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+The compressed kernel currently contains bogus runtime relocations in
+the startup code in head_{32,64}.S, which are generated by the linker,
+but must not actually be processed at runtime.
 
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+This generates warnings when linking with the BFD linker, and errors
+with LLD, which defaults to erroring on runtime relocations in read-only
+sections. It also requires the -z noreloc-overflow hack for the 64-bit
+kernel, which prevents us from linking it as -pie on an older BFD linker
+(<= 2.26) or on LLD, because the locations that are to be apparently
+relocated are only 32-bits in size and so cannot normally have
+R_X86_64_RELATIVE relocations.
+
+This series aims to get rid of these relocations. It is based on
+efi/next, where the latest patches touch the head code to eliminate the
+global offset table.
+
+The first patch is an independent fix for LLD, to avoid an orphan
+section in arch/x86/boot/setup.elf.
+
+The second patch gets rid of almost all the relocations. It uses
+standard PIC addressing technique for 32-bit, i.e. loading a register
+with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+references to access variables. For 64-bit, there is 32-bit code that
+cannot use RIP-relative addressing, and also cannot use the 32-bit
+method, since GOTOFF references are 64-bit only. This is instead handled
+using a macro to replace a reference like gdt with (gdt-startup_32)
+instead. The assembler will generate a PC32 relocation entry, with
+addend set to (.-startup_32), and these will be replaced with constants
+at link time. This works as long as all the code using such references
+lives in the same section as startup_32, i.e. in .head.text.
+
+The third patch addresses a remaining issue with the BFD linker, which
+insists on generating runtime relocations for absolute symbols. We use
+z_input_len and z_output_len, defined in the generated piggy.S file, as
+symbols whose absolute "addresses" are actually the size of the
+compressed payload and the size of the decompressed kernel image
+respectively. LLD does not generate relocations for these two symbols,
+but the BFD linker does, prior to the upcoming 2.35. To get around this,
+piggy.S is extended to also define two u32 variables (in .rodata) with
+the lengths, and the head code is modified to use those instead of the
+symbol addresses.
+
+An alternative way to handle z_input_len/z_output_len would be to just
+include piggy.S in head_{32,64}.S instead of as a separate object file,
+since the GNU assembler doesn't generate relocations for symbols set to
+constants.
+
+The last patch adds a check in the linker script to ensure that no
+runtime relocations get reintroduced. Since the GOT has been eliminated
+as well, the compressed kernel has no runtime relocations whatsoever any
+more.
+
+Changes from v1:
+- Add .text.* to setup.ld instead of just .text.startup
+- Rename the la() macro introduced in the second patch for 64-bit to
+  rva(), and rework the explanatory comment.
+- In the last patch, check both .rel.dyn and .rela.dyn, instead of just
+  one per arch.
+
+Arvind Sankar (4):
+  x86/boot: Add .text.* to setup.ld
+  x86/boot: Remove run-time relocations from .head.text code
+  x86/boot: Remove runtime relocations from head_{32,64}.S
+  x86/boot: Check that there are no runtime relocations
+
+ arch/x86/boot/compressed/Makefile      |  36 +--------
+ arch/x86/boot/compressed/head_32.S     |  59 +++++++-------
+ arch/x86/boot/compressed/head_64.S     | 108 +++++++++++++++----------
+ arch/x86/boot/compressed/mkpiggy.c     |   6 ++
+ arch/x86/boot/compressed/vmlinux.lds.S |   8 ++
+ arch/x86/boot/setup.ld                 |   2 +-
+ 6 files changed, 115 insertions(+), 104 deletions(-)
+
+-- 
+2.26.2
+
