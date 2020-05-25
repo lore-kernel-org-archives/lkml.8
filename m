@@ -2,48 +2,70 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D2F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692CA2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y5HnZg8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388702AbgEYCh6 (ORCPT
+        id S2388695AbgEYCoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 22:37:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:35046 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388110AbgEYCh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 22:37:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81FAD31B;
-        Sun, 24 May 2020 19:37:57 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 378B33F305;
-        Sun, 24 May 2020 19:37:57 -0700 (PDT)
-Subject: Re: [RFC 03/11] net: phy: refactor c45 phy identification sequence
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, madalin.bucur@oss.nxp.com,
-        calvin.johnson@oss.nxp.com, linux-kernel@vger.kernel.org
-References: <20200522213059.1535892-1-jeremy.linton@arm.com>
- <20200522213059.1535892-4-jeremy.linton@arm.com>
- <20200523183058.GX1551@shell.armlinux.org.uk>
- <20200523195131.GN610998@lunn.ch>
- <20200523200141.GD1551@shell.armlinux.org.uk>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <fa71a325-e201-79c0-ca10-3614ea428802@arm.com>
-Date:   Sun, 24 May 2020 21:37:35 -0500
+        Sun, 24 May 2020 22:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388409AbgEYCoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 22:44:38 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0F4C061A0E;
+        Sun, 24 May 2020 19:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=ANukTnGf9qzAoLJoJyRWxzKKdZWe8nKT7t7/i4XYDHs=; b=Y5HnZg8QP8DTAs73j/nJCk8wlu
+        wiu8LaYgIfJac8zqjI0xHJgeZ/i7B4788vRf3XmhSqsa0TwgkMagM3TRUM7Kwz24yQV7uq/6wAL8f
+        pLZBKbXyaQnAtG8pCoqqMzG1eY8XAZLRRJ/ji6P4yr6LyhvlixgM0HDHZuxgPWdosFQG6L46ejkUX
+        RD4S3qgop3rBJVuOMvKLpkqE0yKwqiuGpGADLidqUHHqTcwRtOz9/rl2E2aH5mLNe5VvdTOsw7ikC
+        bmI6Fviwh+poEMANipihvbvVk5raZNASVV0nXwzHOIanyVOW8HLt1i6mkrW8+RMV14jT+0vWV+7Am
+        HCbGhKUQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jd36A-00004r-Bc; Mon, 25 May 2020 02:44:19 +0000
+Subject: Re: [PATCH 1/2] software node: implement software_node_unregister()
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        stable <stable@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+ <605c47b7-9199-85f1-89e0-bd768acd3d2d@roeck-us.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <13de8a28-9ea9-bf44-c4e7-d5bfb63c81fd@infradead.org>
+Date:   Sun, 24 May 2020 19:44:16 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200523200141.GD1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <605c47b7-9199-85f1-89e0-bd768acd3d2d@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,91 +73,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 5/23/20 3:01 PM, Russell King - ARM Linux admin wrote:
-> On Sat, May 23, 2020 at 09:51:31PM +0200, Andrew Lunn wrote:
->>>>   static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
->>>>   			   struct phy_c45_device_ids *c45_ids) {
->>>> -	int phy_reg;
->>>> -	int i, reg_addr;
->>>> +	int ret;
->>>> +	int i;
->>>>   	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
->>>>   	u32 *devs = &c45_ids->devices_in_package;
->>>
->>> I feel a "reverse christmas tree" complaint brewing... yes, the original
->>> code didn't follow it.  Maybe a tidy up while touching this code?
+On 5/24/20 9:43 AM, Guenter Roeck wrote:
+> On 5/24/20 8:30 AM, Greg Kroah-Hartman wrote:
+>> Sometimes it is better to unregister individual nodes instead of trying
+>> to do them all at once with software_node_unregister_nodes(), so create
+>> software_node_unregister() so that you can unregister them one at a
+>> time.
 >>
->> At minimum, a patch should not make it worse. ret and i should clearly
->> be after devs.
+>> This is especially important when creating nodes in a hierarchy, with
+>> parent -> children representations.  Children always need to be removed
+>> before a parent is, as the swnode logic assumes this is going to be the
+>> case.
 >>
->>>>   static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
->>>>   		      bool is_c45, struct phy_c45_device_ids *c45_ids)
->>>>   {
->>>> -	int phy_reg;
->>>> +	int ret;
->>>>   
->>>>   	if (is_c45)
->>>>   		return get_phy_c45_ids(bus, addr, phy_id, c45_ids);
->>>>   
->>>> -	/* Grab the bits from PHYIR1, and put them in the upper half */
->>>> -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID1);
->>>> -	if (phy_reg < 0) {
->>>> +	ret = _get_phy_id(bus, addr, 0, phy_id, false);
->>>> +	if (ret < 0) {
->>>>   		/* returning -ENODEV doesn't stop bus scanning */
->>>> -		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
->>>> +		return (ret == -EIO || ret == -ENODEV) ? -ENODEV : -EIO;
->>>
->>> Since ret will only ever be -EIO here, this can only ever return
->>> -ENODEV, which is a functional change in the code (probably unintended.)
->>> Nevertheless, it's likely introducing a bug if the intention is for
->>> some other return from mdiobus_read() to be handled differently.
->>>
->>>>   	}
->>>>   
->>>> -	*phy_id = phy_reg << 16;
->>>> -
->>>> -	/* Grab the bits from PHYIR2, and put them in the lower half */
->>>> -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
->>>> -	if (phy_reg < 0)
->>>> -		return -EIO;
->>>
->>> ... whereas this one always returns -EIO on any error.
->>>
->>> So, I think you have the potential in this patch to introduce a subtle
->>> change of behaviour, which may lead to problems - have you closely
->>> analysed why the code was the way it was, and whether your change of
->>> behaviour is actually valid?
+>> Fix up the lib/test_printf.c fwnode_pointer() test which to use this new
+>> function as it had the problem of tearing things down in the backwards
+>> order.
 >>
->> I could be remembering this wrongly, but i think this is to do with
->> orion_mdio_xsmi_read() returning -ENODEV, not 0xffffffffff, if there
->> is no device on the bus at the given address. -EIO is fatal to the
->> scan, everything stops with the assumption the bus is broken. -ENODEV
->> should not be fatal to the scan.
+>> Fixes: f1ce39df508d ("lib/test_printf: Add tests for %pfw printk modifier")
+>> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+>> Cc: stable <stable@vger.kernel.org>
+>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Cc: Brendan Higgins <brendanhiggins@google.com>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>> Cc: Petr Mladek <pmladek@suse.com>
+>> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> Cc: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> Maybe orion_mdio_xsmi_read() should be fixed then?  Also, maybe
-> adding return code documentation for mdiobus_read() / mdiobus_write()
-> would help MDIO driver authors have some consistency in what
-> errors they are expected to return (does anyone know for certain?)
+> Both patches pass my boot tests on arm64 and arm64be (I didn't test any others).
+> So, FWIW,
 > 
+> Tested-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> I wasn't sure it the two patches replace or fix commit 4ef12f719802 ("kobject:
+> Make sure the parent does not get released before its children"), so I tried
+> to re-apply 4ef12f719802 on top of the two patches. Unfortunately that still
+> results in crashes and UAF messages.
 
-My understanding at this point (which is mostly based on the xgmac 
-here), is that 0xffffffff is equivalent to "bus responding correctly, 
-phy failed to respond at this register location" while any -Eerror is 
-understood as "something wrong with bus", and the mdio core then makes a 
-choice about terminating just the current phy search (ENODEV), or 
-terminating the entire mdio bus (basically everything else) registration.
+Yes, that kobject patch has been reverted:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e6764aa0e5530066dd969eccea2a1a7d177859a8
 
-I will see about clarifying the docs. I need to see if that will end up 
-being a bit of a rabbit hole before committing to including that in this 
-set.
+and these 2 patches are to be used instead.
 
-Which brings up the problem that at least xgmac_mdio doesn't appear to 
-handle being told "your bus registration failed" without OOPSing the 
-probe routine. I think Calvin is aware of this, and I believe he has 
-some additional xgmac/etc patches on top of this set. Although he pinged 
-me offline the other day to say that apparently all my hunk shuffling 
-broke some of the c45 phy detection I had working earlier in the week.
+thanks.
+-- 
+~Randy
 
