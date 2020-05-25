@@ -2,107 +2,140 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEFCC207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XO2qLGmc"
+	by mail.kernel.org (Postfix) with ESMTP id 71D2F2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388716AbgEYCeg (ORCPT
+        id S2388702AbgEYCh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 22:34:36 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14502 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388110AbgEYCeg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 22:34:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecb2e6a0000>; Sun, 24 May 2020 19:33:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 24 May 2020 19:34:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 24 May 2020 19:34:35 -0700
-Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
- 2020 02:34:35 +0000
-Subject: Re: [PATCH v2] fpga: dfl: afu: convert get_user_pages() -->
- pin_user_pages()
-To:     "Wu, Hao" <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "Xu, Yilun" <yilun.xu@intel.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>
-References: <20200519201449.3136033-1-jhubbard@nvidia.com>
- <64aa1494-7570-5319-b096-ea354ff20431@nvidia.com>
- <20200523205717.GA443638@epycbox.lan>
- <ccf86d21-2ecf-7873-1c30-fbea880b9081@nvidia.com>
- <DM6PR11MB38194610D744865657EEB08385B30@DM6PR11MB3819.namprd11.prod.outlook.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <4f326d89-d034-72ea-06d0-a2f9ba62bcc9@nvidia.com>
-Date:   Sun, 24 May 2020 19:34:35 -0700
+        Sun, 24 May 2020 22:37:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:35046 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388110AbgEYCh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 22:37:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81FAD31B;
+        Sun, 24 May 2020 19:37:57 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 378B33F305;
+        Sun, 24 May 2020 19:37:57 -0700 (PDT)
+Subject: Re: [RFC 03/11] net: phy: refactor c45 phy identification sequence
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, madalin.bucur@oss.nxp.com,
+        calvin.johnson@oss.nxp.com, linux-kernel@vger.kernel.org
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-4-jeremy.linton@arm.com>
+ <20200523183058.GX1551@shell.armlinux.org.uk>
+ <20200523195131.GN610998@lunn.ch>
+ <20200523200141.GD1551@shell.armlinux.org.uk>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <fa71a325-e201-79c0-ca10-3614ea428802@arm.com>
+Date:   Sun, 24 May 2020 21:37:35 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB38194610D744865657EEB08385B30@DM6PR11MB3819.namprd11.prod.outlook.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200523200141.GD1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590373994; bh=UqIhK3yrHz4RCjr9Tqqe8Ckbi0ZVaOt+z/KBLejweaU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XO2qLGmcly07D+VUuZ46k3yHmfYpwrfntoxzgVPQ5z0mrHaw+pjwowIjSOf4ZPust
-         25EiFUyZ50g2bpdCwUITvJixZ+CoHgRScOWT+jTmgPy88g7sVG1AZF+L+Uv1f9I4IK
-         99Jr16tZxqDb9oS55lQSheIWqxt0A9qKx3lBp6UOueIm4utoHe90ZawOW1BfoXkI/m
-         LzYAPHz4BDosWaf9HNP+BKmVtwDwtKnjcHFtKRCwlxgpECxsm6BU58d76S8Qgx2HLi
-         T92uTmZLhtt/bHiINfrWesztz24f6kx21Eahz0WqkyEsg/IhkV54FDtR955KQOTT6B
-         xM1uGg5BQxEkA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-24 19:25, Wu, Hao wrote:
->>>> Hi Moritz and FPGA developers,
->>>>
->>>> Is this OK? And if so, is it going into your git tree? Or should I
->>>> send it up through a different tree? (I'm new to the FPGA development
->>>> model).
+Hi,
+
+On 5/23/20 3:01 PM, Russell King - ARM Linux admin wrote:
+> On Sat, May 23, 2020 at 09:51:31PM +0200, Andrew Lunn wrote:
+>>>>   static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>>>   			   struct phy_c45_device_ids *c45_ids) {
+>>>> -	int phy_reg;
+>>>> -	int i, reg_addr;
+>>>> +	int ret;
+>>>> +	int i;
+>>>>   	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
+>>>>   	u32 *devs = &c45_ids->devices_in_package;
 >>>
->>> I can take it, sorry for sluggish response.
->>>
+>>> I feel a "reverse christmas tree" complaint brewing... yes, the original
+>>> code didn't follow it.  Maybe a tidy up while touching this code?
 >>
->> That's great news, thanks Moritz! Sorry to be pushy, just didn't want it
->> to get lost. :)
+>> At minimum, a patch should not make it worse. ret and i should clearly
+>> be after devs.
+>>
+>>>>   static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
+>>>>   		      bool is_c45, struct phy_c45_device_ids *c45_ids)
+>>>>   {
+>>>> -	int phy_reg;
+>>>> +	int ret;
+>>>>   
+>>>>   	if (is_c45)
+>>>>   		return get_phy_c45_ids(bus, addr, phy_id, c45_ids);
+>>>>   
+>>>> -	/* Grab the bits from PHYIR1, and put them in the upper half */
+>>>> -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID1);
+>>>> -	if (phy_reg < 0) {
+>>>> +	ret = _get_phy_id(bus, addr, 0, phy_id, false);
+>>>> +	if (ret < 0) {
+>>>>   		/* returning -ENODEV doesn't stop bus scanning */
+>>>> -		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
+>>>> +		return (ret == -EIO || ret == -ENODEV) ? -ENODEV : -EIO;
+>>>
+>>> Since ret will only ever be -EIO here, this can only ever return
+>>> -ENODEV, which is a functional change in the code (probably unintended.)
+>>> Nevertheless, it's likely introducing a bug if the intention is for
+>>> some other return from mdiobus_read() to be handled differently.
+>>>
+>>>>   	}
+>>>>   
+>>>> -	*phy_id = phy_reg << 16;
+>>>> -
+>>>> -	/* Grab the bits from PHYIR2, and put them in the lower half */
+>>>> -	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
+>>>> -	if (phy_reg < 0)
+>>>> -		return -EIO;
+>>>
+>>> ... whereas this one always returns -EIO on any error.
+>>>
+>>> So, I think you have the potential in this patch to introduce a subtle
+>>> change of behaviour, which may lead to problems - have you closely
+>>> analysed why the code was the way it was, and whether your change of
+>>> behaviour is actually valid?
+>>
+>> I could be remembering this wrongly, but i think this is to do with
+>> orion_mdio_xsmi_read() returning -ENODEV, not 0xffffffffff, if there
+>> is no device on the bus at the given address. -EIO is fatal to the
+>> scan, everything stops with the assumption the bus is broken. -ENODEV
+>> should not be fatal to the scan.
 > 
-> Thanks John for this patch, and thanks Moritz for taking care of this.
-> Sorry for late response, one thing here we may need to be careful is
-> a recent bug fixing patch, that fixing patch has been merged by Greg
-> in char-misc-next tree, and may have some conflict with this one.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git/commit/?h=char-misc-next&id=c9d7e3da1f3c4cf5dddfc5d7ce4d76d013aba1cc
-> fpga: dfl: afu: Corrected error handling levels
-> 
-> I guess we need to rebase this patch on top of it?
-> Moritz, do you have any suggestion?
+> Maybe orion_mdio_xsmi_read() should be fixed then?  Also, maybe
+> adding return code documentation for mdiobus_read() / mdiobus_write()
+> would help MDIO driver authors have some consistency in what
+> errors they are expected to return (does anyone know for certain?)
 > 
 
-I'll send you a v2, rebased on top of the latest char-misc.git, no problem.
+My understanding at this point (which is mostly based on the xgmac 
+here), is that 0xffffffff is equivalent to "bus responding correctly, 
+phy failed to respond at this register location" while any -Eerror is 
+understood as "something wrong with bus", and the mdio core then makes a 
+choice about terminating just the current phy search (ENODEV), or 
+terminating the entire mdio bus (basically everything else) registration.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+I will see about clarifying the docs. I need to see if that will end up 
+being a bit of a rabbit hole before committing to including that in this 
+set.
+
+Which brings up the problem that at least xgmac_mdio doesn't appear to 
+handle being told "your bus registration failed" without OOPSing the 
+probe routine. I think Calvin is aware of this, and I believe he has 
+some additional xgmac/etc patches on top of this set. Although he pinged 
+me offline the other day to say that apparently all my hunk shuffling 
+broke some of the c45 phy detection I had working earlier in the week.
+
