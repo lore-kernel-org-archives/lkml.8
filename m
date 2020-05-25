@@ -2,79 +2,102 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A975C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1643A207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229C320849
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="yMuAin8O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cC0FfjQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390576AbgEYMe2 (ORCPT
+        id S2390578AbgEYMfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:34:28 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:50808 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390488AbgEYMe0 (ORCPT
+        Mon, 25 May 2020 08:35:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54239 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390504AbgEYMfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:34:26 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id C52572E1499;
-        Mon, 25 May 2020 15:34:23 +0300 (MSK)
-Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id ZJIXPPS6z9-YLTi9Z9T;
-        Mon, 25 May 2020 15:34:23 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1590410063; bh=ai4SFAnq/6nSINx/FBKSEuSs6VEDwe9CKXW2LSyg3rA=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=yMuAin8OkKoPyA6fM61Kd5gq/kMQik8QtpCqmqv1ySlA0gbKNgjehnM/Avo4jesLA
-         1NJfntE9wrGKJwo4Sk3LwQYzT/Ut83m1kxlcVbmccuRAiCW947q9+smxOC+ZIq8b+K
-         PGM0Lk7vsx2iw92s7aN1ayw2f6hxBIH5GbKWN1pU=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:603::1:c])
-        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id O3BMKGQlP9-YLXqqoTf;
-        Mon, 25 May 2020 15:34:21 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: block I/O accounting improvements
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <20200525113014.345997-1-hch@lst.de>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <81f4057b-124a-d0e7-94af-15a198d48d50@yandex-team.ru>
-Date:   Mon, 25 May 2020 15:34:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 08:35:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590410121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+ulfxOt08QO1WwrMMpVkpGa0ners+2XK6qDqQvQKbL0=;
+        b=cC0FfjQbsc4afIBTtX5Wnay6vdfbrF1EMcm5SuGhu/IKGOThdJ7zmUcAcdfHclw15EMMyS
+        vlYxd7hZnidY/U6MWqY9Gbqf4zuzH+cf+U2aWB2NkhENv9vRW1dHeqNH3IKL9P9mpytTqV
+        FjYn2b6ue8Ua/6d1Mzboh3HJSUpTwI0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-1tjLqYJ8PFSlSl3xnEyQnw-1; Mon, 25 May 2020 08:35:17 -0400
+X-MC-Unique: 1tjLqYJ8PFSlSl3xnEyQnw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E6E7876EE2;
+        Mon, 25 May 2020 12:35:15 +0000 (UTC)
+Received: from krava (unknown [10.40.192.57])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B4C3110013C1;
+        Mon, 25 May 2020 12:35:12 +0000 (UTC)
+Date:   Mon, 25 May 2020 14:35:11 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC 00/14] perf tests: Check on subtest for user specified test
+Message-ID: <20200525123511.GE123450@krava>
+References: <20200524224219.234847-1-jolsa@kernel.org>
+ <alpine.LRH.2.20.2005251401230.4075@Diego>
 MIME-Version: 1.0
-In-Reply-To: <20200525113014.345997-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.20.2005251401230.4075@Diego>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/2020 14.29, Christoph Hellwig wrote:
-> Hi Jens,
+On Mon, May 25, 2020 at 02:06:07PM +0200, Michael Petlan wrote:
+> On Mon, 25 May 2020, Jiri Olsa wrote:
+> > hi,
+> > changes for using metric result in another metric seem
+> > to change lot of core metric code, so it's better we
+> > have some more tests before we do that.
+> > 
+> > Sending as RFC as it's still alive and you guys might
+> > have some other idea of how to do this.
+> > 
+> > Also available in here:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> >   perf/fixes
+> > 
+> > jirka
+> > 
+> Hi!
+> Last commit from perf/fixes branch I see there is:
 > 
-> they series contains various improvement for block I/O accounting.  The
-> first bunch of patches switch the bio based drivers to better accounting
-> helpers compared to the current mess.  The end contains a fix and various
-> performanc improvements.  Most of this comes from a series Konstantin
-> sent a few weeks ago, rebased on changes that landed in your tree since
-> and my change to always use the percpu version of the disk stats.
+> commit 0445062df28fef1002302aa419af65fa80513dd4 (HEAD -> perf/fixes, origin/perf/fixes)
+> Author: Jiri Olsa <jolsa@kernel.org>
+> Date:   Fri Dec 6 00:10:13 2019 +0100
 > 
+> Different branch?
 
-Thanks for picking this up.
+ugh.. sorry it's perf/metric_test
 
-One note about possible further improvement in reply to first patch.
+thanks,
+jirka
 
-Reviewed-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
