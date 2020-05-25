@@ -2,228 +2,111 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B18C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2098207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5563A2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:54:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q4lxaU9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389977AbgEYKxs (ORCPT
+        id S2389984AbgEYKyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:53:48 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:1092 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389484AbgEYKxs (ORCPT
+        Mon, 25 May 2020 06:54:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389484AbgEYKyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:53:48 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04PAj2pn015856;
-        Mon, 25 May 2020 06:53:41 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 316wp7xe8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 May 2020 06:53:41 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 04PAreJX032357
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 25 May 2020 06:53:40 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 25 May
- 2020 06:53:39 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 25 May 2020 06:53:38 -0400
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04PAralr015786;
-        Mon, 25 May 2020 06:53:36 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <alexandre.belloni@bootlin.com>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>, <eugen.hristev@microchip.com>,
-        <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: at91-sama5d2_adc: remove usage of iio_priv_to_dev() helper
-Date:   Mon, 25 May 2020 13:53:41 +0300
-Message-ID: <20200525105341.137945-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 25 May 2020 06:54:09 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B1DC061A0E;
+        Mon, 25 May 2020 03:54:08 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id h21so20053610ejq.5;
+        Mon, 25 May 2020 03:54:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=I2SbXHPPSfQYxydd3wzVxKM/dM5peIMZZus8bzRPuPo=;
+        b=q4lxaU9CtOqrjY7oTsTXqky1nSVO0crs1fSCGfajCpOJOJEkhb2krEfjE2ivsNddo8
+         LL4BA0vUQhaBvhZBsXjfN0SuYXpWeL6hFzInK8QZuSMOH1Faptdjtvz1+1xAQ/iJeOfS
+         mgLaqeMgFHFopi+2y37hjqF4dvJMyaYHF3ZLqqoJNz3fXfxCCF+LsaTs+UvwPWEu2ITj
+         Ifb2nW/EuqSEEyYkqf/KsmkKOp3oHVfzcMni37bT0PXZM3dVHQ/X8/lxkoj/VG9sf2YN
+         0S+3RlGK64BfGVU2ykWHHZI1G6HExpHG3BoD9J+swJSzGUUPyY9QZ7BFj40CoeV11eIM
+         YVVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I2SbXHPPSfQYxydd3wzVxKM/dM5peIMZZus8bzRPuPo=;
+        b=A8heldaB0QHhtqT6YTHvg88PoOY0EEO3vKvfjHgQUTKxZNnbdUTKpYatk6EWtdVKXQ
+         PmYaPUg4uB6W8Pg+zKaBheEFv+QKxqgHD4TBJTUwXSEpHA/ElJH+7cqxspljJ5XrBjuw
+         bXLTDzqv1N+39x7TuZeJm2ZyrXc/HM9hAcRplJFkTVE7q1PoTemkJIwHGNsgyZMOM1Hd
+         uLbIQBUKf0gCQK+979FU7FFzWfLAb/97J0GnBX+gUn4HuR/cnm4XXG9xL/6jW/3m/3lK
+         80puMKV4TIK9WC8BxjdwzUWVXKUBIzpOui99E+rusBuRpRUQARoSxReRMNRRPy/SGO+o
+         CrGA==
+X-Gm-Message-State: AOAM532x47u/Jzz5imQlE++ENFiaP3oZaBunHlwfKAUAOwsbwjFcVysk
+        nDxsMsFlAc3lS4xpfLc9Yio=
+X-Google-Smtp-Source: ABdhPJwi1ssc7Gtx/iriU4TwkE8NvmkswAIt2uL7Im8Q8vBREkBMDvgoet34z0Judn6oiPaJ9Kzewg==
+X-Received: by 2002:a17:906:a0c2:: with SMTP id bh2mr19064586ejb.458.1590404047012;
+        Mon, 25 May 2020 03:54:07 -0700 (PDT)
+Received: from localhost (ip1f115f16.dynamic.kabel-deutschland.de. [31.17.95.22])
+        by smtp.gmail.com with ESMTPSA id cm26sm15127731edb.87.2020.05.25.03.54.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 03:54:05 -0700 (PDT)
+From:   Oliver Graute <oliver.graute@gmail.com>
+X-Google-Original-From: Oliver Graute <oliver.graute@kococonnector.com>
+Date:   Mon, 25 May 2020 12:53:32 +0200
+To:     Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: fbtft: fb_st7789v: make HSD20_IPS numeric and
+ not a string
+Message-ID: <20200525105332.GB12301@archlinux.localdomain>
+References: <20200521135038.345878-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-25_05:2020-05-25,2020-05-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
- malwarescore=0 mlxscore=0 lowpriorityscore=0 cotscore=-2147483648
- spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005250084
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521135038.345878-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We may want to get rid of the iio_priv_to_dev() helper. The reason is that
-we will hide some of the members of the iio_dev structure (to prevent
-drivers from accessing them directly), and that will also mean hiding the
-implementation of the iio_priv_to_dev() helper inside the IIO core.
+On 21/05/20, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently HSD20_IPS is defined as "true" and will always result in a
+> non-zero result even if it is defined as "false" because it is an array
+> and that will never be zero. Fix this by defining it as an integer 1
+> rather than a literal string.
+> 
+> Addessses-Coverity: ("Array compared against 0")
+> Fixes: f03c9b788472 ("staging: fbtft: fb_st7789v: Initialize the Display")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/staging/fbtft/fb_st7789v.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
+> index ebc17e05ecd0..3a280cc1892c 100644
+> --- a/drivers/staging/fbtft/fb_st7789v.c
+> +++ b/drivers/staging/fbtft/fb_st7789v.c
+> @@ -24,7 +24,7 @@
+>  	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
+>  	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
+>  
+> -#define HSD20_IPS "true"
+> +#define HSD20_IPS 1
+>  
+>  /**
+>   * enum st7789v_command - ST7789V display controller commands
 
-Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
-may not be fast anymore, so a general idea is to try to get rid of the
-iio_priv_to_dev() altogether.
-The iio_priv() helper won't be affected by the rework, as the iio_dev
-struct will keep a reference to the private information.
-
-For this driver, not using iio_priv_to_dev(), means reworking some paths to
-pass the iio device and using iio_priv() to access the private information,
-and also keeping a reference to the iio device for some quirky paths.
-
-One [quirky] path is the at91_adc_workq_handler() which requires the IIO
-device & the state struct to push to buffers.
-Since this requires the back-ref to the IIO device, the
-at91_adc_touch_pos() also uses it. This simplifies the patch a bit. The
-information required in this function is mostly for debugging purposes.
-Replacing it with a reference to the IIO device would have been a slightly
-bigger change, which may not be worth it (for just the debugging purpose
-and given that we need the back-ref to the IIO device anyway).
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/at91-sama5d2_adc.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index 9abbbdcc7420..7bce18444430 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -402,6 +402,7 @@ struct at91_adc_state {
- 	wait_queue_head_t		wq_data_available;
- 	struct at91_adc_dma		dma_st;
- 	struct at91_adc_touch		touch_st;
-+	struct iio_dev			*indio_dev;
- 	u16				buffer[AT91_BUFFER_MAX_HWORDS];
- 	/*
- 	 * lock to prevent concurrent 'single conversion' requests through
-@@ -642,13 +643,13 @@ static u16 at91_adc_touch_pos(struct at91_adc_state *st, int reg)
- 	/* first half of register is the x or y, second half is the scale */
- 	val = at91_adc_readl(st, reg);
- 	if (!val)
--		dev_dbg(&iio_priv_to_dev(st)->dev, "pos is 0\n");
-+		dev_dbg(&st->indio_dev->dev, "pos is 0\n");
- 
- 	pos = val & AT91_SAMA5D2_XYZ_MASK;
- 	result = (pos << AT91_SAMA5D2_MAX_POS_BITS) - pos;
- 	scale = (val >> 16) & AT91_SAMA5D2_XYZ_MASK;
- 	if (scale == 0) {
--		dev_err(&iio_priv_to_dev(st)->dev, "scale is 0\n");
-+		dev_err(&st->indio_dev->dev, "scale is 0\n");
- 		return 0;
- 	}
- 	result /= scale;
-@@ -1204,9 +1205,9 @@ static unsigned at91_adc_startup_time(unsigned startup_time_min,
- 	return i;
- }
- 
--static void at91_adc_setup_samp_freq(struct at91_adc_state *st, unsigned freq)
-+static void at91_adc_setup_samp_freq(struct iio_dev *indio_dev, unsigned freq)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(st);
-+	struct at91_adc_state *st = iio_priv(indio_dev);
- 	unsigned f_per, prescal, startup, mr;
- 
- 	f_per = clk_get_rate(st->per_clk);
-@@ -1275,9 +1276,9 @@ static void at91_adc_pen_detect_interrupt(struct at91_adc_state *st)
- 	st->touch_st.touching = true;
- }
- 
--static void at91_adc_no_pen_detect_interrupt(struct at91_adc_state *st)
-+static void at91_adc_no_pen_detect_interrupt(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = iio_priv_to_dev(st);
-+	struct at91_adc_state *st = iio_priv(indio_dev);
- 
- 	at91_adc_writel(st, AT91_SAMA5D2_TRGR,
- 			AT91_SAMA5D2_TRGR_TRGMOD_NO_TRIGGER);
-@@ -1297,7 +1298,7 @@ static void at91_adc_workq_handler(struct work_struct *workq)
- 					struct at91_adc_touch, workq);
- 	struct at91_adc_state *st = container_of(touch_st,
- 					struct at91_adc_state, touch_st);
--	struct iio_dev *indio_dev = iio_priv_to_dev(st);
-+	struct iio_dev *indio_dev = st->indio_dev;
- 
- 	iio_push_to_buffers(indio_dev, st->buffer);
- }
-@@ -1318,7 +1319,7 @@ static irqreturn_t at91_adc_interrupt(int irq, void *private)
- 		at91_adc_pen_detect_interrupt(st);
- 	} else if ((status & AT91_SAMA5D2_IER_NOPEN)) {
- 		/* nopen detected IRQ */
--		at91_adc_no_pen_detect_interrupt(st);
-+		at91_adc_no_pen_detect_interrupt(indio);
- 	} else if ((status & AT91_SAMA5D2_ISR_PENS) &&
- 		   ((status & rdy_mask) == rdy_mask)) {
- 		/* periodic trigger IRQ - during pen sense */
-@@ -1486,7 +1487,7 @@ static int at91_adc_write_raw(struct iio_dev *indio_dev,
- 		    val > st->soc_info.max_sample_rate)
- 			return -EINVAL;
- 
--		at91_adc_setup_samp_freq(st, val);
-+		at91_adc_setup_samp_freq(indio_dev, val);
- 		return 0;
- 	default:
- 		return -EINVAL;
-@@ -1624,8 +1625,10 @@ static int at91_adc_update_scan_mode(struct iio_dev *indio_dev,
- 	return 0;
- }
- 
--static void at91_adc_hw_init(struct at91_adc_state *st)
-+static void at91_adc_hw_init(struct iio_dev *indio_dev)
- {
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+
- 	at91_adc_writel(st, AT91_SAMA5D2_CR, AT91_SAMA5D2_CR_SWRST);
- 	at91_adc_writel(st, AT91_SAMA5D2_IDR, 0xffffffff);
- 	/*
-@@ -1635,7 +1638,7 @@ static void at91_adc_hw_init(struct at91_adc_state *st)
- 	at91_adc_writel(st, AT91_SAMA5D2_MR,
- 			AT91_SAMA5D2_MR_TRANSFER(2) | AT91_SAMA5D2_MR_ANACH);
- 
--	at91_adc_setup_samp_freq(st, st->soc_info.min_sample_rate);
-+	at91_adc_setup_samp_freq(indio_dev, st->soc_info.min_sample_rate);
- 
- 	/* configure extended mode register */
- 	at91_adc_config_emr(st);
-@@ -1718,6 +1721,7 @@ static int at91_adc_probe(struct platform_device *pdev)
- 	indio_dev->num_channels = ARRAY_SIZE(at91_adc_channels);
- 
- 	st = iio_priv(indio_dev);
-+	st->indio_dev = indio_dev;
- 
- 	bitmap_set(&st->touch_st.channels_bitmask,
- 		   AT91_SAMA5D2_TOUCH_X_CHAN_IDX, 1);
-@@ -1829,7 +1833,7 @@ static int at91_adc_probe(struct platform_device *pdev)
- 		goto vref_disable;
- 	}
- 
--	at91_adc_hw_init(st);
-+	at91_adc_hw_init(indio_dev);
- 
- 	ret = clk_prepare_enable(st->per_clk);
- 	if (ret)
-@@ -1945,7 +1949,7 @@ static __maybe_unused int at91_adc_resume(struct device *dev)
- 	if (ret)
- 		goto vref_disable_resume;
- 
--	at91_adc_hw_init(st);
-+	at91_adc_hw_init(indio_dev);
- 
- 	/* reconfiguring trigger hardware state */
- 	if (!iio_buffer_enabled(indio_dev))
--- 
-2.25.1
-
+Acked-by: Oliver Graute <oliver.graute@kococonnector.com>
