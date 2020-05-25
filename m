@@ -2,177 +2,169 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2778CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03FBD20849
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7611120825
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="rOGKK9FZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbgEYFn2 (ORCPT
+        id S1729776AbgEYFpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 01:43:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39674 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgEYFn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 01:43:28 -0400
-IronPort-SDR: zwmSkPIkLXJmSvn/vkXoF0L/XGqfsrJrjGEYKj+AdIiz73CyIikFQfOS2NMwyGClATdpyj3DAX
- Oisv7qnPMGOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 22:43:27 -0700
-IronPort-SDR: RgGj6yKfCRpRXq4AIbrpN98WCXvHKkV4whYtLSII4XNB9usli7hIXRWZ8J5TcvrZp1AGq8jDPK
- vBJd6ZmWFWmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
-   d="scan'208";a="467862618"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by fmsmga005.fm.intel.com with ESMTP; 24 May 2020 22:43:24 -0700
-Subject: Re: [PATCH V2 3/3] mmc: sdhci: Allow platform controlled voltage
- switching
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-4-git-send-email-vbadigan@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <cfb229eb-a5e6-a0a9-6590-ef57b621ccb7@intel.com>
-Date:   Mon, 25 May 2020 08:42:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1590074615-10787-4-git-send-email-vbadigan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 25 May 2020 01:45:23 -0400
+Received: from mail-bn7nam10on2054.outbound.protection.outlook.com ([40.107.92.54]:6124
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725900AbgEYFpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 01:45:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e9XiEhLsY19QwuKHefuuSOzQJCr5F5VrVpVN2zWx8hjyHbdRaf7SBwNL7hyBuTBpFspbhs+IYNT1F2tjJc0rcV2im/da1IpvvXLVEgayZAqE6fiH5xV2WYcSbxAtngDHKt+rNLUyoOr5uNjpaYqHrmQb9iTHZLz+l+dYqYR2x3IYFgU1Ro3MV0JatSc3cJwElhL9WxAq4Mtc/IaaK6yBItGdIfCMiiK5UO5ZbPp4HHLcLl7boOZTA4wCiH+rUddXDs0+Vn58tDadSOho+E02DhRGuBdW72zdxVcIM5fUMP1PlAW9dL9//LZRwtP8pa+zDPdaedaRQZhEEnVd27oRBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jtoeagM7KBa+1tD4M0BbeSYsXsoUN6NrinopkC69XoU=;
+ b=dMpfeUuEHPdLC6EALqcyxmrqQEYotLHlqZiwEUTHC5mnxhcZpu5/uYBEGpWNvI0bEi1YRDotDceWByFqdR3vSlZ49oloNEv3Gj5Sta2cPCLq86Jxt0A0G7BXn8HJ9TYJzfNk9grTZzKZho41ij9PPPS5y9NfNqHzkJko4FXCOMjxebX/CNsIO+1wGAPsEYzwKStnkhjqeX8P8b6MnQms1DktQSWooYMECRxcU35KKkePuiIlmsA7KjXXL9c2uiKK6Cxj8iASOUVlc/cULy7e+1frYQEOYcbfheqzzT8JafxprnscLf0nR1/PvsDwLbLCHmWCSGZfBpFbjISIYhrWnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jtoeagM7KBa+1tD4M0BbeSYsXsoUN6NrinopkC69XoU=;
+ b=rOGKK9FZ1aY1wM6SD+1Upa/Fb6BLNSssF8zGFCFBO2E8RqaoQFk1okiqTYXr44lZEWO2HXCyADP9GUoH5cbD2WR/CvM4HFZl+IzAJTU0mb8a/cwU5KXlLH9B5ZY0dJVgI4yEs0+F12LhKSLQKnThUBEItW5HxYczCNhY77WQr2s=
+Received: from BN8PR13MB2611.namprd13.prod.outlook.com (2603:10b6:408:81::17)
+ by BN8PR13MB2771.namprd13.prod.outlook.com (2603:10b6:408:83::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.9; Mon, 25 May
+ 2020 05:45:19 +0000
+Received: from BN8PR13MB2611.namprd13.prod.outlook.com
+ ([fe80::c1d9:f4ee:80ab:de83]) by BN8PR13MB2611.namprd13.prod.outlook.com
+ ([fe80::c1d9:f4ee:80ab:de83%6]) with mapi id 15.20.3045.009; Mon, 25 May 2020
+ 05:45:19 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "anup.patel@wdc.com" <anup.patel@wdc.com>
+Subject: RE: [PATCH v2 0/2] enable spi flash and update is25wp256d page write
+ capabilities
+Thread-Topic: [PATCH v2 0/2] enable spi flash and update is25wp256d page write
+ capabilities
+Thread-Index: AQHWLcrJDI5oN2bq6EiCAm88Ud2giKi4UvWg
+Date:   Mon, 25 May 2020 05:45:18 +0000
+Message-ID: <BN8PR13MB2611897FD771955E74F8E55299B30@BN8PR13MB2611.namprd13.prod.outlook.com>
+References: <1589885187-31247-1-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <1589885187-31247-1-git-send-email-sagar.kadam@sifive.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=none action=none
+ header.from=sifive.com;
+x-originating-ip: [116.74.149.243]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 62cda84b-bd1b-4127-2c19-08d8006ecee3
+x-ms-traffictypediagnostic: BN8PR13MB2771:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR13MB2771A1EC455CCF99ED1EBA7799B30@BN8PR13MB2771.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0414DF926F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nkriZ4bUJhf049rsQQz8EKUy/8PTEmsJZkH7wUrRZxYmikzZzMePmhNnq4+BHls5U6g58G4gakIUeRNPwTya/dHSDnH4nratQ3XwqXLHKUwL9OuycwJJBwgrJzRoktt1+kEVRcROI5OIs368zKiBuB27OGdt/t7y/gezEAkdpLB6YHkNZf2iM+bKMnMhMcJQX0wX/5R7cb+GdpSdE5DDM9N/7RPNAWfsTJccXyfxWXP/WwHLAIFstESHpUeNnMkkufwECOf87O48IK6xhFPu7xI91VnW5zrX57z+cgTZVVu6d3wI4clgnGCdViic5ELGOBUQz9j+S91Jf3RgUU5eLg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39840400004)(366004)(136003)(396003)(66946007)(86362001)(9686003)(76116006)(478600001)(55016002)(71200400001)(64756008)(66476007)(66556008)(66446008)(7696005)(5660300002)(186003)(4326008)(110136005)(55236004)(44832011)(33656002)(53546011)(26005)(15650500001)(316002)(2906002)(7416002)(52536014)(54906003)(6506007)(8936002)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Qj5zbE/zQAFQijdmuq97tANUBtnP3Ew1lOnaPDpl/bS9Ha/lMW2xYP1LWKSijuiSRG6LVQuQ7U4LuLa+8Irqrpjf++JGOUvPMKwA/oAWnBXGAvp0/Xm/yNw6cq5lHAhl94GvsDqT0/h7DxLadVxaMsIeL2t05Ve4xVRbrgrdHdZ1Bgdw+GI/fMStPvNS4kNSrIkl21OW2Dmlgv0hHqXeaApNK+0mBNNPEKb5VU1luZs6WE98O4e37BrBInQgKH4RLDaFTsgIQqPytmAiXE1BzbU1F9sry0cvPio3++u1sKhB0j7tsbN5ARqsmzqC5iOZhgv3TyBaS6rjaolCjLXQAXk7vujcAqIk3xB/yYZVjNQl5BeByEyHZjfIxHlwyEoBP1GermYblKH/L2k8M/oxdBeQXQrLefY6Wf8Wa4BDHCWxApEO6GzuDZEQKWUHQoichrvnVQnBqk57debeRsmTVvp++yppFJP2NxHJhcoOZJ409oiue/h6jkSpDANUFDeh
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62cda84b-bd1b-4127-2c19-08d8006ecee3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2020 05:45:18.4055
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KYVkX2rSrIbhvfFiXD4bJwJ2iIZCr3SbJKc19fFiv8Lh59ciwJx2bA2U+Pmt1Yttjx23iRqW28AOjQOctA7bKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR13MB2771
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/20 6:23 pm, Veerabhadrarao Badiganti wrote:
-> From: Vijay Viswanath <vviswana@codeaurora.org>
-> 
-> If vendor platform drivers are controlling whole logic of voltage
-> switching, then sdhci driver no need control vqmmc regulator.
-> So skip enabling/disable vqmmc from SDHC driver.
-> 
-> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Hi,
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+A gentle reminder.
+Any suggestions here?
 
-> ---
->  drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
->  drivers/mmc/host/sdhci.h |  1 +
->  2 files changed, 20 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1bb6b67..88e5312 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -4098,6 +4098,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	unsigned int override_timeout_clk;
->  	u32 max_clk;
->  	int ret;
-> +	bool enable_vqmmc = false;
->  
->  	WARN_ON(host == NULL);
->  	if (host == NULL)
-> @@ -4111,9 +4112,12 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	 * the host can take the appropriate action if regulators are not
->  	 * available.
->  	 */
-> -	ret = mmc_regulator_get_supply(mmc);
-> -	if (ret)
-> -		return ret;
-> +	if (!mmc->supply.vqmmc) {
-> +		ret = mmc_regulator_get_supply(mmc);
-> +		if (ret)
-> +			return ret;
-> +		enable_vqmmc  = true;
-> +	}
->  
->  	DBG("Version:   0x%08x | Present:  0x%08x\n",
->  	    sdhci_readw(host, SDHCI_HOST_VERSION),
-> @@ -4373,7 +4377,15 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		mmc->caps |= MMC_CAP_NEEDS_POLL;
->  
->  	if (!IS_ERR(mmc->supply.vqmmc)) {
-> -		ret = regulator_enable(mmc->supply.vqmmc);
-> +		if (enable_vqmmc) {
-> +			ret = regulator_enable(mmc->supply.vqmmc);
-> +			if (ret) {
-> +				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
-> +					mmc_hostname(mmc), ret);
-> +				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
-> +			}
-> +			host->sdhci_core_to_disable_vqmmc = !ret;
-> +		}
->  
->  		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
->  		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
-> @@ -4386,12 +4398,6 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
->  						    3600000))
->  			host->flags &= ~SDHCI_SIGNALING_330;
-> -
-> -		if (ret) {
-> -			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
-> -				mmc_hostname(mmc), ret);
-> -			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
-> -		}
->  	}
->  
->  	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
-> @@ -4625,7 +4631,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	return 0;
->  
->  unreg:
-> -	if (!IS_ERR(mmc->supply.vqmmc))
-> +	if (host->sdhci_core_to_disable_vqmmc)
->  		regulator_disable(mmc->supply.vqmmc);
->  undma:
->  	if (host->align_buffer)
-> @@ -4643,7 +4649,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
->  {
->  	struct mmc_host *mmc = host->mmc;
->  
-> -	if (!IS_ERR(mmc->supply.vqmmc))
-> +	if (host->sdhci_core_to_disable_vqmmc)
->  		regulator_disable(mmc->supply.vqmmc);
->  
->  	if (host->align_buffer)
-> @@ -4780,7 +4786,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
->  
->  	destroy_workqueue(host->complete_wq);
->  
-> -	if (!IS_ERR(mmc->supply.vqmmc))
-> +	if (host->sdhci_core_to_disable_vqmmc)
->  		regulator_disable(mmc->supply.vqmmc);
->  
->  	if (host->align_buffer)
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 8d2a096..c7dbc68 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -570,6 +570,7 @@ struct sdhci_host {
->  	u32 caps1;		/* CAPABILITY_1 */
->  	bool read_caps;		/* Capability flags have been read */
->  
-> +	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
->  	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
->  	unsigned int            ocr_avail_sd;
->  	unsigned int            ocr_avail_mmc;
-> 
+BR,
+Sagar Kadam
+
+> -----Original Message-----
+> From: Sagar Kadam <sagar.kadam@sifive.com>
+> Sent: Tuesday, May 19, 2020 4:16 PM
+> To: linux-riscv@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> mtd@lists.infradead.org
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>; palmer@dabbelt.com;
+> aou@eecs.berkeley.edu; tudor.ambarus@microchip.com;
+> miquel.raynal@bootlin.com; richard@nod.at; vigneshr@ti.com;
+> anup.patel@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>
+> Subject: [PATCH v2 0/2] enable spi flash and update is25wp256d page write
+> capabilities
+>=20
+> HiFive Unleashed A00 board has is25wp256d snor chip. It is observed that =
+it
+> gets configured with Serial Input Page program by the end of spi_nor_scan=
+.
+> Using the post bfpt fixup hook we prioritize the page program settings to
+> use quad input page program (opcode:0x34) over serial input page program
+> (opcode: 0x12).
+>=20
+> The patchset is tested on Linux 5.7.0-rc5.
+>=20
+> Changelog:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> V2:
+> -Split common code between is25lp256 and is25wp256 devices as suggested
+> Added a generic post bfpt fixup handler that identifies the flash parts
+> based on their device id and uses the corresponding fixup. Other device's
+> that need a post bfpt fixup can just add the device id check and either
+> reuse the available fixups or write the necessary fixup code if one is no=
+t
+> available.
+>=20
+> V1:
+> -Moved SPI_SIFIVE from defconfig to Kconfig.socs for SOC_SIFIVE.
+>  Retained it's configurability using "imply" instead of "select"
+>=20
+> V0: Base version patch (Tested on 5.7.0-rc3).
+>=20
+>=20
+> Sagar Shrikant Kadam (2):
+>   riscv: defconfig: enable spi nor on Hifive Unleashed A00
+>   spi: nor: update page program settings for is25wp256 using post bfpt
+>     fixup
+>=20
+>  arch/riscv/Kconfig.socs      |  1 +
+>  arch/riscv/configs/defconfig |  3 +-
+>  drivers/mtd/spi-nor/issi.c   | 72
+> ++++++++++++++++++++++++++++++++++++--------
+>  3 files changed, 63 insertions(+), 13 deletions(-)
+>=20
+> --
+> 2.7.4
 
