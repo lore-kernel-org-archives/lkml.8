@@ -2,203 +2,128 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CF52071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 19:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01F62071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ljaUWVc5"
+	dkim=pass (1024-bit key) header.d=silexinside.onmicrosoft.com header.i=@silexinside.onmicrosoft.com header.b="Fec02xZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbgEYT7o (ORCPT
+        id S2390721AbgEYUHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 15:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390316AbgEYT7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 15:59:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF55BC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 12:59:41 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t7so7788302plr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 12:59:41 -0700 (PDT)
+        Mon, 25 May 2020 16:07:04 -0400
+Received: from mail-db5eur03hn2211.outbound.protection.outlook.com ([52.100.12.211]:3649
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388794AbgEYUHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 16:07:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kfF9JXatG8F636xHE46X2rbbzRwYj5yxyo7iDxkiXMmqEKgq09QTsgt0vgQ6OVHI55QfkEk88aWIGM7TkMcer50QqELtiX6ZGagnFdv73sr0UvRftdM/L1RXm5qjwWDwyoxn8wPn6lY++8oHXuZTtePdp1TQsNatysKeAKkyfIT1HDsTpXKkgsqz0vFjldO23tOV+BRFlKK06C7RQ1xtlhMW50WSPqh92HIZQkf92ozmf505WRan9WaDt9m9t2woYZJVG2nicOiMeiRpkgEa4otv7B9w5m0jwb92ZclKiS2SrEh1f69o70e1leyny1Bik0/T1ua6rxlC1ayR22c/4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/pS1cIeIVfkEniXMCE/fhuUO2Qc8spGTHmgfh9zKaY=;
+ b=ZbxnHa+ZNq1A0V5+3xjY3Bl2Pb3Uutbb6j6ofu+HLnwulu/tqYGxVviemL9G+izYui//PMYAlGYcmF/CxDSMzQIRLgbzKL1jkYaUqv3V9fV2KaA2XUifsVF+uFkbLC/Xl8iFL4EwKbEnDgHH8QUxhQY3v2LIbm7HZQxaTZFAq0e2KkzTGJumaRyM4lzddABHvSXrqLKU0ss0P5mIKeJRd1J+W2SGV83ZD0zzGy+CB+VmzNcs16G5yQKT73NL/mSBSi2AFjch/MNWufLF40AbhTOBH8WrJreP0f2AUhlIKdr1LdBmlpavAY5dtOY3c2BMQ2i+lvuX8IFiYCt9OynEug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silexinsight.com; dmarc=pass action=none
+ header.from=silexinsight.com; dkim=pass header.d=silexinsight.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9QyaJyq91Y21TWm2mWkWyDIqO2sYo0+Z1NrqQRUgE7I=;
-        b=ljaUWVc5kIlmJQUxPYKdrG6BE7ChLk5cxtVZHrDO/iKFgRVeR8sCGvDiLiJ7PdjYMq
-         skBIof5jY//HbHYTMpHrjUqvSqJnTaRZ2I/DRCmcSLhY7X25HgI2DyEWArWJe8zc1klo
-         i2MeTI3lRNAD4GSrXtizBZGz9MZWYzvILEzBSynARIxp/Z+5yJWcdz6Pz8Ur9tmUAbkU
-         8VoDQdnPzU0/sjPlZjuzfuqlFF7aVEcVrs5Yoj9Gn6kSZ6w6rMwivhKMWGBthwlWPre0
-         viG7280TWn22JpuLyygLzIsUTnbpQCNThKW2khSm64E2PoxFf/ihBqAqoPDH6FWcpGD/
-         66Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9QyaJyq91Y21TWm2mWkWyDIqO2sYo0+Z1NrqQRUgE7I=;
-        b=YoyE2hqzAh+eHpJY5aJY7e3kRFgPSHmqmTr669VdDputsVmSRuINDzKsXgnWikUOZ1
-         QkdSu7UvwD47xP6JLiRUIK9agNoScoEfS0mdAWsjkloftPcBq6iiLUrOlfrEc0kdEz2j
-         fIo6/JoqqFiTYt1UnmurUOPRb6sJ3A7WuZAM2T5oUYhaqtppdQenMbpOpNkzq8LLth5E
-         L+QHtGKnONxn1ko5i7gIO5lLOjZtqL5Wz7QLpVowB2tcaZPcwo2fzwQx9p0abU/bJpQ1
-         DCAmXVoT7HP8RKUBWigQH4TyestE92rtOyTHQeQNY9HZyFjSteNQQcKdZ9uVW2z2zxop
-         bjdA==
-X-Gm-Message-State: AOAM5323UFdJMo6agRcIuq0QM7gnEhz452BcN5XYG6IbmH9i2NpvXLgQ
-        qxOGEF5jzNUe5TxNh5GnY+tkAg==
-X-Google-Smtp-Source: ABdhPJyY+QwGKRIjKWxot2txvsWSCPAcuOYNxRHnVVq+NncrgyPaB5T+Hy9x86k3ekiQxKGDgZe9Hg==
-X-Received: by 2002:a17:90a:e016:: with SMTP id u22mr22462041pjy.28.1590436780796;
-        Mon, 25 May 2020 12:59:40 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:3c00:cb1c:41a3:c8d? ([2605:e000:100e:8c61:3c00:cb1c:41a3:c8d])
-        by smtp.gmail.com with ESMTPSA id q25sm13482591pfh.94.2020.05.25.12.59.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 12:59:40 -0700 (PDT)
-Subject: Re: [PATCH 12/12] io_uring: support true async buffered reads, if
- file provides it
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200523185755.8494-1-axboe@kernel.dk>
- <20200523185755.8494-13-axboe@kernel.dk>
- <8d429d6b-81ee-0a28-8533-2e1d4faa6b37@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <717e474a-5168-8e1e-2e02-c1bdff007bd9@kernel.dk>
-Date:   Mon, 25 May 2020 13:59:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ d=silexinside.onmicrosoft.com; s=selector2-silexinside-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U/pS1cIeIVfkEniXMCE/fhuUO2Qc8spGTHmgfh9zKaY=;
+ b=Fec02xZdfu+d+ySE4k1LBmDbazH3JN1Lz3vqCizz/UyxnS/rdpFkNY3K1kU3ziTYjCOcVaW1RQDvFyLmhP7cw42cmDiL1ZdZXy4wy9v0gYqdaMeUnvYzOeUigDNTwZLJXUGupTomcTfqtCVKL6J100nNFb/riugInJJahGOZmdk=
+Authentication-Results: selenic.com; dkim=none (message not signed)
+ header.d=none;selenic.com; dmarc=none action=none
+ header.from=silexinsight.com;
+Received: from AM7PR09MB3621.eurprd09.prod.outlook.com (2603:10a6:20b:10d::15)
+ by AM7PR09MB3735.eurprd09.prod.outlook.com (2603:10a6:20b:dc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Mon, 25 May
+ 2020 20:06:58 +0000
+Received: from AM7PR09MB3621.eurprd09.prod.outlook.com
+ ([fe80::e902:acdf:8750:e9e2]) by AM7PR09MB3621.eurprd09.prod.outlook.com
+ ([fe80::e902:acdf:8750:e9e2%7]) with mapi id 15.20.3021.029; Mon, 25 May 2020
+ 20:06:58 +0000
+From:   Olivier Sobrie <olivier.sobrie@silexinsight.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Olivier Sobrie <olivier.sobrie@silexinsight.com>,
+        Waleed Ziad <waleed94ziad@gmail.com>,
+        sebastien.rabou@silexinsight.com
+Subject: [PATCH 0/3] hwrng: add support for Silex Insight BA431
+Date:   Mon, 25 May 2020 21:56:03 +0200
+Message-Id: <20200525195606.2941649-1-olivier.sobrie@silexinsight.com>
+X-Mailer: git-send-email 2.26.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR04CA0072.eurprd04.prod.outlook.com
+ (2603:10a6:208:1::49) To AM7PR09MB3621.eurprd09.prod.outlook.com
+ (2603:10a6:20b:10d::15)
 MIME-Version: 1.0
-In-Reply-To: <8d429d6b-81ee-0a28-8533-2e1d4faa6b37@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2a02:a03f:a7df:f300:30f9:36cf:6713:51ae) by AM0PR04CA0072.eurprd04.prod.outlook.com (2603:10a6:208:1::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 20:06:58 +0000
+X-Mailer: git-send-email 2.26.2
+X-Originating-IP: [2a02:a03f:a7df:f300:30f9:36cf:6713:51ae]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f19eab8d-3ad7-4a82-cc2b-08d800e72dfa
+X-MS-TrafficTypeDiagnostic: AM7PR09MB3735:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM7PR09MB3735DB76BE43DB83F85425DFF4B30@AM7PR09MB3735.eurprd09.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 0414DF926F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ThPY/RbO9T7swwQ8S5YnksqMdOkFrYI9NmePoR2b9ArXvlsVVEZlgfhRU/cUZZcSgZZBplRA1CLIcdCnK/3FpeuIhlnS6rirPgvtDH1HMMsilbRx9SnjLB9bpm6jjWODN3NxR6iEm588R4XOuhADJ4mvQMGo8flANfTdlhqz+uGs+9WRLqyOTma7O29y7lElMoOLqC4FOw49f8voX5EkmLPwZpgHNHuanRWmj5WEeI5um2jY6kaT5HK1+JRVi1hhRAwYhWG2V24pHzLp3kznRz2Vkjwz+DH3AvASsZz+4aLaQ5weNOTq5RVoLa1jrvxgHhN+cIWxhMerJ5A7QCQQh6HcimGW6tNDmpw1cx6r88D3+AxdMucMBnx5e3ksOI8Nww4/rIq6hVB58J8anlVa/C5f+X8PbBeYghj+m5dvLNQoEQWiRDe/e18spkm1/rZ5R3UUOLzWiIN3jjYfmS3SnC4ToUFIul41RZJlYFtFlHWNqpf0/Ot26/mJr+NVfZNpupCEyMA3UZygBIiE3Nsyo6XFfVOO7wLhN5s0fY/YuKGfWZNjBLWWUxIlhe9IuHEiFY9bF0QqxatXKgjWXlr0N7tpT7+XM2ra34kqThs4h9ONrtBn1rJcSzoGWbDWdN1vSTzZG+uSjqYxKPU9jzB8YqsSM8hT+mPltAoM3+ptz30lWNmLS9PSUyVsZ63k/fJZ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:AM7PR09MB3621.eurprd09.prod.outlook.com;PTR:;CAT:OSPM;SFTY:;SFS:(396003)(39840400004)(136003)(376002)(346002)(366004)(186003)(16526019)(66556008)(52116002)(2616005)(2906002)(66476007)(6496006)(107886003)(44832011)(4744005)(66946007)(54906003)(110136005)(316002)(508600001)(6486002)(8936002)(36756003)(1076003)(6666004)(4326008)(5660300002)(8676002)(86362001)(23200700001);DIR:OUT;SFP:1501;
+X-MS-Exchange-AntiSpam-MessageData: DvDAuYDoTRAEFxCwQCuFab1ms52vDM/DX/SrRTm9qRuDhIsIbJkmihm16pn/ZkHbH4vDGxmGbbP9b//ELtxhDjXX7eiXBVWPOeLBDFu0EkDFKb90YM2ik0sPgInwI4EBAVhGhYFChCacyWqoBrR+qmt71u7yJgksP4HTt6+9XR/xMmzpyvK5W/g1ANOxYpfMuQPETVdIRVKCn8XmO1AjES0s4jfjbEs2R7/5L/twgnFPJYcmHUfR2jlI5dFeVx263lPuGI0SZt2pPWMGSj46Eq+3Lh+XC5NZDrXeZU29ZZsJ4zIFs8feYfokHwRapQLjs9MtQiUr1JNxDFULlmM3UvSdxz4RldN3KipiYubWq/817ZMqJ+k6J4334n0CX/fdOjyTxKovgXQ2loiF2yKnYKQ/auT0DIxirnQ3ig1EC0R8/Lo8HVvH2WIW1Y+t1K8x0ppETDs5Tjl+WqjECxmdeFWx4SN2H+q1DjRtymp02jbZ3FvlwFRpd/eeOU9en6tutCw92Vbu+VpA55GWm+wLTLeHv+cuZ9VKiS7zXxlMAy4=
+X-OriginatorOrg: silexinsight.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f19eab8d-3ad7-4a82-cc2b-08d800e72dfa
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 20:06:58.3095
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a02f6f9b-0f64-4420-b881-fca545d421d8
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PxFiTZdtFwzTFiZF6WUO9JPzcM25JUa1Vzz25GnMjAAmOurYCgAmIlrGeX15JNz5FzJm9fhQlxDwngESuLpB6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR09MB3735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 1:29 AM, Pavel Begunkov wrote:
-> On 23/05/2020 21:57, Jens Axboe wrote:
->> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
->> the buffered read to an io-wq worker. Instead we can rely on page
->> unlocking callbacks to support retry based async IO. This is a lot more
->> efficient than doing async thread offload.
->>
->> The retry is done similarly to how we handle poll based retry. From
->> the unlock callback, we simply queue the retry to a task_work based
->> handler.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->> ---
->>  fs/io_uring.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 99 insertions(+)
->>
-> ...
->> +
->> +	init_task_work(&rw->task_work, io_async_buf_retry);
->> +	/* submit ref gets dropped, acquire a new one */
->> +	refcount_inc(&req->refs);
->> +	tsk = req->task;
->> +	ret = task_work_add(tsk, &rw->task_work, true);
->> +	if (unlikely(ret)) {
->> +		/* queue just for cancelation */
->> +		init_task_work(&rw->task_work, io_async_buf_cancel);
->> +		tsk = io_wq_get_task(req->ctx->io_wq);
-> 
-> IIRC, task will be put somewhere around io_free_req(). Then shouldn't here be
-> some juggling with reassigning req->task with task_{get,put}()?
+Hello all,
 
-Not sure I follow? Yes, we'll put this task again when the request
-is freed, but not sure what you mean with juggling?
+This set of patches aims at introducing a linux hwrng driver for the
+Silex Insight BA431 IP which is available for various FPGA.
+This hardware is for instance present in Silex Insight Viper OEM boards.
 
->> +		task_work_add(tsk, &rw->task_work, true);
->> +	}
->> +	wake_up_process(tsk);
->> +	return 1;
->> +}
-> ...
->>  static int io_read(struct io_kiocb *req, bool force_nonblock)
->>  {
->>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
->> @@ -2601,6 +2696,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->>  	if (!ret) {
->>  		ssize_t ret2;
->>  
->> +retry:
->>  		if (req->file->f_op->read_iter)
->>  			ret2 = call_read_iter(req->file, kiocb, &iter);
->>  		else
->> @@ -2619,6 +2715,9 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->>  			if (!(req->flags & REQ_F_NOWAIT) &&
->>  			    !file_can_poll(req->file))
->>  				req->flags |= REQ_F_MUST_PUNT;
->> +			if (io_rw_should_retry(req))
-> 
-> It looks like a state machine with IOCB_WAITQ and gotos. Wouldn't it be cleaner
-> to call call_read_iter()/loop_rw_iter() here directly instead of "goto retry" ?
+The two first patches are documenting the device tree bindings.
+The last one contains the BA431 hwrng driver.
 
-We could, probably making that part a separate helper then. How about the
-below incremental?
+Olivier Sobrie (3):
+  dt-bindings: vendor-prefixes: Add Silex Insight vendor prefix
+  dt-bindings: rng: document Silex Insight BA431 hwrng
+  hwrng: ba431-rng: add support for BA431 hwrng
 
-> BTW, can this async stuff return -EAGAIN ?
-
-Probably? Prefer not to make any definitive calls on that being possible or
-not, as it's sure to disappoint. If it does and IOCB_WAITQ is already set,
-then we'll punt to a thread like before.
-
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index a5a4d9602915..669dccd81207 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2677,6 +2677,13 @@ static bool io_rw_should_retry(struct io_kiocb *req)
- 	return false;
- }
- 
-+static int __io_read(struct io_kiocb *req, struct iov_iter *iter)
-+{
-+	if (req->file->f_op->read_iter)
-+		return call_read_iter(req->file, &req->rw.kiocb, iter);
-+	return loop_rw_iter(READ, req->file, &req->rw.kiocb, iter);
-+}
-+
- static int io_read(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
-@@ -2710,11 +2717,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
- 	if (!ret) {
- 		ssize_t ret2;
- 
--retry:
--		if (req->file->f_op->read_iter)
--			ret2 = call_read_iter(req->file, kiocb, &iter);
--		else
--			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
-+		ret2 = __io_read(req, &iter);
- 
- 		/* Catch -EAGAIN return for forced non-blocking submission */
- 		if (!force_nonblock || ret2 != -EAGAIN) {
-@@ -2729,8 +2732,11 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
- 			if (!(req->flags & REQ_F_NOWAIT) &&
- 			    !file_can_poll(req->file))
- 				req->flags |= REQ_F_MUST_PUNT;
--			if (io_rw_should_retry(req))
--				goto retry;
-+			if (io_rw_should_retry(req)) {
-+				ret2 = __io_read(req, &iter);
-+				if (ret2 != -EAGAIN)
-+					goto out_free;
-+			}
- 			kiocb->ki_flags &= ~IOCB_WAITQ;
- 			return -EAGAIN;
- 		}
+ .../bindings/rng/silex-insight,ba431-rng.yaml |  33 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/char/hw_random/Kconfig                |  10 +
+ drivers/char/hw_random/Makefile               |   1 +
+ drivers/char/hw_random/ba431-rng.c            | 241 ++++++++++++++++++
+ 5 files changed, 287 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/silex-insight,ba431-rng.yaml
+ create mode 100644 drivers/char/hw_random/ba431-rng.c
 
 -- 
-Jens Axboe
+2.26.2
 
