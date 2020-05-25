@@ -2,150 +2,166 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A844C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3882C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4D1E20849
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9D72073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vu/F9Dss"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZG743dT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390861AbgEYNo6 (ORCPT
+        id S2403849AbgEYNqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388794AbgEYNo6 (ORCPT
+        Mon, 25 May 2020 09:46:01 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29328 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403812AbgEYNqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:44:58 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81A1C061A0E;
-        Mon, 25 May 2020 06:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+/9EB+gqUSTCQhVlgwmYHPpqEaICAppIqnpJ4LPwD8U=; b=Vu/F9Dss7kuI+g7DVtxcOSePVc
-        EZi7fra/CTyTCjXy2K8r4Jebv5UwcmZorzPld1lnp1vj2529Ccm7MeesYZyDC95euECiec839L96e
-        ioig9ELPpt1To0X6XLFHP1dUQ66Lfp+ce5DdwiJV8CuQcTcvyZp8GfM2rElQTY8GLkfEayeSCUcZw
-        ACzYIH7tAgjck1ntkBCqrjP+qJGWJQxe4UTy+uJFBD7gFpCW5HuWzUg7r+SYePXuuQNrfx0z3Oy9L
-        MgYA+UzKytPYdwwz+k/9lQQYFnf5gJlFC2xv2ynloQy30JaLRVih8I7yFXnn2ReXuzJY79iD3/PUw
-        OZiRo4QA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdDP6-00087O-2X; Mon, 25 May 2020 13:44:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 654DB300B38;
-        Mon, 25 May 2020 15:44:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 145ED20962E29; Mon, 25 May 2020 15:44:29 +0200 (CEST)
-Date:   Mon, 25 May 2020 15:44:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v1 10/25] seqlock: Add RST directives to kernel-doc code
- samples and notes
-Message-ID: <20200525134429.GE317569@hirez.programming.kicks-ass.net>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-11-a.darwish@linutronix.de>
- <20200522180254.GS325280@hirez.programming.kicks-ass.net>
- <20200522180336.GD325303@hirez.programming.kicks-ass.net>
- <871rnbsu57.fsf@nanos.tec.linutronix.de>
- <20200522183216.GT325280@hirez.programming.kicks-ass.net>
- <20200525093649.GA370823@debian-buster-darwi.lab.linutronix.de>
+        Mon, 25 May 2020 09:46:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590414358;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uBnDQRq8NKvyXj1OcfCzUbckAA8TKqr4QeSz0+Sw4EU=;
+        b=OZG743dTKyNLGdFCmhvkHvYuSbFaU/ADps9n1Xzmp6Ho28YdqRAFX/H1Mhdo46k8Y2/Jsc
+        ZcBtxsRlvO46+nBP4OK39rqFjBTPy16gXE4klAR7wQCbLbbcBvtx5zL4g4hTF1GzE7AdNT
+        eShslV+0qObhjCwBbkXlAtT+z/8VVCs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-GG23CLmjOjmqzJ4FMbOdCA-1; Mon, 25 May 2020 09:45:56 -0400
+X-MC-Unique: GG23CLmjOjmqzJ4FMbOdCA-1
+Received: by mail-wr1-f70.google.com with SMTP id 3so1259861wrs.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:45:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uBnDQRq8NKvyXj1OcfCzUbckAA8TKqr4QeSz0+Sw4EU=;
+        b=TfTAdl+4tH+/CsoAXboLwj9v/8QFXD5sv812dzfs5Yx4uxAscMeoZ2ccCxpxSsJXh2
+         Gefh0ooIxoPMsYNGEtokfdzpAkEv/yAhrC0ns+JWSwY1AIPp4uraNqETVKUVlEqjdzdC
+         C/LCUN2cFpwl5W/+rUResyzuV1wu4uHoZhS35odd5m+J2R4FHAqLKBJOeOmKqzTWrVgc
+         5Acsk9+Hpe1/dmahG7BV9Gn+sqX7kDFaYGEp61ZTNDTLtIcMqSEds6/VjNY2Ds9hsxo5
+         ZfJy53GtsN9CXjDHI1nHdNNhTNDZn1QMlMd2ZSzwfpMPDAoHc/790SsjLOjdb9cZNQjw
+         4nOg==
+X-Gm-Message-State: AOAM531oiKuX7HerfdnrXefIF9d3ARB1+LS6ewcYWplsMRZdutK58vJ0
+        tVkhCtrQeBeasZecQJcjh9V6Osqd4Kl5ANrX/2OEDOyfB3518m0ZB8NKzoV0OxfthEnkS6DJEGt
+        FNyHUDbnCblr9F3HiJDyZyz3X
+X-Received: by 2002:adf:f8cc:: with SMTP id f12mr4806523wrq.418.1590414355392;
+        Mon, 25 May 2020 06:45:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzq04nk/yqNjtfOBOIK2mV4bqQSXW7e50KJZusZD6zfGTmoDNO+WwsLfODm6FhAd1vRSVGZog==
+X-Received: by 2002:adf:f8cc:: with SMTP id f12mr4806496wrq.418.1590414355118;
+        Mon, 25 May 2020 06:45:55 -0700 (PDT)
+Received: from steredhat ([79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id x22sm17757924wmi.32.2020.05.25.06.45.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 06:45:54 -0700 (PDT)
+Date:   Mon, 25 May 2020 15:45:52 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: io_uring: BUG: kernel NULL pointer dereference
+Message-ID: <20200525134552.5dyldwmeks3t6vj6@steredhat>
+References: <20200525103051.lztpbl33hsgv6grz@steredhat>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525093649.GA370823@debian-buster-darwi.lab.linutronix.de>
+In-Reply-To: <20200525103051.lztpbl33hsgv6grz@steredhat>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:36:49AM +0200, Ahmed S. Darwish wrote:
-> Peter Zijlstra <peterz@infradead.org> wrote:
-
-> > I will not let sensible code comments deteriorate to the benefit of some
-> > external piece of crap.
-> >
-> > As a programmer the primary interface to all this is a text editor, not
-> > a web broswer or a pdf file or whatever other bullshit.
-> >
-> > If comments are unreadable in your text editor, they're useless.
+On Mon, May 25, 2020 at 12:30:51PM +0200, Stefano Garzarella wrote:
+> Hi Jens,
+> using fio and io_uring engine with SQPOLL and IOPOLL enabled, I had the
+> following issue that happens after 4/5 seconds fio has started.
+> Initially I had this issue on Linux v5.7-rc6, but I just tried also
+> Linux v5.7-rc7:
 > 
-> Wait.
+> [   75.343479] nvme nvme0: pci function 0000:04:00.0
+> [   75.355110] nvme nvme0: 16/0/15 default/read/poll queues
+> [   75.364946]  nvme0n1: p1
+> [   82.739285] BUG: kernel NULL pointer dereference, address: 00000000000003b0
+> [   82.747054] #PF: supervisor read access in kernel mode
+> [   82.752785] #PF: error_code(0x0000) - not-present page
+> [   82.758516] PGD 800000046c042067 P4D 800000046c042067 PUD 461fcf067 PMD 0 
+> [   82.766186] Oops: 0000 [#1] SMP PTI
+> [   82.770076] CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+> [   82.777939] Hardware name: Dell Inc. PowerEdge R430/03XKDV, BIOS 1.2.6 06/08/2015
+> [   82.786290] RIP: 0010:task_numa_work+0x4f/0x2c0
+> [   82.791341] Code: 18 4c 8b 25 e3 f0 8e 01 49 8b 9f 00 08 00 00 4d 8b af c8 00 00 00 49 39 c7 0f 85 e8 01 00 00 48 89 6d 00 41 f6 47 24 04 75 67 <48> 8b ab b0 03 00 00 48 85 ed 75 16 8b 3d 6f 68 94 01 e8 aa fb 04
+> [   82.812296] RSP: 0018:ffffaaa98415be10 EFLAGS: 00010246
+> [   82.818123] RAX: ffff953ee36b8000 RBX: 0000000000000000 RCX: 0000000000000000
+> [   82.826083] RDX: 0000000000000001 RSI: ffff953ee36b8000 RDI: ffff953ee36b8dc8
+> [   82.834042] RBP: ffff953ee36b8dc8 R08: 00000000001200db R09: ffff9542e3ad2e08
+> [   82.842002] R10: ffff9542ecd20070 R11: 0000000000000000 R12: 00000000fffca35b
+> [   82.849962] R13: 000000012a06a949 R14: ffff9542e3ad2c00 R15: ffff953ee36b8000
+> [   82.857922] FS:  0000000000000000(0000) GS:ffff953eefc40000(0000) knlGS:0000000000000000
+> [   82.866948] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   82.873357] CR2: 00000000000003b0 CR3: 000000046bbd0002 CR4: 00000000001606e0
+> [   82.881316] Call Trace:
+> [   82.884046]  task_work_run+0x68/0xa0
+> [   82.888026]  io_sq_thread+0x252/0x3d0
+> [   82.892111]  ? finish_wait+0x80/0x80
+> [   82.896097]  kthread+0xf9/0x130
+> [   82.899598]  ? __ia32_sys_io_uring_enter+0x370/0x370
+> [   82.905134]  ? kthread_park+0x90/0x90
+> [   82.909217]  ret_from_fork+0x35/0x40
+> [   82.913203] Modules linked in: nvme nvme_core xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ip6table_mangle ip6table_nat iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter rfkill sunrpc intel_rapl_msr intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul iTCO_wdt crc32_pclmul dcdbas ghash_clmulni_intel iTCO_vendor_support intel_cstate intel_uncore pcspkr intel_rapl_perf ipmi_ssif ixgbe mei_me mdio tg3 dca mei lpc_ich ipmi_si acpi_power_meter ipmi_devintf ipmi_msghandler ip_tables xfs libcrc32c mgag200 drm_kms_helper drm_vram_helper drm_ttm_helper ttm drm megaraid_sas crc32c_intel i2c_algo_bit wmi
+> [   82.990613] CR2: 00000000000003b0
+> [   82.994307] ---[ end trace 6d1725e8f60fece7 ]---
+> [   83.039157] RIP: 0010:task_numa_work+0x4f/0x2c0
+> [   83.044211] Code: 18 4c 8b 25 e3 f0 8e 01 49 8b 9f 00 08 00 00 4d 8b af c8 00 00 00 49 39 c7 0f 85 e8 01 00 00 48 89 6d 00 41 f6 47 24 04 75 67 <48> 8b ab b0 03 00 00 48 85 ed 75 16 8b 3d 6f 68 94 01 e8 aa fb 04
+> [   83.065165] RSP: 0018:ffffaaa98415be10 EFLAGS: 00010246
+> [   83.070993] RAX: ffff953ee36b8000 RBX: 0000000000000000 RCX: 0000000000000000
+> [   83.078953] RDX: 0000000000000001 RSI: ffff953ee36b8000 RDI: ffff953ee36b8dc8
+> [   83.086913] RBP: ffff953ee36b8dc8 R08: 00000000001200db R09: ffff9542e3ad2e08
+> [   83.094873] R10: ffff9542ecd20070 R11: 0000000000000000 R12: 00000000fffca35b
+> [   83.102833] R13: 000000012a06a949 R14: ffff9542e3ad2c00 R15: ffff953ee36b8000
+> [   83.110793] FS:  0000000000000000(0000) GS:ffff953eefc40000(0000) knlGS:0000000000000000
+> [   83.119821] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   83.126230] CR2: 00000000000003b0 CR3: 000000046bbd0002 CR4: 00000000001606e0
+> [  113.113624] nvme nvme0: I/O 219 QID 19 timeout, aborting
+> [  113.120135] nvme nvme0: Abort status: 0x0
 > 
-> Most of the patch in question is just substituting the code snippet's
-> leading white spaces to tabs. For illustration purposes, if we remove
-> these white space hunks from the diff, it becomes:
+> Steps I did:
 > 
->   --- a/include/linux/seqlock.h
->   +++ b/include/linux/seqlock.h
->   @@ -232,6 +232,8 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
->   + * .. code-block:: c
->   ...
->   + * .. code-block:: c
->   ...
->   - * NOTE: The non-requirement for atomic modifications does _NOT_ include
->   - *       the publishing of new entries in the case where data is a dynamic
->   - *       data structure.
->   + * .. attention::
->   + *
->   + *     The non-requirement for atomic modifications does _NOT_ include
->   + *     the publishing of new entries in the case where data is a dynamic
->   + *     data structure.
->   ...
+>   $ modprobe nvme poll_queues=15
+>   $ fio fio_iou.job
 > 
-> Are you trying to tell me that, good heavens, these directives are
-> really hurting your eyes so much?
-
-Yep, they're a distraction and serve absolutely no purpose. They're also
-utterly moronic, of course it's code and of course it's bloody well C.
-
-> Putting kernel-doc aside... That huge raw_write_seqcount_latch() comment
-> is actually *way more readable from any text editor* after applying this
-> patch. Go figure.
-
-I don't mind the re-indent.
-
-> >>> The correct fix is, as always, to remove the kernel-doc marker.
+> This is the fio_iou.job that I used:
 > 
-> Sorry, that's not the correct fix.
+>   [global]
+>   filename=/dev/nvme0n1
+>   ioengine=io_uring
+>   direct=1
+>   runtime=60
+>   ramp_time=5
+>   gtod_reduce=1
+> 
+>   cpus_allowed=4
+> 
+>   [job1]
+>   rw=randread
+>   bs=4K
+>   iodepth=1
+>   registerfiles
+>   sqthread_poll=1
+>   sqthread_poll_cpu=2
+>   hipri
+> 
+> I'll try to bisect, but I have some suspicions about:
+> b41e98524e42 io_uring: add per-task callback handler
 
-Of course it is, if kerneldoc complains that a perfectly good comment
-is no good, then the fault lies with kerneldoc.
+I confirm, the bisection ended with this:
+b41e98524e424d104aa7851d54fd65820759875a is the first bad commit
 
-It's like checkpatch; assume it is wrong :-)
+I'll try to figure out what happened.
+Stefano
 
-> In the following patches, kernel-doc for the entire seqlock.h API is
-> added. Singling out raw_write_seqcount_latch() doesn't make any sense.
-
-% s/\/\*\*/\/\*/g -- tada!!
-
-> If you look at the top of this patch series, a lot of seqlock.h
-> seqcount_t call sites were badly broken. The 0day kernel test bot sent
-> me even more erroneous call sites due to the added lockdep checks. This
-> is an extra argument for the added documentation: the existing one is
-> horrible.
-
-I've nothing against improving comments, I'm just saying that RST is
-absolute atrocious shite and has nothing to do with good comments.
-
-If sphinx doesn't like "NOTE:' when go teach it.
-
-> So, please, don't claim that the current situation is fine. It is not.
-
-I've never claimed that. My claim is that RST is shite and has no added
-value.
