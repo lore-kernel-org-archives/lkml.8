@@ -2,224 +2,144 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3372C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B93C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F47920776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AEC206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLoQT+V2"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="j2bTZBWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390643AbgEYUtU (ORCPT
+        id S2390674AbgEYUuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 16:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388714AbgEYUtT (ORCPT
+        Mon, 25 May 2020 16:50:14 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64614 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388714AbgEYUuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 16:49:19 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A4BC061A0E;
-        Mon, 25 May 2020 13:49:19 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id 67so8805747ybn.11;
-        Mon, 25 May 2020 13:49:19 -0700 (PDT)
+        Mon, 25 May 2020 16:50:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X2wJfkwbKoafaibyK+N9Ncu/Ynk3DXqdQFTHlcWriCI=;
-        b=DLoQT+V2udFTowJHySdOBw06G/UIsYeLP87d30xgz4hAP0qMlOlBknkyKi7woMm59x
-         +I+r/LdT0/H+xSs4dWDSHY53MDe87qjqdx7N475LOSVb39FUQ60zqwVlF4QeYURRriMw
-         lTvf7XbjTfXP6X5qxhb771G7IZauyztXEchfwysAeOqt5d/hpzuH/zM5uKwNSerEDXjx
-         Mgk/vZurhuzImXDUVqmsGUcIUra9cQKxJ7EY5iKiPPL3sBdBSTXlv4s6VKcfDvS6mvu5
-         aFU/+YmczMahVOFpixeJtUtViIE/gvioCDKzBuHpMUW3+AADYfqOVRBkeeP2/3xdhTu0
-         nNQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X2wJfkwbKoafaibyK+N9Ncu/Ynk3DXqdQFTHlcWriCI=;
-        b=jTg7FUg5YI+6Rg32+tEIijb3qfK7hnJFF+UM6Y2jz6hUGHAtzFfFR+04+5BiIZuN/x
-         DViT1v4d/QIB+1d0xAQom8WjrHKYCfy4QiNMyPt1BfbBFktZ+NaJcWdRNBhRwvVLRfcr
-         l3dfc3x9ZTvGOePTDFRwOPIWai2TbxHU9Chr5+0iDmxjHvu6FZCI89fuj2PXrMgKEvTX
-         eFOgDH4iNUWKWbaf2hV3aAXooCDwHiYFuZRskp9pY4lY8ORArIQ/itu33Ri2E1onLK/J
-         aid/HKNGwFImZrFjH1814E3cKM0pRp/lqZhhVK+CGsem8jE1DziaBkuwORGSWu5eprSX
-         ZipQ==
-X-Gm-Message-State: AOAM531Fs1vbfX5cQI42NynfWpEroI8Tcm7oONXTxyVqylMlcDFEn/3q
-        OrpGwg6zifxhfKAQ1k9crorEsHTtgc9C1vEZLVw=
-X-Google-Smtp-Source: ABdhPJzgpiJqdMUzZN83thhRsUTHOOWHt309UKnrE8jNJgje+Vakr1QMGa452UN65oM+b/Yhru6vCtiKbNu05k8H07M=
-X-Received: by 2002:a25:c08b:: with SMTP id c133mr44862469ybf.286.1590439758754;
- Mon, 25 May 2020 13:49:18 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590439813; x=1621975813;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=6+yyJokQ78NJbMiUjKAlYDUfTFBLR/t7dFlO+vroyaE=;
+  b=j2bTZBWEnJ1me/DfwuPao0vHoaTIXK/Gxqq/fBIaGkFWmMbDrLO/4WwM
+   bEexLzcerp5Pl09F/Gb0hUS7ZUgWn0loi3ZSDjUoSwjDkeH6TqWAl7s72
+   6MdIqgCGaQPplMfnpOA+/opp9rZK8X93nku5nklISl5etOIjGx7LxASvf
+   A=;
+IronPort-SDR: SFyHkaUqvEMZim+hPrSaYSCTPNJtfo5/OG/NYtJuBZdEW8sdnyfDPbhGGngvpb03I5rfR2gCSs
+ BxNt/ig0SgTA==
+X-IronPort-AV: E=Sophos;i="5.73,434,1583193600"; 
+   d="scan'208";a="45832444"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 25 May 2020 20:50:11 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id BB602141722;
+        Mon, 25 May 2020 20:50:08 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 20:50:08 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.253) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 20:49:59 +0000
+Subject: Re: [PATCH v2 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
+ <20200522062946.28973-8-andraprs@amazon.com>
+ <20200522070708.GC771317@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <fa3a72ef-ba0a-ada9-48bf-bd7cef0a8174@amazon.com>
+Date:   Mon, 25 May 2020 23:49:50 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
- <20200513160116.GA2491@localhost.localdomain> <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
- <20200513213230.GE2491@localhost.localdomain> <CABUN9aBoxXjdPk9piKAZV-2dYOCEnuXr-4H5ZVVvqeMMFRsf7A@mail.gmail.com>
- <20200519204229.GQ2491@localhost.localdomain> <CABUN9aD85O3mF8j72QfrC8vbXPzj5Q=L801t2M6XsbDHn+9D1A@mail.gmail.com>
- <CADvbK_fpZWexYckNtmsEatb+JU_EW4=Xn9OpcL=Tk-a8odDHuw@mail.gmail.com>
- <20200525131036.GA2491@localhost.localdomain> <CADvbK_fGCKg1jB86MTJmkPXaLmdDV191vpgfs1YomJ5_0zgONA@mail.gmail.com>
-In-Reply-To: <CADvbK_fGCKg1jB86MTJmkPXaLmdDV191vpgfs1YomJ5_0zgONA@mail.gmail.com>
-From:   Jonas Falkevik <jonas.falkevik@gmail.com>
-Date:   Mon, 25 May 2020 22:49:06 +0200
-Message-ID: <CABUN9aBOvnCQEWyOd8qtPUZxO1SD-Fecstgqygz0Qc76qCq9aA@mail.gmail.com>
-Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED} event
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200522070708.GC771317@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.253]
+X-ClientProxiedBy: EX13D05UWB003.ant.amazon.com (10.43.161.26) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 6:10 PM Xin Long <lucien.xin@gmail.com> wrote:
->
-> On Mon, May 25, 2020 at 9:10 PM Marcelo Ricardo Leitner
-> <marcelo.leitner@gmail.com> wrote:
-> >
-> > On Mon, May 25, 2020 at 04:42:16PM +0800, Xin Long wrote:
-> > > On Sat, May 23, 2020 at 8:04 PM Jonas Falkevik <jonas.falkevik@gmail.com> wrote:
-> > > >
-> > > > On Tue, May 19, 2020 at 10:42 PM Marcelo Ricardo Leitner
-> > > > <marcelo.leitner@gmail.com> wrote:
-> > > > >
-> > > > > On Fri, May 15, 2020 at 10:30:29AM +0200, Jonas Falkevik wrote:
-> > > > > > On Wed, May 13, 2020 at 11:32 PM Marcelo Ricardo Leitner
-> > > > > > <marcelo.leitner@gmail.com> wrote:
-> > > > > > >
-> > > > > > > On Wed, May 13, 2020 at 10:11:05PM +0200, Jonas Falkevik wrote:
-> > > > > > > > On Wed, May 13, 2020 at 6:01 PM Marcelo Ricardo Leitner
-> > > > > > > > <marcelo.leitner@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
-> > > > > > > > > > Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
-> > > > > > > > >
-> > > > > > > > > How did you get them?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > I think one case is when receiving INIT chunk in sctp_sf_do_5_1B_init().
-> > > > > > > > Here a closed association is created, sctp_make_temp_assoc().
-> > > > > > > > Which is later used when calling sctp_process_init().
-> > > > > > > > In sctp_process_init() one of the first things are to call
-> > > > > > > > sctp_assoc_add_peer()
-> > > > > > > > on the closed / temp assoc.
-> > > > > > > >
-> > > > > > > > sctp_assoc_add_peer() are generating the SCTP_ADDR_ADDED event on the socket
-> > > > > > > > for the potentially new association.
-> > > > > > >
-> > > > > > > I see, thanks. The SCTP_FUTURE_ASSOC means something different. It is
-> > > > > > > for setting/getting socket options that will be used for new asocs. In
-> > > > > > > this case, it is just a coincidence that asoc_id is not set (but
-> > > > > > > initialized to 0) and SCTP_FUTURE_ASSOC is also 0.
-> > > > > >
-> > > > > > yes, you are right, I overlooked that.
-> > > > > >
-> > > > > > > Moreso, if I didn't
-> > > > > > > miss anything, it would block valid events, such as those from
-> > > > > > >  sctp_sf_do_5_1D_ce
-> > > > > > >    sctp_process_init
-> > > > > > > because sctp_process_init will only call sctp_assoc_set_id() by its
-> > > > > > > end.
-> > > > > >
-> > > > > > Do we want these events at this stage?
-> > > > > > Since the association is a newly established one, have the peer address changed?
-> > > > > > Should we enqueue these messages with sm commands instead?
-> > > > > > And drop them if we don't have state SCTP_STATE_ESTABLISHED?
-> > > > > >
-> > > > > > >
-> > > > > > > I can't see a good reason for generating any event on temp assocs. So
-> > > > > > > I'm thinking the checks on this patch should be on whether the asoc is
-> > > > > > > a temporary one instead. WDYT?
-> > > > > > >
-> > > > > >
-> > > > > > Agree, we shouldn't rely on coincidence.
-> > > > > > Either check temp instead or the above mentioned state?
-> > > > > >
-> > > > > > > Then, considering the socket is locked, both code points should be
-> > > > > > > allocating the IDR earlier. It's expensive, yes (point being, it could
-> > > > > > > be avoided in case of other failures), but it should be generating
-> > > > > > > events with the right assoc id. Are you interested in pursuing this
-> > > > > > > fix as well?
-> > > > > >
-> > > > > > Sure.
-> > > > > >
-> > > > > > If we check temp status instead, we would need to allocate IDR earlier,
-> > > > > > as you mention. So that we send the notification with correct assoc id.
-> > > > > >
-> > > > > > But shouldn't the SCTP_COMM_UP, for a newly established association, be the
-> > > > > > first notification event sent?
-> > > > > > The SCTP_COMM_UP notification is enqueued later in sctp_sf_do_5_1D_ce().
-> > > > >
-> > > > > The RFC doesn't mention any specific ordering for them, but it would
-> > > > > make sense. Reading the FreeBSD code now (which I consider a reference
-> > > > > implementation), it doesn't raise these notifications from
-> > > > > INIT_ACK/COOKIE_ECHO at all. The only trigger for SCTP_ADDR_ADDED
-> > > > > event is ASCONF ADD command itself. So these are extra in Linux, and
-> > > > > I'm afraid we got to stick with them.
-> > > > >
-> > > > > Considering the error handling it already has, looks like the
-> > > > > reordering is feasible and welcomed. I'm thinking the temp check and
-> > > > > reordering is the best way forward here.
-> > > > >
-> > > > > Thoughts? Neil? Xin? The assoc_id change might be considered an UAPI
-> > > > > breakage.
-> > > >
-> > > > Some order is mentioned in RFC 6458 Chapter 6.1.1.
-> > > >
-> > > >       SCTP_COMM_UP:  A new association is now ready, and data may be
-> > > >          exchanged with this peer.  When an association has been
-> > > >          established successfully, this notification should be the
-> > > >          first one.
-> >
-> > Oh, nice finding.
-> >
-> > > If this is true, as SCTP_COMM_UP event is always followed by state changed
-> > > to ESTABLISHED. So I'm thinking to NOT make addr events by checking the
-> > > state:
-> > >
-> > > @@ -343,6 +343,9 @@ void sctp_ulpevent_nofity_peer_addr_change(struct
-> > > sctp_transport *transport,
-> > >         struct sockaddr_storage addr;
-> > >         struct sctp_ulpevent *event;
-> > >
-> > > +       if (asoc->state < SCTP_STATE_ESTABLISHED)
-> > > +               return;
-> > > +
-> > >         memset(&addr, 0, sizeof(struct sockaddr_storage));
-> > >         memcpy(&addr, &transport->ipaddr, transport->af_specific->sockaddr_len);
-> >
-> > With the above said, yep. Thanks.
-> >
-> > >
-> > > It's not easy to completely do assoc_id change/event reordering/temp check.
-> > > As:
-> >
-> > Temp check should be fine, but agree re the others. Anyhow, the above
-> > will be good already. :-)
-> Hi Jonas,
->
-> What do you think? If you agree, can you please continue to go with it
-> after testing?
->
-> Thanks.
->
-I agree, it looks good. Looks like it will produce results similar to
-the initial change.
-Will test and verify as well.
-Then should I submit v2 of the patch?
+CgpPbiAyMi8wNS8yMDIwIDEwOjA3LCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgTWF5IDIyLCAy
+MDIwIGF0IDA5OjI5OjM1QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gK3N0YXRp
+YyBjaGFyICpuZV9jcHVzOwo+PiArbW9kdWxlX3BhcmFtKG5lX2NwdXMsIGNoYXJwLCAwNjQ0KTsK
+Pj4gK01PRFVMRV9QQVJNX0RFU0MobmVfY3B1cywgIjxjcHUtbGlzdD4gLSBDUFUgcG9vbCB1c2Vk
+IGZvciBOaXRybyBFbmNsYXZlcyIpOwo+IFRoaXMgaXMgbm90IHRoZSAxOTkwJ3MsIGRvbid0IHVz
+ZSBtb2R1bGUgcGFyYW1ldGVycyBpZiB5b3UgY2FuIGhlbHAgaXQuCj4gV2h5IGlzIHRoaXMgbmVl
+ZGVkLCBhbmQgd2hlcmUgaXMgaXQgZG9jdW1lbnRlZD8KClRoaXMgaXMgYSBDUFUgcG9vbCB0aGF0
+IGNhbiBiZSBzZXQgYnkgdGhlIHJvb3QgdXNlciBhbmQgdGhhdCBpbmNsdWRlcyAKQ1BVcyBzZXQg
+YXNpZGUgdG8gYmUgdXNlZCBmb3IgdGhlIGVuY2xhdmUocykgc2V0dXA7IHRoZXNlIENQVXMgYXJl
+IApvZmZsaW5lZC4gRnJvbSB0aGlzIENQVSBwb29sLCB0aGUga2VybmVsIGxvZ2ljIGNob29zZXMg
+dGhlIENQVXMgdGhhdCBhcmUgCnNldCBmb3IgdGhlIGNyZWF0ZWQgZW5jbGF2ZShzKS4KClRoZSBj
+cHUtbGlzdCBmb3JtYXQgaXMgbWF0Y2hpbmcgdGhlIHNhbWUgdGhhdCBpcyBkb2N1bWVudGVkIGhl
+cmU6CgpodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xhdGVzdC9hZG1pbi1ndWlkZS9r
+ZXJuZWwtcGFyYW1ldGVycy5odG1sCgpJJ3ZlIGFsc28gdGhvdWdodCBvZiBoYXZpbmcgYSBzeXNm
+cyBlbnRyeSBmb3IgdGhlIHNldHVwIG9mIHRoaXMgZW5jbGF2ZSAKQ1BVIHBvb2wuCgo+Cj4+ICsv
+KiBDUFUgcG9vbCB1c2VkIGZvciBOaXRybyBFbmNsYXZlcy4gKi8KPj4gK3N0cnVjdCBuZV9jcHVf
+cG9vbCB7Cj4+ICsJLyogQXZhaWxhYmxlIENQVXMgaW4gdGhlIHBvb2wuICovCj4+ICsJY3B1bWFz
+a192YXJfdCBhdmFpbDsKPj4gKwlzdHJ1Y3QgbXV0ZXggbXV0ZXg7Cj4+ICt9Owo+PiArCj4+ICtz
+dGF0aWMgc3RydWN0IG5lX2NwdV9wb29sIG5lX2NwdV9wb29sOwo+PiArCj4+ICtzdGF0aWMgaW50
+IG5lX29wZW4oc3RydWN0IGlub2RlICpub2RlLCBzdHJ1Y3QgZmlsZSAqZmlsZSkKPj4gK3sKPj4g
+KwlyZXR1cm4gMDsKPj4gK30KPiBJZiBvcGVuIGRvZXMgbm90aGluZywganVzdCBkb24ndCBldmVu
+IHByb3ZpZGUgaXQuCgpJIHJlbW92ZWQgdGhpcyBhbmQgb3RoZXIgZmlsZSBvcHMgb2NjdXJyZW5j
+ZXMgdGhhdCBkbyBub3RoaW5nIGZvciBub3cuCgo+Cj4+ICsKPj4gK3N0YXRpYyBsb25nIG5lX2lv
+Y3RsKHN0cnVjdCBmaWxlICpmaWxlLCB1bnNpZ25lZCBpbnQgY21kLCB1bnNpZ25lZCBsb25nIGFy
+ZykKPj4gK3sKPj4gKwlzd2l0Y2ggKGNtZCkgewo+PiArCj4+ICsJZGVmYXVsdDoKPj4gKwkJcmV0
+dXJuIC1FTk9UVFk7Cj4+ICsJfQo+PiArCj4+ICsJcmV0dXJuIDA7Cj4+ICt9Cj4gU2FtZSBmb3Ig
+aW9jdGwuCgpUaGlzIGxvZ2ljIGlzIGNvbXBsZXRlZCBpbiB0aGUgbmV4dCBwYXRjaCBpbiB0aGUg
+c2VyaWVzLgoKPgo+PiArCj4+ICtzdGF0aWMgaW50IG5lX3JlbGVhc2Uoc3RydWN0IGlub2RlICpp
+bm9kZSwgc3RydWN0IGZpbGUgKmZpbGUpCj4+ICt7Cj4+ICsJcmV0dXJuIDA7Cj4+ICt9Cj4gU2Ft
+ZSBmb3IgcmVsZWFzZS4KCkRvbmUsIEkgcmVtb3ZlZCBpdCBmb3Igbm93LgoKPgo+PiArCj4+ICtz
+dGF0aWMgY29uc3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyBuZV9mb3BzID0gewo+PiArCS5vd25l
+cgkJPSBUSElTX01PRFVMRSwKPj4gKwkubGxzZWVrCQk9IG5vb3BfbGxzZWVrLAo+PiArCS51bmxv
+Y2tlZF9pb2N0bAk9IG5lX2lvY3RsLAo+PiArCS5vcGVuCQk9IG5lX29wZW4sCj4+ICsJLnJlbGVh
+c2UJPSBuZV9yZWxlYXNlLAo+PiArfTsKPj4gKwo+PiArc3RydWN0IG1pc2NkZXZpY2UgbmVfbWlz
+Y2RldmljZSA9IHsKPj4gKwkubWlub3IJPSBNSVNDX0RZTkFNSUNfTUlOT1IsCj4+ICsJLm5hbWUJ
+PSBORV9ERVZfTkFNRSwKPj4gKwkuZm9wcwk9ICZuZV9mb3BzLAo+PiArCS5tb2RlCT0gMDY2MCwK
+Pj4gK307Cj4+ICsKPj4gK3N0YXRpYyBpbnQgX19pbml0IG5lX2luaXQodm9pZCkKPj4gK3sKPj4g
+Kwl1bnNpZ25lZCBpbnQgY3B1ID0gMDsKPj4gKwl1bnNpZ25lZCBpbnQgY3B1X3NpYmxpbmcgPSAw
+Owo+PiArCWludCByYyA9IC1FSU5WQUw7Cj4+ICsKPj4gKwltZW1zZXQoJm5lX2NwdV9wb29sLCAw
+LCBzaXplb2YobmVfY3B1X3Bvb2wpKTsKPiBXaHkgZGlkIHlvdSBqdXN0IHNldCBhIHN0cnVjdHVy
+ZSB0byAwIHRoYXQgd2FzIGFscmVhZHkgaW5pdGlhbGl6ZWQgYnkKPiB0aGUgc3lzdGVtIHRvIDA/
+ICBBcmUgeW91IHN1cmUgYWJvdXQgdGhpcz8KClRydWUsIHRoaXMgaXMgbm90IG5lZWRlZC4gUmVt
+b3ZlZCB0aGUgbWVtc2V0KCkgY2FsbC4KCj4KPj4gKwo+PiArCWlmICghemFsbG9jX2NwdW1hc2tf
+dmFyKCZuZV9jcHVfcG9vbC5hdmFpbCwgR0ZQX0tFUk5FTCkpCj4+ICsJCXJldHVybiAtRU5PTUVN
+Owo+PiArCj4+ICsJbXV0ZXhfaW5pdCgmbmVfY3B1X3Bvb2wubXV0ZXgpOwo+PiArCj4+ICsJcmMg
+PSBjcHVsaXN0X3BhcnNlKG5lX2NwdXMsIG5lX2NwdV9wb29sLmF2YWlsKTsKPj4gKwlpZiAocmMg
+PCAwKSB7Cj4+ICsJCXByX2Vycl9yYXRlbGltaXRlZChORSAiRXJyb3IgaW4gY3B1bGlzdCBwYXJz
+ZSBbcmM9JWRdXG4iLCByYyk7Cj4gQWdhaW4sIGRyb3AgYWxsIHJhdGVsaW1pdGVkIHN0dWZmIHBs
+ZWFzZS4KClVwZGF0ZWQgdG8gcHJfZXJyKCkuCgpUaGFuayB5b3UuCgpBbmRyYQoKCgpBbWF6b24g
+RGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBvZmZpY2U6IDI3
+QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENvdW50eSwgNzAw
+MDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIg
+SjIyLzI2MjEvMjAwNS4K
 
-While at it, I have a patch renaming nofity to notify in the function
-sctp_ulpevent_nofity_peer_addr_change.
-Did I misunderstand the name or is it a typo? Worth submitting as well?
-
-Thanks,
-Jonas
