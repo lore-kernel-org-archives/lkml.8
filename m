@@ -2,134 +2,114 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA351C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999F6207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABE3206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590429855;
+	bh=XgHlHnjCGUNTBTmrn5NBPKNl/rr2R/fQ/zB+IqMDgS4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=EBK1LbXIdNw6YqhjLff05odjF7M4v+f4NsXH83Cv3VbZ62q3W7GUPkfuEXm9xWZFj
+	 tfSdKYB5uisMh7s8XP7WSAE8phwVXwQZA5PVaITYyjwV+FeKiyO3bfPxuoclnlc7tD
+	 j2VhvC2y7mcWCAdAiGDLKHZUzFwpFseOtnjoNIw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389190AbgEYSBu (ORCPT
+        id S2389601AbgEYSEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 14:01:50 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:59246 "EHLO smtp.al2klimov.de"
+        Mon, 25 May 2020 14:04:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388621AbgEYSBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 14:01:50 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 359C145414;
-        Mon, 25 May 2020 18:01:46 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: documentation
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200520200037.88705-1-grandmaster@al2klimov.de>
- <20200525102825.63d72ed2@lwn.net>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <0b3b5ae5-457a-b550-63a8-08a77bb862d7@al2klimov.de>
-Date:   Mon, 25 May 2020 20:01:45 +0200
+        id S2388621AbgEYSEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 14:04:14 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32035207DA;
+        Mon, 25 May 2020 18:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590429854;
+        bh=XgHlHnjCGUNTBTmrn5NBPKNl/rr2R/fQ/zB+IqMDgS4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fSJWlSwRmK/t4Wnfucbt3AIiTph7ZdShkIc+/oaSDZlUJUVgzQiB2HeaucFbT1dYx
+         dglgOyqFUIwqg0pYmEy+0eUhetu/u8D3scJj0XldNPovquwRiiLwKPLXL/iIryCbQ1
+         xFc9nxh2Z1EuY9sj5PO7lhOTmA8xZW050u8A8VKE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 18CA13522846; Mon, 25 May 2020 11:04:14 -0700 (PDT)
+Date:   Mon, 25 May 2020 11:04:14 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/2] rcuperf: Remove useless while loops around wait_event
+Message-ID: <20200525180414.GA2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200525043648.152547-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200525102825.63d72ed2@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525043648.152547-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 25.05.20 um 18:28 schrieb Jonathan Corbet:
-> On Wed, 20 May 2020 22:00:37 +0200
-> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+On Mon, May 25, 2020 at 12:36:47AM -0400, Joel Fernandes (Google) wrote:
+> wait_event() already retries if the condition for the wake up is not
+> satisifed after wake up. Remove them from the rcuperf test.
 > 
->> Rationale: Reduces attack surface on kernel devs for MITM.
->>
->> Deterministic algorithm:
->> For each file:
->>    For each line:
->>      If doesn't contain `\bxmlns\b`:
->>        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>          If both the HTTP and HTTPS versions
->>          return 200 OK and serve the same content:
->>            Replace HTTP with HTTPS.
->> ---
->>   Documentation/COPYING-logo                       |  2 +-
->>   Documentation/admin-guide/LSM/tomoyo.rst         | 16 ++++++++--------
->>   .../admin-guide/acpi/initrd_table_override.rst   |  2 +-
->>   Documentation/admin-guide/bcache.rst             |  4 ++--
->>   Documentation/admin-guide/devices.rst            |  2 +-
->>   Documentation/admin-guide/initrd.rst             |  2 +-
->>   Documentation/admin-guide/md.rst                 |  2 +-
->>   Documentation/admin-guide/mono.rst               |  4 ++--
->>   Documentation/admin-guide/reporting-bugs.rst     |  2 +-
->>   Documentation/admin-guide/unicode.rst            |  4 ++--
->>   Documentation/conf.py                            |  2 +-
->>   Documentation/dev-tools/gdb-kernel-debugging.rst |  2 +-
->>   Documentation/doc-guide/parse-headers.rst        |  2 +-
->>   .../driver-api/acpi/linuxized-acpica.rst         |  6 +++---
->>   Documentation/driver-api/usb/bulk-streams.rst    |  4 ++--
->>   .../driver-api/usb/writing_musb_glue_layer.rst   |  6 +++---
->>   Documentation/filesystems/path-lookup.txt        |  2 +-
->>   Documentation/filesystems/seq_file.txt           |  4 ++--
->>   Documentation/misc-devices/c2port.txt            |  6 +++---
->>   Documentation/process/3.Early-stage.rst          |  2 +-
->>   Documentation/process/7.AdvancedTopics.rst       |  8 ++++----
->>   Documentation/process/8.Conclusion.rst           | 14 +++++++-------
->>   Documentation/process/adding-syscalls.rst        |  4 ++--
->>   Documentation/process/applying-patches.rst       |  4 ++--
->>   .../process/volatile-considered-harmful.rst      |  4 ++--
->>   Documentation/rbtree.txt                         |  4 ++--
->>   Documentation/security/SCTP.rst                  |  2 +-
->>   Documentation/sphinx/kfigure.py                  |  6 +++---
->>   Documentation/static-keys.txt                    |  2 +-
->>   Documentation/trace/events-msr.rst               |  2 +-
->>   Documentation/trace/mmiotrace.rst                |  2 +-
->>   Documentation/vm/ksm.rst                         |  2 +-
->>   Documentation/xz.txt                             |  6 +++---
->>   scripts/kernel-doc                               |  2 +-
->>   34 files changed, 69 insertions(+), 69 deletions(-)
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+Queued the series, thank you, Joel!
+
+							Thanx, Paul
+
+> ---
+>  kernel/rcu/rcuperf.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
 > 
-> OK, so this is still pretty large; I had asked you to narrow things
-> further.  And the rationale is still pretty thin.  And I would *really*
-> rather see the docs updated in a more thoughtful way that considers the
-> value of the links rather than just the protocol used.
-OK, I'll keep that size rating in mind.
-
-Also I'll try to reason a bit verbosely. (Not my skill #1, sorry.)
-
-I have already one more enhancement idea, but I'd like not to have > 1 
-open kernel construction areas of mine in parallel (to reduce merge 
-conflicts).
-
-> 
-> But this does not seem to do harm at this point, so I have gone ahead and
-> applied it.
-What does this mean? Is there a kernel.org repo/branch with my patch?
-
-> 
-> If you proceed with this work, I'd encourage you to be narrow in your
-> focus, be sure to copy the right people, and to justify the changes well,
-> or you may well run into pushback.
-I try my best while CCing, but some mailing lists seem to have 
-(silently!) rejected my patch (see discussion on a previous version of 
-my patch).
-
-Does it matter whether I just feed the output of ...
-
-perl scripts/get_maintainer.pl --separator , --norolestats 
-0001-Replace-HTTP-links-with-HTTPS-ones-documentation.patch
-
-... into Git send-email To: prompt or actually CC: (not To:) mailing lists?
-
-> 
-> Thanks,
-> 
-> jon
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index 16dd1e6b7c09f..246da8fe199e8 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -576,11 +576,8 @@ static int compute_real(int n)
+>  static int
+>  rcu_perf_shutdown(void *arg)
+>  {
+> -	do {
+> -		wait_event(shutdown_wq,
+> -			   atomic_read(&n_rcu_perf_writer_finished) >=
+> -			   nrealwriters);
+> -	} while (atomic_read(&n_rcu_perf_writer_finished) < nrealwriters);
+> +	wait_event(shutdown_wq,
+> +		   atomic_read(&n_rcu_perf_writer_finished) >= nrealwriters);
+>  	smp_mb(); /* Wake before output. */
+>  	rcu_perf_cleanup();
+>  	kernel_power_off();
+> @@ -693,11 +690,8 @@ kfree_perf_cleanup(void)
+>  static int
+>  kfree_perf_shutdown(void *arg)
+>  {
+> -	do {
+> -		wait_event(shutdown_wq,
+> -			   atomic_read(&n_kfree_perf_thread_ended) >=
+> -			   kfree_nrealthreads);
+> -	} while (atomic_read(&n_kfree_perf_thread_ended) < kfree_nrealthreads);
+> +	wait_event(shutdown_wq,
+> +		   atomic_read(&n_kfree_perf_thread_ended) >= kfree_nrealthreads);
+>  
+>  	smp_mb(); /* Wake before output. */
+>  
+> -- 
+> 2.27.0.rc0.183.gde8f92d652-goog
 > 
