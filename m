@@ -2,86 +2,119 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30947C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6232DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062012068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF22068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PyTo25j1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G1bvHWQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgEYIUY (ORCPT
+        id S1731390AbgEYIUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:20:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48542 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgEYIUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:20:20 -0400
-Received: from zn.tnic (p200300ec2f06f30089d08c3691e46ece.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:f300:89d0:8c36:91e4:6ece])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 512DE1EC0116;
-        Mon, 25 May 2020 10:20:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590394819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=omRLYnyE9Ggja9M7/4gjPm4celUM+0shYhwKnAB0XUk=;
-        b=PyTo25j1KlkLw73HQWaVMKI6LnA2AOipXZqxoInK68eV9tl44jIgafJgAgy408JDdFzMiA
-        eMdVN7u7uSTX3ky65sWXX9b1fOPYDPo9nMHhxarcgPslp3TecVAYEpbJg8lv+mIt/3R7DN
-        adTtk/ZQmrIAjn1hD5NHANxI3oJmqEg=
-Date:   Mon, 25 May 2020 10:20:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 04/20] x86/sgx: Add SGX microarchitectural data
- structures
-Message-ID: <20200525082013.GC25636@zn.tnic>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-5-jarkko.sakkinen@linux.intel.com>
- <20200520184745.GJ1457@zn.tnic>
- <20200522155405.GA8377@linux.intel.com>
- <20200522161326.GC25128@linux.intel.com>
- <20200522195017.GA121470@linux.intel.com>
+        Mon, 25 May 2020 04:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgEYIUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 04:20:43 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DC6C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:20:42 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id j145so15437087oib.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Azh7Qf5VqGk1C5GHmcLCjaOZm5RvD53r5M4Q66y5N4E=;
+        b=G1bvHWQvaSzoekxw3mZ7s4c83ovTLXsKLzv3enF9zYsC9+tgS2i9AW2iOGqlowFhri
+         k3mmhKEAGjbvtDNLBBW/BRGvs2DlJTdM/dD0lpKbvlHbUxo79Kxm+tn9tsp4R6wT9i1m
+         Sfa1KVv6reJKwKFn9um4GzRQps/Atzo6MTEzmzLE8GDBznrbiP/L4IyPmL7OOVDrFUcI
+         P9KG7fskRERGdWqROan1hpxepyqr/pEh1t37fif2YcbKYS4aFtmWkEmjcyNRHsjLxPg+
+         S8QumjJdluVOXzH+A7bUuxxUdRKmjJQaKv/KzyH7owfz3PuF4U9wT+0u4+YSwupJ3ZTJ
+         eS2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Azh7Qf5VqGk1C5GHmcLCjaOZm5RvD53r5M4Q66y5N4E=;
+        b=L69eXWOaM0evB7Yc8y9TPzFuqqgMCrV+2F1GU6+PHmsU6YOuRuVf5F3T/USU5EQnFH
+         3JCEu0S++l0iXTDwDO2KwcQbluBZM6/F6u0CZPFHUc6GTQDC4w/flbxBgjbIOAPeetL+
+         SPlS30O4wsDj7DE+sLEE3LQ81499tR8dPNuXN4uOMxGHpdxglLd1kKVwFhQrHuP6AuTI
+         WF4kfS603Ck23tB1gPdiM8m9UgCPx4GVaCWaJlByRAlmDyQ4Vr4evbp/kUfW8rapOn6x
+         AU8zyGadJ5dKN0eH83SuwTzps0Z8iqmV01SYsSky3HFdsDgUn4pwaXKyKCNxNrba8jbO
+         52kw==
+X-Gm-Message-State: AOAM533TEw3/jXpJf37lrMh2vWpPRZ2VyqsMoKifj+ybjbTgjJPhTuOv
+        c0i/mQMmGmUecnzea8jJIvxAaow5YyakU7Dnf7N1WA==
+X-Google-Smtp-Source: ABdhPJzPfGvkXoAEO6zWx5fGwS/RRPJEryJvMFIXf0ksHObwHtbFS1z8Vgxvdql1XeVzo3PZPlnI/SPaIp2bNYA9MjI=
+X-Received: by 2002:aca:d0d:: with SMTP id 13mr2336227oin.172.1590394841810;
+ Mon, 25 May 2020 01:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200522195017.GA121470@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200522033119.1bbd99c5@canb.auug.org.au> <20200521173520.GL6608@willie-the-truck>
+ <20200522171708.5f392fde@canb.auug.org.au> <20200522174944.1a1732fa@canb.auug.org.au>
+ <20200523001223.GA23921@paulmck-ThinkPad-P72> <20200523064643.GA27431@zn.tnic>
+ <87a71zq8ml.fsf@nanos.tec.linutronix.de> <20200523150614.GP2869@paulmck-ThinkPad-P72>
+ <871rnaqxor.fsf@nanos.tec.linutronix.de> <20200523212345.GR2869@paulmck-ThinkPad-P72>
+ <20200525003706.GA13789@paulmck-ThinkPad-P72>
+In-Reply-To: <20200525003706.GA13789@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 25 May 2020 10:20:29 +0200
+Message-ID: <CANpmjNMjvJqVFiY+xSUK=oePP9TsDzZHVh6XKM77ar5fh_fdFQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:50:17PM +0300, Jarkko Sakkinen wrote:
-> If other values except two are never going to be used it is more than a
-> legit point to validate this field.
-> 
-> It also the potential to use ~0x8086 bits to be defined later if ever
-> needed lets say for some kernel specific purpose.
+On Mon, 25 May 2020 at 02:37, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Sat, May 23, 2020 at 02:23:45PM -0700, Paul E. McKenney wrote:
+> > On Sat, May 23, 2020 at 09:05:24PM +0200, Thomas Gleixner wrote:
+> > > "Paul E. McKenney" <paulmck@kernel.org> writes:
+> > > > On Sat, May 23, 2020 at 11:54:26AM +0200, Thomas Gleixner wrote:
+> > > >> core/rcu is the one which diverged and caused the merge conflict with
+> > > >> PPC to happen twice. So Paul needs to remove the stale core/rcu bits and
+> > > >> rebase on the current version (which is not going to change again).
+> > > >
+> > > > So there will be another noinstr-rcu-* tag, and I will rebase on top
+> > > > of that, correct?  If so, fair enough!
+> > >
+> > > Here you go: noinstr-rcu-220-05-23
+> > >
+> > > I wanted this to be 2020 and not 220 but I noticed after pushing it
+> > > out. I guess it still does the job :)
+> >
+> > Now -that- is what I call an old-school tag name!!!  ;-)
+> >
+> > I remerged, rebased, and pushed to -rcu branch "dev".
+> >
+> > If it survives testing, I will reset -rcu branch "rcu/next" as well.
+>
+> And passed!  The compile times are back to their old selves on my
+> laptop as well.
+>
+> Thank you for setting this up, Thomas!!!
 
-Yah, let's cover our ass for the future. We have all seen the "this
-won't be used" but then "we're using it" change of heart. IOW, let's
-align with what the hw checks and we can always relax that in the future
-but not the other way around.
+I just noticed that -rcu and -tip both still have their own version of
+"ubsan, kcsan: Don't combine sanitizer with kcov on clang". For there
+to not be any conflicts in -next, "ubsan, kcsan: Don't combine
+sanitizer with kcov on clang" could be dropped from -rcu.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+-- Marco
