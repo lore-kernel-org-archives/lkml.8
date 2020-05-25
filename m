@@ -2,297 +2,100 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC55DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30578C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9731F206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0ADB20899
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590401288;
-	bh=LYTWl4TrlGylIRalFsrDUx0A/NrT0unSPfBfFVDv/Bc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HvvoJ5TPWxnY0aGaJWl1pu/xHLZJ334YHeVOFYRAVL+ToP4NM1Z+Jj50htUQ7+DBG
-	 pV2Fp9dnpBZ187t/15JG+X9L9x4EqApOT0ocaEnQbJ6YhATA+wFyWIsTq60xxUkngk
-	 fTpgu7OwOjRKWamEYQkNttbZfeFPitcysLgGfsq0=
+	s=default; t=1590401311;
+	bh=J6set5wG6yYzEZqJStlskj0Qhfj8D7QFCDFSbGIGd/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A8Ghcqspts5nzMyTlqcGbX+p69eBRPZ+vlwasYBACFLO5G752N6exjzZMDyqxuu60
+	 XCJ8QYx3Wdy60pi1DXLHGmw0Pvvm4UN+QZITBAF8CY+8m1FcHSGVFk+lTmFTHKPSck
+	 9d5UBYG4F0QP3qXalTodZuy/PRuZi73JJlPzi7wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389532AbgEYKII convert rfc822-to-8bit (ORCPT
+        id S2389656AbgEYKIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:08:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32779 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389337AbgEYKIH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:08:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id v17so13515461ote.0;
-        Mon, 25 May 2020 03:08:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bs8SY7K+8kAbWexYTPELQF/AeX+ik4rZbO2DNGcsIM8=;
-        b=O7aFSnOzP7vEUWoEihmnlgN4SCxd/rOC8RqzmbJggomCCdvycO5hwVhUJvsgIhtHjT
-         f7Ve/46mEt/WxlE4fueHEEfdZoVsV7bmB4pTGQjJGoXlbaAkpKhaLTkADGLnxHB9j3gV
-         0Bz2XaJNJQI9syXlP8AHU3sGDWoVADwBOzaBnx3LXUTJhdQRQGiDEt0hmSBVBRTzOoFy
-         roMB1anAK5botPR3T607cTEMwZ1BUcKpnBGX78Y28xqFqLCbawqARpgOijGqEJY7CvzV
-         w/Km8zfb/N0g5kv9rtgV5oAwujWQrYfwvJLTuz0HorUpDhuNAIALMjIbEg/zehvZG3B9
-         wffQ==
-X-Gm-Message-State: AOAM530n7EMFr526f2fqitb/0B62lkrzZO8D3JeZqPPrbHllsFnT3TNN
-        4P+etpgI/Tqgpsbv/8/h+bsHvOl85q1U8KPVPx9voA==
-X-Google-Smtp-Source: ABdhPJxJbD0MPRC2BDp/QCMf+BfHXnYNLuLxLR1QuVtwVFXXDyVUmOEQqsEX+89XiBMZ6VcZS3rtVjODE1Zccd8weLs=
-X-Received: by 2002:a9d:4713:: with SMTP id a19mr1290811otf.167.1590401285696;
- Mon, 25 May 2020 03:08:05 -0700 (PDT)
+        Mon, 25 May 2020 06:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389337AbgEYKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:08:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14163206D5;
+        Mon, 25 May 2020 10:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590401309;
+        bh=J6set5wG6yYzEZqJStlskj0Qhfj8D7QFCDFSbGIGd/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1hIaZZg9rgTUjy0zKc8HquIfWBmWIniT3wWGWP4sqdOXUS5HD0iWvDkCFB+Uoxflf
+         4vwo6Aw7lKGr0zvf08ixEj2YjX2torC0cej5UuMG9zyX2AVAaxrEggq3Vpa1sfRgJv
+         ke+G54WgvzycCpksvRGtmhxjjG/jnnKeHe/BdNMM=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jdA1z-00F7tY-Dv; Mon, 25 May 2020 11:08:27 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Anup Patel <anup@brainfault.org>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH v2 0/3] More improvements for multiple PLICs
+Date:   Mon, 25 May 2020 11:08:02 +0100
+Message-Id: <159040126938.385862.7378207521947822453.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518091441.94843-1-anup.patel@wdc.com>
+References: <20200518091441.94843-1-anup.patel@wdc.com>
 MIME-Version: 1.0
-References: <20200521203015.959915-1-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20200521203015.959915-1-srinivas.pandruvada@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 25 May 2020 12:07:48 +0200
-Message-ID: <CAJZ5v0i7bQDVZT4k==v=BKJOaXmxH3DBaP5GgSYpmwB8X8mo3g@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI / DPTF: Add additional attributes to power
- participant driver
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: paul.walmsley@sifive.com, anup.patel@wdc.com, tglx@linutronix.de, palmer@dabbelt.com, jason@lakedaemon.net, anup@brainfault.org, Alistair.Francis@wdc.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:30 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> Add two additional attributes to the existing power participant driver:
-> rest_of_platform_power_mw: (RO) Shows the rest of worst case platform
-> power in mW outside of S0C. This will help in power distribution to SoC
-> and rest of the system. For example on a test system, this value is 2.5W
-> with a 15W TDP SoC. Based on the adapter rating (adapter_rating_mw), user
-> space software can decide on proper power allocation to SoC to improve
-> short term performance via powercap/RAPL interface.
->
-> prochot_confirm: (WO) Confirm EC about a prochot notification.
->
-> Also userspace is notified via sysfs_notify(), whenever power source or
-> rest of the platform power is changed. So user space can use poll()
-> system call on those attributes.
->
-> The ACPI methods used in this patch are as follows:
->
-> PROP
-> This object evaluates to the rest of worst case platform power in mW.
-> Bits:
-> 23:0 Worst case rest of platform power in mW.
->
-> PBOK
-> PBOK is a method designed to provide a mechanism for OSPM to change power
-> setting before EC can de-assert a PROCHOT from a device. The EC may
-> receive several PROCHOTs, so it has a sequence number attached to PSRC
-> (read via existing attribute "platform_power_source"). Once OSPM takes
-> action for a PSRC change notification, it can call PBOK method to confirm
-> with the sequence number.
-> Bits:
-> 3:0 Power Delivery State Change Sequence number
-> 30  Reserved
-> 31  0 – Not OK to de-assert PROCHOT
->     1 – OK to de-assert PROCHOT
->
-> PSRC (Platform Power Source): Not new in this patch but for
-> documentation for new bits
-> This object evaluates to an integer that represents the system power
-> source as well as the power delivery state change sequence number.
-> Bits:
-> 3:0 The current power source as an integer for AC, DC, USB, Wireless.
-> 0 = DC, 1 = AC, 2 = USB, 3 = Wireless Charging
-> 7:4 Power Delivery State Change Sequence Number. Default value is 0
->
-> Notifications:
-> 0x81: (Power State Change) Used to notify when the power source has
-> changed.
-> 0x84: (PROP change) Used to notify when the platform rest of power has
-> changed.
->
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v2
->  Change rest_of_platform_power_mw explanation.
->
->  Documentation/ABI/testing/sysfs-platform-dptf | 24 +++++--
->  drivers/acpi/dptf/dptf_power.c                | 69 ++++++++++++++++++-
->  2 files changed, 88 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
-> index 325dc0667dbb..e83a9d208849 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dptf
-> +++ b/Documentation/ABI/testing/sysfs-platform-dptf
-> @@ -27,10 +27,12 @@ KernelVersion:      v4.10
->  Contact:       linux-acpi@vger.kernel.org
->  Description:
->                 (RO) Display the platform power source
-> -               0x00 = DC
-> -               0x01 = AC
-> -               0x02 = USB
-> -               0x03 = Wireless Charger
-> +               bits[3:0] Current power source
-> +                       0x00 = DC
-> +                       0x01 = AC
-> +                       0x02 = USB
-> +                       0x03 = Wireless Charger
-> +               bits[7:4] Power source sequence number
->
->  What:          /sys/bus/platform/devices/INT3407:00/dptf_power/battery_steady_power
->  Date:          Jul, 2016
-> @@ -38,3 +40,17 @@ KernelVersion:       v4.10
->  Contact:       linux-acpi@vger.kernel.org
->  Description:
->                 (RO) The maximum sustained power for battery in milliwatts.
-> +
-> +What:          /sys/bus/platform/devices/INT3407:00/dptf_power/rest_of_platform_power_mw
-> +Date:          June, 2020
-> +KernelVersion: v5.8
-> +Contact:       linux-acpi@vger.kernel.org
-> +Description:
-> +               (RO) Shows the rest of worst case platform power outside of SoC.
-> +
-> +What:          /sys/bus/platform/devices/INT3407:00/dptf_power/prochot_confirm
-> +Date:          June, 2020
-> +KernelVersion: v5.8
-> +Contact:       linux-acpi@vger.kernel.org
-> +Description:
-> +               (WO) Confirm embedded controller about a prochot notification.
-> diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-> index e4e8b75d39f0..abe99039af74 100644
-> --- a/drivers/acpi/dptf/dptf_power.c
-> +++ b/drivers/acpi/dptf/dptf_power.c
-> @@ -16,6 +16,7 @@
->   * ARTG : Adapter rating
->   * CTYP : Charger type
->   * PBSS : Battery steady power
-> + * PROP : Rest of worst case platform Power
->   */
->  #define DPTF_POWER_SHOW(name, object) \
->  static ssize_t name##_show(struct device *dev,\
-> @@ -39,12 +40,34 @@ DPTF_POWER_SHOW(platform_power_source, PSRC)
->  DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
->  DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
->  DPTF_POWER_SHOW(charger_type, CTYP)
-> +DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
->
->  static DEVICE_ATTR_RO(max_platform_power_mw);
->  static DEVICE_ATTR_RO(platform_power_source);
->  static DEVICE_ATTR_RO(adapter_rating_mw);
->  static DEVICE_ATTR_RO(battery_steady_power_mw);
->  static DEVICE_ATTR_RO(charger_type);
-> +static DEVICE_ATTR_RO(rest_of_platform_power_mw);
-> +
-> +static ssize_t prochot_confirm_store(struct device *dev,
-> +                                    struct device_attribute *attr,
-> +                                    const char *buf, size_t count)
-> +{
-> +       struct acpi_device *acpi_dev = dev_get_drvdata(dev);
-> +       acpi_status status;
-> +       int seq_no;
-> +
-> +       if (kstrtouint(buf, 0, &seq_no) < 0)
-> +               return -EINVAL;
-> +
-> +       status = acpi_execute_simple_method(acpi_dev->handle, "PBOK", seq_no);
-> +       if (ACPI_SUCCESS(status))
-> +               return count;
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +static DEVICE_ATTR_WO(prochot_confirm);
->
->  static struct attribute *dptf_power_attrs[] = {
->         &dev_attr_max_platform_power_mw.attr,
-> @@ -52,6 +75,8 @@ static struct attribute *dptf_power_attrs[] = {
->         &dev_attr_adapter_rating_mw.attr,
->         &dev_attr_battery_steady_power_mw.attr,
->         &dev_attr_charger_type.attr,
-> +       &dev_attr_rest_of_platform_power_mw.attr,
-> +       &dev_attr_prochot_confirm.attr,
->         NULL
->  };
->
-> @@ -60,6 +85,33 @@ static const struct attribute_group dptf_power_attribute_group = {
->         .name = "dptf_power"
->  };
->
-> +#define POWER_STATE_CHANGED            0x81
-> +#define POWER_PROP_CHANGE_EVENT        0x84
-> +
-> +static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
-> +{
-> +       struct platform_device *pdev = data;
-> +       char *attr;
-> +
-> +       switch (event) {
-> +       case POWER_STATE_CHANGED:
-> +               attr = "platform_power_source";
-> +               break;
-> +       case POWER_PROP_CHANGE_EVENT:
-> +               attr = "rest_of_platform_power_mw";
-> +               break;
-> +       default:
-> +               dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
-> +               return;
-> +       }
-> +
-> +       /*
-> +        * Notify that an attribute is changed, so that user space can read
-> +        * again.
-> +        */
-> +       sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
-> +}
-> +
->  static int dptf_power_add(struct platform_device *pdev)
->  {
->         struct acpi_device *acpi_dev;
-> @@ -78,10 +130,21 @@ static int dptf_power_add(struct platform_device *pdev)
->         if (ptype != 0x11)
->                 return -ENODEV;
->
-> +       result = acpi_install_notify_handler(acpi_dev->handle,
-> +                                            ACPI_DEVICE_NOTIFY,
-> +                                            dptf_power_notify,
-> +                                            (void *)pdev);
-> +       if (result)
-> +               return result;
-> +
->         result = sysfs_create_group(&pdev->dev.kobj,
->                                     &dptf_power_attribute_group);
-> -       if (result)
-> +       if (result) {
-> +               acpi_remove_notify_handler(acpi_dev->handle,
-> +                                          ACPI_DEVICE_NOTIFY,
-> +                                          dptf_power_notify);
->                 return result;
-> +       }
->
->         platform_set_drvdata(pdev, acpi_dev);
->
-> @@ -90,7 +153,11 @@ static int dptf_power_add(struct platform_device *pdev)
->
->  static int dptf_power_remove(struct platform_device *pdev)
->  {
-> +       struct acpi_device *acpi_dev = platform_get_drvdata(pdev);
->
-> +       acpi_remove_notify_handler(acpi_dev->handle,
-> +                                  ACPI_DEVICE_NOTIFY,
-> +                                  dptf_power_notify);
->         sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
->
->         return 0;
-> --
+On Mon, 18 May 2020 14:44:38 +0530, Anup Patel wrote:
+> This series does more improvements for supporting multiple PLIC
+> instances.
+> 
+> PATCH1 and PATCH2 are fixes whereas PATCH3 helps users distinguish
+> multiple PLIC instances in boot prints.
+> 
+> These patches are based up Linux-5.7-rc5 and can be found at
+> plic_imp_v2 branch at: https://github.com/avpatel/linux.git
+> 
+> [...]
 
-Applied as 5.8 material under edited subject and with a minor
-modification in the "rest of power" attribute ABI documentation.
+Applied to irq/irqchip-next, thanks!
 
-Thanks!
+[1/3] irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
+      commit: 2458ed31e9b9ab40d78a452ab2650a0857556e85
+[2/3] irqchip/sifive-plic: Setup cpuhp once after boot CPU handler is present
+      commit: 2234ae846ccb9ebdf4c391824cb79e73674dceda
+[3/3] irqchip/sifive-plic: Improve boot prints for multiple PLIC instances
+      commit: 0e375f51017bcc86c23979118b10445c424ef5ad
+
+Cheers,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
+
+
