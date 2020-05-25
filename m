@@ -2,82 +2,110 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57728C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4139420776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED56A20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mODj/zYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388662AbgEYBkA (ORCPT
+        id S2388294AbgEYBnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:40:00 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53390 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387925AbgEYBj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:39:59 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9_kIcteX7k4AA--.1106S3;
-        Mon, 25 May 2020 09:39:49 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH 2/2] rtc: mpc5121: Use correct return value for mpc5121_rtc_probe()
-Date:   Mon, 25 May 2020 09:39:48 +0800
-Message-Id: <1590370788-15136-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1590370788-15136-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1590370788-15136-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxn9_kIcteX7k4AA--.1106S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykWFyrZr45GFg_yoW3CFcEkr
-        ya9rn3J3WkCFs2q3WFyay3uryIyan09rWxWw15K39xK347JryxGrykArs5t3yUJw47CFy5
-        CFW7WryxAryfKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_KwCF04k20x
-        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-        AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
-        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvXdbUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sun, 24 May 2020 21:43:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbgEYBnN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 21:43:13 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDC59C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:43:12 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q8so15855998iow.7
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aqz94/+7e1RiM5o+h+HIR5TE0upbQHfvoZz9aXKyiXs=;
+        b=mODj/zYaEfVJeQKqnlvU8U0thUA054KETDD+0ZJLi/WUHfuJCiUK+YSmFFrpzDEb2T
+         qfvn1pEwu7ZiV5+l6WMtrkMTLo5vrGse/ywkJHZgM302nWAn3p3P89mZ7AdaS5okO5z+
+         B0zQERPodLWyTeyc3I30uPgJtEMgR1Nk3d+XD3yOBFmh+1B9cEOpKQZlRARDCHFn0mO7
+         MWXJX34skcUgAi+UliZvPi6mvfe5Id4PHa7lQEJR9F2Ml57zrSYcjgO1bxTqd+lqQCpz
+         vLdpgx9e++1DVTlk0l0QsBLh1xR07qXZH/cJFC69qYM58i7uTFqSHjreyKCnhqwwsKrt
+         V5nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aqz94/+7e1RiM5o+h+HIR5TE0upbQHfvoZz9aXKyiXs=;
+        b=grVk9i8GhKfsUh5Qgi/aPUsD3vDGFx3Es9tIPCcLi+KiYBlAf/TLgkczP02yulvGJ6
+         wlzXpdxIjVxspxcguUIohQoQSX60/y410cFkhxxdSLvMZajq9LetJFtf+izV7CH94wrd
+         BELMGkuSVEcCQ8vSUIaKSw1Nh6DBp8W3Lb2rETX2N+1LDdj+fN5/7eg6xVB38qK+M88n
+         CXcpSb6a2Cmdruq2znj1ERMHm7D2NF4B9AW09EUODs2WrS2eXEEAUdXRttDLaTGZ28wA
+         3chJt0tQ1raah42t+XAXYMRQsdFVBheo/urqmSJefKnuomJFHdw5kxeT27lB/ee0rZNv
+         yFPg==
+X-Gm-Message-State: AOAM531gV6Yi3SOLsC/HWtCi9b4WSkzt/gQxtVg0UtiaCPlgBPTLlQQ+
+        ygYrsNZuZnbmLfz6spX3Rxzc78OaJR/cn9TvGsfe7w==
+X-Google-Smtp-Source: ABdhPJxf+6uLG/Y2ljHcsChPE+oY3J+gk3Kl1nNxYTtxiBfoP4oERbrxXXoZVsfQmFgE4AI8sPfu7fwDiECsZIJ+Pkw=
+X-Received: by 2002:a02:942a:: with SMTP id a39mr17381196jai.50.1590370991729;
+ Sun, 24 May 2020 18:43:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200513122012.v3.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid> <87a71y93lr.fsf@linux.intel.com>
+In-Reply-To: <87a71y93lr.fsf@linux.intel.com>
+From:   "Anand K. Mistry" <amistry@google.com>
+Date:   Mon, 25 May 2020 11:43:00 +1000
+Message-ID: <CAATStaOY+JJ7mXWRwfXWuR_imhwsv=PecKSWiuZUetHTcz3EXg@mail.gmail.com>
+Subject: Re: [PATCH v3] perf record: Use an eventfd to wakeup when done
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+On Sat, 23 May 2020 at 23:35, Andi Kleen <ak@linux.intel.com> wrote:
+>
+> Anand K Mistry <amistry@google.com> writes:
+> >       }
+> >
+> > +     done_fd = eventfd(0, EFD_NONBLOCK);
+>
+> This will make perf depend on a recent glibc or other library
+> that implements eventfd. Wouldn't surprise me if some kind
+> of build time check is needed for this to pass all of Arnaldo's
+> built tests.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/rtc/rtc-mpc5121.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks like Arnaldo made that change when merging:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=e9db221d37f91409040cf7f3fbed08b44e055ae9
 
-diff --git a/drivers/rtc/rtc-mpc5121.c b/drivers/rtc/rtc-mpc5121.c
-index 3040844..5c2ce71 100644
---- a/drivers/rtc/rtc-mpc5121.c
-+++ b/drivers/rtc/rtc-mpc5121.c
-@@ -316,7 +316,7 @@ static int mpc5121_rtc_probe(struct platform_device *op)
- 	rtc->regs = devm_platform_ioremap_resource(op, 0);
- 	if (IS_ERR(rtc->regs)) {
- 		dev_err(&op->dev, "%s: couldn't map io space\n", __func__);
--		return -ENOSYS;
-+		return PTR_ERR(rtc->regs);
- 	}
- 
- 	device_init_wakeup(&op->dev, 1);
+This makes me curious. How old a kernel should modern tools support?
+From the man page, eventfd was added in 2.6.22 (and eventfd2 in
+2.6.27), which was 2007 (or 2008 for eventfd2) and glibc-2.8 which was
+2008. I understand the kernel's policy of never breaking userspace,
+but what about userspace tools?
+
+>
+>
+> -Andi
+
+
+
 -- 
-2.1.0
-
+Anand K. Mistry
+Software Engineer
+Google Australia
