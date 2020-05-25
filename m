@@ -2,84 +2,73 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D78C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 393AA2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208742065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389134AbgEYHbY (ORCPT
+        id S2389142AbgEYHbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:31:24 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57104 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388947AbgEYHbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:31:24 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2k7dMte4NI4AA--.483S2;
-        Mon, 25 May 2020 15:31:07 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] watchdog: bcm_kona_wdt: Use correct return value for bcm_kona_wdt_probe()
-Date:   Mon, 25 May 2020 15:31:04 +0800
-Message-Id: <1590391864-308-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxf2k7dMte4NI4AA--.483S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykWFyrtrykuFg_yoW3twb_Ga
-        17CrZ3urykGr1vvF1qvayUZrW2qF15uF1kXw1xKay3X347Jry3CrWqvr1xJw13Xw4Yyr9x
-        CFyUXr4a9rn3GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
-        42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73UjIFyTuYvjfUYgAwDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Mon, 25 May 2020 03:31:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59820 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388947AbgEYHbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:31:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0A307B084;
+        Mon, 25 May 2020 07:31:44 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9515D1E1270; Mon, 25 May 2020 09:31:40 +0200 (CEST)
+Date:   Mon, 25 May 2020 09:31:40 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Martijn Coenen <maco@android.com>
+Cc:     Jan Kara <jack@suse.cz>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com
+Subject: Re: Writeback bug causing writeback stalls
+Message-ID: <20200525073140.GI14199@quack2.suse.cz>
+References: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
+ <20200522144100.GE14199@quack2.suse.cz>
+ <CAB0TPYF+Nqd63Xf_JkuepSJV7CzndBw6_MUqcnjusy4ztX24hQ@mail.gmail.com>
+ <20200522153615.GF14199@quack2.suse.cz>
+ <CAB0TPYGJ6WkaKLoqQhsxa2FQ4s-jYKkDe1BDJ89CE_QUM_aBVw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYGJ6WkaKLoqQhsxa2FQ4s-jYKkDe1BDJ89CE_QUM_aBVw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+On Sat 23-05-20 10:15:20, Martijn Coenen wrote:
+> Jaegeuk wondered whether callers of write_inode_now() should hold
+> i_rwsem, and whether that would also prevent this problem. Some
+> existing callers of write_inode_now() do, eg ntfs and hfs:
+> 
+> hfs_file_fsync()
+>     inode_lock(inode);
+> 
+>     /* sync the inode to buffers */
+>     ret = write_inode_now(inode, 0);
+> 
+> but there are also some that don't (eg fat, fuse, orangefs).
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/watchdog/bcm_kona_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well, most importantly filesystems like ext4, xfs, btrfs don't hold i_rwsem
+when writing back inode and that's deliberate because of performance. We
+don't want to block writes (or event reads in case of XFS) for the inode
+during writeback.
 
-diff --git a/drivers/watchdog/bcm_kona_wdt.c b/drivers/watchdog/bcm_kona_wdt.c
-index eb850a8..8237c4e 100644
---- a/drivers/watchdog/bcm_kona_wdt.c
-+++ b/drivers/watchdog/bcm_kona_wdt.c
-@@ -279,7 +279,7 @@ static int bcm_kona_wdt_probe(struct platform_device *pdev)
- 
- 	wdt->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(wdt->base))
--		return -ENODEV;
-+		return PTR_ERR(wdt->base);
- 
- 	wdt->resolution = SECWDOG_DEFAULT_RESOLUTION;
- 	ret = bcm_kona_wdt_set_resolution_reg(wdt);
+								Honza
 -- 
-2.1.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
