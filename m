@@ -2,227 +2,101 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA554C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A92207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACE2207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="4BarvoNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390929AbgEYORg (ORCPT
+        id S2390953AbgEYORn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:17:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3129 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388714AbgEYORf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:17:35 -0400
-IronPort-SDR: UQr3PVRi2FPn3/rM2nd9TcIWVka1m4EziacmAInFJvvFf+y9yzBn/04gGKUIAMs0MNTuFKoZOz
- RSwgkbMSq/5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 07:17:34 -0700
-IronPort-SDR: IfeJVgavZtejKtMOXAyajmTm6DPV/qoCPe5pCKn9/BqPKoQrl47/CuD8l+e9P6MhC/OwaeFe0c
- GWhzkWOXUMAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="269773665"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 25 May 2020 07:17:34 -0700
-Received: from [10.249.227.191] (abudanko-mobl.ccr.corp.intel.com [10.249.227.191])
-        by linux.intel.com (Postfix) with ESMTP id 6D2E5580101;
-        Mon, 25 May 2020 07:17:32 -0700 (PDT)
-Subject: [PATCH v4 01/10] tools/libperf: introduce static poll file
- descriptors
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <024af6a7-8085-c28d-5067-6ab3225bdc82@linux.intel.com>
-Date:   Mon, 25 May 2020 17:17:31 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 25 May 2020 10:17:43 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:56638 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388714AbgEYORm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 10:17:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=yXApgBJF7xcQKVRSk3HDzC6DxxKYhOHfHRVUfNQbTPs=; b=4
+        BarvoNNC8GKkvRFHoG7AohTA9EhGNyeRiT1JyawU/rRBzQPapG7ZeW+uXFgn8g1I
+        7DYSW70ZrywJERuZMQahf83cEc1rwfa/SrSEpztfz83rzTi6I+CyuUYf9w3ANu2t
+        2P8FMD41z9jdenOSsjZpRhjaQrOjk12ac6N4BIivmM=
+Received: from localhost.localdomain (unknown [223.73.184.21])
+        by app1 (Coremail) with SMTP id XAUFCgAnLaF208teMdMwAg--.41704S3;
+        Mon, 25 May 2020 22:17:27 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] SUNRPC: Remove unreachable error condition in rpcb_getport_async()
+Date:   Mon, 25 May 2020 22:17:02 +0800
+Message-Id: <1590416223-52653-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgAnLaF208teMdMwAg--.41704S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF18KF15tF4xtFy5tF15twb_yoWDWrb_JF
+        W8AFs7Za4vkrn7tanrtrWfJ3y7Z3W2yr1vgwsxA34xXayxX39xtrs5Zrn8Aa17GFWfur1U
+        Crs3Ga48Cw12kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbf8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+        rcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr4
+        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+        8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20E
+        Y4v20xvaj40_Gr0_Zr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbksqPUUUUU==
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+rpcb_getport_async() invokes rpcb_call_async(), which return the value
+of rpc_run_task() to "child". Since rpc_run_task() is impossible to
+return an ERR pointer, there is no need to add the IS_ERR() condition on
+"child" here. So we need to remove it.
 
-Implement adding of file descriptors to fixed size (currently 1)
-storage at struct fdarray by the dedicated fdarray__add_stat().
-Append the static descriptors to the array used by poll() syscall
-at fdarray__poll(). Copy poll() result of the descriptors from the
-array back to the storage for possible later analysis separately
-from descriptors added by fdarray__add().
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- tools/lib/api/fd/array.c                 | 42 +++++++++++++++++++++++-
- tools/lib/api/fd/array.h                 |  7 ++++
- tools/lib/perf/evlist.c                  | 11 +++++++
- tools/lib/perf/include/internal/evlist.h |  2 ++
- 4 files changed, 61 insertions(+), 1 deletion(-)
+ net/sunrpc/rpcb_clnt.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 58d44d5eee31..b0027f2169c7 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -11,10 +11,16 @@
+diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
+index 4a020b688860..c27123e6ba80 100644
+--- a/net/sunrpc/rpcb_clnt.c
++++ b/net/sunrpc/rpcb_clnt.c
+@@ -795,12 +795,6 @@ void rpcb_getport_async(struct rpc_task *task)
  
- void fdarray__init(struct fdarray *fda, int nr_autogrow)
- {
-+	int i;
-+
- 	fda->entries	 = NULL;
- 	fda->priv	 = NULL;
- 	fda->nr		 = fda->nr_alloc = 0;
- 	fda->nr_autogrow = nr_autogrow;
-+
-+	fda->nr_stat = 0;
-+	for (i = 0; i < FDARRAY__STAT_ENTRIES_MAX; i++)
-+		fda->stat_entries[i].fd = -1;
- }
+ 	child = rpcb_call_async(rpcb_clnt, map, proc);
+ 	rpc_release_client(rpcb_clnt);
+-	if (IS_ERR(child)) {
+-		/* rpcb_map_release() has freed the arguments */
+-		dprintk("RPC: %5u %s: rpc_run_task failed\n",
+-			task->tk_pid, __func__);
+-		return;
+-	}
  
- int fdarray__grow(struct fdarray *fda, int nr)
-@@ -83,6 +89,20 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
- 	return pos;
- }
- 
-+int fdarray__add_stat(struct fdarray *fda, int fd, short revents)
-+{
-+	int pos = fda->nr_stat;
-+
-+	if (pos >= FDARRAY__STAT_ENTRIES_MAX)
-+		return -1;
-+
-+	fda->stat_entries[pos].fd = fd;
-+	fda->stat_entries[pos].events = revents;
-+	fda->nr_stat++;
-+
-+	return pos;
-+}
-+
- int fdarray__filter(struct fdarray *fda, short revents,
- 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
- 		    void *arg)
-@@ -113,7 +133,27 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 
- int fdarray__poll(struct fdarray *fda, int timeout)
- {
--	return poll(fda->entries, fda->nr, timeout);
-+	int nr, i, pos, res;
-+
-+	nr = fda->nr;
-+
-+	for (i = 0; i < fda->nr_stat; i++) {
-+		if (fda->stat_entries[i].fd != -1) {
-+			pos = fdarray__add(fda, fda->stat_entries[i].fd,
-+					   fda->stat_entries[i].events);
-+			if (pos >= 0)
-+				fda->priv[pos].idx = i;
-+		}
-+	}
-+
-+	res = poll(fda->entries, fda->nr, timeout);
-+
-+	for (i = nr; i < fda->nr; i++)
-+		fda->stat_entries[fda->priv[i].idx] = fda->entries[i];
-+
-+	fda->nr = nr;
-+
-+	return res;
- }
- 
- int fdarray__fprintf(struct fdarray *fda, FILE *fp)
-diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
-index b39557d1a88f..9bca72e80b09 100644
---- a/tools/lib/api/fd/array.h
-+++ b/tools/lib/api/fd/array.h
-@@ -3,6 +3,7 @@
- #define __API_FD_ARRAY__
- 
- #include <stdio.h>
-+#include <poll.h>
- 
- struct pollfd;
- 
-@@ -16,6 +17,9 @@ struct pollfd;
-  *	  I.e. using 'fda->priv[N].idx = * value' where N < fda->nr is ok,
-  *	  but doing 'fda->priv = malloc(M)' is not allowed.
-  */
-+
-+#define FDARRAY__STAT_ENTRIES_MAX	1
-+
- struct fdarray {
- 	int	       nr;
- 	int	       nr_alloc;
-@@ -25,6 +29,8 @@ struct fdarray {
- 		int    idx;
- 		void   *ptr;
- 	} *priv;
-+	int	       nr_stat;
-+	struct pollfd  stat_entries[FDARRAY__STAT_ENTRIES_MAX];
- };
- 
- void fdarray__init(struct fdarray *fda, int nr_autogrow);
-@@ -34,6 +40,7 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
- void fdarray__delete(struct fdarray *fda);
- 
- int fdarray__add(struct fdarray *fda, int fd, short revents);
-+int fdarray__add_stat(struct fdarray *fda, int fd, short revents);
- int fdarray__poll(struct fdarray *fda, int timeout);
- int fdarray__filter(struct fdarray *fda, short revents,
- 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 6a875a0f01bb..e68e4c08e7c2 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -317,6 +317,17 @@ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
- 	return pos;
- }
- 
-+int perf_evlist__add_pollfd_stat(struct perf_evlist *evlist, int fd,
-+			         short revent)
-+{
-+	int pos = fdarray__add_stat(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
-+
-+	if (pos >= 0)
-+		fcntl(fd, F_SETFL, O_NONBLOCK);
-+
-+	return pos;
-+}
-+
- static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
- 					 void *arg __maybe_unused)
- {
-diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-index 74dc8c3f0b66..2b3b4518c05e 100644
---- a/tools/lib/perf/include/internal/evlist.h
-+++ b/tools/lib/perf/include/internal/evlist.h
-@@ -46,6 +46,8 @@ struct perf_evlist_mmap_ops {
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
- 			    void *ptr, short revent);
-+int perf_evlist__add_pollfd_stat(struct perf_evlist *evlist, int fd,
-+			         short revent);
- 
- int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			  struct perf_evlist_mmap_ops *ops,
+ 	xprt->stat.bind_count++;
+ 	rpc_put_task(child);
 -- 
-2.24.1
-
+2.7.4
 
