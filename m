@@ -2,95 +2,157 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB343C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987B02071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CAF2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590390911;
+	bh=YFgtG6huhkHRiOdwNZCAV+D12/UIoXk/fcLnM/lUdeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jAqNwZger0Ru4mxrlwNbSPlu/7v+QJpxEh88DIJebO7BXupEjLG+xZBBUSWiSvbJz
+	 z/7ug8OgVXEfRKoegJ6/4Jxy+5aZ1HgfEv9h1YZCY9v8Ecb4GbQSbqnpMUWcLrluBY
+	 OX7K8tQXmaUXeH+ixzLbJPGhUNGVp8+aS5kCVpe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389026AbgEYHNi (ORCPT
+        id S2389054AbgEYHPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:13:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59298 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388951AbgEYHNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:13:37 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 40DA53E6F75ED8ACB62E;
-        Mon, 25 May 2020 15:13:34 +0800 (CST)
-Received: from [10.174.151.115] (10.174.151.115) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 25 May
- 2020 15:13:25 +0800
-Subject: Re: [PATCH 2/2] crypto: virtio: Fix use-after-free in
- virtio_crypto_skcipher_finalize_req()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        <linux-crypto@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     Arei Gonglei <arei.gonglei@huawei.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        <linux-kernel@vger.kernel.org>
-References: <a5ef5d51-e35c-983f-8e7f-5f19552abe9e@web.de>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <a17850bb-f70d-1f77-3823-afd70816ce57@huawei.com>
-Date:   Mon, 25 May 2020 15:13:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 25 May 2020 03:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388982AbgEYHPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:15:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D01A2071A;
+        Mon, 25 May 2020 07:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590390910;
+        bh=YFgtG6huhkHRiOdwNZCAV+D12/UIoXk/fcLnM/lUdeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vtrWywB3/mB0QEDRNMzGH93WaxvezI456K+fFbe0o2XNJnOjXOunVsfW2JXT4Bmkm
+         mU+uEh3a7fQ9AyHERKOZ4LmVbAnuKydoUcT1mJhDlYXIim/TJJWH9nBGVKlv5iD02K
+         YX/oZJ7wPu96i4zzcBYWv4lwXWz/3XO9hrCcncnw=
+Date:   Mon, 25 May 2020 09:15:07 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Kyungtae Kim <kt0755@gmail.com>, Jiri Slaby <jslaby@suse.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Tian <dave.jing.tian@gmail.com>
+Subject: Re: [PATCH v2] vt: keyboard: avoid integer overflow in k_ascii
+Message-ID: <20200525071507.GA169307@kroah.com>
+References: <20200523230928.GA17074@pizza01>
+ <20200525000823.GE89269@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <a5ef5d51-e35c-983f-8e7f-5f19552abe9e@web.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525000823.GE89269@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+On Sun, May 24, 2020 at 05:08:23PM -0700, Dmitry Torokhov wrote:
+> On Sat, May 23, 2020 at 11:09:35PM +0000, Kyungtae Kim wrote:
+> > @@ -884,8 +884,11 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+> >  
+> >  	if (npadch == -1)
+> >  		npadch = value;
+> > +	else if (!check_mul_overflow(npadch, base, &new_npadch) &&
+> > +	    !check_add_overflow(new_npadch, value, &new_npadch))
+> > +		npadch = new_npadch;
+> >  	else
+> > -		npadch = npadch * base + value;
+> > +		return;
+> >  }
+> 
+> So thinking about it some more, if we use unsigned types, then there is
+> no issue with overflow UB, and thus maybe we should do something like
+> this:
+> 
+> diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
+> index 15d33fa0c925..568b2171f335 100644
+> --- a/drivers/tty/vt/keyboard.c
+> +++ b/drivers/tty/vt/keyboard.c
+> @@ -127,7 +127,11 @@ static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
+>  static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
+>  static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
+>  static bool dead_key_next;
+> -static int npadch = -1;					/* -1 or number assembled on pad */
+> +
+> +/* Handles a number being assembled on the number pad */
+> +static bool npadch_active;
 
-On 2020/5/25 14:30, Markus Elfring wrote:
->> … So the system will crash
->> at last when this memory be used again.
-> 
-> I would prefer a wording with less typos here.
-> 
-Could you help me to make the sentence better?
+Much nicer, thanks for that, -1 is not a good thing to try to understand :)
 
-> 
->> We can free the resources before calling ->complete to fix this issue.
-> 
-> * An imperative wording can be nicer.
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=9cb1fd0efd195590b828b9b865421ad345a4a145#n151
-> 
-I'll try.
+> +static unsigned int npadch_value;
 
-> * You proposed to move a call of the function “crypto_finalize_skcipher_request”.
->   How does this change fit to the mentioned position?
+Nicer to just make this a u32 to be explicit about it?
+
+> +
+>  static unsigned int diacr;
+>  static char rep;					/* flag telling character repeat */
+>  
+> @@ -845,12 +849,12 @@ static void k_shift(struct vc_data *vc, unsigned char value, char up_flag)
+>  		shift_state &= ~(1 << value);
+>  
+>  	/* kludge */
+> -	if (up_flag && shift_state != old_state && npadch != -1) {
+> +	if (up_flag && shift_state != old_state && npadch_active) {
+>  		if (kbd->kbdmode == VC_UNICODE)
+> -			to_utf8(vc, npadch);
+> +			to_utf8(vc, npadch_value);
+>  		else
+> -			put_queue(vc, npadch & 0xff);
+> -		npadch = -1;
+> +			put_queue(vc, npadch_value & 0xff);
+> +		npadch_active = false;
+>  	}
+>  }
+>  
+> @@ -868,7 +872,7 @@ static void k_meta(struct vc_data *vc, unsigned char value, char up_flag)
+>  
+>  static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+>  {
+> -	int base;
+> +	unsigned int base;
+
+u32?
+
+
+>  
+>  	if (up_flag)
+>  		return;
+> @@ -882,10 +886,12 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+>  		base = 16;
+>  	}
+>  
+> -	if (npadch == -1)
+> -		npadch = value;
+> -	else
+> -		npadch = npadch * base + value;
+> +	if (!npadch_active) {
+> +		npadch_value = 0;
+> +		npadch_active = true;
+> +	}
+> +
+> +	npadch_value = npadch_value * base + value;
+>  }
+>  
+>  static void k_lock(struct vc_data *vc, unsigned char value, char up_flag)
 > 
-The resources which need to be freed is not used anymore, but the pointers
-of these resources may be changed in the function
-"crypto_finalize_skcipher_request", so free these resources before call the
-function is suitable.
-
-> * Would you like to add the tag “Fixes” to the commit message?
->
-OK.
-
-> Regards,
-> Markus
 > 
+> I think if we stop overloading what npadch means, the code becomes more
+> clear. What do you think?
 
--- 
----
-Regards,
-Longpeng(Mike)
+I think it makes a lot more sense, care to turn this into a "real"
+patch?
+
+thanks,
+greg k-h
