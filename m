@@ -2,87 +2,68 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59244C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0866C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4B5206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A978E206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389720AbgEYKFQ (ORCPT
+        id S2389687AbgEYKFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:05:16 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:40380 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389455AbgEYKFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:05:16 -0400
-Received: by mail-oo1-f66.google.com with SMTP id f39so164458ooi.7;
-        Mon, 25 May 2020 03:05:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xw1pkyh0Ir8nfmsoLVnnjIS8IfgdWiFdji6t98JfZAE=;
-        b=ft0/5SNQtI4e2cYekn8i3vaIFPn7VoyLA3CIMfo1gQNgrtxjeNl5+XD7NRfyPp6SVD
-         k/wXD71XQujMcPlSitNymyb/zG62IWq4xoG3hqi7cR3RM+asZQguK3dgMVHzNGGGeilT
-         Orl6gkiDSx0JKNT2EDolBE9T4geX8RPxzJJth49E4znH14RUsnLfhiXQQFL5zGIhaGv6
-         DDaJd8SKXHq7GSfPKAsnFbSTOHDJi9AgRo/CDW1w+42e/QQimjw/dD74ZFn188lNq7TB
-         kVWghouV9TxFVoNEYSDxPGSQaeJoMHd/ZotguvavFldFuewiJk0T6Ge0cCfv5B77lgDQ
-         OYxg==
-X-Gm-Message-State: AOAM532QCCLCF0kVbmX2jwFQ/V8fJv4c8V+kjWdaYkDXou7VWpnCuSFZ
-        ikuugA+QS61nqO1NlElOeJZV+f+6FnpFelqGMCw=
-X-Google-Smtp-Source: ABdhPJwpsoXxS4SZOMLNeUtOFIvKeQ/xfHoBmbLhEQs5FjxW+RcSdEOgaeAHqrTHm23gDT4hxLApJzNpKxs3TYatHYQ=
-X-Received: by 2002:a4a:95d0:: with SMTP id p16mr12638128ooi.40.1590401113953;
- Mon, 25 May 2020 03:05:13 -0700 (PDT)
+        Mon, 25 May 2020 06:05:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40252 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389302AbgEYKFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:05:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AEA73ACE6;
+        Mon, 25 May 2020 10:05:45 +0000 (UTC)
+Date:   Mon, 25 May 2020 12:05:40 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 2/7] mm/vmalloc: Track which page-table levels were
+ modified
+Message-ID: <20200525100540.GB5075@suse.de>
+References: <20200515140023.25469-1-joro@8bytes.org>
+ <20200515140023.25469-3-joro@8bytes.org>
+ <20200515130142.4ca90ee590e9d8ab88497676@linux-foundation.org>
+ <20200516125641.GK8135@suse.de>
+ <20200518151828.ad3c714a29209b359e326ec4@linux-foundation.org>
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590356277-19993-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 12:05:02 +0200
-Message-ID: <CAMuHMdW=7oEj03eFmVkziZUhrSWk01AHEPAw1R1D0fmdijTAtQ@mail.gmail.com>
-Subject: Re: [PATCH 4/8] dt-bindings: dmaengine: renesas,usb-dmac: Add binding
- for r8a7742
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518151828.ad3c714a29209b359e326ec4@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:40 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Mon, May 18, 2020 at 03:18:28PM -0700, Andrew Morton wrote:
+> It would be nice to get all this (ie, linux-next) retested before we
+> send it upstream, please.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested these patches as in next-20200522, with three 2, 3, and 4-level
+paging. On 4-level (aka 64-bit) I also re-ran the Stevens trace-cmd
+reproducer, no issues found and the trace-cmd problem is still fixed.
 
-Gr{oetje,eeting}s,
+Thanks,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Joerg
