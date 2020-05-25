@@ -2,234 +2,102 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13560C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C83620899
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590415935;
-	bh=4J38MidBihyKODDqhruO+ael6y9jTfLnvI1Z4aDlbFE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmLFlzp2qa1gw0Cs12XTBkB1Ye3hcDWxnOhjM0ssNPJpjxCUB03HS+TzfsXWeSEfi
-	 0ItAk4c7daxQ6YQCePoWox8kmvLPclLJirfovJf4mw+NbROYpWKyBahIowmfuZRPhp
-	 miM7COe2P3TaJWCfbGrRKSEvDxjorag85l4wh6no=
+	by mail.kernel.org (Postfix) with ESMTP id 58E3E20890
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="jPH55+5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390872AbgEYOMO (ORCPT
+        id S2390874AbgEYOMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388862AbgEYOMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:12:12 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73951208A7;
-        Mon, 25 May 2020 14:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590415932;
-        bh=4J38MidBihyKODDqhruO+ael6y9jTfLnvI1Z4aDlbFE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9o7RA9oI5Kye0q9iCchyRyIL21EWhvh6bv/rY761ReIRig06ZaRi8rubQpI91ZRV
-         9pykULK5id5wU0m0wRpqZTyItnDTVuc7tETrW9cTANnku1CKeQZWfjJLdhRNqLzoWT
-         qQvmud0/LxMUoLJA7h/lDhaJZ1VuGZ8+r0VriZPo=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Andrew F. Davis" <afd@ti.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] power: supply: bq27xxx_battery: Notify about voltage and current changes
-Date:   Mon, 25 May 2020 16:12:00 +0200
-Message-Id: <20200525141200.17199-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200525141200.17199-1-krzk@kernel.org>
-References: <20200525141200.17199-1-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 25 May 2020 10:12:36 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:37808 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388855AbgEYOMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 10:12:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=e35Z1aZcBpO4FjT4/OfXhJlClEKE3GlteSXg77ztYqc=; b=j
+        PH55+5TSZQKrRnRs/Q6BFmo4bAVedI3XsuUqmNPn+LSJw31h84UiM5/J8FEVXMqf
+        6LgFoXk15SpIWDz00Fw8zirS4DN5oG6nUFUFAEPeCFsjcl2omNwKkGfSnLFs6Mnk
+        ZrijSSneX648u0Oq5LuS57tHUXaFHZkTkUu9heakeo=
+Received: from localhost.localdomain (unknown [223.73.184.21])
+        by app2 (Coremail) with SMTP id XQUFCgC3v+M90stetAqpAg--.14499S3;
+        Mon, 25 May 2020 22:12:15 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     David Howells <dhowells@redhat.com>, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] afs: Fix afs_cb_interest refcnt leak in afs_select_fileserver()
+Date:   Mon, 25 May 2020 22:11:26 +0800
+Message-Id: <1590415886-52353-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgC3v+M90stetAqpAg--.14499S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF1xuF17tF47XrWrZFy3CFg_yoW8Jw1Dpr
+        4rCw1DKr98X348GwsxJa1rXa4rX393Xw42kFZxWw1rZws8CF4avr1vqryvgFW7u395Aw4U
+        XF18K34Y9FZ8CFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+        rcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUOlksUU
+        UUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read voltage and current and store them in the cache (like other
-properties).  This has benefits:
-1. User-space will be notified on voltage or current change.  These
-   are important properties of charging so user-space might be
-   interested in getting them.
-2. Closes possible resource exhaustion attack through continuous I2C
-   reads triggered by unprivileged power supply sysfs API.  User could
-   just keep reading voltage_now or current_now sysfs entries leading
-   to excessive I2C transfers.
+afs_select_fileserver() invokes afs_get_cb_interest(), which returns a
+reference of the specified afs_cb_interest object to "fc->cbi" with
+increased refcnt.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The reference counting issue happens in one exception handling path of
+afs_select_fileserver(). When error occurred in
+afs_wait_for_fs_probes(), the function forgets to decrease the refcnt
+increased by afs_get_cb_interest(), causing a refcnt leak.
+
+Fix this issue by calling afs_put_cb_interest() when error occurred in
+afs_wait_for_fs_probes().
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- drivers/power/supply/bq27xxx_battery.c | 97 ++++++++++++--------------
- include/linux/power/bq27xxx_battery.h  |  2 +
- 2 files changed, 48 insertions(+), 51 deletions(-)
+ fs/afs/rotate.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 33c26d42cd02..048618c13e17 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -1520,6 +1520,48 @@ static int bq27xxx_battery_read_pwr_avg(struct bq27xxx_device_info *di)
- 		return tval;
- }
+diff --git a/fs/afs/rotate.c b/fs/afs/rotate.c
+index 2a3305e42b14..f73af16cdb92 100644
+--- a/fs/afs/rotate.c
++++ b/fs/afs/rotate.c
+@@ -357,8 +357,10 @@ bool afs_select_fileserver(struct afs_fs_cursor *fc)
+ 	_debug("pick [%lx]", fc->untried);
  
-+/*
-+ * Return the battery average current in µA
-+ * Note that current can be negative signed as well
-+ * Or 0 if something fails.
-+ */
-+static int bq27xxx_battery_read_current(struct bq27xxx_device_info *di,
-+					int flags)
-+{
-+	int curr;
-+
-+	curr = bq27xxx_read(di, BQ27XXX_REG_AI, false);
-+	if (curr < 0) {
-+		dev_err(di->dev, "error reading current\n");
-+		return 0;
+ 	error = afs_wait_for_fs_probes(fc->server_list, fc->untried);
+-	if (error < 0)
++	if (error < 0) {
++		afs_put_cb_interest(afs_v2net(vnode), fc->cbi);
+ 		goto failed_set_error;
 +	}
-+
-+	if (di->opts & BQ27XXX_O_ZERO) {
-+		if (flags & BQ27000_FLAG_CHGS) {
-+			dev_dbg(di->dev, "negative current!\n");
-+			curr = -curr;
-+		}
-+
-+		return curr * BQ27XXX_CURRENT_CONSTANT / BQ27XXX_RS;
-+	}
-+
-+	/* else: Other gauges return signed value */
-+	return (int)((s16)curr) * 1000;
-+}
-+
-+static int bq27xxx_battery_read_voltage(struct bq27xxx_device_info *di)
-+{
-+	int volt;
-+
-+	volt = bq27xxx_read(di, BQ27XXX_REG_VOLT, false);
-+	if (volt < 0) {
-+		dev_err(di->dev, "error reading voltage\n");
-+		return volt;
-+	}
-+
-+	return volt * 1000;
-+}
-+
- /*
-  * Returns true if a battery over temperature condition is detected
-  */
-@@ -1606,6 +1648,8 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
- 			cache.cycle_count = bq27xxx_battery_read_cyct(di);
- 		if (di->regs[BQ27XXX_REG_AP] != INVALID_REG_ADDR)
- 			cache.power_avg = bq27xxx_battery_read_pwr_avg(di);
-+		cache.curr = bq27xxx_battery_read_current(di, cache.flags);
-+		cache.voltage = bq27xxx_battery_read_voltage(di);
  
- 		/* We only have to read charge design full once */
- 		if (di->charge_design_full <= 0)
-@@ -1633,39 +1677,6 @@ static void bq27xxx_battery_poll(struct work_struct *work)
- 		schedule_delayed_work(&di->work, poll_interval * HZ);
- }
- 
--/*
-- * Return the battery average current in µA
-- * Note that current can be negative signed as well
-- * Or 0 if something fails.
-- */
--static int bq27xxx_battery_current(struct bq27xxx_device_info *di,
--				   union power_supply_propval *val)
--{
--	int curr;
--	int flags;
--
--	curr = bq27xxx_read(di, BQ27XXX_REG_AI, false);
--	if (curr < 0) {
--		dev_err(di->dev, "error reading current\n");
--		return curr;
--	}
--
--	if (di->opts & BQ27XXX_O_ZERO) {
--		flags = bq27xxx_read(di, BQ27XXX_REG_FLAGS, true);
--		if (flags & BQ27000_FLAG_CHGS) {
--			dev_dbg(di->dev, "negative current!\n");
--			curr = -curr;
--		}
--
--		val->intval = curr * BQ27XXX_CURRENT_CONSTANT / BQ27XXX_RS;
--	} else {
--		/* Other gauges return signed value */
--		val->intval = (int)((s16)curr) * 1000;
--	}
--
--	return 0;
--}
--
- static int bq27xxx_battery_status(struct bq27xxx_device_info *di,
- 				  union power_supply_propval *val)
- {
-@@ -1728,22 +1739,6 @@ static int bq27xxx_battery_capacity_level(struct bq27xxx_device_info *di,
-  * Return the battery Voltage in millivolts
-  * Or < 0 if something fails.
-  */
--static int bq27xxx_battery_voltage(struct bq27xxx_device_info *di,
--				   union power_supply_propval *val)
--{
--	int volt;
--
--	volt = bq27xxx_read(di, BQ27XXX_REG_VOLT, false);
--	if (volt < 0) {
--		dev_err(di->dev, "error reading voltage\n");
--		return volt;
--	}
--
--	val->intval = volt * 1000;
--
--	return 0;
--}
--
- static int bq27xxx_simple_value(int value,
- 				union power_supply_propval *val)
- {
-@@ -1777,13 +1772,13 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
- 		ret = bq27xxx_battery_status(di, val);
- 		break;
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
--		ret = bq27xxx_battery_voltage(di, val);
-+		ret = bq27xxx_simple_value(di->cache.voltage, val);
- 		break;
- 	case POWER_SUPPLY_PROP_PRESENT:
- 		val->intval = di->cache.flags < 0 ? 0 : 1;
- 		break;
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
--		ret = bq27xxx_battery_current(di, val);
-+		val->intval = di->cache.curr; /* Can be negative */
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
- 		ret = bq27xxx_simple_value(di->cache.capacity, val);
-diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
-index 507c5e214c42..418ba5e4029a 100644
---- a/include/linux/power/bq27xxx_battery.h
-+++ b/include/linux/power/bq27xxx_battery.h
-@@ -49,6 +49,8 @@ struct bq27xxx_reg_cache {
- 	int cycle_count;
- 	int capacity;
- 	int energy;
-+	int curr;
-+	int voltage;
- 	int flags;
- 	int power_avg;
- 	int health;
+ 	/* Pick the untried server with the lowest RTT.  If we have outstanding
+ 	 * callbacks, we stick with the server we're already using if we can.
 -- 
-2.17.1
+2.7.4
 
