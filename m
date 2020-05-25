@@ -2,133 +2,127 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8A82068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590395047;
-	bh=qF3nZy5bJ7P9gCbxMcGSnMA5OaRcF5JKseiRc0o1Zk8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=uBVtYu1PZgPkP+ZLPGXRxHjkRcX4WsRddHQOhIvDl/ZLmEIq+itW8sYjkWgGL+k2H
-	 RVjUc2jyr9/EyICEHNec1giqo/EuL/aJWbknoDhSdenXNU3sHrInXlW8q2+n8VxK+Q
-	 dA8bOaj+Rh9yWvhOURWl+Z2Yy/v22/hc8E93HQqk=
+	by mail.kernel.org (Postfix) with ESMTP id 023B52068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="hXS2eopB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731439AbgEYIYG (ORCPT
+        id S1731443AbgEYIYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgEYIYG (ORCPT
+        Mon, 25 May 2020 04:24:52 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:51760 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729370AbgEYIYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:24:06 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AE6C061A0E;
-        Mon, 25 May 2020 01:24:05 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z6so19764497ljm.13;
-        Mon, 25 May 2020 01:24:05 -0700 (PDT)
+        Mon, 25 May 2020 04:24:49 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49Vqrw4bXWz9vC8F
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:24:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id UOltj2F8jyCY for <linux-kernel@vger.kernel.org>;
+        Mon, 25 May 2020 03:24:48 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49Vqrw30lYz9vC7f
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:24:48 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49Vqrw30lYz9vC7f
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49Vqrw30lYz9vC7f
+Received: by mail-io1-f70.google.com with SMTP id a2so7335350iok.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:24:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ANsmsts+DHXNEc88o7BQxwGmebDh+l2B4Pvz9WLqzyk=;
-        b=dC7wDseltyDwTHP3wA1YHJ/onugrBnJLQt+wdz1AkGAxhdRt7AQqbFVbEtXa1c4vme
-         cPXUb3LOtmSGHqIik58e/iBF222d8d1d3hkGp6oSi3P/jexKHicIkGHfYhgiGunoDJBl
-         hOUo5Oau8cnauLrWdywpaa1D088+V2fO8UUyd/Z+VjHmrHqeLlug/ShdCNSH6HM6fWtk
-         nLZAV0osglxqjUxxFOPEEN4NYm6Ar4hqIugIlhmpotzkyXZNki1OexDwVmidWYsBjD88
-         8LqLfc0zUCK84unUeDKe9OGYUIJtI1DHO/UHed4Bzr7X7m4GnHaSenVJMAnpfVtXWnji
-         0lTQ==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=UgPHdCth6FfAh45Sp7ZUoEgt/yFAzGGw7Kx8LIhpmq8=;
+        b=hXS2eopB+hvH691nPeB1Zs2AMGFgmIX2UDsXvN31/HKoTn0XPTA+V61fDS1KpI6EAP
+         fKAC4tW56wRc49zPqmwJOjxCgYCIy5aXHVtsIKjqoUBNRg/uUknqu47ZU04B3FanFDX0
+         VUApByauUqYaafkLS+r10m/lgxPlP0GV/0DcJLMQnKU2hfcQ2wRwCwoiym1+sZ3UN+Za
+         8tlPGzYreXpKNYgPWO3j3OCST7oTFyDc1Jw9hD2CKQjLWYlExq2//jW55N59s33I11xg
+         qRmPCa337Ja13H7oiv/S2E3Ul0DyhQtaV6Pc8rhU4x7h0OK/QUwWpAEtUDcTIf9o+00S
+         PfkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ANsmsts+DHXNEc88o7BQxwGmebDh+l2B4Pvz9WLqzyk=;
-        b=GJ5jLXEONGW7tae6BavaJyxUdcU52wYsY+qEWd2hnRm7HSz6KMJxwlfx3z3POpgQcj
-         2e68mXZXdReD9rp6oJMXruhyRRvKD/NUVAXbFlTBlj5lSjAWxumP+uws6j3finZbTqAK
-         9whOx/OL8B5vwZWyQXWMkyOKirI5rtzHDL47lVimQWXVBICXTx/v7cOnk1MNif815vyx
-         DxVf6LX5If2vZQvkigqGI1vOKXDouRi7KOmT5HWSm4t9VFZI1gdIv6+Ic+sb3JNv9yi5
-         AiLqh7RZUXk9OeKuC+nWKL2t5KB+o//fxWnTKi/xpAx5+qBEseYQkZi7pzkSJxLzDRGF
-         B2Dw==
-X-Gm-Message-State: AOAM5307Mnc/145hkVcQBpqHQTBGe6pzrR4DKENrobQjJvTaXcxWyk29
-        mlOqpZin2uESw4lvs69dscc=
-X-Google-Smtp-Source: ABdhPJxNZgTanxq9CvLsQ/fUF7XgeONYIPCPiDZoewQSfO90yvUaQW600QFBf+2TaJtz/KgUa6K1qw==
-X-Received: by 2002:a2e:87d7:: with SMTP id v23mr11619050ljj.334.1590395044209;
-        Mon, 25 May 2020 01:24:04 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id w4sm2758698lji.2.2020.05.25.01.24.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 01:24:03 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     linux-usb@vger.kernel.org, vigneshr@ti.com,
-        chunfeng.yun@mediatek.com, linux-kernel@vger.kernel.org,
-        Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 0/2] usb: dwc3: keystone: Turn on USB3 PHY before controller
-In-Reply-To: <20200525071048.7738-1-rogerq@ti.com>
-References: <20200525071048.7738-1-rogerq@ti.com>
-Date:   Mon, 25 May 2020 11:23:58 +0300
-Message-ID: <87k110whgh.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UgPHdCth6FfAh45Sp7ZUoEgt/yFAzGGw7Kx8LIhpmq8=;
+        b=sJCGpIEGXvlix2JyyMWDC7CTHyGW4gjZUq7o4qxQwNF2MJNoo1Zpar1ZJpqY21Exlr
+         jsyQ0LVSizMIplzvFZ/N5i/wME9otTqXLvFh3fWh8/AmJNnlXN4N/aorEORlGitXzlJ5
+         3cIScHoUqkzDoP8gxoEHzZWWMhPKXpnr/BtNIEGlM4a1uvnUcwMkYBEgWK8+OjH3u8wD
+         x3j7OW/rkaJ/CaPk7HPGTLJEIJodJTKA2k00DlgTTZhwZDZX00Q6mGo5fF/TT5WnIK9e
+         fKwIoMmV3AQ+EFM5MU5cqJ1z3ZpQlR0L1R2vLQb3ymWdYzTQI5cC2Lqftx+wx+k7zFFl
+         i87A==
+X-Gm-Message-State: AOAM530Elu34hPzW9E20iOba/78ydriUWPN1X4K3c0nwhHtszt7LJlWi
+        N3CLhdLX8c6e5M9A7twslH6OVEnSYrUiv4HAkCngQazr9WZY+oDVvt3ZEfLTJP/0Qc2RLz0mqXy
+        hirRAbNYuRS8Yc16VU2fEUdNQQkRp
+X-Received: by 2002:a92:7f03:: with SMTP id a3mr7363180ild.269.1590395086906;
+        Mon, 25 May 2020 01:24:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLEnS9ErHtnXEYR675VkwcBtM4ELkTqkTi0AF3EzLzdY1KPbwvUJq+fAVZlkTlUM+RbSgA7Q==
+X-Received: by 2002:a92:7f03:: with SMTP id a3mr7363168ild.269.1590395086524;
+        Mon, 25 May 2020 01:24:46 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id b7sm7173816ioq.40.2020.05.25.01.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 01:24:45 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     shshaikh@marvell.com
+Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH] qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
+Date:   Mon, 25 May 2020 03:24:39 -0500
+Message-Id: <20200525082439.14113-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Qiushi Wu <wu000273@umn.edu>
 
+In function qlcnic_83xx_interrupt_test(), function
+qlcnic_83xx_diag_alloc_res() is not handled by function
+qlcnic_83xx_diag_free_res() after a call of the function
+qlcnic_alloc_mbx_args() failed. Fix this issue by adding
+a jump target "fail_mbx_args", and jump to this new target
+when qlcnic_alloc_mbx_args() failed.
 
-Hi,
+Fixes: b6b4316c8b2f ("qlcnic: Handle qlcnic_alloc_mbx_args() failure")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Roger Quadros <rogerq@ti.com> writes:
-> This series prepares for Super-Speed support for AM654 SoC.
->
-> Patch 1 is already in your testing/next as commit d47b0062a8ad6c5060c8443=
-9745c3ce7d21d6bb9.
-> Please revert that and apply the revised version in which we make
-> the USB3.0 PHY optional. Thanks.
->
-> cheers,
-> -roger
->
-> Changelog:
-> v2:
-> - make USB3 PHY optional
->
-> Roger Quadros (2):
->   dt-bindings: usb: ti,keystone-dwc3.yaml: Add USB3.0 PHY property
->   usb: dwc3: keystone: Turn on USB3 PHY before controller
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
+index 2a533280b124..29b9c728a65e 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
+@@ -3651,7 +3651,7 @@ int qlcnic_83xx_interrupt_test(struct net_device *netdev)
+ 	ahw->diag_cnt = 0;
+ 	ret = qlcnic_alloc_mbx_args(&cmd, adapter, QLCNIC_CMD_INTRPT_TEST);
+ 	if (ret)
+-		goto fail_diag_irq;
++		goto fail_mbx_args;
+ 
+ 	if (adapter->flags & QLCNIC_MSIX_ENABLED)
+ 		intrpt_id = ahw->intr_tbl[0].id;
+@@ -3681,6 +3681,8 @@ int qlcnic_83xx_interrupt_test(struct net_device *netdev)
+ 
+ done:
+ 	qlcnic_free_mbx_args(&cmd);
++
++fail_mbx_args:
+ 	qlcnic_83xx_diag_free_res(netdev, drv_sds_rings);
+ 
+ fail_diag_irq:
+-- 
+2.17.1
 
-should reach testing/next shortly.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7LgJ4ACgkQzL64meEa
-mQb5WQ//Vrvlk2vNCM3DTytPOMcudLJlF7qSgD5yafe51IBxP+esW9iJ8ttw7AK/
-+EDL5oqKUkORUhymPd4SGQhV23f2a31WdEoDKgc8S5OsTPyrZM8OJb8SmSiQGL/9
-OaInwQmBD69/g0HxNo4LcdWkeoFNUvOdptJST/rbml59WiUwAx3By8t+liqYQ7QY
-VQoO7hY2F379UU7mE7Aa37IygSDON2SEaSqrDPzhYOJehQ3IECTJA3Y3K+irTJ1Y
-FyiK6S0qHtTkuf03Hn7Xdrkp3EPPnkqT760rHucMwrLjiu6L3R0pHKhalFtTQWwz
-BdDCMJpMwBe5iztuZgLPvWGrDE/M0WW6Zcout3BxtBgyOIT+PWPxW9+BmLxYGljo
-/zAJahDjSVPc8Ui4jHLCR7WxrCOgZutps/OaX3lxNobbQQpK7OAkXeXbV1RCXqyp
-dI6uu78nSd8cbY5nRk6oSe3w/oplTeSXpnrDwTMf2dR+kJ73pXBv8anVPodj3oRn
-SeDVKOtXnRqS7N3eKYAp4k8EqIfCr3Ls4Hj8bhto77BhQmDLcoVSmgJKybK9c42Z
-pyeW2hHs7usGd+3uRNq06xUr1QR2VX+6yfC5AiVxgkkOlgUrQPK8gxhRdp20vckP
-7HQvIQitgkOxD72mHqt75ZPElgFzkuca0Q+Dopw6EvuJPj0q8m8=
-=GcB7
------END PGP SIGNATURE-----
---=-=-=--
