@@ -2,130 +2,133 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B985C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2612F2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8A82068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590395047;
+	bh=qF3nZy5bJ7P9gCbxMcGSnMA5OaRcF5JKseiRc0o1Zk8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=uBVtYu1PZgPkP+ZLPGXRxHjkRcX4WsRddHQOhIvDl/ZLmEIq+itW8sYjkWgGL+k2H
+	 RVjUc2jyr9/EyICEHNec1giqo/EuL/aJWbknoDhSdenXNU3sHrInXlW8q2+n8VxK+Q
+	 dA8bOaj+Rh9yWvhOURWl+Z2Yy/v22/hc8E93HQqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbgEYIXW (ORCPT
+        id S1731439AbgEYIYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:23:22 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40463 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgEYIXV (ORCPT
+        Mon, 25 May 2020 04:24:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgEYIYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:23:21 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v128so15405092oia.7;
-        Mon, 25 May 2020 01:23:20 -0700 (PDT)
+        Mon, 25 May 2020 04:24:06 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AE6C061A0E;
+        Mon, 25 May 2020 01:24:05 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z6so19764497ljm.13;
+        Mon, 25 May 2020 01:24:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=ANsmsts+DHXNEc88o7BQxwGmebDh+l2B4Pvz9WLqzyk=;
+        b=dC7wDseltyDwTHP3wA1YHJ/onugrBnJLQt+wdz1AkGAxhdRt7AQqbFVbEtXa1c4vme
+         cPXUb3LOtmSGHqIik58e/iBF222d8d1d3hkGp6oSi3P/jexKHicIkGHfYhgiGunoDJBl
+         hOUo5Oau8cnauLrWdywpaa1D088+V2fO8UUyd/Z+VjHmrHqeLlug/ShdCNSH6HM6fWtk
+         nLZAV0osglxqjUxxFOPEEN4NYm6Ar4hqIugIlhmpotzkyXZNki1OexDwVmidWYsBjD88
+         8LqLfc0zUCK84unUeDKe9OGYUIJtI1DHO/UHed4Bzr7X7m4GnHaSenVJMAnpfVtXWnji
+         0lTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=28/BUMdFhJjxsxR1feXVFplXDlF+r6hoIsh+I+AzW0E=;
-        b=un18HYLQ7z1tPBCJLUfcvJDsi35hNSYl70745bPTOjIqRFwBqT21L1VEvBnmIrMyJC
-         hX7zM0pXtbr/lq7fLTGja1BxlJks+1zpFuBL5GZtKDXW0RZhQG6uxAg34mZUEuKbAOiy
-         /KbCfmgzRroOCaU7HQKTC12P5T3w4GD9Eo7vuipUFQkM6WlwdYIF+N0rkGyxPpcZJcuL
-         dSzQMLjA8WZaM589mIUJxrmnaFtfFk6im8MvLjkb6BVhbGcUp/oAVSWY0PiweHHgxwTH
-         hHbFjVqpidmvwkDE7i+bIN53RQ7Ok4+tr0let3cL9FztTh8UKABiHE2SEW6+A2axIpSv
-         4TGw==
-X-Gm-Message-State: AOAM5328wcEyAYZb3Z8l6FqeHHpp74wDlvXzCSBRRld9AUP2Tbe6wgPb
-        2CJ+rIRNriAXfyEyg/SadlSdsnwKjczhH8H3qDcqLnEo
-X-Google-Smtp-Source: ABdhPJyzr0dnWV3MxYv2OKruE8IEE6eIwSdF+vupDK8Z/lgVCl750YPGIPHRJxBhyO31YeNKh1PTPnPf9gE6bcsIQIk=
-X-Received: by 2002:aca:cd93:: with SMTP id d141mr9968926oig.148.1590394999938;
- Mon, 25 May 2020 01:23:19 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=ANsmsts+DHXNEc88o7BQxwGmebDh+l2B4Pvz9WLqzyk=;
+        b=GJ5jLXEONGW7tae6BavaJyxUdcU52wYsY+qEWd2hnRm7HSz6KMJxwlfx3z3POpgQcj
+         2e68mXZXdReD9rp6oJMXruhyRRvKD/NUVAXbFlTBlj5lSjAWxumP+uws6j3finZbTqAK
+         9whOx/OL8B5vwZWyQXWMkyOKirI5rtzHDL47lVimQWXVBICXTx/v7cOnk1MNif815vyx
+         DxVf6LX5If2vZQvkigqGI1vOKXDouRi7KOmT5HWSm4t9VFZI1gdIv6+Ic+sb3JNv9yi5
+         AiLqh7RZUXk9OeKuC+nWKL2t5KB+o//fxWnTKi/xpAx5+qBEseYQkZi7pzkSJxLzDRGF
+         B2Dw==
+X-Gm-Message-State: AOAM5307Mnc/145hkVcQBpqHQTBGe6pzrR4DKENrobQjJvTaXcxWyk29
+        mlOqpZin2uESw4lvs69dscc=
+X-Google-Smtp-Source: ABdhPJxNZgTanxq9CvLsQ/fUF7XgeONYIPCPiDZoewQSfO90yvUaQW600QFBf+2TaJtz/KgUa6K1qw==
+X-Received: by 2002:a2e:87d7:: with SMTP id v23mr11619050ljj.334.1590395044209;
+        Mon, 25 May 2020 01:24:04 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id w4sm2758698lji.2.2020.05.25.01.24.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 01:24:03 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     linux-usb@vger.kernel.org, vigneshr@ti.com,
+        chunfeng.yun@mediatek.com, linux-kernel@vger.kernel.org,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 0/2] usb: dwc3: keystone: Turn on USB3 PHY before controller
+In-Reply-To: <20200525071048.7738-1-rogerq@ti.com>
+References: <20200525071048.7738-1-rogerq@ti.com>
+Date:   Mon, 25 May 2020 11:23:58 +0300
+Message-ID: <87k110whgh.fsf@kernel.org>
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200515171031.GB19423@ninjato> <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
- <20200518092601.GA3268@ninjato> <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
- <CA+V-a8tVx6D8Vh=rYD2=Z-14GAW0puo009FtjYM++sw8PAtJug@mail.gmail.com> <20200522201727.GA21376@ninjato>
-In-Reply-To: <20200522201727.GA21376@ninjato>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 10:23:08 +0200
-Message-ID: <CAMuHMdUDs1DXfKMwDgK3e29vdzhPCPBbms2Hj8t7Pvp4j5D5Tg@mail.gmail.com>
-Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 22, 2020 at 10:17 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > > According to the Hardware User's Manual Rev. 1.00, the registers do exist
-> > > on all RZ/G1, except for RZ/G1E (see below).
-> > >
-> > >    "(automatic transmission can be used as a hardware function, but this is
-> > >     not meaningful for actual use cases)."
-> > >
-> > > (whatever that comment may mean?)
+
+Hi,
+
+Roger Quadros <rogerq@ti.com> writes:
+> This series prepares for Super-Speed support for AM654 SoC.
 >
-> Strange comment, in deed. Given the paragraph before, I would guess Gen1
-> maybe had a "fitting" PMIC where SoC/PMIC handled DVFS kind of magically
-> with this automatic transfer feature? And Gen2 has not.
+> Patch 1 is already in your testing/next as commit d47b0062a8ad6c5060c8443=
+9745c3ce7d21d6bb9.
+> Please revert that and apply the revised version in which we make
+> the USB3.0 PHY optional. Thanks.
 >
-> > > On R-Car E3 and RZ/G2E, which have a single IIC instance, we
-> > > handled that by:
-> > >
-> > >         The r8a77990 (R-Car E3) and r8a774c0 (RZ/G2E)
-> > >         controllers are not considered compatible with
-> > >         "renesas,rcar-gen3-iic" or "renesas,rmobile-iic"
-> > >         due to the absence of automatic transmission registers.
+> cheers,
+> -roger
 >
-> From a "describe the HW" point of view, this still makes sense to me.
-> Although, it is unlikely we will add support for the automatic
-> transmission feature (maybe famous last words).
-
-;-)
-
-> > > On R-Car E2 and RZ/G1E, we forgot, and used both SoC-specific and
-> > > family-specific compatible values.
+> Changelog:
+> v2:
+> - make USB3 PHY optional
 >
-> Okay, but we can fix DTs when they have bugs, or?
+> Roger Quadros (2):
+>   dt-bindings: usb: ti,keystone-dwc3.yaml: Add USB3.0 PHY property
+>   usb: dwc3: keystone: Turn on USB3 PHY before controller
 
-We can.  But we also have to consider DT backwards compatibility: i.e.
-using an old DTB with a future kernel implementing the automatic
-transmission feature.
+should reach testing/next shortly.
 
-Fortunately R-Car E2 and RZ/G1E have SoC-specific compatible values,
-so we can easily blacklist it in the driver based on that.
-Blacklisting the last instance on the other SoCs is uglier, as it needs a
-quirk that checks both the SoC-compatible value and the absence of the
-generic compatible value. But it can still be done.
+=2D-=20
+balbi
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Gr{oetje,eeting}s,
+-----BEGIN PGP SIGNATURE-----
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7LgJ4ACgkQzL64meEa
+mQb5WQ//Vrvlk2vNCM3DTytPOMcudLJlF7qSgD5yafe51IBxP+esW9iJ8ttw7AK/
++EDL5oqKUkORUhymPd4SGQhV23f2a31WdEoDKgc8S5OsTPyrZM8OJb8SmSiQGL/9
+OaInwQmBD69/g0HxNo4LcdWkeoFNUvOdptJST/rbml59WiUwAx3By8t+liqYQ7QY
+VQoO7hY2F379UU7mE7Aa37IygSDON2SEaSqrDPzhYOJehQ3IECTJA3Y3K+irTJ1Y
+FyiK6S0qHtTkuf03Hn7Xdrkp3EPPnkqT760rHucMwrLjiu6L3R0pHKhalFtTQWwz
+BdDCMJpMwBe5iztuZgLPvWGrDE/M0WW6Zcout3BxtBgyOIT+PWPxW9+BmLxYGljo
+/zAJahDjSVPc8Ui4jHLCR7WxrCOgZutps/OaX3lxNobbQQpK7OAkXeXbV1RCXqyp
+dI6uu78nSd8cbY5nRk6oSe3w/oplTeSXpnrDwTMf2dR+kJ73pXBv8anVPodj3oRn
+SeDVKOtXnRqS7N3eKYAp4k8EqIfCr3Ls4Hj8bhto77BhQmDLcoVSmgJKybK9c42Z
+pyeW2hHs7usGd+3uRNq06xUr1QR2VX+6yfC5AiVxgkkOlgUrQPK8gxhRdp20vckP
+7HQvIQitgkOxD72mHqt75ZPElgFzkuca0Q+Dopw6EvuJPj0q8m8=
+=GcB7
+-----END PGP SIGNATURE-----
+--=-=-=--
