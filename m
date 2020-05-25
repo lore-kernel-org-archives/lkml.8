@@ -2,111 +2,83 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36969C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8742073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMy73XZt"
+	by mail.kernel.org (Postfix) with ESMTP id 1B3F22073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390719AbgEYNCw (ORCPT
+        id S2390727AbgEYNC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388757AbgEYNCw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:02:52 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B70C061A0E;
-        Mon, 25 May 2020 06:02:52 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l21so20405577eji.4;
-        Mon, 25 May 2020 06:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZr4IPFA4Vnbkt6An22aT54SGu2lLj63yMeWXMh2dCU=;
-        b=mMy73XZtjjq+v4fDME0JBmckAwsdZlGQrcp1G0zD8WngkTBWfH8HjpTofWsjJgwraQ
-         ncz6Rex61aGiRYH768s46xsWQhHLzdLe+qi7H71M8wHZZh318/BIb+Kzd5ljR9FhsExI
-         Y2VNq5YIzefbTqjzrHmYmgdsZU/SnNdopkjk3ByxS+Jz0popDoFuQJjrziYpS8S0GhCx
-         Y4tLWe5ROO8kQzaBLll0odz/tcULVeR1RkqKR11ed9IyOCy9v6pjqS2HRqr5HNTMtNkx
-         b1rdKVPBUHwclqn85zggGlfCuHdP1ndh4g0dleq/9Tj7GiwnkBUROk3iM8J0VcDSsOpq
-         zAaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZr4IPFA4Vnbkt6An22aT54SGu2lLj63yMeWXMh2dCU=;
-        b=RFxwan3zqfPWkMg7acC6TEMvNel1IHWQ4PjxqG6gNqx7DAIdR8r/he8fjgimtDgeVI
-         JudUy5kTZY7sNxTwXHSkshcWn+vhx7HHe8xv464jRJFrExZ++RX+UyEEzn1BouniLbeB
-         mXVi+kDcqV0v+t+kntmLXAlj4EW4LxZQwVnA22VysH8pCP2F7SYqLIVcq6MV38aZCCbD
-         t52Xbd656qGWbGpvXZ8vyWNFiT7942aosEQqsN3ix26qoXKCri6f8m2Ui2igZ/32NZaW
-         VHjvf9CBQDqeSh34AyuYNdeT9NCq6nn3E6/7E3UE54cnd+EHz3ZsTykPnVSsPAdEOvTf
-         i3wg==
-X-Gm-Message-State: AOAM530OoH6MTkNiBFFTSWo6ejuFu8oHv1eAIQ0CW6uIsr7iOxcwqUM8
-        khbNPxfrX4QirucgruQO7Xw=
-X-Google-Smtp-Source: ABdhPJz5mt0X/pfBA+FGY+x8reJY5MplGG1iEykEAMeauC//yEKoqPcGvWWK6WjbkImYZeR/hpWdKA==
-X-Received: by 2002:a17:906:aeca:: with SMTP id me10mr19856510ejb.367.1590411770746;
-        Mon, 25 May 2020 06:02:50 -0700 (PDT)
-Received: from localhost.localdomain ([188.25.147.193])
-        by smtp.gmail.com with ESMTPSA id d15sm15656750edr.3.2020.05.25.06.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 06:02:50 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org
-Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
-        lukas@wunner.de, heikki.krogerus@linux.intel.com, vigneshr@ti.com,
-        linux-kernel@vger.kernel.org, fido_max@inbox.ru,
-        radu-andrei.bulie@nxp.com
-Subject: [PATCH] serial: 8250: probe all 16550A variants by default
-Date:   Mon, 25 May 2020 16:02:38 +0300
-Message-Id: <20200525130238.3614179-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 25 May 2020 09:02:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33362 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388757AbgEYNC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:02:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 17DBFACDB;
+        Mon, 25 May 2020 13:02:58 +0000 (UTC)
+Date:   Mon, 25 May 2020 15:02:53 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Evan Green <evgreen@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] iommu: Fix group refcount in iommu_alloc_default_domain()
+Message-ID: <20200525130253.GH5075@suse.de>
+References: <20200522130145.30067-1-saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522130145.30067-1-saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+Hi,
 
-On NXP T1040, the UART is typically detected as 16550A_FSL64. After said
-patch, it gets detected as plain 16550A and the Linux console is
-completely garbled and missing characters.
+On Fri, May 22, 2020 at 06:31:45PM +0530, Sai Prakash Ranjan wrote:
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index a4c2f122eb8b..05f7b77c432f 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1491,6 +1491,7 @@ static int iommu_alloc_default_domain(struct device *dev)
+>  {
+>  	struct iommu_group *group;
+>  	unsigned int type;
+> +	int ret;
+>  
+>  	group = iommu_group_get(dev);
+>  	if (!group)
+> @@ -1501,7 +1502,11 @@ static int iommu_alloc_default_domain(struct device *dev)
+>  
+>  	type = iommu_get_def_domain_type(dev);
+>  
+> -	return iommu_group_alloc_default_domain(dev->bus, group, type);
+> +	ret = iommu_group_alloc_default_domain(dev->bus, group, type);
+> +
+> +	iommu_group_put(group);
+> +
+> +	return ret;
+>  }
+>  
+>  /**
 
-So clearly, introducing the SERIAL_8250_16550A_VARIANTS config option
-has broken many existing users because it has changed the default
-behavior. Restore that by adding a 'default y' to this option. Users who
-care about 20 ms shorter boot time can always disable it, but stop
-wasting many debugging hours for people who don't care all that much.
+Thanks for the report and the fix. I think it is better to fix this by
+not taking a group reference in iommu_alloc_default_domain() at all and
+pass group as a parameter. Please see the patch I just sent out.
 
-Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- drivers/tty/serial/8250/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
 
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index af0688156dd0..89c7ecb55619 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
- config SERIAL_8250_16550A_VARIANTS
- 	bool "Support for variants of the 16550A serial port"
- 	depends on SERIAL_8250
-+	default y
- 	help
- 	  The 8250 driver can probe for many variants of the venerable 16550A
- 	  serial port. Doing so takes additional time at boot.
--- 
-2.25.1
-
+	Joerg
