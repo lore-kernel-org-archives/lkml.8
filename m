@@ -2,133 +2,143 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208C0207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590400753;
-	bh=dFvT/rav7y2msyyMHKKB49+6/JbmifHHbRyoV4o0gjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AZmWZqBa97k6qFdNzZMmijGS5TvhgDiB6gYwIoV+T6IQPcMjDdhhx62EB3OmUMBeX
-	 Hbzjai552J0GLhvtAPpk2fBqtEJyl9e6b3peC4HbZ/X8g3WayjLQlrS2usuR+bpaxI
-	 MMZhLC5g+QFojFxVnw/MC/pdAePRQT8U9QTURI+g=
+	by mail.kernel.org (Postfix) with ESMTP id 092AC20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tp+1lAZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389705AbgEYJ7M (ORCPT
+        id S2389715AbgEYKBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389398AbgEYJ7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:59:11 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF3C20787;
-        Mon, 25 May 2020 09:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590400751;
-        bh=dFvT/rav7y2msyyMHKKB49+6/JbmifHHbRyoV4o0gjg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LcRbBDykBXk62o50QbWX56I4nMWRbBZd+d8cUfZnhvJxwsnisb9MOjbF2sU5n+kT6
-         aGZkouliWEAgN3U6LbulyWW6ksAyKoVk30zwr/B7LLl5in613enj5ff9zANWY0WoRS
-         1OSxyOi38KK/TS8lTfsZ8jVI71GiTRC2xm0eKB8g=
-Date:   Mon, 25 May 2020 18:59:05 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        David Laight <David.Laight@ACULAB.COM>
-Subject: Re: [PATCH v2] selftests/ftrace: Use printf for backslash included
- command
-Message-Id: <20200525185905.5fecd8073e686001712dfdf9@kernel.org>
-In-Reply-To: <158920418730.16156.8299185499520876735.stgit@devnote2>
-References: <87imh21x6f.fsf@igel.home>
-        <158920418730.16156.8299185499520876735.stgit@devnote2>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 25 May 2020 06:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389633AbgEYKBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:01:21 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F99FC061A0E;
+        Mon, 25 May 2020 03:01:21 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 185so273340pgb.10;
+        Mon, 25 May 2020 03:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ylVewysK+PjFjXe4MaGfxxgQ1ncgy8eTFQobRB6nT0c=;
+        b=Tp+1lAZs+PhCP2z2fNV0mJUwu1x5W0yWBgjwqNEqzzwYYbeKiiop0GapnXB9v4Chsn
+         HwEIfjaydCb/+r2I/0Aof9KtuWlvDqvi480G5WOYeJZJo7MT19EUdBqAu8ukI7MwF/NB
+         NP/7HnFDbfZzlzdHNr3Cu4qRfItaxzEUW0aGBB/ZpY1OHKKuWNuGZu/MgShQ1uaTr0XE
+         xZvhyvpk7oBI6p4GFiZFbhGwOJQNKuFyxnqx6Tb/6j1sF4UmhQ3vQmU6nMVu1FBSrdMK
+         bU5xGF85vpSWHeXwhcATOXbzqXJkJoIEBDuSPppvjerQEhjVHhc7QMGQ/rueEXi0VoOz
+         jazQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ylVewysK+PjFjXe4MaGfxxgQ1ncgy8eTFQobRB6nT0c=;
+        b=atHd1Yo6sRpv8xgsUKFmmPcBQ2sX9Xt58N4yGG0XSiPVCvXwvckeZlAe4sfIlrqv9G
+         WhqOzTNMw3jnRbtY+7fFsnbxC3T6qtvWcQ80v4pl9lnkrG/rYDpuQoXX4UBH3O125JPC
+         BNzcpOdl36dIMhRI+tloMyQxtMnOeIbB0MV66Fv6qDCMnB07SfMRqOFJgwYp8i48ooTJ
+         4G4/Swp6KL9mOrcBFdF1wGbUnBmAZC0G286xgBQ8vGlhuMCGOajmZcuwCb1I1L6mmYoU
+         AiQ3Os6RDsb0edXMBCrbhqHozCnc5eUZ59oq/dH0MJ2xoNVQqn3zpSVBuq4hn/cfv9qA
+         SBDg==
+X-Gm-Message-State: AOAM531Qkn8LHieRux6CdI6ANN3MJI8YmDvXcMs+BBa9MUcNtpydHNMZ
+        Y2oai4UmgFEtqgm11VB0wxA=
+X-Google-Smtp-Source: ABdhPJw2tG4pYxsjdlq0VIewPkp5+2Nj+vreZVIMh2XoSkb01B91XsADvAnpnZFN8P9jP1xYme6ikA==
+X-Received: by 2002:aa7:9464:: with SMTP id t4mr15632262pfq.52.1590400881118;
+        Mon, 25 May 2020 03:01:21 -0700 (PDT)
+Received: from bj616583pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id co16sm12353532pjb.55.2020.05.25.03.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 03:01:20 -0700 (PDT)
+From:   gengcixi@gmail.com
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, oberpar@linux.ibm.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        Cixi Geng <cixi.geng1@unisoc.com>
+Subject: [RFC PATCH v4] GCOV: profile by modules
+Date:   Mon, 25 May 2020 18:00:54 +0800
+Message-Id: <20200525100054.17700-1-gengcixi@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+From: Cixi Geng <cixi.geng1@unisoc.com>
 
-Could you pick this to kselftest-next?
+The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
+kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
+to control part of the kernel modules to open gcov.
 
-Thank you,
+Only add SERIAL_GCOV for an example.
 
-On Mon, 11 May 2020 22:36:27 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+---
+ drivers/tty/serial/Kconfig  |  7 +++++++
+ drivers/tty/serial/Makefile |  1 +
+ kernel/gcov/Kconfig         | 14 ++++++++++++++
+ 3 files changed, 22 insertions(+)
 
-> Since the built-in echo has different behavior in POSIX shell
-> (dash) and bash, kprobe_syntax_errors.tc can fail on dash which
-> interpret backslash escape automatically.
-> 
-> To fix this issue, we explicitly use printf "%s" (not interpret
-> backslash escapes) if the command string can include backslash.
-> 
-> Reported-by: Liu Yiding <yidingx.liu@intel.com>
-> Suggested-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/testing/selftests/ftrace/test.d/functions    |    8 +++++---
->  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 +++-
->  2 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-> index 61a3c7e2634d..697c77ef2e2b 100644
-> --- a/tools/testing/selftests/ftrace/test.d/functions
-> +++ b/tools/testing/selftests/ftrace/test.d/functions
-> @@ -119,12 +119,14 @@ yield() {
->      ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
->  }
->  
-> +# Since probe event command may include backslash, explicitly use printf "%s"
-> +# to NOT interpret it.
->  ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
-> -    pos=$(echo -n "${2%^*}" | wc -c) # error position
-> -    command=$(echo "$2" | tr -d ^)
-> +    pos=$(printf "%s" "${2%^*}" | wc -c) # error position
-> +    command=$(printf "%s" "$2" | tr -d ^)
->      echo "Test command: $command"
->      echo > error_log
-> -    (! echo "$command" >> "$3" ) 2> /dev/null
-> +    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
->      grep "$1: error:" -A 3 error_log
->      N=$(tail -n 1 error_log | wc -c)
->      # "  Command: " and "^\n" => 13
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> index ef1e9bafb098..eb0f4ab4e070 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> @@ -91,7 +91,9 @@ esac
->  if grep -q "Create/append/" README && grep -q "imm-value" README; then
->  echo 'p:kprobes/testevent _do_fork' > kprobe_events
->  check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
-> -echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
-> +
-> +# Explicitly use printf "%s" to not interpret \1
-> +printf "%s" 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
->  check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
->  check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
->  check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
-> 
-
-
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index adf9e80e7dc9..6df002370f18 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1566,3 +1566,10 @@ endmenu
+ 
+ config SERIAL_MCTRL_GPIO
+ 	tristate
++
++config SERIAL_GCOV
++	bool "Enable profile gcov for serial directory"
++	depends on GCOV_PROFILE_PREREQS
++	help
++	  The SERIAL_GCOV will add Gcov profiling flags when kernel compiles.
++	  Say 'Y' here if you want the gcov data for the serial directory,
+diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+index d056ee6cca33..17272733db95 100644
+--- a/drivers/tty/serial/Makefile
++++ b/drivers/tty/serial/Makefile
+@@ -3,6 +3,7 @@
+ # Makefile for the kernel serial device drivers.
+ #
+ 
++GCOV_PROFILE := $(CONFIG_SERIAL_GCOV)
+ obj-$(CONFIG_SERIAL_CORE) += serial_core.o
+ 
+ obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
+diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+index 3941a9c48f83..ea8b514f5676 100644
+--- a/kernel/gcov/Kconfig
++++ b/kernel/gcov/Kconfig
+@@ -51,6 +51,20 @@ config GCOV_PROFILE_ALL
+ 	larger and run slower. Also be sure to exclude files from profiling
+ 	which are not linked to the kernel image to prevent linker errors.
+ 
++config GCOV_PROFILE_PREREQS
++	bool "Profile Kernel subsytem"
++	depends on !COMPILE_TEST
++	depends on GCOV_KERNEL
++	depends on !GCOV_PROFILE_ALL
++	help
++	  This options activates profiling for the specified kernel modules.
++
++	  When some modules need Gcov data, enable this config, then configure
++	  with gcov on the corresponding modules,The directories or files of
++	  these modules will be added profiling flags after kernel compile.
++
++	  If unsure, say N.
++
+ choice
+ 	prompt "Specify GCOV format"
+ 	depends on GCOV_KERNEL
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
