@@ -2,97 +2,108 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD21CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD105207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F6120776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="izo/Grih"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fEqDp470"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389180AbgEYVJ6 (ORCPT
+        id S2390823AbgEYVKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 17:09:58 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:57263 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729338AbgEYVJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 17:09:57 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id dKM5jEHnSdVYHdKM6jX09H; Mon, 25 May 2020 15:09:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1590440996; bh=E6euisO0yE/Fs40IpuKFjZmhJuLZeL7J5pqllyIRrzQ=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=izo/GrihCTAyL7wxdUDzqoApjM9nfnrX1rqAD0v1gB0en1/Pr5qDq1xEbOCOPDDGN
-         AExW7WcecmKO7ZG5yxbizxul6EG8JWPaAdlpBJ0ElaKMjZB+N+LoNj2QCyD3VwUfkw
-         U06nBuRJWL5C2x4FdSYfUtkhA7FMO6246eMheVIaVVuiSCcwGsXYyRZ603rp8uCRYS
-         ZyvNOOYZKVRMBV7XK4J7SDPWR3xwNoLSZi3OJOjuWrFplOy/8hfS07BbPlgWfbYx1g
-         hGS7X7Tz2E2xuCX+ResHyWUQ1YF/TELTR4XgRKrUMHsrKZ0DEkc9VUzftLRojxV5B/
-         L+7CKFyh8mD1w==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Y5CGTSWN c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=kAzHQTmmk_fIg6_RNCcA:9
- a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Len Brown'" <len.brown@intel.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>
-References: <3169564.ZRsPWhXyMD@kreacher> <000801d632a9$6a586c90$3f0945b0$@net>
-In-Reply-To: <000801d632a9$6a586c90$3f0945b0$@net>
-Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
-Date:   Mon, 25 May 2020 14:09:51 -0700
-Message-ID: <001101d632d8$d6a01b30$83e05190$@net>
+        Mon, 25 May 2020 17:10:25 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:20360 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387794AbgEYVKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 17:10:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590441024; x=1621977024;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=pVK6EFMn3Y2YVusHeeWOKQoF6/4jAwAm20RH8qsPtmc=;
+  b=fEqDp470vqFqqwArMcW7d1vmTu1iAhYHFrecYy/ILENf4vrklpcTbVga
+   vNB0pjkbFF8DM9Tki1nIZqc8JqUH3iW2YuG8ghSTz2WRDn3agqYMjLeHS
+   ui1ifOUO8+T50yj/NzOv0SKpgUJu3kr4rRtdWcSlXGYW6oZkpOaz9aYeL
+   A=;
+IronPort-SDR: XHbaP4qQBTQgvcldhy0Q30HDmBJWwVZvPmBauoun0HAOmo056nEb87EMS0Lvtb7Wfh68vTPPw/
+ VMpdpKBJwezg==
+X-IronPort-AV: E=Sophos;i="5.73,434,1583193600"; 
+   d="scan'208";a="32213533"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 25 May 2020 21:10:22 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id B5A79A1C56;
+        Mon, 25 May 2020 21:10:21 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 21:10:21 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.175) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 May 2020 21:10:12 +0000
+Subject: Re: [PATCH v2 16/18] nitro_enclaves: Add sample for ioctl interface
+ usage
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
+ <20200522062946.28973-17-andraprs@amazon.com>
+ <20200522071123.GI771317@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <af35ad60-6084-b28d-60ec-4e27adfae800@amazon.com>
+Date:   Tue, 26 May 2020 00:10:06 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdYvk3X5bnwqpX6hRwi7ciAthJfS0ADBo0fwAA9F6bA=
-X-CMAE-Envelope: MS4wfEucPqWNd1dMiC4Rfsb/loWX2wDsbH1jnGYnBd7z7rfnF8IkJe3mMjEq5QtGIPjwHJRbfkWeFH+/BcHigRmBrxdi+yNem7AUGSdwWrrPGGpIgLhDVjiW
- YOsCK6MayGljnaVmYc1R+ywIhRiOYL6SWnRAW8eAB4M2Z9Mj5iJFEjy6t7ms8ry80GVxQhGs37dwz9wQcbHQpTYVR1fEsJI3O9jgwJzJ82gK8K6xZynz4ktj
- M73J3gxWkBagvLkVcIxk2UczBbScFwIcQF5WblPyjCZEnTP1aEhetJZ/7Ct9mF4PEacLf/2POEti+hSabik5Vo+GH5+FNIlzJFvYk0s/YpGQ0cYIM5o1/vKO
- 2WX5ZSiynZSeKLPRdgF0KM9VcoSy2OOosmUeuCxmqH6UgLTYBOmeSkIJX7DsekxUBsPEFbDl
+In-Reply-To: <20200522071123.GI771317@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.175]
+X-ClientProxiedBy: EX13D38UWC003.ant.amazon.com (10.43.162.23) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-The INTEL_CPUFREQ_TRANSITION_DELAY_HWP = 20000
-test results from this e-mail were incorrect.
-The test and graphs are being re-done.
-
-On 2020.05.25 08:30 Doug smythies wrote:
-
-> 
-> Legend - intel_pstate - powersave graph [2].
-> 
-> What? Why is there such a graph, unrelated to this patch?
-> Well, because there is a not yet understood effect.
-> 
-> p_powe_stock : intel_pstate, powersave, stock kernel (5.7-rc6), hwp disabled.
-> P_powe_hwp : intel_pstate, powersave, patched kernel (5.7-rc6), DELAY_HWP 5000.
-> P_powe_hwp2 : intel_pstate, powersave, patched kernel (5.7-rc6), DELAY_HWP 20000.
-> 
-> Conclusion: ??
-> 
-> Note: That I merely made a stupid mistake is a real possibility.
-
-Yes, that was it. However all DELAY_HWP 20000 tests were bad,
-Not just this one.
-
-... Doug
-
+CgpPbiAyMi8wNS8yMDIwIDEwOjExLCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgTWF5IDIyLCAy
+MDIwIGF0IDA5OjI5OjQ0QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gU2lnbmVk
+LW9mZi1ieTogQWxleGFuZHJ1IFZhc2lsZSA8bGV4bnZAYW1hem9uLmNvbT4KPj4gU2lnbmVkLW9m
+Zi1ieTogQW5kcmEgUGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+IE5vIGNoYW5nZWxv
+Zz8KCkkgaW5jbHVkZWQgdGhlIGNoYW5nZWxvZyBpbiB2My4KCj4KPj4gLS0tCj4+ICAgc2FtcGxl
+cy9uaXRyb19lbmNsYXZlcy8uZ2l0aWdub3JlICAgICAgICAgICAgIHwgICAyICsKPj4gICBzYW1w
+bGVzL25pdHJvX2VuY2xhdmVzL01ha2VmaWxlICAgICAgICAgICAgICAgfCAgMjggKwo+PiAgIC4u
+Li9pbmNsdWRlL2xpbnV4L25pdHJvX2VuY2xhdmVzLmggICAgICAgICAgICB8ICAyMyArCj4+ICAg
+Li4uL2luY2x1ZGUvdWFwaS9saW51eC9uaXRyb19lbmNsYXZlcy5oICAgICAgIHwgIDc3ICsrKwo+
+IFdoeSBhcmUgeW91IG5vdCB1c2luZyB0aGUgdWFwaSBmaWxlcyBmcm9tIHRoZSBrZXJuZWwgaXRz
+ZWxmPyAgSG93IGFyZQo+IHlvdSBnb2luZyB0byBrZWVwIHRoZXNlIGluIHN5bmM/CgpZZWFoLCB0
+aGUgdWFwaSBmaWxlcyBzaG91bGQgYmUgdXNlZCwgSSBqdXN0IHJlbW92ZWQgdGhlIGluY2x1ZGUg
+Zm9sZGVyIApmcm9tIGhlcmUuCgpUaGFuayB5b3UuCgpBbmRyYQoKCgpBbWF6b24gRGV2ZWxvcG1l
+bnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBvZmZpY2U6IDI3QSBTZi4gTGF6
+YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21h
+bmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEv
+MjAwNS4K
 
