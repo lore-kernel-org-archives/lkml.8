@@ -2,93 +2,184 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE56C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDB22073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57EB2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YOCI/MFa"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OX+SXYOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389629AbgEYJrJ (ORCPT
+        id S2389631AbgEYJsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:47:09 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15772 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389333AbgEYJrJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:47:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590400028; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=nzc2bGnfZw3EYhLsT6vL//x7Kf1J15GGIKlmgweEp8c=;
- b=YOCI/MFacC/yvl3v/Qyn6JuZA2kPSxYOnlygybphYFEXhtT9G1U29T3//u8ejWKsGIWhPiYT
- mjezvCyLtfbWhXEFlf6d+pdz3LWPABdTco34hE7eh32OsPgsvFOVe52Sbjh4o9tecPZ/kPFV
- y6CCLHrn/lhK0JWIjoSa1CcdKno=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ecb9416c60c306cc85162b3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 09:47:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8BCA4C43391; Mon, 25 May 2020 09:47:02 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 25 May 2020 05:48:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33330 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389333AbgEYJsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:48:02 -0400
+Received: from zn.tnic (p200300ec2f06f30089d08c3691e46ece.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:f300:89d0:8c36:91e4:6ece])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08818C433C9;
-        Mon, 25 May 2020 09:47:02 +0000 (UTC)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 70AFA1EC0118;
+        Mon, 25 May 2020 11:48:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590400080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3y3jg68vy6yb8x/l2uE4EytiivitkVVGn0MCFGvcVrI=;
+        b=OX+SXYOo7rf6Yz3kc38j0qTOsFjaZVHPSTqIcgJnz64n7aJmXMRxTsVY2Y/hr2J7HxVQ7i
+        ipOhdTCTXChcvJ6EHpaChhQXCseTDbCmOXPxlkGQuXwWmDjHgCD1OwlBJSiH14Nc0JSUAh
+        MNyzs/BRMaNSA4rQ0EsQbMgPZw8em3U=
+Date:   Mon, 25 May 2020 11:47:54 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 52/75] x86/sev-es: Handle MMIO String Instructions
+Message-ID: <20200525094747.GE25636@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-53-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 May 2020 15:17:01 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 08/10] clk: qcom: Add graphics clock controller driver for
- SM8250
-In-Reply-To: <20200524210615.17035-9-jonathan@marek.ca>
-References: <20200524210615.17035-1-jonathan@marek.ca>
- <20200524210615.17035-9-jonathan@marek.ca>
-Message-ID: <c4d43cf01b6d014fdc2258abb94eb2c5@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-53-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
-
-On 2020-05-25 02:36, Jonathan Marek wrote:
-> Add support for the graphics clock controller found on SM8250
-> based devices. This would allow graphics drivers to probe and
-> control their clocks.
+On Tue, Apr 28, 2020 at 05:17:02PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> This is copied from the downstream kernel, adapted for upstream.
-> For example, GDSCs have been added.
+> Add handling for emulation the MOVS instruction on MMIO regions, as done
+> by the memcpy_toio() and memcpy_fromio() functions.
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kernel/sev-es.c | 78 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+> index e3662723ed76..84958a82f8e0 100644
+> --- a/arch/x86/kernel/sev-es.c
+> +++ b/arch/x86/kernel/sev-es.c
+> @@ -552,6 +552,74 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * The MOVS instruction has two memory operands, which raises the
+> + * problem that it is not known whether the access to the source or the
+> + * destination caused the #VC exception (and hence whether an MMIO read
+> + * or write operation needs to be emulated).
+> + *
+> + * Instead of playing games with walking page-tables and trying to guess
+> + * whether the source or destination is an MMIO range, this code splits
 
-Since this is taken from downstream, maintain the original author's
-signed-off and add yourself as the co-developer if you have done
-any modifications. Same applies to all other patches.
+s/this code splits/split/
 
--Sai
+> + * the move into two operations, a read and a write with only one
+> + * memory operand. This will cause a nested #VC exception on the MMIO
+> + * address which can then be handled.
+> + *
+> + * This implementation has the benefit that it also supports MOVS where
+> + * source _and_ destination are MMIO regions.
+> + *
+> + * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
+> + * rare operation. If it turns out to be a performance problem the split
+> + * operations can be moved to memcpy_fromio() and memcpy_toio().
+> + */
+> +static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
+> +					  unsigned int bytes)
+> +{
+> +	unsigned long ds_base, es_base;
+> +	unsigned char *src, *dst;
+> +	unsigned char buffer[8];
+> +	enum es_result ret;
+> +	bool rep;
+> +	int off;
+> +
+> +	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
+> +	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
+> +
+> +	if (ds_base == -1L || es_base == -1L) {
+> +		ctxt->fi.vector = X86_TRAP_GP;
+> +		ctxt->fi.error_code = 0;
+> +		return ES_EXCEPTION;
+> +	}
+> +
+> +	src = ds_base + (unsigned char *)ctxt->regs->si;
+> +	dst = es_base + (unsigned char *)ctxt->regs->di;
+> +
+> +	ret = vc_read_mem(ctxt, src, buffer, bytes);
+> +	if (ret != ES_OK)
+> +		return ret;
+> +
+> +	ret = vc_write_mem(ctxt, dst, buffer, bytes);
+> +	if (ret != ES_OK)
+> +		return ret;
+> +
+> +	if (ctxt->regs->flags & X86_EFLAGS_DF)
+> +		off = -bytes;
+> +	else
+> +		off =  bytes;
+> +
+> +	ctxt->regs->si += off;
+> +	ctxt->regs->di += off;
+> +
+> +	rep = insn_has_rep_prefix(&ctxt->insn);
+> +
+
+^ Superfluous newline.
+
+> +	if (rep)
+> +		ctxt->regs->cx -= 1;
+> +
+> +	if (!rep || ctxt->regs->cx == 0)
+> +		return ES_OK;
+> +	else
+> +		return ES_RETRY;
+> +}
+> +
+>  static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+>  				     struct es_em_ctxt *ctxt)
+>  {
+> @@ -606,6 +674,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+>  		memcpy(reg_data, ghcb->shared_buffer, bytes);
+>  		break;
+>  
+> +		/* MOVS instruction */
+> +	case 0xa4:
+> +		bytes = 1;
+> +		/* Fallthrough */
+
+WARNING: Prefer 'fallthrough;' over fallthrough comment
+#120: FILE: arch/x86/kernel/sev-es.c:680:
++               /* Fallthrough */
+
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
