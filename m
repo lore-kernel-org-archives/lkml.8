@@ -2,128 +2,94 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F0620776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590392676;
-	bh=k/3pUqyaY8ZZZCGpA3RJjTGKY//Rexfbnp6OChZ7fNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Reale2hzN7PLa6nGN4ewoCh2ktFqvIVQCZKbXzGvrB5+PXAuiNGQrT0I4c2ELZavv
-	 H1vsgbv6XT7vFy67lMp0bZQA6xJXqO7wJXDtCWiSO0ydEqguJnTh6lyY821WfjS38z
-	 ADNPmik7yZmQY9RvnYJhHvAOAumpLZoNvcDnaX4E=
+	by mail.kernel.org (Postfix) with ESMTP id B7A5920776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389164AbgEYHog (ORCPT
+        id S2389172AbgEYHoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:44:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39581 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389105AbgEYHof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:44:35 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z206so6346748lfc.6;
-        Mon, 25 May 2020 00:44:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QQh8K/AzxLyGXT7M8yyjCx9x6FADb3eXEm3pp3jyfa4=;
-        b=Zgpw5qphMRCBKWHJFfrmVihs3Yafigyu8r1I6rSThpIn6IoCrkEpHpPQPdOHdILtnc
-         o34ZdzK05O2EsAhcbSDNuL+nKpO+VM9vB4D2hruSUmIelKC21lcFQLYJIITIYr9OXqO2
-         J7Kh8jVQtBwfksKmwcm+xu6RERFPITseVDe/HSusP/+szbISvyBqLliroe980yVj4WyK
-         KqHjWB2nzJIkBZ9GISVRnFUxD0cNkDnXj6VqoVmVJfrZ1nr3vx6BcO6NdH4MhvXv3Py9
-         VgUjhf4dxXNbjcyxXY2tdxkJxR2XWIvKPOn9/mjm36rfj4mWGmPUfycX8OP+Ic84EIiZ
-         lACw==
-X-Gm-Message-State: AOAM532xn4mq4lgKq2+RbU1mnSmcdVKpM0GRSMWV5BLXzrCQjw/gkz8O
-        TKGIm6QLXLRR6cEuSZC7tO4=
-X-Google-Smtp-Source: ABdhPJxKSbwHav/tnGnwZwLeNFOidZRkNGpkdbwTWES4Gq2Rkn73uu1zH4rlqSs7CM5G8CSF/j4pBg==
-X-Received: by 2002:a19:c212:: with SMTP id l18mr6677122lfc.68.1590392673005;
-        Mon, 25 May 2020 00:44:33 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id l15sm4308390ljc.73.2020.05.25.00.44.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 00:44:32 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jd7ma-0001OJ-DP; Mon, 25 May 2020 09:44:24 +0200
-Date:   Mon, 25 May 2020 09:44:24 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tony Lindgren <tony@atomide.com>, Johan Hovold <johan@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200525074424.GA5276@localhost>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200522091731.GA1203588@kroah.com>
+        Mon, 25 May 2020 03:44:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37814 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389105AbgEYHop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:44:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A8230AC9F;
+        Mon, 25 May 2020 07:44:46 +0000 (UTC)
+Subject: Re: [PATCH v2] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <159032779896.957378.7852761411265662220.stgit@buzz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <4cd36ad8-c5f8-9222-20cf-3b5719d18b98@suse.cz>
+Date:   Mon, 25 May 2020 09:44:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522091731.GA1203588@kroah.com>
+In-Reply-To: <159032779896.957378.7852761411265662220.stgit@buzz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:17:31AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, May 12, 2020 at 02:47:07PM -0700, Tony Lindgren wrote:
-> > Hi all,
-> > 
-> > Here's the updated set of these patches fixed up for Johan's and
-> > Pavel's earlier comments.
-> > 
-> > This series does the following:
-> > 
-> > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
-> > 
-> > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
-> >    TTY ports configured in devicetree with help of n_gsm.c
-> > 
-> > 3. Allows the use of standard Linux device drivers for dedicated
-> >    TS 27.010 channels for devices like GNSS and ALSA found on some
-> >    modems for example
-> > 
-> > 4. Adds a gnss-motmdm consumer driver for the GNSS device found on
-> >    the Motorola Mapphone MDM6600 modem on devices like droid4
-> > 
-> > I've placed the serdev-ngsm.c under drivers/tty/serdev as it still
-> > seems to make most sense with no better places available. It's no
-> > longer an MFD driver as it really does not need to care what channel
-> > specific consumer drivers might be configured for the generic driver.
-> > Now serdev-ngsm just uses of_platform_populate() to probe whatever
-> > child nodes it might find.
-> > 
-> > I'm not attached having the driver in drivers/tty/serdev. I just
-> > don't have any better locations in mind. So using Johan's earlier
-> > i2c example, the drivers/tty/serdev/serdev-ngsm.c driver is now a
-> > generic protocol and bus driver, so it's getting closer to the
-> > the drivers/i2c/busses analogy maybe :) Please do suggest better
-> > locations other than MFD and misc if you have better ideas.
-> > 
-> > Now without the chardev support, the /dev/gsmtty* using apps need
-> > to use "U1234AT+CFUN?" format for the packets. The advantage is
-> > less kernel code, and we keep the existing /dev/gsmtty* interface.
-> > 
-> > If we still really need the custom chardev support, that can now
-> > be added as needed with the channel specific consumer driver(s),
-> > but looks like this won't be needed based on Pavel's ofono work.
+On 5/24/20 3:43 PM, Konstantin Khlebnikov wrote:
+> Replace superfluous VM_BUG_ON() with comment about correct usage.
 > 
-> Johan and Rob, any objection/review of this series?
+> Technically reverts commit 1d148e218a0d0566b1c06f2f45f1436d53b049b2
+> ("mm: add VM_BUG_ON_PAGE() to page_mapcount()"), but context have changed.
+> 
+> Function isolate_migratepages_block() runs some checks out of lru_lock
+> when choose pages for migration. After checking PageLRU() it checks extra
+> page references by comparing page_count() and page_mapcount(). Between
+> these two checks page could be removed from lru, freed and taken by slab.
+> 
+> As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
+> Race window is tiny. For certain workload this happens around once a year.
+> 
+> 
+>  page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
+>  flags: 0x500000000008100(slab|head)
+>  raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
+>  raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
+>  page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
+>  ------------[ cut here ]------------
+>  kernel BUG at ./include/linux/mm.h:628!
+>  invalid opcode: 0000 [#1] SMP NOPTI
+>  CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
+>  Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
+>  RIP: 0010:isolate_migratepages_block+0x986/0x9b0
+> 
+> 
+> Code in isolate_migratepages_block() was added in commit 119d6d59dcc0
+> ("mm, compaction: avoid isolating pinned pages") before adding VM_BUG_ON
+> into page_mapcount().
+> 
+> This race has been predicted in 2015 by Vlastimil Babka (see link below).
 
-Yeah, sorry I haven't had time to review this yet. I should be able to
-look at it today.
+Huh, looks like I made that prediction only half year after that patch has been
+posted. Now if only I remembered why... I hope it was just a code inspection
+while chasing something else. I most likely didn't actually see the bug happen,
+as we don't compile with DEBUG_VM.
 
-Johan
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
+> Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
+> Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
+
+With Hugh's wording tweaks,
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Thanks.
