@@ -2,137 +2,79 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372C8207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727352075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DncnV4l3"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GLSosxCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388797AbgEYGlb (ORCPT
+        id S2388872AbgEYGlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 02:41:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59712 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEYGlb (ORCPT
+        Mon, 25 May 2020 02:41:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60899 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726393AbgEYGlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 02:41:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P6fRS2052015;
-        Mon, 25 May 2020 01:41:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590388887;
-        bh=o/T4a+iVa5id3QHDSWuDIMh/rTsJCeFA4f07QeO6HeU=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=DncnV4l3WaMIUD5GWq0POssxEbkZFJ6cQCK3bcT5JfoLNCg0stJnAL1Mr/WdzghAL
-         4LoTk8bxoFwyUZM14tGcdX8ZmDVwCEUfP/GBhuhFIenwnY88R0xoNgxJ/pxVo4B0mL
-         /O7q4hR1fix1975Xna6QmwTw5Qlb9lb53Gps9JrM=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P6fRWD057808;
-        Mon, 25 May 2020 01:41:27 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 25
- May 2020 01:41:27 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 25 May 2020 01:41:26 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P6fOX6098354;
-        Mon, 25 May 2020 01:41:25 -0500
-Subject: Re: [PATCH 3/3] usb: dwc3: keystone: Turn on USB3 PHY before
- controller
-From:   Roger Quadros <rogerq@ti.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-CC:     <robh+dt@kernel.org>, <vigneshr@ti.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200513130709.10239-1-rogerq@ti.com>
- <20200513130709.10239-4-rogerq@ti.com> <1589420265.5899.0.camel@mhfsdcap03>
- <baaaf89c-4baf-4218-e22e-53cd1a64ec02@ti.com> <87tv0i4y0v.fsf@kernel.org>
- <debe1c1d-8e84-8047-d387-42d4f6e03f91@ti.com>
-Message-ID: <ec6c01d7-643f-3dd4-dcad-b492924fdf66@ti.com>
-Date:   Mon, 25 May 2020 09:41:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 02:41:42 -0400
+X-UUID: 3141a7b4d1dc49c0874af76805d7c1e3-20200525
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=rPpVOTNMfIfxzbe8ETe1dm7/wf5N3sl6Al3g3yCdGBA=;
+        b=GLSosxCzgrZVU3EH3VE+cnZIpkCtJkNDv9/mYyryejePguRwrJwSZ+C5ImAAI2B93qX/O+JSL3Hsv1aXGMnmaiwV5sCc/faxC4mxlzFQlQxf6fVAIwOyFZZK8/Sk9BkT/AzAHeSYo01Mq0upww0AhzJAgdnY0OyFrdnT7emH45w=;
+X-UUID: 3141a7b4d1dc49c0874af76805d7c1e3-20200525
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1933868565; Mon, 25 May 2020 14:41:39 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 25 May 2020 14:41:36 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 25 May 2020 14:41:36 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>
+Subject: [PATCH v1] clk: mediatek: assign the initial value to clk_init_data of mtk_mux
+Date:   Mon, 25 May 2020 14:41:29 +0800
+Message-ID: <1590388889-28382-1-git-send-email-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <debe1c1d-8e84-8047-d387-42d4f6e03f91@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SXQnZCBiZSBkYW5nZXJvdXMgd2hlbiBzdHJ1Y3QgY2xrX2NvcmUgaGF2ZSBuZXcgbWVtZWJlcnMu
+DQpBZGQgdGhlIG1pc3NpbmcgaW5pdGlhbCB2YWx1ZSB0byBjbGtfaW5pdF9kYXRhLg0KDQpGaXhl
+czogYTNhZTU0OTkxN2YxICgiY2xrOiBtZWRpYXRlazogQWRkIG5ldyBjbGttdXggcmVnaXN0ZXIg
+QVBJIikNCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IFdlaXlp
+IEx1IDx3ZWl5aS5sdUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2Nsay9tZWRpYXRlay9j
+bGstbXV4LmMgfCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
+aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXV4LmMgYi9k
+cml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXV4LmMNCmluZGV4IDc2ZjljZDAuLjE0ZTEyN2UgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXV4LmMNCisrKyBiL2RyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdXguYw0KQEAgLTE2MCw3ICsxNjAsNyBAQCBzdHJ1Y3QgY2xrICpt
+dGtfY2xrX3JlZ2lzdGVyX211eChjb25zdCBzdHJ1Y3QgbXRrX211eCAqbXV4LA0KIAkJCQkgc3Bp
+bmxvY2tfdCAqbG9jaykNCiB7DQogCXN0cnVjdCBtdGtfY2xrX211eCAqY2xrX211eDsNCi0Jc3Ry
+dWN0IGNsa19pbml0X2RhdGEgaW5pdDsNCisJc3RydWN0IGNsa19pbml0X2RhdGEgaW5pdCA9IHt9
+Ow0KIAlzdHJ1Y3QgY2xrICpjbGs7DQogDQogCWNsa19tdXggPSBremFsbG9jKHNpemVvZigqY2xr
+X211eCksIEdGUF9LRVJORUwpOw0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
 
-
-On 25/05/2020 09:39, Roger Quadros wrote:
-> Felipe,
-> 
-> On 14/05/2020 13:21, Felipe Balbi wrote:
->> Roger Quadros <rogerq@ti.com> writes:
->>
->>> On 14/05/2020 04:37, Chunfeng Yun wrote:
->>>> On Wed, 2020-05-13 at 16:07 +0300, Roger Quadros wrote:
->>>>> The Local Power Sleep Controller (LPSC) dependency on AM65
->>>>> requires SERDES0 to be powered on before USB.
->>>>>
->>>>> We need to power up SERDES0 power domain and hold it on
->>>>> throughout the reset, init, power on sequence.
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>    drivers/usb/dwc3/dwc3-keystone.c | 47 +++++++++++++++++++++++++++++++-
->>>>>    1 file changed, 46 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-keystone.c
->>>>> index 1e14a6f4884b..46d46f3507fc 100644
->>>>> --- a/drivers/usb/dwc3/dwc3-keystone.c
->>>>> +++ b/drivers/usb/dwc3/dwc3-keystone.c
->>>>> @@ -14,6 +14,7 @@
->>>>>    #include <linux/dma-mapping.h>
->>>>>    #include <linux/io.h>
->>>>>    #include <linux/of_platform.h>
->>>>> +#include <linux/phy/phy.h>
->>>>>    #include <linux/pm_runtime.h>
->>>>>    /* USBSS register offsets */
->>>>> @@ -34,6 +35,7 @@
->>>>>    struct dwc3_keystone {
->>>>>        struct device            *dev;
->>>>>        void __iomem            *usbss;
->>>>> +    struct phy            *usb3_phy;
->>>>>    };
->>>>>    static inline u32 kdwc3_readl(void __iomem *base, u32 offset)
->>>>> @@ -95,8 +97,44 @@ static int kdwc3_probe(struct platform_device *pdev)
->>>>>        if (IS_ERR(kdwc->usbss))
->>>>>            return PTR_ERR(kdwc->usbss);
->>>>> -    pm_runtime_enable(kdwc->dev);
->>>>> +    /* PSC dependency on AM65 needs SERDES0 to be powered before USB0 */
->>>>> +    kdwc->usb3_phy = devm_phy_get(dev, "usb3-phy");
->>>> Use devm_phy_optional_get() instead?
->>>
->>> Indeed, it seems better suited.
->>
->> patches 1 and 2 are in testing/next
->>
-> 
-> Could you please drop them as I need to make changes to make the PHY optional.
-> I will send v2 of entire series.
-
-Actually only patch 2 and 3 need to be revised. Patch 1 is fine.
-
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
