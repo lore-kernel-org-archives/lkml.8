@@ -2,107 +2,128 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41167C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9582075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D212076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YG0i9AGd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sd09yhOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbgEYB3f (ORCPT
+        id S2388389AbgEYBgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 21:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388104AbgEYB3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 21:29:35 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B922C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:29:34 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id j3so15988776ilk.11
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 18:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R71dV7S9rJQPlMHMjk6Vu0NBsTKVA0V6AR1/+ijdTXU=;
-        b=YG0i9AGd6c2S5ULFReX3uDyCO0YWpEQCkwusIvHlXGkiFJT+GtuhdBKe9bqYDEGHPb
-         E3+x+B/bMoy6IQPVjsI7AggtSBmpul1UTgun/A+Q2EOnJlbgXz7On0eFGyvM62Jcq7TB
-         0e6p3z/qn1cDJ54BSMybkDq/gImwKoRitLte8r8ujFU5kvQuKUP/haYS5ztBh5IQkiDh
-         eBo7a6dG4doC9fuPhpq6/5Veb5dmh532DftU9nhEHXRZwxNZ3Cxd0qrGxDy/Q1dv6Smw
-         mYrc1BOsvh5Me6Ghy6A/PUZTwGaIkt67xwxK5HvPqmsw4BnfM8sJ5IpaaJ+eBhTnJ38Z
-         AM+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R71dV7S9rJQPlMHMjk6Vu0NBsTKVA0V6AR1/+ijdTXU=;
-        b=rck1+bCWeMBy0DMyFYSZY0S/7Bfqr+3OXx6dVvU00PHkduQMVz/DA3LNmbiJDrtw+Z
-         jG4T3jaUQ2suqlXskGunZDZQcZ2CNCBpKkVfZxx/s1JWSJNK10hDgReAo6eI59lom1mn
-         2eDBY7qI+ng3Jht2K/52G9rX8T7bJUwDDVpPKUy49ukNVXoZXmOn/QzcFRu90CUtsHG6
-         nkq0B/ADrv52iH6fkHlpSXs3D7tSOn2uOxJVT/AlBTG2DzmRDay9Q4+XJ6BRxWMmI/TP
-         Y+dBGK7xbw4A8VUwfT3hYj0juynk4qsjvkoMtkRA+fYDEVeYfVnyrt22ewu1WrXB0CeJ
-         fK4Q==
-X-Gm-Message-State: AOAM531R22Xk2Os5QuZPtMCdIUUWI5kQgcg3upR+P12kSPch5Y1gwYxb
-        /iCeUl72apb948kCn1kwRuc=
-X-Google-Smtp-Source: ABdhPJypDVQv9J77hH8HwSGLN96MDsXiBlnK/6+cLrJxFiV/47Xdl8IvjqMmRo6j1STXYHmMcm0URg==
-X-Received: by 2002:a92:da52:: with SMTP id p18mr23324203ilq.173.1590370173505;
-        Sun, 24 May 2020 18:29:33 -0700 (PDT)
-Received: from james-x399.localdomain (71-218-100-23.hlrn.qwest.net. [71.218.100.23])
-        by smtp.gmail.com with ESMTPSA id t10sm8396302ilq.62.2020.05.24.18.29.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 18:29:32 -0700 (PDT)
-From:   James Hilliard <james.hilliard1@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     James Hilliard <james.hilliard1@gmail.com>,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] drm/vc4: hdmi: Silence pixel clock error on -EPROBE_DEFER
-Date:   Sun, 24 May 2020 19:28:59 -0600
-Message-Id: <20200525012859.267433-1-james.hilliard1@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 24 May 2020 21:36:25 -0400
+Received: from mail-eopbgr20072.outbound.protection.outlook.com ([40.107.2.72]:47854
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388054AbgEYBgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 21:36:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HiX7rs9PqF9KglRAWToYPyhf7pE4ZdfljLzXZ0MpDJ6k6npqqXtIbf3/XD+6EAyfWsDm0cnnWll3UG2Hhec9/QIpPDpuhY1+PyHPQznyU6K/cNE+kQIop6/OzcSyInO3k9MlQhD7zU4A7SgSpQL7AMXiI+oc/BFi+raq7eVjbWAXMmvMw4m01lpGFSIAt8HoUIcLic7SaL5y8831iXGUPag2R2TtsL5IFxHUIrfyR2oukJOwVyiSRRuqY3pC4+rJOCDyyyQq1OrM9XEnk8i9e65veytfn8633qa15LkegVuJGAs0Xuh28ieYYEIOAXcdOcwmHAKJHlS+XynIx2arPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nWB8xeDp0zWETM/9zU5P1VQL49/4BX9QTeqZaKyKh5o=;
+ b=kppLtSwdwfDO0ATYEaXYCBarWPambnxgXumJpi9eyuSJ3tWWY8cbN6387c26iK4OolHA6S/uDyt5bGGMEQW84jozvn3ga2/UEJHfrNSbnZuLaOG2gR0gd92CSjW7JdzFwk/0l+RMtYkzBtZn31M+mfL1NyprAjvailnCIIx9Apfbd+EDluA5gPx9Yg6Y5D8OAcy/PWnCkJ/mfTsOyy2pQCNokE/rgPIqzOpKmHOrtSNvG312kDIgJNvRVfDSSIr2iWW8nEOaEhxWj3STAR33cbGdjLKOyiOgSbpgltwuncSeTveYBwn91K4+sVEoc7XhnAeyDXRgDZEMUnLVFMdbJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nWB8xeDp0zWETM/9zU5P1VQL49/4BX9QTeqZaKyKh5o=;
+ b=sd09yhOsIiC84XFSgoBMUvKurY3YWE429aU9Li6HxehrANMb5rZPfqomtja9pdJ4GvTR1NYsNcoVPJX4ayu4Adcguvf4lem381u18ByL0prM5RUlKOoXLZzbYlFhAoZrkfFeSg8PbxBIxX6H1fUtVGACTKnEdmcersUaKtYKO40=
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
+ by DB8PR04MB6875.eurprd04.prod.outlook.com (2603:10a6:10:11f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Mon, 25 May
+ 2020 01:36:19 +0000
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::7564:54a2:a35e:1066]) by DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::7564:54a2:a35e:1066%9]) with mapi id 15.20.3021.029; Mon, 25 May 2020
+ 01:36:19 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, "kjlu@umn.edu" <kjlu@umn.edu>
+CC:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] can: flexcan: Fix runtime PM imbalance on error
+Thread-Topic: [PATCH] can: flexcan: Fix runtime PM imbalance on error
+Thread-Index: AQHWMB2MYA5dCmRv5E6bmmiK8TDkyKi4B0Gg
+Date:   Mon, 25 May 2020 01:36:18 +0000
+Message-ID: <DB8PR04MB679570CD8E04A213435330FFE6B30@DB8PR04MB6795.eurprd04.prod.outlook.com>
+References: <20200522094340.18059-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200522094340.18059-1-dinghao.liu@zju.edu.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: zju.edu.cn; dkim=none (message not signed)
+ header.d=none;zju.edu.cn; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2ff962ad-3508-492d-90e5-08d8004c0603
+x-ms-traffictypediagnostic: DB8PR04MB6875:
+x-microsoft-antispam-prvs: <DB8PR04MB6875D0AA708342C394B7C21CE6B30@DB8PR04MB6875.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1247;
+x-forefront-prvs: 0414DF926F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: F7a7zwkrOVovD82nwcaASFW9YYD8eCZwCBnmlRjZcny/AaXbb2DFXP3n6+KdpiE2oiMy+ZpACe9hzJJfM8CFtzLCEuloRfP7TBaBP7weTxSUhnUK7sYEmCX4QriJKU3XdfP+4EBDJBCVZKWkUnmlASjx0GKzdrwKjL+LefApeRfXfSMIBLeLK/J0aljfxz3YHM7rK1JMtMVsA/XqONWJtCBIMcF0UjMkm0AcDCS5UfpgZTW9i1CussCLO0+YKNEzicAWFECIh65LNZ0msI2ZOvEuNE3wD2bqX4DFGAMxYAuPr1hZprhxzBMFsQn9wGQgTWGAFfQ7hJaxmfLENsVa3MEgDKZ9AQylAW/MlXgR56ZhlEKhDzQskDavSY6y4KZVCiAb9LRGVmYpLojHXUI7og==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(376002)(346002)(136003)(4326008)(55016002)(33656002)(316002)(8676002)(8936002)(110136005)(9686003)(2906002)(66946007)(86362001)(52536014)(966005)(5660300002)(186003)(26005)(64756008)(76116006)(66476007)(54906003)(66446008)(66556008)(53546011)(478600001)(71200400001)(7696005)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: AcvVg6V9G+ccpCW6gVWkgEzM8JxumpZVaRS9gTP2EG0U8NJWiYENUX+kVjx5bX0wCbMosysrBKE//9xfBiippupSbn/vKZkzE1VKLptwQATfSn1XxW730OoUA3242AdDfGB64ngqo22XczheZ1UV8p5RJmr6qFqDpgItoUNUdQzG/giIfsywmvu8TFGQVto99AgnGOSaCA98OgHvofybAoansDImrQa6lmEenU1/YqjBTKYeh8ZYZ1DwaPkEx02wrHnlywmOnGk2jed3YneWpnEDdK/Z08LeV21HQkML3YZy+NhxvYhSTfwXF0VjsUbF34AOijtv/tHx6JpA9hA5yK3+t7cAUb2JzX//k7StWIQ/Xe2xT7UZRwd4rpkrZfyCroErRpBxFXBN8UWBty0hbFnU0vcYVNN3IcYO8JFBpa4s62rJ0AUyKWw/s09dJQsvvsjM3RxodcE9bev3iZ5rgja1fRGiY0kRpK0WmAdaS1Q=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ff962ad-3508-492d-90e5-08d8004c0603
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2020 01:36:18.9932
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: umDhSrdo1fnSPb/dRphpnWcfZV4vUdsCJnVpYViJ4hPd2ErxYJNiLikRlW2S+l/NO/Bhk7OipXuEudv0AURvUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6875
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the vc4 hdmi driver loads before the pixel clock is available we
-see a spurious "*ERROR* Failed to get pixel clock" error.
-
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
----
-no response in over 2 weeks
----
- drivers/gpu/drm/vc4/vc4_hdmi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 340719238753..6d4ee3f6b445 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1338,8 +1338,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 
- 	hdmi->pixel_clock = devm_clk_get(dev, "pixel");
- 	if (IS_ERR(hdmi->pixel_clock)) {
--		DRM_ERROR("Failed to get pixel clock\n");
--		return PTR_ERR(hdmi->pixel_clock);
-+		ret = PTR_ERR(hdmi->pixel_clock);
-+		if (ret != -EPROBE_DEFER)
-+			DRM_ERROR("Failed to get pixel clock\n");
-+		return ret;
- 	}
- 	hdmi->hsm_clock = devm_clk_get(dev, "hdmi");
- 	if (IS_ERR(hdmi->hsm_clock)) {
--- 
-2.25.1
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LWNhbi1vd25lckB2
+Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWNhbi1vd25lckB2Z2VyLmtlcm5lbC5vcmc+DQo+IE9uIEJl
+aGFsZiBPZiBEaW5naGFvIExpdQ0KPiBTZW50OiAyMDIwxOo11MIyMsjVIDE3OjQ0DQo+IFRvOiBk
+aW5naGFvLmxpdUB6anUuZWR1LmNuOyBramx1QHVtbi5lZHUNCj4gQ2M6IFdvbGZnYW5nIEdyYW5k
+ZWdnZXIgPHdnQGdyYW5kZWdnZXIuY29tPjsgTWFyYyBLbGVpbmUtQnVkZGUNCj4gPG1rbEBwZW5n
+dXRyb25peC5kZT47IERhdmlkIFMuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47IEpha3Vi
+DQo+IEtpY2luc2tpIDxrdWJhQGtlcm5lbC5vcmc+OyBsaW51eC1jYW5Admdlci5rZXJuZWwub3Jn
+Ow0KPiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+DQo+IFN1YmplY3Q6IFtQQVRDSF0gY2FuOiBmbGV4Y2FuOiBGaXggcnVudGltZSBQTSBpbWJhbGFu
+Y2Ugb24gZXJyb3INCj4gDQo+IFdoZW4gcmVnaXN0ZXJfZmxleGNhbmRldigpIHJldHVybnMgYW4g
+ZXJyb3IgY29kZSwgYSBwYWlyaW5nIHJ1bnRpbWUgUE0NCj4gdXNhZ2UgY291bnRlciBkZWNyZW1l
+bnQgaXMgbmVlZGVkIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuDQo+IA0KPiBBbHNvLCBj
+YWxsIHBtX3J1bnRpbWVfZGlzYWJsZSgpIHdoZW4gcmVnaXN0ZXJfZmxleGNhbmRldigpIHJldHVy
+bnMgYW4gZXJyb3INCj4gY29kZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxk
+aW5naGFvLmxpdUB6anUuZWR1LmNuPg0KDQpBIHBhdGNoIGhhcyBhbHJlYWR5IGJlZW4gc2VudCBv
+dXQgdG8gZml4IHRoaXMgaXNzdWU6DQpodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51
+eC1jYW4vbXNnMDMwNTIuaHRtbA0KDQpSZXZpZXdlZC1ieTogSm9ha2ltIFpoYW5nIDxxaWFuZ3Fp
+bmcuemhhbmdAbnhwLmNvbT4NCg0KQmVzdCBSZWdhcmRzLA0KSm9ha2ltIFpoYW5nDQo+IC0tLQ0K
+PiAgZHJpdmVycy9uZXQvY2FuL2ZsZXhjYW4uYyB8IDIgKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
+IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9jYW4vZmxleGNh
+bi5jIGIvZHJpdmVycy9uZXQvY2FuL2ZsZXhjYW4uYyBpbmRleA0KPiA5NGQxMGVjOTU0YTAuLmVh
+MTkzNDI2ZTVhZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvY2FuL2ZsZXhjYW4uYw0KPiAr
+KysgYi9kcml2ZXJzL25ldC9jYW4vZmxleGNhbi5jDQo+IEBAIC0xNjY2LDYgKzE2NjYsOCBAQCBz
+dGF0aWMgaW50IGZsZXhjYW5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikN
+Cj4gIAlyZXR1cm4gMDsNCj4gDQo+ICAgZmFpbGVkX3JlZ2lzdGVyOg0KPiArCXBtX3J1bnRpbWVf
+cHV0X25vaWRsZSgmcGRldi0+ZGV2KTsNCj4gKwlwbV9ydW50aW1lX2Rpc2FibGUoJnBkZXYtPmRl
+dik7DQo+ICAJZnJlZV9jYW5kZXYoZGV2KTsNCj4gIAlyZXR1cm4gZXJyOw0KPiAgfQ0KPiAtLQ0K
+PiAyLjE3LjENCg0K
