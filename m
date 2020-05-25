@@ -2,143 +2,205 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE912071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725FD2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DbaOp9GW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403827AbgEYNSO (ORCPT
+        id S2403834AbgEYNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:18:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43250 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403779AbgEYNSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:18:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 48817B027;
-        Mon, 25 May 2020 13:18:14 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id B8F7B6032A; Mon, 25 May 2020 15:18:10 +0200 (CEST)
-Date:   Mon, 25 May 2020 15:18:10 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        netdev@vger.kernel.org, roopa@cumulusnetworks.com,
-        davem@davemloft.net, kuba@kernel.org, andrew@lunn.ch,
-        UNGLinuxDriver@microchip.com, bridge@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: MRP netlink interface
-Message-ID: <20200525131810.tls4p6qfftprzpxg@lion.mk-sys.cz>
-References: <20200525112827.t4nf4lamz6g4g2c5@soft-dev3.localdomain>
- <20200525100322.sjlfxhz2ztrfjia7@lion.mk-sys.cz>
- <88bc4a98-c0c8-32df-142e-d4738fe0065a@cumulusnetworks.com>
- <20200525131435.eqfgqh7gu5hmyc3g@soft-dev3.localdomain>
+        Mon, 25 May 2020 09:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390688AbgEYNTJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:19:09 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01DEDC061A0E;
+        Mon, 25 May 2020 06:19:09 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C415724D;
+        Mon, 25 May 2020 15:19:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590412745;
+        bh=LC8ysV2b9bTGuLITct/UwUGjPS8MrRakOH70P7jIc5A=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DbaOp9GW/rTRqvFzPZnflWpDnhkpJnlP1KlYU3D0Yxug4EOvZ9BtFRldHCQKJjvd9
+         Ep0o/r0REulCaIgyJfel8PoUlXyHL1YYmo+sTeK9OYN+L4eE9ZApca8/Gi+2dem7mL
+         Bmmr+6DO/3B+XAP6KIT1+17DwU/6kJR4i0MaDtZ0=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] media: vsp1: dl: Fix NULL pointer dereference on unbind
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>, stable@vger.kernel.org
+References: <20200523081334.23531-1-erosca@de.adit-jv.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <d4544b1b-a695-bd70-0ccb-e2fb1838f3f8@ideasonboard.com>
+Date:   Mon, 25 May 2020 14:19:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525131435.eqfgqh7gu5hmyc3g@soft-dev3.localdomain>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200523081334.23531-1-erosca@de.adit-jv.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 01:14:35PM +0000, Horatiu Vultur wrote:
-> The 05/25/2020 13:26, Nikolay Aleksandrov wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On 25/05/2020 13:03, Michal Kubecek wrote:
-> > > On Mon, May 25, 2020 at 11:28:27AM +0000, Horatiu Vultur wrote:
-> > > [...]
-> > >> My first approach was to extend the 'struct br_mrp_instance' with a field that
-> > >> contains the priority of the node. But this breaks the backwards compatibility,
-> > >> and then every time when I need to change something, I will break the backwards
-> > >> compatibility. Is this a way to go forward?
-> > >
-> > > No, I would rather say it's an example showing why passing data
-> > > structures as binary data via netlink is a bad idea. I definitely
-> > > wouldn't advice this approach for any new interface. One of the
-> > > strengths of netlink is the ability to use structured and extensible
-> > > messages.
-> > >
-> > >> Another approach is to restructure MRP netlink interface. What I was thinking to
-> > >> keep the current attributes (IFLA_BRIDGE_MRP_INSTANCE,
-> > >> IFLA_BRIDGE_MRP_PORT_STATE,...) but they will be nested attributes and each of
-> > >> this attribute to contain the fields of the structures they represents.
-> > >> For example:
-> > >> [IFLA_AF_SPEC] = {
-> > >>     [IFLA_BRIDGE_FLAGS]
-> > >>     [IFLA_BRIDGE_MRP]
-> > >>         [IFLA_BRIDGE_MRP_INSTANCE]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]
-> > >>         [IFLA_BRIDGE_MRP_RING_ROLE]
-> > >>             [IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]
-> > >>             [IFLA_BRIDGE_MRP_RING_ROLE_ROLE]
-> > >>         ...
-> > >> }
-> > >> And then I can parse each field separately and then fill up the structure
-> > >> (br_mrp_instance, br_mrp_port_role, ...) which will be used forward.
-> > >> Then when this needs to be extended with the priority it would have the
-> > >> following format:
-> > >> [IFLA_AF_SPEC] = {
-> > >>     [IFLA_BRIDGE_FLAGS]
-> > >>     [IFLA_BRIDGE_MRP]
-> > >>         [IFLA_BRIDGE_MRP_INSTANCE]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]
-> > >>             [IFLA_BRIDGE_MRP_INSTANCE_PRIO]
-> > >>         [IFLA_BRIDGE_MRP_RING_ROLE]
-> > >>             [IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]
-> > >>             [IFLA_BRIDGE_MRP_RING_ROLE_ROLE]
-> > >>         ...
-> > >> }
-> > >> And also the br_mrp_instance will have a field called prio.
-> > >> So now, if the userspace is not updated to have support for setting the prio
-> > >> then the kernel will use a default value. Then if the userspace contains a field
-> > >> that the kernel doesn't know about, then it would just ignore it.
-> > >> So in this way every time when the netlink interface will be extended it would
-> > >> be backwards compatible.
-> > >
-> > > Silently ignoring unrecognized attributes in userspace requests is what
-> > > most kernel netlink based interfaces have been doing traditionally but
-> > > it's not really a good idea. Essentially it ties your hands so that you
-> > > can only add new attributes which can be silently ignored without doing
-> > > any harm, otherwise you risk that kernel will do something different
-> > > than userspace asked and userspace does not even have a way to find out
-> > > if the feature is supported or not. (IIRC there are even some places
-> > > where ignoring an attribute changes the nature of the request but it is
-> > > still ignored by older kernels.)
-> > >
-> > > That's why there have been an effort, mostly by Johannes Berg, to
-> > > introduce and promote strict checking for new netlink interfaces and new
-> > > attributes in existing netlink attributes. If you don't have strict
-> > > checking for unknown attributes enabled yet, there isn't much that can
-> > > be done for already released kernels but I would suggest to enable it as
-> > > soon as possible.
-> > >
-> > > Michal
+Hi Eugeniu,
+
+Yeouch. Looks like I really missed a trick there!
+
+We should probably update the $SUBJECT to match what is performed in the
+patch, which is perhaps more like:
+
+"media: vsp1: dl: Store VSP reference when creating cmd pools"
+
+On 23/05/2020 09:13, Eugeniu Rosca wrote:
+
+And then we can explain here:
+
+In commit f3b98e3c4d2e16 ("media: vsp1: Provide support for extended
+command pools"), the vsp pointer used for referencing the VSP1 device
+structure from a command pool during vsp1_dl_ext_cmd_pool_destroy() was
+not populated.
+
+Correctly assign the pointer to prevent the following
+null-pointer-dereference when removing the device:
+
+> v4.19 commit f3b98e3c4d2e16 ("media: vsp1: Provide support for extended
+> command pools") introduced below issue [*], consistently reproduced.
 > 
-> Thanks for the detail explanation. Currently this is in net-next so I
-> would try to change it.
-> Can you point me to some code that is using this strict checking for
-> netlink attributes? Just to have a better understanding of it.
+> In order to fix it, inspire from the sibling/predecessor v4.18-rc1
+> commit 5de0473982aab2 ("media: vsp1: Provide a body pool"), which saves
+> the vsp1 instance address in vsp1_dl_body_pool_create().
+> 
+> [*] h3ulcb-kf #>
+> echo fea28000.vsp > /sys/bus/platform/devices/fea28000.vsp/driver/unbind
+>  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
+>  Mem abort info:
+>    ESR = 0x96000006
+>    EC = 0x25: DABT (current EL), IL = 32 bits
+>    SET = 0, FnV = 0
+>    EA = 0, S1PTW = 0
+>  Data abort info:
+>    ISV = 0, ISS = 0x00000006
+>    CM = 0, WnR = 0
+>  user pgtable: 4k pages, 48-bit VAs, pgdp=00000007318be000
+>  [0000000000000028] pgd=00000007333a1003, pud=00000007333a6003, pmd=0000000000000000
+>  Internal error: Oops: 96000006 [#1] PREEMPT SMP
+>  Modules linked in:
+>  CPU: 1 PID: 486 Comm: sh Not tainted 5.7.0-rc6-arm64-renesas-00118-ge644645abf47 #185
+>  Hardware name: Renesas H3ULCB Kingfisher board based on r8a77951 (DT)
+>  pstate: 40000005 (nZcv daif -PAN -UAO)
+>  pc : vsp1_dlm_destroy+0xe4/0x11c
+>  lr : vsp1_dlm_destroy+0xc8/0x11c
+>  sp : ffff800012963b60
+>  x29: ffff800012963b60 x28: ffff0006f83fc440
+>  x27: 0000000000000000 x26: ffff0006f5e13e80
+>  x25: ffff0006f5e13ed0 x24: ffff0006f5e13ed0
+>  x23: ffff0006f5e13ed0 x22: dead000000000122
+>  x21: ffff0006f5e3a080 x20: ffff0006f5df2938
+>  x19: ffff0006f5df2980 x18: 0000000000000003
+>  x17: 0000000000000000 x16: 0000000000000016
+>  x15: 0000000000000003 x14: 00000000000393c0
+>  x13: ffff800011a5ec18 x12: ffff800011d8d000
+>  x11: ffff0006f83fcc68 x10: ffff800011a53d70
+>  x9 : ffff8000111f3000 x8 : 0000000000000000
+>  x7 : 0000000000210d00 x6 : 0000000000000000
+>  x5 : ffff800010872e60 x4 : 0000000000000004
+>  x3 : 0000000078068000 x2 : ffff800012781000
+>  x1 : 0000000000002c00 x0 : 0000000000000000
+>  Call trace:
+>   vsp1_dlm_destroy+0xe4/0x11c
+>   vsp1_wpf_destroy+0x10/0x20
+>   vsp1_entity_destroy+0x24/0x4c
+>   vsp1_destroy_entities+0x54/0x130
+>   vsp1_remove+0x1c/0x40
+>   platform_drv_remove+0x28/0x50
+>   __device_release_driver+0x178/0x220
+>   device_driver_detach+0x44/0xc0
+>   unbind_store+0xe0/0x104
+>   drv_attr_store+0x20/0x30
+>   sysfs_kf_write+0x48/0x70
+>   kernfs_fop_write+0x148/0x230
+>   __vfs_write+0x18/0x40
+>   vfs_write+0xdc/0x1c4
+>   ksys_write+0x68/0xf0
+>   __arm64_sys_write+0x18/0x20
+>   el0_svc_common.constprop.0+0x70/0x170
+>   do_el0_svc+0x20/0x80
+>   el0_sync_handler+0x134/0x1b0
+>   el0_sync+0x140/0x180
+>  Code: b40000c2 f9403a60 d2800084 a9400663 (f9401400)
+>  ---[ end trace 3875369841fb288a ]---
+> 
+> Fixes: f3b98e3c4d2e16 ("media: vsp1: Provide support for extended command pools")
+> Cc: stable@vger.kernel.org # v4.19+
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-AFAICS you are using nla_parse_nested() in br_mrp_parse() so that the
-validation should be strict, including rejection of unknown attributes.
-See the comments at nla_parse() and nla_parse_deprecated() and
-enum netlink_validation in include/net/netlink.h for details.
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-Michal
+> ---
+> 
+> How about adding a new unit test perfoming unbind/rebind to
+> http://git.ideasonboard.com/renesas/vsp-tests.git, to avoid
+> such issues in future? 
 
-> > +1, we don't have strict checking for the bridge main af spec attributes, but
-> > you could add that for new nested interfaces that need to be parsed like the
-> > above
+Yes, now I wish I had done so back at 4.19! I hope this wasn't too
+painful to diagnose and fix, and thank you for being so thorough in your
+report!
+
+
+> Locally, below command has been used to identify the problem:
+> 
+> for f in $(find /sys/bus/platform/devices/ -name "*vsp*" -o -name "*fdp*"); do \
+>      b=$(basename $f); \
+>      echo $b > $f/driver/unbind; \
+> done
+> 
+
+I've created a test to add to vsp-tests, which I'll post next, thank you
+for the suggestion.
+
+Before your patch is applied, I experience the same crash you have seen,
+and after your patch - I can successfully unbind/bind all of the VSP1
+instances.
+
+So I think you can have this too:
+
+Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/media/platform/vsp1/vsp1_dl.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
+> index d7b43037e500..e07b135613eb 100644
+> --- a/drivers/media/platform/vsp1/vsp1_dl.c
+> +++ b/drivers/media/platform/vsp1/vsp1_dl.c
+> @@ -431,6 +431,8 @@ vsp1_dl_cmd_pool_create(struct vsp1_device *vsp1, enum vsp1_extcmd_type type,
+>  	if (!pool)
+>  		return NULL;
+>  
+> +	pool->vsp1 = vsp1;
+> +
+>  	spin_lock_init(&pool->lock);
+>  	INIT_LIST_HEAD(&pool->free);
+>  
+> 
+
