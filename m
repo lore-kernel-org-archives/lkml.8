@@ -2,99 +2,82 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E26FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD23B207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590415553;
-	bh=4VZk7RGn/PZBtXmEcizHf6YuFu228DNJ0CvSOZvd4BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zhH6Hr3E7MR1QFnoMX9ND0XRiqZSqGzR0zU+gPNi8c9wVmwZ3vLbzIAIw8TQGX93E
-	 QLlwHF+HMZ3z8lxQHH82fZW5/gdGOD0VLRniEEKx2DNiRm4Wpwe7HlRpJHdWqELxjt
-	 ypDCywaA0ABObmG21USb+Hzv2W1oHBKi2DbRgrAA=
+	by mail.kernel.org (Postfix) with ESMTP id 96F74207C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Op3B2LdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390847AbgEYOFx (ORCPT
+        id S2390862AbgEYOIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388862AbgEYOFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:05:52 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        Mon, 25 May 2020 10:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388862AbgEYOIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 10:08:20 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFF9C061A0E;
+        Mon, 25 May 2020 07:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PO3yERWHmB8+QRSkMGVpwgQOq3YGaqk7/bHMgrlUzuQ=; b=Op3B2LdRkLowOoFosfpIk3IvYW
+        5kDfoxDzKbBWHO1iuggHZzE0DEU97ZulQpMA/rBfv/iuADt73Np3Ih13qRhkZVW4eQZN8CE/CGJn3
+        f8dRiwUt4xvamUEcIURsgXAx0up8jKmVvBW9ZOIadnCo+plYOOU7I0xuVkRA90qbB1nbhZW04TSO6
+        nMP3xEB2J2l5SjwSXvf4r76jlb1j2vfIWCA6cYFtKRS44luNJu2CeB76WYg2pLH51sN+BRmGY0TUs
+        PMZZT58WMIRFxGzrshnPNK7pJbNYXf+KsAvae6BACKypIYpBPlG3dkFluV3Q66nje5z/F0m32404E
+        S+GEv6UQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdDlh-0008SV-Q3; Mon, 25 May 2020 14:07:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC9EA2078B;
-        Mon, 25 May 2020 14:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590415552;
-        bh=4VZk7RGn/PZBtXmEcizHf6YuFu228DNJ0CvSOZvd4BE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=djIhABcz5/fRiDGNcdUszfyq0up8K+3x3CkQ/nelt1OocgB6msuJwEizqeMiNWURe
-         hxbFIRagK4FJ90O4P8/mnGAm5naoZrRqw0YMNh7o4fvMR8aVumSLb+wDTQ8PaYKcn9
-         qAn7oLs40TIYavPqgVIiInlrv+PaZpuGPHjV7n34=
-Date:   Mon, 25 May 2020 16:05:49 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: Endless soft-lockups for compiling workload since next-20200519
-Message-ID: <20200525140541.GA28923@lenoir>
-References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
- <20200520125056.GC325280@hirez.programming.kicks-ass.net>
- <20200521004035.GA15455@lenoir>
- <20200521093938.GG325280@hirez.programming.kicks-ass.net>
- <20200521104937.GB325303@hirez.programming.kicks-ass.net>
- <20200521110027.GC325303@hirez.programming.kicks-ass.net>
- <20200521124113.GC15455@lenoir>
- <20200525132105.GW325280@hirez.programming.kicks-ass.net>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 421D230018B;
+        Mon, 25 May 2020 16:07:52 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F1E99285ECE8A; Mon, 25 May 2020 16:07:51 +0200 (CEST)
+Date:   Mon, 25 May 2020 16:07:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 10/25] seqlock: Add RST directives to kernel-doc code
+ samples and notes
+Message-ID: <20200525140751.GH325303@hirez.programming.kicks-ass.net>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200519214547.352050-11-a.darwish@linutronix.de>
+ <20200522180254.GS325280@hirez.programming.kicks-ass.net>
+ <20200522180336.GD325303@hirez.programming.kicks-ass.net>
+ <871rnbsu57.fsf@nanos.tec.linutronix.de>
+ <20200522183216.GT325280@hirez.programming.kicks-ass.net>
+ <20200525093649.GA370823@debian-buster-darwi.lab.linutronix.de>
+ <20200525134429.GE317569@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525132105.GW325280@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200525134429.GE317569@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 03:21:05PM +0200, Peter Zijlstra wrote:
-> @@ -2320,7 +2304,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
->  
->  	if (llist_add(&p->wake_entry, &rq->wake_list)) {
->  		if (!set_nr_if_polling(rq->idle))
-> -			smp_call_function_single_async(cpu, &rq->wake_csd);
-> +			smp_call_function_single_async(cpu, &p->wake_csd);
->  		else
->  			trace_sched_wake_idle_without_ipi(cpu);
+On Mon, May 25, 2020 at 03:44:29PM +0200, Peter Zijlstra wrote:
 
-Ok that's of course very unlikely but could it be possible to have the
-following:
+> I've never claimed that. My claim is that RST is shite and has no added
+> value.
 
-CPU 0                         CPU 1                                     CPU 2
------       
-
-//Wake up A
-ttwu_queue(TASK A, CPU 1)     idle_loop {
-                                  ttwu_queue_pending {
-                                      ....
-                                      raw_spin_unlock_irqrestore(rq)
-                                      # VMEXIT (with IPI still pending)
-                                                                        //task A migrates here
-                                                                        wait_event(....)
-                                                                        //sleep
-
-//Wake up A
-ttwu_queue(TASK A, CPU 2) {
-    //IPI on CPU 2 ignored
-    // due to csd->flags == CSD_LOCK
-
+Or rather, it has negative value, for it makes comments less readable.
