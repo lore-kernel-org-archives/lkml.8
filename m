@@ -2,166 +2,192 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C48C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028DD20812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9F82087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xC4PyPOp"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IHXf24/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390005AbgEYLEx (ORCPT
+        id S2390019AbgEYLE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:04:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389932AbgEYLEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:04:52 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133C3C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:04:52 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x13so2067699wrv.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mdW5TPC5pBwP0jwDwntViUNqGTKeQcBSi1CWOKkv90w=;
-        b=xC4PyPOpMkD3gjHORr1MlsIaPoaoO3wxo7sLYizRTeva0cpblXPG3DxEkmPibw0pwZ
-         RYhWtDKVifwl9eqTL0qayhhWFNcOarYklj0GaInqJob9rDfi8aJDVhT2fa9yWDFeKZry
-         zrUXCOFEBzZTCx6Yd5R9FmkNzuyw2JWyK5SNiXb0MagQ8+MhTrKDX/k/u2XH2a8W3kaP
-         ceIc1BJZoD0IjpJaf5YB7JQtzm7SY+30PEocdbxSSrIyV7F9/hweqITPLFBFbVubAqp5
-         nn0cGCvZWmXdGWKuNT5KfZXJvIc3m0f488iAUVxhuTctIKgGerteTRLuPw69doFs3rW0
-         XB5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mdW5TPC5pBwP0jwDwntViUNqGTKeQcBSi1CWOKkv90w=;
-        b=mLBrp0fCxClCpqvdqOODYLg2PxuAm+slg3gb7QQivCAaXnm/e8X1RivPOsIEeLwyTl
-         3ADqUZk+udtd4Ir2Uhyz68Za9KfvqmPEeNvgcP9L2GcyhIrMt4S3OrFDdh3aCl+rysN4
-         md6RzfdxqCoCuvyEMrxDPZsBrCcxCDtxbLpKVtGqeqsxZy2YnID/k20jeQzMfCXEpz3F
-         v++emBIM2uyU1rNA+HsCw6P1bkbb9S3hwgwMnVCRfy6tuQu3EqDcmMvWngtZEpsIroPS
-         +M/P6Je4mt7fGMG5jBPCoVSZdUayfJXifPU9Nmndk4p3hmjwXsthNwSveFcmkHaRbqoi
-         jBbg==
-X-Gm-Message-State: AOAM531nGMmBLmyAArNooVsExu7kGOMUNGyw6Fk79gqGLv183gqXO6wN
-        P9WVwBHXWxd1NzeBGADh3bwXig==
-X-Google-Smtp-Source: ABdhPJyfOYYJksdGU00xJHoz0dGb6Rf2rEJX7JV0GT0hLF7DPKsW04VY3gPpZ4LP6LDZUIHOVMIqwg==
-X-Received: by 2002:a5d:4b45:: with SMTP id w5mr15497931wrs.358.1590404690512;
-        Mon, 25 May 2020 04:04:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f5b2:610d:e426:c0dd? ([2a01:e34:ed2f:f020:f5b2:610d:e426:c0dd])
-        by smtp.googlemail.com with ESMTPSA id b185sm437997wmd.3.2020.05.25.04.04.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 04:04:49 -0700 (PDT)
-Subject: Re: [PATCH] thermal: imx8mm: Add get_trend ops
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
- <fccf4197-d0ca-f313-8f70-000ef4731033@linaro.org>
- <DB3PR0402MB3916B6D11328A036BD479D39F5B50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <6a4d31e4-8a24-2e9f-aa49-bec8258ead4c@linaro.org>
- <DB3PR0402MB39167D71ED6979FC33D3747DF5B20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39162E6A876BA54A80B0DCE2F5B30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <dadf94db-8aa5-d1a7-5818-c56032a44ea4@linaro.org>
-Date:   Mon, 25 May 2020 13:04:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 07:04:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:55005 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389930AbgEYLEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:04:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49VvPY1N1tz9sPF;
+        Mon, 25 May 2020 21:04:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590404691;
+        bh=vqJW3U9Kr/VnRD5n+k5na38ywhEDWSc9rmtReGEIdTw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IHXf24/VYwanOckLfO5AZIy2GjxwyQRt+feoBs2JNfPMhhd3PxdSsC9BI1cSokK9H
+         ddrSGEDlLsXh2RD2EFJeHX9GVkgQbmPBLxvbhk3Jp/kI8QWFrWqNXscJbwmxtNviRT
+         Twb4uyJOTxFZhsksTt6wbCXGfm946HoZ2HJTGX+BUgmqV07nwPTScRqRKIuPAaN7TV
+         Ds7OEXZJapYepehzT0I/WrrHptglhiwdmPUK8aHbFJCyawehe/EkRBwQOwRmS1HrL+
+         g5novGMGhqT/N9Cvw03115O5IhrvLYiak3SH6HzzIj1Lej4Noz8ezbugbInUUfNRz+
+         0tgV4Hq+yMbrg==
+Date:   Mon, 25 May 2020 21:04:43 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Balbir Singh <sblbir@amazon.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200525210443.0904d583@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB39162E6A876BA54A80B0DCE2F5B30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/hl.C9T28t6O0frUX+OSEIhN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/2020 04:46, Anson Huang wrote:
-> Hi, Daniel
+--Sig_/hl.C9T28t6O0frUX+OSEIhN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[ ... ]
+Hi all,
 
-> I tried modifying the min/max to '2' in cooling map, it works that
-> whenever cooling action is needed, the max cooling action will be
-> applied. But I also noticed some behaviors which NOT as expected:
-> 
-> 1. to easy the test, I enable the " CONFIG_THERMAL_WRITABLE_TRIPS",
-> and just modify the passive trip threshold to trigger the cooling
-> action, this is much more easy then putting the board into an oven to
-> increase the SoC temperature or running many high loading test to
-> increase the temperature, but when I modify the passive trip
-> threshold to be lower than current temperature, the cooling action is
-> NOT triggered immediately, it is because the default step_wise
-> governor will NOT trigger the cooling action when the trend is
-> THERMAL_TREND_STABLE. But what expected is, when the temperature is
-> exceed the passive trip threshold, the cooling action can be 
-> triggered immediately no matter the trend is stable or raising.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-You are right, what is expected is, when the temperature exceeds the
-passive trip threshold, a cooling action happens, the trend is raising
-in this case.
+  arch/x86/mm/tlb.c
 
-But in your test, it is not what is happening: the trip point is
-changing, not the temperature.
+between commit:
 
-Probably, the cpufreq driver is at its lowest OPP, so there is no room
-for more cooling effect when changing the trip point.
+  83ce56f712af ("x86/mm: Refactor cond_ibpb() to support other use cases")
 
-IMO, the test is not right as the trip point is decreased to a
-temperature where actually the SoC is not hot.
+from the tip tree and commit:
 
-If you want to test it easily, I recommend to use dhrystone, something like:
+  36c8e34d03a1 ("x86/mm: remove vmalloc faulting")
 
- dhrystone -t 6 -l 10000
+from the akpm-current tree.
 
-That will make your board to heat immediately.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-> That
-> means we have to implement our own .get_trend callback?
+--=20
+Cheers,
+Stephen Rothwell
 
-From my POV it must disappear, because it has little meaning. The
-governor is the one which should be dealing with that and call the
-corresponding cooling index.
+diff --cc arch/x86/mm/tlb.c
+index c8524c506ab0,f3fe261e5936..000000000000
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@@ -345,48 -161,16 +345,20 @@@ void switch_mm(struct mm_struct *prev,=20
+  	local_irq_restore(flags);
+  }
+ =20
+- static void sync_current_stack_to_mm(struct mm_struct *mm)
+- {
+- 	unsigned long sp =3D current_stack_pointer;
+- 	pgd_t *pgd =3D pgd_offset(mm, sp);
+-=20
+- 	if (pgtable_l5_enabled()) {
+- 		if (unlikely(pgd_none(*pgd))) {
+- 			pgd_t *pgd_ref =3D pgd_offset_k(sp);
+-=20
+- 			set_pgd(pgd, *pgd_ref);
+- 		}
+- 	} else {
+- 		/*
+- 		 * "pgd" is faked.  The top level entries are "p4d"s, so sync
+- 		 * the p4d.  This compiles to approximately the same code as
+- 		 * the 5-level case.
+- 		 */
+- 		p4d_t *p4d =3D p4d_offset(pgd, sp);
+-=20
+- 		if (unlikely(p4d_none(*p4d))) {
+- 			pgd_t *pgd_ref =3D pgd_offset_k(sp);
+- 			p4d_t *p4d_ref =3D p4d_offset(pgd_ref, sp);
+-=20
+- 			set_p4d(p4d, *p4d_ref);
+- 		}
+- 	}
+- }
+-=20
+ -static inline unsigned long mm_mangle_tif_spec_ib(struct task_struct *nex=
+t)
+ +static inline unsigned long mm_mangle_tif_spec_bits(struct task_struct *n=
+ext)
+  {
+  	unsigned long next_tif =3D task_thread_info(next)->flags;
+ -	unsigned long ibpb =3D (next_tif >> TIF_SPEC_IB) & LAST_USER_MM_IBPB;
+ +	unsigned long spec_bits =3D (next_tif >> TIF_SPEC_IB) & LAST_USER_MM_SPE=
+C_MASK;
+ =20
+ -	return (unsigned long)next->mm | ibpb;
+ +	BUILD_BUG_ON(TIF_SPEC_L1D_FLUSH !=3D TIF_SPEC_IB + 1);
+ +
+ +	return (unsigned long)next->mm | spec_bits;
+  }
+ =20
+ -static void cond_ibpb(struct task_struct *next)
+ +static void cond_mitigation(struct task_struct *next)
+  {
+ +	unsigned long prev_mm, next_mm;
+ +
+  	if (!next || !next->mm)
+  		return;
+ =20
+@@@ -587,20 -343,12 +559,11 @@@ void switch_mm_irqs_off(struct mm_struc
+  		need_flush =3D true;
+  	} else {
+  		/*
+ -		 * Avoid user/user BTB poisoning by flushing the branch
+ -		 * predictor when switching between processes. This stops
+ -		 * one process from doing Spectre-v2 attacks on another.
+ +		 * Apply process to process speculation vulnerability
+ +		 * mitigations if applicable.
+  		 */
+ -		cond_ibpb(tsk);
+ +		cond_mitigation(tsk);
+ =20
+- 		if (IS_ENABLED(CONFIG_VMAP_STACK)) {
+- 			/*
+- 			 * If our current stack is in vmalloc space and isn't
+- 			 * mapped in the new pgd, we'll double-fault.  Forcibly
+- 			 * map it.
+- 			 */
+- 			sync_current_stack_to_mm(next);
+- 		}
+-=20
+  		/*
+  		 * Stop remote flushes for the previous mm.
+  		 * Skip kernel threads; we never send init_mm TLB flushing IPIs,
 
-> 2. No margin for releasing the cooling action, for example, if
-> cooling action is triggered, when the temperature drops below the
-> passive trip threshold, the cooling action will be cancelled
-> immediately, if SoC keeps running at full performance, the
-> temperature will increase very soon, which may cause the SoC keep
-> triggering/cancelling the cooling action around the passive trip
-> threshold. If there is a margin, the situation will be much better.
-> 
-> Do you have any idea/comment about them?
+--Sig_/hl.C9T28t6O0frUX+OSEIhN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Yes, that is a good point. The hysteresis is supposed to do that. There
-is a work done by Andrzej Pietrasiewicz to disable / enable the thermal
-zones [1]. I think we should be able to fix that after the changes are done.
+-----BEGIN PGP SIGNATURE-----
 
-  -- Daniel
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7LpksACgkQAVBC80lX
+0GyNkAf9GICn1Mww2MmQEZQxmyyal+SdgjHa10MPbAYeaJFPPVJoPnFdn47rWrg/
+c/z9fxZuXiv2bL2yjOJEcF0/JT1BJXaYZzJid6RiI1ooXLcw+9RsSZHBZAnTn1Sg
+aKufTGdRA8skpFCalDJ4q1zaYd6EiniI2cgLpJtVQK4ktnjDRcKNSUx/5MMFqUCP
+5PXLpNXqpsoJSx2bY3db6kBLbFBoCEt1LBYZGXW8UI2rYzi34PiF6kh8m2XBWPSV
+PoObe9QQML1LqUSd79xmtMSZqw6McNI+RCq2aM25g8XKtNGN8RkxraSO8+kYX6rr
+cQbmeIJXKdWRQnV91ZbzzseI1ut9UA==
+=Whvo
+-----END PGP SIGNATURE-----
 
-[1] https://www.spinics.net/lists/netdev/msg644762.html
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--Sig_/hl.C9T28t6O0frUX+OSEIhN--
