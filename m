@@ -2,175 +2,308 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3053C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA84C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806552071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SWe1pufS"
+	by mail.kernel.org (Postfix) with ESMTP id 468B82065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390845AbgEYU4a (ORCPT
+        id S2390892AbgEYU5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 16:56:30 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4222 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390817AbgEYU43 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 16:56:29 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecc30ab0000>; Mon, 25 May 2020 13:55:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 25 May 2020 13:56:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 25 May 2020 13:56:29 -0700
-Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
- 2020 20:56:29 +0000
-Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
- on disabled memory
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Peter Xu <peterx@redhat.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <cohuck@redhat.com>, <cai@lca.pw>,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
- <159017506369.18853.17306023099999811263.stgit@gimli.home>
- <20200523193417.GI766834@xz-x1> <20200523170602.5eb09a66@x1.home>
- <20200523235257.GC939059@xz-x1> <20200525122607.GC744@ziepe.ca>
- <20200525142806.GC1058657@xz-x1> <20200525144651.GE744@ziepe.ca>
- <20200525151142.GE1058657@xz-x1> <20200525165637.GG744@ziepe.ca>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <3d9c1c8b-5278-1c4d-0e9c-e6f8fdb75853@nvidia.com>
-Date:   Mon, 25 May 2020 13:56:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 16:57:41 -0400
+Received: from mga03.intel.com ([134.134.136.65]:31787 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390750AbgEYU5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 16:57:41 -0400
+IronPort-SDR: MIrIFXuIKpg9V8rg0jNp9CMR669MSRXKvS0VQdwoRhm9GdU1xRT6X4zLP7JyUfa5d4dzxIK76E
+ iWdrvnOstJpQ==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 13:57:40 -0700
+IronPort-SDR: yVosbKdla3GYtCJyMs8X85aI0BFO3gwFRnzHMtPQcCh4hGkKdeq2QpFyX3q6LMY3KbHKg0Lw2k
+ CdjpCjGMMNiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,434,1583222400"; 
+   d="asc'?scan'208";a="375515995"
+Received: from hiversen-mobl.ger.corp.intel.com (HELO otredad) ([10.252.59.29])
+  by fmsmga001.fm.intel.com with ESMTP; 25 May 2020 13:57:35 -0700
+From:   Francisco Jerez <francisco.jerez.plata@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
+In-Reply-To: <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com>
+References: <3169564.ZRsPWhXyMD@kreacher> <87mu5wre1v.fsf@intel.com> <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com>
+Date:   Mon, 25 May 2020 13:57:47 -0700
+Message-ID: <87a71vraus.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200525165637.GG744@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590440107; bh=mZysOd1QSiEigolQ8hgnjUdmLlF/gyT8pGtK6k3rS+I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SWe1pufSO5sOhzDhzw9FORr9IxV3d2pqwczuexNQ8i/rSIdTPJapPS+xjsVmjUx+j
-         8AexDFSia74cHhz9UOfLvRGUhDEp2cf7jkplVC3Mt/Rfk0FNuEUT4jxtPV2hgkMUOb
-         dc46G8WMaN9n2tvlh+JASE8owmtRpb8tJICS3M6z1ehjXHaZ+6MngGzLU4/+33s0O6
-         Vsq5pXorjAoY5UmdS3qZo1jAad4+XzjE4Ozuz76I/7GfeZTDA4demB8WyaXQz1Kt7I
-         ecRbj0Hvq4WglA9i7Po2nRX0unF41cf/93qAK5qhjyyEuaKbATmKUzrDCM2lxjQCGr
-         sEgX43LJiWtKg==
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-25 09:56, Jason Gunthorpe wrote:
-> On Mon, May 25, 2020 at 11:11:42AM -0400, Peter Xu wrote:
->> On Mon, May 25, 2020 at 11:46:51AM -0300, Jason Gunthorpe wrote:
->>> On Mon, May 25, 2020 at 10:28:06AM -0400, Peter Xu wrote:
->>>> On Mon, May 25, 2020 at 09:26:07AM -0300, Jason Gunthorpe wrote:
->>>>> On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
->>>>>
->>>>>> For what I understand now, IMHO we should still need all those handlings of
->>>>>> FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
->>>>>> try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
->>>>>> not sure what would be the side effect of that if fault() blocked it.  E.g.,
->>>>>> the caller could be in an atomic context.
->>>>>
->>>>> AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
->>>>> VM_FAULT_RETRY is returned, which this doesn't do?
->>>>
->>>> Yes, that's why I think we should still properly return VM_FAULT_RETRY if
->>>> needed..  because IMHO it is still possible that the caller calls with
->>>> FAULT_FLAG_RETRY_NOWAIT.
->>>>
->>>> My understanding is that FAULT_FLAG_RETRY_NOWAIT majorly means:
->>>>
->>>>    - We cannot release the mmap_sem, and,
->>>>    - We cannot sleep
->>>
->>> Sleeping looks fine, look at any FS implementation of fault, say,
->>> xfs. The first thing it does is xfs_ilock() which does down_write().
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+"Rafael J. Wysocki" <rafael@kernel.org> writes:
+
+> On Mon, May 25, 2020 at 3:39 AM Francisco Jerez
+> <francisco.jerez.plata@intel.com> wrote:
 >>
->> Yeah.  My wild guess is that maybe fs code will always be without
->> FAULT_FLAG_RETRY_NOWAIT so it's safe to sleep unconditionally (e.g., I think
->> the general #PF should be fine to sleep in fault(); gup should be special, but
->> I didn't observe any gup code called upon file systems)?
-> 
-> get_user_pages is called on filesystem backed pages.
-> 
-> I have no idea what FAULT_FLAG_RETRY_NOWAIT is supposed to do. Maybe
-> John was able to guess when he reworked that stuff?
-> 
+>> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+>>
+>> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> >
+>> > Allow intel_pstate to work in the passive mode with HWP enabled and
+>> > make it translate the target frequency supplied by the cpufreq
+>> > governor in use into an EPP value to be written to the HWP request
+>> > MSR (high frequencies are mapped to low EPP values that mean more
+>> > performance-oriented HWP operation) as a hint for the HWP algorithm
+>> > in the processor, so as to prevent it and the CPU scheduler from
+>> > working against each other at least when the schedutil governor is
+>> > in use.
+>> >
+>> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> > ---
+>> >
+>> > This is a prototype not intended for production use (based on linux-next).
+>> >
+>> > Please test it if you can (on HWP systems, of course) and let me know the
+>> > results.
+>> >
+>> > The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very well
+>> > may turn out to be either too high or too low for the general use, which is one
+>> > reason why getting as much testing coverage as possible is key here.
+>> >
+>> > If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
+>> > please do so and let me know the conclusions.
+>> >
+>> > Cheers,
+>> > Rafael
+>> >
+>> > ---
+>> >  drivers/cpufreq/intel_pstate.c |  169 +++++++++++++++++++++++++++++++----------
+>> >  1 file changed, 131 insertions(+), 38 deletions(-)
+>> >
+>> > Index: linux-pm/drivers/cpufreq/intel_pstate.c
+>> > ===================================================================
+>> > --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+>> > +++ linux-pm/drivers/cpufreq/intel_pstate.c
+>> > @@ -36,6 +36,7 @@
+>> >  #define INTEL_PSTATE_SAMPLING_INTERVAL       (10 * NSEC_PER_MSEC)
+>> >
+>> >  #define INTEL_CPUFREQ_TRANSITION_LATENCY     20000
+>> > +#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP   5000
+>> >  #define INTEL_CPUFREQ_TRANSITION_DELAY               500
+>> >
+>> >  #ifdef CONFIG_ACPI
+>> > @@ -95,6 +96,8 @@ static inline int32_t percent_ext_fp(int
+>> >       return div_ext_fp(percent, 100);
+>> >  }
+>> >
+>> > +#define HWP_EPP_TO_BYTE(x)   (((u64)x >> 24) & 0xFF)
+>> > +
+>> >  /**
+>> >   * struct sample -   Store performance sample
+>> >   * @core_avg_perf:   Ratio of APERF/MPERF which is the actual average
+>> > @@ -2175,7 +2178,10 @@ static int intel_pstate_verify_policy(st
+>> >
+>> >  static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
+>> >  {
+>> > -     intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+>> > +     if (hwp_active)
+>> > +             intel_pstate_hwp_force_min_perf(policy->cpu);
+>> > +     else
+>> > +             intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+>> >  }
+>> >
+>> >  static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+>> > @@ -2183,12 +2189,10 @@ static void intel_pstate_stop_cpu(struct
+>> >       pr_debug("CPU %d exiting\n", policy->cpu);
+>> >
+>> >       intel_pstate_clear_update_util_hook(policy->cpu);
+>> > -     if (hwp_active) {
+>> > +     if (hwp_active)
+>> >               intel_pstate_hwp_save_state(policy);
+>> > -             intel_pstate_hwp_force_min_perf(policy->cpu);
+>> > -     } else {
+>> > -             intel_cpufreq_stop_cpu(policy);
+>> > -     }
+>> > +
+>> > +     intel_cpufreq_stop_cpu(policy);
+>> >  }
+>> >
+>> >  static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
+>> > @@ -2296,7 +2300,8 @@ static int intel_cpufreq_verify_policy(s
+>> >  #define      INTEL_PSTATE_TRACE_TARGET 10
+>> >  #define      INTEL_PSTATE_TRACE_FAST_SWITCH 90
+>> >
+>> > -static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type, int old_pstate)
+>> > +static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type,
+>> > +                             int from, int to)
+>> >  {
+>> >       struct sample *sample;
+>> >
+>> > @@ -2309,8 +2314,8 @@ static void intel_cpufreq_trace(struct c
+>> >       sample = &cpu->sample;
+>> >       trace_pstate_sample(trace_type,
+>> >               0,
+>> > -             old_pstate,
+>> > -             cpu->pstate.current_pstate,
+>> > +             from,
+>> > +             to,
+>> >               sample->mperf,
+>> >               sample->aperf,
+>> >               sample->tsc,
+>> > @@ -2318,40 +2323,110 @@ static void intel_cpufreq_trace(struct c
+>> >               fp_toint(cpu->iowait_boost * 100));
+>> >  }
+>> >
+>> > -static int intel_cpufreq_target(struct cpufreq_policy *policy,
+>> > -                             unsigned int target_freq,
+>> > -                             unsigned int relation)
+>> > +static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u8 new_epp)
+>> >  {
+>> > -     struct cpudata *cpu = all_cpu_data[policy->cpu];
+>> > -     struct cpufreq_freqs freqs;
+>> > -     int target_pstate, old_pstate;
+>> > +     u64 value, prev;
+>> >
+>> > -     update_turbo_state();
+>> > +     prev = READ_ONCE(cpu->hwp_req_cached);
+>> > +     value = prev;
+>> >
+>> > -     freqs.old = policy->cur;
+>> > -     freqs.new = target_freq;
+>> > +     /*
+>> > +      * The entire MSR needs to be updated in order to update the EPP field
+>> > +      * in it, so opportunistically update the min and max too if needed.
+>> > +      */
+>> > +     value &= ~HWP_MIN_PERF(~0L);
+>> > +     value |= HWP_MIN_PERF(cpu->min_perf_ratio);
+>> > +
+>> > +     value &= ~HWP_MAX_PERF(~0L);
+>> > +     value |= HWP_MAX_PERF(cpu->max_perf_ratio);
+>> > +
+>> > +     if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+>> > +             intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET,
+>> > +                                 HWP_EPP_TO_BYTE(prev), new_epp);
+>> > +
+>> > +             value &= ~GENMASK_ULL(31, 24);
+>> > +             value |= HWP_ENERGY_PERF_PREFERENCE(new_epp);
+>> > +     }
+>> > +
+>> > +     if (value != prev) {
+>> > +             WRITE_ONCE(cpu->hwp_req_cached, value);
+>> > +             wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
+>> > +     }
+>> > +}
+>> > +
+>> > +/**
+>> > + * intel_cpufreq_adjust_hwp_request - Adjust the HWP reuqest register.
+>> > + * @cpu: Target CPU.
+>> > + * @max_freq: Maximum frequency to consider.
+>> > + * @target_freq: Target frequency selected by the governor.
+>> > + *
+>> > + * Translate the target frequency into a new EPP value to be written into the
+>> > + * HWP request MSR of @cpu as a hint for the HW-driven P-state selection.
+>> > + *
+>> > + * The purpose of this is to avoid situations in which the kernel and the HWP
+>> > + * algorithm work against each other by giving a hint about the expectations of
+>> > + * the former to the latter.
+>> > + *
+>> > + * The mapping betweeen the target frequencies and the hint values need not be
+>> > + * exact, but it must be monotonic, so that higher target frequencies always
+>> > + * indicate more performance-oriented P-state selection.
+>> > + */
+>> > +static void intel_cpufreq_adjust_hwp_request(struct cpudata *cpu, s64 max_freq,
+>> > +                                          unsigned int target_freq)
+>> > +{
+>> > +     s64 epp_fp = div_fp(255 * (max_freq - target_freq), max_freq);
+>> > +
+>> > +     intel_cpufreq_update_hwp_request(cpu, fp_toint(epp_fp));
+>> > +}
+>> > +
+>>
+>> Hey Rafael, I'm building a kernel with this in order to give it a try on
+>> my system, but I'm skeptical that translating the target frequency to an
+>> EPP value will work reliably.  AFAIA the EPP value only has an indirect
+>> influence on the processor's performance by adjusting the trade-off
+>> between its responsiveness (rather than the actual clock frequency which
+>> it will sustain in the long run) and its energy usage, in a largely
+>> unspecified and non-linear way (non-linear like the effect of switching
+>> CPU energy optimization features on and off, or like its effect on the
+>> energy balancing behavior of the processor which can have a paradoxical
+>> effect on performance).
+>>
+>> I doubt that the scheduling-based CPU utilization is a good predictor
+>> for the optimal trade-off between those two variables.
+>
+> While I agree that this is not perfect, there barely is anything else
+> that can be used for this purpose.
+>
+> Using the desired field or trying to adjust the limits relatively
+> often would basically cause the P-state selection to be driven
+> entirely by the kernel which simply doesn't know certain things only
+> known to the P-unit, so it is reasonable to leave some level of
+> control to the latter, so as to allow it to use the information known
+> to it only.
+>
+> However, if it is allowed to do whatever it likes without any hints
+> from the kernel, it may very well go against the scheduler's decisions
+> which is not going to be optimal.
+>
+> I'm simply not sure if there is any other way to give such hints to it
+> that through the EPP.
+>
 
-Although I didn't end up touching that particular area, I'm sure it's going
-to come up sometime soon, so I poked around just now, and found that
-FAULT_FLAG_RETRY_NOWAIT was added almost exactly 9 years ago. This flag was
-intended to make KVM and similar things behave better when doing GUP on
-file-backed pages that might, or might not be in memory.
+Why not HWP_MIN_PERF?  That would leave the HWP quite some room for
+maneuvering (the whole HWP_MIN_PERF-HWP_MAX_PERF P-state range, it's not
+like P-state selection would be entirely driven by the kernel), while
+avoiding every failure scenario I was describing in my previous reply.
 
-The idea is described in the changelog, but not in the code comments or
-Documentation, sigh:
+Simply adjusting the EPP doesn't really allow the governor to make any
+assumptions about the instantaneous performance of the processor, so it
+seems questionable that it is exposed as a frequency target, since its
+effect on frequency would be highly implementation-dependent and
+inconsistent with the behavior of other CPUFREQ drivers.  OTOH adjusting
+HWP_MIN_PERF achieves precisely what the caller wants: The CPU will
+deliver at least the requested number of clocks per second (assuming the
+request is compatible with the thermal and electrical constraints of the
+processor), while retaining the liberty to clock up beyond that
+frequency if the HWP is able to react to some discontinuous event more
+quickly than the scheduler.
 
-commit 318b275fbca1ab9ec0862de71420e0e92c3d1aa7
-Author: Gleb Natapov <gleb@redhat.com>
-Date:   Tue Mar 22 16:30:51 2011 -0700
+> Thanks!
 
-     mm: allow GUP to fail instead of waiting on a page
+--=-=-=--
 
-     GUP user may want to try to acquire a reference to a page if it is already
-     in memory, but not if IO, to bring it in, is needed.  For example KVM may
-     tell vcpu to schedule another guest process if current one is trying to
-     access swapped out page.  Meanwhile, the page will be swapped in and the
-     guest process, that depends on it, will be able to run again.
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-     This patch adds FAULT_FLAG_RETRY_NOWAIT (suggested by Linus) and
-     FOLL_NOWAIT follow_page flags.  FAULT_FLAG_RETRY_NOWAIT, when used in
-     conjunction with VM_FAULT_ALLOW_RETRY, indicates to handle_mm_fault that
-     it shouldn't drop mmap_sem and wait on a page, but return VM_FAULT_RETRY
-     instead.
+-----BEGIN PGP SIGNATURE-----
 
-If that helps, maybe documentation approximately like this might be welcome
-(against linux-next, so I'm using mmap_lock, instead of mmap_sem), below.
-Or is this overkill? People like minimal documentation in the code, so maybe
-this belongs in Documentation, if anywhere:
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 8429d5aa31e44..e32e8e52a57ac 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -430,6 +430,15 @@ extern pgprot_t protection_map[16];
-   * continuous faults with flags (b).  We should always try to detect pending
-   * signals before a retry to make sure the continuous page faults can still be
-   * interrupted if necessary.
-+ *
-+ * About @FAULT_FLAG_RETRY_NOWAIT: this is intended for callers who would like
-+ * to acquire a page, but only if the page is already in memory. If, on the
-+ * other hand, the page requires IO in order to bring it into memory, then fault
-+ * handlers will immediately return VM_FAULT_RETRY ("don't wait"), while leaving
-+ * mmap_lock held ("don't drop mmap_lock"). For example, this is useful for
-+ * virtual machines that have multiple guests running: if guest A attempts
-+ * get_user_pages() on a swapped out page, another guest can be scheduled while
-+ * waiting for IO to swap in guest A's page.
-   */
-  #define FAULT_FLAG_WRITE                       0x01
-  #define FAULT_FLAG_MKWRITE                     0x02
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXswxSwAKCRCDmTidfVK/
+W85WAP9LllIMzUqpuK2JCyRaa/YAvLzISzlD3BtybBDpk2SgPAD9Eys3UMR/8f7M
++zN75zK7I9Fd9jytw1uvpa5mLCfhowQ=
+=TAoT
+-----END PGP SIGNATURE-----
+--==-=-=--
