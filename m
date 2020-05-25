@@ -2,88 +2,79 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE92C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC76C207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964E72078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389657AbgEYKSh (ORCPT
+        id S2389720AbgEYKTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:18:37 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:40624 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbgEYKSg (ORCPT
+        Mon, 25 May 2020 06:19:05 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:34262 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389356AbgEYKTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:18:36 -0400
-Received: by mail-oo1-f66.google.com with SMTP id f39so170585ooi.7;
-        Mon, 25 May 2020 03:18:35 -0700 (PDT)
+        Mon, 25 May 2020 06:19:05 -0400
+Received: by mail-il1-f197.google.com with SMTP id d8so14876519ilo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:19:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wt8kUHkLgm4/PwCXdRTJgQz9PVt7y+gc7PSY3CqRuB8=;
-        b=OIsigtPDMDXhkjZR/DX2SCMb86jskcKQpqAvMHP3IXf6lOYqXDvBXec45ERoDWsXZp
-         rPfSGffaFreUQ8o+j5aLkVbMGHtBYmMIhioZiRIxADlM3NsRKeC38XdwuBex223peYFr
-         66jUSxQyJlfyLRakHDmIAXfLElIPD8T4oprn0aX6nxqlBSmmn9tD03MIqsU6V/1QId5R
-         W+bZU0iwfBMtEsjUaNKBtOtCzroESR1L2DE3HNYyO5htM+MGr0TklunP2bqTxs7JrM94
-         DFRgu432q6tFWU5y5PT8JYCjDEYQ9Mrg0nxaY0hxnY5mabQrE/Q4ljYSbud4V8PliDk1
-         XTLw==
-X-Gm-Message-State: AOAM531CCohuB10O0M3DtuJiJ9uOvwjPNSGyLhNWCEu1p2V9ch8zhvGc
-        YIwlL7qXYPYEORfN3CqYuR+RE/oxvPz7LrrKIJQ=
-X-Google-Smtp-Source: ABdhPJyV6T1+hM56Oz27Q8wrRBfENyGDZ7TpbxFI/YUDXRlpcmMlJpGgfYhSII4TvcHVkQgF6ezzXbs7f7VYidwjDHs=
-X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr12526255oot.1.1590401915222;
- Mon, 25 May 2020 03:18:35 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=whoLZ/cMcXb882oZ1pDdASgEN3wOLkDsAb0kfev0mIU=;
+        b=oG3OYFZpHzjY1B1q3/LPD6LYt7VVkD5Z/+V2IS438294ZI/VcND0acE4Onf2y1kd5r
+         JQljJ0MluRhcSTO5dqdOg6x5x5dpTG69aPg5b112wvor/XbCqjugbDqTHBIqNtCNpxxG
+         iR1PLi4KAabEPhEWILpZJRlIMuFyoqll2VCy7QvyA5a3963kcay7+SbLc1KWQd6cQIaI
+         ekUj19RJ7sYj6BAXAiCi9LL1lTxXBg8EQD00forqgaLavjeV+HM2LXNqh0RDpnaHpDdu
+         VJAXMxtXpLTLWEZavpgL61e+DnkpS68uWQeZdrvXo5iQrkDO5Vt2sbOhnI9sQbgR8aNK
+         /41Q==
+X-Gm-Message-State: AOAM5307biRJtPzEqdy1KVMqS5/t58x9C9eUKKXFmrsyokjO8kZ3lK28
+        EGmXLjXp5XUzOdjTqOt297JtcNPC/k4UcCKrWWFky2E2ZDlF
+X-Google-Smtp-Source: ABdhPJx+tnjOlgCi02g4SUjSWTWYNC0Cv4sVgDVr14y8LKntAXEIw1aJC8Vk3mNbVow1S6zjJQ4Lbgs7vJILAN2bfDVXV1/HhbNz
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590356277-19993-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 12:18:24 +0200
-Message-ID: <CAMuHMdUxuCE2ODK1kdOvtvLuPrxO3-O=0FYv5ZABE01M9phdEQ@mail.gmail.com>
-Subject: Re: [PATCH 5/8] dt-bindings: usb: usb-xhci: Document r8a7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+X-Received: by 2002:a05:6e02:965:: with SMTP id q5mr23266428ilt.272.1590401944546;
+ Mon, 25 May 2020 03:19:04 -0700 (PDT)
+Date:   Mon, 25 May 2020 03:19:04 -0700
+In-Reply-To: <0000000000000a9cca057cd141bd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f472ee05a6764e46@google.com>
+Subject: Re: inconsistent lock state in icmp_send
+From:   syzbot <syzbot+251ec6887ada6eac4921@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, edumazet@google.com, jmaloy@redhat.com,
+        jon.maloy@ericsson.com, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com,
+        yoshfuji@linux-ipv6.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:40 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document r8a7742 xhci support. The driver will use the fallback
-> compatible string "renesas,rcar-gen2-xhci", therefore no driver
-> change is needed.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+syzbot suspects this bug was fixed by commit:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+commit 1378817486d6860f6a927f573491afe65287abf1
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu May 21 18:29:58 2020 +0000
 
-Gr{oetje,eeting}s,
+    tipc: block BH before using dst_cache
 
-                        Geert
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10cbef06100000
+start commit:   f5d58277 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c8970c89a0efbb23
+dashboard link: https://syzkaller.appspot.com/bug?extid=251ec6887ada6eac4921
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10ab6ba3400000
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+If the result looks correct, please mark the bug fixed by replying with:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+#syz fix: tipc: block BH before using dst_cache
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
