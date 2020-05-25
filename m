@@ -2,222 +2,184 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A692073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F2F20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="buAXv4JE"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Kd6js+c0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390360AbgEYLru (ORCPT
+        id S2390315AbgEYLuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390165AbgEYLrt (ORCPT
+        Mon, 25 May 2020 07:50:08 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27622 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388697AbgEYLuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:47:49 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F7FC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:47:48 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g9so14758401edr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:47:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hl7IW7DWz99YomR3QOZBXmvlxAGPmsXZQwu20AX5v3s=;
-        b=buAXv4JEaQqiHrO8/RCz7HUcFTvhmEjLbUZHKrXlRHNck0Rq6D8WUDoq2L3hNja/6v
-         t1syq8JezlywvTLr95huE9K/RR3oyutUWhO1IsPHTp6b/xHwqCEXwE4xS0rtsqbZ6SEL
-         KwmqiMdE0QJSqHwNi1PaxzQDGEvLE0qUP4uaQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hl7IW7DWz99YomR3QOZBXmvlxAGPmsXZQwu20AX5v3s=;
-        b=LTUEtkMKYIay1tNEwyrDGHuwuvjlv7azfwYrFtsaX3hrQRQWkL4yA57ZsK5rUjPiQd
-         ruMRrFDcK4cil6Dcwgeqp/gR6and+r550MOl1h5hPCY0MJgSLXVOqaB8h8aJsrs109Uz
-         EAawkf+A+I8nZ2qHO7NXGpiQt/S9i2e++q+GS2BYv8DawG8wvTCp867KJ2IwEH14Q3My
-         z6DOMFa+TVW48XGk1nGa1D2PihlC8gpY6my3LURO/mMXRR9phRaiY9WT79Q4Y3sLIyNM
-         5K7VEj8597IPH8g3q6NpiII9ozMOUB/35mZsAv6ERR5nV3LXgOL/oDXBHOgP4p4JmdS5
-         RdJg==
-X-Gm-Message-State: AOAM530ri7LyIi4MNozYqcIA5ASDORBfAfBStk20piuKaMlwr0QSMfBI
-        4Px3UWdI+guv0K057+CYTs/99y8/TDQ2+Q==
-X-Google-Smtp-Source: ABdhPJw4IidvW31wFrC1oKMiivgxU/hkxDXmWH5lX9bA4EB3MAV2UNKdr/KHmrWjyIgg/l93GX5ytw==
-X-Received: by 2002:a50:fc83:: with SMTP id f3mr15281795edq.138.1590407267291;
-        Mon, 25 May 2020 04:47:47 -0700 (PDT)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id b62sm16066954edf.28.2020.05.25.04.47.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 04:47:46 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id x6so3201074wrm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:47:45 -0700 (PDT)
-X-Received: by 2002:adf:e543:: with SMTP id z3mr14323859wrm.385.1590407265383;
- Mon, 25 May 2020 04:47:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522202130.13306-1-jonas@kwiboo.se>
-In-Reply-To: <20200522202130.13306-1-jonas@kwiboo.se>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 25 May 2020 13:47:33 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5C7SsLET_6yHNpXnG5ozb09znOpRV1Rx8-uDpy=d4+ETQ@mail.gmail.com>
-Message-ID: <CAAFQd5C7SsLET_6yHNpXnG5ozb09znOpRV1Rx8-uDpy=d4+ETQ@mail.gmail.com>
-Subject: Re: [PATCH] media: rkvdec: Fix H264 scaling list order
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mon, 25 May 2020 07:50:07 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04PBm2dF023009;
+        Mon, 25 May 2020 13:49:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=ZLPJbD1i52pQmhWGud8u9OF5Yeh//Hrj8jaTYYs9M5U=;
+ b=Kd6js+c0GtO9/IEl9vzto9Y8GRXycY27HMPexBUqs+VTSoehYyl+sjHlU1lrl+GElZLK
+ WE1Mf3lI5suTEZKRtnv0a7knaBYa0SZV/1V7COQiI79ue5zX9MJV9R9hY7bG4lPmqM8H
+ MxNc+UaPLdg46wE59rALpCUX+roPIerHdStpPpIEZ09pb6nAILTuKJx11U2HmUkgdIoM
+ oGShsqDs2T/76Ka0CzY1lxjCYs9QHlUHEw2WAeb+EIiUXNIEmDB963Kt8ZIE6bQ/u4/H
+ g4n1zaNdojeeyXLwkYpwvxqDpcnMBl67VJSxXZUAKispXLGsUKRRV4oqsf0Rvui4+k42 xQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316rya26p9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 May 2020 13:49:38 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10CAF10002A;
+        Mon, 25 May 2020 13:49:37 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BB6C121E681;
+        Mon, 25 May 2020 13:49:37 +0200 (CEST)
+Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
+ 2020 13:49:37 +0200
+Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
+ SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
+ 15.00.1473.003; Mon, 25 May 2020 13:49:37 +0200
+From:   Nicolas TOROMANOFF <nicolas.toromanoff@st.com>
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: RE: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
+Thread-Topic: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
+Thread-Index: AQHWMnPoC6hseRPByUqqkn4smN/k96i4hBOA
+Date:   Mon, 25 May 2020 11:49:37 +0000
+Message-ID: <31e99726fa6544fcaac88490de3186e6@SFHDAG6NODE1.st.com>
+References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
+ <20200512141113.18972-6-nicolas.toromanoff@st.com>
+ <CAMj1kXGs6UgkKb5+tH2B-+26=tbjHq3UUY2gxfcRfMb1nGVuFA@mail.gmail.com>
+ <67c25d90d9714a85b52f3d9c2070af88@SFHDAG6NODE1.st.com>
+ <CAMj1kXGo+9aXeYppGSheqhC-pNeJCcEie+SAnWy_sAiooEDMsQ@mail.gmail.com>
+ <bd6cac3bd4c74db1a403df58082028fd@SFHDAG6NODE1.st.com>
+ <CAMj1kXFwt6cs-MJhAeMRF4-yiddm=ezq=qvSjA_sRAX+_Gdqhw@mail.gmail.com>
+In-Reply-To: <CAMj1kXFwt6cs-MJhAeMRF4-yiddm=ezq=qvSjA_sRAX+_Gdqhw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-25_07:2020-05-25,2020-05-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:21 PM Jonas Karlman <jonas@kwiboo.se> wrote:
->
-> The Rockchip Video Decoder driver is expecting that the values in a
-> scaling list are in zig-zag order and applies the inverse scanning process
-> to get the values in matrix order.
->
-> Commit 0b0393d59eb4 ("media: uapi: h264: clarify expected
-> scaling_list_4x4/8x8 order") clarified that the values in the scaling list
-> should already be in matrix order.
->
-> Fix this by removing the reordering and change to use two memcpy.
->
-> Fixes: cd33c830448b ("media: rkvdec: Add the rkvdec driver")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
->  drivers/staging/media/rkvdec/rkvdec-h264.c | 70 +++++++---------------
->  1 file changed, 22 insertions(+), 48 deletions(-)
->
-
-+Alexandre Courbot +Jeffrey Kardatzke for visibility
-
-> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> index cd4980d06be7..2719f0c66a4a 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> @@ -18,11 +18,16 @@
->  /* Size with u32 units. */
->  #define RKV_CABAC_INIT_BUFFER_SIZE     (3680 + 128)
->  #define RKV_RPS_SIZE                   ((128 + 128) / 4)
-> -#define RKV_SCALING_LIST_SIZE          (6 * 16 + 6 * 64 + 128)
->  #define RKV_ERROR_INFO_SIZE            (256 * 144 * 4)
->
->  #define RKVDEC_NUM_REFLIST             3
->
-> +struct rkvdec_scaling_matrix {
-> +       u8 scaling_list_4x4[6][16];
-> +       u8 scaling_list_8x8[6][64];
-> +       u8 padding[128];
-> +};
-> +
->  struct rkvdec_sps_pps_packet {
->         u32 info[8];
->  };
-> @@ -86,7 +91,7 @@ struct rkvdec_ps_field {
->  /* Data structure describing auxiliary buffer format. */
->  struct rkvdec_h264_priv_tbl {
->         s8 cabac_table[4][464][2];
-> -       u8 scaling_list[RKV_SCALING_LIST_SIZE];
-> +       struct rkvdec_scaling_matrix scaling_list;
->         u32 rps[RKV_RPS_SIZE];
->         struct rkvdec_sps_pps_packet param_set[256];
->         u8 err_info[RKV_ERROR_INFO_SIZE];
-> @@ -785,56 +790,25 @@ static void assemble_hw_rps(struct rkvdec_ctx *ctx,
->         }
->  }
->
-> -/*
-> - * NOTE: The values in a scaling list are in zig-zag order, apply inverse
-> - * scanning process to get the values in matrix order.
-> - */
-> -static const u32 zig_zag_4x4[16] = {
-> -       0, 1, 4, 8, 5, 2, 3, 6, 9, 12, 13, 10, 7, 11, 14, 15
-> -};
-> -
-> -static const u32 zig_zag_8x8[64] = {
-> -       0,  1,  8, 16,  9,  2,  3, 10, 17, 24, 32, 25, 18, 11,  4,  5,
-> -       12, 19, 26, 33, 40, 48, 41, 34, 27, 20, 13,  6,  7, 14, 21, 28,
-> -       35, 42, 49, 56, 57, 50, 43, 36, 29, 22, 15, 23, 30, 37, 44, 51,
-> -       58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63
-> -};
-> -
-> -static void reorder_scaling_list(struct rkvdec_ctx *ctx,
-> -                                struct rkvdec_h264_run *run)
-> +static void assemble_hw_scaling_list(struct rkvdec_ctx *ctx,
-> +                                    struct rkvdec_h264_run *run)
->  {
->         const struct v4l2_ctrl_h264_scaling_matrix *scaling = run->scaling_matrix;
-> -       const size_t num_list_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4);
-> -       const size_t list_len_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4[0]);
-> -       const size_t num_list_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8);
-> -       const size_t list_len_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8[0]);
->         struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
->         struct rkvdec_h264_priv_tbl *tbl = h264_ctx->priv_tbl.cpu;
-> -       u8 *dst = tbl->scaling_list;
-> -       const u8 *src;
-> -       int i, j;
-> -
-> -       BUILD_BUG_ON(ARRAY_SIZE(zig_zag_4x4) != list_len_4x4);
-> -       BUILD_BUG_ON(ARRAY_SIZE(zig_zag_8x8) != list_len_8x8);
-> -       BUILD_BUG_ON(ARRAY_SIZE(tbl->scaling_list) <
-> -                    num_list_4x4 * list_len_4x4 +
-> -                    num_list_8x8 * list_len_8x8);
-> -
-> -       src = &scaling->scaling_list_4x4[0][0];
-> -       for (i = 0; i < num_list_4x4; ++i) {
-> -               for (j = 0; j < list_len_4x4; ++j)
-> -                       dst[zig_zag_4x4[j]] = src[j];
-> -               src += list_len_4x4;
-> -               dst += list_len_4x4;
-> -       }
->
-> -       src = &scaling->scaling_list_8x8[0][0];
-> -       for (i = 0; i < num_list_8x8; ++i) {
-> -               for (j = 0; j < list_len_8x8; ++j)
-> -                       dst[zig_zag_8x8[j]] = src[j];
-> -               src += list_len_8x8;
-> -               dst += list_len_8x8;
-> -       }
-> +       BUILD_BUG_ON(sizeof(tbl->scaling_list.scaling_list_4x4) !=
-> +                    sizeof(scaling->scaling_list_4x4));
-> +       BUILD_BUG_ON(sizeof(tbl->scaling_list.scaling_list_8x8) !=
-> +                    sizeof(scaling->scaling_list_8x8));
-> +
-> +       memcpy(tbl->scaling_list.scaling_list_4x4,
-> +              scaling->scaling_list_4x4,
-> +              sizeof(scaling->scaling_list_4x4));
-> +
-> +       memcpy(tbl->scaling_list.scaling_list_8x8,
-> +              scaling->scaling_list_8x8,
-> +              sizeof(scaling->scaling_list_8x8));
->  }
->
->  /*
-> @@ -1126,7 +1100,7 @@ static int rkvdec_h264_run(struct rkvdec_ctx *ctx)
->         v4l2_h264_build_b_ref_lists(&reflist_builder, h264_ctx->reflists.b0,
->                                     h264_ctx->reflists.b1);
->
-> -       reorder_scaling_list(ctx, &run);
-> +       assemble_hw_scaling_list(ctx, &run);
->         assemble_hw_pps(ctx, &run);
->         assemble_hw_rps(ctx, &run);
->         config_registers(ctx, &run);
-> --
-> 2.17.1
->
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJk
+YkBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE1heSAyNSwgMjAyMCAxMTowNyBBTQ0KPiBU
+bzogTmljb2xhcyBUT1JPTUFOT0ZGIDxuaWNvbGFzLnRvcm9tYW5vZmZAc3QuY29tPjsgRXJpYyBC
+aWdnZXJzDQo+IDxlYmlnZ2Vyc0BrZXJuZWwub3JnPg0KPiBPbiBNb24sIDI1IE1heSAyMDIwIGF0
+IDExOjAxLCBOaWNvbGFzIFRPUk9NQU5PRkYNCj4gPG5pY29sYXMudG9yb21hbm9mZkBzdC5jb20+
+IHdyb3RlOg0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJv
+bTogQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IE1vbmRheSwg
+TWF5IDI1LCAyMDIwIDk6NDYgQU0NCj4gPiA+IFRvOiBOaWNvbGFzIFRPUk9NQU5PRkYgPG5pY29s
+YXMudG9yb21hbm9mZkBzdC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDUvNV0gY3J5
+cHRvOiBzdG0zMi9jcmM6IHByb3RlY3QgZnJvbSBjb25jdXJyZW50DQo+ID4gPiBhY2Nlc3Nlcw0K
+PiA+ID4NCj4gPiA+IE9uIE1vbiwgMjUgTWF5IDIwMjAgYXQgMDk6MjQsIE5pY29sYXMgVE9ST01B
+Tk9GRg0KPiA+ID4gPG5pY29sYXMudG9yb21hbm9mZkBzdC5jb20+IHdyb3RlOg0KPiA+ID4gPg0K
+PiA+ID4gPiBIZWxsbywNCj4gPiA+ID4NCj4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
+LS0tLQ0KPiA+ID4gPiA+IEZyb206IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+
+ID4gPiA+ID4gU2VudDogRnJpZGF5LCBNYXkgMjIsIDIwMjAgNjoxMiBQTT4gT24gVHVlLCAxMiBN
+YXkgMjAyMCBhdA0KPiA+ID4gPiA+IDE2OjEzLCBOaWNvbGFzIFRvcm9tYW5vZmYgPG5pY29sYXMu
+dG9yb21hbm9mZkBzdC5jb20+IHdyb3RlOg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFByb3Rl
+Y3QgU1RNMzIgQ1JDIGRldmljZSBmcm9tIGNvbmN1cnJlbnQgYWNjZXNzZXMuDQo+ID4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ID4gQXMgd2UgY3JlYXRlIGEgc3BpbmxvY2tlZCBzZWN0aW9uIHRoYXQgaW5j
+cmVhc2Ugd2l0aCBidWZmZXINCj4gPiA+ID4gPiA+IHNpemUsIHdlIHByb3ZpZGUgYSBtb2R1bGUg
+cGFyYW1ldGVyIHRvIHJlbGVhc2UgdGhlIHByZXNzdXJlIGJ5DQo+ID4gPiA+ID4gPiBzcGxpdHRp
+bmcgY3JpdGljYWwgc2VjdGlvbiBpbiBjaHVua3MuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
+U2l6ZSBvZiBlYWNoIGNodW5rIGlzIGRlZmluZWQgaW4gYnVyc3Rfc2l6ZSBtb2R1bGUgcGFyYW1l
+dGVyLg0KPiA+ID4gPiA+ID4gQnkgZGVmYXVsdCBidXJzdF9zaXplPTAsIGkuZS4gZG9uJ3Qgc3Bs
+aXQgaW5jb21pbmcgYnVmZmVyLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IE5pY29sYXMgVG9yb21hbm9mZiA8bmljb2xhcy50b3JvbWFub2ZmQHN0LmNvbT4NCj4gPiA+
+ID4gPg0KPiA+ID4gPiA+IFdvdWxkIHlvdSBtaW5kIGV4cGxhaW5pbmcgdGhlIHVzYWdlIG1vZGVs
+IGhlcmU/IEl0IGxvb2tzIGxpa2UNCj4gPiA+ID4gPiB5b3UgYXJlIHNoYXJpbmcgYSBDUkMgaGFy
+ZHdhcmUgYWNjZWxlcmF0b3Igd2l0aCBhIHN5bmNocm9ub3VzDQo+ID4gPiA+ID4gaW50ZXJmYWNl
+IGJldHdlZW4gZGlmZmVyZW50IHVzZXJzIGJ5IHVzaW5nIHNwaW5sb2Nrcz8gWW91IGFyZQ0KPiA+
+ID4gPiA+IGF3YXJlIHRoYXQgdGhpcyB3aWxsIHRpZSB1cCB0aGUgd2FpdGluZyBDUFVzIGNvbXBs
+ZXRlbHkgZHVyaW5nDQo+ID4gPiA+ID4gdGhpcyB0aW1lLCByaWdodD8gU28gaXQgd291bGQgYmUg
+bXVjaCBiZXR0ZXIgdG8gdXNlIGEgbXV0ZXgNCj4gPiA+ID4gPiBoZXJlLiBPciBwZXJoYXBzIGl0
+IHdvdWxkIG1ha2UgbW9yZSBzZW5zZSB0byBmYWxsIGJhY2sgdG8gYSBzL3cNCj4gPiA+ID4gPiBi
+YXNlZCBDUkMgcm91dGluZSBpZiB0aGUgaC93IGlzIHRpZWQgdXANCj4gPiA+IHdvcmtpbmcgZm9y
+IGFub3RoZXIgdGFzaz8NCj4gPiA+ID4NCj4gPiA+ID4gSSBrbm93IG11dGV4IGFyZSBtb3JlIGFj
+Y2VwdGFibGUgaGVyZSwgYnV0IHNoYXNoIF91cGRhdGUoKSBhbmQNCj4gPiA+ID4gX2luaXQoKSBt
+YXkgYmUgY2FsbCBmcm9tIGFueSBjb250ZXh0LCBhbmQgc28gSSBjYW5ub3QgdGFrZSBhIG11dGV4
+Lg0KPiA+ID4gPiBBbmQgdG8gcHJvdGVjdCBteSBjb25jdXJyZW50IEhXIGFjY2VzcyBJIG9ubHkg
+dGhvdWdoIGFib3V0IHNwaW5sb2NrLg0KPiA+ID4gPiBEdWUgdG8gcG9zc2libGUgY29uc3RyYWlu
+dCBvbiBDUFVzLCBJIGFkZCBhIGJ1cnN0X3NpemUgb3B0aW9uIHRvDQo+ID4gPiA+IGZvcmNlIHNs
+aXR0aW5nIGxvbmcgYnVmZmVyIGludG8gc21hbGxlciBvbmUsIGFuZCBzbyBkZWNyZWFzZSB0aW1l
+IHdlIHRha2UNCj4gdGhlIGxvY2suDQo+ID4gPiA+IEJ1dCBJIGRpZG4ndCB0aG91Z2ggdG8gZmFs
+bGJhY2sgdG8gc29mdHdhcmUgQ1JDLg0KPiA+ID4gPg0KPiA+ID4gPiBJJ2xsIGRvIGEgcGF0Y2gg
+b24gdG9wLg0KPiA+ID4gPiBJbiBpbiB0aGUgYnVyc3RfdXBkYXRlKCkgZnVuY3Rpb24gSSdsbCB1
+c2UgYQ0KPiA+ID4gPiBzcGluX3RyeWxvY2tfaXJxc2F2ZSgpIGFuZCB1c2UNCj4gPiA+IHNvZnR3
+YXJlIENSQzMyIGlmIEhXIGlzIGFscmVhZHkgaW4gdXNlLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+
+IFJpZ2h0LiBJIGRpZG4ndCBldmVuIG5vdGljZSB0aGF0IHlvdSB3ZXJlIGtlZXBpbmcgaW50ZXJy
+dXB0cw0KPiA+ID4gZGlzYWJsZWQgdGhlIHdob2xlIHRpbWUgd2hlbiB1c2luZyB0aGUgaC93IGJs
+b2NrLiBUaGF0IG1lYW5zIHRoYXQNCj4gPiA+IGFueSBzZXJpb3VzIHVzZSBvZiB0aGlzIGgvdyBi
+bG9jayB3aWxsIG1ha2UgSVJRIGxhdGVuY3kgZ28gdGhyb3VnaCB0aGUgcm9vZi4NCj4gPiA+DQo+
+ID4gPiBJIHJlY29tbWVuZCB0aGF0IHlvdSBnbyBiYWNrIHRvIHRoZSBkcmF3aW5nIGJvYXJkIG9u
+IHRoaXMgZHJpdmVyLA0KPiA+ID4gcmF0aGVyIHRoYW4gcGFwZXJpbmcgb3ZlciB0aGUgaXNzdWVz
+IHdpdGggYSBzcGluX3RyeWxvY2soKS4gUGVyaGFwcw0KPiA+ID4gaXQgd291bGQgYmUgYmV0dGVy
+IHRvIG1vZGVsIGl0IGFzIGEgYWhhc2ggKGV2ZW4gdGhvdWdoIHRoZSBoL3cgYmxvY2sNCj4gPiA+
+IGl0c2VsZiBpcyBzeW5jaHJvbm91cykgYW5kIHVzZSBhIGt0aHJlYWQgdG8gZmVlZCBpbiB0aGUg
+ZGF0YS4NCj4gPg0KPiA+IEkgdGhvdWdodCB3aGVuIEkgdXBkYXRlZCB0aGUgZHJpdmVyIHRvIG1v
+dmUgdG8gYSBhaGFzaCBpbnRlcmZhY2UsIGJ1dA0KPiA+IHRoZSBtYWluIHVzYWdlIG9mIGNyYzMy
+IGlzIHRoZSBleHQ0IGZzLCB0aGF0IGNhbGxzIHRoZSBzaGFzaCBBUEkuDQo+ID4gQ29tbWl0IDg3
+N2I1NjkxZjI3YSAoImNyeXB0bzogc2hhc2ggLSByZW1vdmUgc2hhc2hfZGVzYzo6ZmxhZ3MiKQ0K
+PiA+IHJlbW92ZWQgcG9zc2liaWxpdHkgdG8gc2xlZXAgaW4gc2hhc2ggY2FsbGJhY2suIChiZWZv
+cmUgdGhpcyBjb21taXQNCj4gPiBhbmQgd2l0aCBNQVlfU0xFRVAgb3B0aW9uIHNldCwgdXNpbmcg
+YSBtdXRleCBtYXkgaGF2ZSBiZWVuIGZpbmUpLg0KPiA+DQo+IA0KPiBBY2NvcmRpbmcgdG8gdGhh
+dCBjb21taXQncyBsb2csIHNsZWVwaW5nIGlzIG5ldmVyIGZpbmUgZm9yIHNoYXNoKCksIHNpbmNl
+IGl0IHVzZXMNCj4ga21hcF9hdG9taWMoKSB3aGVuIGl0ZXJhdGluZyBvdmVyIHRoZSBzY2F0dGVy
+bGlzdC4NCg0KVG9kYXksIHdlIGNvdWxkIGF2b2lkIHVzaW5nIGttYXBfYXRvbWljKCkgaW4gc2hh
+c2hfYXNoYXNoXyooKSBBUElzICh0aGUNCm9uZXMgdGhhdCBXYWxrcyB0aHJvdWdoIHRoZSBzY2F0
+dGVybGlzdCkgYnkgdXNpbmcgdGhlDQpjcnlwdG9fYWhhc2hfd2Fsa19maXJzdCgpIGZ1bmN0aW9u
+IHRvIGluaXRpYWxpemUgdGhlIHNoYXNoX2FoYXNoIHdhbGtlcg0KKG5vdGUgdGhhdCB0aGlzIGZ1
+bmN0aW9uIGlzIG5ldmVyIGNhbGwgaW4gY3VycmVudCBrZXJuZWwgc291cmNlIFt0byByZW1vdmUg
+P10pLg0KVGhlbiBzaGFzaF9haGFzaF8qKCkgZnVuY3Rpb25zIHdpbGwgY2FsbCBhaGFzaF8qKCkg
+ZnVuY3Rpb24gdGhhdCB1c2Uga21hcCgpDQppZiAod2Fsay0+ZmxhZ3MgJiBDUllQVE9fQUxHX0FT
+WU5DKSBbZmxhZyBzZXQgYnkgY3J5cHRvX2FoYXNoX3dhbGtfZmlyc3QoKV0NClRoZSBsYXN0IGtt
+YXBfYXRvbWljKCkgd2lsbCBiZSBpbiB0aGUgc2hhc2hfYWhhc2hfZGlnZXN0KCkgY2FsbCBpbiB0
+aGUNCm9wdGltaXplIGJyYW5jaCAodGhhdCBzaG91bGQgYmUgcmVwbGFjZWQgYnkgdGhlIG5vIGF0
+b21pYyBvbmUpDQoNCkkgZGlkbid0IGludmVzdGlnYXRlIG1vcmUgdGhpcyB3YXksIGJlY2F1c2Ug
+SSBkaWRuJ3QgY2hlY2sgdGhlIGRyYXdiYWNrIG9mDQp1c2luZyBrbWFwKCkgaW5zdGVhZCBvZiBr
+bWFwX2F0b21pYygpLCBJIHdhbnRlZCB0byBhdm9pZCBtb2RpZnlpbmcgYmVoYXZpb3INCm9mIG90
+aGVyIGRyaXZlcnMgYW5kIHVzaW5nIGEgZnVuY3Rpb24gbmV2ZXIgdXNlIGVsc2V3aGVyZSBpbiBr
+ZXJuZWwgc2NhcnJlZA0KbWUgOy0pLg0KSWYgdGhlc2UgdXBkYXRlcyBjb3JyZWN0IHZpc2libGUg
+YnVncyBpbiB0aGUgYWhhc2ggdXNhZ2Ugb2YgdGhlIHN0bTMyLWNyYzMyDQpjb2RlIFtubyBtb3Jl
+ICJzbGVlcCB3aGlsZSBhdG9taWMiIHRyYWNlcyBldmVuIHdpdGggbXV0ZXggaW4gdGVzdHNdLCAN
+CkRvY3VtZW50YXRpb24gc3RhdGVzIHRoYXQgc2hhc2ggQVBJIGNvdWxkIGJlIGNhbGxlZCBmcm9t
+IGFueSBjb250ZXh0LA0KSSBjYW5ub3QgYWRkIG11dGV4IGluIHRoZW0uDQoNCj4gPiBCeSBub3cg
+dGhlIHNvbHV0aW9uIEkgc2VlIGlzIHRvIHVzZSB0aGUgc3Bpbl90cnlsb2NrX2lycXNhdmUoKSwN
+Cj4gPiBmYWxsYmFjayB0byBzb2Z0d2FyZSBjcmMgKkFORCogY2FwcGluZyBidXJzdF9zaXplIHRv
+IGVuc3VyZSB0aGUgbG9ja2VkDQo+IHNlY3Rpb24gc3RheSByZWFzb25hYmxlLg0KPiA+DQo+ID4g
+RG9lcyB0aGlzIHNlZW1zIGFjY2VwdGFibGUgPw0KPiA+DQo+IA0KPiBJZiB0aGUgcmVhc29uIGZv
+ciBkaXNhYmxpbmcgaW50ZXJydXB0cyBpcyB0byBhdm9pZCBkZWFkbG9ja3MsIHdvdWxkbid0IHRo
+ZSBzd2l0Y2gNCj4gdG8gdHJ5bG9jaygpIHdpdGggYSBzb2Z0d2FyZSBmYWxsYmFjayBhbGxvdyB1
+cyB0byBrZWVwIGludGVycnVwdHMgZW5hYmxlZD8NCg0KUmlnaHQsIHdpdGggdGhlIHRyeWxvY2ss
+IEkgZG9uJ3Qgc2VlIHdoeSB3ZSBtYXkgbmVlZCB0byBtYXNrIGludGVycnVwdHMuDQoNCg0K
