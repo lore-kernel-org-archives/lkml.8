@@ -2,126 +2,96 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 690FE20849
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="qpXxGAAj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PRzOewQ+"
+	by mail.kernel.org (Postfix) with ESMTP id 0F88C207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388792AbgEYENI (ORCPT
+        id S1726007AbgEYEUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 00:13:08 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58375 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726476AbgEYEMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 00:12:41 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2FFEF580093;
-        Mon, 25 May 2020 00:12:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 25 May 2020 00:12:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=EgpbtN/+ei+48
-        TUPE6rJYI7EBx+b/wvisfgtTkfb6gU=; b=qpXxGAAjLUpAy9WDNMYjbZ5O0Ljyw
-        IzOx73Osb8vd/SNqV78gEYSp4+wDv0KNYSjZSDWydMtvKFp3RNbr6LvnzcS0KLXP
-        dX6xHVIMQ+sDPpflqy2lVidGxJzK/a3nXxxzR1DTwn6AYxhYgzyrhugHpAZtJ/jO
-        mAXB21LORPmUnNTohTPGmuDtRTaIS1S+VL8987QD53KOcSBnq0E9xz/hfbS/DCKF
-        B25171mgORxD5aFg2XdtGpUF86KuGK/6XgfJQ4hZn1mBar3zaloRu0wSowgWEFkP
-        jdHrabb+FIHKgiuKp4d7Qsb561CY0VZfz/s/QIz6xTpqhHOWUB0GLfH8Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=EgpbtN/+ei+48TUPE6rJYI7EBx+b/wvisfgtTkfb6gU=; b=PRzOewQ+
-        Phs1aVdVZtrv1lvhroOOrMhOnVLE43OnsCsU4ijXhcxXA3ATKSCOK4K2gKvwewqZ
-        J2IutSyq/MVtONgCWdG4/VZBtrAEoYFsrSujyRQ99zcT3YbqQp5csiiBxGmfyDBS
-        vB/9ecZTosNNCLPaJgs72TgkhHzOrnRHIprzgdRVlhm4sZ4NwzaWORGXyPhu9WyA
-        WrFeL38Wug6b37/0OniGvI+7UXABz2sLrMtBb6iGzvAGu1XVSsIRfbHLi6MaTB6N
-        orguUPjNtn+kfcaO9GQ++5mdS9n04C/AbNj+w5mG1XHXFwTfDAB6bwqYOU9QapMC
-        /HNLznxGnPrWcg==
-X-ME-Sender: <xms:uEXLXt-JNE6ahII_u9VUM9sgToLpHH_CqnZ-bvdMAyeA8zFLMnykbw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudduledgjeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
-    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
-    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
-    iivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
-    ugdrohhrgh
-X-ME-Proxy: <xmx:uEXLXhsqx0OJg0rE9kBQIYaWKtcJNKvfq_vfmrWdX5HD_kow8dZjig>
-    <xmx:uEXLXrCH5f0WmaY8Xg_Z8oGAxSvkV46iLicv0LDHcxWm3Lx7vF6anA>
-    <xmx:uEXLXhdSxk0vdtZMl__FuOG50FVtd6_0u4s57SR9IrYTAyDJa7iJTA>
-    <xmx:uEXLXjHDCEypRycqwy5ViMOImS67LFUZd3wmdf3Lr9fhDQDm0J-iMA>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7BB5C306653A;
-        Mon, 25 May 2020 00:12:39 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 4/9] ARM: dts: sunxi: h3/h5: Add r_intc node
-Date:   Sun, 24 May 2020 23:12:57 -0500
-Message-Id: <20200525041302.51213-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200525041302.51213-1-samuel@sholland.org>
-References: <20200525041302.51213-1-samuel@sholland.org>
+        Mon, 25 May 2020 00:20:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:35792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbgEYEUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 00:20:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC0C030E;
+        Sun, 24 May 2020 21:20:01 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99C8D3F52E;
+        Sun, 24 May 2020 21:20:01 -0700 (PDT)
+Subject: Re: [RFC 07/11] net: phy: reset invalid phy reads of 0 back to
+ 0xffffffff
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
+        linux-kernel@vger.kernel.org
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-8-jeremy.linton@arm.com>
+ <20200523184459.GA1551@shell.armlinux.org.uk>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <d6d71908-58a0-96c9-b046-9a4739cc7bcd@arm.com>
+Date:   Sun, 24 May 2020 23:20:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200523184459.GA1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The H3 and H5 SoCs have an additional interrupt controller in the RTC
-power domain that can be used to enable wakeup for certain IRQs.
+Hi,
 
-Add a node for it.
+On 5/23/20 1:44 PM, Russell King - ARM Linux admin wrote:
+> On Fri, May 22, 2020 at 04:30:55PM -0500, Jeremy Linton wrote:
+>> MMD's in the device list sometimes return 0 for their id.
+>> When that happens lets reset the id back to 0xfffffff so
+>> that we don't get a stub device created for it.
+>>
+>> This is a questionable commit, but i'm tossing it out
+>> there along with the comment that reading the spec
+>> seems to indicate that maybe there are further registers
+>> that could be probed in an attempt to resolve some futher
+>> "bad" phys. It sort of comes down to do we want unused phy
+>> devices floating around (potentially unmatched in dt) or
+>> do we want to cut them off early and let DT create them
+>> directly.
+> 
+> I'm not sure what you mean "stub device" or "unused phy devices
+> floating around" - the individual MMDs are not treated as separate
+> "phy devices", but as one PHY device as a whole.
+> 
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Well, I guess its clearer to say phy/mmd devices with a phy_id=0. Which 
+is a problem if we don't have DT overriding the phy_id for a given 
+address. Although AFAIK given a couple of the /sys/bus/mdio_bus/devices 
+lists I've seen, and after studying this code for a while now, I think 
+"bogus" phy's might be getting created*. I was far to easy, to upset the 
+cart when I was hacking on this set, and end up with a directory chuck 
+full of phys.
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 01a5df9aa71b..94f648ad1c9e 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -836,6 +836,15 @@ rtc: rtc@1f00000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		r_intc: interrupt-controller@1f00c00 {
-+			compatible = "allwinner,sun8i-h3-r-intc",
-+				     "allwinner,sun6i-a31-r-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			reg = <0x01f00c00 0x400>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		r_ccu: clock@1f01400 {
- 			compatible = "allwinner,sun8i-h3-r-ccu";
- 			reg = <0x01f01400 0x100>;
--- 
-2.24.1
+So this gets close to one of the questions I asked in the cover letter. 
+This patch and 09/11 serve to cut off possibly valid phy's which are 
+failing to identify themselves using the standard registers. Which per 
+the 802.3 spec there is a blurb about 0 in the id registers for some 
+cases. Its not really a critical problem for ACPI machines to have these 
+phys around (OTOH, there might be issues with c22 phys on c45 electrical 
+buses that respond to c45 reg requests but don't set the c22 regs flag, 
+I haven't seen that yet.). I considered dropping this patch, and 9/11 
+was a last minute addition. I kept it because I was worried all those 
+extra "reserved" MMDs would end up with id = 0's in there and break 
+something.
 
+* In places where there isn't actually a phy, likely a large part of the 
+problem was clearing the c22 bit, which allowed 0xFFFFFFFF returns to 
+slip through the devices list.
