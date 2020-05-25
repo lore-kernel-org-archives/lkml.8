@@ -2,145 +2,118 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBCA2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AFF20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="AvdK9ybJ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="f75/oRPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389660AbgEYJub (ORCPT
+        id S2389617AbgEYJxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:50:31 -0400
-Received: from mout.web.de ([212.227.15.4]:50595 "EHLO mout.web.de"
+        Mon, 25 May 2020 05:53:48 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34124 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389356AbgEYJua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:50:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590400221;
-        bh=P6sswJVCyID2kisGSDD8jTyeLQrShJTFR1PjTv+eZxc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=AvdK9ybJ1tADJV9pR1p0lQ0HZxOPqaf/sPyVksHLjIUi6nvluP5yqliA5p4cIu5ca
-         Uhzsvdzmi3gklEef4ML9ixSFY36l1xQ7CWy/Nr9LbBDMXYJga9t6GT4CNR3CX3cCfL
-         POdgqS0lIj7sPqzqCgYM8YPSsJTJhhchuXIYXMZM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.186.124]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MJnrh-1jJA1M0SSH-00K70i; Mon, 25
- May 2020 11:50:21 +0200
-Subject: Re: [PATCH v2] workqueue: Fix double kfree for rescuer
-To:     Zhang Qiang <qiang.zhang@windriver.com>, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200525075901.12699-1-qiang.zhang@windriver.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <7d19381c-2c51-deb4-f82f-d54bc56c6ecf@web.de>
-Date:   Mon, 25 May 2020 11:50:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2389333AbgEYJxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:53:48 -0400
+Received: from zn.tnic (p200300ec2f06f30089d08c3691e46ece.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:f300:89d0:8c36:91e4:6ece])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 08BEC1EC015C;
+        Mon, 25 May 2020 11:53:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590400427;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9VzBtpWPU0udK1c1x3QSZ15i6vXLnUq6lBexMlFZdDw=;
+        b=f75/oRPaAWlIyjcWmr6QIrmj4cZgSFjzANrLAL9ul+FOdvMd25H4cUnMA1+hiMnOuRfV0V
+        kWXb/wEH5VNMjlJuLMhLZq07oxJScHT2D14MJb7INO8ym2mw8fL5u5mcwYmNPvncVtYmJa
+        rIlP+DwLBHpf7Wj8SjEB5BsPgo9DKuM=
+Date:   Mon, 25 May 2020 11:53:46 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 53/75] x86/sev-es: Handle MSR events
+Message-ID: <20200525095346.GF25636@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-54-joro@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200525075901.12699-1-qiang.zhang@windriver.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/CuB+C/LELFimNzsT2Wxe2zFsNLbNR1jiONlIHhnZsAdjmp1iQT
- 4a3Z8zTk6peY7avnTRfu6iWy4kbgAX0pKulHM1+lPvmRoQ1/1kFqiGnqVPXKR7HfxX159Nj
- aW6dvFj9avM+8KDTBIupWH1D3Ehx8TBF6hHKu24Kp9O7zUiJUIU0bAfe860Hq2L0WrkLJs9
- ysHYMIbM2OXA5O0N0e1YA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t//vjUJuSxg=:fYWUeVqWWHsoL4CYrNEAG5
- ZyGwLpyhe8VTj4MHd0nqek+8Jp9RyabwjK0IzpUf9dRnIOX81m0FzMm/8AHYSdw5exgy1Nkav
- Jer3v3P6Y1hw2xdznmcec1gtRHf7oJxzFJ+3dmDvJCHwoIpqK4qsu7yxiEUbQnrk+4ZRDJZXX
- +38utp+TVTRrdRlsyZLMPVnjZARLL11mc/935nCwyCd04WgoeYRTXsYNhJX8Ag+XrjV4sclhD
- WqYZLPmeHW2GKVaMvxj5PX7L+wjctEW6vPy4GODuGgE/5JJzwt+36zVHUB+l38G9Viv/V+mxG
- cgfC/iknm2IRWHaGTf1g+4j4KOab8h8dTWjhjT66U2TsdBOD6Z+e3gy2pzTSNb+wDeD5o3HeQ
- XMsnBPwGjy0Tc7CO0Ef3GDajYmRk2sSSX4JgFOFc9w3g99iYPWQo7phCWH4gcAgukjROZKd8G
- 2gJX6EXIcO+TYo2Aqb+4WtWIx+x/jgCEq3sfgVXZMeZN/wNFmwyMmXtYP0IKdnXU7Hbhg0Lrr
- Gc0UJbYQIMXbtRabqMbDjor/s4umXtKrClPP9HUL0ftWVYjh+HvtlrSenIKJtr1V1eCs7Aco5
- fmnwa/2PueOp+/OXWz+Y1cBgRF5JRGe1ZRqGQtrz49YrQqYqkbKCKpcnIHHvsRz2rHPdpo/Lq
- 5bDk+p9BORZE2c+4TUANTmFvzKEwXEK0F310noMq5nT8kNprcnnh7+mIVuTxlYNZYhOhMUt5H
- ejCSauQcdh1nq0It7So2lRnLadvJliq491LyGckjmjWrBDfCtSxOfmIGEokPfviKxF9ltPP0w
- cSZJfjWG21D+tnzkD8F0wAqRzCJxhiK8dFD9ndphYXqPvhxz+ZTk+zf58mFe9r5rKeVdf7XP+
- ferkBHOgyMCeUkBuzTrqGQAaDG5UjRFjc06U47T1eE5oL53j6ebrV3bxcwgFZcDkYGuj16gbN
- Q4RQu/CtepaYbXBr4WiPfS0nkRPQ7vHUJ5AKCRPm4Vd/NfQ8/ofiDK/I0Aw1G3wddlQccKu4w
- 0UpjXoM986J6Z4rsib07z6UiiDJ2FqO9wWf4QEENZyMkGq+g1nqPT+/QqsttThulIfJs0RFia
- ktxze+mZmn2uY3Pu68/URGMbLhXp3fEw1dAjPsbW3q4Vql63s4fzC39Se03WWJtuXzQijx6Ln
- CSp4qY4o5Uy9W6KIvyk2z33VeqSg/xnnL05X3hxJ36Rj0gp9m+LfywNU9X20Fsmg9+LcsUWJK
- i3+kRULGc5HuaMDLQ
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-54-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The duplicate memory release should be deleted from the implementation
-> of the callback function "rcu_free_wq".
+On Tue, Apr 28, 2020 at 05:17:03PM +0200, Joerg Roedel wrote:
+> From: Tom Lendacky <thomas.lendacky@amd.com>
+> 
+> Implement a handler for #VC exceptions caused by RDMSR/WRMSR
+> instructions.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> [ jroedel@suse.de: Adapt to #VC handling infrastructure ]
+> Co-developed-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kernel/sev-es.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+> index 84958a82f8e0..e43bba4c7d79 100644
+> --- a/arch/x86/kernel/sev-es.c
+> +++ b/arch/x86/kernel/sev-es.c
+> @@ -316,6 +316,31 @@ static phys_addr_t vc_slow_virt_to_phys(struct ghcb *ghcb, unsigned long vaddr)
+>  /* Include code shared with pre-decompression boot stage */
+>  #include "sev-es-shared.c"
+>  
+> +static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+> +{
+> +	struct pt_regs *regs = ctxt->regs;
+> +	enum es_result ret;
+> +	u64 exit_info_1;
+> +
 
-I tried to help with the selection of a better commit message.
-I have taken another look also at the implementation of the function =E2=
-=80=9Cdestroy_workqueue=E2=80=9D.
+A comment pls:
 
-* The function call =E2=80=9Cdestroy_workqueue=E2=80=9D can be performed t=
-here in an if branch
-  after the statement =E2=80=9Cwq->rescuer =3D NULL=E2=80=9D was executed.
+	/* Is it a WRMSR? */
 
-* This data processing is independent from a possible call of the
-  function =E2=80=9Ccall_rcu(&wq->rcu, rcu_free_wq)=E2=80=9D in another if=
- branch.
-  Thus it seems that a null pointer is intentionally passed by a data stru=
-cture
-  member to this callback function on demand.
-  The corresponding call of the function =E2=80=9Ckfree=E2=80=9D can toler=
-ate this special case.
+> +	exit_info_1 = (ctxt->insn.opcode.bytes[1] == 0x30) ? 1 : 0;
+> +
+> +	ghcb_set_rcx(ghcb, regs->cx);
+> +	if (exit_info_1) {
+> +		ghcb_set_rax(ghcb, regs->ax);
+> +		ghcb_set_rdx(ghcb, regs->dx);
+> +		exit_info_1 = 1;
 
+No need to set it again - you just did above. :)
 
-Now I find that the proposed change can be inappropriate.
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards,
-Markus
+https://people.kernel.org/tglx/notes-about-netiquette
