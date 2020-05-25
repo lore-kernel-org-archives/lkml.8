@@ -2,90 +2,89 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8B7720849
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXyLNnMC"
+	by mail.kernel.org (Postfix) with ESMTP id AE2F2207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388795AbgEYFAw (ORCPT
+        id S1729381AbgEYFD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 01:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgEYFAv (ORCPT
+        Mon, 25 May 2020 01:03:57 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53000 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgEYFD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 01:00:51 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98297C061A0E;
-        Sun, 24 May 2020 22:00:51 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id b91so13975936edf.3;
-        Sun, 24 May 2020 22:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=50Epmor9kAHw3TRqR6ikhX5aKUzMYS5VsliqcmruboU=;
-        b=oXyLNnMC+ilSxlsvL7dik8LdbERvwdF9VQ9aAi7DcUNeN4YER18lugb1gO3OSq46Sa
-         pSTromtok/rcz45UL6158umCtYGOKv7+jphzZ+nndfFVjeVONlV25aNJs9OHjAKGs4Tr
-         HOCtMrCKMhKMn89OTCpjdDFWswAUVV/yPWa531Zdif1bRyUbAkZoqlXJRM8io2wf05zr
-         t56k6BUsSALTz+ZjpsaZceA1lGx3szt4pgNnPbPasKgdYRTYx4qGMBi21A7NDfOT8i8J
-         1W5PLQvpIoQ1hIEmbc5UtiLLDxf3WxXvuE00vl4vINXsAU7r+0O02TqFhb4Q47XgmOhC
-         zN2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=50Epmor9kAHw3TRqR6ikhX5aKUzMYS5VsliqcmruboU=;
-        b=JKZRZc+OuZ9acbumqHLK0URPhHJcXR1BROzkpnq1uHef8FgejF9o/vsMCUUKJT85jZ
-         TcZQ0hWsBUbzfhUcJXmD6htYaj0y/OJHGyEOnKCgsZVnOykn8STBmwm1TH5yyofxuApm
-         IQN4iJvIohmsj1cnsNlQPW639IIlYhQloqHiy4bZYCXb3MkYfUaVVkgs+Isd6tvPOyON
-         TOPnJq6GVbgWQ/xoD2ofyhZ+hX0TFY0LdABNzonIFdctZjIshDHlcZSqu4bJKewp+oJ0
-         iEuVLV0O8rRvSLXX2h57kuZj79nWq7zgH8exUOy7bJ8zOBf/C4qwA8f0RB2SsrmEZMD4
-         wdaQ==
-X-Gm-Message-State: AOAM532j82NlwfpM+qSi4hBxAGtXWz+r7O/vLNFWEk5vywZwR3AmdOmU
-        P+KcFXaPlUCl4XW22umj2WXWgEkIoS8aMWyJt9Y5oQ==
-X-Google-Smtp-Source: ABdhPJzuqkMtQU0OIfoXAxpu4pT73Nt2MVW8v+HneaNsJ3Afe/aaVi48PvkQN0jCXF5uPsrSg4DFsu3u+/EF7MLKh6g=
-X-Received: by 2002:aa7:d54c:: with SMTP id u12mr13185852edr.298.1590382850250;
- Sun, 24 May 2020 22:00:50 -0700 (PDT)
+        Mon, 25 May 2020 01:03:56 -0400
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04P53sDK065057;
+        Mon, 25 May 2020 14:03:54 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
+ Mon, 25 May 2020 14:03:54 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04P53rFU065032
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Mon, 25 May 2020 14:03:53 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
+ printk(KERN_DEBUG)
+To:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <d65ee15211aa69a815bdc7cc4fc9e7c2e1bcba43.camel@perches.com>
+ <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <94f7ce4f-74fb-bccc-2e87-749e0c8da92c@i-love.sakura.ne.jp>
+Date:   Mon, 25 May 2020 14:03:48 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <CAPM=9tyy5vubggbcj32bGpA_h6yDaBNM3QeJPySTzci-etfBZw@mail.gmail.com>
- <20200521231312.GJ17635@magnolia> <20200522003027.GC2040@dread.disaster.area> <20200522205116.GD8230@magnolia>
-In-Reply-To: <20200522205116.GD8230@magnolia>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Mon, 25 May 2020 15:00:39 +1000
-Message-ID: <CAPM=9tywrqCchmVkNxzQQVSphB5MYgKvr3dNwhysntQ2P9BSfg@mail.gmail.com>
-Subject: Re: lockdep trace with xfs + mm in it from 5.7.0-rc5
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFqZXNthJE0a3KkgZFXYSFArwRs0H_20KjT6KfAkiMo6WTp1rw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 May 2020 at 06:51, Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> OTOH, it didn't take that long to whip up a patch.
->
-> Dave, does this fix your problem?
+On 2020/05/25 4:18, Ondrej Mosnacek wrote:
+> I'm also not sure if this is really worth it... It would help localize
+> the bug in this specific case, but there is nothing systematic about
+> it. Are there that many debug print statements that dereference
+> pointers that are later passed to functions, but not dereferenced
+> otherwise? Maybe yes, but it seems to be quite an optimistic
+> assumption... I don't consider it such a big problem that a bug in
+> function X only manifests itself deeper in the callchain. There will
+> always be such bugs, no matter how many moles you whack.
 
-I reproduced with 5.7.0-rc7, and tried this patch on top in the same
-VM doing the same thing.
+There are about 1400 pr_debug() callers. About 1000 pr_debug() callers seem
+to pass plain '%p' (which is now likely useless for debugging purpose due to
+default ptr_to_id() conversion inside pointer()), and about 400 pr_debug()
+callers seem to pass '%p[a-zA-Z]' (which does some kind of dereference inside
+pointer()). Thus, we might find some bugs by evaluating '%p[a-zA-Z]'.
 
-with this patch I no longer see the lockdep trace.
 
-Tested-by: Dave Airlie <airlied@gmail.com>
 
-Thanks,
-Dave.
+On Sun, May 24, 2020 at 7:38 PM Joe Perches <joe@perches.com> wrote:
+> While I think this is rather unnecessary,
+> what about dev_dbg/netdev_dbg/netif_dbg et al ?
+
+Maybe a good idea, for there are about 24000 *dev_dbg() callers, and
+479 callers pass '%p[a-zA-Z]'. But we can defer to another patch, in
+case this patch finds crashes before fuzz testing process starts.
+
