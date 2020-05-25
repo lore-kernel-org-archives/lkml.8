@@ -2,199 +2,257 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F72FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDBF207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:51:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHmD6bYE"
+	by mail.kernel.org (Postfix) with ESMTP id DCAE32075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 02:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388754AbgEYCvK (ORCPT
+        id S2388734AbgEYCxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 22:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388398AbgEYCvK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 22:51:10 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4C1C061A0E;
-        Sun, 24 May 2020 19:51:08 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ci21so7949893pjb.3;
-        Sun, 24 May 2020 19:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0KTulik1Nw6UnTFr4ECUxiGZmmAKN8Jgtu7klUu9+kQ=;
-        b=nHmD6bYEjdy89LXBZiccA1HR8SKfRHmmze16HYNFa0BoHvddtGrEPfCuPiju0FY5e+
-         uSJC6WC0bumFpfHFloVziH2bmU02a1x7InZshsa+uWm4aXZ82b2tUhtRxUjGckfI4tKp
-         NhRuS0BL1ZY9BVw64howvx0RxHu0wa2RqJtbKNrcnl4E/z+YZa4ael/By/9AOqBxmjMS
-         TXaWBcWmjNzdfyfK+u64fT5+XL9aguMsdRjFABayTixOyU6wOIAfdkLQhk6NLeRLr5Au
-         an0BB1aWj7Qf69hjoQOHRfo1gf+lTKrggsprt5PKtxw6EwnlI6DC0ZcvZaxAzQFjeS+Z
-         OV/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0KTulik1Nw6UnTFr4ECUxiGZmmAKN8Jgtu7klUu9+kQ=;
-        b=OBDFOlL6lAvKjo/F+vDiyHUlZo2J7TITemQAR7/gehVW5phMjcOMwmi111KGkVYLuw
-         DB/7kzkLyb5/Vq77ph5XKnweEJHVMDzaa0avHDhsCpDpsXpCIYNHekh2oIMKt5q5poEx
-         1elFVtWVFaux4IeOCHQtd5QjMdl6KF+z6SQQJvpDUJ9rg2BtlqFUrTxD4XkVczW7yylh
-         PAXrQ3WnwPdyYdAQu6IGmxaTmfCp+cssq+cXs0dWCFuratO8HnkOzx6DcVqCV0vGqfKV
-         SCG5QA7XizLMOvXuxnAWKMy3TddH9IyIiY3hlEfiU7dNK0mrdSLZ9is4EqNMitONRUWQ
-         W0qA==
-X-Gm-Message-State: AOAM532yAPSqxHQ8wVQRY/Ru71xvlD0uxCguRwCvP+o667gbWyrbZ3gU
-        3CVmmQkKR8loiNBsPlJj1A2+xcVx
-X-Google-Smtp-Source: ABdhPJyxXnHBQZJaKDgwKvPimEv4R6bFOVBQoKzLnbwCAZHVIm6ToC6cE/y5xwLAqIJ6dpY4QjQdUg==
-X-Received: by 2002:a17:90a:fe96:: with SMTP id co22mr17356494pjb.220.1590375068185;
-        Sun, 24 May 2020 19:51:08 -0700 (PDT)
-Received: from MacBook-Pro.mshome.net ([122.224.153.228])
-        by smtp.googlemail.com with ESMTPSA id l10sm11804420pfd.70.2020.05.24.19.51.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 May 2020 19:51:07 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>,
-        Yanhu Cao <jrcaoyanhu@jd.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [v2] ceph: show max caps in debugfs caps file
-Date:   Mon, 25 May 2020 10:50:49 +0800
-Message-Id: <20200525025049.4292-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 24 May 2020 22:53:23 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40794 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388543AbgEYCxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 22:53:22 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj974MsteoL84AA--.426S3;
+        Mon, 25 May 2020 10:52:41 +0800 (CST)
+From:   Bibo Mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v6 2/4] mm/memory.c: Update local TLB if PTE entry exists
+Date:   Mon, 25 May 2020 10:52:38 +0800
+Message-Id: <1590375160-6997-2-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
+References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxj974MsteoL84AA--.426S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFW5Ar4rAryrWFWkWFy8Xwb_yoWxCFW7pF
+        93Can8XF47Xr18AFWfJr1Dur13Z34rKFWkJry3Kw1Fvwnxtw1Sga4rG3yrArZ5Jr9Yq3Zr
+        Jr4jgF4UCw47Zw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF
+        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcV
+        CY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
+        aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
+        kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm
+        72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI
+        1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E
+        5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZV
+        WrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
+        1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+        0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+        U5tgA7UUUUU==
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-before
-------
-total		1286
-avail		1005
-used		281
-reserved	0
-min		1024
+If two threads concurrently fault at the same page, the thread that
+won the race updates the PTE and its local TLB. For now, the other
+thread gives up, simply does nothing, and continues.
 
-after
------
-total		1286
-avail		1005
-used		281
-limit		261
-reserved	0
-min		1024
+It could happen that this second thread triggers another fault, whereby
+it only updates its local TLB while handling the fault. Instead of
+triggering another fault, let's directly update the local TLB of the
+second thread. Function update_mmu_tlb is used here to update local
+TLB on the second thread, and it is defined as empty on other arches.
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-Signed-off-by: Yanhu Cao <jrcaoyanhu@jd.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- fs/ceph/caps.c       | 6 ++++--
- fs/ceph/debugfs.c    | 8 +++++---
- fs/ceph/mds_client.c | 1 +
- fs/ceph/mds_client.h | 4 +++-
- fs/ceph/super.h      | 2 +-
- 5 files changed, 14 insertions(+), 7 deletions(-)
+ arch/mips/include/asm/pgtable.h | 23 +++++++++++++++++++++++
+ include/asm-generic/pgtable.h   | 17 +++++++++++++++++
+ mm/memory.c                     | 27 +++++++++++++++++++--------
+ 3 files changed, 59 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 5f3aa4d607de..17191d6cd3b5 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -404,8 +404,8 @@ void ceph_put_cap(struct ceph_mds_client *mdsc, struct ceph_cap *cap)
+diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+index 0d625c2..d2004b5 100644
+--- a/arch/mips/include/asm/pgtable.h
++++ b/arch/mips/include/asm/pgtable.h
+@@ -480,6 +480,26 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ 
+ #define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
+ 
++#define __HAVE_ARCH_PTE_SAME
++static inline int pte_same(pte_t pte_a, pte_t pte_b)
++{
++	return pte_val(pte_a) == pte_val(pte_b);
++}
++
++#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
++static inline int ptep_set_access_flags(struct vm_area_struct *vma,
++					unsigned long address, pte_t *ptep,
++					pte_t entry, int dirty)
++{
++	if (!pte_same(*ptep, entry))
++		set_pte_at(vma->vm_mm, address, ptep, entry);
++	/*
++	 * update_mmu_cache will unconditionally execute, handling both
++	 * the case that the PTE changed and the spurious fault case.
++	 */
++	return true;
++}
++
+ /*
+  * Conversion functions: convert a page and protection to a page entry,
+  * and a page entry and page directory to the page they refer to.
+@@ -523,6 +543,9 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
+ 	__update_tlb(vma, address, pte);
  }
  
- void ceph_reservation_status(struct ceph_fs_client *fsc,
--			     int *total, int *avail, int *used, int *reserved,
--			     int *min)
-+			     int *total, int *avail, int *used, int *limit,
-+			     int *reserved, int *min)
++#define	__HAVE_ARCH_UPDATE_MMU_TLB
++#define update_mmu_tlb	update_mmu_cache
++
+ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+ 	unsigned long address, pmd_t *pmdp)
  {
- 	struct ceph_mds_client *mdsc = fsc->mdsc;
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 329b8c8..fa5c73f 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -188,6 +188,23 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
+ }
+ #endif
  
-@@ -417,6 +417,8 @@ void ceph_reservation_status(struct ceph_fs_client *fsc,
- 		*avail = mdsc->caps_avail_count;
- 	if (used)
- 		*used = mdsc->caps_use_count;
-+	if (limit)
-+		*limit = mdsc->caps_limit;
- 	if (reserved)
- 		*reserved = mdsc->caps_reserve_count;
- 	if (min)
-diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-index 481ac97b4d25..617020261902 100644
---- a/fs/ceph/debugfs.c
-+++ b/fs/ceph/debugfs.c
-@@ -138,16 +138,18 @@ static int caps_show(struct seq_file *s, void *p)
- {
- 	struct ceph_fs_client *fsc = s->private;
- 	struct ceph_mds_client *mdsc = fsc->mdsc;
--	int total, avail, used, reserved, min, i;
-+	int total, avail, used, limit, reserved, min, i;
- 	struct cap_wait	*cw;
++
++/*
++ * If two threads concurrently fault at the same page, the thread that
++ * won the race updates the PTE and its local TLB/Cache. The other thread
++ * gives up, simply does nothing, and continues; on architectures where
++ * software can update TLB,  local TLB can be updated here to avoid next page
++ * fault. This function updates TLB only, do nothing with cache or others.
++ * It is the difference with function update_mmu_cache.
++ */
++#ifndef __HAVE_ARCH_UPDATE_MMU_TLB
++static inline void update_mmu_tlb(struct vm_area_struct *vma,
++				unsigned long address, pte_t *ptep)
++{
++}
++#define __HAVE_ARCH_UPDATE_MMU_TLB
++#endif
++
+ /*
+  * Some architectures may be able to avoid expensive synchronization
+  * primitives when modifications are made to PTE's which are already
+diff --git a/mm/memory.c b/mm/memory.c
+index f703fe8..8bb31c4 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2436,10 +2436,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+ 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+ 			/*
+ 			 * Other thread has already handled the fault
+-			 * and we don't need to do anything. If it's
+-			 * not the case, the fault will be triggered
+-			 * again on the same address.
++			 * and update local tlb only
+ 			 */
++			update_mmu_tlb(vma, addr, vmf->pte);
+ 			ret = false;
+ 			goto pte_unlock;
+ 		}
+@@ -2463,7 +2462,8 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+ 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+ 		locked = true;
+ 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+-			/* The PTE changed under us. Retry page fault. */
++			/* The PTE changed under us, update local tlb */
++			update_mmu_tlb(vma, addr, vmf->pte);
+ 			ret = false;
+ 			goto pte_unlock;
+ 		}
+@@ -2752,6 +2752,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+ 		new_page = old_page;
+ 		page_copied = 1;
+ 	} else {
++		update_mmu_tlb(vma, vmf->address, vmf->pte);
+ 		mem_cgroup_cancel_charge(new_page, memcg, false);
+ 	}
  
--	ceph_reservation_status(fsc, &total, &avail, &used, &reserved, &min);
-+	ceph_reservation_status(fsc, &total, &avail, &used,
-+				&limit, &reserved, &min);
- 	seq_printf(s, "total\t\t%d\n"
- 		   "avail\t\t%d\n"
- 		   "used\t\t%d\n"
-+		   "limit\t\t%d\n"
- 		   "reserved\t%d\n"
- 		   "min\t\t%d\n\n",
--		   total, avail, used, reserved, min);
-+		   total, avail, used, limit, reserved, min);
- 	seq_printf(s, "ino                issued           implemented\n");
- 	seq_printf(s, "-----------------------------------------------\n");
+@@ -2812,6 +2813,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf)
+ 	 * pte_offset_map_lock.
+ 	 */
+ 	if (!pte_same(*vmf->pte, vmf->orig_pte)) {
++		update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		return VM_FAULT_NOPAGE;
+ 	}
+@@ -2936,6 +2938,7 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+ 			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+ 					vmf->address, &vmf->ptl);
+ 			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
++				update_mmu_tlb(vma, vmf->address, vmf->pte);
+ 				unlock_page(vmf->page);
+ 				pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 				put_page(vmf->page);
+@@ -3341,8 +3344,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+ 						vma->vm_page_prot));
+ 		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+ 				vmf->address, &vmf->ptl);
+-		if (!pte_none(*vmf->pte))
++		if (!pte_none(*vmf->pte)) {
++			update_mmu_tlb(vma, vmf->address, vmf->pte);
+ 			goto unlock;
++		}
+ 		ret = check_stable_address_space(vma->vm_mm);
+ 		if (ret)
+ 			goto unlock;
+@@ -3378,8 +3383,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
  
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 7c63abf5bea9..d26bc065f5f5 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1920,6 +1920,7 @@ int ceph_trim_caps(struct ceph_mds_client *mdsc,
- 		   int max_caps)
- {
- 	int trim_caps = session->s_nr_caps - max_caps;
-+	mdsc->caps_limit = max_caps;
+ 	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+ 			&vmf->ptl);
+-	if (!pte_none(*vmf->pte))
++	if (!pte_none(*vmf->pte)) {
++		update_mmu_cache(vma, vmf->address, vmf->pte);
+ 		goto release;
++	}
  
- 	dout("trim_caps mds%d start: %d / %d, trim %d\n",
- 	     session->s_mds, session->s_nr_caps, max_caps, trim_caps);
-diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
-index 903d9edfd4bf..840d47976dbb 100644
---- a/fs/ceph/mds_client.h
-+++ b/fs/ceph/mds_client.h
-@@ -445,7 +445,9 @@ struct ceph_mds_client {
- 	struct		list_head cap_wait_list;
- 	int		caps_total_count;    /* total caps allocated */
- 	int		caps_use_count;      /* in use */
--	int		caps_use_max;	     /* max used caps */
-+	int		caps_use_max;	     /* max used caps,
-+						limited by client */
-+	int		caps_limit;          /* limited by mds */
- 	int		caps_reserve_count;  /* unused, reserved */
- 	int		caps_avail_count;    /* unused, unreserved */
- 	int		caps_min_count;      /* keep at least this many
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 60aac3aee055..052d7725761d 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -700,7 +700,7 @@ extern void ceph_unreserve_caps(struct ceph_mds_client *mdsc,
- 			       struct ceph_cap_reservation *ctx);
- extern void ceph_reservation_status(struct ceph_fs_client *client,
- 				    int *total, int *avail, int *used,
--				    int *reserved, int *min);
-+				    int *limit, int *reserved, int *min);
+ 	ret = check_stable_address_space(vma->vm_mm);
+ 	if (ret)
+@@ -3646,8 +3653,10 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+ 	}
  
+ 	/* Re-check under ptl */
+-	if (unlikely(!pte_none(*vmf->pte)))
++	if (unlikely(!pte_none(*vmf->pte))) {
++		update_mmu_tlb(vma, vmf->address, vmf->pte);
+ 		return VM_FAULT_NOPAGE;
++	}
  
- 
+ 	flush_icache_page(vma, page);
+ 	entry = mk_pte(page, vma->vm_page_prot);
+@@ -4224,8 +4233,10 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
+ 	spin_lock(vmf->ptl);
+ 	entry = vmf->orig_pte;
+-	if (unlikely(!pte_same(*vmf->pte, entry)))
++	if (unlikely(!pte_same(*vmf->pte, entry))) {
++		update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
+ 		goto unlock;
++	}
+ 	if (vmf->flags & FAULT_FLAG_WRITE) {
+ 		if (!pte_write(entry))
+ 			return do_wp_page(vmf);
 -- 
-2.24.3 (Apple Git-128)
+1.8.3.1
 
