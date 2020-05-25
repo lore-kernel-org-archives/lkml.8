@@ -2,184 +2,61 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B17C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61182068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nO2zcmFB"
+	by mail.kernel.org (Postfix) with ESMTP id 108D42068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389192AbgEYJGF (ORCPT
+        id S2389245AbgEYJHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388660AbgEYJGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:06:04 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0746C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n141so4500036qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
-        b=nO2zcmFBdCWzlGqLw1pR2ThUuz31GiwsX9FmLMPWXkIRbISIRdArAGzOKpkV7Qzv10
-         5VetiQSFGmqqkEyKB7+SGACaU0qLz2m+9iyUgPiDy2IDRCPxhwFx8/5DMtWUHYRsjtlL
-         0atWQF/ahgFhsYQYAzdXXs0aRQhob0wySOVyDYs2DXpouokBCqB6slqb/TvDM+I33ev8
-         yk0brFmDMsprGHiwBPRLvyh/NVcy/OCFMiVYdFYc4bQaZFP6VvDRpzKRyp0zTf5FOVWN
-         aSAJO9abuoljXUYQUaIMlrcVwRxlonf00RVbuDaEI1E+vkonNYosmqgXcWB0HgzUmBS7
-         NMpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
-        b=QlPPOjlZY5++W48Uo6Yqci/xwxLYav3yJDjlPTttWZIqfU3geSzn1QlVIg6yjeTqkD
-         HPX/V9P4yptWpDfuX/BP78kJsmbDSHpDEQz97jS4fZMIthCQl34CWAPBnxt6gIEMBXyC
-         Sioa81n0Vc7F6hREvz7goTBin2gjhQN1+zP+ytJIUuy59A7OnHId+P8Qx8Ud7OGPc5hT
-         BgAmVY0GYCTvDLqLfuHZPw95oh+KOpET+T33qcHw6TZNtRfFZk99AdswBg3ekspFbyXt
-         je7CbQ6pTq3MR/l6aX0EUdrX/xJztyp4eyvLW6FNBU4YLCJKbd/TdHod7KZpqQPVsgh4
-         fwDA==
-X-Gm-Message-State: AOAM532lrqw4FvJSGNC5nVwevtCtT/Fz/p2CHJhhvXtaHTGysvREyct0
-        6JLNxzAM72U6VG4yFIN0P1lDdTP+QZV6WgCxh2TQAg==
-X-Google-Smtp-Source: ABdhPJwwogx5lD1d892oBsZ0UV12gKR+k0N+3QkhwPrACB1IANnU5OS7w1qWs680sMYLIO0JDYTSL1iYK1byj+QAdpM=
-X-Received: by 2002:a37:5b47:: with SMTP id p68mr26336785qkb.120.1590397562647;
- Mon, 25 May 2020 02:06:02 -0700 (PDT)
+        Mon, 25 May 2020 05:07:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57230 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388611AbgEYJHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:07:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7B9BCACAC;
+        Mon, 25 May 2020 09:07:19 +0000 (UTC)
+Date:   Mon, 25 May 2020 11:07:14 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] printk: Remove pr_cont_once()
+Message-ID: <20200525090714.GD5300@linux-b0ei>
+References: <20200524153243.11690-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200525084110.GE755@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com> <75bff2917be1badd36af9f980cf59d2c@walle.cc>
-In-Reply-To: <75bff2917be1badd36af9f980cf59d2c@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 May 2020 11:05:51 +0200
-Message-ID: <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525084110.GE755@jagdpanzerIV.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 12 maj 2020 o 16:41 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> >> +
-> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
-> >> +MODULE_LICENSE("GPL");
-> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
-> >> new file mode 100644
-> >> index 000000000000..a868cbcde6e9
-> >> --- /dev/null
-> >> +++ b/include/linux/gpio-regmap.h
-> >> @@ -0,0 +1,69 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only */
-> >> +
-> >> +#ifndef _LINUX_GPIO_REGMAP_H
-> >> +#define _LINUX_GPIO_REGMAP_H
-> >> +
-> >> +struct gpio_regmap;
-> >> +
-> >> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
-> >> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
-> >> +
-> >
-> > What if the addr is actually 0?
->
-> Then the driver has to set GPIO_REGMAP_ADDR_ZERO or use the convenience
-> macro GPIO_REGMAP_ADDR.
->
-> So you can have
->
->    struct gpio_regmap_config config =3D { 0 };
->    config.reg_dat_base =3D 0x10;
->    config.reg_dir_out_base =3D 0x20;
->
-> or
->
->    config.reg_dat_base =3D GPIO_REGMAP_ADDR_ZERO;
->
-> or if you can't be sure if the RHS value might be zero:
->
->    config.reg_dat_base =3D GPIO_REGMAP_ADDR(reg);
->
->
-> > Maybe drop GPIO_REGMAP_ADDR and require users to set unused registers
-> > to GPIO_REGMAP_ADDR_ZERO?
->
-> Thats bad because:
->   * you'd have to set plenty of unused base registers for a simple driver
->   * if there will be additional properties in the future, you have to
-> touch
->     all other drivers, because they are initialized as 0 (ie. valid reg
-> 0).
->
-> >> +/**
-> >> + * struct gpio_regmap_config - Description of a generic regmap
-> >> gpio_chip.
-> >> + *
-> >> + * @parent:            The parent device
-> >> + * @regmap:            The regmap used to access the registers
-> >> + *                     given, the name of the device is used
-> >> + * @label:             (Optional) Descriptive name for GPIO
-> >> controller.
-> >> + *                     If not given, the name of the device is used.
-> >> + * @ngpio:             Number of GPIOs
-> >> + * @reg_dat_base:      (Optional) (in) register base address
-> >> + * @reg_set_base:      (Optional) set register base address
-> >> + * @reg_clr_base:      (Optional) clear register base address
-> >> + * @reg_dir_in_base:   (Optional) out setting register base address
-> >> + * @reg_dir_out_base:  (Optional) in setting register base address
-> >
-> > The two above are inverted I think?
-> good catch.
->
-> > Also: why the limitation of only supporting one at a time?
->
-> they should be exclusive, either you have a register where you set the
-> output bits to one, or the input bits. Maybe this need a bit more
-> context
-> above. in gpio-mmio.c you can set both and both are used in
-> set_direction(), but only one is read in get_direction().
->
-> That being said, I have no strong opinion wether they should be
-> exclusive
-> or not, besides the symmetry of set_/get_direction().
->
-> -michael
->
+On Mon 2020-05-25 17:41:10, Sergey Senozhatsky wrote:
+> On (20/05/25 00:32), Tetsuo Handa wrote:
+> > pr_cont_once() does not make sense; at least emitting module name using
+> > pr_fmt() into middle of a line (after e.g. pr_info_once()) does not make
+> > sense. Let's remove unused pr_cont_once().
+> > 
+> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> > Cc: Joe Perches <joe@perches.com>
+> 
+> Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Sorry for the late response, your comments make sense to me. Are you
-going to submit a v4 before the v5.8 merge window?
+The patch is committed into printk/linux.git, branch for-5.8.
 
-Bart
+Best Regards,
+Petr
