@@ -2,205 +2,198 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5662071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995A52071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 05:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388494AbgEYF07 (ORCPT
+        id S1729690AbgEYF1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 01:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgEYF06 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 01:26:58 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DBBC061A0E;
-        Sun, 24 May 2020 22:26:58 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jd5dG-0002km-FT; Mon, 25 May 2020 07:26:38 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 14BF21C047E;
-        Mon, 25 May 2020 07:26:37 +0200 (CEST)
-Date:   Mon, 25 May 2020 05:26:36 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/core: Optimize ttwu() spinning on p->on_cpu
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jirka Hladky <jhladky@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        valentin.schneider@arm.com, Hillf Danton <hdanton@sina.com>,
-        Rik van Riel <riel@surriel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200524202956.27665-2-mgorman@techsingularity.net>
-References: <20200524202956.27665-2-mgorman@techsingularity.net>
+        Mon, 25 May 2020 01:27:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:46592 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgEYF1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 01:27:11 -0400
+IronPort-SDR: gtHPSKWX4gfNEWkgD+EO4FVcER8/zsz7eaOw6QdHKOR2+WQsNUaEYzgSFQc+pLDqWvF3TCHiDX
+ aC5fLU+zP7UQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 22:27:10 -0700
+IronPort-SDR: iJgO3NPxbSQrde39Pl/sGd3uIpknDtkS1Z6bF9xo+xNLMwaEOMKfpi1qnscwN4yVnKqkqnWG39
+ FlfTk6lI7Z/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
+   d="scan'208";a="467949545"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 24 May 2020 22:27:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 3F116D7; Mon, 25 May 2020 08:27:04 +0300 (EEST)
+Date:   Mon, 25 May 2020 08:27:04 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Marius Hillenbrand <mhillenb@amazon.de>
+Subject: Re: [RFC 00/16] KVM protected memory extension
+Message-ID: <20200525052704.phyk5olkykncj3bj@black.fi.intel.com>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159038439694.17951.308820958111860270.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On Fri, May 22, 2020 at 03:51:58PM +0300, Kirill A. Shutemov wrote:
+> == Background / Problem ==
+> 
+> There are a number of hardware features (MKTME, SEV) which protect guest
+> memory from some unauthorized host access. The patchset proposes a purely
+> software feature that mitigates some of the same host-side read-only
+> attacks.
 
-Commit-ID:     c6e7bd7afaeb3af55ffac122828035f1c01d1d7b
-Gitweb:        https://git.kernel.org/tip/c6e7bd7afaeb3af55ffac122828035f1c01d1d7b
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Sun, 24 May 2020 21:29:55 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 25 May 2020 07:01:44 +02:00
-
-sched/core: Optimize ttwu() spinning on p->on_cpu
-
-Both Rik and Mel reported seeing ttwu() spend significant time on:
-
-  smp_cond_load_acquire(&p->on_cpu, !VAL);
-
-Attempt to avoid this by queueing the wakeup on the CPU that owns the
-p->on_cpu value. This will then allow the ttwu() to complete without
-further waiting.
-
-Since we run schedule() with interrupts disabled, the IPI is
-guaranteed to happen after p->on_cpu is cleared, this is what makes it
-safe to queue early.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Jirka Hladky <jhladky@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: valentin.schneider@arm.com
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Rik van Riel <riel@surriel.com>
-Link: https://lore.kernel.org/r/20200524202956.27665-2-mgorman@techsingularity.net
----
- kernel/sched/core.c | 52 ++++++++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fa905b6..903c9ee 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2312,7 +2312,7 @@ static void wake_csd_func(void *info)
- 	sched_ttwu_pending();
- }
+CC people who worked on the related patchsets.
  
--static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-+static void __ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
- {
- 	struct rq *rq = cpu_rq(cpu);
- 
-@@ -2354,6 +2354,17 @@ bool cpus_share_cache(int this_cpu, int that_cpu)
- {
- 	return per_cpu(sd_llc_id, this_cpu) == per_cpu(sd_llc_id, that_cpu);
- }
-+
-+static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-+{
-+	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-+		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-+		__ttwu_queue_remote(p, cpu, wake_flags);
-+		return true;
-+	}
-+
-+	return false;
-+}
- #endif /* CONFIG_SMP */
- 
- static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
-@@ -2362,11 +2373,8 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
- 	struct rq_flags rf;
- 
- #if defined(CONFIG_SMP)
--	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
--		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
--		ttwu_queue_remote(p, cpu, wake_flags);
-+	if (ttwu_queue_remote(p, cpu, wake_flags))
- 		return;
--	}
- #endif
- 
- 	rq_lock(rq, &rf);
-@@ -2548,7 +2556,15 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	if (p->on_rq && ttwu_remote(p, wake_flags))
- 		goto unlock;
- 
-+	if (p->in_iowait) {
-+		delayacct_blkio_end(p);
-+		atomic_dec(&task_rq(p)->nr_iowait);
-+	}
-+
- #ifdef CONFIG_SMP
-+	p->sched_contributes_to_load = !!task_contributes_to_load(p);
-+	p->state = TASK_WAKING;
-+
- 	/*
- 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
- 	 * possible to, falsely, observe p->on_cpu == 0.
-@@ -2572,6 +2588,16 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 
- 	/*
- 	 * If the owning (remote) CPU is still in the middle of schedule() with
-+	 * this task as prev, considering queueing p on the remote CPUs wake_list
-+	 * which potentially sends an IPI instead of spinning on p->on_cpu to
-+	 * let the waker make forward progress. This is safe because IRQs are
-+	 * disabled and the IPI will deliver after on_cpu is cleared.
-+	 */
-+	if (READ_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags))
-+		goto unlock;
-+
-+	/*
-+	 * If the owning (remote) CPU is still in the middle of schedule() with
- 	 * this task as prev, wait until its done referencing the task.
- 	 *
- 	 * Pairs with the smp_store_release() in finish_task().
-@@ -2581,28 +2607,12 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 */
- 	smp_cond_load_acquire(&p->on_cpu, !VAL);
- 
--	p->sched_contributes_to_load = !!task_contributes_to_load(p);
--	p->state = TASK_WAKING;
--
--	if (p->in_iowait) {
--		delayacct_blkio_end(p);
--		atomic_dec(&task_rq(p)->nr_iowait);
--	}
--
- 	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
- 	if (task_cpu(p) != cpu) {
- 		wake_flags |= WF_MIGRATED;
- 		psi_ttwu_dequeue(p);
- 		set_task_cpu(p, cpu);
- 	}
--
--#else /* CONFIG_SMP */
--
--	if (p->in_iowait) {
--		delayacct_blkio_end(p);
--		atomic_dec(&task_rq(p)->nr_iowait);
--	}
--
- #endif /* CONFIG_SMP */
- 
- 	ttwu_queue(p, cpu, wake_flags);
+> == What does this set mitigate? ==
+> 
+>  - Host kernel ”accidental” access to guest data (think speculation)
+> 
+>  - Host kernel induced access to guest data (write(fd, &guest_data_ptr, len))
+> 
+>  - Host userspace access to guest data (compromised qemu)
+> 
+> == What does this set NOT mitigate? ==
+> 
+>  - Full host kernel compromise.  Kernel will just map the pages again.
+> 
+>  - Hardware attacks
+> 
+> 
+> The patchset is RFC-quality: it works but has known issues that must be
+> addressed before it can be considered for applying.
+> 
+> We are looking for high-level feedback on the concept.  Some open
+> questions:
+> 
+>  - This protects from some kernel and host userspace read-only attacks,
+>    but does not place the host kernel outside the trust boundary. Is it
+>    still valuable?
+> 
+>  - Can this approach be used to avoid cache-coherency problems with
+>    hardware encryption schemes that repurpose physical bits?
+> 
+>  - The guest kernel must be modified for this to work.  Is that a deal
+>    breaker, especially for public clouds?
+> 
+>  - Are the costs of removing pages from the direct map too high to be
+>    feasible?
+> 
+> == Series Overview ==
+> 
+> The hardware features protect guest data by encrypting it and then
+> ensuring that only the right guest can decrypt it.  This has the
+> side-effect of making the kernel direct map and userspace mapping
+> (QEMU et al) useless.  But, this teaches us something very useful:
+> neither the kernel or userspace mappings are really necessary for normal
+> guest operations.
+> 
+> Instead of using encryption, this series simply unmaps the memory. One
+> advantage compared to allowing access to ciphertext is that it allows bad
+> accesses to be caught instead of simply reading garbage.
+> 
+> Protection from physical attacks needs to be provided by some other means.
+> On Intel platforms, (single-key) Total Memory Encryption (TME) provides
+> mitigation against physical attacks, such as DIMM interposers sniffing
+> memory bus traffic.
+> 
+> The patchset modifies both host and guest kernel. The guest OS must enable
+> the feature via hypercall and mark any memory range that has to be shared
+> with the host: DMA regions, bounce buffers, etc. SEV does this marking via a
+> bit in the guest’s page table while this approach uses a hypercall.
+> 
+> For removing the userspace mapping, use a trick similar to what NUMA
+> balancing does: convert memory that belongs to KVM memory slots to
+> PROT_NONE: all existing entries converted to PROT_NONE with mprotect() and
+> the newly faulted in pages get PROT_NONE from the updated vm_page_prot.
+> The new VMA flag -- VM_KVM_PROTECTED -- indicates that the pages in the
+> VMA must be treated in a special way in the GUP and fault paths. The flag
+> allows GUP to return the page even though it is mapped with PROT_NONE, but
+> only if the new GUP flag -- FOLL_KVM -- is specified. Any userspace access
+> to the memory would result in SIGBUS. Any GUP access without FOLL_KVM
+> would result in -EFAULT.
+> 
+> Any anonymous page faulted into the VM_KVM_PROTECTED VMA gets removed from
+> the direct mapping with kernel_map_pages(). Note that kernel_map_pages() only
+> flushes local TLB. I think it's a reasonable compromise between security and
+> perfromance.
+> 
+> Zapping the PTE would bring the page back to the direct mapping after clearing.
+> At least for now, we don't remove file-backed pages from the direct mapping.
+> File-backed pages could be accessed via read/write syscalls. It adds
+> complexity.
+> 
+> Occasionally, host kernel has to access guest memory that was not made
+> shared by the guest. For instance, it happens for instruction emulation.
+> Normally, it's done via copy_to/from_user() which would fail with -EFAULT
+> now. We introduced a new pair of helpers: copy_to/from_guest(). The new
+> helpers acquire the page via GUP, map it into kernel address space with
+> kmap_atomic()-style mechanism and only then copy the data.
+> 
+> For some instruction emulation copying is not good enough: cmpxchg
+> emulation has to have direct access to the guest memory. __kvm_map_gfn()
+> is modified to accommodate the case.
+> 
+> The patchset is on top of v5.7-rc6 plus this patch:
+> 
+> https://lkml.kernel.org/r/20200402172507.2786-1-jimmyassarsson@gmail.com
+> 
+> == Open Issues ==
+> 
+> Unmapping the pages from direct mapping bring a few of issues that have
+> not rectified yet:
+> 
+>  - Touching direct mapping leads to fragmentation. We need to be able to
+>    recover from it. I have a buggy patch that aims at recovering 2M/1G page.
+>    It has to be fixed and tested properly
+> 
+>  - Page migration and KSM is not supported yet.
+> 
+>  - Live migration of a guest would require a new flow. Not sure yet how it
+>    would look like.
+> 
+>  - The feature interfere with NUMA balancing. Not sure yet if it's
+>    possible to make them work together.
+> 
+>  - Guests have no mechanism to ensure that even a well-behaving host has
+>    unmapped its private data.  With SEV, for instance, the guest only has
+>    to trust the hardware to encrypt a page after the C bit is set in a
+>    guest PTE.  A mechanism for a guest to query the host mapping state, or
+>    to constantly assert the intent for a page to be Private would be
+>    valuable.
+-- 
+ Kirill A. Shutemov
