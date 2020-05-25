@@ -2,129 +2,121 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE886C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00672C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C83352071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C971B2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NW+zm73D"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="s+rIPQDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403911AbgEYNuo (ORCPT
+        id S2403912AbgEYNzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
+        Mon, 25 May 2020 09:55:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403897AbgEYNum (ORCPT
+        with ESMTP id S2403805AbgEYNzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:50:42 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA17AC061A0E;
-        Mon, 25 May 2020 06:50:40 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id z5so20583340ejb.3;
-        Mon, 25 May 2020 06:50:40 -0700 (PDT)
+        Mon, 25 May 2020 09:55:50 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E739C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:55:50 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so13771475qts.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dpDoqtle89oMVZav++4VvJVMWQAzIvDKYzkUUcdunEw=;
-        b=NW+zm73DRelXLZ5sBomfzu4+PxDqvP8CsG4xbbPCqo24ArxrG3N8Cgq5HV4uyFqPF7
-         z3R5e8SH65DwmVNtyDIoy1gECoxDjjqVNpXG0KWOK58q5FinvOIrRxDrlmPeSp9k4P5D
-         1xqL38Cdmz4+D16QhTfC+30JM/UF2wi+c+4ziCJwOPFx6aFmzW1ngeRu5n0dWBF4+KhR
-         mOnbdFiNeC+Km7huoQYt4jy4vjvnxnrEgiNB5Iquio4RsFI4Sy5Db4ev8WGNrlMwYDka
-         MAjbDZlAHcQ/VyE2gr3VqGq5NeoJf/gUx38Cv/6xSwZdV1ZTF7rHe15gJdFQHF6/ybwL
-         SACA==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5qQiY+ZXVw5IFFJYnTIFYyj/ziMbEL19deOcInariiA=;
+        b=s+rIPQDib3dWy7Qcs1M3vaRswSUZvO59bqqwm56bvqNnzsd4cGfc/7y1P/ukq2S2M3
+         PRgCBF4I5yOX75Y1qMGHQ9N7hpD66Xa2ylF+nsSHZz8eI/+R17sLGS34WG6yB1hnYtTn
+         fxgQqHsvaLBcRm1G99YsDEQTL4oizD8LMOq/huB8wT3l24mnRuG0YjrjGeM61fQ7Yxm+
+         PxYDwaAhhug9Q3qyQPQNKrd0BIyQJNbC4QQNoLdQPKvIXkt5/9xKXKxiWrU5gmRF6gSm
+         MvlWmdS1pugo0AAxExtGgv/BHg7s/CpyKeuTsDu4Txn9GcpG1IiEwgP5o/gSoah3gXe1
+         EeIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dpDoqtle89oMVZav++4VvJVMWQAzIvDKYzkUUcdunEw=;
-        b=Naf5JpKAJwJeigaR9IJGPclVX/nEPNo5bar1CstjVdmHDk/GhPwg6YeGVgl48Fv3Rr
-         j70+bKZKZwBcyj3OcWFwqn9EKBjczb9CmhAkSTRLmX4lc0jRszdIUsg8QgZawId86rji
-         Wq81q3J2qmaWu+jwX9LnqTKVPeWoPRQ/VQrVjVVv0ZepdDKaCqW+UDlz1lQS4tycdmT6
-         ExmcbMAX0xKsdtbJKT0YI9dU2Df7P4bvQI54UdiajGNDYmEt0dyyk+TONn07FwnEcfiv
-         ySMPcOkqch1v7i3jmKCFUA7OSL91olHrkYewBKE3BycdfVXTSdwpktBZfUvOxUR1Gz6U
-         R7Kw==
-X-Gm-Message-State: AOAM5328cFA7/mAcmadLq5WTNUyWldvEfpBbTj4qf67JU/IyUUg4jFi2
-        SsGD09KNaSYHQJryfRR6M4M=
-X-Google-Smtp-Source: ABdhPJyNHy9KwhzwGMSS43P11YocfOM/h36IBUYqOErK8Hy15T5PPDieh7cJpqIkwx3VqgiJlVKxFw==
-X-Received: by 2002:a17:906:7d90:: with SMTP id v16mr18177637ejo.554.1590414639616;
-        Mon, 25 May 2020 06:50:39 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:a081:4793:30bf:f3d5? ([2001:a61:2482:101:a081:4793:30bf:f3d5])
-        by smtp.gmail.com with ESMTPSA id df21sm15997034edb.27.2020.05.25.06.50.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 06:50:39 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, nilal@redhat.com,
-        Florian Weimer <fweimer@redhat.com>,
-        =?UTF-8?Q?Colm_MacC=c3=a1rtaigh?= <colm@allcosts.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH] proc.5: add "wf" to VmFlags in /proc/[pid]/smaps
-To:     Ian Rogers <irogers@google.com>, Rik van Riel <riel@redhat.com>
-References: <20200521222551.259804-1-irogers@google.com>
- <CAP-5=fXjXgWEgp9gqReByrDBTvjDbPEsubeAFxrpxj_+FsFn6w@mail.gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <1edcb7ac-bc5f-b9ec-a037-656005ae85e3@gmail.com>
-Date:   Mon, 25 May 2020 15:50:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5qQiY+ZXVw5IFFJYnTIFYyj/ziMbEL19deOcInariiA=;
+        b=PHaJHh8dnjqVOsNf7Heaqj5wTGJvb9EQNtyNfpJ5A8JVI6vpPiCuj6AOTDGIf16vDM
+         rxt+3azMpOA4CPuEseoXtBwnuXDkuLa4K3D1Xp79sIfSRyeGec36Yo0cxfCgqhRPCBI6
+         5rxRIt4j39vTUhb/l4G/LRpSrwRl1ZhDQFnlQl48R8RnQLqi+Yt9jzoaIeH2j/gwSXrN
+         ippxAoo7csy071gj4umypuVuwut0iiG8pxynXEHxzsNYybeXt/+9bEejYXfRfsK0in3J
+         mi3qzBHH7A6+DS5Rtaf0t0H5VvI6VEu6RCAuiCtTXRPzQCBQ5NeJcydTAE4al2fgpfqy
+         EnIw==
+X-Gm-Message-State: AOAM533pYkShE+/pUmSzBiLOEZ5WVClDlxeKqQiUHqgIPbDZ4DF/wZkb
+        yD8+WQx2YzYLpRlXCin4LthDMw==
+X-Google-Smtp-Source: ABdhPJx1pZ0HniR8T/jbB4G1WDzMkmj7aTRZoPixQJ2Jm50F2Q986QYmKu3Ld6Mw176pQBYwWMNCPA==
+X-Received: by 2002:aed:3f55:: with SMTP id q21mr14482318qtf.190.1590414947129;
+        Mon, 25 May 2020 06:55:47 -0700 (PDT)
+Received: from ovpn-112-169.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e34sm15059240qtb.21.2020.05.25.06.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 06:55:46 -0700 (PDT)
+Date:   Mon, 25 May 2020 09:55:40 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC linux-next PATCH] mm: khugepaged: remove error message when
+ checking external pins
+Message-ID: <20200525135540.GA18914@ovpn-112-169.phx2.redhat.com>
+References: <1589317383-9595-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200521145644.GA6367@ovpn-112-192.phx2.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fXjXgWEgp9gqReByrDBTvjDbPEsubeAFxrpxj_+FsFn6w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521145644.GA6367@ovpn-112-192.phx2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 1:13 AM, Ian Rogers wrote:
-> On Thu, May 21, 2020 at 3:25 PM Ian Rogers <irogers@google.com> wrote:
->>
->> This patch documents a flag added in the following kernel commit:
->>
->> commit d2cd9ede6e193dd7d88b6d27399e96229a551b19
->> Author: Rik van Riel <riel@redhat.com>
->> Date:   Wed Sep 6 16:25:15 2017 -0700
->>
->>     mm,fork: introduce MADV_WIPEONFORK
->>
->> This was already documented in man2/madvise.2 in the commit:
->>
->> commit c0c4f6c29c494c466f3a2a6273c5b55b76a72927
->> Author: Rik van Riel <riel@redhat.com>
->> Date:   Tue Sep 19 20:32:00 2017 +0200
->>
->>     madvise.2: Document MADV_WIPEONFORK and MADV_KEEPONFORK
->>
->> Signed-off-by: Ian Rogers <irogers@google.com>
+On Thu, May 21, 2020 at 10:56:51AM -0400, Qian Cai wrote:
+> On Wed, May 13, 2020 at 05:03:03AM +0800, Yang Shi wrote:
+> []
+> >  mm/khugepaged.c | 24 +++++++++++++++++-------
+> >  1 file changed, 17 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 1fdd677..048f5d4 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -602,12 +602,6 @@ static bool is_refcount_suitable(struct page *page)
+> >  	if (PageSwapCache(page))
+> >  		expected_refcount += compound_nr(page);
+> >  
+> > -	if (IS_ENABLED(CONFIG_DEBUG_VM) && expected_refcount > refcount) {
+> > -		pr_err("expected_refcount (%d) > refcount (%d)\n",
+> > -				expected_refcount, refcount);
+> > -		dump_page(page, "Unexpected refcount");
+> > -	}
+> > -
+> >  	return page_count(page) == expected_refcount;
+> >  }
 > 
-> Doing a quick audit of fs/proc/task_mmu.c having noticed this flag was
-> missing I note:
->  - "mp" isn't documented, only possible with INTEL_MPX
->  - "nl" is documented but not present in show_smap_vma_flags
->  - "um" and "uw" aren't documented
+> mm/khugepaged.c: In function 'is_refcount_suitable':
+> mm/khugepaged.c:575:25: warning: variable 'refcount set but not used [-Wunused-but-set-variable]
+>   int expected_refcount, refcount;
+>                          ^~~~~~~~ 
+> 
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -572,9 +572,8 @@ static void release_pte_pages(pte_t *pte, pte_t *_pte,
+>  
+>  static bool is_refcount_suitable(struct page *page)
+>  {
+> -	int expected_refcount, refcount;
+> +	int expected_refcount;
+>  
+> -	refcount = page_count(page);
+>  	expected_refcount = total_mapcount(page);
+>  	if (PageSwapCache(page))
+>  		expected_refcount += compound_nr(page); 
 
-I took a shot at fixing these:
-
-
-             mp  - MPX-specific VMA (x86, since Linux 3.19)
-             nl  - non-linear mapping (removed in Linux 4.0)
-             um  - userfaultfd missing pages tracking (since Linux 4.3)
-             uw  - userfaultfd wprotect pages tracking (since Linux 4.3)
-             sf  - perform synchronous page faults (since Linux 4.15)
-
-Thanks,
-
-Michael
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Andrew, can you squash this fix?
