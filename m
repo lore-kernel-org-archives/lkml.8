@@ -2,150 +2,175 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA6DD2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CBC20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:24:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lQPIKNsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbgEYDOR (ORCPT
+        id S2388771AbgEYDYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 23:14:17 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:47933 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388413AbgEYDOR (ORCPT
+        Sun, 24 May 2020 23:24:54 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:59722 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388419AbgEYDYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 23:14:17 -0400
-Received: by mail-io1-f72.google.com with SMTP id v23so11740657ioj.14
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 20:14:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=YSWc34iX3GK8ObMO8XHR5U5QhpSHn1IWPTDBonz04dU=;
-        b=hNDTROQU0Fu8chJTRnHXPmQKfeKVH+tvt1o7gSXiMC6DjdgwEvnEZSIIKknbr2lufx
-         d9T+a8Qb+L8m/wJH6tEPlEYMO1dMnMlBjoOtzdXyftpKHtmxazWvZy2lhw87o1VRZ2Lm
-         PT0A1K1aKQ4ptHW19tRQPXWShGGSDsGkCXYRA4e0PJpPuOnfC0zi3PVS5ddiX2JMft3o
-         /k7EVeSR5wRXIiyv2ucaKNqARQ8guik/SM+STvOx2YW2tHhqOxJgUJgQMxHZZJou53Nn
-         rfUXYOm0Xxlm+OVGgKVdmhhxp2TFzOgfvCMiQgZIXPo2AnsiepyrpZI6r7T3DErduRAv
-         IuWg==
-X-Gm-Message-State: AOAM531oAf0L8pbhu+llfll4wmEkalGxzj8JSSgxYMGwwiEea2747s1k
-        c8i7RXHnWE0FxyKvRfgxZwpdJVrsLU6+BCcCylxKgcw17gnM
-X-Google-Smtp-Source: ABdhPJxsbx6n8x/nMHeqIEt5cap9oSTo8nQK+yklLFkw76SjM625O48upChlWPPuWEq7icEG+0rG9XmUmKJ8XgF+hcCtLsVY/cXz
+        Sun, 24 May 2020 23:24:53 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200525032449epoutp031f6a2f202665f1e3b26d0b97c778cd49~SJ4mBR1-K0765007650epoutp03V
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 03:24:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200525032449epoutp031f6a2f202665f1e3b26d0b97c778cd49~SJ4mBR1-K0765007650epoutp03V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590377089;
+        bh=whwtiYVJePSOpI6IDsuK2aO2TqcSPkMQQXmpbyPPijE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=lQPIKNsWBnS1wvatAr7V8HZx3w2QDD7l6q8yUGaWDvYbQQlp+aCPWqwFLUP0J/RQx
+         lutAFgTLOCUwzJBwJ7xphiAsirMuf9ntMHGHYy0zo+8XBj2KObS3bkSIyGuH5kJY8T
+         CB1JwIOQAmmTOgfR4ZHvvV1hPHvc+CTd6wr/XMXM=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200525032449epcas1p46da777b14093b0d0bccb0f3faa2d10c1~SJ4ljr0oH0133401334epcas1p4q;
+        Mon, 25 May 2020 03:24:49 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49VjBk15DWzMqYkV; Mon, 25 May
+        2020 03:24:46 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DA.8C.04392.E7A3BCE5; Mon, 25 May 2020 12:24:46 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200525032444epcas1p3cb8df5bc4db0acbf7ba0f2b015295d3f~SJ4hYp7ML0361403614epcas1p3L;
+        Mon, 25 May 2020 03:24:44 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200525032444epsmtrp125c88d00e8d76f74d7ec5f9a541ecc55~SJ4hX775M1742717427epsmtrp1e;
+        Mon, 25 May 2020 03:24:44 +0000 (GMT)
+X-AuditID: b6c32a37-cabff70000001128-c1-5ecb3a7e9abf
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2C.0D.08303.C7A3BCE5; Mon, 25 May 2020 12:24:44 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200525032444epsmtip1889fb26a38d4bdb0f8e0eb4860e0caf9~SJ4hNyvK01369713697epsmtip1r;
+        Mon, 25 May 2020 03:24:44 +0000 (GMT)
+Subject: Re: [PATCH v3 2/3] extcon: max14577: Add proper dt-compatible
+ strings
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <8441253a-c8c9-17be-e2a7-7d96f1369dd5@samsung.com>
+Date:   Mon, 25 May 2020 12:35:08 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:914d:: with SMTP id y13mr1544846ioq.48.1590376455857;
- Sun, 24 May 2020 20:14:15 -0700 (PDT)
-Date:   Sun, 24 May 2020 20:14:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b5f39305a6705fd3@google.com>
-Subject: general protection fault in sock_recvmsg
-From:   syzbot <syzbot+d7cface3f90b13edf5b0@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-        mptcp@lists.01.org, netdev@vger.kernel.org, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200522102448.30209-2-m.szyprowski@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGc5l2OqDVsYAe+qBljFGILGMtjAaIBoJEfKiY+KAGHOlYKt3S
+        aYlLomhcQAVFU5YKiqBRMaaIbNaHGiTBYoIiwTVEicQdBbER9cVpp0TevnPO/+e/595LYIpG
+        XEkYzHbOZmaNFB4h6XwQl5hwcO2j/OTDxwjmdq1byjhHx3Dm8eNWGTPkqceZqYpexNzqHZEx
+        rw9fx5lH9+zriJy2lnI8p7K9BeVMtS3WYtuK04o4VsfZVJy50KIzmPXpVO6WgswCTUoynUCv
+        YVIplZk1celU1iZtQrbBKByAUpWwRofQ0rI8TyVlpNksDjunKrLw9nSKs+qM1jXWRJ418Q6z
+        PrHQYlpLJyev0gjCncVF0x7G2jh378CpbmkpKo84icIJIFdD9ad+dBJFEAqyG4Gz7j4uFj8Q
+        XPzZKROLKQTeiXP4jKWiwi0VBx4EHUf6Q5bvCD66moOqSFILfwangxxFGqB34HPQgZGDCN5X
+        VAUHOBkP3o8vgjyfjIXh6XcowHIyA2qu+IMsIZfBRPnzIEeTW8HXeTSkWQC+ujFJgMMF/bPJ
+        +rAAY+QieDV2KcRLoGu8HgsEA1lFQM2d4TBxhyy4cOl0iCPhc1+7TGQlfDpzPMQH4IavFxfN
+        ZQjavU+k4kAN3qvnBTMhJMSB25MktmPh7t8GJAbPg2/+09KABEg5lB1XiJKlMPR2JBQbA80n
+        yvGziHLNWsc1awXXrBVc/8MakaQFLeSsvEnP8bRVPfu521Dwd8andqPWgU09iCQQNVeudfbn
+        K6RsCb/P1IOAwKgo+YZsoSXXsfv2czZLgc1h5PgepBFuuwpTRhdahL9uthfQmlVqtZpZTado
+        aJpaJHc+N+YrSD1r54o5zsrZZnxhRLiyFMX4dhyVOBprq336lXlqt5JomvTfbNr8BVSqmvHM
+        Oqvn8nJnQ5zR7Tp0+eX86i7daM36sqzKybcjUVj/rsHf17/GLnlT+mHOxYjdGyOnri02vKdJ
+        oz8vMUOyYXufd0/ujS4i/qn/WeFDmWZFRt7oH3kMNfBLlVlbn9Ih6YqebPBTEr6IpeMxG8/+
+        AxRUs3uzAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSnG6N1ek4g1MbzC02zljPajH14RM2
+        i/PnN7BbXN41h83ic+8RRou1R+6yW9xuXMFmcXp3iQOHx6ZVnWwefVtWMXp83iQXwBzFZZOS
+        mpNZllqkb5fAlfFjl0XBAp6Kc907WBsYO7m6GDk5JARMJHp717N2MXJxCAnsYJR4dfc+K0RC
+        UmLaxaPMXYwcQLawxOHDxSBhIYG3jBITTzmD2MICfhK7WyYwg9giApkSO/ZfZAKZwyxwmVFi
+        680eRoihRxklDnxvAqtiE9CS2P/iBhuIzS+gKHH1x2NGEJtXwE5i+pKvYDaLgKrEh87rYLao
+        QJjEziWPmSBqBCVOznzCAmJzAtVf+zgHLM4soC7xZ94lZghbXOLWk/lQcXmJ7W/nME9gFJ6F
+        pH0WkpZZSFpmIWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOIK0tHYw7ln1
+        Qe8QIxMH4yFGCQ5mJRFed7dTcUK8KYmVValF+fFFpTmpxYcYpTlYlMR5v85aGCckkJ5Ykpqd
+        mlqQWgSTZeLglGpgunx0/6TmKz8uPjgxUeNy3p3FWlvaXO3NEnlZA3j2bt0RK/8yk3tWwjyd
+        Xx+cbRyErwVP8zO/v6pG5N2RZ4f6bj9S2FJsEqH3W1smqsTsLPc8SfvHnUdvvZFQ1/LSvmld
+        YBzK9pQ39M5TDScdvoZt/kt2mK3lY54b13yK/eZf3R8sue8/NNVXhq28F8At1ZgV46ASvy1A
+        etmCN/Y717LtfpFluFBz0uLXPz9IOfxJF03MjHonKfjVpk/T5x2LwBt13tvmb1YdyWJQLevK
+        WH9JY3ugetmFZG+XIm6RgwauCpqiX3/7bbXTPv13S0HyvaOHXj+NS/VsvnknIuPxl6/xXpMt
+        GdzjWPWFbc6FixYrsRRnJBpqMRcVJwIAlAEnig8DAAA=
+X-CMS-MailID: 20200525032444epcas1p3cb8df5bc4db0acbf7ba0f2b015295d3f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200522102455eucas1p24b695b7f6c533681f544be166ea69200
+References: <20200522102448.30209-1-m.szyprowski@samsung.com>
+        <CGME20200522102455eucas1p24b695b7f6c533681f544be166ea69200@eucas1p2.samsung.com>
+        <20200522102448.30209-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Marek,
 
-syzbot found the following crash on:
+On 5/22/20 7:24 PM, Marek Szyprowski wrote:
+> Add device tree compatible strings and create proper modalias structures
+> to let this driver load automatically if compiled as module, because
+> max14577 MFD driver creates MFD cells with such compatible strings.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v3:
+> - sorted of_max14577_muic_dt_match
+> v2:
+> - added .of_match_table pointer
+> ---
+>  drivers/extcon/extcon-max14577.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-max14577.c b/drivers/extcon/extcon-max14577.c
+> index 32f663436e6e..03af678ddeba 100644
+> --- a/drivers/extcon/extcon-max14577.c
+> +++ b/drivers/extcon/extcon-max14577.c
+> @@ -782,9 +782,19 @@ static const struct platform_device_id max14577_muic_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(platform, max14577_muic_id);
+>  
+> +static const struct of_device_id of_max14577_muic_dt_match[] = {
+> +	{ .compatible = "maxim,max14577-muic",
+> +	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
+> +	{ .compatible = "maxim,max77836-muic",
+> +	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, of_max14577_muic_dt_match);
+> +
+>  static struct platform_driver max14577_muic_driver = {
+>  	.driver		= {
+>  		.name	= "max14577-muic",
+> +		.of_match_table = of_max14577_muic_dt_match,
+>  	},
+>  	.probe		= max14577_muic_probe,
+>  	.remove		= max14577_muic_remove,
+> 
 
-HEAD commit:    caffb99b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15a74441100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
-dashboard link: https://syzkaller.appspot.com/bug?extid=d7cface3f90b13edf5b0
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141034ba100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119cd016100000
+Applied it. Thanks.
 
-The bug was bisected to:
-
-commit 263e1201a2c324b60b15ecda5de9ebf1e7293e31
-Author: Paolo Abeni <pabeni@redhat.com>
-Date:   Thu Apr 30 13:01:51 2020 +0000
-
-    mptcp: consolidate synack processing.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119d8626100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=139d8626100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=159d8626100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d7cface3f90b13edf5b0@syzkaller.appspotmail.com
-Fixes: 263e1201a2c3 ("mptcp: consolidate synack processing.")
-
-general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 1 PID: 7226 Comm: syz-executor523 Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
-RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
-Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8d 6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
-RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
-R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
-R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
-FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- mptcp_recvmsg+0x18d5/0x19b0 net/mptcp/protocol.c:891
- inet_recvmsg+0xf6/0x1d0 net/ipv4/af_inet.c:838
- sock_recvmsg_nosec net/socket.c:886 [inline]
- sock_recvmsg net/socket.c:904 [inline]
- __sys_recvfrom+0x2f3/0x470 net/socket.c:2057
- __do_sys_recvfrom net/socket.c:2075 [inline]
- __se_sys_recvfrom net/socket.c:2071 [inline]
- __x64_sys_recvfrom+0xda/0xf0 net/socket.c:2071
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x448ef9
-Code: e8 cc 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc6a3abdda8 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
-RAX: ffffffffffffffda RBX: 00000000006dec28 RCX: 0000000000448ef9
-RDX: 0000000000001000 RSI: 00000000200004c0 RDI: 0000000000000003
-RBP: 00000000006dec20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000040000000 R11: 0000000000000246 R12: 00000000006dec2c
-R13: 00007ffe4730174f R14: 00007fc6a3abe9c0 R15: 00000000006dec2c
-Modules linked in:
----[ end trace 097bdf143c3a60db ]---
-RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
-RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
-Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8d 6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
-RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
-R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
-R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
-FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
