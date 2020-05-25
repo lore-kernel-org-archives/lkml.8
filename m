@@ -2,88 +2,184 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED97C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED09620723
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BB020723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:20:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ea1g/amu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389777AbgEYKUY (ORCPT
+        id S2389791AbgEYKUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:20:24 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:37190 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbgEYKUX (ORCPT
+        Mon, 25 May 2020 06:20:40 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:55171 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389356AbgEYKUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:20:23 -0400
-Received: by mail-oo1-f68.google.com with SMTP id r12so3509719ool.4;
-        Mon, 25 May 2020 03:20:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QQ3bKV0IGk0Q2r0OiUHGmRZfloaC+oey94yGv1o2D4E=;
-        b=hg0wsIjrOioazcUfGW3Zqsju50kyN9dWumrd9A+TmLvZqrTHXVYL3E9GBf5DapMvzi
-         2nTj6FcSV9Mmo+Jmn9X4dRu3XTAGy6+jHRUV+Uvx38CozcvO6X7//hXaKn7zzzPrluIo
-         LNUfqIw5wppB3kalV8omuaI528vNKapgfHFV8NV3X2m0SIDy2ChrXRHXWnQBxSO0AnMN
-         +PBO9OUb0MIxGAcp7JKHU9T5wwhZbzll4xj9THn4uyAV5HOhT9e93cMiybyGyHLDEvHz
-         MBaVRmQGEhly73Q5g7t4AHowEnImBXT7uRwu8ODyTUbX8XzZjUtKJiRbVEUpIgFFgIcS
-         Kpzw==
-X-Gm-Message-State: AOAM532ihQbXpKvWG7hsjBgW049U6errbvFH+qJmPE7NxyMwCjpkGsQS
-        eLcocV1/iRDf8b8LB3XY1/fcx8/0r+NBNV8KRQU=
-X-Google-Smtp-Source: ABdhPJyG7gY1vgATEx/zQgoz5xy+TXg0emLN8vf6Fp0mTM5+PsKO4ijltUaRMalF3tBjfNo7QxUSc3jxkBUpxrJU2Qo=
-X-Received: by 2002:a4a:95d0:: with SMTP id p16mr12678039ooi.40.1590402021986;
- Mon, 25 May 2020 03:20:21 -0700 (PDT)
+        Mon, 25 May 2020 06:20:39 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B2E8E224C1;
+        Mon, 25 May 2020 12:20:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590402035;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DaBHew0vxxdSiEHFxN0/9/jK/7HdYOSYbRfKY5g0cf4=;
+        b=ea1g/amuAFXkMGyk8b01UJ7SrnTfSaaC0mLpqaKs3JWGpnTuJMhPFxCjrOrj5hGTBW8g1t
+        mYu/alo7xbuCw9vBpCPuDGeqDHA+jdYpRLceu125oZwEWGtTah1zfrAEd2LfXjKMyULS3n
+        5CBwJkAWm0vxbZD5i+M/5MsdB4Z8DEI=
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590356277-19993-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 May 2020 12:20:10 +0200
-Message-ID: <CAMuHMdUSQK2OnFM3eZ80HL4xtuqZS+fKaec1Y8moUeJ4yF1J9A@mail.gmail.com>
-Subject: Re: [PATCH 6/8] ARM: dts: r8a7742: Add USB 2.0 host support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 25 May 2020 12:20:25 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-11-michael@walle.cc>
+ <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
+ <75bff2917be1badd36af9f980cf59d2c@walle.cc>
+ <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <951244aab2ff553a463f7431ba09bf27@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 11:40 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Describe internal PCI bridge devices, USB phy device and
-> link PCI USB devices to USB phy.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Am 2020-05-25 11:05, schrieb Bartosz Golaszewski:
+> wt., 12 maj 2020 o 16:41 Michael Walle <michael@walle.cc> napisał(a):
+>> 
+>> >> +
+>> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+>> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
+>> >> +MODULE_LICENSE("GPL");
+>> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+>> >> new file mode 100644
+>> >> index 000000000000..a868cbcde6e9
+>> >> --- /dev/null
+>> >> +++ b/include/linux/gpio-regmap.h
+>> >> @@ -0,0 +1,69 @@
+>> >> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> >> +
+>> >> +#ifndef _LINUX_GPIO_REGMAP_H
+>> >> +#define _LINUX_GPIO_REGMAP_H
+>> >> +
+>> >> +struct gpio_regmap;
+>> >> +
+>> >> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
+>> >> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
+>> >> +
+>> >
+>> > What if the addr is actually 0?
+>> 
+>> Then the driver has to set GPIO_REGMAP_ADDR_ZERO or use the 
+>> convenience
+>> macro GPIO_REGMAP_ADDR.
+>> 
+>> So you can have
+>> 
+>>    struct gpio_regmap_config config = { 0 };
+>>    config.reg_dat_base = 0x10;
+>>    config.reg_dir_out_base = 0x20;
+>> 
+>> or
+>> 
+>>    config.reg_dat_base = GPIO_REGMAP_ADDR_ZERO;
+>> 
+>> or if you can't be sure if the RHS value might be zero:
+>> 
+>>    config.reg_dat_base = GPIO_REGMAP_ADDR(reg);
+>> 
+>> 
+>> > Maybe drop GPIO_REGMAP_ADDR and require users to set unused registers
+>> > to GPIO_REGMAP_ADDR_ZERO?
+>> 
+>> Thats bad because:
+>>   * you'd have to set plenty of unused base registers for a simple 
+>> driver
+>>   * if there will be additional properties in the future, you have to
+>> touch
+>>     all other drivers, because they are initialized as 0 (ie. valid 
+>> reg
+>> 0).
+>> 
+>> >> +/**
+>> >> + * struct gpio_regmap_config - Description of a generic regmap
+>> >> gpio_chip.
+>> >> + *
+>> >> + * @parent:            The parent device
+>> >> + * @regmap:            The regmap used to access the registers
+>> >> + *                     given, the name of the device is used
+>> >> + * @label:             (Optional) Descriptive name for GPIO
+>> >> controller.
+>> >> + *                     If not given, the name of the device is used.
+>> >> + * @ngpio:             Number of GPIOs
+>> >> + * @reg_dat_base:      (Optional) (in) register base address
+>> >> + * @reg_set_base:      (Optional) set register base address
+>> >> + * @reg_clr_base:      (Optional) clear register base address
+>> >> + * @reg_dir_in_base:   (Optional) out setting register base address
+>> >> + * @reg_dir_out_base:  (Optional) in setting register base address
+>> >
+>> > The two above are inverted I think?
+>> good catch.
+>> 
+>> > Also: why the limitation of only supporting one at a time?
+>> 
+>> they should be exclusive, either you have a register where you set the
+>> output bits to one, or the input bits. Maybe this need a bit more
+>> context
+>> above. in gpio-mmio.c you can set both and both are used in
+>> set_direction(), but only one is read in get_direction().
+>> 
+>> That being said, I have no strong opinion wether they should be
+>> exclusive
+>> or not, besides the symmetry of set_/get_direction().
+>> 
+>> -michael
+>> 
+> 
+> Sorry for the late response, your comments make sense to me. Are you
+> going to submit a v4 before the v5.8 merge window?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+I'm currently stuck with how to handle the MFD part. Ie. Rob doesn't
+seem to like the logicial device numbering - or at least there wasn't
+an answer to that one anymore, see patch 5/16.
 
-Gr{oetje,eeting}s,
+If you like I could submit this patch on its own. But then there
+wouldn't be a user for it.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-michael
