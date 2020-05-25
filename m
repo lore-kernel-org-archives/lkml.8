@@ -2,212 +2,168 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A184C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A232071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC14E2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lM+n5ilu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390137AbgEYLRQ (ORCPT
+        id S2390145AbgEYLRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390128AbgEYLRP (ORCPT
+        Mon, 25 May 2020 07:17:53 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:16112 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390073AbgEYLRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:17:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA12FC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:17:14 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jdB6Q-0002IF-Jj; Mon, 25 May 2020 13:17:06 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:d406:10d7:6286:51e5] (unknown [IPv6:2a03:f580:87bc:d400:d406:10d7:6286:51e5])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 7C801505AAD;
-        Mon, 25 May 2020 11:17:03 +0000 (UTC)
-Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
-        =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        Jan Glauber <jglauber@marvell.com>,
-        Robert Richter <rrichter@marvell.com>
-References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
- <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
- <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
- <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
- <7b85e098-b9a9-dd14-203f-100cdf2e703e@pengutronix.de>
- <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <e0f641bc-5473-792d-fea9-0a2e81fe1e38@pengutronix.de>
-Date:   Mon, 25 May 2020 13:17:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 07:17:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590405471; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=NrdbeJbjmJrveR0HXfTx+Z+kD54p396ZB66qEdqxXe0=;
+ b=lM+n5iluYIg/YdnLSizJofw2DG2/0CQQHly7ijKsIXuI4zrCXHWFo1ppsTK+v/ctSneDEnB1
+ pv7ioXEoyuLNfmfmCPdqy75yEHBwiwzQoSv/USPMUtHv/unafSzeAPrB8SIGGmHetLybCmIG
+ s7+YDecWnS9HmmB1V711c1bTYws=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ecba955.7f67d8dc1228-smtp-out-n04;
+ Mon, 25 May 2020 11:17:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7FAA8C433C9; Mon, 25 May 2020 11:17:41 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3F83FC433C6;
+        Mon, 25 May 2020 11:17:40 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 16:47:40 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: add apps_smmu node
+In-Reply-To: <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-3-jonathan@marek.ca>
+ <42f39eeb2af9c82a551a417c62ea21d7@codeaurora.org>
+ <0f58e2fd-ef55-cf38-d403-4782662aa89e@marek.ca>
+ <2a35f3b85d8311fb4298aaea82236967@codeaurora.org>
+ <c9c21e4c-fc89-5a74-fa78-203e5fb64e27@marek.ca>
+Message-ID: <72d771390af9a68759d3f81cb79e46a6@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/20 10:19 PM, Tim Harvey wrote:
-> On Wed, Feb 26, 2020 at 2:19 AM Marc Kleine-Budde <mkl@pengutronix.de> wrote:
-> Sorry for the long delay... I'm finally getting back to this issue.
-> 
-> I'm told by Marvell/Cavium that the OcteonTX SPI hardware does not
-> support full duplex although I don't see this in any of their errata
-> or reference manuals. Perhaps someone familiar with the CN81xx/CN80xx
-> OcteonTX hardware from Marvell/Cavium can weigh in here as I'm not
-> clear if this limitation is in all hardware that uses the
-> spi-cavium-thunderx.c driver (I've added Jan to the list who authored
-> the driver)
+Hi,
 
-If the hardware doesn't support full duplex transfers you should add
-SPI_CONTROLLER_HALF_DUPLEX to the driver.
+On 2020-05-25 16:38, Jonathan Marek wrote:
+> On 5/25/20 6:54 AM, Sai Prakash Ranjan wrote:
+>> On 2020-05-25 15:39, Jonathan Marek wrote:
+>>> Hi,
+>>> 
+>>> On 5/25/20 5:42 AM, Sai Prakash Ranjan wrote:
+>>>> Hi Jonathan,
+>>>> 
+>>>> On 2020-05-24 08:08, Jonathan Marek wrote:
+>>>>> Add the apps_smmu node for sm8250. Note that adding the iommus 
+>>>>> field for
+>>>>> UFS is required because initializing the iommu removes the bypass 
+>>>>> mapping
+>>>>> that created by the bootloader.
+>>>>> 
+>>>> 
+>>>> This statement doesn't seem right, you can just say since the bypass 
+>>>> is disabled
+>>>> by default now, we need to add this property to enable translation 
+>>>> and avoid global faults.
+>>>> 
+>>> 
+>>> If I use this patch [1] then the UFS iommu property isn't needed. In
+>>> downstream, the identity (bypass?) stream mapping is inherited from
+>>> the bootloader, and UFS is used without any iommu property. Setting
+>>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n doesn't make it work on its own
+>>> (without the UFS iommu property), so there's more to it than just
+>>> "bypass is disabled by default now".
+>>> 
+>>> https://patchwork.kernel.org/patch/11310757/
+>>> 
+>> 
+>> "iommus" property is not about inheriting stream mapping from 
+>> bootloader,
+>> it is used to enable SMMU address translation for the corresponding
+>> master when specified. So when you have disabled bypass, i.e.,
+>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y or via cmdline 
+>> "arm-smmu.disable_bypass=1"
+>> and iommus property with SID and mask is not specified, then it will 
+>> result
+>> in SMMU global faults.
+>> 
+>> Downstream has bypass enabled(ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n),so 
+>> you
+>> won't see any global faults if you do not have iommus property.
+>> 
+>> Patch in your link is for display because of the usecase for splash 
+>> screen
+>> on android and some other devices where the bootloader will configure 
+>> SMMU,
+>> it has not yet merged and not likely to get merged in the current 
+>> state.
+>> 
+>> So yes "there is *not* much more to it than bypass is disabled by 
+>> default now"
+>> and you have to specify "iommus" for the master devices or you should 
+>> enable bypass,
+>> i.e., ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n or 
+>> arm-smmu.disable_bypass=n
+>> 
+>> Try without the patch in the link and without iommus for UFS and
+>> ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y and you will see.
+>> 
+>> -Sai
+> 
+> I know that the "iommus" property is not about inheriting stream
+> mapping. Probing the iommu removes the stream mapping created by the
+> bootloader, the iommus property is added so that new mappings are
+> created to replace what was removed.
+> 
+> You seem to be under the impression that the SM8150/SM8250 bootloader
+> does not configure SMMU. It does, for both UFS and SDHC, just like it
+> does for display/splash screen on some devices.
+> 
 
-If the hardware supports full duplex, but the driver doesn't the driver should
-be fixed, or SPI_CONTROLLER_HALF_DUPLEX with the appropriate explanation.
+It could be that bootloader does configure SMMU for UFS and SDHC, but 
+the
+upstream SMMU driver doesnt allow to inherit stream mapping from the 
+bootloader
+yet, so adding iommus property based on the assumption that it is 
+inherited seems
+wrong.
 
-> As you point out setting SPI_CONTROLLER_HALF_DUPLEX will cause
-> spi_{sync,async,async_locked} calls to fail with -EINVAL if they have
-> both a tx and rx buf, so this should be done to help catch these
-> issues:
-> diff --git a/drivers/spi/spi-cavium-thunderx.c
-> b/drivers/spi/spi-cavium-thunderx.c
-> index fd6b9ca..76fdb94 100644
-> --- a/drivers/spi/spi-cavium-thunderx.c
-> +++ b/drivers/spi/spi-cavium-thunderx.c
-> @@ -64,6 +65,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
->                 p->sys_freq = SYS_FREQ_DEFAULT;
->         dev_info(dev, "Set system clock to %u\n", p->sys_freq);
-> 
-> +       master->flags = SPI_MASTER_HALF_DUPLEX;
->         master->num_chipselect = 4;
->         master->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH |
->                             SPI_LSB_FIRST | SPI_3WIRE;
-> 
-> Now, with regards to the mcp251x.c driver you were correct that I was
-> missing dealing with the full-duplex call from mcp251x_hw_rx_frame()
-> which indeed was causing data corruption on recieve.
-> 
-> So the following patch to mcp251x.c properly converts mcp251x to half-duplex:
-> 
-> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-> index 5009ff2..016c1e5 100644
-> --- a/drivers/net/can/spi/mcp251x.c
-> +++ b/drivers/net/can/spi/mcp251x.c
-> @@ -290,23 +290,23 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
->         priv->spi_tx_buf[0] = INSTRUCTION_READ;
->         priv->spi_tx_buf[1] = reg;
-> 
-> -       mcp251x_spi_trans(spi, 3);
-> -       val = priv->spi_rx_buf[2];
-> +       spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
-> 
->         return val;
->  }
-> 
->  static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
->  {
-> +       u8 val[2] = {0};
->         struct mcp251x_priv *priv = spi_get_drvdata(spi);
-> 
->         priv->spi_tx_buf[0] = INSTRUCTION_READ;
->         priv->spi_tx_buf[1] = reg;
-> 
-> -       mcp251x_spi_trans(spi, 4);
-> +       spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
-> 
-> -       *v1 = priv->spi_rx_buf[2];
-> -       *v2 = priv->spi_rx_buf[3];
-> +       *v1 = val[0];
-> +       *v2 = val[1];
->  }
-> 
->  static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
-> @@ -409,8 +409,9 @@ static void mcp251x_hw_rx_frame(struct spi_device
-> *spi, u8 *buf,
->                         buf[i] = mcp251x_read_reg(spi, RXBCTRL(buf_idx) + i);
->         } else {
->                 priv->spi_tx_buf[RXBCTRL_OFF] = INSTRUCTION_READ_RXB(buf_idx);
-> -               mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
-> -               memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
-> +               spi_write_then_read(spi, priv->spi_tx_buf, 1, priv->spi_rx_buf,
-> +                                   SPI_TRANSFER_BUF_LEN);
-> +               memcpy(buf + 1, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN - 1);
->         }
->  }
-> 
-> I do have hardware to test with and without this patch my CN80xx board
-> with an MCP25625 fails device probing (mcp251x spi0.1: MCP251x didn't
-> enter in conf mode after reset) because read values are corrupt. With
-> this patch my the MCP25625 works fine on the CN80xx detecting,
-> sending, and receiving frames.
+> With either value of ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT, it will not
+> work without the iommus property.
 
-nice!
+I'm pretty sure that if you have ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n 
+and
+without iommus, it should work.
 
-> Should I be submitting this patch with logic that only does
-> half-duplex if the spi controller doesn't support it (if
-> (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX)) or is it
-> acceptable to simply make the driver half-duplex like this for all
-> cases?
-
-Please make half duplex transfers depending on SPI_CONTROLLER_HALF_DUPLEX as
-most drivers have a considerable overhead at the end of a transfer.
-
-Most of them wait for a transfer complete interrupt. Which might take longer
-than the actual SPI transfer. Splitting one full duplex read-register transfer
-(which is a write followed by a read) into two half duplex transfers would kill
-performance on full duplex capable controllers.
-
-regards,
-Marc
+-Sai
 
 -- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
