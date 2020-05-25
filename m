@@ -2,113 +2,212 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966B920823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB05207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:09:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zHpb7anp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgEYXIq (ORCPT
+        id S2388737AbgEYXJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:08:46 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:49658 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725969AbgEYXIp (ORCPT
+        Mon, 25 May 2020 19:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729945AbgEYXJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:08:45 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id C45A7D7DFED;
-        Tue, 26 May 2020 09:07:51 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jdMCF-0000w3-1b; Tue, 26 May 2020 09:07:51 +1000
-Date:   Tue, 26 May 2020 09:07:51 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mon, 25 May 2020 19:09:54 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4820CC061A0E;
+        Mon, 25 May 2020 16:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6fb+jwIV+5xOJZE2gPa7YONBDSpBbGWac/9vd5Yh+aU=; b=zHpb7anpL5zxe0UlF6SWp1Jwk
+        FO2S7cTSpWbbVzb4FznbNTRikuQ2shlc6kz/YZnIoo/1SErn5/Kxc6y+rdLU7J0k3o+w2a/AAKhZc
+        pp8IpfWxfQRqwoIdtdXYZ2Z6508FyH4TEMcuvqdnBUvPldMC1MqC/ooqxbz3309gQkikSSdKlTnuq
+        zsQ2DlDkL9qGif+A97eC6Klut0XlIXPF8ndUzRT5xBZdY9+BhhoNrocEXtmw28oXOX54wpxFBgX07
+        +60V+zMPSiortjNcqs8DbjUm7dhKMaWByB6/yHdQ3YFSzauviCn+oF7C6sPmSB7dXbeFvKKxr8fl+
+        ANSYeZACQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:45034)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jdME8-0006DC-3M; Tue, 26 May 2020 00:09:48 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jdME6-0004mF-4z; Tue, 26 May 2020 00:09:46 +0100
+Date:   Tue, 26 May 2020 00:09:46 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/36] Large pages in the page cache
-Message-ID: <20200525230751.GZ2005@dread.disaster.area>
-References: <20200515131656.12890-1-willy@infradead.org>
- <20200521224906.GU2005@dread.disaster.area>
- <20200522000411.GI28818@bombadil.infradead.org>
- <20200522025751.GX2005@dread.disaster.area>
- <20200522030553.GK28818@bombadil.infradead.org>
+Subject: Re: [RFC 04/11] net: phy: Handle c22 regs presence better
+Message-ID: <20200525230946.GR1551@shell.armlinux.org.uk>
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-5-jeremy.linton@arm.com>
+ <20200523183731.GZ1551@shell.armlinux.org.uk>
+ <f85e4d86-ff58-0ed2-785b-c51626916140@arm.com>
+ <20200525100612.GM1551@shell.armlinux.org.uk>
+ <63ca13e3-11ea-3ddf-e1c7-90597d4a5f8c@arm.com>
+ <20200525220127.GO1551@shell.armlinux.org.uk>
+ <a9490c28-ebe1-ed6d-e65e-2e1d0a06386b@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522030553.GK28818@bombadil.infradead.org>
+In-Reply-To: <a9490c28-ebe1-ed6d-e65e-2e1d0a06386b@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
-        a=A0qFvS8_A0EZQLsPnN8A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 08:05:53PM -0700, Matthew Wilcox wrote:
-> On Fri, May 22, 2020 at 12:57:51PM +1000, Dave Chinner wrote:
-> > On Thu, May 21, 2020 at 05:04:11PM -0700, Matthew Wilcox wrote:
-> > > On Fri, May 22, 2020 at 08:49:06AM +1000, Dave Chinner wrote:
-> > > > Ok, so the main issue I have with the filesystem/iomap side of
-> > > > things is that it appears to be adding "transparent huge page"
-> > > > awareness to the filesysetm code, not "large page support".
-> > > > 
-> > > > For people that aren't aware of the difference between the
-> > > > transparent huge and and a normal compound page (e.g. I have no idea
-> > > > what the difference is), this is likely to cause problems,
-> > > > especially as you haven't explained at all in this description why
-> > > > transparent huge pages are being used rather than bog standard
-> > > > compound pages.
+On Mon, May 25, 2020 at 05:22:07PM -0500, Jeremy Linton wrote:
+> On 5/25/20 5:01 PM, Russell King - ARM Linux admin wrote:
+> > On Mon, May 25, 2020 at 04:51:16PM -0500, Jeremy Linton wrote:
+> > > Hi,
 > > > 
-> > > The primary reason to use a different name from compound_*
-> > > is so that it can be compiled out for systems that don't enable
-> > > CONFIG_TRANSPARENT_HUGEPAGE.  So THPs are compound pages, as they always
-> > > have been, but for a filesystem, using thp_size() will compile to either
-> > > page_size() or PAGE_SIZE depending on CONFIG_TRANSPARENT_HUGEPAGE.
+> > > On 5/25/20 5:06 AM, Russell King - ARM Linux admin wrote:
+> > > > On Sun, May 24, 2020 at 10:34:13PM -0500, Jeremy Linton wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On 5/23/20 1:37 PM, Russell King - ARM Linux admin wrote:
+> > > > > > On Fri, May 22, 2020 at 04:30:52PM -0500, Jeremy Linton wrote:
+> > > > > > > Until this point, we have been sanitizing the c22
+> > > > > > > regs presence bit out of all the MMD device lists.
+> > > > > > > This is incorrect as it causes the 0xFFFFFFFF checks
+> > > > > > > to incorrectly fail. Further, it turns out that we
+> > > > > > > want to utilize this flag to make a determination that
+> > > > > > > there is actually a phy at this location and we should
+> > > > > > > be accessing it using c22.
+> > > > > > > 
+> > > > > > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> > > > > > > ---
+> > > > > > >     drivers/net/phy/phy_device.c | 16 +++++++++++++---
+> > > > > > >     1 file changed, 13 insertions(+), 3 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> > > > > > > index f0761fa5e40b..2d677490ecab 100644
+> > > > > > > --- a/drivers/net/phy/phy_device.c
+> > > > > > > +++ b/drivers/net/phy/phy_device.c
+> > > > > > > @@ -689,9 +689,6 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
+> > > > > > >     		return -EIO;
+> > > > > > >     	*devices_in_package |= phy_reg;
+> > > > > > > -	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
+> > > > > > > -	*devices_in_package &= ~BIT(0);
+> > > > > > > -
+> > > > > > >     	return 0;
+> > > > > > >     }
+> > > > > > > @@ -742,6 +739,8 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+> > > > > > >     	int i;
+> > > > > > >     	const int num_ids = ARRAY_SIZE(c45_ids->device_ids);
+> > > > > > >     	u32 *devs = &c45_ids->devices_in_package;
+> > > > > > > +	bool c22_present = false;
+> > > > > > > +	bool valid_id = false;
+> > > > > > >     	/* Find first non-zero Devices In package. Device zero is reserved
+> > > > > > >     	 * for 802.3 c45 complied PHYs, so don't probe it at first.
+> > > > > > > @@ -770,6 +769,10 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+> > > > > > >     		return 0;
+> > > > > > >     	}
+> > > > > > > +	/* Bit 0 doesn't represent a device, it indicates c22 regs presence */
+> > > > > > > +	c22_present = *devs & BIT(0);
+> > > > > > > +	*devs &= ~BIT(0);
+> > > > > > > +
+> > > > > > >     	/* Now probe Device Identifiers for each device present. */
+> > > > > > >     	for (i = 1; i < num_ids; i++) {
+> > > > > > >     		if (!(c45_ids->devices_in_package & (1 << i)))
+> > > > > > > @@ -778,6 +781,13 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+> > > > > > >     		ret = _get_phy_id(bus, addr, i, &c45_ids->device_ids[i], true);
+> > > > > > >     		if (ret < 0)
+> > > > > > >     			return ret;
+> > > > > > > +		if (valid_phy_id(c45_ids->device_ids[i]))
+> > > > > > > +			valid_id = true;
+> > > > > > 
+> > > > > > Here you are using your "devices in package" validator to validate the
+> > > > > > PHY ID value.  One of the things it does is mask this value with
+> > > > > > 0x1fffffff.  That means you lose some of the vendor OUI.  To me, this
+> > > > > > looks completely wrong.
+> > > > > 
+> > > > > I think in this case I was just using it like the comment in
+> > > > > get_phy_device() "if the phy_id is mostly F's, there is no device here".
+> > > > > 
+> > > > > My understanding is that the code is trying to avoid the 0xFFFFFFFF returns
+> > > > > that seem to indicate "bus ok, phy didn't respond".
+> > > > > 
+> > > > > I just checked the OUI registration, and while there are a couple OUI's
+> > > > > registered that have a number of FFF's in them, none of those cases seems to
+> > > > > overlap sufficiently to cause this to throw them out. Plus a phy would also
+> > > > > have to have model+revision set to 'F's. So while might be possible, if
+> > > > > unlikely, at the moment I think the OUI registration keeps this from being a
+> > > > > problem. Particularly, if i'm reading the mapping correctly, the OUI mapping
+> > > > > guarantees that the field cannot be all '1's due to the OUI having X & M
+> > > > > bits cleared. It sort of looks like the mapping is trying to lose those
+> > > > > bits, by tossing bit 1 & 2, but the X & M are in the wrong octet (AFAIK, I
+> > > > > just read it three times cause it didn't make any sense).
+> > > > 
+> > > > I should also note that we have at least one supported PHY where one
+> > > > of the MMDs returns 0xfffe for even numbered registers and 0x0000 for
+> > > > odd numbered registers in one of the vendor MMDs for addresses 0
+> > > > through 0xefff - which has a bit set in the devices-in-package.
+> > > > 
+> > > > It also returns 0x0082 for almost every register in MMD 2, but MMD 2's
+> > > > devices-in-package bit is clear in most of the valid MMDs, so we
+> > > > shouldn't touch it.
+> > > > 
+> > > > These reveal the problem of randomly probing MMDs - they can return
+> > > > unexpected values and not be as well behaved as we would like them to
+> > > > be.  Using register 8 to detect presence may be beneficial, but that
+> > > > may also introduce problems as we haven't used that before (and we
+> > > > don't know whether any PHY that wrong.)  I know at least the 88x3310
+> > > > gets it right for all except the vendor MMDs, where the low addresses
+> > > > appear non-confromant to the 802.3 specs.  Both vendor MMDs are
+> > > > definitely implemented, just not with anything conforming to 802.3.
+> > > 
+> > > Yes, we know even for the NXP reference hardware, one of the phy's doesn't
+> > > probe out correctly because it doesn't respond to the ieee defined
+> > > registers. I think at this point, there really isn't anything we can do
+> > > about that unless we involve the (ACPI) firmware in currently nonstandard
+> > > behaviors.
+> > > 
+> > > So, my goals here have been to first, not break anything, and then do a
+> > > slightly better job finding phy's that are (mostly?) responding correctly to
+> > > the 802.3 spec. So we can say "if you hardware is ACPI conformant, and you
+> > > have IEEE conformant phy's you should be ok". So, for your example phy, I
+> > > guess the immediate answer is "use DT" or "find a conformant phy", or even
+> > > "abstract it in the firmware and use a mailbox interface".
 > > 
-> > Again, why is this dependent on THP? We can allocate compound pages
-> > without using THP, so why only allow the page cache to use larger
-> > pages when THP is configured?
+> > You haven't understood.  The PHY does conform for most of the MMDs,
+> > but there are a number that do not conform.
 > 
-> We have too many CONFIG options.  My brain can't cope with adding
-> CONFIG_LARGE_PAGES because then we might have neither THP nor LP, LP and
-> not THP, THP and not LP or both THP and LP.  And of course HUGETLBFS,
-> which has its own special set of issues that one has to think about when
-> dealing with the page cache.
+> Probably...
+> 
+> Except that i'm not sure how that is a problem at the moment, its still
+> going to trigger as a found phy, and walk the same mmd list as before
+> requesting drivers. Those drivers haven't changed their behavior so where is
+> the problem? If there is a problem its in 7/11 where things are getting
+> kicked due to seemingly invalid Ids.
+> 
+> The 1/11 devices=0 case actually appears to be a bug i'm fixing because you
+> won't get an ID or a MMD list from that (before or after).
 
-That sounds like something that should be fixed. :/
+I think I've just flattened that argument in my immediately preceding
+reply on the Cortina situation; I think you've grossly misread that
+through not fully researching the history and then finding the
+existing users.
 
-Really, I don't care about the historical mechanisms that people can
-configure large pages with. If the mm subsystem does not have a
-unified abstraction and API for working with large pages, then that
-is the first problem that needs to be addressed before other
-subsystems start trying to use large pages. 
+There is no bug that you are fixing from what I can see.
 
-i.e. a filesystem developer doesn't care how the mm subsystem is
-allocating/managing large pages, we just want to be able to treat
-large pages exactly the same way as we treat single pages. There
-should be exactly zero difference between them at the API level.
-
-> So, either large pages becomes part of the base kernel and you
-> always get them, or there's a CONFIG option to enable them and it's
-> CONFIG_TRANSPARENT_HUGEPAGE.  I chose the latter.
-
-Please make the API part of the base kernel. Then you can hide all
-these whacky mm level config options behind it so that code that
-interacts with large pages just doesn't have to care about what type
-of large page infrastructure the user has configured.
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
