@@ -2,101 +2,75 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E637C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD97C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B6420776
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T1py55ml"
+	by mail.kernel.org (Postfix) with ESMTP id C775F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 17:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391318AbgEYRY5 (ORCPT
+        id S2391329AbgEYR20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 13:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389370AbgEYRY4 (ORCPT
+        Mon, 25 May 2020 13:28:26 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:42355 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388480AbgEYR20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 13:24:56 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7701C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 10:24:56 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f83so17967440qke.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 10:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bvESvaLhhtdJGYqjlNfkZpxLTpkNUIrmn1w48gtvYac=;
-        b=T1py55mlsxBq628MiuFleZaRgFYOHjQ6EfTQhD+k4oVv+8/f18oDhYjFECMBxD4d00
-         ldCQ4gyeTwMuMwupGs4qyWt2k4Ub/Eit/LCdAKbn/+rRQSw5p+lIx4KKE4Mxhj6apM6N
-         KsTWKQUjSmfby8Oc1/B+7T6fTWD46YOMYFIj+7cfxI/8/z8ilH3jeyXSsf6B+u4JGC0p
-         BEaGO7mQ5euyrg56ziuWff04oTIIsdb7n1WYRsUfbf9SHTwIIXCgX6llBWT7jYb/ikI+
-         Ejkl52FUMjc/F58RXqVP7Bab1lH6EE0iOebK2MfHF0oI5x7sLBET/QIcIMbeeX1UjXVz
-         YSRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bvESvaLhhtdJGYqjlNfkZpxLTpkNUIrmn1w48gtvYac=;
-        b=aCaYdDHe8DczEc4im4oLSfYnejlps1HCZJPTqPjZhY+dbqmIIajJHab5/uhdlKAUrH
-         2PgHE/q8d4KMHYsO7oYHlhgXiZZeYLPduA7Xl4KJLLl0a8UECozZqH9GRIQcjIOcLV5r
-         qoeu3+2puVgcbwrTiJA56a3be4Sw40B340Eg945HNs2M7Ig+UvgtD5u8G2i52TAP+Wpy
-         w2nc0pYdrCekA/4xeST253f4ByxlCpCOICCKACsQ+cKf3RMnp2+kblJbQex5Xu6eb3eo
-         EfDgeu7MfY4Y9YrxwYKVHrRZcZwrVTND3AXzTWyNsuOgLkr5qY53JHOoaW7ej+ZdkLuB
-         DmlA==
-X-Gm-Message-State: AOAM533qZcg5EF9qdxTTcFuY8V5LTmVk5gF3NWDv1T4UGivvjmq1EKXD
-        /mp4COTsMsBnsrRvt9Dg7ITYxg==
-X-Google-Smtp-Source: ABdhPJwt8/BoSl0QE3JQ+vOSP7+bsmhmZCSKZlIhbS5D0sBTW4rLQ/3vprWwjhtpvRzmPRVEbzhz8A==
-X-Received: by 2002:a37:ef0e:: with SMTP id j14mr15376918qkk.292.1590427495958;
-        Mon, 25 May 2020 10:24:55 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id m13sm1361300qta.90.2020.05.25.10.24.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 10:24:55 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jdGqN-0007ja-5w; Mon, 25 May 2020 14:24:55 -0300
-Date:   Mon, 25 May 2020 14:24:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     wu000273@umn.edu
-Cc:     aditr@vmware.com, pv-drivers@vmware.com, dledford@redhat.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjlu@umn.edu
-Subject: Re: [PATCH] RDMA: fix missing pci disable in pvrdma_pci_probe()
-Message-ID: <20200525172455.GA29516@ziepe.ca>
-References: <20200523030457.16160-1-wu000273@umn.edu>
+        Mon, 25 May 2020 13:28:26 -0400
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 73A0220000C;
+        Mon, 25 May 2020 17:28:18 +0000 (UTC)
+Date:   Mon, 25 May 2020 10:28:15 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+        jslaby@suse.com, andriy.shevchenko@linux.intel.com,
+        lukas@wunner.de, heikki.krogerus@linux.intel.com, vigneshr@ti.com,
+        linux-kernel@vger.kernel.org, fido_max@inbox.ru,
+        radu-andrei.bulie@nxp.com
+Subject: Re: [PATCH] serial: 8250: probe all 16550A variants by default
+Message-ID: <20200525172815.GA445190@localhost>
+References: <20200525130238.3614179-1-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200523030457.16160-1-wu000273@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200525130238.3614179-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:04:57PM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
-> 
-> In function pvrdma_pci_probe(), pdev was not disabled in one error
-> path. Thus replace the jump target “err_free_device” by
-> "err_disable_pdev".
-> 
-> Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-> ---
->  drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, May 25, 2020 at 04:02:38PM +0300, Vladimir Oltean wrote:
+> On NXP T1040, the UART is typically detected as 16550A_FSL64. After said
+> patch, it gets detected as plain 16550A and the Linux console is
+> completely garbled and missing characters.
 
-Applied to for-next, thanks
+Interesting that there's *new* powerpc hardware that needs these
+variants. I based the patch on the fact that, on x86 at least, hardware
+using these variants hasn't been made for a long time.
 
-Jason
+In the hopes of preserving at least part of the benefit of the patch,
+could you please change it to `default y if !X86_64`?
+
+>  drivers/tty/serial/8250/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+> index af0688156dd0..89c7ecb55619 100644
+> --- a/drivers/tty/serial/8250/Kconfig
+> +++ b/drivers/tty/serial/8250/Kconfig
+> @@ -63,6 +63,7 @@ config SERIAL_8250_PNP
+>  config SERIAL_8250_16550A_VARIANTS
+>  	bool "Support for variants of the 16550A serial port"
+>  	depends on SERIAL_8250
+> +	default y
+>  	help
+>  	  The 8250 driver can probe for many variants of the venerable 16550A
+>  	  serial port. Doing so takes additional time at boot.
+> -- 
+> 2.25.1
+> 
