@@ -2,108 +2,133 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0E142070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C58E2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="O94WIHSd"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FTGZhnUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390500AbgEYMKa (ORCPT
+        id S2390501AbgEYMRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390461AbgEYMK3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:10:29 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5341DC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:10:29 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u13so6340422wml.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:10:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=forissier-org.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hl6rYKWqUm/7GRxqy3lWiUdASrTU+laQ3IaMy3yViVU=;
-        b=O94WIHSdPf5AmAtZ9dSscMQStIjb5iIJUHRucZqQMwLpEMpv9H/2ZX5Yy0BoU9JQ8m
-         jK66pVRMLedoePLd8XY98+xo3nO1/uep5jfPUhMsqUIFJzT8e7YgIthzc8iJKrPte5lc
-         ggvcoawUdavMXWqNFUumCs0h9fHzxbsyoQ9AHygorbPy0VjYR3ss2xntFcKBLYdq9uU3
-         CfA9yT5FtzjRaob8Tjd40SwlsjGI0Emz1Fd/Hhp6dAc9rGvWTE9FHODNq14RKpuDXiTs
-         lWTtNJsJQeIkalzwJiIv2jJ3VDEz6YoNkWZ3nMWKG24YHOCJ7K4nEgzwcgQu7JCVZM3c
-         yg0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hl6rYKWqUm/7GRxqy3lWiUdASrTU+laQ3IaMy3yViVU=;
-        b=Hm7jcJwdpc4UWF8DUj1K0nvjJF0fucBnJkrkYJhFjjEa/tzlzdBR0uv/gNABB/YQiQ
-         jjDqCP6QTA6o5vEIWRWaPr9q9DSf6bizU5ZkUchTqWXv7KaY0BFZ8ms14h4GSwrmRMik
-         sFMDNL3k8xuyCtg5i41uQBd6UyP2mzVFD4wWTYkUTkPNYRTlNo8ROS/KOw0Osz4LWqSN
-         pBHmjNotA2JX6mjOVbvHW8zXZe2MEpXLcySSM0o0PHU8+qtTVrgWeYQY8w4VBv71/lIc
-         O5J8f/HsB/SfuLSM5DzZxMKIxvpNIoRfxSnF8R+l56EiSbX8asUPIA7sxG6EMxC0RNS0
-         GO2g==
-X-Gm-Message-State: AOAM531FDRqkuu6gMfhI/tyGOnOxyK5p2ucztX4P8nl+i8mBux6sJ4am
-        H/4ghTabsYrCTIFR+2OK3yCkSQ==
-X-Google-Smtp-Source: ABdhPJzYVQBgZJg06rhrOBIA8uy79S/hgyrFcLeou5/MTwusJ/Wd2NaF1gQiRO7UWy5KyU52Y6G9xg==
-X-Received: by 2002:a1c:7714:: with SMTP id t20mr23981266wmi.132.1590408627896;
-        Mon, 25 May 2020 05:10:27 -0700 (PDT)
-Received: from ?IPv6:2a01:e0a:269:e210:80:e64c:847d:b568? ([2a01:e0a:269:e210:80:e64c:847d:b568])
-        by smtp.gmail.com with ESMTPSA id z6sm3166325wrh.79.2020.05.25.05.10.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 05:10:26 -0700 (PDT)
-Subject: Re: [Tee-dev] [PATCHv3 2/3] optee: use uuid for sysfs driver entry
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jgg@ziepe.ca, arnd@linaro.org, linux-integrity@vger.kernel.org,
-        peterhuewe@gmx.de
-References: <20200525115235.5405-1-maxim.uvarov@linaro.org>
- <20200525115235.5405-3-maxim.uvarov@linaro.org>
-From:   Jerome Forissier <jerome@forissier.org>
-Message-ID: <7de3fea9-cd88-4dbf-aa27-3cb188fd6e85@forissier.org>
-Date:   Mon, 25 May 2020 14:10:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 08:17:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:35999 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390196AbgEYMRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 08:17:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Vx0t2sHtz9sRK;
+        Mon, 25 May 2020 22:17:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590409023;
+        bh=fYfq6YA5ZEavJZmtkIPGM1/uqwRFCyotFeFe+s7lg6s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FTGZhnUSi5nrV+vrD9Wl/IZbHqC0qLz0UUJRzmIEliqAy2jCoHOJWiOWJ+KUm/XfS
+         FEfEfj3zE7RA03lgEpvzGOIGJdNhSZrQEjuH+Q63ak6uWHueIcfQt1DxjS+3kkhDMu
+         E3Ri/zwZX6wm3AzHPC58Itg7AxzBhPgHg/rQK2ZqH2aej3gXiAyGCattkqHhDZ+f+V
+         +Dpi4qSKZ6FHgXRV8upOB5ff1ACtnwurIsuLgp43KBGUg+iIPoaf0oydnrpwSUQ4i/
+         oeTUdEg1wz5g/asreuqYehWaA6tpczzwO62kGCh8GgaPQng7zQr2hhFe7O/Zll4DhO
+         3MlWXIvuacoFQ==
+Date:   Mon, 25 May 2020 22:17:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michel Lespinasse <walken@google.com>
+Subject: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200525221700.0aa347f7@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200525115235.5405-3-maxim.uvarov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/25/20 1:52 PM, Maxim Uvarov wrote:
-> Optee device names for sysfs needed to be unique
+After merging the akpm tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-s/Optee/OP-TEE/
-s/needed/need/
+In file included from include/linux/kernel.h:14,
+                 from mm/gup.c:2:
+mm/gup.c: In function 'internal_get_user_pages_fast':
+mm/gup.c:2732:33: error: 'struct mm_struct' has no member named 'mmap_sem';=
+ did you mean 'mmap_base'?
+ 2732 |   might_lock_read(&current->mm->mmap_sem);
+      |                                 ^~~~~~~~
 
-> and it's better if they will mean something. UUID for name
-> looks like good solution:
-> /sys/bus/tee/devices/optee-clnt-<uuid>
+Caused by commit
 
-How about mentioning it is the UUID of the Trusted Application on the
-TEE side?
+  64fe66e8a95e ("mmap locking API: rename mmap_sem to mmap_lock")
 
-> 
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> ---
->  drivers/tee/optee/device.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+fron the akpm tree interacting with commit
 
-Thanks,
--- 
-Jerome
+  b1fc8b5ddb4e ("mm/gup: might_lock_read(mmap_sem) in get_user_pages_fast()=
+")
+
+from the akpm-current tree.
+
+I added the following patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 25 May 2020 22:11:51 +1000
+Subject: [PATCH] mm/gup: update for mmap_sem rename
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/gup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index 8977e5fe9843..f4bca3de0b4b 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2729,7 +2729,7 @@ static int internal_get_user_pages_fast(unsigned long=
+ start, int nr_pages,
+ 		return -EINVAL;
+=20
+ 	if (!(gup_flags & FOLL_FAST_ONLY))
+-		might_lock_read(&current->mm->mmap_sem);
++		might_lock_read(&current->mm->mmap_lock);
+=20
+ 	start =3D untagged_addr(start) & PAGE_MASK;
+ 	addr =3D start;
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7LtzwACgkQAVBC80lX
+0GxCqAf8CMQxqEoEeB0A9cquiky5dJtTg8uOtMvLSuKnwgwU2PC/PXw28rohfJcU
+OpWtNENKV20HsCQ8L4fp5i/0DFOe2Y8GInsVgIUiEqjYN8qB/x/tRNpvumGnwJ9M
+/7wFv+V0oQ8T5D4zur1ODysYeJ5dC63Z6JS+xBXWUqA2kW944a7SwJGw1L+Ch7XG
+5+Z2N2V1Um4nGZ9/qNCoGPeEVIz7H0FG0bDNZzZ4QuxtD2SIqffLGGAWfNaqCnrc
+Mjt3o6f5LFuXF1H5dZxIUtWkzzv1e4ZvbvHAR56CD3D7DGBvOEF1bS/mqKNAcoOY
+/EYOwnm6OysnTaH+z92kkT5nfFBlJg==
+=AlaN
+-----END PGP SIGNATURE-----
+
+--Sig_/Dr7XEb5Vh9NKhV2ex.+CD5f--
