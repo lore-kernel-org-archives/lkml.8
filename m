@@ -2,318 +2,189 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D15C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF32C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 699ED2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="S5/2tK2O"
+	by mail.kernel.org (Postfix) with ESMTP id E2CB8207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404223AbgEYPei (ORCPT
+        id S2404232AbgEYPfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404134AbgEYPeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:34:37 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2362AC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:34:36 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c11so19024963ljn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=olnoNQxuknVW4bQuL5l9tebXpdimIfOj9TqotW4cTeA=;
-        b=S5/2tK2OydDqOOPz92GXiwHcWA5BpMIaQdb6yJEiIONflcVtdqNyt15Npm9Ejh/Yib
-         jqdHyq3ZArOPYiiaPcNQtpFA2tbSL6MsvhagZVCcgbzp7/4BWge00aJx/DScLdxmgVGz
-         agEtZukX8gi/P9gkH/lOCz+74fS62K7kSH57gAyHOj+xqfjlqEAL3ZnAGv/DOweDoBrF
-         wPSyOn/pvGQi1v0fMnCKoiZzqEoLV/3lIfn+vnjyP24ZOwvR806MoLSm53KcI47Vs6W8
-         xkKXLcYCAZVWf41kjTVWjQmJtWfFK/2Z0DTutZbICKnnpsaSRo7EtowkAjR5G3TCnzO3
-         VrIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=olnoNQxuknVW4bQuL5l9tebXpdimIfOj9TqotW4cTeA=;
-        b=e/67POYfypdjKf4KB0mWfc21tiPHJ2/8lNqwP85HC9gYmst7ZsQWnYYsEQNLDusKcU
-         KRGrRUSlfEgaWA+Gt67i+D/fFSOMijgOliy4jlIdC7hDI5j9vHsS53tEzCUbZs73dqQ1
-         biqhtA13ruZ4enw/0zf9g2QfppgbaeF6WEYBbVCT/vuKkrpw7yZZ1TSaGBbANZWCKnUB
-         MRZdGi7qfQvEUl3W1SiSwTqrL9hroWDe5DXpNU6BFyVNPwHgCZX480sVKMRdJVEdQmUg
-         tLD/MhnxcaQnzfsAyhjGwJWJKnt1GA0YIcD3Q2J24vAVh96N8Ah4AwbW7yIjHq60rG/g
-         pTeg==
-X-Gm-Message-State: AOAM5302sLolWsRDBDhqhTddeDKzIkPreJs6ElKk3cn/V2wQHmhXfIjs
-        lY/ub5n0ZMervABpH8hSMeo+ew==
-X-Google-Smtp-Source: ABdhPJwx1Dck3qKU28qGLJSfQYnOWshmUttRmy/DfNjZQo9rEFN1phiSf4LGY2ZslMm4HFfBhPyrPg==
-X-Received: by 2002:a2e:701a:: with SMTP id l26mr14906546ljc.50.1590420874530;
-        Mon, 25 May 2020 08:34:34 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r7sm5036541lfc.79.2020.05.25.08.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 08:34:33 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 23ECA10230F; Mon, 25 May 2020 18:34:35 +0300 (+03)
-Date:   Mon, 25 May 2020 18:34:35 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 09/16] KVM: Protected memory extension
-Message-ID: <20200525153435.c6mx3pjryyk4j4go@box>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200522125214.31348-10-kirill.shutemov@linux.intel.com>
- <87367o828i.fsf@vitty.brq.redhat.com>
+        Mon, 25 May 2020 11:35:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39596 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404083AbgEYPfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 11:35:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5E655AC49;
+        Mon, 25 May 2020 15:35:19 +0000 (UTC)
+Subject: Re: [PATCH] mm: dump_page: add debugfs file for dumping page state by
+ pfn
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <159041635119.987025.7321864888027213705.stgit@buzz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <cccdc0a9-0f13-232d-cdc9-9e81f90c914b@suse.cz>
+Date:   Mon, 25 May 2020 17:35:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87367o828i.fsf@vitty.brq.redhat.com>
+In-Reply-To: <159041635119.987025.7321864888027213705.stgit@buzz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 05:26:37PM +0200, Vitaly Kuznetsov wrote:
-> "Kirill A. Shutemov" <kirill@shutemov.name> writes:
+On 5/25/20 4:19 PM, Konstantin Khlebnikov wrote:
+> Tool 'page-types' could list pages mapped by process or file cache pages,
+> but it shows only limited amount of state exported via procfs.
 > 
-> > Add infrastructure that handles protected memory extension.
-> >
-> > Arch-specific code has to provide hypercalls and define non-zero
-> > VM_KVM_PROTECTED.
-> >
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  include/linux/kvm_host.h |   4 ++
-> >  mm/mprotect.c            |   1 +
-> >  virt/kvm/kvm_main.c      | 131 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 136 insertions(+)
-> >
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index bd0bb600f610..d7072f6d6aa0 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -700,6 +700,10 @@ void kvm_arch_flush_shadow_all(struct kvm *kvm);
-> >  void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
-> >  				   struct kvm_memory_slot *slot);
-> >  
-> > +int kvm_protect_all_memory(struct kvm *kvm);
-> > +int kvm_protect_memory(struct kvm *kvm,
-> > +		       unsigned long gfn, unsigned long npages, bool protect);
-> > +
-> >  int gfn_to_page_many_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
-> >  			    struct page **pages, int nr_pages);
-> >  
-> > diff --git a/mm/mprotect.c b/mm/mprotect.c
-> > index 494192ca954b..552be3b4c80a 100644
-> > --- a/mm/mprotect.c
-> > +++ b/mm/mprotect.c
-> > @@ -505,6 +505,7 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
-> >  	vm_unacct_memory(charged);
-> >  	return error;
-> >  }
-> > +EXPORT_SYMBOL_GPL(mprotect_fixup);
-> >  
-> >  /*
-> >   * pkey==-1 when doing a legacy mprotect()
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 530af95efdf3..07d45da5d2aa 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -155,6 +155,8 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm);
-> >  static unsigned long long kvm_createvm_count;
-> >  static unsigned long long kvm_active_vms;
-> >  
-> > +static int protect_memory(unsigned long start, unsigned long end, bool protect);
-> > +
-> >  __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-> >  		unsigned long start, unsigned long end, bool blockable)
-> >  {
-> > @@ -1309,6 +1311,14 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >  	if (r)
-> >  		goto out_bitmap;
-> >  
-> > +	if (mem->memory_size && kvm->mem_protected) {
-> > +		r = protect_memory(new.userspace_addr,
-> > +				   new.userspace_addr + new.npages * PAGE_SIZE,
-> > +				   true);
-> > +		if (r)
-> > +			goto out_bitmap;
-> > +	}
-> > +
-> >  	if (old.dirty_bitmap && !new.dirty_bitmap)
-> >  		kvm_destroy_dirty_bitmap(&old);
-> >  	return 0;
-> > @@ -2652,6 +2662,127 @@ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_vcpu_mark_page_dirty);
-> >  
-> > +static int protect_memory(unsigned long start, unsigned long end, bool protect)
-> > +{
-> > +	struct mm_struct *mm = current->mm;
-> > +	struct vm_area_struct *vma, *prev;
-> > +	int ret;
-> > +
-> > +	if (down_write_killable(&mm->mmap_sem))
-> > +		return -EINTR;
-> > +
-> > +	ret = -ENOMEM;
-> > +	vma = find_vma(current->mm, start);
-> > +	if (!vma)
-> > +		goto out;
-> > +
-> > +	ret = -EINVAL;
-> > +	if (vma->vm_start > start)
-> > +		goto out;
-> > +
-> > +	if (start > vma->vm_start)
-> > +		prev = vma;
-> > +	else
-> > +		prev = vma->vm_prev;
-> > +
-> > +	ret = 0;
-> > +	while (true) {
-> > +		unsigned long newflags, tmp;
-> > +
-> > +		tmp = vma->vm_end;
-> > +		if (tmp > end)
-> > +			tmp = end;
-> > +
-> > +		newflags = vma->vm_flags;
-> > +		if (protect)
-> > +			newflags |= VM_KVM_PROTECTED;
-> > +		else
-> > +			newflags &= ~VM_KVM_PROTECTED;
-> > +
-> > +		/* The VMA has been handled as part of other memslot */
-> > +		if (newflags == vma->vm_flags)
-> > +			goto next;
-> > +
-> > +		ret = mprotect_fixup(vma, &prev, start, tmp, newflags);
-> > +		if (ret)
-> > +			goto out;
-> > +
-> > +next:
-> > +		start = tmp;
-> > +		if (start < prev->vm_end)
-> > +			start = prev->vm_end;
-> > +
-> > +		if (start >= end)
-> > +			goto out;
-> > +
-> > +		vma = prev->vm_next;
-> > +		if (!vma || vma->vm_start != start) {
-> > +			ret = -ENOMEM;
-> > +			goto out;
-> > +		}
-> > +	}
-> > +out:
-> > +	up_write(&mm->mmap_sem);
-> > +	return ret;
-> > +}
-> > +
-> > +int kvm_protect_memory(struct kvm *kvm,
-> > +		       unsigned long gfn, unsigned long npages, bool protect)
-> > +{
-> > +	struct kvm_memory_slot *memslot;
-> > +	unsigned long start, end;
-> > +	gfn_t numpages;
-> > +
-> > +	if (!VM_KVM_PROTECTED)
-> > +		return -KVM_ENOSYS;
-> > +
-> > +	if (!npages)
-> > +		return 0;
-> > +
-> > +	memslot = gfn_to_memslot(kvm, gfn);
-> > +	/* Not backed by memory. It's okay. */
-> > +	if (!memslot)
-> > +		return 0;
-> > +
-> > +	start = gfn_to_hva_many(memslot, gfn, &numpages);
-> > +	end = start + npages * PAGE_SIZE;
-> > +
-> > +	/* XXX: Share range across memory slots? */
-> > +	if (WARN_ON(numpages < npages))
-> > +		return -EINVAL;
-> > +
-> > +	return protect_memory(start, end, protect);
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_protect_memory);
-> > +
-> > +int kvm_protect_all_memory(struct kvm *kvm)
-> > +{
-> > +	struct kvm_memslots *slots;
-> > +	struct kvm_memory_slot *memslot;
-> > +	unsigned long start, end;
-> > +	int i, ret = 0;;
-> > +
-> > +	if (!VM_KVM_PROTECTED)
-> > +		return -KVM_ENOSYS;
-> > +
-> > +	mutex_lock(&kvm->slots_lock);
-> > +	kvm->mem_protected = true;
+> Let's employ existing helper dump_page() to reach remaining information:
+> writing pfn into /sys/kernel/debug/dump_page dumps state into kernel log.
+
+Yeah that's indeed useful, however I'm less sure if kernel log is the proper way
+to extract the data. For example IIRC with the page_owner file can "seek to pfn"
+to dump it, although that makes it somewhat harder to use.
+
+Or we could write pfn to one file and read the dump from another one? But that's
+not atomic.
+
+Perhaps if we could do something like "cat /sys/kernel/debug/dump_page/<pfn>"
+without all the pfns being actually listed in the dump_page directory with "ls"?
+Is that possible?
+
+> # echo 0x37c43c > /sys/kernel/debug/dump_page
+> # dmesg | tail -6
+>  page:ffffcb0b0df10f00 refcount:1 mapcount:0 mapping:000000007755d3d9 index:0x30
+>  0xffffffffae4239e0 name:"libGeoIP.so.1.6.9"
+>  flags: 0x200000000020014(uptodate|lru|mappedtodisk)
+>  raw: 0200000000020014 ffffcb0b187fd288 ffffcb0b189e6248 ffff9528a04afe10
+>  raw: 0000000000000030 0000000000000000 00000001ffffffff 0000000000000000
+>  page dumped because: debugfs request
 > 
-> What will happen upon guest reboot? Do we need to unprotect everything
-> to make sure we'll be able to boot? Also, after the reboot how will the
-> guest know that it is protected and needs to unprotect things? -> see my
-> idea about converting KVM_HC_ENABLE_MEM_PROTECTED to a stateful MSR (but
-> we'll likely have to reset it upon reboot anyway).
-
-That's extremely good question. I have not considered reboot. I tend to use
--no-reboot in my setup.
-
-I'll think how to deal with reboot. I don't know how it works now to give
-a good answer.
-
-The may not be a good solution: unprotecting memory on reboot means we
-expose user data. We can wipe the data before unprotecting, but we should
-not wipe BIOS and anything else that is required on reboot. I donno.
-
-> > +	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-> > +		slots = __kvm_memslots(kvm, i);
-> > +		kvm_for_each_memslot(memslot, slots) {
-> > +			start = memslot->userspace_addr;
-> > +			end = start + memslot->npages * PAGE_SIZE;
-> > +			ret = protect_memory(start, end, true);
-> > +			if (ret)
-> > +				goto out;
-> > +		}
-> > +	}
-> > +out:
-> > +	mutex_unlock(&kvm->slots_lock);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_protect_all_memory);
-> > +
-> >  void kvm_sigset_activate(struct kvm_vcpu *vcpu)
-> >  {
-> >  	if (!vcpu->sigset_active)
+> With CONFIG_PAGE_OWNER=y shows also stacks for last page alloc and free:
 > 
-> -- 
-> Vitaly
+>  page:ffffea0018fff480 refcount:1 mapcount:1 mapping:0000000000000000 index:0x7f9f28f62
+>  anon flags: 0x100000000080034(uptodate|lru|active|swapbacked)
+>  raw: 0100000000080034 ffffea00184140c8 ffffea0018517d88 ffff8886076ba161
+>  raw: 00000007f9f28f62 0000000000000000 0000000100000000 ffff888bfc79f000
+>  page dumped because: debugfs request
+>  page->mem_cgroup:ffff888bfc79f000
+>  page_owner tracks the page as allocated
+>  page last allocated via order 0, migratetype Movable, gfp_mask 0x100dca(GFP_HIGHUSER_MOVABLE|__GFP_ZERO)
+>   prep_new_page+0x139/0x1a0
+>   get_page_from_freelist+0xde9/0x14e0
+>   __alloc_pages_nodemask+0x18b/0x360
+>   alloc_pages_vma+0x7c/0x270
+>   __handle_mm_fault+0xd40/0x12b0
+>   handle_mm_fault+0xe7/0x1e0
+>   do_page_fault+0x2d5/0x610
+>   page_fault+0x2f/0x40
+>  page last free stack trace:
+>   free_pcp_prepare+0x11e/0x1c0
+>   free_unref_page_list+0x71/0x180
+>   release_pages+0x31e/0x480
+>   tlb_flush_mmu+0x44/0x150
+>   tlb_finish_mmu+0x3d/0x70
+>   exit_mmap+0xdd/0x1a0
+>   mmput+0x70/0x140
+>   do_exit+0x33f/0xc40
+>   do_group_exit+0x3a/0xa0
+>   __x64_sys_exit_group+0x14/0x20
+>   do_syscall_64+0x48/0x130
+>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 > 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>  Documentation/admin-guide/mm/pagemap.rst |    3 +++
+>  Documentation/vm/page_owner.rst          |   10 ++++++++++
+>  mm/debug.c                               |   27 +++++++++++++++++++++++++++
+>  3 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
+> index 340a5aee9b80..663ad5490d72 100644
+> --- a/Documentation/admin-guide/mm/pagemap.rst
+> +++ b/Documentation/admin-guide/mm/pagemap.rst
+> @@ -205,3 +205,6 @@ Before Linux 3.11 pagemap bits 55-60 were used for "page-shift" (which is
+>  always 12 at most architectures). Since Linux 3.11 their meaning changes
+>  after first clear of soft-dirty bits. Since Linux 4.2 they are used for
+>  flags unconditionally.
+> +
+> +Page state could be dumped into kernel log by writing pfn in text form
+> +into /sys/kernel/debug/dump_page.
+> diff --git a/Documentation/vm/page_owner.rst b/Documentation/vm/page_owner.rst
+> index 0ed5ab8c7ab4..d4d4dc64c19d 100644
+> --- a/Documentation/vm/page_owner.rst
+> +++ b/Documentation/vm/page_owner.rst
+> @@ -88,3 +88,13 @@ Usage
+>  
+>     See the result about who allocated each page
+>     in the ``sorted_page_owner.txt``.
+> +
+> +Notes
+> +=====
+> +
+> +To lookup pages in file cache or mapped in process you could use interface
+> +pagemap documented in Documentation/admin-guide/mm/pagemap.rst or tool
+> +page-types in the tools/vm directory.
+> +
+> +Page state could be dumped into kernel log by writing pfn in text form
+> +into /sys/kernel/debug/dump_page.
+> diff --git a/mm/debug.c b/mm/debug.c
+> index 2189357f0987..5803f2b63d95 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/migrate.h>
+>  #include <linux/page_owner.h>
+>  #include <linux/ctype.h>
+> +#include <linux/debugfs.h>
+>  
+>  #include "internal.h"
+>  
+> @@ -147,6 +148,32 @@ void dump_page(struct page *page, const char *reason)
+>  }
+>  EXPORT_SYMBOL(dump_page);
+>  
+> +#ifdef CONFIG_DEBUG_FS
+> +static int dump_page_set(void *data, u64 pfn)
+> +{
+> +	struct page *page;
+> +
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
+> +	page = pfn_to_online_page(pfn);
+> +	if (!page)
+> +		return -ENXIO;
+> +
+> +	dump_page(page, "debugfs request");
+> +	return 0;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(dump_page_fops, NULL, dump_page_set, "%llx\n");
+> +
+> +static int __init dump_page_debugfs(void)
+> +{
+> +	debugfs_create_file_unsafe("dump_page", 0200, NULL, NULL,
+> +				   &dump_page_fops);
+> +	return 0;
+> +}
+> +late_initcall(dump_page_debugfs);
+> +#endif /* CONFIG_DEBUG_FS */
+> +
+>  #ifdef CONFIG_DEBUG_VM
+>  
+>  void dump_vma(const struct vm_area_struct *vma)
 > 
 
--- 
- Kirill A. Shutemov
