@@ -2,120 +2,156 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C882C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8384CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4D12070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590413173;
-	bh=YiX6rS4Wn1OzTQVu8bEgGFPdVP60PatK1jENKJ6TG4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WAPFlmtDu8l9ymYmSdm5rCN/QSnjbsP0UDTTlujMVCOacY/MF+jvjjuIeih6bca4P
-	 pUol0kO8+fT0Raj2SjT9CJh5lWDHq0DZE3zFlkR3v7vtBCHVK+Qmb3KeumsMcLLlrY
-	 4MRZRxSMieoGoR/c7JnlY8MiobHeOYUKP1tGc5oU=
+	by mail.kernel.org (Postfix) with ESMTP id 662E42078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390802AbgEYN0M (ORCPT
+        id S2390811AbgEYN0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390609AbgEYN0K (ORCPT
+        Mon, 25 May 2020 09:26:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37096 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388794AbgEYN0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:26:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551C9C061A0E;
-        Mon, 25 May 2020 06:26:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j16so4629611wrb.7;
-        Mon, 25 May 2020 06:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MP6DRNEuCMRyiUZleYcforgbKGB3a+zep0oAe43tg2I=;
-        b=fvrBvY4ibEdQQM5pF6/IquSIewV5ZavHaNrfE1JSOhz1kwkuaWt5LjmZc8u4KzkR0O
-         ccXuCuaUZHp3sPZM/3LCQMlxk0RCjGSpgBMsBx1i/rYSc8/OHkTul3XcBYnPwxkv8Pg5
-         64xnojveJsctzcQQzoCNIYbVF5+Vy5DvN8rtlL92/HgCVAQ11A+wP5WyvfFzRne5eHNJ
-         q1uQzJ5UpG4k72AodRlyhlpsyiaP9fB4vCl1dTUnGv2vlDl1BKLYP1tp9nUw7V2yBjCM
-         uRt51NuJUfFTu+whDAMZ7GUe5UAfvO1aiSuNw6uQcjyBhyK1aPTHn+Ea+uyUZQhviM3W
-         j1Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MP6DRNEuCMRyiUZleYcforgbKGB3a+zep0oAe43tg2I=;
-        b=l1pf+RKJb3k8g/YLXflX21KGmXl+aFRlZOxbwhAMbOaIOElliSES5Er+3KZqAxCFa+
-         dype1zpcY2nu5vuvgMXwbMMS2JkdR2pgXSnB+D1QAyJNwt7KtoNrsswu5CKFVkm0QJyc
-         FCp6s3u1jEYDZg9Ltemq41SJRK6m+wseJI2lUhJAMPMuzWHqldVbIMXd2ts4DB4b+l6P
-         UxdXgt5BvBSGbKNc6nJ4USh3INH/2JANXWLufO/a8GETkbESQmpuR5648h6PTM0NC25r
-         dK1MrkbSWsa4/kT14lHk1BlzKl+WGRAR6F2lbDzJ/2iKmVRMNca9mKb51XHEXCC3SAG1
-         /XMQ==
-X-Gm-Message-State: AOAM530ue/S/WaHJrHrg95TQ1A7IkRsrD7V2VXmFxjqDfEqTxuX6ZfNm
-        t3kI0es3VHEZJdqEfweF4Nk=
-X-Google-Smtp-Source: ABdhPJwYR19qizr+nnGBgvRXxEom4sWziXWEWb5qxZbh+w1tAiIwUp6ASTljA50PM/sQpOkzPSr/WA==
-X-Received: by 2002:adf:f74e:: with SMTP id z14mr15962530wrp.338.1590413169128;
-        Mon, 25 May 2020 06:26:09 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id r6sm20363405wmh.1.2020.05.25.06.26.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 06:26:08 -0700 (PDT)
-Date:   Mon, 25 May 2020 15:26:06 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] radix-tree: Use local_lock for protection
-Message-ID: <20200525132606.GB3066456@gmail.com>
-References: <20200524215739.551568-1-bigeasy@linutronix.de>
- <20200524215739.551568-3-bigeasy@linutronix.de>
- <20200525062954.GA3180782@gmail.com>
- <20200525111114.GB17206@bombadil.infradead.org>
+        Mon, 25 May 2020 09:26:16 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jdD7M-0001k3-Eu; Mon, 25 May 2020 13:26:12 +0000
+Date:   Mon, 25 May 2020 15:26:11 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        tycho@tycho.ws, keescook@chromium.org, cyphar@cyphar.com,
+        Jeffrey Vander Stoep <jeffv@google.com>, jannh@google.com,
+        rsesek@google.com, palmer@google.com,
+        Matt Denton <mpdenton@google.com>,
+        Kees Cook <keescook@google.com>
+Subject: Re: [PATCH 1/5] seccomp: Add find_notification helper
+Message-ID: <20200525132611.ltpkbe6ditxkag2r@wittgenstein>
+References: <20200524233942.8702-1-sargun@sargun.me>
+ <20200524233942.8702-2-sargun@sargun.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200525111114.GB17206@bombadil.infradead.org>
+In-Reply-To: <20200524233942.8702-2-sargun@sargun.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Matthew Wilcox <willy@infradead.org> wrote:
-
-> On Mon, May 25, 2020 at 08:29:54AM +0200, Ingo Molnar wrote:
-> > > +void radix_tree_preload_end(void)
-> > > +{
-> > > +	local_unlock(&radix_tree_preloads.lock);
-> > > +}
-> > > +EXPORT_SYMBOL(radix_tree_preload_end);
-> > 
-> > Since upstream we are still mapping the local_lock primitives to
-> > preempt_disable()/preempt_enable(), I believe these uninlining changes should not be done
-> > in this patch, i.e. idr_preload_end() and radix_tree_preload_end() should stay inline.
+On Sun, May 24, 2020 at 04:39:38PM -0700, Sargun Dhillon wrote:
+> This adds a helper which can iterate through a seccomp_filter to
+> find a notification matching an ID. It removes several replicated
+> chunks of code.
 > 
-> But radix_tree_preloads is static, and I wouldn't be terribly happy to
-> see that exported to modules.
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> Cc: Matt Denton <mpdenton@google.com>
+> Cc: Kees Cook <keescook@google.com>,
+> Cc: Jann Horn <jannh@google.com>,
+> Cc: Robert Sesek <rsesek@google.com>,
+> Cc: Chris Palmer <palmer@google.com>
+> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> Cc: Tycho Andersen <tycho@tycho.ws>
+> ---
+>  kernel/seccomp.c | 38 +++++++++++++++++++++-----------------
+>  1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> index 55a6184f5990..f6ce94b7a167 100644
+> --- a/kernel/seccomp.c
+> +++ b/kernel/seccomp.c
+> @@ -1021,10 +1021,25 @@ static int seccomp_notify_release(struct inode *inode, struct file *file)
+>  	return 0;
+>  }
+>  
+> +/* must be called with notif_lock held */
+> +static inline struct seccomp_knotif *
+> +find_notification(struct seccomp_filter *filter, u64 id)
+> +{
+> +	struct seccomp_knotif *cur;
+> +
+> +	list_for_each_entry(cur, &filter->notif->notifications, list) {
+> +		if (cur->id == id)
+> +			return cur;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +
+>  static long seccomp_notify_recv(struct seccomp_filter *filter,
+>  				void __user *buf)
+>  {
+> -	struct seccomp_knotif *knotif = NULL, *cur;
+> +	struct seccomp_knotif *knotif, *cur;
+>  	struct seccomp_notif unotif;
+>  	ssize_t ret;
+>  
+> @@ -1078,14 +1093,8 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
+>  		 * may have died when we released the lock, so we need to make
+>  		 * sure it's still around.
+>  		 */
+> -		knotif = NULL;
+>  		mutex_lock(&filter->notify_lock);
+> -		list_for_each_entry(cur, &filter->notif->notifications, list) {
+> -			if (cur->id == unotif.id) {
+> -				knotif = cur;
+> -				break;
+> -			}
+> -		}
+> +		knotif = find_notification(filter, unotif.id);
+>  
+>  		if (knotif) {
+>  			knotif->state = SECCOMP_NOTIFY_INIT;
+> @@ -1150,7 +1159,7 @@ static long seccomp_notify_send(struct seccomp_filter *filter,
+>  static long seccomp_notify_id_valid(struct seccomp_filter *filter,
+>  				    void __user *buf)
+>  {
+> -	struct seccomp_knotif *knotif = NULL;
+> +	struct seccomp_knotif *knotif;
+>  	u64 id;
+>  	long ret;
+>  
+> @@ -1162,15 +1171,10 @@ static long seccomp_notify_id_valid(struct seccomp_filter *filter,
+>  		return ret;
+>  
+>  	ret = -ENOENT;
+> -	list_for_each_entry(knotif, &filter->notif->notifications, list) {
+> -		if (knotif->id == id) {
+> -			if (knotif->state == SECCOMP_NOTIFY_SENT)
+> -				ret = 0;
+> -			goto out;
+> -		}
+> -	}
+> +	knotif = find_notification(filter, id);
+> +	if (knotif && knotif->state == SECCOMP_NOTIFY_SENT)
+> +		ret = 0;
 
-Well, it seems a bit silly to make radix_tree_preload_end() a 
-standalone function, on most distro kernels that don't have 
-CONFIG_PREEMPT=y, preempt_enable() is a NOP:
+Coul be a little nicer to have this be:
 
- 0000000000002bf0 <radix_tree_preload_end>:
-     2bf0:       c3                      retq   
+if (knotif && knotif->state == SECCOMP_NOTIFY_SENT)
+	ret = 0;
+else
+	ret = -ENOENT;
 
-I.e. we'd be introducing a separate function call for no good reason.
+or, if you want to keep the assignment out of the lock:
 
-Thanks,
+ret = -ENOENT;
+ret = mutex_lock_interruptible(&filter->notify_lock);
+if (ret < 0)
+	return ret;
 
-	Ingo
+knotif = find_notification(filter, id);
+if (knotif && knotif->state == SECCOMP_NOTIFY_SENT)
+	ret = 0;
+
+otherwise looks like a good cleanup to me.
