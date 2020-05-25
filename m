@@ -2,92 +2,93 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C30CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D377C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8F6207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:38:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fJy+PwUI"
+	by mail.kernel.org (Postfix) with ESMTP id 646A7207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 10:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389861AbgEYKi4 (ORCPT
+        id S2389862AbgEYKjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 06:38:56 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:30726 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389764AbgEYKiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 06:38:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590403134; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=lFsr8nIACUM6UgmDa1xekMARHxnlRL7EhwzL3mtLwqY=; b=fJy+PwUIu+ofwdpqbbUZsYHJjlSiQ1dqLOq6OIZ6gtt9Vi0FYC4K9px8y5Z3g3CicsKK8LGF
- IcahHYpAEQ2Ogoeal9XrHe052LOmEFv0lLTORXT/vHa4gyI+4b+eAfCy4S3kKbzhj/hEt+zt
- TcEZqncp/oiuRjde1tkH74V2kp8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ecba03e9d4cf4d3ef43d85d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 10:38:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ECDC6C43391; Mon, 25 May 2020 10:38:53 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27801C433C9;
-        Mon, 25 May 2020 10:38:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27801C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        linux-kernel@vger.kernel.org, ath10k@lists.infradead.org,
-        b43-dev@lists.infradead.org, brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, libertas-dev@lists.infradead.org,
-        linux-wireless@vger.kernel.org,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: Re: [PATCH 07/11] mmc: sdio: Move SDIO IDs from ath6kl driver to common include file
-References: <20200522144412.19712-1-pali@kernel.org>
-        <20200522144412.19712-8-pali@kernel.org>
-Date:   Mon, 25 May 2020 13:38:46 +0300
-In-Reply-To: <20200522144412.19712-8-pali@kernel.org> ("Pali \=\?utf-8\?Q\?Roh\?\=
- \=\?utf-8\?Q\?\=C3\=A1r\=22's\?\= message
-        of "Fri, 22 May 2020 16:44:08 +0200")
-Message-ID: <87blmc9u4p.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 25 May 2020 06:39:55 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:60824 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389720AbgEYKjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 06:39:54 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 25 May 2020 18:39:48
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Mon, 25 May 2020 18:39:48 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Kangjie Lu" <kjlu@umn.edu>, "Sebastian Reichel" <sre@kernel.org>,
+        "Linux PM" <linux-pm@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] power: supply: bq24190_charger: fix runtime pm
+ imbalance
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <CAJZ5v0j5XB_me9YSUemUaz6URair4CtRVSU1U6F62FWCi2SRJg@mail.gmail.com>
+References: <20200520074309.19366-1-dinghao.liu@zju.edu.cn>
+ <CAJZ5v0j5XB_me9YSUemUaz6URair4CtRVSU1U6F62FWCi2SRJg@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <29d2d7f2.c835d.1724b6ac5fc.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCHIAR0oMtexCkGAA--.1585W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQA8s8
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r4DMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUAVWUtwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
-
-> Also replace generic MANUFACTURER macros by proper SDIO IDs macros.
->
-> Check for "AR6003 or later" is slightly modified to use SDIO device IDs.
-> This allows removal of all custom MANUFACTURER macros from ath6kl.
->
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+PiBPbiBXZWQsIE1heSAyMCwgMjAyMCBhdCAxMDowMSBBTSBEaW5naGFvIExpdSA8ZGluZ2hhby5s
+aXVAemp1LmVkdS5jbj4gd3JvdGU6Cj4gPgo+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3Jl
+bWVudHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291bnRlciBldmVuCj4gPiBpdCByZXR1cm5zIGFu
+IGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQgb24KPiA+IHRo
+ZSBlcnJvciBoYW5kbGluZyBwYXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4gPgo+
+ID4gU2lnbmVkLW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Cj4g
+PiAtLS0KPiA+ICBkcml2ZXJzL3Bvd2VyL3N1cHBseS9icTI0MTkwX2NoYXJnZXIuYyB8IDQgKysr
+LQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dlci9zdXBwbHkvYnEyNDE5MF9jaGFyZ2VyLmMg
+Yi9kcml2ZXJzL3Bvd2VyL3N1cHBseS9icTI0MTkwX2NoYXJnZXIuYwo+ID4gaW5kZXggNDUzZDYz
+MzJkNDNhLi40ZjdjNmI2YWJiNTYgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3N1cHBs
+eS9icTI0MTkwX2NoYXJnZXIuYwo+ID4gKysrIGIvZHJpdmVycy9wb3dlci9zdXBwbHkvYnEyNDE5
+MF9jaGFyZ2VyLmMKPiA+IEBAIC00ODEsOCArNDgxLDEwIEBAIHN0YXRpYyBzc2l6ZV90IGJxMjQx
+OTBfc3lzZnNfc3RvcmUoc3RydWN0IGRldmljZSAqZGV2LAo+ID4gICAgICAgICAgICAgICAgIHJl
+dHVybiByZXQ7Cj4gPgo+ID4gICAgICAgICByZXQgPSBwbV9ydW50aW1lX2dldF9zeW5jKGJkaS0+
+ZGV2KTsKPiA+IC0gICAgICAgaWYgKHJldCA8IDApCj4gPiArICAgICAgIGlmIChyZXQgPCAwKSB7
+Cj4gPiArICAgICAgICAgICAgICAgcG1fcnVudGltZV9wdXRfYXV0b3N1c3BlbmQoYmRpLT5kZXYp
+Owo+IAo+IFRoZSBhdXRvc3VzcGVuZCB0aGluZyBpcyBub3QgbmVjZXNzYXJ5IGhlcmUsIGJlY2F1
+c2UgdGhlIHN1c3BlbmQgaXMKPiBub3QgZ29pbmcgdG8gd29yayBhbnl3YXkgZHVlIHRvIHRoZSBy
+ZXN1bWUgZXJyb3IsIHNvIHRoaXMgY2FuIGJlCj4gX3B1dF9ub2lkbGUoKS4KPiAKPiBZb3UgbWln
+aHQgYXMgd2VsbCBkbyBzb21ldGhpbmcgbGlrZQo+IAo+IGNvdW50ID0gcmV0Owo+IGdvdG8gb3V0
+Owo+IAo+IGhlcmUgYW5kIGFkZCBhbiAib3V0IiBsYWJlbCBiZWZvcmUgdGhlIHBtX3J1bnRpbWVf
+bWFya19sYXN0X2J1c3koKSBjYWxsLCB0aG91Z2guCj4gCj4gPiAgICAgICAgICAgICAgICAgcmV0
+dXJuIHJldDsKPiA+ICsgICAgICAgfQo+ID4KPiA+ICAgICAgICAgcmV0ID0gYnEyNDE5MF93cml0
+ZV9tYXNrKGJkaSwgaW5mby0+cmVnLCBpbmZvLT5tYXNrLCBpbmZvLT5zaGlmdCwgdik7Cj4gPiAg
+ICAgICAgIGlmIChyZXQpCj4gPiAtLQo+ID4gMi4xNy4xCj4gPgoKVGhhbmsgeW91IGZvciB5b3Vy
+IGFkdmljZSEgSSB3aWxsIGZpeCB0aGlzIGluIHRoZSBuZXh0IHZlcnNpb24gb2YgcGF0Y2guCgpS
+ZWdhcmRzLApEaW5naGFvCg==
