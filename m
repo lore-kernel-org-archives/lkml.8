@@ -2,174 +2,95 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C52C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BDE2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61AB22070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:25:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g6KUhPZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404130AbgEYPYK (ORCPT
+        id S2404104AbgEYPZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
+        Mon, 25 May 2020 11:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404016AbgEYPYK (ORCPT
+        with ESMTP id S2403996AbgEYPZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:24:10 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24FBAC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:24:10 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jdExO-0002aw-LB; Mon, 25 May 2020 17:24:02 +0200
-Date:   Mon, 25 May 2020 17:24:01 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v1 02/25] mm/swap: Don't abuse the seqcount latching API
-Message-ID: <20200525152401.GA375786@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-3-a.darwish@linutronix.de>
- <20200522145707.GO325280@hirez.programming.kicks-ass.net>
+        Mon, 25 May 2020 11:25:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B29CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=67Pp2K07rsDEiwyIQepVcEcJzzewNU6na93Mu3juojQ=; b=g6KUhPZ9roVqd5YXwqlKVXub/P
+        z7RW5yNuga22tjhq5muAT9FDw1qKg5X3prJDbADcUS9GkgPXAzUeWM20PNVtMcUXGfDMrfmLoEe3D
+        NOK0lHQdVKvcbC7/5M/NDs4aJ1vzdQNnpp6KFecz2M5L3GPGiQyvRtY2xPrQpmM9vQoPZqFfDjJ0W
+        E5cqqs5hLwXR/6sv2Zw2Qx9NrQAf1cTBZZyL1AWqAaiyYXzV0phNXNLAbspLg/4QUiwkwrMNdE86B
+        encocoidsL60WB1n2kWVgIv2w3v9cgZPCGUZQQRuQaWb2E3q+ozhSKtMyJUGEm9uphUzzZD/HwZgb
+        QVFmM6qw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdEyd-0005sN-Rz; Mon, 25 May 2020 15:25:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A09793011E6;
+        Mon, 25 May 2020 17:25:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9280C2389FE1F; Mon, 25 May 2020 17:25:17 +0200 (CEST)
+Date:   Mon, 25 May 2020 17:25:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Subject: Re: [RFC PATCH 0/5] x86/hw_breakpoint: protects more cpu entry data
+Message-ID: <20200525152517.GY325280@hirez.programming.kicks-ass.net>
+References: <20200525145102.122557-1-laijs@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522145707.GO325280@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200525145102.122557-1-laijs@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> wrote:
-> On Tue, May 19, 2020 at 11:45:24PM +0200, Ahmed S. Darwish wrote:
-> > @@ -713,10 +713,20 @@ static void lru_add_drain_per_cpu(struct work_struct *dummy)
-> >   */
-> >  void lru_add_drain_all(void)
-> >  {
->
+On Mon, May 25, 2020 at 02:50:57PM +0000, Lai Jiangshan wrote:
+> Hello
+> 
+> The patchset is based on (tag: entry-v9-the-rest, tglx-devel/x86/entry).
+> And it is complement of 3ea11ac991d
+> ("x86/hw_breakpoint: Prevent data breakpoints on cpu_entry_area").
+> 
+> After reading the code, we can see that more data needs to be protected
+> against hw_breakpoint, otherwise it may cause
+> dangerous/recursive/unwanted #DB.
+> 
+> 
+> Lai Jiangshan (5):
+>   x86/hw_breakpoint: add within_area() to check data breakpoints
+>   x86/hw_breakpoint: Prevent data breakpoints on direct GDT
+>   x86/hw_breakpoint: Prevent data breakpoints on per_cpu cpu_tss_rw
 
-Re-adding cut-out comment for context:
+I think we can actually get rid of that #DB IST stack frobbing, also see
+patches linked below.
 
-	/*
-	 * lru_drain_gen - Current generation of pages that could be in vectors
-	 *
-	 * (A) Definition: lru_drain_gen = x implies that all generations
-	 *     0 < n <= x are already scheduled for draining.
-	 *
-	 * This is an optimization for the highly-contended use case where a
-	 * user space workload keeps constantly generating a flow of pages
-	 * for each CPU.
-	 */
-> > +	static unsigned int lru_drain_gen;
-> >  	static struct cpumask has_work;
-> > +	static DEFINE_MUTEX(lock);
-> > +	int cpu, this_gen;
-> >
-> >  	/*
-> >  	 * Make sure nobody triggers this path before mm_percpu_wq is fully
-> > @@ -725,21 +735,48 @@ void lru_add_drain_all(void)
-> >  	if (WARN_ON(!mm_percpu_wq))
-> >  		return;
-> >
->
+>   x86/hw_breakpoint: Prevent data breakpoints on user_pcid_flush_mask
 
-Re-adding cut-out comment for context:
+Should we disallow the full structure just to be sure?
 
-	/*
-	 * (B) Cache the LRU draining generation number
-	 *
-	 * smp_rmb() ensures that the counter is loaded before the mutex is
-	 * taken. It pairs with the smp_wmb() inside the mutex critical section
-	 * at (D).
-	 */
-> > +	this_gen = READ_ONCE(lru_drain_gen);
-> > +	smp_rmb();
->
-> 	this_gen = smp_load_acquire(&lru_drain_gen);
+>   x86/hw_breakpoint: Prevent data breakpoints on debug_idt_table
 
-ACK. will do.
+That's going away, see:
 
-> >
-> >  	mutex_lock(&lock);
-> >
-> >  	/*
-> > +	 * (C) Exit the draining operation if a newer generation, from another
-> > +	 * lru_add_drain_all(), was already scheduled for draining. Check (A).
-> >  	 */
-> > +	if (unlikely(this_gen != lru_drain_gen))
-> >  		goto done;
-> >
->
+https://lkml.kernel.org/r/20200522204738.645043059@infradead.org
 
-Re-adding cut-out comment for context:
+But yes, nice!
 
-	/*
-	 * (D) Increment generation number
-	 *
-	 * Pairs with READ_ONCE() and smp_rmb() at (B), outside of the critical
-	 * section.
-	 *
-	 * This pairing must be done here, before the for_each_online_cpu loop
-	 * below which drains the page vectors.
-	 *
-	 * Let x, y, and z represent some system CPU numbers, where x < y < z.
-	 * Assume CPU #z is is in the middle of the for_each_online_cpu loop
-	 * below and has already reached CPU #y's per-cpu data. CPU #x comes
-	 * along, adds some pages to its per-cpu vectors, then calls
-	 * lru_add_drain_all().
-	 *
-	 * If the paired smp_wmb() below is done at any later step, e.g. after
-	 * the loop, CPU #x will just exit at (C) and miss flushing out all of
-	 * its added pages.
-	 */
-> > +	WRITE_ONCE(lru_drain_gen, lru_drain_gen + 1);
-> > +	smp_wmb();
->
-> You can leave this smp_wmb() out and rely on the smp_mb() implied by
-> queue_work_on()'s test_and_set_bit().
->
-
-Won't this be too implicit?
-
-Isn't it possible that, over the years, queue_work_on() impementation
-changes and the test_and_set_bit()/smp_mb() gets removed?
-
-If that happens, this commit will get *silently* broken and the local
-CPU pages won't be drained.
-
-> >  	cpumask_clear(&has_work);
-> > -
-> >  	for_each_online_cpu(cpu) {
-> >  		struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
-> >
->
-> While you're here, do:
->
-> 	s/cpumask_set_cpu/__&/
->
-
-ACK.
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
