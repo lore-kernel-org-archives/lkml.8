@@ -2,57 +2,112 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C894C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FEB20849
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573702071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390551AbgEYMiM (ORCPT
+        id S2390578AbgEYMi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:38:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47216 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390488AbgEYMiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:38:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0AC97AD17;
-        Mon, 25 May 2020 12:38:14 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 742C0DA728; Mon, 25 May 2020 14:37:14 +0200 (CEST)
-Date:   Mon, 25 May 2020 14:37:14 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Ethan Edwards <ethancarteredwards@gmail.com>
-Cc:     clm@fb.com, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH] FS: BTRFS: ulist.c: Fixed a brace coding style and space
- before tab
-Message-ID: <20200525123714.GR18421@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Ethan Edwards <ethancarteredwards@gmail.com>, clm@fb.com,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <20200522212902.20994-1-ethancarteredwards@gmail.com>
+        Mon, 25 May 2020 08:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390488AbgEYMi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 08:38:59 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3F3C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:38:59 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jdCNR-0002xS-7D; Mon, 25 May 2020 14:38:45 +0200
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jdCNK-0004LN-Ul; Mon, 25 May 2020 14:38:38 +0200
+Date:   Mon, 25 May 2020 14:38:38 +0200
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: coda: Fix runtime PM imbalance in coda_probe
+Message-ID: <20200525123838.GA12983@pengutronix.de>
+References: <20200523100332.32626-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522212902.20994-1-ethancarteredwards@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20200523100332.32626-1-dinghao.liu@zju.edu.cn>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:21:25 up 95 days, 19:51, 121 users,  load average: 0.21, 0.19,
+ 0.19
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 05:29:02PM -0400, Ethan Edwards wrote:
-> From: Ethan Edwards <ethancarteredwards@gmail.com
+Hi Dinghao,
+
+thank you for the patch! The first part is fine, but I think the second
+part is not necessary, see below:
+
+On Sat, May 23, 2020 at 06:03:32PM +0800, Dinghao Liu wrote:
+> When coda_firmware_request() returns an error code,
+> a pairing runtime PM usage counter decrement is needed
+> to keep the counter balanced.
 > 
-> Fixed coding style
+> Also, the caller expects coda_probe() to increase PM
+> usage counter, there should be a refcount decrement
+> in coda_remove() to keep the counter balanced.
 
-No thanks.
+coda_probe() increments the usage counter only until coda_fw_callback()
+decrements it again. Where is the imbalance?
 
-Long answer: https://btrfs.wiki.kernel.org/index.php/Developer%27s_FAQ#How_not_to_start
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/media/platform/coda/coda-common.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
+> index d0d093dd8f7c..550e9a1266da 100644
+> --- a/drivers/media/platform/coda/coda-common.c
+> +++ b/drivers/media/platform/coda/coda-common.c
+> @@ -3119,6 +3119,8 @@ static int coda_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_alloc_workqueue:
+> +	pm_runtime_disable(&pdev->dev);
+> +	pm_runtime_put_noidle(&pdev->dev);
+
+These seem right, they balance out the pm_runtime_enable()
+and pm_runtime_get_noresume() right before the error.
+
+>  	destroy_workqueue(dev->workqueue);
+>  err_v4l2_register:
+>  	v4l2_device_unregister(&dev->v4l2_dev);
+> @@ -3136,6 +3138,7 @@ static int coda_remove(struct platform_device *pdev)
+>  	}
+>  	if (dev->m2m_dev)
+>  		v4l2_m2m_release(dev->m2m_dev);
+> +	pm_runtime_put_noidle(&pdev->dev);
+
+I think this is incorrect. There is one pm_runtime_get_noresume() in
+coda_probe(), and one pm_runtime_put_sync() in coda_fw_callback().
+By the time coda_remove() is called, balance is already restored.
+
+regards
+Philipp
