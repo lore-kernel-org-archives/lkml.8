@@ -2,184 +2,428 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC522C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2F20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9208E2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:51:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Kd6js+c0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XC8QgWe5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390315AbgEYLuI (ORCPT
+        id S2390357AbgEYLvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:50:08 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27622 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388697AbgEYLuH (ORCPT
+        Mon, 25 May 2020 07:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388697AbgEYLvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:50:07 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04PBm2dF023009;
-        Mon, 25 May 2020 13:49:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=ZLPJbD1i52pQmhWGud8u9OF5Yeh//Hrj8jaTYYs9M5U=;
- b=Kd6js+c0GtO9/IEl9vzto9Y8GRXycY27HMPexBUqs+VTSoehYyl+sjHlU1lrl+GElZLK
- WE1Mf3lI5suTEZKRtnv0a7knaBYa0SZV/1V7COQiI79ue5zX9MJV9R9hY7bG4lPmqM8H
- MxNc+UaPLdg46wE59rALpCUX+roPIerHdStpPpIEZ09pb6nAILTuKJx11U2HmUkgdIoM
- oGShsqDs2T/76Ka0CzY1lxjCYs9QHlUHEw2WAeb+EIiUXNIEmDB963Kt8ZIE6bQ/u4/H
- g4n1zaNdojeeyXLwkYpwvxqDpcnMBl67VJSxXZUAKispXLGsUKRRV4oqsf0Rvui4+k42 xQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316rya26p9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 May 2020 13:49:38 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10CAF10002A;
-        Mon, 25 May 2020 13:49:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BB6C121E681;
-        Mon, 25 May 2020 13:49:37 +0200 (CEST)
-Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
- 2020 13:49:37 +0200
-Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
- SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
- 15.00.1473.003; Mon, 25 May 2020 13:49:37 +0200
-From:   Nicolas TOROMANOFF <nicolas.toromanoff@st.com>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
-Thread-Topic: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
-Thread-Index: AQHWMnPoC6hseRPByUqqkn4smN/k96i4hBOA
-Date:   Mon, 25 May 2020 11:49:37 +0000
-Message-ID: <31e99726fa6544fcaac88490de3186e6@SFHDAG6NODE1.st.com>
-References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
- <20200512141113.18972-6-nicolas.toromanoff@st.com>
- <CAMj1kXGs6UgkKb5+tH2B-+26=tbjHq3UUY2gxfcRfMb1nGVuFA@mail.gmail.com>
- <67c25d90d9714a85b52f3d9c2070af88@SFHDAG6NODE1.st.com>
- <CAMj1kXGo+9aXeYppGSheqhC-pNeJCcEie+SAnWy_sAiooEDMsQ@mail.gmail.com>
- <bd6cac3bd4c74db1a403df58082028fd@SFHDAG6NODE1.st.com>
- <CAMj1kXFwt6cs-MJhAeMRF4-yiddm=ezq=qvSjA_sRAX+_Gdqhw@mail.gmail.com>
-In-Reply-To: <CAMj1kXFwt6cs-MJhAeMRF4-yiddm=ezq=qvSjA_sRAX+_Gdqhw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 25 May 2020 07:51:09 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B257CC061A0E;
+        Mon, 25 May 2020 04:51:07 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q9so8456826pjm.2;
+        Mon, 25 May 2020 04:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=usryTSbz9ckWV1gcsz/VSE18mxXlhCv31iNouvCgz0g=;
+        b=XC8QgWe5P0WIy+9z89EDU5K3zg9sb0ST07Qmb8wgEt/AgCMcq3G2vru2lEYAvnbMdo
+         3cbQ65bRrzQHE4iNJigqX0sBs4b62m+UplfgxoW8bWfLJIZUuTPS4b+12w0a1y704sDr
+         t6D4DFzVORIAn04L5M8+DF5EthadE2UCZVr7qj0Q9oo6ElvaY4zICpBaWT+U1NkitBxf
+         Aze/KYWIBgqWdAI3BN/R0O9RXe5rT4hnVinrk3zxgpeHKk1PWxhuvbdDTWXU2uysSIdJ
+         CnmJgV5UXgPVTUkG1bwPD5aCBjLOzRnwUN31HVkbyu2xJcCODhcjxsOFfgbX1mSmH9lx
+         ZglA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=usryTSbz9ckWV1gcsz/VSE18mxXlhCv31iNouvCgz0g=;
+        b=FjwwsMA5/MCkm1upEuW+GY/Mf5ZiMC1Kxapjg/QJBbb3y+w6Kvio5p+MHnEd3w4jwT
+         d/8u2FAi6UX5/MQbDkny6M3FPhHbhbTerfnG/EASaMp22260w5dladKEJvBWBqIvnXJo
+         ryvVMcrGSLPwLLeeJ8LUcs0mrwkIvLCQVr/ioZ+dO/uKcP08xvWmmt829vNcgQvsIqhN
+         LIwxjjYeBQow/E5dJ5GCcgY+mcYjfhtFEn9gzNiv/z+tAIe0CaAPKcNLkLUd+mnuo7Zv
+         qh5kFBKYk+QZCP0+UZUZdFfpVSRZXAA7jkMJ7HAS4wPFtQCFsgQub+ATODvzBMKjF7lY
+         CAEA==
+X-Gm-Message-State: AOAM533MBCURisVmGQlDx4q/mj38evKTNj6/OYvDYfDjmbMGSmMYufdP
+        myU2D28YgdHmyTsP66lp/bE=
+X-Google-Smtp-Source: ABdhPJwHpZZA3fyGCEQ/Qqz3ydAhsyJ2v4JFcnqycfdEtq1RKlChtYmpwGYBg2pu5DsBKMB4u14GBw==
+X-Received: by 2002:a17:90a:f696:: with SMTP id cl22mr21550209pjb.170.1590407467116;
+        Mon, 25 May 2020 04:51:07 -0700 (PDT)
+Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:b9cb:9f91:3c10:565c])
+        by smtp.gmail.com with ESMTPSA id h16sm13017537pfq.56.2020.05.25.04.51.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 04:51:06 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] exfat: redefine PBR as boot_sector
+Date:   Mon, 25 May 2020 20:50:48 +0900
+Message-Id: <20200525115052.19243-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-25_07:2020-05-25,2020-05-25 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJk
-YkBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE1heSAyNSwgMjAyMCAxMTowNyBBTQ0KPiBU
-bzogTmljb2xhcyBUT1JPTUFOT0ZGIDxuaWNvbGFzLnRvcm9tYW5vZmZAc3QuY29tPjsgRXJpYyBC
-aWdnZXJzDQo+IDxlYmlnZ2Vyc0BrZXJuZWwub3JnPg0KPiBPbiBNb24sIDI1IE1heSAyMDIwIGF0
-IDExOjAxLCBOaWNvbGFzIFRPUk9NQU5PRkYNCj4gPG5pY29sYXMudG9yb21hbm9mZkBzdC5jb20+
-IHdyb3RlOg0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJv
-bTogQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IE1vbmRheSwg
-TWF5IDI1LCAyMDIwIDk6NDYgQU0NCj4gPiA+IFRvOiBOaWNvbGFzIFRPUk9NQU5PRkYgPG5pY29s
-YXMudG9yb21hbm9mZkBzdC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDUvNV0gY3J5
-cHRvOiBzdG0zMi9jcmM6IHByb3RlY3QgZnJvbSBjb25jdXJyZW50DQo+ID4gPiBhY2Nlc3Nlcw0K
-PiA+ID4NCj4gPiA+IE9uIE1vbiwgMjUgTWF5IDIwMjAgYXQgMDk6MjQsIE5pY29sYXMgVE9ST01B
-Tk9GRg0KPiA+ID4gPG5pY29sYXMudG9yb21hbm9mZkBzdC5jb20+IHdyb3RlOg0KPiA+ID4gPg0K
-PiA+ID4gPiBIZWxsbywNCj4gPiA+ID4NCj4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KPiA+ID4gPiA+IEZyb206IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+
-ID4gPiA+ID4gU2VudDogRnJpZGF5LCBNYXkgMjIsIDIwMjAgNjoxMiBQTT4gT24gVHVlLCAxMiBN
-YXkgMjAyMCBhdA0KPiA+ID4gPiA+IDE2OjEzLCBOaWNvbGFzIFRvcm9tYW5vZmYgPG5pY29sYXMu
-dG9yb21hbm9mZkBzdC5jb20+IHdyb3RlOg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFByb3Rl
-Y3QgU1RNMzIgQ1JDIGRldmljZSBmcm9tIGNvbmN1cnJlbnQgYWNjZXNzZXMuDQo+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gQXMgd2UgY3JlYXRlIGEgc3BpbmxvY2tlZCBzZWN0aW9uIHRoYXQgaW5j
-cmVhc2Ugd2l0aCBidWZmZXINCj4gPiA+ID4gPiA+IHNpemUsIHdlIHByb3ZpZGUgYSBtb2R1bGUg
-cGFyYW1ldGVyIHRvIHJlbGVhc2UgdGhlIHByZXNzdXJlIGJ5DQo+ID4gPiA+ID4gPiBzcGxpdHRp
-bmcgY3JpdGljYWwgc2VjdGlvbiBpbiBjaHVua3MuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-U2l6ZSBvZiBlYWNoIGNodW5rIGlzIGRlZmluZWQgaW4gYnVyc3Rfc2l6ZSBtb2R1bGUgcGFyYW1l
-dGVyLg0KPiA+ID4gPiA+ID4gQnkgZGVmYXVsdCBidXJzdF9zaXplPTAsIGkuZS4gZG9uJ3Qgc3Bs
-aXQgaW5jb21pbmcgYnVmZmVyLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFNpZ25lZC1vZmYt
-Ynk6IE5pY29sYXMgVG9yb21hbm9mZiA8bmljb2xhcy50b3JvbWFub2ZmQHN0LmNvbT4NCj4gPiA+
-ID4gPg0KPiA+ID4gPiA+IFdvdWxkIHlvdSBtaW5kIGV4cGxhaW5pbmcgdGhlIHVzYWdlIG1vZGVs
-IGhlcmU/IEl0IGxvb2tzIGxpa2UNCj4gPiA+ID4gPiB5b3UgYXJlIHNoYXJpbmcgYSBDUkMgaGFy
-ZHdhcmUgYWNjZWxlcmF0b3Igd2l0aCBhIHN5bmNocm9ub3VzDQo+ID4gPiA+ID4gaW50ZXJmYWNl
-IGJldHdlZW4gZGlmZmVyZW50IHVzZXJzIGJ5IHVzaW5nIHNwaW5sb2Nrcz8gWW91IGFyZQ0KPiA+
-ID4gPiA+IGF3YXJlIHRoYXQgdGhpcyB3aWxsIHRpZSB1cCB0aGUgd2FpdGluZyBDUFVzIGNvbXBs
-ZXRlbHkgZHVyaW5nDQo+ID4gPiA+ID4gdGhpcyB0aW1lLCByaWdodD8gU28gaXQgd291bGQgYmUg
-bXVjaCBiZXR0ZXIgdG8gdXNlIGEgbXV0ZXgNCj4gPiA+ID4gPiBoZXJlLiBPciBwZXJoYXBzIGl0
-IHdvdWxkIG1ha2UgbW9yZSBzZW5zZSB0byBmYWxsIGJhY2sgdG8gYSBzL3cNCj4gPiA+ID4gPiBi
-YXNlZCBDUkMgcm91dGluZSBpZiB0aGUgaC93IGlzIHRpZWQgdXANCj4gPiA+IHdvcmtpbmcgZm9y
-IGFub3RoZXIgdGFzaz8NCj4gPiA+ID4NCj4gPiA+ID4gSSBrbm93IG11dGV4IGFyZSBtb3JlIGFj
-Y2VwdGFibGUgaGVyZSwgYnV0IHNoYXNoIF91cGRhdGUoKSBhbmQNCj4gPiA+ID4gX2luaXQoKSBt
-YXkgYmUgY2FsbCBmcm9tIGFueSBjb250ZXh0LCBhbmQgc28gSSBjYW5ub3QgdGFrZSBhIG11dGV4
-Lg0KPiA+ID4gPiBBbmQgdG8gcHJvdGVjdCBteSBjb25jdXJyZW50IEhXIGFjY2VzcyBJIG9ubHkg
-dGhvdWdoIGFib3V0IHNwaW5sb2NrLg0KPiA+ID4gPiBEdWUgdG8gcG9zc2libGUgY29uc3RyYWlu
-dCBvbiBDUFVzLCBJIGFkZCBhIGJ1cnN0X3NpemUgb3B0aW9uIHRvDQo+ID4gPiA+IGZvcmNlIHNs
-aXR0aW5nIGxvbmcgYnVmZmVyIGludG8gc21hbGxlciBvbmUsIGFuZCBzbyBkZWNyZWFzZSB0aW1l
-IHdlIHRha2UNCj4gdGhlIGxvY2suDQo+ID4gPiA+IEJ1dCBJIGRpZG4ndCB0aG91Z2ggdG8gZmFs
-bGJhY2sgdG8gc29mdHdhcmUgQ1JDLg0KPiA+ID4gPg0KPiA+ID4gPiBJJ2xsIGRvIGEgcGF0Y2gg
-b24gdG9wLg0KPiA+ID4gPiBJbiBpbiB0aGUgYnVyc3RfdXBkYXRlKCkgZnVuY3Rpb24gSSdsbCB1
-c2UgYQ0KPiA+ID4gPiBzcGluX3RyeWxvY2tfaXJxc2F2ZSgpIGFuZCB1c2UNCj4gPiA+IHNvZnR3
-YXJlIENSQzMyIGlmIEhXIGlzIGFscmVhZHkgaW4gdXNlLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+
-IFJpZ2h0LiBJIGRpZG4ndCBldmVuIG5vdGljZSB0aGF0IHlvdSB3ZXJlIGtlZXBpbmcgaW50ZXJy
-dXB0cw0KPiA+ID4gZGlzYWJsZWQgdGhlIHdob2xlIHRpbWUgd2hlbiB1c2luZyB0aGUgaC93IGJs
-b2NrLiBUaGF0IG1lYW5zIHRoYXQNCj4gPiA+IGFueSBzZXJpb3VzIHVzZSBvZiB0aGlzIGgvdyBi
-bG9jayB3aWxsIG1ha2UgSVJRIGxhdGVuY3kgZ28gdGhyb3VnaCB0aGUgcm9vZi4NCj4gPiA+DQo+
-ID4gPiBJIHJlY29tbWVuZCB0aGF0IHlvdSBnbyBiYWNrIHRvIHRoZSBkcmF3aW5nIGJvYXJkIG9u
-IHRoaXMgZHJpdmVyLA0KPiA+ID4gcmF0aGVyIHRoYW4gcGFwZXJpbmcgb3ZlciB0aGUgaXNzdWVz
-IHdpdGggYSBzcGluX3RyeWxvY2soKS4gUGVyaGFwcw0KPiA+ID4gaXQgd291bGQgYmUgYmV0dGVy
-IHRvIG1vZGVsIGl0IGFzIGEgYWhhc2ggKGV2ZW4gdGhvdWdoIHRoZSBoL3cgYmxvY2sNCj4gPiA+
-IGl0c2VsZiBpcyBzeW5jaHJvbm91cykgYW5kIHVzZSBhIGt0aHJlYWQgdG8gZmVlZCBpbiB0aGUg
-ZGF0YS4NCj4gPg0KPiA+IEkgdGhvdWdodCB3aGVuIEkgdXBkYXRlZCB0aGUgZHJpdmVyIHRvIG1v
-dmUgdG8gYSBhaGFzaCBpbnRlcmZhY2UsIGJ1dA0KPiA+IHRoZSBtYWluIHVzYWdlIG9mIGNyYzMy
-IGlzIHRoZSBleHQ0IGZzLCB0aGF0IGNhbGxzIHRoZSBzaGFzaCBBUEkuDQo+ID4gQ29tbWl0IDg3
-N2I1NjkxZjI3YSAoImNyeXB0bzogc2hhc2ggLSByZW1vdmUgc2hhc2hfZGVzYzo6ZmxhZ3MiKQ0K
-PiA+IHJlbW92ZWQgcG9zc2liaWxpdHkgdG8gc2xlZXAgaW4gc2hhc2ggY2FsbGJhY2suIChiZWZv
-cmUgdGhpcyBjb21taXQNCj4gPiBhbmQgd2l0aCBNQVlfU0xFRVAgb3B0aW9uIHNldCwgdXNpbmcg
-YSBtdXRleCBtYXkgaGF2ZSBiZWVuIGZpbmUpLg0KPiA+DQo+IA0KPiBBY2NvcmRpbmcgdG8gdGhh
-dCBjb21taXQncyBsb2csIHNsZWVwaW5nIGlzIG5ldmVyIGZpbmUgZm9yIHNoYXNoKCksIHNpbmNl
-IGl0IHVzZXMNCj4ga21hcF9hdG9taWMoKSB3aGVuIGl0ZXJhdGluZyBvdmVyIHRoZSBzY2F0dGVy
-bGlzdC4NCg0KVG9kYXksIHdlIGNvdWxkIGF2b2lkIHVzaW5nIGttYXBfYXRvbWljKCkgaW4gc2hh
-c2hfYXNoYXNoXyooKSBBUElzICh0aGUNCm9uZXMgdGhhdCBXYWxrcyB0aHJvdWdoIHRoZSBzY2F0
-dGVybGlzdCkgYnkgdXNpbmcgdGhlDQpjcnlwdG9fYWhhc2hfd2Fsa19maXJzdCgpIGZ1bmN0aW9u
-IHRvIGluaXRpYWxpemUgdGhlIHNoYXNoX2FoYXNoIHdhbGtlcg0KKG5vdGUgdGhhdCB0aGlzIGZ1
-bmN0aW9uIGlzIG5ldmVyIGNhbGwgaW4gY3VycmVudCBrZXJuZWwgc291cmNlIFt0byByZW1vdmUg
-P10pLg0KVGhlbiBzaGFzaF9haGFzaF8qKCkgZnVuY3Rpb25zIHdpbGwgY2FsbCBhaGFzaF8qKCkg
-ZnVuY3Rpb24gdGhhdCB1c2Uga21hcCgpDQppZiAod2Fsay0+ZmxhZ3MgJiBDUllQVE9fQUxHX0FT
-WU5DKSBbZmxhZyBzZXQgYnkgY3J5cHRvX2FoYXNoX3dhbGtfZmlyc3QoKV0NClRoZSBsYXN0IGtt
-YXBfYXRvbWljKCkgd2lsbCBiZSBpbiB0aGUgc2hhc2hfYWhhc2hfZGlnZXN0KCkgY2FsbCBpbiB0
-aGUNCm9wdGltaXplIGJyYW5jaCAodGhhdCBzaG91bGQgYmUgcmVwbGFjZWQgYnkgdGhlIG5vIGF0
-b21pYyBvbmUpDQoNCkkgZGlkbid0IGludmVzdGlnYXRlIG1vcmUgdGhpcyB3YXksIGJlY2F1c2Ug
-SSBkaWRuJ3QgY2hlY2sgdGhlIGRyYXdiYWNrIG9mDQp1c2luZyBrbWFwKCkgaW5zdGVhZCBvZiBr
-bWFwX2F0b21pYygpLCBJIHdhbnRlZCB0byBhdm9pZCBtb2RpZnlpbmcgYmVoYXZpb3INCm9mIG90
-aGVyIGRyaXZlcnMgYW5kIHVzaW5nIGEgZnVuY3Rpb24gbmV2ZXIgdXNlIGVsc2V3aGVyZSBpbiBr
-ZXJuZWwgc2NhcnJlZA0KbWUgOy0pLg0KSWYgdGhlc2UgdXBkYXRlcyBjb3JyZWN0IHZpc2libGUg
-YnVncyBpbiB0aGUgYWhhc2ggdXNhZ2Ugb2YgdGhlIHN0bTMyLWNyYzMyDQpjb2RlIFtubyBtb3Jl
-ICJzbGVlcCB3aGlsZSBhdG9taWMiIHRyYWNlcyBldmVuIHdpdGggbXV0ZXggaW4gdGVzdHNdLCAN
-CkRvY3VtZW50YXRpb24gc3RhdGVzIHRoYXQgc2hhc2ggQVBJIGNvdWxkIGJlIGNhbGxlZCBmcm9t
-IGFueSBjb250ZXh0LA0KSSBjYW5ub3QgYWRkIG11dGV4IGluIHRoZW0uDQoNCj4gPiBCeSBub3cg
-dGhlIHNvbHV0aW9uIEkgc2VlIGlzIHRvIHVzZSB0aGUgc3Bpbl90cnlsb2NrX2lycXNhdmUoKSwN
-Cj4gPiBmYWxsYmFjayB0byBzb2Z0d2FyZSBjcmMgKkFORCogY2FwcGluZyBidXJzdF9zaXplIHRv
-IGVuc3VyZSB0aGUgbG9ja2VkDQo+IHNlY3Rpb24gc3RheSByZWFzb25hYmxlLg0KPiA+DQo+ID4g
-RG9lcyB0aGlzIHNlZW1zIGFjY2VwdGFibGUgPw0KPiA+DQo+IA0KPiBJZiB0aGUgcmVhc29uIGZv
-ciBkaXNhYmxpbmcgaW50ZXJydXB0cyBpcyB0byBhdm9pZCBkZWFkbG9ja3MsIHdvdWxkbid0IHRo
-ZSBzd2l0Y2gNCj4gdG8gdHJ5bG9jaygpIHdpdGggYSBzb2Z0d2FyZSBmYWxsYmFjayBhbGxvdyB1
-cyB0byBrZWVwIGludGVycnVwdHMgZW5hYmxlZD8NCg0KUmlnaHQsIHdpdGggdGhlIHRyeWxvY2ss
-IEkgZG9uJ3Qgc2VlIHdoeSB3ZSBtYXkgbmVlZCB0byBtYXNrIGludGVycnVwdHMuDQoNCg0K
+Aggregate PBR related definitions and redefine as "boot_sector" to comply
+with the exFAT specification.
+And, rename variable names including 'pbr'.
+
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+ fs/exfat/exfat_fs.h  |  2 +-
+ fs/exfat/exfat_raw.h | 79 +++++++++++++++--------------------------
+ fs/exfat/super.c     | 84 ++++++++++++++++++++++----------------------
+ 3 files changed, 72 insertions(+), 93 deletions(-)
+
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 294aa7792bc3..b0e5b9afc56c 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -231,7 +231,7 @@ struct exfat_sb_info {
+ 	unsigned int root_dir; /* root dir cluster */
+ 	unsigned int dentries_per_clu; /* num of dentries per cluster */
+ 	unsigned int vol_flag; /* volume dirty flag */
+-	struct buffer_head *pbr_bh; /* buffer_head of PBR sector */
++	struct buffer_head *boot_bh; /* buffer_head of BOOT sector */
+ 
+ 	unsigned int map_clu; /* allocation bitmap start cluster */
+ 	unsigned int map_sectors; /* num of allocation bitmap sectors */
+diff --git a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h
+index 8d6c64a7546d..b373dc4e099f 100644
+--- a/fs/exfat/exfat_raw.h
++++ b/fs/exfat/exfat_raw.h
+@@ -8,7 +8,8 @@
+ 
+ #include <linux/types.h>
+ 
+-#define PBR_SIGNATURE		0xAA55
++#define BOOT_SIGNATURE		0xAA55
++#define EXBOOT_SIGNATURE	0xAA550000
+ 
+ #define EXFAT_MAX_FILE_LEN	255
+ 
+@@ -55,7 +56,7 @@
+ 
+ /* checksum types */
+ #define CS_DIR_ENTRY		0
+-#define CS_PBR_SECTOR		1
++#define CS_BOOT_SECTOR		1
+ #define CS_DEFAULT		2
+ 
+ /* file attributes */
+@@ -69,57 +70,35 @@
+ #define ATTR_RWMASK		(ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME | \
+ 				 ATTR_SUBDIR | ATTR_ARCHIVE)
+ 
+-#define PBR64_JUMP_BOOT_LEN		3
+-#define PBR64_OEM_NAME_LEN		8
+-#define PBR64_RESERVED_LEN		53
++#define BOOTSEC_JUMP_BOOT_LEN		3
++#define BOOTSEC_OEM_NAME_LEN		8
++#define BOOTSEC_OLDBPB_LEN		53
+ 
+ #define EXFAT_FILE_NAME_LEN		15
+ 
+-/* EXFAT BIOS parameter block (64 bytes) */
+-struct bpb64 {
+-	__u8 jmp_boot[PBR64_JUMP_BOOT_LEN];
+-	__u8 oem_name[PBR64_OEM_NAME_LEN];
+-	__u8 res_zero[PBR64_RESERVED_LEN];
+-} __packed;
+-
+-/* EXFAT EXTEND BIOS parameter block (56 bytes) */
+-struct bsx64 {
+-	__le64 vol_offset;
+-	__le64 vol_length;
+-	__le32 fat_offset;
+-	__le32 fat_length;
+-	__le32 clu_offset;
+-	__le32 clu_count;
+-	__le32 root_cluster;
+-	__le32 vol_serial;
+-	__u8 fs_version[2];
+-	__le16 vol_flags;
+-	__u8 sect_size_bits;
+-	__u8 sect_per_clus_bits;
+-	__u8 num_fats;
+-	__u8 phy_drv_no;
+-	__u8 perc_in_use;
+-	__u8 reserved2[7];
+-} __packed;
+-
+-/* EXFAT PBR[BPB+BSX] (120 bytes) */
+-struct pbr64 {
+-	struct bpb64 bpb;
+-	struct bsx64 bsx;
+-} __packed;
+-
+-/* Common PBR[Partition Boot Record] (512 bytes) */
+-struct pbr {
+-	union {
+-		__u8 raw[64];
+-		struct bpb64 f64;
+-	} bpb;
+-	union {
+-		__u8 raw[56];
+-		struct bsx64 f64;
+-	} bsx;
+-	__u8 boot_code[390];
+-	__le16 signature;
++/* EXFAT: Main and Backup Boot Sector (512 bytes) */
++struct boot_sector {
++	__u8	jmp_boot[BOOTSEC_JUMP_BOOT_LEN];
++	__u8	oem_name[BOOTSEC_OEM_NAME_LEN];
++	__u8	must_be_zero[BOOTSEC_OLDBPB_LEN];
++	__le64	partition_offset;
++	__le64	vol_length;
++	__le32	fat_offset;
++	__le32	fat_length;
++	__le32	clu_offset;
++	__le32	clu_count;
++	__le32	root_cluster;
++	__le32	vol_serial;
++	__u8	fs_revision[2];
++	__le16	vol_flags;
++	__u8	sect_size_bits;
++	__u8	sect_per_clus_bits;
++	__u8	num_fats;
++	__u8	drv_sel;
++	__u8	percent_in_use;
++	__u8	reserved[7];
++	__u8	boot_code[390];
++	__le16	signature;
+ } __packed;
+ 
+ struct exfat_dentry {
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index c1f47f4071a8..e60d28e73ff0 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -49,7 +49,7 @@ static void exfat_put_super(struct super_block *sb)
+ 		sync_blockdev(sb->s_bdev);
+ 	exfat_set_vol_flags(sb, VOL_CLEAN);
+ 	exfat_free_bitmap(sbi);
+-	brelse(sbi->pbr_bh);
++	brelse(sbi->boot_bh);
+ 	mutex_unlock(&sbi->s_lock);
+ 
+ 	call_rcu(&sbi->rcu, exfat_delayed_free);
+@@ -101,7 +101,7 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
+ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ {
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	struct pbr64 *bpb = (struct pbr64 *)sbi->pbr_bh->b_data;
++	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+ 	bool sync;
+ 
+ 	/* flags are not changed */
+@@ -116,18 +116,18 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ 	if (sb_rdonly(sb))
+ 		return 0;
+ 
+-	bpb->bsx.vol_flags = cpu_to_le16(new_flag);
++	p_boot->vol_flags = cpu_to_le16(new_flag);
+ 
+-	if (new_flag == VOL_DIRTY && !buffer_dirty(sbi->pbr_bh))
++	if (new_flag == VOL_DIRTY && !buffer_dirty(sbi->boot_bh))
+ 		sync = true;
+ 	else
+ 		sync = false;
+ 
+-	set_buffer_uptodate(sbi->pbr_bh);
+-	mark_buffer_dirty(sbi->pbr_bh);
++	set_buffer_uptodate(sbi->boot_bh);
++	mark_buffer_dirty(sbi->boot_bh);
+ 
+ 	if (sync)
+-		sync_dirty_buffer(sbi->pbr_bh);
++		sync_dirty_buffer(sbi->boot_bh);
+ 	return 0;
+ }
+ 
+@@ -366,13 +366,14 @@ static int exfat_read_root(struct inode *inode)
+ 	return 0;
+ }
+ 
+-static struct pbr *exfat_read_pbr_with_logical_sector(struct super_block *sb)
++static struct boot_sector *exfat_read_boot_with_logical_sector(
++		struct super_block *sb)
+ {
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	struct pbr *p_pbr = (struct pbr *) (sbi->pbr_bh)->b_data;
++	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+ 	unsigned short logical_sect = 0;
+ 
+-	logical_sect = 1 << p_pbr->bsx.f64.sect_size_bits;
++	logical_sect = 1 << p_boot->sect_size_bits;
+ 
+ 	if (!is_power_of_2(logical_sect) ||
+ 	    logical_sect < 512 || logical_sect > 4096) {
+@@ -387,49 +388,48 @@ static struct pbr *exfat_read_pbr_with_logical_sector(struct super_block *sb)
+ 	}
+ 
+ 	if (logical_sect > sb->s_blocksize) {
+-		brelse(sbi->pbr_bh);
+-		sbi->pbr_bh = NULL;
++		brelse(sbi->boot_bh);
++		sbi->boot_bh = NULL;
+ 
+ 		if (!sb_set_blocksize(sb, logical_sect)) {
+ 			exfat_err(sb, "unable to set blocksize %u",
+ 				  logical_sect);
+ 			return NULL;
+ 		}
+-		sbi->pbr_bh = sb_bread(sb, 0);
+-		if (!sbi->pbr_bh) {
++		sbi->boot_bh = sb_bread(sb, 0);
++		if (!sbi->boot_bh) {
+ 			exfat_err(sb, "unable to read boot sector (logical sector size = %lu)",
+ 				  sb->s_blocksize);
+ 			return NULL;
+ 		}
+ 
+-		p_pbr = (struct pbr *)sbi->pbr_bh->b_data;
++		p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+ 	}
+-	return p_pbr;
++	return p_boot;
+ }
+ 
+ /* mount the file system volume */
+ static int __exfat_fill_super(struct super_block *sb)
+ {
+ 	int ret;
+-	struct pbr *p_pbr;
+-	struct pbr64 *p_bpb;
++	struct boot_sector *p_boot;
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 
+ 	/* set block size to read super block */
+ 	sb_min_blocksize(sb, 512);
+ 
+ 	/* read boot sector */
+-	sbi->pbr_bh = sb_bread(sb, 0);
+-	if (!sbi->pbr_bh) {
++	sbi->boot_bh = sb_bread(sb, 0);
++	if (!sbi->boot_bh) {
+ 		exfat_err(sb, "unable to read boot sector");
+ 		return -EIO;
+ 	}
+ 
+ 	/* PRB is read */
+-	p_pbr = (struct pbr *)sbi->pbr_bh->b_data;
++	p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+ 
+-	/* check the validity of PBR */
+-	if (le16_to_cpu((p_pbr->signature)) != PBR_SIGNATURE) {
++	/* check the validity of BOOT */
++	if (le16_to_cpu((p_boot->signature)) != BOOT_SIGNATURE) {
+ 		exfat_err(sb, "invalid boot record signature");
+ 		ret = -EINVAL;
+ 		goto free_bh;
+@@ -437,8 +437,8 @@ static int __exfat_fill_super(struct super_block *sb)
+ 
+ 
+ 	/* check logical sector size */
+-	p_pbr = exfat_read_pbr_with_logical_sector(sb);
+-	if (!p_pbr) {
++	p_boot = exfat_read_boot_with_logical_sector(sb);
++	if (!p_boot) {
+ 		ret = -EIO;
+ 		goto free_bh;
+ 	}
+@@ -447,43 +447,43 @@ static int __exfat_fill_super(struct super_block *sb)
+ 	 * res_zero field must be filled with zero to prevent mounting
+ 	 * from FAT volume.
+ 	 */
+-	if (memchr_inv(p_pbr->bpb.f64.res_zero, 0,
+-			sizeof(p_pbr->bpb.f64.res_zero))) {
++	if (memchr_inv(p_boot->must_be_zero, 0,
++			sizeof(p_boot->must_be_zero))) {
+ 		ret = -EINVAL;
+ 		goto free_bh;
+ 	}
+ 
+-	p_bpb = (struct pbr64 *)p_pbr;
+-	if (!p_bpb->bsx.num_fats) {
++	p_boot = (struct boot_sector *)p_boot;
++	if (!p_boot->num_fats) {
+ 		exfat_err(sb, "bogus number of FAT structure");
+ 		ret = -EINVAL;
+ 		goto free_bh;
+ 	}
+ 
+-	sbi->sect_per_clus = 1 << p_bpb->bsx.sect_per_clus_bits;
+-	sbi->sect_per_clus_bits = p_bpb->bsx.sect_per_clus_bits;
++	sbi->sect_per_clus = 1 << p_boot->sect_per_clus_bits;
++	sbi->sect_per_clus_bits = p_boot->sect_per_clus_bits;
+ 	sbi->cluster_size_bits = sbi->sect_per_clus_bits + sb->s_blocksize_bits;
+ 	sbi->cluster_size = 1 << sbi->cluster_size_bits;
+-	sbi->num_FAT_sectors = le32_to_cpu(p_bpb->bsx.fat_length);
+-	sbi->FAT1_start_sector = le32_to_cpu(p_bpb->bsx.fat_offset);
+-	sbi->FAT2_start_sector = p_bpb->bsx.num_fats == 1 ?
++	sbi->num_FAT_sectors = le32_to_cpu(p_boot->fat_length);
++	sbi->FAT1_start_sector = le32_to_cpu(p_boot->fat_offset);
++	sbi->FAT2_start_sector = p_boot->num_fats == 1 ?
+ 		sbi->FAT1_start_sector :
+ 			sbi->FAT1_start_sector + sbi->num_FAT_sectors;
+-	sbi->data_start_sector = le32_to_cpu(p_bpb->bsx.clu_offset);
+-	sbi->num_sectors = le64_to_cpu(p_bpb->bsx.vol_length);
++	sbi->data_start_sector = le32_to_cpu(p_boot->clu_offset);
++	sbi->num_sectors = le64_to_cpu(p_boot->vol_length);
+ 	/* because the cluster index starts with 2 */
+-	sbi->num_clusters = le32_to_cpu(p_bpb->bsx.clu_count) +
++	sbi->num_clusters = le32_to_cpu(p_boot->clu_count) +
+ 		EXFAT_RESERVED_CLUSTERS;
+ 
+-	sbi->root_dir = le32_to_cpu(p_bpb->bsx.root_cluster);
++	sbi->root_dir = le32_to_cpu(p_boot->root_cluster);
+ 	sbi->dentries_per_clu = 1 <<
+ 		(sbi->cluster_size_bits - DENTRY_SIZE_BITS);
+ 
+-	sbi->vol_flag = le16_to_cpu(p_bpb->bsx.vol_flags);
++	sbi->vol_flag = le16_to_cpu(p_boot->vol_flags);
+ 	sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
+ 	sbi->used_clusters = EXFAT_CLUSTERS_UNTRACKED;
+ 
+-	if (le16_to_cpu(p_bpb->bsx.vol_flags) & VOL_DIRTY) {
++	if (le16_to_cpu(p_boot->vol_flags) & VOL_DIRTY) {
+ 		sbi->vol_flag |= VOL_DIRTY;
+ 		exfat_warn(sb, "Volume was not properly unmounted. Some data may be corrupt. Please run fsck.");
+ 	}
+@@ -517,7 +517,7 @@ static int __exfat_fill_super(struct super_block *sb)
+ free_upcase_table:
+ 	exfat_free_upcase_table(sbi);
+ free_bh:
+-	brelse(sbi->pbr_bh);
++	brelse(sbi->boot_bh);
+ 	return ret;
+ }
+ 
+@@ -608,7 +608,7 @@ static int exfat_fill_super(struct super_block *sb, struct fs_context *fc)
+ free_table:
+ 	exfat_free_upcase_table(sbi);
+ 	exfat_free_bitmap(sbi);
+-	brelse(sbi->pbr_bh);
++	brelse(sbi->boot_bh);
+ 
+ check_nls_io:
+ 	unload_nls(sbi->nls_io);
+-- 
+2.25.1
+
