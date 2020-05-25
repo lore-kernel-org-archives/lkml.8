@@ -7,72 +7,64 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B286C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D679DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B4120787
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA00820787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cxm5wBQU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pw328Wov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389689AbgEYJ4d (ORCPT
+        id S2389674AbgEYJ4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59908 "EHLO
+        Mon, 25 May 2020 05:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389333AbgEYJ4d (ORCPT
+        with ESMTP id S2389333AbgEYJ4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:56:33 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9816C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:56:32 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id a23so13449887qto.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:56:32 -0700 (PDT)
+        Mon, 25 May 2020 05:56:44 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E3EC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:56:44 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x29so217504qtv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:56:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CMPkAnqOp+8OxXk8fKVTR6aNVdBXjbmCqODMZoYVJi4=;
-        b=Cxm5wBQUK+9K0WKUEwdMY+ksokGj99NAuDXog1rwVcwqJOl7BKXquOXvqBPW7F8q2d
-         MLt9c1u1ySBcbWYOUEP56mH2TYL+8Gb7TNQj6CfRHHq24XPHLgqUm/YbNgJyAdpMlyg+
-         w0NN0hh7u5bqw3Q+g0RVnJBmWhJUcrukhKxFPgh/2z2EWcW/klnOWiz5qwVAUI67utL2
-         KiYfOMsZkDxJNVLdD2vXckdXAgi+DNlNRSdNutfgIA+aDgcHtGVVrxh9IIvtsfzT/l5C
-         9hYItws2TLsVsMtfj2bbMWJVFBvTc/r2fo7YhZByt2JnUqkk+i1/WLJZPIYKu2nerv61
-         /Zqg==
+        bh=xgy4pPwZvtj+TPA9hBH3u2ab7Rd+oEJ+C7zugCqkjSE=;
+        b=pw328WoviOHNUOb1wemFaEh4oU0CaeEryBB1HVU7jb147EtirSWXnc0Of7pyUsNu/4
+         Y31/bMG5OvVNXmKEjQ2/bHn0cZ9y6J4idnng1OsJm1L+Y2NW3XZftCQU2LJ4hsFAneOg
+         M1rzrheRn/j4ngjNQd4a1v0NtSNPTSbzLmPi1peQ/MyJptaia97iIkMW4m5oxafw0190
+         coEeM3qQTHgMTa9BNYQOGJthlqc+LP7TRouNoPLnRCEgpcqeyqRpEJYoYDFxbP13FoZW
+         Uhv4sTdhXxYXwzUldUOTPDokZrmVvlh+P8XtQeSk/w6PGLYmLOF+3yJRzVnT5+GDnCEX
+         l2Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CMPkAnqOp+8OxXk8fKVTR6aNVdBXjbmCqODMZoYVJi4=;
-        b=R+HzlQXj9yefob+Z3W2J15wjog3ENDv5U0ZzMHtrUL+4HZ78hhQPMKn93n9cdjYw3q
-         QI0M+F2pBNx6ap1ViEO+piM94+1k9X2HePX6eNhXKBgiQcXXUD5byf2sUj5fWTjJdaQ7
-         ssvVK6Isl21CWqKCHdRc0syrpcTHkCwrNRqJA+n/mfluJCdSWxeNgjVV62oDRgwwBg1+
-         aue/o6IELTY33ecu1WU+ySkXamwWKejhbqvqe5iRNi2sAKcu1AR2xNUi6pYk76xlje3l
-         ct9aYiJvfuJ2JELms44SxWkW/SIJuXEYRPW0Uv43nd9ZGvPF75KA3WlvgZcNgA9/Wmsv
-         bIgQ==
-X-Gm-Message-State: AOAM5308FlPQ/970IeODnG8PiZwvRsOqm9Z6gO6feebxX6uJNLDpd3SO
-        zUG19Cq/qyNtL6i1SsRsONsCYm8j+NlRaeB3dEX8UA==
-X-Google-Smtp-Source: ABdhPJzopLNYaPFRPT/ZN7w3dm20D9KZZRQBDwrtFfG3rAAJu8VxTj8O2V5wel6Keo/JWmkE6CjK/4Y0sMQctdjBOqg=
-X-Received: by 2002:ac8:74d9:: with SMTP id j25mr1708889qtr.257.1590400591745;
- Mon, 25 May 2020 02:56:31 -0700 (PDT)
+        bh=xgy4pPwZvtj+TPA9hBH3u2ab7Rd+oEJ+C7zugCqkjSE=;
+        b=ZAtE/1HORRRX1cP21oCsfhjxpW+bM+BGq/4+aE9jWeMJgFZYqbNdO4CNx+Ua0H73pG
+         P4MZLgiASlYKu/VdbxqRjS7qsatcEIenDXwNHN5cHWi8KYhXWpCvsxW6CnukVYbzsbRX
+         qFFBWOswoYc1pjil72l7itgZSfHn3HMrp5Mv18Hr9qvme+3wQHElxSIOniDJy5AtzryY
+         vmxm+vJqZsDHI1ZLJSVpRFozTOtgZ6ETrT5P6TiB7vk46k03PHIdzeCcJjgyyDFwvQ3N
+         SWM9KxQlmO0FMgm6TR+vmKAsY4KU1rVO0PMEdSDAYoC1QutycpSddaAmStx08x8URIXg
+         N5lw==
+X-Gm-Message-State: AOAM532fyj+ctMRDzaoV2kM2txy/GxFsOCwlNVOvxLhgiZ8sBP2l/ee8
+        WPuwJH2MjGnXcqXhKuzA/V77qStcWAS2MHWQnRHdpQ==
+X-Google-Smtp-Source: ABdhPJy53jIyAXr/dV5k2cbIvijNG4i6QjG5uYS4h1FkoY3idjBusgFR602TYASb0QHlcI3nl2a+YNyE94DXEir5TpU=
+X-Received: by 2002:ac8:260b:: with SMTP id u11mr27310502qtu.380.1590400603220;
+ Mon, 25 May 2020 02:56:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200522020059.22332-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200522020059.22332-1-walter-zh.wu@mediatek.com>
+References: <20200522020127.23335-1-walter-zh.wu@mediatek.com>
+In-Reply-To: <20200522020127.23335-1-walter-zh.wu@mediatek.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 25 May 2020 11:56:20 +0200
-Message-ID: <CACT4Y+Zn9eMAPwCMEo710NnsUEoXP+H7xge8a1essu2F9DeFRw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] rcu/kasan: record and print call_rcu() call stack
+Date:   Mon, 25 May 2020 11:56:32 +0200
+Message-ID: <CACT4Y+aFiKZs4EW9ovnQYCu0ytgy0Po3k0rCWAXObmV3Yvd68A@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] kasan: record and print the free track
 To:     Walter Wu <walter-zh.wu@mediatek.com>
 Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
         kasan-dev <kasan-dev@googlegroups.com>,
         Linux-MM <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -87,215 +79,276 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, May 22, 2020 at 4:01 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 >
-> This feature will record the last two call_rcu() call stacks and
-> prints up to 2 call_rcu() call stacks in KASAN report.
+> Move free track from kasan_alloc_meta to kasan_free_meta in order
+> to make struct kasan_alloc_meta and kasan_free_meta size are both
+> 16 bytes. It is a good size because it is the minimal redzone size
+> and a good number of alignment.
 >
-> When call_rcu() is called, we store the call_rcu() call stack into
-> slub alloc meta-data, so that the KASAN report can print rcu stack.
+> For free track, we make some modifications as shown below:
+> 1) Remove the free_track from struct kasan_alloc_meta.
+> 2) Add the free_track into struct kasan_free_meta.
+> 3) Add a macro KASAN_KMALLOC_FREETRACK in order to check whether
+>    it can print free stack in KASAN report.
 >
 > [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
-> [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
-
-Hi Walter,
-
-The series look good to me. Thanks for bearing with me. I am eager to
-see this in syzbot reports.
 
 Reviewed-and-tested-by: Dmitry Vyukov <dvyukov@google.com>
 
 > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
 > Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> Co-developed-by: Dmitry Vyukov <dvyukov@google.com>
 > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
 > Cc: Dmitry Vyukov <dvyukov@google.com>
 > Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Andrey Konovalov <andreyknvl@google.com>
 > ---
->  include/linux/kasan.h |  2 ++
->  kernel/rcu/tree.c     |  2 ++
->  mm/kasan/common.c     |  4 ++--
->  mm/kasan/generic.c    | 21 +++++++++++++++++++++
->  mm/kasan/kasan.h      | 10 ++++++++++
->  mm/kasan/report.c     | 28 +++++++++++++++++++++++-----
->  6 files changed, 60 insertions(+), 7 deletions(-)
+>  mm/kasan/common.c         | 22 ++--------------------
+>  mm/kasan/generic.c        | 22 ++++++++++++++++++++++
+>  mm/kasan/generic_report.c |  1 +
+>  mm/kasan/kasan.h          | 13 +++++++++++--
+>  mm/kasan/quarantine.c     |  1 +
+>  mm/kasan/report.c         | 26 ++++----------------------
+>  mm/kasan/tags.c           | 37 +++++++++++++++++++++++++++++++++++++
+>  7 files changed, 78 insertions(+), 44 deletions(-)
 >
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 31314ca7c635..23b7ee00572d 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
->
->  void kasan_cache_shrink(struct kmem_cache *cache);
->  void kasan_cache_shutdown(struct kmem_cache *cache);
-> +void kasan_record_aux_stack(void *ptr);
->
->  #else /* CONFIG_KASAN_GENERIC */
->
->  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
->  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
-> +static inline void kasan_record_aux_stack(void *ptr) {}
->
->  #endif /* CONFIG_KASAN_GENERIC */
->
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 06548e2ebb72..36a4ff7f320b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -57,6 +57,7 @@
->  #include <linux/slab.h>
->  #include <linux/sched/isolation.h>
->  #include <linux/sched/clock.h>
-> +#include <linux/kasan.h>
->  #include "../time/tick-internal.h"
->
->  #include "tree.h"
-> @@ -2668,6 +2669,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
->         head->func = func;
->         head->next = NULL;
->         local_irq_save(flags);
-> +       kasan_record_aux_stack(head);
->         rdp = this_cpu_ptr(&rcu_data);
->
->         /* Add the callback to our list. */
 > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 2906358e42f0..8bc618289bb1 100644
+> index 8bc618289bb1..47b53912f322 100644
 > --- a/mm/kasan/common.c
 > +++ b/mm/kasan/common.c
-> @@ -41,7 +41,7 @@
->  #include "kasan.h"
->  #include "../slab.h"
+> @@ -51,7 +51,7 @@ depot_stack_handle_t kasan_save_stack(gfp_t flags)
+>         return stack_depot_save(entries, nr_entries, flags);
+>  }
 >
-> -static inline depot_stack_handle_t save_stack(gfp_t flags)
-> +depot_stack_handle_t kasan_save_stack(gfp_t flags)
->  {
->         unsigned long entries[KASAN_STACK_DEPTH];
->         unsigned int nr_entries;
-> @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
->  static inline void set_track(struct kasan_track *track, gfp_t flags)
+> -static inline void set_track(struct kasan_track *track, gfp_t flags)
+> +void kasan_set_track(struct kasan_track *track, gfp_t flags)
 >  {
 >         track->pid = current->pid;
-> -       track->stack = save_stack(flags);
-> +       track->stack = kasan_save_stack(flags);
+>         track->stack = kasan_save_stack(flags);
+> @@ -299,24 +299,6 @@ struct kasan_free_meta *get_free_info(struct kmem_cache *cache,
+>         return (void *)object + cache->kasan_info.free_meta_offset;
 >  }
 >
->  void kasan_enable_current(void)
+> -
+> -static void kasan_set_free_info(struct kmem_cache *cache,
+> -               void *object, u8 tag)
+> -{
+> -       struct kasan_alloc_meta *alloc_meta;
+> -       u8 idx = 0;
+> -
+> -       alloc_meta = get_alloc_info(cache, object);
+> -
+> -#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> -       idx = alloc_meta->free_track_idx;
+> -       alloc_meta->free_pointer_tag[idx] = tag;
+> -       alloc_meta->free_track_idx = (idx + 1) % KASAN_NR_FREE_STACKS;
+> -#endif
+> -
+> -       set_track(&alloc_meta->free_track[idx], GFP_NOWAIT);
+> -}
+> -
+>  void kasan_poison_slab(struct page *page)
+>  {
+>         unsigned long i;
+> @@ -492,7 +474,7 @@ static void *__kasan_kmalloc(struct kmem_cache *cache, const void *object,
+>                 KASAN_KMALLOC_REDZONE);
+>
+>         if (cache->flags & SLAB_KASAN)
+> -               set_track(&get_alloc_info(cache, object)->alloc_track, flags);
+> +               kasan_set_track(&get_alloc_info(cache, object)->alloc_track, flags);
+>
+>         return set_tag(object, tag);
+>  }
 > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index 56ff8885fe2e..8acf48882ba2 100644
+> index 8acf48882ba2..4b3cbad7431b 100644
 > --- a/mm/kasan/generic.c
 > +++ b/mm/kasan/generic.c
-> @@ -325,3 +325,24 @@ DEFINE_ASAN_SET_SHADOW(f2);
->  DEFINE_ASAN_SET_SHADOW(f3);
->  DEFINE_ASAN_SET_SHADOW(f5);
->  DEFINE_ASAN_SET_SHADOW(f8);
+> @@ -346,3 +346,25 @@ void kasan_record_aux_stack(void *addr)
+>         alloc_info->aux_stack[1] = alloc_info->aux_stack[0];
+>         alloc_info->aux_stack[0] = kasan_save_stack(GFP_NOWAIT);
+>  }
 > +
-> +void kasan_record_aux_stack(void *addr)
+> +void kasan_set_free_info(struct kmem_cache *cache,
+> +                               void *object, u8 tag)
 > +{
-> +       struct page *page = kasan_addr_to_page(addr);
-> +       struct kmem_cache *cache;
-> +       struct kasan_alloc_meta *alloc_info;
-> +       void *object;
+> +       struct kasan_free_meta *free_meta;
 > +
-> +       if (!(page && PageSlab(page)))
-> +               return;
-> +
-> +       cache = page->slab_cache;
-> +       object = nearest_obj(cache, page, addr);
-> +       alloc_info = get_alloc_info(cache, object);
+> +       free_meta = get_free_info(cache, object);
+> +       kasan_set_track(&free_meta->free_track, GFP_NOWAIT);
 > +
 > +       /*
-> +        * record the last two call_rcu() call stacks.
+> +        *  the object was freed and has free track set
 > +        */
-> +       alloc_info->aux_stack[1] = alloc_info->aux_stack[0];
-> +       alloc_info->aux_stack[0] = kasan_save_stack(GFP_NOWAIT);
+> +       *(u8 *)kasan_mem_to_shadow(object) = KASAN_KMALLOC_FREETRACK;
 > +}
+> +
+> +struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
+> +                               void *object, u8 tag)
+> +{
+> +       if (*(u8 *)kasan_mem_to_shadow(object) != KASAN_KMALLOC_FREETRACK)
+> +               return NULL;
+> +       return &get_free_info(cache, object)->free_track;
+> +}
+> diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
+> index e200acb2d292..a38c7a9e192a 100644
+> --- a/mm/kasan/generic_report.c
+> +++ b/mm/kasan/generic_report.c
+> @@ -80,6 +80,7 @@ static const char *get_shadow_bug_type(struct kasan_access_info *info)
+>                 break;
+>         case KASAN_FREE_PAGE:
+>         case KASAN_KMALLOC_FREE:
+> +       case KASAN_KMALLOC_FREETRACK:
+>                 bug_type = "use-after-free";
+>                 break;
+>         case KASAN_ALLOCA_LEFT:
 > diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index e8f37199d885..a7391bc83070 100644
+> index a7391bc83070..ef655a1c6e15 100644
 > --- a/mm/kasan/kasan.h
 > +++ b/mm/kasan/kasan.h
-> @@ -104,7 +104,15 @@ struct kasan_track {
+> @@ -17,15 +17,17 @@
+>  #define KASAN_PAGE_REDZONE      0xFE  /* redzone for kmalloc_large allocations */
+>  #define KASAN_KMALLOC_REDZONE   0xFC  /* redzone inside slub object */
+>  #define KASAN_KMALLOC_FREE      0xFB  /* object was freed (kmem_cache_free/kfree) */
+> +#define KASAN_KMALLOC_FREETRACK 0xFA  /* object was freed and has free track set */
+>  #else
+>  #define KASAN_FREE_PAGE         KASAN_TAG_INVALID
+>  #define KASAN_PAGE_REDZONE      KASAN_TAG_INVALID
+>  #define KASAN_KMALLOC_REDZONE   KASAN_TAG_INVALID
+>  #define KASAN_KMALLOC_FREE      KASAN_TAG_INVALID
+> +#define KASAN_KMALLOC_FREETRACK KASAN_TAG_INVALID
+>  #endif
 >
->  struct kasan_alloc_meta {
->         struct kasan_track alloc_track;
+> -#define KASAN_GLOBAL_REDZONE    0xFA  /* redzone for global variable */
+> -#define KASAN_VMALLOC_INVALID   0xF9  /* unallocated space in vmapped page */
+> +#define KASAN_GLOBAL_REDZONE    0xF9  /* redzone for global variable */
+> +#define KASAN_VMALLOC_INVALID   0xF8  /* unallocated space in vmapped page */
+>
+>  /*
+>   * Stack redzone shadow values
+> @@ -127,6 +129,9 @@ struct kasan_free_meta {
+>          * Otherwise it might be used for the allocator freelist.
+>          */
+>         struct qlist_node quarantine_link;
 > +#ifdef CONFIG_KASAN_GENERIC
-> +       /*
-> +        * call_rcu() call stack is stored into struct kasan_alloc_meta.
-> +        * The free stack is stored into struct kasan_free_meta.
-> +        */
-> +       depot_stack_handle_t aux_stack[2];
-> +#else
->         struct kasan_track free_track[KASAN_NR_FREE_STACKS];
+> +       struct kasan_track free_track;
 > +#endif
->  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
->         u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
->         u8 free_track_idx;
-> @@ -159,6 +167,8 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
+>  };
 >
+>  struct kasan_alloc_meta *get_alloc_info(struct kmem_cache *cache,
+> @@ -168,6 +173,10 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
 >  struct page *kasan_addr_to_page(const void *addr);
 >
-> +depot_stack_handle_t kasan_save_stack(gfp_t flags);
-> +
+>  depot_stack_handle_t kasan_save_stack(gfp_t flags);
+> +void kasan_set_track(struct kasan_track *track, gfp_t flags);
+> +void kasan_set_free_info(struct kmem_cache *cache, void *object, u8 tag);
+> +struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
+> +                               void *object, u8 tag);
+>
 >  #if defined(CONFIG_KASAN_GENERIC) && \
 >         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
->  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
+> diff --git a/mm/kasan/quarantine.c b/mm/kasan/quarantine.c
+> index 978bc4a3eb51..4c5375810449 100644
+> --- a/mm/kasan/quarantine.c
+> +++ b/mm/kasan/quarantine.c
+> @@ -145,6 +145,7 @@ static void qlink_free(struct qlist_node *qlink, struct kmem_cache *cache)
+>         if (IS_ENABLED(CONFIG_SLAB))
+>                 local_irq_save(flags);
+>
+> +       *(u8 *)kasan_mem_to_shadow(object) = KASAN_KMALLOC_FREE;
+>         ___cache_free(cache, object, _THIS_IP_);
+>
+>         if (IS_ENABLED(CONFIG_SLAB))
 > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 80f23c9da6b0..2421a4bd9227 100644
+> index 2421a4bd9227..fed3c8fdfd25 100644
 > --- a/mm/kasan/report.c
 > +++ b/mm/kasan/report.c
-> @@ -105,15 +105,20 @@ static void end_report(unsigned long *flags)
->         kasan_enable_current();
+> @@ -164,26 +164,6 @@ static void describe_object_addr(struct kmem_cache *cache, void *object,
+>                 (void *)(object_addr + cache->object_size));
 >  }
 >
-> +static void print_stack(depot_stack_handle_t stack)
-> +{
-> +       unsigned long *entries;
-> +       unsigned int nr_entries;
+> -static struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
+> -               void *object, u8 tag)
+> -{
+> -       struct kasan_alloc_meta *alloc_meta;
+> -       int i = 0;
+> -
+> -       alloc_meta = get_alloc_info(cache, object);
+> -
+> -#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> -       for (i = 0; i < KASAN_NR_FREE_STACKS; i++) {
+> -               if (alloc_meta->free_pointer_tag[i] == tag)
+> -                       break;
+> -       }
+> -       if (i == KASAN_NR_FREE_STACKS)
+> -               i = alloc_meta->free_track_idx;
+> -#endif
+> -
+> -       return &alloc_meta->free_track[i];
+> -}
+> -
+>  static void describe_object(struct kmem_cache *cache, void *object,
+>                                 const void *addr, u8 tag)
+>  {
+> @@ -195,8 +175,10 @@ static void describe_object(struct kmem_cache *cache, void *object,
+>                 print_track(&alloc_info->alloc_track, "Allocated");
+>                 pr_err("\n");
+>                 free_track = kasan_get_free_track(cache, object, tag);
+> -               print_track(free_track, "Freed");
+> -               pr_err("\n");
+> +               if (free_track) {
+> +                       print_track(free_track, "Freed");
+> +                       pr_err("\n");
+> +               }
+>
+>  #ifdef CONFIG_KASAN_GENERIC
+>                 if (alloc_info->aux_stack[0]) {
+> diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
+> index 25b7734e7013..201dee5d6ae0 100644
+> --- a/mm/kasan/tags.c
+> +++ b/mm/kasan/tags.c
+> @@ -162,3 +162,40 @@ void __hwasan_tag_memory(unsigned long addr, u8 tag, unsigned long size)
+>         kasan_poison_shadow((void *)addr, size, tag);
+>  }
+>  EXPORT_SYMBOL(__hwasan_tag_memory);
 > +
-> +       nr_entries = stack_depot_fetch(stack, &entries);
-> +       stack_trace_print(entries, nr_entries, 0);
+> +void kasan_set_free_info(struct kmem_cache *cache,
+> +                               void *object, u8 tag)
+> +{
+> +       struct kasan_alloc_meta *alloc_meta;
+> +       u8 idx = 0;
+> +
+> +       alloc_meta = get_alloc_info(cache, object);
+> +
+> +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> +       idx = alloc_meta->free_track_idx;
+> +       alloc_meta->free_pointer_tag[idx] = tag;
+> +       alloc_meta->free_track_idx = (idx + 1) % KASAN_NR_FREE_STACKS;
+> +#endif
+> +
+> +       kasan_set_track(&alloc_meta->free_track[idx], GFP_NOWAIT);
 > +}
 > +
->  static void print_track(struct kasan_track *track, const char *prefix)
->  {
->         pr_err("%s by task %u:\n", prefix, track->pid);
->         if (track->stack) {
-> -               unsigned long *entries;
-> -               unsigned int nr_entries;
-> -
-> -               nr_entries = stack_depot_fetch(track->stack, &entries);
-> -               stack_trace_print(entries, nr_entries, 0);
-> +               print_stack(track->stack);
->         } else {
->                 pr_err("(stack is not available)\n");
->         }
-> @@ -192,6 +197,19 @@ static void describe_object(struct kmem_cache *cache, void *object,
->                 free_track = kasan_get_free_track(cache, object, tag);
->                 print_track(free_track, "Freed");
->                 pr_err("\n");
+> +struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
+> +                               void *object, u8 tag)
+> +{
+> +       struct kasan_alloc_meta *alloc_meta;
+> +       int i = 0;
 > +
-> +#ifdef CONFIG_KASAN_GENERIC
-> +               if (alloc_info->aux_stack[0]) {
-> +                       pr_err("Last call_rcu():\n");
-> +                       print_stack(alloc_info->aux_stack[0]);
-> +                       pr_err("\n");
-> +               }
-> +               if (alloc_info->aux_stack[1]) {
-> +                       pr_err("Second to last call_rcu():\n");
-> +                       print_stack(alloc_info->aux_stack[1]);
-> +                       pr_err("\n");
-> +               }
+> +       alloc_meta = get_alloc_info(cache, object);
+> +
+> +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> +       for (i = 0; i < KASAN_NR_FREE_STACKS; i++) {
+> +               if (alloc_meta->free_pointer_tag[i] == tag)
+> +                       break;
+> +       }
+> +       if (i == KASAN_NR_FREE_STACKS)
+> +               i = alloc_meta->free_track_idx;
 > +#endif
->         }
->
->         describe_object_addr(cache, object, addr);
+> +
+> +       return &alloc_meta->free_track[i];
+> +}
 > --
 > 2.18.0
 >
 > --
 > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200522020059.22332-1-walter-zh.wu%40mediatek.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200522020127.23335-1-walter-zh.wu%40mediatek.com.
