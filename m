@@ -2,144 +2,102 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42503207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h2w1oTn2"
+	by mail.kernel.org (Postfix) with ESMTP id B54652084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389306AbgEYIsp (ORCPT
+        id S2389309AbgEYItP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:48:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388342AbgEYIsm (ORCPT
+        Mon, 25 May 2020 04:49:15 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:41412 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388773AbgEYItO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:48:42 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59ACDC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:48:41 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id e7so9550049vsm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GeODa0YbiTjbooy9JHHC15ZmQa3mj5lyrBd83ZZUO4Y=;
-        b=h2w1oTn2afNYUAiEwaZkklboJKWXBctne83Cc9a9u+fdFQSeX+39nRiBV1k+paJgkg
-         OGpSXepJMqTiWYil+kmALPik7Qhs2kcryCnAHY/5u7nC8u8U2bG98H0wLoVZyWjOWQoR
-         ii6CgGNDtNG2SpInmFkEUL0ZpHiGrElshtenbPJA0izbisyK7lizeg7jwP3NgC5qP75U
-         vac7nz/vxymHuFoQtN+I5Yn9MDUCPClEn079BXVx83LomJXi5G8RlyF6ZjLtgIDq+MkP
-         aoQIykw/OQvXg9pgx6DJ0AjdYUyDyDUu/841HkIxdohjtDZj7+jgX2qxfybe5Hc1/aaL
-         RHDw==
+        Mon, 25 May 2020 04:49:14 -0400
+Received: by mail-oo1-f67.google.com with SMTP id z26so3453326oog.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:49:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GeODa0YbiTjbooy9JHHC15ZmQa3mj5lyrBd83ZZUO4Y=;
-        b=TxDrsrK4ox685BrdxDh2pWxlahA+y4sfgn1GIfGILRjoBWvEe1t6rCDpds2Qwb/pM6
-         BkeEe995mTM9jpZtfjGwl/4m7aYC7g43OhrD4QMIzCqgLNxO1RokEdoe+kw54O1sGQL8
-         DBrYCw76HXdObH65a39NShTB6Zy4SYUTdtMuZyzvcTaYasIaZpjcTFiBwdF5U3oa7+D8
-         59eA24hI/lQ69UTKktVNcaTGM5vkJjcT3GqRx+7BWTpC9HtP85tT4QcrtOMI4eS0BNZb
-         oYdXMij9mBWuvYwb81hXGnP2XLD4bMUE6RLnS13gDZc6NyZJFyf04fJKUeuikYyoTbbs
-         kyKQ==
-X-Gm-Message-State: AOAM530ryIdsRyPyUBOLJI9S+kWLMvPCIBj/lAemiIDSKBC3fJyBFhhI
-        LxpcItpyFuIsjYH1bVr40PAWoS3ubYI/IsdGbB/Apw==
-X-Google-Smtp-Source: ABdhPJwCcH4pYSZrf2SKmkEOCli6MSxdBz6f7xVXY4gZ5TdGNjJ0pX2ecAHPY0hqztpn3/kyrwxrYrPLPmlnUmgnX6Y=
-X-Received: by 2002:a67:2441:: with SMTP id k62mr3914343vsk.165.1590396520572;
- Mon, 25 May 2020 01:48:40 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=M+PuH/pTGAFDoL2hcME8N+/oYCZf4CIdiqezjAv2DZ0=;
+        b=jAocEbMXtiBYW6J0Lky0SwLf38n9GXNy6eDeQFxaduUV2vjPLuSHs/BrkrLQyOrizJ
+         uurvnNfLGgKwSgeQCA4eeH8xX0H+pSSCQ5+SqL+5UlTY4DDUkS+GPe9v/ekGw3MeSh7x
+         q8OJIJt46DrMpwNjrDCPwXp0DeNu2s5w9RQuR492UYLc+5jqpbW4gEe+hxAFx3beVmfO
+         rJxsxkz4tSM4tk0qo+rQB3ECEfb3lDFmNE6IZUoamwPAw2VvjbPYvCksAET1OZgmSpFI
+         VGv+BRLqj5h3X5DGrWyKF6CQASHZStCTcaxjrj2LnKiSpIlVnk7XPoDKoZOvhLYkJMcj
+         utZw==
+X-Gm-Message-State: AOAM5339hV8wvvR6w5Nc/TYnGY3uH+ryC25lZWfhcsCbYnjDeznLJfHp
+        VN//Ziy7SvgMQ0ZoCWPJXKlS9BG5Qw0axO4BMGw=
+X-Google-Smtp-Source: ABdhPJwx++7vr09NOyjF/OrUTnNC3we2My4ZE1fNWT4N/UM+Ioatv7uIPOceNSYDHBQKEw3b7wBE7TZ7HQRP/gO1ySY=
+X-Received: by 2002:a4a:95d0:: with SMTP id p16mr12463896ooi.40.1590396553331;
+ Mon, 25 May 2020 01:49:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <HKAPR02MB429107D62F3E9F86E76AD550E0B40@HKAPR02MB4291.apcprd02.prod.outlook.com>
-In-Reply-To: <HKAPR02MB429107D62F3E9F86E76AD550E0B40@HKAPR02MB4291.apcprd02.prod.outlook.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 25 May 2020 10:48:04 +0200
-Message-ID: <CAPDyKFqDveZ0+eh3QeXGr6gvek5YTr1chvinZN1twPT5uu7=4w@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: fix use-after-free issue
-To:     =?UTF-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
-Cc:     "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20200521185707.GA3661@embeddedor>
+In-Reply-To: <20200521185707.GA3661@embeddedor>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 25 May 2020 10:49:02 +0200
+Message-ID: <CAMuHMdUGPMrPTqypGpnhe2wdpnbtUOsdUacnrHAapBM_996F5A@mail.gmail.com>
+Subject: Re: [PATCH] m68k: tools: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 11:29, =E5=BD=AD=E6=B5=A9(Richard) <richard.peng@opp=
-o.com> wrote:
+On Thu, May 21, 2020 at 8:52 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 >
->  The data structure member =E2=80=9Crpmb->md=E2=80=9D was passed to a cal=
-l of
->  the function =E2=80=9Cmmc_blk_put=E2=80=9D after a call of the function =
-=E2=80=9Cput_device=E2=80=9D.
->  Reorder these function calls to keep the data accesses consistent.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 >
-> Fixes: 1c87f7357849 ("mmc: block: Fix bug when removing RPMB chardev ")
-> Signed-off-by: Peng Hao <richard.peng@oppo.com>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-I downloaded the patch from patchwork, but it seems like it got
-mangled somehow. Perhaps you can try to download it from patchwork and
-run checkpatch on it to see if it works for you? Otherwise the problem
-may be at my side.
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+i.e. will queue in the m68k for-v5.8 branch.
 
-In any case, I manually fixed it up this time. So, applied for fixes
-and by adding a stable tag, thanks!
+Gr{oetje,eeting}s,
 
-Kind regards
-Uffe
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-> ---
->  drivers/mmc/core/block.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> index 8499b56..e6e025c 100644
-> --- a/drivers/mmc/core/block.c
-> +++ b/drivers/mmc/core/block.c
-> @@ -2483,8 +2483,8 @@ static int mmc_rpmb_chrdev_release(struct inode *in=
-ode, struct file *filp)
->  struct mmc_rpmb_data *rpmb =3D container_of(inode->i_cdev,
->    struct mmc_rpmb_data, chrdev);
->
-> -put_device(&rpmb->dev);
->  mmc_blk_put(rpmb->md);
-> +put_device(&rpmb->dev);
->
->  return 0;
->  }
-> --
-> 2.7.4
-> ________________________________
-> OPPO
->
-> =E6=9C=AC=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=
-=E4=BB=B6=E5=90=AB=E6=9C=89OPPO=E5=85=AC=E5=8F=B8=E7=9A=84=E4=BF=9D=E5=AF=
-=86=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=BB=85=E9=99=90=E4=BA=8E=E9=82=AE=E4=BB=B6=
-=E6=8C=87=E6=98=8E=E7=9A=84=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=EF=
-=BC=88=E5=8C=85=E5=90=AB=E4=B8=AA=E4=BA=BA=E5=8F=8A=E7=BE=A4=E7=BB=84=EF=BC=
-=89=E3=80=82=E7=A6=81=E6=AD=A2=E4=BB=BB=E4=BD=95=E4=BA=BA=E5=9C=A8=E6=9C=AA=
-=E7=BB=8F=E6=8E=88=E6=9D=83=E7=9A=84=E6=83=85=E5=86=B5=E4=B8=8B=E4=BB=A5=E4=
-=BB=BB=E4=BD=95=E5=BD=A2=E5=BC=8F=E4=BD=BF=E7=94=A8=E3=80=82=E5=A6=82=E6=9E=
-=9C=E6=82=A8=E9=94=99=E6=94=B6=E4=BA=86=E6=9C=AC=E9=82=AE=E4=BB=B6=EF=BC=8C=
-=E8=AF=B7=E7=AB=8B=E5=8D=B3=E4=BB=A5=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E9=
-=80=9A=E7=9F=A5=E5=8F=91=E4=BB=B6=E4=BA=BA=E5=B9=B6=E5=88=A0=E9=99=A4=E6=9C=
-=AC=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=E4=BB=B6=E3=80=82
->
-> This e-mail and its attachments contain confidential information from OPP=
-O, which is intended only for the person or entity whose address is listed =
-above. Any use of the information contained herein in any way (including, b=
-ut not limited to, total or partial disclosure, reproduction, or disseminat=
-ion) by persons other than the intended recipient(s) is prohibited. If you =
-receive this e-mail in error, please notify the sender by phone or email im=
-mediately and delete it!
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
