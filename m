@@ -2,131 +2,118 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A282AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9B92073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D37A2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 12:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwEjjhL6"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="Yaqnn88P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390472AbgEYMGA (ORCPT
+        id S2390488AbgEYMHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 08:06:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59473 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390228AbgEYMGA (ORCPT
+        Mon, 25 May 2020 08:07:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390364AbgEYMHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 08:06:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590408358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zI7DMzgAyPm47gxM2waB33iVsf6Q+eglN7ngq4fwosY=;
-        b=JwEjjhL6KmdNLcxj/hTYz+tJvsnqcyG0QYZH8Q1ZjWjgUkurt+eq4y8/f9vSkGCmfVCoe9
-        qXv8laoc4wA+Xotb4ky2EVcZ28icTkD3fZOzQSExwDActoGw9Sj4M9COiJUOwn1Gt5V8Gs
-        UeGz3s3EGiyfCg5U1sYmAcx+oUMJaUA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103--CqCFHlYM-2vr7NNxerPFg-1; Mon, 25 May 2020 08:05:55 -0400
-X-MC-Unique: -CqCFHlYM-2vr7NNxerPFg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55FAA1937FDD;
-        Mon, 25 May 2020 12:05:53 +0000 (UTC)
-Received: from Diego (unknown [10.40.208.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BD4560E1C;
-        Mon, 25 May 2020 12:05:49 +0000 (UTC)
-Date:   Mon, 25 May 2020 14:06:07 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     Jiri Olsa <jolsa@kernel.org>
-cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ian Rogers <irogers@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC 00/14] perf tests: Check on subtest for user specified
- test
-In-Reply-To: <20200524224219.234847-1-jolsa@kernel.org>
-Message-ID: <alpine.LRH.2.20.2005251401230.4075@Diego>
-References: <20200524224219.234847-1-jolsa@kernel.org>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Mon, 25 May 2020 08:07:15 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43214C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:07:14 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id se13so20207586ejb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 05:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pjBNNIbLOFwDkpzFcneYW/rm3MCteyqmk2+AD7eTi7Q=;
+        b=Yaqnn88Ptufk2fBQlUDcRCsKClwr9CO1WpPiINZQN7Y4JD8fD75BspVLhLhkLjxRnV
+         OnSaMpQrtS7Zumgr4dlhU8rzWFSyCTw35A0VY+NuJg/9uGfC71GLdP683A++JNRhCti6
+         FlHsOkRSKy1k7lGEVPgcYl/pvHmKf5AIXjoFY+c0LFENh61NYCh1pFy/Cs9TEFW2+54I
+         b0Ue7htdyUeQ9wnRCiwOiM28NU+ph229BAzmdKlN+YgAg/2WYYtP+4+k3CZ9kISsHA1t
+         4eaNy2dCumj/YvHSNdDOdX80MwIj8Z5eYKcCcFFd5bPCIV4ix+OJ5UTnzK4vrKTBELNp
+         EwZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pjBNNIbLOFwDkpzFcneYW/rm3MCteyqmk2+AD7eTi7Q=;
+        b=JSwwOS3XN3QywTqsEd0ExK9LgAFRstBMniXxo9tirk8Izn+F3X2wEYG3Wk3mcJUImr
+         CMOZn8k5CpG5cmcgXZxPYBZmzfEhGrJMnaNQ6Ja8UaiSQ4cXZx2JHRRDx0P2OoALP+70
+         E6PEQ/myQcaQU268pna+TifZsh4rAUj1h+C8Z3ru5EJZD8XoyD8lqOV6cbh/hoAJzI7k
+         r3PUqCbTvhB/xC8yFt6Z1czdZlM6u0DIpVAUBm3INvY3TFOslfEs3jhNTe4VjFlJFopG
+         bbtBOKeiv/DTUmwDJWX7ZmDkIl4/sUiYFmj17C3JUveaAn2+v5o9CzbFiebSW69FwCBa
+         Z6FQ==
+X-Gm-Message-State: AOAM533Rp3TdMShLEwrCEz2L6dkJqmHIE42KypZ4cC5oDlOnkTHrfuAi
+        rMnMzY30NI7NsmtQxr4zx+/TMA==
+X-Google-Smtp-Source: ABdhPJyG5BNBoy7vcuGmKdKBvgQj8LWPAOajFFLOspBplpV88Xa3IJ2LcNxO/A0Y2BJCjebWWRCstA==
+X-Received: by 2002:a17:906:e01:: with SMTP id l1mr17850843eji.425.1590408432916;
+        Mon, 25 May 2020 05:07:12 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id o18sm4012831eje.40.2020.05.25.05.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 05:07:12 -0700 (PDT)
+Date:   Mon, 25 May 2020 14:07:10 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+Message-ID: <20200525120710.GA898135@x1>
+References: <20200508165821.GA14555@x1>
+ <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
+ <20200518141843.GA916914@x1>
+ <20200520220203.GA363398@x1>
+ <CACRpkdYV4Pd2rL=Kha6HxL8J5+vFy_M0hV7+qMghS4AVxd9D2w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYV4Pd2rL=Kha6HxL8J5+vFy_M0hV7+qMghS4AVxd9D2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020, Jiri Olsa wrote:
-> hi,
-> changes for using metric result in another metric seem
-> to change lot of core metric code, so it's better we
-> have some more tests before we do that.
+On Mon, May 25, 2020 at 11:23:17AM +0200, Linus Walleij wrote:
+> On Thu, May 21, 2020 at 12:02 AM Drew Fustini <drew@beagleboard.org> wrote:
 > 
-> Sending as RFC as it's still alive and you guys might
-> have some other idea of how to do this.
+> > I've posted a v2 which I hope improves the intent of the line names. [0]
+> >
+> > I'm happy to integrate any feedback and create a v3 - especially if it
+> > is prefered for me to list the specific peripherial signals instead of
+> > an abstract term like "[ethernet]" or "[emmc]".  This is for lines that
+> > can not be used because they are not routed to the expansion headers.
+> >
+> > [0] https://lore.kernel.org/linux-omap/20200520214757.GA362547@x1/T/#u
 > 
-> Also available in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/fixes
+> This looks good to me. FWIW
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> jirka
-> 
-Hi!
-Last commit from perf/fixes branch I see there is:
+> Yours,
+> Linus Walleij
 
-commit 0445062df28fef1002302aa419af65fa80513dd4 (HEAD -> perf/fixes, origin/perf/fixes)
-Author: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri Dec 6 00:10:13 2019 +0100
+Linus - 
 
-Different branch?
+I have posted a newer patch that targets am335x-beagleblack.dts [0] 
+instead of am335x-bone-common.dtsi as Grygorii Strashko pointed out
+that these line names are not applicable to all BeagleBone models.
 
-> 
-> ---
-> Jiri Olsa (14):
->       perf tests: Check on subtest for user specified test
->       perf tools: Do not pass avg to generic_metric
->       perf tools: Add struct parse_events_state pointer to scanner
->       perf tools: Add fake pmu support
->       perf tools: Add parse_events_fake interface
->       perf tests: Add another pmu-events tests
->       perf tools: Factor out parse_groups function
->       perf tools: Add metricgroup__parse_groups_test function
->       perf tools: Add fake_pmu to parse_events function
->       perf tools: Add map to parse_events function
->       perf tools: Factor out prepare_metric function
->       perf tools: Add test_generic_metric function
->       perf tests: Add parse metric test for ipc metric
->       perf tests: Add parse metric test for frontend metric
-> 
->  tools/perf/tests/Build          |   1 +
->  tools/perf/tests/builtin-test.c |  38 ++++++++++++++++++++++------
->  tools/perf/tests/parse-metric.c | 163 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/tests/pmu-events.c   | 120 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/tests/tests.h        |   1 +
->  tools/perf/util/metricgroup.c   |  53 ++++++++++++++++++++++++++++++---------
->  tools/perf/util/metricgroup.h   |   9 +++++++
->  tools/perf/util/parse-events.c  |  73 ++++++++++++++++++++++++++++++++++++++---------------
->  tools/perf/util/parse-events.h  |   6 ++++-
->  tools/perf/util/parse-events.l  |  16 +++++++-----
->  tools/perf/util/parse-events.y  |  37 +++++++++++++++++++++++++--
->  tools/perf/util/stat-shadow.c   |  77 ++++++++++++++++++++++++++++++++++++--------------------
->  tools/perf/util/stat.h          |   3 +++
->  13 files changed, 521 insertions(+), 76 deletions(-)
->  create mode 100644 tools/perf/tests/parse-metric.c
-> 
+The gpio line naming scheme is the same, is it ok to add your Ack?
 
+thanks,
+drew
+
+[0] https://lore.kernel.org/linux-omap/20200521200926.GC429020@x1/
