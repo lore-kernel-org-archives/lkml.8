@@ -2,154 +2,197 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80C7220812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 15:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590422315;
-	bh=wiDKEyw484GXmzSpZVclCFGRQEPFTvq5irNs419nfE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UkAUoaskJxeiuIaMLjW3Gpw3LZZMRfgqMEV4P1EJ171iqanJUFZyqFcIGqiJ4IRFe
-	 yDgAQjaoOY+tv7DX1Lo2Wt84ZbGTQvDxKuzK3wrdED112iyIeRgqISvJH4toBH6gU3
-	 WQ63CvMf6x7MOf45Dn+opUQjopHrL0iYQuJDVNRg=
+	by mail.kernel.org (Postfix) with ESMTP id 033FE2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ktt0B1DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404188AbgEYP6f (ORCPT
+        id S2391126AbgEYQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 11:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404076AbgEYP6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 11:58:34 -0400
-Received: from kernel.org (unknown [87.70.212.59])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1635F2071A;
-        Mon, 25 May 2020 15:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590422313;
-        bh=wiDKEyw484GXmzSpZVclCFGRQEPFTvq5irNs419nfE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aJELzVEPKY+5KMeo8hwIzuqSdQOIGJRHj/t/iF3JINZEsAtYxfFOUSrWPkz21CKEb
-         B3vg9eQI7Das73bdaUmYck2p+l4ymM+jeed8WASz0bR5SGfs0HEDOf2iFB+RvIlCur
-         jJA4oOH7cASC0Bl1E46qbLND7ovDEJmEy0zytSs4=
-Date:   Mon, 25 May 2020 18:58:25 +0300
-From:   Mike Rapoport <rppt@kernel.org>
+        Mon, 25 May 2020 12:00:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47206 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388494AbgEYQAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 12:00:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04PFwghJ129757;
+        Mon, 25 May 2020 15:59:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Y0KNdejFsfkVxkixHd4qUi3/9lIVbUPFXxLx2tMB3mo=;
+ b=ktt0B1DHcMRPvUUhQIHh+XEmZH4NOxqhRe6nehGlGe6jWE0wP/BKZz6JEMgAEzDgr4Wt
+ Iyw2VMRvZgMlAMUPTq1xWQNlvHNIQS9Hk3zTqSdffRXf5mV7hA6z5WHxk6GB/6HyB/zQ
+ 51jwLGiQCLXMbGUesZSNUg71QQxsrm082PQgdMQkm+jHvJ5iwhpa4nL7UvoNyapqmpQW
+ g7iyh42jaEG3tha5rot3T7+WEyCSd7fsSajvSIfQKeIQe0mEQ6IoQXkD4BNCMPKkSjC4
+ hISIz4pP5LzYrh0UZJHOsSXum9iprA2Sk1BD+A4AkSaZD/Phl7WyugXVyCvpQ+/wSsGS nw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 316vfn6096-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 25 May 2020 15:59:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04PFrU0i025028;
+        Mon, 25 May 2020 15:57:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 317j5jjg0w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 May 2020 15:57:12 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04PFv3EO022146;
+        Mon, 25 May 2020 15:57:08 GMT
+Received: from [192.168.14.112] (/79.178.199.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 May 2020 08:57:03 -0700
+Subject: Re: [RFC 00/16] KVM protected memory extension
 To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/mm: Fix boot with some memory above MAXMEM
-Message-ID: <20200525155825.GB13247@kernel.org>
-References: <20200511191721.1416-1-kirill.shutemov@linux.intel.com>
- <20200525044902.rsb46bxu5hdsqglt@box>
- <20200525145943.GA13247@kernel.org>
- <20200525150820.zljiamptpzi37ohx@box>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+ <42685c32-a7a9-b971-0cf4-e8af8d9a40c6@oracle.com>
+ <20200525144656.phfxjp2qip6736fj@box>
+From:   Liran Alon <liran.alon@oracle.com>
+Message-ID: <29c62691-0d50-8a02-5f43-761fa56ab551@oracle.com>
+Date:   Mon, 25 May 2020 18:56:57 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525150820.zljiamptpzi37ohx@box>
+In-Reply-To: <20200525144656.phfxjp2qip6736fj@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9632 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=804 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005250124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9632 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=835 lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005250125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 06:08:20PM +0300, Kirill A. Shutemov wrote:
-> On Mon, May 25, 2020 at 05:59:43PM +0300, Mike Rapoport wrote:
-> > On Mon, May 25, 2020 at 07:49:02AM +0300, Kirill A. Shutemov wrote:
-> > > On Mon, May 11, 2020 at 10:17:21PM +0300, Kirill A. Shutemov wrote:
-> > > > A 5-level paging capable machine can have memory above 46-bit in the
-> > > > physical address space. This memory is only addressable in the 5-level
-> > > > paging mode: we don't have enough virtual address space to create direct
-> > > > mapping for such memory in the 4-level paging mode.
-> > > > 
-> > > > Currently, we fail boot completely: NULL pointer dereference in
-> > > > subsection_map_init().
-> > > > 
-> > > > Skip creating a memblock for such memory instead and notify user that
-> > > > some memory is not addressable.
-> > > > 
-> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-> > > > Cc: stable@vger.kernel.org # v4.14
-> > > > ---
-> > > 
-> > > Gentle ping.
-> > > 
-> > > It's not urgent, but it's a bug fix. Please consider applying.
-> > > 
-> > > > Tested with a hacked QEMU: https://gist.github.com/kiryl/d45eb54110944ff95e544972d8bdac1d
-> > > > 
-> > > > ---
-> > > >  arch/x86/kernel/e820.c | 19 +++++++++++++++++--
-> > > >  1 file changed, 17 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > > > index c5399e80c59c..d320d37d0f95 100644
-> > > > --- a/arch/x86/kernel/e820.c
-> > > > +++ b/arch/x86/kernel/e820.c
-> > > > @@ -1280,8 +1280,8 @@ void __init e820__memory_setup(void)
-> > > >  
-> > > >  void __init e820__memblock_setup(void)
-> > > >  {
-> > > > +	u64 size, end, not_addressable = 0;
-> > > >  	int i;
-> > > > -	u64 end;
-> > > >  
-> > > >  	/*
-> > > >  	 * The bootstrap memblock region count maximum is 128 entries
-> > > > @@ -1307,7 +1307,22 @@ void __init e820__memblock_setup(void)
-> > > >  		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
-> > > >  			continue;
-> > > >  
-> > > > -		memblock_add(entry->addr, entry->size);
-> > > > +		if (entry->addr >= MAXMEM) {
-> > > > +			not_addressable += entry->size;
-> > > > +			continue;
-> > > > +		}
-> > > > +
-> > > > +		end = min_t(u64, end, MAXMEM - 1);
-> > > > +		size = end - entry->addr;
-> > > > +		not_addressable += entry->size - size;
-> > > > +		memblock_add(entry->addr, size);
-> > > > +	}
-> > > > +
-> > > > +	if (not_addressable) {
-> > > > +		pr_err("%lldGB of physical memory is not addressable in the paging mode\n",
-> > > > +		       not_addressable >> 30);
-> > > > +		if (!pgtable_l5_enabled())
-> > > > +			pr_err("Consider enabling 5-level paging\n");
-> > 
-> > Could this happen at all when l5 is enabled?
-> > Does it mean we need kmap() for 64-bit?
-> 
-> It's future-profing. Who knows what paging modes we would have in the
-> future.
 
-Than maybe
+On 25/05/2020 17:46, Kirill A. Shutemov wrote:
+> On Mon, May 25, 2020 at 04:47:18PM +0300, Liran Alon wrote:
+>> On 22/05/2020 15:51, Kirill A. Shutemov wrote:
+>>> == Background / Problem ==
+>>>
+>>> There are a number of hardware features (MKTME, SEV) which protect guest
+>>> memory from some unauthorized host access. The patchset proposes a purely
+>>> software feature that mitigates some of the same host-side read-only
+>>> attacks.
+>>>
+>>>
+>>> == What does this set mitigate? ==
+>>>
+>>>    - Host kernel ”accidental” access to guest data (think speculation)
+>> Just to clarify: This is any host kernel memory info-leak vulnerability. Not
+>> just speculative execution memory info-leaks. Also architectural ones.
+>>
+>> In addition, note that removing guest data from host kernel VA space also
+>> makes guest<->host memory exploits more difficult.
+>> E.g. Guest cannot use already available memory buffer in kernel VA space for
+>> ROP or placing valuable guest-controlled code/data in general.
+>>
+>>>    - Host kernel induced access to guest data (write(fd, &guest_data_ptr, len))
+>>>
+>>>    - Host userspace access to guest data (compromised qemu)
+>> I don't quite understand what is the benefit of preventing userspace VMM
+>> access to guest data while the host kernel can still access it.
+> Let me clarify: the guest memory mapped into host userspace is not
+> accessible by both host kernel and userspace. Host still has way to access
+> it via a new interface: GUP(FOLL_KVM). The GUP will give you struct page
+> that kernel has to map (temporarily) if need to access the data. So only
+> blessed codepaths would know how to deal with the memory.
+Yes, I understood that. I meant explicit host kernel access.
+>
+> It can help preventing some host->guest attack on the compromised host.
+> Like if an VM has successfully attacked the host it cannot attack other
+> VMs as easy.
 
-	pr_err("%lldGB of physical memory is not addressable in %s the paging mode\n",
-               not_addressable >> 30, pgtable_l5_enabled() "5-level" ? "4-level");
+We have mechanisms to sandbox the userspace VMM process for that.
 
-"the paging mode" on its own sounds a bit awkward to me.
+You need to be more specific on what is the attack scenario you attempt 
+to address
+here that is not covered by existing mechanisms. i.e. Be crystal clear 
+on the extra value
+of the feature of not exposing guest data to userspace VMM.
 
-> -- 
->  Kirill A. Shutemov
+>
+> It would also help to protect against guest->host attack by removing one
+> more places where the guest's data is mapped on the host.
+Because guest have explicit interface to request which guest pages can 
+be mapped in userspace VMM, the value of this is very small.
 
--- 
-Sincerely yours,
-Mike.
+Guest already have ability to map guest controlled code/data in 
+userspace VMM either via this interface or via forcing userspace VMM
+to create various objects during device emulation handling. The only 
+extra property this patch-series provides, is that only a
+small portion of guest pages will be mapped to host userspace instead of 
+all of it. Resulting in smaller regions for exploits that require
+guessing a virtual address. But: (a) Userspace VMM device emulation may 
+still allow guest to spray userspace heap with objects containing
+guest controlled data. (b) How is userspace VMM suppose to limit which 
+guest pages should not be mapped to userspace VMM even though guest have
+explicitly requested them to be mapped? (E.g. Because they are valid DMA 
+sources/targets for virtual devices or because it's vGPU frame-buffer).
+>> QEMU is more easily compromised than the host kernel because it's
+>> guest<->host attack surface is larger (E.g. Various device emulation).
+>> But this compromise comes from the guest itself. Not other guests. In
+>> contrast to host kernel attack surface, which an info-leak there can
+>> be exploited from one guest to leak another guest data.
+> Consider the case when unprivileged guest user exploits bug in a QEMU
+> device emulation to gain access to data it cannot normally have access
+> within the guest. With the feature it would able to see only other shared
+> regions of guest memory such as DMA and IO buffers, but not the rest.
+This is a scenario where an unpriviledged guest userspace have direct 
+access to a virtual device
+and is able to exploit a bug in device emulation handling such that it 
+will allow it to compromise
+the security *inside* the guest. i.e. Leak guest kernel data or other 
+guest userspace processes data.
+
+That's true. Good point. This is a very important missing argument from 
+the cover-letter.
+
+Now it's crystal clear on the trade-off considered here:
+Is the extra complication and perf cost provided by the mechanism of 
+this patch-series worth
+to protect against the scenario of a userspace VMM vulnerability that 
+may be accessible to unpriviledged
+guest userspace process to leak other *in-guest* data that is not 
+otherwise accessible to that process?
+
+-Liran
+
+
