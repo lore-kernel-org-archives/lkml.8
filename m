@@ -2,159 +2,133 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A02C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624FB207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:58:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="djMQu8Ht"
+	by mail.kernel.org (Postfix) with ESMTP id 208C0207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590400753;
+	bh=dFvT/rav7y2msyyMHKKB49+6/JbmifHHbRyoV4o0gjg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AZmWZqBa97k6qFdNzZMmijGS5TvhgDiB6gYwIoV+T6IQPcMjDdhhx62EB3OmUMBeX
+	 Hbzjai552J0GLhvtAPpk2fBqtEJyl9e6b3peC4HbZ/X8g3WayjLQlrS2usuR+bpaxI
+	 MMZhLC5g+QFojFxVnw/MC/pdAePRQT8U9QTURI+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389702AbgEYJ6T (ORCPT
+        id S2389705AbgEYJ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389407AbgEYJ6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:58:19 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A88C061A0E;
-        Mon, 25 May 2020 02:58:19 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 25 May 2020 05:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389398AbgEYJ7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:59:11 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Vswm5fnrz9sRK;
-        Mon, 25 May 2020 19:58:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590400697;
-        bh=C5bGOXdSwpoXj/ZvUi/2ELa8jGqYdbWahmElM6nSh5A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=djMQu8Ht/SaWlEGZDqarXlwGVKijTdoIi9u1SogHphHBVshrLdg3KQDPDmtI18m6b
-         q4sjobZ1I06pSB7tNChmLck12mIucN1gMVX9oXMxkkBjZn/yvAy/hlGml6L5P45wMC
-         +FcBa/z/q+eoWuqGYLqRhmaTQZsGd0KZWLJ6yyMuIz6+kWx7ZjCZU/yWiQlFeyQl0L
-         sQPkIgqRIa2IQZ1rog//40UEBNMG+fEBp7keMwMG6Ci74BVPtnNaTV8GcFbcNPzxht
-         IuP6QNpcvXwmT4Wrn4SYU8aS9UcQKm5XAeNhgju5D7SqQP5VNegwJRlq0XzltPNVLw
-         8rVTQ7GZzrD8w==
-Date:   Mon, 25 May 2020 19:58:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build failure after merge of the notifications tree
-Message-ID: <20200525195813.0e76ac56@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF3C20787;
+        Mon, 25 May 2020 09:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590400751;
+        bh=dFvT/rav7y2msyyMHKKB49+6/JbmifHHbRyoV4o0gjg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LcRbBDykBXk62o50QbWX56I4nMWRbBZd+d8cUfZnhvJxwsnisb9MOjbF2sU5n+kT6
+         aGZkouliWEAgN3U6LbulyWW6ksAyKoVk30zwr/B7LLl5in613enj5ff9zANWY0WoRS
+         1OSxyOi38KK/TS8lTfsZ8jVI71GiTRC2xm0eKB8g=
+Date:   Mon, 25 May 2020 18:59:05 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: Re: [PATCH v2] selftests/ftrace: Use printf for backslash included
+ command
+Message-Id: <20200525185905.5fecd8073e686001712dfdf9@kernel.org>
+In-Reply-To: <158920418730.16156.8299185499520876735.stgit@devnote2>
+References: <87imh21x6f.fsf@igel.home>
+        <158920418730.16156.8299185499520876735.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Shuah,
 
-Hi all,
+Could you pick this to kselftest-next?
 
-After merging the notifications tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Thank you,
 
-kernel/watch_queue.c:67:13: error: 'generic_pipe_buf_confirm' undeclared he=
-re (not in a function); did you mean 'generic_pipe_buf_release'?
-   67 |  .confirm =3D generic_pipe_buf_confirm,
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~
-      |             generic_pipe_buf_release
-kernel/watch_queue.c:69:3: error: 'const struct pipe_buf_operations' has no=
- member named 'steal'
-   69 |  .steal  =3D watch_queue_pipe_buf_steal,
-      |   ^~~~~
-kernel/watch_queue.c:69:12: error: initialization of 'bool (*)(struct pipe_=
-inode_info *, struct pipe_buffer *)' {aka '_Bool (*)(struct pipe_inode_info=
- *, struct pipe_buffer *)'} from incompatible pointer type 'int (*)(struct =
-pipe_inode_info *, struct pipe_buffer *)' [-Werror=3Dincompatible-pointer-t=
-ypes]
-   69 |  .steal  =3D watch_queue_pipe_buf_steal,
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/watch_queue.c:69:12: note: (near initialization for 'watch_queue_pip=
-e_buf_ops.try_steal')
+On Mon, 11 May 2020 22:36:27 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Caused by commit
+> Since the built-in echo has different behavior in POSIX shell
+> (dash) and bash, kprobe_syntax_errors.tc can fail on dash which
+> interpret backslash escape automatically.
+> 
+> To fix this issue, we explicitly use printf "%s" (not interpret
+> backslash escapes) if the command string can include backslash.
+> 
+> Reported-by: Liu Yiding <yidingx.liu@intel.com>
+> Suggested-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/testing/selftests/ftrace/test.d/functions    |    8 +++++---
+>  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 +++-
+>  2 files changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+> index 61a3c7e2634d..697c77ef2e2b 100644
+> --- a/tools/testing/selftests/ftrace/test.d/functions
+> +++ b/tools/testing/selftests/ftrace/test.d/functions
+> @@ -119,12 +119,14 @@ yield() {
+>      ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
+>  }
+>  
+> +# Since probe event command may include backslash, explicitly use printf "%s"
+> +# to NOT interpret it.
+>  ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
+> -    pos=$(echo -n "${2%^*}" | wc -c) # error position
+> -    command=$(echo "$2" | tr -d ^)
+> +    pos=$(printf "%s" "${2%^*}" | wc -c) # error position
+> +    command=$(printf "%s" "$2" | tr -d ^)
+>      echo "Test command: $command"
+>      echo > error_log
+> -    (! echo "$command" >> "$3" ) 2> /dev/null
+> +    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
+>      grep "$1: error:" -A 3 error_log
+>      N=$(tail -n 1 error_log | wc -c)
+>      # "  Command: " and "^\n" => 13
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+> index ef1e9bafb098..eb0f4ab4e070 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+> @@ -91,7 +91,9 @@ esac
+>  if grep -q "Create/append/" README && grep -q "imm-value" README; then
+>  echo 'p:kprobes/testevent _do_fork' > kprobe_events
+>  check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
+> -echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
+> +
+> +# Explicitly use printf "%s" to not interpret \1
+> +printf "%s" 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
+>  check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
+>  check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
+>  check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
+> 
 
-  c73be61cede5 ("pipe: Add general notification queue support")
 
-from the notifications tree interacting with commits
-
-  76887c256744 ("fs: make the pipe_buf_operations ->steal operation optiona=
-l")
-  b8d9e7f2411b ("fs: make the pipe_buf_operations ->confirm operation optio=
-nal")
-
-from the vfs tree.
-
-I have applied the following merge fix patch.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 25 May 2020 19:53:40 +1000
-Subject: [PATCH] pipe: update for pipe_buf_operations changes
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- kernel/watch_queue.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index 9a9699c06709..d7a369eab613 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -56,17 +56,9 @@ static void watch_queue_pipe_buf_release(struct pipe_ino=
-de_info *pipe,
- 	set_bit(bit, wqueue->notes_bitmap);
- }
-=20
--static int watch_queue_pipe_buf_steal(struct pipe_inode_info *pipe,
--				      struct pipe_buffer *buf)
--{
--	return -1; /* No. */
--}
--
- /* New data written to a pipe may be appended to a buffer with this type. =
-*/
- static const struct pipe_buf_operations watch_queue_pipe_buf_ops =3D {
--	.confirm	=3D generic_pipe_buf_confirm,
- 	.release	=3D watch_queue_pipe_buf_release,
--	.steal		=3D watch_queue_pipe_buf_steal,
- 	.get		=3D generic_pipe_buf_get,
- };
-=20
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7LlrUACgkQAVBC80lX
-0GzuDAf+LZceR3VHP4/7LUemV6cqzQTSlUzb+50eSRfyI/Kv7XfEq/ZQNaTKYYS5
-ONh+C1OID0KqRuXrJGpMpScwl4ZM21ys8nPGi3fmwPWhGq1pPSikWdU3KAxZPawH
-uFVaEQtRCwaE8bqiieN6elL4mTM1wi8zGfKgiakvrpmah77pCHGrfojXqKnwQDur
-1KVpJLVMT0cLPoXGWVN572VGEMrQ29HZqi3YOH5p/ZFa63Z0dCC8j1zrPIGzcPgi
-H6t2jbv1Hdjo9XXNqJruL9nBE2kKt8XeGZwssXf6ZYENm9QlmvRHynnsOl2efrEQ
-w7CxYO9F3fHZdIyOkejNHcDQ7Ybsrg==
-=+kXf
------END PGP SIGNATURE-----
-
---Sig_/ZC=WHHLA_w6i+JSvgWkA_Gd--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
