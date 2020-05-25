@@ -2,119 +2,125 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6232DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCF22068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC672068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G1bvHWQv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kWTq3gFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbgEYIUn (ORCPT
+        id S1731407AbgEYIUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:20:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
+        Mon, 25 May 2020 04:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgEYIUn (ORCPT
+        with ESMTP id S1731393AbgEYIUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:20:43 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DC6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:20:42 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id j145so15437087oib.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Azh7Qf5VqGk1C5GHmcLCjaOZm5RvD53r5M4Q66y5N4E=;
-        b=G1bvHWQvaSzoekxw3mZ7s4c83ovTLXsKLzv3enF9zYsC9+tgS2i9AW2iOGqlowFhri
-         k3mmhKEAGjbvtDNLBBW/BRGvs2DlJTdM/dD0lpKbvlHbUxo79Kxm+tn9tsp4R6wT9i1m
-         Sfa1KVv6reJKwKFn9um4GzRQps/Atzo6MTEzmzLE8GDBznrbiP/L4IyPmL7OOVDrFUcI
-         P9KG7fskRERGdWqROan1hpxepyqr/pEh1t37fif2YcbKYS4aFtmWkEmjcyNRHsjLxPg+
-         S8QumjJdluVOXzH+A7bUuxxUdRKmjJQaKv/KzyH7owfz3PuF4U9wT+0u4+YSwupJ3ZTJ
-         eS2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Azh7Qf5VqGk1C5GHmcLCjaOZm5RvD53r5M4Q66y5N4E=;
-        b=L69eXWOaM0evB7Yc8y9TPzFuqqgMCrV+2F1GU6+PHmsU6YOuRuVf5F3T/USU5EQnFH
-         3JCEu0S++l0iXTDwDO2KwcQbluBZM6/F6u0CZPFHUc6GTQDC4w/flbxBgjbIOAPeetL+
-         SPlS30O4wsDj7DE+sLEE3LQ81499tR8dPNuXN4uOMxGHpdxglLd1kKVwFhQrHuP6AuTI
-         WF4kfS603Ck23tB1gPdiM8m9UgCPx4GVaCWaJlByRAlmDyQ4Vr4evbp/kUfW8rapOn6x
-         AU8zyGadJ5dKN0eH83SuwTzps0Z8iqmV01SYsSky3HFdsDgUn4pwaXKyKCNxNrba8jbO
-         52kw==
-X-Gm-Message-State: AOAM533TEw3/jXpJf37lrMh2vWpPRZ2VyqsMoKifj+ybjbTgjJPhTuOv
-        c0i/mQMmGmUecnzea8jJIvxAaow5YyakU7Dnf7N1WA==
-X-Google-Smtp-Source: ABdhPJzPfGvkXoAEO6zWx5fGwS/RRPJEryJvMFIXf0ksHObwHtbFS1z8Vgxvdql1XeVzo3PZPlnI/SPaIp2bNYA9MjI=
-X-Received: by 2002:aca:d0d:: with SMTP id 13mr2336227oin.172.1590394841810;
- Mon, 25 May 2020 01:20:41 -0700 (PDT)
+        Mon, 25 May 2020 04:20:54 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E72AC061A0E;
+        Mon, 25 May 2020 01:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xrmvJaWubnjFTpNiW+zE/kAk/rWAsR9PlwlUmAPBcSU=; b=kWTq3gFZnpgr6eUomTw3dMoHl
+        cfqphxbxiOM2PfHvnCr8j11lD1wq6Mxm0AatdALSkB8Wxmiese4dLnuzMjezkwAX4fuweFuQHDr2I
+        C2L3UZBce3zO9vsD7wWchhcuma5yWSjgj1H8JLmsWfyTCBrKQ6QbpxqGVwRh6AFGc3x9UfG2nTKmg
+        VAmifAT58HEzpxYcJTqcN9CDTQu4IxAtvYrKtInHJE0B4igfAydo8YJLHQO6dVSPHTgXq8hZiTAQr
+        8HEBol4nOehjb/wnD44vnPWbgLSlZWAJirBJiNM3/UVEjnqlze0XG0yVRdIKNtIN+YSifjO3oQxLG
+        xvKEb17lA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36700)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jd8Lm-0004h6-MG; Mon, 25 May 2020 09:20:46 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jd8Ll-0004CK-Dt; Mon, 25 May 2020 09:20:45 +0100
+Date:   Mon, 25 May 2020 09:20:45 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 07/11] net: phy: reset invalid phy reads of 0 back to
+ 0xffffffff
+Message-ID: <20200525082045.GG1551@shell.armlinux.org.uk>
+References: <20200522213059.1535892-1-jeremy.linton@arm.com>
+ <20200522213059.1535892-8-jeremy.linton@arm.com>
+ <20200523184459.GA1551@shell.armlinux.org.uk>
+ <d6d71908-58a0-96c9-b046-9a4739cc7bcd@arm.com>
 MIME-Version: 1.0
-References: <20200522033119.1bbd99c5@canb.auug.org.au> <20200521173520.GL6608@willie-the-truck>
- <20200522171708.5f392fde@canb.auug.org.au> <20200522174944.1a1732fa@canb.auug.org.au>
- <20200523001223.GA23921@paulmck-ThinkPad-P72> <20200523064643.GA27431@zn.tnic>
- <87a71zq8ml.fsf@nanos.tec.linutronix.de> <20200523150614.GP2869@paulmck-ThinkPad-P72>
- <871rnaqxor.fsf@nanos.tec.linutronix.de> <20200523212345.GR2869@paulmck-ThinkPad-P72>
- <20200525003706.GA13789@paulmck-ThinkPad-P72>
-In-Reply-To: <20200525003706.GA13789@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 25 May 2020 10:20:29 +0200
-Message-ID: <CANpmjNMjvJqVFiY+xSUK=oePP9TsDzZHVh6XKM77ar5fh_fdFQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6d71908-58a0-96c9-b046-9a4739cc7bcd@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 at 02:37, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Sat, May 23, 2020 at 02:23:45PM -0700, Paul E. McKenney wrote:
-> > On Sat, May 23, 2020 at 09:05:24PM +0200, Thomas Gleixner wrote:
-> > > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > > > On Sat, May 23, 2020 at 11:54:26AM +0200, Thomas Gleixner wrote:
-> > > >> core/rcu is the one which diverged and caused the merge conflict with
-> > > >> PPC to happen twice. So Paul needs to remove the stale core/rcu bits and
-> > > >> rebase on the current version (which is not going to change again).
-> > > >
-> > > > So there will be another noinstr-rcu-* tag, and I will rebase on top
-> > > > of that, correct?  If so, fair enough!
-> > >
-> > > Here you go: noinstr-rcu-220-05-23
-> > >
-> > > I wanted this to be 2020 and not 220 but I noticed after pushing it
-> > > out. I guess it still does the job :)
-> >
-> > Now -that- is what I call an old-school tag name!!!  ;-)
-> >
-> > I remerged, rebased, and pushed to -rcu branch "dev".
-> >
-> > If it survives testing, I will reset -rcu branch "rcu/next" as well.
->
-> And passed!  The compile times are back to their old selves on my
-> laptop as well.
->
-> Thank you for setting this up, Thomas!!!
+On Sun, May 24, 2020 at 11:20:01PM -0500, Jeremy Linton wrote:
+> Hi,
+> 
+> On 5/23/20 1:44 PM, Russell King - ARM Linux admin wrote:
+> > On Fri, May 22, 2020 at 04:30:55PM -0500, Jeremy Linton wrote:
+> > > MMD's in the device list sometimes return 0 for their id.
+> > > When that happens lets reset the id back to 0xfffffff so
+> > > that we don't get a stub device created for it.
+> > > 
+> > > This is a questionable commit, but i'm tossing it out
+> > > there along with the comment that reading the spec
+> > > seems to indicate that maybe there are further registers
+> > > that could be probed in an attempt to resolve some futher
+> > > "bad" phys. It sort of comes down to do we want unused phy
+> > > devices floating around (potentially unmatched in dt) or
+> > > do we want to cut them off early and let DT create them
+> > > directly.
+> > 
+> > I'm not sure what you mean "stub device" or "unused phy devices
+> > floating around" - the individual MMDs are not treated as separate
+> > "phy devices", but as one PHY device as a whole.
+> > 
+> 
+> Well, I guess its clearer to say phy/mmd devices with a phy_id=0. Which is a
+> problem if we don't have DT overriding the phy_id for a given address.
+> Although AFAIK given a couple of the /sys/bus/mdio_bus/devices lists I've
+> seen, and after studying this code for a while now, I think "bogus" phy's
+> might be getting created*. I was far to easy, to upset the cart when I was
+> hacking on this set, and end up with a directory chuck full of phys.
+> 
+> So this gets close to one of the questions I asked in the cover letter. This
+> patch and 09/11 serve to cut off possibly valid phy's which are failing to
+> identify themselves using the standard registers. Which per the 802.3 spec
+> there is a blurb about 0 in the id registers for some cases. Its not really
+> a critical problem for ACPI machines to have these phys around (OTOH, there
+> might be issues with c22 phys on c45 electrical buses that respond to c45
+> reg requests but don't set the c22 regs flag, I haven't seen that yet.).
 
-I just noticed that -rcu and -tip both still have their own version of
-"ubsan, kcsan: Don't combine sanitizer with kcov on clang". For there
-to not be any conflicts in -next, "ubsan, kcsan: Don't combine
-sanitizer with kcov on clang" could be dropped from -rcu.
+If you have a classical clause 22 PHY on a clause 45 bus, it isn't
+going to respond to clause 45 cycles, so it isn't going to respond to
+a request to read the devices-in-package register, so there is no
+"c22 regs" flag.
 
-Thanks,
--- Marco
+> I
+> considered dropping this patch, and 9/11 was a last minute addition. I kept
+> it because I was worried all those extra "reserved" MMDs would end up with
+> id = 0's in there and break something.
+> 
+> * In places where there isn't actually a phy, likely a large part of the
+> problem was clearing the c22 bit, which allowed 0xFFFFFFFF returns to slip
+> through the devices list.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
