@@ -6,79 +6,99 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F39D72073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CEF20723
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EdSxjRSD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rnyO7kdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390270AbgEYLmR (ORCPT
+        id S2390271AbgEYLnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48392 "EHLO
+        Mon, 25 May 2020 07:43:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390174AbgEYLmR (ORCPT
+        with ESMTP id S2390145AbgEYLnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:42:17 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B712CC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:42:16 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z6so20372727ljm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:42:16 -0700 (PDT)
+        Mon, 25 May 2020 07:43:02 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B024DC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:43:01 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so20415264ljo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:43:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yvtww6jVPHdISeT6csiqLTbFH0Gov1r9YtbJ5CPJPLg=;
-        b=EdSxjRSDXgbY4KEcQ2hzxMVL2CBP4aUTI6LL2hd7KTPsww/BPsm/fd418408B4j1hB
-         zkZaR0wL2wWLo8uqNIOHFFdjn5KAEsaHdxilb6V4U4uYMNFH6tYaTdlSzGwh7BZH5D8H
-         T/bQDBsGc1ma9RCGpGDfDOKeXOAmeKZLstRJZ3/hkjgZ+A4Mz4w8ZGOkY1Igw+FI4uYG
-         7kNzmkwOdPDPdpO7wxU1qYik4m9l0ZxHKUsNdyvUOyus2NFyLiMrh6quyg17fiLzfXc5
-         jNc0IL3LvBgvTM1v5YEC/DRlIIF+ftkV48jPCnfCrF5Ry//RNb9NRyJdX66PrIHeReQP
-         k1XQ==
+        bh=t2vxVYv4xVR6U/qYBOPL/Sh6OEV4BvbiXrni8lSYOZU=;
+        b=rnyO7kdv8TBjKSCx7gstNM2O47jYUphMQvaC4a0iPu7TBrsyJI3OBVC3dAk8EsVhBN
+         jbLU4ohd+DYSB/La1ltq16AHcJz8V4gqI4W44GnxcdsjnO0SqcBjGC+sqdeCAuGCHPXJ
+         uI8WVbld2wpCLQ88NiIRvGbzPXk7tC6V0FwTR3diasJgXE3Jm49AG37cTFX1Nf6FuvuR
+         4zo/fOAAGODQ7XJbzJC4syUoHdM3V4zQeACVIhBoV19SVkYA8q+nmsk/EuFOK6XEso3L
+         z+mw6zMHbuf2gaYUF7dKI1KoyMtFXH/kDONlwmIWX0rYefYg5AiW3JccW4H28PtO0OxH
+         Vh7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yvtww6jVPHdISeT6csiqLTbFH0Gov1r9YtbJ5CPJPLg=;
-        b=TfFsTGaOefhAuMHtkX826DxKBhEeVAWPdAC7PVbZPEDxRkjGhLB/uJTKVp6tU6ZV/C
-         Ld10dL+zum/HDROzx9pYNDntJOyANw4LWjCE5jEgdP7Q3G3z8/7Wkkt/VuxDwUo7xS3C
-         Bm3KCCIqb32TQsvVQliKlNmmr5PxOLnu+x6oUERG+f6fVTfgWlkkN6y+nStqyA4ec7xX
-         1Jnk/4BAH5bZmUJHi/lg+GkgKpB421Bm7cJ8t+ai13P1e8rLUWcRlG24Udk0JWbaT6LS
-         P/t6ft4ZhygWivaKL0vHSOxj8npYgJbtRZCSuOJfslHH0LWv5Hv8EWW7lZXHA7HQvZ2a
-         kmDQ==
-X-Gm-Message-State: AOAM533jX8XIkXa44XJkL4FNrNxu38gBXMxSYAWBZ3hgnGd7zgs/fF9k
-        Mm98N5Tl9lYsDQtVk0ExNqIjQmeWeNAd8ileVZrifw==
-X-Google-Smtp-Source: ABdhPJx2AfcllQTpapyVNb6BHkrFVf9eM3BgGJa98ASkxug+8NUxurx/Wn6WlZe6fcs8D39uD5EKt8t2HSKSe6n5SlU=
-X-Received: by 2002:a2e:8703:: with SMTP id m3mr14352935lji.286.1590406935269;
- Mon, 25 May 2020 04:42:15 -0700 (PDT)
+        bh=t2vxVYv4xVR6U/qYBOPL/Sh6OEV4BvbiXrni8lSYOZU=;
+        b=fBFRe6WGqvbkRh2il8mXMoG9zWX/gGoTSvs7kWI04te5IKcLeb0SsS0kVk3AFmOh1V
+         eD/YG+WriQGO5DI5wJ/Cbj7hIHUAzpCBB4nHI2KbhwRvD8L7tpYmRvlMNUCyfMW2Abub
+         8GkBJhB2XH7S10yJ7ZqGvnBqpdP4jlYvtZkXbpyzeDOR0xRy4QRb4vmzs95/ohDH+olx
+         InG1oKpLxVN/8gJDHY4opk8N4Q2D5O9RR7RGxTsi5QS3V35hym9ImmozvyVZWf7WLBGc
+         kyVxzMrx3AB7hM0GGJdNfDfvecufSnm8E9SnlP8ko8/Qk29BF+eTgSXf/STG2HP5Wl1r
+         dllA==
+X-Gm-Message-State: AOAM532DP9GaBbldUfenJq41NR8jBXhKATdXlmB00q/whHtev5gJzk4D
+        3Gdrc6WTyvQozWWI5unub4ZJOkRDZdJu+us0e74pug==
+X-Google-Smtp-Source: ABdhPJxNx140asgaRv1GueBI/yRu7vpeWmLICpZwaTeVTw9FxTQuEBl8mS1SSnzvGBwKJd/qZDE7HpkvM/4jtg2DzVk=
+X-Received: by 2002:a2e:711c:: with SMTP id m28mr13376284ljc.104.1590406980230;
+ Mon, 25 May 2020 04:43:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn> <1590234326-2194-2-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1590234326-2194-2-git-send-email-yangtiezhu@loongson.cn>
+References: <20200523145157.16257-1-zhengdejin5@gmail.com> <20200523145157.16257-3-zhengdejin5@gmail.com>
+In-Reply-To: <20200523145157.16257-3-zhengdejin5@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 13:42:04 +0200
-Message-ID: <CACRpkdb9UHxBDeU-o3bLWryuv=7D5qz5JM23T1omLiOsMjE-6Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: at91-pio4: Add COMPILE_TEST support
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 25 May 2020 13:42:49 +0200
+Message-ID: <CACRpkdaPRtN3aXA_TB0dCJr2Lb29-kDwcDPTNWePQHJj5rLutA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] i2c: busses: convert to devm_platform_request_irq()
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Barry Song <baohua@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
+        Wolfram Sang <wsa@the-dreams.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 1:45 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On Sat, May 23, 2020 at 4:52 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
 
-> Add COMPILE_TEST support to the AT91 PIO4 pinctrl driver for better compile
-> testing coverage.
+> Use devm_platform_request_irq() to simplify code, and it contains
+> platform_get_irq() and devm_request_irq().
 >
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> I resend this patch by that discussion.
+> https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-Patch applied, if there is some compile error we will notice shorty :D
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
