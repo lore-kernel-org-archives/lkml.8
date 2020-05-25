@@ -2,191 +2,121 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB04C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA8D2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7646F20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:22:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gh/9+Yv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390156AbgEYLR4 (ORCPT
+        id S2390104AbgEYLWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44494 "EHLO
+        Mon, 25 May 2020 07:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390073AbgEYLRx (ORCPT
+        with ESMTP id S2389897AbgEYLWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:17:53 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B5BC061A0E;
-        Mon, 25 May 2020 04:17:53 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jdB74-0007Ln-QO; Mon, 25 May 2020 13:17:46 +0200
-Date:   Mon, 25 May 2020 13:17:46 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] radix-tree: Use local_lock for protection
-Message-ID: <20200525111746.bufjnl7mo4ytwlap@linutronix.de>
-References: <20200524215739.551568-1-bigeasy@linutronix.de>
- <20200524215739.551568-3-bigeasy@linutronix.de>
- <20200525062954.GA3180782@gmail.com>
+        Mon, 25 May 2020 07:22:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE55C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:22:47 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l11so16810198wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iBXFsq/YRJNCwLhfCmeFdcjlel1EZijBKcYLRzOu38Q=;
+        b=gh/9+Yv09sgbbtm3vqifgn2cPo3AJETQ4e9OZBODF204Lf4iGD8nsJqV4WvCsTgazk
+         tcXETVo/y553zKNDOEa7REnmLWD7PguAm6tPteMqfHl2jFxSEGBexwggMjO0ydFAePUK
+         B/Y83qEZoSvtMsAcKkZdzgOLIdsvhZRogL+Kn8FGa9VtVG012fC7yFS6yxnCau6/H3E8
+         URhZVGk2iN3e4nxqQ4EHWonIjP1NFtZiXJEBjCVMtAW9UMP8oR5qCb/H82/KHZYquEyX
+         0Vgw4bcLCm8FI8XnFP8ECKzzzkt8QzHENhpyOXi1aNPcyIgEo9BemP145SqWODRQziiW
+         pg0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iBXFsq/YRJNCwLhfCmeFdcjlel1EZijBKcYLRzOu38Q=;
+        b=RA7Ffv2wvDRGEa9EdR7Ya3Vj4CD/XjSpF/JjskxOt4yl3cvB8O+JInva8Mu51Yh3hC
+         9s2YhXNyuCJMbDuqiI+dgufJo+ebBlwQXIvjiB3z4H+10pG/4XE/K8ltlFy7wD1CEStL
+         Z8hwUfPCzsY+PkPNAa5jk+BONp89TC6oqCe07ydTee4ePSBfCMx4atTH/0XWgsI2steZ
+         0LB8Mgs4vwsu5kcpEfWG23A8pvrz8ZqOkybaHm8TsNu/fxAieb8GFoY4IwEWZRwnIEEl
+         sfkQpFMFo6AuEvvmQ4AaEU1iEh8FgJk6yPi0t/9qZ5+VMhZWYvZstxPD5xJ9miNHcSOW
+         220g==
+X-Gm-Message-State: AOAM532GkkTIt/AKrj30vpN6lUcnosnUjC9xqN6AyUCKz+LC2dZ8yVb8
+        IjvETMTxcZjn4mGQB96kW6ygYf6kxnM=
+X-Google-Smtp-Source: ABdhPJxFakP7sz4ZuenT+NK54SgLAYXWUyk7vZJB0US30kWhTl7TSWqOox/0c5EB1TWVM2hSe/YQUw==
+X-Received: by 2002:a5d:40d0:: with SMTP id b16mr14590871wrq.218.1590405766298;
+        Mon, 25 May 2020 04:22:46 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f5b2:610d:e426:c0dd? ([2a01:e34:ed2f:f020:f5b2:610d:e426:c0dd])
+        by smtp.googlemail.com with ESMTPSA id 30sm3905659wrd.47.2020.05.25.04.22.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 04:22:45 -0700 (PDT)
+Subject: Re: [PATCH v3] thermal: qoriq: Update the settings for TMUv2
+To:     Yuantian Tang <andy.tang@nxp.com>, rui.zhang@intel.com,
+        edubezval@gmail.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200525072106.12993-1-andy.tang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <24d2d2c9-0f30-743b-dfe0-6acd2d3de367@linaro.org>
+Date:   Mon, 25 May 2020 13:22:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200525072106.12993-1-andy.tang@nxp.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200525062954.GA3180782@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-25 08:29:54 [+0200], Ingo Molnar wrote:
-> Since upstream we are still mapping the local_lock primitives to
-> preempt_disable()/preempt_enable(), I believe these uninlining changes should not be done
-> in this patch, i.e. idr_preload_end() and radix_tree_preload_end() should stay inline.
+On 25/05/2020 09:21, Yuantian Tang wrote:
+> For TMU v2, TMSAR registers need to be set properly to get the
+> accurate temperature values.
+> Also the temperature read needs to be converted to degree Celsius
+> since it is in degrees Kelvin.
 
-That means we need to export the per-CPU struct radix_tree_preload in
-order to access the ::lock from an inline function.
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> ---
 
-Something like this then:
+[ ... ]
 
-diff --git a/include/linux/idr.h b/include/linux/idr.h
-index ac6e946b6767b..3ade03e5c7af3 100644
---- a/include/linux/idr.h
-+++ b/include/linux/idr.h
-@@ -171,7 +171,7 @@ static inline bool idr_is_empty(const struct idr *idr)
-  */
- static inline void idr_preload_end(void)
- {
--	preempt_enable();
-+	local_unlock(&radix_tree_preloads.lock);
- }
- 
- /**
-diff --git a/include/linux/radix-tree.h b/include/linux/radix-tree.h
-index 63e62372443a5..1dcc43ac75aed 100644
---- a/include/linux/radix-tree.h
-+++ b/include/linux/radix-tree.h
-@@ -16,11 +16,20 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/xarray.h>
-+#include <linux/locallock.h>
- 
- /* Keep unconverted code working */
- #define radix_tree_root		xarray
- #define radix_tree_node		xa_node
- 
-+struct radix_tree_preload {
-+	struct local_lock lock;
-+	unsigned nr;
-+	/* nodes->parent points to next preallocated node */
-+	struct radix_tree_node *nodes;
-+};
-+DECLARE_PER_CPU(struct radix_tree_preload, radix_tree_preloads);
-+
- /*
-  * The bottom two bits of the slot determine how the remaining bits in the
-  * slot are interpreted:
-@@ -245,7 +254,7 @@ int radix_tree_tagged(const struct radix_tree_root *, unsigned int tag);
- 
- static inline void radix_tree_preload_end(void)
- {
--	preempt_enable();
-+	local_unlock(&radix_tree_preloads.lock);
- }
- 
- void __rcu **idr_get_free(struct radix_tree_root *root,
-diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-index 2ee6ae3b0ade0..1c46840b4f1d3 100644
---- a/lib/radix-tree.c
-+++ b/lib/radix-tree.c
-@@ -20,6 +20,7 @@
- #include <linux/kernel.h>
- #include <linux/kmemleak.h>
- #include <linux/percpu.h>
-+#include <linux/locallock.h>
- #include <linux/preempt.h>		/* in_interrupt() */
- #include <linux/radix-tree.h>
- #include <linux/rcupdate.h>
-@@ -27,7 +28,6 @@
- #include <linux/string.h>
- #include <linux/xarray.h>
- 
--
- /*
-  * Radix tree node cache.
-  */
-@@ -58,12 +58,10 @@ struct kmem_cache *radix_tree_node_cachep;
- /*
-  * Per-cpu pool of preloaded nodes
-  */
--struct radix_tree_preload {
--	unsigned nr;
--	/* nodes->parent points to next preallocated node */
--	struct radix_tree_node *nodes;
-+DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = {
-+	.lock = INIT_LOCAL_LOCK(lock),
- };
--static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = { 0, };
-+EXPORT_PER_CPU_SYMBOL_GPL(radix_tree_preloads);
- 
- static inline struct radix_tree_node *entry_to_node(void *ptr)
- {
-@@ -332,14 +330,14 @@ static __must_check int __radix_tree_preload(gfp_t gfp_mask, unsigned nr)
- 	 */
- 	gfp_mask &= ~__GFP_ACCOUNT;
- 
--	preempt_disable();
-+	local_lock(&radix_tree_preloads.lock);
- 	rtp = this_cpu_ptr(&radix_tree_preloads);
- 	while (rtp->nr < nr) {
--		preempt_enable();
-+		local_unlock(&radix_tree_preloads.lock);
- 		node = kmem_cache_alloc(radix_tree_node_cachep, gfp_mask);
- 		if (node == NULL)
- 			goto out;
--		preempt_disable();
-+		local_lock(&radix_tree_preloads.lock);
- 		rtp = this_cpu_ptr(&radix_tree_preloads);
- 		if (rtp->nr < nr) {
- 			node->parent = rtp->nodes;
-@@ -381,7 +379,7 @@ int radix_tree_maybe_preload(gfp_t gfp_mask)
- 	if (gfpflags_allow_blocking(gfp_mask))
- 		return __radix_tree_preload(gfp_mask, RADIX_TREE_PRELOAD_SIZE);
- 	/* Preloading doesn't help anything with this gfp mask, skip it */
--	preempt_disable();
-+	local_lock(&radix_tree_preloads.lock);
- 	return 0;
- }
- EXPORT_SYMBOL(radix_tree_maybe_preload);
-@@ -1470,7 +1468,7 @@ EXPORT_SYMBOL(radix_tree_tagged);
- void idr_preload(gfp_t gfp_mask)
- {
- 	if (__radix_tree_preload(gfp_mask, IDR_PRELOAD_SIZE))
--		preempt_disable();
-+		local_lock(&radix_tree_preloads.lock);
- }
- EXPORT_SYMBOL(idr_preload);
- 
--- 
-2.27.0.rc0
+> @@ -202,6 +213,8 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+>  	} else {
+>  		regmap_write(data->regmap, REGS_V2_TMTMIR, TMTMIR_DEFAULT);
+>  		regmap_write(data->regmap, REGS_V2_TEUMR(0), TEUMR0_V2);
+> +		for (i = 0; i < 7; i++)
 
+Please wrap this litteral 7 to an explicit constant name
 
-> Thanks,
+> +			regmap_write(data->regmap, REGS_V2_TMSAR(i), TMSARA_V2);
+>  	}
+>  
+>  	/* Disable monitoring */
+> @@ -212,6 +225,7 @@ static const struct regmap_range qoriq_yes_ranges[] = {
+>  	regmap_reg_range(REGS_TMR, REGS_TSCFGR),
+>  	regmap_reg_range(REGS_TTRnCR(0), REGS_TTRnCR(3)),
+>  	regmap_reg_range(REGS_V2_TEUMR(0), REGS_V2_TEUMR(2)),
+> +	regmap_reg_range(REGS_V2_TMSAR(0), REGS_V2_TMSAR(15)),
+>  	regmap_reg_range(REGS_IPBRR(0), REGS_IPBRR(1)),
+>  	/* Read only registers below */
+>  	regmap_reg_range(REGS_TRITSR(0), REGS_TRITSR(15)),
 > 
-> 	Ingo
 
-Sebastian
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
