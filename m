@@ -5,104 +5,96 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB591C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC748C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7CAE208A7
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9371C207CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="bqPjER1L"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="FgVc/37q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390895AbgEYOO4 (ORCPT
+        id S2390907AbgEYOQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:14:56 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:46377 "EHLO fudan.edu.cn"
+        Mon, 25 May 2020 10:16:21 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:52101 "EHLO fudan.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388825AbgEYOO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:14:56 -0400
+        id S2388714AbgEYOQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 10:16:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=wV+8GWHmlPLsGH6pV0dZ1EqATUh15qtb0QrL9XQq63E=; b=b
-        qPjER1LjiSCRAX2iFQiqDmvRgFlNgmzB2XZcJHwD5XE16wnKoTtYw1nnY/kMdvND
-        X5fntiruuOcJGMEBy6o3OCdgowJtdWiBPpMTaOEacWqZQ/y7vnXKjqVoxxv8CSrl
-        NXBrZKkOuCzfovzwF5EbdNHwpXkWGpxg88/g5LHdYQ=
+        Message-Id; bh=A2C6VJveWD7/k0MVHTpe6FT8HSlUTvfLdgwU7DetgHI=; b=F
+        gVc/37qjCWc81JOyIy9zjfz0hxwLFOMlaceF5MaATZ1PV1RIuf/iNwdCWKLxv/tx
+        gUPvkVzsqsumy3tWQ/SNt/CkHPzibbSIbYsCzmOiRsPXRFKRqAkHOysyJj0u1hzs
+        LSZcZQSxetU8gEfLNJ7PZy0rfd4JkBjRxas+tgTjpM=
 Received: from localhost.localdomain (unknown [223.73.184.21])
-        by app1 (Coremail) with SMTP id XAUFCgBXXaHV0stehMwwAg--.41775S3;
-        Mon, 25 May 2020 22:14:46 +0800 (CST)
+        by app1 (Coremail) with SMTP id XAUFCgC3vpoq08tejM8wAg--.42131S3;
+        Mon, 25 May 2020 22:16:11 +0800 (CST)
 From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
         Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] dax: Fix dax_region refcnt leak when creating dev_dax
-Date:   Mon, 25 May 2020 22:14:13 +0800
-Message-Id: <1590416053-52476-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Subject: [PATCH] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Mon, 25 May 2020 22:15:41 +0800
+Message-Id: <1590416141-52534-1-git-send-email-xiyuyang19@fudan.edu.cn>
 X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgBXXaHV0stehMwwAg--.41775S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Gr47GrW3Ww4xKw4DKFyUZFb_yoW8Jr48pa
-        15Wayj9rZ8KF1UZw45Aw45uF15AwsrK3y8CFW7X3y3urs3X3sFyrySqa42qFyY9r95A345
-        XF1qqry09asrCa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-        UI43ZEXa7VUbPEfUUUUUU==
+X-CM-TRANSID: XAUFCgC3vpoq08tejM8wAg--.42131S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFW8Kr48uFyUZFWfCryfJFb_yoWDAFX_Gr
+        4fXr1DX348tF17JFyxtrWvyrW0g3yDGFyUGFWvy343GFWF93yDXF93trnrWF47KrWaqw1a
+        yFyDGr9I9aySvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbskFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7MxkIecxEwVAFwVW5XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjfUOyCJUUUUU
 X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__devm_create_dev_dax() invokes kref_get(), which increases the refcount
-of the "dax_region".
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
 
-The reference counting issue happens in several exception handling paths
-of __devm_create_dev_dax(). When those error scenarios occur such as add
-device failed, the function forgets to decrease the refcnt increased by
-kref_get(), causing a refcnt leak.
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
 
-Fix this issue by calling kref_put() when those error scenarios occur.
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
 
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- drivers/dax/bus.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index df238c8b6ef2..1a861d90321f 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -452,12 +452,15 @@ struct dev_dax *__devm_create_dev_dax(struct dax_region *dax_region, int id,
- 	if (rc) {
- 		kill_dev_dax(dev_dax);
- 		put_device(dev);
-+		kref_put(&dax_region->kref, dax_region_free);
- 		return ERR_PTR(rc);
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 5cf91322de0f..07e0c6f6322f 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1301,6 +1301,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
  	}
- 
- 	rc = devm_add_action_or_reset(dax_region->dev, unregister_dev_dax, dev);
--	if (rc)
-+	if (rc) {
-+		kref_put(&dax_region->kref, dax_region_free);
- 		return ERR_PTR(rc);
-+	}
- 
- 	return dev_dax;
- 
+ }
 -- 
 2.7.4
 
