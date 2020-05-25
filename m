@@ -2,91 +2,127 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF70C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697D8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C8820723
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA1C20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:50:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQa+JryU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389835AbgEYSot (ORCPT
+        id S2389896AbgEYSu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 14:44:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:61879 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389656AbgEYSot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 14:44:49 -0400
-IronPort-SDR: uV4VgqjTaYnbc0xUiveGR5U3J1xtLG+WbEdGqf7bxvVxC3r/gsOSb5MNkBqtXad0Y5jFoCjVwz
- tv8Kzh3Z4m1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 11:44:48 -0700
-IronPort-SDR: yUA6AGsEvWdifmfpQ+pUAKlfTL/2FPPfRroao5MqZP1089PTl7MBCv5Ho+o6w7tWBVVuUcwUjZ
- 1zRxL6R/IK/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,434,1583222400"; 
-   d="scan'208";a="301880649"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 25 May 2020 11:44:46 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jdI5e-000HzL-2k; Tue, 26 May 2020 02:44:46 +0800
-Date:   Tue, 26 May 2020 02:43:51 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     kbuild-all@lists.01.org, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fix semicolon.cocci warnings
-Message-ID: <20200525184351.GA37386@5cf39b9a5cc3>
-References: <202005260227.no1AzpN2%lkp@intel.com>
+        Mon, 25 May 2020 14:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389242AbgEYSu1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 14:50:27 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4347C061A0E;
+        Mon, 25 May 2020 11:50:25 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id se13so21356381ejb.9;
+        Mon, 25 May 2020 11:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=yacm3U0qWCWgeSmXbcjYqJ4T7TsFvh8zB4Vu1STfoFM=;
+        b=uQa+JryU5U/xkprr0VU4wHLb1ptlusOM492zyG8yptXBCQ7qII6dwK/9S+0Er1CJVi
+         vdZVJu04IYtyxD8tt6oI2Dby72CGOP8y6yf12XXVdNrTX3D1mLvWrrrG4ZZUsKs344sR
+         uc5s88RYB//nXT5BVmBNbwI/LOnWW/BWJSEpNgIpaLbjr8w3ghGCUjiaRrx3nQKDuBpU
+         LbVRM7shQHOWAKrtO70/jP82aiMaxHB4cIeA3BDQ5ueUgui6UfOflHRsuYs9+fyUFIfu
+         dx766EfXFLguqRAiRFbhAgJaP3cCPYzU7OwKH1NPi5O3wfRDM3/8fjbgPyjsN4ye4JEF
+         M0gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=yacm3U0qWCWgeSmXbcjYqJ4T7TsFvh8zB4Vu1STfoFM=;
+        b=jVi7nFNUWz3ubpOVsCHMFMdtODE0+0CAhadSSQR8fRQgX5JSfOHVAG9kvor2EnHQtb
+         hFVRl4N5g0cE5UrXQRuj2zaZevDb+ETgKVFGCMss7lWtk2KbsMMbNilECVsLZ+uU8J80
+         eKQgSzWzZrHrThuope4YApbBTFt/kjAUZxFd95vqEmW/K+ODCseAvSK1e5eCBpr+cX6m
+         FN0Q91eP6pUKtLp2QiQ4fMkIMOH62efP3FWT7EMTN5w37ry4b05Y8jkS3xb9t+rEqGi0
+         B43IxoRieRyiNyJ8hNMFHYQB4z0007w/KHQdNtdaIol7uVzvlNi/oQgjSYkNmJIr05/u
+         eCIA==
+X-Gm-Message-State: AOAM533lqHVFxCUFmUPsCTHW6bwb1siyiCrxyBg1OePnqHylBkpWAwEd
+        3r77UUtP+mDVTRrS6v5oxpUL65ILeCG40u9JflU=
+X-Google-Smtp-Source: ABdhPJyC9tuTXMYG9K8YfU4Pyf8Jg11LDH1/yKS69qMXTsf7ZZM9DsSbPV2QF3umu5gcdOx0/SP74f0QpwbjwAnUHLQ=
+X-Received: by 2002:a17:906:41a:: with SMTP id d26mr20778426eja.217.1590432624419;
+ Mon, 25 May 2020 11:50:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005260227.no1AzpN2%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200521222551.259804-1-irogers@google.com> <CAP-5=fXjXgWEgp9gqReByrDBTvjDbPEsubeAFxrpxj_+FsFn6w@mail.gmail.com>
+ <1edcb7ac-bc5f-b9ec-a037-656005ae85e3@gmail.com> <20200525145906.e5xfzmj6hvl7t4fg@box>
+In-Reply-To: <20200525145906.e5xfzmj6hvl7t4fg@box>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Mon, 25 May 2020 20:50:13 +0200
+Message-ID: <CAKgNAkg8OG1gCvZcaAMYmwpd-_MPMis4kGfDRgZGgp3o_MxUag@mail.gmail.com>
+Subject: Re: [PATCH] proc.5: add "wf" to VmFlags in /proc/[pid]/smaps
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Ian Rogers <irogers@google.com>, Rik van Riel <riel@redhat.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>, nilal@redhat.com,
+        Florian Weimer <fweimer@redhat.com>,
+        =?UTF-8?Q?Colm_MacC=C3=A1rtaigh?= <colm@allcosts.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On Mon, 25 May 2020 at 16:59, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> On Mon, May 25, 2020 at 03:50:38PM +0200, Michael Kerrisk (man-pages) wrote:
+> > On 5/22/20 1:13 AM, Ian Rogers wrote:
+> > > On Thu, May 21, 2020 at 3:25 PM Ian Rogers <irogers@google.com> wrote:
+> > >>
+> > >> This patch documents a flag added in the following kernel commit:
+> > >>
+> > >> commit d2cd9ede6e193dd7d88b6d27399e96229a551b19
+> > >> Author: Rik van Riel <riel@redhat.com>
+> > >> Date:   Wed Sep 6 16:25:15 2017 -0700
+> > >>
+> > >>     mm,fork: introduce MADV_WIPEONFORK
+> > >>
+> > >> This was already documented in man2/madvise.2 in the commit:
+> > >>
+> > >> commit c0c4f6c29c494c466f3a2a6273c5b55b76a72927
+> > >> Author: Rik van Riel <riel@redhat.com>
+> > >> Date:   Tue Sep 19 20:32:00 2017 +0200
+> > >>
+> > >>     madvise.2: Document MADV_WIPEONFORK and MADV_KEEPONFORK
+> > >>
+> > >> Signed-off-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Doing a quick audit of fs/proc/task_mmu.c having noticed this flag was
+> > > missing I note:
+> > >  - "mp" isn't documented, only possible with INTEL_MPX
+> > >  - "nl" is documented but not present in show_smap_vma_flags
+> > >  - "um" and "uw" aren't documented
+> >
+> > I took a shot at fixing these:
+> >
+> >
+> >              mp  - MPX-specific VMA (x86, since Linux 3.19)
+>
+> This one is gone. The patch to remove leftovers of MPX is linux-next.
 
-sound/soc/codecs/zl38060.c:298:2-3: Unneeded semicolon
+Thanks, Kirill. I'll simply remove that entry.
 
+Cheers,
 
- Remove unneeded semicolon.
+Michael
 
-Generated by: scripts/coccinelle/misc/semicolon.cocci
-
-Fixes: 52e8a94baf90 ("ASoC: Add initial ZL38060 driver")
-CC: Sven Van Asbroeck <thesven73@gmail.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
-head:   f202272cabf276441174dc05ad8b94d3c1174877
-commit: 52e8a94baf9026276fcdc9ff21a50dc2ca0bc94b [26/131] ASoC: Add initial ZL38060 driver
-
- zl38060.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/sound/soc/codecs/zl38060.c
-+++ b/sound/soc/codecs/zl38060.c
-@@ -295,7 +295,7 @@ static int zl38_hw_params(struct snd_pcm
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
- 
- 	err = regmap_update_bits(priv->regmap, REG_TDMA_CFG_CLK,
- 				 CFG_CLK_FSRATE_MASK, fsrate);
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
