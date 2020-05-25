@@ -2,74 +2,92 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7123EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1132070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590396018;
-	bh=GL159ZQNLTlj2WGGQuKXAGi8lVtqHdeHMIsD6BmONC0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xmL8ppsEA9NgEUJQ3v/SZkHNTchxczhbGxPWzpOH8ndRCmZIULMWS1Bk8iP3xJt6O
-	 +aERj5rv35XkbdijVO0TcyPSn1skh+miSqSkOR7z3A2dd8Cj38Y6KZfDTLpEtOVnSI
-	 OyCDZiTGelA/3wCkA2bvVUc02VfWX/D3yv7CRv70=
+	by mail.kernel.org (Postfix) with ESMTP id 6E3BB206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5U64KOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389209AbgEYIkR (ORCPT
+        id S2388854AbgEYIlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388367AbgEYIkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:40:16 -0400
-Received: from [192.168.0.50] (89-70-52-201.dynamic.chello.pl [89.70.52.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2FE206C3;
-        Mon, 25 May 2020 08:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590396016;
-        bh=GL159ZQNLTlj2WGGQuKXAGi8lVtqHdeHMIsD6BmONC0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=vqcq27tKaqWpr2bu+p4rvaNWHiBH9SFiUHGgkSNz2qWurwhKBRcYZ7Wgwa9XT+tYI
-         5ZCU/f7UIuTx/PYDcGbRmMkEUQoV1Ww71wkpqptMTvdZZb4FUtv12lQ7f2jBQM1RRR
-         HA1AG4NZHDl3VlKZZptPu168RbCwdkvYkAM9fSU8=
-Subject: Re: [PATCH] media: exynos4-is: Fix runtime PM imbalance in
- isp_video_open
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-References: <20200524033404.23227-1-dinghao.liu@zju.edu.cn>
-From:   Sylwester Nawrocki <snawrocki@kernel.org>
-Message-ID: <bde57b79-dc52-6fca-4efd-e8c7b1c57373@kernel.org>
-Date:   Mon, 25 May 2020 10:40:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 04:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388093AbgEYIlN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 04:41:13 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32784C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:41:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b190so8555527pfg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0mzXarWxBBKV5YiTFm3eZ7M/Fqe7bfckpl5g6k+Pyyg=;
+        b=e5U64KOTcb902jIdhoHukS+7m8s4pppfZyqRU+HzA5l4bNpOYfzALa4Ocw3R/jPxh3
+         PKweMy1cG2NNCOQiPGIby/hEPhUwoMMxQR24Kgf1Mrowbo6z4YxrNSbvTCL9U6iGUMZp
+         U/fJaANlXoAwyLpqUugZbwxlxhbOFgu/JFRff6PZmqtOIFGc1f4HETwjg+C/QbiU1rwO
+         inc1ewAdROkKmsIxvbAanyBq1Ydh/a0KyivURz+F2g6ljD301YBhaQQY1IY8HmO+k9wo
+         xtJn2t3KNfuX/93HnWTrjWR7CY+9qWdT0QD6ZwzK57yRzXyVzieKlHojPH0+23Dc3oXC
+         2tCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0mzXarWxBBKV5YiTFm3eZ7M/Fqe7bfckpl5g6k+Pyyg=;
+        b=eQHf2GFtxlNWKwvTcJPyzbD2qBNrUTyIqAa4BR+qYcxyy9g9LEYaDMz/GM7PkLKNTh
+         xJX5BUA/opbXDSxiH9P7iZLjytG5Hfbq5jzJ9g7vh4eOviKg9zkBiyjkUCGyBkmGIjwj
+         O70g/AznGRQRmMelgDQCvA2i3/k75nypPnT33U6SlfwK5UcGQyMaxDksiskM1trOQXzb
+         /bJ0hvy9SU41xkKxO6oWIlrni+/xNyk1L7FO1OMz30V9OHrCxhGgdjxYKJAHWuj70/NH
+         jDQaBkJ+/cv0XpU2hf5O3Zt86Lxw/kHnvtsg5sw4jFjDTgimULkc6y/21f1G+hmT5xh9
+         CKgw==
+X-Gm-Message-State: AOAM532j3QsYIKZM7bK9FBFY9/Z4G9YrMVodaY0N0ib7YbA5mQaCTq9S
+        Bur//CUVtWjsFo1MxyGkZ5o=
+X-Google-Smtp-Source: ABdhPJxHYn7cKVjg2x+cay3kdlWTff3peXSGsguldgNxnOiXdJIB3xzpRFC+29NSpg1baph6syIlNw==
+X-Received: by 2002:a62:5209:: with SMTP id g9mr8843467pfb.287.1590396072726;
+        Mon, 25 May 2020 01:41:12 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id 19sm12256767pjl.52.2020.05.25.01.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 01:41:12 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Mon, 25 May 2020 17:41:10 +0900
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] printk: Remove pr_cont_once()
+Message-ID: <20200525084110.GE755@jagdpanzerIV.localdomain>
+References: <20200524153243.11690-1-penguin-kernel@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <20200524033404.23227-1-dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524153243.11690-1-penguin-kernel@I-love.SAKURA.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/20 05:34, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
+On (20/05/25 00:32), Tetsuo Handa wrote:
+> pr_cont_once() does not make sense; at least emitting module name using
+> pr_fmt() into middle of a line (after e.g. pr_info_once()) does not make
+> sense. Let's remove unused pr_cont_once().
 > 
-> Signed-off-by: Dinghao Liu<dinghao.liu@zju.edu.cn>
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Cc: Joe Perches <joe@perches.com>
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
+	-ss
