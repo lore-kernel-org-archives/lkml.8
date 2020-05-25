@@ -3,272 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D990C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5957F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6F32070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sPV/VarQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="vq9aRPSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388851AbgEYNVY (ORCPT
+        id S2390754AbgEYNXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:21:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388685AbgEYNVY (ORCPT
+        Mon, 25 May 2020 09:23:06 -0400
+Received: from gateway23.websitewelcome.com ([192.185.49.179]:24084 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388685AbgEYNXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:21:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C48FC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:21:24 -0700 (PDT)
+        Mon, 25 May 2020 09:23:06 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id DD0FC3168B
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 08:23:03 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id dD4JjBGQLSl8qdD4JjRdvU; Mon, 25 May 2020 08:23:03 -0500
+X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KXafGMI0016LaAdXkM6ecwx4s5fmwYBS7iuHwl2pdQQ=; b=sPV/VarQ0Bv/np6SED4MNCPCsN
-        /iCB/llU5luzXwK+O74kL/zA13hLfRLLsp6f/qfAn54bsudvxA8Izu5g8+WiX9+4PV60f/NZIbt0K
-        SPpTbaUT41S86gFeLI9C5Wrx+hA6uOwqrXOB/RVTUfK5qfuMbxk+TXGZsFkIKsVqNf0Pwq56eltP+
-        eCmFcbgEDHp9HhpItQ9MMlnACt+GYEBsPUo+LCVmzJ9nxAPok9xSsqjN08b/tNHd1/1l/Fv0wfCKs
-        FjVizXX6dYfJ8JxBqpGGMSp8tlmmCrAxO491f7BDKW479VInVltz/3ggax049wIbJoqftIZ8Bprdf
-        eRKqJdxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdD2S-0003So-0H; Mon, 25 May 2020 13:21:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73B4E30018B;
-        Mon, 25 May 2020 15:21:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 60FA52B0BA0F2; Mon, 25 May 2020 15:21:05 +0200 (CEST)
-Date:   Mon, 25 May 2020 15:21:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: Endless soft-lockups for compiling workload since next-20200519
-Message-ID: <20200525132105.GW325280@hirez.programming.kicks-ass.net>
-References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
- <20200520125056.GC325280@hirez.programming.kicks-ass.net>
- <20200521004035.GA15455@lenoir>
- <20200521093938.GG325280@hirez.programming.kicks-ass.net>
- <20200521104937.GB325303@hirez.programming.kicks-ass.net>
- <20200521110027.GC325303@hirez.programming.kicks-ass.net>
- <20200521124113.GC15455@lenoir>
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZlJcRTFhtej8T0UtBWcokFIRDI/JzVylWnvucohUJ7A=; b=vq9aRPShyuaIeDESHTZHBzkl6j
+        AMEjiAKwtKeXVMqK61TH7ofchoit4SpmFWiSxFH5R9SVl7tPcvjbJLXZf+JtRYsafI6OuB6IgXMsS
+        egrlfjFI0w92Abhq2YKc9vrLkJbye31UNLxHWzFyYF8+899in3kYEGy9Rx7nMXZlD69915Oz9T/F4
+        OhWJmUD7Lv+YfHJBHs6gdiMYTCijtmFoweNen3f1PAuQT0VpVDqCov4OV1tQtcuRazAL2YrKZR/NJ
+        8MGLhpU/ViE1nDlPMJfBJ/LIczL6H7gCQ9eBmnjRxtYWUEel/PnN7xlSPVrrIWEpfSXw3eQLa7VAb
+        Er3uZEVA==;
+Received: from [191.31.196.240] (port=46922 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jdD4I-002bEq-71; Mon, 25 May 2020 10:23:02 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v6 0/3] Add Caninos Loucos Labrador CoM and Base Board Device Tree
+Date:   Mon, 25 May 2020 10:22:15 -0300
+Message-Id: <20200525132218.190841-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521124113.GC15455@lenoir>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.240
+X-Source-L: No
+X-Exim-ID: 1jdD4I-002bEq-71
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.196.240]:46922
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 2
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:41:14PM +0200, Frederic Weisbecker wrote:
-> On Thu, May 21, 2020 at 01:00:27PM +0200, Peter Zijlstra wrote:
+Thanks Andreas, Mani and Rob for your time reviewing it.
 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 01f94cf52783..b6d8a7b991f0 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -10033,7 +10033,7 @@ static void kick_ilb(unsigned int flags)
-> >  	 * is idle. And the softirq performing nohz idle load balance
-> >  	 * will be run before returning from the IPI.
-> >  	 */
-> > -	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
-> > +	smp_call_function_single_async(ilb_cpu, &this_rq()->nohz_csd);
-> 
-> My fear here is that if a previous call from the the same CPU but to another
-> target is still pending, the new one will be spuriously ignored.
-> 
+Changes since v5:
+(Suggested by Andreas Färber)
+- Put caninos,labrador-v2 as const one level down
 
-Urgh, indeed!
+Changes since v4:
+(Suggested by Rob Herring)
+- Fix issues with yaml indentation
 
-> But I believe we can still keep the remote csd if nohz_flags() are
-> strictly only set before the IPI and strictly only cleared from it.
-> 
-> And I still don't understand why trigger_load_balance() raise the
-> softirq without setting the current CPU as ilb. run_rebalance_domains()
-> thus ignores it most of the time in the end or it spuriously clear the
-> nohz_flags set by an IPI sender. Or there is something I misunderstood
-> there.
+Matheus Castello (3):
+  dt-bindings: Add vendor prefix for Caninos Loucos
+  dt-bindings: arm: actions: Document Caninos Loucos Labrador
+  ARM: dts: Add Caninos Loucos Labrador
 
-That is because it is simple and didn't matter before. Whoever got there
-first go to run the ilb whenever the flag was set.
+ .../devicetree/bindings/arm/actions.yaml      |  5 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 ++
+ arch/arm/boot/dts/Makefile                    |  1 +
+ .../arm/boot/dts/owl-s500-labrador-base-m.dts | 34 +++++++++++++++++++
+ arch/arm/boot/dts/owl-s500-labrador-v2.dtsi   | 22 ++++++++++++
+ 5 files changed, 64 insertions(+)
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-base-m.dts
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
 
-But now we have this race due to having to serialize access to the csd.
+--
+2.26.2
 
-We want the IPI to clear the flag, but then the softirq no longer knows
-it was supposed to do ILB.
-
-How's this then?
-
----
- include/linux/sched.h |  4 ++++
- kernel/sched/core.c   | 41 +++++++++++++----------------------------
- kernel/sched/fair.c   | 15 +++++++--------
- kernel/sched/sched.h  |  2 +-
- 4 files changed, 25 insertions(+), 37 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f38d62c4632c..136ee400b568 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -696,6 +696,10 @@ struct task_struct {
- 	struct uclamp_se		uclamp[UCLAMP_CNT];
- #endif
- 
-+#ifdef CONFIG_SMP
-+	call_single_data_t		wake_csd;
-+#endif
-+
- #ifdef CONFIG_PREEMPT_NOTIFIERS
- 	/* List of struct preempt_notifier: */
- 	struct hlist_head		preempt_notifiers;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 5b286469e26e..90484b988b65 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -637,41 +637,25 @@ void wake_up_nohz_cpu(int cpu)
- 		wake_up_idle_cpu(cpu);
- }
- 
--static inline bool got_nohz_idle_kick(void)
-+static void nohz_csd_func(void *info)
- {
--	int cpu = smp_processor_id();
--
--	if (!(atomic_read(nohz_flags(cpu)) & NOHZ_KICK_MASK))
--		return false;
--
--	if (idle_cpu(cpu) && !need_resched())
--		return true;
-+	struct rq *rq = info;
-+	int cpu = cpu_of(rq);
- 
-+	WARN_ON(!(atomic_read(nohz_flags(cpu)) & NOHZ_KICK_MASK));
- 	/*
--	 * We can't run Idle Load Balance on this CPU for this time so we
--	 * cancel it and clear NOHZ_BALANCE_KICK
-+	 * Release the rq::nohz_csd.
- 	 */
-+	smp_mb__before_atomic();
- 	atomic_andnot(NOHZ_KICK_MASK, nohz_flags(cpu));
--	return false;
--}
--
--static void nohz_csd_func(void *info)
--{
--	struct rq *rq = info;
- 
--	if (got_nohz_idle_kick()) {
--		rq->idle_balance = 1;
-+	rq->idle_balance = idle_cpu(cpu);
-+	if (rq->idle_balance && !need_resched()) {
-+		rq->nohz_idle_balance = 1;
- 		raise_softirq_irqoff(SCHED_SOFTIRQ);
- 	}
- }
- 
--#else /* CONFIG_NO_HZ_COMMON */
--
--static inline bool got_nohz_idle_kick(void)
--{
--	return false;
--}
--
- #endif /* CONFIG_NO_HZ_COMMON */
- 
- #ifdef CONFIG_NO_HZ_FULL
-@@ -2320,7 +2304,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
- 
- 	if (llist_add(&p->wake_entry, &rq->wake_list)) {
- 		if (!set_nr_if_polling(rq->idle))
--			smp_call_function_single_async(cpu, &rq->wake_csd);
-+			smp_call_function_single_async(cpu, &p->wake_csd);
- 		else
- 			trace_sched_wake_idle_without_ipi(cpu);
- 	}
-@@ -2921,6 +2905,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- #endif
- #if defined(CONFIG_SMP)
- 	p->on_cpu = 0;
-+	p->wake_csd = (struct __call_single_data) {
-+		.func = wake_csd_func,
-+	};
- #endif
- 	init_task_preempt_count(p);
- #ifdef CONFIG_SMP
-@@ -6723,8 +6710,6 @@ void __init sched_init(void)
- 		rq->avg_idle = 2*sysctl_sched_migration_cost;
- 		rq->max_idle_balance_cost = sysctl_sched_migration_cost;
- 
--		rq_csd_init(rq, &rq->wake_csd, wake_csd_func);
--
- 		INIT_LIST_HEAD(&rq->cfs_tasks);
- 
- 		rq_attach_root(rq, &def_root_domain);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 01f94cf52783..93525549a023 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10024,6 +10024,10 @@ static void kick_ilb(unsigned int flags)
- 	if (ilb_cpu >= nr_cpu_ids)
- 		return;
- 
-+	/*
-+	 * Access to rq::nohz_csd is serialized by NOHZ_KICK_MASK; he who sets
-+	 * the first flag owns it; cleared by nohz_csd_func().
-+	 */
- 	flags = atomic_fetch_or(flags, nohz_flags(ilb_cpu));
- 	if (flags & NOHZ_KICK_MASK)
- 		return;
-@@ -10374,17 +10378,12 @@ static bool nohz_idle_balance(struct rq *this_rq, enum cpu_idle_type idle)
- 	int this_cpu = this_rq->cpu;
- 	unsigned int flags;
- 
--	if (!(atomic_read(nohz_flags(this_cpu)) & NOHZ_KICK_MASK))
-+	if (!this_rq->nohz_idle_balance)
- 		return false;
- 
--	if (idle != CPU_IDLE) {
--		atomic_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
--		return false;
--	}
-+	this_rq->nohz_idle_balance = 0;
- 
--	/* could be _relaxed() */
--	flags = atomic_fetch_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
--	if (!(flags & NOHZ_KICK_MASK))
-+	if (idle != CPU_IDLE)
- 		return false;
- 
- 	_nohz_idle_balance(this_rq, flags, idle);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index f7ab6334e992..6418f6af15c1 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -951,6 +951,7 @@ struct rq {
- 
- 	struct callback_head	*balance_callback;
- 
-+	unsigned char		nohz_idle_balance;
- 	unsigned char		idle_balance;
- 
- 	unsigned long		misfit_task_load;
-@@ -1021,7 +1022,6 @@ struct rq {
- #endif
- 
- #ifdef CONFIG_SMP
--	call_single_data_t	wake_csd;
- 	struct llist_head	wake_list;
- #endif
- 
