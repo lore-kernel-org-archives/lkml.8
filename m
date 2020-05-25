@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F16A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5329E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiYel4cr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQAomHcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgEYVsW (ORCPT
+        id S1731542AbgEYVsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 17:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59802 "EHLO
+        Mon, 25 May 2020 17:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731504AbgEYVsT (ORCPT
+        with ESMTP id S1731500AbgEYVsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 25 May 2020 17:48:19 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FBAC08C5C0;
-        Mon, 25 May 2020 14:48:18 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b6so22188474ljj.1;
-        Mon, 25 May 2020 14:48:18 -0700 (PDT)
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E6BC061A0E;
+        Mon, 25 May 2020 14:48:17 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so22152056ljo.5;
+        Mon, 25 May 2020 14:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=myZbGzUvCLDF53laDPj5mc/dKuerQ91BFIMGTCX8KTY=;
-        b=MiYel4crknK5dXCl5GHpc6bBf3Hel4UK5iJXpbbn3FNgSjsxMB1Mq5QBrlw9Dm0oKt
-         p5pJ/J6P3q28DJM/MHq/cL40IA1JX42PUYLbPaUa4l16QNFz/R9GXie4lY5P31QrVdyc
-         U7qEY+zsEkwxvJvZKg2h3Qk5wwTiIyseRKQ+fyscqBk0nerwsTHcRG0rzs/XaAdw9cFE
-         fcQTGKZLjzeowQ1ntpUs8Lk3cv02BJw9afWKbJxYVpCQ5OJ6i/SxwVWLDBF/0bxRFY1Z
-         Hb+Ylu/piIEoG9HTZX1ceVG/SFPuFWQOFTYL3RG/AHpMqgDV/6b/YFyIu+6fowY1+TJV
-         gBuQ==
+        bh=ZQqXHmyUSlSMzrEScq/mc28bFFncHq5WVrswvpeHH5c=;
+        b=nQAomHcfsNoRankxf3s+HeOEHNCHu2KmuSmpUalABmcCQtLqexcSQ3HblvcZtsuaF4
+         otVr2oDxWeVWUW5VOoQ2++yly0jQXYqjKZdL8iwzqlLqnci24JZ7HYKlwLwIuJGpeMGt
+         JEqpfJKb2UHMs5+ON23CHKijnJJ2/L00Iit2ge7oba8fvFLYW1tInnxhyLssBi39T00m
+         qi/iRX5hCt9qeOBqpcEyZFAuSuD4wbHSMCrv9jW4p3XXI+JoqECU4N39O7fBLPb8QcuO
+         rtJbdTeEu49DYmRRX9Pp6Q0/kkZjh2qa3kaaxZ3FMJ5Ddxg1eF0jzv/99t023HnWMGHQ
+         mRUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=myZbGzUvCLDF53laDPj5mc/dKuerQ91BFIMGTCX8KTY=;
-        b=ADXkgiNQacraGrSV1VOs14T4UuBa5GNqMCAu2uXtMrJkTAC8rmv2cbFJ/pAR006VMN
-         41froBFMR/Kq3F8bvMXe+33snGCLzy6kX5toDtRITP8w+d9Bj58r2BGAtoqZEGqTjp3e
-         FRPZY8G2N3P0Bmjs64QPsWALcoYi/bQ2rYIw7DP1phJWlEkiV5LHj0ihGDFrbAMd9EOq
-         wLPZDejzCyX8zz2eXDQglxjww6Dut+L7gDOwvJeApnvpptkuQ/3zzIbK1nPrztUjpvE5
-         JHoaQoZ9G/ucMp8zokIjkhSaeFICesrjUQHoN+KlCAgl35bS9k/9ZJ1GUKczSKEHji/W
-         ffZw==
-X-Gm-Message-State: AOAM532VTHhKFzT4Du3ygGatvp+hVYE25zGNStd6/n24XCotZC/doN+T
-        N2pEfWhbRUMvdyIeVxw+OK/CvmwlXkYOyg==
-X-Google-Smtp-Source: ABdhPJwSIz48TxBYILx85UNtNxrSRT7oQBbn/6kX4IFkWPacY0Y7bMHszbNeQvbgXRgnvoSyEX311Q==
-X-Received: by 2002:a2e:7d19:: with SMTP id y25mr14028058ljc.255.1590443297064;
-        Mon, 25 May 2020 14:48:17 -0700 (PDT)
+        bh=ZQqXHmyUSlSMzrEScq/mc28bFFncHq5WVrswvpeHH5c=;
+        b=awguTCTx4m1mk6Qz80H5v+BKVFSoUgfXR6LPObZgXnKBIPuBuCNn+B4+juzWX5w1Jj
+         zV0JJ2s2IJf6P+mS2tvUbRAZFqG1PF5LdjnsPAwtw5E2ssmbPI+Yd2S2Df6erRvwDs+l
+         Ns4D0lRVv+rD8b/BFTP4sKtasDIlMlckreFO9V5qmf/dzekRcUTCidaM/4Kt8Fj+bz2D
+         C2ipctCUgBhqMQPC4SZ1ayypACapq7Ubr79WsrfgwZmIH2PFOJU/is/OodlVetT1F6BE
+         cx3PzNILruPleCFAC98p9kPwWiW5iqGJKSwTXvj3oOLRGyeFxx8YfatZ0y/ptr02EGbw
+         OlFw==
+X-Gm-Message-State: AOAM531F3qulFUpXFSzdc+VDxYelWcA5yN/JfT351D5mjag0xvWyycJl
+        TX1pr3eDdKbvpWKlqzHkfO5aTmhy7jIBQQ==
+X-Google-Smtp-Source: ABdhPJynkTSq/4AdeYM1T/xp9OPOdZ+/e3MJPy/AjzsKPtpdjsgFusPDyaoa2eBXUB0sJQXz2faVew==
+X-Received: by 2002:a05:651c:209:: with SMTP id y9mr13605918ljn.408.1590443295981;
+        Mon, 25 May 2020 14:48:15 -0700 (PDT)
 Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id a6sm2280044lji.29.2020.05.25.14.48.16
+        by smtp.gmail.com with ESMTPSA id a6sm2280044lji.29.2020.05.25.14.48.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 14:48:16 -0700 (PDT)
+        Mon, 25 May 2020 14:48:15 -0700 (PDT)
 From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -68,10 +68,11 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH v2 06/16] rcu/tree: Move kfree_rcu_cpu locking/unlocking to separate functions
-Date:   Mon, 25 May 2020 23:47:50 +0200
-Message-Id: <20200525214800.93072-7-urezki@gmail.com>
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH v2 05/16] rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro
+Date:   Mon, 25 May 2020 23:47:49 +0200
+Message-Id: <20200525214800.93072-6-urezki@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200525214800.93072-1-urezki@gmail.com>
 References: <20200525214800.93072-1-urezki@gmail.com>
@@ -82,72 +83,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce helpers to lock and unlock per-cpu "kfree_rcu_cpu"
-structures. That will make kfree_call_rcu() more readable
-and prevent programming errors.
+We can simplify KFREE_BULK_MAX_ENTR macro and get rid of
+magic numbers which were used to make the structure to be
+exactly one page.
 
+Suggested-by: Boqun Feng <boqun.feng@gmail.com>
 Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/tree.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ kernel/rcu/tree.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 6501fbcae3c7..c1f4b740cf14 100644
+index 776ccf858154..6501fbcae3c7 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2901,6 +2901,27 @@ debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
- #endif
- }
+@@ -2824,13 +2824,6 @@ EXPORT_SYMBOL_GPL(call_rcu);
+ #define KFREE_DRAIN_JIFFIES (HZ / 50)
+ #define KFREE_N_BATCHES 2
  
-+static inline struct kfree_rcu_cpu *
-+krc_this_cpu_lock(unsigned long *flags)
-+{
-+	struct kfree_rcu_cpu *krcp;
-+
-+	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
-+	krcp = this_cpu_ptr(&krc);
-+	if (likely(krcp->initialized))
-+		raw_spin_lock(&krcp->lock);
-+
-+	return krcp;
-+}
-+
-+static inline void
-+krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
-+{
-+	if (likely(krcp->initialized))
-+		raw_spin_unlock(&krcp->lock);
-+	local_irq_restore(flags);
-+}
-+
- /*
-  * This function is invoked in workqueue context after a grace period.
-  * It frees all the objects queued on ->bhead_free or ->head_free.
-@@ -3126,11 +3147,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	struct kfree_rcu_cpu *krcp;
- 	void *ptr;
- 
--	local_irq_save(flags);	// For safely calling this_cpu_ptr().
--	krcp = this_cpu_ptr(&krc);
--	if (krcp->initialized)
--		raw_spin_lock(&krcp->lock);
+-/*
+- * This macro defines how many entries the "records" array
+- * will contain. It is based on the fact that the size of
+- * kfree_rcu_bulk_data structure becomes exactly one page.
+- */
+-#define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 3)
 -
-+	krcp = krc_this_cpu_lock(&flags);
- 	ptr = (void *)head - (unsigned long)func;
+ /**
+  * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
+  * @nr_records: Number of active pointers in the array
+@@ -2839,10 +2832,18 @@ EXPORT_SYMBOL_GPL(call_rcu);
+  */
+ struct kfree_rcu_bulk_data {
+ 	unsigned long nr_records;
+-	void *records[KFREE_BULK_MAX_ENTR];
+ 	struct kfree_rcu_bulk_data *next;
++	void *records[];
+ };
  
- 	// Queue the object but don't yet schedule the batch.
-@@ -3161,9 +3178,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	}
- 
- unlock_return:
--	if (krcp->initialized)
--		raw_spin_unlock(&krcp->lock);
--	local_irq_restore(flags);
-+	krc_this_cpu_unlock(krcp, flags);
- }
- EXPORT_SYMBOL_GPL(kfree_call_rcu);
- 
++/*
++ * This macro defines how many entries the "records" array
++ * will contain. It is based on the fact that the size of
++ * kfree_rcu_bulk_data structure becomes exactly one page.
++ */
++#define KFREE_BULK_MAX_ENTR \
++	((PAGE_SIZE - sizeof(struct kfree_rcu_bulk_data)) / sizeof(void *))
++
+ /**
+  * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
 -- 
 2.20.1
 
