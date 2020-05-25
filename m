@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39884207CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB12F2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jy+KUYg4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qvMmSe1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389697AbgEYJ4z (ORCPT
+        id S2389701AbgEYJ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59966 "EHLO
+        Mon, 25 May 2020 05:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389630AbgEYJ4y (ORCPT
+        with ESMTP id S2389492AbgEYJ5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:56:54 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E080C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:56:54 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id z80so17062169qka.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:56:54 -0700 (PDT)
+        Mon, 25 May 2020 05:57:06 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93363C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:57:06 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id z5so7833834qvw.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 02:57:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=W3OPQj+6MaWJ3brcNW2aa4WZVKniXvFNcmel059rH8E=;
-        b=Jy+KUYg4h6yqEgXZCmyC1r7hZaPjIJ5NbD8kOSB7ANDSGTcv/cxI7IqondbwUcYIx4
-         YDawj4yAqtGCTp0JhlLeUar5y5gF5ERMxMtMxT9kSvZxxMG4qNqP+DMsADzyMxnVKbjp
-         Qp5JMPqDS0aZAK6jAL+ldHNC8V3WS0Ap82mFULselou6eQNZR6sUCTVknKoKe+7skkSe
-         dQeDlVCIHtIQn2PZEtJqdGm5TlcgmE0EGSNqzldorS8mctTWozaYEL/goXdYZEUy6XHq
-         b1ZewotnWXEtHoJ8G6kTfaYc7CdNtQvcQjiQnRuegORWPKpgBsNANNWjDA7f82Y4NWg5
-         MWzw==
+        bh=lXJcON4uIxpNxBwaXZsOO47XJesOn1/BpUPO8EArG+w=;
+        b=qvMmSe1XAwiiXDHUShXrjRlC8kHXfgYHjV+edzVEs9diOiTb51gVIu8DIFR7Kl1EEw
+         5Y6sFR/4qt/etZj+zXMQpnJBCOEpUeTwjkyvlO8aenAuL6yYXWj5/o20G1wXUq4flko1
+         0Adu+aOLsPFZhSXfJTg9dh9NB1pX3j29lBaIeuFGFuoJIBmUZdgqF8H4jTnEgquDqytC
+         ME1ipTZN5l8O/AB/Fdssqx02XGyIdC7XSoDAlDbHzQ/3e7envCluBo7IUnF4+C/82B+t
+         JcEk4VlBKK5Unrbf4qGqJeVpeleWSKtRNitNo1bP6Ul6mHjKPR/3XdUzUOIYp4Q/Az14
+         0fTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=W3OPQj+6MaWJ3brcNW2aa4WZVKniXvFNcmel059rH8E=;
-        b=J/mZMJwBhFkrYX+qqHth2RDIqlDUlqxaG2wh7uwFnzX9WljqbcBbGeZikr5BJEcKiO
-         /Wp26boTbQNPCZCZsIZzvRFT16HCfrP1/YbJXx9P0nN1p7DsFynx3QoXopO5YNwFnLAm
-         Cm/djY7Mo3wXqv4GGTL+yVOoRPearCrNFko8cZQkw443nyiMGuzanfTn57pVoPeqyVly
-         AI056N6nmNsEJ1CsNqjdQMEc07vBmqRjfJ6OUL9gHSeG44FEj5QjwWoF/V0yqWrGZRtT
-         7gcBFGq74oCC7XV5ebmWWycdAT52C4Dz22rXDmATPBKjkygMPOKwjvkoUj2j1bZr0sKN
-         mSbQ==
-X-Gm-Message-State: AOAM532+FE8gmgxnMyNMmMgR6KbdnXixt1zaWmnWy2ISlPUHj43tFOpz
-        Ax+8LxrNQV4+Qd3Y/wYcg0+7YOq7SDYpqhvUTNYtXw==
-X-Google-Smtp-Source: ABdhPJxqSbuF0F9MjNbi/qpdSowpX/KR1shgHH8LS5OI24MEwe9xv7ADZ1UvXqDFHd6kocEjU/m+KLakA52EHSzuhyQ=
-X-Received: by 2002:a05:620a:786:: with SMTP id 6mr1210763qka.407.1590400613522;
- Mon, 25 May 2020 02:56:53 -0700 (PDT)
+        bh=lXJcON4uIxpNxBwaXZsOO47XJesOn1/BpUPO8EArG+w=;
+        b=WVFsQGO/Uzbl5XN+dfw7mYdjJIZjQE9iioyf6IhgOz02afWDl4b6OKHloufMno0wH8
+         7e7DGfd0I3QautuuORJv1znBGfQtRTrlmBK6yQyIUG5/d+xqxmEReyjFteuEGb5GQ/Di
+         E2+usda9NE7MtyLJOno6MaipUOzPzTQ1bfqXS9W8JftDbNPvG1HchwwR5w3+bu6ejqDz
+         sT3msZAP9F43JJRgatmQGHh7M74tntDcNKl8ZLDeVmAESCtAdT08uH/sNjh1x9kT5wu6
+         FSl2UG7pfGZVo/9i/kl6DRzMpcgrmkElzyDSDaCEqE7ETsjhw7S7MHhq4uyrmEnKCJZU
+         Fk7w==
+X-Gm-Message-State: AOAM532YAFaZAbctAE+ID6kAqAhnCVp+Lh+DcVo4Gh/Xr+JQljM8JJfu
+        /1ikrf9gsS2pd/em1+/YxKSYiDIGXC66xM74C9BWag==
+X-Google-Smtp-Source: ABdhPJwu98seAlM8B/W6iEB7Cgc17dFjE0Ji2BN+7kajKF3ry3QeBw893G/4FHc1aJT4/bDywXnEMDItzUTJpwb33p8=
+X-Received: by 2002:a05:6214:15ce:: with SMTP id p14mr15030956qvz.159.1590400624833;
+ Mon, 25 May 2020 02:57:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200522020151.23405-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200522020151.23405-1-walter-zh.wu@mediatek.com>
+References: <20200522020212.23460-1-walter-zh.wu@mediatek.com>
+In-Reply-To: <20200522020212.23460-1-walter-zh.wu@mediatek.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 25 May 2020 11:56:42 +0200
-Message-ID: <CACT4Y+axrVeCwdEg_yWH57jF7gcKT429J4wVwsNGPuARcPMiLg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] kasan: add tests for call_rcu stack recording
+Date:   Mon, 25 May 2020 11:56:53 +0200
+Message-ID: <CACT4Y+agmL5ZOWmNBJyLSTuhy7ekp4HTafABUsqqP+XFd7ErKw@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] kasan: update documentation for generic kasan
 To:     Walter Wu <walter-zh.wu@mediatek.com>
 Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         kasan-dev <kasan-dev@googlegroups.com>,
         Linux-MM <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -80,8 +80,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, May 22, 2020 at 4:02 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 >
-> Test call_rcu() call stack recording and verify whether it correctly
-> is printed in KASAN report.
+> Generic KASAN will support to record the last two call_rcu() call stacks
+> and print them in KASAN report. So that need to update documentation.
 
 Reviewed-and-tested-by: Dmitry Vyukov <dvyukov@google.com>
 
@@ -89,58 +89,24 @@ Reviewed-and-tested-by: Dmitry Vyukov <dvyukov@google.com>
 > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
 > Cc: Dmitry Vyukov <dvyukov@google.com>
 > Cc: Alexander Potapenko <glider@google.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
 > ---
->  lib/test_kasan.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+>  Documentation/dev-tools/kasan.rst | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index e3087d90e00d..6e5fb05d42d8 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -792,6 +792,35 @@ static noinline void __init vmalloc_oob(void)
->  static void __init vmalloc_oob(void) {}
->  #endif
+> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
+> index c652d740735d..fede42e6536b 100644
+> --- a/Documentation/dev-tools/kasan.rst
+> +++ b/Documentation/dev-tools/kasan.rst
+> @@ -193,6 +193,9 @@ function calls GCC directly inserts the code to check the shadow memory.
+>  This option significantly enlarges kernel but it gives x1.1-x2 performance
+>  boost over outline instrumented kernel.
 >
-> +static struct kasan_rcu_info {
-> +       int i;
-> +       struct rcu_head rcu;
-> +} *global_ptr;
+> +Generic KASAN prints up to 2 call_rcu() call stacks in reports, the last one
+> +and the second to last.
 > +
-> +static noinline void __init kasan_rcu_reclaim(struct rcu_head *rp)
-> +{
-> +       struct kasan_rcu_info *fp = container_of(rp,
-> +                                               struct kasan_rcu_info, rcu);
-> +
-> +       kfree(fp);
-> +       fp->i = 1;
-> +}
-> +
-> +static noinline void __init kasan_rcu_uaf(void)
-> +{
-> +       struct kasan_rcu_info *ptr;
-> +
-> +       pr_info("use-after-free in kasan_rcu_reclaim\n");
-> +       ptr = kmalloc(sizeof(struct kasan_rcu_info), GFP_KERNEL);
-> +       if (!ptr) {
-> +               pr_err("Allocation failed\n");
-> +               return;
-> +       }
-> +
-> +       global_ptr = rcu_dereference_protected(ptr, NULL);
-> +       call_rcu(&global_ptr->rcu, kasan_rcu_reclaim);
-> +}
-> +
->  static int __init kmalloc_tests_init(void)
->  {
->         /*
-> @@ -839,6 +868,7 @@ static int __init kmalloc_tests_init(void)
->         kasan_bitops();
->         kmalloc_double_kzfree();
->         vmalloc_oob();
-> +       kasan_rcu_uaf();
->
->         kasan_restore_multi_shot(multishot);
+>  Software tag-based KASAN
+>  ~~~~~~~~~~~~~~~~~~~~~~~~
 >
 > --
 > 2.18.0
@@ -148,4 +114,4 @@ Reviewed-and-tested-by: Dmitry Vyukov <dvyukov@google.com>
 > --
 > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200522020151.23405-1-walter-zh.wu%40mediatek.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200522020212.23460-1-walter-zh.wu%40mediatek.com.
