@@ -2,308 +2,107 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA84C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96145C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 468B82065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE7F2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 20:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590440270;
+	bh=lR7NOEwZSW7Lg+I18yIGiKJF3iGfsiCFNOxqNlZ1mDc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=O7hdxg4bwEtazn/g6tMsq7xltMTDnl7BNUkfDTn9cghUge07m0QHukBAP5fpMPfgC
+	 OmtanpLx7MtiL6NQCjlJJBWwCCmhclXPjIopI5UvRPRT55PeZkpqSLTxzeys760+OO
+	 02wP3B2gBnYqxMNPQnUVbzksgU/rwkMmtSiYSedk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390892AbgEYU5l (ORCPT
+        id S2390922AbgEYU5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 16:57:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31787 "EHLO mga03.intel.com"
+        Mon, 25 May 2020 16:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390750AbgEYU5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 16:57:41 -0400
-IronPort-SDR: MIrIFXuIKpg9V8rg0jNp9CMR669MSRXKvS0VQdwoRhm9GdU1xRT6X4zLP7JyUfa5d4dzxIK76E
- iWdrvnOstJpQ==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 13:57:40 -0700
-IronPort-SDR: yVosbKdla3GYtCJyMs8X85aI0BFO3gwFRnzHMtPQcCh4hGkKdeq2QpFyX3q6LMY3KbHKg0Lw2k
- CdjpCjGMMNiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,434,1583222400"; 
-   d="asc'?scan'208";a="375515995"
-Received: from hiversen-mobl.ger.corp.intel.com (HELO otredad) ([10.252.59.29])
-  by fmsmga001.fm.intel.com with ESMTP; 25 May 2020 13:57:35 -0700
-From:   Francisco Jerez <francisco.jerez.plata@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
-In-Reply-To: <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com>
-References: <3169564.ZRsPWhXyMD@kreacher> <87mu5wre1v.fsf@intel.com> <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com>
-Date:   Mon, 25 May 2020 13:57:47 -0700
-Message-ID: <87a71vraus.fsf@intel.com>
+        id S2390750AbgEYU5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 16:57:49 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (c-67-180-217-166.hsd1.ca.comcast.net [67.180.217.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B8262065F;
+        Mon, 25 May 2020 20:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590440268;
+        bh=lR7NOEwZSW7Lg+I18yIGiKJF3iGfsiCFNOxqNlZ1mDc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=swt24vm+6Bdjwmpc/k3E1NGlCiAfDgyqBkQ3G8Ce/iyqkrFCZLuItGHYd7e+lhuit
+         2p/8FdJfvjSP6yy44RRgmPkzZ0fXJ6Hm3oE4qCNX4na//sgiBAFsr9XmKyyD1l5QJB
+         5v9UiseaC98juTrEUehmaFTAJxgDK718S2RLobhk=
+Date:   Mon, 25 May 2020 13:57:46 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, derosier@gmail.com,
+        greearb@candelatech.com, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, jiri@resnulli.us,
+        briannorris@chromium.org
+Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
+Message-ID: <20200525135746.45e764de@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
+References: <20200519010530.GS11244@42.do-not-panic.com>
+        <20200519211531.3702593-1-kuba@kernel.org>
+        <20200522052046.GY11244@42.do-not-panic.com>
+        <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="==-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==-=-=
-Content-Type: multipart/mixed; boundary="=-=-="
+On Fri, 22 May 2020 22:46:07 +0200 Johannes Berg wrote:
+> > The irony is you have a problem with a networking device and all the
+> > devices your initial set touched are networking. Two of the drivers 
+> > you touched either have or will soon have devlink health reporters
+> > implemented.  
+> 
+> Like I said above, do you think it'd be feasible to make a devcoredump
+> out of devlink health reports? And can the report be in a way that we
+> control the file format, or are there limits? I guess I should read the
+> code to find out, but I figure you probably just know. But feel free to
+> tell me to read it :)
+> 
+> The reason I'm asking is that it's starting to sound like we really
+> ought to be implementing devlink, but we've got a bunch of
+> infrastructure that uses the devcoredump, and it'll take time
+> (significantly so) to change all that...
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In devlink world pure FW core dumps are exposed by devlink regions.
+An API allowing reading device memory, registers, etc., but also 
+creating dumps of memory regions when things go wrong. It should be
+a fairly straightforward migration.
 
-"Rafael J. Wysocki" <rafael@kernel.org> writes:
+Devlink health is more targeted, the dump is supposed to contain only
+relevant information, selected and formatted by the driver. When device
+misbehaves driver reads the relevant registers and FW state and creates
+a formatted state dump. I believe each element of the dump must fit
+into a netlink message (but there may be multiple elements, see
+devlink_fmsg_prepare_skb()).
 
-> On Mon, May 25, 2020 at 3:39 AM Francisco Jerez
-> <francisco.jerez.plata@intel.com> wrote:
->>
->> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
->>
->> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> >
->> > Allow intel_pstate to work in the passive mode with HWP enabled and
->> > make it translate the target frequency supplied by the cpufreq
->> > governor in use into an EPP value to be written to the HWP request
->> > MSR (high frequencies are mapped to low EPP values that mean more
->> > performance-oriented HWP operation) as a hint for the HWP algorithm
->> > in the processor, so as to prevent it and the CPU scheduler from
->> > working against each other at least when the schedutil governor is
->> > in use.
->> >
->> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> > ---
->> >
->> > This is a prototype not intended for production use (based on linux-next).
->> >
->> > Please test it if you can (on HWP systems, of course) and let me know the
->> > results.
->> >
->> > The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very well
->> > may turn out to be either too high or too low for the general use, which is one
->> > reason why getting as much testing coverage as possible is key here.
->> >
->> > If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
->> > please do so and let me know the conclusions.
->> >
->> > Cheers,
->> > Rafael
->> >
->> > ---
->> >  drivers/cpufreq/intel_pstate.c |  169 +++++++++++++++++++++++++++++++----------
->> >  1 file changed, 131 insertions(+), 38 deletions(-)
->> >
->> > Index: linux-pm/drivers/cpufreq/intel_pstate.c
->> > ===================================================================
->> > --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
->> > +++ linux-pm/drivers/cpufreq/intel_pstate.c
->> > @@ -36,6 +36,7 @@
->> >  #define INTEL_PSTATE_SAMPLING_INTERVAL       (10 * NSEC_PER_MSEC)
->> >
->> >  #define INTEL_CPUFREQ_TRANSITION_LATENCY     20000
->> > +#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP   5000
->> >  #define INTEL_CPUFREQ_TRANSITION_DELAY               500
->> >
->> >  #ifdef CONFIG_ACPI
->> > @@ -95,6 +96,8 @@ static inline int32_t percent_ext_fp(int
->> >       return div_ext_fp(percent, 100);
->> >  }
->> >
->> > +#define HWP_EPP_TO_BYTE(x)   (((u64)x >> 24) & 0xFF)
->> > +
->> >  /**
->> >   * struct sample -   Store performance sample
->> >   * @core_avg_perf:   Ratio of APERF/MPERF which is the actual average
->> > @@ -2175,7 +2178,10 @@ static int intel_pstate_verify_policy(st
->> >
->> >  static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
->> >  {
->> > -     intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
->> > +     if (hwp_active)
->> > +             intel_pstate_hwp_force_min_perf(policy->cpu);
->> > +     else
->> > +             intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
->> >  }
->> >
->> >  static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
->> > @@ -2183,12 +2189,10 @@ static void intel_pstate_stop_cpu(struct
->> >       pr_debug("CPU %d exiting\n", policy->cpu);
->> >
->> >       intel_pstate_clear_update_util_hook(policy->cpu);
->> > -     if (hwp_active) {
->> > +     if (hwp_active)
->> >               intel_pstate_hwp_save_state(policy);
->> > -             intel_pstate_hwp_force_min_perf(policy->cpu);
->> > -     } else {
->> > -             intel_cpufreq_stop_cpu(policy);
->> > -     }
->> > +
->> > +     intel_cpufreq_stop_cpu(policy);
->> >  }
->> >
->> >  static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
->> > @@ -2296,7 +2300,8 @@ static int intel_cpufreq_verify_policy(s
->> >  #define      INTEL_PSTATE_TRACE_TARGET 10
->> >  #define      INTEL_PSTATE_TRACE_FAST_SWITCH 90
->> >
->> > -static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type, int old_pstate)
->> > +static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type,
->> > +                             int from, int to)
->> >  {
->> >       struct sample *sample;
->> >
->> > @@ -2309,8 +2314,8 @@ static void intel_cpufreq_trace(struct c
->> >       sample = &cpu->sample;
->> >       trace_pstate_sample(trace_type,
->> >               0,
->> > -             old_pstate,
->> > -             cpu->pstate.current_pstate,
->> > +             from,
->> > +             to,
->> >               sample->mperf,
->> >               sample->aperf,
->> >               sample->tsc,
->> > @@ -2318,40 +2323,110 @@ static void intel_cpufreq_trace(struct c
->> >               fp_toint(cpu->iowait_boost * 100));
->> >  }
->> >
->> > -static int intel_cpufreq_target(struct cpufreq_policy *policy,
->> > -                             unsigned int target_freq,
->> > -                             unsigned int relation)
->> > +static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u8 new_epp)
->> >  {
->> > -     struct cpudata *cpu = all_cpu_data[policy->cpu];
->> > -     struct cpufreq_freqs freqs;
->> > -     int target_pstate, old_pstate;
->> > +     u64 value, prev;
->> >
->> > -     update_turbo_state();
->> > +     prev = READ_ONCE(cpu->hwp_req_cached);
->> > +     value = prev;
->> >
->> > -     freqs.old = policy->cur;
->> > -     freqs.new = target_freq;
->> > +     /*
->> > +      * The entire MSR needs to be updated in order to update the EPP field
->> > +      * in it, so opportunistically update the min and max too if needed.
->> > +      */
->> > +     value &= ~HWP_MIN_PERF(~0L);
->> > +     value |= HWP_MIN_PERF(cpu->min_perf_ratio);
->> > +
->> > +     value &= ~HWP_MAX_PERF(~0L);
->> > +     value |= HWP_MAX_PERF(cpu->max_perf_ratio);
->> > +
->> > +     if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
->> > +             intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET,
->> > +                                 HWP_EPP_TO_BYTE(prev), new_epp);
->> > +
->> > +             value &= ~GENMASK_ULL(31, 24);
->> > +             value |= HWP_ENERGY_PERF_PREFERENCE(new_epp);
->> > +     }
->> > +
->> > +     if (value != prev) {
->> > +             WRITE_ONCE(cpu->hwp_req_cached, value);
->> > +             wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
->> > +     }
->> > +}
->> > +
->> > +/**
->> > + * intel_cpufreq_adjust_hwp_request - Adjust the HWP reuqest register.
->> > + * @cpu: Target CPU.
->> > + * @max_freq: Maximum frequency to consider.
->> > + * @target_freq: Target frequency selected by the governor.
->> > + *
->> > + * Translate the target frequency into a new EPP value to be written into the
->> > + * HWP request MSR of @cpu as a hint for the HW-driven P-state selection.
->> > + *
->> > + * The purpose of this is to avoid situations in which the kernel and the HWP
->> > + * algorithm work against each other by giving a hint about the expectations of
->> > + * the former to the latter.
->> > + *
->> > + * The mapping betweeen the target frequencies and the hint values need not be
->> > + * exact, but it must be monotonic, so that higher target frequencies always
->> > + * indicate more performance-oriented P-state selection.
->> > + */
->> > +static void intel_cpufreq_adjust_hwp_request(struct cpudata *cpu, s64 max_freq,
->> > +                                          unsigned int target_freq)
->> > +{
->> > +     s64 epp_fp = div_fp(255 * (max_freq - target_freq), max_freq);
->> > +
->> > +     intel_cpufreq_update_hwp_request(cpu, fp_toint(epp_fp));
->> > +}
->> > +
->>
->> Hey Rafael, I'm building a kernel with this in order to give it a try on
->> my system, but I'm skeptical that translating the target frequency to an
->> EPP value will work reliably.  AFAIA the EPP value only has an indirect
->> influence on the processor's performance by adjusting the trade-off
->> between its responsiveness (rather than the actual clock frequency which
->> it will sustain in the long run) and its energy usage, in a largely
->> unspecified and non-linear way (non-linear like the effect of switching
->> CPU energy optimization features on and off, or like its effect on the
->> energy balancing behavior of the processor which can have a paradoxical
->> effect on performance).
->>
->> I doubt that the scheduling-based CPU utilization is a good predictor
->> for the optimal trade-off between those two variables.
->
-> While I agree that this is not perfect, there barely is anything else
-> that can be used for this purpose.
->
-> Using the desired field or trying to adjust the limits relatively
-> often would basically cause the P-state selection to be driven
-> entirely by the kernel which simply doesn't know certain things only
-> known to the P-unit, so it is reasonable to leave some level of
-> control to the latter, so as to allow it to use the information known
-> to it only.
->
-> However, if it is allowed to do whatever it likes without any hints
-> from the kernel, it may very well go against the scheduler's decisions
-> which is not going to be optimal.
->
-> I'm simply not sure if there is any other way to give such hints to it
-> that through the EPP.
->
+We should be able to convert dl-regions dumps and dl-health dumps into
+devcoredumps, but since health reporters are supposed to be more
+targeted there's usually multiple of them per device.
 
-Why not HWP_MIN_PERF?  That would leave the HWP quite some room for
-maneuvering (the whole HWP_MIN_PERF-HWP_MAX_PERF P-state range, it's not
-like P-state selection would be entirely driven by the kernel), while
-avoiding every failure scenario I was describing in my previous reply.
-
-Simply adjusting the EPP doesn't really allow the governor to make any
-assumptions about the instantaneous performance of the processor, so it
-seems questionable that it is exposed as a frequency target, since its
-effect on frequency would be highly implementation-dependent and
-inconsistent with the behavior of other CPUFREQ drivers.  OTOH adjusting
-HWP_MIN_PERF achieves precisely what the caller wants: The CPU will
-deliver at least the requested number of clocks per second (assuming the
-request is compatible with the thermal and electrical constraints of the
-processor), while retaining the liberty to clock up beyond that
-frequency if the HWP is able to react to some discontinuous event more
-quickly than the scheduler.
-
-> Thanks!
-
---=-=-=--
-
---==-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXswxSwAKCRCDmTidfVK/
-W85WAP9LllIMzUqpuK2JCyRaa/YAvLzISzlD3BtybBDpk2SgPAD9Eys3UMR/8f7M
-+zN75zK7I9Fd9jytw1uvpa5mLCfhowQ=
-=TAoT
------END PGP SIGNATURE-----
---==-=-=--
+Conversely devcoredumps can be trivially exposed as dl-region dumps,
+but I believe dl-health would require driver changes to format the
+information appropriately.
