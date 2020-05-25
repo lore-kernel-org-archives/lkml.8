@@ -2,167 +2,87 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB39C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C82C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E16C2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590394047;
-	bh=yEczq1eG0TAuLxffm05GiJiXcK0sP7HpAZsmTv2shSY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dwOZD48g17NdC+8x8TTjfsuoJq6IGLBD3As4C9zwDP2XE0b2iqg+Qo2BUFYTSy0fe
-	 5GlR+Fe9DDCWKLHGrzVYhHkqVI1rS+POhN6WduX/EUHfu634A21UilkufrtHhWKnO0
-	 r4U2d2Aqkskvinkrm72V3QbMWen7+Sg1pJaQps6A=
+	by mail.kernel.org (Postfix) with ESMTP id B606F206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbgEYIH1 (ORCPT
+        id S2388648AbgEYIJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
+        Mon, 25 May 2020 04:09:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13792 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgEYIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:07:26 -0400
-Received: from e123331-lin.nice.arm.com (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9B34206B6;
-        Mon, 25 May 2020 08:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590394045;
-        bh=yEczq1eG0TAuLxffm05GiJiXcK0sP7HpAZsmTv2shSY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wuCP9lTQKFI/hDYSUTNv2zClhLFPdw8x5S6uNhmIFsvMPkvlqO5/VpwVhSBNXY+iT
-         hdO8ukcl+M2JFEVkoy5oFz2DBMl6yto50yQEXKcOTYwGLVGnU7LCRs1ofbaM29+EhU
-         WaUflpmVhCd4a5CLw0f2eXL2I+NI+5c2N/qlKvLg=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: [GIT PULL] EFI changes for v5.8
-Date:   Mon, 25 May 2020 10:07:14 +0200
-Message-Id: <20200525080714.23228-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S2387941AbgEYIJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 04:09:07 -0400
+IronPort-SDR: H6TxFAeeQmasdR6rHp6+dFFwDDNS0xKAWftkmWr+Yz/dvQVorhTa/EFjIbDReSevTXV2RJQYXy
+ PB4vlJvOTm6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 01:09:06 -0700
+IronPort-SDR: 2GxOdfOXTb/+beTG0TdxwA4u82GnnXD2FJKjLqz8AyaRik+2lRMnoP5XOU/iowG1F7sBWaKmQT
+ YcSLip9as2CA==
+X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
+   d="scan'208";a="284068677"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 01:09:04 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id D5C3920953; Mon, 25 May 2020 11:09:02 +0300 (EEST)
+Date:   Mon, 25 May 2020 11:09:02 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: smiapp: Fix runtime PM imbalance on error
+Message-ID: <20200525080902.GC7618@paasikivi.fi.intel.com>
+References: <20200522090313.10634-1-dinghao.liu@zju.edu.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522090313.10634-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingo, Thomsd, Boris,
+Hi Dinghao,
 
-Please pull the changes below. Note that I did not incorporate the GOT
-handling changes for the x86 decompressor - Arvind has some changes on
-top that might just as well go in at the same time, and they are not
-really EFI changes anyway.
+Thanks for the patch.
 
-The following changes since commit 4da0b2b7e67524cc206067865666899bc02e1cb0:
+On Fri, May 22, 2020 at 05:03:13PM +0800, Dinghao Liu wrote:
+> When v4l2_async_register_subdev_sensor_common() returns
+> an error code, a pairing runtime PM usage counter
+> decrement is needed to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/media/i2c/smiapp/smiapp-core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+> index 5e4f6a2ef78e..43ba63c48a87 100644
+> --- a/drivers/media/i2c/smiapp/smiapp-core.c
+> +++ b/drivers/media/i2c/smiapp/smiapp-core.c
+> @@ -3103,6 +3103,7 @@ static int smiapp_probe(struct i2c_client *client)
+>  	return 0;
+>  
+>  out_disable_runtime_pm:
+> +	pm_runtime_put_autosuspend(&client->dev);
 
-  efi/libstub: Re-enable command line initrd loading for x86 (2020-04-25 12:26:32 +0200)
+Can you use pm_runtime_put_noidle(), as the device musn't be powered off
+here yet?
 
-are available in the Git repository at:
+>  	pm_runtime_disable(&client->dev);
+>  
+>  out_media_entity_cleanup:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-changes-for-v5.8
+-- 
+Regards,
 
-for you to fetch changes up to 9241dfe7f2772fc73c82eb950afb1c795d2c012c:
-
-  efi/x86: Drop the special GDT for the EFI thunk (2020-05-24 00:25:15 +0200)
-
-Cc: Ingo Molnar <mingo@redhat.com>,
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-
-----------------------------------------------------------------
-More EFI changes for v5.8:
-- Rename pr_efi/pr_efi_err to efi_info/efi_err, and use them consistently
-- Simplify and unify initrd loading
-- Parse the builtin command line on x86 (if provided)
-- Implement printk() support, including support for wide character strings
-- Some fixes for issues introduced by the first batch of v5.8 changes
-- Fix a missing prototypes warning
-- Simplify GDT handling in early mixed mode thunking code
-- Some other minor fixes and cleanups
-
-----------------------------------------------------------------
-Ard Biesheuvel (5):
-      efi/libstub/x86: Work around LLVM ELF quirk build regression
-      efi/libstub: Make efi_printk() input argument const char*
-      efi/libstub: Use pool allocation for the command line
-      efi/efivars: Add missing kobject_put() in sysfs entry creation error path
-      efi/libstub: Add missing prototype for PE/COFF entry point
-
-Arvind Sankar (38):
-      efi/x86: Use correct size for boot_params
-      efi/libstub: Add a helper function to split 64-bit values
-      efi/libstub: Move pr_efi/pr_efi_err into efi namespace
-      efi/x86: Use efi_err for error messages
-      efi/gop: Use efi_err for error messages
-      efi/tpm: Use efi_err for error messages
-      efi/libstub: Upgrade ignored dtb= argument message to error
-      efi/x86: Move command-line initrd loading to efi_main
-      efi/libstub: Unify initrd loading across architectures
-      efi/x86: Support builtin command line
-      efi/libstub: Check return value of efi_parse_options
-      efi/libstub: Fix mixed mode boot issue after macro refactor
-      efi/libstub: Include dependencies of efistub.h
-      efi/libstub: Rename efi_[char16_]printk to efi_[char16_]puts
-      efi/libstub: Buffer output of efi_puts
-      efi/libstub: Add a basic printf implementation
-      efi/libstub: Optimize for size instead of speed
-      efi/printf: Drop %n format and L qualifier
-      efi/printf: Add 64-bit and 8-bit integer support
-      efi/printf: Factor out flags parsing and handle '%' earlier
-      efi/printf: Fix minor bug in precision handling
-      efi/printf: Merge 'p' with the integer formats
-      efi/printf: Factor out width/precision parsing
-      efi/printf: Factor out integer argument retrieval
-      efi/printf: Handle null string input
-      efi/printf: Refactor code to consolidate padding and output
-      efi/printf: Abort on invalid format
-      efi/printf: Turn vsprintf into vsnprintf
-      efi/libstub: Implement printk-style logging
-      efi/libstub: Add definitions for console input and events
-      efi/gop: Add an option to list out the available GOP modes
-      efi/printf: Add support for wchar_t (UTF-16)
-      efi/libstub: Add UTF-8 decoding to efi_puts
-      efi/libstub: Use %ls for filename
-      efi/libstub: Get the exact UTF-8 length
-      efi/libstub: Use snprintf with %ls to convert the command line
-      efi/libstub: Don't parse overlong command lines
-      efi/x86: Drop the special GDT for the EFI thunk
-
-Joe Perches (1):
-      efi/libstub: Correct comment typos
-
- Documentation/fb/efifb.rst                     |   5 +
- arch/arm/boot/compressed/efi-header.S          |   2 +-
- arch/arm64/kernel/efi-entry.S                  |   2 +-
- arch/arm64/kernel/efi-header.S                 |   2 +-
- arch/x86/boot/compressed/efi_thunk_64.S        |  19 +-
- arch/x86/include/asm/efi.h                     |  29 +-
- arch/x86/xen/efi.c                             |   2 +-
- drivers/firmware/efi/efivars.c                 |   4 +-
- drivers/firmware/efi/libstub/Makefile          |   7 +-
- drivers/firmware/efi/libstub/arm32-stub.c      |  12 +-
- drivers/firmware/efi/libstub/arm64-stub.c      |  14 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c | 346 +++++++++++----
- drivers/firmware/efi/libstub/efi-stub.c        |  70 +--
- drivers/firmware/efi/libstub/efistub.h         | 155 +++++--
- drivers/firmware/efi/libstub/fdt.c             |  16 +-
- drivers/firmware/efi/libstub/file.c            |  14 +-
- drivers/firmware/efi/libstub/gop.c             | 113 ++++-
- drivers/firmware/efi/libstub/pci.c             |  10 +-
- drivers/firmware/efi/libstub/relocate.c        |   4 +-
- drivers/firmware/efi/libstub/secureboot.c      |   4 +-
- drivers/firmware/efi/libstub/tpm.c             |   2 +-
- drivers/firmware/efi/libstub/vsprintf.c        | 564 +++++++++++++++++++++++++
- drivers/firmware/efi/libstub/x86-stub.c        | 124 +++---
- include/linux/efi.h                            |   4 +-
- 24 files changed, 1211 insertions(+), 313 deletions(-)
- create mode 100644 drivers/firmware/efi/libstub/vsprintf.c
+Sakari Ailus
