@@ -2,93 +2,158 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F58EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5112C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1CD208A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590416319;
-	bh=boEYvuFZgzF1dk665cIlE8LztYbfHpvHAl5Gif5KGSo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rf+PaUR+sFG3DUmv0jSf/uMLFepdhNpZZ4YBx6HkM7q8KIe19lTfmH5t5aINx5tGD
-	 PZH7dCLTvI1Sdh3MuBaSzxtdxvKnT/1ard+9EmNSPNZ21nbvLtiZSPBnu5uXdyxwsb
-	 UgK1GiY1mY6njRUbGINjXO77+W680zwrvVT5z7qI=
+	by mail.kernel.org (Postfix) with ESMTP id 7E84F2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McRwpMFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390985AbgEYOSi (ORCPT
+        id S2390994AbgEYOTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:18:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388714AbgEYOSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:18:37 -0400
-Received: from localhost.localdomain (unknown [42.120.72.90])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A2B208A7;
-        Mon, 25 May 2020 14:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590416317;
-        bh=boEYvuFZgzF1dk665cIlE8LztYbfHpvHAl5Gif5KGSo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZHENXbnG2hbFsP3eU5DBavKi06wsIU3kamBYuvdPB1hknyqZr08kLrGHRWfnzmJ44
-         QRW5TIbyDVQGJjj3o19wCxeijWwgSHTAH7VR5tMAh21HUQMpJ7Jb8csW17v2WmxZV3
-         hjAWLGkVy1honrNkHtkrCDqSDQmdm4f9KDoZTBKU=
-From:   guoren@kernel.org
-To:     tycho@tycho.ws, keescook@chromium.org, palmerdabbelt@google.com,
-        paul.walmsley@sifive.com, anup@brainfault.org
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH] riscv: Remove unnecessary path for syscall_trace
-Date:   Mon, 25 May 2020 14:18:26 +0000
-Message-Id: <1590416306-66453-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 25 May 2020 10:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390870AbgEYOTJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 10:19:09 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CA5C061A0E;
+        Mon, 25 May 2020 07:19:09 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v63so8874252pfb.10;
+        Mon, 25 May 2020 07:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OLgmeYVGZXrkZOzVtobLf8KYagc1Ru99Oter6TayP28=;
+        b=McRwpMFwL2GwANU7i7pPIJzTK2vBJL3q6oU1JordXmOja9i5MfCP2WuX52WLeahfb+
+         cErAfgipDSrgbQ3AqtdhRvi/KTj3VYiazno1w8qrcUK12yf4HtrmUtVV3e8f6YE4o3DX
+         XsKUh3XU4Xcxr6Vv9PfK2stlH9TWR7Ek5JXMqrXat27ggjSKSz+C2ud+ms4qJmw/hDqK
+         kypGSQalnAlAtE7edTtljJUTmT0vmK+bwiTGMsqpL+09DeL5S9msSoEp7WwJGyz0HpS4
+         s6eI+Pjzwh43sAbjyPKCdOTpiO2QhURw0nDjRhq2YiROu7/QAgBFcya8CMqRmNaHsZFM
+         B68Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OLgmeYVGZXrkZOzVtobLf8KYagc1Ru99Oter6TayP28=;
+        b=lFx7u+UokrejwKIvj21QykGWrNMeDpUhKLWuCFAqsLI+7SwtJJy3dxxfeShspTepCU
+         w5Daga4CKXrxmGer1R0s/rIQKDykBIWqoSKy4l/cD6OEkYzc99yv9kHw84QUYonWWWWJ
+         c/AiEd7HbVLcYqg8eq6TCMhbUN3zlbNM/gmphkEC3EANbBCzAwa4s754Lc6figT7iv7y
+         rfxnzj7c8s0zebEIKCJ0vI6oBAyei38ShcXSArwW07EDXT8HKDvYd4TtRF7XWeT66CkO
+         130uhBWShj3ciU83WHHvAQ8WMGaZdpX5FXWSx/YFbe88KO6IKq2k+DWJcvWGoqmf4PHy
+         18tQ==
+X-Gm-Message-State: AOAM531qAfQV/UA/UoxYdfoC1BwsRJsWX4uxbwDAoOauBOn8prGQGfYN
+        kFjg9njUlA9SQt6EMIm6jVJye2O9eTI=
+X-Google-Smtp-Source: ABdhPJw6oiFgQzylvXFpXW6V+V8h0Ie8cogLaZCO/NgLDd53stGrJrlj8hCAv+ulcteLnMqvQkrogw==
+X-Received: by 2002:a62:e419:: with SMTP id r25mr17238043pfh.82.1590416348655;
+        Mon, 25 May 2020 07:19:08 -0700 (PDT)
+Received: from sol (220-235-68-201.dyn.iinet.net.au. [220.235.68.201])
+        by smtp.gmail.com with ESMTPSA id n2sm13147723pfe.161.2020.05.25.07.19.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 07:19:07 -0700 (PDT)
+Date:   Mon, 25 May 2020 22:19:02 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+Message-ID: <20200525141902.GA27938@sol>
+References: <20200516064507.19058-1-warthog618@gmail.com>
+ <CACRpkdbputuoHFWL_FhUNR-ZywvJt=qYdaa+i2cLt-Odmgxe2w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbputuoHFWL_FhUNR-ZywvJt=qYdaa+i2cLt-Odmgxe2w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+On Mon, May 25, 2020 at 10:39:42AM +0200, Linus Walleij wrote:
+> On Sat, May 16, 2020 at 8:45 AM Kent Gibson <warthog618@gmail.com> wrote:
+> 
+> > Add a new version of the uAPI to address existing 32/64bit alignment
+> > issues, add support for debounce, and provide some future proofing by
+> > adding padding reserved for future use.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> 
+> I don't see any major problems with it, just some comments:
+> 
+> + * @padding: reserved for future use and should be zero filled
+> 
+> *MUST* be zerofilled is what it should say.
+> 
+> > +struct gpioline_config {
+> > +       __u8 default_values[GPIOLINES_MAX];
+> 
+> So 32 bytes
+> 
 
-Obviously, there is no need to recover a0-a7 in reject path.
+Actually that one is 64 bytes, which is the same as v1, i.e. GPIOLINES_MAX
+is the same as GPIOHANDLES_MAX - just renamed.
 
-Previous modification is from commit af33d243 by Tycho, to
-fixup seccomp reject syscall code path.
+On the subject of values, is there any reason to use a byte for each line
+rather value than a bit?
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Cc: Tycho Andersen <tycho@tycho.ws>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Palmer Dabbelt <palmerdabbelt@google.com>
----
- arch/riscv/kernel/entry.S | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> > +       __u32 flags;
+> > +       __u8 direction;
+> > +       __u8 drive;
+> > +       __u8 bias;
+> > +       __u8 edge_detection;
+> 
+> Some comment in the struc that this adds up to 32 bits?
+> 
+> > +       __u32 debounce;
+> > +       __u32 padding[7]; /* for future use */
+> 
+> What we need to do inside the kernel with all of these
+> is to ascertain that they are 0 for now when they are
+> sent in and refuse them otherwise, I think it was Lars-Peter
+> Clausen who said that they had to retire a whole slew of
+> ioctl()s because some userspace just used unallocated
+> memory for this and since that was random bytes it needed to
+> be supported with that content forever and the reserved
+> padding could never be used for the reserved purpose.
+> 
+> This kind of comment goes for all the structs.
+> 
 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 56d071b..ea3444d 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -306,7 +306,7 @@ work_resched:
- handle_syscall_trace_enter:
- 	move a0, sp
- 	call do_syscall_trace_enter
--	move t0, a0
-+	bnez a0, ret_from_syscall_rejected
- 	REG_L a0, PT_A0(sp)
- 	REG_L a1, PT_A1(sp)
- 	REG_L a2, PT_A2(sp)
-@@ -315,7 +315,6 @@ handle_syscall_trace_enter:
- 	REG_L a5, PT_A5(sp)
- 	REG_L a6, PT_A6(sp)
- 	REG_L a7, PT_A7(sp)
--	bnez t0, ret_from_syscall_rejected
- 	j check_syscall_nr
- handle_syscall_trace_exit:
- 	move a0, sp
--- 
-2.7.4
+OK, I wasn't sure how strict the validation should be on the kernel
+side, but I'll take a strict stance and check the whole struct.
 
+Having said that, when adding future fields, the idea was to have a bit
+in the flags that indicates that the corresponding field is now valid.
+If the flag is not set then whatever value is there is irrelevant.
+e.g. the debounce field value is irrelevent and ignored unless the
+GPIOLINE_FLAG_V2_DEBOUNCE is set in flags.
+OTOH, if the bit is set then the field would have to be set correctly.
+And the current kernel would reject a future request with an unsupported
+bit set in flags.
+
+But definitely better to play it safe - will check the padding is
+zeroed as well, as well as any field for which the flag bit is clear.
+
+> But mostly it is a question about the kernel code receiving
+> or emitting these.
+> 
+
+For sure - all the structs returned will be zeroed before use so as not
+to leak kernel stack - unless they originate from userspace of course.
+
+Back on retired ioctls, I notice that 5, 6, and 7 are missing from gpio.
+Have those been retired, or just skipped over by accident?
+
+Cheers,
+Kent.
