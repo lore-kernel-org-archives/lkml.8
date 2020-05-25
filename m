@@ -2,205 +2,273 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D990C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 725FD2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5957F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DbaOp9GW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sPV/VarQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403834AbgEYNTJ (ORCPT
+        id S2388851AbgEYNVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35338 "EHLO
+        Mon, 25 May 2020 09:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390688AbgEYNTJ (ORCPT
+        with ESMTP id S2388685AbgEYNVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:19:09 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01DEDC061A0E;
-        Mon, 25 May 2020 06:19:09 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C415724D;
-        Mon, 25 May 2020 15:19:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1590412745;
-        bh=LC8ysV2b9bTGuLITct/UwUGjPS8MrRakOH70P7jIc5A=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DbaOp9GW/rTRqvFzPZnflWpDnhkpJnlP1KlYU3D0Yxug4EOvZ9BtFRldHCQKJjvd9
-         Ep0o/r0REulCaIgyJfel8PoUlXyHL1YYmo+sTeK9OYN+L4eE9ZApca8/Gi+2dem7mL
-         Bmmr+6DO/3B+XAP6KIT1+17DwU/6kJR4i0MaDtZ0=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH] media: vsp1: dl: Fix NULL pointer dereference on unbind
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>, stable@vger.kernel.org
-References: <20200523081334.23531-1-erosca@de.adit-jv.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <d4544b1b-a695-bd70-0ccb-e2fb1838f3f8@ideasonboard.com>
-Date:   Mon, 25 May 2020 14:19:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 25 May 2020 09:21:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C48FC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KXafGMI0016LaAdXkM6ecwx4s5fmwYBS7iuHwl2pdQQ=; b=sPV/VarQ0Bv/np6SED4MNCPCsN
+        /iCB/llU5luzXwK+O74kL/zA13hLfRLLsp6f/qfAn54bsudvxA8Izu5g8+WiX9+4PV60f/NZIbt0K
+        SPpTbaUT41S86gFeLI9C5Wrx+hA6uOwqrXOB/RVTUfK5qfuMbxk+TXGZsFkIKsVqNf0Pwq56eltP+
+        eCmFcbgEDHp9HhpItQ9MMlnACt+GYEBsPUo+LCVmzJ9nxAPok9xSsqjN08b/tNHd1/1l/Fv0wfCKs
+        FjVizXX6dYfJ8JxBqpGGMSp8tlmmCrAxO491f7BDKW479VInVltz/3ggax049wIbJoqftIZ8Bprdf
+        eRKqJdxw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdD2S-0003So-0H; Mon, 25 May 2020 13:21:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73B4E30018B;
+        Mon, 25 May 2020 15:21:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 60FA52B0BA0F2; Mon, 25 May 2020 15:21:05 +0200 (CEST)
+Date:   Mon, 25 May 2020 15:21:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: Endless soft-lockups for compiling workload since next-20200519
+Message-ID: <20200525132105.GW325280@hirez.programming.kicks-ass.net>
+References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
+ <20200520125056.GC325280@hirez.programming.kicks-ass.net>
+ <20200521004035.GA15455@lenoir>
+ <20200521093938.GG325280@hirez.programming.kicks-ass.net>
+ <20200521104937.GB325303@hirez.programming.kicks-ass.net>
+ <20200521110027.GC325303@hirez.programming.kicks-ass.net>
+ <20200521124113.GC15455@lenoir>
 MIME-Version: 1.0
-In-Reply-To: <20200523081334.23531-1-erosca@de.adit-jv.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521124113.GC15455@lenoir>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu,
+On Thu, May 21, 2020 at 02:41:14PM +0200, Frederic Weisbecker wrote:
+> On Thu, May 21, 2020 at 01:00:27PM +0200, Peter Zijlstra wrote:
 
-Yeouch. Looks like I really missed a trick there!
-
-We should probably update the $SUBJECT to match what is performed in the
-patch, which is perhaps more like:
-
-"media: vsp1: dl: Store VSP reference when creating cmd pools"
-
-On 23/05/2020 09:13, Eugeniu Rosca wrote:
-
-And then we can explain here:
-
-In commit f3b98e3c4d2e16 ("media: vsp1: Provide support for extended
-command pools"), the vsp pointer used for referencing the VSP1 device
-structure from a command pool during vsp1_dl_ext_cmd_pool_destroy() was
-not populated.
-
-Correctly assign the pointer to prevent the following
-null-pointer-dereference when removing the device:
-
-> v4.19 commit f3b98e3c4d2e16 ("media: vsp1: Provide support for extended
-> command pools") introduced below issue [*], consistently reproduced.
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 01f94cf52783..b6d8a7b991f0 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -10033,7 +10033,7 @@ static void kick_ilb(unsigned int flags)
+> >  	 * is idle. And the softirq performing nohz idle load balance
+> >  	 * will be run before returning from the IPI.
+> >  	 */
+> > -	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
+> > +	smp_call_function_single_async(ilb_cpu, &this_rq()->nohz_csd);
 > 
-> In order to fix it, inspire from the sibling/predecessor v4.18-rc1
-> commit 5de0473982aab2 ("media: vsp1: Provide a body pool"), which saves
-> the vsp1 instance address in vsp1_dl_body_pool_create().
-> 
-> [*] h3ulcb-kf #>
-> echo fea28000.vsp > /sys/bus/platform/devices/fea28000.vsp/driver/unbind
->  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
->  Mem abort info:
->    ESR = 0x96000006
->    EC = 0x25: DABT (current EL), IL = 32 bits
->    SET = 0, FnV = 0
->    EA = 0, S1PTW = 0
->  Data abort info:
->    ISV = 0, ISS = 0x00000006
->    CM = 0, WnR = 0
->  user pgtable: 4k pages, 48-bit VAs, pgdp=00000007318be000
->  [0000000000000028] pgd=00000007333a1003, pud=00000007333a6003, pmd=0000000000000000
->  Internal error: Oops: 96000006 [#1] PREEMPT SMP
->  Modules linked in:
->  CPU: 1 PID: 486 Comm: sh Not tainted 5.7.0-rc6-arm64-renesas-00118-ge644645abf47 #185
->  Hardware name: Renesas H3ULCB Kingfisher board based on r8a77951 (DT)
->  pstate: 40000005 (nZcv daif -PAN -UAO)
->  pc : vsp1_dlm_destroy+0xe4/0x11c
->  lr : vsp1_dlm_destroy+0xc8/0x11c
->  sp : ffff800012963b60
->  x29: ffff800012963b60 x28: ffff0006f83fc440
->  x27: 0000000000000000 x26: ffff0006f5e13e80
->  x25: ffff0006f5e13ed0 x24: ffff0006f5e13ed0
->  x23: ffff0006f5e13ed0 x22: dead000000000122
->  x21: ffff0006f5e3a080 x20: ffff0006f5df2938
->  x19: ffff0006f5df2980 x18: 0000000000000003
->  x17: 0000000000000000 x16: 0000000000000016
->  x15: 0000000000000003 x14: 00000000000393c0
->  x13: ffff800011a5ec18 x12: ffff800011d8d000
->  x11: ffff0006f83fcc68 x10: ffff800011a53d70
->  x9 : ffff8000111f3000 x8 : 0000000000000000
->  x7 : 0000000000210d00 x6 : 0000000000000000
->  x5 : ffff800010872e60 x4 : 0000000000000004
->  x3 : 0000000078068000 x2 : ffff800012781000
->  x1 : 0000000000002c00 x0 : 0000000000000000
->  Call trace:
->   vsp1_dlm_destroy+0xe4/0x11c
->   vsp1_wpf_destroy+0x10/0x20
->   vsp1_entity_destroy+0x24/0x4c
->   vsp1_destroy_entities+0x54/0x130
->   vsp1_remove+0x1c/0x40
->   platform_drv_remove+0x28/0x50
->   __device_release_driver+0x178/0x220
->   device_driver_detach+0x44/0xc0
->   unbind_store+0xe0/0x104
->   drv_attr_store+0x20/0x30
->   sysfs_kf_write+0x48/0x70
->   kernfs_fop_write+0x148/0x230
->   __vfs_write+0x18/0x40
->   vfs_write+0xdc/0x1c4
->   ksys_write+0x68/0xf0
->   __arm64_sys_write+0x18/0x20
->   el0_svc_common.constprop.0+0x70/0x170
->   do_el0_svc+0x20/0x80
->   el0_sync_handler+0x134/0x1b0
->   el0_sync+0x140/0x180
->  Code: b40000c2 f9403a60 d2800084 a9400663 (f9401400)
->  ---[ end trace 3875369841fb288a ]---
-> 
-> Fixes: f3b98e3c4d2e16 ("media: vsp1: Provide support for extended command pools")
-> Cc: stable@vger.kernel.org # v4.19+
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> ---
-> 
-> How about adding a new unit test perfoming unbind/rebind to
-> http://git.ideasonboard.com/renesas/vsp-tests.git, to avoid
-> such issues in future? 
-
-Yes, now I wish I had done so back at 4.19! I hope this wasn't too
-painful to diagnose and fix, and thank you for being so thorough in your
-report!
-
-
-> Locally, below command has been used to identify the problem:
-> 
-> for f in $(find /sys/bus/platform/devices/ -name "*vsp*" -o -name "*fdp*"); do \
->      b=$(basename $f); \
->      echo $b > $f/driver/unbind; \
-> done
+> My fear here is that if a previous call from the the same CPU but to another
+> target is still pending, the new one will be spuriously ignored.
 > 
 
-I've created a test to add to vsp-tests, which I'll post next, thank you
-for the suggestion.
+Urgh, indeed!
 
-Before your patch is applied, I experience the same crash you have seen,
-and after your patch - I can successfully unbind/bind all of the VSP1
-instances.
-
-So I think you can have this too:
-
-Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> ---
->  drivers/media/platform/vsp1/vsp1_dl.c | 2 ++
->  1 file changed, 2 insertions(+)
+> But I believe we can still keep the remote csd if nohz_flags() are
+> strictly only set before the IPI and strictly only cleared from it.
 > 
-> diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
-> index d7b43037e500..e07b135613eb 100644
-> --- a/drivers/media/platform/vsp1/vsp1_dl.c
-> +++ b/drivers/media/platform/vsp1/vsp1_dl.c
-> @@ -431,6 +431,8 @@ vsp1_dl_cmd_pool_create(struct vsp1_device *vsp1, enum vsp1_extcmd_type type,
->  	if (!pool)
->  		return NULL;
->  
-> +	pool->vsp1 = vsp1;
-> +
->  	spin_lock_init(&pool->lock);
->  	INIT_LIST_HEAD(&pool->free);
->  
-> 
+> And I still don't understand why trigger_load_balance() raise the
+> softirq without setting the current CPU as ilb. run_rebalance_domains()
+> thus ignores it most of the time in the end or it spuriously clear the
+> nohz_flags set by an IPI sender. Or there is something I misunderstood
+> there.
 
+That is because it is simple and didn't matter before. Whoever got there
+first go to run the ilb whenever the flag was set.
+
+But now we have this race due to having to serialize access to the csd.
+
+We want the IPI to clear the flag, but then the softirq no longer knows
+it was supposed to do ILB.
+
+How's this then?
+
+---
+ include/linux/sched.h |  4 ++++
+ kernel/sched/core.c   | 41 +++++++++++++----------------------------
+ kernel/sched/fair.c   | 15 +++++++--------
+ kernel/sched/sched.h  |  2 +-
+ 4 files changed, 25 insertions(+), 37 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index f38d62c4632c..136ee400b568 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -696,6 +696,10 @@ struct task_struct {
+ 	struct uclamp_se		uclamp[UCLAMP_CNT];
+ #endif
+ 
++#ifdef CONFIG_SMP
++	call_single_data_t		wake_csd;
++#endif
++
+ #ifdef CONFIG_PREEMPT_NOTIFIERS
+ 	/* List of struct preempt_notifier: */
+ 	struct hlist_head		preempt_notifiers;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 5b286469e26e..90484b988b65 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -637,41 +637,25 @@ void wake_up_nohz_cpu(int cpu)
+ 		wake_up_idle_cpu(cpu);
+ }
+ 
+-static inline bool got_nohz_idle_kick(void)
++static void nohz_csd_func(void *info)
+ {
+-	int cpu = smp_processor_id();
+-
+-	if (!(atomic_read(nohz_flags(cpu)) & NOHZ_KICK_MASK))
+-		return false;
+-
+-	if (idle_cpu(cpu) && !need_resched())
+-		return true;
++	struct rq *rq = info;
++	int cpu = cpu_of(rq);
+ 
++	WARN_ON(!(atomic_read(nohz_flags(cpu)) & NOHZ_KICK_MASK));
+ 	/*
+-	 * We can't run Idle Load Balance on this CPU for this time so we
+-	 * cancel it and clear NOHZ_BALANCE_KICK
++	 * Release the rq::nohz_csd.
+ 	 */
++	smp_mb__before_atomic();
+ 	atomic_andnot(NOHZ_KICK_MASK, nohz_flags(cpu));
+-	return false;
+-}
+-
+-static void nohz_csd_func(void *info)
+-{
+-	struct rq *rq = info;
+ 
+-	if (got_nohz_idle_kick()) {
+-		rq->idle_balance = 1;
++	rq->idle_balance = idle_cpu(cpu);
++	if (rq->idle_balance && !need_resched()) {
++		rq->nohz_idle_balance = 1;
+ 		raise_softirq_irqoff(SCHED_SOFTIRQ);
+ 	}
+ }
+ 
+-#else /* CONFIG_NO_HZ_COMMON */
+-
+-static inline bool got_nohz_idle_kick(void)
+-{
+-	return false;
+-}
+-
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+ #ifdef CONFIG_NO_HZ_FULL
+@@ -2320,7 +2304,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+ 
+ 	if (llist_add(&p->wake_entry, &rq->wake_list)) {
+ 		if (!set_nr_if_polling(rq->idle))
+-			smp_call_function_single_async(cpu, &rq->wake_csd);
++			smp_call_function_single_async(cpu, &p->wake_csd);
+ 		else
+ 			trace_sched_wake_idle_without_ipi(cpu);
+ 	}
+@@ -2921,6 +2905,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ #endif
+ #if defined(CONFIG_SMP)
+ 	p->on_cpu = 0;
++	p->wake_csd = (struct __call_single_data) {
++		.func = wake_csd_func,
++	};
+ #endif
+ 	init_task_preempt_count(p);
+ #ifdef CONFIG_SMP
+@@ -6723,8 +6710,6 @@ void __init sched_init(void)
+ 		rq->avg_idle = 2*sysctl_sched_migration_cost;
+ 		rq->max_idle_balance_cost = sysctl_sched_migration_cost;
+ 
+-		rq_csd_init(rq, &rq->wake_csd, wake_csd_func);
+-
+ 		INIT_LIST_HEAD(&rq->cfs_tasks);
+ 
+ 		rq_attach_root(rq, &def_root_domain);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 01f94cf52783..93525549a023 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10024,6 +10024,10 @@ static void kick_ilb(unsigned int flags)
+ 	if (ilb_cpu >= nr_cpu_ids)
+ 		return;
+ 
++	/*
++	 * Access to rq::nohz_csd is serialized by NOHZ_KICK_MASK; he who sets
++	 * the first flag owns it; cleared by nohz_csd_func().
++	 */
+ 	flags = atomic_fetch_or(flags, nohz_flags(ilb_cpu));
+ 	if (flags & NOHZ_KICK_MASK)
+ 		return;
+@@ -10374,17 +10378,12 @@ static bool nohz_idle_balance(struct rq *this_rq, enum cpu_idle_type idle)
+ 	int this_cpu = this_rq->cpu;
+ 	unsigned int flags;
+ 
+-	if (!(atomic_read(nohz_flags(this_cpu)) & NOHZ_KICK_MASK))
++	if (!this_rq->nohz_idle_balance)
+ 		return false;
+ 
+-	if (idle != CPU_IDLE) {
+-		atomic_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
+-		return false;
+-	}
++	this_rq->nohz_idle_balance = 0;
+ 
+-	/* could be _relaxed() */
+-	flags = atomic_fetch_andnot(NOHZ_KICK_MASK, nohz_flags(this_cpu));
+-	if (!(flags & NOHZ_KICK_MASK))
++	if (idle != CPU_IDLE)
+ 		return false;
+ 
+ 	_nohz_idle_balance(this_rq, flags, idle);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index f7ab6334e992..6418f6af15c1 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -951,6 +951,7 @@ struct rq {
+ 
+ 	struct callback_head	*balance_callback;
+ 
++	unsigned char		nohz_idle_balance;
+ 	unsigned char		idle_balance;
+ 
+ 	unsigned long		misfit_task_load;
+@@ -1021,7 +1022,6 @@ struct rq {
+ #endif
+ 
+ #ifdef CONFIG_SMP
+-	call_single_data_t	wake_csd;
+ 	struct llist_head	wake_list;
+ #endif
+ 
