@@ -2,135 +2,122 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00011C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA290206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B712073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hOwyHL6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389604AbgEYJhH (ORCPT
+        id S2389575AbgEYJiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389251AbgEYJhH (ORCPT
+        Mon, 25 May 2020 05:38:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:39615 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389365AbgEYJiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:37:07 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9E5C061A0E;
-        Mon, 25 May 2020 02:37:06 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jd9XP-00062M-Es; Mon, 25 May 2020 11:36:51 +0200
-Date:   Mon, 25 May 2020 11:36:49 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v1 10/25] seqlock: Add RST directives to kernel-doc code
- samples and notes
-Message-ID: <20200525093649.GA370823@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-11-a.darwish@linutronix.de>
- <20200522180254.GS325280@hirez.programming.kicks-ass.net>
- <20200522180336.GD325303@hirez.programming.kicks-ass.net>
- <871rnbsu57.fsf@nanos.tec.linutronix.de>
- <20200522183216.GT325280@hirez.programming.kicks-ass.net>
+        Mon, 25 May 2020 05:38:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590399481; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8yygGiBP0D9AqMlE/nAxVZXV3Mc/D/TZO0KkO47wiAo=;
+ b=hOwyHL6kwvb/VzFFwwVL9h56z/2OjYPqVBWUX4mdOPi609R1ePel+7dj8Ir4d8PtASAVfiaX
+ mYW+GKFyzputoVR5uCfh9DlS2TbwKkuYB5+ZE9AP3i3ClPzkVBcOoE3IL8MnoF2/3zZGMIeJ
+ IFP6RjEsvpxI2MGrTmhVZrMfNvU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ecb91e48cd231c403df1324 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 25 May 2020 09:37:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 33CD5C433CA; Mon, 25 May 2020 09:37:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCF53C433C9;
+        Mon, 25 May 2020 09:37:38 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522183216.GT325280@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 15:07:38 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
+In-Reply-To: <20200524023815.21789-2-jonathan@marek.ca>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-2-jonathan@marek.ca>
+Message-ID: <d35d2d1b64622ae83ffd9a963aadcad4@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> wrote:
-> On Fri, May 22, 2020 at 08:26:44PM +0200, Thomas Gleixner wrote:
-> > Peter Zijlstra <peterz@infradead.org> writes:
-> > > On Fri, May 22, 2020 at 08:02:54PM +0200, Peter Zijlstra wrote:
-> > >> On Tue, May 19, 2020 at 11:45:32PM +0200, Ahmed S. Darwish wrote:
-> > >> > Mark all C code samples inside seqlock.h kernel-doc text with the RST
-> > >> > 'code-block: c' directive. Sphinx won't properly format the example code
-> > >> > and will produce noisy text indentation warnings otherwise.
-> > >>
-> > >> I so bloody hate RST.. and now it's infecting perfectly sane comments
-> > >> and turning them into unreadable junk :-(
-> > >
-> > > The correct fix is, as always, to remove the kernel-doc marker.
-> >
-> > Get over it already.
->
-> I will not let sensible code comments deteriorate to the benefit of some
-> external piece of crap.
->
-> As a programmer the primary interface to all this is a text editor, not
-> a web broswer or a pdf file or whatever other bullshit.
->
-> If comments are unreadable in your text editor, they're useless.
+Hi Jonathan,
 
-Wait.
+On 2020-05-24 08:08, Jonathan Marek wrote:
+> Add the apps_smmu node for sm8150. Note that adding the iommus field 
+> for
+> UFS is required because initializing the iommu removes the bypass 
+> mapping
+> that created by the bootloader.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 91 ++++++++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index a36512d1f6a1..acb839427b12 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -442,6 +442,8 @@ ufs_mem_hc: ufshc@1d84000 {
+>  			resets = <&gcc GCC_UFS_PHY_BCR>;
+>  			reset-names = "rst";
+> 
+> +			iommus = <&apps_smmu 0x300 0>;
+> +
+>  			clock-names =
+>  				"core_clk",
+>  				"bus_aggr_clk",
+> @@ -706,6 +708,7 @@ usb_1_dwc3: dwc3@a600000 {
+>  				compatible = "snps,dwc3";
+>  				reg = <0 0x0a600000 0 0xcd00>;
+>  				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +				iommus = <&apps_smmu 0x140 0>;
+>  				snps,dis_u2_susphy_quirk;
+>  				snps,dis_enblslpm_quirk;
+>  				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+> @@ -742,6 +745,94 @@ spmi_bus: spmi@c440000 {
+>  			cell-index = <0>;
+>  		};
+> 
+> +		apps_smmu: iommu@15000000 {
+> +			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
 
-Most of the patch in question is just substituting the code snippet's
-leading white spaces to tabs. For illustration purposes, if we remove
-these white space hunks from the diff, it becomes:
+This should be qcom,sm8150-smmu-500 and also you need to update the 
+arm-smmu
+binding with this compatible in a separate patch.
 
-  --- a/include/linux/seqlock.h
-  +++ b/include/linux/seqlock.h
-  @@ -232,6 +232,8 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
-  + * .. code-block:: c
-  ...
-  + * .. code-block:: c
-  ...
-  - * NOTE: The non-requirement for atomic modifications does _NOT_ include
-  - *       the publishing of new entries in the case where data is a dynamic
-  - *       data structure.
-  + * .. attention::
-  + *
-  + *     The non-requirement for atomic modifications does _NOT_ include
-  + *     the publishing of new entries in the case where data is a dynamic
-  + *     data structure.
-  ...
+-Sai
 
-Are you trying to tell me that, good heavens, these directives are
-really hurting your eyes so much?
-
-Putting kernel-doc aside... That huge raw_write_seqcount_latch() comment
-is actually *way more readable from any text editor* after applying this
-patch. Go figure.
-
->>> The correct fix is, as always, to remove the kernel-doc marker.
-
-Sorry, that's not the correct fix.
-
-In the following patches, kernel-doc for the entire seqlock.h API is
-added. Singling out raw_write_seqcount_latch() doesn't make any sense.
-
-If you look at the top of this patch series, a lot of seqlock.h
-seqcount_t call sites were badly broken. The 0day kernel test bot sent
-me even more erroneous call sites due to the added lockdep checks. This
-is an extra argument for the added documentation: the existing one is
-horrible.
-
-So, please, don't claim that the current situation is fine. It is not.
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
