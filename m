@@ -2,113 +2,132 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03859C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A322F2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2D32071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:41:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EerNxe3s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2bxfNn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390985AbgEYOjU (ORCPT
+        id S2390998AbgEYOlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:39:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390944AbgEYOjT (ORCPT
+        Mon, 25 May 2020 10:41:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56358 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390896AbgEYOlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:39:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF51C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sDmy5Xm2F2pY2KhwGXNcV6+J3j89es51xHtTpy+cA+A=; b=EerNxe3smaAc3YWerSP2Lw+Npr
-        tFZ8sQaFtxsOb746sxudWvYOKBpBmZArB9MeYtZyCdI7JxOYogp1YFwif7kF+W6eubgzeaPlDYfZ7
-        mpuchARpKoY0U/x7lncesvfyIRe7TxxaR1mgsoLlp459I9SptO5dMVSiVZzaQU8PZPvFyrxvNBnJ+
-        5/SJQNk2nO9Br7ajHJO+rCGLWC91fkjWpFEvebYohEYV5jIB3UQ082WzxdEDn4F0k/3uD4Fuk9+lP
-        k7gAu3DiVqtBhknvniOaWGeNCpeTG/dkMyTQZfvl0dngm0Oqy7wVgO+CiGsSPJTZRqXHbXDRCPRP7
-        Q11KbcNQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdEFq-000050-T9; Mon, 25 May 2020 14:39:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0E6B300B38;
-        Mon, 25 May 2020 16:38:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D689D2389FE1F; Mon, 25 May 2020 16:38:59 +0200 (CEST)
-Date:   Mon, 25 May 2020 16:38:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mon, 25 May 2020 10:41:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590417694;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=K70tf3jYnNdVjDRvfEDwL8NY4vBMlniBrKknRBAKsXU=;
+        b=G2bxfNn/cTATA6nyaUrFhR1ArDMmY0l+N6f/1cDwRbDzvp3zQ9RuUlNgS1sHhYrtwP8Chg
+        jbvOmfyfb333bkvwhFzL4xB0PI4LyqqTm7yRDbmjwh5GW595YQJn6KX2WtLznUz/VgfP1x
+        mAeMgNtfuqCqyRgRoqSFKzGpOdKobj4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-126-nFF1I69QNRqKWgF8nam1Jg-1; Mon, 25 May 2020 10:41:31 -0400
+X-MC-Unique: nFF1I69QNRqKWgF8nam1Jg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1FB31005512;
+        Mon, 25 May 2020 14:41:29 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.194.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8501B5D9C5;
+        Mon, 25 May 2020 14:41:26 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, x86@kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: Endless soft-lockups for compiling workload since next-20200519
-Message-ID: <20200525143859.GX325280@hirez.programming.kicks-ass.net>
-References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
- <20200520125056.GC325280@hirez.programming.kicks-ass.net>
- <20200521004035.GA15455@lenoir>
- <20200521093938.GG325280@hirez.programming.kicks-ass.net>
- <20200521104937.GB325303@hirez.programming.kicks-ass.net>
- <20200521110027.GC325303@hirez.programming.kicks-ass.net>
- <20200521124113.GC15455@lenoir>
- <20200525132105.GW325280@hirez.programming.kicks-ass.net>
- <20200525140541.GA28923@lenoir>
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] KVM: x86: Interrupt-based mechanism for async_pf 'page present' notifications
+Date:   Mon, 25 May 2020 16:41:15 +0200
+Message-Id: <20200525144125.143875-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525140541.GA28923@lenoir>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:05:49PM +0200, Frederic Weisbecker wrote:
-> On Mon, May 25, 2020 at 03:21:05PM +0200, Peter Zijlstra wrote:
-> > @@ -2320,7 +2304,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-> >  
-> >  	if (llist_add(&p->wake_entry, &rq->wake_list)) {
-> >  		if (!set_nr_if_polling(rq->idle))
-> > -			smp_call_function_single_async(cpu, &rq->wake_csd);
-> > +			smp_call_function_single_async(cpu, &p->wake_csd);
-> >  		else
-> >  			trace_sched_wake_idle_without_ipi(cpu);
-> 
-> Ok that's of course very unlikely but could it be possible to have the
-> following:
-> 
-> CPU 0                         CPU 1                                     CPU 2
-> -----       
-> 
-> //Wake up A
-> ttwu_queue(TASK A, CPU 1)     idle_loop {
->                                   ttwu_queue_pending {
->                                       ....
->                                       raw_spin_unlock_irqrestore(rq)
->                                       # VMEXIT (with IPI still pending)
->                                                                         //task A migrates here
->                                                                         wait_event(....)
->                                                                         //sleep
-> 
-> //Wake up A
-> ttwu_queue(TASK A, CPU 2) {
->     //IPI on CPU 2 ignored
->     // due to csd->flags == CSD_LOCK
-> 
+Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
+it seems that re-using #PF exception for a PV mechanism wasn't a great
+idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
+not present' events and normal APIC interrupts for 'page ready' events.
+This series does the later.
 
-Right you are.
+Changes since v1:
+- struct kvm_vcpu_pv_apf_data's fields renamed to 'flags' and 'token',
+  comments added [Vivek Goyal]
+- 'type1/2' names for APF events dropped from everywhere [Vivek Goyal]
+- kvm_arch_can_inject_async_page_present() renamed to 
+  kvm_arch_can_dequeue_async_page_present [Vivek Goyal]
+- 'KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS' patch added.
 
-Bah!
+v1: https://lore.kernel.org/kvm/20200511164752.2158645-1-vkuznets@redhat.com/
+QEMU patches for testing: https://github.com/vittyvk/qemu.git (async_pf2_v2 branch)
 
-More thinking....
+Vitaly Kuznetsov (10):
+  Revert "KVM: async_pf: Fix #DF due to inject "Page not Present" and
+    "Page Ready" exceptions simultaneously"
+  KVM: x86: extend struct kvm_vcpu_pv_apf_data with token info
+  KVM: rename kvm_arch_can_inject_async_page_present() to
+    kvm_arch_can_dequeue_async_page_present()
+  KVM: introduce kvm_read_guest_offset_cached()
+  KVM: x86: interrupt based APF 'page ready' event delivery
+  KVM: x86: acknowledgment mechanism for async pf page ready
+    notifications
+  KVM: x86: announce KVM_FEATURE_ASYNC_PF_INT
+  KVM: x86: Switch KVM guest to using interrupts for page ready APF
+    delivery
+  KVM: x86: drop KVM_PV_REASON_PAGE_READY case from
+    kvm_handle_page_fault()
+  KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS
+
+ Documentation/virt/kvm/cpuid.rst     |   6 ++
+ Documentation/virt/kvm/msr.rst       | 120 +++++++++++++++------
+ arch/s390/include/asm/kvm_host.h     |   4 +-
+ arch/s390/kvm/kvm-s390.c             |   2 +-
+ arch/x86/entry/entry_32.S            |   5 +
+ arch/x86/entry/entry_64.S            |   5 +
+ arch/x86/include/asm/hardirq.h       |   3 +
+ arch/x86/include/asm/irq_vectors.h   |   6 +-
+ arch/x86/include/asm/kvm_host.h      |  12 ++-
+ arch/x86/include/asm/kvm_para.h      |  10 +-
+ arch/x86/include/uapi/asm/kvm_para.h |  19 +++-
+ arch/x86/kernel/irq.c                |   9 ++
+ arch/x86/kernel/kvm.c                |  62 +++++++----
+ arch/x86/kvm/cpuid.c                 |   3 +-
+ arch/x86/kvm/mmu/mmu.c               |  19 ++--
+ arch/x86/kvm/svm/nested.c            |   2 +-
+ arch/x86/kvm/svm/svm.c               |   3 +-
+ arch/x86/kvm/vmx/nested.c            |   2 +-
+ arch/x86/kvm/vmx/vmx.c               |   5 +-
+ arch/x86/kvm/x86.c                   | 149 ++++++++++++++++++---------
+ include/linux/kvm_host.h             |   3 +
+ include/uapi/linux/kvm.h             |   1 +
+ virt/kvm/async_pf.c                  |  12 ++-
+ virt/kvm/kvm_main.c                  |  19 +++-
+ 24 files changed, 344 insertions(+), 137 deletions(-)
+
+-- 
+2.25.4
+
