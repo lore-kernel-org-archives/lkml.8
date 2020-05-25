@@ -2,131 +2,113 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E02BC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CD0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C15F2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590412464;
-	bh=h59g/FWKiLO/S5qsGnm95+KrT3FhntaQraRQRXiYPEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iBDYl1lng7NYvuOCd+lzRRx/nsFi33y9PAD3ZxAheZbpHvYcHt2nBc87RxGmae3MH
-	 XDGexd36ILUZIb11d9MRdxfUUrS4bEVKFI4Hx2xi5ngjWs/Zj7onZP7mLSQjjfsLG6
-	 xCQThYQeQCD6jukIQ9Ei+HpgotLowR0xKgIwO2OE=
+	by mail.kernel.org (Postfix) with ESMTP id C0762207C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390719AbgEYNOX (ORCPT
+        id S2390754AbgEYNQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390626AbgEYNOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:14:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E657DC061A0E;
-        Mon, 25 May 2020 06:14:21 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so1100922wme.3;
-        Mon, 25 May 2020 06:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lLb0og4tlG0+5ScJbZjLWh8El6oOSBuFzon5WeuLTO4=;
-        b=i96jkpDU/ButrseZ7QFSuoa+G4ZzhfXIIph4o9JxLPuUrH4KjK86b3q2zr5C3AN3Qk
-         K3tKbBD3D0ecBH47eTU1BKqPyq5McNWKNvoyNHqmPl8usDeeohnwsXLi977SE7RD2WK/
-         ttoqwdNAotGk46M12G+dGyPXgNGEoLHXR3zfBmJL/g9PPTaqNUyFRRb1uD7vypNTbdHF
-         toQtk3P8zMbL9pUEYlDkpdvfiI4C2O86E3pHcjjBGz4/94vAiSSvg5xsfQctnmG8LpVc
-         lJQLoCtEUYYlLhRMSZi0TsllFBZMiBpqdgmiGEvZl/kdfGJqCDkys2YMdP4NOwm5FWlc
-         3cvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=lLb0og4tlG0+5ScJbZjLWh8El6oOSBuFzon5WeuLTO4=;
-        b=Fn0AQeJxEbIU5FZRTdNZXdGWAGGevry25gSDSD8GLKN+jw6Sa/l1dlU5w0Q32DhteX
-         oejCEmtEOdJRh0xI//u0SUWfDY4fj9IVg+3+0PevimEEzunXwwbG3E9dmEKIQqfqpLiJ
-         cujYjHsSN9G9G5ElcjqbyLUFUqyzNg2el+g6gFUBQ15g/Z1EGoVZWzfFW9js0sOUa2HU
-         Qgy7bR2nooZnB/GkF0x6+fewGWoiHRnzn6TyfPyuGQRZq84viG3iQRrHic3MeBsd0fuR
-         a57+DC9ImrcweN1BFzzxNcAt+xBZc1T9KssPzBn2nedK86oLnof0wKI4Kws3dUhXbh7p
-         NeLw==
-X-Gm-Message-State: AOAM530ci4HQuieUcY6COgSUN362NVsm8hJdNUScR5+cVJPRXeXC1Kbr
-        8QHDHZj9RWSjBv1+6H2P80arIy/v
-X-Google-Smtp-Source: ABdhPJylPg58OihdBLTiDOTMZiAMnlp4GjxJTJedis+A0Gvf6fegBNgbpQBUr6txkuYengzMpcy/HQ==
-X-Received: by 2002:a1c:29c4:: with SMTP id p187mr25142690wmp.73.1590412460688;
-        Mon, 25 May 2020 06:14:20 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id 23sm10133992wmo.18.2020.05.25.06.14.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 06:14:19 -0700 (PDT)
-Date:   Mon, 25 May 2020 15:14:17 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [GIT PULL] EFI changes for v5.8
-Message-ID: <20200525131417.GA3066456@gmail.com>
-References: <20200525080714.23228-1-ardb@kernel.org>
+        Mon, 25 May 2020 09:16:12 -0400
+Received: from mga18.intel.com ([134.134.136.126]:64597 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388757AbgEYNQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:16:11 -0400
+IronPort-SDR: gFHRJKf/fzgIkRWbiRwQ2XSMYXB/UwWQlvks7Qjuvw81DiGAx6fXNJa7e+QLXifs6GBibN5hzl
+ Fzb8HExQv0hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:16:11 -0700
+IronPort-SDR: 29F1ZN30wZD0n3NYF9s7La+3jVNm76brsOCh1moocqg5VGKKI5v9XVZenm7WyJTxli7pWH8e+R
+ a2bJsIDr/DYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
+   d="scan'208";a="266147156"
+Received: from mylly.fi.intel.com (HELO [10.237.72.67]) ([10.237.72.67])
+  by orsmga003.jf.intel.com with ESMTP; 25 May 2020 06:16:06 -0700
+Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers glue
+ layer interface
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+ <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
+ <20200521023735.mja62ujmxebgwyef@mobilestation>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <80cf1d67-5de1-f3f1-27a0-b88cc105b228@linux.intel.com>
+Date:   Mon, 25 May 2020 16:16:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525080714.23228-1-ardb@kernel.org>
+In-Reply-To: <20200521023735.mja62ujmxebgwyef@mobilestation>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+On 5/21/20 5:37 AM, Serge Semin wrote:
+> On Wed, May 20, 2020 at 03:46:11PM +0300, Jarkko Nikula wrote:
+>> Hi
+>>
+>> On 5/10/20 12:50 PM, Serge Semin wrote:
+>>> Seeing the DW I2C platform driver is getting overcomplicated with a lot of
+>>> vendor-specific configs let's introduce a glue-layer interface so new
+>>> platforms which equipped with Synopsys Designware APB I2C IP-core would
+>>> be able to handle their peculiarities in the dedicated objects.
+>>>
+>> Comment to this patch and patches 9/12 and 12/12:
+>>
+>> Currently i2c-designware-platdrv.c is about 500 lines of code so I don't
+>> think it's too overcomplicated. But I feel we have already too many Kconfig
+>> options and source modules for i2c-designware and obviously would like to
+>> push back a little from adding more.
+>>
+>> I don't think i2c-designware-platdrv.c becomes yet too complicated if Baikal
+>> related code is added there, perhaps under #ifdef CONFIG_OF like MSCC Ocelot
+>> code is currently.
+> 
+> Well, it's up to you to decide, what solution is more suitable for you to
+> maintain. My idea of detaching the MSCC and Baikal-T1 code to the dedicated
+> source files was to eventually move the whole i2c-designware-* set of files
+> into a dedicated directory drivers/i2c/buses/dw as it's done for some others
+> Synopsys DesignWare controllers: drivers/pci/controller/dwc/, drivers/usb/dwc2,
+> drivers/usb/dwc3, drivers/net/ethernet/synopsys/ . If you think, that it's too
+> early for Dw I2C code to live in a dedicated directory, fine with me. I can
+> merge the MSCC and Baikal-T1 code back into the i2c-designware-platdrv.c .
+> So what's your final word in this matter?
+> 
+I think sub directory decision under each subsystem is more subsystem 
+rather than vendor/driver specific. Good point anyway.
 
-> Ingo, Thomsd, Boris,
-> 
-> Please pull the changes below. Note that I did not incorporate the GOT
-> handling changes for the x86 decompressor - Arvind has some changes on
-> top that might just as well go in at the same time, and they are not
-> really EFI changes anyway.
-> 
-> The following changes since commit 4da0b2b7e67524cc206067865666899bc02e1cb0:
-> 
->   efi/libstub: Re-enable command line initrd loading for x86 (2020-04-25 12:26:32 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-changes-for-v5.8
-> 
-> for you to fetch changes up to 9241dfe7f2772fc73c82eb950afb1c795d2c012c:
-> 
->   efi/x86: Drop the special GDT for the EFI thunk (2020-05-24 00:25:15 +0200)
-> 
-> Cc: Ingo Molnar <mingo@redhat.com>,
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Arvind Sankar <nivedita@alum.mit.edu>
-> 
-> ----------------------------------------------------------------
-> More EFI changes for v5.8:
-> - Rename pr_efi/pr_efi_err to efi_info/efi_err, and use them consistently
-> - Simplify and unify initrd loading
-> - Parse the builtin command line on x86 (if provided)
-> - Implement printk() support, including support for wide character strings
-> - Some fixes for issues introduced by the first batch of v5.8 changes
-> - Fix a missing prototypes warning
-> - Simplify GDT handling in early mixed mode thunking code
-> - Some other minor fixes and cleanups
+For this patchset I'd like more if changes are done to 
+i2c-designware-platdrv.c since it's not too complicated yet :-)
 
->  24 files changed, 1211 insertions(+), 313 deletions(-)
+If it starts to look too messy in the future then it's time split I think.
 
-Pulled, thanks a lot Ard! Will push it out after a bit of testing.
-
-There was one conflict, in drivers/firmware/efi/libstub/efistub.h, 
-with a straightforward resolution.
-
-	Ingo
+Jarkko
