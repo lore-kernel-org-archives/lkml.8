@@ -2,713 +2,223 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34E320812
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2642071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="maBoI4uX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmZ8Vunc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgEYGKi (ORCPT
+        id S1729985AbgEYGLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 02:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
+        Mon, 25 May 2020 02:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgEYGKh (ORCPT
+        with ESMTP id S1729338AbgEYGLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 02:10:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E10CC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 23:10:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v19so8455454wmj.0
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 23:10:36 -0700 (PDT)
+        Mon, 25 May 2020 02:11:46 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF20C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 23:11:46 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c185so2554443qke.7
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 23:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0g1DoUv/RfpQAvC1o5cK/ZswgZvs8d7X77J2d/f+2vs=;
-        b=maBoI4uX9byXj4E3/SlgRx/7mJlVyXGMSeWfbNzXQ+wfww0xX/Ecd2c36c7B+Sp3AR
-         Iq2z0Sad35A85XTfE7mVtR0ivzeFXL13XQ7HUWeob1H0eK4SUPZdLNvNswOZyQ847dJz
-         v/QUUQvr5hMq4JBk9OCmqdKAcNCAU61lmfeGPWLtAKxOPlY+dvc55mkky/gbdBW7n3NM
-         QyHWVzAEmjmqzvfyHAFGdt+YIFwEvQvBM5beD9cPds4NMVN232kMoiyET2BXVvSzLTF0
-         B8XbC6n7+8EZMrvjQcij97iXFqyNmwNPKl032xEjjWFWeqRyEdBKv81yg9p4qGzWgwNI
-         Hw9A==
+        bh=zE6QF3wBuG+bbFky4XNH1ls+bDYS3myqBI0CKs9XLgY=;
+        b=gmZ8VuncLIfL+xQ1uVR/HNEXvNFmcIL7W5Uce9o/Ajf7J1PDFBxeCDlCWbnUpHE6ew
+         puJM4g0cpV7xMRSGDzwlLFFr5698CMId+R2S2OAHxbid2eP9t36+yRSdrVhVV8snbrxd
+         6rsVpBMPe71+h9AvFol2x+TtVwUSlkSzXspe5p+Z/Hu45Wbl0bLDcp/UnIKo3WJC6lkj
+         9ku4sr5N4poBK1P76/+PeROWEIRrwOAZCh59hVy/dGSJKfucj/zaU28pOZIwYfDI9w4P
+         oxQB6iRYVc+ONa7iQkF5QlPsVXJ4N14h1uyhvh4HkDuA5La1uzSRNtP7DQZM9lno5YQs
+         YYuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0g1DoUv/RfpQAvC1o5cK/ZswgZvs8d7X77J2d/f+2vs=;
-        b=YxpEsg6rCGfECL/+/Ykqf4YsEpmQX6yImYUGpbDQ5yemSEFMaCvg5WUU2nfqOeuFja
-         eO/KS/UTavf3xIdcwasOL+qakSJvdyUqca5hm0RgEaacHeHTZbq8WkPeDSjyA5d7DDlU
-         FUmtO/Jyl8sFMWmPEt1VHL1ZatnagXJac57+zG9u2LGToFeGdDBDFGGjitNh0tn+aQCL
-         upCgMSuenOwLtlszfSnqHoGgwbff0D3U7XPERsOvJWBCvdlt1WnuEpaZs3n9cUfLhDuR
-         GCmmDNQ9qzgQ+o/g2vp2KxEYjwPkiP0uIfFNwrkj2y8gRCGyLiennq8r83n3B/b8d8Ly
-         BWsA==
-X-Gm-Message-State: AOAM530pkHzc994FQq45tX1mUSuWrNefod43d73wjpyGMhCoA7NQNfqp
-        O2Ad2JRBEdVJNDn2vxYfI85LgLDR0LyNEsSS4ELCMw==
-X-Google-Smtp-Source: ABdhPJyMrWtPstEgGCPNoUUhXe7yoPaWbUQ0njqnVUw5spsB//ctLBBaarib3u5J3eGzlHPbQDXELVlWZp/L4cP11IY=
-X-Received: by 2002:a7b:c5d7:: with SMTP id n23mr10497940wmk.185.1590387034744;
- Sun, 24 May 2020 23:10:34 -0700 (PDT)
+        bh=zE6QF3wBuG+bbFky4XNH1ls+bDYS3myqBI0CKs9XLgY=;
+        b=Tv5ad5/VkgENlQWl7IsSNDZmgwc2q5CMXA6SDCpjYUXYAySOhdK5KilaHmEa8T/qWi
+         P6SiJD/68XItOfaePGHPL0KLHakA2uiku2ta04elYCqHPbUhjVH1Z0YJgi1Uw/Ye9bjp
+         uqMOQCr1bBYBIsbglmte0FAy9Rhbaz8XwoaJ9EpugkDE2ivUBN/SU85jLtUYwKkMIh5K
+         Q13fAhXUqgsgZnZw6u8tJZfeOkCezcF83YV6RsV11BRlKnScBH8sMndX5DvXI7zCt1Aa
+         GPB1DCzqw+ODw/aKLk3/ttTp1BAMYzWC1dqmPXEZHrhMSaLzi4ue59LyXoh5OM+YIXRW
+         xl3g==
+X-Gm-Message-State: AOAM5334Yl/auyMJGZ9jVLSG0sk1IHTm2G+T6c7TvcoHMrQz5S1nfHeA
+        0KTZB3aOdODz+pacU/7jwB3p0B1QxAwYhqFQp+g=
+X-Google-Smtp-Source: ABdhPJydMBgq/Pjn4/khBBaHIGx05CEfpOqguypnLj9qdpyApo26fr/GyQlog+GyRmcHhBgT4Rg6CgKdiB76ee7lE7c=
+X-Received: by 2002:a37:b50:: with SMTP id 77mr22555339qkl.152.1590387105305;
+ Sun, 24 May 2020 23:11:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200524091008.25587-1-alex@ghiti.fr> <20200524091008.25587-6-alex@ghiti.fr>
-In-Reply-To: <20200524091008.25587-6-alex@ghiti.fr>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 25 May 2020 11:40:23 +0530
-Message-ID: <CAAhSdy3zbTu4ZOXnx=iJHBkzB2o=xXj6EAB68bhUUW5Hnsu9ng@mail.gmail.com>
-Subject: Re: [PATCH 5/8] riscv: Implement sv48 support
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Zong Li <zong.li@sifive.com>, Christoph Hellwig <hch@lst.de>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <1590141444-28668-1-git-send-email-shengjiu.wang@nxp.com> <20200525050950.GA1244@Asurada>
+In-Reply-To: <20200525050950.GA1244@Asurada>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Mon, 25 May 2020 14:11:18 +0800
+Message-ID: <CAA+D8AML7P3j+14w5PywPy4QEcxw09z1izZSZbrOB_nte+XDmA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_asrc: Merge suspend/resume function to runtime_suspend/resume
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 2:45 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+On Mon, May 25, 2020 at 1:12 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 >
-> By adding a new 4th level of page table, give the possibility to 64bit
-> kernel to address 2^48 bytes of virtual address: in practice, that roughly
-> offers ~160TB of virtual address space to userspace and allows up to 64TB
-> of physical memory.
+> On Fri, May 22, 2020 at 05:57:24PM +0800, Shengjiu Wang wrote:
+> > With dedicated power domain for asrc, power can be disabled after
+> > probe and pm runtime suspend, then the value of all registers need to
+> > be restored in pm runtime resume. So we can merge suspend/resume function
+> > to runtime_suspend/resume function and enable regcache only in end of
+> > probe.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/fsl/fsl_asrc.c | 70 ++++++++++++++++------------------------
+> >  1 file changed, 27 insertions(+), 43 deletions(-)
+> >
+> > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> > index 432936039de4..3ebbe15ac378 100644
+> > --- a/sound/soc/fsl/fsl_asrc.c
+> > +++ b/sound/soc/fsl/fsl_asrc.c
+> > @@ -1100,6 +1100,7 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+> >       platform_set_drvdata(pdev, asrc);
+> >       pm_runtime_enable(&pdev->dev);
+> >       spin_lock_init(&asrc->lock);
+> > +     regcache_cache_only(asrc->regmap, true);
+> >
+> >       ret = devm_snd_soc_register_component(&pdev->dev, &fsl_asrc_component,
+> >                                             &fsl_asrc_dai, 1);
+> > @@ -1117,6 +1118,7 @@ static int fsl_asrc_runtime_resume(struct device *dev)
+> >       struct fsl_asrc *asrc = dev_get_drvdata(dev);
+> >       struct fsl_asrc_priv *asrc_priv = asrc->private;
+> >       int i, ret;
+> > +     u32 asrctr;
+> >
+> >       ret = clk_prepare_enable(asrc->mem_clk);
+> >       if (ret)
+> > @@ -1135,6 +1137,24 @@ static int fsl_asrc_runtime_resume(struct device *dev)
+> >                       goto disable_asrck_clk;
+> >       }
+> >
+> > +     /* Stop all pairs provisionally */
+> > +     regmap_read(asrc->regmap, REG_ASRCTR, &asrctr);
+> > +     regmap_update_bits(asrc->regmap, REG_ASRCTR,
+> > +                        ASRCTR_ASRCEi_ALL_MASK, 0);
+> > +
+> > +     /* Restore all registers */
+> > +     regcache_cache_only(asrc->regmap, false);
+> > +     regcache_mark_dirty(asrc->regmap);
 >
-> If the underlying hardware does not support sv48, we will automatically
-> fallback to a standard 3-level page table by folding the new PUD level into
-> PGDIR level. In order to detect HW capabilities at runtime, we
-> use SATP feature that ignores writes with an unsupported mode.
 >
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> ---
->  arch/riscv/Kconfig                  |   6 +-
->  arch/riscv/include/asm/csr.h        |   3 +-
->  arch/riscv/include/asm/fixmap.h     |   1 +
->  arch/riscv/include/asm/page.h       |  15 +++
->  arch/riscv/include/asm/pgalloc.h    |  36 +++++++
->  arch/riscv/include/asm/pgtable-64.h |  97 ++++++++++++++++-
->  arch/riscv/include/asm/pgtable.h    |   9 +-
->  arch/riscv/kernel/head.S            |   3 +-
->  arch/riscv/mm/context.c             |   4 +-
->  arch/riscv/mm/init.c                | 159 +++++++++++++++++++++++++---
->  10 files changed, 309 insertions(+), 24 deletions(-)
+> I see you doing regcache_mark_dirty() in the resume() now,
+> being different from previously doing in suspend()?
 >
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index e167f16131f4..3f73f60e9732 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -68,6 +68,7 @@ config RISCV
->         select ARCH_HAS_GCOV_PROFILE_ALL
->         select HAVE_COPY_THREAD_TLS
->         select HAVE_ARCH_KASAN if MMU && 64BIT
-> +       select RELOCATABLE if 64BIT
->
->  config ARCH_MMAP_RND_BITS_MIN
->         default 18 if 64BIT
-> @@ -106,7 +107,7 @@ config PAGE_OFFSET
->         default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
->         default 0x80000000 if 64BIT && !MMU
->         default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
-> -       default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
-> +       default 0xffffc00000000000 if 64BIT && !MAXPHYSMEM_2GB
->
->  config ARCH_FLATMEM_ENABLE
->         def_bool y
-> @@ -155,8 +156,11 @@ config GENERIC_HWEIGHT
->  config FIX_EARLYCON_MEM
->         def_bool MMU
->
-> +# On a 64BIT relocatable kernel, the 4-level page table is at runtime folded
-> +# on a 3-level page table when sv48 is not supported.
->  config PGTABLE_LEVELS
->         int
-> +       default 4 if 64BIT && RELOCATABLE
->         default 3 if 64BIT
->         default 2
->
-> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> index cec462e198ce..d41536c3f8d4 100644
-> --- a/arch/riscv/include/asm/csr.h
-> +++ b/arch/riscv/include/asm/csr.h
-> @@ -40,11 +40,10 @@
->  #ifndef CONFIG_64BIT
->  #define SATP_PPN       _AC(0x003FFFFF, UL)
->  #define SATP_MODE_32   _AC(0x80000000, UL)
-> -#define SATP_MODE      SATP_MODE_32
->  #else
->  #define SATP_PPN       _AC(0x00000FFFFFFFFFFF, UL)
->  #define SATP_MODE_39   _AC(0x8000000000000000, UL)
-> -#define SATP_MODE      SATP_MODE_39
-> +#define SATP_MODE_48   _AC(0x9000000000000000, UL)
->  #endif
->
->  /* Exception cause high bit - is an interrupt if set */
-> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-> index 2368d49eb4ef..d891cf9c73c5 100644
-> --- a/arch/riscv/include/asm/fixmap.h
-> +++ b/arch/riscv/include/asm/fixmap.h
-> @@ -27,6 +27,7 @@ enum fixed_addresses {
->         FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
->         FIX_PTE,
->         FIX_PMD,
-> +       FIX_PUD,
->         FIX_TEXT_POKE1,
->         FIX_TEXT_POKE0,
->         FIX_EARLYCON_MEM_BASE,
-> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-> index 48bb09b6a9b7..5e77fe7f0d6d 100644
-> --- a/arch/riscv/include/asm/page.h
-> +++ b/arch/riscv/include/asm/page.h
-> @@ -31,7 +31,19 @@
->   * When not using MMU this corresponds to the first free page in
->   * physical memory (aligned on a page boundary).
->   */
-> +#ifdef CONFIG_RELOCATABLE
-> +#define PAGE_OFFSET            __page_offset
-> +
-> +#ifdef CONFIG_64BIT
-> +/*
-> + * By default, CONFIG_PAGE_OFFSET value corresponds to SV48 address space so
-> + * define the PAGE_OFFSET value for SV39.
-> + */
-> +#define PAGE_OFFSET_L3         0xffffffe000000000
-> +#endif /* CONFIG_64BIT */
-> +#else
->  #define PAGE_OFFSET            _AC(CONFIG_PAGE_OFFSET, UL)
-> +#endif /* CONFIG_RELOCATABLE */
->
->  #define KERN_VIRT_SIZE (-PAGE_OFFSET)
->
-> @@ -102,6 +114,9 @@ extern unsigned long pfn_base;
->  extern unsigned long max_low_pfn;
->  extern unsigned long min_low_pfn;
->  extern unsigned long kernel_virt_addr;
-> +#ifdef CONFIG_RELOCATABLE
-> +extern unsigned long __page_offset;
-> +#endif
->
->  #define __pa_to_va_nodebug(x)  ((void *)((unsigned long) (x) + va_pa_offset))
->  #define linear_mapping_va_to_pa(x)     ((unsigned long)(x) - va_pa_offset)
-> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
-> index 3f601ee8233f..540eaa5a8658 100644
-> --- a/arch/riscv/include/asm/pgalloc.h
-> +++ b/arch/riscv/include/asm/pgalloc.h
-> @@ -36,6 +36,42 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
->
->         set_pud(pud, __pud((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
->  }
-> +
-> +static inline void p4d_populate(struct mm_struct *mm, p4d_t *p4d, pud_t *pud)
-> +{
-> +       if (pgtable_l4_enabled) {
-> +               unsigned long pfn = virt_to_pfn(pud);
-> +
-> +               set_p4d(p4d, __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
-> +       }
-> +}
-> +
-> +static inline void p4d_populate_safe(struct mm_struct *mm, p4d_t *p4d,
-> +                                    pud_t *pud)
-> +{
-> +       if (pgtable_l4_enabled) {
-> +               unsigned long pfn = virt_to_pfn(pud);
-> +
-> +               set_p4d_safe(p4d,
-> +                            __p4d((pfn << _PAGE_PFN_SHIFT) | _PAGE_TABLE));
-> +       }
-> +}
-> +
-> +static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return (pud_t *)__get_free_page(
-> +                               GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
-> +       return NULL;
-> +}
-> +
-> +static inline void pud_free(struct mm_struct *mm, pud_t *pud)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               free_page((unsigned long)pud);
-> +}
-> +
-> +#define __pud_free_tlb(tlb, pud, addr)  pud_free((tlb)->mm, pud)
->  #endif /* __PAGETABLE_PMD_FOLDED */
->
->  #define pmd_pgtable(pmd)       pmd_page(pmd)
-> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-> index b15f70a1fdfa..c84c31fbf8da 100644
-> --- a/arch/riscv/include/asm/pgtable-64.h
-> +++ b/arch/riscv/include/asm/pgtable-64.h
-> @@ -8,16 +8,32 @@
->
->  #include <linux/const.h>
->
-> -#define PGDIR_SHIFT     30
-> +extern bool pgtable_l4_enabled;
-> +
-> +#define PGDIR_SHIFT     (pgtable_l4_enabled ? 39 : 30)
->  /* Size of region mapped by a page global directory */
->  #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
->  #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
->
-> +/* pud is folded into pgd in case of 3-level page table */
-> +#define PUD_SHIFT      30
-> +#define PUD_SIZE       (_AC(1, UL) << PUD_SHIFT)
-> +#define PUD_MASK       (~(PUD_SIZE - 1))
-> +
->  #define PMD_SHIFT       21
->  /* Size of region mapped by a page middle directory */
->  #define PMD_SIZE        (_AC(1, UL) << PMD_SHIFT)
->  #define PMD_MASK        (~(PMD_SIZE - 1))
->
-> +/* Page Upper Directory entry */
-> +typedef struct {
-> +       unsigned long pud;
-> +} pud_t;
-> +
-> +#define pud_val(x)      ((x).pud)
-> +#define __pud(x)        ((pud_t) { (x) })
-> +#define PTRS_PER_PUD    (PAGE_SIZE / sizeof(pud_t))
-> +
->  /* Page Middle Directory entry */
->  typedef struct {
->         unsigned long pmd;
-> @@ -60,6 +76,16 @@ static inline void pud_clear(pud_t *pudp)
->         set_pud(pudp, __pud(0));
->  }
->
-> +static inline pud_t pfn_pud(unsigned long pfn, pgprot_t prot)
-> +{
-> +       return __pud((pfn << _PAGE_PFN_SHIFT) | pgprot_val(prot));
-> +}
-> +
-> +static inline unsigned long _pud_pfn(pud_t pud)
-> +{
-> +       return pud_val(pud) >> _PAGE_PFN_SHIFT;
-> +}
-> +
->  static inline unsigned long pud_page_vaddr(pud_t pud)
->  {
->         return (unsigned long)pfn_to_virt(pud_val(pud) >> _PAGE_PFN_SHIFT);
-> @@ -70,6 +96,15 @@ static inline struct page *pud_page(pud_t pud)
->         return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
->  }
->
-> +#define mm_pud_folded  mm_pud_folded
-> +static inline bool mm_pud_folded(struct mm_struct *mm)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return false;
-> +
-> +       return true;
-> +}
-> +
->  #define pmd_index(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
->
->  static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
-> @@ -90,4 +125,64 @@ static inline unsigned long _pmd_pfn(pmd_t pmd)
->  #define pmd_ERROR(e) \
->         pr_err("%s:%d: bad pmd %016lx.\n", __FILE__, __LINE__, pmd_val(e))
->
-> +#define pud_ERROR(e)   \
-> +       pr_err("%s:%d: bad pud %016lx.\n", __FILE__, __LINE__, pud_val(e))
-> +
-> +static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               *p4dp = p4d;
-> +       else
-> +               set_pud((pud_t *)p4dp, (pud_t){ p4d_val(p4d) });
-> +}
-> +
-> +static inline int p4d_none(p4d_t p4d)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return (p4d_val(p4d) == 0);
-> +
-> +       return 0;
-> +}
-> +
-> +static inline int p4d_present(p4d_t p4d)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return (p4d_val(p4d) & _PAGE_PRESENT);
-> +
-> +       return 1;
-> +}
-> +
-> +static inline int p4d_bad(p4d_t p4d)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return !p4d_present(p4d);
-> +
-> +       return 0;
-> +}
-> +
-> +static inline void p4d_clear(p4d_t *p4d)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               set_p4d(p4d, __p4d(0));
-> +}
-> +
-> +static inline unsigned long p4d_page_vaddr(p4d_t p4d)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return (unsigned long)pfn_to_virt(
-> +                               p4d_val(p4d) >> _PAGE_PFN_SHIFT);
-> +
-> +       return pud_page_vaddr((pud_t) { p4d_val(p4d) });
-> +}
-> +
-> +#define pud_index(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-> +
-> +static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
-> +{
-> +       if (pgtable_l4_enabled)
-> +               return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
-> +
-> +       return (pud_t *)p4d;
-> +}
-> +
->  #endif /* _ASM_RISCV_PGTABLE_64_H */
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 8e96315b3366..b8a8ba69d0a2 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -20,12 +20,14 @@
->   * the kernel.
->   */
->  #define KERNEL_VIRT_ADDR       (VMALLOC_END - SZ_2G + 1)
-> -#define KERNEL_LINK_ADDR       KERNEL_VIRT_ADDR
-> +#define KERNEL_LINK_ADDR       (VMALLOC_LINK_END - SZ_2G + 1)
->
->  #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
->  #define VMALLOC_END      (PAGE_OFFSET - 1)
->  #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
->
-> +#define VMALLOC_LINK_END       (_AC(CONFIG_PAGE_OFFSET, UL) - 1)
-> +
->  #define BPF_JIT_REGION_SIZE    (SZ_128M)
->  #define BPF_JIT_REGION_START   (kernel_virt_addr)
->  #define BPF_JIT_REGION_END     (kernel_virt_addr + BPF_JIT_REGION_SIZE)
-> @@ -67,8 +69,7 @@
->
->  #ifndef __ASSEMBLY__
->
-> -/* Page Upper Directory not used in RISC-V */
-> -#include <asm-generic/pgtable-nopud.h>
-> +#include <asm-generic/pgtable-nop4d.h>
->  #include <asm/page.h>
->  #include <asm/tlbflush.h>
->  #include <linux/mm_types.h>
-> @@ -81,7 +82,7 @@
->
->  #ifdef CONFIG_MMU
->  #ifdef CONFIG_64BIT
-> -#define VA_BITS                39
-> +#define VA_BITS                (pgtable_l4_enabled ? 48 : 39)
->  #define PA_BITS                56
->  #else
->  #define VA_BITS                32
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 8f5bb7731327..0632c4834c68 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -62,7 +62,8 @@ relocate:
->
->         /* Compute satp for kernel page tables, but don't load it yet */
->         srl a2, a0, PAGE_SHIFT
-> -       li a1, SATP_MODE
-> +       la a1, satp_mode
-> +       REG_L a1, 0(a1)
->         or a2, a2, a1
->
->         /*
-> diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
-> index 613ec81a8979..6830504f8b11 100644
-> --- a/arch/riscv/mm/context.c
-> +++ b/arch/riscv/mm/context.c
-> @@ -9,6 +9,8 @@
->  #include <asm/cacheflush.h>
->  #include <asm/mmu_context.h>
->
-> +extern u64 satp_mode;
-> +
->  /*
->   * When necessary, performs a deferred icache flush for the given MM context,
->   * on the local CPU.  RISC-V has no direct mechanism for instruction cache
-> @@ -59,7 +61,7 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
->         cpumask_set_cpu(cpu, mm_cpumask(next));
->
->  #ifdef CONFIG_MMU
-> -       csr_write(CSR_SATP, virt_to_pfn(next->pgd) | SATP_MODE);
-> +       csr_write(CSR_SATP, virt_to_pfn(next->pgd) | satp_mode);
->         local_flush_tlb_all();
->  #endif
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 5782cae58ac2..bad8da099ff6 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -25,8 +25,23 @@
->
->  #include "../kernel/head.h"
->
-> -unsigned long kernel_virt_addr = KERNEL_VIRT_ADDR;
-> +#ifdef CONFIG_64BIT
-> +u64 satp_mode = IS_ENABLED(CONFIG_MAXPHYSMEM_2GB) ?
-> +                               SATP_MODE_39 : SATP_MODE_48;
-> +bool pgtable_l4_enabled = IS_ENABLED(CONFIG_MAXPHYSMEM_2GB) ? false : true;
-> +#else
-> +u64 satp_mode = SATP_MODE_32;
-> +bool pgtable_l4_enabled;
-> +#endif
-> +EXPORT_SYMBOL(pgtable_l4_enabled);
-> +EXPORT_SYMBOL(satp_mode);
-> +
-> +unsigned long kernel_virt_addr;
->  EXPORT_SYMBOL(kernel_virt_addr);
-> +#ifdef CONFIG_RELOCATABLE
-> +unsigned long __page_offset = _AC(CONFIG_PAGE_OFFSET, UL);
-> +EXPORT_SYMBOL(__page_offset);
-> +#endif
->
->  unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
->                                                         __page_aligned_bss;
-> @@ -254,9 +269,12 @@ static void __init create_pte_mapping(pte_t *ptep,
->
->  #ifndef __PAGETABLE_PMD_FOLDED
->
-> +pud_t trampoline_pud[PTRS_PER_PUD] __page_aligned_bss;
->  pmd_t trampoline_pmd[PTRS_PER_PMD] __page_aligned_bss;
-> +pud_t fixmap_pud[PTRS_PER_PUD] __page_aligned_bss;
->  pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
->  pmd_t early_pmd[PTRS_PER_PMD] __initdata __aligned(PAGE_SIZE);
-> +pud_t early_pud[PTRS_PER_PUD] __initdata __aligned(PAGE_SIZE);
->
->  static pmd_t *__init get_pmd_virt(phys_addr_t pa)
->  {
-> @@ -273,7 +291,8 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
->         if (mmu_enabled)
->                 return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
->
-> -       BUG_ON((va - kernel_virt_addr) >> PGDIR_SHIFT);
-> +       /* Only one PMD is available for early mapping */
-> +       BUG_ON((va - kernel_virt_addr) >> PUD_SHIFT);
->
->         return (uintptr_t)early_pmd;
->  }
-> @@ -305,19 +324,70 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
->         create_pte_mapping(ptep, va, pa, sz, prot);
->  }
->
-> -#define pgd_next_t             pmd_t
-> -#define alloc_pgd_next(__va)   alloc_pmd(__va)
-> -#define get_pgd_next_virt(__pa)        get_pmd_virt(__pa)
-> +static pud_t *__init get_pud_virt(phys_addr_t pa)
-> +{
-> +       if (mmu_enabled) {
-> +               clear_fixmap(FIX_PUD);
-> +               return (pud_t *)set_fixmap_offset(FIX_PUD, pa);
-> +       } else {
-> +               return (pud_t *)((uintptr_t)pa);
-> +       }
-> +}
-> +
-> +static phys_addr_t __init alloc_pud(uintptr_t va)
-> +{
-> +       if (mmu_enabled)
-> +               return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
-> +
-> +       /* Only one PUD is available for early mapping */
-> +       BUG_ON((va - kernel_virt_addr) >> PGDIR_SHIFT);
-> +
-> +       return (uintptr_t)early_pud;
-> +}
-> +
-> +static void __init create_pud_mapping(pud_t *pudp,
-> +                                     uintptr_t va, phys_addr_t pa,
-> +                                     phys_addr_t sz, pgprot_t prot)
-> +{
-> +       pmd_t *nextp;
-> +       phys_addr_t next_phys;
-> +       uintptr_t pud_index = pud_index(va);
-> +
-> +       if (sz == PUD_SIZE) {
-> +               if (pud_val(pudp[pud_index]) == 0)
-> +                       pudp[pud_index] = pfn_pud(PFN_DOWN(pa), prot);
-> +               return;
-> +       }
-> +
-> +       if (pud_val(pudp[pud_index]) == 0) {
-> +               next_phys = alloc_pmd(va);
-> +               pudp[pud_index] = pfn_pud(PFN_DOWN(next_phys), PAGE_TABLE);
-> +               nextp = get_pmd_virt(next_phys);
-> +               memset(nextp, 0, PAGE_SIZE);
-> +       } else {
-> +               next_phys = PFN_PHYS(_pud_pfn(pudp[pud_index]));
-> +               nextp = get_pmd_virt(next_phys);
-> +       }
-> +
-> +       create_pmd_mapping(nextp, va, pa, sz, prot);
-> +}
-> +
-> +#define pgd_next_t             pud_t
-> +#define alloc_pgd_next(__va)   alloc_pud(__va)
-> +#define get_pgd_next_virt(__pa)        get_pud_virt(__pa)
->  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)     \
-> -       create_pmd_mapping(__nextp, __va, __pa, __sz, __prot)
-> -#define fixmap_pgd_next                fixmap_pmd
-> +       create_pud_mapping(__nextp, __va, __pa, __sz, __prot)
-> +#define fixmap_pgd_next                (pgtable_l4_enabled ?                   \
-> +                       (uintptr_t)fixmap_pud : (uintptr_t)fixmap_pmd)
-> +#define trampoline_pgd_next    (pgtable_l4_enabled ?                   \
-> +                       (uintptr_t)trampoline_pud : (uintptr_t)trampoline_pmd)
->  #else
->  #define pgd_next_t             pte_t
->  #define alloc_pgd_next(__va)   alloc_pte(__va)
->  #define get_pgd_next_virt(__pa)        get_pte_virt(__pa)
->  #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)     \
->         create_pte_mapping(__nextp, __va, __pa, __sz, __prot)
-> -#define fixmap_pgd_next                fixmap_pte
-> +#define fixmap_pgd_next                ((uintptr_t)fixmap_pte)
->  #endif
->
->  static void __init create_pgd_mapping(pgd_t *pgdp,
-> @@ -328,6 +398,13 @@ static void __init create_pgd_mapping(pgd_t *pgdp,
->         phys_addr_t next_phys;
->         uintptr_t pgd_index = pgd_index(va);
->
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +       if (!pgtable_l4_enabled) {
-> +               create_pud_mapping((pud_t *)pgdp, va, pa, sz, prot);
-> +               return;
-> +       }
-> +#endif
-> +
->         if (sz == PGDIR_SIZE) {
->                 if (pgd_val(pgdp[pgd_index]) == 0)
->                         pgdp[pgd_index] = pfn_pgd(PFN_DOWN(pa), prot);
-> @@ -419,6 +496,47 @@ void __init relocate_kernel(uintptr_t load_pa)
->         }
->  }
->
-> +#if defined(CONFIG_64BIT) && !defined(CONFIG_MAXPHYSMEM_2GB)
-> +void disable_pgtable_l4(void)
-> +{
-> +       pgtable_l4_enabled = false;
-> +       __page_offset = PAGE_OFFSET_L3;
-> +       satp_mode = SATP_MODE_39;
-> +}
-> +
-> +/* There is a simple way to determine if 4-level is supported by the
-> + * underlying hardware: establish 1:1 mapping in 4-level page table mode
-> + * then read SATP to see if the configuration was taken into account
-> + * meaning sv48 is supported.
-> + */
-> +asmlinkage __init void set_satp_mode(uintptr_t load_pa)
-> +{
-> +       u64 identity_satp, hw_satp;
-> +       int cpus_node;
-> +
-> +       create_pgd_mapping(early_pg_dir, load_pa, (uintptr_t)early_pud,
-> +                          PGDIR_SIZE, PAGE_TABLE);
-> +       create_pud_mapping(early_pud, load_pa, (uintptr_t)early_pmd,
-> +                          PUD_SIZE, PAGE_TABLE);
-> +       create_pmd_mapping(early_pmd, load_pa, load_pa,
-> +                          PMD_SIZE, PAGE_KERNEL_EXEC);
-> +
-> +       identity_satp = PFN_DOWN((uintptr_t)&early_pg_dir) | satp_mode;
-> +       local_flush_tlb_all();
-> +       csr_write(CSR_SATP, identity_satp);
-> +
-> +       hw_satp = csr_read(CSR_SATP);
-> +       csr_write(CSR_SATP, 0ULL);
-> +       local_flush_tlb_all();
-> +
-> +       if (hw_satp != identity_satp)
-> +               disable_pgtable_l4();
-> +
-> +       memset(early_pg_dir, 0, PAGE_SIZE);
-> +       memset(early_pud, 0, PAGE_SIZE);
-> +       memset(early_pmd, 0, PAGE_SIZE);
-> +}
-> +#endif
->  #endif
->
->  static uintptr_t load_pa, load_sz;
-> @@ -442,9 +560,14 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->         load_pa = (uintptr_t)(&_start);
->         load_sz = (uintptr_t)(&_end) - load_pa;
->
-> +#if defined(CONFIG_64BIT) && !defined(CONFIG_MAXPHYSMEM_2GB)
-> +       set_satp_mode(load_pa);
-> +#endif
-> +
-> +       kernel_virt_addr = KERNEL_VIRT_ADDR;
-> +
->         va_pa_offset = PAGE_OFFSET - load_pa;
->         va_kernel_pa_offset = kernel_virt_addr - load_pa;
-> -
->         pfn_base = PFN_DOWN(load_pa);
->
->  #ifdef CONFIG_RELOCATABLE
-> @@ -473,15 +596,22 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->
->         /* Setup early PGD for fixmap */
->         create_pgd_mapping(early_pg_dir, FIXADDR_START,
-> -                          (uintptr_t)fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
-> +                          fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
->
->  #ifndef __PAGETABLE_PMD_FOLDED
-> -       /* Setup fixmap PMD */
-> +       /* Setup fixmap PUD and PMD */
-> +       if (pgtable_l4_enabled)
-> +               create_pud_mapping(fixmap_pud, FIXADDR_START,
-> +                          (uintptr_t)fixmap_pmd, PUD_SIZE, PAGE_TABLE);
->         create_pmd_mapping(fixmap_pmd, FIXADDR_START,
->                            (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
-> +
->         /* Setup trampoline PGD and PMD */
->         create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
-> -                          (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
-> +                          trampoline_pgd_next, PGDIR_SIZE, PAGE_TABLE);
-> +       if (pgtable_l4_enabled)
-> +               create_pud_mapping(trampoline_pud, kernel_virt_addr,
-> +                          (uintptr_t)trampoline_pmd, PUD_SIZE, PAGE_TABLE);
->         create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
->                            load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
->  #else
-> @@ -558,12 +688,13 @@ static void __init setup_vm_final(void)
->
->         vm_area_add_early(&vm_kernel);
->
-> -       /* Clear fixmap PTE and PMD mappings */
-> +       /* Clear fixmap page table mappings */
->         clear_fixmap(FIX_PTE);
->         clear_fixmap(FIX_PMD);
-> +       clear_fixmap(FIX_PUD);
->
->         /* Move to swapper page table */
-> -       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
-> +       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | satp_mode);
->         local_flush_tlb_all();
->  }
->
-> --
-> 2.20.1
->
+> Thanks
+> Nic
 
-Looks good to me.
+Which is for probe -> runtime_resume case.
+After probe, the power may be disabled, so move mark_dirtry
+to runtime_resume, then regcache can re-write all the registers.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+best regards
+wang shengjiu
 
-Regards,
-Anup
+>
+>
+> > +     regcache_sync(asrc->regmap);
+> > +
+> > +     regmap_update_bits(asrc->regmap, REG_ASRCFG,
+> > +                        ASRCFG_NDPRi_ALL_MASK | ASRCFG_POSTMODi_ALL_MASK |
+> > +                        ASRCFG_PREMODi_ALL_MASK, asrc_priv->regcache_cfg);
+> > +
+> > +     /* Restart enabled pairs */
+> > +     regmap_update_bits(asrc->regmap, REG_ASRCTR,
+> > +                        ASRCTR_ASRCEi_ALL_MASK, asrctr);
+> > +
+> >       return 0;
+> >
+> >  disable_asrck_clk:
+> > @@ -1155,6 +1175,11 @@ static int fsl_asrc_runtime_suspend(struct device *dev)
+> >       struct fsl_asrc_priv *asrc_priv = asrc->private;
+> >       int i;
+> >
+> > +     regmap_read(asrc->regmap, REG_ASRCFG,
+> > +                 &asrc_priv->regcache_cfg);
+> > +
+> > +     regcache_cache_only(asrc->regmap, true);
+> > +
+> >       for (i = 0; i < ASRC_CLK_MAX_NUM; i++)
+> >               clk_disable_unprepare(asrc_priv->asrck_clk[i]);
+> >       if (!IS_ERR(asrc->spba_clk))
+> > @@ -1166,51 +1191,10 @@ static int fsl_asrc_runtime_suspend(struct device *dev)
+> >  }
+> >  #endif /* CONFIG_PM */
+> >
+> > -#ifdef CONFIG_PM_SLEEP
+> > -static int fsl_asrc_suspend(struct device *dev)
+> > -{
+> > -     struct fsl_asrc *asrc = dev_get_drvdata(dev);
+> > -     struct fsl_asrc_priv *asrc_priv = asrc->private;
+> > -
+> > -     regmap_read(asrc->regmap, REG_ASRCFG,
+> > -                 &asrc_priv->regcache_cfg);
+> > -
+> > -     regcache_cache_only(asrc->regmap, true);
+> > -     regcache_mark_dirty(asrc->regmap);
+> > -
+> > -     return 0;
+> > -}
+> > -
+> > -static int fsl_asrc_resume(struct device *dev)
+> > -{
+> > -     struct fsl_asrc *asrc = dev_get_drvdata(dev);
+> > -     struct fsl_asrc_priv *asrc_priv = asrc->private;
+> > -     u32 asrctr;
+> > -
+> > -     /* Stop all pairs provisionally */
+> > -     regmap_read(asrc->regmap, REG_ASRCTR, &asrctr);
+> > -     regmap_update_bits(asrc->regmap, REG_ASRCTR,
+> > -                        ASRCTR_ASRCEi_ALL_MASK, 0);
+> > -
+> > -     /* Restore all registers */
+> > -     regcache_cache_only(asrc->regmap, false);
+> > -     regcache_sync(asrc->regmap);
+> > -
+> > -     regmap_update_bits(asrc->regmap, REG_ASRCFG,
+> > -                        ASRCFG_NDPRi_ALL_MASK | ASRCFG_POSTMODi_ALL_MASK |
+> > -                        ASRCFG_PREMODi_ALL_MASK, asrc_priv->regcache_cfg);
+> > -
+> > -     /* Restart enabled pairs */
+> > -     regmap_update_bits(asrc->regmap, REG_ASRCTR,
+> > -                        ASRCTR_ASRCEi_ALL_MASK, asrctr);
+> > -
+> > -     return 0;
+> > -}
+> > -#endif /* CONFIG_PM_SLEEP */
+> > -
+> >  static const struct dev_pm_ops fsl_asrc_pm = {
+> >       SET_RUNTIME_PM_OPS(fsl_asrc_runtime_suspend, fsl_asrc_runtime_resume, NULL)
+> > -     SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
+> > +     SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> > +                             pm_runtime_force_resume)
+> >  };
+> >
+> >  static const struct fsl_asrc_soc_data fsl_asrc_imx35_data = {
+> > --
+> > 2.21.0
+> >
