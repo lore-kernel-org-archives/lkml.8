@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D51BB20723
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39D72073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jaoRXRcL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EdSxjRSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390260AbgEYLlo (ORCPT
+        id S2390270AbgEYLmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
+        Mon, 25 May 2020 07:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388696AbgEYLln (ORCPT
+        with ESMTP id S2390174AbgEYLmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:41:43 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EF7C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:41:42 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v16so20442477ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:41:42 -0700 (PDT)
+        Mon, 25 May 2020 07:42:17 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B712CC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:42:16 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z6so20372727ljm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 04:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DwdjF0Ue67Sj/Pl5fSyKVWCmeyW6oEYcnXakGvQJHew=;
-        b=jaoRXRcLC5ll4JhxX10uEVRJ41Q5RkA27cdh9uS3nKRej2LciDH6hzpvyUxipgi+U5
-         gGEs5JM0h649U0962y9zxwKiEK9IhGlqgX9hr+iZfj4D9okOridFVnkhOZQT9aM6uKp4
-         wKs53j3bIOKcr8Cg+1W/pbSgpwMmYbKoWrSO++MBe/+ieemSnRvP6HPyGTivWuWuHGZo
-         Plou4TMB0zl9fqMtOdpZQTGHdysntDU7bfqdaQ8DkkpDH45NuPn/1WIJV2SzMCSdzEsK
-         ZtssI9eE1l2buaJ6jL6BgbIWWKZGocl6SR3LjWdyBx5G3MiwEBjEsP/yXjSqn3zIz+so
-         vYaw==
+        bh=yvtww6jVPHdISeT6csiqLTbFH0Gov1r9YtbJ5CPJPLg=;
+        b=EdSxjRSDXgbY4KEcQ2hzxMVL2CBP4aUTI6LL2hd7KTPsww/BPsm/fd418408B4j1hB
+         zkZaR0wL2wWLo8uqNIOHFFdjn5KAEsaHdxilb6V4U4uYMNFH6tYaTdlSzGwh7BZH5D8H
+         T/bQDBsGc1ma9RCGpGDfDOKeXOAmeKZLstRJZ3/hkjgZ+A4Mz4w8ZGOkY1Igw+FI4uYG
+         7kNzmkwOdPDPdpO7wxU1qYik4m9l0ZxHKUsNdyvUOyus2NFyLiMrh6quyg17fiLzfXc5
+         jNc0IL3LvBgvTM1v5YEC/DRlIIF+ftkV48jPCnfCrF5Ry//RNb9NRyJdX66PrIHeReQP
+         k1XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DwdjF0Ue67Sj/Pl5fSyKVWCmeyW6oEYcnXakGvQJHew=;
-        b=TZRsAIQ3kWot+8V13rOksj6Zl0jIYCAE2AZvndzUT7xjPV/km0wkn7GSOOcKGCUB/P
-         MWnTefzNKZSVwCOsKQdDxx93cmGWBM9ryli9nIk4c9XILYJ9RQTS9/M5Rz7dXJKKBSC9
-         xmeo78AFbejEMEkhdjenc90Ey5GtBqEssxlP7AqR49yeDz5pvPB4jwFnODOIkvC01NKB
-         nAgH+JHzg/o985RWvFgZ4P6funKuJkBVKMYTEgveMtsQ/1zG3wE8vq4yT7I0SDH/Dvhj
-         ZN1JftoI3I4SmWL0XJi487S7bg0oIcNWXJKgfoQgksfsUykMSp8njhQ3+kb6oTum2sqc
-         GQ9Q==
-X-Gm-Message-State: AOAM5300bapgZaA/QAi4A97DD+2XMg5Htg3Qz/6C37nOpon0bFpcp6HX
-        6Jg06hArT0Qfj8p8Kvjo6DorXGpmBdr0PJUMrF/6i+J3
-X-Google-Smtp-Source: ABdhPJzmAF2fPYPuX08EOV6Ek1vROzWyd4lTeFHVNjZzIF6Goyz2gdDExdfIB4Roq7kbyBarCt6itfaazrSXen7+9BU=
-X-Received: by 2002:a05:651c:32d:: with SMTP id b13mr3226363ljp.283.1590406900778;
- Mon, 25 May 2020 04:41:40 -0700 (PDT)
+        bh=yvtww6jVPHdISeT6csiqLTbFH0Gov1r9YtbJ5CPJPLg=;
+        b=TfFsTGaOefhAuMHtkX826DxKBhEeVAWPdAC7PVbZPEDxRkjGhLB/uJTKVp6tU6ZV/C
+         Ld10dL+zum/HDROzx9pYNDntJOyANw4LWjCE5jEgdP7Q3G3z8/7Wkkt/VuxDwUo7xS3C
+         Bm3KCCIqb32TQsvVQliKlNmmr5PxOLnu+x6oUERG+f6fVTfgWlkkN6y+nStqyA4ec7xX
+         1Jnk/4BAH5bZmUJHi/lg+GkgKpB421Bm7cJ8t+ai13P1e8rLUWcRlG24Udk0JWbaT6LS
+         P/t6ft4ZhygWivaKL0vHSOxj8npYgJbtRZCSuOJfslHH0LWv5Hv8EWW7lZXHA7HQvZ2a
+         kmDQ==
+X-Gm-Message-State: AOAM533jX8XIkXa44XJkL4FNrNxu38gBXMxSYAWBZ3hgnGd7zgs/fF9k
+        Mm98N5Tl9lYsDQtVk0ExNqIjQmeWeNAd8ileVZrifw==
+X-Google-Smtp-Source: ABdhPJx2AfcllQTpapyVNb6BHkrFVf9eM3BgGJa98ASkxug+8NUxurx/Wn6WlZe6fcs8D39uD5EKt8t2HSKSe6n5SlU=
+X-Received: by 2002:a2e:8703:: with SMTP id m3mr14352935lji.286.1590406935269;
+ Mon, 25 May 2020 04:42:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn> <1590234326-2194-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1590234326-2194-2-git-send-email-yangtiezhu@loongson.cn>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 13:41:29 +0200
-Message-ID: <CACRpkdYOrdXDMq8MJ2dPQSUf--zaX_tWZd9RYR2FQPHc0pujJQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: Fix return value about devm_platform_ioremap_resource()
+Date:   Mon, 25 May 2020 13:42:04 +0200
+Message-ID: <CACRpkdb9UHxBDeU-o3bLWryuv=7D5qz5JM23T1omLiOsMjE-6Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: at91-pio4: Add COMPILE_TEST support
 To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -73,13 +73,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sat, May 23, 2020 at 1:45 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-> to check the return value and return PTR_ERR() if failed.
+> Add COMPILE_TEST support to the AT91 PIO4 pinctrl driver for better compile
+> testing coverage.
 >
-> Fixes: 4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Patch applied!
+Patch applied, if there is some compile error we will notice shorty :D
 
 Yours,
 Linus Walleij
