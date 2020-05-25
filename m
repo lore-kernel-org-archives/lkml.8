@@ -2,122 +2,279 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDF41207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:13:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="vAcp9De3"
+	by mail.kernel.org (Postfix) with ESMTP id 49775207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 06:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590387243;
+	bh=QGD4cByxPnCoA6n2Sg4kf+oxsIEQqjYdN+taN/eLzgc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yafL7hHKRrGii69mz4+Oxo/xStSFjYUVQduexwJnwu87DY27/oWPadNWysjKFv3ZD
+	 EdG7EYN6m9Nbeov0A38LY/W13fPZry4R7YBQ9n8tv1vi62bPDYu+zee99B6EQZR123
+	 VVBjqjcCKWaYN5V08zHCJdR66S5VSjdkl4MeIKP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbgEYGNR (ORCPT
+        id S1730162AbgEYGOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 02:13:17 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:33069 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726572AbgEYGNQ (ORCPT
+        Mon, 25 May 2020 02:14:02 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:29996 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729125AbgEYGOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 02:13:16 -0400
-X-UUID: 1689848e2ef64c158ed97b7d0f06d0f0-20200525
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4/4tyFF13ExXdeCjudAPME2PjshhSd+G5yUb+3jQX6c=;
-        b=vAcp9De36AsutujK+9KbaHTnQbyL9LOdmqnpYpQFuEUFDKkGvBW5jjoG5WOBOJIGwHDpb1mshel7U/Wsact9KWkzaPsX3G12OCjSlPBOGyHy6XyFWRiXI52Wo2XZhHmD+tSjBY8tYMzY1t4pBjssw3zl8K2LVevujgfM+eUbfic=;
-X-UUID: 1689848e2ef64c158ed97b7d0f06d0f0-20200525
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 139799003; Mon, 25 May 2020 14:13:09 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 25 May
- 2020 14:13:08 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 25 May 2020 14:13:07 +0800
-Message-ID: <1590387086.13912.4.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 2/7] iommu/mediatek: Rename the register
- STANDARD_AXI_MODE(0x48) to MISC_CTRL
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Chao Hao <chao.hao@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>, Jun Yan <jun.yan@mediatek.com>
-Date:   Mon, 25 May 2020 14:11:26 +0800
-In-Reply-To: <20200509083654.5178-3-chao.hao@mediatek.com>
-References: <20200509083654.5178-1-chao.hao@mediatek.com>
-         <20200509083654.5178-3-chao.hao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 25 May 2020 02:14:02 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 04P6DftV011010;
+        Mon, 25 May 2020 15:13:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 04P6DftV011010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590387222;
+        bh=oENAvSU374xQl925hQWWrFTQfS/J2U0fWJOwnfp1JZM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gY6qMMgyC9ptd9cxKW7s/cReF1LuMEWAwdLOgytXCN8mP3JXQF22E0Gf62mzumEFx
+         oMt75M5Gjv2d7KgNvaYXa5VMBC+PYpmPoJyBYHrTqvOWDn5dFB5oMVR1ozyfZ5tFDE
+         ZxmICLuiwiBRNrLKuTWO6bOWo4R5mjc9xjSUmgYid1dFPN3VgDy7boq4+jmD/RDLcw
+         17FxreBOVpJIfF7+wm2BsbPDPY4uzNLb5TdJXwNq2IDT/XtSqrb415C6gBRxSInT3c
+         SU4kbErUj8LeL6C6G6J53LbKrzsv0egeNQ9UPMyaVxzqSee9mkl4ACDeMpGdtp/iy0
+         XaxwOy+5xidcQ==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id l15so9376776vsr.3;
+        Sun, 24 May 2020 23:13:41 -0700 (PDT)
+X-Gm-Message-State: AOAM531xNXFa4UUih0OyQRbqBSoRcuP7bSk2x4IGr1m1DJKMTb8Clp33
+        m5zYKUq4/NEE0dHw/Pp012mLm1QZI1YqeKLRhEY=
+X-Google-Smtp-Source: ABdhPJwhygBmEYDbMBYsZQ9wkj1QmW/2tf70n5T8CJ/9qywv1nCjnFTQWJvZprdvc+EugW2Am2wLdFzoU//9qDS4AIA=
+X-Received: by 2002:a67:d016:: with SMTP id r22mr16696665vsi.215.1590387220542;
+ Sun, 24 May 2020 23:13:40 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 9F19ACAE1B3DEF7E5400D3D9BC819389FFCDC31F868E03319EA154150F0F08962000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200521202716.193316-1-samitolvanen@google.com>
+ <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
+ <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
+ <1590226253.lnkg0jun9x.astroid@bobo.none> <CAK7LNAR_-q3jhaUzDpkC3ej_DpAerzMsORT-tFw_3AwX7xM0Yw@mail.gmail.com>
+ <20200523165355.GA5570@ravnborg.org>
+In-Reply-To: <20200523165355.GA5570@ravnborg.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 25 May 2020 15:13:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATwkmndM9yOV2=ytnGnSh5hS3dH3pdz-Yun00uFPa8j+Q@mail.gmail.com>
+Message-ID: <CAK7LNATwkmndM9yOV2=ytnGnSh5hS3dH3pdz-Yun00uFPa8j+Q@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA1LTA5IGF0IDE2OjM2ICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gRm9y
-IGlvbW11IG9mZnNldD0weDQ4IHJlZ2lzdGVyLCBvbmx5IHRoZSBwcmV2aW91cyBtdDgxNzMvbXQ4
-MTgzIHVzZSB0aGUNCj4gbmFtZSBTVEFOREFSRF9BWElfTU9ERSwgYWxsIHRoZSBsYXRlc3QgU29D
-IGV4dGVuZCB0aGUgcmVnaXN0ZXIgbW9yZQ0KPiBmZWF0dXJlIGJ5IGRpZmZlcmVudCBiaXRzLCBm
-b3IgZXhhbXBsZTogYXhpX21vZGUsIGluX29yZGVyX2VuLCBjb2hlcmVudF9lbg0KPiBhbmQgc28g
-b24uIFNvIHJlbmFtZSBSRUdfTU1VX01JU0NfQ1RSTCBtYXkgYmUgbW9yZSBwcm9wZXIuDQo+IA0K
-PiBUaGlzIHBhdGNoIG9ubHkgcmVuYW1lIHRoZSByZWdpc3RlciBuYW1lLCBubyBmdW5jdGlvbmFs
-IGNoYW5nZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENoYW8gSGFvIDxjaGFvLmhhb0BtZWRpYXRl
-ay5jb20+DQoNClJldmlld2VkLWJ5OiBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4NCg0K
-PiAtLS0NCj4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgfCAxNCArKysrKysrLS0tLS0tLQ0K
-PiAgZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCB8ICAyICstDQo+ICAyIGZpbGVzIGNoYW5nZWQs
-IDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5jIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiBpbmRl
-eCA1ZjRkNmRmNTljZjYuLmU3ZTdjNzY5NWVkMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pb21t
-dS9tdGtfaW9tbXUuYw0KPiArKysgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+IEBAIC00
-MSw3ICs0MSw3IEBADQo+ICAjZGVmaW5lIEZfSU5WTERfRU4wCQkJCUJJVCgwKQ0KPiAgI2RlZmlu
-ZSBGX0lOVkxEX0VOMQkJCQlCSVQoMSkNCj4gIA0KPiAtI2RlZmluZSBSRUdfTU1VX1NUQU5EQVJE
-X0FYSV9NT0RFCQkweDA0OA0KPiArI2RlZmluZSBSRUdfTU1VX01JU0NfQ1RSTAkJCTB4MDQ4DQo+
-ICAjZGVmaW5lIFJFR19NTVVfRENNX0RJUwkJCQkweDA1MA0KPiAgDQo+ICAjZGVmaW5lIFJFR19N
-TVVfQ1RSTF9SRUcJCQkweDExMA0KPiBAQCAtNTg1LDggKzU4NSwxMCBAQCBzdGF0aWMgaW50IG10
-a19pb21tdV9od19pbml0KGNvbnN0IHN0cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YSkNCj4gIAl9
-DQo+ICAJd3JpdGVsX3JlbGF4ZWQoMCwgZGF0YS0+YmFzZSArIFJFR19NTVVfRENNX0RJUyk7DQo+
-ICANCj4gLQlpZiAoZGF0YS0+cGxhdF9kYXRhLT5yZXNldF9heGkpDQo+IC0JCXdyaXRlbF9yZWxh
-eGVkKDAsIGRhdGEtPmJhc2UgKyBSRUdfTU1VX1NUQU5EQVJEX0FYSV9NT0RFKTsNCj4gKwlpZiAo
-ZGF0YS0+cGxhdF9kYXRhLT5yZXNldF9heGkpIHsNCj4gKwkJLyogVGhlIHJlZ2lzdGVyIGlzIGNh
-bGxlZCBTVEFOREFSRF9BWElfTU9ERSBpbiB0aGlzIGNhc2UgKi8NCj4gKwkJd3JpdGVsX3JlbGF4
-ZWQoMCwgZGF0YS0+YmFzZSArIFJFR19NTVVfTUlTQ19DVFJMKTsNCj4gKwl9DQo+ICANCj4gIAlp
-ZiAoZGV2bV9yZXF1ZXN0X2lycShkYXRhLT5kZXYsIGRhdGEtPmlycSwgbXRrX2lvbW11X2lzciwg
-MCwNCj4gIAkJCSAgICAgZGV2X25hbWUoZGF0YS0+ZGV2KSwgKHZvaWQgKilkYXRhKSkgew0KPiBA
-QCAtNzMwLDggKzczMiw3IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgbXRrX2lvbW11X3N1
-c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAgCXN0cnVjdCBtdGtfaW9tbXVfc3VzcGVuZF9y
-ZWcgKnJlZyA9ICZkYXRhLT5yZWc7DQo+ICAJdm9pZCBfX2lvbWVtICpiYXNlID0gZGF0YS0+YmFz
-ZTsNCj4gIA0KPiAtCXJlZy0+c3RhbmRhcmRfYXhpX21vZGUgPSByZWFkbF9yZWxheGVkKGJhc2Ug
-Kw0KPiAtCQkJCQkgICAgICAgUkVHX01NVV9TVEFOREFSRF9BWElfTU9ERSk7DQo+ICsJcmVnLT5t
-aXNjX2N0cmwgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBSRUdfTU1VX01JU0NfQ1RSTCk7DQo+ICAJ
-cmVnLT5kY21fZGlzID0gcmVhZGxfcmVsYXhlZChiYXNlICsgUkVHX01NVV9EQ01fRElTKTsNCj4g
-IAlyZWctPmN0cmxfcmVnID0gcmVhZGxfcmVsYXhlZChiYXNlICsgUkVHX01NVV9DVFJMX1JFRyk7
-DQo+ICAJcmVnLT5pbnRfY29udHJvbDAgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBSRUdfTU1VX0lO
-VF9DT05UUk9MMCk7DQo+IEBAIC03NTUsOCArNzU2LDcgQEAgc3RhdGljIGludCBfX21heWJlX3Vu
-dXNlZCBtdGtfaW9tbXVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gIAkJZGV2X2Vycihk
-YXRhLT5kZXYsICJGYWlsZWQgdG8gZW5hYmxlIGNsayglZCkgaW4gcmVzdW1lXG4iLCByZXQpOw0K
-PiAgCQlyZXR1cm4gcmV0Ow0KPiAgCX0NCj4gLQl3cml0ZWxfcmVsYXhlZChyZWctPnN0YW5kYXJk
-X2F4aV9tb2RlLA0KPiAtCQkgICAgICAgYmFzZSArIFJFR19NTVVfU1RBTkRBUkRfQVhJX01PREUp
-Ow0KPiArCXdyaXRlbF9yZWxheGVkKHJlZy0+bWlzY19jdHJsLCBiYXNlICsgUkVHX01NVV9NSVND
-X0NUUkwpOw0KPiAgCXdyaXRlbF9yZWxheGVkKHJlZy0+ZGNtX2RpcywgYmFzZSArIFJFR19NTVVf
-RENNX0RJUyk7DQo+ICAJd3JpdGVsX3JlbGF4ZWQocmVnLT5jdHJsX3JlZywgYmFzZSArIFJFR19N
-TVVfQ1RSTF9SRUcpOw0KPiAgCXdyaXRlbF9yZWxheGVkKHJlZy0+aW50X2NvbnRyb2wwLCBiYXNl
-ICsgUkVHX01NVV9JTlRfQ09OVFJPTDApOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9t
-dGtfaW9tbXUuaCBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gaW5kZXggZWE5NDlhMzI0
-ZTMzLi4xYjZlYTgzOWI5MmMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11
-LmgNCj4gKysrIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiBAQCAtMTgsNyArMTgsNyBA
-QA0KPiAgI2luY2x1ZGUgPHNvYy9tZWRpYXRlay9zbWkuaD4NCj4gIA0KPiAgc3RydWN0IG10a19p
-b21tdV9zdXNwZW5kX3JlZyB7DQo+IC0JdTMyCQkJCXN0YW5kYXJkX2F4aV9tb2RlOw0KPiArCXUz
-MgkJCQltaXNjX2N0cmw7DQo+ICAJdTMyCQkJCWRjbV9kaXM7DQo+ICAJdTMyCQkJCWN0cmxfcmVn
-Ow0KPiAgCXUzMgkJCQlpbnRfY29udHJvbDA7DQoNCg==
+Hi Sam,
 
+Thanks for the comments.
+
+On Sun, May 24, 2020 at 1:54 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Masahiro.
+>
+> On Sun, May 24, 2020 at 12:12:35AM +0900, Masahiro Yamada wrote:
+> > Hi Nicholas,
+> > (+CC: Sam Ravnborg)
+> >
+> >
+> > On Sat, May 23, 2020 at 7:06 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+> > >
+> > > Excerpts from Masahiro Yamada's message of May 23, 2020 3:44 am:
+> > > > + Michael, and PPC ML.
+> > > >
+> > > > They may know something about the reason of failure.
+> > >
+> > > Because the linker can't put branch stubs within object code sections,
+> > > so when you incrementally link them too large, the linker can't resolve
+> > > branches into other object files.
+> >
+> >
+> > Ah, you are right.
+> >
+> > So, this is a problem not only for PPC
+> > but also for ARM (both 32 and 64 bit), etc.
+> >
+> > ARM needs to insert a veneer to jump far.
+> >
+> > Prior to thin archive, we could not compile
+> > ARCH=arm allyesconfig because
+> > drivers/built-in.o was too large.
+> >
+> > This patch gets us back to the too large
+> > incremental object situation.
+> >
+> > With my quick compile-testing,
+> > ARCH=arm allyesconfig
+> > and ARCH=arm64 allyesconfig are broken.
+> >
+> >
+> > > This is why we added incremental linking in the first place. I suppose
+> > > it could be made conditional for platforms that can use this
+> > > optimization.
+> > >
+> > > What'd be really nice is if we could somehow build and link kallsyms
+> > > without relinking everything twice, and if we could do section mismatch
+> > > analysis without making that vmlinux.o as well. I had a few ideas but
+> > > not enough time to do much work on it.
+> >
+> >
+> > Right, kallsyms links 3 times. (not twice)
+> >
+> >
+> > Hmm, I think Sami's main motivation is Clang LTO.
+> >
+> > LTO is very time-consuming.
+> > So, the android common kernel implements Clang LTO
+> > in the pre modpost stage:
+> >
+> >
+> > 1) LTO against vmlinux.o
+> >
+> > 2) modpost against vmlinux.o
+> >
+> > 3) Link vmlinux.o + kallsyms into vmlinux
+> >    (this requires linking 3 times)
+>
+> We have kallsyms we had to link three times because the linking
+> increased the object a little in size so symbols did not match.
+> The last time was added more or less only to check that we did
+> have stable symbol addresses.
+
+
+Usually vmlinux_link is invoked 3 times if CONFIG_KALLSYMS=y.
+
+(kallsyms_step 1, kallsyms_step 2, and final vmlinux_link)
+
+If the elf size does not match after kallsyms_step 2,
+kallsyms_step 3 is invoked.
+
+So, 4 times including the extra check pass.
+
+If CONFIG_DEBUG_INFO_BTF=y, vmlinux_link is invoked
+one more time.
+
+So, linked 5 times at most.
+
+
+
+>
+> All this predates LTO stuff which we only introduced later.
+>
+> The reason for doing modpost on vmlinux.o was that we had cases
+> where everything in drivers/ was fine but there was section mismatch
+> references from arch/* to drivers/*
+> This is back when there were much more drivers in arch/ than what we
+> have today.
+> And back then we also had much more to check ad we had cPU hotplug
+> that could really cause section mismatches - this is no longer the case
+> which is a good thing.
+>
+>
+>
+> ...
+> >
+> > The following two commits.
+> > I did not fully understand the background, though.
+> >
+> > I CC'ed Sam in case he may add some comments.
+> >
+> > commit 85bd2fddd68e757da8e1af98f857f61a3c9ce647
+> > Author: Sam Ravnborg <sam@ravnborg.org>
+> > Date:   Mon Feb 26 15:33:52 2007 +0100
+> >
+> >     kbuild: fix section mismatch check for vmlinux
+> >
+> >     vmlinux does not contain relocation entries which is
+> >     used by the section mismatch checks.
+> >     Reported by: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+> >
+> >     Use the individual objects as inputs to overcome
+> >     this limitation.
+> >     In modpost check the .o files and skip non-ELF files.
+> >
+> >     Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+>
+>
+> So we checked vmlinx - but vmlinx did have too much stripped away.
+> so in reality nothing was checked.
+> To allow the warnings to be as precise as possible move the checks
+> out to the indovidual .o files.
+> Sometimes the names was mangled a little so if warnigns was only
+> reported on vmlinx level in could be difficult to track down the
+> offender.
+> This would then also do the check on .o files that had all the
+> relocation symbols rtequired.
+>
+> >
+> > commit 741f98fe298a73c9d47ed53703c1279a29718581
+> > Author: Sam Ravnborg <sam@ravnborg.org>
+> > Date:   Tue Jul 17 10:54:06 2007 +0200
+> >
+> >     kbuild: do section mismatch check on full vmlinux
+> >
+> >     Previously we did do the check on the .o files used to link
+> >     vmlinux but that failed to find questionable references across
+> >     the .o files.
+> >     Create a dedicated vmlinux.o file used only for section mismatch checks
+> >     that uses the defualt linker script so section does not get renamed.
+> >
+> >     The vmlinux.o may later be used as part of the the final link of vmlinux
+> >     but for now it is used fo section mismatch only.
+> >     For a defconfig build this is instant but for an allyesconfig this
+> >     add two minutes to a full build (that anyways takes ~2 hours).
+> >
+> >     Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+>
+> But when we introduced check of the individual .o fiules we missed when
+> the references spanned outside the .o files as explained previously.
+> So included a link of vmlinx.o that did NOT drop the relocations
+> so we could use it to check for the remaining section mismatch warnings.
+>
+> Remember - back when we started this we had many hundred warnings
+> and it was a fight to keep that number low.
+> But we also wanted to report as much as possible.
+>
+> There was back then several discussions if this was really worth the
+> effort. How much was gained from discarding the memory where the
+> section mismatch warnigns was triggered.
+> In other words - how about just keeping the init code in memory so there
+> were no illegal references anymore.
+> That is something that is maybe worth to consiuder again as we have even
+> less memory we save by throwing away the init code.
+> But I think this is a topic for another mail thread.
+
+
+I am not sure if we want to go as far as stop doing __init.
+I want to reuse memory after initialization.
+
+Anyway, the section mismatch checks highly rely on
+REL or RELA.
+
+The REL(A) sections do not exist in the final vmlinux,
+or is useless at least. So, it does not work for most of
+architectures.
+
+If we use individual .o files, modpost cannot check
+function calls to a different object file.
+
+So, the conclusion is we definitely need vmlinux.o for section
+mismatch checks.
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
