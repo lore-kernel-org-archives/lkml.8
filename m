@@ -2,82 +2,131 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77982071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBEE207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:18:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lqW+siR8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Chwl/QQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389782AbgEYSIk (ORCPT
+        id S2389100AbgEYSSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 14:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388621AbgEYSIj (ORCPT
+        Mon, 25 May 2020 14:18:48 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15068 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387644AbgEYSSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 14:08:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC08C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 11:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=KtQ2SC4NpHGImf+Tkc9R2teElcvTerbBEl4X1UzaM28=; b=lqW+siR8qtiAMM7Ddod74VaBie
-        aKsujkrzo3JVXxk/qIICnnccnJVJQt884GIWER0zPUzXJx2nqGRAaNsxMYV8Sq6Q/SEEGo0XkPDGZ
-        /EJvlWvTNo1OW7TwjorFNCsMZnnwVc0WmjxVSUXHy8V1ZyVlr8uQ7YU4BrKmAF9keKI60F6cjpSNg
-        an2IerjCCfGD+L39XIeikvdlcQdIiZOWtxTy40xrRZxC6jNg7FnMWiSLlWJA/aDKrheGokOqDoKtm
-        SkSbxJdQZexIBIGyFAH6W4D0YCbhbsX5YwUmOyZ60cOtstxHtc8GrwuxBawUvvZepEO7UwJX52gKD
-        MuSgxKyQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdHWe-0004PD-Vv; Mon, 25 May 2020 18:08:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D698300478;
-        Mon, 25 May 2020 20:08:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5847720BD4F43; Mon, 25 May 2020 20:08:34 +0200 (CEST)
-Date:   Mon, 25 May 2020 20:08:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
-Subject: Re: [RFC][PATCH 0/4] x86/entry: disallow #DB more
-Message-ID: <20200525180834.GF317569@hirez.programming.kicks-ass.net>
-References: <20200525110101.GG325303@hirez.programming.kicks-ass.net>
- <2E6DBDE0-FEEA-467F-A380-4ED736B6C912@amacapital.net>
+        Mon, 25 May 2020 14:18:47 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecc0bfb0000>; Mon, 25 May 2020 11:18:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 25 May 2020 11:18:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 25 May 2020 11:18:47 -0700
+Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
+ 2020 18:18:47 +0000
+Subject: Re: linux-next: build failure after merge of the akpm tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michel Lespinasse <walken@google.com>
+References: <20200525221700.0aa347f7@canb.auug.org.au>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <4e1d8a9d-e308-df6a-6921-dbbe8d5f8389@nvidia.com>
+Date:   Mon, 25 May 2020 11:18:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2E6DBDE0-FEEA-467F-A380-4ED736B6C912@amacapital.net>
+In-Reply-To: <20200525221700.0aa347f7@canb.auug.org.au>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590430715; bh=B44ZR8YbjlxZaVO8MV90cF+K5/pLr/M0ZkZHcJrr5JU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Chwl/QQxWSGf/T6mUMGZUo+dcs0yENwHSyinp5sOP7wXPjA+WAQ5/C+7JSw8a3qW6
+         fy1IZHRHRsTO6uHbr8wm1w6PW0cp4tEZ4Fn6MCK7JnqIMZgsvfjfh+46e8tuoh5U9Y
+         WuSVqIOkW3A7EN5pWAW9ZPZanPCzeMRcJKz5Oc8daChIpVKFzadnBcuON+SsDDAKFe
+         Hv6Rn1ScfdEMhf+syHvLggwSZhtX3IsSQcrp9+TEnRSTiQDarjiHst07JMYpB3rEKX
+         iN4hnK2uFX3tyqt1c05Q4XoljYiyi7HLEtaFSe+TO/v/fQOxVcZ1sVmBUxD60l2YQU
+         kLtOD1lUxtE+Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 10:19:08AM -0700, Andy Lutomirski wrote:
+On 2020-05-25 05:17, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> In file included from include/linux/kernel.h:14,
+>                   from mm/gup.c:2:
+> mm/gup.c: In function 'internal_get_user_pages_fast':
+> mm/gup.c:2732:33: error: 'struct mm_struct' has no member named 'mmap_sem'; did you mean 'mmap_base'?
+>   2732 |   might_lock_read(&current->mm->mmap_sem);
+>        |                                 ^~~~~~~~
+> 
+> Caused by commit
+> 
+>    64fe66e8a95e ("mmap locking API: rename mmap_sem to mmap_lock")
+> 
+> fron the akpm tree interacting with commit
+> 
+>    b1fc8b5ddb4e ("mm/gup: might_lock_read(mmap_sem) in get_user_pages_fast()")
+> 
+> from the akpm-current tree.
+> 
+> I added the following patch for today.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 25 May 2020 22:11:51 +1000
+> Subject: [PATCH] mm/gup: update for mmap_sem rename
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>   mm/gup.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 8977e5fe9843..f4bca3de0b4b 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2729,7 +2729,7 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
+>   		return -EINVAL;
+>   
+>   	if (!(gup_flags & FOLL_FAST_ONLY))
+> -		might_lock_read(&current->mm->mmap_sem);
+> +		might_lock_read(&current->mm->mmap_lock);
+>   
+>   	start = untagged_addr(start) & PAGE_MASK;
+>   	addr = start;
+> 
 
-> How about adding it to cpu_tlbstate?  A lot of NMIs are going to read
-> that anyway to check CR3.
+Yes, looks good. And in fact, Andrew has the same fix-up in the mmotm branch of
+linux-next.git, as
 
-That might work I suppose; we're really pushing the name of it though.
-Also, that's PTI specific IIRC, and we're getting to the point where a
-significant number of CPUs no longer need that, right?
+     commit a76c281a8ddd ("mmap-locking-api-rename-mmap_sem-to-mmap_lock-fix").
 
-> And blaming KVM is a bit misplaced. This isn’t KVM’s fault — it’s
-> Intel’s. VT-x has two modes: DR access exits and DR access doesn’t
-> exit. There’s no shadow mode.
 
-It's virt, I can't be arsed to care, whoever misdesigned it.
-We already have debugreg pvops, they can do shadow there.
+thanks,
+-- 
+John Hubbard
+NVIDIA
