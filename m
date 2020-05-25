@@ -2,134 +2,136 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 931BC2078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590398243;
-	bh=dvoIblhrB6r6q1w4YgHnKBzB3u8MDjy2EHOsa4SWZok=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=l5PC5kBNp7dGWGTXqG06R+ClCT1p3crHW+hc7ysDrOqALLHXfIAnZ+SRxIC9lDA8X
-	 R3PbAPklovBt8z4ygsmiGapEHMiTC6jmh01bD2wwDoeH5/VQkBNiWQ7ipwmUGCp6Jq
-	 KDfvONzkQbzvrS4spaByg0uj2xhbEODK2PERSx9c=
+	by mail.kernel.org (Postfix) with ESMTP id 3D7E620812
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k4ak4DSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389483AbgEYJRX (ORCPT
+        id S2389492AbgEYJR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389454AbgEYJRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:17:21 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01ED020787;
-        Mon, 25 May 2020 09:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590398241;
-        bh=dvoIblhrB6r6q1w4YgHnKBzB3u8MDjy2EHOsa4SWZok=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tXnRIYphXASv22/CWUBMA4CPRNsDbUMhgCnKjxTTC6dq9DDNazs1+GztuGsokQpEJ
-         72QM5aF0JoA15SMnoO0AX6SPOL6GCj0SXNeERYxlYPaPRT7hQ4f+IaxJUF+lIYihOX
-         pyq7Ce4X2AFg/w1e44/Sm5YB7VXDDhAc7W7i/lfo=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jd9EU-00F730-Ux; Mon, 25 May 2020 10:17:19 +0100
+        Mon, 25 May 2020 05:17:26 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49774 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389454AbgEYJRY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:17:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P9H84v069133;
+        Mon, 25 May 2020 04:17:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590398228;
+        bh=JF+D0P9IlTXPAfVYCw880QogymYkRdaUdIkcXPWXVR0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=k4ak4DShTAe1fnBn80U/w9NlFhqdOkJS/RCmod4EjnJtnlNFq4M2N5QQlPouYiMCm
+         sCdiswkOmEOLokRg0ZHntmcbWkaHT6lQ4b3dpXNFiDC8FgsROLxTuRL/D10EN5aLwS
+         Sw0OHYuzX9G7gDrvk6vk9HjKGBYo9CusJ3O1IwiQ=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04P9H8dp099068
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 25 May 2020 04:17:08 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 25
+ May 2020 04:17:08 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 25 May 2020 04:17:08 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9FjAE034800;
+        Mon, 25 May 2020 04:17:03 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v9 14/19] mtd: spi-nor: sfdp: detect Soft Reset sequence support from BFPT
+Date:   Mon, 25 May 2020 14:45:39 +0530
+Message-ID: <20200525091544.17270-15-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200525091544.17270-1-p.yadav@ti.com>
+References: <20200525091544.17270-1-p.yadav@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 May 2020 10:17:18 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Jianyong Wu <jianyong.wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, Mark.Rutland@arm.com,
-        will@kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        Wei.Chen@arm.com, nd@arm.com
-Subject: Re: [RFC PATCH v12 10/11] arm64: add mechanism to let user choose
- which counter to return
-In-Reply-To: <20200524021106.GC335@localhost>
-References: <20200522083724.38182-1-jianyong.wu@arm.com>
- <20200522083724.38182-11-jianyong.wu@arm.com>
- <20200524021106.GC335@localhost>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <306951e4945b9e486dc98818ba24466d@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: richardcochran@gmail.com, jianyong.wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com, steven.price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com, Wei.Chen@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-24 03:11, Richard Cochran wrote:
-> On Fri, May 22, 2020 at 04:37:23PM +0800, Jianyong Wu wrote:
->> In general, vm inside will use virtual counter compered with host use
->> phyical counter. But in some special scenarios, like nested
->> virtualization, phyical counter maybe used by vm. A interface added in
->> ptp_kvm driver to offer a mechanism to let user choose which counter
->> should be return from host.
-> 
-> Sounds like you have two time sources, one for normal guest, and one
-> for nested.  Why not simply offer the correct one to user space
-> automatically?  If that cannot be done, then just offer two PHC
-> devices with descriptive names.
+A Soft Reset sequence will return the flash to Power-on-Reset (POR)
+state. It consists of two commands: Soft Reset Enable and Soft Reset.
+Find out if the sequence is supported from BFPT DWORD 16.
 
-There is no such thing as a distinction between nested or non-nested.
-Both counters are available to the guest at all times, and said guest
-can choose whichever it wants to use. So the hypervisor (KVM) has to
-support both counters as a reference.
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/mtd/spi-nor/core.h | 1 +
+ drivers/mtd/spi-nor/sfdp.c | 4 ++++
+ drivers/mtd/spi-nor/sfdp.h | 2 ++
+ 3 files changed, 7 insertions(+)
 
-For a Linux guest, we always know which reference we're using (the
-virtual counter). So it is pointless to expose the choice to userspace
-at all.
-
-> 
->> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
->> index fef72f29f3c8..8b0a7b328bcd 100644
->> --- a/drivers/ptp/ptp_chardev.c
->> +++ b/drivers/ptp/ptp_chardev.c
->> @@ -123,6 +123,9 @@ long ptp_ioctl(struct posix_clock *pc, unsigned 
->> int cmd, unsigned long arg)
->>  	struct timespec64 ts;
->>  	int enable, err = 0;
->> 
->> +#ifdef CONFIG_ARM64
->> +	static long flag;
-> 
-> static?  This is not going to fly.
-> 
->> +		 * In most cases, we just need virtual counter from host and
->> +		 * there is limited scenario using this to get physical counter
->> +		 * in guest.
->> +		 * Be careful to use this as there is no way to set it back
->> +		 * unless you reinstall the module.
-> 
-> How on earth is the user supposed to know this?
-> 
-> From your description, this "flag" really should be a module
-> parameter.
-
-Not even that. If anything, the driver can obtain full knowledge of 
-which
-counter is in use without any help. And the hard truth is that it is
-*always* the virtual counter as far as Linux is concerned.
-
-         M.
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index 6338d32a0d77..79ce952c0539 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -26,6 +26,7 @@ enum spi_nor_option_flags {
+ 	SNOR_F_HAS_SR_TB_BIT6	= BIT(11),
+ 	SNOR_F_HAS_4BIT_BP      = BIT(12),
+ 	SNOR_F_HAS_SR_BP3_BIT6  = BIT(13),
++	SNOR_F_SOFT_RESET	= BIT(14),
+ };
+ 
+ struct spi_nor_read_command {
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index 9fd3d8d9a127..11109969dc3a 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -618,6 +618,10 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 		break;
+ 	}
+ 
++	/* Soft Reset support. */
++	if (bfpt.dwords[BFPT_DWORD(16)] & BFPT_DWORD16_SOFT_RST)
++		nor->flags |= SNOR_F_SOFT_RESET;
++
+ 	/* Stop here if JESD216 rev B. */
+ 	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
+ 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
+diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+index e15e30796d62..d1d43ee09a0a 100644
+--- a/drivers/mtd/spi-nor/sfdp.h
++++ b/drivers/mtd/spi-nor/sfdp.h
+@@ -84,6 +84,8 @@ struct sfdp_bfpt {
+ #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
+ #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
+ 
++#define BFPT_DWORD16_SOFT_RST			BIT(12)
++
+ #define BFPT_DWORD18_CMD_EXT_MASK		GENMASK(30, 29)
+ #define BFPT_DWORD18_CMD_EXT_REP		(0x0UL << 29) /* Repeat */
+ #define BFPT_DWORD18_CMD_EXT_INV		(0x1UL << 29) /* Invert */
 -- 
-Jazz is not dead. It just smells funny...
+2.26.2
+
