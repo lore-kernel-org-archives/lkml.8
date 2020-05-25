@@ -2,139 +2,120 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F40C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67BDB20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFE720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590392774;
+	bh=fgqR3OQ1PtjHSkmtV10P2hHKo5KnIbUACEU4h7/NwDY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JX7kenf+BNGl4pZ94Mf3EYNUFiOnAvqJryWF9X/pBYD+afzDmiiQuJHXwhkc8E2IX
+	 qRVbiCPwiDZGynBNTTeBbf8I7XsFptVkNsN3VHE6ZcF6/MJE3WR4DQTqTsUOv5+2AX
+	 6D8PgQLRUBdhxTmJb4r6oENNq50cIetRx0Q/OM/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389183AbgEYHpO (ORCPT
+        id S2389191AbgEYHqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:45:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38182 "EHLO mx2.suse.de"
+        Mon, 25 May 2020 03:46:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389105AbgEYHpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:45:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A4B95ABEC;
-        Mon, 25 May 2020 07:45:14 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id E45311E1270; Mon, 25 May 2020 09:38:35 +0200 (CEST)
-Date:   Mon, 25 May 2020 09:38:35 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Martijn Coenen <maco@android.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        android-storage-core@google.com, kernel-team@android.com
-Subject: Re: Writeback bug causing writeback stalls
-Message-ID: <20200525073835.GJ14199@quack2.suse.cz>
-References: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
- <20200524140522.14196-1-hdanton@sina.com>
+        id S2389105AbgEYHqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:46:13 -0400
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA8B2084C;
+        Mon, 25 May 2020 07:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590392772;
+        bh=fgqR3OQ1PtjHSkmtV10P2hHKo5KnIbUACEU4h7/NwDY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=18NjHvk8ScXaincZb/YmfsI/QWRTplgkBTpu2YO6xlvUH9+CRSqSUsuJc+m0WsfwR
+         Hrivql4XcabyAJcADV4htQDQUsebbxcwc5z8OLIL7h17y3/Z/qxoKZaswCs2GJCXzY
+         3oijNN+ovScPzBf0r3oycDR/sgKHxZ/e5USy3VSE=
+Received: by mail-il1-f178.google.com with SMTP id c20so16572051ilk.6;
+        Mon, 25 May 2020 00:46:12 -0700 (PDT)
+X-Gm-Message-State: AOAM5313MxXw++WMcE0QOIIQ40fdcg0n1X6bed9QLLb2/OVjpx2P8Ayw
+        l9EIVcEBKV/yXjjV/qTBLE8fDOYndhxz8AEfiEg=
+X-Google-Smtp-Source: ABdhPJyznDWuSesPLw+JJ+5BL9aOApZTfftAlcgXJD7CkLN8jcHhBFDwqaPXE/x7YTJsngd0cfoo32pizca9o+KxyyU=
+X-Received: by 2002:a92:5ec1:: with SMTP id f62mr20911209ilg.80.1590392771546;
+ Mon, 25 May 2020 00:46:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200524140522.14196-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
+ <20200512141113.18972-6-nicolas.toromanoff@st.com> <CAMj1kXGs6UgkKb5+tH2B-+26=tbjHq3UUY2gxfcRfMb1nGVuFA@mail.gmail.com>
+ <67c25d90d9714a85b52f3d9c2070af88@SFHDAG6NODE1.st.com>
+In-Reply-To: <67c25d90d9714a85b52f3d9c2070af88@SFHDAG6NODE1.st.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 25 May 2020 09:46:00 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGo+9aXeYppGSheqhC-pNeJCcEie+SAnWy_sAiooEDMsQ@mail.gmail.com>
+Message-ID: <CAMj1kXGo+9aXeYppGSheqhC-pNeJCcEie+SAnWy_sAiooEDMsQ@mail.gmail.com>
+Subject: Re: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
+To:     Nicolas TOROMANOFF <nicolas.toromanoff@st.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 24-05-20 22:05:22, Hillf Danton wrote:
-> 
-> On Fri, 22 May 2020 11:57:42 +0200 Martijn Coenen wrote:
-> > 
-> > So, the sequence of events is something like this. Let's assume the inode is
-> > already on b_dirty_time for valid reasons. Then:
-> > 
-> > CPU1                                          CPU2
-> > fuse_flush()
-> >   write_inode_now()
-> >     writeback_single_inode()
-> >       sets I_SYNC
-> >         __writeback_single_inode()
-> >           writes back data
-> >           clears inode dirty flags
-> >           unlocks inode
-> >           calls mark_inode_dirty_sync()
-> >             sets I_DIRTY_SYNC, but doesn't
-> >             update wb list because I_SYNC is
-> >             still set
-> >                                               write() // somebody else writes
-> >                                               mark_inode_dirty(I_DIRTY_PAGES)
-> >                                               sets I_DIRTY_PAGES on i_state
-> >                                               doesn't update wb list,
-> >                                               because I_SYNC set
-> >       locks inode again
-> >       sees inode is still dirty,
-> >       doesn't touch WB list
-> >       clears I_SYNC
-> > 
-> > So now we have an inode on b_dirty_time with I_DIRTY_PAGES | I_DIRTY_SYNC set,
-> > and subsequent calls to mark_inode_dirty() with either I_DIRTY_PAGES or
-> > I_DIRTY_SYNC will do nothing to change that. The flusher won't touch
-> > the inode either, because it's not on a b_dirty or b_io list.
+On Mon, 25 May 2020 at 09:24, Nicolas TOROMANOFF
+<nicolas.toromanoff@st.com> wrote:
+>
+> Hello,
+>
+> > -----Original Message-----
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> > Sent: Friday, May 22, 2020 6:12 PM>
+> > On Tue, 12 May 2020 at 16:13, Nicolas Toromanoff
+> > <nicolas.toromanoff@st.com> wrote:
+> > >
+> > > Protect STM32 CRC device from concurrent accesses.
+> > >
+> > > As we create a spinlocked section that increase with buffer size, we
+> > > provide a module parameter to release the pressure by splitting
+> > > critical section in chunks.
+> > >
+> > > Size of each chunk is defined in burst_size module parameter.
+> > > By default burst_size=0, i.e. don't split incoming buffer.
+> > >
+> > > Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+> >
+> > Would you mind explaining the usage model here? It looks like you are sharing a
+> > CRC hardware accelerator with a synchronous interface between different users
+> > by using spinlocks? You are aware that this will tie up the waiting CPUs
+> > completely during this time, right? So it would be much better to use a mutex
+> > here. Or perhaps it would make more sense to fall back to a s/w based CRC
+> > routine if the h/w is tied up working for another task?
+>
+> I know mutex are more acceptable here, but shash _update() and _init() may be call
+> from any context, and so I cannot take a mutex.
+> And to protect my concurrent HW access I only though about spinlock. Due to possible
+> constraint on CPUs, I add a burst_size option to force slitting long buffer into smaller one,
+> and so decrease time we take the lock.
+> But I didn't though to fallback to software CRC.
+>
+> I'll do a patch on top.
+> In in the burst_update() function I'll use a spin_trylock_irqsave() and use software CRC32 if HW is already in use.
+>
 
-Hi Hillf,
+Right. I didn't even notice that you were keeping interrupts disabled
+the whole time when using the h/w block. That means that any serious
+use of this h/w block will make IRQ latency go through the roof.
 
-> Based on the above analysis, check of I_DIRTY_TIME is added before and
-> after calling __writeback_single_inode() to detect the case you reported.
-> 
-> If a dirty inode is not on the right io list after writeback, we can
-> move it to a new one; and we can do that as we are the I_SYNC owner.
-> 
-> While changing its io list, the inode's dirty timestamp is also updated
-> to the current tick as does in __mark_inode_dirty().
-
-Apparently you didn't read my reply to Martinj because what you did in this
-patch is exactly what I described that we cannot do because that can cause
-sync(2) to miss inodes and thus break its data integrity guarantees. So we
-have to come up with a different solution.
-
-								Honza
-
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -1528,6 +1528,7 @@ static int writeback_single_inode(struct
->  				  struct writeback_control *wbc)
->  {
->  	struct bdi_writeback *wb;
-> +	bool dt;
->  	int ret = 0;
->  
->  	spin_lock(&inode->i_lock);
-> @@ -1560,6 +1561,7 @@ static int writeback_single_inode(struct
->  	     !mapping_tagged(inode->i_mapping, PAGECACHE_TAG_WRITEBACK)))
->  		goto out;
->  	inode->i_state |= I_SYNC;
-> +	dt = inode->i_state & I_DIRTY_TIME;
->  	wbc_attach_and_unlock_inode(wbc, inode);
->  
->  	ret = __writeback_single_inode(inode, wbc);
-> @@ -1574,6 +1576,14 @@ static int writeback_single_inode(struct
->  	 */
->  	if (!(inode->i_state & I_DIRTY_ALL))
->  		inode_io_list_del_locked(inode, wb);
-> +	else if (!(inode->i_state & I_DIRTY_TIME) && dt) {
-> +		/*
-> +		 * We can correct inode's io list, however, by moving it to
-> +		 * b_dirty from b_dirty_time as we are the I_SYNC owner
-> +		 */
-> +		inode->dirtied_when = jiffies;
-> +		inode_io_list_move_locked(inode, wb, &wb->b_dirty);
-> +	}
->  	spin_unlock(&wb->list_lock);
->  	inode_sync_complete(inode);
->  out:
-> --
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+I recommend that you go back to the drawing board on this driver,
+rather than papering over the issues with a spin_trylock(). Perhaps it
+would be better to model it as a ahash (even though the h/w block
+itself is synchronous) and use a kthread to feed in the data.
