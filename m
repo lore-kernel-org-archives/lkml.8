@@ -2,131 +2,83 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A98C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC79EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1454207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uC/DUKVP"
+	by mail.kernel.org (Postfix) with ESMTP id C72442071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 08:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgEYIMg (ORCPT
+        id S1731295AbgEYIOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 04:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgEYIMf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 04:12:35 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5A8C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:12:35 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w10so19834101ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 01:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mQlv94/UsIcWqqoQiFz4Gmt5TSCy0PaSYRGYfGZ8ASE=;
-        b=uC/DUKVPr4AEHq5tZ0tk/8BJui59Ip+3Hv4adGb5DQ14R3VOvZPglrknK3jEuEDUri
-         0d/s8L/nPTs2TjywXIwDlAjAl0pbo1y4d4KL36xuI94CirTpSML2vZQUsvsl4pKnfCT/
-         N1Dr1x0yKT+NPvdkJagD16frkkV4x2sD0QXMuT8oRsZpcVs7WIynSnod8WL8W7zEpzVp
-         9VYGC1iie7CLhJuFTjwO+eudzrsEauJNzNODWYn+/OMtBZijYLasRQSg6Mccp6nvsS7K
-         yPzPRVs3STK0Cn+lL+DaqTkrNgfUs+i/dYHTpAqH/NTlrp/7vli8ofSqHDlLR/MYqwVQ
-         KVrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mQlv94/UsIcWqqoQiFz4Gmt5TSCy0PaSYRGYfGZ8ASE=;
-        b=Cqe1LVuVuG3THhIwevcCXuY3b//lpqJr07Y7nxFq4Q1UvhjpOnJmfkSMFcOi+Gbl4Y
-         XIQeqKrG/5u6zygO5z6kNB7yuCzxVgLMQa5qw1/cnjOIZoQiCSvcRPXjbODJkylXs54c
-         0Rr9Fd0Xo0y6v7a2H3IsXhOd6uiVPuLymIk6RUy1MRMU0pkSSJ/QRYqxY5O8Ym8Yxiy/
-         NP1TNzbgrDWa8FflMaq8egIOwMT3IyLrs4xrkrHp8qDv+gEprTdtaAkYFLJyXAVV9dNi
-         cg0ShuaCkvU9R6pKMB+NlmTeiXVujMWS95CKdsDLhTxY8w0fa3FHH75vqireNTexQdeX
-         RdmA==
-X-Gm-Message-State: AOAM5316GQc5AIQIh8YW0ausg94kAuhIyC3vJN/GJEALHl7LfYUy/DWx
-        5vEW2IaBpRDrc1q7JOz33f/epVAWgZUqUQ==
-X-Google-Smtp-Source: ABdhPJyJtREc8uUJDAMfpETQ8xnMzoK/Y5+TXrGnZ2HOaSMhu/3tzdRc4VuGqCS4FTW3P1QcfIskmw==
-X-Received: by 2002:a2e:2a02:: with SMTP id q2mr11637583ljq.311.1590394353496;
-        Mon, 25 May 2020 01:12:33 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:425b:15e7:251c:5b3:d625:2d43? ([2a00:1fa0:425b:15e7:251c:5b3:d625:2d43])
-        by smtp.gmail.com with ESMTPSA id m10sm4627606lfd.15.2020.05.25.01.12.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 01:12:32 -0700 (PDT)
-Subject: Re: [PATCH v6 1/4] MIPS: Do not flush tlb page when updating PTE
- entry
-To:     Bibo Mao <maobibo@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <79778fc3-c029-272b-358e-4f8f8e5772d3@cogentembedded.com>
-Date:   Mon, 25 May 2020 11:12:25 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 25 May 2020 04:14:33 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:46348 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731228AbgEYIOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 04:14:32 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 25 May 2020 16:14:17
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Mon, 25 May 2020 16:14:17 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Sakari Ailus" <sakari.ailus@linux.intel.com>
+Cc:     kjlu@umn.edu, "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] media: smiapp: Fix runtime PM imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200525080902.GC7618@paasikivi.fi.intel.com>
+References: <20200522090313.10634-1-dinghao.liu@zju.edu.cn>
+ <20200525080902.GC7618@paasikivi.fi.intel.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <142e32cb.c76d2.1724ae58dd9.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgDn7wdZfstemTQEAA--.1084W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAvsv
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXIS07vEb7Iv0x
+        C_Ar1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r43MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUAVWUtwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 25.05.2020 5:52, Bibo Mao wrote:
-
-> It is not necessary to flush tlb page on all CPUs if suitable PTE
-> entry exists already during page fault handling, just updating
-> TLB is fine.
-> 
-> Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
-
-    Need empty line here.
-
-> V6:
-> - Add update_mmu_tlb function as empty on all platform except mips
->    system, we use this function to update local tlb for page fault
->    smp-race handling
-> V5:
-> - define update_mmu_cache function specified on MIPS platform, and
->    add page fault smp-race stats info
-> V4:
-> - add pte_sw_mkyoung function to implement readable privilege, and
->    this function is  only in effect on MIPS system.
-> - add page valid bit judgement in function pte_modify
-> V3:
-> - add detailed changelog, modify typo issue in patch V2
-> v2:
-> - split flush_tlb_fix_spurious_fault and tlb update into two patches
-> - comments typo modification
-> - separate tlb update and add pte readable privilege into two patches
-
-   It was a bad idea to keep the version change log in the 1st patch only,
-we have either cover letter for that, or all the individual patches...
-
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-[...]
-
-MBR, Sergei
+PiBIaSBEaW5naGFvLAo+IAo+IFRoYW5rcyBmb3IgdGhlIHBhdGNoLgo+IAo+IE9uIEZyaSwgTWF5
+IDIyLCAyMDIwIGF0IDA1OjAzOjEzUE0gKzA4MDAsIERpbmdoYW8gTGl1IHdyb3RlOgo+ID4gV2hl
+biB2NGwyX2FzeW5jX3JlZ2lzdGVyX3N1YmRldl9zZW5zb3JfY29tbW9uKCkgcmV0dXJucwo+ID4g
+YW4gZXJyb3IgY29kZSwgYSBwYWlyaW5nIHJ1bnRpbWUgUE0gdXNhZ2UgY291bnRlcgo+ID4gZGVj
+cmVtZW50IGlzIG5lZWRlZCB0byBrZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLgo+ID4gCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0t
+LQo+ID4gIGRyaXZlcnMvbWVkaWEvaTJjL3NtaWFwcC9zbWlhcHAtY29yZS5jIHwgMSArCj4gPiAg
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL21lZGlhL2kyYy9zbWlhcHAvc21pYXBwLWNvcmUuYyBiL2RyaXZlcnMvbWVkaWEvaTJjL3Nt
+aWFwcC9zbWlhcHAtY29yZS5jCj4gPiBpbmRleCA1ZTRmNmEyZWY3OGUuLjQzYmE2M2M0OGE4NyAx
+MDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvbWVkaWEvaTJjL3NtaWFwcC9zbWlhcHAtY29yZS5jCj4g
+PiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9zbWlhcHAvc21pYXBwLWNvcmUuYwo+ID4gQEAgLTMx
+MDMsNiArMzEwMyw3IEBAIHN0YXRpYyBpbnQgc21pYXBwX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50
+ICpjbGllbnQpCj4gPiAgCXJldHVybiAwOwo+ID4gIAo+ID4gIG91dF9kaXNhYmxlX3J1bnRpbWVf
+cG06Cj4gPiArCXBtX3J1bnRpbWVfcHV0X2F1dG9zdXNwZW5kKCZjbGllbnQtPmRldik7Cj4gCj4g
+Q2FuIHlvdSB1c2UgcG1fcnVudGltZV9wdXRfbm9pZGxlKCksIGFzIHRoZSBkZXZpY2UgbXVzbid0
+IGJlIHBvd2VyZWQgb2ZmCj4gaGVyZSB5ZXQ/Cj4gCj4gPiAgCXBtX3J1bnRpbWVfZGlzYWJsZSgm
+Y2xpZW50LT5kZXYpOwo+ID4gIAo+ID4gIG91dF9tZWRpYV9lbnRpdHlfY2xlYW51cDoKPiAKPiAt
+LSAKPiBSZWdhcmRzLAo+IAo+IFNha2FyaSBBaWx1cwoKT0suIEkgd2lsbCBmaXggdGhpcyBpbiB0
+aGUgbmV4dCB2ZXJzaW9uIG9mIHBhdGNoLgoKUmVnYXJkcywKRGluZ2hhbwo=
