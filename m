@@ -2,135 +2,207 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484F5206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDEA2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bl8G0I+c"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="CR0sQBLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388965AbgEYHE6 (ORCPT
+        id S2388972AbgEYHGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:04:58 -0400
-Received: from mout.web.de ([212.227.15.14]:37821 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388385AbgEYHE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:04:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590390288;
-        bh=XN/8bP+JztC7FWmfDY5wchPuBCjRd/bzjUXLltJmfFk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=bl8G0I+cjJijgkq0QF1yjzi867NlsmzsB9O//XGhyeh+kIsl6mL2aSFURAp54bh6Q
-         yXqjCVtuus0/Js3Lv4CmekLFwO1rT+EIPTgwTdy25CxQ8cFNheamx9RxO7g3/UJ1Ys
-         9HW2v+VJTZQOgqlpt2a2G8L7Bitoq8j/e03rh+HY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.186.124]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M73XZ-1ircss3Sth-00wjFY; Mon, 25
- May 2020 09:04:47 +0200
-Subject: Re: [PATCH] workqueue: Fix double kfree(rescuer) in
- destroy_workqueue()
-To:     Qiang Zhang <qiang.zhang@windriver.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <96b49f22-50a7-9c8f-7c9d-f178195de717@web.de>
- <69170178-f149-b44b-6465-a4c6ab893d52@windriver.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <cb2735b1-c54a-8746-d776-951081582366@web.de>
-Date:   Mon, 25 May 2020 09:04:46 +0200
+        Mon, 25 May 2020 03:06:04 -0400
+Received: from mail-dm6nam10on2070.outbound.protection.outlook.com ([40.107.93.70]:31514
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388385AbgEYHGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:06:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X3vmwPBEEAOpO61DYGW4UWI6OxorbyS9VH0vgKTR3kJpyO+vyN3HO3WJZY2ZP4P9m01IltaVjN1fVeIkK58g9vVl/dTbpSLyJ3DsYphdNCCgw72fwJmCZvB6n05Kj1VluobZUgRs5kFsIlmA5A9YZnN0xcalcuWOEgs8SSNYt98LhRANv+OWP3uGStwjebfzjLaFsLL3P66vUi2kes0MltWVohx6J3u+W88W9aKm3sHdMQufUoLdhQWyejiyseYRNt5UuZm5LpufGGyRdTOY/DK5KuYc80Se/lYqSTdRH4Y2ZzBgIojXcHROZOeHzXPHAR6ZztJi+zTZAWozmFxVeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fXdo8ctrYhcGYAMJXvPk/EHyvdz5MtQCV3Uoe/dsjpU=;
+ b=atF+xgsj0GfZRkr552Hg7kZ6q2Njfxt1diPFpefWPNidggCF8wRKbcd8RjLLUpTW3xqfFIfHwkCEjV8QMUW64efS+pjaGHEXkSozOUb5IonDVcbdzuheY0QB83adHzS3VGjIK5ju2i9aSPJmOYNWXeLQ35v1CVWBxmPkWhNgh01zxmHHwKMr7PWlrmDfNLeTvPZCZ9iW/U8wUVe0wsrqIkFJueTBDzFUvS5DahFjbxjSxtnNG6SAosGk9f7DbvhEfuKy+a7PyMUuFkYI7Suy8hQ3IKmur+1aUeF2iYOkpXzJFwSty7wcUZ4m2/2nLPpZmcZGCF2ybizXlur982KpVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fXdo8ctrYhcGYAMJXvPk/EHyvdz5MtQCV3Uoe/dsjpU=;
+ b=CR0sQBLGQh/X8xGD7Yz/gU9QnG4GK53KRdmBQf1cgrwRUPNjBx+Go6yVyedRTY+X+p09isRV086wL6Y7Muj3hNxRf2W7cmT498Xw0ZqKdv2bYmWfnVsx1KAOnfafEC3qnnUVkVO6ZBLkmFXa4UEkE7JLX3lcZbUOmw9o4siYLKM=
+Received: from SA9PR10CA0006.namprd10.prod.outlook.com (2603:10b6:806:a7::11)
+ by BY5PR02MB6643.namprd02.prod.outlook.com (2603:10b6:a03:213::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Mon, 25 May
+ 2020 07:06:00 +0000
+Received: from SN1NAM02FT057.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:a7:cafe::a9) by SA9PR10CA0006.outlook.office365.com
+ (2603:10b6:806:a7::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
+ Transport; Mon, 25 May 2020 07:06:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT057.mail.protection.outlook.com (10.152.73.105) with Microsoft SMTP
+ Server id 15.20.3021.23 via Frontend Transport; Mon, 25 May 2020 07:06:00
+ +0000
+Received: from [149.199.38.66] (port=51354 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jd7At-00046f-4s; Mon, 25 May 2020 00:05:27 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jd7BQ-00035S-Ax; Mon, 25 May 2020 00:06:00 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jd7BL-00034i-Pc; Mon, 25 May 2020 00:05:55 -0700
+Subject: Re: [PATCH v2 0/2] drivers: provide devm_platform_request_irq()
+To:     Dejin Zheng <zhengdejin5@gmail.com>, Wolfram Sang <wsa@kernel.org>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        michal.simek@xilinx.com, baruch@tkos.co.il, paul@crapouillou.net,
+        khilman@baylibre.com, shawnguo@kernel.org, festevam@gmail.com,
+        vz@mleia.com, heiko@sntech.de, linus.walleij@linaro.org,
+        baohua@kernel.org, ardb@kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200523145157.16257-1-zhengdejin5@gmail.com>
+ <20200523160828.GE3459@ninjato> <20200523170933.GA16771@nuc8i5>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <ad90d9b5-5906-fef3-85b8-00c7eff70e61@xilinx.com>
+Date:   Mon, 25 May 2020 09:05:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <69170178-f149-b44b-6465-a4c6ab893d52@windriver.com>
+In-Reply-To: <20200523170933.GA16771@nuc8i5>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XM/UPWxEwJSqrzdZtuHujA6YaO0VRSqTgZ3nfEuw0R4TW++3p2d
- +ImW6Zdy9uA3Y17eW8EiS1mIzw5N5HF/jh/MEJ2jz6fVqU4+YQczNtUIpzv18CBDushFfkw
- zTEx2wCShGiCNCZd1VqK1n064T2rmhoJn/FN6gx9OA2ccd4RTdl8GLG+gJ4FVmnVHVw6tPR
- A2FOHvXnRDasILvbyDM4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I9Qr39uPVw0=:/kPg2f8RGNhs8C/ALm6Qyg
- 7VIHMla623sOnEq6dZr3uxnKmE+1cI9TyZGSrlAKdVDq377k6ku0A+H/zpD31VcsV0HF2Jgsd
- 9Hi6Gl0X2oRoYXYyAFtOmCgtwlBsydzvuBBmQkTdSfq4Y7eM4N8O9lZvqRyNxPLiLj3dQtoKG
- guDhio9pPoNr3DjRxa77EOOh268MZ7+qlZDHNBHtaTIrXJkyLgNJ4Zi05HQ4fm5SyOdIQGCAQ
- FeY/WmCrbkoK2XSo9C85EFQNwvWGleMxEIt+9azj+ScTtixOPUAnPw0Ikl1OJdjugXwdE93d3
- rgbekFZwiJXnexQCBzVD0j9RdifQ/9q5x5/x/+xZ2cJaI914SsfdQd0MG+YbqMJ/Lv6CUDxQa
- OZXAg1a9rii4VstZwpok5EmE4wuUnkqomHvRt+MzJwTn8T/xnsVJw4ye3QU97i8V+wfsoufK4
- 31gHMF4giEhLdDIj13TUqUwx5QObWiS6DsSJ57IXgSc5naVkdSrM/ulWoYWu5tnGVAq51dqzX
- 8YRILqH8BVJ4+k101UmmINMJefyZ8r/CozBn9cLznavOqkSfrH2BrP/d09/Sj02+JfI2SP/s3
- D2yPwwPBB7p3qXZfDxCDcTUCGtTFnGrCO7h4wC33Cg4ggzXw6YqMUIH0xeW4XVqfIoHYAh0f4
- pUl94ha3d4wQbBlsGppoML+y2NsrIj2wD8fNagbd/Ev3UtwpqqzBWbTN6AIkt9OR2JDMC1ZX9
- AfeMPzTj4+DVG5gu/hOXTclMgbP32p/NPp0v0gY1vDmbp5YVzji9LqjxJnboE2xxQdqVfZ0ML
- oYA97/F0pNKyRXCqfzwGc+QCA04hZ7hl8AeJJsADl/ZOZBwvWr7YROFQ4WNbboOsPytaldwlk
- VMkLnOaGQgUL+RPxpN4U0ZhFyGZhg6P7Z4HvoNpqQeja93bacphVS3uerXbTN1mhcznqCqxIV
- UrPp9woH8TPIMfrF69jpsh1AxjAAPseBPrFCy/mxwJ5rCkwTsULsWrzAFdZou84Ns8UE2RIMu
- DvEqI9pKhfamaCj2JhAFFRIECa42q56P0kkUdI5PJekviMknirA/VhtnjwyeHV8Zjt9k434JL
- VEPVttZEQtF/KbT/OpTYdrtLgLIODOxiytgLgArqyxCbdzqWJ8dZrgxVftkWDI0eRkSgMNrnr
- HIoBp8smdL+w9Ps2xbVhqNpvfgABydJQLccHQGc/kTGaVgOS+JP4v2qHpQFOjnzbslOAAGTmZ
- HpPbvkjEDh9gns3cV
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(39850400004)(396003)(136003)(376002)(346002)(46966005)(70206006)(70586007)(8676002)(9786002)(31686004)(36756003)(7416002)(356005)(82310400002)(81166007)(4326008)(316002)(336012)(8936002)(426003)(110136005)(5660300002)(2906002)(31696002)(966005)(6666004)(2616005)(44832011)(47076004)(478600001)(82740400003)(26005)(186003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7407a3b9-ecc3-4013-cbc5-08d8007a14c7
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6643:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB6643C1AAAB4632F6229AB334C6B30@BY5PR02MB6643.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0414DF926F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HmIskl1+6bW7Tzk9PM8II2z3ABidVCyc77KXnKlW7FHDmRDCEy7+LVlvEzTvATa+1kNnMUvAsJTiv+tweCoSsXHkZsF511xeBbLGsJPWUJFO6jgDXWnWvlj/IOp++6ZL15u+Tkj5ZuvnR4OTkOEOW6L7W9rFwSkquC1+tJTale7YIiCrqwrgU6QA0fy4ALkgz+SRmwYdIuxiKDoa0a3snd1Lls9tXEpYRaaVjb2sZ4GMSc+uqORAIoUBOErHHjLirjD0AivF/oWgXM7M7RK67eJ9Gf02g75YIiAAgrveF/7mZTFK9CxCzk7q5oAPLyM8DO85a+UxZbgH1RcSNIlJMaYq2VTjY5vBhRCVYq4v/jdqw/aL7+g9TP5mxBAv4TX9Ru0BtdFtFN9YxX6ffZdmYNIZGuwGnHroYXG3Hvt4W2hm+zlzCjzIxCvhjHRlQo+bPyz+Yb9lTNBakoIF9rR81ia6SRaH8qRn/Z1ZnN0PhDH29qG+1yvAGFc1wM4FfCv5
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2020 07:06:00.7313
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7407a3b9-ecc3-4013-cbc5-08d8007a14c7
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6643
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Sorry I didn't describe clearly
->
-> I describe the meaning as follows:
+On 23. 05. 20 19:09, Dejin Zheng wrote:
+> On Sat, May 23, 2020 at 06:08:29PM +0200, Wolfram Sang wrote:
+>> On Sat, May 23, 2020 at 10:51:55PM +0800, Dejin Zheng wrote:
+>>> It will call devm_request_irq() after platform_get_irq() function
+>>> in many drivers, sometimes, it is not right for the error handling
+>>> of these two functions in some drivers. so provide this function
+>>> to simplify the driver.
+>>>
+>>> the first patch will provide devm_platform_request_irq(), and the
+>>> other patch will convert to devm_platform_request_irq() in some
+>>> i2c bus dirver.
+>>>
+>>> v1 -> v2:
+>>> 	- I give up this series of patches in v1 version. I resend this
+>>> 	  patches v2 by that discussion:
+>>> 	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+>>> 	  The patch content has not changed.
+>>
+>> I don't understand. v1 has been nacked because of technical reasons. How
+>> did the discussion above change the situation? Am I missing something?
+>>
+> No, you are not missing something. Maybe I did not explain clearly.
+> 
+> The v1 has been nacked because Grygorii told me that the
+> function platform_get_irq() should be done as early as possible to avoid
+> unnecessary initialization steps, and the function devm_request_irq()
+> should be done late in probe when driver and HW are actually ready to
+> handle IRQs. It can do the other things between the two funtions. I agree
+> with him that it may be necessary in some complex drives. So abandon the
+> patch v1.
+> 
+> Base on the discussion of you and Michal, I think maybe this patch is also
+> needed for the simple driver or the driver of already use it like that:
+> 	
+> 	irq = platform_get_irq(pdev, 0);
+> 	if (irq < 0)
+> 		return irq;
+> 	ret = devm_request_irq()
+> 
+> It provides a common error handling and reduce one function call for each
+> drivers, more easier to use and simplify code. So resend it.
+> 
+> BR,
+> Dejin
+> 
+>>>
+>>> Dejin Zheng (2):
+>>>   drivers: provide devm_platform_request_irq()
+>>>   i2c: busses: convert to devm_platform_request_irq()
+>>>
+>>>  drivers/base/platform.c            | 33 ++++++++++++++++++++++++++++++
+>>>  drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++------------
+>>>  drivers/i2c/busses/i2c-cadence.c   | 10 +++------
+>>>  drivers/i2c/busses/i2c-digicolor.c | 10 +++------
+>>>  drivers/i2c/busses/i2c-emev2.c     |  5 ++---
+>>>  drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
+>>>  drivers/i2c/busses/i2c-meson.c     | 13 ++++--------
+>>>  drivers/i2c/busses/i2c-mxs.c       |  9 +++-----
+>>>  drivers/i2c/busses/i2c-pnx.c       |  9 ++------
+>>>  drivers/i2c/busses/i2c-rcar.c      |  9 +++-----
+>>>  drivers/i2c/busses/i2c-rk3x.c      | 14 +++----------
+>>>  drivers/i2c/busses/i2c-sirf.c      | 10 ++-------
+>>>  drivers/i2c/busses/i2c-stu300.c    |  4 ++--
+>>>  drivers/i2c/busses/i2c-synquacer.c | 12 +++--------
+>>>  include/linux/platform_device.h    |  4 ++++
+>>>  15 files changed, 72 insertions(+), 91 deletions(-)
 
-Can it help to adjust the change description in the way
-that a duplicate memory release should be deleted from the implementation
-of the callback function =E2=80=9Crcu_free_wq=E2=80=9D?
+If you look at all driver except for cadence one it doesn't do any
+change and I can't see any issue with it because sequences are the same
+as were before.
 
-Which commit should be referenced for the tag =E2=80=9CFixes=E2=80=9D?
+Regarding Cadence and Grygorii's comments:
+We are not checking that id->irq is valid that's why even if that fails
+driver continues to work. Which means that this change doesn't increase
+boot time or change code flow.
+On Xilinx devices cadence i2c is connected to ARM GIC which is
+initialized very early and IRC controller should be up and running all
+the time.
+That's why I can't see any issue which this change on Cadence driver too.
 
-Regards,
-Markus
+Thanks,
+Michal
+
+
+
+
