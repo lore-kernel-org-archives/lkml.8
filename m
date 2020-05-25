@@ -2,151 +2,150 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF19C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7554207C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GIlJUKzz"
+	by mail.kernel.org (Postfix) with ESMTP id BA6DD2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 03:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388746AbgEYDMa (ORCPT
+        id S2388758AbgEYDOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 23:12:30 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45320 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388575AbgEYDM3 (ORCPT
+        Sun, 24 May 2020 23:14:17 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47933 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388413AbgEYDOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 23:12:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590376348;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cnz+SecxbJF4VB67gTuVQUxZ7oOwMLV+o3t+dmPe5pU=;
-        b=GIlJUKzzlS9LB2JX9KtglBoDkMHN/kiSeRLdq/IRBCyKt++bA0Oh84vp2wda9xfj5DBba/
-        RnnPme8mGPOM6JyOsxXDYlWUC5Mf5r140iWczvu2Mty/TolXRJbAlWSA2EDhbjf2dkUBwl
-        BukRfNWZ9TnJvVbJoR3rJSJn+KIGNKE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-nEBiy2TBMrq5N4laMrxC4w-1; Sun, 24 May 2020 23:12:26 -0400
-X-MC-Unique: nEBiy2TBMrq5N4laMrxC4w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0919C1009440;
-        Mon, 25 May 2020 03:12:24 +0000 (UTC)
-Received: from [10.72.13.226] (ovpn-13-226.pek2.redhat.com [10.72.13.226])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B1C4B5D9DC;
-        Mon, 25 May 2020 03:12:16 +0000 (UTC)
-Subject: Re: [PATCH 1/2] crypto: virtio: fix src/dst scatterlist calculation
-To:     "Longpeng(Mike)" <longpeng2@huawei.com>,
-        linux-crypto@vger.kernel.org
-Cc:     Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>
-References: <20200525005627.707-1-longpeng2@huawei.com>
- <20200525005627.707-2-longpeng2@huawei.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <25cff618-601c-e899-a3cc-b289863a7407@redhat.com>
-Date:   Mon, 25 May 2020 11:12:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 24 May 2020 23:14:17 -0400
+Received: by mail-io1-f72.google.com with SMTP id v23so11740657ioj.14
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 20:14:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=YSWc34iX3GK8ObMO8XHR5U5QhpSHn1IWPTDBonz04dU=;
+        b=hNDTROQU0Fu8chJTRnHXPmQKfeKVH+tvt1o7gSXiMC6DjdgwEvnEZSIIKknbr2lufx
+         d9T+a8Qb+L8m/wJH6tEPlEYMO1dMnMlBjoOtzdXyftpKHtmxazWvZy2lhw87o1VRZ2Lm
+         PT0A1K1aKQ4ptHW19tRQPXWShGGSDsGkCXYRA4e0PJpPuOnfC0zi3PVS5ddiX2JMft3o
+         /k7EVeSR5wRXIiyv2ucaKNqARQ8guik/SM+STvOx2YW2tHhqOxJgUJgQMxHZZJou53Nn
+         rfUXYOm0Xxlm+OVGgKVdmhhxp2TFzOgfvCMiQgZIXPo2AnsiepyrpZI6r7T3DErduRAv
+         IuWg==
+X-Gm-Message-State: AOAM531oAf0L8pbhu+llfll4wmEkalGxzj8JSSgxYMGwwiEea2747s1k
+        c8i7RXHnWE0FxyKvRfgxZwpdJVrsLU6+BCcCylxKgcw17gnM
+X-Google-Smtp-Source: ABdhPJxsbx6n8x/nMHeqIEt5cap9oSTo8nQK+yklLFkw76SjM625O48upChlWPPuWEq7icEG+0rG9XmUmKJ8XgF+hcCtLsVY/cXz
 MIME-Version: 1.0
-In-Reply-To: <20200525005627.707-2-longpeng2@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Received: by 2002:a5d:914d:: with SMTP id y13mr1544846ioq.48.1590376455857;
+ Sun, 24 May 2020 20:14:15 -0700 (PDT)
+Date:   Sun, 24 May 2020 20:14:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b5f39305a6705fd3@google.com>
+Subject: general protection fault in sock_recvmsg
+From:   syzbot <syzbot+d7cface3f90b13edf5b0@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        mptcp@lists.01.org, netdev@vger.kernel.org, pabeni@redhat.com,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 2020/5/25 上午8:56, Longpeng(Mike) wrote:
-> The system will crash when we insmod crypto/tcrypt.ko whit mode=38.
->
-> Usually the next entry of one sg will be @sg@ + 1, but if this sg element
-> is part of a chained scatterlist, it could jump to the start of a new
-> scatterlist array. Let's fix it by sg_next() on calculation of src/dst
-> scatterlist.
->
-> BTW I add a check for sg_nents_for_len() its return value since
-> sg_nents_for_len() function could fail.
->
-> Cc: Gonglei <arei.gonglei@huawei.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: linux-kernel@vger.kernel.org
->
-> Reported-by: LABBE Corentin <clabbe@baylibre.com>
-> Signed-off-by: Gonglei <arei.gonglei@huawei.com>
-> Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-> ---
->   drivers/crypto/virtio/virtio_crypto_algs.c | 14 ++++++++++----
->   1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-> index 372babb44112..2fa1129f96d6 100644
-> --- a/drivers/crypto/virtio/virtio_crypto_algs.c
-> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-> @@ -359,8 +359,14 @@ __virtio_crypto_skcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
->   	unsigned int num_out = 0, num_in = 0;
->   	int sg_total;
->   	uint8_t *iv;
-> +	struct scatterlist *sg;
->   
->   	src_nents = sg_nents_for_len(req->src, req->cryptlen);
-> +	if (src_nents < 0) {
-> +		pr_err("Invalid number of src SG.\n");
-> +		return src_nents;
-> +	}
-> +
->   	dst_nents = sg_nents(req->dst);
->   
->   	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
-> @@ -446,12 +452,12 @@ __virtio_crypto_skcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
->   	vc_sym_req->iv = iv;
->   
->   	/* Source data */
-> -	for (i = 0; i < src_nents; i++)
-> -		sgs[num_out++] = &req->src[i];
-> +	for (sg = req->src, i = 0; sg && i < src_nents; sg = sg_next(sg), i++)
+syzbot found the following crash on:
+
+HEAD commit:    caffb99b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15a74441100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
+dashboard link: https://syzkaller.appspot.com/bug?extid=d7cface3f90b13edf5b0
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141034ba100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119cd016100000
+
+The bug was bisected to:
+
+commit 263e1201a2c324b60b15ecda5de9ebf1e7293e31
+Author: Paolo Abeni <pabeni@redhat.com>
+Date:   Thu Apr 30 13:01:51 2020 +0000
+
+    mptcp: consolidate synack processing.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119d8626100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=139d8626100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=159d8626100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d7cface3f90b13edf5b0@syzkaller.appspotmail.com
+Fixes: 263e1201a2c3 ("mptcp: consolidate synack processing.")
+
+general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 1 PID: 7226 Comm: syz-executor523 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
+RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
+Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8d 6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
+RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
+RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
+R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
+R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
+FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ mptcp_recvmsg+0x18d5/0x19b0 net/mptcp/protocol.c:891
+ inet_recvmsg+0xf6/0x1d0 net/ipv4/af_inet.c:838
+ sock_recvmsg_nosec net/socket.c:886 [inline]
+ sock_recvmsg net/socket.c:904 [inline]
+ __sys_recvfrom+0x2f3/0x470 net/socket.c:2057
+ __do_sys_recvfrom net/socket.c:2075 [inline]
+ __se_sys_recvfrom net/socket.c:2071 [inline]
+ __x64_sys_recvfrom+0xda/0xf0 net/socket.c:2071
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x448ef9
+Code: e8 cc 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc6a3abdda8 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
+RAX: ffffffffffffffda RBX: 00000000006dec28 RCX: 0000000000448ef9
+RDX: 0000000000001000 RSI: 00000000200004c0 RDI: 0000000000000003
+RBP: 00000000006dec20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000040000000 R11: 0000000000000246 R12: 00000000006dec2c
+R13: 00007ffe4730174f R14: 00007fc6a3abe9c0 R15: 00000000006dec2c
+Modules linked in:
+---[ end trace 097bdf143c3a60db ]---
+RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
+RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
+Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8d 6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
+RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
+RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
+R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
+R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
+FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-Any reason sg is checked here?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I believe it should be checked in sg_nents_for_len().
-
-
-> +		sgs[num_out++] = sg;
->   
->   	/* Destination data */
-> -	for (i = 0; i < dst_nents; i++)
-> -		sgs[num_out + num_in++] = &req->dst[i];
-> +	for (sg = req->dst, i = 0; sg && i < dst_nents; sg = sg_next(sg), i++)
-> +		sgs[num_out + num_in++] = sg;
-
-
-I believe sg should be checked in sg_nents().
-
-Thanks
-
-
->   
->   	/* Status */
->   	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
