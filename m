@@ -2,213 +2,121 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA39C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0176C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE15208A7
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3AB20888
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ej0e13nJ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="enNvc4+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404108AbgEYO7D (ORCPT
+        id S2390998AbgEYO7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:59:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42706 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2403996AbgEYO7D (ORCPT
+        Mon, 25 May 2020 10:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390921AbgEYO7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:59:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590418741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/PbRQvB88ht24b8raCs2Rp+OemoV1xc4Dn7xmItPEjo=;
-        b=Ej0e13nJTXOEmSKCQVitLTSaxaOWYlU6f2xGRXps/mz6leK1roz7oZ6YdZlRYSlW4O7z/r
-        sIC55pqwBqTW2JiQHKq0cCUqE5l0PdteaVjHQ0jKvmy45W9h3sa9fpGS9XKZUEfFklIQ1w
-        Q37f7N7lP+n3YquKJyZOBj7xgUCxovU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-w1L8mdADN4mAprqihsApOw-1; Mon, 25 May 2020 10:58:56 -0400
-X-MC-Unique: w1L8mdADN4mAprqihsApOw-1
-Received: by mail-ej1-f69.google.com with SMTP id h17so37365ejo.21
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:58:56 -0700 (PDT)
+        Mon, 25 May 2020 10:59:08 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDEEC08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:59:08 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m12so18664698ljc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mEbHD2ev263wlFRheDig3n99CabBDelJzVN0Rki9PdU=;
+        b=enNvc4+9hQuIOZOIh3CaF8Xu0UeS+b0QfIV6J5Y+QYtH841jSCEK08HAeRk1to7Ei7
+         mo18xJOlr+wir0EjKge1Voe2Z6a3szF3i50Zj1DIcl2dF4cyHDBAuWKs8XmOR6BD2Uub
+         xef+MqLgkQEgyiJJZTBGfCKGQ2yWMsPHDg7jY+wGy0r4JAaFtWLIcj/WUzNwBYtvtQ/i
+         cSXFVtNNN3PNkIfjSzeLaHI1VJOTBNl0XV0sUEhY3nhCBi/s4KR4ZrlqL17n6HDZSLTU
+         uaQBd1ajC9jkJiXhhkBc8BWDeRk12QnICMUmZf1+eu3v75Jxwzs5IWC2htaEpEslfgcM
+         fVfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=/PbRQvB88ht24b8raCs2Rp+OemoV1xc4Dn7xmItPEjo=;
-        b=jhd2mZipjUsln4s8z7UKZiYbrdU7nIxNPmCLOT+patq8aeg12/XixSKmKGpeD7/fWM
-         vBZKF1XI1jgp/Qlg6Y1oo8dkVa6hNwaSRe8tkz0qVVAbzSpqmxyO4w9v7VoKRc1RisfS
-         JhVxRKyaNFNrbfQKRf13sTKuw27F26sFOMiDXUdfGrNAl+VVFOns7mnNXQYNuiNt+WlC
-         x+qcFRXnUVz1GP01sx3nStZBb0N6TxtxIdhN22xPhYdOuyVQNyQkScNooyO2BhjHCtC0
-         qUjsEzTPbbKPKA0BqXOygxqpfQ50DEH5FbrWnZkFcEkuMHbjZ+fs9TJV0PCl/S4BZk2f
-         NfcA==
-X-Gm-Message-State: AOAM5337yfWVTvYtnVwlFwTNRGaYVSbDk22iwskl2KioZ4ccuR0/7yzl
-        riG/6C0/nm1MPPxaaDmRqhyqdZx+TbDjsktd5xhjFIj2c0mEFNqgrx1iUGVKCsQn6XsDWqR8kxB
-        m18oQvPSBeLACZXnFdd38rSe/
-X-Received: by 2002:a50:ae02:: with SMTP id c2mr15032187edd.373.1590418733891;
-        Mon, 25 May 2020 07:58:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwbhAfQv27YSR8SHsKDaU9868pdSCI+CFNDsQqunB+c4lrCFbVP38Mx6dHQ77pU4fv1zDsTqA==
-X-Received: by 2002:a50:ae02:: with SMTP id c2mr15032176edd.373.1590418733681;
-        Mon, 25 May 2020 07:58:53 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c15sm10946676edm.78.2020.05.25.07.58.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mEbHD2ev263wlFRheDig3n99CabBDelJzVN0Rki9PdU=;
+        b=bCQY0aFFJdNwnDF2UmS/FcJb4iPi4KpBxtsd6bjnwk5hsvGJjXgbd0yIiCzbFLgfYr
+         3QZxEoqzdUsRzyMmiz3A+6K1ZNBmSEFmZr4RftdIzSzrNEilkFETnsUl4Zqp65HQnn1z
+         40uVGkkaTiqsm+humoRIDsTuPi7arz2m7phE+x+rHWASeJhGAtwe0C2nPVzcZYNqc9dv
+         sf34OXnAneSHr9VYE6PAOfYmc+v82SkFijUEQOqzbFrcPKZUEK8cuIdpoI2w9lAAnCTR
+         Lve7ysWz5EOkk4C2OMkLdu9L4OlWCap2RhZI6pYGMze5HUE40y3Cngyylh2UjLoMaLLY
+         TjhA==
+X-Gm-Message-State: AOAM532y8ecJcGB7AzhjuKqcji23ij5awFvy/EQY22WHz1a2S9G5FqZ6
+        gYMsbZtDfa22nhs0qgjj0c+89g==
+X-Google-Smtp-Source: ABdhPJwRf7RFMRCGGPJo5Q4CtZh9c7tpy4gmdWyeTAE62C3TTupgb3dtVWxbju39YxVIt4HlovmXJg==
+X-Received: by 2002:a2e:7619:: with SMTP id r25mr14688414ljc.42.1590418746399;
+        Mon, 25 May 2020 07:59:06 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id w6sm4697970ljw.89.2020.05.25.07.59.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 07:58:53 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe\, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen\, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
-In-Reply-To: <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com> <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
-Date:   Mon, 25 May 2020 16:58:51 +0200
-Message-ID: <87d06s83is.fsf@vitty.brq.redhat.com>
+        Mon, 25 May 2020 07:59:05 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id DFB3F10230F; Mon, 25 May 2020 17:59:06 +0300 (+03)
+Date:   Mon, 25 May 2020 17:59:06 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>, Rik van Riel <riel@redhat.com>,
+        linux-man@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-api@vger.kernel.org, nilal@redhat.com,
+        Florian Weimer <fweimer@redhat.com>,
+        Colm =?utf-8?Q?MacC=C3=A1rtaigh?= <colm@allcosts.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH] proc.5: add "wf" to VmFlags in /proc/[pid]/smaps
+Message-ID: <20200525145906.e5xfzmj6hvl7t4fg@box>
+References: <20200521222551.259804-1-irogers@google.com>
+ <CAP-5=fXjXgWEgp9gqReByrDBTvjDbPEsubeAFxrpxj_+FsFn6w@mail.gmail.com>
+ <1edcb7ac-bc5f-b9ec-a037-656005ae85e3@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1edcb7ac-bc5f-b9ec-a037-656005ae85e3@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Kirill A. Shutemov" <kirill@shutemov.name> writes:
+On Mon, May 25, 2020 at 03:50:38PM +0200, Michael Kerrisk (man-pages) wrote:
+> On 5/22/20 1:13 AM, Ian Rogers wrote:
+> > On Thu, May 21, 2020 at 3:25 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> This patch documents a flag added in the following kernel commit:
+> >>
+> >> commit d2cd9ede6e193dd7d88b6d27399e96229a551b19
+> >> Author: Rik van Riel <riel@redhat.com>
+> >> Date:   Wed Sep 6 16:25:15 2017 -0700
+> >>
+> >>     mm,fork: introduce MADV_WIPEONFORK
+> >>
+> >> This was already documented in man2/madvise.2 in the commit:
+> >>
+> >> commit c0c4f6c29c494c466f3a2a6273c5b55b76a72927
+> >> Author: Rik van Riel <riel@redhat.com>
+> >> Date:   Tue Sep 19 20:32:00 2017 +0200
+> >>
+> >>     madvise.2: Document MADV_WIPEONFORK and MADV_KEEPONFORK
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> > 
+> > Doing a quick audit of fs/proc/task_mmu.c having noticed this flag was
+> > missing I note:
+> >  - "mp" isn't documented, only possible with INTEL_MPX
+> >  - "nl" is documented but not present in show_smap_vma_flags
+> >  - "um" and "uw" aren't documented
+> 
+> I took a shot at fixing these:
+> 
+> 
+>              mp  - MPX-specific VMA (x86, since Linux 3.19)
 
-> Provide basic helpers, KVM_FEATURE and a hypercall.
->
-> Host side doesn't provide the feature yet, so it is a dead code for now.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->  arch/x86/include/asm/kvm_para.h      |  5 +++++
->  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
->  arch/x86/kernel/kvm.c                | 16 ++++++++++++++++
->  include/uapi/linux/kvm_para.h        |  3 ++-
->  4 files changed, 25 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-> index 9b4df6eaa11a..3ce84fc07144 100644
-> --- a/arch/x86/include/asm/kvm_para.h
-> +++ b/arch/x86/include/asm/kvm_para.h
-> @@ -10,11 +10,16 @@ extern void kvmclock_init(void);
->  
->  #ifdef CONFIG_KVM_GUEST
->  bool kvm_check_and_clear_guest_paused(void);
-> +bool kvm_mem_protected(void);
->  #else
->  static inline bool kvm_check_and_clear_guest_paused(void)
->  {
->  	return false;
->  }
-> +static inline bool kvm_mem_protected(void)
-> +{
-> +	return false;
-> +}
->  #endif /* CONFIG_KVM_GUEST */
->  
->  #define KVM_HYPERCALL \
-> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-> index 2a8e0b6b9805..c3b499acc98f 100644
-> --- a/arch/x86/include/uapi/asm/kvm_para.h
-> +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> @@ -28,9 +28,10 @@
->  #define KVM_FEATURE_PV_UNHALT		7
->  #define KVM_FEATURE_PV_TLB_FLUSH	9
->  #define KVM_FEATURE_ASYNC_PF_VMEXIT	10
-> -#define KVM_FEATURE_PV_SEND_IPI	11
-> +#define KVM_FEATURE_PV_SEND_IPI		11
-
-Nit: spurrious change
-
->  #define KVM_FEATURE_POLL_CONTROL	12
->  #define KVM_FEATURE_PV_SCHED_YIELD	13
-> +#define KVM_FEATURE_MEM_PROTECTED	14
->  
->  #define KVM_HINTS_REALTIME      0
->  
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 6efe0410fb72..bda761ca0d26 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -35,6 +35,13 @@
->  #include <asm/tlb.h>
->  #include <asm/cpuidle_haltpoll.h>
->  
-> +static bool mem_protected;
-> +
-> +bool kvm_mem_protected(void)
-> +{
-> +	return mem_protected;
-> +}
-> +
-
-Honestly, I don't see a need for kvm_mem_protected(), just rename the
-bool if you need kvm_ prefix :-)
-
->  static int kvmapf = 1;
->  
->  static int __init parse_no_kvmapf(char *arg)
-> @@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
->  {
->  	kvmclock_init();
->  	x86_platform.apic_post_init = kvm_apic_init;
-> +
-> +	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
-> +		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
-> +			pr_err("Failed to enable KVM memory protection\n");
-> +			return;
-> +		}
-> +
-> +		mem_protected = true;
-> +	}
->  }
-
-Personally, I'd prefer to do this via setting a bit in a KVM-specific
-MSR instead. The benefit is that the guest doesn't need to remember if
-it enabled the feature or not, it can always read the config msr. May
-come handy for e.g. kexec/kdump.
-
->  
->  const __initconst struct hypervisor_x86 x86_hyper_kvm = {
-> diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-> index 8b86609849b9..1a216f32e572 100644
-> --- a/include/uapi/linux/kvm_para.h
-> +++ b/include/uapi/linux/kvm_para.h
-> @@ -27,8 +27,9 @@
->  #define KVM_HC_MIPS_EXIT_VM		7
->  #define KVM_HC_MIPS_CONSOLE_OUTPUT	8
->  #define KVM_HC_CLOCK_PAIRING		9
-> -#define KVM_HC_SEND_IPI		10
-> +#define KVM_HC_SEND_IPI			10
-
-Same spurrious change detected.
-
->  #define KVM_HC_SCHED_YIELD		11
-> +#define KVM_HC_ENABLE_MEM_PROTECTED	12
->  
->  /*
->   * hypercalls use architecture specific
+This one is gone. The patch to remove leftovers of MPX is linux-next.
 
 -- 
-Vitaly
-
+ Kirill A. Shutemov
