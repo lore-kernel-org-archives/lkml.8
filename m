@@ -2,115 +2,99 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF38C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E132071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB302071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 16:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Okfa0myw"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ePS/+uns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391156AbgEYQB7 (ORCPT
+        id S2391162AbgEYQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 12:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388211AbgEYQB6 (ORCPT
+        Mon, 25 May 2020 12:03:30 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35354 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388432AbgEYQDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 12:01:58 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984B9C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:01:58 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id 18so17724117iln.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 09:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ndTklb7/SAZk4bUIoOKID+ziy4QQzei1SxmS+QITaNQ=;
-        b=Okfa0myw3gWvHcsvCG+LrNu8vo8bECwM1NcFblymMQAiGT7+y9eHEr8NC5z6+N8JzK
-         mzlw3h7rltmPg5jkXMl04Me9kIbZlJYjsG8Urh65mRdyktu03LLIpv77czeeIpVw8Sru
-         x6DqR6REiEic6JH/kXXTOsijnyICa34jR95UnPtu86+3N8w52mTLttUjUQRtPFCY/AZA
-         vG6P/pea15LJdJxDU3EvCTPMiuu5DCbxndnPe4cnBnNZF2ZxKEZ4qbok33u/ix0NGgf/
-         NluPSBy63jZnk1Nbp5nADhjP36FybTKqPGJNjjHqjN3ow+fOetbQDP+cAHrBoMqBGVCR
-         wFmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ndTklb7/SAZk4bUIoOKID+ziy4QQzei1SxmS+QITaNQ=;
-        b=T8gGZL1J6JtU/Dgt6Fq8nWSzMpHJ+ZMnVZD3aOze/zNwS8CfF5OXnYdy4nBqTNMDLp
-         yyvNlDr5axqr+kpPDo6ukT8eFNkrHRul9i/xSqjEGFocdi6w56/5HnroQr5l1bcDZPBf
-         iN1Uvg8CB0pQyCnLevwKARVHCHO3xjTgZoP0AyzK55n2YQN01ss0tqlBzUNz+IkKFqZg
-         szoZHREiQw4RTw7rTIzF9rRBfcdmR7rU159GB6sweWau8IAIntTvQeyIk/3HG+ag07Gs
-         Ypp5wInUZnnGltWJcaBmrgeE3hyOIAjH8jtc1tIai9Zhm9yYTFcTiSWjU6j7bEfkwfLG
-         q5pQ==
-X-Gm-Message-State: AOAM53305rgUQpmu2Ad4OVTdQiAJHM7ObPtEMItx14Qy8IX+S/gp8uO+
-        sIBgy6t8s9Un53eobpTwdjLKWagfm0Tf6S6Q/6nOcg==
-X-Google-Smtp-Source: ABdhPJzdCyCnVR8DkEpN7qEDDAtmWOw4EM3xPxchVD4sgi/TBYuoYYkIjzb27DvgzVuornpYLqRjO0idnxc4E75ZQnI=
-X-Received: by 2002:a92:89cf:: with SMTP id w76mr24457702ilk.57.1590422517999;
- Mon, 25 May 2020 09:01:57 -0700 (PDT)
+        Mon, 25 May 2020 12:03:30 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id D135A2E0A38;
+        Mon, 25 May 2020 19:03:26 +0300 (MSK)
+Received: from sas1-9998cec34266.qloud-c.yandex.net (sas1-9998cec34266.qloud-c.yandex.net [2a02:6b8:c14:3a0e:0:640:9998:cec3])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id NAeM9spR5e-3Q20fraS;
+        Mon, 25 May 2020 19:03:26 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1590422606; bh=6fMfPJImAYMqb9DBFtCBybi5ZMOsXbk7TMTbXjcpGFo=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=ePS/+unsDrvrq3Vwpl5SI6hzU95mJcUmrDVWGMj5sCiXLxrSLq6otGZy9jR9sNIIP
+         I6MtIIllcp/4Tdv1K1d40ZgiDZjpanzymxVDyRqtvD7+oNrACrEkAANM3s8ksePrfP
+         lTVrByGVf3zoOsb0ZtF9suzqtH6wzBA5UBLV+BqY=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:603::1:c])
+        by sas1-9998cec34266.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id jmItrKVgv5-3PWS8ElJ;
+        Mon, 25 May 2020 19:03:25 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] mm: dump_page: add debugfs file for dumping page state by
+ pfn
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <159041635119.987025.7321864888027213705.stgit@buzz>
+ <20200525153315.GC17206@bombadil.infradead.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <a5d3f702-62e0-f683-da52-33bc3d1e5976@yandex-team.ru>
+Date:   Mon, 25 May 2020 19:03:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org> <ccfe8a5ede0523436508e31085322ccdab8f972a.1590171891.git.saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <ccfe8a5ede0523436508e31085322ccdab8f972a.1590171891.git.saiprakash.ranjan@codeaurora.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 25 May 2020 10:01:47 -0600
-Message-ID: <CANLsYkwhjbyspLjbnp4XYCcRNFUkBs46QjWYBTza1scGDtNSmQ@mail.gmail.com>
-Subject: Re: [PATCHv3 2/2] dt-bindings: arm: coresight: Add optional property
- to replicators
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200525153315.GC17206@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 at 12:37, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Add an optional boolean property "qcom,replicator-loses-context" to
-> identify replicators which loses context when AMBA clocks are removed
-> in certain configurable replicator designs.
->
-> Reviewed-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 846f6daae71b..b598a5f0037d 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -121,6 +121,12 @@ its hardware characteristcs.
->         * interrupts : Exactly one SPI may be listed for reporting the address
->           error
->
-> +* Optional property for configurable replicators:
-> +
-> +       * qcom,replicator-loses-context: boolean. Indicates that the replicator
-> +         will lose register context when AMBA clock is removed which is observed
-> +         in some replicator designs.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> +
->  Graph bindings for Coresight
->  -------------------------------
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+On 25/05/2020 18.33, Matthew Wilcox wrote:
+> On Mon, May 25, 2020 at 05:19:11PM +0300, Konstantin Khlebnikov wrote:
+>> Tool 'page-types' could list pages mapped by process or file cache pages,
+>> but it shows only limited amount of state exported via procfs.
+>>
+>> Let's employ existing helper dump_page() to reach remaining information:
+>> writing pfn into /sys/kernel/debug/dump_page dumps state into kernel log.
+>>
+>> # echo 0x37c43c > /sys/kernel/debug/dump_page
+>> # dmesg | tail -6
+>>   page:ffffcb0b0df10f00 refcount:1 mapcount:0 mapping:000000007755d3d9 index:0x30
+>>   0xffffffffae4239e0 name:"libGeoIP.so.1.6.9"
+>>   flags: 0x200000000020014(uptodate|lru|mappedtodisk)
+>>   raw: 0200000000020014 ffffcb0b187fd288 ffffcb0b189e6248 ffff9528a04afe10
+>>   raw: 0000000000000030 0000000000000000 00000001ffffffff 0000000000000000
+>>   page dumped because: debugfs request
+> 
+> This makes me deeply uncomfortable.  We're using %px, and %lx
+> (for the 'raw' lines) so we actually get to see kernel addresses.
+> We've rationalised this in the past as being acceptable because you're
+> already in an "assert triggered" kind of situation.  Now you're adding
+> a way for any process with CAP_SYS_ADMIN to get kernel addresses dumped
+> into the syslog.
+> 
+> I think we need a different function for this, or we need to re-audit
+> dump_page() for exposing kernel pointers, and not expose the raw data
+> in struct page.
+> 
+
+It's better to add switch for disabling paranoia if bad things happening.
+I.e. keep everything safe by default (or whatever sysctl/config set) and
+flip the switch when needed.
