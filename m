@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84215C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E79520787
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA31B20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 11:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388733AbgEYLZQ (ORCPT
+        id S2390191AbgEYLZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 07:25:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36936 "EHLO huawei.com"
+        Mon, 25 May 2020 07:25:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47114 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390155AbgEYLZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 07:25:11 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6277791ED5DCDAB77912;
-        Mon, 25 May 2020 19:25:09 +0800 (CST)
+        id S2390173AbgEYLZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 07:25:17 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9506F6CC1EAF105C267D;
+        Mon, 25 May 2020 19:25:14 +0800 (CST)
 Received: from DESKTOP-5IS4806.china.huawei.com (10.173.221.230) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 25 May 2020 19:25:03 +0800
+ 14.3.487.0; Mon, 25 May 2020 19:25:07 +0800
 From:   Keqian Zhu <zhukeqian1@huawei.com>
 To:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -41,11 +41,10 @@ CC:     Catalin Marinas <catalin.marinas@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexios Zavras <alexios.zavras@intel.com>,
         <wanghaibin.wang@huawei.com>, <zhengxiang9@huawei.com>,
-        Keqian Zhu <zhukeqian1@huawei.com>,
-        Peng Liang <liangpeng10@huawei.com>
-Subject: [RFC PATCH 2/7] KVM: arm64: Set DBM bit of PTEs if hw DBM enabled
-Date:   Mon, 25 May 2020 19:24:01 +0800
-Message-ID: <20200525112406.28224-3-zhukeqian1@huawei.com>
+        Keqian Zhu <zhukeqian1@huawei.com>
+Subject: [RFC PATCH 6/7] kvm: arm64: Save stage2 PTE dirty info if it is coverred
+Date:   Mon, 25 May 2020 19:24:05 +0800
+Message-ID: <20200525112406.28224-7-zhukeqian1@huawei.com>
 X-Mailer: git-send-email 2.8.4.windows.1
 In-Reply-To: <20200525112406.28224-1-zhukeqian1@huawei.com>
 References: <20200525112406.28224-1-zhukeqian1@huawei.com>
@@ -58,61 +57,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In user_mem_abort, for normal case (mem_type is PAGE_S2), set DBM bit
-of PTEs if hw DBM enabled. We also check and set DBM bit during write
-protect PTEs to make it works well if we miss some cases.
+kvm_set_pte is called to replace a target PTE with a desired one.
+We always replace it, but if hw DBM is enalbled and dirty info is
+coverred, should let caller know it. Caller can decide to whether
+save the dirty info.
+
+kvm_set_pmd and kvm_set_pud is not modified, because we only use
+DBM in PTEs for now.
 
 Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-Signed-off-by: Peng Liang <liangpeng10@huawei.com>
 ---
- arch/arm64/include/asm/pgtable-prot.h |  1 +
- virt/kvm/arm/mmu.c                    | 14 +++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ virt/kvm/arm/mmu.c | 39 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-index 1305e28225fc..f9910ba2afd8 100644
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -79,6 +79,7 @@ extern bool arm64_use_ng_mappings;
- 	})
- 
- #define PAGE_S2			__pgprot(_PROT_DEFAULT | PAGE_S2_MEMATTR(NORMAL) | PTE_S2_RDONLY | PAGE_S2_XN)
-+#define PAGE_S2_DBM		__pgprot(_PROT_DEFAULT | PAGE_S2_MEMATTR(NORMAL) | PTE_S2_RDONLY | PAGE_S2_XN | PTE_DBM)
- #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PAGE_S2_MEMATTR(DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_S2_XN)
- 
- #define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
 diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index e3b9ee268823..dc97988eb2e0 100644
+index e1d9e4b98cb6..43d89c6333f0 100644
 --- a/virt/kvm/arm/mmu.c
 +++ b/virt/kvm/arm/mmu.c
-@@ -1426,6 +1426,10 @@ static void stage2_wp_ptes(pmd_t *pmd, phys_addr_t addr, phys_addr_t end)
- 	pte = pte_offset_kernel(pmd, addr);
- 	do {
- 		if (!pte_none(*pte)) {
-+#ifdef CONFIG_ARM64_HW_AFDBM
-+			if (kvm_hw_dbm_enabled() && !kvm_s2pte_dbm(pte))
-+				kvm_set_s2pte_dbm(pte);
-+#endif
- 			if (!kvm_s2pte_readonly(pte))
- 				kvm_set_s2pte_readonly(pte);
- 		}
-@@ -1827,7 +1831,15 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+@@ -185,10 +185,34 @@ static void clear_stage2_pmd_entry(struct kvm *kvm, pmd_t *pmd, phys_addr_t addr
+ 	put_page(virt_to_page(pmd));
+ }
  
- 		ret = stage2_set_pmd_huge(kvm, memcache, fault_ipa, &new_pmd);
- 	} else {
--		pte_t new_pte = kvm_pfn_pte(pfn, mem_type);
-+		pte_t new_pte;
+-static inline void kvm_set_pte(pte_t *ptep, pte_t new_pte)
++/*
++ * @ret: true if dirty info is coverred.
++ */
++static inline bool kvm_set_pte(pte_t *ptep, pte_t new_pte)
+ {
++#ifdef CONFIG_ARM64_HW_AFDBM
++	pteval_t old_pteval, new_pteval, pteval;
 +
-+#ifdef CONFIG_ARM64_HW_AFDBM
-+		if (kvm_hw_dbm_enabled() &&
-+		    pgprot_val(mem_type) == pgprot_val(PAGE_S2)) {
-+			mem_type = PAGE_S2_DBM;
-+		}
++	if (!kvm_hw_dbm_enabled() || pte_none(*ptep) ||
++	    !kvm_s2pte_readonly(&new_pte)) {
++		WRITE_ONCE(*ptep, new_pte);
++		dsb(ishst);
++		return false;
++	}
++
++	new_pteval = pte_val(new_pte);
++	pteval = READ_ONCE(pte_val(*ptep));
++	do {
++		old_pteval = pteval;
++		pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, new_pteval);
++	} while (pteval != old_pteval);
++
++	return !kvm_s2pte_readonly((pte_t *)&pteval);
++#else
+ 	WRITE_ONCE(*ptep, new_pte);
+ 	dsb(ishst);
++	return false;
 +#endif
-+		new_pte = kvm_pfn_pte(pfn, mem_type);
+ }
  
- 		if (writable) {
- 			new_pte = kvm_s2pte_mkwrite(new_pte);
+ static inline void kvm_set_pmd(pmd_t *pmdp, pmd_t new_pmd)
+@@ -249,7 +273,10 @@ static void unmap_stage2_ptes(struct kvm *kvm, pmd_t *pmd,
+ 		if (!pte_none(*pte)) {
+ 			pte_t old_pte = *pte;
+ 
+-			kvm_set_pte(pte, __pte(0));
++			if (kvm_set_pte(pte, __pte(0))) {
++				mark_page_dirty(kvm, addr >> PAGE_SHIFT);
++			}
++
+ 			kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 
+ 			/* No need to invalidate the cache for device mappings */
+@@ -1291,13 +1318,17 @@ static int stage2_set_pte(struct kvm *kvm, struct kvm_mmu_memory_cache *cache,
+ 		if (pte_val(old_pte) == pte_val(*new_pte))
+ 			return 0;
+ 
+-		kvm_set_pte(pte, __pte(0));
++		if (kvm_set_pte(pte, __pte(0))) {
++			mark_page_dirty(kvm, addr >> PAGE_SHIFT);
++		}
+ 		kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 	} else {
+ 		get_page(virt_to_page(pte));
+ 	}
+ 
+-	kvm_set_pte(pte, *new_pte);
++	if (kvm_set_pte(pte, *new_pte)) {
++		mark_page_dirty(kvm, addr >> PAGE_SHIFT);
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
