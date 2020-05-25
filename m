@@ -2,111 +2,155 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 00:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B402076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 00:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7CC20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 01:06:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jyLqZWcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388411AbgEYA4x (ORCPT
+        id S2388578AbgEYBG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 May 2020 20:56:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35350 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388300AbgEYA4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 May 2020 20:56:49 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B2A869B05EB5BC246CD8;
-        Mon, 25 May 2020 08:56:46 +0800 (CST)
-Received: from DESKTOP-27KDQMV.china.huawei.com (10.174.151.115) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 25 May 2020 08:56:39 +0800
-From:   "Longpeng(Mike)" <longpeng2@huawei.com>
-To:     <linux-crypto@vger.kernel.org>
-CC:     "Longpeng(Mike)" <longpeng2@huawei.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        LABBE Corentin <clabbe@baylibre.com>
-Subject: [PATCH 2/2] crypto: virtio: fix an memory use-after-free bug
-Date:   Mon, 25 May 2020 08:56:27 +0800
-Message-ID: <20200525005627.707-3-longpeng2@huawei.com>
-X-Mailer: git-send-email 2.25.0.windows.1
-In-Reply-To: <20200525005627.707-1-longpeng2@huawei.com>
-References: <20200525005627.707-1-longpeng2@huawei.com>
+        Sun, 24 May 2020 21:06:56 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3882 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388104AbgEYBG4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 May 2020 21:06:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecb1a230001>; Sun, 24 May 2020 18:06:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 24 May 2020 18:06:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 24 May 2020 18:06:56 -0700
+Received: from [10.2.58.199] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
+ 2020 01:06:55 +0000
+Subject: Re: [linux-next RFC v2] mm/gup.c: Convert to use
+ get_user_{page|pages}_fast_only()
+To:     Souptick Joarder <jrdr.linux@gmail.com>, <paulus@ozlabs.org>,
+        <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
+        <akpm@linux-foundation.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <pbonzini@redhat.com>,
+        <sfr@canb.auug.org.au>, <rppt@linux.ibm.com>,
+        <aneesh.kumar@linux.ibm.com>, <msuchanek@suse.de>
+CC:     <kvm-ppc@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kvm@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>
+References: <1590294434-19125-1-git-send-email-jrdr.linux@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <c70dc7fa-352d-9f61-abb9-d578072978c9@nvidia.com>
+Date:   Sun, 24 May 2020 18:06:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1590294434-19125-1-git-send-email-jrdr.linux@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590368804; bh=EEpIMRcGKaVO5bGQlnRAHw8rtGeOowsYueuXInSPi3s=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jyLqZWcsK7zNDpabMhHdo1b0AlaiipzNPL4HP1LNN3aAKN9MH4cdhH887Q6znc7zJ
+         JRdw0a3NFx7dIJGfKB18HuE0seDEmQ4NNyi6MnWmVQVJOnpx0oa1cbNcN/bXjmiZ/5
+         e80joKTWjrJ35JatB6ckm3S9A4Q0hp9dZMmFwumgFCoM1h1lBsmrEVbAUUAsUU1L2d
+         HiFF/Wcjvzc1L/JFH3pVFbqDknUNJuha89i6LX4NIwNRZ9luqMFsNQJ4aHWuuPBSZn
+         d6Hu/FUFFj73Yj8J/Zk9kJJtkF61iQhaaTt1SXhUOHDEyQxNiGrT55Eyj2aqcUqmIe
+         OtHdXy5DJhJOg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The system'll crash when we insmod crypto/tcrypto.ko with mode=155.
+On 2020-05-23 21:27, Souptick Joarder wrote:
+> API __get_user_pages_fast() renamed to get_user_pages_fast_only()
+> to align with pin_user_pages_fast_only().
+> 
+> As part of this we will get rid of write parameter. Instead caller
+> will pass FOLL_WRITE to get_user_pages_fast_only(). This will not
+> change any existing functionality of the API.
+> 
+> All the callers are changed to pass FOLL_WRITE.
 
-After dig into this case, I find it's caused by reuse the request
-memory.
+This looks good. A few nits below, but with those fixed, feel free to
+add:
 
-In crypto_authenc_init_tfm, we'll set the reqsize to:
-  [PART 1]sizeof(authenc_request_ctx) +
-  [PART 2]ictx->reqoff +
-  [PART 3]MAX(ahash part, skcipher part)
-and the 'PART 3' will be used by both ahash and skcipher.
+     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
-When virtio_crypto driver finish skcipher req, it'll call ->complete
-callback(in crypto_finalize_skcipher_request) and then free its
-resources which pointers are recorded in 'skcipher parts'.
+> 
+> There are few places where 1 is passed to 2nd parameter of
+> __get_user_pages_fast() and return value is checked for 1
+> like [1]. Those are replaced with new inline
+> get_user_page_fast_only().
+> 
+> [1] if (__get_user_pages_fast(hva, 1, 1, &page) == 1)
+> 
 
-However, the ->complete is 'crypto_authenc_encrypt_done' in this case,
-it will use the 'ahash part' of the request and change its content,
-so virtio_crypto driver will get the wrong pointer after ->complete
-finish and mistakenly free some other memory. So the system will crash
-at last when this memory be used again.
+We try to avoid talking *too* much about the previous version of
+the code. Just enough. So, instead of the above two paragraphs,
+I'd compress it down to:
 
-We can free the resources before calling ->complete to fix this issue.
+Also: introduce get_user_page_fast_only(), and use it in a few
+places that hard-code nr_pages to 1.
 
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>                                                                                                                                                                      
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
+...
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 93d93bd..8d4597f 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1817,10 +1817,16 @@ extern int mprotect_fixup(struct vm_area_struct *vma,
+>   /*
+>    * doesn't attempt to fault and will return short.
+>    */
+> -int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+> -			  struct page **pages);
+> +int get_user_pages_fast_only(unsigned long start, int nr_pages,
+> +			unsigned int gup_flags, struct page **pages);
 
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
----
- drivers/crypto/virtio/virtio_crypto_algs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Silly nit:
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 2fa1129f96d6..3800356fb764 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -587,10 +587,11 @@ static void virtio_crypto_skcipher_finalize_req(
- 		scatterwalk_map_and_copy(req->iv, req->dst,
- 					 req->cryptlen - AES_BLOCK_SIZE,
- 					 AES_BLOCK_SIZE, 0);
--	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
--					   req, err);
- 	kzfree(vc_sym_req->iv);
- 	virtcrypto_clear_request(&vc_sym_req->base);
-+
-+	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
-+					   req, err);
- }
- 
- static struct virtio_crypto_algo virtio_crypto_algs[] = { {
+Can you please leave the original indentation in place? I don't normally
+comment about this, but I like the original indentation better, and it matches
+the pin_user_pages_fast() below, too.
+
+...
+> @@ -2786,8 +2792,8 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
+>    * If the architecture does not support this function, simply return with no
+>    * pages pinned.
+>    */
+> -int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+> -			  struct page **pages)
+> +int get_user_pages_fast_only(unsigned long start, int nr_pages,
+> +			unsigned int gup_flags, struct page **pages)
+
+
+Same thing here: you've changed the original indentation, which was (arguably, but
+to my mind anyway) more readable, and for no reason. It still would have fit within
+80 cols.
+
+I'm sure it's a perfect 50/50 mix of people who prefer either indentation style, and
+so for brand new code, I'll remain silent, as long as it is consistent with either
+itself and/or the surrounding code. But changing it back and forth is a bit 
+aggravating, and best avoided. :)
+
+
+thanks,
 -- 
-2.17.1
-
+John Hubbard
+NVIDIA
