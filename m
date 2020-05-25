@@ -2,94 +2,121 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88948C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 686312075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFE82071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="wTKtd1Vj"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="JMKM6a35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgEYEcq (ORCPT
+        id S1728748AbgEYEgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 00:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
+        Mon, 25 May 2020 00:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgEYEcq (ORCPT
+        with ESMTP id S1725858AbgEYEgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 00:32:46 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC30C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:32:44 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b6so19314566ljj.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:32:44 -0700 (PDT)
+        Mon, 25 May 2020 00:36:53 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6751DC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:36:53 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e16so7154025qtg.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:36:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WrUFOLt9W4X7+7Hr4QrlHwXipVvqxmvlL120XbBbrhs=;
-        b=wTKtd1Vjv/ulJ2FRNbEj/4hKXpRQgfTgnSQqG0fgNLk2kydwySZbE6RNq14Nz3V7mT
-         DRaLDFml1j37ovPWa4B0sMa7yINjDPda6OfVIj/IZN+DNBcp/rVx6TOlCRv64xmYWumE
-         M7NHUOVeEsTkw27kZokfduHNoW6jHGHHX08aczLzJiJv60S0E6ph+pMu7+jor0Y59A4H
-         Ix8vOh6ni0QJnJ69+/JY+ySU/SPP0tPNwyJtqxQuK/GB08xYdHAS/fPsuT2da1gGUumf
-         d6cRP7OtTKN4zBS3Zuh9USel6xHpJ51z8oxXrQmZtqP4gmY9X/RhMRI6KB2U7nKovb5Y
-         OCYA==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zBPHTpLy/9QWLr/aIBq8Hs4cOMBIV6k4rc/Eb2CKDIA=;
+        b=JMKM6a35mSptNJYaIw3nBoQMdqoyk7i7z7oZ3Malix0oflaA2hVVapoAirhBvRG3nJ
+         TqYRK55svrq9Neom7Y0qefb5Qj+Z9yDcBEulJYlDWEAe1RBvQvmg1FSttwGxGf0Ojaye
+         +APXz9HZ9uM3MfVfw+Knbzxb0BeQe3WbdNtS0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WrUFOLt9W4X7+7Hr4QrlHwXipVvqxmvlL120XbBbrhs=;
-        b=G3/KqgWu7820HTk+uZUbE0uug0bYFKPq5B5QQncHvOMToNof5n2I4FHBAcqZ6qH11a
-         638f/TzXRqgh8Gs5HfPsr55VfDmGjh13pnn38GUS3XXd4+18hBwaNKjkg/UMKO1AMb+x
-         XuNwaFgcucTZmjPK/YoROTERqj9GZmfO82rom3QN8bFm/lyYZ4Gd4YHU9Oei7RKJsXUD
-         UznJE5biqDFvM8ETep3F5AcxuI2Ic8pej0p2zFcdjdITkY/GPGNpCwD58LpJIO5o8CBy
-         ZhnZRJium3eJa3SCHYAv8Q/Tb/ZBdLu7W5d9hPlMkMGzZ7ogqOReRueuiUDdo8jcLuWw
-         13ZA==
-X-Gm-Message-State: AOAM531Ue7vsZmYmo49tc1gX2AMM5lYFZzHM6tH89aMnsmSvhnrmXXe7
-        1XimJ/Njn/J06Q56cB47U1M6Tg==
-X-Google-Smtp-Source: ABdhPJzZGWVnx2Ety9OdD8HfgyBX70TKROgXrdT6USIyGUjVgUaa7nqQ2ypUdkRt0MksjSbVn1uqnA==
-X-Received: by 2002:a2e:a586:: with SMTP id m6mr6713031ljp.318.1590381162883;
-        Sun, 24 May 2020 21:32:42 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f12sm4446255lfp.8.2020.05.24.21.32.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zBPHTpLy/9QWLr/aIBq8Hs4cOMBIV6k4rc/Eb2CKDIA=;
+        b=YMSGAo7wD5t/6w9fTG3s2FG6eWw84XeBF1Ei4EsdLUhQdW/WQcs8HeGijPAhEIBlD/
+         m/hoFeHgXvblPCxwJYxaPozj6as7UEAYsUDabFOECdl6TddJinjApuAmGMsMRgTsxSZp
+         D6dZ56xYo4V9a4CNitrTBwfO53tWDQFr0jJ0JEOjKmNaVVaemaU5RUWAJw6xusj9wyVy
+         QocfZ5E60d0pp/YXtNrSI7xJc5H/OwdLY7A9nHOdvm13M7jSbVAKw5y459CdmMRX6eYl
+         tXyqddjkjEP5gjyHUToiwEkjWDxggYJpHOuk4QFPgxXMVJ7RNQg/YDuo/RneWdZE+wb9
+         BAPw==
+X-Gm-Message-State: AOAM532NWprfim3/GZhTdkdyHMG91AAm0hZXPBZ/Cai9SkyzHArR+lLH
+        ikQFx52eabyFwJyNA1QzODnII9d+tKk=
+X-Google-Smtp-Source: ABdhPJz7kK8+gBrYJE2/gAEQd8LEG0beqhF9eolqo/LtET8sEp8ucbBAXJSHJ0S21ElLPFxQ0FKIfA==
+X-Received: by 2002:ac8:34d0:: with SMTP id x16mr2216011qtb.300.1590381412275;
+        Sun, 24 May 2020 21:36:52 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g66sm13917019qkb.122.2020.05.24.21.36.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2020 21:32:42 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id D146B1012E6; Mon, 25 May 2020 07:32:42 +0300 (+03)
-Date:   Mon, 25 May 2020 07:32:42 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm,thp: stop leaking unreleased file pages
-Message-ID: <20200525043242.ef2uhn2a4w7xazcx@box>
-References: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
+        Sun, 24 May 2020 21:36:51 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 1/2] rcuperf: Remove useless while loops around wait_event
+Date:   Mon, 25 May 2020 00:36:47 -0400
+Message-Id: <20200525043648.152547-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 06:50:15PM -0700, Hugh Dickins wrote:
-> When collapse_file() calls try_to_release_page(), it has already
-> isolated the page: so if releasing buffers happens to fail (as it
-> sometimes does), remember to putback_lru_page(): otherwise that page is
-> left unreclaimable and unfreeable, and the file extent uncollapsible.
-> 
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-> Cc: stable@vger.kernel.org # v5.4+
+wait_event() already retries if the condition for the wake up is not
+satisifed after wake up. Remove them from the rcuperf test.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
+---
+ kernel/rcu/rcuperf.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 16dd1e6b7c09f..246da8fe199e8 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -576,11 +576,8 @@ static int compute_real(int n)
+ static int
+ rcu_perf_shutdown(void *arg)
+ {
+-	do {
+-		wait_event(shutdown_wq,
+-			   atomic_read(&n_rcu_perf_writer_finished) >=
+-			   nrealwriters);
+-	} while (atomic_read(&n_rcu_perf_writer_finished) < nrealwriters);
++	wait_event(shutdown_wq,
++		   atomic_read(&n_rcu_perf_writer_finished) >= nrealwriters);
+ 	smp_mb(); /* Wake before output. */
+ 	rcu_perf_cleanup();
+ 	kernel_power_off();
+@@ -693,11 +690,8 @@ kfree_perf_cleanup(void)
+ static int
+ kfree_perf_shutdown(void *arg)
+ {
+-	do {
+-		wait_event(shutdown_wq,
+-			   atomic_read(&n_kfree_perf_thread_ended) >=
+-			   kfree_nrealthreads);
+-	} while (atomic_read(&n_kfree_perf_thread_ended) < kfree_nrealthreads);
++	wait_event(shutdown_wq,
++		   atomic_read(&n_kfree_perf_thread_ended) >= kfree_nrealthreads);
+ 
+ 	smp_mb(); /* Wake before output. */
+ 
 -- 
- Kirill A. Shutemov
+2.27.0.rc0.183.gde8f92d652-goog
+
