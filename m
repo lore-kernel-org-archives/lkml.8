@@ -2,124 +2,134 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3667820787
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xuSjLVqd"
+	by mail.kernel.org (Postfix) with ESMTP id 931BC2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 09:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590398243;
+	bh=dvoIblhrB6r6q1w4YgHnKBzB3u8MDjy2EHOsa4SWZok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=l5PC5kBNp7dGWGTXqG06R+ClCT1p3crHW+hc7ysDrOqALLHXfIAnZ+SRxIC9lDA8X
+	 R3PbAPklovBt8z4ygsmiGapEHMiTC6jmh01bD2wwDoeH5/VQkBNiWQ7ipwmUGCp6Jq
+	 KDfvONzkQbzvrS4spaByg0uj2xhbEODK2PERSx9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389467AbgEYJRS (ORCPT
+        id S2389483AbgEYJRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 05:17:18 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53186 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389454AbgEYJRP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 05:17:15 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04P9H3Va076879;
-        Mon, 25 May 2020 04:17:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590398223;
-        bh=vZHWXLCtyhdJG9oIb95lQ7NP/FmYNPGx8pS+OBRUJx0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xuSjLVqdL/uD6awLR/47Z619GCwtC2Dif5V8LIxo79ScdQzmwOPLk8pIosjOp6ieh
-         YpLTfax1YdafoLeAraxM1vxWxl5XayULQcuWIULzbRaF2lKWWIH7WWp7BaT909LPUg
-         Ya9NmSYYWkZIPXNfI0/9WTBa1r3m5OGvRZW7iPJI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9H2qe018675;
-        Mon, 25 May 2020 04:17:03 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 25
- May 2020 04:17:02 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 25 May 2020 04:17:02 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04P9FjAD034800;
-        Mon, 25 May 2020 04:16:57 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v9 13/19] mtd: spi-nor: sfdp: do not make invalid quad enable fatal
-Date:   Mon, 25 May 2020 14:45:38 +0530
-Message-ID: <20200525091544.17270-14-p.yadav@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200525091544.17270-1-p.yadav@ti.com>
-References: <20200525091544.17270-1-p.yadav@ti.com>
+        Mon, 25 May 2020 05:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389454AbgEYJRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 05:17:21 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01ED020787;
+        Mon, 25 May 2020 09:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590398241;
+        bh=dvoIblhrB6r6q1w4YgHnKBzB3u8MDjy2EHOsa4SWZok=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tXnRIYphXASv22/CWUBMA4CPRNsDbUMhgCnKjxTTC6dq9DDNazs1+GztuGsokQpEJ
+         72QM5aF0JoA15SMnoO0AX6SPOL6GCj0SXNeERYxlYPaPRT7hQ4f+IaxJUF+lIYihOX
+         pyq7Ce4X2AFg/w1e44/Sm5YB7VXDDhAc7W7i/lfo=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jd9EU-00F730-Ux; Mon, 25 May 2020 10:17:19 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 25 May 2020 10:17:18 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Richard Cochran <richardcochran@gmail.com>,
+        Jianyong Wu <jianyong.wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, Mark.Rutland@arm.com,
+        will@kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        Wei.Chen@arm.com, nd@arm.com
+Subject: Re: [RFC PATCH v12 10/11] arm64: add mechanism to let user choose
+ which counter to return
+In-Reply-To: <20200524021106.GC335@localhost>
+References: <20200522083724.38182-1-jianyong.wu@arm.com>
+ <20200522083724.38182-11-jianyong.wu@arm.com>
+ <20200524021106.GC335@localhost>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <306951e4945b9e486dc98818ba24466d@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: richardcochran@gmail.com, jianyong.wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com, steven.price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com, Wei.Chen@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Micron MT35XU512ABA flash does not support the quad enable bit. But
-instead of programming the Quad Enable Require field to 000b ("Device
-does not have a QE bit"), it is programmed to 111b ("Reserved").
+On 2020-05-24 03:11, Richard Cochran wrote:
+> On Fri, May 22, 2020 at 04:37:23PM +0800, Jianyong Wu wrote:
+>> In general, vm inside will use virtual counter compered with host use
+>> phyical counter. But in some special scenarios, like nested
+>> virtualization, phyical counter maybe used by vm. A interface added in
+>> ptp_kvm driver to offer a mechanism to let user choose which counter
+>> should be return from host.
+> 
+> Sounds like you have two time sources, one for normal guest, and one
+> for nested.  Why not simply offer the correct one to user space
+> automatically?  If that cannot be done, then just offer two PHC
+> devices with descriptive names.
 
-While this is technically incorrect, it is not reason enough to abort
-BFPT parsing. Instead, continue BFPT parsing assuming there is no quad
-enable bit present.
+There is no such thing as a distinction between nested or non-nested.
+Both counters are available to the guest at all times, and said guest
+can choose whichever it wants to use. So the hypervisor (KVM) has to
+support both counters as a reference.
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
----
- drivers/mtd/spi-nor/sfdp.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+For a Linux guest, we always know which reference we're using (the
+virtual counter). So it is pointless to expose the choice to userspace
+at all.
 
-diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-index 052cabb52df9..9fd3d8d9a127 100644
---- a/drivers/mtd/spi-nor/sfdp.c
-+++ b/drivers/mtd/spi-nor/sfdp.c
-@@ -576,10 +576,6 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 
- 	/* Quad Enable Requirements. */
- 	switch (bfpt.dwords[BFPT_DWORD(15)] & BFPT_DWORD15_QER_MASK) {
--	case BFPT_DWORD15_QER_NONE:
--		params->quad_enable = NULL;
--		break;
--
- 	case BFPT_DWORD15_QER_SR2_BIT1_BUGGY:
- 		/*
- 		 * Writing only one byte to the Status Register has the
-@@ -616,8 +612,10 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 		params->quad_enable = spi_nor_sr2_bit1_quad_enable;
- 		break;
- 
-+	case BFPT_DWORD15_QER_NONE:
- 	default:
--		return -EINVAL;
-+		params->quad_enable = NULL;
-+		break;
- 	}
- 
- 	/* Stop here if JESD216 rev B. */
+> 
+>> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+>> index fef72f29f3c8..8b0a7b328bcd 100644
+>> --- a/drivers/ptp/ptp_chardev.c
+>> +++ b/drivers/ptp/ptp_chardev.c
+>> @@ -123,6 +123,9 @@ long ptp_ioctl(struct posix_clock *pc, unsigned 
+>> int cmd, unsigned long arg)
+>>  	struct timespec64 ts;
+>>  	int enable, err = 0;
+>> 
+>> +#ifdef CONFIG_ARM64
+>> +	static long flag;
+> 
+> static?  This is not going to fly.
+> 
+>> +		 * In most cases, we just need virtual counter from host and
+>> +		 * there is limited scenario using this to get physical counter
+>> +		 * in guest.
+>> +		 * Be careful to use this as there is no way to set it back
+>> +		 * unless you reinstall the module.
+> 
+> How on earth is the user supposed to know this?
+> 
+> From your description, this "flag" really should be a module
+> parameter.
+
+Not even that. If anything, the driver can obtain full knowledge of 
+which
+counter is in use without any help. And the hard truth is that it is
+*always* the virtual counter as far as Linux is concerned.
+
+         M.
 -- 
-2.26.2
-
+Jazz is not dead. It just smells funny...
