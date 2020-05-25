@@ -2,108 +2,175 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ECDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8579C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD5F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:03:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TQHZ1bse"
+	by mail.kernel.org (Postfix) with ESMTP id 9434D207C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 13:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390734AbgEYNDn (ORCPT
+        id S2390745AbgEYNDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 09:03:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388757AbgEYNDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 09:03:43 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CEBC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:03:42 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id a23so13732541qto.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 06:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l8DtLHa85gJVAwQ0kwg15axaycizXM27g5I12GoSRmo=;
-        b=TQHZ1bseJ27nGYaagMlYvaDubSiL2Uit4y2PJfMQznPas6SqYWT9TulWbeGas5mJ9v
-         2yytZorNLW6P6j4w5oYubQzVbRge+VdVCBHL7HlqQXXFNNLjq9NYzmLUNfVOEAUNGgLz
-         1oWKuiBoq9InlofxCd75JtdreffEadOMEM3MmiJBZWuSzbLkWS8BcmYMeNdidRkFV28t
-         KdmyLWruCFvuGTI2xuxUFYhycaGjGvROPZE1pcZBIsQA4tVGgLQvZEytnjQ/+QpS2TSP
-         7R+HtJoBYF5Cg93n5Hm35ytWNR0ocSGcr4KG/IIk4vFz2X+VE2T+ZYZKqWE1BuGGx8Hy
-         Cbow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l8DtLHa85gJVAwQ0kwg15axaycizXM27g5I12GoSRmo=;
-        b=WrGlskTcjdvME6o+WUf9S3NAiKcsuIfgEzKphYwaRBq1Fhh2ME9eWQx4SJBKXlwRI/
-         QZFXfwKPGe34/HMAmzW/mLwfEoBtZ1pEmrWH9zmRG2ND+sZQjOFwDHPBQEK/jTL38wIL
-         5OGsehlNfh3k8tRET9JCtks5M/mnz8S9U4zZIQMayazK699K4QbdlcAiIkWow893E7xl
-         7Fb+w8lkwV79qADy3IfoNFGyFmlXLdWKxCwJPea78+qyI0OYUtToMZPhKERTV1T1gcc7
-         OL5a52N3pKkdcASyCmDS0Vrv988e5/wwg5OUd9+CK0mNVYGZVBrc0435hybhAh/X5iCC
-         /K8w==
-X-Gm-Message-State: AOAM53365FKwzRaeTCAK7iU21x7Z9bS24yQSPfZVVZvpIsjzTuh8feYn
-        0sG28D3OzImYdbCbCIdQRHKY6A==
-X-Google-Smtp-Source: ABdhPJyZ4IT+0r7ySKwikREH5gDy81VkOMFbpJ1aybPDtbwvirwWq0ysKv73Xy77i+ZrWhpQ00H17A==
-X-Received: by 2002:ac8:6e82:: with SMTP id c2mr28826003qtv.155.1590411822178;
-        Mon, 25 May 2020 06:03:42 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id x205sm14649646qka.12.2020.05.25.06.03.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 06:03:41 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jdClY-0008JS-Mx; Mon, 25 May 2020 10:03:40 -0300
-Date:   Mon, 25 May 2020 10:03:40 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     wu000273@umn.edu
-Cc:     dledford@redhat.com, leon@kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kjlu@umn.edu
-Subject: Re: [PATCH] RDMA/core: fix missing release in add_port.
-Message-ID: <20200525130340.GD744@ziepe.ca>
-References: <20200525060656.2478-1-wu000273@umn.edu>
+        Mon, 25 May 2020 09:03:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34276 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388757AbgEYNDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 09:03:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A5D8BABC2;
+        Mon, 25 May 2020 13:03:52 +0000 (UTC)
+Subject: Re: [PATCH 05/16] bcache: use bio_{start,end}_io_acct
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-bcache@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+References: <20200525113014.345997-1-hch@lst.de>
+ <20200525113014.345997-6-hch@lst.de>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ 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
+Message-ID: <85828157-ac53-57e8-1a27-068478ab5f5c@suse.de>
+Date:   Mon, 25 May 2020 21:03:39 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525060656.2478-1-wu000273@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200525113014.345997-6-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 01:06:56AM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
+On 2020/5/25 19:30, Christoph Hellwig wrote:
+> Switch bcache to use the nicer bio accounting helpers, and call the
+> routines where we also sample the start time to give coherent accounting
+> results.
 > 
-> In function add_port(), pointer p is not released in error paths.
-> Fix this issue by adding a kfree(p) into the end of error path.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Acked-by: Coly Li <colyli@suse.de>
+
+
+Coly Li
+
+> ---
+>  drivers/md/bcache/request.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
 > 
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
->  drivers/infiniband/core/sysfs.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-> index 087682e6969e..04a003378dfc 100644
-> +++ b/drivers/infiniband/core/sysfs.c
-> @@ -1202,6 +1202,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
+> diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
+> index 77d1a26975174..22b483527176b 100644
+> --- a/drivers/md/bcache/request.c
+> +++ b/drivers/md/bcache/request.c
+> @@ -668,9 +668,7 @@ static void backing_request_endio(struct bio *bio)
+>  static void bio_complete(struct search *s)
+>  {
+>  	if (s->orig_bio) {
+> -		generic_end_io_acct(s->d->disk->queue, bio_op(s->orig_bio),
+> -				    &s->d->disk->part0, s->start_time);
+> -
+> +		bio_end_io_acct(s->orig_bio, s->start_time);
+>  		trace_bcache_request_end(s->d, s->orig_bio);
+>  		s->orig_bio->bi_status = s->iop.status;
+>  		bio_endio(s->orig_bio);
+> @@ -730,7 +728,7 @@ static inline struct search *search_alloc(struct bio *bio,
+>  	s->recoverable		= 1;
+>  	s->write		= op_is_write(bio_op(bio));
+>  	s->read_dirty_data	= 0;
+> -	s->start_time		= jiffies;
+> +	s->start_time		= bio_start_io_acct(bio);
 >  
->  err_put:
->  	kobject_put(&p->kobj);
-> +	kfree(p);
->  	return ret;
->  }
+>  	s->iop.c		= d->c;
+>  	s->iop.bio		= NULL;
+> @@ -1082,8 +1080,7 @@ static void detached_dev_end_io(struct bio *bio)
+>  	bio->bi_end_io = ddip->bi_end_io;
+>  	bio->bi_private = ddip->bi_private;
+>  
+> -	generic_end_io_acct(ddip->d->disk->queue, bio_op(bio),
+> -			    &ddip->d->disk->part0, ddip->start_time);
+> +	bio_end_io_acct(bio, ddip->start_time);
+>  
+>  	if (bio->bi_status) {
+>  		struct cached_dev *dc = container_of(ddip->d,
+> @@ -1108,7 +1105,7 @@ static void detached_dev_do_request(struct bcache_device *d, struct bio *bio)
+>  	 */
+>  	ddip = kzalloc(sizeof(struct detached_dev_io_private), GFP_NOIO);
+>  	ddip->d = d;
+> -	ddip->start_time = jiffies;
+> +	ddip->start_time = bio_start_io_acct(bio);
+>  	ddip->bi_end_io = bio->bi_end_io;
+>  	ddip->bi_private = bio->bi_private;
+>  	bio->bi_end_io = detached_dev_end_io;
+> @@ -1190,11 +1187,6 @@ blk_qc_t cached_dev_make_request(struct request_queue *q, struct bio *bio)
+>  		}
+>  	}
+>  
+> -	generic_start_io_acct(q,
+> -			      bio_op(bio),
+> -			      bio_sectors(bio),
+> -			      &d->disk->part0);
+> -
+>  	bio_set_dev(bio, dc->bdev);
+>  	bio->bi_iter.bi_sector += dc->sb.data_offset;
+>  
+> @@ -1311,8 +1303,6 @@ blk_qc_t flash_dev_make_request(struct request_queue *q, struct bio *bio)
+>  		return BLK_QC_T_NONE;
+>  	}
+>  
+> -	generic_start_io_acct(q, bio_op(bio), bio_sectors(bio), &d->disk->part0);
+> -
+>  	s = search_alloc(bio, d);
+>  	cl = &s->cl;
+>  	bio = &s->bio.bio;
+> 
 
-Er, no, kobject_put does the kfree
-
-There is a bug here, it is calling kfree() after kobject_init_and_add
-fails, which is wrong, it should be goto err_put
-
-Jason
