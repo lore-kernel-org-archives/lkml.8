@@ -2,131 +2,69 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBEE207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Chwl/QQx"
+	by mail.kernel.org (Postfix) with ESMTP id 8C70C20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 18:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389100AbgEYSSs (ORCPT
+        id S2389240AbgEYSYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 14:18:48 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15068 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387644AbgEYSSr (ORCPT
+        Mon, 25 May 2020 14:24:32 -0400
+Received: from smtprelay0220.hostedemail.com ([216.40.44.220]:57382 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387644AbgEYSYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 14:18:47 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecc0bfb0000>; Mon, 25 May 2020 11:18:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 25 May 2020 11:18:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 25 May 2020 11:18:47 -0700
-Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 May
- 2020 18:18:47 +0000
-Subject: Re: linux-next: build failure after merge of the akpm tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michel Lespinasse <walken@google.com>
-References: <20200525221700.0aa347f7@canb.auug.org.au>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <4e1d8a9d-e308-df6a-6921-dbbe8d5f8389@nvidia.com>
-Date:   Mon, 25 May 2020 11:18:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 25 May 2020 14:24:31 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id D8289837F24A;
+        Mon, 25 May 2020 18:24:30 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: boy42_4301fb626d43
+X-Filterd-Recvd-Size: 1665
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 May 2020 18:24:29 +0000 (UTC)
+Message-ID: <7b93effe211b5439b6b8697e8ed3a2b070bfbb31.camel@perches.com>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: documentation
+From:   Joe Perches <joe@perches.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 25 May 2020 11:24:28 -0700
+In-Reply-To: <0b3b5ae5-457a-b550-63a8-08a77bb862d7@al2klimov.de>
+References: <20200520200037.88705-1-grandmaster@al2klimov.de>
+         <20200525102825.63d72ed2@lwn.net>
+         <0b3b5ae5-457a-b550-63a8-08a77bb862d7@al2klimov.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <20200525221700.0aa347f7@canb.auug.org.au>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590430715; bh=B44ZR8YbjlxZaVO8MV90cF+K5/pLr/M0ZkZHcJrr5JU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Chwl/QQxWSGf/T6mUMGZUo+dcs0yENwHSyinp5sOP7wXPjA+WAQ5/C+7JSw8a3qW6
-         fy1IZHRHRsTO6uHbr8wm1w6PW0cp4tEZ4Fn6MCK7JnqIMZgsvfjfh+46e8tuoh5U9Y
-         WuSVqIOkW3A7EN5pWAW9ZPZanPCzeMRcJKz5Oc8daChIpVKFzadnBcuON+SsDDAKFe
-         Hv6Rn1ScfdEMhf+syHvLggwSZhtX3IsSQcrp9+TEnRSTiQDarjiHst07JMYpB3rEKX
-         iN4hnK2uFX3tyqt1c05Q4XoljYiyi7HLEtaFSe+TO/v/fQOxVcZ1sVmBUxD60l2YQU
-         kLtOD1lUxtE+Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-25 05:17, Stephen Rothwell wrote:
-> Hi all,
+On Mon, 2020-05-25 at 20:01 +0200, Alexander A. Klimov wrote:
+> Does it matter whether I just feed the output of ...
 > 
-> After merging the akpm tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+> perl scripts/get_maintainer.pl --separator , --norolestats 
+> 0001-Replace-HTTP-links-with-HTTPS-ones-documentation.patch
 > 
-> In file included from include/linux/kernel.h:14,
->                   from mm/gup.c:2:
-> mm/gup.c: In function 'internal_get_user_pages_fast':
-> mm/gup.c:2732:33: error: 'struct mm_struct' has no member named 'mmap_sem'; did you mean 'mmap_base'?
->   2732 |   might_lock_read(&current->mm->mmap_sem);
->        |                                 ^~~~~~~~
-> 
-> Caused by commit
-> 
->    64fe66e8a95e ("mmap locking API: rename mmap_sem to mmap_lock")
-> 
-> fron the akpm tree interacting with commit
-> 
->    b1fc8b5ddb4e ("mm/gup: might_lock_read(mmap_sem) in get_user_pages_fast()")
-> 
-> from the akpm-current tree.
-> 
-> I added the following patch for today.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 25 May 2020 22:11:51 +1000
-> Subject: [PATCH] mm/gup: update for mmap_sem rename
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->   mm/gup.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8977e5fe9843..f4bca3de0b4b 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2729,7 +2729,7 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
->   		return -EINVAL;
->   
->   	if (!(gup_flags & FOLL_FAST_ONLY))
-> -		might_lock_read(&current->mm->mmap_sem);
-> +		might_lock_read(&current->mm->mmap_lock);
->   
->   	start = untagged_addr(start) & PAGE_MASK;
->   	addr = start;
-> 
+> ... into Git send-email To: prompt or actually CC: (not To:) mailing lists?
 
-Yes, looks good. And in fact, Andrew has the same fix-up in the mmotm branch of
-linux-next.git, as
+Yes.  vger mailing lists drop emails with large to:/cc:
+headers (It was >1024 chars, it may be different now)
 
-     commit a76c281a8ddd ("mmap-locking-api-rename-mmap_sem-to-mmap_lock-fix").
+It's generally better to add --nogit --nogit-fallback to
+get_maintainer to avoid the git lookup addition of people
+that have modified files that aren't listed in MAINTAINERS.
 
+You could add a --bcc with those dropped names if you
+really want to have those people receive the emails.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
