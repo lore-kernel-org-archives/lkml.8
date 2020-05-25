@@ -8,73 +8,71 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B26C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA66C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560B7206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852452071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3m9JiCz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0Dm69Md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389232AbgEYVtK (ORCPT
+        id S2389295AbgEYVuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 17:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59786 "EHLO
+        Mon, 25 May 2020 17:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731473AbgEYVsP (ORCPT
+        with ESMTP id S1729559AbgEYVuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 17:48:15 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88664C061A0E;
-        Mon, 25 May 2020 14:48:15 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m12so19757198ljc.6;
-        Mon, 25 May 2020 14:48:15 -0700 (PDT)
+        Mon, 25 May 2020 17:50:12 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61406C08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 14:50:11 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z6so22118523ljm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 14:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4AXOThceM9HQTaD/1C2DnJHW4BibV/GSMKqCaOTg8gw=;
-        b=P3m9JiCzUkqtxpY3mGwyXff/VaAi3lP8/Tw+HlJuwPCpcTr92OEkjgnqiZ51xr+MHa
-         z49tq0aEIaaYGJKwcR6O6FW9FIExXQV1fFTdIfYDAjMWi+wCwWncxFYb/JFPYlqTXRBy
-         VCUuHP7h++feYt4Np0dchSCZwta7xjAVajnIwZR8hWoZ/a7tG+J8V6FMvgGM7Rez+tsl
-         wfN00uPkBMigNVhsfJGkkX+qjkKyweTM+CS6DU1+ugrgKsVomI/1uCAPxvj8+xcLvX8e
-         lfWO+lPdcbH1PdVu9/kxMln3KnnoOJJqj1I0kKe/FE6oBlUYB4pysxmaQ+FYMmGNX0WT
-         dmbQ==
+        bh=iEiJkh8NOisGzIdjA2H8Ok8XHFo6aNWnpKwvRPxnlbI=;
+        b=F0Dm69MdRLl1SxBsFc77E4osmjMTyNBL9fquMX9me9JytXqkrntX0IB1ESMq2khzr5
+         yLJvt9nWa+eIDZ6fzdHAf82L5UJYn06C4sRahqCU0cBjfLoCgHmNaxq0KFTJFaRCvXhc
+         Ftu6ItywBCl7PQFZY6hSErjbpHd5VzG+rqhCvHoAHTZ7BarMhuHbAH4mXP8hZ4WgYUZW
+         2VgnUpRQ+CXevOpYJQNKZiTj+SRdLTbMIa8E98zZl0B6You97hjFSK3purxPAfsjk5b0
+         qrLy3Fs+ur2e3NrQEFbAmjpBlKFq1GiP59sap03Fh4plngauYBQh0O0lzlGnB4lwMdw3
+         vavA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4AXOThceM9HQTaD/1C2DnJHW4BibV/GSMKqCaOTg8gw=;
-        b=Hm0BA7XIlzBDC74czRdDU5cRD0P4b2obQtazJ+tdE+65nfZNdFqv8/0U6TdfmA0UwY
-         WlqNYS9bm1oMHpXnNGsaddZuFfFBuhSPHxi1e+B8MyLKdy9sU/mbUR1Vob4yrAU/TzxV
-         dFWC5qeOxswuOtdaNTVGxfSJERd5I7gyiZLV6mi1JgEwJZfpNcd/0ELsdtkWWA8mXs+d
-         dceAA6uMCITMNDTB9V3AJCpweMNOxb8E6XfSdA9uUCEx9XDtA1Bd/JA4ukKL9Czj8hK0
-         +WOpj6avS2TrkpIcI7gWogfMVGyUlW9E9PmEdXCy2wr0jFjLB6ri3UbkHCuzqd0vEhze
-         qoGg==
-X-Gm-Message-State: AOAM5312HhS9vgZH/tt6lXanyBFrp5W1TjEmCAE8Jsqz5OB4kcJDmI2g
-        nbBSXjgvdwfQzF31595xxhz/+i2s0NsAVw==
-X-Google-Smtp-Source: ABdhPJwoXkLN/yki/p/Nl7rk5K8p4UfzLX1z4H8VqCpUnDmQzGXhiEVBIV01t81o4vGj/zpvUKz2og==
-X-Received: by 2002:a2e:9910:: with SMTP id v16mr14937280lji.213.1590443293740;
-        Mon, 25 May 2020 14:48:13 -0700 (PDT)
-Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id a6sm2280044lji.29.2020.05.25.14.48.12
+        bh=iEiJkh8NOisGzIdjA2H8Ok8XHFo6aNWnpKwvRPxnlbI=;
+        b=om//RroKLE6+8s7kz2AZS8HsW8G/IjVuIaBA/QKoFqwr6iC06Alj7Uu2ywhAnXwNW0
+         ZVE7kaBnMnkzsqlXFCgnPSt0/l1m0VmSnoa0dpswVKaFloIFKa3sVGuNJOGWmc7nWjtc
+         r4IbMPuW94dfphoqemDGSFM9DwGO+0Vkn2vuXLWlUQTd92WwaSObpHnHQbYeWQsWyDbN
+         vxEfwtj04Okd7xlj+2Lz0/vV6y4drTnC39YfQiZOIPyFUxo+xluQGXSPbLXvAD96595G
+         wOg+QGN2hwznU4Et6Wc25h/CMbgj2dvxsoeGqzTn1f4UUjpkTViFMYu61fpbQauHGrw0
+         phhg==
+X-Gm-Message-State: AOAM532CaHPsn4GjCD/HaQp+P2v1Pss+Sbc5UrlbJR0q7bZomgzdKIw9
+        L72WMRwUIULKC/3kU0c0rO8=
+X-Google-Smtp-Source: ABdhPJyP8HJlSTai+vcBxS4V7LXTWrEOfp1rNKWJ8hrEnvT9KdNn/GE2gqtjW3JuXID/TJTQaI/afw==
+X-Received: by 2002:a2e:8e28:: with SMTP id r8mr13086965ljk.460.1590443409926;
+        Mon, 25 May 2020 14:50:09 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
+        by smtp.gmail.com with ESMTPSA id e21sm3893338ljj.86.2020.05.25.14.50.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 14:48:13 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH v2 03/16] rcu/tree: Repeat the monitor if any free channel is busy
-Date:   Mon, 25 May 2020 23:47:47 +0200
-Message-Id: <20200525214800.93072-4-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200525214800.93072-1-urezki@gmail.com>
-References: <20200525214800.93072-1-urezki@gmail.com>
+        Mon, 25 May 2020 14:50:09 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 2/2] iommu/sun50i: Constify sun50i_iommu_ops
+Date:   Mon, 25 May 2020 23:49:58 +0200
+Message-Id: <20200525214958.30015-3-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
+References: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,52 +80,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that one of the channels cannot be detached
-because its free channel is busy and previously queued data
-has not been processed yet. On the other hand, another
-channel can be successfully detached causing the monitor
-work to stop.
+The struct sun50i_iommu_ops is not modified and can be made const to
+allow the compiler to put it in read-only memory.
 
-Prevent that by rescheduling the monitor work if there are
-any channels in the pending state after a detach attempt.
+Before:
+   text    data     bss     dec     hex filename
+  14358    2501      64   16923    421b drivers/iommu/sun50i-iommu.o
 
-Fixes: 34c881745549e ("rcu: Support kfree_bulk() interface in kfree_rcu()")
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+After:
+   text    data     bss     dec     hex filename
+  14726    2117      64   16907    420b drivers/iommu/sun50i-iommu.o
+
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- kernel/rcu/tree.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/iommu/sun50i-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d28010cf158b..ae21e1bddd3e 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2971,7 +2971,7 @@ static void kfree_rcu_work(struct work_struct *work)
- static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
- {
- 	struct kfree_rcu_cpu_work *krwp;
--	bool queued = false;
-+	bool repeat = false;
- 	int i;
- 
- 	lockdep_assert_held(&krcp->lock);
-@@ -3009,11 +3009,14 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
- 			 * been detached following each other, one by one.
- 			 */
- 			queue_rcu_work(system_wq, &krwp->rcu_work);
--			queued = true;
- 		}
-+
-+		/* Repeat if any "free" corresponding channel is still busy. */
-+		if (krcp->bhead || krcp->head)
-+			repeat = true;
- 	}
- 
--	return queued;
-+	return !repeat;
+diff --git a/drivers/iommu/sun50i-iommu.c b/drivers/iommu/sun50i-iommu.c
+index 1fa09ddcebd4..fce605e96aa2 100644
+--- a/drivers/iommu/sun50i-iommu.c
++++ b/drivers/iommu/sun50i-iommu.c
+@@ -771,7 +771,7 @@ static int sun50i_iommu_of_xlate(struct device *dev,
+ 	return iommu_fwspec_add_ids(dev, &id, 1);
  }
  
- static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+-static struct iommu_ops sun50i_iommu_ops = {
++static const struct iommu_ops sun50i_iommu_ops = {
+ 	.pgsize_bitmap	= SZ_4K,
+ 	.attach_dev	= sun50i_iommu_attach_device,
+ 	.detach_dev	= sun50i_iommu_detach_device,
 -- 
-2.20.1
+2.26.2
 
