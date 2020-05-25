@@ -2,112 +2,189 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC95AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBDD20878
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FC62078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 14:30:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TAjphygu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOeyv6u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390976AbgEYO2N (ORCPT
+        id S2390905AbgEYOaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 10:28:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30669 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390879AbgEYO2M (ORCPT
+        Mon, 25 May 2020 10:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgEYOaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 10:28:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590416891;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZaEIUSBX9tpbhuTtXwt0hPkJYnX8LPVpuC0gCRduKRM=;
-        b=TAjphygu3iA4QXwEqmcVdAvkaMtxKjBCasWNZmvtaxkCDxjcWFQ7RHfwNn+UxtTa12QlyI
-        jonP9GKchSPd1AlxH4j2xMFigXvTc1f/RT1nsSNdXviNjSkBdJqr8Bq0WOu9eQct+3vpNF
-        2e+NeaEBD0m4Od3Auwda8R3MPg/9cvY=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-WaWKYkqiOLaACR2Gkrh6Qw-1; Mon, 25 May 2020 10:28:09 -0400
-X-MC-Unique: WaWKYkqiOLaACR2Gkrh6Qw-1
-Received: by mail-qk1-f197.google.com with SMTP id n22so2651735qka.18
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:28:09 -0700 (PDT)
+        Mon, 25 May 2020 10:30:04 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD54EC061A0E;
+        Mon, 25 May 2020 07:30:03 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id x1so20648999ejd.8;
+        Mon, 25 May 2020 07:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yMh1OLCPJYxMT3dRwDh/Pc1pXHaCVXG/hZf91AhdVB4=;
+        b=BOeyv6u90esY242TIOVf8kZuHxZc7IiQ4MFI+Zqvwnzes9+xpAj9hLrHuSa2uyOBDF
+         Or68NuUhIgoEg6nrhjh+IEbnG9Whd1p5tJqEWeNdAT0ST3Osy+qsjbWYmUd9upYS+BdI
+         2qgI30mwbvOogfXDlMdztExw+nMndzWJd43DYd3kfgXSNP3MnD7GjZ0Xy8FkjRu7QqWk
+         VUSXBMCyKF/d2KTbv5eA+/8WowJnlaEfolsh1wtKblHmFhkOjXyGM9Yf7P7h8hbeuACF
+         hyKMECLKRaGsrNpU3R2oAklEG3KJhKdUdgKPm1XyKHn81exBNgBWveq1bY0yPJAdBZfJ
+         PuyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZaEIUSBX9tpbhuTtXwt0hPkJYnX8LPVpuC0gCRduKRM=;
-        b=N7y+/dRUdLVOLH/Lr1EmsJS3132Gb6tk+NnP73FK/hROUVvdq+r1xElcjgC5rnajGe
-         WJ8SPiXaTOGTNrRiAd8fdGZHhMdw5u4NF/zUi5kZj0cEpHgWwdsdZaV7XKc6NonTmVJf
-         6bfoS8+6WBwy6xZaVZ5/LVti1XmQ+yYzFB2sfJ216EYN0Tgdwv8SEsbCIpLvZHTMu492
-         TT+W0qM3+nh0dcNYnJowu43ZxSRNjurcctv0RKl1YcoUE6cJN+c3LFf0v9Hgtv2wwi1K
-         P2xooXSHY4DVo/DXFHUuLr/Ti5m/YUosSsACdtv/pf64s/Yyfdfhlf7dqJym1CpmTtdh
-         YbFQ==
-X-Gm-Message-State: AOAM5311pBKPgUc1a5lcLgeO1cYY0joSmAKajVHBFSoHJ8fKP/4mRVWu
-        7k42zl0VL5Q0inwCsZ69Z/wN0RZMRwbHr6RDcQlM7AgWo5QStWO3/GKhxpZTvb9M/4ZZypHwj9q
-        V1hhHRnB8eYJ+Ehy+t9j0AeO9
-X-Received: by 2002:ad4:4e6f:: with SMTP id ec15mr16255160qvb.88.1590416889390;
-        Mon, 25 May 2020 07:28:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxjb9M4FkYI0U4ICscrcqcpLddToI8iQZDPwlZmFCKNG2Yq4ppAaEqVT0efADo9YCNE/szg8g==
-X-Received: by 2002:ad4:4e6f:: with SMTP id ec15mr16255137qvb.88.1590416889166;
-        Mon, 25 May 2020 07:28:09 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id h3sm13643021qkl.28.2020.05.25.07.28.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yMh1OLCPJYxMT3dRwDh/Pc1pXHaCVXG/hZf91AhdVB4=;
+        b=qxD1Xddd72zLq/ZkJcZ5XRGNGtDfMHflZ96jbipnEr027zHorfkcHjLReZIfGgGdU3
+         BmaMwxmVGb0DwiiXeo6sJ6QQAVQyTD8fRwSX1QI/bPhWfaba93GjwN390Cxypsme5bB2
+         HqZ+4bJYOzby6snhmfAoqF1+DpeFgjdV3ZnbMc2+Fmh9R26ZaUDevUTNEj4ZtKYoa7M6
+         EtOldMPY8wsrwCva114JlxcNR2pkcO1VCkcfH03Hh2cQzxQp2rOpZWUoF0MMkpbRHXa/
+         ELNtweGZ9UM9YkSnc2bCgoO3Vm1JThr/ysi+Snogw8mTl40wUSs6kkGxzTAj2ftb47u3
+         SU1w==
+X-Gm-Message-State: AOAM530CffYyOzHyEYcjAtKg0QQZ9YuY/j898e55VCf9d86mAqGub+R5
+        kjMXkyAk5Z3H6Eg/BgG6nZk=
+X-Google-Smtp-Source: ABdhPJwpDfwq3VxDQ5PqHUh5/tPRWT5lYSDfIlEbnN3rH0SxoiirUlcrfg9jhMOb+eHRznUbsJQX/A==
+X-Received: by 2002:a17:906:c7cc:: with SMTP id dc12mr19635108ejb.263.1590417002325;
+        Mon, 25 May 2020 07:30:02 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2dfa:6900:4b6:3b49:50f6:6c03])
+        by smtp.gmail.com with ESMTPSA id f10sm16642978edt.69.2020.05.25.07.30.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 07:28:08 -0700 (PDT)
-Date:   Mon, 25 May 2020 10:28:06 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com, cai@lca.pw
-Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
- on disabled memory
-Message-ID: <20200525142806.GC1058657@xz-x1>
-References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
- <159017506369.18853.17306023099999811263.stgit@gimli.home>
- <20200523193417.GI766834@xz-x1>
- <20200523170602.5eb09a66@x1.home>
- <20200523235257.GC939059@xz-x1>
- <20200525122607.GC744@ziepe.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200525122607.GC744@ziepe.ca>
+        Mon, 25 May 2020 07:30:01 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Ettore Chimenti <ek5.chimenti@gmail.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH SECOND RESEND] MAINTAINERS: adjust entries to moving CEC platform drivers
+Date:   Mon, 25 May 2020 16:29:46 +0200
+Message-Id: <20200525142946.8268-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 09:26:07AM -0300, Jason Gunthorpe wrote:
-> On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
-> 
-> > For what I understand now, IMHO we should still need all those handlings of
-> > FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
-> > try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
-> > not sure what would be the side effect of that if fault() blocked it.  E.g.,
-> > the caller could be in an atomic context.
-> 
-> AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
-> VM_FAULT_RETRY is returned, which this doesn't do?
+Commit 4be5e8648b0c ("media: move CEC platform drivers to a separate
+directory") moved various files into a new directory structure, but did
+not adjust the entries in MAINTAINERS.
 
-Yes, that's why I think we should still properly return VM_FAULT_RETRY if
-needed..  because IMHO it is still possible that the caller calls with
-FAULT_FLAG_RETRY_NOWAIT.
+Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
 
-My understanding is that FAULT_FLAG_RETRY_NOWAIT majorly means:
+  warning: no file matches F: drivers/media/platform/s5p-cec/
+  warning: no file matches F: drivers/media/platform/tegra-cec/
+  warning: no file matches F: drivers/media/platform/cec-gpio/
+  warning: no file matches F: drivers/media/platform/meson/ao-cec-g12a.c
+  warning: no file matches F: drivers/media/platform/meson/ao-cec.c
+  warning: no file matches F: drivers/media/platform/seco-cec/seco-cec.c
+  warning: no file matches F: drivers/media/platform/seco-cec/seco-cec.h
+  warning: no file matches F: drivers/media/platform/sti/cec/
 
-  - We cannot release the mmap_sem, and,
-  - We cannot sleep
+Update the MAINTAINERS entries to the new file locations.
 
-But we're allowed to return VM_FAULT_RETRY if any of the above is necessary.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Mauro, please pick this non-urgent minor clean-up patch on top of the
+CEC platform driver moves.
+ 
+applies cleanly on next-20200417, next-20200505 and still on next-20200525
+for this second resend.
 
-Thanks,
+v1 send here:
+https://lore.kernel.org/lkml/20200418093630.6149-1-lukas.bulwahn@gmail.com/
 
+v1 first resend here:
+https://lore.kernel.org/lkml/20200506050744.4779-1-lukas.bulwahn@gmail.com/
+
+ MAINTAINERS | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7a442b48f24b..bf5cb149101b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2403,7 +2403,7 @@ L:	linux-samsung-soc@vger.kernel.org (moderated for non-subscribers)
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/s5p-cec.txt
+-F:	drivers/media/platform/s5p-cec/
++F:	drivers/media/cec/platform/s5p/
+ 
+ ARM/SAMSUNG S5P SERIES JPEG CODEC SUPPORT
+ M:	Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
+@@ -2548,7 +2548,7 @@ L:	linux-tegra@vger.kernel.org
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/tegra-cec.txt
+-F:	drivers/media/platform/tegra-cec/
++F:	drivers/media/cec/platform/tegra/
+ 
+ ARM/TETON BGA MACHINE SUPPORT
+ M:	"Mark F. Brown" <mark.brown314@gmail.com>
+@@ -3969,7 +3969,7 @@ S:	Supported
+ W:	http://linuxtv.org
+ T:	git git://linuxtv.org/media_tree.git
+ F:	Documentation/devicetree/bindings/media/cec-gpio.txt
+-F:	drivers/media/platform/cec-gpio/
++F:	drivers/media/cec/platform/cec-gpio/
+ 
+ CELL BROADBAND ENGINE ARCHITECTURE
+ M:	Arnd Bergmann <arnd@arndb.de>
+@@ -11146,8 +11146,7 @@ S:	Supported
+ W:	http://linux-meson.com/
+ T:	git git://linuxtv.org/media_tree.git
+ F:	Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
+-F:	drivers/media/platform/meson/ao-cec-g12a.c
+-F:	drivers/media/platform/meson/ao-cec.c
++F:	drivers/media/cec/platform/meson/
+ 
+ MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
+ M:	Liang Yang <liang.yang@amlogic.com>
+@@ -15212,8 +15211,7 @@ F:	drivers/mmc/host/sdricoh_cs.c
+ SECO BOARDS CEC DRIVER
+ M:	Ettore Chimenti <ek5.chimenti@gmail.com>
+ S:	Maintained
+-F:	drivers/media/platform/seco-cec/seco-cec.c
+-F:	drivers/media/platform/seco-cec/seco-cec.h
++F:	drivers/media/cec/platform/seco/
+ 
+ SECURE COMPUTING
+ M:	Kees Cook <keescook@chromium.org>
+@@ -16249,7 +16247,7 @@ STI CEC DRIVER
+ M:	Benjamin Gaignard <benjamin.gaignard@linaro.org>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/stih-cec.txt
+-F:	drivers/media/platform/sti/cec/
++F:	drivers/media/cec/platform/sti/
+ 
+ STK1160 USB VIDEO CAPTURE DRIVER
+ M:	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
 -- 
-Peter Xu
+2.17.1
 
