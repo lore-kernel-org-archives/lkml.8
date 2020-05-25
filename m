@@ -2,88 +2,158 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E583BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46DCC2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2F22084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 07:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590390636;
+	bh=4WLoiRexcTxciWe8JZU5u/C40av7ctTVX+SjXYJho00=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0ULNdYPzo6uGPXd9xy68X6XfhRH4SXST/Fk5A4p6qU/lL+0xuoIzOU/byEt46kwLP
+	 1NfOfR3YIc3bOOJlfUuftMbd1SgHnhLsjN+fxtFI29Xq2Lao5whEDDUQJ8c+k8PrXd
+	 v5LZNjDZ1wCs7lR1JWhOk9Up9Y+Y3Iw6iOxpNN0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388976AbgEYHH7 (ORCPT
+        id S1730735AbgEYHKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 03:07:59 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:37384 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388904AbgEYHH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 03:07:59 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgDXyCyVbsteklsDAA--.9986S4;
-        Mon, 25 May 2020 15:07:04 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: Intel: sst: Fix runtime PM imbalance in sst_power_control
-Date:   Mon, 25 May 2020 15:06:59 +0800
-Message-Id: <20200525070701.3888-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgDXyCyVbsteklsDAA--.9986S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7XrW7tw4DGF1xXrWkZr43Jrb_yoWfCFc_Kw
-        4F9as5Xa95GrWSg34UuF43ZFn5Aa97GryfJF18Kr43AFWYgrZY9w1DXF97ur1fWr48Xr1a
-        9wn0gr4ayrW8CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
-        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
-        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18
-        McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-        1lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAF
-        wVW8CwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4I
-        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
-        Zr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-        1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBpB-UUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEJBlZdtORShQAlsl
+        Mon, 25 May 2020 03:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgEYHKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 03:10:35 -0400
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F0F32089D
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 07:10:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590390635;
+        bh=4WLoiRexcTxciWe8JZU5u/C40av7ctTVX+SjXYJho00=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yqtYl4IJgJcWq0K/gnq9EHJ5EOT8cPn2hfZSdDgxiIYlKo4rAYyOS1QrJjKvNf4dj
+         ftrPNv+SG4nwKdL0Sl5edTHXajZXx7Okd6tSvflVxIQnJZvOFtnhX08LExpaebZC7s
+         yrE8rnGwoY77fag7LxF3ilJby28bjePLK5oJR4Ac=
+Received: by mail-il1-f176.google.com with SMTP id a14so16498480ilk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 00:10:35 -0700 (PDT)
+X-Gm-Message-State: AOAM533IP8X7q+09JJsCm+rBDGFTJ7cYZsNy6rgk3r3041c1BfeC16CU
+        xw2CwPHa5sntTjIjmAU45n7v5tGfq9wFbiKM/1Q=
+X-Google-Smtp-Source: ABdhPJyYf+pQSPyKqjkboHAVokssC7VyAA7D7Gh1me4Sh4qUjQliJFwSFi67CGsO2Wpk/+X9tNMwPDFtdh9jxCZ37Cc=
+X-Received: by 2002:a92:5ec1:: with SMTP id f62mr20829058ilg.80.1590390634564;
+ Mon, 25 May 2020 00:10:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAKwvOd=qB+EoJwfAYUA9Hg7f9op4Q4W+TDnht8pLRG5bPX=29Q@mail.gmail.com>
+ <20200524212816.243139-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200524212816.243139-1-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 25 May 2020 09:10:23 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGStGW4tZXs5rQoSZaRqGvxHrmLF4_jUYiY9jRuCjYgoA@mail.gmail.com>
+Message-ID: <CAMj1kXGStGW4tZXs5rQoSZaRqGvxHrmLF4_jUYiY9jRuCjYgoA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] x86/boot: Remove runtime relocations from compressed kernel
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When sst_load_fw() returns an error code, a pairing runtime
-PM usage counter decrement is needed to keep the counter
-balanced.
+On Sun, 24 May 2020 at 23:28, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> The compressed kernel currently contains bogus runtime relocations in
+> the startup code in head_{32,64}.S, which are generated by the linker,
+> but must not actually be processed at runtime.
+>
+> This generates warnings when linking with the BFD linker, and errors
+> with LLD, which defaults to erroring on runtime relocations in read-only
+> sections. It also requires the -z noreloc-overflow hack for the 64-bit
+> kernel, which prevents us from linking it as -pie on an older BFD linker
+> (<= 2.26) or on LLD, because the locations that are to be apparently
+> relocated are only 32-bits in size and so cannot normally have
+> R_X86_64_RELATIVE relocations.
+>
+> This series aims to get rid of these relocations. It is based on
+> efi/next (efi-changes-for-v5.8), where the latest patches touch the
+> head code to eliminate the global offset table.
+>
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- sound/soc/intel/atom/sst/sst_drv_interface.c | 1 +
- 1 file changed, 1 insertion(+)
+Note: I dropped my decompressor linker script changes from that tag,
+but they are still at the top of the efi/next branch.
 
-diff --git a/sound/soc/intel/atom/sst/sst_drv_interface.c b/sound/soc/intel/atom/sst/sst_drv_interface.c
-index 762495385d5c..3897985b254f 100644
---- a/sound/soc/intel/atom/sst/sst_drv_interface.c
-+++ b/sound/soc/intel/atom/sst/sst_drv_interface.c
-@@ -150,6 +150,7 @@ static int sst_power_control(struct device *dev, bool state)
- 		if ((ctx->sst_state == SST_RESET) && (usage_count == 1)) {
- 			ret = sst_load_fw(ctx);
- 			if (ret) {
-+				pm_runtime_put_sync(dev);
- 				dev_err(dev, "FW download fail %d\n", ret);
- 				sst_set_fw_state_locked(ctx, SST_RESET);
- 				ret = sst_pm_runtime_put(ctx);
--- 
-2.17.1
+Given these changes to go on top, I think it is better to merge all of
+them separately, and let the x86 maintainers decide how and when.
+(I can prepare a branch and a separate PR if desired)
 
+For the series (modulo one nit in a separate reply)
+
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+
+
+
+> The first patch is an independent fix for LLD, to avoid an orphan
+> section in arch/x86/boot/setup.elf [0].
+>
+> The second patch gets rid of almost all the relocations. It uses
+> standard PIC addressing technique for 32-bit, i.e. loading a register
+> with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+> references to access variables. For 64-bit, there is 32-bit code that
+> cannot use RIP-relative addressing, and also cannot use the 32-bit
+> method, since GOTOFF references are 64-bit only. This is instead handled
+> using a macro to replace a reference like gdt with (gdt-startup_32)
+> instead. The assembler will generate a PC32 relocation entry, with
+> addend set to (.-startup_32), and these will be replaced with constants
+> at link time. This works as long as all the code using such references
+> lives in the same section as startup_32, i.e. in .head.text.
+>
+> The third patch addresses a remaining issue with the BFD linker, which
+> insists on generating runtime relocations for absolute symbols. We use
+> z_input_len and z_output_len, defined in the generated piggy.S file, as
+> symbols whose absolute "addresses" are actually the size of the
+> compressed payload and the size of the decompressed kernel image
+> respectively. LLD does not generate relocations for these two symbols,
+> but the BFD linker does. To get around this, piggy.S is extended to also
+> define two u32 variables (in .rodata) with the lengths, and the head
+> code is modified to use those instead of the symbol addresses.
+>
+> An alternative way to handle z_input_len/z_output_len would be to just
+> include piggy.S in head_{32,64}.S instead of as a separate object file,
+> since the GNU assembler doesn't generate relocations for symbols set to
+> constants.
+>
+> The last patch adds a check in the linker script to ensure that no
+> runtime relocations get reintroduced. Since the GOT has been eliminated
+> as well, the compressed kernel has no runtime relocations whatsoever any
+> more.
+>
+> [0] https://lore.kernel.org/lkml/20200521152459.558081-1-nivedita@alum.mit.edu/
+>
+> Arvind Sankar (4):
+>   x86/boot: Add .text.startup to setup.ld
+>   x86/boot: Remove runtime relocations from .head.text code
+>   x86/boot: Remove runtime relocations from head_{32,64}.S
+>   x86/boot: Check that there are no runtime relocations
+>
+>  arch/x86/boot/compressed/Makefile      | 36 +---------
+>  arch/x86/boot/compressed/head_32.S     | 59 +++++++--------
+>  arch/x86/boot/compressed/head_64.S     | 99 +++++++++++++++-----------
+>  arch/x86/boot/compressed/mkpiggy.c     |  6 ++
+>  arch/x86/boot/compressed/vmlinux.lds.S | 11 +++
+>  arch/x86/boot/setup.ld                 |  2 +-
+>  6 files changed, 109 insertions(+), 104 deletions(-)
+>
+> --
+> 2.26.2
+>
