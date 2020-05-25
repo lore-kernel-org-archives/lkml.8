@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8532C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C67C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9FF206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2C1206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 23:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="bQFUbSXv"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="YHgThdGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgEYXCI (ORCPT
+        id S2388325AbgEYXE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 19:02:08 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50571 "EHLO
+        Mon, 25 May 2020 19:04:26 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50583 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgEYXCI (ORCPT
+        with ESMTP id S1725969AbgEYXEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 19:02:08 -0400
+        Mon, 25 May 2020 19:04:25 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DAFD8891B1;
-        Tue, 26 May 2020 11:02:05 +1200 (NZST)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 22B518066C;
+        Tue, 26 May 2020 11:04:22 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1590447725;
-        bh=fH21vaeruc+kAM4fRkdYBDX8IezlA8s+rV2IxWRdUUQ=;
+        s=mail181024; t=1590447862;
+        bh=MsPQZ/8mSwAtwYiT1fuSbbMyv5NEG0wCWFqP4bzlY28=;
         h=From:To:Cc:Subject:Date;
-        b=bQFUbSXvHUFXQUnOjO7zu2nuk/5dZTo2scG6o2aQjXG+HyKgSwBbP3qmCyE4fC9zQ
-         bGDqRT2+Hkt1GbBtQpidXa6kEx9WD5GDHD3IZL1Q1ZAFzrTBJcxRIsEz+bu17qOdmF
-         bCqTt2A+dHFVXflilJ157r+2BJxBjd5NbYGsMZ3A0tgy/MkFhWYXt4DS1/l4ErMgIW
-         f4xm1khPvOi31Y9tXokMFC/LFPztkPgAinRtMGwNpEJKPk5aXd/Qc9SW021W054nNE
-         BCprFdFeEOtDUppl8PZRJvmkZ4CCetB/vxwd2E1qoxAwI42upQzOGODJhghklm96RS
-         TdjuT340RZEQA==
+        b=YHgThdGzte+KMBYPaD+HYVpoTS1LJTylGUVwW99cltQyMpIfAb9aZsJs1R5DJhBq+
+         5LZhVoBJbh+DsYG3W27d/hPl6dpfauAOoEQB591koGLjd8MTIcFjnsOVJONvph5zfO
+         iXmzQgAY1sGHAfshwSRbMGEUQLDdPMOgQlNaWaVSc7r5Hu/0hn+YWmYaWH6OUsfc8A
+         tGsYL/W/zTaVnEZCvPbp1Tkx7ZVDQYTy0IDygofdqbekPWSHYDPkq4fbas5Fdw7dW5
+         JWGhIkccZDBGCeazpd4IolNLT+qeN+ZwqdheZg75pDLpFzUGVCgsLkB60iWh4quCgb
+         ERM2hJ56E5JjQ==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ecc4e6c0000>; Tue, 26 May 2020 11:02:05 +1200
+        id <B5ecc4ef10000>; Tue, 26 May 2020 11:04:22 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id DE20F13ED4B;
-        Tue, 26 May 2020 11:02:02 +1200 (NZST)
+        by smtp (Postfix) with ESMTP id D9D8813EF47;
+        Tue, 26 May 2020 11:04:15 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id D486C28006C; Tue, 26 May 2020 11:02:03 +1200 (NZST)
+        id CE87F28006C; Tue, 26 May 2020 11:04:16 +1200 (NZST)
 From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     0001-xtensa-Fix-spelling-grammar-in-comment.patch@alliedtelesis.co.nz
+Cc:     linux-xtensa@linux-xtensa.org, linux-kernel@vger.kernel.org,
         trivial@kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] HID: logitech-dj: Fix spelling in comment
-Date:   Tue, 26 May 2020 11:02:01 +1200
-Message-Id: <20200525230201.14985-1-chris.packham@alliedtelesis.co.nz>
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH] xtensa: Fix spelling/grammar in comment
+Date:   Tue, 26 May 2020 11:04:13 +1200
+Message-Id: <20200525230413.15551-1-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -62,28 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change 'unhandeled' to 'unhandled'.
+Change 'excpetion' to 'exception', 'handeled' to 'handled' and 'the the'
+to 'the'.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- drivers/hid/hid-logitech-dj.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.=
-c
-index ed9b1c1f460d..51e1305cc375 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -820,7 +820,7 @@ static void logi_dj_recv_queue_unknown_work(struct dj=
-_receiver_dev *djrcv_dev)
- {
- 	struct dj_workitem workitem =3D { .type =3D WORKITEM_TYPE_UNKNOWN };
-=20
--	/* Rate limit queries done because of unhandeled reports to 2/sec */
-+	/* Rate limit queries done because of unhandled reports to 2/sec */
- 	if (time_before(jiffies, djrcv_dev->last_query + HZ / 2))
- 		return;
-=20
+diff --git a/arch/xtensa/kernel/entry.S b/arch/xtensa/kernel/entry.S
+index 06fbb0a171f1..696b1e4b1a67 100644
+--- a/arch/xtensa/kernel/entry.S
++++ b/arch/xtensa/kernel/entry.S
+@@ -959,14 +959,14 @@ ENDPROC(unrecoverable_exception)
+  * of the proper size instead.
+  *
+  * This algorithm simply backs out the register changes started by the u=
+ser
+- * excpetion handler, makes it appear that we have started a window unde=
+rflow
++ * exception handler, makes it appear that we have started a window unde=
+rflow
+  * by rotating the window back and then setting the old window base (OWB=
+) in
+  * the 'ps' register with the rolled back window base. The 'movsp' instr=
+uction
+  * will be re-executed and this time since the next window frames is in =
+the
+  * active AR registers it won't cause an exception.
+  *
+  * If the WindowUnderflow code gets a TLB miss the page will get mapped
+- * the the partial windeowUnderflow will be handeled in the double excep=
+tion
++ * the partial windeowUnderflow will be handled in the double exception
+  * handler.
+  *
+  * Entry condition:
 --=20
 2.25.1
 
