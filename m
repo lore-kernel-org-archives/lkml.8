@@ -7,147 +7,334 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAC41206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD613206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 21:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oHIcutto"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEsmvmox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731341AbgEYVgU (ORCPT
+        id S1731384AbgEYViL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 17:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
+        Mon, 25 May 2020 17:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEYVgT (ORCPT
+        with ESMTP id S1726393AbgEYViK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 17:36:19 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361BFC061A0E;
-        Mon, 25 May 2020 14:36:19 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b6so22165951ljj.1;
-        Mon, 25 May 2020 14:36:19 -0700 (PDT)
+        Mon, 25 May 2020 17:38:10 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D3AC061A0E;
+        Mon, 25 May 2020 14:38:09 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id i16so16048775edv.1;
+        Mon, 25 May 2020 14:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oth1KexUB+FsUoOYKeg78MRq+7smeSq/8UsnVtGlaks=;
-        b=oHIcuttoLald5GlP7EJCAhpNtOvQYbC5KLwNgxj6w+p4IDisM1e6iP/kiGn1AtaIaN
-         KUZn5Fh39pkqJoUY6m0S5fcg6GpEnUaeUq1Z7eqdkOnkp/gNOu2oCvUQksV5p9H6zGjg
-         tq0973ORHFL6eKR5cEqvLqWhLI6cJVAu7fb6nSo6/FyLDCbmc6v178oNMbVq9Iuf1M8q
-         mkts9N8PuWtgoVQw0WIcQd5lv1SavLzNuUHKH/0JQIrcfl0TOo1bOP+SXmDBdYfDiLwa
-         N4fSJ2toDNtc1Ote8zWlIOCdrs+EmH4jeBtpoD8zsF6smOyI3VVYwKNBKi8oRynbsiUi
-         HRHA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mf9AVxXDGmv+6PK94uIl6o/iS2upf7j3FSWt9EcjJrk=;
+        b=VEsmvmoxO2iC23CSjp4AKFMU4HJZ80dvP0Od1DJVDknwvsnt6BmcNDyiVPRNQ6lqZ7
+         CuHOOgL2CG/bIK4T7bHFTjroH0G+1r04J8o8DA5iBBnvoM36IRjGHzMZjcDK9RBCQvSR
+         MH7NUZG7gBOjngIApbo/vEWxrkIut35fMGrAAkEsrmvlzUp/QyPpFybFa8H7csC+53DC
+         8rYXKIerOelM0oVKZOxrBxW4jMZrMA8bf1DqCHKSzfqxafVdST7DtEx8thOgX5HzH1/t
+         /SA+Q4eBX3zXAH/REMJRI1JOCN2rMntuSuQoH3ZNKGQqv0YZ2NiDcKdaBrsH8BUzMOTb
+         FckA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oth1KexUB+FsUoOYKeg78MRq+7smeSq/8UsnVtGlaks=;
-        b=ctTDFo9kiCRJlJddJvW7x07B5VZvro2ru8PrqyvrwW43fm4WS4gNOx83e5OqLBNCy5
-         NE4D57Db+h2arq05uI1DdK5oc5Q4GXOgHj7Zh5RMuCve3v0hOEEIMZ43CwaPJiOn49TW
-         c8sXcL98B366dk3NNzTx3S60R0PZFy3ej4cleeiQOep7dvDcvuGlzGXCGo57o1Qw1Gjg
-         40aqXkWo8ax6M7nQrtfC8ljsnkcKYeIj0EPv+3/MBd9+MYu10rWcS99zNE0iATwL4GVF
-         miRiagBcpWIj6a6iYJ0/EJpNq94jsB/ZBkxr+69wMNT8BvqAhUMS56sEVqC7j8jDrMKC
-         gIyA==
-X-Gm-Message-State: AOAM533UEyAY3M5GWfCukXfcTvbI6gZxoTtyGGHC9Ra9QpO9P2V5iD/U
-        r+EEvKhhdMCpfdJUWNjnARQ=
-X-Google-Smtp-Source: ABdhPJzaUPjez1Vfl7UAmA7nCR6v6/Jv8o4QyzmOpysnLeKWkDcdWjl+RB5g2upMT//w2edcMXL8fQ==
-X-Received: by 2002:a2e:a544:: with SMTP id e4mr4256451ljn.264.1590442576830;
-        Mon, 25 May 2020 14:36:16 -0700 (PDT)
-Received: from mobilestation ([95.79.222.123])
-        by smtp.gmail.com with ESMTPSA id q25sm3073111lfb.43.2020.05.25.14.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 14:36:16 -0700 (PDT)
-Date:   Tue, 26 May 2020 00:36:13 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200525213613.fqwb6xdb6qsh6xy7@mobilestation>
-References: <20200522123427.GD1634618@smile.fi.intel.com>
- <20200522124406.co7gmteojfsooerc@mobilestation>
- <20200522131013.GH5801@sirena.org.uk>
- <20200522132742.taf2ixfjpyd5u3dt@mobilestation>
- <20200522140025.bmd6bhpjjk5msvsm@mobilestation>
- <20200522143639.GG1634618@smile.fi.intel.com>
- <20200522144542.brhibh453wid2d6v@mobilestation>
- <20200522152241.GK5801@sirena.org.uk>
- <20200523083410.3qarkfkwsmodvxwk@mobilestation>
- <20200525114132.GC4544@sirena.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mf9AVxXDGmv+6PK94uIl6o/iS2upf7j3FSWt9EcjJrk=;
+        b=uR/4BEF2HaC7YvGBTOFrOxqtEdk1Sj5hw5azh15Wy9zOazD+zFMCn0fh3Q1r/NFFa7
+         SqdQqjWaHLwsYliw3S9Hv73l3aFmRJohVy5GKYiuJLH2IQfp2cntlVhil+qYAqNQf0C1
+         5KdWGGn4OZ9aJ22SEHZiVUAM9PD9tnzpkKBnCO34j3mt0BVSIAiSafPx7SR2yklXVKxV
+         qzzkn3Jd3oahXE2Nmwg/atISnJMe/H+5dONww2/eXmnvsvBUT6gKV3vN2kQFl4JF5JgM
+         JzKisOul/QMP6sViRVy7X/ftUE8JA6CZtgaTPL+VWeBj9gS/52fwS0bbHICVWoQ3c4vi
+         0O/w==
+X-Gm-Message-State: AOAM531r4G8lozUkgOzssgFWhRRX8/VLBxKNvpI3GcUrkbV28dH4HTm1
+        XwbZZCWfbEqJY9bpUzVZNsqqE0f3lWYnLdMRuzL8bA==
+X-Google-Smtp-Source: ABdhPJw5iT8ya8VKHgzsP7KNShSlw4h5q0BbaA7FW0gsGcTCfGjXnDYG6Sigh9thsu5NcfNjtB6W/kQfs9AcdKAE3eQ=
+X-Received: by 2002:a05:6402:2213:: with SMTP id cq19mr17140506edb.337.1590442687807;
+ Mon, 25 May 2020 14:38:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525114132.GC4544@sirena.org.uk>
+References: <20200506163033.3843-1-m-karicheri2@ti.com> <87r1vdkxes.fsf@intel.com>
+In-Reply-To: <87r1vdkxes.fsf@intel.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 26 May 2020 00:37:56 +0300
+Message-ID: <CA+h21hqiV71wc0v=-KkPbWNyXSY+-oiz+DsQLAe1XEJw7eP=_Q@mail.gmail.com>
+Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 12:41:32PM +0100, Mark Brown wrote:
-> On Sat, May 23, 2020 at 11:34:10AM +0300, Serge Semin wrote:
-> > On Fri, May 22, 2020 at 04:22:41PM +0100, Mark Brown wrote:
-> 
-> > > Right, that definitely needs to be fixed then - 8MHz is indeed a totally
-> > > normal clock rate for SPI so people will hit it.  I guess if there's a
-> > > noticable performance hit to defer to thread then we could implement
-> > > both and look at how long the delay is going to be to decide which to
-> > > use, that's annoyingly complicated though so if the overhead is small
-> > > enough we could just not bother.
-> 
-> > As I suggested before we can implement a solution without performance drop.
-> > Just wait for the DMA completion locally in the dw_spi_dma_transfer() method and
-> > return 0 instead of 1 from the transfer_one() callback. In that function we'll
-> > wait while DMA finishes its business, after that we can check the Tx/Rx FIFO
-> > emptiness and wait for the data to be completely transferred with delays or
-> > sleeps or whatever.
-> 
-> No extra context switches there at least, that's the main issue.
+Hi Vinicius,
 
-Right. There won't be extra context switch.
+On Thu, 21 May 2020 at 20:33, Vinicius Costa Gomes
+<vinicius.gomes@intel.com> wrote:
+>
+> Murali Karicheri <m-karicheri2@ti.com> writes:
+>
+> > This RFC series add support for Parallel Redundancy Protocol (PRP)
+> > as defined in IEC-62439-3 in the kernel networking subsystem. PRP
+> > Uses a Redundancy Control Trailer (RCT) the format of which is
+> > similar to HSR Tag. This is used for implementing redundancy.
+> > RCT consists of 6 bytes similar to HSR tag and contain following
+> > fields:-
+> >
+> > - 16-bit sequence number (SeqNr);
+> > - 4-bit LAN identifier (LanId);
+> > - 12 bit frame size (LSDUsize);
+> > - 16-bit suffix (PRPsuffix).
+> >
+> > The PRPsuffix identifies PRP frames and distinguishes PRP frames
+> > from other protocols that also append a trailer to their useful
+> > data. The LSDUsize field allows the receiver to distinguish PRP
+> > frames from random, nonredundant frames as an additional check.
+> > LSDUsize is the size of the Ethernet payload inclusive of the
+> > RCT. Sequence number along with LanId is used for duplicate
+> > detection and discard.
+> >
+> > PRP node is also known as Dual Attached Node (DAN-P) since it
+> > is typically attached to two different LAN for redundancy.
+> > DAN-P duplicates each of L2 frames and send it over the two
+> > Ethernet links. Each outgoing frame is appended with RCT.
+> > Unlike HSR, these are added to the end of L2 frame and may be
+> > treated as padding by bridges and therefore would be work with
+> > traditional bridges or switches, where as HSR wouldn't as Tag
+> > is prefixed to the Ethenet frame. At the remote end, these are
+> > received and the duplicate frame is discarded before the stripped
+> > frame is send up the networking stack. Like HSR, PRP also sends
+> > periodic Supervision frames to the network. These frames are
+> > received and MAC address from the SV frames are populated in a
+> > database called Node Table. The above functions are grouped into
+> > a block called Link Redundancy Entity (LRE) in the IEC spec.
+> >
+> > As there are many similarities between HSR and PRP protocols,
+> > this patch re-use the code from HSR driver to implement PRP
+> > driver. As many part of the code can be re-used, this patch
+> > introduces a new common API definitions for both protocols and
+> > propose to obsolete the existing HSR defines in
+> > include/uapi/linux/if_link.h. New definitions are prefixed
+> > with a HSR_PRP prefix. Similarly include/uapi/linux/hsr_netlink.h
+> > is proposed to be replaced with include/uapi/linux/hsr_prp_netlink.h
+> > which also uses the HSR_PRP prefix. The netlink socket interface
+> > code is migrated (as well as the iproute2 being sent as a follow up
+> > patch) to use the new API definitions. To re-use the code,
+> > following are done as a preparatory patch before adding the PRP
+> > functionality:-
+> >
+> >   - prefix all common code with hsr_prp
+> >   - net/hsr -> renamed to net/hsr-prp
+> >   - All common struct types, constants, functions renamed with
+> >     hsr{HSR}_prp{PRP} prefix.
+>
+> I don't really like these prefixes, I am thinking of when support for
+> IEEE 802.1CB is added, do we rename this to "hsr_prp_frer"?
+>
+> And it gets even more complicated, and using 802.1CB you can configure
+> the tagging method and the stream identification function so a system
+> can interoperate in a HSR or PRP network.
+>
 
-> 
-> > NOTE Currently the DW APB SSI driver doesn't set xfer->effective_speed_hz, though as
-> > far as I can see that field exists there to be initialized by the SPI controller
-> > driver, right? If so, strange it isn't done in any SPI drivers...
-> 
-> Yes.  Not that many people are concerned about the exact timing it turns
-> out, the work that was being used for never fully made it upstream.
-> 
-> > What do think about this?
-> 
-> Sure.
+Is it a given that 802.1CB in Linux should be implemented using an hsr
+upper device?
+802.1CB is _much_ more flexible than both HSR and PRP. You can have
+more than 2 ports, you can have per-stream rules (each stream has its
+own sequence number), and those rules can identify the source, the
+destination, or both the source and the destination.
 
-Great. I'll send a new patchset soon. It'll fix the Tx/Rx non-empty issue in
-accordance with the proposed design.
+> So, I see this as different methods of achieving the same result, which
+> makes me think that the different "methods/types" (HSR and PRP in your
+> case) should be basically different implementations of a "struct
+> hsr_ops" interface. With this hsr_ops something like this:
+>
+>    struct hsr_ops {
+>           int (*handle_frame)()
+>           int (*add_port)()
+>           int (*remove_port)()
+>           int (*setup)()
+>           void (*teardown)()
+>    };
+>
+> >
+> > Please review this and provide me feedback so that I can work to
+> > incorporate them and send a formal patch series for this. As this
+> > series impacts user space, I am not sure if this is the right
+> > approach to introduce a new definitions and obsolete the old
+> > API definitions for HSR. The current approach is choosen
+> > to avoid redundant code in iproute2 and in the netlink driver
+> > code (hsr_netlink.c). Other approach we discussed internally was
+> > to Keep the HSR prefix in the user space and kernel code, but
+> > live with the redundant code in the iproute2 and hsr netlink
+> > code. Would like to hear from you what is the best way to add
+> > this feature to networking core. If there is any other
+> > alternative approach possible, I would like to hear about the
+> > same.
+>
+> Why redudant code is needed in the netlink parts and in iproute2 when
+> keeping the hsr prefix?
+>
+> >
+> > The patch was tested using two TI AM57x IDK boards which are
+> > connected back to back over two CPSW ports.
+> >
+> > Script used for creating the hsr/prp interface is given below
+> > and uses the ip link command. Also provided logs from the tests
+> > I have executed for your reference.
+> >
+> > iproute2 related patches will follow soon....
+> >
+> > Murali Karicheri
+> > Texas Instruments
+> >
+> > ============ setup.sh =================================================
+> > #!/bin/sh
+> > if [ $# -lt 4 ]
+> > then
+> >        echo "setup-cpsw.sh <hsr/prp> <MAC-Address of slave-A>"
+> >        echo "  <ip address for hsr/prp interface>"
+> >        echo "  <if_name of hsr/prp interface>"
+> >        exit
+> > fi
+> >
+> > if [ "$1" != "hsr" ] && [ "$1" != "prp" ]
+> > then
+> >        echo "use hsr or prp as first argument"
+> >        exit
+> > fi
+> >
+> > if_a=eth2
+> > if_b=eth3
+> > if_name=$4
+> >
+> > ifconfig $if_a down
+> > ifconfig $if_b down
+> > ifconfig $if_a hw ether $2
+> > ifconfig $if_b hw ether $2
+> > ifconfig $if_a up
+> > ifconfig $if_b up
+> >
+> > echo "Setting up $if_name with MAC address $2 for slaves and IP address $3"
+> > echo "          using $if_a and $if_b"
+> >
+> > if [ "$1" = "hsr" ]; then
+> >        options="version 1"
+> > else
+> >        options=""
+> > fi
+> >
+> > ip link add name $if_name type $1 slave1 $if_a slave2 $if_b supervision 0 $options
+> > ifconfig $if_name $3 up
+> > ==================================================================================
+> > PRP Logs:
+> >
+> > DUT-1 : https://pastebin.ubuntu.com/p/hhsRjTQpcr/
+> > DUT-2 : https://pastebin.ubuntu.com/p/snPFKhnpk4/
+> >
+> > HSR Logs:
+> >
+> > DUT-1 : https://pastebin.ubuntu.com/p/FZPNc6Nwdm/
+> > DUT-2 : https://pastebin.ubuntu.com/p/CtV4ZVS3Yd/
+> >
+> > Murali Karicheri (13):
+> >   net: hsr: Re-use Kconfig option to support PRP
+> >   net: hsr: rename hsr directory to hsr-prp to introduce PRP
+> >   net: hsr: rename files to introduce PRP support
+> >   net: hsr: rename hsr variable inside struct hsr_port to priv
+> >   net: hsr: rename hsr_port_get_hsr() to hsr_prp_get_port()
+> >   net: hsr: some renaming to introduce PRP driver support
+> >   net: hsr: introduce common uapi include/definitions for HSR and PRP
+> >   net: hsr: migrate HSR netlink socket code to use new common API
+> >   net: hsr: move re-usable code for PRP to hsr_prp_netlink.c
+> >   net: hsr: add netlink socket interface for PRP
+> >   net: prp: add supervision frame generation and handling support
+> >   net: prp: add packet handling support
+> >   net: prp: enhance debugfs to display PRP specific info in node table
+> >
+> >  MAINTAINERS                                   |   2 +-
+> >  include/uapi/linux/hsr_netlink.h              |   3 +
+> >  include/uapi/linux/hsr_prp_netlink.h          |  50 ++
+> >  include/uapi/linux/if_link.h                  |  19 +
+> >  net/Kconfig                                   |   2 +-
+> >  net/Makefile                                  |   2 +-
+> >  net/hsr-prp/Kconfig                           |  37 ++
+> >  net/hsr-prp/Makefile                          |  11 +
+> >  net/hsr-prp/hsr_netlink.c                     | 202 +++++++
+> >  net/{hsr => hsr-prp}/hsr_netlink.h            |  15 +-
+> >  .../hsr_prp_debugfs.c}                        |  82 +--
+> >  net/hsr-prp/hsr_prp_device.c                  | 562 ++++++++++++++++++
+> >  net/hsr-prp/hsr_prp_device.h                  |  23 +
+> >  net/hsr-prp/hsr_prp_forward.c                 | 558 +++++++++++++++++
+> >  .../hsr_prp_forward.h}                        |  10 +-
+> >  .../hsr_prp_framereg.c}                       | 323 +++++-----
+> >  net/hsr-prp/hsr_prp_framereg.h                |  68 +++
+> >  net/hsr-prp/hsr_prp_main.c                    | 194 ++++++
+> >  net/hsr-prp/hsr_prp_main.h                    | 289 +++++++++
+> >  net/hsr-prp/hsr_prp_netlink.c                 | 365 ++++++++++++
+> >  net/hsr-prp/hsr_prp_netlink.h                 |  28 +
+> >  net/hsr-prp/hsr_prp_slave.c                   | 222 +++++++
+> >  net/hsr-prp/hsr_prp_slave.h                   |  37 ++
+> >  net/hsr-prp/prp_netlink.c                     | 141 +++++
+> >  net/hsr-prp/prp_netlink.h                     |  27 +
+> >  net/hsr/Kconfig                               |  29 -
+> >  net/hsr/Makefile                              |  10 -
+> >  net/hsr/hsr_device.c                          | 509 ----------------
+> >  net/hsr/hsr_device.h                          |  22 -
+> >  net/hsr/hsr_forward.c                         | 379 ------------
+> >  net/hsr/hsr_framereg.h                        |  62 --
+> >  net/hsr/hsr_main.c                            | 154 -----
+> >  net/hsr/hsr_main.h                            | 188 ------
+> >  net/hsr/hsr_netlink.c                         | 514 ----------------
+> >  net/hsr/hsr_slave.c                           | 198 ------
+> >  net/hsr/hsr_slave.h                           |  33 -
+> >  36 files changed, 3084 insertions(+), 2286 deletions(-)
+> >  create mode 100644 include/uapi/linux/hsr_prp_netlink.h
+> >  create mode 100644 net/hsr-prp/Kconfig
+> >  create mode 100644 net/hsr-prp/Makefile
+> >  create mode 100644 net/hsr-prp/hsr_netlink.c
+> >  rename net/{hsr => hsr-prp}/hsr_netlink.h (58%)
+> >  rename net/{hsr/hsr_debugfs.c => hsr-prp/hsr_prp_debugfs.c} (52%)
+> >  create mode 100644 net/hsr-prp/hsr_prp_device.c
+> >  create mode 100644 net/hsr-prp/hsr_prp_device.h
+> >  create mode 100644 net/hsr-prp/hsr_prp_forward.c
+> >  rename net/{hsr/hsr_forward.h => hsr-prp/hsr_prp_forward.h} (50%)
+> >  rename net/{hsr/hsr_framereg.c => hsr-prp/hsr_prp_framereg.c} (56%)
+> >  create mode 100644 net/hsr-prp/hsr_prp_framereg.h
+> >  create mode 100644 net/hsr-prp/hsr_prp_main.c
+> >  create mode 100644 net/hsr-prp/hsr_prp_main.h
+> >  create mode 100644 net/hsr-prp/hsr_prp_netlink.c
+> >  create mode 100644 net/hsr-prp/hsr_prp_netlink.h
+> >  create mode 100644 net/hsr-prp/hsr_prp_slave.c
+> >  create mode 100644 net/hsr-prp/hsr_prp_slave.h
+> >  create mode 100644 net/hsr-prp/prp_netlink.c
+> >  create mode 100644 net/hsr-prp/prp_netlink.h
+> >  delete mode 100644 net/hsr/Kconfig
+> >  delete mode 100644 net/hsr/Makefile
+> >  delete mode 100644 net/hsr/hsr_device.c
+> >  delete mode 100644 net/hsr/hsr_device.h
+> >  delete mode 100644 net/hsr/hsr_forward.c
+> >  delete mode 100644 net/hsr/hsr_framereg.h
+> >  delete mode 100644 net/hsr/hsr_main.c
+> >  delete mode 100644 net/hsr/hsr_main.h
+> >  delete mode 100644 net/hsr/hsr_netlink.c
+> >  delete mode 100644 net/hsr/hsr_slave.c
+> >  delete mode 100644 net/hsr/hsr_slave.h
+> >
+> > --
+> > 2.17.1
+> >
+>
+> --
+> Vinicius
 
--Sergey
-
-> 
-> > patchset "spi: dw: Add generic DW DMA controller support" (it's being under
-> > review in this email thread) ? Anyway, if the fixup is getting to be that
-> > complicated, will it have to be backported to another stable kernels?
-> 
-> No, if it's too invasive it shouldn't be (though the stable people might
-> decide they want it anyway these days :/ ).
-
-
+Thanks,
+-Vladimir
