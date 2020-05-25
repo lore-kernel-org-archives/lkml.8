@@ -2,132 +2,125 @@ Return-Path: <SRS0=8lgJ=7H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D35CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000CC208A7
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7DC2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 May 2020 04:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="09rI4km/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgEYEjM (ORCPT
+        id S2388211AbgEYEon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 00:39:12 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12919 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgEYEjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 00:39:11 -0400
-IronPort-SDR: 02gefz82HyRqGfp/DRwWDX50sWBfFAzDWMGuXzBsU1a73YdFMPpbQM72TATUXdRw5AdQA3eSLW
- 2+0/b/HqfNPQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2020 21:39:11 -0700
-IronPort-SDR: mkPIiir/SIIp5RsIl2SkJX+dMgspH7qHmH92MoBbroHS+PWpT9tKflWqEGsybUNTzLAYcNacxR
- ymSYNh1hOXyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,432,1583222400"; 
-   d="scan'208";a="269644158"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga006.jf.intel.com with ESMTP; 24 May 2020 21:39:10 -0700
-Date:   Sun, 24 May 2020 21:39:10 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 7/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200525043910.GA319107@iweiny-DESK2.sc.intel.com>
-References: <20200521191313.261929-1-ira.weiny@intel.com>
- <20200521191313.261929-8-ira.weiny@intel.com>
- <20200522114848.GC14199@quack2.suse.cz>
+        Mon, 25 May 2020 00:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgEYEom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 00:44:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3083FC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:44:41 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id c11so17146586ljn.2
+        for <linux-kernel@vger.kernel.org>; Sun, 24 May 2020 21:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M6jtbeZwsvOZY+pgkpyuXhsDWBq5iskp0QmwZ/y8vek=;
+        b=09rI4km/OQky2Hmq6IxNeoiKo6N0pt5n/f/PKfR13+ShQ85KtKze6oAlKD20TZz3uG
+         hK5itjdR+DGUWy/ck/g9o7zoYj1sAuEP/l/vuQ8JCscuFmDGnBGFvXFadRkAawaWY0sJ
+         0GRmmleoZL098cmRsHe9hqsJZPjZedVJdbOuQg+rsr1tUNBhltwHGHylxhgppz2OZR+/
+         zMrJ5vxrxqGrV0sUX9B94ozLmcIf/Dc80Xt4z0bGSMn8sMtdhstvP4oVMijucS84XTKf
+         mIbFWn7F5XzMuJCCV2ik6sf3HKVDp8MW9hA8nR88LHJLbytPYmBBk2Qxvpsxuh0TQhyl
+         R1pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M6jtbeZwsvOZY+pgkpyuXhsDWBq5iskp0QmwZ/y8vek=;
+        b=qxd6PvqrSwBhR+21UXK6sjd1fRN+50hpQConqJ6uIx0BKul/WqSP3qCdDRf0qAv0DY
+         2PpkHhkPDomrVXc+fW+X1BjfOQ9LRdBeOoWgLjwvAi9WMtqK91gZwpCD+Oy0lkq2UGzz
+         XGiAm7uxOJVeP04JtzknL1HuiAJo3ovCi4HDzdG+oRU8PRxeizV4o+rI2TJwsJjYaoUd
+         0GN8aD3+7wrODdf3QZHQzmkOAf9KfsK1vsErtbpNg84ABCW+3TtxUMxXrMWC3dQrv4ML
+         YF8MLvrEmGFN1ZM1fT11uVkFKRzqyrI3+8DKRN0UJN3ovJQ7/9r2iRmM/auFKPX6FZZI
+         vwtQ==
+X-Gm-Message-State: AOAM531k7bZ8/gwS9ewtPuTBe+3/ymJX2zFN6wkfXMDsxWFYtQ5rqtgY
+        f1izdlGI4dlNsbikDNWkzsTRZw==
+X-Google-Smtp-Source: ABdhPJw50Z60Kd3jiZW8ttE5tCSoWdYL5faK1qntPLqAT1rgXHSslGhNq6uCYyWrH2iB5zTGkI3frg==
+X-Received: by 2002:a2e:8997:: with SMTP id c23mr13748654lji.22.1590381879513;
+        Sun, 24 May 2020 21:44:39 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id h2sm4733454ljb.45.2020.05.24.21.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2020 21:44:38 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 72CDA1012E6; Mon, 25 May 2020 07:44:39 +0300 (+03)
+Date:   Mon, 25 May 2020 07:44:39 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v2] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
+Message-ID: <20200525044439.f433y6enrpehdmid@box>
+References: <159032779896.957378.7852761411265662220.stgit@buzz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522114848.GC14199@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <159032779896.957378.7852761411265662220.stgit@buzz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 01:48:48PM +0200, Jan Kara wrote:
-> On Thu 21-05-20 12:13:12, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> > 
-> > Set the flag to be user visible and changeable.  Set the flag to be
-> > inherited.  Allow applications to change the flag at any time with the
-> > exception of if VERITY or ENCRYPT is set.
-> > 
-> > Disallow setting VERITY or ENCRYPT if DAX is set.
-> > 
-> > Finally, on regular files, flag the inode to not be cached to facilitate
-> > changing S_DAX on the next creation of the inode.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Sun, May 24, 2020 at 04:43:18PM +0300, Konstantin Khlebnikov wrote:
+> Replace superfluous VM_BUG_ON() with comment about correct usage.
 > 
-> ...
+> Technically reverts commit 1d148e218a0d0566b1c06f2f45f1436d53b049b2
+> ("mm: add VM_BUG_ON_PAGE() to page_mapcount()"), but context have changed.
 > 
-> > @@ -303,6 +318,16 @@ static int ext4_ioctl_setflags(struct inode *inode,
-> >  	unsigned int jflag;
-> >  	struct super_block *sb = inode->i_sb;
-> >  
-> > +	if (ext4_test_inode_flag(inode, EXT4_INODE_DAX)) {
-> > +		if (ext4_test_inode_flag(inode, EXT4_INODE_VERITY) ||
-> > +		    ext4_test_inode_flag(inode, EXT4_INODE_ENCRYPT) ||
-> > +		    ext4_test_inode_state(inode,
-> > +					  EXT4_STATE_VERITY_IN_PROGRESS)) {
-> > +			err = -EOPNOTSUPP;
-> > +			goto flags_out;
-> > +		}
-> > +	}
+> Function isolate_migratepages_block() runs some checks out of lru_lock
+> when choose pages for migration. After checking PageLRU() it checks extra
+> page references by comparing page_count() and page_mapcount(). Between
+> these two checks page could be removed from lru, freed and taken by slab.
 > 
-> The way this check is implemented wouldn't IMO do what we need... It
-> doesn't check the flags that are being set but just the current inode
-> state. I think it should rather be:
+> As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
+> Race window is tiny. For certain workload this happens around once a year.
+> 
+> 
+>  page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
+>  flags: 0x500000000008100(slab|head)
+>  raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
+>  raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
+>  page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
+>  ------------[ cut here ]------------
+>  kernel BUG at ./include/linux/mm.h:628!
+>  invalid opcode: 0000 [#1] SMP NOPTI
+>  CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
+>  Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
+>  RIP: 0010:isolate_migratepages_block+0x986/0x9b0
+> 
+> 
+> Code in isolate_migratepages_block() was added in commit 119d6d59dcc0
+> ("mm, compaction: avoid isolating pinned pages") before adding VM_BUG_ON
+> into page_mapcount().
+> 
+> This race has been predicted in 2015 by Vlastimil Babka (see link below).
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
+> Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
+> Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
 
-Sorry, I got confused by the flags when I wrote this.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-> 
-> 	if ((flags ^ oldflags) & EXT4_INODE_DAX_FL) {
-> 		...
-> 	}
-> 
-> And perhaps move this to a place in ext4_ioctl_setflags() where we check
-> other similar conflicts.
-
-Sure.  It seems like a ext4_setflags_prepare() helper would be in order.  I'll
-see what I can do.
-
-> 
-> And then we should check conflicts with the journal flag as well, as I
-> mentioned in reply to the first patch. There it is more complicated by the
-> fact that we should disallow setting of both EXT4_INODE_DAX_FL and
-> EXT4_JOURNAL_DATA_FL at the same time so the checks will be somewhat more
-> complicated.
-
-I'm confused by jflag.  Why is EXT4_JOURNAL_DATA_FL stored in jflag?
-
-Ira
-
-> 
-> 								Honza
-> 
-> > +
-> >  	/* Is it quota file? Do not allow user to mess with it */
-> >  	if (ext4_is_quota_file(inode))
-> >  		goto flags_out;
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+-- 
+ Kirill A. Shutemov
