@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4841C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97AAD208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345C8208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521058;
-	bh=u2VeJ6WneGtXK1DRpVLdh0k3NgnIp1z1pi15bDGTiIw=;
+	s=default; t=1590521062;
+	bh=tEjzEMiEZEFeoK8EtcG/4j8pP2AresuUknmzaa2p67U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aL6kczyV/017em8UCSOw9w9iH9RNL1FGb62lQFAdXIuzpOdE4DQ4Yt8xJfulJiLQ9
-	 OowMVpNnz543qf+s7uZV0tNLrMxEZw4hE5iVqNIczgPrNCJ4OKCqiVw6Q91qwsUB1l
-	 2hJnhbOM1+rcgXe8EuZlfL2Yml2gn2JUX3PU5HA8=
+	b=IH9Hdb/CEwDSaSXybOB2LbaeWIh388pY+T2tC9/wLtMWxksiHe8rWDaTV4z8k5/+G
+	 Ve8FH+EAEsjqbwa3xSASQ+RFzN2vGZ5GRJvodeCyTIQrIDWvnAzLQSDvlnzwVyvlMi
+	 i9AwMxJnnP70zmZu3Gjx2ZejdJ3ozkaoEoFtVSH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389537AbgEZTIC (ORCPT
+        id S2392346AbgEZTYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:08:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403778AbgEZTH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:57 -0400
+        id S2391379AbgEZTIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1485320776;
-        Tue, 26 May 2020 19:07:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EED4A208A7;
+        Tue, 26 May 2020 19:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520076;
-        bh=u2VeJ6WneGtXK1DRpVLdh0k3NgnIp1z1pi15bDGTiIw=;
+        s=default; t=1590520081;
+        bh=tEjzEMiEZEFeoK8EtcG/4j8pP2AresuUknmzaa2p67U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3k3A03aXKFo7/meVY8rJh3CXPh2WriqXSiW+cMvDRguCDl0c7lDuYL8zt/YaubMc
-         xgfpDRmvu87mIJk4gxYqdJLVbjmWIzUbcsznGc3sQYyTiYE0s5QsiezHUlKAynuazI
-         0fxruFgd2teIMfEZ9UY6a0MSHTB3UGt5wKS33A4A=
+        b=PNadqIzJXJL/Cu7PR7h1PWys34Su8PDMjvnRUm8vFmyTe12qUyLSfH9zvcmVNqe69
+         xa2aaL4xPreS4t5a6hFPTC9Qd7+v8dE3IQ2NY4hie/vJ3XHjd+Nu9LtFXTpVMcQA/e
+         2ahcm/gzBNagnvKmHeMvBgMfvjDXoXkpjzkzjGkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/111] ALSA: hda: patch_realtek: fix empty macro usage in if block
-Date:   Tue, 26 May 2020 20:53:07 +0200
-Message-Id: <20200526183937.524385358@linuxfoundation.org>
+Subject: [PATCH 5.4 051/111] ALSA: hda/realtek - Add supported new mute Led for HP
+Date:   Tue, 26 May 2020 20:53:09 +0200
+Message-Id: <20200526183937.705149344@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,51 +59,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Kailang Yang <kailang@realtek.com>
 
-[ Upstream commit 8a71821f12a010d7100f9cc1f7b218aff0313c4a ]
+[ Upstream commit 431e76c3edd76d84a0ed1eb81a286b2ddecc5ee4 ]
 
-GCC reports the following warning with W=1
+HP Note Book supported new mute Led.
+Hardware PIN was not enough to meet old LED rule.
+JD2 to control playback mute led.
+GPO3 to control capture mute led.
+(ALC285 didn't control GPO3 via verb command)
+This two PIN just could control by COEF registers.
 
-sound/pci/hda/patch_realtek.c: In function ‘alc269_suspend’:
-sound/pci/hda/patch_realtek.c:3616:29: warning: suggest braces around
-empty body in an ‘if’ statement [-Wempty-body]
- 3616 |   alc5505_dsp_suspend(codec);
-      |                             ^
+[ corrected typos by tiwai ]
 
-sound/pci/hda/patch_realtek.c: In function ‘alc269_resume’:
-sound/pci/hda/patch_realtek.c:3651:28: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
- 3651 |   alc5505_dsp_resume(codec);
-      |                            ^
-
-This is a classic macro problem and can indeed lead to bad program
-flows.
-
-Fix by using the usual "do { } while (0)" pattern
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200111214736.3002-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Link: https://lore.kernel.org/r/6741211598ba499687362ff2aa30626b@realtek.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c | 81 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 151099b8c394..a0e7d711cbb5 100644
+index 499c8150ebb8..16f548cdf290 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -3719,8 +3719,8 @@ static void alc5505_dsp_init(struct hda_codec *codec)
+@@ -86,6 +86,14 @@ struct alc_spec {
+ 
+ 	unsigned int gpio_mute_led_mask;
+ 	unsigned int gpio_mic_led_mask;
++	unsigned int mute_led_coef_idx;
++	unsigned int mute_led_coefbit_mask;
++	unsigned int mute_led_coefbit_on;
++	unsigned int mute_led_coefbit_off;
++	unsigned int mic_led_coef_idx;
++	unsigned int mic_led_coefbit_mask;
++	unsigned int mic_led_coefbit_on;
++	unsigned int mic_led_coefbit_off;
+ 
+ 	hda_nid_t headset_mic_pin;
+ 	hda_nid_t headphone_mic_pin;
+@@ -4182,6 +4190,73 @@ static void alc280_fixup_hp_gpio4(struct hda_codec *codec,
+ 	}
  }
  
- #ifdef HALT_REALTEK_ALC5505
--#define alc5505_dsp_suspend(codec)	/* NOP */
--#define alc5505_dsp_resume(codec)	/* NOP */
-+#define alc5505_dsp_suspend(codec)	do { } while (0) /* NOP */
-+#define alc5505_dsp_resume(codec)	do { } while (0) /* NOP */
- #else
- #define alc5505_dsp_suspend(codec)	alc5505_dsp_halt(codec)
- #define alc5505_dsp_resume(codec)	alc5505_dsp_back_from_halt(codec)
++/* update mute-LED according to the speaker mute state via COEF bit */
++static void alc_fixup_mute_led_coefbit_hook(void *private_data, int enabled)
++{
++	struct hda_codec *codec = private_data;
++	struct alc_spec *spec = codec->spec;
++
++	if (spec->mute_led_polarity)
++		enabled = !enabled;
++
++	/* temporarily power up/down for setting COEF bit */
++	enabled ? alc_update_coef_idx(codec, spec->mute_led_coef_idx,
++		spec->mute_led_coefbit_mask, spec->mute_led_coefbit_off) :
++		  alc_update_coef_idx(codec, spec->mute_led_coef_idx,
++		spec->mute_led_coefbit_mask, spec->mute_led_coefbit_on);
++}
++
++static void alc285_fixup_hp_mute_led_coefbit(struct hda_codec *codec,
++					  const struct hda_fixup *fix,
++					  int action)
++{
++	struct alc_spec *spec = codec->spec;
++
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		spec->mute_led_polarity = 0;
++		spec->mute_led_coef_idx = 0x0b;
++		spec->mute_led_coefbit_mask = 1<<3;
++		spec->mute_led_coefbit_on = 1<<3;
++		spec->mute_led_coefbit_off = 0;
++		spec->gen.vmaster_mute.hook = alc_fixup_mute_led_coefbit_hook;
++		spec->gen.vmaster_mute_enum = 1;
++	}
++}
++
++/* turn on/off mic-mute LED per capture hook by coef bit */
++static void alc_hp_cap_micmute_update(struct hda_codec *codec)
++{
++	struct alc_spec *spec = codec->spec;
++
++	if (spec->gen.micmute_led.led_value)
++		alc_update_coef_idx(codec, spec->mic_led_coef_idx,
++			spec->mic_led_coefbit_mask, spec->mic_led_coefbit_on);
++	else
++		alc_update_coef_idx(codec, spec->mic_led_coef_idx,
++			spec->mic_led_coefbit_mask, spec->mic_led_coefbit_off);
++}
++
++static void alc285_fixup_hp_coef_micmute_led(struct hda_codec *codec,
++				const struct hda_fixup *fix, int action)
++{
++	struct alc_spec *spec = codec->spec;
++
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		spec->mic_led_coef_idx = 0x19;
++		spec->mic_led_coefbit_mask = 1<<13;
++		spec->mic_led_coefbit_on = 1<<13;
++		spec->mic_led_coefbit_off = 0;
++		snd_hda_gen_add_micmute_led(codec, alc_hp_cap_micmute_update);
++	}
++}
++
++static void alc285_fixup_hp_mute_led(struct hda_codec *codec,
++				const struct hda_fixup *fix, int action)
++{
++	alc285_fixup_hp_mute_led_coefbit(codec, fix, action);
++	alc285_fixup_hp_coef_micmute_led(codec, fix, action);
++}
++
+ #if IS_REACHABLE(CONFIG_INPUT)
+ static void gpio2_mic_hotkey_event(struct hda_codec *codec,
+ 				   struct hda_jack_callback *event)
+@@ -5980,6 +6055,7 @@ enum {
+ 	ALC294_FIXUP_ASUS_HPE,
+ 	ALC294_FIXUP_ASUS_COEF_1B,
+ 	ALC285_FIXUP_HP_GPIO_LED,
++	ALC285_FIXUP_HP_MUTE_LED,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7128,6 +7204,10 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc285_fixup_hp_gpio_led,
+ 	},
++	[ALC285_FIXUP_HP_MUTE_LED] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_hp_mute_led,
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7273,6 +7353,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
++	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+ 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
 -- 
 2.25.1
 
