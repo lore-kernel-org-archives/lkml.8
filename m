@@ -2,155 +2,100 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D300C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B643020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590509478;
-	bh=AFObFPiEU5l68FJxSKAVBork4rbzTfO2UBXUfARqMxI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tpkkfsGDuI+fLOfQWLs4pCwcgHwQomj7lIc14McZRkqWmGzCSgZ34MoUPjk8aP4TE
-	 j33WpR9Yi8O3Iyh//ZM3ifVUOSIzohq7BUuiptTa/xSdhAiX+yUGelgpCUZ+HS9rhG
-	 /CHETM1Y/CtHmiVyRHumUWTCpELbpKdpZZLbXnPA=
+	by mail.kernel.org (Postfix) with ESMTP id 72FA1206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388400AbgEZQLS (ORCPT
+        id S1728732AbgEZQMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727968AbgEZQLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:11:17 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F1320776;
-        Tue, 26 May 2020 16:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590509477;
-        bh=AFObFPiEU5l68FJxSKAVBork4rbzTfO2UBXUfARqMxI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=p0LgAOh6RnqSfh2zGcWW90/l/3LTg8MS3of25fxYbVIAnyq6J2oouqe+XgLu1TeKo
-         1MfsxBQ4L0W0560RavbPdeG0g/XfQtkdW2nNC3zDHcMLCrBYR7wVX/t7Xt/Yj8B8YV
-         EDDNCT13f1Ytj8JeXrGvRAjpEM+UXMndNrTSqSuI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 48C113522A8B; Tue, 26 May 2020 09:11:17 -0700 (PDT)
-Date:   Tue, 26 May 2020 09:11:17 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2020.05.25a 51/63] kernel/rcu/refperf.c:298:6: warning:
- no previous prototype for function 'reset_readers'
-Message-ID: <20200526161117.GH2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <202005262032.uaSJI5NU%lkp@intel.com>
+        Tue, 26 May 2020 12:12:37 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58934 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgEZQMg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:12:36 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DD16A803086B;
+        Tue, 26 May 2020 16:12:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id h4VA-Y7ucsL7; Tue, 26 May 2020 19:12:33 +0300 (MSK)
+Date:   Tue, 26 May 2020 19:12:32 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-mips@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: memory: Add Baikal-T1 L2-cache
+ Control Block binding
+Message-ID: <20200526161232.cmrn5iydtcffua2p@mobilestation>
+References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526125928.17096-4-Sergey.Semin@baikalelectronics.ru>
+ <20200526160915.GA4042264@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <202005262032.uaSJI5NU%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200526160915.GA4042264@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:07:35PM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.25a
-> head:   1e9451642683146552713c5ce6d269ae378eacd5
-> commit: 786a25497743696d79592b864cafbfe48787e6e1 [51/63] refperf: Add a test to measure performance of read-side synchronization
-> config: x86_64-allyesconfig (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 3393cc4cebf9969db94dc424b7a2b6195589c33b)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install x86_64 cross compiling tool for clang build
->         # apt-get install binutils-x86-64-linux-gnu
->         git checkout 786a25497743696d79592b864cafbfe48787e6e1
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
+On Tue, May 26, 2020 at 10:09:15AM -0600, Rob Herring wrote:
+> On Tue, 26 May 2020 15:59:25 +0300, Serge Semin wrote:
+> > There is a single register provided by the SoC system controller,
+> > which can be used to tune the L2-cache RAM up. It only provides a way
+> > to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
+> > compatible string the device node can be optionally equipped with the
+> > properties of Tag/Data/WS latencies.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Olof Johansson <olof@lixom.net>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: soc@kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Move driver to the memory subsystem.
+> > - Use dual GPL/BSD license.
+> > - Use single lined copyright header.
+> > - Move "allOf" restrictions to the root level of the properties.
+> > - Discard syscon compatible string and reg property.
+> > - The DT node is supposed to be a child of the Baikal-T1 system controller
+> >   node.
+> > 
+> > Changelog v3:
+> > - Get the reg property back even though the driver is using the parental
+> >   syscon regmap.
+> > - The DT schema will live separately from the system controller, but the
+> >   corresponding sub-node of the later DT schema will $ref this one.
+> > - Set non-default latencies in the example.
+> > ---
+> >  .../memory-controllers/baikal,bt1-l2-ctl.yaml | 63 +++++++++++++++++++
+> >  1 file changed, 63 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+> > 
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> >> kernel/rcu/refperf.c:298:6: warning: no previous prototype for function 'reset_readers' [-Wmissing-prototypes]
-> void reset_readers(int n)
-> ^
-> kernel/rcu/refperf.c:298:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> void reset_readers(int n)
-> ^
-> static
-> >> kernel/rcu/refperf.c:311:5: warning: no previous prototype for function 'process_durations' [-Wmissing-prototypes]
-> u64 process_durations(int n)
-> ^
-> kernel/rcu/refperf.c:311:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> u64 process_durations(int n)
-> ^
-> static
-> 2 warnings generated.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Good catches, fixing!
+Great! Thanks.
 
-							Thanx, Paul
-
-> vim +/reset_readers +298 kernel/rcu/refperf.c
-> 
->    297	
->  > 298	void reset_readers(int n)
->    299	{
->    300		int i;
->    301		struct reader_task *rt;
->    302	
->    303		for (i = 0; i < n; i++) {
->    304			rt = &(reader_tasks[i]);
->    305	
->    306			rt->last_duration_ns = 0;
->    307		}
->    308	}
->    309	
->    310	// Print the results of each reader and return the sum of all their durations.
->  > 311	u64 process_durations(int n)
->    312	{
->    313		int i;
->    314		struct reader_task *rt;
->    315		char buf1[64];
->    316		char buf[512];
->    317		u64 sum = 0;
->    318	
->    319		buf[0] = 0;
->    320		sprintf(buf, "Experiment #%d (Format: <THREAD-NUM>:<Total loop time in ns>)",
->    321			exp_idx);
->    322	
->    323		for (i = 0; i <= n && !torture_must_stop(); i++) {
->    324			rt = &(reader_tasks[i]);
->    325			sprintf(buf1, "%d: %llu\t", i, rt->last_duration_ns);
->    326	
->    327			if (i % 5 == 0)
->    328				strcat(buf, "\n");
->    329			strcat(buf, buf1);
->    330	
->    331			sum += rt->last_duration_ns;
->    332		}
->    333		strcat(buf, "\n");
->    334	
->    335		PERFOUT("%s\n", buf);
->    336	
->    337		return sum;
->    338	}
->    339	
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
-
+-Sergey
