@@ -2,100 +2,105 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF1FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C927C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7AC20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590513895;
-	bh=WXYCcCFzHUdbB9KLas9uzteSeA6GV64kG5wAwquPbs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EbCKSD+aihXK0KJLvvxulIIxjMas/QIYKAepDR28lgFcH+3N61WaQuRBlQ3gMvQpc
-	 tqVHjcHvWF24lmbfsIkO04zqZVsKtUwyy7Hc+LhTGxdEO4MM0TrqrSHfVrFQxY0H0y
-	 U4qauoakcdnZiIIqDljUOGV4zJlbd0v2rBemSBN4=
+	by mail.kernel.org (Postfix) with ESMTP id 630E920723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TRgNf435"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389504AbgEZRYy (ORCPT
+        id S2389511AbgEZRZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388844AbgEZRXo (ORCPT
+        Tue, 26 May 2020 13:25:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49559 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389189AbgEZRX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:23:44 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF73C03E96D;
-        Tue, 26 May 2020 10:23:43 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id dh1so9783207qvb.13;
-        Tue, 26 May 2020 10:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SYQZMFTEBJ18xeJeS1buRtQuG/fExe+cZBQxRWLCEdI=;
-        b=DBB2dXXyQS8i2KL6fgI0iY3v+kzmXamXskvxCjgHOeueAxTFhY4qC9ElWV+f2i479K
-         QgcXP98W5NFfdi6cLmwRIm5jRaajZ8Xq7c0jS72HCWME/8Aas5rcXPl/uwSEOB+PWYmO
-         Z3J++foQU1ozkoo2brpOSl+duSw8dye0KsWj/pmWQjzzjVRDRm7PUb6cnoCrFBZvZwMW
-         InpmBDBrFiYlJd+AhV8vkCA3HCv+Ri0pjM+wDegKgRiYKUdb2EOcEM6peCwi5NR1/peF
-         tGUKznRKDoHnuAvvD+pPYLR7nxGJWvxFBE7FlmmQc/4cwA0CRXHJEEDCXEqIH6PsKNep
-         vYRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=SYQZMFTEBJ18xeJeS1buRtQuG/fExe+cZBQxRWLCEdI=;
-        b=n7+QUx2OtX1zV0w2oYk0t7Pef67ElN6QPRgQKAHQOc9kLv8K7Ozbqa8zM9UuucCvEv
-         WY+3Gj0lpo1uLHr+4saZL53Y5Ebj6Z0GJTTFf1Rhm7Wzx3oO3Qx1BBo//GOouIcW+A8u
-         O50yZorojILT/RlDB8I4MfeTDnubo6r5qO/LRBlUHDUhXwEV/XcolkzVcdAbMarB1D5s
-         7M7pqdU2HNNKGN7OhWFXGJhYeYe4bsq+MYn57/yRco3IKTRwxCqbzRrEuVlCZR6CJQQi
-         VnXZVWzJFMTMsSioeZeU5YubTi/seKIW9yst7FFeP3CrAuEwXk0MEcDhkn5hOuyr0dHn
-         IrpQ==
-X-Gm-Message-State: AOAM532doG7CK3oRbmPA1EDfzOkVsbLyBSx4qu1NptfTr7Ld7E+b586t
-        oCdmE8sKOqqQd/v7g0l0XUc=
-X-Google-Smtp-Source: ABdhPJxNcrcKF+fqaOMGL5W+NexLSdpNhiaupcVndx+6tqKzg2Z+N1bEowXKJaoJNYdwASCyIlLg3w==
-X-Received: by 2002:ad4:4d03:: with SMTP id l3mr21657230qvl.158.1590513823004;
-        Tue, 26 May 2020 10:23:43 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:85c0])
-        by smtp.gmail.com with ESMTPSA id d56sm277843qtb.54.2020.05.26.10.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 10:23:42 -0700 (PDT)
-Date:   Tue, 26 May 2020 13:23:40 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Wu Bo <wubo40@huawei.com>
-Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, Markus.Elfring@web.de,
-        linux-kernel@vger.kernel.org, liuzhiqiang26@huawei.com,
-        linfeilong@huawei.com
-Subject: Re: [PATCH] blkcg:Fix memory leaks in blkg_conf_prep()
-Message-ID: <20200526172340.GD83516@mtj.thefacebook.com>
-References: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
+        Tue, 26 May 2020 13:23:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590513805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aWMuLu+D+5hDBHITPYz9gQFGs3iVcOHE/1FDulotv2A=;
+        b=TRgNf435B4D0n7eDZsuJ3zdupWdjH1fsB25/HqrExxzy7jamns4SRB0rwfeplW3ojCUyin
+        QvnHMGzaJG1Ujw+U3YUqcVPIxXazZkzry8cuBg7NAj6K1TDv8ZJXKX46ZccB1P49Pe3GqL
+        x00GRAD6FxBX1EmMGpufwRxY9FOHYPU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-GjesUvQwNiOUcKPoOOjLMw-1; Tue, 26 May 2020 13:23:23 -0400
+X-MC-Unique: GjesUvQwNiOUcKPoOOjLMw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68617107ACF3;
+        Tue, 26 May 2020 17:23:22 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3A055C1D6;
+        Tue, 26 May 2020 17:23:21 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH 14/28] KVM: nSVM: remove trailing padding for struct vmcb_control_area
+Date:   Tue, 26 May 2020 13:22:54 -0400
+Message-Id: <20200526172308.111575-15-pbonzini@redhat.com>
+In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
+References: <20200526172308.111575-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:36:06PM +0800, Wu Bo wrote:
-> From: Wu Bo <wubo40@huawei.com>
-> 
-> If a call of the function blkg_lookup_check() failed,
-> we should be release the previously allocated block group 
-> before jumping to the lable 'fail_unlock' in the implementation of 
-> the function blkg_conf_prep().
-> 
-> Suggested-by: Markus Elfring <Markus.Elfring@web.de>
-> Signed-off-by: Wu Bo <wubo40@huawei.com>
+Allow placing the VMCB structs on the stack or in other structs without
+wasting too much space.  Add BUILD_BUG_ON as a quick safeguard against typos.
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/include/asm/svm.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Thanks.
-
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 6ece8561ba66..8a1f5382a4ea 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -96,7 +96,6 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+ 	u8 reserved_6[8];	/* Offset 0xe8 */
+ 	u64 avic_logical_id;	/* Offset 0xf0 */
+ 	u64 avic_physical_id;	/* Offset 0xf8 */
+-	u8 reserved_7[768];
+ };
+ 
+ 
+@@ -203,8 +202,16 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
+ 	u64 last_excp_to;
+ };
+ 
++
++static inline void __unused_size_checks(void)
++{
++	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
++	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
++}
++
+ struct __attribute__ ((__packed__)) vmcb {
+ 	struct vmcb_control_area control;
++	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
+ 	struct vmcb_save_area save;
+ };
+ 
 -- 
-tejun
+2.26.2
+
+
