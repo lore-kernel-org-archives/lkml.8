@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EC820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FE920849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520948;
-	bh=GU2D2mRPFvVsOoMBcRg66MyY3nXhu9te59IzEmrUMN8=;
+	s=default; t=1590520953;
+	bh=XSQb4Zp5cDsFHLtoAkY8MQ1hc/uoWgOtYUAeCqjEU30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMS4n6mktywR4BRltLsUs6uSXSONUNEl2LKNkXoWLBszyLWsmNO2LWx5BS42tPaLC
-	 2hker7s91Hke0TlRhP+hwX9MOk4WxxP3j3a7L930IN3lk5vf8lglqOmtNwjXmfJenn
-	 qJrXzlq+hhX7f3WkQakYe9zQHRD66oQVflZbjIEE=
+	b=qd0TKzt+4VwRHOVWgUbZDltXFFFOSXEpzG+2a1i0HY2fKiRHOQqM07UEipoBnWLm5
+	 A7BinKlhZcSkX/e3uG+VTqYtuA4I2YmfzLeFTJko+8VN2KCawk/IFzTc/6Jjd9vqf6
+	 2C+CZLY/zWNslN2e/jiDqE7JqieWP+AwS6U5TvTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391944AbgEZTW0 (ORCPT
+        id S2392169AbgEZTWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:22:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39354 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390048AbgEZTKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:12 -0400
+        id S2391912AbgEZTKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCAAF208B3;
-        Tue, 26 May 2020 19:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4760C20873;
+        Tue, 26 May 2020 19:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520212;
-        bh=GU2D2mRPFvVsOoMBcRg66MyY3nXhu9te59IzEmrUMN8=;
+        s=default; t=1590520209;
+        bh=XSQb4Zp5cDsFHLtoAkY8MQ1hc/uoWgOtYUAeCqjEU30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dLMc7xtUFONavf120fZnPFi6Q6PiRiEV3RceEHLrKnVeZnQ7WIljHYnBTSYzIbIv9
-         6hRgS0d//LZSKN6DIRvBT1euNy7i2bTt1/30po6G8KdokZOgr4mNyh+cSspEuw8vxU
-         YFGBYKlWSws1x1SkYAFUTBHHA/EYtLuesgvX+a4U=
+        b=eQ1tzH2AraEMXV0NW/y1Rik0di3J1CZcOPJS4DBOzY6LK1ne7kaCJBcBi5xzjxD7F
+         IEuzKIarOo3U9WyY5liAKNHF7dsJzGWrLBP8SoR1tHm27ZmZobHDX4SvJO4PX/R8xd
+         EXe77+eprVvE84O0Iro+nVmaf7FbMgsRT7u037ns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 101/111] x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
-Date:   Tue, 26 May 2020 20:53:59 +0200
-Message-Id: <20200526183942.478236620@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Colin Xu <colin.xu@intel.com>
+Subject: [PATCH 5.4 074/111] drm/i915/gvt: Init DPLL/DDI vreg for virtual display instead of inheritance.
+Date:   Tue, 26 May 2020 20:53:32 +0200
+Message-Id: <20200526183939.874072051@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,70 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Colin Xu <colin.xu@intel.com>
 
-commit 187b96db5ca79423618dfa29a05c438c34f9e1f0 upstream.
+commit f965b68188ab59a40a421ced1b05a2fea638465c upstream.
 
-Normally, show_trace_log_lvl() scans the stack, looking for text
-addresses to print.  In parallel, it unwinds the stack with
-unwind_next_frame().  If the stack address matches the pointer returned
-by unwind_get_return_address_ptr() for the current frame, the text
-address is printed normally without a question mark.  Otherwise it's
-considered a breadcrumb (potentially from a previous call path) and it's
-printed with a question mark to indicate that the address is unreliable
-and typically can be ignored.
+Init value of some display vregs rea inherited from host pregs. When
+host display in different status, i.e. all monitors unpluged, different
+display configurations, etc., GVT virtual display setup don't consistent
+thus may lead to guest driver consider display goes malfunctional.
 
-Since the following commit:
+The added init vreg values are based on PRMs and fixed by calcuation
+from current configuration (only PIPE_A) and the virtual EDID.
 
-  f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-
-... for inactive tasks, show_trace_log_lvl() prints *only* unreliable
-addresses (prepended with '?').
-
-That happens because, for the first frame of an inactive task,
-unwind_get_return_address_ptr() returns the wrong return address
-pointer: one word *below* the task stack pointer.  show_trace_log_lvl()
-starts scanning at the stack pointer itself, so it never finds the first
-'reliable' address, causing only guesses to being printed.
-
-The first frame of an inactive task isn't a normal stack frame.  It's
-actually just an instance of 'struct inactive_task_frame' which is left
-behind by __switch_to_asm().  Now that this inactive frame is actually
-exposed to callers, fix unwind_get_return_address_ptr() to interpret it
-properly.
-
-Fixes: f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200522135435.vbxs7umku5pyrdbk@treble
+Fixes: 04d348ae3f0a ("drm/i915/gvt: vGPU display virtualization")
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Colin Xu <colin.xu@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200508060506.216250-1-colin.xu@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/i915/gvt/display.c |   49 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -311,12 +311,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_addr
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -207,14 +207,41 @@ static void emulate_monitor_status_chang
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG0) |
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG1) |
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG2);
+-		vgpu_vreg_t(vgpu, LCPLL1_CTL) |=
+-				LCPLL_PLL_ENABLE |
+-				LCPLL_PLL_LOCK;
+-		vgpu_vreg_t(vgpu, LCPLL2_CTL) |= LCPLL_PLL_ENABLE;
+-
++		/*
++		 * Only 1 PIPE enabled in current vGPU display and PIPE_A is
++		 *  tied to TRANSCODER_A in HW, so it's safe to assume PIPE_A,
++		 *   TRANSCODER_A can be enabled. PORT_x depends on the input of
++		 *   setup_virtual_dp_monitor, we can bind DPLL0 to any PORT_x
++		 *   so we fixed to DPLL0 here.
++		 * Setup DPLL0: DP link clk 1620 MHz, non SSC, DP Mode
++		 */
++		vgpu_vreg_t(vgpu, DPLL_CTRL1) =
++			DPLL_CTRL1_OVERRIDE(DPLL_ID_SKL_DPLL0);
++		vgpu_vreg_t(vgpu, DPLL_CTRL1) |=
++			DPLL_CTRL1_LINK_RATE(DPLL_CTRL1_LINK_RATE_1620, DPLL_ID_SKL_DPLL0);
++		vgpu_vreg_t(vgpu, LCPLL1_CTL) =
++			LCPLL_PLL_ENABLE | LCPLL_PLL_LOCK;
++		vgpu_vreg_t(vgpu, DPLL_STATUS) = DPLL_LOCK(DPLL_ID_SKL_DPLL0);
++		/*
++		 * Golden M/N are calculated based on:
++		 *   24 bpp, 4 lanes, 154000 pixel clk (from virtual EDID),
++		 *   DP link clk 1620 MHz and non-constant_n.
++		 * TODO: calculate DP link symbol clk and stream clk m/n.
++		 */
++		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) = 63 << TU_SIZE_SHIFT;
++		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) |= 0x5b425e;
++		vgpu_vreg_t(vgpu, PIPE_DATA_N1(TRANSCODER_A)) = 0x800000;
++		vgpu_vreg_t(vgpu, PIPE_LINK_M1(TRANSCODER_A)) = 0x3cd6e;
++		vgpu_vreg_t(vgpu, PIPE_LINK_N1(TRANSCODER_A)) = 0x80000;
+ 	}
  
- unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
- {
-+	struct task_struct *task = state->task;
-+
- 	if (unwind_done(state))
- 		return NULL;
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_B)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_B);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_B);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_B);
+ 		vgpu_vreg_t(vgpu, SFUSE_STRAP) |= SFUSE_STRAP_DDIB_DETECTED;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
+@@ -235,6 +262,12 @@ static void emulate_monitor_status_chang
+ 	}
  
- 	if (state->regs)
- 		return &state->regs->ip;
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_C)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_C);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_C);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_C);
+ 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTC_HOTPLUG_CPT;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
+@@ -255,6 +288,12 @@ static void emulate_monitor_status_chang
+ 	}
  
-+	if (task != current && state->sp == task->thread.sp) {
-+		struct inactive_task_frame *frame = (void *)task->thread.sp;
-+		return &frame->ret_addr;
-+	}
-+
- 	if (state->sp)
- 		return (unsigned long *)state->sp - 1;
- 
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_D)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_D);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_D);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_D);
+ 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTD_HOTPLUG_CPT;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
 
 
