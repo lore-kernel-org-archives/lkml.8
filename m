@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13255C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D42702086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1791208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519800;
-	bh=21kYSuG0pFowDVai7SHBUxnwhgPk+jiqxAqlxf/Ywrs=;
+	s=default; t=1590519804;
+	bh=Dgq3p6bbhPKRPAoq7iflPSQKnWlh1GWu+U2jg9fzKQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cgo2fg2pOz7oEAhC822ta0MB861OA7B5Gs1e8xq2Rx+raTp6azSmB+L7W0AlS1z+J
-	 rX8xGLSqFj0CkCwwWBt1h/AYN14dAe913dtao7xd5bxU2QFz6gQPeuIdhKCob4qoEi
-	 8QAyMOW8sPzs66cfaQD/laQP3b/38RyVr/vIn5g4=
+	b=I6qTmo2aIwuTZLG84loDKlwNVrgrs6Nz34cv/yF12yHz6BMZI+kyCUM1bXrVLp+/O
+	 nRDsErw+7v4L8BzHNMkBjk1y4F9Bdg+p3Zj7hueoYyMfZ8DYXID0bKKP4rJ8zuBGGM
+	 2Bu7UNakKSChpBu73wwLHX1+c3Oskx56UgHRIawc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389569AbgEZTDU (ORCPT
+        id S2391206AbgEZTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391185AbgEZTDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:15 -0400
+        id S2390271AbgEZTDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DBE208C9;
-        Tue, 26 May 2020 19:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77418208A7;
+        Tue, 26 May 2020 19:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519794;
-        bh=21kYSuG0pFowDVai7SHBUxnwhgPk+jiqxAqlxf/Ywrs=;
+        s=default; t=1590519799;
+        bh=Dgq3p6bbhPKRPAoq7iflPSQKnWlh1GWu+U2jg9fzKQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tpWRDsu7WzR6bbKdVaJ3AIsxR+0houG13EyMBBtseg2OKRHJGZwKAHwJndTTOyOc
-         aBUSp3I+U3CBnL1OAOqk6Enuam2cqiAaZBzTBqZCwSeFr+UVgojh8ZvGI0UMoSThQb
-         t2aftJmCHLQYVf4SCXPaB2TtwhEbofhq5fpOoUnQ=
+        b=1SqIAYXcReQiGzR3+nOXNDMxsU1QDBF+B2NTo7aYrUAS6swY1xXETZ8u59h8JGKVd
+         yz5HD5JJEknRptEp5t31WCAwMI/hiGKMNdx4SJmdxSCui2xkdY20pmbZDgaujrOT8P
+         pS5pR+tdpgGgat7E0U4CC1M+GLc16CbKU+CPNDHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/81] scsi: qla2xxx: Delete all sessions before unregister local nvme port
-Date:   Tue, 26 May 2020 20:52:55 +0200
-Message-Id: <20200526183928.889022046@linuxfoundation.org>
+Subject: [PATCH 4.19 22/81] vhost/vsock: fix packet delivery order to monitoring devices
+Date:   Tue, 26 May 2020 20:52:57 +0200
+Message-Id: <20200526183929.430407142@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -63,64 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit c48f849d3f7a4ec1025105f446e29d395c4dcc2f ]
+[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
 
-Delete all sessions before unregistering local nvme port.  This allows nvme
-layer to decrement all active rport count down to zero.  Once the count is
-down to zero, nvme would call qla to continue with the npiv port deletion.
+We want to deliver packets to monitoring devices before it is
+put in the virtqueue, to avoid that replies can appear in the
+packet capture before the transmitted packet.
 
-PID: 27448  TASK: ffff9e34b777c1c0  CPU: 0   COMMAND: "qaucli"
- 0 [ffff9e25e84abbd8] __schedule at ffffffff977858ca
- 1 [ffff9e25e84abc68] schedule at ffffffff97785d79
- 2 [ffff9e25e84abc78] schedule_timeout at ffffffff97783881
- 3 [ffff9e25e84abd28] wait_for_completion at ffffffff9778612d
- 4 [ffff9e25e84abd88] qla_nvme_delete at ffffffffc0e3024e [qla2xxx]
- 5 [ffff9e25e84abda8] qla24xx_vport_delete at ffffffffc0e024b9 [qla2xxx]
- 6 [ffff9e25e84abdf0] fc_vport_terminate at ffffffffc011c247 [scsi_transport_fc]
- 7 [ffff9e25e84abe28] store_fc_host_vport_delete at ffffffffc011cd94 [scsi_transport_fc]
- 8 [ffff9e25e84abe70] dev_attr_store at ffffffff974b376b
- 9 [ffff9e25e84abe80] sysfs_kf_write at ffffffff972d9a92
-10 [ffff9e25e84abe90] kernfs_fop_write at ffffffff972d907b
-11 [ffff9e25e84abec8] vfs_write at ffffffff9724c790
-12 [ffff9e25e84abf08] sys_write at ffffffff9724d55f
-13 [ffff9e25e84abf50] system_call_fastpath at ffffffff97792ed2
-    RIP: 00007fc0bd81a6fd  RSP: 00007ffff78d9648  RFLAGS: 00010202
-    RAX: 0000000000000001  RBX: 0000000000000022  RCX: 00007ffff78d96e0
-    RDX: 0000000000000022  RSI: 00007ffff78d94e0  RDI: 0000000000000008
-    RBP: 00007ffff78d9440   R8: 0000000000000000   R9: 00007fc0bd48b2cd
-    R10: 0000000000000017  R11: 0000000000000293  R12: 0000000000000000
-    R13: 00005624e4dac840  R14: 00005624e4da9a10  R15: 0000000000000000
-    ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
-
-Link: https://lore.kernel.org/r/20200331104015.24868-4-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vhost/vsock.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index b008d583dd6e..0ab9d2fd4a14 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -2162,11 +2162,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
- 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
- 		msleep(1000);
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index bac1365cc81b..7891bd40ebd8 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -182,14 +182,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+ 			break;
+ 		}
  
--	qla_nvme_delete(vha);
+-		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+-		added = true;
+-
+-		/* Deliver to monitoring devices all correctly transmitted
+-		 * packets.
++		/* Deliver to monitoring devices all packets that we
++		 * will transmit.
+ 		 */
+ 		virtio_transport_deliver_tap_pkt(pkt);
  
- 	qla24xx_disable_vp(vha);
- 	qla2x00_wait_for_sess_deletion(vha);
++		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
++		added = true;
++
+ 		pkt->off += payload_len;
+ 		total_len += payload_len;
  
-+	qla_nvme_delete(vha);
- 	vha->flags.delete_progress = 1;
- 
- 	qlt_remove_target(ha, vha);
 -- 
 2.25.1
 
