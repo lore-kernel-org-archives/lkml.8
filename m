@@ -2,143 +2,143 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F699C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 171B6206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:39:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=familie-tometzki.de header.i=@familie-tometzki.de header.b="XW6RzidC"
+	by mail.kernel.org (Postfix) with ESMTP id 067F7206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389015AbgEZSjl (ORCPT
+        id S2389108AbgEZSkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388499AbgEZSjk (ORCPT
+        Tue, 26 May 2020 14:40:18 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59486 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387399AbgEZSkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:39:40 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6962CC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:39:40 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id e2so24878849eje.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=familie-tometzki.de; s=google;
-        h=from:date:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9yva+qG0CZWgeaDfnOWSXKHYV4l94Ce4oRRp5BLm0Oo=;
-        b=XW6RzidCRYP2Urt2pLVgj+Y2vf8lofpnePp5ZiqYjWjPn/rcD6GCDfwn2F6QE3Pg34
-         ISBbXtqD2nuqvPNYgmx4/rjBYdoCjm7Kl4/b2NA9942py6RSyMGL8HKPsA9KOndNvPw/
-         NjGzW/RkogQmoz4+uKVWxXevo1NoqZ8uxTwoZvpFaiCphEJ5YpxjkBKR4yfkyvh3xyKd
-         IoMz/T9laR7tZZ8QjiGKGnSC9J34Tr74DAkymOMCGv/4+PVSWiJjosKfpOgb6Fw8nTY1
-         wdy6nerj9ivOhppgEGvWg7vzPGg6M96VoLEQhHit1NnGIZqeOeBUXvTP/gvQdGVUC02l
-         z7cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=9yva+qG0CZWgeaDfnOWSXKHYV4l94Ce4oRRp5BLm0Oo=;
-        b=Jx5hosr3iO0cQBTpdbA9AG4hjbBl8QJE2txBwjJk/3KFbCv08f6UBnjmWutCsfKrh1
-         Iln7kUnDO3hHr2ghGK16o/ZOxiF42ISvNaHd0FsNxD1Ty7tJXU1cJKm5PtH9EOWINhw7
-         +uDX4rHQq3IxKlgO8hY4NxM0z58IWYW8r1f8/3l6YlUfG3rrSXs2OwvVOGA/qVwyeHAZ
-         bLrKDQpIFHePC8jpgr3c7oIt/xuVgQ3tmhSqkWojSi/a29mPG/rjHG4WTC58n6I70uUM
-         jk8Vifboq36TnGGYmVOrsoKGTAhUKeC3oMxjbflNj345F/Ar26s7BYU2CG8v5UWlQ/Y5
-         2lnA==
-X-Gm-Message-State: AOAM532oMvIvvhdl9CPc8VFE1Aa9dOGCl+NS4GybeeUWAivkURouR4PC
-        ICo3S1kG63QmiYoABfHbwVpyzQ==
-X-Google-Smtp-Source: ABdhPJw9DBtVBj1Op2rbWQHpDcoVvB1GpyA0iV2tDzjriXZdh1QOuZlv8wwGB2XXOIkkrHxsK4HuZw==
-X-Received: by 2002:a17:906:9617:: with SMTP id s23mr2263738ejx.505.1590518378411;
-        Tue, 26 May 2020 11:39:38 -0700 (PDT)
-Received: from centos.familie-tometzki.de (p54944fd8.dip0.t-ipconnect.de. [84.148.79.216])
-        by smtp.gmail.com with ESMTPSA id af15sm528840ejc.89.2020.05.26.11.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:39:37 -0700 (PDT)
-From:   damian <damian.tometzki@familie-tometzki.de>
-X-Google-Original-From: damian <dti+kernel@familie-tometzki.de>
-Date:   Tue, 26 May 2020 20:39:34 +0200
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V9 20/39] x86/irq: Use generic irq_regs implementation
-Message-ID: <20200526183934.GA3960@centos.familie-tometzki.de>
-Mail-Followup-To: Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20200521200513.656533920@linutronix.de>
- <20200521202118.704169051@linutronix.de>
+        Tue, 26 May 2020 14:40:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id F347F8030869;
+        Tue, 26 May 2020 18:40:14 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2o6nlMTIy_Dv; Tue, 26 May 2020 21:40:13 +0300 (MSK)
+Date:   Tue, 26 May 2020 21:40:11 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Max Staudt <max@enpas.org>, Stefan Roese <sr@denx.de>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 07/12] i2c: designware: Move Baytrail sem config to
+ the platform if-clause
+Message-ID: <20200526184011.rjpkpuk6nxuksyct@mobilestation>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-8-Sergey.Semin@baikalelectronics.ru>
+ <da6d8b18-b808-fd86-bbd2-13e7a90b2a5e@linux.intel.com>
+ <20200521022215.ubvhuop47aflqkkb@mobilestation>
+ <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200521202118.704169051@linutronix.de>
+In-Reply-To: <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thomas,
+On Mon, May 25, 2020 at 04:01:26PM +0300, Jarkko Nikula wrote:
+> On 5/21/20 5:22 AM, Serge Semin wrote:
+> > On Wed, May 20, 2020 at 03:16:14PM +0300, Jarkko Nikula wrote:
+> > > On 5/10/20 12:50 PM, Serge Semin wrote:
+> > > > Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
+> > > > platform driver. It's a bit confusing to see it's config in the menu at
+> > > > some separated place with no reference to the platform code. Lets move the
+> > > > config definition under the if-I2C_DESIGNWARE_PLATFORM clause. By doing so
+> > > > the config menu will display the feature right below the DW I2C platform
+> > > > driver item and will indent it to the right so signifying its belonging.
+> > > > 
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > > Cc: Paul Burton <paulburton@kernel.org>
+> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Frank Rowand <frowand.list@gmail.com>
+> > > > Cc: linux-mips@vger.kernel.org
+> > > > Cc: devicetree@vger.kernel.org
+> > > > ---
+> > > >    drivers/i2c/busses/Kconfig | 30 +++++++++++++++++-------------
+> > > >    1 file changed, 17 insertions(+), 13 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> > > > index 368aa64e9266..ed6927c4c540 100644
+> > > > --- a/drivers/i2c/busses/Kconfig
+> > > > +++ b/drivers/i2c/busses/Kconfig
+> > > > @@ -530,8 +530,8 @@ config I2C_DESIGNWARE_CORE
+> > > >    config I2C_DESIGNWARE_PLATFORM
+> > > >    	tristate "Synopsys DesignWare Platform"
+> > > > -	select I2C_DESIGNWARE_CORE
+> > > >    	depends on (ACPI && COMMON_CLK) || !ACPI
+> > > > +	select I2C_DESIGNWARE_CORE
+> > > >    	help
+> > > >    	  If you say yes to this option, support will be included for the
+> > > >    	  Synopsys DesignWare I2C adapter.
+> > > > @@ -539,6 +539,22 @@ config I2C_DESIGNWARE_PLATFORM
+> > > >    	  This driver can also be built as a module.  If so, the module
+> > > >    	  will be called i2c-designware-platform.
+> > > > +if I2C_DESIGNWARE_PLATFORM
+> > > > +
+> > > > +config I2C_DESIGNWARE_BAYTRAIL
+> > > > +	bool "Intel Baytrail I2C semaphore support"
+> > > > +	depends on ACPI
+> > > > +	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
+> > > > +		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
+> > > > +	help
+> > > > +	  This driver enables managed host access to the PMIC I2C bus on select
+> > > > +	  Intel BayTrail platforms using the X-Powers AXP288 PMIC. It allows
+> > > > +	  the host to request uninterrupted access to the PMIC's I2C bus from
+> > > > +	  the platform firmware controlling it. You should say Y if running on
+> > > > +	  a BayTrail system using the AXP288.
+> > > > +
+> > > > +endif # I2C_DESIGNWARE_PLATFORM
+> > > > +
+> > > 
+> > > Is the added "if I2C_DESIGNWARE_PLATFORM" needed here? Should the "depends
+> > > on" be enough?
+> > 
+> > The idea was to add if-endif clause here for features possibly added sometime
+> > in future. But using normal "depends on I2C_DESIGNWARE_PLATFORM" shall make
+> > the config depicted as an indented sub-config as well. Would you like me to
+> > remove the if-clause and use the depends on operator instead?
+> > 
+> Yes, please remove it from this patch. Keeps this patch simpler and if some
+> future feature needs it then that patch(set) is the right place to add it.
 
-with this patch i got the following build error:
+Agreed. I'll do this in v3.
 
-  LD      .tmp_vmlinux.kallsyms1
-/home/damian/kernel/buildroot/output/host/bin/x86_64-buildroot-linux-uclibc-ld: arch/x86/kernel/irq.o: in function `get_irq_regs':
-/home/damian/kernel/buildroot/output/build/linux-custom/./arch/x86/include/asm/irq_regs.h:19: undefined reference to `irq_regs'
-/home/damian/kernel/buildroot/output/host/bin/x86_64-buildroot-linux-uclibc-ld: arch/x86/kernel/irq.o: in function `set_irq_regs':
-/home/damian/kernel/buildroot/output/build/linux-custom/./arch/x86/include/asm/irq_regs.h:27: undefined reference to `irq_regs'
-/home/damian/kernel/buildroot/output/host/bin/x86_64-buildroot-linux-uclibc-ld: /home/damian/kernel/buildroot/output/build/linux-custom/./arch/x86/include/asm/irq_regs.h:27: undefined reference to `irq_regs'
-/home/damian/kernel/buildroot/output/host/bin/x86_64-buildroot-linux-uclibc-ld: arch/x86/kernel/irq.o: in function `get_irq_regs':
-/home/damian/kernel/buildroot/output/build/linux-custom/./arch/x86/include/asm/irq_regs.h:19: undefined reference to `irq_regs'
-/home/damian/kernel/buildroot/output/host/bin/x86_64-buildroot-linux-uclibc-ld: arch/x86/kernel/irq.o: in function `set_irq_regs':
-/home/damian/kernel/buildroot/output/build/linux-custom/./arch/x86/include/asm/irq_regs.h:27: undefined reference to `irq_regs'
+-Sergey
 
-Best regards
-Damian
-
+> 
+> Jarkko
