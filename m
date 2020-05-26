@@ -2,174 +2,124 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C380C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A89FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A51220776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:51:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TK4FemrF"
+	by mail.kernel.org (Postfix) with ESMTP id 7A1A8208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgEZOvc (ORCPT
+        id S1729350AbgEZOww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:51:32 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38930 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729333AbgEZOvc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:51:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590504691; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=c8RXii6pifQBdUf4+jgUL7EdFr2F1OlKXX/MPLtY3BE=; b=TK4FemrF0tArihT8pLlsvVKMC5D8kGttY+CCYAZmZeT809/vASziQehHAthFXOmVwfH9eBHT
- kDl/ir3sn8eqByBpp2qoekLX5n96XpDGNygiIox07SaoX2NC/m5NkEdXSwnJaOS5xOmmRonQ
- Z2q23BgEnR31mFgsaVIKHygSMc0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ecd2cf227386861261101e1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 14:51:30
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7AC6FC433CB; Tue, 26 May 2020 14:51:29 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9701BC433C6;
-        Tue, 26 May 2020 14:51:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9701BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v1] bluetooth: hci_qca: Fix QCA6390 memdump failure
-Date:   Tue, 26 May 2020 22:51:21 +0800
-Message-Id: <1590504681-6284-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 26 May 2020 10:52:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:51792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726916AbgEZOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:52:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D055F30E;
+        Tue, 26 May 2020 07:52:50 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BE253F7C3;
+        Tue, 26 May 2020 07:52:47 -0700 (PDT)
+Date:   Tue, 26 May 2020 15:52:45 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
+        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v2 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
+Message-ID: <20200526145244.GG17051@gaia>
+References: <20200423135656.2712-1-yezhenyu2@huawei.com>
+ <20200423135656.2712-6-yezhenyu2@huawei.com>
+ <20200522154254.GD26492@gaia>
+ <ddba6d98-29b5-0748-ba74-ec022f509270@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddba6d98-29b5-0748-ba74-ec022f509270@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCA6390 memdump VSE sometimes come to bluetooth driver
-with wrong sequence number as illustrated as follows:
-frame # in DEC: frame data in HEX
-1396: ff fd 01 08 74 05 00 37 8f 14
-1397: ff fd 01 08 75 05 00 ff bf 38
-1414: ff fd 01 08 86 05 00 fb 5e 4b
-1399: ff fd 01 08 77 05 00 f3 44 0a
-1400: ff fd 01 08 78 05 00 ca f7 41
-it is mistook for controller missing packets, so results
-in page fault after overwriting memdump buffer allocated.
+On Mon, May 25, 2020 at 03:19:42PM +0800, Zhenyu Ye wrote:
+> On 2020/5/22 23:42, Catalin Marinas wrote:
+> > On Thu, Apr 23, 2020 at 09:56:55PM +0800, Zhenyu Ye wrote:
+> >> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> >> index 3d7c01e76efc..3eff199d3507 100644
+> >> --- a/mm/pgtable-generic.c
+> >> +++ b/mm/pgtable-generic.c
+> >> @@ -101,6 +101,28 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+> >>  
+> >>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >>  
+> >> +#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+> >> +
+> >> +#define FLUSH_Pxx_TLB_RANGE(_pxx)					\
+> >> +void flush_##_pxx##_tlb_range(struct vm_area_struct *vma,		\
+> >> +			      unsigned long addr, unsigned long end)	\
+> >> +{									\
+> >> +		struct mmu_gather tlb;					\
+> >> +									\
+> >> +		tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);		\
+> >> +		tlb_start_vma(&tlb, vma);				\
+> >> +		tlb_flush_##_pxx##_range(&tlb, addr, end - addr);	\
+> >> +		tlb_end_vma(&tlb, vma);					\
+> >> +		tlb_finish_mmu(&tlb, addr, end);			\
+> >> +}
+> > 
+> > I may have confused myself (flush_p??_tlb_* vs. tlb_flush_p??_*) but do
+> > actually need this whole tlb_gather thing here? IIUC (by grep'ing),
+> > flush_p?d_tlb_range() is only called on huge pages, so we should know
+> > the level already.
+> 
+> tlb_flush_##_pxx##_range() is used to set tlb->cleared_*,
+> flush_##_pxx##_tlb_range() will actually flush the TLB entry.
+> 
+> In arch64, tlb_flush_p?d_range() is defined as:
+> 
+> 	#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+> 	#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
 
-it is fixed by ignoring QCA6390 sequence number error
-and checking buffer space before writing.
+Currently, flush_p??_tlb_range() are generic and defined as above. I
+think in the generic code they can remain an alias for
+flush_tlb_range().
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 38 insertions(+), 7 deletions(-)
+On arm64, we can redefine them as:
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index e4a6823..ab90af6 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -114,6 +114,7 @@ struct qca_memdump_data {
- 	char *memdump_buf_tail;
- 	u32 current_seq_no;
- 	u32 received_dump;
-+	u32 ram_dump_size;
- };
- 
- struct qca_memdump_event_hdr {
-@@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
- 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
- 	u16 seq_no;
- 	u32 dump_size;
-+	u32 temp;
-+	enum qca_btsoc_type soc_type = qca_soc_type(hu);
- 
- 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
- 
-@@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
- 
- 			skb_pull(skb, sizeof(dump_size));
- 			memdump_buf = vmalloc(dump_size);
-+			qca_memdump->ram_dump_size = dump_size;
- 			qca_memdump->memdump_buf_head = memdump_buf;
- 			qca_memdump->memdump_buf_tail = memdump_buf;
- 		}
-@@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
- 		 * packets in the buffer.
- 		 */
- 		while ((seq_no > qca_memdump->current_seq_no + 1) &&
-+			(soc_type != QCA_QCA6390) &&
- 			seq_no != QCA_LAST_SEQUENCE_NUM) {
- 			bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
- 				   qca_memdump->current_seq_no);
-+			temp = qca_memdump->received_dump;
-+			temp += QCA_DUMP_PACKET_SIZE;
-+			if (temp > qca_memdump->ram_dump_size) {
-+				bt_dev_err(hu->hdev,
-+						"QCA memdump received %d, no space for missed packet",
-+						qca_memdump->received_dump);
-+				break;
-+			}
- 			memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
- 			memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
- 			qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
- 			qca_memdump->current_seq_no++;
- 		}
- 
--		memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
--		memdump_buf = memdump_buf + skb->len;
--		qca_memdump->memdump_buf_tail = memdump_buf;
--		qca_memdump->current_seq_no = seq_no + 1;
--		qca_memdump->received_dump += skb->len;
-+		temp = qca_memdump->received_dump + skb->len;
-+		if (temp <= qca_memdump->ram_dump_size) {
-+			if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
-+					(seq_no != qca_memdump->current_seq_no))
-+				bt_dev_err(hu->hdev,
-+						"QCA memdump unexpected packet %d",
-+						seq_no);
-+			bt_dev_dbg(hu->hdev,
-+					"QCA memdump packet %d with length %d",
-+					seq_no, skb->len);
-+			memcpy(memdump_buf, (unsigned char *)skb->data,
-+					skb->len);
-+			memdump_buf = memdump_buf + skb->len;
-+			qca_memdump->memdump_buf_tail = memdump_buf;
-+			qca_memdump->current_seq_no = seq_no + 1;
-+			qca_memdump->received_dump += skb->len;
-+		} else {
-+			bt_dev_err(hu->hdev,
-+					"QCA memdump received %d, no space for packet %d",
-+					qca_memdump->received_dump, seq_no);
-+		}
- 		qca->qca_memdump = qca_memdump;
- 		kfree_skb(skb);
- 		if (seq_no == QCA_LAST_SEQUENCE_NUM) {
--			bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
--				   qca_memdump->received_dump);
-+			bt_dev_info(hu->hdev,
-+					"QCA memdump Done, received %d, total %d",
-+					qca_memdump->received_dump,
-+					qca_memdump->ram_dump_size);
- 			memdump_buf = qca_memdump->memdump_buf_head;
- 			dev_coredumpv(&hu->serdev->dev, memdump_buf,
- 				      qca_memdump->received_dump, GFP_KERNEL);
+#define flush_pte_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 3)
+#define flush_pmd_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 2)
+#define flush_pud_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 1)
+#define flush_p4d_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 0)
+
+(unless the compiler optimises away all the mmu_gather stuff in your
+macro above but they don't look trivial to me)
+
+Also, I don't see the new flush_pte_* and flush_p4d_* macros used
+anywhere and I don't think they are needed. The pte equivalent is
+flush_tlb_page() (we need to make sure it's not used on a pmd in the
+hugetlb context).
+
+> So even if we know the level here, we can not pass the value to tlbi
+> instructions (flush_tlb_range() is a common kernel interface and retro-fit it
+> needs lots of changes), according to Peter's suggestion, I finally decide to
+> pass the value of TTL by the tlb_gather_* frame.[1]
+
+My comment was about the generic implementation using mmu_gather as you
+are proposing. We don't need to change the flush_tlb_range() interface,
+nor do we need to rewrite flush_p??_tlb_range().
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
-
+Catalin
