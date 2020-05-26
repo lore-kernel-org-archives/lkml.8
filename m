@@ -2,196 +2,113 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88042C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2EA20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6787520776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:38:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRqDkXAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgEZFf5 (ORCPT
+        id S1726638AbgEZFiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 01:35:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20009 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgEZFf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 01:35:56 -0400
-IronPort-SDR: 75n97el5uGZTIObyAj1H5ptVwaYdYcv8hOXWx2zz6NKYERpz+GSPgwrYW63A4YoJut68MC1SQg
- SMwqrYADHwTA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 22:35:56 -0700
-IronPort-SDR: 8GuUvj2YEZwOCH+zeBzQGzidx1tkcc1NTDlrvncBzRNXwbmzFfOQ4wMAbrOH0d3XjFBsPvnH75
- aWpwPrG8sZfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
-   d="scan'208";a="256368416"
-Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.240.193.54])
-  by fmsmga008.fm.intel.com with ESMTP; 25 May 2020 22:35:53 -0700
-From:   Zhu Lingshan <lingshan.zhu@intel.com>
-To:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        jasowang@redhat.com
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [PATCH] vdpa: bypass waking up vhost_woker for vdpa vq kick
-Date:   Tue, 26 May 2020 13:32:25 +0800
-Message-Id: <1590471145-4436-1-git-send-email-lingshan.zhu@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 26 May 2020 01:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgEZFix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 01:38:53 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11A1C061A0E;
+        Mon, 25 May 2020 22:38:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 131so1254253pfv.13;
+        Mon, 25 May 2020 22:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=TEpwLFvhdJnR4rjU7Ugp7j/UBW4cby4V0E/lSlZIC2A=;
+        b=dRqDkXAhUQqq4jKIqnZQcVMSc+nmulxIn8oBwA5cKzkJQBeQVkpu50Q4u+BhuUv1gH
+         iSsk9QGdD6CEpil6jNcyOQ6GwppqEKhEjSNSnOBG204oomjvsOGyP+Nza/14py2CtuON
+         sYN1JHc89qYwszU9hx8uqkyA8M81ruCWFGrBLh+cHmn59r2sxviOOZFHLEF7/yl5kNa7
+         RrYXh9FBng/tXMbq8zkTC7wVjOZx1fvh7xZIj2fFN5eRop2lY7NgCJ3Ki++2DXfJc5hI
+         bYvvh/uiHyY9c8tg2kkR1etcVQQyprHGXiS9iODGxU15LCQfz50k/z5hoSzh2G2I5q8K
+         R6ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=TEpwLFvhdJnR4rjU7Ugp7j/UBW4cby4V0E/lSlZIC2A=;
+        b=Cge8cGhNeaMRGkjMIRW0Fr0ilINHdp6FFzWxohJvlXXfPn3OSWTULTpgeGlKJN+2o5
+         7zWl8PDn37IiqafDtuV7qVtm+ZBOp3jkUA5CQctvuUs4EnEU4z288xx2yvGdUvVmFnHR
+         7yjCfOkO1s5EJ3E3KIzfwlMeZYwWhjEzdlav9+YgN5Dlcpcfq131WXs6EUjSNcGnFxAW
+         72Z5KwTO3K1V8gGkC+NnOjMgrts7EzUaZLOyCSJdNV2mxxCdtdbJQcQJ4mIuA31hVMxR
+         vtIy72El/cOYr0gsJcXJ1l9X8gPNZBmE+WkMyNR1KhnVD4mqGDzx8s2Rz+mWESQSWUBB
+         asyQ==
+X-Gm-Message-State: AOAM531k++wYGfx77HXExBgsojY/ZomXQ8mh3z+S/xUxBIHCBRmVjlRi
+        K7sqNr5CAap4BXOiQpM1Lf1ba47e
+X-Google-Smtp-Source: ABdhPJwU6+yb4CNaNP614xORlUHrKpQ8SmzJEas/bYBWmkz6zcDW8qqB9KRkV689KfvC/QL6TxFnAg==
+X-Received: by 2002:a63:d148:: with SMTP id c8mr29277363pgj.51.1590471533034;
+        Mon, 25 May 2020 22:38:53 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id y6sm14105508pjw.15.2020.05.25.22.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2020 22:38:52 -0700 (PDT)
+Date:   Mon, 25 May 2020 22:38:50 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Anders Roxell <anders.roxell@linaro.org>, geert+renesas@glider.be,
+        magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org,
+        sre@kernel.org, robh@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: reset: vexpress: fix build issue
+Message-ID: <20200526053850.GA2368760@ubuntu-s3-xlarge-x86>
+References: <20200522220103.908307-1-anders.roxell@linaro.org>
+ <20200524222025.GA3116034@ubuntu-s3-xlarge-x86>
+ <292277.1590449865@turing-police>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <292277.1590449865@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Standard vhost devices rely on waking up a vhost_worker to kick
-a virtquque. However vdpa devices have hardware backends, so it
-does not need this waking up routin. In this commit, vdpa device
-will kick a virtqueue directly, reduce the performance overhead
-caused by waking up a vhost_woker.
+On Mon, May 25, 2020 at 07:37:45PM -0400, Valdis Klētnieks wrote:
+> On Sun, 24 May 2020 15:20:25 -0700, Nathan Chancellor said:
+> 
+> > arm-linux-gnueabi-ld: drivers/power/reset/vexpress-poweroff.o: in function `vexpress_reset_probe':
+> > vexpress-poweroff.c:(.text+0x36c): undefined reference to `devm_regmap_init_vexpress_config'
+> 
+> The part I can't figure out is that git blame tells me there's already an
+> export:
+> 
+> 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 154)   return regmap;
+> 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 155) }
+> b33cdd283bd91 (Arnd Bergmann   2014-05-26 17:25:22 +0200 156) EXPORT_SYMBOL_GPL(devm_regmap_init_vexpress_config);
+> 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 157)
+> 
+> but I can't figure out where or if drivers/power/reset/vexpress-poweroff.c gets
+> a MODULE_LICENSE from...
 
-Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
-Suggested-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/vdpa.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+Correct, it is exported but that file is being built as a module whereas
+the file requiring it is beign builtin. As far as I understand, that
+will not work, hence the error.
 
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 0968361..d3a2aca 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -287,6 +287,66 @@ static long vhost_vdpa_get_vring_num(struct vhost_vdpa *v, u16 __user *argp)
- 
- 	return 0;
- }
-+void vhost_vdpa_poll_stop(struct vhost_virtqueue *vq)
-+{
-+	vhost_poll_stop(&vq->poll);
-+}
-+
-+int vhost_vdpa_poll_start(struct vhost_virtqueue *vq)
-+{
-+	struct vhost_poll *poll = &vq->poll;
-+	struct file *file = vq->kick;
-+	__poll_t mask;
-+
-+
-+	if (poll->wqh)
-+		return 0;
-+
-+	mask = vfs_poll(file, &poll->table);
-+	if (mask)
-+		vq->handle_kick(&vq->poll.work);
-+	if (mask & EPOLLERR) {
-+		vhost_poll_stop(poll);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static long vhost_vdpa_set_vring_kick(struct vhost_virtqueue *vq,
-+				      void __user *argp)
-+{
-+	bool pollstart = false, pollstop = false;
-+	struct file *eventfp, *filep = NULL;
-+	struct vhost_vring_file f;
-+	long r;
-+
-+	if (copy_from_user(&f, argp, sizeof(f)))
-+		return -EFAULT;
-+
-+	eventfp = f.fd == -1 ? NULL : eventfd_fget(f.fd);
-+	if (IS_ERR(eventfp)) {
-+		r = PTR_ERR(eventfp);
-+		return r;
-+	}
-+
-+	if (eventfp != vq->kick) {
-+		pollstop = (filep = vq->kick) != NULL;
-+		pollstart = (vq->kick = eventfp) != NULL;
-+	} else
-+		filep = eventfp;
-+
-+	if (pollstop && vq->handle_kick)
-+		vhost_vdpa_poll_stop(vq);
-+
-+	if (filep)
-+		fput(filep);
-+
-+	if (pollstart && vq->handle_kick)
-+		r = vhost_vdpa_poll_start(vq);
-+
-+	return r;
-+}
- 
- static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 				   void __user *argp)
-@@ -316,6 +376,11 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 		return 0;
- 	}
- 
-+	if (cmd == VHOST_SET_VRING_KICK) {
-+		r = vhost_vdpa_set_vring_kick(vq, argp);
-+		return r;
-+	}
-+
- 	if (cmd == VHOST_GET_VRING_BASE)
- 		vq->last_avail_idx = ops->get_vq_state(v->vdpa, idx);
- 
-@@ -667,6 +732,39 @@ static void vhost_vdpa_free_domain(struct vhost_vdpa *v)
- 	v->domain = NULL;
- }
- 
-+static int vhost_vdpa_poll_worker(wait_queue_entry_t *wait, unsigned int mode,
-+				  int sync, void *key)
-+{
-+	struct vhost_poll *poll = container_of(wait, struct vhost_poll, wait);
-+	struct vhost_virtqueue *vq = container_of(poll, struct vhost_virtqueue,
-+						  poll);
-+
-+	if (!(key_to_poll(key) & poll->mask))
-+		return 0;
-+
-+	vq->handle_kick(&vq->poll.work);
-+
-+	return 0;
-+}
-+
-+void vhost_vdpa_poll_init(struct vhost_dev *dev)
-+{
-+	struct vhost_virtqueue *vq;
-+	struct vhost_poll *poll;
-+	int i;
-+
-+	for (i = 0; i < dev->nvqs; i++) {
-+		vq = dev->vqs[i];
-+		poll = &vq->poll;
-+		if (vq->handle_kick) {
-+			init_waitqueue_func_entry(&poll->wait,
-+						  vhost_vdpa_poll_worker);
-+			poll->work.fn = vq->handle_kick;
-+		}
-+
-+	}
-+}
-+
- static int vhost_vdpa_open(struct inode *inode, struct file *filep)
- {
- 	struct vhost_vdpa *v;
-@@ -697,6 +795,8 @@ static int vhost_vdpa_open(struct inode *inode, struct file *filep)
- 	vhost_dev_init(dev, vqs, nvqs, 0, 0, 0,
- 		       vhost_vdpa_process_iotlb_msg);
- 
-+	vhost_vdpa_poll_init(dev);
-+
- 	dev->iotlb = vhost_iotlb_alloc(0, 0);
- 	if (!dev->iotlb) {
- 		r = -ENOMEM;
--- 
-1.8.3.1
+The issue with this patch is that ARCH_VEXPRESS still just selects
+POWER_RESET_VEXPRESS, which ignores "depends on", hence the Kconfig
+warning and not fixing the error.
 
+I am not that much of a Kconfig guru to come up with a solution. I am
+just reporting it because arm allmodconfig is broken on -next due to
+this.
+
+Cheers,
+Nathan
