@@ -2,110 +2,79 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8325220899
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD53207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="NLV22qvX";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="afcg++KY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RuZlvMn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390793AbgEZUAS (ORCPT
+        id S2390626AbgEZUCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 16:00:18 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:40278 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389192AbgEZUAR (ORCPT
+        Tue, 26 May 2020 16:02:44 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58926 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728113AbgEZUCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 16:00:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D37D98EE181;
-        Tue, 26 May 2020 13:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1590523216;
-        bh=EZt3MAAU3Hg10i9FE752yd5IDT4uWKbN7LKCv9x0GPQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=NLV22qvXsh6issMEiflCG1YvaON1vKnS1OOLXctGyovv8WJlNWckH6sgvDdN1U/iM
-         iNIKgzqlL1ICZ7B/kN43Ry0hTmQSVQ5J1cKMU42liF2Ys1h/I1m5mEmCZLpdWm4BDv
-         QvJ03f0NvwQrsEpff8/BxBMdHqN7ZgW5fkW0anp4=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JoFa7QQodzZs; Tue, 26 May 2020 13:00:15 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
+        Tue, 26 May 2020 16:02:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vLR9eBAiLYEUKwprcJXh81uedkl9DNMlOvuRu7LvBis=; b=RuZlvMn80VurInOVh3nLd0nRe3
+        Y7yAHKOXTj4q11Y0AFuKtwl092FpvUOO9mwUoSSfDX+dMPSUSj8eAoaCfP84b/7/fv0YN1+xUVyjd
+        U1lK99hA6Tm/nCbZWgti+CRELnvAfK9exDx5pugAJnPVEGxhsPoU1+EQ2sGhpA6WYhYanlTAbkYLq
+        ZpVTVSDXS+M0wg0YjPAnxFDUkANX4qCvPcfM8qhv97vPPF2TMXyle/a1SiIJ5sPi4cGZ/R90OICNq
+        47zv+pR8c+cxTXlekgr09/00Sve2tZasrWS1AYmE1QlbvuH2IdleD11LgwySpzlAXKp8axG6DSjJ1
+        rxH5lnSQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdfkN-00059M-CD; Tue, 26 May 2020 20:00:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 3E1088EE0D4;
-        Tue, 26 May 2020 13:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1590523215;
-        bh=EZt3MAAU3Hg10i9FE752yd5IDT4uWKbN7LKCv9x0GPQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=afcg++KYC4Z2n+x94LoS83eoHa6xVTQH/ThpIcfUJw490XnywifB+paixbtoxXZkr
-         /SRGkFY0ddZ2KSAJcYOoDIbdesWLODByAkpqRiBWyXEF3jber4Lhj0TSC7913uCJLs
-         AW8ndfCSbzt+latxR8khWR3zjUo/HoUS62nm6Sf4=
-Message-ID: <1590523214.15108.4.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Tadeusz Struk <tstruk@gmail.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Alex Guzman <alex@guzman.io>
-Date:   Tue, 26 May 2020 13:00:14 -0700
-In-Reply-To: <f63afdc1-6c40-dc0d-bb9a-154bc51d3b95@gmail.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <f63afdc1-6c40-dc0d-bb9a-154bc51d3b95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1FFEB3079B8;
+        Tue, 26 May 2020 22:00:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D5BA32B975366; Tue, 26 May 2020 22:00:15 +0200 (CEST)
+Date:   Tue, 26 May 2020 22:00:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Subject: Re: [PATCH] sched/fair: don't NUMA balance for kthreads
+Message-ID: <20200526200015.GG325280@hirez.programming.kicks-ass.net>
+References: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
+ <jhjpnaqtztl.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhjpnaqtztl.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 12:39 -0700, Tadeusz Struk wrote:
-> On 5/26/20 12:14 PM, James Bottomley wrote:
-> > +	/* atomic tpm command send and result receive. We only
-> > hold the ops
-> > +	 * lock during this period so that the tpm can be
-> > unregistered even if
-> > +	 * the char dev is held open.
-> > +	 */
-> > +	if (tpm_try_get_ops(priv->chip)) {
-> > +		ret = -EPIPE;
-> > +		goto out;
-> > +	}
-> > +
+On Tue, May 26, 2020 at 05:40:06PM +0100, Valentin Schneider wrote:
+
+> > Change the task_tick_numa() check to exclude kernel threads in general,
+> > as it doesn't make sense to attempt ot balance for kthreads anyway.
+> >
 > 
-> Hi James,
-> This won't help if the message is read by an async tcti.
+> Does it? (this isn't a rethorical question)
+> 
+> Suppose a given kthread ends up doing more accesses to some pages
+> (via use_mm()) than the other threads that access them, wouldn't it make
+> sense to take that into account when it comes to NUMA balancing?
 
-Why not?  It moves the ops get underneath the async path, so it's now
-all done in the direct read or the async read.  That seems to be more
-efficient.
+Well, task_tick_numa() tries and farm off a bunch of actual work to
+task_work_add(), and there's so very little userspace for a kernel
+thread to return to... :-)
 
->  If the problem lies in the chip get locality code, perhaps this
-> could help to debug the root-cause instead of masking it out in the
-> upper layer code:
-
-I don't think there is a root cause other than a TIS TPM is getting
-annoyed by us cycling localities too rapidly because we don't do an
-actual TPM operation between request and relinquish.  Since the first
-request/relinquish seems unnecessary for the async case, moving the ops
-get eliminates the problem.
-
-James
 
