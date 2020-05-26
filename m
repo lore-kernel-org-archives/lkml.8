@@ -2,171 +2,156 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A23C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0308C207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JT4RV0mM"
+	by mail.kernel.org (Postfix) with ESMTP id A67AD20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590488887;
+	bh=x3mOYN24tbxe+gNTkgcgLvRrAnMD+99uPHzhsd1zDGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JfjXCVkyqK/4MzwB502GlCpOTPcXXHutK4asBP071cHqGlY22BqIOTELXMto96FCb
+	 MHzLSvim8GC3+uWRbIuSRFQ1K3g3dWFx9L0ZD/Y/epvWWUeIjvqE3q3DN/S3Oz3D2e
+	 8AA19quDhipfSYPmczTlSxiiYrblPoPozYamg8vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731896AbgEZK1g (ORCPT
+        id S1731907AbgEZK2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:27:36 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54120 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731815AbgEZK1f (ORCPT
+        Tue, 26 May 2020 06:28:07 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:44525 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731815AbgEZK2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:27:35 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QAQjkT081195;
-        Tue, 26 May 2020 05:26:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590488805;
-        bh=vdH3rMMJrkdgphKuaXQ5IO32KVwoCjnEB2v3zBfzIPM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JT4RV0mM/EMrnxsTPJldtOSCFBht4DucNA90MRLqYqZzuCzISqdhdxOMtmkaovCL8
-         4Vh0yzIiiNLrzrC/Py7th1HPimPvMCUsHuiUo5/G84yhfi1XJiYxIY9zIdrEC/lmbe
-         ZtUE2VcErU4eLYXwnaBmjdO9eSEdMJswhlYAe374=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QAQjKx037891
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 05:26:45 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 05:26:44 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 05:26:44 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QAQgba105108;
-        Tue, 26 May 2020 05:26:42 -0500
-Subject: Re: [PATCH] [v2] ASoC: ti: Fix runtime PM imbalance in
- omap2_mcbsp_set_clks_src
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>
-CC:     Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200525085848.4227-1-dinghao.liu@zju.edu.cn>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <0d556082-9095-eaf6-7123-471ec09b031b@ti.com>
-Date:   Tue, 26 May 2020 13:27:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 26 May 2020 06:28:06 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 04QARV5x024991;
+        Tue, 26 May 2020 19:27:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04QARV5x024991
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590488851;
+        bh=qnm3rcWAxInWSd7vhesNxTx/sKbpy8dqFftwYTjfELU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d4f/9aYrEJvJeK4t8MaEjo9TogMD/5uYTpgPmWaN2UzL3ND0LOZ291eMctSBAYfPB
+         tn0rQSIsqcfowRTILhKel6fIWTKHEw2Zqyf6bEBz/jvIh7ZgU3jpcmixTohAIVdF21
+         gzTrrpsiUJOSfi8FYxqwJ3ltxmBBFW5pNFkU0LXLG7K/eWaigsevlu3mUX97bN1oa5
+         pQsOV9bQhxyEZyrc+9/dxELDBWniO81dxhLTMRdluThaGeWY4gOX6vi5kqxpEYU4kZ
+         7o/3IarHny//KBzkWoGf+7DWC9yHZ9vkgbInaWm3MCkInK00WNe8EjQMdoBZw+dZgv
+         W8a9C6I2zx2qg==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id a68so624949vsd.8;
+        Tue, 26 May 2020 03:27:31 -0700 (PDT)
+X-Gm-Message-State: AOAM533KelBniSuk8/zirtrylh2GKidzg8V74O2YqCgpqSUPI/VnANqh
+        oM7m0g76QIJPFewJZKVhCDiRWz0UNf0LULLrIcE=
+X-Google-Smtp-Source: ABdhPJx6dRlphU0QbxVwiuH+rp3NeV+cpYYVA6E440luhUT6tySW9m+6bHSUuCg6QiYsLdDdqazD4C7FT7S2ugwji2k=
+X-Received: by 2002:a67:f3c3:: with SMTP id j3mr294296vsn.155.1590488850516;
+ Tue, 26 May 2020 03:27:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200525085848.4227-1-dinghao.liu@zju.edu.cn>
-Content-Type: multipart/mixed;
-        boundary="------------66CB105DE74DA43F47C7D236"
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
+ <20200521220041.87368-1-ndesaulniers@google.com>
+In-Reply-To: <20200521220041.87368-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 26 May 2020 19:26:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARtO5Pr2nxpoORSHDFWHbjP0waOmrn_TZ+rXhmYm+TORw@mail.gmail.com>
+Message-ID: <CAK7LNARtO5Pr2nxpoORSHDFWHbjP0waOmrn_TZ+rXhmYm+TORw@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: support compressed debug info
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blaikie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------66CB105DE74DA43F47C7D236
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 22, 2020 at 7:00 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> As debug information gets larger and larger, it helps significantly save
+> the size of vmlinux images to compress the information in the debug
+> information sections. Note: this debug info is typically split off from
+> the final compressed kernel image, which is why vmlinux is what's used
+> in conjunction with GDB. Minimizing the debug info size should have no
+> impact on boot times, or final compressed kernel image size.
+>
+> All of the debug sections will have a `C` flag set.
+> $ readelf -S <object file>
+>
+> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+>     vmlinux.gcc75.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +18  [ = ]       0    [Unmapped]
+>  -73.3%  -114Ki  [ = ]       0    .debug_aranges
+>  -76.2% -2.01Mi  [ = ]       0    .debug_frame
+>  -73.6% -2.89Mi  [ = ]       0    .debug_str
+>  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+>  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+>  -70.5% -9.04Mi  [ = ]       0    .debug_line
+>  -79.3% -10.9Mi  [ = ]       0    .debug_loc
+>  -39.5% -88.6Mi  [ = ]       0    .debug_info
+>  -18.2%  -123Mi  [ = ]       0    TOTAL
+>
+> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+>     vmlinux.clang11.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +23  [ = ]       0    [Unmapped]
+>  -65.6%    -871  [ = ]       0    .debug_aranges
+>  -77.4% -1.84Mi  [ = ]       0    .debug_frame
+>  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+>  -73.1% -2.43Mi  [ = ]       0    .debug_str
+>  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+>  -65.9% -8.62Mi  [ = ]       0    .debug_line
+>  -86.2% -40.0Mi  [ = ]       0    .debug_loc
+>  -42.0% -64.1Mi  [ = ]       0    .debug_info
+>  -22.1%  -122Mi  [ = ]       0    TOTAL
+>
+> For x86_64 defconfig + LLVM=1 (before):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
+> Maximum resident set size (kbytes): 43856
+>
+> For x86_64 defconfig + LLVM=1 (after):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
+> Maximum resident set size (kbytes): 1566776
+>
+> Suggested-by: David Blaikie <blaikie@google.com>
+> Suggested-by: Nick Clifton <nickc@redhat.com>
+> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
 
 
-On 25/05/2020 11.58, Dinghao Liu wrote:
-> When clk_set_parent() returns an error code, a pairing
-> runtime PM usage counter increment is needed to keep the
-> counter balanced.
->=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->=20
-> Changelog:
->=20
-> v2: - Fix this in a cleaner way.
+Suggested-by seems strange to me, but
+I decided to not be worried too much.
 
-Thanks for the update,
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Applied to linux-kbuild.
 
-> ---
->  sound/soc/ti/omap-mcbsp.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-> index 3d41ca2238d4..d7406cc3c2a5 100644
-> --- a/sound/soc/ti/omap-mcbsp.c
-> +++ b/sound/soc/ti/omap-mcbsp.c
-> @@ -77,18 +77,15 @@ static int omap2_mcbsp_set_clks_src(struct omap_mcb=
-sp *mcbsp, u8 fck_src_id)
->  	pm_runtime_put_sync(mcbsp->dev);
-> =20
->  	r =3D clk_set_parent(mcbsp->fclk, fck_src);
-> -	if (r) {
-> +	if (r)
->  		dev_err(mcbsp->dev, "CLKS: could not clk_set_parent() to %s\n",
->  			src);
-> -		clk_put(fck_src);
-> -		return r;
-> -	}
-> =20
->  	pm_runtime_get_sync(mcbsp->dev);
-> =20
->  	clk_put(fck_src);
-> =20
-> -	return 0;
-> +	return r;
->  }
-> =20
->  static irqreturn_t omap_mcbsp_irq_handler(int irq, void *data)
->=20
+Thanks.
 
-- P=C3=A9ter
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
---------------66CB105DE74DA43F47C7D236
-Content-Type: application/pgp-keys; name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename="pEpkey.asc"
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFki4nsBCAD3BM+Ogt951JlaDloruEjoZk/Z+/37CjP0fY2mqLhBOzkpx95u
-X1Fquf0KfVk+ZzCd25XGOZEtpZNlXfbxRr2iRWPS5RW2FeLYGvg2TTJCpSr+ugKu
-OOec6KECCUotGbGhpYwBrbarJNEwDcAzPK7UJYa1rhWOmkpZJ1hXF1hUghB84q35
-8DmN4sGLcsIbVdRFZ1tWFh4vGBFV9LsoDZIrnnANb6/XMX78s+tr3RG3GZBaFPl8
-jO5IIv0UIGNUKaYlNVFYthjGCzOqtstHchWuK9eQkR7m1+Vc+ezh1qK0VJydIcjn
-OtoMZZL7RAz13LB9vmcJjbQPnI7dJojz/M7zABEBAAG0JlBldGVyIFVqZmFsdXNp
-IDxwZXRlci51amZhbHVzaUB0aS5jb20+iQFOBBMBCAA4FiEE+dBcpRFvJjZw+uta
-LCayis85LN4FAlki4nsCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQLCay
-is85LN4QjggAzxxxXqiWpA3vuj9yrlGLft3BeGKWqF8+RzdeRvshtNdpGeIFf+r5
-AJVR71R1w89Qeb4DGXus7qsKiafdFGG7yxbuhw8a5wUm+ZncBXA+ETn3OyVtl8g8
-r/ZcPX420jClBNTVuL0sSnyqDFDrt5f+uAFOIwsnHdpns174Zu9QhgYxdvdZ+jMh
-Psb745O9EVeNvdfUIRdrVjb4IhJKNIzkb0Tulsz5xeCJReUYpxZU1jzEq3YZqIou
-+fi+oS4wlJuSoxKKTmIXtSeEy/weStF1XHMo6vLYqzaK4FyIuclqeuYUYSVy2425
-7TMXugaI+O85AEI6KW8MCcu1NucSfAWUabkBDQRZIuJ7AQgAypKq8iIugpHxWA2c
-Ck6MQdPBT6cOEVK0tjeHaHAVOUPiw9Pq+ssMifdIkDdqXNZ3RLH/X2svYvd8c81C
-egqshfB8nkJ5EKmQc9d7s0EwnYT8OwsoVb3c2WXnsdcKEyu2nHgyeJEUpPpMPyLc
-+PWhoREifttab4sOPktepdnUbvrDK/gkjHmiG6+L2owSn637N+Apo3/eQuDajfEu
-kybxK19ReRcp6dbqWSBGSeNB32c/zv1ka37bTMNVUY39Rl+/8lA/utLfrMeACHRO
-FGO1BexMASKUdmlB0v9n4BaJFGrAJYAFJBNHLCDemqkU7gjaiimuHSjwuP0Wk7Ct
-KQJfVQARAQABiQE2BBgBCAAgFiEE+dBcpRFvJjZw+utaLCayis85LN4FAlki4nsC
-GwwACgkQLCayis85LN7kCwgAoy9r3ZQfJNOXO1q/YQfpEELHn0p8LpwliSDUS1xL
-sswyxtZS8LlW8PjlTXuBLu38Vfr0vGav7oyV7TkhnKT3oBOLXanyZqwgyZSKNEGB
-PB4v3Fo7YTzpfSofiwuz03uyfjTxiMGjonxSb+YxM7HBHfzjrOKKlg02fK+lWNZo
-m5lXugeWD7U6JJguNdYfr+U4zYIblelUImcIE+wnR0oLzUEVDIWSpVrl/OqS3Rzo
-mw8wBsHksTHrbgUnKL0SCzYc90BTeKbyjEBnVDr+dlfbxRxkB8h9RMPMdjodvXzS
-Gfsa9V/k4XAsh7iX9EUVBbnmjA61ySxU/w98h96jMuteTg=3D=3D
-=3DeQmw
------END PGP PUBLIC KEY BLOCK-----
-
---------------66CB105DE74DA43F47C7D236--
+-- 
+Best Regards
+Masahiro Yamada
