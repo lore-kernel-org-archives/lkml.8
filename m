@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB383C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E72EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB237208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F41208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519347;
-	bh=30hosN3XGqyhYAlpFUcyInwX7uz4bI0skliC9qihkSY=;
+	s=default; t=1590519353;
+	bh=eMtE+JBaMmlzLtICDuGyHLpacDpmAxayQKApB2U+tyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9qPHV6HPmi78VUiPiEWgCOstsxkmuQYKgp2eo0ehEaEG0cXZGdXj8hU/HrvTPrRo
-	 PYg5FzEkNU31hvObmgQmKIn9p0qtNVLrza8jE+n4MlyvTYqAqVow+jOvcPBCzdPGgT
-	 wYsLHpXwKQdTj90B2ngi33q5zatKA7loRRpxW9iM=
+	b=C2snjPJjWzwJJ3oFPfmEdVY0R6WcIyzsjD/mX7Yvqbk0/8tC8Y0vkFOqv5Of1aew/
+	 ksPzXValIFFQrh/yNkGHd6zMwvARWTLkBplcQdGlxPMZ1MwxPdEnfAgD0cRpEIHPcD
+	 ik28m3OlJGxldvVuPworHN7tAc0l7Jmoi9DSVgfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389641AbgEZSzr (ORCPT
+        id S2389667AbgEZSzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48174 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389614AbgEZSzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:43 -0400
+        id S2389600AbgEZSzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60DE20849;
-        Tue, 26 May 2020 18:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B21452086A;
+        Tue, 26 May 2020 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519342;
-        bh=30hosN3XGqyhYAlpFUcyInwX7uz4bI0skliC9qihkSY=;
+        s=default; t=1590519345;
+        bh=eMtE+JBaMmlzLtICDuGyHLpacDpmAxayQKApB2U+tyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+X5BY9kO0lcdQGndCJd80Jf7v/aWCA/nKhbdFT67yzJ/yyFqCY1EzdKVMhxKwY94
-         rEPtqMOlOSgxsEbBg7FocTsk2Gt7k9vW/WYhKBUTotPfdrfxO0XSj8mkUYRwYjXpsZ
-         6Z+NDJd7gVfCyVRGw5CGOk6BjnRGfyo/KuC7TDmA=
+        b=C8Aa2Wz/DuWTZ6lS80+3+ywk8anX5gMH7bUF14dvaJcJMVD0mO3SZeCwNAhvpUzeq
+         672RfLB2XD38NbhRGUSgPGAPJuVFbqv5zCUzjTLKFf1hgcPTP1AjPfoNKX3x1sd9gW
+         XcY+o9mD9cXWXvxrLfuCeVootN74omv4ypXMKSFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 04/65] padata: ensure the reorder timer callback runs on the correct CPU
-Date:   Tue, 26 May 2020 20:52:23 +0200
-Message-Id: <20200526183907.883106465@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Sultan Alsawaf <sultan@kerneltoast.com>
+Subject: [PATCH 4.4 31/65] ext4: lock the xattr block before checksuming it
+Date:   Tue, 26 May 2020 20:52:50 +0200
+Message-Id: <20200526183917.592537446@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -60,110 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Krause <minipli@googlemail.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit cf5868c8a22dc2854b96e9569064bb92365549ca upstream.
+commit dac7a4b4b1f664934e8b713f529b629f67db313c upstream.
 
-The reorder timer function runs on the CPU where the timer interrupt was
-handled which is not necessarily one of the CPUs of the 'pcpu' CPU mask
-set.
+We must lock the xattr block before calculating or verifying the
+checksum in order to avoid spurious checksum failures.
 
-Ensure the padata_reorder() callback runs on the correct CPU, which is
-one in the 'pcpu' CPU mask set and, preferrably, the next expected one.
-Do so by comparing the current CPU with the expected target CPU. If they
-match, call padata_reorder() right away. If they differ, schedule a work
-item on the target CPU that does the padata_reorder() call for us.
+https://bugzilla.kernel.org/show_bug.cgi?id=193661
 
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ben Hutchings <ben@decadent.org.uk>
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/padata.h |    2 ++
- kernel/padata.c        |   43 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+ fs/ext4/xattr.c |   66 +++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 32 insertions(+), 34 deletions(-)
 
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -85,6 +85,7 @@ struct padata_serial_queue {
-  * @swork: work struct for serialization.
-  * @pd: Backpointer to the internal control structure.
-  * @work: work struct for parallelization.
-+ * @reorder_work: work struct for reordering.
-  * @num_obj: Number of objects that are processed by this cpu.
-  * @cpu_index: Index of the cpu.
-  */
-@@ -93,6 +94,7 @@ struct padata_parallel_queue {
-        struct padata_list    reorder;
-        struct parallel_data *pd;
-        struct work_struct    work;
-+       struct work_struct    reorder_work;
-        atomic_t              num_obj;
-        int                   cpu_index;
- };
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -281,11 +281,51 @@ static void padata_reorder(struct parall
- 	return;
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -139,31 +139,26 @@ static __le32 ext4_xattr_block_csum(stru
  }
  
-+static void invoke_padata_reorder(struct work_struct *work)
-+{
-+	struct padata_parallel_queue *pqueue;
-+	struct parallel_data *pd;
-+
-+	local_bh_disable();
-+	pqueue = container_of(work, struct padata_parallel_queue, reorder_work);
-+	pd = pqueue->pd;
-+	padata_reorder(pd);
-+	local_bh_enable();
-+}
-+
- static void padata_reorder_timer(unsigned long arg)
+ static int ext4_xattr_block_csum_verify(struct inode *inode,
+-					sector_t block_nr,
+-					struct ext4_xattr_header *hdr)
++					struct buffer_head *bh)
  {
- 	struct parallel_data *pd = (struct parallel_data *)arg;
-+	unsigned int weight;
-+	int target_cpu, cpu;
+-	if (ext4_has_metadata_csum(inode->i_sb) &&
+-	    (hdr->h_checksum != ext4_xattr_block_csum(inode, block_nr, hdr)))
+-		return 0;
+-	return 1;
+-}
+-
+-static void ext4_xattr_block_csum_set(struct inode *inode,
+-				      sector_t block_nr,
+-				      struct ext4_xattr_header *hdr)
+-{
+-	if (!ext4_has_metadata_csum(inode->i_sb))
+-		return;
++	struct ext4_xattr_header *hdr = BHDR(bh);
++	int ret = 1;
  
--	padata_reorder(pd);
-+	cpu = get_cpu();
-+
-+	/* We don't lock pd here to not interfere with parallel processing
-+	 * padata_reorder() calls on other CPUs. We just need any CPU out of
-+	 * the cpumask.pcpu set. It would be nice if it's the right one but
-+	 * it doesn't matter if we're off to the next one by using an outdated
-+	 * pd->processed value.
-+	 */
-+	weight = cpumask_weight(pd->cpumask.pcpu);
-+	target_cpu = padata_index_to_cpu(pd, pd->processed % weight);
-+
-+	/* ensure to call the reorder callback on the correct CPU */
-+	if (cpu != target_cpu) {
-+		struct padata_parallel_queue *pqueue;
-+		struct padata_instance *pinst;
-+
-+		/* The timer function is serialized wrt itself -- no locking
-+		 * needed.
-+		 */
-+		pinst = pd->pinst;
-+		pqueue = per_cpu_ptr(pd->pqueue, target_cpu);
-+		queue_work_on(target_cpu, pinst->wq, &pqueue->reorder_work);
-+	} else {
-+		padata_reorder(pd);
+-	hdr->h_checksum = ext4_xattr_block_csum(inode, block_nr, hdr);
++	if (ext4_has_metadata_csum(inode->i_sb)) {
++		lock_buffer(bh);
++		ret = (hdr->h_checksum == ext4_xattr_block_csum(inode,
++							bh->b_blocknr, hdr));
++		unlock_buffer(bh);
 +	}
-+
-+	put_cpu();
++	return ret;
  }
  
- static void padata_serial_worker(struct work_struct *serial_work)
-@@ -412,6 +452,7 @@ static void padata_init_pqueues(struct p
- 		__padata_list_init(&pqueue->reorder);
- 		__padata_list_init(&pqueue->parallel);
- 		INIT_WORK(&pqueue->work, padata_parallel_worker);
-+		INIT_WORK(&pqueue->reorder_work, invoke_padata_reorder);
- 		atomic_set(&pqueue->num_obj, 0);
- 	}
+-static inline int ext4_handle_dirty_xattr_block(handle_t *handle,
+-						struct inode *inode,
+-						struct buffer_head *bh)
++static void ext4_xattr_block_csum_set(struct inode *inode,
++				      struct buffer_head *bh)
+ {
+-	ext4_xattr_block_csum_set(inode, bh->b_blocknr, BHDR(bh));
+-	return ext4_handle_dirty_metadata(handle, inode, bh);
++	if (ext4_has_metadata_csum(inode->i_sb))
++		BHDR(bh)->h_checksum = ext4_xattr_block_csum(inode,
++						bh->b_blocknr, BHDR(bh));
  }
+ 
+ static inline const struct xattr_handler *
+@@ -226,7 +221,7 @@ ext4_xattr_check_block(struct inode *ino
+ 	if (buffer_verified(bh))
+ 		return 0;
+ 
+-	if (!ext4_xattr_block_csum_verify(inode, bh->b_blocknr, BHDR(bh)))
++	if (!ext4_xattr_block_csum_verify(inode, bh))
+ 		return -EFSBADCRC;
+ 	error = ext4_xattr_check_names(BFIRST(bh), bh->b_data + bh->b_size,
+ 				       bh->b_data);
+@@ -590,23 +585,23 @@ ext4_xattr_release_block(handle_t *handl
+ 		le32_add_cpu(&BHDR(bh)->h_refcount, -1);
+ 		if (ce)
+ 			mb_cache_entry_release(ce);
++
++		ext4_xattr_block_csum_set(inode, bh);
+ 		/*
+ 		 * Beware of this ugliness: Releasing of xattr block references
+ 		 * from different inodes can race and so we have to protect
+ 		 * from a race where someone else frees the block (and releases
+ 		 * its journal_head) before we are done dirtying the buffer. In
+ 		 * nojournal mode this race is harmless and we actually cannot
+-		 * call ext4_handle_dirty_xattr_block() with locked buffer as
++		 * call ext4_handle_dirty_metadata() with locked buffer as
+ 		 * that function can call sync_dirty_buffer() so for that case
+ 		 * we handle the dirtying after unlocking the buffer.
+ 		 */
+ 		if (ext4_handle_valid(handle))
+-			error = ext4_handle_dirty_xattr_block(handle, inode,
+-							      bh);
++			error = ext4_handle_dirty_metadata(handle, inode, bh);
+ 		unlock_buffer(bh);
+ 		if (!ext4_handle_valid(handle))
+-			error = ext4_handle_dirty_xattr_block(handle, inode,
+-							      bh);
++			error = ext4_handle_dirty_metadata(handle, inode, bh);
+ 		if (IS_SYNC(inode))
+ 			ext4_handle_sync(handle);
+ 		dquot_free_block(inode, EXT4_C2B(EXT4_SB(inode->i_sb), 1));
+@@ -837,13 +832,14 @@ ext4_xattr_block_set(handle_t *handle, s
+ 					ext4_xattr_rehash(header(s->base),
+ 							  s->here);
+ 			}
++			ext4_xattr_block_csum_set(inode, bs->bh);
+ 			unlock_buffer(bs->bh);
+ 			if (error == -EFSCORRUPTED)
+ 				goto bad_block;
+ 			if (!error)
+-				error = ext4_handle_dirty_xattr_block(handle,
+-								      inode,
+-								      bs->bh);
++				error = ext4_handle_dirty_metadata(handle,
++								   inode,
++								   bs->bh);
+ 			if (error)
+ 				goto cleanup;
+ 			goto inserted;
+@@ -912,10 +908,11 @@ inserted:
+ 				le32_add_cpu(&BHDR(new_bh)->h_refcount, 1);
+ 				ea_bdebug(new_bh, "reusing; refcount now=%d",
+ 					le32_to_cpu(BHDR(new_bh)->h_refcount));
++				ext4_xattr_block_csum_set(inode, new_bh);
+ 				unlock_buffer(new_bh);
+-				error = ext4_handle_dirty_xattr_block(handle,
+-								      inode,
+-								      new_bh);
++				error = ext4_handle_dirty_metadata(handle,
++								   inode,
++								   new_bh);
+ 				if (error)
+ 					goto cleanup_dquot;
+ 			}
+@@ -965,11 +962,12 @@ getblk_failed:
+ 				goto getblk_failed;
+ 			}
+ 			memcpy(new_bh->b_data, s->base, new_bh->b_size);
++			ext4_xattr_block_csum_set(inode, new_bh);
+ 			set_buffer_uptodate(new_bh);
+ 			unlock_buffer(new_bh);
+ 			ext4_xattr_cache_insert(ext4_mb_cache, new_bh);
+-			error = ext4_handle_dirty_xattr_block(handle,
+-							      inode, new_bh);
++			error = ext4_handle_dirty_metadata(handle, inode,
++							   new_bh);
+ 			if (error)
+ 				goto cleanup;
+ 		}
 
 
