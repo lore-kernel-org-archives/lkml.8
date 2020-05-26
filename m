@@ -2,102 +2,81 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2AEE20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:40:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ieiogTJm"
+	by mail.kernel.org (Postfix) with ESMTP id 3B8B0207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgEZGkD (ORCPT
+        id S1728607AbgEZGkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:40:03 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14762 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgEZGkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:40:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eccb96a0002>; Mon, 25 May 2020 23:38:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 25 May 2020 23:40:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 25 May 2020 23:40:02 -0700
-Received: from [10.2.58.199] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 06:40:02 +0000
-Subject: Re: [RFC 07/16] KVM: mm: Introduce VM_KVM_PROTECTED
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-CC:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, <x86@kernel.org>,
-        <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200522125214.31348-8-kirill.shutemov@linux.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <29a1d089-ab37-321c-0a01-11801a16a742@nvidia.com>
-Date:   Mon, 25 May 2020 23:40:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 26 May 2020 02:40:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5281 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727075AbgEZGkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:40:51 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 43581B913C77D32BEFE4;
+        Tue, 26 May 2020 14:40:48 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 26 May 2020
+ 14:40:40 +0800
+Subject: Re: [PATCH v3 1/6] arm64: Detect the ARMv8.4 TTL feature
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        <catalin.marinas@arm.com>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200525125300.794-1-yezhenyu2@huawei.com>
+ <20200525125300.794-2-yezhenyu2@huawei.com>
+ <c6b6eb07-2606-9fc0-280a-e53b81a6491c@arm.com>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <050b7ee6-c7aa-5d61-4dff-4792a411464e@huawei.com>
+Date:   Tue, 26 May 2020 14:40:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200522125214.31348-8-kirill.shutemov@linux.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <c6b6eb07-2606-9fc0-280a-e53b81a6491c@arm.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590475114; bh=g/4IAy2uMJlh4KcPaPM3wTx3s9c3edZLBVBevRBpy5g=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ieiogTJmT7OD2KrJ54E1e+hMqFWNUcQJHEuLSx9iORtOMEa5DJuAkKC82OoqDK/N9
-         Z+kkYDd4JWywiQaUWZKhEuISDGME1ftbzsbIcaVdmEQIrS2TUgIRB5OxSPoR3R92Tt
-         jnBzX8r8IBgby3fhpEva9vuLWhaTbFQSJqyrzyvvfA9Dn0EBcg1yefSpYw7SEIOcku
-         rSizgc+dOr48WxFQZCagQj69j/oJRl6J/hi++W8wMvAG7ZQZ/kKsJpSl/PhfVjzOYD
-         e3jpCHn7iaiyEF/xVkgMX+hYNUCBlu4gWmyTs4WtrXyBtUJxvJJs3wgxYomhlwoGvf
-         KM/O8NJAlDMKA==
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-22 05:52, Kirill A. Shutemov wrote:
-...
-> @@ -2773,6 +2780,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
->   #define FOLL_LONGTERM	0x10000	/* mapping lifetime is indefinite: see below */
->   #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
->   #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
-> +#define FOLL_KVM	0x80000 /* access to VM_KVM_PROTECTED VMAs */
->   
+Hi Anshuman,
 
-I grabbed 0x80000 already, for FOLL_FAST_ONLY. :)
+On 2020/5/26 10:39, Anshuman Khandual wrote:
+> This patch (https://patchwork.kernel.org/patch/11557359/) is adding some
+> more ID_AA64MMFR2 features including the TTL. I am going to respin parts
+> of the V4 series patches along with the above mentioned patch. So please
+> rebase this series accordingly, probably on latest next.
+> 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+I noticed that some patches of your series have been merged into arm64
+tree (for-next/cpufeature), such as TLB range, but this one not. Why?
+
+BTW, this patch is provided by Marc in his NV series [1], maybe you
+should also let him know.
+
+I will rebase my series after your patch is merged.
+
+[1] https://lore.kernel.org/linux-arm-kernel/d6032191-ba0e-82a4-4dde-11beef369a11@arm.com/
+
+Thanks,
+Zhenyu
+
