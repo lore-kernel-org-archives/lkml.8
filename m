@@ -2,205 +2,172 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D89C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31375C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C812820704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C7F20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590514946;
+	bh=Fj7nTuGw3+OAaFy7iclQ+oy2Dn/4vFd6hQEuB3Ao8bk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fxgrhDDELIPQ1quzcJUtJeL6710k+w/7EDYuu61JmXw6jCVGepiglsFko995RIoxB
+	 EYiC/5ObxL8tTBrZn7sQesRJ6GmHobeP4idvkNWS+9uH8zmntXGyHwkgQ6bsvezaAu
+	 Bt1Yh52IAz1sX2/Nix6wIimSZBXAigxTtVVK6+Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389003AbgEZRl5 (ORCPT
+        id S2389091AbgEZRmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:41:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59226 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388499AbgEZRl4 (ORCPT
+        Tue, 26 May 2020 13:42:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41844 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388499AbgEZRmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:41:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 44395803086B;
-        Tue, 26 May 2020 17:41:52 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hZUm0VjOyTcJ; Tue, 26 May 2020 20:41:50 +0300 (MSK)
-Date:   Tue, 26 May 2020 20:41:49 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-mips@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] serial: 8250_dw: Fix common clocks usage race
- condition
-Message-ID: <20200526174149.wpmto6vx775idbaj@mobilestation>
-References: <20200526160316.26136-1-Sergey.Semin@baikalelectronics.ru>
- <20200526160316.26136-4-Sergey.Semin@baikalelectronics.ru>
- <20200526165701.GX1634618@smile.fi.intel.com>
+        Tue, 26 May 2020 13:42:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 63so17016717oto.8;
+        Tue, 26 May 2020 10:42:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SmxTWFXXM8Y+h9jTDITVUIXUE4Zfd86HNcIQXeGrsvg=;
+        b=lZCtJr2r84UqdgbPW+lqqg9NsydVGA70wLSWXVu3D70BjVEedy9OfaIxwH4qKgaRzd
+         eNZ4aeZaoVxdk4yBgK9U8qZHshJ9jIwHYAU/mmG9iavJF/Ug1IIsPpCJeKJTAZprXRQx
+         GytE4bEri7yRY617WiFoMA+Y90Adtd0vSSiI413qdfgHno6Orez+gpnoq8vu1LyS0qhD
+         mZy0VLzLYZxxeBN4sE23QrWzajBfIRcZzxH/4KhIt/GbJH+IOAQ9RJ5Fh+eX8fzLnc2f
+         Y3unTa4xI35mIgmnX2a5JZWEmvL/vAEQqJbtRleY62Ha1S8j+Uq6mRbUUHTWvBc/nymE
+         Uvgg==
+X-Gm-Message-State: AOAM531uyGjw3UUo95m1BI752ooP/UQtVMLc24thDGhZDlAnzTRByXuS
+        1FxzZD+gP6Svj7vFTRyuctnT1bLnUV/ytIoULP4=
+X-Google-Smtp-Source: ABdhPJwFFP4P8gdh3vXJm5dZIVmlwwrvCbfa1hsaT/wQPQI9ONnf3VgoTYFCJk9CkNQheEUgN7QsNloQASq382OXMHQ=
+X-Received: by 2002:a9d:3d05:: with SMTP id a5mr1722231otc.262.1590514943990;
+ Tue, 26 May 2020 10:42:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200526165701.GX1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <3169564.ZRsPWhXyMD@kreacher> <87mu5wre1v.fsf@intel.com>
+ <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com>
+ <87a71vraus.fsf@intel.com> <CAJZ5v0j4EYLej+Xb=huAGTDEH_0mgRShBkjBeib38exmss60Sg@mail.gmail.com>
+ <000801d63375$927946a0$b76bd3e0$@net>
+In-Reply-To: <000801d63375$927946a0$b76bd3e0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 May 2020 19:42:12 +0200
+Message-ID: <CAJZ5v0jSZVGYxQY5pJ89U-XGTwTFciQRuz87a8ekGBDx55WTvw@mail.gmail.com>
+Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with
+ HWP enabled
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Francisco Jerez <francisco.jerez.plata@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:57:01PM +0300, Andy Shevchenko wrote:
-> On Tue, May 26, 2020 at 07:03:16PM +0300, Serge Semin wrote:
-> > The race condition may happen if the UART reference clock is shared with
-> > some other device (on Baikal-T1 SoC it's another DW UART port). In this
-> > case if that device changes the clock rate while serial console is using
-> > it the DW 8250 UART port might not only end up with an invalid uartclk
-> > value saved, but may also experience a distorted output data since
-> > baud-clock could have been changed. In order to fix this lets at least
-> > try to adjust the 8250 port setting like UART clock rate in case if the
-> > reference clock rate change is discovered. The driver will call the new
-> > method to update 8250 UART port clock rate settings. It's done by means of
-> > the clock event notifier registered at the port startup and unregistered
-> > in the shutdown callback method.
-> > 
-> > Note 1. In order to avoid deadlocks we had to execute the UART port update
-> > method in a dedicated deferred work. This is due to (in my opinion
-> > redundant) the clock update implemented in the dw8250_set_termios()
-> > method.
-> > Note 2. Before the ref clock is manually changed by the custom
-> > set_termios() function we swap the port uartclk value with new rate
-> > adjusted to be suitable for the requested baud. It is necessary in
-> > order to effectively disable a functionality of the ref clock events
-> > handler for the current UART port, since uartclk update will be done
-> > a bit further in the generic serial8250_do_set_termios() function.
-> 
-> ...
-> 
-> > +static void dw8250_clk_work_cb(struct work_struct *work)
-> > +{
-> > +	struct dw8250_data *d = work_to_dw8250_data(work);
-> > +	struct uart_8250_port *up;
-> > +	unsigned long rate;
-> > +
-> > +	rate = clk_get_rate(d->clk);
-> 
+On Tue, May 26, 2020 at 5:51 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2020.05.26 01:19 Rafael J. Wysocki wrote:
+> >  to On Mon, May 25, 2020 at 10:57 PM Francisco Jerez
+> > > "Rafael J. Wysocki" <rafael@kernel.org> writes:
+> > > > On Mon, May 25, 2020 at 3:39 AM Francisco Jerez
+> > >
+> > > Why not HWP_MIN_PERF?  That would leave the HWP quite some room for
+> > > maneuvering (the whole HWP_MIN_PERF-HWP_MAX_PERF P-state range, it's not
+> > > like P-state selection would be entirely driven by the kernel), while
+> > > avoiding every failure scenario I was describing in my previous reply.
+>
+> I have re-done my tests.
+> The problem that I observe seems specific to hwp itself
+> and not this patch and it's use in passive mode.
+> I see the exact same thing with intel_pstate/powersave.
+> [1] detail A.
+>
+>
+> Test: still simple single threaded load sweep,
+> at 347 hertz work/sleep frequency.
+> What do I see?
+>
+> Unexpected frequency drops at around 70% load.
+> Example, from trace:
+>
+> First, the thing has been going for awhile at 4.8 GHz.
+>
+> Old epp ; new epp ; freq GHz; load % ; duration mS
+> 80        ; 82      ; 4.57    ; 61.94  ; 20.001
+> 82      ; 80    ; 4.57    ; 62.47  ; 40.003
+> 80      ; 44      ; 3.73    ;   68.63  ; 62.009  <<<< What? Why freq down? Why long duration?
+> 44      ;  0      ; 1.96    ; 100.23 ; 19.995  <<<< Even lower freq. load overruns.
+>  0      ; 73      ; 4.56    ; 82.93  ; 40.07   <<<< O.K. recovered, but damage done.
+> 73      ; 46      ; 2.36    ;   79.19  ; 20.94   <<< now things oscillate a little.
+> 46      ; 0       ; 1.9884  ;   100.24 ; 20.99
+>  0      ; 75      ; 4.5624  ;   82.1   ; 41.002  <<< Event ends. Next event in 487 milliseconds.
+>
+> Observation: Events are often, but not always, preceded by a longer than normal duration.
+> However, long durations are also not out of the ordinary in passive mode.
+>
+> And yes, the above trace was with DELAY_HWP 20,000, but I do have trace examples
+> with it at 5,000. This was just a particularly good example.
+>
+> Observation (from looking at a lot of trace data): There are phase delays
+> between the two systems, intel_cpufreq and hwp, and sometimes they seem to
+> oscillate a little and fight each other. There maybe some problematic
+> work/sleep frequencies where the oscillation builds into a full blown
+> resonance.
+>
+> Why does hwp drop the frequency?
+>
+> This system is otherwise fairly idle,
+> so maybe because the pll drops down during the non work periods.
+>
+> Maybe HWP thinks the system is idle and drops the frequency.
+> I can eliminate the overruns by disabling deep idle states such
+> that the PLL vote is never relinquished, but it's not a fair test.
+>
+> Note that the above response can be "tuned".
+> If we take the conversation algorithm from target frequency to EPP
+> and introduce and offset, the above can be improved.
+>
+> At what cost? More sluggishness, for a large positive offset.
+> So, the overruns just move from the steady state side of the task to
+> when the task starts. I did not find if there is a "sweet spot"
+> between offset and system response, and I do not think there is value
+> added in trying.
+>
+> Note: With original settings, I rarely observe a problem with the step
+> function response to a new task.
+>
+> >
+> > Actually, I have been thinking about the HWP min as an alternative
+> > that may be worth evaluating.
+> >
+> > However, I would rather set the HWP min to something like 80% if the
+> > cpufreq request.
+>
+> Yes, this is a good idea and should not suffer from the two servo systems
+> fighting each other.
 
-> > +	if (rate) {
-> 
-> 	if (rate <= 0)
-> 		return;
-> 
-> ?
+OK, thanks for the feedback!
 
-Ok. Though there isn't point in a function consisting of a few lines. 
+I am about to post this patch.
 
-> 
-> > +		up = serial8250_get_port(d->data.line);
-> > +
-> > +		serial8250_update_uartclk(&up->port, rate);
-> > +	}
-> > +}
-> 
-> ...
-> 
-> > +static int dw8250_startup(struct uart_port *p)
-> > +{
-> > +	struct dw8250_data *d = to_dw8250_data(p->private_data);
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * Some platforms may provide a reference clock shared between several
-> > +	 * devices. In this case before using the serial port first we have to
-> > +	 * make sure that any clock state change is known to the UART port at
-> > +	 * least post factum.
-> > +	 */
-> 
+> I got 0 overruns, verses 2240 overruns with no min limitation (100 second test).
+>
+> As for INTEL_CPUFREQ_TRANSITION_DELAY_HWP, I'll probably use
+> 10 milliseconds moving forward, because that is what I am most
+> familiar with from years ago work on the this driver. But, I did
+> not observe any issue with 5 milliseconds.
 
-> > +	if (d->clk) {
-> 
-> Do you need this?
+I'm going to use INTEL_CPUFREQ_TRANSITION_DELAY_HWP in the new patch
+for now then.
 
-Yes, I do. The same way as clk_get_rate() needs this.
+> [1] http://www.smythies.com/~doug/linux/intel_pstate/passive-hwp/passive-hwp-but-active-powersave.png
 
-> 
-> > +		ret = clk_notifier_register(d->clk, &d->clk_notifier);
-> 
-> Okay, seems clk_notifier_register() and its counterpart should be fixed for
-> optional clocks.
-
-In order to use the clk_get_rate() function we need to make sure the clk isn't
-optional otherwise -EINVAL will be returned, which is indistinguishable from
-any another error. The same situation is for the clk_notifier_register() and
-clk_notifier_unregister() counterpart.
-
-> 
-> > +		if (ret)
-> > +			dev_warn(p->dev, "Failed to set the clock notifier\n");
-> 
-> So, what does this warning mean on the platforms which does not need notifier
-> at all
-
-It means "The clk-notifier subsystem is broken. Though if reference clock rate
-doesn't change, it won't a problem." Due to the last statement we print a
-warning, but not an error message.
-
-> (i.o.w. all but baikal)?
-
-No. As we discussed earlier in the previous pacthset versions there are another
-platforms with shared reference clocks behind the DW APB UART, like: Allwinner SoCs,
-RPi 3/4, etc.
-
-> 
-> > +		/*
-> > +		 * Get current reference clock rate to make sure the UART port
-> > +		 * is equipped with an up-to-date value before it's started up.
-> > +		 */
-> 
-> Why? We call ->set_termios() for it, no?
-
-This makes sense. Thanks. I'll remove this part.
-
--Sergey
-
-> 
-> > +		p->uartclk = clk_get_rate(d->clk);
-> > +		if (!p->uartclk) {
-> > +			dev_err(p->dev, "Clock rate not defined\n");
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> > +	return serial8250_do_startup(p);
-> > +}
-> > +
-> > +static void dw8250_shutdown(struct uart_port *p)
-> > +{
-> > +	struct dw8250_data *d = to_dw8250_data(p->private_data);
-> > +
-> > +	serial8250_do_shutdown(p);
-> > +
-> 
-> > +	if (d->clk) {
-> 
-> Ditto.
-> 
-> > +		clk_notifier_unregister(d->clk, &d->clk_notifier);
-> > +
-> > +		flush_work(&d->clk_work);
-> > +	}
-> > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Thanks!
