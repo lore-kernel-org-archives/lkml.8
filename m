@@ -2,76 +2,83 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA006C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09363C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A218C2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29E52084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8H3MQBs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I1fjp5Xg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388801AbgEZLDt (ORCPT
+        id S2388898AbgEZLDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 07:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388818AbgEZLDr (ORCPT
+        Tue, 26 May 2020 07:03:51 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51786 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388809AbgEZLDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 07:03:47 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AADC03E97E;
-        Tue, 26 May 2020 04:03:47 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u26so902023wmn.1;
-        Tue, 26 May 2020 04:03:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WNmMCHQhQQzWJi0EZ9sZ2eNrgpixzlI5wsbtnbpPOeQ=;
-        b=W8H3MQBsUXQUTKWEZv7Q4Wk5HwDwJdE5VIPVKx+zWM7nL/hLhk8fUgVZoZNICPIvG0
-         1zoT0s+z/2Uv5zk25wqMi7ut5qOG+bwb93BOIqTvneSorUvGx/1fr4EsD7ZLWH6ZYPrz
-         W+Z5ITMvhz3cPFDKQ6h7AU2ur68mjrW9SdlT7nW34AgQX712TTPrfUe9ZKbVpLEBaaDY
-         i8ycYtToxxp1HYjSM45zR2OTK5bVlhZ7+DDBMndag9ROlbixbMr2v4u7ADw9zMFby959
-         DE2F9pb9UXKhPQY4TGyfX/g/IgP17wjspC8azvkAo3B2XRw9fGf2qbJcb1ywsootcNWv
-         O4AA==
+        Tue, 26 May 2020 07:03:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590491025;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YiHC1jSZ9odIhljl+OEk0Z9XTPo94KqwVQ3mMvdqhCY=;
+        b=I1fjp5XgQW6FPaTls6PoNGs5V/mqK5DkHd2jHkW810kDdtPBYBylY+wB+LPqvzs565HYHR
+        r4Be4nWecOeR8kjnxVzClG2ieZLrbdx0DgwgSZqp/U8gqKOrbmE+q5jLEmFct6lPKhrWTN
+        e9WbXX/ovxy5eunR6qh1/eWk+RdQFWQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-gKzmnVJkOFebMkBlM5B7Iw-1; Tue, 26 May 2020 07:03:44 -0400
+X-MC-Unique: gKzmnVJkOFebMkBlM5B7Iw-1
+Received: by mail-wr1-f70.google.com with SMTP id e14so9612016wrv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:03:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WNmMCHQhQQzWJi0EZ9sZ2eNrgpixzlI5wsbtnbpPOeQ=;
-        b=GV/c8ooCXxooIXIDdNLXFb4Q1Ur5/TV8/7mfoRiBdgSxVPP9IKX1SmgBIuzJnK23ax
-         16cTYT4SqGE0JuOLJYoXVVR2Ke39mk5B7MZY6b+CouwyX7CwcLIfxvEZ/+Hr0rwn/gYI
-         TZAt60FRg9J4CHyvXXab47zFW+tjo8UkcLGsY4VuLyKfN4CVrgDPSxGrmxmaR5dEU7EU
-         vVWGxh9omi2y2SBAJNxJZud3h5I8DTV/xusbN+GYVc5Pb2h7wVeaJp4fw0c3CtHii4Yr
-         k1RJzUVsYMNNlixBIOUys4Cy5zt97Xx2jCjmamlu7Iq1mERf2ZZ+wkZza211SUHEIT1S
-         ZFJQ==
-X-Gm-Message-State: AOAM532EPbgnaS4HSlxY42Lx3pisNIwACbpOuuBa0PE7Rp2D4RjUIplA
-        FwCPjE30qyxu8cw/mTD7/6E=
-X-Google-Smtp-Source: ABdhPJy1dn8nJ7EBF1K3qfcolfl264laLlQTJniTWhVfeQbgu6WJ9Veq4i5pRVpVi/dlQexl8ZDiDA==
-X-Received: by 2002:a05:600c:2041:: with SMTP id p1mr960165wmg.152.1590491026217;
-        Tue, 26 May 2020 04:03:46 -0700 (PDT)
-Received: from skynet.lan (172.red-88-15-120.dynamicip.rima-tde.net. [88.15.120.172])
-        by smtp.gmail.com with ESMTPSA id l204sm11196246wmf.19.2020.05.26.04.03.45
+        bh=YiHC1jSZ9odIhljl+OEk0Z9XTPo94KqwVQ3mMvdqhCY=;
+        b=Vt0K0dTCmxcmDFrlNruwFZTmrHjfhmdVqZtzaMylMuAii7MzRtVk+swqpM+ii0mm3L
+         YLi+wpg3cZDUQTGaGXRUj3X2FM0pCZhBsZ26W0YEMGUjbJiyv4uYZWGVm6an6uUop36E
+         nsJ/Fv6nR0kwnZNf2LyM9OiI6WVGf/5k53auIJNpadYzk13aGhNP4dbkrZQ/YS98iKUm
+         kJZEtuAo+Oxe5BFDWck43lOZQdduvNDRdomZo/rnkujt7OE8vhJdygmDUMiG67GL7CGZ
+         1pY3VDz7lMuz1XcTDWiNp8GqPaVXfLAHWlYmiGQ930Mb0kFEby8Fan9YqP9y8gtJUEiG
+         cf3g==
+X-Gm-Message-State: AOAM531vlq1Mwy1HcGsxvlAPQY3K2N0/LY2jQ5xjkLCqR52LGyW0/kjw
+        F0W30aj3ub9t1tynDjlkpe8PWDLByNLIJLYhxgMCZbtqa6vLTxGoOR9/W+FStSLvvNF8EHU+5KQ
+        Nsb1p1u04VpRJLHXhP4rMjD0A
+X-Received: by 2002:a7b:c8d6:: with SMTP id f22mr867237wml.108.1590491022742;
+        Tue, 26 May 2020 04:03:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy+r1rjVk/6TMhaP3IgReV3uZsywmdIrm1MH7nDDpPZhbJkQGL0WqDauUTDI+FV3ViYCaqhZA==
+X-Received: by 2002:a7b:c8d6:: with SMTP id f22mr867213wml.108.1590491022381;
+        Tue, 26 May 2020 04:03:42 -0700 (PDT)
+Received: from localhost.localdomain.com ([194.230.155.118])
+        by smtp.gmail.com with ESMTPSA id d6sm22928240wrj.90.2020.05.26.04.03.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 04:03:45 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH] MIPS: BCM63xx: fix 6328 boot selection bit
-Date:   Tue, 26 May 2020 13:03:24 +0200
-Message-Id: <20200526110324.1324754-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 26 May 2020 04:03:31 -0700 (PDT)
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Subject: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux kernel statistics
+Date:   Tue, 26 May 2020 13:03:10 +0200
+Message-Id: <20200526110318.69006-1-eesposit@redhat.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -80,28 +87,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MISC_STRAP_BUS_BOOT_SEL_SHIFT is 18 according to Broadcom's GPL source code.
+There is currently no common way for Linux kernel subsystems to expose
+statistics to userspace shared throughout the Linux kernel; subsystems have
+to take care of gathering and displaying statistics by themselves, for
+example in the form of files in debugfs. For example KVM has its own code
+section that takes care of this in virt/kvm/kvm_main.c, where it sets up
+debugfs handlers for displaying values and aggregating them from various
+subfolders to obtain information about the system state (i.e. displaying
+the total number of exits, calculated by summing all exits of all cpus of
+all running virtual machines).
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Allowing each section of the kernel to do so has two disadvantages. First,
+it will introduce redundant code. Second, debugfs is anyway not the right
+place for statistics (for example it is affected by lockdown)
 
-diff --git a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
-index bc3444cd4ef2..9ceb5e72889f 100644
---- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
-+++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
-@@ -1367,8 +1367,8 @@
- #define MISC_STRAPBUS_6328_REG		0x240
- #define STRAPBUS_6328_FCVO_SHIFT	7
- #define STRAPBUS_6328_FCVO_MASK		(0x1f << STRAPBUS_6328_FCVO_SHIFT)
--#define STRAPBUS_6328_BOOT_SEL_SERIAL	(1 << 28)
--#define STRAPBUS_6328_BOOT_SEL_NAND	(0 << 28)
-+#define STRAPBUS_6328_BOOT_SEL_SERIAL	(1 << 18)
-+#define STRAPBUS_6328_BOOT_SEL_NAND	(0 << 18)
- 
- /*************************************************************************
-  * _REG relative to RSET_PCIE
+In this patch series I introduce statsfs, a synthetic ram-based virtual
+filesystem that takes care of gathering and displaying statistics for the
+Linux kernel subsystems.
+
+The file system is mounted on /sys/kernel/stats and would be already used
+by kvm. Statsfs was initially introduced by Paolo Bonzini [1].
+
+Statsfs offers a generic and stable API, allowing any kind of
+directory/file organization and supporting multiple kind of aggregations
+(not only sum, but also average, max, min and count_zero) and data types
+(boolean, unsigned/signed and custom types). The implementation, which is
+a generalization of KVM’s debugfs statistics code, takes care of gathering
+and displaying information at run time; users only need to specify the
+values to be included in each source.
+
+Statsfs would also be a different mountpoint from debugfs, and would not
+suffer from limited access due to the security lock down patches. Its main
+function is to display each statistics as a file in the desired folder
+hierarchy defined through the API. Statsfs files can be read, and possibly
+cleared if their file mode allows it.
+
+Statsfs has two main components: the public API defined by
+include/linux/statsfs.h, and the virtual file system which should end up in
+/sys/kernel/stats.
+
+The API has two main elements, values and sources. Kernel subsystems like
+KVM can use the API to create a source, add child sources/values/aggregates
+and register it to the root source (that on the virtual fs would be
+/sys/kernel/statsfs).
+
+Sources are created via statsfs_source_create(), and each source becomes a
+directory in the file system. Sources form a parent-child relationship;
+root sources are added to the file system via statsfs_source_register().
+Every other source is added to or removed from a parent through the
+statsfs_source_add_subordinate and statsfs_source_remote_subordinate APIs.
+Once a source is created and added to the tree (via add_subordinate), it
+will be used to compute aggregate values in the parent source.
+A source can optionally be hidden from the filesystem
+but still considered in the aggregation operations if the corresponding
+flag is set during initialization.
+
+Values represent quantites that are gathered by the statsfs user. Examples
+of values include the number of vm exits of a given kind, the amount of
+memory used by some data structure, the length of the longest hash table
+chain, or anything like that. Values are defined with the
+statsfs_source_add_values function. Each value is defined by a struct
+statsfs_value; the same statsfs_value can be added to many different
+sources. A value can be considered "simple" if it fetches data from a
+user-provided location, or "aggregate" if it groups all values in the
+subordinates sources that include the same statsfs_value.
+Each value has a stats_fs_type pointer in order to allow the user to
+provide custom get and clear functions. The library, however, also
+exports default stats_fs_type structs for the standard types
+(all unsigned and signed types plus boolean).
+A value can also provide a show function, that takes care
+of displaying the value in a custom string format. This can be especially
+useful when displaying enums.
+
+For more information, please consult the kerneldoc documentation in patch 2
+and the sample uses in the kunit tests, KVM and networking.
+
+This series of patches is based on my previous series "libfs: group and
+simplify linux fs code" and the single patch sent to kvm "kvm_host: unify
+VM_STAT and VCPU_STAT definitions in a single place". The former simplifies
+code duplicated in debugfs and tracefs (from which statsfs is based on),
+the latter groups all macros definition for statistics in kvm in a single
+common file shared by all architectures.
+
+Patch 1 adds a new refcount and kref destructor wrappers that take a
+semaphore, as those are used later by statsfs. Patch 2 introduces the
+statsfs API, patch 3 provides extensive tests that can also be used as
+example on how to use the API and patch 4 adds the file system support.
+Finally, patch 5 provides a real-life example of statsfs usage in KVM,
+with patch 6 providing a concrete example of the show function and
+patch 7 another real-life example in the networking subsystem.
+
+[1] https://lore.kernel.org/kvm/5d6cdcb1-d8ad-7ae6-7351-3544e2fa366d@redhat.com/?fbclid=IwAR18LHJ0PBcXcDaLzILFhHsl3qpT3z2vlG60RnqgbpGYhDv7L43n0ZXJY8M
+
+Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+
+v2 -> v3 move kconfig entry in the pseudo filesystem menu, add
+documentation, get/clear function for value types, show function,
+floating/cumulative and hidden flags. Also added the netstat
+example
+
+Emanuele Giuseppe Esposito (7):
+  stats_fs API: create, add and remove stats_fs sources and values
+  documentation for stats_fs
+  kunit: tests for stats_fs API
+  stats_fs fs: virtual fs to show stats to the end-user
+  kvm_main: replace debugfs with stats_fs
+  [not for merge] kvm: example of stats_fs_value show function
+  [not for merge] netstats: example use of stats_fs API
+
+ Documentation/filesystems/index.rst    |    1 +
+ Documentation/filesystems/stats_fs.rst |  222 +++++
+ MAINTAINERS                            |    7 +
+ arch/arm64/kvm/Kconfig                 |    1 +
+ arch/arm64/kvm/guest.c                 |    2 +-
+ arch/mips/kvm/Kconfig                  |    1 +
+ arch/mips/kvm/mips.c                   |    2 +-
+ arch/powerpc/kvm/Kconfig               |    1 +
+ arch/powerpc/kvm/book3s.c              |   12 +-
+ arch/powerpc/kvm/booke.c               |    8 +-
+ arch/s390/kvm/Kconfig                  |    1 +
+ arch/s390/kvm/kvm-s390.c               |   16 +-
+ arch/x86/include/asm/kvm_host.h        |    2 +-
+ arch/x86/kvm/Kconfig                   |    1 +
+ arch/x86/kvm/Makefile                  |    2 +-
+ arch/x86/kvm/debugfs.c                 |   64 --
+ arch/x86/kvm/stats_fs.c                |  114 +++
+ arch/x86/kvm/x86.c                     |   11 +-
+ fs/Kconfig                             |   20 +
+ fs/Makefile                            |    1 +
+ fs/stats_fs/Makefile                   |    7 +
+ fs/stats_fs/inode.c                    |  461 ++++++++++
+ fs/stats_fs/internal.h                 |   34 +
+ fs/stats_fs/stats_fs-tests.c           | 1097 ++++++++++++++++++++++++
+ fs/stats_fs/stats_fs.c                 |  642 ++++++++++++++
+ fs/stats_fs/stub.c                     |   13 +
+ include/linux/kvm_host.h               |   45 +-
+ include/linux/netdevice.h              |    2 +
+ include/linux/stats_fs.h               |  381 ++++++++
+ include/uapi/linux/magic.h             |    1 +
+ net/Kconfig                            |    1 +
+ net/core/dev.c                         |   68 ++
+ tools/lib/api/fs/fs.c                  |   21 +
+ virt/kvm/arm/arm.c                     |    2 +-
+ virt/kvm/kvm_main.c                    |  317 +------
+ 35 files changed, 3193 insertions(+), 388 deletions(-)
+ create mode 100644 Documentation/filesystems/stats_fs.rst
+ delete mode 100644 arch/x86/kvm/debugfs.c
+ create mode 100644 arch/x86/kvm/stats_fs.c
+ create mode 100644 fs/stats_fs/Makefile
+ create mode 100644 fs/stats_fs/inode.c
+ create mode 100644 fs/stats_fs/internal.h
+ create mode 100644 fs/stats_fs/stats_fs-tests.c
+ create mode 100644 fs/stats_fs/stats_fs.c
+ create mode 100644 fs/stats_fs/stub.c
+ create mode 100644 include/linux/stats_fs.h
+
 -- 
-2.26.2
+2.25.4
 
