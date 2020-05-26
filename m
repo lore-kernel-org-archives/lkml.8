@@ -2,100 +2,187 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B06C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FD120721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nqynxx6P"
+	by mail.kernel.org (Postfix) with ESMTP id A147720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590521153;
+	bh=GUuK0ABC3jZqZ0Rvg0S0uULvtjY5PAQW5rWG5iALkwQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PWN9cx32FGkJeh4yAt6k5j0GH9cpnmTQfNMs88gTXti40oqRr6TMU/5wpSVnwAaAu
+	 sbGAeBRpEH12rfEgEkZP/jmkHa3lXu9lxrQJAvxqNeaOhK9YZlu3QqEX5088V+jGMq
+	 MH53uxBj73JUJmdwQx7ww5O4l7I+ybOvfDedDRVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392570AbgEZTZj (ORCPT
+        id S2404130AbgEZTZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391649AbgEZTGe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:34 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE87DC03E96D;
-        Tue, 26 May 2020 12:06:33 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so2146745plb.11;
-        Tue, 26 May 2020 12:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GRcaB+mIzfLDLlFG78mKyVuPh26Fe+lvp5hkpJeot3s=;
-        b=Nqynxx6PjGvEUZ1vtdBukxxUlM6ZSXnf+QzDLWfl+huq9Bf6ZSVBiPnYfUBC9Dm8qI
-         /YHuV8Ukd1QPbrbMm1BaQRDqMZJKOKzQBA795QM0k1YDFT0WAC+i7zjw2PRJZiDXDdQ2
-         BbUxqeqtNKM1TJTdMA7ERT3IRA1HFK6NQjZ2X3X33quoU+tMoTGq+FbMWjPuRbPHSSfP
-         u22Kd9dK22J+1vfq2qmx6QYQvBoBhUhts04C/Ya9NKP6eL67/4Dn9Cl43sOvYNNasjgi
-         7b266JVDDOmQQgGmWUcj6idaoJHHU6hTILO6Z9oYrNUIGCN3PjGiQYRAWASkHnSdhY3X
-         xGDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GRcaB+mIzfLDLlFG78mKyVuPh26Fe+lvp5hkpJeot3s=;
-        b=e3qDmNQ5ewExzFSuFpCrQqPt680oaerEbRKvlQ7O81qMi0OWWRscMT5T0rd1CMbuuP
-         Dg0qgn3dVIwc9mKTVgm4PcjXCnZzXExBt3c3v5Mm8CJHH6Ur8dpJR18Ey9qKjACISNAr
-         ufeo8oYG7yI2BmFtYHsliA/9obSQ/8CCqCZTMh/T55mOmPKzlVAdVojIq8NRQCA/maLt
-         yE8+l2VU3d5hUA366bhXwqsHYtw9bb+5IE07ZGFTGnqko2n6qPKWD2R9RtQyUvDsEh1p
-         iEjMwO3zWyv0+PNkhbn47U3QWiUSea8vyI8Ug7fTzwdmRCnJZ/ibF31Se4C6yBl2YRXc
-         38Jw==
-X-Gm-Message-State: AOAM530j0twft7uQg8u+v1iw1FWjzr2L79imGHmfXfTJkISkS9R8Gc/F
-        k618p2qJlG7ZvAO2vANQQ3o=
-X-Google-Smtp-Source: ABdhPJyj7v5wDj7jxE/+gZB0RtFsKRceZTkA3pyRGaDUaeRtW5SFdh5wW2q4rDfjAwUOuIi02wPtug==
-X-Received: by 2002:a17:902:47:: with SMTP id 65mr2284406pla.54.1590519993316;
-        Tue, 26 May 2020 12:06:33 -0700 (PDT)
-Received: from [192.168.208.37] ([49.206.126.69])
-        by smtp.gmail.com with ESMTPSA id s123sm242456pfs.170.2020.05.26.12.06.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 12:06:32 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Git v2.27.0-rc2
-To:     Junio C Hamano <gitster@pobox.com>
-Cc:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
-        git-packagers@googlegroups.com
-References: <xmqqtv02mt2m.fsf@gitster.c.googlers.com>
-From:   Kaartic Sivaraam <kaartic.sivaraam@gmail.com>
-Message-ID: <e66ea483-5e7f-4ebd-5ba8-91227efa454a@gmail.com>
-Date:   Wed, 27 May 2020 00:36:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 26 May 2020 15:25:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391643AbgEZTGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E430E20873;
+        Tue, 26 May 2020 19:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519991;
+        bh=GUuK0ABC3jZqZ0Rvg0S0uULvtjY5PAQW5rWG5iALkwQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x5eThrGP46roDrv21WTXox8Gs6MKSH5Jc7/EiADHPkw2kz1ija8t4tN8WD5r4ieGT
+         pPOAtofMIRiBAbm6ysaSo5anbBD4e6ZvA6/eIGeBOs0tFYFt/rhF3JTG6LOsThUUGU
+         iQVxriMneE80SdsTtzpYIwMMf0E0zcL0oF3tywJ4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 016/111] afs: Dont unlock fetched data pages until the op completes successfully
+Date:   Tue, 26 May 2020 20:52:34 +0200
+Message-Id: <20200526183934.153530259@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <xmqqtv02mt2m.fsf@gitster.c.googlers.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Junio,
+From: David Howells <dhowells@redhat.com>
 
-On 27-05-2020 00:17, Junio C Hamano wrote:
-> Shourya Shukla (4):
->        submodule--helper.c: Rename 'cb_foreach' to 'foreach_cb'
->        gitfaq: files in .gitignore are tracked
->        gitfaq: fetching and pulling a repository
->        submodule: port subcommand 'set-url' from shell to C
+[ Upstream commit 9d1be4f4dc5ff1c66c86acfd2c35765d9e3776b3 ]
 
-This is the only place where the `set-url` conversion from Shell to C is 
-mentioned. I wonder if it's enough or if it needs a little bit more 
-attention may be in the "Performance, Internal Implementation, 
-Development Support etc." as it is a conversion of a submodule sub-command?
+Don't call req->page_done() on each page as we finish filling it with
+the data coming from the network.  Whilst this might speed up the
+application a bit, it's a problem if there's a network failure and the
+operation has to be reissued.
 
-I'm not sure about the importance that these kinds of conversion 
-require, thus the question :)
+If this happens, an oops occurs because afs_readpages_page_done() clears
+the pointer to each page it unlocks and when a retry happens, the
+pointers to the pages it wants to fill are now NULL (and the pages have
+been unlocked anyway).
 
+Instead, wait till the operation completes successfully and only then
+release all the pages after clearing any terminal gap (the server can
+give us less data than we requested as we're allowed to ask for more
+than is available).
+
+KASAN produces a bug like the following, and even without KASAN, it can
+oops and panic.
+
+    BUG: KASAN: wild-memory-access in _copy_to_iter+0x323/0x5f4
+    Write of size 1404 at addr 0005088000000000 by task md5sum/5235
+
+    CPU: 0 PID: 5235 Comm: md5sum Not tainted 5.7.0-rc3-fscache+ #250
+    Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
+    Call Trace:
+     memcpy+0x39/0x58
+     _copy_to_iter+0x323/0x5f4
+     __skb_datagram_iter+0x89/0x2a6
+     skb_copy_datagram_iter+0x129/0x135
+     rxrpc_recvmsg_data.isra.0+0x615/0xd42
+     rxrpc_kernel_recv_data+0x1e9/0x3ae
+     afs_extract_data+0x139/0x33a
+     yfs_deliver_fs_fetch_data64+0x47a/0x91b
+     afs_deliver_to_call+0x304/0x709
+     afs_wait_for_call_to_complete+0x1cc/0x4ad
+     yfs_fs_fetch_data+0x279/0x288
+     afs_fetch_data+0x1e1/0x38d
+     afs_readpages+0x593/0x72e
+     read_pages+0xf5/0x21e
+     __do_page_cache_readahead+0x128/0x23f
+     ondemand_readahead+0x36e/0x37f
+     generic_file_buffered_read+0x234/0x680
+     new_sync_read+0x109/0x17e
+     vfs_read+0xe6/0x138
+     ksys_read+0xd8/0x14d
+     do_syscall_64+0x6e/0x8a
+     entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fixes: 196ee9cd2d04 ("afs: Make afs_fs_fetch_data() take a list of pages")
+Fixes: 30062bd13e36 ("afs: Implement YFS support in the fs client")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/afs/fsclient.c  | 8 ++++----
+ fs/afs/yfsclient.c | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index 6805a469d13c..0a4fed9e706b 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -385,8 +385,6 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
+ 		ASSERTCMP(req->offset, <=, PAGE_SIZE);
+ 		if (req->offset == PAGE_SIZE) {
+ 			req->offset = 0;
+-			if (req->page_done)
+-				req->page_done(req);
+ 			req->index++;
+ 			if (req->remain > 0)
+ 				goto begin_page;
+@@ -440,11 +438,13 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
+ 		if (req->offset < PAGE_SIZE)
+ 			zero_user_segment(req->pages[req->index],
+ 					  req->offset, PAGE_SIZE);
+-		if (req->page_done)
+-			req->page_done(req);
+ 		req->offset = 0;
+ 	}
+ 
++	if (req->page_done)
++		for (req->index = 0; req->index < req->nr_pages; req->index++)
++			req->page_done(req);
++
+ 	_leave(" = 0 [done]");
+ 	return 0;
+ }
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 39230880f372..8af7f093305d 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -497,8 +497,6 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
+ 		ASSERTCMP(req->offset, <=, PAGE_SIZE);
+ 		if (req->offset == PAGE_SIZE) {
+ 			req->offset = 0;
+-			if (req->page_done)
+-				req->page_done(req);
+ 			req->index++;
+ 			if (req->remain > 0)
+ 				goto begin_page;
+@@ -556,11 +554,13 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
+ 		if (req->offset < PAGE_SIZE)
+ 			zero_user_segment(req->pages[req->index],
+ 					  req->offset, PAGE_SIZE);
+-		if (req->page_done)
+-			req->page_done(req);
+ 		req->offset = 0;
+ 	}
+ 
++	if (req->page_done)
++		for (req->index = 0; req->index < req->nr_pages; req->index++)
++			req->page_done(req);
++
+ 	_leave(" = 0 [done]");
+ 	return 0;
+ }
 -- 
-Sivaraam
+2.25.1
+
+
+
