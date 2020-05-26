@@ -2,106 +2,157 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF44C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C626208C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590532182;
-	bh=ekKNeNee1MhvK9tq5BOS9AGTldx3+yaX5CwkXqG7/TA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=gb28/Soe/DQTbx7ZXMcAxhqhesNIQ2Tbp2OR2G3gfEGsQuqzSWcfKYCnubM56q1gI
-	 QThnBcIkeuq2cdSNUj3RVt2LbHsTcXCTItJGWvhSneOYp7rv5CXUOBR4Mx+cKbdVqp
-	 gBO1tPNi8ur7w37tiOAUwS3ZcAeZuhRQgiZRLHHM=
+	by mail.kernel.org (Postfix) with ESMTP id 0A148208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OJ4yu814"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392000AbgEZW3l (ORCPT
+        id S2392020AbgEZW3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389482AbgEZW3l (ORCPT
+        Tue, 26 May 2020 18:29:44 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3912 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389482AbgEZW3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:29:41 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB14C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:29:40 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id b18so17723116oti.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5wqB25Ndtf7G896Xqr2DU1ONCjpaiNIvRfUkDhIp+o4=;
-        b=ajCuuPdVNqJkiWUnn8o03t9TsMo7OEm3Qkfy9klzyZhl3i1I3ekfHr0s9Zn3xB8saQ
-         KsS8XImoIfanBQsGd/FJI/5xiiDtBWFT7WfsF7PAbZAWWtlc37D0g9zX0Irm3bp5N0By
-         533c/c/rF8H6sPab+sGruZq3Kx8M7fEalWda8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5wqB25Ndtf7G896Xqr2DU1ONCjpaiNIvRfUkDhIp+o4=;
-        b=bvcGI2VZ0VT286b0uqVUW2rRaRlMUWeVzsJOciRHtTTIMUDVqL1Frd7XdBJ1nI1zdU
-         hhBX2Gkj8fcxJBcUKQTuDI02HKyNFVHDl+FY+QdP4t6/LQ6iuDCYpiFH3vE1TmVXIGhv
-         NwVGwTThKlupaA/J0vmpCklwhUdhEmnhMLm6TaTgqLntTQaAAEFyAbzPPCVUoV7bfP8W
-         OKFIX4PONgewkJsOJSg6HlxZgj4mKf5of9l6I+2kE0CFiVUU3fsT8FyE+TwgzZtqCrhj
-         D5s9E3WV45e3uxRpgo4Xd2Mhz9JufA4Cno+WPi9MAyZL7vsNVNKFqGFNMwCA33YN8gmU
-         ZKyw==
-X-Gm-Message-State: AOAM530VMMh9F/CxsUusXugY3jdj92NcT/g3RnwhJKwrWocwDm/PIhts
-        PMME+8ZlKHwOH96x0+n3YnG9nQ==
-X-Google-Smtp-Source: ABdhPJw2UJGheVoQlPvhb7lYFGjKDjL07dSv/0TUE+bFEqIDtMMdHttQ9hsCTHmFNvxtgVQFW6OFrQ==
-X-Received: by 2002:a9d:6092:: with SMTP id m18mr2402145otj.117.1590532179333;
-        Tue, 26 May 2020 15:29:39 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id d21sm282371otp.46.2020.05.26.15.29.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 15:29:38 -0700 (PDT)
-Subject: Re: [fixup] kunit: use --build_dir=.kunit as default
-To:     Vitor Massaru Iha <vitor@massaru.org>, kunit-dev@googlegroups.com
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-References: <20200526183436.47026-1-vitor@massaru.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ace26347-a78e-1bd1-86f5-f8e644aa93ec@linuxfoundation.org>
-Date:   Tue, 26 May 2020 16:29:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 18:29:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecd97fc0001>; Tue, 26 May 2020 15:28:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 26 May 2020 15:29:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 15:29:41 -0700
+Received: from [10.2.171.79] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
+ 2020 22:29:36 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Christoph Hellwig <hch@lst.de>, <nouveau@lists.freedesktop.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Jerome Glisse" <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, <willy@infradead.org>
+Subject: Re: [PATCH 4/6] mm/hmm: add output flag for compound page mapping
+Date:   Tue, 26 May 2020 18:29:34 -0400
+X-Mailer: MailMate (1.13.1r5685)
+Message-ID: <B0BF5621-FEF9-446C-AAD9-81EFA1416EB1@nvidia.com>
+In-Reply-To: <1ec0511f-e6eb-3e11-ad6d-ad4e5b107464@nvidia.com>
+References: <20200508192009.15302-1-rcampbell@nvidia.com>
+ <20200508192009.15302-5-rcampbell@nvidia.com> <20200508195129.GA19740@lst.de>
+ <1ec0511f-e6eb-3e11-ad6d-ad4e5b107464@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526183436.47026-1-vitor@massaru.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_4B5C64C4-2994-4ABE-B17A-646474CC0806_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590532092; bh=cwtuAIOq+85ZyiwcNHD3iSzFYHUjU2pYVvKab5S4Qb8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=OJ4yu8141xYfTos05JStvkCXdsYzpSd0C8gJhS4DYokuTujNxJRM/AzYDbvvN2/Fx
+         EJJXr3Ns5xanby9PR2ZxO8jI1rf5Gva/sivcLkLdx32TNggJOswgyx/hDR8ErNr8ip
+         /rjWMzOVsngLZ4eAkJAl0u/brqBX7PpcR5oU5G2vFMR1uqh+IY47scqn3LWtFnL9ng
+         wXGhk9k1xgHsZTzzZ9DB/SrwYmUYX8m5q01lF6IgmjFa+t2sR5kI3kqneBCEG9PYZx
+         wFmtQu2AkihWQfZB/HlrB/gPFg0Bp10HUSMKw9+qHvpRMZjTIXiIspuuSWvRc9j0nI
+         GXPq2w9P3Rs9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 12:34 PM, Vitor Massaru Iha wrote:
-> To make KUnit easier to use, and to avoid overwriting object and
-> .config files, the default KUnit build directory is set to .kunit
-> 
->   * Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205221
-> 
-> Fixed up minor merge conflicts - Shuah Khan <skhan@linuxfoundation.org>
-> 
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
-> version after merge on kunit brach:
->   * fix identation (tabs instead of spaces)
+--=_MailMate_4B5C64C4-2994-4ABE-B17A-646474CC0806_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-You mentioned spaces breaking python. Please include the python
-errors and make it clear in the change log what is fixes.
+On 8 May 2020, at 16:06, Ralph Campbell wrote:
 
-thanks,
--- Shuah
+> On 5/8/20 12:51 PM, Christoph Hellwig wrote:
+>> On Fri, May 08, 2020 at 12:20:07PM -0700, Ralph Campbell wrote:
+>>> hmm_range_fault() returns an array of page frame numbers and flags fo=
+r
+>>> how the pages are mapped in the requested process' page tables. The P=
+FN
+>>> can be used to get the struct page with hmm_pfn_to_page() and the pag=
+e size
+>>> order can be determined with compound_order(page) but if the page is =
+larger
+>>> than order 0 (PAGE_SIZE), there is no indication that the page is map=
+ped
+>>> using a larger page size. To be fully general, hmm_range_fault() woul=
+d need
+>>> to return the mapping size to handle cases like a 1GB compound page b=
+eing
+>>> mapped with 2MB PMD entries. However, the most common case is the map=
+ping
+>>> size the same as the underlying compound page size.
+>>> Add a new output flag to indicate this so that callers know it is saf=
+e to
+>>> use a large device page table mapping if one is available.
+>>
+>> Why do you need the flag?  The caller should be able to just use
+>> page_size() (or willys new thp_size helper).
+>>
+>
+> The question is whether or not a large page can be mapped with smaller
+> page table entries with different permissions. If one process has a 2MB=
 
+> page mapped with 4K PTEs with different read/write permissions, I don't=
+ think
+> it would be OK for a device to map the whole 2MB with write access enab=
+led.
+> The flag is supposed to indicate that the whole page can be mapped by t=
+he
+> device with the indicated read/write permissions.
+
+If hmm_range_fault() only walks one VMA at a time, you would not have thi=
+s permission
+issue, right? Since all pages from one VMA should have the same permissio=
+n.
+But it seems that hmm_range_fault() deals with pages across multiple VMAs=
+=2E
+Maybe we should make hmm_range_fault() bail out early when it encounters
+a VMA with a different permission than the existing ones?
+
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_4B5C64C4-2994-4ABE-B17A-646474CC0806_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl7NmE8PHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKjycP/3XJhZ/XUzVmTxYQ6iRjWJrpB2rP0Qm21PvT
+aJJd4WglE/dotbUGatNjl86bKqfhWVyQSbwPFnsc94YTkkAazZh8FspW6mV2WdQ+
+1itzDfkls+hAAXuJcWOOnw23UY5+y8Hy/tfsrqr0sP6UNvJ3wuyXDMBmbQVSyvur
+Aa6SAZNJv7LG1YdCJfCI3X92aSziGBd7s3/1Kz2AUagsvP20T4jygQo+6lgepNzy
+hEdUKBstpN1T3sRVom1n4BYJK+kDrRVfiYdCFrhJ9ZTIu3K9snEWrsMRSnx7wSX2
+dxSZwVx+dqOokDM5DhYZWyif1X0/JZzq7v0P4BNuUJkpXZrCutqQP6nvGxsR+QVX
+5GgkLzeUOUqnFJvljtiSkwjUPRblljGFo9WDGEnrVNTDG7uZf56Qz6SdQPwLR9GK
+Vsk8saRYhZ6YHPE8QtuByliBhzzZfIUK7oafU8e/1QEo/0zFdL+QEbfUR61/nHpK
+WkHcnZRxJ5EGmfGGk4dYq+soIl+0g3oMWIDQ2QFMA1RPf3pzOR595P5ldo6KgPSo
+N+euHyai7HSurTxdE4JgN27uM9/d9yq0X3uQGwW/a/Fq3EhiAiUJnfd4s375Wd2y
+qcsaP5rxatQo0EeVnGs2vwXgG3f3vFYVhs4FRRogl5EEQE36Y81uLm+pZmjoKfyf
+eGcZSDTZ
+=zDv+
+-----END PGP SIGNATURE-----
+
+--=_MailMate_4B5C64C4-2994-4ABE-B17A-646474CC0806_=--
