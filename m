@@ -2,51 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97076C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB8C20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7619320888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521259;
-	bh=oXcHXb6dsSUvMpO8NE2tgJlKh/jHYLMsINJNQtFNX/Y=;
+	s=default; t=1590521262;
+	bh=UepWdnsWpDppgVk5vfkJFKBUbmMK8J+U8pMrQTMIVVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBf0zKTWFVUIDbaOU3OhYO7non/FrutZsreZtkKxJx9nb4cY89eYXrB/JCou6BnQw
-	 sj1mMEt9pOD5EYVdN9WnMOoQONAvaECDWDubGiTRMW6hxgoUwLGlSmcfHqotMIYCRY
-	 Ua65RDNAV64j6q6prrTuXQq6CkOrAeT0tu8MMe9U=
+	b=wTyqWMLAsZDw/G9Ptgs/YB6Rfc6+EIAreHQ3J0xRpTgU46GX7/rXlJOso4G57hmJF
+	 I4y3bj8JPOl2DK14KIqjFfdAHND64MbtYlgqrjvzs6f8FF6XT/T8kc9uPoSUz1s4++
+	 MbVhGyHLQSmus0qx6uQ/Zu1zg3XtqJVB7l9GoIhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392488AbgEZT1i (ORCPT
+        id S2391304AbgEZTEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391319AbgEZTEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:10 -0400
+        id S2390518AbgEZTD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C293E20849;
-        Tue, 26 May 2020 19:04:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C4CF20873;
+        Tue, 26 May 2020 19:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519850;
-        bh=oXcHXb6dsSUvMpO8NE2tgJlKh/jHYLMsINJNQtFNX/Y=;
+        s=default; t=1590519837;
+        bh=UepWdnsWpDppgVk5vfkJFKBUbmMK8J+U8pMrQTMIVVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/do5Po24igzrLrMRgzpLx4wIkC8UUC3rculzuxlYixFyMf7MNIR8wayRDx7UI92b
-         3FEHk13KpA41h7GegkcsYRiv2+Y1CibmblkmOY1dduN3+BZJlO4Kp2xuBlsM6C2HRm
-         bRP7pN0ilXPpdZz+mfQlvVlVg7nggJnABYHs+JxU=
+        b=h9mT6jN3zILXnD4vvt8XhHswIcGy9McAP7Jez2ru8JX/7ZIcJ2/BxHk7IqCqP3Hac
+         ULG2Uwwpnb6DeZPKH8P4HIPTAqNkHfxLKRUF1allKANbTO6ZskqQy07fQDWW43l5mF
+         nDnl4uZo78149NLWFUhMs4SLKqzF52oO+eJohnkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 40/81] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
-Date:   Tue, 26 May 2020 20:53:15 +0200
-Message-Id: <20200526183931.653439338@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 36/81] padata: initialize pd->cpu with effective cpumask
+Date:   Tue, 26 May 2020 20:53:11 +0200
+Message-Id: <20200526183931.357121297@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -59,34 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lachner <gladiac@gmail.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-commit d9e8fe0cffbfdd18de96fa68ee2a8b667a0b046e upstream.
+[ Upstream commit ec9c7d19336ee98ecba8de80128aa405c45feebb ]
 
-The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
-requires a similar workaround for Clevo laptops to enforce the
-DAC/mixer connection path. Set up a quirk entry for that.
+Exercising CPU hotplug on a 5.2 kernel with recent padata fixes from
+cryptodev-2.6.git in an 8-CPU kvm guest...
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
-Signed-off-by: Christian Lachner <gladiac@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200518053844.42743-2-gladiac@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
+    # echo 0 > /sys/devices/system/cpu/cpu1/online
+    # echo c > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+    # modprobe tcrypt mode=215
 
+...caused the following crash:
+
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor read access in kernel mode
+    #PF: error_code(0x0000) - not-present page
+    PGD 0 P4D 0
+    Oops: 0000 [#1] SMP PTI
+    CPU: 2 PID: 134 Comm: kworker/2:2 Not tainted 5.2.0-padata-base+ #7
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
+    Workqueue: pencrypt padata_parallel_worker
+    RIP: 0010:padata_reorder+0xcb/0x180
+    ...
+    Call Trace:
+     padata_do_serial+0x57/0x60
+     pcrypt_aead_enc+0x3a/0x50 [pcrypt]
+     padata_parallel_worker+0x9b/0xe0
+     process_one_work+0x1b5/0x3f0
+     worker_thread+0x4a/0x3c0
+     ...
+
+In padata_alloc_pd, pd->cpu is set using the user-supplied cpumask
+instead of the effective cpumask, and in this case cpumask_first picked
+an offline CPU.
+
+The offline CPU's reorder->list.next is NULL in padata_reorder because
+the list wasn't initialized in padata_init_pqueues, which only operates
+on CPUs in the effective mask.
+
+Fix by using the effective mask in padata_alloc_pd.
+
+Fixes: 6fc4dbcf0276 ("padata: Replace delayed timer with immediate workqueue in padata_reorder")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/padata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2443,6 +2443,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 47dc31ce15ac..e9b8d517fd4b 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -451,7 +451,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	atomic_set(&pd->refcnt, 1);
+ 	pd->pinst = pinst;
+ 	spin_lock_init(&pd->lock);
+-	pd->cpu = cpumask_first(pcpumask);
++	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+ 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+ 
+ 	return pd;
+-- 
+2.25.1
+
 
 
