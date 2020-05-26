@@ -2,139 +2,168 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6104FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E11C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322AE20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F400220787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFaO+/3V"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qlSo2Zbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgEZMuf (ORCPT
+        id S1729364AbgEZMwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:50:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39213 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728558AbgEZMuf (ORCPT
+        Tue, 26 May 2020 08:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgEZMwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:50:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590497433;
+        Tue, 26 May 2020 08:52:20 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D1FC03E96D;
+        Tue, 26 May 2020 05:52:20 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0f910029cc1ac058818593.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:9100:29cc:1ac0:5881:8593])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CD3C51EC0118;
+        Tue, 26 May 2020 14:52:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590497538;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MJSM3PD7cXbri59EHpWEca36HJ8EesRGj50MuybBvxc=;
-        b=TFaO+/3Vu3SKfbYNBG6sNzw83S/luUq9uqmjqaa5Uo9gQrWc0DF+Ht7oyc4gVyUfpLYS/X
-        yyg348EOtJVTMG0SZtYXpK2yWURcaI9yBVkKOThqQXD4bG1Rd8AmvMpn/m7I2qC6eVF8u/
-        hFGbQ+itEdYrk4fwJKtK3nlYgBidSLU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-Q4pwPJCCOcmmRT7We-A9mg-1; Tue, 26 May 2020 08:50:31 -0400
-X-MC-Unique: Q4pwPJCCOcmmRT7We-A9mg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD18D461;
-        Tue, 26 May 2020 12:50:29 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-102.rdu2.redhat.com [10.10.115.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C94D10013DB;
-        Tue, 26 May 2020 12:50:29 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 0988E22036E; Tue, 26 May 2020 08:50:29 -0400 (EDT)
-Date:   Tue, 26 May 2020 08:50:28 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-Message-ID: <20200526125028.GB108774@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
- <20200511164752.2158645-3-vkuznets@redhat.com>
- <20200521183832.GB46035@redhat.com>
- <87sgfq8vau.fsf@vitty.brq.redhat.com>
+        bh=ZGH6cJ+EMFRFX4aplnDSD+DpMuQLo38Ps+fJV82VzCI=;
+        b=qlSo2ZbxzQoEd46ObhBqeRWPa6sLsZbdFDMdO6sqoBqhzSgPMMxW0dZvXVV9mMQ/2l//1O
+        sHyXBTNiS43qkWgA9OkgGUuAzdGy61Wu2libvEx7SeFNdr3MH860Ee7RdoT/YGbR1ryt4V
+        VUppJQiINcI6WieHJiReA+PRI0FpEB0=
+Date:   Tue, 26 May 2020 14:52:08 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200526125207.GE28228@zn.tnic>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87sgfq8vau.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 06:34:17PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > On Mon, May 11, 2020 at 06:47:46PM +0200, Vitaly Kuznetsov wrote:
-> >> Currently, APF mechanism relies on the #PF abuse where the token is being
-> >> passed through CR2. If we switch to using interrupts to deliver page-ready
-> >> notifications we need a different way to pass the data. Extent the existing
-> >> 'struct kvm_vcpu_pv_apf_data' with token information for page-ready
-> >> notifications.
-> >> 
-> >> The newly introduced apf_put_user_ready() temporary puts both reason
-> >> and token information, this will be changed to put token only when we
-> >> switch to interrupt based notifications.
-> >> 
-> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> ---
-> >>  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
-> >>  arch/x86/kvm/x86.c                   | 17 +++++++++++++----
-> >>  2 files changed, 15 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-> >> index 2a8e0b6b9805..e3602a1de136 100644
-> >> --- a/arch/x86/include/uapi/asm/kvm_para.h
-> >> +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> >> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
-> >>  
-> >>  struct kvm_vcpu_pv_apf_data {
-> >>  	__u32 reason;
-> >
-> > Hi Vitaly,
-> >
-> > Given we are redoing it, can we convert "reason" into a flag instead
-> > and use bit 0 for signalling "page not present" Then rest of the 31
-> > bits can be used for other purposes. I potentially want to use one bit to
-> > signal error (if it is known at the time of injecting #PF).
-> 
-> Yes, I think we can do that. The existing KVM_PV_REASON_PAGE_READY and
-> KVM_PV_REASON_PAGE_NOT_PRESENT are mutually exclusive and can be
-> converted to flags (we'll only have KVM_PV_REASON_PAGE_NOT_PRESENT in
-> use when this series is merged).
-> 
-> >
-> >> -	__u8 pad[60];
-> >> +	__u32 pageready_token;
-> >> +	__u8 pad[56];
-> >
-> > Given token is 32 bit, for returning error in "page ready" type messages,
-> > I will probably use padding bytes and create pagready_flag and use one
-> > of the bits to signal error.
-> 
-> In case we're intended to pass more data in synchronous notifications,
-> shall we leave some blank space after 'flags' ('reason' previously) and
-> before 'token'?
+On Fri, May 15, 2020 at 03:43:58AM +0300, Jarkko Sakkinen wrote:
+> Add functions for allocating page from Enclave Page Cache (EPC). A page is
 
-Given you are planning to move away from using kvm_vcpu_pv_apf_data
-for synchronous notifications, I will not be too concerned about it.
+				pages
 
-Thanks
-Vivek
+> allocated by going through the EPC sections and returning the first free
+> page.
+> 
+> When a page is freed, it might have a valid state, which means that the
+> callee has assigned it to an enclave, which are protected memory ares used
 
+								  areas
+
+although explaining what enclaves are has already happened so probably
+not needed here too.
+
+> to run code protected from outside access. The page is returned back to the
+> invalid state with ENCLS[EREMOVE] [1].
+> 
+> [1] Intel SDM: 40.3 INTEL® SGX SYSTEM LEAF FUNCTION REFERENCE
+> 
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Acked-by: Jethro Beekman <jethro@fortanix.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/sgx/main.c | 60 ++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/cpu/sgx/sgx.h  |  3 ++
+>  2 files changed, 63 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index 38424c1e8341..60d82e7537c8 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -13,6 +13,66 @@
+>  struct sgx_epc_section sgx_epc_sections[SGX_MAX_EPC_SECTIONS];
+>  int sgx_nr_epc_sections;
+>  
+> +static struct sgx_epc_page *__sgx_try_alloc_page(struct sgx_epc_section *section)
+> +{
+> +	struct sgx_epc_page *page;
+> +
+> +	if (list_empty(&section->page_list))
+> +		return NULL;
+> +
+> +	page = list_first_entry(&section->page_list, struct sgx_epc_page, list);
+> +	list_del_init(&page->list);
+> +	return page;
+> +}
+> +
+> +/**
+> + * sgx_try_alloc_page() - Allocate an EPC page
+
+Uuh, this is confusing. Looking forward into the patchset, you guys have
+
+sgx_alloc_page()
+sgx_alloc_va_page()
+
+and this here
+
+sgx_try_alloc_page()
+
+So this one here should be called sgx_alloc_epc_page() if we're going to
+differentiate *what* it is allocating.
+
+But then looking at sgx_alloc_page():
+
++ * sgx_alloc_page() - Allocate an EPC page
+...
+
++ struct sgx_epc_page *sgx_alloc_page(void *owner, bool reclaim)
+
+this one returns a struct sgx_epc_page * too.
+
+The former "allocates" from the EPC cache so I'm thinking former should
+not have "alloc" in its name at all. It should be called something like
+
+sgx_get_epc_page()
+
+or so.
+
+Now, looking at sgx_alloc_page(), it does call this one -
+sgx_try_alloc_page() to get a page from the page list but it
+does not allocate anything. The actual allocation happens in
+sgx_alloc_epc_section() which actually does the k*alloc().
+
+Which sounds to me like those functions should not use "alloc" and
+"free" in their names but "get" and "put" to denote that they're simply
+getting pages from lists and returning them back to those lists.
+
+IMNSVHO.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
