@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD369C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E26C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995A120776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755B120776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521644;
-	bh=3pSeskTFjO+0bbdeOLUtWgslWTMrbRVNNNRWN0jVovo=;
+	s=default; t=1590521647;
+	bh=9082s8SwAhFTbqFbYa/4fyiheRIflpQhujxpR+8RCdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlVmuMi/RJvPKsAqm7gVixgZYtW0GWYY/ZTGcpdDVfBo60leFHCbX6fIfvWVijKv+
-	 03R2R3rnK1w+3U7B6wHQQhdgR08EtAnV03DAujTBKolZDQMA70srlpjPCKlhmnQ5pk
-	 KKAL1z5/rFmgu7DopNbQoICzYSlMk3VsB20cUl3s=
+	b=pnDtq2pviISxDJ8JGujaVDyKAMmlZmmkrginCDxFv2WiI1v2K79oSP6LSCoI/2q+V
+	 d+TrnqFRIGuioV77iadbV3BoqN81Ym5hY0VwfDb08Niod5feJMd4nBrCa4h8gPrWSE
+	 /JNRqt91NLJ4cMY5GKf5Uid9MJIASc0Dz1MJpSRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389555AbgEZSze (ORCPT
+        id S2389498AbgEZSz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389529AbgEZSzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:31 -0400
+        id S2389430AbgEZSzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C04432084C;
-        Tue, 26 May 2020 18:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78365208B3;
+        Tue, 26 May 2020 18:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519330;
-        bh=3pSeskTFjO+0bbdeOLUtWgslWTMrbRVNNNRWN0jVovo=;
+        s=default; t=1590519317;
+        bh=9082s8SwAhFTbqFbYa/4fyiheRIflpQhujxpR+8RCdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FwSM5xgpTUImhI4viHXgNCFGTSCyRiRyt4bhB/lwx2XFM6nm+lDVPjHCVTCGxFP8U
-         Dlkz9KGryf8lumpl8KMTz9xyUSbn3YO9o8sMXpdDTCjp9L4HbSO2DE/jjtR4OQxJul
-         3r6eqPWe4Be9xKcI4aohSk5IeaVF7DnGfvgAHq5w=
+        b=dxCFbhJToac1nmxpXLkbWuXNa5vGsMx55UUGQlIqpihcg9D/eyW5lgg5IJVE48l6j
+         PU6hbCq5KrjR6TBWDlxqgKKb31Hd+v20sToWYMzUSShqvTklE661s5SM7YSXZ6LdXC
+         nXHM55D7JKMiZ6NCrveUeHUESkEBbAHx7o383D/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Lauro Ramos Venancio <lvenanci@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>, Rik van Riel <riel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, lwang@redhat.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        stable@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 26/65] sched/fair, cpumask: Export for_each_cpu_wrap()
-Date:   Tue, 26 May 2020 20:52:45 +0200
-Message-Id: <20200526183915.976645661@linuxfoundation.org>
+Subject: [PATCH 4.4 21/65] i2c: dev: dont start function name with return
+Date:   Tue, 26 May 2020 20:52:40 +0200
+Message-Id: <20200526183914.141946514@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -66,105 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-[ Upstream commit c743f0a5c50f2fcbc628526279cfa24f3dabe182 ]
+commit 72a71f869c95dc11b73f09fe18c593d4a0618c3f upstream.
 
-More users for for_each_cpu_wrap() have appeared. Promote the construct
-to generic cpumask interface.
+I stumbled multiple times over 'return_i2c_dev', especially before the
+actual 'return res'. It makes the code hard to read, so reanme the
+function to 'put_i2c_dev' which also better matches 'get_free_i2c_dev'.
 
-The implementation is slightly modified to reduce arguments.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Lauro Ramos Venancio <lvenanci@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: lwang@redhat.com
-Link: http://lkml.kernel.org/r/20170414122005.o35me2h5nowqkxbv@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[dj: include only what's added to the cpumask interface, 4.4 doesn't
-     have them in the scheduler]
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cpumask.h | 17 +++++++++++++++++
- lib/cpumask.c           | 32 ++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+ drivers/i2c/i2c-dev.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index bb3a4bb35183..1322883e7b46 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -232,6 +232,23 @@ unsigned int cpumask_local_spread(unsigned int i, int node);
- 		(cpu) = cpumask_next_zero((cpu), (mask)),	\
- 		(cpu) < nr_cpu_ids;)
- 
-+extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
-+
-+/**
-+ * for_each_cpu_wrap - iterate over every cpu in a mask, starting at a specified location
-+ * @cpu: the (optionally unsigned) integer iterator
-+ * @mask: the cpumask poiter
-+ * @start: the start location
-+ *
-+ * The implementation does not assume any bit in @mask is set (including @start).
-+ *
-+ * After the loop, cpu is >= nr_cpu_ids.
-+ */
-+#define for_each_cpu_wrap(cpu, mask, start)					\
-+	for ((cpu) = cpumask_next_wrap((start)-1, (mask), (start), false);	\
-+	     (cpu) < nr_cpumask_bits;						\
-+	     (cpu) = cpumask_next_wrap((cpu), (mask), (start), true))
-+
- /**
-  * for_each_cpu_and - iterate over every cpu in both masks
-  * @cpu: the (optionally unsigned) integer iterator
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index 5a70f6196f57..24f06e7abf92 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -42,6 +42,38 @@ int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
- 	return i;
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index 5fecc1d9e0a1..382c66d5a470 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -91,7 +91,7 @@ static struct i2c_dev *get_free_i2c_dev(struct i2c_adapter *adap)
+ 	return i2c_dev;
  }
  
-+/**
-+ * cpumask_next_wrap - helper to implement for_each_cpu_wrap
-+ * @n: the cpu prior to the place to search
-+ * @mask: the cpumask pointer
-+ * @start: the start point of the iteration
-+ * @wrap: assume @n crossing @start terminates the iteration
-+ *
-+ * Returns >= nr_cpu_ids on completion
-+ *
-+ * Note: the @wrap argument is required for the start condition when
-+ * we cannot assume @start is set in @mask.
-+ */
-+int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
-+{
-+	int next;
-+
-+again:
-+	next = cpumask_next(n, mask);
-+
-+	if (wrap && n < start && next >= start) {
-+		return nr_cpumask_bits;
-+
-+	} else if (next >= nr_cpumask_bits) {
-+		wrap = true;
-+		n = -1;
-+		goto again;
-+	}
-+
-+	return next;
-+}
-+EXPORT_SYMBOL(cpumask_next_wrap);
-+
- /* These are not inline because of header tangles. */
- #ifdef CONFIG_CPUMASK_OFFSTACK
- /**
+-static void return_i2c_dev(struct i2c_dev *i2c_dev)
++static void put_i2c_dev(struct i2c_dev *i2c_dev)
+ {
+ 	spin_lock(&i2c_dev_list_lock);
+ 	list_del(&i2c_dev->list);
+@@ -582,7 +582,7 @@ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
+ error:
+ 	cdev_del(&i2c_dev->cdev);
+ error_cdev:
+-	return_i2c_dev(i2c_dev);
++	put_i2c_dev(i2c_dev);
+ 	return res;
+ }
+ 
+@@ -599,7 +599,7 @@ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
+ 	if (!i2c_dev) /* attach_adapter must have failed */
+ 		return 0;
+ 
+-	return_i2c_dev(i2c_dev);
++	put_i2c_dev(i2c_dev);
+ 	device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
+ 	cdev_del(&i2c_dev->cdev);
+ 
 -- 
 2.25.1
 
