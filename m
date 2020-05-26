@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B0C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DD7208C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF6E208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519316;
-	bh=ENfyGguspCD34AD0RQik4lsmnT2YnKEPit8iBaMEZpo=;
+	s=default; t=1590519319;
+	bh=2M33O1g+B+9kR689BYVVVK/Fk67khvaJz+834sBuYn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLRJV2V3C6Zdf9qZHS6qAKyP9Y/s/E8JBrmCCRDvp8iy4Qf43PY9A8bf+zTim6UhF
-	 lrrglOjYjq1z557wSnmOabnJQxBv5UjV+cvwmVomTXODKeBbpncef6w7oew7jE/1Tp
-	 XdNtASOgIDdugD9mS9rjawyKjKo8huJ3hMjQgAxc=
+	b=r9e1dZ6vNUBlSt4w02pxFO9t69OURtVRDnMLwF/kbAwmkNBFD0BFbJ5nYM6Jj0kmj
+	 4UzqBn3bbo8TTEHa4IOlRhHHeCk4WdPvCTljCCSOvsvOPvQQJTKxx/mx0w+Vc9W96e
+	 BkXVmagNt2rduR+CSYd6oNXblAO2wdr7kq5pFBLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389394AbgEZSzP (ORCPT
+        id S2389427AbgEZSzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47506 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389338AbgEZSzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:11 -0400
+        id S2389363AbgEZSzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E372208C7;
-        Tue, 26 May 2020 18:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DF8208B3;
+        Tue, 26 May 2020 18:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519310;
-        bh=ENfyGguspCD34AD0RQik4lsmnT2YnKEPit8iBaMEZpo=;
+        s=default; t=1590519313;
+        bh=2M33O1g+B+9kR689BYVVVK/Fk67khvaJz+834sBuYn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkZpgQUQ4JM5j49lWC6en+tBii/8RbpJPkfVum6p8ds9A6GcnprErivMIN7sfE7K/
-         qScyLqVxATifJrqE8G+RR65JO735b6hAW0q5cIRhFyILEbzoRSC0p9pMajHCENZvtR
-         17qSkVX/5WPRAjgwyzv8pF2m2Z+4/J2vEvRfdIQk=
+        b=WtLzK9TFFBIanQH7Xy9enYFFmg0xwjDBjKPhYdJSindHe8qfbofPnwG5OAKYTn6ut
+         W40mNMj+T9H7UmGDjWxdS72jXTnL1qhs9m0UEgJlRHMVJ4LIy/z33yoKTkwqRnNKCe
+         UiVVCuEfX//J9OWC/pcYs8sjywAjjxyMbnuxgm6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <shuahkh@osg.samsung.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        stable@vger.kernel.org, Erico Nunes <erico.nunes@datacom.ind.br>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 19/65] media: fix media devnode ioctl/syscall and unregister race
-Date:   Tue, 26 May 2020 20:52:38 +0200
-Message-Id: <20200526183913.346146501@linuxfoundation.org>
+Subject: [PATCH 4.4 20/65] i2c: dev: switch from register_chrdev to cdev API
+Date:   Tue, 26 May 2020 20:52:39 +0200
+Message-Id: <20200526183913.759270679@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -63,184 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <shuahkh@osg.samsung.com>
+From: Erico Nunes <erico.nunes@datacom.ind.br>
 
-commit 6f0dd24a084a17f9984dd49dffbf7055bf123993 upstream.
+commit d6760b14d4a1243f918d983bba1e35c5a5cd5a6d upstream.
 
-Media devnode open/ioctl could be in progress when media device unregister
-is initiated. System calls and ioctls check media device registered status
-at the beginning, however, there is a window where unregister could be in
-progress without changing the media devnode status to unregistered.
+i2c-dev had never moved away from the older register_chrdev interface to
+implement its char device registration. The register_chrdev API has the
+limitation of enabling only up to 256 i2c-dev busses to exist.
 
-process 1				process 2
-fd = open(/dev/media0)
-media_devnode_is_registered()
-	(returns true here)
+Large platforms with lots of i2c devices (i.e. pluggable transceivers)
+with dedicated busses may have to exceed that limit.
+In particular, there are also platforms making use of the i2c bus
+multiplexing API, which instantiates a virtual bus for each possible
+multiplexed selection.
 
-					media_device_unregister()
-						(unregister is in progress
-						and devnode isn't
-						unregistered yet)
-					...
-ioctl(fd, ...)
-__media_ioctl()
-media_devnode_is_registered()
-	(returns true here)
-					...
-					media_devnode_unregister()
-					...
-					(driver releases the media device
-					memory)
+This patch removes the register_chrdev usage and replaces it with the
+less old cdev API, which takes away the 256 i2c-dev bus limitation.
+It should not have any other impact for i2c bus drivers or user space.
 
-media_device_ioctl()
-	(By this point
-	devnode->media_dev does not
-	point to allocated memory.
-	use-after free in in mutex_lock_nested)
+This patch has been tested on qemu x86 and qemu powerpc platforms with
+the aid of a module which adds and removes 5000 virtual i2c busses, as
+well as validated on an existing powerpc hardware platform which makes
+use of the i2c bus multiplexing API.
+i2c-dev busses with device minor numbers larger than 256 have also been
+validated to work with the existing i2c-tools.
 
-BUG: KASAN: use-after-free in mutex_lock_nested+0x79c/0x800 at addr
-ffff8801ebe914f0
-
-Fix it by clearing register bit when unregister starts to avoid the race.
-
-process 1                               process 2
-fd = open(/dev/media0)
-media_devnode_is_registered()
-        (could return true here)
-
-                                        media_device_unregister()
-                                                (clear the register bit,
-						 then start unregister.)
-                                        ...
-ioctl(fd, ...)
-__media_ioctl()
-media_devnode_is_registered()
-        (return false here, ioctl
-	 returns I/O error, and
-	 will not access media
-	 device memory)
-                                        ...
-                                        media_devnode_unregister()
-                                        ...
-                                        (driver releases the media device
-					 memory)
-
-Signed-off-by: Shuah Khan <shuahkh@osg.samsung.com>
-Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reported-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Tested-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-[bwh: Backported to 4.4: adjut filename, context]
+Signed-off-by: Erico Nunes <erico.nunes@datacom.ind.br>
+[wsa: kept includes sorted]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/media-device.c  | 15 ++++++++-------
- drivers/media/media-devnode.c | 19 ++++++++++++-------
- include/media/media-devnode.h | 14 ++++++++++++++
- 3 files changed, 34 insertions(+), 14 deletions(-)
+ drivers/i2c/i2c-dev.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index 5d79cd481730..0ca9506f4654 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -405,6 +405,7 @@ int __must_check __media_device_register(struct media_device *mdev,
- 	if (ret < 0) {
- 		/* devnode free is handled in media_devnode_*() */
- 		mdev->devnode = NULL;
-+		media_devnode_unregister_prepare(devnode);
- 		media_devnode_unregister(devnode);
- 		return ret;
- 	}
-@@ -423,16 +424,16 @@ void media_device_unregister(struct media_device *mdev)
- 	struct media_entity *entity;
- 	struct media_entity *next;
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index e56b774e7cf9..5fecc1d9e0a1 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -22,6 +22,7 @@
  
-+	/* Clear the devnode register bit to avoid races with media dev open */
-+	media_devnode_unregister_prepare(mdev->devnode);
+ /* The I2C_RDWR ioctl code is written by Kolja Waschk <waschk@telos.de> */
+ 
++#include <linux/cdev.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/device.h>
+@@ -47,9 +48,10 @@ struct i2c_dev {
+ 	struct list_head list;
+ 	struct i2c_adapter *adap;
+ 	struct device *dev;
++	struct cdev cdev;
+ };
+ 
+-#define I2C_MINORS	256
++#define I2C_MINORS	MINORMASK
+ static LIST_HEAD(i2c_dev_list);
+ static DEFINE_SPINLOCK(i2c_dev_list_lock);
+ 
+@@ -559,6 +561,12 @@ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
+ 	if (IS_ERR(i2c_dev))
+ 		return PTR_ERR(i2c_dev);
+ 
++	cdev_init(&i2c_dev->cdev, &i2cdev_fops);
++	i2c_dev->cdev.owner = THIS_MODULE;
++	res = cdev_add(&i2c_dev->cdev, MKDEV(I2C_MAJOR, adap->nr), 1);
++	if (res)
++		goto error_cdev;
 +
- 	list_for_each_entry_safe(entity, next, &mdev->entities, list)
- 		media_device_unregister_entity(entity);
- 
--	/* Check if mdev devnode was registered */
--	if (media_devnode_is_registered(mdev->devnode)) {
--		device_remove_file(&mdev->devnode->dev, &dev_attr_model);
--		media_devnode_unregister(mdev->devnode);
--		/* devnode free is handled in media_devnode_*() */
--		mdev->devnode = NULL;
--	}
-+	device_remove_file(&mdev->devnode->dev, &dev_attr_model);
-+	media_devnode_unregister(mdev->devnode);
-+	/* devnode free is handled in media_devnode_*() */
-+	mdev->devnode = NULL;
+ 	/* register this i2c device with the driver core */
+ 	i2c_dev->dev = device_create(i2c_dev_class, &adap->dev,
+ 				     MKDEV(I2C_MAJOR, adap->nr), NULL,
+@@ -572,6 +580,8 @@ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
+ 		 adap->name, adap->nr);
+ 	return 0;
+ error:
++	cdev_del(&i2c_dev->cdev);
++error_cdev:
+ 	return_i2c_dev(i2c_dev);
+ 	return res;
  }
- EXPORT_SYMBOL_GPL(media_device_unregister);
+@@ -591,6 +601,7 @@ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
  
-diff --git a/drivers/media/media-devnode.c b/drivers/media/media-devnode.c
-index 45bb70d27224..e887120d19aa 100644
---- a/drivers/media/media-devnode.c
-+++ b/drivers/media/media-devnode.c
-@@ -302,6 +302,17 @@ int __must_check media_devnode_register(struct media_device *mdev,
- 	return ret;
+ 	return_i2c_dev(i2c_dev);
+ 	device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
++	cdev_del(&i2c_dev->cdev);
+ 
+ 	pr_debug("i2c-dev: adapter [%s] unregistered\n", adap->name);
+ 	return 0;
+@@ -627,7 +638,7 @@ static int __init i2c_dev_init(void)
+ 
+ 	printk(KERN_INFO "i2c /dev entries driver\n");
+ 
+-	res = register_chrdev(I2C_MAJOR, "i2c", &i2cdev_fops);
++	res = register_chrdev_region(MKDEV(I2C_MAJOR, 0), I2C_MINORS, "i2c");
+ 	if (res)
+ 		goto out;
+ 
+@@ -651,7 +662,7 @@ static int __init i2c_dev_init(void)
+ out_unreg_class:
+ 	class_destroy(i2c_dev_class);
+ out_unreg_chrdev:
+-	unregister_chrdev(I2C_MAJOR, "i2c");
++	unregister_chrdev_region(MKDEV(I2C_MAJOR, 0), I2C_MINORS);
+ out:
+ 	printk(KERN_ERR "%s: Driver Initialisation failed\n", __FILE__);
+ 	return res;
+@@ -662,7 +673,7 @@ static void __exit i2c_dev_exit(void)
+ 	bus_unregister_notifier(&i2c_bus_type, &i2cdev_notifier);
+ 	i2c_for_each_dev(NULL, i2cdev_detach_adapter);
+ 	class_destroy(i2c_dev_class);
+-	unregister_chrdev(I2C_MAJOR, "i2c");
++	unregister_chrdev_region(MKDEV(I2C_MAJOR, 0), I2C_MINORS);
  }
  
-+void media_devnode_unregister_prepare(struct media_devnode *devnode)
-+{
-+	/* Check if devnode was ever registered at all */
-+	if (!media_devnode_is_registered(devnode))
-+		return;
-+
-+	mutex_lock(&media_devnode_lock);
-+	clear_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
-+	mutex_unlock(&media_devnode_lock);
-+}
-+
- /**
-  * media_devnode_unregister - unregister a media device node
-  * @devnode: the device node to unregister
-@@ -309,17 +320,11 @@ int __must_check media_devnode_register(struct media_device *mdev,
-  * This unregisters the passed device. Future open calls will be met with
-  * errors.
-  *
-- * This function can safely be called if the device node has never been
-- * registered or has already been unregistered.
-+ * Should be called after media_devnode_unregister_prepare()
-  */
- void media_devnode_unregister(struct media_devnode *devnode)
- {
--	/* Check if devnode was ever registered at all */
--	if (!media_devnode_is_registered(devnode))
--		return;
--
- 	mutex_lock(&media_devnode_lock);
--	clear_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
- 	/* Delete the cdev on this minor as well */
- 	cdev_del(&devnode->cdev);
- 	mutex_unlock(&media_devnode_lock);
-diff --git a/include/media/media-devnode.h b/include/media/media-devnode.h
-index 8b854c044032..d5ff95bf2d4b 100644
---- a/include/media/media-devnode.h
-+++ b/include/media/media-devnode.h
-@@ -93,6 +93,20 @@ struct media_devnode {
- int __must_check media_devnode_register(struct media_device *mdev,
- 					struct media_devnode *devnode,
- 					struct module *owner);
-+
-+/**
-+ * media_devnode_unregister_prepare - clear the media device node register bit
-+ * @devnode: the device node to prepare for unregister
-+ *
-+ * This clears the passed device register bit. Future open calls will be met
-+ * with errors. Should be called before media_devnode_unregister() to avoid
-+ * races with unregister and device file open calls.
-+ *
-+ * This function can safely be called if the device node has never been
-+ * registered or has already been unregistered.
-+ */
-+void media_devnode_unregister_prepare(struct media_devnode *devnode);
-+
- void media_devnode_unregister(struct media_devnode *devnode);
- 
- static inline struct media_devnode *media_devnode_data(struct file *filp)
+ MODULE_AUTHOR("Frodo Looijaard <frodol@dds.nl> and "
 -- 
 2.25.1
 
