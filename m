@@ -2,96 +2,135 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E710C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0937AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B0820787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF1920723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2DzLyU7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlMqhymq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgEZPaI (ORCPT
+        id S1729896AbgEZPbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
+        Tue, 26 May 2020 11:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEZPaH (ORCPT
+        with ESMTP id S1727898AbgEZPbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:30:07 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D394CC03E96D;
-        Tue, 26 May 2020 08:30:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ci23so1476146pjb.5;
-        Tue, 26 May 2020 08:30:07 -0700 (PDT)
+        Tue, 26 May 2020 11:31:07 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CE1C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:31:07 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id x12so16390886qts.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=an9KhWgQP+/Fji7KQ32EAN6LrJ7/yGHMUcaJcF1rPZo=;
-        b=Y2DzLyU7ga/1gd25vfMIXc2hsI4Jl/HI4zlSDDOkQhLjym0fyD97OT9l7rWdxoJrU/
-         Gj3F2USd8BzEhDLGRw4nN84mi1/lfHKsxlGsJm9d94hKH33e8JCz7bkqWE8HVxS4xfr4
-         kAeeO3cgUL5AngjhHOzIJtBVGgGNQTTrZiUP4eoo0qO2kjoiAgOkH9JXshk4ySA7B9nm
-         NGOAQj/xKe6K/sQFiMrsghgYJtRxXOTgrssil/3FzmV+HDJh+i+9JQgKdGxxcj1vJgg4
-         TO2EIHLXV2MBQbfLSoYVohMTVpFDuQjuWApEa67mCt0rdBj589x73BosdSLh22w07/cP
-         bVuA==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nVAali8dSpr9v23zA2CiQyVc5uAWU4kfctYwAsBlH/o=;
+        b=MlMqhymqjZPS+Xk2oM/nsOGlwmsVKEvRj4bQK8+GHRYvx7kOElq385DciMHFdWZ2pN
+         GASgbbgs5hMREcR6xa8j4+PrKAcUIuIBVetVBWfpypo0erTrV+EC1lpQSQmubuOlzucY
+         hPblqe0W+D0iSCX2mYKLxLF9ycsTl5mJ7XTnOXIWbOztP301r5zS4/LWrcSFzWRFamxz
+         Ng5lqfW4+c8KpRlAtmj+N7aQvvugxtYrPSLWk2xEhuPvLDW7ZbSvJBR3nscZTHMEt2wc
+         d6Qx7q2Wld8mQ8o9zjYRS5SH6TO3ik47KhkD9QwpkXfO5t6Ooj89/j5cbP1Zf+mPboKl
+         d1+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=an9KhWgQP+/Fji7KQ32EAN6LrJ7/yGHMUcaJcF1rPZo=;
-        b=H3p2ezEY4iU4dCARpXoi0L2dE25UDT594Op/0xu/wisewzZH1ZCl/SeWflS4KyJ8+H
-         1BALIF6udSxb0mWhWet5hwvZaGxcA80iFG9+KzBBpaF8YFuNOz2Ql7o/A1JVVTzXLWgF
-         gaRIMVNE07UVo1jjXLJnI8PqpixG1TpeNwD+jJcQuChXORpwrGkCvCZUIDoL34Z7kLPR
-         qoQKCvXVaEVcPzytbUnzs9o8iEohQTdJJboxHb/RK9gI1aTwMO4sQxH58ztIUUeJFG+u
-         86W/9IXR4i1OJB/srZssn5ixhqM0N8c1FmeWzgW6tEvwt0FitJNBY5pH36uNAYrZgFNc
-         1O0Q==
-X-Gm-Message-State: AOAM533N5ZiZ8znZKpIRfGrJGY7UOEjjkOZKdpaH6DmQufUb/KbFXA2P
-        UCKyonAyP9VKagoow3aBZno=
-X-Google-Smtp-Source: ABdhPJw607K5Yy3cpbQj7QtR27NhBpQq/vORS80zd+2iyq/bZjMIWObM4XLjhk4EssLGpG1TV8rNyw==
-X-Received: by 2002:a17:90a:297:: with SMTP id w23mr17965652pja.140.1590507007342;
-        Tue, 26 May 2020 08:30:07 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f18sm69423pga.75.2020.05.26.08.30.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 08:30:06 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:30:04 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Will Deacon <will@kernel.org>
-Cc:     Brian Cain <bcain@codeaurora.org>, linux-hexagon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=nVAali8dSpr9v23zA2CiQyVc5uAWU4kfctYwAsBlH/o=;
+        b=A3KTFr907yXAcjCcPh0+h1gZuJX+9KjdSRiDEjBm+t0F/ZAN9CvJxuJxszX9Ae4QGi
+         FP9rYs4eNYUo7xJ3rnhinpJVuy+HZmZl70Qatwms+jVFG4BOIArBzd7jZslT4KYBGjqO
+         JPX4yyTd1CxcLsRS+VXfI/cv5l2xpBnk/WEcbNRlY+lNkmlkbYHEk58vcXdaGHQzFce+
+         gn/bIvbyOQw44U6FV/ROLg4+flZnhGh9XJ/1usreMcKVr9t7xtBdtIWXQyTZuBFQxpBA
+         8NLm27bTv/fMmZhLfqkHrj9I9/rseZUA7aFj7xvQmiYl6OYneesyWYbjkgdLlJXZ6v8p
+         fltQ==
+X-Gm-Message-State: AOAM533IlImyph6zD91nZmjODT7vBgwqhjpVIUR4gIpU2uPatc8onse1
+        XNCqlPHQUXrSikRthHCSLpQ=
+X-Google-Smtp-Source: ABdhPJxnBiPFtjIpt6qPHHje38BhJSIddHhrmpv1FHc/VrjNRsNLAJGH/3oSj7NAnqQw0VXpp90IGQ==
+X-Received: by 2002:ac8:768c:: with SMTP id g12mr1859594qtr.51.1590507066478;
+        Tue, 26 May 2020 08:31:06 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n63sm7791312qkn.104.2020.05.26.08.31.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 08:31:05 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 26 May 2020 11:31:04 -0400
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] compiler/gcc: Raise minimum GCC version for kernel
- builds to 4.8
-Message-ID: <20200526153004.GA74229@roeck-us.net>
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
+ compressed kernel
+Message-ID: <20200526153104.GC2190602@rani.riverdale.lan>
+References: <20200524212816.243139-1-nivedita@alum.mit.edu>
+ <20200525225918.1624470-1-nivedita@alum.mit.edu>
+ <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
+ <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
+ <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com>
+ <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
+ <CA+icZUWTKJ=-OGJPzqm6HNQMkB1uS_B0ydU-9Xa035wB7vA4iw@mail.gmail.com>
+ <CA+icZUU54K8z2--6fS=LEaMJGgeWfudViT7ETMsSYF1i59_4mg@mail.gmail.com>
+ <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 09:41:37PM +0100, Will Deacon wrote:
-> It is very rare to see versions of GCC prior to 4.8 being used to build
-> the mainline kernel. These old compilers are also known to have codegen
-> issues which can lead to silent miscompilation:
+On Tue, May 26, 2020 at 05:07:24PM +0200, Sedat Dilek wrote:
+> > >
+> >
+> > Maybe this should be:
+> >
+> > [ arch/x86/boot/compressed/Makefile ]
+> >
+> > -KBUILD_CFLAGS += -include hidden.h
+> > +KBUILD_CFLAGS += -include ./hidden.h
+> >
 > 
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+> NOPE.
 > 
-> Raise the minimum GCC version to 4.8 for building the kernel and remove
-> some tautological Kconfig dependencies as a consequence.
+> This works:
+> 
+> [ arch/x86/boot/compressed/Makefile ]
+> 
+> -KBUILD_CFLAGS += -include hidden.h
+> +KBUILD_CFLAGS += -include ./arch/x86/boot/compressed/hidden.h
+> 
+> $ ll arch/x86/boot/bzImage arch/x86/boot/compressed/vmlinux
+> -rw-r--r-- 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/bzImage
+> -rwxr-xr-x 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/compressed/vmlinux
+> 
+> - Sedat -
 
-My hexagon compiler is v4.6.1, and I have been unable to find a more
-recent version. Does anyone happen to have a pointer to a hexagon toolchain
-with gcc 4.8 or later ?
+It needs to either be $(srctree)/$(src)/hidden.h, or we should add
+-I $(srctree)/$(src) to the KBUILD_CFLAGS. The latter option is added
+automatically when building in a separate builddir with O=${KOBJ} (which
+is how I, and I assume Ard, was testing), but for some reason is not
+added when building in-tree. The -include option doesn't automatically
+search the directory of the source file.
 
-Thanks,
-Guenter
+-include file Process file as if "#include "file"" appeared as the first
+line of the primary source file.  However, the first directory searched
+for file is the preprocessor's working directory instead of the
+directory containing the main source file.  If not found there, it is
+searched for in the remainder of the "#include "..."" search chain as
+normal.
