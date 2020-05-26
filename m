@@ -2,111 +2,86 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2115C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F2B2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlEeO+C8"
+	by mail.kernel.org (Postfix) with ESMTP id BA1032075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbgEZInh (ORCPT
+        id S1728527AbgEZIpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:43:37 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49835 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728024AbgEZIng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590482615;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/o8L9PpT2tPsfwELAAEZex10xy71nNXmIgMtBI4kKNA=;
-        b=RlEeO+C8vTVcSd/SMVw348v/uN1O+AiRKy40JOHbemFSPJDMPvAa2VhhVckG9XHaqWV5zw
-        iJ++leKMlMcWVZM66tLMkHsCnFyizPd8VTsEeMGZ/AWFzf86tP3hoG1zjTpyRv2SLAELJp
-        QsYQFeYxxzxhX3MOt2FbwXht6upTN0k=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-wufcBrycOPaQ5ivi6OTiiQ-1; Tue, 26 May 2020 04:43:33 -0400
-X-MC-Unique: wufcBrycOPaQ5ivi6OTiiQ-1
-Received: by mail-qk1-f197.google.com with SMTP id g20so19612717qkl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:43:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/o8L9PpT2tPsfwELAAEZex10xy71nNXmIgMtBI4kKNA=;
-        b=aNT/07Bm1mMN390MTmSYNeMMniMpsSe1Qq+HJKxaxln0jxT7oXIlYzX1l+7Q9QlymO
-         LHrsrYD0rjxGLLHUNa418YPKWiwStRcLxWvxICEToTReeNd70VsOVPdHMQHDK8isdN01
-         AMFgVAml99Hh8hCuBJ/45QPtur8XRURnTI1hUXTaUaPgY70QUiujtZ+N44KxxprdoYad
-         SPHYXeMbHtdCIu/ZxhO0PNJVjE/m9gRSlR/clahJdeySvOxGGdgMnD06/y6fUt3HiXBI
-         Dz2qKJkpdk+aSgwu+NuUf7vw3wuCEkG1HNflPwc23wyewInmi+ZKL5ZZGjCLW4XZZSg2
-         R3Qg==
-X-Gm-Message-State: AOAM531QmkW1rrH1JtTToLDwYIbAGNv5OnniwKQrxygNFHndL+cZuUuo
-        m+C2Ob91HEvYDxVvzwea2VTnzAognOyC4IDlNJA9qr+iVFrZTv0/4paDYJBc8qJPsZiwaAEombK
-        WpbRqVJnDfGcl8KZR4/8I7/Ox9nK12wNK1U5e0bfr
-X-Received: by 2002:aed:3b56:: with SMTP id q22mr205468qte.345.1590482613006;
-        Tue, 26 May 2020 01:43:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxyCwcKrOs606XZeMhMjzfd+m/IeRZLNp6DGq58cyir74B5vkJgKPvaaN7ku7p/ZD35bdvAPWfqpM86aYcOPdo=
-X-Received: by 2002:aed:3b56:: with SMTP id q22mr205453qte.345.1590482612797;
- Tue, 26 May 2020 01:43:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200414091842.25972-1-kai.heng.feng@canonical.com> <nycvar.YFH.7.76.2005261023250.25812@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.2005261023250.25812@cbobk.fhfr.pm>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 26 May 2020 10:43:21 +0200
-Message-ID: <CAO-hwJ+mTjVpBiY9vHXA2Y6D+cXYemixFJ++i+KwZZ25Z6LHHA@mail.gmail.com>
-Subject: Re: [PATCH] HID: multitouch: Remove MT_CLS_WIN_8_DUAL
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 26 May 2020 04:45:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61868 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727948AbgEZIpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:45:01 -0400
+IronPort-SDR: Ki3z+1WgNfjC7KKxRHuOhd0bqIatf55tOjxbrrlj56DsEM/Xb5Q64esk5W4+WKjrq8e8Bmft4W
+ u7QIp15zG8sw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 01:45:00 -0700
+IronPort-SDR: pIW+1899icms35CvI7TILPT9rghumRkDFUatvOV23OOrQX/R/d2NRPuQm96VvFE6oYqk5Ysfwx
+ U7Ckdc4wua7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
+   d="scan'208";a="442003884"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga005.jf.intel.com with ESMTP; 26 May 2020 01:44:58 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH 1/1] phy: intel: Fix compilation error on FIELD_PREP usage
+Date:   Tue, 26 May 2020 16:43:20 +0800
+Message-Id: <d8a71fafa408f273fe63b64481448c29c450fa83.1590477581.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:24 AM Jiri Kosina <jikos@kernel.org> wrote:
->
-> On Tue, 14 Apr 2020, Kai-Heng Feng wrote:
->
-> > After commit c23e2043d5f7 ("HID: multitouch: do not filter mice nodes"),
-> > MT_CLS_WIN_8 also supports mouse nodes, hence make MT_CLS_WIN_8_DUAL
-> > redundant.
-> >
-> > Remove MT_CLS_WIN_8_DUAL accordingly.
->
-> Benjamin, can I get your Ack on this one please?
+FIELD_PREP expects mask variable datatype as unsigned long and constant.
+Make the mask argument in combo_phy_w32_off_mask () as unsigned long const
+datatype.
 
-Heh, funny enough I was trying to fix
-https://bugzilla.kernel.org/show_bug.cgi?id=207235 and was pondering
-this one too.
+Error reported as:
+In file included from include/linux/build_bug.h:5,
+from include/linux/bitfield.h:10,
+from drivers/phy/intel/phy-intel-combo.c:8:
+drivers/phy/intel/phy-intel-combo.c: In function 'combo_phy_w32_off_mask':
+include/linux/bitfield.h:52:28: warning: comparison is always false due to limited range of data type [-Wtype-limits]
 
-To fix #207235, I'll likely need to add a new class and quirk in
-hid-multitouch. I can't really find a generic solution for now, and we
-better have a local quirk for the 2 devices we currently have and
-backport those to stable. However, this patch will likely conflict
-(trivially), with the new quirks, so I was thinking:
-- submitting my quick and dirty quirk and mark it to stable
-- apply this one on top of it (this one really doesn't need to go to stable)
+include/linux/compiler.h:350:38: error: call to '__compiletime_assert_37' declared with attribute error: FIELD_PREP: mask is not constant
+94 |   __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");          |   ^~~~~~~~~~~~~~~~
+drivers/phy/intel/phy-intel-combo.c:137:13: note: in expansion of macro 'FIELD_PREP'
+137 |  reg_val |= FIELD_PREP(mask, val);
+|             ^~~~~~~~~~
 
-How does that sound?
+Fixes: ac0a95a3ea78 ("phy: intel: Add driver support for ComboPhy")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ drivers/phy/intel/phy-intel-combo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Benjamin
-
->
-> Thanks,
->
-> --
-> Jiri Kosina
-> SUSE Labs
->
+diff --git a/drivers/phy/intel/phy-intel-combo.c b/drivers/phy/intel/phy-intel-combo.c
+index c2a35be4cdfb..05b7d724ceb0 100644
+--- a/drivers/phy/intel/phy-intel-combo.c
++++ b/drivers/phy/intel/phy-intel-combo.c
+@@ -128,7 +128,7 @@ static int intel_cbphy_pcie_refclk_cfg(struct intel_cbphy_iphy *iphy, bool set)
+ }
+ 
+ static inline void combo_phy_w32_off_mask(void __iomem *base, unsigned int reg,
+-					  u32 mask, u32 val)
++					  unsigned long const mask, u32 val)
+ {
+ 	u32 reg_val;
+ 
+-- 
+2.11.0
 
