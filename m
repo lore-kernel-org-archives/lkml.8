@@ -2,135 +2,208 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1170CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF61F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99D020787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590507255;
+	bh=wZsFbXQuM7MjfrRU576qrM/dfqXW3YX4P29Td4olhQc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Ppy//uI0/AfSiQxckB4xZEJXgCkm8ortdY+QU5aypVJ2ca/S3l5RG0Mu+hV4sJsXo
+	 +NHFSS2bIcHvpEjcFdJBy0Q09PO828L6b6zxn3vkLfhik8fMjwbZghYIV6nZAGeucF
+	 ilx2jHIGUzfrM4dHjyVrdl+rdwbueSLCqVNG2+ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgEZPdr (ORCPT
+        id S1729809AbgEZPeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:33:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:13369 "EHLO mga05.intel.com"
+        Tue, 26 May 2020 11:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgEZPdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:33:46 -0400
-IronPort-SDR: hzG5JAQAcnX16NXrlVBVUYrMGunCsg3k/g4g7/kscG23i7uVb3gjFMewyI1RLJVwALABzvX4c6
- tjqcrEhbaDgw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:33:45 -0700
-IronPort-SDR: nRnoLIoNHfPkKLn4f9P3ixflHY/LfK8O2t0bt5XrmJ3yMKcapWyMAQzjd5MjHsxypE/CTaz6dh
- qtXgDIX5nIwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="270112433"
-Received: from mashaikh-mobl1.amr.corp.intel.com (HELO [10.255.1.194]) ([10.255.1.194])
-  by orsmga006.jf.intel.com with ESMTP; 26 May 2020 08:33:36 -0700
-Subject: Re: [PATCH v5] arch/x86: Update config and kernel doc for MPK feature
- on AMD
-To:     Borislav Petkov <bp@alien8.de>, Babu Moger <babu.moger@amd.com>
-Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, x86@kernel.org,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <158940940570.47998.17107695356894054769.stgit@naples-babu.amd.com>
- <20200523122149.GF27431@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <23ee5cfa-22ec-a367-04f2-4bca8edcfa9e@intel.com>
-Date:   Tue, 26 May 2020 08:33:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1729601AbgEZPeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:34:14 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3F7F20663;
+        Tue, 26 May 2020 15:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590507253;
+        bh=wZsFbXQuM7MjfrRU576qrM/dfqXW3YX4P29Td4olhQc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=YwB5C5xSJAIQS54Syy4KeUn3r6iDmj67x7HBwi9GZu03JQfqUACdY9hw9bWDIEN5v
+         +mJY253DZf2Z/KOYtugdIzPnPTeYg6r60886uyEpWQ0KO5LdekxOVIUcLQuDZtg5IZ
+         6JF4RdXllT47CN/Ud9rp3VTWB9XeikPerKw8y3W8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id ABC313522A8B; Tue, 26 May 2020 08:34:13 -0700 (PDT)
+Date:   Tue, 26 May 2020 08:34:13 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V9 02/39] rcu: Abstract out rcu_irq_enter_check_tick()
+ from rcu_nmi_enter()
+Message-ID: <20200526153413.GG2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200521200513.656533920@linutronix.de>
+ <20200521202116.996113173@linutronix.de>
+ <20200521210339.GC2869@paulmck-ThinkPad-P72>
+ <20200526081456.GA35238@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200523122149.GF27431@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526081456.GA35238@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/20 5:21 AM, Borislav Petkov wrote:
->> +config X86_MEMORY_PROTECTION_KEYS
->> +	# Set the "INTEL_"-free option whenever the "INTEL_" one is set.
->> +	# The "INTEL_" one should be removed and replaced by this option
->> +	# after 5.10. This avoids exposing most 'oldconfig' users to this
->> +	# churn.
->> +	def_bool X86_INTEL_MEMORY_PROTECTION_KEYS
-> I only picked up the discussion from the sidelines but why do we need
-> this at all? If we don't want to have churn, then we can leave it be
-> called X86_INTEL_MEMORY_PROTECTION_KEYS, not change the manpage and
-> have this depend on CPU_SUP_AMD too so that people can select it on AMD
-> machines, and get on with our lives.
+On Tue, May 26, 2020 at 10:14:56AM +0200, Ingo Molnar wrote:
 > 
-> So what's up?
+> * Paul E. McKenney <paulmck@kernel.org> wrote:
+> 
+> > > +	if (!tick_nohz_full_cpu(rdp->cpu) ||
+> > > +	    !READ_ONCE(rdp->rcu_urgent_qs) ||
+> > > +	    READ_ONCE(rdp->rcu_forced_tick)) {
+> > > +		// RCU doesn't need nohz_full help from this CPU, or it is
+> > > +		// already getting that help.
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	// We get here only when not in an extended quiescent state and
+> > > +	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
+> > > +	// already watching and (2) The fact that we are in an interrupt
+> > > +	// handler and that the rcu_node lock is an irq-disabled lock
+> > > +	// prevents self-deadlock.  So we can safely recheck under the lock.
+> > > +	// Note that the nohz_full state currently cannot change.
+> > > +	raw_spin_lock_rcu_node(rdp->mynode);
+> > > +	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> > > +		// A nohz_full CPU is in the kernel and RCU needs a
+> > > +		// quiescent state.  Turn on the tick!
+> > > +		WRITE_ONCE(rdp->rcu_forced_tick, true);
+> > > +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> > > +	}
+> > > +	raw_spin_unlock_rcu_node(rdp->mynode);
+> 
+> BTW., can we please not ever use this weird comment style in the future?
+> 
+> Linus gave an exception to single-line C++ style comments - but I 
+> don't think that should be extrapolated to a license to uglify the 
+> kernel with inconsistent muck like this. :-/
+> 
+> I've sanitized it via the patch below.
 
-Thanks for pointing that out.  I think this ended up mixing together the
-two alternative, which doesn't make much sense.
+The "//" comment style does save vertical space.  Is it really ugly
+or just unfamiliar?  For purposes of comparison, back in the day, the
+"/* */" style seemed quite strange compared to my earlier languages'
+commenting styles.
 
-Babu, let's just leave the config option _naming_ entirely in place.
-The only change should be to the dependencies and the description text.
+> ( I also fixed the whitespace damage and a capitalization typo while 
+>   at it, and fixed the spelling in the big comment explaining 
+>   __rcu_irq_enter_check_tick(). )
+
+Some were stylistic rather than wrong, but I have no objection to
+any of these changes.
+
+							Thanx, Paul
+
+> Thanks,
+> 
+> 	Ingo
+> 
+> --- tip.orig/kernel/rcu/tree.c
+> +++ tip/kernel/rcu/tree.c
+> @@ -850,14 +850,14 @@ void noinstr rcu_user_exit(void)
+>  }
+>  
+>  /**
+> - * __rcu_irq_enter_check_tick - Enable scheduler tick on CPU if RCU needs it.
+> + * __rcu_irq_enter_check_tick - Enable the scheduler tick on a CPU if RCU needs it.
+>   *
+>   * The scheduler tick is not normally enabled when CPUs enter the kernel
+>   * from nohz_full userspace execution.  After all, nohz_full userspace
+>   * execution is an RCU quiescent state and the time executing in the kernel
+> - * is quite short.  Except of course when it isn't.  And it is not hard to
+> + * is quite short.  Except of course when it isn't: it is not hard to
+>   * cause a large system to spend tens of seconds or even minutes looping
+> - * in the kernel, which can cause a number of problems, include RCU CPU
+> + * in the kernel, which can cause a number of problems, including RCU CPU
+>   * stall warnings.
+>   *
+>   * Therefore, if a nohz_full CPU fails to report a quiescent state
+> @@ -879,7 +879,7 @@ void __rcu_irq_enter_check_tick(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> -	 // Enabling the tick is unsafe in NMI handlers.
+> +	/* Enabling the tick is unsafe in NMI handlers. */
+>  	if (WARN_ON_ONCE(in_nmi()))
+>  		return;
+>  
+> @@ -889,21 +889,27 @@ void __rcu_irq_enter_check_tick(void)
+>  	if (!tick_nohz_full_cpu(rdp->cpu) ||
+>  	    !READ_ONCE(rdp->rcu_urgent_qs) ||
+>  	    READ_ONCE(rdp->rcu_forced_tick)) {
+> -		// RCU doesn't need nohz_full help from this CPU, or it is
+> -		// already getting that help.
+> +		/*
+> +		 * RCU doesn't need nohz_full help from this CPU, or it is
+> +		 * already getting that help.
+> +		 */
+>  		return;
+>  	}
+>  
+> -	// We get here only when not in an extended quiescent state and
+> -	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
+> -	// already watching and (2) The fact that we are in an interrupt
+> -	// handler and that the rcu_node lock is an irq-disabled lock
+> -	// prevents self-deadlock.  So we can safely recheck under the lock.
+> -	// Note that the nohz_full state currently cannot change.
+> +	/*
+> +	 * We get here only when not in an extended quiescent state and
+> +	 * from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
+> +	 * already watching and (2) the fact that we are in an interrupt
+> +	 * handler and that the rcu_node lock is an irq-disabled lock
+> +	 * prevents self-deadlock.  So we can safely recheck under the lock.
+> +	 * Note that the nohz_full state currently cannot change.
+> +	 */
+>  	raw_spin_lock_rcu_node(rdp->mynode);
+>  	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> -		// A nohz_full CPU is in the kernel and RCU needs a
+> -		// quiescent state.  Turn on the tick!
+> +		/*
+> +		 * A nohz_full CPU is in the kernel and RCU needs a
+> +		 * quiescent state.  Turn on the tick!
+> +		 */
+>  		WRITE_ONCE(rdp->rcu_forced_tick, true);
+>  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+>  	}
