@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7838C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DC7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FF620870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4E42086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519560;
-	bh=N6ehpuoCQv6kH0tgSy7p5WhQqA0oIC2CBTQ03EHOEN4=;
+	s=default; t=1590519565;
+	bh=hJiJ03o0lZ1z/xkUa7Dz3X3U5LU6LHP3tzsv86V5xNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIYBv14k6Tlew8STYXvVhAqFjhDNV9veLvCjz9N1stIHcvgxqpWfpp8bGCSNgVqAC
-	 QSntRDxq1THi6xsEtLD2eM/EbP4qsgrR/eChdsvjsgfmobzyWIulRo8aZeT7lXzUjq
-	 HBEtBpw8BUlAAEfbVu2iPJ5nTBxnnzT6HEts+sd0=
+	b=L4SrcJ2NjJtbhh/TdiZioVnJYVj5QJbF2YqhykmDjIOn3VkburQiNpaSgLCN+p4iY
+	 ALwT2NHNxVCinFR0e87d56nVSmHNwFxkDQb7TqQ0iL6vZQOI+C0gjYF6fYmmIFy8IT
+	 QT+p3J+J6qVxZ4AIUYYjdUMchnrLTcH0KcnGDbSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390505AbgEZS7T (ORCPT
+        id S2389692AbgEZS7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52928 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390475AbgEZS7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:59:13 -0400
+        id S2389903AbgEZS7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B3820849;
-        Tue, 26 May 2020 18:59:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D832086A;
+        Tue, 26 May 2020 18:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519552;
-        bh=N6ehpuoCQv6kH0tgSy7p5WhQqA0oIC2CBTQ03EHOEN4=;
+        s=default; t=1590519558;
+        bh=hJiJ03o0lZ1z/xkUa7Dz3X3U5LU6LHP3tzsv86V5xNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0Jh/aFpL9NytphUkIzIbt9WpiQW7o/APri2Yo7twzwdcuNw7SGhNnth9x/NKxRDB
-         tA4QCde02GrelcAjsIF+PaOJHk23lTZ0Rc/jxmJz0O9W4BRRvj23DqazDc94IT4u8m
-         pLr6nvFE39JKbKxs9212I1PZiWRG9yhkQq6ceyQY=
+        b=Q2mYKCU9jlDEWdpeMjjxgH+Y/k+IvxuC8gE6GPkOw1AnJhXkTJoo5CNurlIwQi0cR
+         orZkfWR4GVuBnCCyLAtfjnG5EGsV4OMfLGGfyuWc5fz3irszj5gzWnprgL1ztvHeL1
+         iopSVo/uBd5WjNeUZutQzbQpGxCvVi4MbTCr95Uc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brent Lu <brent.lu@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 49/64] ALSA: pcm: fix incorrect hw_base increase
-Date:   Tue, 26 May 2020 20:53:18 +0200
-Message-Id: <20200526183930.012768084@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "R. Parameswaran" <rparames@brocade.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.9 51/64] l2tp: device MTU setup, tunnel socket needs a lock
+Date:   Tue, 26 May 2020 20:53:20 +0200
+Message-Id: <20200526183930.465216226@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -59,80 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brent Lu <brent.lu@intel.com>
+From: R. Parameswaran <parameswaran.r7@gmail.com>
 
-commit e7513c5786f8b33f0c107b3759e433bc6cbb2efa upstream.
+commit 57240d007816486131bee88cd474c2a71f0fe224 upstream.
 
-There is a corner case that ALSA keeps increasing the hw_ptr but DMA
-already stop working/updating the position for a long time.
+The MTU overhead calculation in L2TP device set-up
+merged via commit b784e7ebfce8cfb16c6f95e14e8532d0768ab7ff
+needs to be adjusted to lock the tunnel socket while
+referencing the sub-data structures to derive the
+socket's IP overhead.
 
-In following log we can see the position returned from DMA driver does
-not move at all but the hw_ptr got increased at some point of time so
-snd_pcm_avail() will return a large number which seems to be a buffer
-underrun event from user space program point of view. The program
-thinks there is space in the buffer and fill more data.
-
-[  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
-[  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
-...
-[  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
-[  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
-[  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
-
-This is because the hw_base will be increased by runtime->buffer_size
-frames unconditionally if the hw_ptr is not updated for over half of
-buffer time. As the hw_base increases, so does the hw_ptr increased
-by the same number.
-
-The avail value returned from snd_pcm_avail() could exceed the limit
-(buffer_size) easily becase the hw_ptr itself got increased by same
-buffer_size samples when the corner case happens. In following log,
-the buffer_size is 16368 samples but the avail is 21810 samples so
-CRAS server complains about it.
-
-[  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
-[  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
-
-cras_server[1907]: pcm_avail returned frames larger than buf_size:
-sof-glkda7219max: :0,5: 21810 > 16368
-
-By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
-the hw_base will keep the same when buffer stall happens at long as
-the interval between each HWSYNC call is shorter than half of buffer
-time.
-
-Following is a log captured by a patched kernel. The hw_base/hw_ptr
-value is fixed in this corner case and user space program should be
-aware of the buffer stall and handle it.
-
-[  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
-[  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
-[  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
-[  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
-[  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
-...
-[  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
-
-Signed-off-by: Brent Lu <brent.lu@intel.com>
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1589776238-23877-1-git-send-email-brent.lu@intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Guillaume Nault <g.nault@alphalink.fr>
+Tested-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: R. Parameswaran <rparames@brocade.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_lib.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/net.h |    2 +-
+ net/l2tp/l2tp_eth.c |    2 ++
+ net/socket.c        |    2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -456,6 +456,7 @@ static int snd_pcm_update_hw_ptr0(struct
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -298,7 +298,7 @@ int kernel_sendpage(struct socket *sock,
+ int kernel_sock_ioctl(struct socket *sock, int cmd, unsigned long arg);
+ int kernel_sock_shutdown(struct socket *sock, enum sock_shutdown_cmd how);
  
-  no_delta_check:
- 	if (runtime->status->hw_ptr == new_hw_ptr) {
-+		runtime->hw_ptr_jiffies = curr_jiffies;
- 		update_audio_tstamp(substream, &curr_tstamp, &audio_tstamp);
- 		return 0;
+-/* Following routine returns the IP overhead imposed by a socket.  */
++/* Routine returns the IP overhead imposed by a (caller-protected) socket. */
+ u32 kernel_sock_ip_overhead(struct sock *sk);
+ 
+ #define MODULE_ALIAS_NETPROTO(proto) \
+--- a/net/l2tp/l2tp_eth.c
++++ b/net/l2tp/l2tp_eth.c
+@@ -240,7 +240,9 @@ static void l2tp_eth_adjust_mtu(struct l
+ 		dev->needed_headroom += session->hdr_len;
+ 		return;
  	}
++	lock_sock(tunnel->sock);
+ 	l3_overhead = kernel_sock_ip_overhead(tunnel->sock);
++	release_sock(tunnel->sock);
+ 	if (l3_overhead == 0) {
+ 		/* L3 Overhead couldn't be identified, this could be
+ 		 * because tunnel->sock was NULL or the socket's
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3325,7 +3325,7 @@ EXPORT_SYMBOL(kernel_sock_shutdown);
+ /* This routine returns the IP overhead imposed by a socket i.e.
+  * the length of the underlying IP header, depending on whether
+  * this is an IPv4 or IPv6 socket and the length from IP options turned
+- * on at the socket.
++ * on at the socket. Assumes that the caller has a lock on the socket.
+  */
+ u32 kernel_sock_ip_overhead(struct sock *sk)
+ {
 
 
