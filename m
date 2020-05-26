@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD66208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F34A20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519972;
-	bh=mRxvmJxdQSgll9Gs2py6a241v8LCbk3tjj+w8cKD8rg=;
+	s=default; t=1590519975;
+	bh=1LLrEfPfAV+cGfCNECNu52XXltkAInRVKK30NZ1an0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lFCwM4NQsCsLkJ6GXv+1W1VuWIc081vpKn8paCCF7BZZmlBBNJ2V4M9ufc2QV6vz9
-	 SOFK1Fw/5IiCNtHn/pohXXcYLWvKmR/o6XRIvvS5sTRhRRudljKyFShsgcedQQM1P3
-	 QthDGIKJ719v68Lwz9GPzk7rLTChFyhcfdnVhoA8=
+	b=gVN+qrkeGc3YhPr4irdDvP7k+FwKh1MEQCpn+0lDMtKy+dk8pYJsqsAfKj2ydc0sN
+	 DCkdFIev2/ciDlo6TOTnfdonhYhPtBMP0HgFLzGM5Y0ei3mGHnqXddXS6x8AOohqjs
+	 Azg5zS5Xnj0vYTriQMqR1tX+c2vaVYcFvNGg1Xgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403878AbgEZTGL (ORCPT
+        id S2391137AbgEZTGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391092AbgEZTF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:59 -0400
+        id S2391639AbgEZTGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B90F20776;
-        Tue, 26 May 2020 19:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C587C20776;
+        Tue, 26 May 2020 19:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519958;
-        bh=mRxvmJxdQSgll9Gs2py6a241v8LCbk3tjj+w8cKD8rg=;
+        s=default; t=1590519961;
+        bh=1LLrEfPfAV+cGfCNECNu52XXltkAInRVKK30NZ1an0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wl7Zbc8GKW06z3RUXeRFZgx9HB+RSwlxM3FShJlwBmgbihYhjI/3uAhfUZTHtwxZu
-         TuGoSBy5cLL7x9VIXLETzJG9SiR83Sg2o8sQtes91ysUczkn4iu/JQX9l/qck7VpFL
-         gdE9GhBt2VAacDbnbMUZ/GwwRL215Vy1FcYHjDCM=
+        b=ugslCmFevgxOCDsWJq7V5LY1cw3QQS2ZfqZtkMXkHr1O2WpA1e5eVZuqvaG69gzl0
+         1Q2smdXGMJB70NBx5GjR56kHzXirGjHVYDMvM5d2lHdLl524nhJZjtuGVsJY7e5kOv
+         938IZ/lt/SGGp30mR8FoioBmBYEVaCck62TZn+m0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/81] net: bcmgenet: code movement
-Date:   Tue, 26 May 2020 20:53:33 +0200
-Message-Id: <20200526183933.528845980@linuxfoundation.org>
+Subject: [PATCH 4.19 59/81] net: bcmgenet: abort suspend on error
+Date:   Tue, 26 May 2020 20:53:34 +0200
+Message-Id: <20200526183933.620315588@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -63,98 +63,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit a94cbf03eb514d4d64d8c4f4caa0616b7ce5040a ]
+[ Upstream commit c5a54bbcececa36852807c36157a86d808b62310 ]
 
-This commit switches the order of bcmgenet_suspend and bcmgenet_resume
-in the file to prevent the need for a forward declaration in the next
-commit and to make the review of that commit easier.
+If an error occurs during suspension of the driver the driver should
+restore the hardware configuration and return an error to force the
+system to resume.
 
+Fixes: 0db55093b566 ("net: bcmgenet: return correct value 'ret' from bcmgenet_power_down")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 60 +++++++++----------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 3 +++
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 89cc146d2c5c..60abf9fab810 100644
+index 60abf9fab810..047fc0cf0263 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -3616,36 +3616,6 @@ static int bcmgenet_remove(struct platform_device *pdev)
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static int bcmgenet_suspend(struct device *d)
--{
--	struct net_device *dev = dev_get_drvdata(d);
--	struct bcmgenet_priv *priv = netdev_priv(dev);
--	int ret = 0;
--
--	if (!netif_running(dev))
--		return 0;
--
--	netif_device_detach(dev);
--
--	bcmgenet_netif_stop(dev);
--
--	if (!device_may_wakeup(d))
--		phy_suspend(dev->phydev);
--
--	/* Prepare the device for Wake-on-LAN and switch to the slow clock */
--	if (device_may_wakeup(d) && priv->wolopts) {
--		ret = bcmgenet_power_down(priv, GENET_POWER_WOL_MAGIC);
--		clk_prepare_enable(priv->clk_wol);
--	} else if (priv->internal_phy) {
--		ret = bcmgenet_power_down(priv, GENET_POWER_PASSIVE);
--	}
--
--	/* Turn off the clocks */
--	clk_disable_unprepare(priv->clk);
--
--	return ret;
--}
--
- static int bcmgenet_resume(struct device *d)
- {
- 	struct net_device *dev = dev_get_drvdata(d);
-@@ -3724,6 +3694,36 @@ static int bcmgenet_resume(struct device *d)
+@@ -3722,6 +3722,9 @@ static int bcmgenet_suspend(struct device *d)
+ 	/* Turn off the clocks */
  	clk_disable_unprepare(priv->clk);
+ 
++	if (ret)
++		bcmgenet_resume(d);
++
  	return ret;
  }
-+
-+static int bcmgenet_suspend(struct device *d)
-+{
-+	struct net_device *dev = dev_get_drvdata(d);
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	int ret = 0;
-+
-+	if (!netif_running(dev))
-+		return 0;
-+
-+	netif_device_detach(dev);
-+
-+	bcmgenet_netif_stop(dev);
-+
-+	if (!device_may_wakeup(d))
-+		phy_suspend(dev->phydev);
-+
-+	/* Prepare the device for Wake-on-LAN and switch to the slow clock */
-+	if (device_may_wakeup(d) && priv->wolopts) {
-+		ret = bcmgenet_power_down(priv, GENET_POWER_WOL_MAGIC);
-+		clk_prepare_enable(priv->clk_wol);
-+	} else if (priv->internal_phy) {
-+		ret = bcmgenet_power_down(priv, GENET_POWER_PASSIVE);
-+	}
-+
-+	/* Turn off the clocks */
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
  #endif /* CONFIG_PM_SLEEP */
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+index 2fbd027f0148..b3596e0ee47b 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -186,9 +186,15 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
+ 	}
  
- static SIMPLE_DEV_PM_OPS(bcmgenet_pm_ops, bcmgenet_suspend, bcmgenet_resume);
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
++	if (!(reg & MPD_EN))
++		return;	/* already powered up so skip the rest */
+ 	reg &= ~MPD_EN;
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
++	reg = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
++	reg &= ~(RBUF_HFB_EN | RBUF_ACPI_EN);
++	bcmgenet_hfb_reg_writel(priv, reg, HFB_CTRL);
++
+ 	/* Disable CRC Forward */
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+ 	reg &= ~CMD_CRC_FWD;
 -- 
 2.25.1
 
