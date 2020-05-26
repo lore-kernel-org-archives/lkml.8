@@ -2,214 +2,149 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE08C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A73F720787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A732054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CYaRrEKk"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ligm5/JI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbgEZIA2 (ORCPT
+        id S1731474AbgEZIAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:00:28 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:39751 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgEZIA1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:00:27 -0400
+        Tue, 26 May 2020 04:00:39 -0400
+Received: from mail-bn7nam10on2059.outbound.protection.outlook.com ([40.107.92.59]:22780
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727772AbgEZIAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:00:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c5pus8z8SAp04Nx6lXfXhJ9GxITXhlmegUBmJNo7E1+4aczoVOCpzDUx1w4k7Svj5/G0gifK9lp20jpTLnS3pslSDh7egZhl/+c8KoOKT471qFy9gCw4uaDusk7nOURtKHBlyuNIpiNSE/uLppd/OQTd6PrAw7pObqh5R3WtqEOR0BpGgdt/5eQLsnsN+OM/YlNBn1yvNluQydsA7TWLwE1yEnINrZvLbB6eSDchcEnXSXXRutzWwhwSUYK4BWbvunueO3/bI+XEJk5mIgWhOrCTdwWMamvhOW1zoGYLDzcWpfuO2Pw1/tjz7QByzFx2KMVmfxMTHNYMDYw0USEbgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iFur7+hvEAckJneUss4HF6YfuQRKPrMTM5qk2dTU0nM=;
+ b=TZ3wvf4d9bBY/esu1z6kzmQV5lN+CBleeVMNtDKmiHjxGCK/IXD1IjzhT6XGz0IQ5HFXSEve2vtHY0ssHOfiDhGe4eT1gJgCWXTjEb5rmlhIP+f0En6+WiRzb48cuK9CM2wwMTgKmgT+n/7XxF80ogsVno1g4VzPMjea9y8u9yDUm7qZg1vcjpq8oLn4JdEoO3NDBJm54x/i99ZSau5TcVKcPgP83z/9ma5f42f0YvHwNXCXA3+NcqhTPGwH8Tz9t0Q/u9YF1qH9y1TLZF5zy7PLvJc9/yDFSNJ/IXUuk++Piv7IaKjikByK0DMg4/fqrQUQfNGIC0P+mql3uTS45Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=sina.com smtp.mailfrom=srdcmail.amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590480027; x=1622016027;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=UhuFz5/PVwHP7A8t6OOk+6Z1C3gPVbE/vJE89mGH7rk=;
-  b=CYaRrEKkzLGGWdRqeItYHOCchymQ1d2Wej3UcscrekaVgoCMkcNut2u7
-   wwSdK+WEqSQtXRSNsiySN0tgfH6bPuf8wR365r3rN/72uRJJRme02Ikto
-   +8tQscwhxcneIV304WYSiPaTf8TEXj1G7f7MsVRqL7eDsBqUFC3ehtmGt
-   0=;
-IronPort-SDR: aqs/bkFlUMjxx+PvYffDA8AduqNToMWqfH5wwz42ycexg2UwvVc1D5oMYAYhYUsod2FE3jzyYd
- Lf+KWBCnH20g==
-X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
-   d="scan'208";a="33537801"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 26 May 2020 08:00:26 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 8FB05A119D;
-        Tue, 26 May 2020 08:00:15 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 07:59:49 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.193) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 07:59:31 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v9 2/8] mm/damon: Account age of target regions
-Date:   Tue, 26 May 2020 09:56:56 +0200
-Message-ID: <20200526075702.27339-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526075702.27339-1-sjpark@amazon.com>
-References: <20200526075702.27339-1-sjpark@amazon.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iFur7+hvEAckJneUss4HF6YfuQRKPrMTM5qk2dTU0nM=;
+ b=ligm5/JIX/hYB5Y7euEEbJ0VXSQRUI0DB4LavLzvMeCk+ZgMlGWgKkQEkHQKx5aVCEC2Af1L1byH6mWd8CV+G5AUoPlouFaITupr1MspRORozffsSxJfcWzerUa1IQRrL2Luh2EzGVtpOGn401p9CSnaahxyFQpeK7emCizq8zU=
+Received: from DM5PR17CA0055.namprd17.prod.outlook.com (2603:10b6:3:13f::17)
+ by BN6PR12MB1794.namprd12.prod.outlook.com (2603:10b6:404:100::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
+ 2020 08:00:36 +0000
+Received: from DM6NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:13f:cafe::45) by DM5PR17CA0055.outlook.office365.com
+ (2603:10b6:3:13f::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
+ Transport; Tue, 26 May 2020 08:00:35 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=srdcmail.amd.com; sina.com; dkim=none (message not signed)
+ header.d=none;sina.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: srdcmail.amd.com does not
+ designate permitted sender hosts)
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ DM6NAM11FT003.mail.protection.outlook.com (10.13.173.162) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3021.23 via Frontend Transport; Tue, 26 May 2020 08:00:34 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 26 May
+ 2020 03:00:34 -0500
+Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 26 May
+ 2020 03:00:33 -0500
+Received: from atlvmail01.amd.com (10.180.10.61) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Tue, 26 May 2020 03:00:33 -0500
+Received: from srdcmail.amd.com (srdcmail.amd.com [10.237.16.23])
+        by atlvmail01.amd.com (8.14.4/8.14.4) with ESMTP id 04Q80Vvi014384;
+        Tue, 26 May 2020 04:00:32 -0400
+Received: from srdcws1054.amd.com (srdcws1054.amd.com [10.66.16.34])
+        by srdcmail.amd.com (8.13.8/8.13.8) with ESMTP id 04Q80UHs025260;
+        Tue, 26 May 2020 16:00:30 +0800
+Received: (from weisheng@localhost)
+        by srdcws1054.amd.com (8.14.7/8.14.7/Submit) id 04Q80Sr0020868;
+        Tue, 26 May 2020 16:00:28 +0800
+From:   Wesley Sheng <wesley.sheng@amd.com>
+To:     <jdmason@kudzu.us>, <dave.jiang@intel.com>, <allenbh@gmail.com>,
+        <linux-ntb@googlegroups.com>, <linux-kernel@vger.kernel.org>
+CC:     <wesleyshenggit@sina.com>, <wesley.sheng@amd.com>
+Subject: [PATCH] NTB: correct ntb_peer_spad_addr and ntb_peer_spad_read comment typos
+Date:   Tue, 26 May 2020 15:59:43 +0800
+Message-ID: <20200526075943.20756-1-wesley.sheng@amd.com>
+X-Mailer: git-send-email 2.16.2
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.161.193]
-X-ClientProxiedBy: EX13D08UWB004.ant.amazon.com (10.43.161.232) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(396003)(136003)(376002)(46966005)(8676002)(1076003)(5660300002)(4326008)(70586007)(82740400003)(26005)(70206006)(2906002)(316002)(47076004)(44832011)(8936002)(54906003)(42186006)(110136005)(426003)(356005)(6666004)(81166007)(2616005)(336012)(498600001)(83170400001)(36756003)(82310400002)(2101003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4722de4b-c7c2-454f-a49b-08d8014ade9e
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1794:
+X-Microsoft-Antispam-PRVS: <BN6PR12MB1794BF0AF5F29DDAA3A3393CF0B00@BN6PR12MB1794.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 041517DFAB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VNcfLpcYn+5JLBnApqZomPXqwa2xKcPRTCTjIZlGeD5Pleg0CcEtvsQtol7x8kxfhol7KhvDLQcFHHYTF9KJq5PCJ0zAN72tQyZTXfeAs0D8xLW3IlXVUgWKauyP+tCS6+oPNoQWrTrNM8coQdT8tS9bz8vDflqoAJ5q7Gx6Tlxdth8bJSreENElYPvf/LlFQgJhkrV7TwQbkoQGt6ZTrCtJZeQVJdryY5waCqdY1x/MmjfMnHWGo7ZKhA0pZOirEEFJwAx/WlkBcoCVzR4fSGU+oZ4qzp1dYPQaW3LZLYkOKCKYjy6Xn2U2jjvSjduhRR/FOqG92Opspmail+EG2FZ1+9GsZSCa5s8oxqQz9dIJk5YEf/x41JtKBbIuMJgPUd55hubolDtJRPWkgDiseCuI+Xq8rID6UNKxwnXFTuo=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 08:00:34.6172
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4722de4b-c7c2-454f-a49b-08d8014ade9e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1794
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+The comment for ntb_peer_spad_addr and ntb_peer_spad_read
+incorrectly referred to peer doorbell register and local
+scratchpad register.
 
-DAMON can be used as a primitive for data access pattern aware memory
-management optimizations.  However, users who want such optimizations
-should run DAMON, read the monitoring results, analyze it, plan a new
-memory management scheme, and apply the new scheme by themselves.  It
-would not be too hard, but still require some level of effort.  For
-complicated optimizations, this effort is inevitable.
-
-That said, in many cases, users would simply want to apply an actions to
-a memory region of a specific size having a specific access frequency
-for a specific time.  For example, "page out a memory region larger than
-100 MiB but having a low access frequency more than 10 minutes", or "Use
-THP for a memory region larger than 2 MiB having a high access frequency
-for more than 2 seconds".
-
-For such optimizations, users will need to first account the age of each
-region themselves.  To reduce such efforts, this commit implements a
-simple age account of each region in DAMON.  For each aggregation step,
-DAMON compares the access frequency with that from last aggregation and
-reset the age of the region if the change is significant.  Else, the age
-is incremented.  Also, in case of the merge of regions, the region
-size-weighted average of the ages is set as the age of merged new
-region.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Wesley Sheng <wesley.sheng@amd.com>
 ---
- include/linux/damon.h | 10 ++++++++++
- mm/damon.c            | 29 +++++++++++++++++++++--------
- 2 files changed, 31 insertions(+), 8 deletions(-)
+ include/linux/ntb.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 31d436fd2843..7dafbcf86795 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -24,6 +24,13 @@
-  * @sampling_addr:	Address of the sample for the next access check.
-  * @nr_accesses:	Access frequency of this region.
-  * @list:		List head for siblings.
-+ * @age:		Age of this region.
-+ * @last_nr_accesses:	Internal value for age calculation.
-+ *
-+ * @age is initially zero, increased for each aggregation interval, and reset
-+ * to zero again if the access frequency is significantly changed.  If two
-+ * regions are merged into a new region, both @nr_accesses and @age of the new
-+ * region are set as region size-weighted average of those of the two regions.
+diff --git a/include/linux/ntb.h b/include/linux/ntb.h
+index 8c13538aeffe..b9b0d805d0f9 100644
+--- a/include/linux/ntb.h
++++ b/include/linux/ntb.h
+@@ -1351,7 +1351,7 @@ static inline int ntb_spad_write(struct ntb_dev *ntb, int sidx, u32 val)
+  * @sidx:	Scratchpad index.
+  * @spad_addr:	OUT - The address of the peer scratchpad register.
+  *
+- * Return the address of the peer doorbell register.  This may be used, for
++ * Return the address of the peer scratchpad register.  This may be used, for
+  * example, by drivers that offload memory copy operations to a dma engine.
+  *
+  * Return: Zero on success, otherwise an error number.
+@@ -1373,7 +1373,7 @@ static inline int ntb_peer_spad_addr(struct ntb_dev *ntb, int pidx, int sidx,
+  *
+  * Read the peer scratchpad register, and return the value.
+  *
+- * Return: The value of the local scratchpad register.
++ * Return: The value of the peer scratchpad register.
   */
- struct damon_region {
- 	unsigned long vm_start;
-@@ -31,6 +38,9 @@ struct damon_region {
- 	unsigned long sampling_addr;
- 	unsigned int nr_accesses;
- 	struct list_head list;
-+
-+	unsigned int age;
-+	unsigned int last_nr_accesses;
- };
- 
- /**
-diff --git a/mm/damon.c b/mm/damon.c
-index 76eca256a8ae..25d4ad98dc3b 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -86,6 +86,9 @@ static struct damon_region *damon_new_region(struct damon_ctx *ctx,
- 	region->nr_accesses = 0;
- 	INIT_LIST_HEAD(&region->list);
- 
-+	region->age = 0;
-+	region->last_nr_accesses = 0;
-+
- 	return region;
- }
- 
-@@ -659,6 +662,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 					sizeof(r->nr_accesses));
- 			trace_damon_aggregated(t->pid, nr,
- 					r->vm_start, r->vm_end, r->nr_accesses);
-+			r->last_nr_accesses = r->nr_accesses;
- 			r->nr_accesses = 0;
- 		}
- 	}
-@@ -672,9 +676,11 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- static void damon_merge_two_regions(struct damon_region *l,
- 				struct damon_region *r)
+ static inline u32 ntb_peer_spad_read(struct ntb_dev *ntb, int pidx, int sidx)
  {
--	l->nr_accesses = (l->nr_accesses * sz_damon_region(l) +
--			r->nr_accesses * sz_damon_region(r)) /
--			(sz_damon_region(l) + sz_damon_region(r));
-+	unsigned long sz_l = sz_damon_region(l), sz_r = sz_damon_region(r);
-+
-+	l->nr_accesses = (l->nr_accesses * sz_l + r->nr_accesses * sz_r) /
-+			(sz_l + sz_r);
-+	l->age = (l->age * sz_l + r->age * sz_r) / (sz_l + sz_r);
- 	l->vm_end = r->vm_end;
- 	damon_destroy_region(r);
- }
-@@ -692,12 +698,16 @@ static void damon_merge_regions_of(struct damon_task *t, unsigned int thres)
- 	struct damon_region *r, *prev = NULL, *next;
- 
- 	damon_for_each_region_safe(r, next, t) {
--		if (!prev || prev->vm_end != r->vm_start ||
--		    diff_of(prev->nr_accesses, r->nr_accesses) > thres) {
-+		if (diff_of(r->nr_accesses, r->last_nr_accesses) > thres)
-+			r->age = 0;
-+		else
-+			r->age++;
-+
-+		if (prev && prev->vm_end == r->vm_start &&
-+		    diff_of(prev->nr_accesses, r->nr_accesses) <= thres)
-+			damon_merge_two_regions(prev, r);
-+		else
- 			prev = r;
--			continue;
--		}
--		damon_merge_two_regions(prev, r);
- 	}
- }
- 
-@@ -733,6 +743,9 @@ static void damon_split_region_at(struct damon_ctx *ctx,
- 	new = damon_new_region(ctx, r->vm_start + sz_r, r->vm_end);
- 	r->vm_end = new->vm_start;
- 
-+	new->age = r->age;
-+	new->last_nr_accesses = r->last_nr_accesses;
-+
- 	damon_insert_region(new, r, damon_next_region(r));
- }
- 
 -- 
-2.17.1
+2.16.2
 
