@@ -3,54 +3,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9934AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E75C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7643020873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A5C208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520190;
-	bh=IiuhLMGWHM/X/lfLTWnUFZUAF7iBrzqUte/CXOACkVo=;
+	s=default; t=1590520197;
+	bh=7IACNEB+1M0tSKpRru+93NDuVZNrVl4F0ZbxYmbGCuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KKnG1ieqgsppT2V+88IU971JzdmT+zFarcQD46gAqHe/+Ya+0b3fIzZes1Ic6512k
-	 87kiWUXxYSgBPsDuwa9UtVcm1nt3F3llS+2Lur8gda20oXHktcJURIvXJEakck/Dxl
-	 pmU0cHeP7q4w2F9iooVZBTbbaIqC3l7wDKDCriEQ=
+	b=QdP484YCMkpaA86X6Pv3rnJfo+Gwxd/OD6ZsLaR/XKGelbJwY0aPvv4cypWDVCqhe
+	 t8iea90FJIBAWv3eDCOmBxdXJla2QbFYpReCrHr/TrehIt0WdReJ4Cqgu3hRqOdMhk
+	 UbsQB1PQDLp9NlhFhsk+OH/WzhmkEIuj7BaeCqbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389486AbgEZTJt (ORCPT
+        id S2403983AbgEZTJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38854 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403860AbgEZTJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:43 -0400
+        id S2403950AbgEZTJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3CDA20776;
-        Tue, 26 May 2020 19:09:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD51520873;
+        Tue, 26 May 2020 19:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520182;
-        bh=IiuhLMGWHM/X/lfLTWnUFZUAF7iBrzqUte/CXOACkVo=;
+        s=default; t=1590520192;
+        bh=7IACNEB+1M0tSKpRru+93NDuVZNrVl4F0ZbxYmbGCuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qim7GnTLUmsrkdkbNwbzNDJp1ITJVI2enksor6nscJ4F5ZQmMEG0oUNPImz0GGaE6
-         4rdjDFDD5BKJsrud/ooaC37oOk3k9qcGo/98zd7BwE3b730swbdWnmnyzxh4b3KlYH
-         6tai3MMuJm5sq+NNFCRS/1zAAzn2gcyabW66Dyco=
+        b=yqsR9p7O2zu885T+8Yl6Y9mDce6tjqQo6CUR2YrNHOOSGujBL8nbWABgc5IFM02dR
+         bh3dnK867ZtVBej8rkfN6YXB0oWKKzmE3acwT6LdWMqfLBAh+mlz/4148HQxk1BrTP
+         R3ic1ke0ak/QpRYKQoNTNA2ycEyBygRSYOoI14zI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 073/111] vsprintf: dont obfuscate NULL and error pointers
-Date:   Tue, 26 May 2020 20:53:31 +0200
-Message-Id: <20200526183939.791425560@linuxfoundation.org>
+Subject: [PATCH 5.4 094/111] device-dax: dont leak kernel memory to user space after unloading kmem
+Date:   Tue, 26 May 2020 20:53:52 +0200
+Message-Id: <20200526183941.834174383@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -63,122 +64,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit 7bd57fbc4a4ddedc664cad0bbced1b469e24e921 upstream.
+commit 60858c00e5f018eda711a3aa84cf62214ef62d61 upstream.
 
-I don't see what security concern is addressed by obfuscating NULL
-and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-of sites where %p is used (over 10000) and the fact that NULL pointers
-aren't uncommon, it probably wouldn't take long for an attacker to
-find the hash that corresponds to 0.  Although harder, the same goes
-for most common error values, such as -1, -2, -11, -14, etc.
+Assume we have kmem configured and loaded:
 
-The NULL part actually fixes a regression: NULL pointers weren't
-obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-dereferencing invalid pointers") which went into 5.2.  I'm tacking
-the IS_ERR() part on here because error pointers won't leak kernel
-addresses and printing them as pointers shouldn't be any different
-from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-debugging based on existing pr_debug and friends excruciating.
+  [root@localhost ~]# cat /proc/iomem
+  ...
+  140000000-33fffffff : Persistent Memory$
+    140000000-1481fffff : namespace0.0
+    150000000-33fffffff : dax0.0
+      150000000-33fffffff : System RAM
 
-Note that the "always print 0's for %pK when kptr_restrict == 2"
-behaviour which goes way back is left as is.
+Assume we try to unload kmem. This force-unloading will work, even if
+memory cannot get removed from the system.
 
-Example output with the patch applied:
+  [root@localhost ~]# rmmod kmem
+  [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
+  ...
+  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
 
-                             ptr         error-ptr              NULL
- %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
- %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
- %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
- %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
- %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
+Now, we can reconfigure the namespace:
 
-Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+  [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
+  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
+  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
+  ...
+
+This fails as expected due to the busy memory resource, and the memory
+cannot be used.  However, the dax0.0 device is removed, and along its
+name.
+
+The name of the memory resource now points at freed memory (name of the
+device):
+
+  [root@localhost ~]# cat /proc/iomem
+  ...
+  140000000-33fffffff : Persistent Memory
+    140000000-1481fffff : namespace0.0
+    150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
+    150000000-33fffffff : System RAM
+
+We have to make sure to duplicate the string.  While at it, remove the
+superfluous setting of the name and fixup a stale comment.
+
+Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <stable@vger.kernel.org>	[5.3]
+Link: http://lkml.kernel.org/r/20200508084217.9160-2-david@redhat.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_printf.c |   19 ++++++++++++++++++-
- lib/vsprintf.c    |    7 +++++++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/dax/kmem.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -212,6 +212,7 @@ test_string(void)
- #define PTR_STR "ffff0123456789ab"
- #define PTR_VAL_NO_CRNG "(____ptrval____)"
- #define ZEROS "00000000"	/* hex 32 zero bits */
-+#define ONES "ffffffff"		/* hex 32 one bits */
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -22,6 +22,7 @@ int dev_dax_kmem_probe(struct device *de
+ 	resource_size_t kmem_size;
+ 	resource_size_t kmem_end;
+ 	struct resource *new_res;
++	const char *new_res_name;
+ 	int numa_node;
+ 	int rc;
  
- static int __init
- plain_format(void)
-@@ -243,6 +244,7 @@ plain_format(void)
- #define PTR_STR "456789ab"
- #define PTR_VAL_NO_CRNG "(ptrval)"
- #define ZEROS ""
-+#define ONES ""
+@@ -48,11 +49,16 @@ int dev_dax_kmem_probe(struct device *de
+ 	kmem_size &= ~(memory_block_size_bytes() - 1);
+ 	kmem_end = kmem_start + kmem_size;
  
- static int __init
- plain_format(void)
-@@ -328,14 +330,28 @@ test_hashed(const char *fmt, const void
- 	test(buf, fmt, p);
- }
- 
-+/*
-+ * NULL pointers aren't hashed.
-+ */
- static void __init
- null_pointer(void)
- {
--	test_hashed("%p", NULL);
-+	test(ZEROS "00000000", "%p", NULL);
- 	test(ZEROS "00000000", "%px", NULL);
- 	test("(null)", "%pE", NULL);
- }
- 
-+/*
-+ * Error pointers aren't hashed.
-+ */
-+static void __init
-+error_pointer(void)
-+{
-+	test(ONES "fffffff5", "%p", ERR_PTR(-11));
-+	test(ONES "fffffff5", "%px", ERR_PTR(-11));
-+	test("(efault)", "%pE", ERR_PTR(-11));
-+}
+-	/* Region is permanently reserved.  Hot-remove not yet implemented. */
+-	new_res = request_mem_region(kmem_start, kmem_size, dev_name(dev));
++	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
++	if (!new_res_name)
++		return -ENOMEM;
 +
- #define PTR_INVALID ((void *)0x000000ab)
++	/* Region is permanently reserved if hotremove fails. */
++	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
+ 	if (!new_res) {
+ 		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
+ 			 &kmem_start, &kmem_end);
++		kfree(new_res_name);
+ 		return -EBUSY;
+ 	}
  
- static void __init
-@@ -598,6 +614,7 @@ test_pointer(void)
- {
- 	plain();
- 	null_pointer();
-+	error_pointer();
- 	invalid_pointer();
- 	symbol_ptr();
- 	kernel_ptr();
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -746,6 +746,13 @@ static char *ptr_to_id(char *buf, char *
- 	const char *str = sizeof(ptr) == 8 ? "(____ptrval____)" : "(ptrval)";
- 	unsigned long hashval;
+@@ -63,12 +69,12 @@ int dev_dax_kmem_probe(struct device *de
+ 	 * unknown to us that will break add_memory() below.
+ 	 */
+ 	new_res->flags = IORESOURCE_SYSTEM_RAM;
+-	new_res->name = dev_name(dev);
  
-+	/*
-+	 * Print the real pointer value for NULL and error pointers,
-+	 * as they are not actual addresses.
-+	 */
-+	if (IS_ERR_OR_NULL(ptr))
-+		return pointer_string(buf, end, ptr, spec);
-+
- 	/* When debugging early boot use non-cryptographically secure hash. */
- 	if (unlikely(debug_boot_weak_hash)) {
- 		hashval = hash_long((unsigned long)ptr, 32);
+ 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+ 	if (rc) {
+ 		release_resource(new_res);
+ 		kfree(new_res);
++		kfree(new_res_name);
+ 		return rc;
+ 	}
+ 	dev_dax->dax_kmem_res = new_res;
+@@ -83,6 +89,7 @@ static int dev_dax_kmem_remove(struct de
+ 	struct resource *res = dev_dax->dax_kmem_res;
+ 	resource_size_t kmem_start = res->start;
+ 	resource_size_t kmem_size = resource_size(res);
++	const char *res_name = res->name;
+ 	int rc;
+ 
+ 	/*
+@@ -102,6 +109,7 @@ static int dev_dax_kmem_remove(struct de
+ 	/* Release and free dax resources */
+ 	release_resource(res);
+ 	kfree(res);
++	kfree(res_name);
+ 	dev_dax->dax_kmem_res = NULL;
+ 
+ 	return 0;
 
 
