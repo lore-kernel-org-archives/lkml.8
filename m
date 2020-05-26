@@ -2,586 +2,226 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B11AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC9F20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456D4206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eU9JPpF+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388673AbgEZDyS (ORCPT
+        id S1725775AbgEZEIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 23:54:18 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:43653 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgEZDyS (ORCPT
+        Tue, 26 May 2020 00:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgEZEIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 23:54:18 -0400
-Received: by mail-io1-f70.google.com with SMTP id 184so13651635iow.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 20:54:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=WKIr+TucPsON9szJo+WazjJgT1BlLKj7KY36LZC5zpo=;
-        b=qm0Ldi19Up5rCObsgsChr7mBS1FeVUvCS3hIElHWawvRR8+NVSKke6aLlEjjQJrBn0
-         5kYYyX3iPDkbwA+kUE0OVdN58qLlk8Mpa7Cy3sVFaO/Hw7r4h6vib0zG4o5Hzrj1aEqA
-         /0SQuOUOxBFeNr6enV/37rS1epJgM9MNmINVw3EPAdxdllSxuvdBDLvFBv+NzSTJzL5U
-         iod1jvWQNdidv+lJZp3qPkfmLp5O7cXPDg+qaVyPHAGODuoBuIO6ZAc4mPwFqu15mP2g
-         he0RfznsUKJpnG7KN/6cRgkgY5RKDEI+BWGosX0nvHWm5zrxTfURZ0y+cRIh+r3ZLh5T
-         tZvw==
-X-Gm-Message-State: AOAM530fVg/QrKaA7+7H28HOyilik9wv03i2No61+HA5W6kVeEoSNt1w
-        3tX4s4pZfgPT60v/IUfnUVYCjxoKNTcN4cS0lkEzVmKXNNGG
-X-Google-Smtp-Source: ABdhPJxap8xtXaMzCShC+NS8/GCMXynVaDAv01L/U3yaDH+yUKKcNeUfP3CAyMCLdaVtMrMVAA9ksKbPbrC+155Phq8VYzxxs27K
+        Tue, 26 May 2020 00:08:47 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4255C061A0E;
+        Mon, 25 May 2020 21:08:46 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WL701D55z9sRK;
+        Tue, 26 May 2020 14:08:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590466124;
+        bh=XCYEpLx2hJU0++Jzfm30Of0jjuMLXOrS3eK/9jvwsbQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eU9JPpF+ejhp6uiawmJc3Yu8oY2dhLpeynXp3nlRB8L+KanMHcY/MLcdDG8AB+Z/P
+         F1sC/CqmYLS9byL42NH8SM1Fg9BV3GiMFMfxjQxnMXDKzoiuQtVJ+CBS49XK6DQAjP
+         4ALI4gjT9WKewqwpmynZ1PSYp5ahLlhBbOG4ZjID1kPRgW1D2oKPSCbPiUqOgWzJHy
+         0MS+nKKhaW+rjC5duEJeglnCzWCWNS5V2BR0KWcNefSysGaquxl8q6mYl2rzEVpOYm
+         kWrBDWU/s8c1L4WcRMi5mea17jXVDJ3GUSrI8PeTaEkvFUlHHHjFrGduWeDSD+ipTq
+         PglRZHLJ0l9kQ==
+Date:   Tue, 26 May 2020 14:08:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>
+Subject: Re: inux-next: build failure after merge of the drm-msm tree
+Message-ID: <20200526140841.0a1d5c7b@canb.auug.org.au>
+In-Reply-To: <20200519150955.1667566a@canb.auug.org.au>
+References: <20200519150955.1667566a@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a02:212c:: with SMTP id e44mr21249599jaa.109.1590465254393;
- Mon, 25 May 2020 20:54:14 -0700 (PDT)
-Date:   Mon, 25 May 2020 20:54:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000840d4d05a6850c73@google.com>
-Subject: WARNING: suspicious RCU usage in idtentry_exit
-From:   syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/8t_Uf+6ZsLciv4vCeeIrHds";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/8t_Uf+6ZsLciv4vCeeIrHds
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Hi all,
 
-HEAD commit:    7b4cb0a4 Add linux-next specific files for 20200525
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13356016100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=47b0740d89299c10
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ae5eaae0809ee311e75
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+On Tue, 19 May 2020 15:09:55 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Hi all,
+>=20
+> After merging the drm-msm tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>=20
+> ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
+> ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
+>=20
+> Caused by commit
+>=20
+>   04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for disp=
+lay")
+>=20
+> I applied the following patch for today (this is mechanical, there may
+> be a better way):
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 19 May 2020 14:12:39 +1000
+> Subject: [PATCH] drm/msm/dpu: fix up u64/u32 division for 32 bit architec=
+tures
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 23 ++++++++++++++-----
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     | 15 ++++++++----
+>  2 files changed, 28 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/=
+drm/msm/disp/dpu1/dpu_core_perf.c
+> index 9697abcbec3f..85c2a4190840 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/sort.h>
+>  #include <linux/clk.h>
+>  #include <linux/bitmap.h>
+> +#include <asm/div64.h>
+> =20
+>  #include "dpu_kms.h"
+>  #include "dpu_trace.h"
+> @@ -53,8 +54,11 @@ static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
+>  	}
+> =20
+>  	bw_factor =3D kms->catalog->perf.bw_inefficiency_factor;
+> -	if (bw_factor)
+> -		crtc_plane_bw =3D mult_frac(crtc_plane_bw, bw_factor, 100);
+> +	if (bw_factor) {
+> +		u64 quot =3D crtc_plane_bw;
+> +		u32 rem =3D do_div(quot, 100);
+> +		crtc_plane_bw =3D (quot * bw_factor) + ((rem * bw_factor) / 100);
+> +	}
+> =20
+>  	return crtc_plane_bw;
+>  }
+> @@ -89,8 +93,11 @@ static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
+>  	}
+> =20
+>  	clk_factor =3D kms->catalog->perf.clk_inefficiency_factor;
+> -	if (clk_factor)
+> -		crtc_clk =3D mult_frac(crtc_clk, clk_factor, 100);
+> +	if (clk_factor) {
+> +		u64 quot =3D crtc_clk;
+> +		u32 rem =3D do_div(quot, 100);
+> +		crtc_clk =3D (quot * clk_factor) + ((rem * clk_factor) / 100);
+> +	}
+> =20
+>  	return crtc_clk;
+>  }
+> @@ -234,8 +241,12 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu=
+_kms *kms,
+>  		}
+>  	}
+> =20
+> -	avg_bw =3D kms->num_paths ?
+> -			perf.bw_ctl / kms->num_paths : 0;
+> +	if (kms->num_paths) {
+> +		avg_bw =3D perf.bw_ctl;
+> +		do_div(avg_bw, kms->num_paths);
+> +	} else {
+> +		avg_bw =3D 0;
+> +	}
+> =20
+>  	for (i =3D 0; i < kms->num_paths; i++)
+>  		icc_set_bw(kms->path[i],
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/=
+msm/disp/dpu1/dpu_plane.c
+> index c2a6e3dacd68..ad95f32eac13 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -9,6 +9,7 @@
+> =20
+>  #include <linux/debugfs.h>
+>  #include <linux/dma-buf.h>
+> +#include <asm/div64.h>
+> =20
+>  #include <drm/drm_atomic_uapi.h>
+>  #include <drm/drm_damage_helper.h>
+> @@ -174,7 +175,11 @@ static void _dpu_plane_calc_bw(struct drm_plane *pla=
+ne,
+>  	plane_prefill_bw =3D
+>  		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
+> =20
+> -	plane_prefill_bw =3D mult_frac(plane_prefill_bw, mode->vtotal, (vbp+vpw=
+));
+> +	{
+> +		u64 quot =3D plane_prefill_bw;
+> +		u32 rem =3D do_div(plane_prefill_bw, vbp + vpw);
+> +		plane_prefill_bw =3D quot * mode->vtotal + rem * mode->vtotal / (vbp +=
+ vpw);
+> +	}
+> =20
+>  	pstate->plane_fetch_bw =3D max(plane_bw, plane_prefill_bw);
+>  }
+> @@ -204,9 +209,11 @@ static void _dpu_plane_calc_clk(struct drm_plane *pl=
+ane)
+>  	pstate->plane_clk =3D
+>  		dst_width * mode->vtotal * fps;
+> =20
+> -	if (src_height > dst_height)
+> -		pstate->plane_clk =3D mult_frac(pstate->plane_clk,
+> -					src_height, dst_height);
+> +	if (src_height > dst_height) {
+> +		u64 quot =3D pstate->plane_clk;
+> +		u32 rem =3D do_div(quot, dst_height);
+> +		pstate->plane_clk =3D quot * src_height + rem * src_height / dst_heigh=
+t;
+> +	}
+>  }
+> =20
+>  /**
+> --=20
+> 2.26.2
 
-Unfortunately, I don't have any reproducer for this crash yet.
+I am still applying the above ...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com
+--=20
+Cheers,
+Stephen Rothwell
 
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc7-next-20200525-syzkaller #0 Not tainted
------------------------------
-kernel/rcu/tree.c:715 RCU dynticks_nesting counter underflow/zero!!
+--Sig_/8t_Uf+6ZsLciv4vCeeIrHds
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-other info that might help us debug this:
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7MlkkACgkQAVBC80lX
+0Gx4LQf+OevSCtA6ybeDqh2xOqst6lelN3TGJ23ITVN62OfIXdVS8sn2xZvBRA3f
+YYXPyH+7VnTlaqxR0cD73cio4OqZaiJNca+Lub3TyNmRqo5B0cTnKhEuHVBBsnqm
+Q1ULxLmb2Tfymhtt1xhuZ22YFCS2+fT7xqQvUNzD7DzuPTrWQ5z4Wr03jedEvies
+fCQCW+f76pqE5NcCws3sEDhi1fmtIMS3dEVdf8e7EwN5rondAUqy9gGga4o1Yy3g
+Z6XPo5Qj/IfjHAWxUoYcWGtG7SgTtf2pe1KYZ/Egxlx+2M8IkN/GcZQTKIqXrEHW
+mBdCH8DpqBQVIU9+2+T8nsVmXH4i7Q==
+=DjW/
+-----END PGP SIGNATURE-----
 
-RCU used illegally from idle CPU!
-rcu_scheduler_active = 2, debug_locks = 1
-RCU used illegally from extended quiescent state!
-no locks held by syz-executor.5/24641.
-
-stack backtrace:
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- rcu_irq_exit_preempt+0x1fa/0x250 kernel/rcu/tree.c:715
- idtentry_exit+0x9e/0xc0 arch/x86/entry/common.c:583
- exc_general_protection+0x23d/0x520 arch/x86/kernel/traps.c:506
- asm_exc_general_protection+0x1e/0x30 arch/x86/include/asm/idtentry.h:353
-RIP: 0010:kvm_fastop_exception+0xb68/0xfe8
-Code: f2 ff ff ff 48 31 db e9 fb c9 2a f9 b8 f2 ff ff ff 48 31 f6 e9 ff c9 2a f9 31 c0 e9 ec 2c 2b f9 b8 fb ff ff ff e9 13 a9 31 f9 <b9> fb ff ff ff 31 c0 31 d2 e9 33 a9 31 f9 31 db e9 2a 0b 42 f9 31
-RSP: 0018:ffffc90004a87a30 EFLAGS: 00010212
-RAX: 0000000000040000 RBX: ffff88809cca4080 RCX: 0000000000000122
-RDX: 00000000000063ff RSI: ffffc90004a87a98 RDI: 0000000000000122
-RBP: 0000000000000122 R08: ffff888058486480 R09: fffffbfff131f481
-R10: ffffffff898fa403 R11: fffffbfff131f480 R12: 0000000000000122
-R13: 0000000000000078 R14: 0000000000000006 R15: ffffffff88244b5c
- paravirt_read_msr_safe arch/x86/include/asm/paravirt.h:178 [inline]
- vmx_create_vcpu+0x184/0x2b40 arch/x86/kvm/vmx/vmx.c:6827
- kvm_arch_vcpu_create+0x6a8/0xb30 arch/x86/kvm/x86.c:9427
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3043 [inline]
- kvm_vm_ioctl+0x15b7/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc7-next-20200525-syzkaller #0 Not tainted
------------------------------
-kernel/rcu/tree.c:717 RCU in extended quiescent state!!
-
-other info that might help us debug this:
-
-
-RCU used illegally from idle CPU!
-rcu_scheduler_active = 2, debug_locks = 1
-RCU used illegally from extended quiescent state!
-no locks held by syz-executor.5/24641.
-
-stack backtrace:
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- idtentry_exit+0x9e/0xc0 arch/x86/entry/common.c:583
- exc_general_protection+0x23d/0x520 arch/x86/kernel/traps.c:506
- asm_exc_general_protection+0x1e/0x30 arch/x86/include/asm/idtentry.h:353
-RIP: 0010:kvm_fastop_exception+0xb68/0xfe8
-Code: f2 ff ff ff 48 31 db e9 fb c9 2a f9 b8 f2 ff ff ff 48 31 f6 e9 ff c9 2a f9 31 c0 e9 ec 2c 2b f9 b8 fb ff ff ff e9 13 a9 31 f9 <b9> fb ff ff ff 31 c0 31 d2 e9 33 a9 31 f9 31 db e9 2a 0b 42 f9 31
-RSP: 0018:ffffc90004a87a30 EFLAGS: 00010212
-RAX: 0000000000040000 RBX: ffff88809cca4080 RCX: 0000000000000122
-RDX: 00000000000063ff RSI: ffffc90004a87a98 RDI: 0000000000000122
-RBP: 0000000000000122 R08: ffff888058486480 R09: fffffbfff131f481
-R10: ffffffff898fa403 R11: fffffbfff131f480 R12: 0000000000000122
-R13: 0000000000000078 R14: 0000000000000006 R15: ffffffff88244b5c
- paravirt_read_msr_safe arch/x86/include/asm/paravirt.h:178 [inline]
- vmx_create_vcpu+0x184/0x2b40 arch/x86/kvm/vmx/vmx.c:6827
- kvm_arch_vcpu_create+0x6a8/0xb30 arch/x86/kvm/x86.c:9427
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3043 [inline]
- kvm_vm_ioctl+0x15b7/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc7-next-20200525-syzkaller #0 Not tainted
------------------------------
-include/trace/events/rcu.h:27 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-RCU used illegally from idle CPU!
-rcu_scheduler_active = 2, debug_locks = 1
-RCU used illegally from extended quiescent state!
-no locks held by syz-executor.5/24641.
-
-stack backtrace:
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- trace_rcu_utilization include/trace/events/rcu.h:27 [inline]
- trace_rcu_utilization include/trace/events/rcu.h:27 [inline]
- rcu_note_context_switch+0x113d/0x1b20 kernel/rcu/tree_plugin.h:293
- __schedule+0x22b/0x1f70 kernel/sched/core.c:4058
- preempt_schedule_irq+0xb0/0x150 kernel/sched/core.c:4380
- idtentry_exit+0xb9/0xc0 arch/x86/entry/common.c:585
- exc_general_protection+0x23d/0x520 arch/x86/kernel/traps.c:506
- asm_exc_general_protection+0x1e/0x30 arch/x86/include/asm/idtentry.h:353
-RIP: 0010:kvm_fastop_exception+0xb68/0xfe8
-Code: f2 ff ff ff 48 31 db e9 fb c9 2a f9 b8 f2 ff ff ff 48 31 f6 e9 ff c9 2a f9 31 c0 e9 ec 2c 2b f9 b8 fb ff ff ff e9 13 a9 31 f9 <b9> fb ff ff ff 31 c0 31 d2 e9 33 a9 31 f9 31 db e9 2a 0b 42 f9 31
-RSP: 0018:ffffc90004a87a30 EFLAGS: 00010212
-RAX: 0000000000040000 RBX: ffff88809cca4080 RCX: 0000000000000122
-RDX: 00000000000063ff RSI: ffffc90004a87a98 RDI: 0000000000000122
-RBP: 0000000000000122 R08: ffff888058486480 R09: fffffbfff131f481
-R10: ffffffff898fa403 R11: fffffbfff131f480 R12: 0000000000000122
-R13: 0000000000000078 R14: 0000000000000006 R15: ffffffff88244b5c
- paravirt_read_msr_safe arch/x86/include/asm/paravirt.h:178 [inline]
- vmx_create_vcpu+0x184/0x2b40 arch/x86/kvm/vmx/vmx.c:6827
- kvm_arch_vcpu_create+0x6a8/0xb30 arch/x86/kvm/x86.c:9427
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3043 [inline]
- kvm_vm_ioctl+0x15b7/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-
-=============================
-WARNING: suspicious RCU usage
-5.7.0-rc7-next-20200525-syzkaller #0 Not tainted
------------------------------
-include/trace/events/sched.h:629 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-RCU used illegally from idle CPU!
-rcu_scheduler_active = 2, debug_locks = 0
-RCU used illegally from extended quiescent state!
-1 lock held by syz-executor.5/24641:
- #0: ffff8880ae737d58 (&rq->lock){-.-.}-{2:2}, at: rq_lock kernel/sched/sched.h:1263 [inline]
- #0: ffff8880ae737d58 (&rq->lock){-.-.}-{2:2}, at: __schedule+0x233/0x1f70 kernel/sched/core.c:4068
-
-stack backtrace:
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- trace_pelt_se_tp include/trace/events/sched.h:629 [inline]
- trace_pelt_se_tp include/trace/events/sched.h:629 [inline]
- __update_load_avg_se+0x75a/0xc90 kernel/sched/pelt.c:321
- update_load_avg+0x178/0x1c60 kernel/sched/fair.c:3786
- set_next_entity+0x295/0x880 kernel/sched/fair.c:4387
- pick_next_task_fair+0x66f/0xc70 kernel/sched/fair.c:7045
- pick_next_task kernel/sched/core.c:3975 [inline]
- __schedule+0x375/0x1f70 kernel/sched/core.c:4090
- preempt_schedule_irq+0xb0/0x150 kernel/sched/core.c:4380
- idtentry_exit+0xb9/0xc0 arch/x86/entry/common.c:585
- exc_general_protection+0x23d/0x520 arch/x86/kernel/traps.c:506
- asm_exc_general_protection+0x1e/0x30 arch/x86/include/asm/idtentry.h:353
-RIP: 0010:kvm_fastop_exception+0xb68/0xfe8
-Code: f2 ff ff ff 48 31 db e9 fb c9 2a f9 b8 f2 ff ff ff 48 31 f6 e9 ff c9 2a f9 31 c0 e9 ec 2c 2b f9 b8 fb ff ff ff e9 13 a9 31 f9 <b9> fb ff ff ff 31 c0 31 d2 e9 33 a9 31 f9 31 db e9 2a 0b 42 f9 31
-RSP: 0018:ffffc90004a87a30 EFLAGS: 00010212
-RAX: 0000000000040000 RBX: ffff88809cca4080 RCX: 0000000000000122
-RDX: 00000000000063ff RSI: ffffc90004a87a98 RDI: 0000000000000122
-RBP: 0000000000000122 R08: ffff888058486480 R09: fffffbfff131f481
-R10: ffffffff898fa403 R11: fffffbfff131f480 R12: 0000000000000122
-R13: 0000000000000078 R14: 0000000000000006 R15: ffffffff88244b5c
- paravirt_read_msr_safe arch/x86/include/asm/paravirt.h:178 [inline]
- vmx_create_vcpu+0x184/0x2b40 arch/x86/kvm/vmx/vmx.c:6827
- kvm_arch_vcpu_create+0x6a8/0xb30 arch/x86/kvm/x86.c:9427
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3043 [inline]
- kvm_vm_ioctl+0x15b7/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-check_preemption_disabled: 3 callbacks suppressed
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.5/24641
-caller is rcu_nmi_enter+0x19/0x200 kernel/rcu/tree.c:823
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- rcu_nmi_enter+0x19/0x200 kernel/rcu/tree.c:823
- kernel_text_address+0x99/0xe0 kernel/extable.c:143
- __kernel_text_address+0x9/0x30 kernel/extable.c:105
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:317 [inline]
- unwind_get_return_address+0x5a/0xa0 arch/x86/kernel/unwind_orc.c:312
- arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- __d_alloc+0x2a/0x920 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- anon_inode_getfile fs/anon_inodes.c:91 [inline]
- anon_inode_getfile+0xc8/0x1f0 fs/anon_inodes.c:74
- anon_inode_getfd+0x4c/0xa0 fs/anon_inodes.c:136
- create_vcpu_fd arch/x86/kvm/../../../virt/kvm/kvm_main.c:2983 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3058 [inline]
- kvm_vm_ioctl+0x1ab5/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.5/24641
-caller is rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:299 [inline]
-caller is rcu_nmi_enter+0x7b/0x200 kernel/rcu/tree.c:838
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:299 [inline]
- rcu_nmi_enter+0x7b/0x200 kernel/rcu/tree.c:838
- kernel_text_address+0x99/0xe0 kernel/extable.c:143
- __kernel_text_address+0x9/0x30 kernel/extable.c:105
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:317 [inline]
- unwind_get_return_address+0x5a/0xa0 arch/x86/kernel/unwind_orc.c:312
- arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- __d_alloc+0x2a/0x920 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- anon_inode_getfile fs/anon_inodes.c:91 [inline]
- anon_inode_getfile+0xc8/0x1f0 fs/anon_inodes.c:74
- anon_inode_getfd+0x4c/0xa0 fs/anon_inodes.c:136
- create_vcpu_fd arch/x86/kvm/../../../virt/kvm/kvm_main.c:2983 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3058 [inline]
- kvm_vm_ioctl+0x1ab5/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.5/24641
-caller is rcu_dynticks_eqs_enter+0x11/0x70 kernel/rcu/tree.c:236
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- rcu_dynticks_eqs_enter+0x11/0x70 kernel/rcu/tree.c:236
- rcu_nmi_enter+0x185/0x200 kernel/rcu/tree.c:844
- kernel_text_address+0x99/0xe0 kernel/extable.c:143
- __kernel_text_address+0x9/0x30 kernel/extable.c:105
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:317 [inline]
- unwind_get_return_address+0x5a/0xa0 arch/x86/kernel/unwind_orc.c:312
- arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- __d_alloc+0x2a/0x920 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- anon_inode_getfile fs/anon_inodes.c:91 [inline]
- anon_inode_getfile+0xc8/0x1f0 fs/anon_inodes.c:74
- anon_inode_getfd+0x4c/0xa0 fs/anon_inodes.c:136
- create_vcpu_fd arch/x86/kvm/../../../virt/kvm/kvm_main.c:2983 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3058 [inline]
- kvm_vm_ioctl+0x1ab5/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.5/24641
-caller is rcu_nmi_exit+0x19/0x2c0 kernel/rcu/tree.c:634
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- rcu_nmi_exit+0x19/0x2c0 kernel/rcu/tree.c:634
- kernel_text_address+0xb3/0xe0 kernel/extable.c:156
- __kernel_text_address+0x9/0x30 kernel/extable.c:105
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:317 [inline]
- unwind_get_return_address+0x5a/0xa0 arch/x86/kernel/unwind_orc.c:312
- arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- __d_alloc+0x2a/0x920 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- anon_inode_getfile fs/anon_inodes.c:91 [inline]
- anon_inode_getfile+0xc8/0x1f0 fs/anon_inodes.c:74
- anon_inode_getfd+0x4c/0xa0 fs/anon_inodes.c:136
- create_vcpu_fd arch/x86/kvm/../../../virt/kvm/kvm_main.c:2983 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3058 [inline]
- kvm_vm_ioctl+0x1ab5/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.5/24641
-caller is rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:299 [inline]
-caller is rcu_nmi_exit+0x7b/0x2c0 kernel/rcu/tree.c:642
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:299 [inline]
- rcu_nmi_exit+0x7b/0x2c0 kernel/rcu/tree.c:642
- kernel_text_address+0xb3/0xe0 kernel/extable.c:156
- __kernel_text_address+0x9/0x30 kernel/extable.c:105
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:317 [inline]
- unwind_get_return_address+0x5a/0xa0 arch/x86/kernel/unwind_orc.c:312
- arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- __d_alloc+0x2a/0x920 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- anon_inode_getfile fs/anon_inodes.c:91 [inline]
- anon_inode_getfile+0xc8/0x1f0 fs/anon_inodes.c:74
- anon_inode_getfd+0x4c/0xa0 fs/anon_inodes.c:136
- create_vcpu_fd arch/x86/kvm/../../../virt/kvm/kvm_main.c:2983 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3058 [inline]
- kvm_vm_ioctl+0x1ab5/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.5/24641
-caller is rcu_dynticks_eqs_enter+0x11/0x70 kernel/rcu/tree.c:236
-CPU: 1 PID: 24641 Comm: syz-executor.5 Not tainted 5.7.0-rc7-next-20200525-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- rcu_dynticks_eqs_enter+0x11/0x70 kernel/rcu/tree.c:236
- rcu_nmi_exit+0x214/0x2c0 kernel/rcu/tree.c:670
- kernel_text_address+0xb3/0xe0 kernel/extable.c:156
- __kernel_text_address+0x9/0x30 kernel/extable.c:105
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:317 [inline]
- unwind_get_return_address+0x5a/0xa0 arch/x86/kernel/unwind_orc.c:312
- arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- __d_alloc+0x2a/0x920 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- anon_inode_getfile fs/anon_inodes.c:91 [inline]
- anon_inode_getfile+0xc8/0x1f0 fs/anon_inodes.c:74
- anon_inode_getfd+0x4c/0xa0 fs/anon_inodes.c:136
- create_vcpu_fd arch/x86/kvm/../../../virt/kvm/kvm_main.c:2983 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3058 [inline]
- kvm_vm_ioctl+0x1ab5/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:353
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2c93b11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000004
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f2c93b126d4
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--Sig_/8t_Uf+6ZsLciv4vCeeIrHds--
