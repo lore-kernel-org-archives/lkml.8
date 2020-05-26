@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851E720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0090C20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520488;
-	bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
+	s=default; t=1590520491;
+	bh=+h9rwYI/xKlJmnEgPrnwvsAMxjyE8wJ7SqiZPWkNuyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yux7oj0l2TaQo7pPGc/shDzyRbfFaN+tsLdoXssv1C7AMEShpk0XocJE9TYviAAyw
-	 1ghPoL5JUffFVE63nrt7j+naePT+ompOg/fY3oeba7gg0hEksV9wA/CG8tbDWKQAAO
-	 39HzECM3D76pOUrxit7w2YAGmOKzhSf+nrihJDOk=
+	b=RGleKCdVQzix4gGp3OPs8kmAXkzti1eC/xVXs58m73aQl/Gomo9H53yFqrayCLDbT
+	 qEX90O66+R/0dfBsgL3O5Rf3kQSnMEnlIEgWMTlsDj/+xPGMX+M0CcbLKfxDUAkv6l
+	 6BFzwXts5FovWIjIuPzZMXA1loYYrK5RKc+qsM1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392206AbgEZTOr (ORCPT
+        id S2392215AbgEZTOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392097AbgEZTOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:41 -0400
+        id S2392183AbgEZTOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB03208A7;
-        Tue, 26 May 2020 19:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC5E120776;
+        Tue, 26 May 2020 19:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520480;
-        bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
+        s=default; t=1590520485;
+        bh=+h9rwYI/xKlJmnEgPrnwvsAMxjyE8wJ7SqiZPWkNuyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQA7MpP7YWPupfektjNPQT+odYfpnvXivKFy6IxV4YXw9g44Z2l676HiLPJuKCGal
-         H7wv+TBB8X8OMxxa+OO1iNTtCMPL4TIpEtbCRCQnASGQyy4V2SmjJp90uA5awx5xZE
-         ODPFzQq2qMAIhMidiQxZaA4FBRSAGU6Y/30XPaQk=
+        b=PVgsNNTdX+EbHalo0f/orIaKhVn72v/2Hsnw8CosjqYN9dYClO+EG7QmkhgNGPY9A
+         q6PPPkLy0TaWGrJxp2u/KQwWKkn5NFPFmW9gnXye9o13x4WS+CVKygVCabXfVtwoHb
+         AIvVGdRU5liszFyoLb/jLFNAdHlHQWWtvxu/YitM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.6 096/126] iio: sca3000: Remove an erroneous get_device()
-Date:   Tue, 26 May 2020 20:53:53 +0200
-Message-Id: <20200526183945.895950958@linuxfoundation.org>
+Subject: [PATCH 5.6 097/126] iio: dac: vf610: Fix an error handling path in vf610_dac_probe()
+Date:   Tue, 26 May 2020 20:53:54 +0200
+Message-Id: <20200526183945.960511619@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -63,34 +63,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 928edefbc18cd8433f7df235c6e09a9306e7d580 upstream.
+commit aad4742fbf0a560c25827adb58695a4497ffc204 upstream.
 
-This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
-call.
-Remove it.
+A call to 'vf610_dac_exit()' is missing in an error handling path.
 
-While at it add a missing \n at the end of the message.
-
-Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
+Fixes: 1b983bf42fad ("iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/accel/sca3000.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/dac/vf610_dac.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/accel/sca3000.c
-+++ b/drivers/iio/accel/sca3000.c
-@@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3
- 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
- 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
- 	if (ret) {
--		dev_err(get_device(&st->us->dev), "problem reading register");
-+		dev_err(&st->us->dev, "problem reading register\n");
- 		return ret;
- 	}
+--- a/drivers/iio/dac/vf610_dac.c
++++ b/drivers/iio/dac/vf610_dac.c
+@@ -223,6 +223,7 @@ static int vf610_dac_probe(struct platfo
+ 	return 0;
  
+ error_iio_device_register:
++	vf610_dac_exit(info);
+ 	clk_disable_unprepare(info->clk);
+ 
+ 	return ret;
 
 
