@@ -2,71 +2,71 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D95CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A12C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6314A2089D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F632089D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nVQ1QJpS"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="cxFv3bw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731479AbgEZHDI (ORCPT
+        id S1731492AbgEZHDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:03:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33892 "EHLO
+        Tue, 26 May 2020 03:03:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731463AbgEZHDH (ORCPT
+        with ESMTP id S1731463AbgEZHDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:03:07 -0400
+        Tue, 26 May 2020 03:03:08 -0400
 Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC662C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:06 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s69so807636pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7533C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fs4so806502pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=fZ7IHiP/Z+5wqk/IVpAWK8RobZ149sWEYypNjSaWVHM=;
-        b=nVQ1QJpS/aGTk0VchSb7wE/ai2hrbk48juRmxjQ984NV+mQnS3sJ6llsgYFEqa2Zad
-         0RxjxfPXH9Oj4hW3khHPJYqo6utNQt8pj/DjTdFrezbdD5GR7S8ubJaCsGEr0AOa2TRH
-         VGsNI1fFvfCnJMMpWTHIfKuGfl8NkV/FmjN8QZyEDCK6EUV3UwO13TAYTzKunoaNVsGh
-         sHK3tnmrRHZytqL3oTtLK+cUCPEkEIfWZE+hDwZhZHCx0825xwNdGfm244W9vhoQG5Yt
-         d9CNwEP8AmCnv93LtQUd6MmZU4PDvwcGlr+sYn9qmzCf5z6SEcnGT321cOB5OM4SfG1O
-         4/tQ==
+        bh=d8KymXTIzfL2DSySO92h+GogegkiWUPCyUDxjM568ZM=;
+        b=cxFv3bw23gIV9vLNTY/nx1wiGqjTbYw5ZKltp1+uU4praWpkIJFiquaCjv7zUhITZH
+         hLtzReZc5ey1Tu5w8Lg4xYJHQm8ekSZEigmTQV7t6mh9vp01QEFb8h1FfZB1nxpWdYYa
+         +YCdq6HTr8Wo4ztifajntKUGTit1pHDa1Y3lh2c7B4Z89CBXehqxXUKtMs2qDDCMkQ0J
+         +UJlf55Zn5cpB4mbtlFqt83D4kofK9VdXjmO/4HHABFE6wst6yb/gFXg4sz2Ur19QCOG
+         /TVJonzBguoGdK3XGWA3TVqRkXbk+3GuNHu6hkW55blmoyuunVXUB3AsDc4dv5EYhC0P
+         7u5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fZ7IHiP/Z+5wqk/IVpAWK8RobZ149sWEYypNjSaWVHM=;
-        b=f+6DUpZ2qWS9d/f6+MEcTs2kek7+vUF7U1O8c8gOsItymnP6x2Zfu+xxPu+NEQ5PKV
-         OdFZA7vTVhFCCGRL4IMLN1JUHqBWd8Z58COBVsdEy9+7vaPCB9QdpvD5q8Em1RblYsVp
-         Xp9W2gBFFhAzl5csT7G4evHndQHeM7VzE9Vbke9Nw5B3z35Q8qSKydX7TBp7JopYBkUt
-         xMSktcdTryH/e8UYZ/JQN8V7qqouQmLOgTZfIiYONXmnUU78KoidLBr311PRH9CYU8rP
-         Lx312TZjGGtasx/nCQEIV8R0yZv/agV6d7nvylQ+8ci8xRiZ7DIrCpATJ/8jwKLhxEx3
-         io+Q==
-X-Gm-Message-State: AOAM533IXs8Pcp5d92X9LMGjrJyay/aR08+XBcT4QJsRSMxGjoBe7szs
-        9izh786gotr8tymFN7THTHJlSA==
-X-Google-Smtp-Source: ABdhPJzMBT/HJSEdmH9HxTb2icg7SFzSF8ztRp2aI8PhCuNhNPDKgK1RJhnCJnQyUZXCBRvFyJOG8g==
-X-Received: by 2002:a17:90b:4390:: with SMTP id in16mr25078324pjb.78.1590476586393;
-        Tue, 26 May 2020 00:03:06 -0700 (PDT)
+        bh=d8KymXTIzfL2DSySO92h+GogegkiWUPCyUDxjM568ZM=;
+        b=GY6M41X5EdQoczr+19bH+rm2KuIv/rvv/KvixHG5Dneu5lSP0FZeE7H+cU9ggcTi4u
+         zRupv/rpivFg0KSZV2HbxTf3hSODHq9O7PwmGZhr7MM+hKRw270asH+4qFv8dyCw+3sV
+         KqyYhBsTRn+pFevWla6xOE1E/kLS8Zjkph4oABy2ylHDJSFv62F5P2xLQzkSaX0a/ztH
+         jINXC6zqta5ldaaqIg42zTaRVKFjzXmm4H5428fwTCg7vXfFne+GjshxzHIhiDCFZPLr
+         z2LR+EjdAJnR+lGshXFAPQKjZbVEZfxyyXYC9YYBJu4s8yxI0qCniboyRs/wA9n5D9lU
+         Chyg==
+X-Gm-Message-State: AOAM530o3BEAC2jld5KDsKTp5D82IXAwilF7TP06qMDHNG4nGXgOXs5b
+        g5s83bfsN0F/vI97rFqisyFqPw==
+X-Google-Smtp-Source: ABdhPJxpSvle0lTpxOGzUm0bS79NHDX1pYJ3AliqMsFV9gAzrL0dNzHrIyynOanHjduYV7E5n6rQUA==
+X-Received: by 2002:a17:90b:3010:: with SMTP id hg16mr24750860pjb.157.1590476588424;
+        Tue, 26 May 2020 00:03:08 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.03.04
+        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.03.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:03:05 -0700 (PDT)
+        Tue, 26 May 2020 00:03:08 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, oleg@redhat.com
-Subject: [RFC PATCH v4 08/13] riscv: Reset vector register
-Date:   Tue, 26 May 2020 15:02:37 +0800
-Message-Id: <2424daf7c5b704b5c4ea2c317304d7fd0cf7ef2a.1590474856.git.greentime.hu@sifive.com>
+Subject: [RFC PATCH v4 09/13] riscv: Add vector struct and assembler definitions
+Date:   Tue, 26 May 2020 15:02:38 +0800
+Message-Id: <1f20f778318bf18e47eace08e54983fed23ba019.1590474856.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590474856.git.greentime.hu@sifive.com>
 References: <cover.1590474856.git.greentime.hu@sifive.com>
@@ -79,97 +79,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-Reset vector registers at boot-time and disable vector instructions
-execution for kernel mode.
+Add vector state context struct in struct thread and asm-offsets.c
+definitions.
 
+The vector registers will be saved in datap pointer of __riscv_v_state. It
+will be dynamically allocated in kernel space. It will be put right after
+the __riscv_v_state data structure in user space.
+
+[greentime.hu@sifive.com: add support for dynamic vlen, add vcsr and remove
+vxsat, vxrm because these data can be get in vcsr, add new macros for
+_riscv_v_state elements offset and remove unused ones]
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/kernel/entry.S |  2 +-
- arch/riscv/kernel/head.S  | 49 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 48 insertions(+), 3 deletions(-)
+ arch/riscv/include/asm/processor.h   |  1 +
+ arch/riscv/include/uapi/asm/ptrace.h | 13 +++++++++++++
+ arch/riscv/kernel/asm-offsets.c      |  8 ++++++++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 56d071b2c0a1..4e32770c19c8 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -70,7 +70,7 @@ _save_context:
- 	 * Disable the FPU to detect illegal usage of floating point in kernel
- 	 * space.
- 	 */
--	li t0, SR_SUM | SR_FS
-+	li t0, SR_SUM | SR_FS | SR_VS
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index 3ddb798264f1..217273375cfb 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -32,6 +32,7 @@ struct thread_struct {
+ 	unsigned long sp;	/* Kernel mode stack */
+ 	unsigned long s[12];	/* s[0]: frame pointer */
+ 	struct __riscv_d_ext_state fstate;
++	struct __riscv_v_state vstate;
+ };
  
- 	REG_L s0, TASK_TI_USER_SP(tp)
- 	csrrc s1, CSR_STATUS, t0
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 98a406474e7d..1290ef680125 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -181,10 +181,10 @@ ENTRY(_start_kernel)
- .option pop
+ #define INIT_THREAD {					\
+diff --git a/arch/riscv/include/uapi/asm/ptrace.h b/arch/riscv/include/uapi/asm/ptrace.h
+index 882547f6bd5c..661b0466b850 100644
+--- a/arch/riscv/include/uapi/asm/ptrace.h
++++ b/arch/riscv/include/uapi/asm/ptrace.h
+@@ -77,6 +77,19 @@ union __riscv_fp_state {
+ 	struct __riscv_q_ext_state q;
+ };
  
- 	/*
--	 * Disable FPU to detect illegal usage of
-+	 * Disable FPU & VECTOR to detect illegal usage of
- 	 * floating point in kernel space
- 	 */
--	li t0, SR_FS
-+	li t0, SR_FS | SR_VS
- 	csrc CSR_STATUS, t0
++struct __riscv_v_state {
++	__u32 magic;
++	__u32 size;
++	unsigned long vstart;
++	unsigned long vl;
++	unsigned long vtype;
++	unsigned long vcsr;
++	void *datap;
++#if __riscv_xlen == 32
++	__u32 __padding;
++#endif
++} __attribute__((aligned(16)));
++
+ #endif /* __ASSEMBLY__ */
  
- #ifdef CONFIG_SMP
-@@ -341,6 +341,51 @@ ENTRY(reset_regs)
- 	csrw	fcsr, 0
- 	/* note that the caller must clear SR_FS */
- #endif /* CONFIG_FPU */
+ #endif /* _UAPI_ASM_RISCV_PTRACE_H */
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+index 07cb9c10de4e..6627fde230b2 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -70,6 +70,14 @@ void asm_offsets(void)
+ 	OFFSET(TASK_THREAD_F31, task_struct, thread.fstate.f[31]);
+ 	OFFSET(TASK_THREAD_FCSR, task_struct, thread.fstate.fcsr);
+ 
++	OFFSET(RISCV_V_STATE_MAGIC, __riscv_v_state, magic);
++	OFFSET(RISCV_V_STATE_SIZE, __riscv_v_state, size);
++	OFFSET(RISCV_V_STATE_VSTART, __riscv_v_state, vstart);
++	OFFSET(RISCV_V_STATE_VL, __riscv_v_state, vl);
++	OFFSET(RISCV_V_STATE_VTYPE, __riscv_v_state, vtype);
++	OFFSET(RISCV_V_STATE_VCSR, __riscv_v_state, vcsr);
++	OFFSET(RISCV_V_STATE_DATAP, __riscv_v_state, datap);
 +
-+#ifdef CONFIG_VECTOR
-+	csrr	t0, CSR_MISA
-+	li	t1, (COMPAT_HWCAP_ISA_V >> 16)
-+	slli	t1, t1, 16
-+	and	t0, t0, t1
-+	beqz	t0, .Lreset_regs_done
-+
-+	li	t1, SR_VS
-+	csrs	CSR_STATUS, t1
-+	vmv.v.i v0, 0
-+	vmv.v.i v1, 0
-+	vmv.v.i v2, 0
-+	vmv.v.i v3, 0
-+	vmv.v.i v4, 0
-+	vmv.v.i v5, 0
-+	vmv.v.i v6, 0
-+	vmv.v.i v7, 0
-+	vmv.v.i v8, 0
-+	vmv.v.i v9, 0
-+	vmv.v.i v10, 0
-+	vmv.v.i v11, 0
-+	vmv.v.i v12, 0
-+	vmv.v.i v13, 0
-+	vmv.v.i v14, 0
-+	vmv.v.i v15, 0
-+	vmv.v.i v16, 0
-+	vmv.v.i v17, 0
-+	vmv.v.i v18, 0
-+	vmv.v.i v19, 0
-+	vmv.v.i v20, 0
-+	vmv.v.i v21, 0
-+	vmv.v.i v22, 0
-+	vmv.v.i v23, 0
-+	vmv.v.i v24, 0
-+	vmv.v.i v25, 0
-+	vmv.v.i v26, 0
-+	vmv.v.i v27, 0
-+	vmv.v.i v28, 0
-+	vmv.v.i v29, 0
-+	vmv.v.i v30, 0
-+	vmv.v.i v31, 0
-+	/* note that the caller must clear SR_VS */
-+#endif /* CONFIG_VECTOR */
-+
- .Lreset_regs_done:
- 	ret
- END(reset_regs)
+ 	DEFINE(PT_SIZE, sizeof(struct pt_regs));
+ 	OFFSET(PT_EPC, pt_regs, epc);
+ 	OFFSET(PT_RA, pt_regs, ra);
 -- 
 2.26.2
 
