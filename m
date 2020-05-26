@@ -2,109 +2,157 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5662EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EABBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE5520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1356420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:50:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k4BbUH8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgEZPsn (ORCPT
+        id S2388238AbgEZPuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:48:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:27189 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgEZPsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:48:43 -0400
-IronPort-SDR: KRGgT9oQ9Der3d4hH0ZOEIRyfDJ/B0MadeUpkkdeFxVPFONYKYN4Rzy5k9BTQ2kcaM1Qy9NXlO
- 18i8V+SKrtoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:48:36 -0700
-IronPort-SDR: 9r1wevZOJJL4X3ZpDu4uVOXS/LfIhzSY80MVMsGu9VilwjF0IoSxDNFLoHZusveuLa+8k+eaiu
- g5y9tOhzbybQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="256491252"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga008.fm.intel.com with ESMTP; 26 May 2020 08:48:36 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 06777301C5F; Tue, 26 May 2020 08:48:36 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:48:35 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        sashal@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
-Message-ID: <20200526154835.GW499505@tassilo.jf.intel.com>
-References: <20200526052848.605423-1-andi@firstfloor.org>
- <20200526065618.GC2580410@kroah.com>
+        Tue, 26 May 2020 11:50:05 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18082 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726420AbgEZPuF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:50:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590508203; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=l9+v5KTbmJ9FO+vcSKCZmMPOM+Wqw2LiKpZkkRVxaYY=; b=k4BbUH8w071U4dwe4gOOilbx0z/pTF8ZOqOA+9ujq0r+tcF1b3I4u7AkI4a68h79DXIclYDA
+ GuQv+e0qj6LcJSL1S4fXV81KN3VTDx8HUb2MkT6vnVS5kRTIsDY0zDWg3HzFLQFJNbOMFdJ5
+ v5ZN+eqlMEDcTDbaNqrYHgFC5lw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ecd3a8bc28b2cdd985bdf32 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 15:49:31
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 88F0EC433A0; Tue, 26 May 2020 15:49:31 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA2E0C433C9;
+        Tue, 26 May 2020 15:49:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA2E0C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 26 May 2020 09:49:27 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     freedreno@lists.freedreno.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/msm/a6xx: skip HFI set freq if GMU is powered down
+Message-ID: <20200526154927.GB20960@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
+        freedreno@lists.freedreno.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Stephen Boyd <swboyd@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200522221159.GA20960@jcrouse1-lnx.qualcomm.com>
+ <20200522222909.27260-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526065618.GC2580410@kroah.com>
+In-Reply-To: <20200522222909.27260-1-jonathan@marek.ca>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
-> On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
-> > From: Andi Kleen <ak@linux.intel.com>
-> > 
-> > Since there seem to be kernel modules floating around that set
-> > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
-> > CR4 pinning just checks that bits are set, this also checks
-> > that the FSGSBASE bit is not set, and if it is clears it again.
+On Fri, May 22, 2020 at 06:29:08PM -0400, Jonathan Marek wrote:
+> Also skip the newly added HFI set freq path if the GMU is powered down,
+> which was missing because of patches crossing paths.
+
+I saw the 5.8 pull later in my inbox so I'm not sure if this made it or not but
+it qualifies as a -fix if it didn't.
+
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> So we are trying to "protect" ourselves from broken out-of-tree kernel
-> modules now?  
-
-Well it's a specific case where we know they're opening a root hole
-unintentionally. This is just an pragmatic attempt to protect the users in the 
-short term.
-
-> Why stop with this type of check, why not just forbid them
-> entirely if we don't trust them?  :)
-
-Would be pointless -- lots of people rely on them, so such a rule
-wouldn't survive very long in production kernels.
-
-> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> > index bed0cb83fe24..1f5b7871ae9a 100644
-> > --- a/arch/x86/kernel/cpu/common.c
-> > +++ b/arch/x86/kernel/cpu/common.c
-> > @@ -385,6 +385,11 @@ void native_write_cr4(unsigned long val)
-> >  		/* Warn after we've set the missing bits. */
-> >  		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
-> >  			  bits_missing);
-> > +		if (val & X86_CR4_FSGSBASE) {
-> > +			WARN_ONCE(1, "CR4 unexpectedly set FSGSBASE!?\n");
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 67c58345b26a..9851367a88cd 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -110,13 +110,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+>  	struct msm_gpu *gpu = &adreno_gpu->base;
+>  	int ret;
+>  
+> -	/*
+> -	 * This can get called from devfreq while the hardware is idle. Don't
+> -	 * bring up the power if it isn't already active
+> -	 */
+> -	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
+> -		return;
+> -
+>  	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
+>  
+>  	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
+> @@ -141,7 +134,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+>  	 * for now leave it at max so that the performance is nominal.
+>  	 */
+>  	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> -	pm_runtime_put(gmu->dev);
+>  }
+>  
+>  void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+> @@ -159,13 +151,21 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+>  			break;
+>  
+>  	gmu->current_perf_index = perf_index;
+> +	gmu->freq = gmu->gpu_freqs[perf_index];
+> +
+> +	/*
+> +	 * This can get called from devfreq while the hardware is idle. Don't
+> +	 * bring up the power if it isn't already active
+> +	 */
+> +	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
+> +		return;
+>  
+>  	if (gmu->legacy)
+>  		__a6xx_gmu_set_freq(gmu, perf_index);
+>  	else
+>  		a6xx_hfi_set_freq(gmu, perf_index);
+>  
+> -	gmu->freq = gmu->gpu_freqs[perf_index];
+> +	pm_runtime_put(gmu->dev);
+>  }
+>  
+>  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+> -- 
+> 2.26.1
 > 
-> Like this will actually be noticed by anyone who calls this?  What is a
-> user supposed to do about this?
 
-In the long term they would need to apply the proper patches
-for FSGSBASE.
-
-> 
-> What about those systems that panic-on-warn?
-
-I assume they're ok with "panic on root hole"
-
-> 
-> > +			val &= ~X86_CR4_FSGSBASE;
-> 
-> So you just prevented them from setting this, thereby fixing up their
-> broken code that will never be fixed because you did this?  Why do this?
-
-If they rely on the functionality they will apply the proper patches
-then. Or at least they will be aware that they have a root hole,
-which they are currently not.
-
--Andi
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
