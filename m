@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F46C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5727520888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAEE20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521212;
-	bh=0kG7rzBhywYYe9vAfuxYEHFHGEYOAtH8A3jXzEB/jls=;
+	s=default; t=1590521219;
+	bh=Xvv+FdlC04ssSt3A38EU2gkkWbZ8KSIMSeziWGxBUUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJvFMO//KycdVJirk3CuTlFxWf/hr9TbuehUDnaCZsFS2sS6OSo3KfNJAFH4p0twj
-	 kDDuaqHLRh5mtz+TsqOYP3tjKWazWMn5bpQXmW56l6dG6Nm6pRthdIYlBtIWW9K5dt
-	 wjTmBSsQzbwrMqMcF0Yyq07UBQ2tyMf06tlBH0kU=
+	b=QM5XQrYO3VI+K5Q9YzpSz3wkVyIey2SYOdnIeyoY1rGWRqry3isO8pGe2Zt/u+9kz
+	 deRuSuq5EB1qINf/EfYpf8y/luWFg52LsxoBfliWCGlHNYUAKAfBcuD0pBoeTeOGZ1
+	 rfk6gFnLzM4MsZtlsjSxNM5FKcbJWkrE5OEjEJJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391455AbgEZTFE (ORCPT
+        id S2391627AbgEZT06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32786 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390801AbgEZTFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:00 -0400
+        id S2389774AbgEZTEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA4B020849;
-        Tue, 26 May 2020 19:04:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 152382086A;
+        Tue, 26 May 2020 19:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519900;
-        bh=0kG7rzBhywYYe9vAfuxYEHFHGEYOAtH8A3jXzEB/jls=;
+        s=default; t=1590519892;
+        bh=Xvv+FdlC04ssSt3A38EU2gkkWbZ8KSIMSeziWGxBUUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1jvuEjPKcYkWoflCiaaUx54ZxfLKDof0eYPr5mhuEWu9FJdqE41TrcODB9cNlDb4k
-         zDA7OQ9nB3ntJbyY0pgZ4qyblEfajS/WGz4O4ULeKFnOSeF/ys4f2JqiezeFZsbWjM
-         RBcNfpQOXipXEXV6U7ufm9v/5YSNNRYajt0pekHQ=
+        b=L6Tz6xo9rC+QhFf325zTh065c3VsKjNx2H7nW7fbMiwdm7vYOkPSYyNxf3pjc5uj0
+         2ZyuB+lsDgZK7rxjf0I3lhz1t7tL0JOkTb7NeklsoMZ7kTrfljXUTLPPeDhPueRNVb
+         zGfOp7fjOEmOzRdrx0PBMP2tD3g1/x2t25wTe65I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/81] staging: most: core: replace strcpy() by strscpy()
-Date:   Tue, 26 May 2020 20:53:29 +0200
-Message-Id: <20200526183933.091481328@linuxfoundation.org>
+        stable@vger.kernel.org, Artem Borisov <dedsa2002@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 17/81] HID: alps: Add AUI1657 device ID
+Date:   Tue, 26 May 2020 20:52:52 +0200
+Message-Id: <20200526183928.396594129@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,38 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Artem Borisov <dedsa2002@gmail.com>
 
-[ Upstream commit 3970d0d81816310175b6272e709ee09dd3e05171 ]
+[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
 
-The strcpy() function is being deprecated. Replace it by the safer
-strscpy() and fix the following Coverity warning:
+This device is used on Lenovo V130-15IKB variants and uses
+the same registers as U1.
 
-"You might overrun the 80-character fixed-size string iface->p->name
-by copying iface->description without checking the length."
-
-Addresses-Coverity-ID: 1444760 ("Copy into fixed size buffer")
-Fixes: 131ac62253db ("staging: most: core: use device description as name")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/most/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-alps.c | 1 +
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-index 25a077f4ea94..08f60ce6293d 100644
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -1412,7 +1412,7 @@ int most_register_interface(struct most_interface *iface)
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index 895f49b565ee..28ca21014bbe 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -806,6 +806,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
++	case HID_DEVICE_ID_ALPS_1657:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index ae145bdcd83d..53ac5e1ab4bc 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -83,7 +83,7 @@
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-
++#define HID_DEVICE_ID_ALPS_1657         0x121E
  
- 	INIT_LIST_HEAD(&iface->p->channel_list);
- 	iface->p->dev_id = id;
--	strcpy(iface->p->name, iface->description);
-+	strscpy(iface->p->name, iface->description, sizeof(iface->p->name));
- 	iface->dev.init_name = iface->p->name;
- 	iface->dev.bus = &mc.bus;
- 	iface->dev.parent = &mc.dev;
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.25.1
 
