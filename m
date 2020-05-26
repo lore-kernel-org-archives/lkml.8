@@ -2,102 +2,111 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD55120787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C357B20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590485394;
+	bh=PbnuSbjrPKx+frOK/02YHoC+zKJxsOZXbZBogVNVYUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GF2MP1EWv3QOul+zwD07PXDreY1gBY3CMj8sbEUKmobERrK91m2P7HPG44VAFYgT3
+	 6C4TAVQF6B9SfPMLu9zlLO9g9twr/rGOeY0+QO/D+rMjT3r+RrLRa21ayz4MPfXBIQ
+	 7SVS9q5Eyiu7gPFRZnbdJiXwGyM3kT43eMgdZ08M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbgEZJ22 (ORCPT
+        id S2388550AbgEZJ3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388187AbgEZJ22 (ORCPT
+        Tue, 26 May 2020 05:29:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44230 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388187AbgEZJ3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:28:28 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C03C03E97E;
-        Tue, 26 May 2020 02:28:27 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jdVsn-0000QU-Gd; Tue, 26 May 2020 11:28:25 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 19DEB1C00FA;
-        Tue, 26 May 2020 11:28:25 +0200 (CEST)
-Date:   Tue, 26 May 2020 09:28:24 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/apic] x86/apic: Make TSC deadline timer detection message visible
-Cc:     Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200525104218.27018-1-bp@alien8.de>
-References: <20200525104218.27018-1-bp@alien8.de>
+        Tue, 26 May 2020 05:29:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y17so11293211wrn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:29:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ShjgF4SNUEG7M04ROEYeQ8ZjVBRjeIQdGVLkBtQG+ak=;
+        b=Xy0H4SIOiF7fFa7UyTUgTqh3hqkGaQTj8v0oD/DB/gI2qX0CN6CB5zDY+PbZHyl0UB
+         XpmQvnMz0hQHz8Gn4JV1FJLTRPDLv86M1Wswx97lCUDccdf78wuyKo8kH2U9afFiG+Lc
+         CiEFmU0IlWraxxJbpwXtDcVKIP/xcd3zg5g6LT94xGQGlGnFQjcJyv3daLhkleQI93nl
+         KrnXCnMYEeMhmMXEkLLuGXsfNiJ1//bCJqE5/ppX6przq5JW0PHWHM76/TrS1V5Hx3jJ
+         wSCQd3o3o9IFSzLZJjkNv8mST2AYnF/s+Q20e11k9JzxTUUcISY947C1rLC0WizDNXaS
+         +6aQ==
+X-Gm-Message-State: AOAM533VrPI9oT9EH4fEDHFkXgb4q29NiBg4kGXG+V7uBugnERE/Z0ay
+        D/G8Dwx7huIn8JgiV69LVAI=
+X-Google-Smtp-Source: ABdhPJxPLemHBV0CT+S/xiQ8ckgGW5J9NJuBXtGnIc5m2r1m0PNqXrW4TPaPYYpcShID9RPqgZLwkg==
+X-Received: by 2002:a5d:4cd1:: with SMTP id c17mr17472482wrt.199.1590485391877;
+        Tue, 26 May 2020 02:29:51 -0700 (PDT)
+Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
+        by smtp.gmail.com with ESMTPSA id o10sm9725133wrq.40.2020.05.26.02.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:29:51 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:29:48 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V9 30/39] x86/entry: Convert various hypervisor vectors
+ to IDTENTRY_SYSVEC
+Message-ID: <20200526092948.buwjs26ybsnmr67e@debian>
+References: <20200521200513.656533920@linutronix.de>
+ <20200521202119.647997594@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159048530494.17951.1301116942468405416.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521202119.647997594@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/apic branch of tip:
+On Thu, May 21, 2020 at 10:05:43PM +0200, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Convert various hypervisor vectors to IDTENTRY_SYSVEC
+>   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
+>   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
+>   - Remove the ASM idtentries in 64bit
+>   - Remove the BUILD_INTERRUPT entries in 32bit
+>   - Remove the old prototypes
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Andy Lutomirski <luto@kernel.org>
 
-Commit-ID:     de308d1815c9e8fe602a958c5c76142ff6501d75
-Gitweb:        https://git.kernel.org/tip/de308d1815c9e8fe602a958c5c76142ff6501d75
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Mon, 25 May 2020 12:38:39 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 26 May 2020 10:54:18 +02:00
+For Hyper-V bits:
 
-x86/apic: Make TSC deadline timer detection message visible
-
-The commit
-
-  c84cb3735fd5 ("x86/apic: Move TSC deadline timer debug printk")
-
-removed the message which said that the deadline timer was enabled.
-It added a pr_debug() message which is issued when deadline timer
-validation succeeds.
-
-Well, issued only when CONFIG_DYNAMIC_DEBUG is enabled - otherwise
-pr_debug() calls get optimized away if DEBUG is not defined in the
-compilation unit.
-
-Therefore, make the above message pr_info() so that it is visible in
-dmesg.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200525104218.27018-1-bp@alien8.de
----
- arch/x86/kernel/apic/apic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index e53dda2..21d2f1d 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2093,7 +2093,7 @@ void __init init_apic_mappings(void)
- 	unsigned int new_apicid;
- 
- 	if (apic_validate_deadline_timer())
--		pr_debug("TSC deadline timer available\n");
-+		pr_info("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
