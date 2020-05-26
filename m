@@ -2,213 +2,107 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8799320787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BAF20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GUDC0wrP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TomsnslX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgEZJbq (ORCPT
+        id S1731811AbgEZJcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:31:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50298 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728568AbgEZJbp (ORCPT
+        Tue, 26 May 2020 05:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgEZJcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:31:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04Q9VOEb096081;
-        Tue, 26 May 2020 04:31:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590485484;
-        bh=jD7sXlwKitwGx0YhJeaqEQlLnyjhXpd8mxOdk7QooZY=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=GUDC0wrP0Ch5wK7qYXrkHjfCuwrjhH7Tc4woRZ0YGuBScfA9Bpv4xBUWTexJdnfV3
-         jwosfFsjV/yLgrlIx87iIbjPaOPwZ1W7AelQeN8QuhO01ssHvZ7Yx43DWeHlLLZSlU
-         c4p13kIklbbKQQMbejyk0Ls75gMfIAeKg3A11SkQ=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04Q9VOqX038751;
-        Tue, 26 May 2020 04:31:24 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 04:31:24 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 04:31:24 -0500
-Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04Q9VJ4V008663;
-        Tue, 26 May 2020 04:31:20 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH 1/6] mtd: spi-nor: cadence-quadspi: Drop
- cdns,is-decoded-cs property
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Boris Brezillon <bbrezillon@kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "simon.k.r.goldschmidt@gmail.com" <simon.k.r.goldschmidt@gmail.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marex@denx.de" <marex@denx.de>
-References: <20200508185411.487-1-vigneshr@ti.com>
- <20200508185411.487-2-vigneshr@ti.com>
-Message-ID: <7ea8e0fd-9709-42b1-66d5-8976b73dd82a@ti.com>
-Date:   Tue, 26 May 2020 15:01:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 05:32:09 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18140C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:32:09 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so11953780lfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UYw+tYM8bbjvDaBrvccyjr1qaeMi6SQMX6gjapj2HjU=;
+        b=TomsnslXfXeqB9GzlKe+1oBlCjnhC4HoALX5uKNqKl7rbpXiuL1ra5zpBOFyqWo0K+
+         CD4lRHgTX5R0jQs3K66+BdL8W/6xe04fqJSCw3QKKhJR2sNgtJ6HRqSRqu6cQ3VRigx4
+         wn9IWMBpzbDzI1vLRzmFF9I8c89YVKwj8dg+VRAcd02ISTSomt4JlggQov9QkA2KTN4r
+         Ezcgw1l2966Cjweh5ZyDhZnIdq7w7fqQCSywi6faBZhV1GxjM2EmbPJnsu1wC+pksviW
+         nXVaEZeKa3s/B5Uf7rn7Qz2qDyjun9sqoxQOpts+t4wWoIyz8bxayVS1raQ3P5yYa6/m
+         fOpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UYw+tYM8bbjvDaBrvccyjr1qaeMi6SQMX6gjapj2HjU=;
+        b=iMyl5/7l3Z/z6rvW3VDfS4dh+DxUIwUhAxMpwr3J5iIldCOLDS9Lzl6YWjLtXAj80h
+         Yp0BIcbNY1os5x9+Cc928KiXHZ+QMB1uxHwEf5qXr7mE5/sw6azG6n/+jhMQ0eAeaGev
+         gocPvkhXeVJO/2oZyHwNnSG5ZUngK6xcI98/jK8GFq2B8hAQHUWOzrk6WS7aaZUPApXJ
+         87bHgSfrPZAD/96DLc4Sy8EbxwRRVFcz3lEdiShNJreyUtO/XN4ndDlGOAIaw8LHfF0I
+         OJATfIf2Ytoo1veVpHxiMJM60r+/CkxU9COAJdyVTJjkms99M6AEqE71aYyXXZII2U7/
+         mrcQ==
+X-Gm-Message-State: AOAM533tDm6rSL21jh27D/Vpiu85TEKegDELqcWsg2n2tSW98VH8Z5vc
+        XkFNaUHPdF4IClZyimFdLgUmBuQCK3X8L0mFPNHXixD4AZQ=
+X-Google-Smtp-Source: ABdhPJyY8QOc4NQanHGk277urw9P/tSEpFU4FaDnC2qV6MzVnDwh3lf26WEmK3E9rv4KAp3GZLiszj2pR0rS6+2ofT0=
+X-Received: by 2002:ac2:414c:: with SMTP id c12mr76335lfi.47.1590485527533;
+ Tue, 26 May 2020 02:32:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200508185411.487-2-vigneshr@ti.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200524025117.15679-1-dinghao.liu@zju.edu.cn>
+ <CACRpkda9ENYMLZVnTzN2rn9UvsMOWpeDnOhh7zs4ttAJqgipKw@mail.gmail.com> <58a22985.cfec2.1724f66f322.Coremail.dinghao.liu@zju.edu.cn>
+In-Reply-To: <58a22985.cfec2.1724f66f322.Coremail.dinghao.liu@zju.edu.cn>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 May 2020 11:31:56 +0200
+Message-ID: <CACRpkdYr7mprhK9rdWEfuuwb7hxxc5aS5LZqKf4x5OgMrvh4CQ@mail.gmail.com>
+Subject: Re: Re: [PATCH] iio: magnetometer: ak8974: Fix runtime PM imbalance
+ on error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 26, 2020 at 7:14 AM <dinghao.liu@zju.edu.cn> wrote:
+> > On Sun, May 24, 2020 at 4:51 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
 
+> > >  disable_pm:
+> > > -       pm_runtime_put_noidle(&i2c->dev);
+> > >         pm_runtime_disable(&i2c->dev);
+> > >         ak8974_set_power(ak8974, AK8974_PWR_OFF);
+> >
+> > Keep the top pm_runtime_put_noidle().
+>
+> I found that there was already a pm_runtime_put() before
+> iio_triggered_buffer_setup() (just after pm_runtime_use_autosuspend).
+> So if we keep the pm_runtime_put_noidle() here, we will have
+> two pmusage counter decrement. Do you think this is a bug?
 
-On 09/05/20 12:24 am, Vignesh Raghavendra wrote:
-> Cadence QSPI provides a way to automatically decode CS based on the
-> offset accessed within memory map window. This feature cannot be
-> supported in spi-mem framework as controller driver would not have
-> access to flash geometry. Therefore drop this feature in preparation to
-> moving to spi-mem.
-> 
-> Note that, this feature never worked in the driver (Direct/Indirect mode
-> accesses did not take into account size of flash on other CSs) and there
-> are no users of this feature in kernel. Therefore dropping this should
-> not cause a regression
-> 
+Yes you're right.
 
-I realized cdns,is-decoded-cs property does not depend on
-cqspi_configure_cs_and_sizes() and can still be supported w/o knowing
-flash geometry... Will respin.. 
+What about just moving the pm_runtime_put() until the end
+of the initialization? Right before return 0;
+Then we can keep this nice goto exits as they are.
 
-Regards
-Vignesh
+Maybe move all these three:
 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  .../mtd/spi-nor/controllers/cadence-quadspi.c | 59 +++----------------
->  1 file changed, 9 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> index 494dcab4aaaa..fa54f85e16d7 100644
-> --- a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> +++ b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> @@ -77,11 +77,7 @@ struct cqspi_st {
->        dma_addr_t              mmap_phys_base;
->  
->        int                     current_cs;
-> -     int                     current_page_size;
-> -     int                     current_erase_size;
-> -     int                     current_addr_width;
->        unsigned long           master_ref_clk_hz;
-> -     bool                    is_decoded_cs;
->        u32                     fifo_depth;
->        u32                     fifo_width;
->        bool                    rclk_en;
-> @@ -715,19 +711,15 @@ static void cqspi_chipselect(struct spi_nor *nor)
->        unsigned int reg;
->  
->        reg = readl(reg_base + CQSPI_REG_CONFIG);
-> -     if (cqspi->is_decoded_cs) {
-> -             reg |= CQSPI_REG_CONFIG_DECODE_MASK;
-> -     } else {
-> -             reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
-> +     reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
->  
-> -             /* Convert CS if without decoder.
-> -              * CS0 to 4b'1110
-> -              * CS1 to 4b'1101
-> -              * CS2 to 4b'1011
-> -              * CS3 to 4b'0111
-> -              */
-> -             chip_select = 0xF & ~(1 << chip_select);
-> -     }
-> +     /* Convert CS if without decoder.
-> +      * CS0 to 4b'1110
-> +      * CS1 to 4b'1101
-> +      * CS2 to 4b'1011
-> +      * CS3 to 4b'0111
-> +      */
-> +     chip_select = 0xF & ~(1 << chip_select);
->  
->        reg &= ~(CQSPI_REG_CONFIG_CHIPSELECT_MASK
->                 << CQSPI_REG_CONFIG_CHIPSELECT_LSB);
-> @@ -736,32 +728,6 @@ static void cqspi_chipselect(struct spi_nor *nor)
->        writel(reg, reg_base + CQSPI_REG_CONFIG);
->  }
->  
-> -static void cqspi_configure_cs_and_sizes(struct spi_nor *nor)
-> -{
-> -     struct cqspi_flash_pdata *f_pdata = nor->priv;
-> -     struct cqspi_st *cqspi = f_pdata->cqspi;
-> -     void __iomem *iobase = cqspi->iobase;
-> -     unsigned int reg;
-> -
-> -     /* configure page size and block size. */
-> -     reg = readl(iobase + CQSPI_REG_SIZE);
-> -     reg &= ~(CQSPI_REG_SIZE_PAGE_MASK << CQSPI_REG_SIZE_PAGE_LSB);
-> -     reg &= ~(CQSPI_REG_SIZE_BLOCK_MASK << CQSPI_REG_SIZE_BLOCK_LSB);
-> -     reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
-> -     reg |= (nor->page_size << CQSPI_REG_SIZE_PAGE_LSB);
-> -     reg |= (ilog2(nor->mtd.erasesize) << CQSPI_REG_SIZE_BLOCK_LSB);
-> -     reg |= (nor->addr_width - 1);
-> -     writel(reg, iobase + CQSPI_REG_SIZE);
-> -
-> -     /* configure the chip select */
-> -     cqspi_chipselect(nor);
-> -
-> -     /* Store the new configuration of the controller */
-> -     cqspi->current_page_size = nor->page_size;
-> -     cqspi->current_erase_size = nor->mtd.erasesize;
-> -     cqspi->current_addr_width = nor->addr_width;
-> -}
-> -
->  static unsigned int calculate_ticks_for_ns(const unsigned int ref_clk_hz,
->                                           const unsigned int ns_val)
->  {
-> @@ -867,18 +833,13 @@ static void cqspi_configure(struct spi_nor *nor)
->        int switch_cs = (cqspi->current_cs != f_pdata->cs);
->        int switch_ck = (cqspi->sclk != sclk);
->  
-> -     if ((cqspi->current_page_size != nor->page_size) ||
-> -         (cqspi->current_erase_size != nor->mtd.erasesize) ||
-> -         (cqspi->current_addr_width != nor->addr_width))
-> -             switch_cs = 1;
-> -
->        if (switch_cs || switch_ck)
->                cqspi_controller_enable(cqspi, 0);
->  
->        /* Switch chip select. */
->        if (switch_cs) {
->                cqspi->current_cs = f_pdata->cs;
-> -             cqspi_configure_cs_and_sizes(nor);
-> +             cqspi_chipselect(nor);
->        }
->  
->        /* Setup baudrate divisor and delays */
-> @@ -1145,8 +1106,6 @@ static int cqspi_of_get_pdata(struct platform_device *pdev)
->        struct device_node *np = pdev->dev.of_node;
->        struct cqspi_st *cqspi = platform_get_drvdata(pdev);
->  
-> -     cqspi->is_decoded_cs = of_property_read_bool(np, "cdns,is-decoded-cs");
-> -
->        if (of_property_read_u32(np, "cdns,fifo-depth", &cqspi->fifo_depth)) {
->                dev_err(&pdev->dev, "couldn't determine fifo-depth\n");
->                return -ENXIO;
-> 
+      pm_runtime_set_autosuspend_delay(&i2c->dev,
+                                         AK8974_AUTOSUSPEND_DELAY);
+        pm_runtime_use_autosuspend(&i2c->dev);
+        pm_runtime_put(&i2c->dev);
+
+Yours,
+Linus Walleij
