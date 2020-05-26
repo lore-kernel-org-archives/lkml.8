@@ -2,92 +2,130 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D67C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A14C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB0E20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xF9LzHEc"
+	by mail.kernel.org (Postfix) with ESMTP id 22AD320707
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390002AbgEZVyZ (ORCPT
+        id S2390043AbgEZVzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:54:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38060 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389025AbgEZVyY (ORCPT
+        Tue, 26 May 2020 17:55:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59830 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389384AbgEZVzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:54:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pBdj0zFH6qn+s7a+72XnkjTzpnjbcAx9OlA+W5CsagI=; b=xF9LzHEcR8F3Stc5e6BKjjfdxW
-        v5hTIrAM1q5XkZqcomMP2gA0XQM19ENu9mUkPE8d8IN4DpJ2udUUXW2cMacLBEzrclHF9FTv5QkOR
-        BJlRB8eX3bn5RUz7ajh1nopqxpLrhX5TNh4xEcbw/VuX+3ZRq38MYftQ0Muoz6ySMX8lZ0Mtg6ciZ
-        7ugfQdlx6DYL5tCiHOxRaCNmfhwCNTDRYoimfQsNlGzvqeVAlFUu9H+s/M3HT93cBaYys6KTpGwty
-        uZM1a+mDlQ6Hi30yN8ijP6A/H1eATq024XCxg6FT5I6ZLvr9yZiqvP1uc9dPGduEXGrjrirP8loDx
-        Cp5DUBwA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdhWa-0008Jx-WA; Tue, 26 May 2020 21:54:17 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 344B09834AB; Tue, 26 May 2020 23:54:15 +0200 (CEST)
-Date:   Tue, 26 May 2020 23:54:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [RFC] perf/core: allow ftrace for functions in
- kernel/event/core.c
-Message-ID: <20200526215415.GH2483@worktop.programming.kicks-ass.net>
-References: <20200526212826.4097888-1-songliubraving@fb.com>
- <20200526213913.GG2483@worktop.programming.kicks-ass.net>
- <A9B20D93-748B-4789-801E-91720E2D4F28@fb.com>
+        Tue, 26 May 2020 17:55:44 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A381C803086D;
+        Tue, 26 May 2020 21:55:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uTdaH333Hlk4; Wed, 27 May 2020 00:55:36 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg flags support
+Date:   Wed, 27 May 2020 00:55:17 +0300
+Message-ID: <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A9B20D93-748B-4789-801E-91720E2D4F28@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:46:29PM +0000, Song Liu wrote:
-> 
-> 
-> > On May 26, 2020, at 2:39 PM, Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > On Tue, May 26, 2020 at 02:28:26PM -0700, Song Liu wrote:
-> >> It is useful to trace functions in kernel/event/core.c. Allow ftrace for
-> >> them by removing $(CC_FLAGS_FTRACE) from Makefile.
-> > 
-> > Did you try using the ftrace event with perf with this on?
-> 
-> I have tried a few things, like 
-> 
->   perf stat -e probe:perf_read -I 1000
->   perf record -e probe:__x64_sys_perf_event_open -aR
-> 
-> They all work fine. 
-> 
-> Do you have some tricky functions that we should double check?
+Recently the I2C-controllers slave interface support was added to the
+kernel I2C subsystem. In this case Linux can be used as, for example,
+a I2C EEPROM machine. See [1] for details. Other than instantiating
+the EEPROM-slave device from user-space there is a way to declare the
+device in dts. In this case firstly the I2C bus controller must support
+the slave interface. Secondly I2C-slave sub-node of that controller
+must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+declared in [2]). That flag is declared as (1 << 30), which when set
+makes dtc unhappy about too big address set for a I2C-slave:
 
-I've no idea what probe: does. iirc there's something like
-ftrace:function that is like regular function tracing.
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
 
-At some point using that made the kernel really sick due to recursion
-between ftrace and perf. Quite possibly that's been fixed, dunno.
+Similar problem would have happened if we had set the 10-bit address
+flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+
+In order to fix the problem we suggest to alter the I2C-bus reg-check
+algorithm, so one would be aware of the upper bits set. Normally if no
+flag specified, the 7-bit address is expected in the "reg"-property.
+If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+
+[1] Documentation/i2c/slave-interface.rst
+[2] include/dt-bindings/i2c/i2c.h
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+---
+ scripts/dtc/checks.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index 4b3c486f1399..6321fc5b7404 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -1028,6 +1028,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	const char *unitname = get_unitname(node);
+ 	char unit_addr[17];
+ 	uint32_t reg = 0;
++	uint32_t addr;
+ 	int len;
+ 	cell_t *cells = NULL;
+ 
+@@ -1044,17 +1045,21 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	}
+ 
+ 	reg = fdt32_to_cpu(*cells);
+-	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
++	addr = reg & 0x3FFFFFFFU;
++	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
+ 		     unit_addr);
+ 
+ 	for (len = prop->val.len; len > 0; len -= 4) {
+ 		reg = fdt32_to_cpu(*(cells++));
+-		if (reg > 0x3ff)
++		addr = reg & 0x3FFFFFFFU;
++		if ((reg & (1 << 31)) && addr > 0x3ff)
+ 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+-				  reg);
+-
++				  addr);
++		else if (!(reg & (1 << 31)) && addr > 0x7f)
++			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
++				  addr);
+ 	}
+ }
+ WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
+-- 
+2.26.2
+
