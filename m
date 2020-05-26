@@ -2,113 +2,117 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B39F2087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC13208A9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732004AbgEZODU (ORCPT
+        id S1731701AbgEZOEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:03:20 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57990 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731857AbgEZODD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:03:03 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id EC7298030869;
-        Tue, 26 May 2020 14:03:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qzvqWvySs0VA; Tue, 26 May 2020 17:03:00 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Serge Semin <fancer.lancer@gmail.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/6] mips: cdmm: Add mti,mips-cdmm dtb node support
-Date:   Tue, 26 May 2020 17:02:41 +0300
-Message-ID: <20200526140243.21946-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200526140243.21946-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200526140243.21946-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 26 May 2020 10:04:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:51320 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgEZOEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:04:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 552661FB;
+        Tue, 26 May 2020 07:04:12 -0700 (PDT)
+Received: from [10.163.78.28] (unknown [10.163.78.28])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D8103F6C4;
+        Tue, 26 May 2020 07:04:09 -0700 (PDT)
+Subject: Re: [PATCH V2] arm64/cpufeature: Add get_arm64_ftr_reg_nowarn()
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        broonie@kernel.org, linux-kernel@vger.kernel.org
+References: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
+ <0726a5b9-fff6-a15c-e705-db7abd4b1abd@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <6886ec2e-c2e4-c2d2-faaa-b46ef69cc226@arm.com>
+Date:   Tue, 26 May 2020 19:33:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <0726a5b9-fff6-a15c-e705-db7abd4b1abd@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since having and mapping the CDMM block is platform specific, then
-instead of just returning a zero-address, lets make the default CDMM
-base address search method (mips_cdmm_phys_base()) to do something
-useful. For instance to find the address in a dedicated dtb-node in
-order to support of-based platforms by default.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
----
+On 05/26/2020 07:34 PM, Suzuki K Poulose wrote:
+> On 05/26/2020 02:39 PM, Anshuman Khandual wrote:
+>> There is no way to proceed when requested register could not be searched in
+>> arm64_ftr_reg[]. Requesting for a non present register would be an error as
+>> well. Hence lets just WARN_ON() when search fails in get_arm64_ftr_reg()
+>> rather than checking for return value and doing a BUG_ON() instead in some
+>> individual callers. But there are also caller instances that dont error out
+>> when register search fails. Add a new helper get_arm64_ftr_reg_nowarn() for
+>> such cases.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Changes in V2:
+>>
+>> - Added get_arm64_ftr_reg_nowarn() per Will
+>> - read_sanitised_ftr_reg() returns 0 when register search fails per Catalin
+>>
+>> Changes in V1: (https://patchwork.kernel.org/patch/11559083/)
+>>
+>>   arch/arm64/kernel/cpufeature.c | 42 +++++++++++++++++++++++-----------
+>>   1 file changed, 29 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index bc5048f152c1..f4555b9d145c 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -548,16 +548,16 @@ static int search_cmp_ftr_reg(const void *id, const void *regp)
+>>   }
+>>   
+> 
+> ...
+> 
+>>   static u64 arm64_ftr_set_value(const struct arm64_ftr_bits *ftrp, s64 reg,
+>>                      s64 ftr_val)
+>>   {
+>> @@ -632,8 +654,6 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
+>>       const struct arm64_ftr_bits *ftrp;
+>>       struct arm64_ftr_reg *reg = get_arm64_ftr_reg(sys_reg);
+>>   -    BUG_ON(!reg);
+>> -
+>>       for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
+>>           u64 ftr_mask = arm64_ftr_mask(ftrp);
+>>           s64 ftr_new = arm64_ftr_value(ftrp, new);
+>> @@ -762,7 +782,6 @@ static int check_update_ftr_reg(u32 sys_id, int cpu, u64 val, u64 boot)
+>>   {
+>>       struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+>>   -    BUG_ON(!regp);
+>>       update_cpu_ftr_reg(regp, val);
+>>       if ((boot & regp->strict_mask) == (val & regp->strict_mask))
+>>           return 0;
+>> @@ -776,9 +795,6 @@ static void relax_cpu_ftr_reg(u32 sys_id, int field)
+>>       const struct arm64_ftr_bits *ftrp;
+>>       struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+>>   -    if (WARN_ON(!regp))
+>> -        return;
+>> -
+> 
+> You need to return here, on !regp. Rest looks fine to me.
 
-Changelog prev:
-- Use alphabetical order for the include pre-processor operator.
----
- drivers/bus/mips_cdmm.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/bus/mips_cdmm.c b/drivers/bus/mips_cdmm.c
-index 1b14256376d2..9f7ed1fcd428 100644
---- a/drivers/bus/mips_cdmm.c
-+++ b/drivers/bus/mips_cdmm.c
-@@ -13,6 +13,8 @@
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/io.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/smp.h>
-@@ -337,9 +339,22 @@ static phys_addr_t mips_cdmm_cur_base(void)
-  * Picking a suitable physical address at which to map the CDMM region is
-  * platform specific, so this weak function can be overridden by platform
-  * code to pick a suitable value if none is configured by the bootloader.
-+ * By default this method tries to find a CDMM-specific node in the system
-+ * dtb. Note that this won't work for early serial console.
-  */
- phys_addr_t __weak mips_cdmm_phys_base(void)
- {
-+	struct device_node *np;
-+	struct resource res;
-+	int err;
-+
-+	np = of_find_compatible_node(NULL, NULL, "mti,mips-cdmm");
-+	if (np) {
-+		err = of_address_to_resource(np, 0, &res);
-+		if (!err)
-+			return res.start;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.26.2
-
+Catalin had suggested and agreed on for this change in behavior here.
+If the register is not found, there is already some problem.
