@@ -2,113 +2,220 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA93C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1075FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250802068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE63B2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="ecGB8EiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgEZSfC (ORCPT
+        id S1730023AbgEZSfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:35:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38312 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgEZSfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:35:02 -0400
-IronPort-SDR: HLgmo8LAcD1WrfC8fnTadiTCz9SptjwJGTBN+2nidyVz/xZLVFH6dcNoUJmTYkL5MfJpOwqgjc
- U5OG73fNRUmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 11:35:01 -0700
-IronPort-SDR: Y+FI5ZVcXxa++6tH2EuB5e/A5meiAUK4eJ01+7jBspT26gqSwzsmUGMfjWsRBeKJNwkIM55H1/
- AZzrs7JRxjpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="291295609"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 11:34:57 -0700
-Date:   Tue, 26 May 2020 11:34:57 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
-Message-ID: <20200526183457.GC36356@otc-nc-03>
-References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
- <20200504231936.2bc07fe3@x1.home>
- <20200505061107.GA22974@araj-mobl1.jf.intel.com>
- <20200505080514.01153835@x1.home>
- <20200505145605.GA13690@otc-nc-03>
- <20200505093414.6bae52e0@x1.home>
- <20200526180648.GC35892@otc-nc-03>
- <20200526122654.7ac087b3@x1.home>
+        Tue, 26 May 2020 14:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728113AbgEZSfN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:35:13 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED72C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:35:13 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c185so7569995qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tOHefzf5rrf6G5EWDMOouxVnKSU7Wd/O1AnRn9bMs1U=;
+        b=ecGB8EiRX+iwxbGas+Dcx/BedPX+XhFTrkIpEUtRlmlYtDVzT38LGjlDQ+q0FGUsVq
+         vMlno1I/lZLGX10FakV/Gie2hEbDpAk9KwWjUPG2tp9zqkjs2XGBadd0xZTH7ZtTiz+g
+         f6OYTzZ35mk2dWOeVG/8r0pwIUn4JixaihXgg9Di9Be2BWUjgpaQIFKGBsZ1+uowDH83
+         +6aFYeXMhY5gvukVB1flp+GlXlpw6t6WZWGk6fX5tZgluAbwhKJtaZb3j7YIj2IIOl/x
+         lt2akuZxcJ21/6+Vaj0s9YkLkKgZwjy6mUVeAzk8jXI3/Pnhw2EsE+qzD2CdI2zQUUjR
+         ahJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tOHefzf5rrf6G5EWDMOouxVnKSU7Wd/O1AnRn9bMs1U=;
+        b=mfOVlrbp4KGTRvw9otcfr7Aqw9z6h21580xsD9T5TMrck457a3Pd3XQescLeDFQZv3
+         dRZ4ks6ijIGIFMQDaKM6ggJXilaKbpbL/QfJSRmOF0NaPGftFyNEwKzFar2g+ENzLCO0
+         a3CRa5a/ajIUVcx8k07dJvw/mfN+ZLnAspwEKOil2sNi5/yeCxxrJEFQ5Tg2Ob3iiaJl
+         UkgcM2ElAzD4C8H2+78JHM8p+izx+8UKU/US6Dk82u2rPmQw2NvRKlDB8VdiRhpQA85C
+         l1VBiYWMsrfrMUIM7OMNF53+lmFX3hHtvsCNJAPggT+f2A7vKTxbB7q7xWn3dznzoU2N
+         sAkA==
+X-Gm-Message-State: AOAM532ac9JkyVAkl45meQupUia7xMPEeK+BQx+puJvOJxOMKEsBCQkd
+        z5HcMaKyf3Z45JKllrOJdF9lvQ==
+X-Google-Smtp-Source: ABdhPJxCRmUucVbdyfLei9YA5WE+HsPraMh/wlOImgdfrkErvWAIFR3hdUWwt5WWeBJVD5+n89/mHw==
+X-Received: by 2002:a05:620a:22f5:: with SMTP id p21mr129040qki.241.1590518112425;
+        Tue, 26 May 2020 11:35:12 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id o2sm396942qtj.70.2020.05.26.11.35.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 11:35:11 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [fixup] kunit: use KUnit defconfig by default
+Date:   Tue, 26 May 2020 15:35:06 -0300
+Message-Id: <20200526183506.47104-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526122654.7ac087b3@x1.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 12:26:54PM -0600, Alex Williamson wrote:
-> > > 
-> > > I don't think the language in the spec is anything sufficient to handle
-> > > RCiEP uniquely.  We've previously rejected kernel command line opt-outs
-> > > for ACS, and the extent to which those patches still float around the
-> > > user community and are blindly used to separate IOMMU groups are a
-> > > testament to the failure of this approach.  Users do not have a basis
-> > > for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
-> > > grouping, but the risk is entirely unknown.  A kconfig option is even
-> > > worse as that means if you consume a downstream kernel, the downstream
-> > > maintainers might have decided universally that isolation is less
-> > > important than functionality.  
-> > 
-> > We discussed this internally, and Intel vt-d spec does spell out clearly 
-> > in Section 3.16 Root-Complex Peer to Peer Considerations. The spec clearly
-> > calls out that all p2p must be done on translated addresses and therefore
-> > must go through the IOMMU.
-> > 
-> > I suppose they should also have some similar platform gauranteed behavior
-> > for RCiEP's or MFD's *Must* behave as follows. The language is strict and
-> > when IOMMU is enabled in the platform, everything is sent up north to the
-> > IOMMU agent.
-> > 
-> > 3.16 Root-Complex Peer to Peer Considerations
-> > When DMA remapping is enabled, peer-to-peer requests through the
-> > Root-Complex must be handled
-> > as follows:
-> > • The input address in the request is translated (through first-level,
-> >   second-level or nested translation) to a host physical address (HPA).
-> >   The address decoding for peer addresses must be done only on the 
-> >   translated HPA. Hardware implementations are free to further limit 
-> >   peer-to-peer accesses to specific host physical address regions 
-> >   (or to completely disallow peer-forwarding of translated requests).
-> > • Since address translation changes the contents (address field) of the PCI
-> >   Express Transaction Layer Packet (TLP), for PCI Express peer-to-peer 
-> >   requests with ECRC, the Root-Complex hardware must use the new ECRC 
-> >   (re-computed with the translated address) if it decides to forward 
-> >   the TLP as a peer request.
-> > • Root-ports, and multi-function root-complex integrated endpoints, may
-> >   support additional peerto-peer control features by supporting PCI Express
-> >   Access Control Services (ACS) capability. Refer to ACS capability in 
-> >   PCI Express specifications for details.
-> 
-> That sounds like it might be a reasonable basis for quirking all RCiEPs
-> on VT-d platforms if Intel is willing to stand behind it.  Thanks,
-> 
+To improve the usability of KUnit, defconfig is used
+by default if no kunitconfig is present.
 
-Sounds good.. that's what i hear from our platform teams. If there is a
-violation it would be a bug in silicon.  
+ * https://bugzilla.kernel.org/show_bug.cgi?id=205259
+
+Fixed up minor merge conflicts - Shuah Khan <skhan@linuxfoundation.org>
+
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+Version after kunit merge branch:
+ * removes code related defconfig;
+ * handles when there is no .kunitconfig. 
+---
+ tools/testing/kunit/kunit.py | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
+
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index b3490271a103..787b6d4ad716 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -23,7 +23,7 @@ import kunit_parser
+ KunitResult = namedtuple('KunitResult', ['status','result','elapsed_time'])
+ 
+ KunitConfigRequest = namedtuple('KunitConfigRequest',
+-				['build_dir', 'defconfig', 'make_options'])
++				['build_dir', 'make_options'])
+ KunitBuildRequest = namedtuple('KunitBuildRequest',
+ 			       ['jobs', 'build_dir', 'alltests',
+ 				'make_options'])
+@@ -32,8 +32,8 @@ KunitExecRequest = namedtuple('KunitExecRequest',
+ KunitParseRequest = namedtuple('KunitParseRequest',
+ 			       ['raw_output', 'input_data'])
+ KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
+-					   'build_dir', 'defconfig',
+-					   'alltests', 'make_options'])
++					   'build_dir', 'alltests',
++					   'make_options'])
+ 
+ KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
+ 
+@@ -60,8 +60,7 @@ def config_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	kunit_parser.print_with_timestamp('Configuring KUnit Kernel ...')
+ 
+ 	config_start = time.time()
+-	if request.defconfig:
+-		create_default_kunitconfig()
++	create_default_kunitconfig()
+ 	success = linux.build_reconfig(request.build_dir, request.make_options)
+ 	config_end = time.time()
+ 	if not success:
+@@ -131,7 +130,6 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	run_start = time.time()
+ 
+ 	config_request = KunitConfigRequest(request.build_dir,
+-					    request.defconfig,
+ 					    request.make_options)
+ 	config_result = config_tests(linux, config_request)
+ 	if config_result.status != KunitStatus.SUCCESS:
+@@ -177,11 +175,6 @@ def add_common_opts(parser):
+ 			    help='Run all KUnit tests through allyesconfig',
+ 			    action='store_true')
+ 
+-def add_config_opts(parser):
+-	parser.add_argument('--defconfig',
+-			    help='Uses a default .kunitconfig.',
+-			    action='store_true')
+-
+ def add_build_opts(parser):
+ 	parser.add_argument('--jobs',
+ 			    help='As in the make command, "Specifies  the number of '
+@@ -210,7 +203,6 @@ def main(argv, linux=None):
+ 	# The 'run' command will config, build, exec, and parse in one go.
+ 	run_parser = subparser.add_parser('run', help='Runs KUnit tests.')
+ 	add_common_opts(run_parser)
+-	add_config_opts(run_parser)
+ 	add_build_opts(run_parser)
+ 	add_exec_opts(run_parser)
+ 	add_parse_opts(run_parser)
+@@ -219,7 +211,6 @@ def main(argv, linux=None):
+ 						help='Ensures that .config contains all of '
+ 						'the options in .kunitconfig')
+ 	add_common_opts(config_parser)
+-	add_config_opts(config_parser)
+ 
+ 	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
+ 	add_common_opts(build_parser)
+@@ -251,6 +242,9 @@ def main(argv, linux=None):
+ 			cli_args.build_dir,
+ 			kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+@@ -258,7 +252,6 @@ def main(argv, linux=None):
+ 				       cli_args.timeout,
+ 				       cli_args.jobs,
+ 				       cli_args.build_dir,
+-				       cli_args.defconfig,
+ 				       cli_args.alltests,
+ 				       cli_args.make_options)
+ 		result = run_tests(linux, request)
+@@ -272,11 +265,13 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+ 		request = KunitConfigRequest(cli_args.build_dir,
+-					     cli_args.defconfig,
+ 					     cli_args.make_options)
+ 		result = config_tests(linux, request)
+ 		kunit_parser.print_with_timestamp((
+@@ -292,6 +287,9 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+@@ -313,6 +311,9 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+-- 
+2.26.2
+
