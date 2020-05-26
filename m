@@ -2,268 +2,167 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82797C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28A2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4910720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FC72088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VB0IJCKf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HohC0S3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbgEZJFX (ORCPT
+        id S1731649AbgEZJHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:05:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52722 "EHLO
+        Tue, 26 May 2020 05:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731414AbgEZJFV (ORCPT
+        with ESMTP id S1726926AbgEZJHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:05:21 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FD2C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:05:20 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id x22so15700377otq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:05:20 -0700 (PDT)
+        Tue, 26 May 2020 05:07:08 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F2FC03E97E;
+        Tue, 26 May 2020 02:07:08 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a2so22939393ejb.10;
+        Tue, 26 May 2020 02:07:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/3w8cfGBsTlHvqLR3U+lzLxG0Ht4yzZveld1byYqfS4=;
-        b=VB0IJCKfeceglSmWrYCMOzzK7GXWJ4hwtocL1HEGjNNW4U4b6QJ5BK1aVDkqpR/U18
-         npyMwOTswqlSNzj2MRqEtRkWkDa/QOxxOuYBWxTglilYJPp6heENCk8zPzN9yh+h6MGI
-         W6bNICgB/Pe0AfkVS/WOOmlnpWJ16If/M8UmfUYHozbVT8PbYCt7IbXqdCXamvMQ97pU
-         yzquI4R+cfbupQIRYq2xYetPGO135C/Dr/YAT0qekQkrCR7BreHsQJjJIU/VX08yqU7P
-         p3GIh9+XAlAbL75y+buQOSPqSLG7Y502TJOQ8fiW0Tuwle7Vmg7xu4715ncyO9khMqEp
-         +/+w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6UYhgjt30/Z/G4DYA8xqr5Fc2y1n0eveIbzcFms15a4=;
+        b=HohC0S3oZosLwnVdaGYJQNK0ABtqTjZCVei35zCr/Pg4Rs06vGrGX2HvU29rd+dq/z
+         S9kHdKV/rP631FYX4FwIN/XzVWSUUHemeGkv+xJiwzzvM1xz+8wc+TM09LyYeQ6Zu6ny
+         oF9eni5wKT59hWdMZXrRT9HJ+C/F49x7QR8vJlVv93/0xWxNjcuwqdQyCEcNlt53yV7a
+         aGNTLndvbz6VEIZxmUs3NEsChWgiqskGRQTXJv956kXAhce8COkgRKeCbDmHrPI98oEH
+         n2I5XxPSFKsu5iBQbXeG4meB1iT00yNxxhkGCHqRMbv1HFi1Z4WaI3H6IbOmxdGzHWkf
+         ftCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/3w8cfGBsTlHvqLR3U+lzLxG0Ht4yzZveld1byYqfS4=;
-        b=GTT/vZJpnzryIdIFHA++arN2hN5NnKUqLfnviewnviDMu/uEqLevXbqkfeh/akwqkH
-         7h9T3fUHEjlZWpLyKunQZdc0f4jestg+pbup1BMxPuAAPDCqACBzkQDf3+mSKCmjcS9X
-         Im59pFKCMdBaRc5XmplRPpa6QcdcDaoindMCIpIcEuDRJ8bC0RQyh+wVuD3pvR7E+K+E
-         LXmJD14vYIodl6ls8Xgsrz3avc0DFMhPz+pJlWln/th7IE/PdNR/ZLDXL/wGQuTdU7gu
-         uSKXQNrRGQJJyGeqodEcizyzQlcWnU+QJ03Ic3auB72GW4JCaUJmTlqViIlfQi0/KaiH
-         mR4g==
-X-Gm-Message-State: AOAM5305uWWLQvp8HA3dZ3AD/Jf7P+xpdm1+WArSavjcQ1CqCMEXCPUe
-        anFVYm+F4Le374IwVmhdVd/88tLvxUOr80LIf7/qRg==
-X-Google-Smtp-Source: ABdhPJyuhLPAc5N/uuqD7ThQ4bQVyc10oQff+CZam5oOrMDE1Nv7VD9kSzLXi5Z8w+uRHIMCDst3FTS9U8B07jRKupA=
-X-Received: by 2002:a05:6830:1d69:: with SMTP id l9mr144061oti.127.1590483919866;
- Tue, 26 May 2020 02:05:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200524085259.24784-1-alex@ghiti.fr> <20200524085259.24784-3-alex@ghiti.fr>
-In-Reply-To: <20200524085259.24784-3-alex@ghiti.fr>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Tue, 26 May 2020 17:05:08 +0800
-Message-ID: <CANXhq0pSutF8x6YfZS_d52sASnDpPVvH72Omq5LP-dcPmqD3Gw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] riscv: Introduce CONFIG_RELOCATABLE
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6UYhgjt30/Z/G4DYA8xqr5Fc2y1n0eveIbzcFms15a4=;
+        b=BTpHEKalZMhtGQbxDXKryduZJJsvEckNhz2rn8EZHBnUhF/3r0o3kvQ2maeM6/9Ig/
+         lghUG/0uUernKN2P3C/xIhE0yd2yVZmmYww/DiG+IawTi3HsD3vIK6KeLB40jQErJ20F
+         ckh+JzrE8mbLw3qx52gz3puLS9GeVaCe3nIMKLNN1o6eFpZVRCuFCAfUmP6pI0ETPFKz
+         atlJVK7reVtctCUPps4qDG7b9eURsEIbuoHYxrq94y6xFjKTko+OKnj2FhIS/Zv+pACF
+         ZYzpdV6f8F7/ZcWBDiBzrBNJ74+Evhq3MNh3Wfn3vyj6UC/6f2vEnnDL35j3tYXa2cjn
+         c5Bg==
+X-Gm-Message-State: AOAM5327Nhnj02QvW2W9rvE8A+xxq59Cmg7vUVjXLvpPXWg6ZWpB8zme
+        QzJMN3urGrUcN5It1AN0H3w=
+X-Google-Smtp-Source: ABdhPJyzYunI/i1R25TYINlpWvSkulJF0DUuKtO5cC8KpGJIdTpXzvxx7ocD4EXNacXZ+D2iDaRgvA==
+X-Received: by 2002:a17:906:cd08:: with SMTP id oz8mr287367ejb.90.1590484027017;
+        Tue, 26 May 2020 02:07:07 -0700 (PDT)
+Received: from localhost.localdomain (p5b3f6e09.dip0.t-ipconnect.de. [91.63.110.9])
+        by smtp.gmail.com with ESMTPSA id c7sm17870535edj.54.2020.05.26.02.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:07:05 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        sravanhome@gmail.com
+Subject: [PATCH v12 0/6] Add battery charger driver support for MP2629
+Date:   Tue, 26 May 2020 11:06:40 +0200
+Message-Id: <20200526090646.25827-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 4:55 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
->
-> This config allows to compile the kernel as PIE and to relocate it at
-> any virtual address at runtime: this paves the way to KASLR and to 4-level
-> page table folding at runtime. Runtime relocation is possible since
-> relocation metadata are embedded into the kernel.
->
-> Note that relocating at runtime introduces an overhead even if the
-> kernel is loaded at the same address it was linked at and that the compiler
-> options are those used in arm64 which uses the same RELA relocation
-> format.
->
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> ---
->  arch/riscv/Kconfig              | 12 +++++++
->  arch/riscv/Makefile             |  5 ++-
->  arch/riscv/kernel/vmlinux.lds.S |  6 ++--
->  arch/riscv/mm/Makefile          |  4 +++
->  arch/riscv/mm/init.c            | 63 +++++++++++++++++++++++++++++++++
->  5 files changed, 87 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index a31e1a41913a..93127d5913fe 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -170,6 +170,18 @@ config PGTABLE_LEVELS
->         default 3 if 64BIT
->         default 2
->
-> +config RELOCATABLE
-> +       bool
-> +       depends on MMU
-> +       help
-> +          This builds a kernel as a Position Independent Executable (PIE),
-> +          which retains all relocation metadata required to relocate the
-> +          kernel binary at runtime to a different virtual address than the
-> +          address it was linked at.
-> +          Since RISCV uses the RELA relocation format, this requires a
-> +          relocation pass at runtime even if the kernel is loaded at the
-> +          same address it was linked at.
-> +
->  source "arch/riscv/Kconfig.socs"
->
->  menu "Platform type"
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index fb6e37db836d..1406416ea743 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -9,7 +9,10 @@
->  #
->
->  OBJCOPYFLAGS    := -O binary
-> -LDFLAGS_vmlinux :=
-> +ifeq ($(CONFIG_RELOCATABLE),y)
-> +LDFLAGS_vmlinux := -shared -Bsymbolic -z notext -z norelro
-> +KBUILD_CFLAGS += -fPIE
-> +endif
->  ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
->         LDFLAGS_vmlinux := --no-relax
->  endif
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index a9abde62909f..e8ffba8c2044 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -85,8 +85,10 @@ SECTIONS
->
->         BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
->
-> -       .rel.dyn : {
-> -               *(.rel.dyn*)
-> +       .rela.dyn : ALIGN(8) {
-> +               __rela_dyn_start = .;
-> +               *(.rela .rela*)
-> +               __rela_dyn_end = .;
->         }
->
->         _end = .;
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index 363ef01c30b1..dc5cdaa80bc1 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -1,6 +1,10 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->
->  CFLAGS_init.o := -mcmodel=medany
-> +ifdef CONFIG_RELOCATABLE
-> +CFLAGS_init.o += -fno-pie
-> +endif
-> +
->  ifdef CONFIG_FTRACE
->  CFLAGS_REMOVE_init.o = -pg
->  endif
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 17f108baec4f..7074522d40c6 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -13,6 +13,9 @@
->  #include <linux/of_fdt.h>
->  #include <linux/libfdt.h>
->  #include <linux/set_memory.h>
-> +#ifdef CONFIG_RELOCATABLE
-> +#include <linux/elf.h>
-> +#endif
->
->  #include <asm/fixmap.h>
->  #include <asm/tlbflush.h>
-> @@ -379,6 +382,53 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
->  #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
->  #endif
->
-> +#ifdef CONFIG_RELOCATABLE
-> +extern unsigned long __rela_dyn_start, __rela_dyn_end;
-> +
-> +#ifdef CONFIG_64BIT
-> +#define Elf_Rela Elf64_Rela
-> +#define Elf_Addr Elf64_Addr
-> +#else
-> +#define Elf_Rela Elf32_Rela
-> +#define Elf_Addr Elf32_Addr
-> +#endif
-> +
-> +void __init relocate_kernel(uintptr_t load_pa)
-> +{
-> +       Elf_Rela *rela = (Elf_Rela *)&__rela_dyn_start;
-> +       /*
-> +        * This holds the offset between the linked virtual address and the
-> +        * relocated virtual address.
-> +        */
-> +       uintptr_t reloc_offset = kernel_virt_addr - KERNEL_LINK_ADDR;
-> +       /*
-> +        * This holds the offset between kernel linked virtual address and
-> +        * physical address.
-> +        */
-> +       uintptr_t va_kernel_link_pa_offset = KERNEL_LINK_ADDR - load_pa;
-> +
-> +       for ( ; rela < (Elf_Rela *)&__rela_dyn_end; rela++) {
-> +               Elf_Addr addr = (rela->r_offset - va_kernel_link_pa_offset);
-> +               Elf_Addr relocated_addr = rela->r_addend;
-> +
-> +               if (rela->r_info != R_RISCV_RELATIVE)
-> +                       continue;
-> +
-> +               /*
-> +                * Make sure to not relocate vdso symbols like rt_sigreturn
-> +                * which are linked from the address 0 in vmlinux since
-> +                * vdso symbol addresses are actually used as an offset from
-> +                * mm->context.vdso in VDSO_OFFSET macro.
-> +                */
-> +               if (relocated_addr >= KERNEL_LINK_ADDR)
-> +                       relocated_addr += reloc_offset;
-> +
-> +               *(Elf_Addr *)addr = relocated_addr;
-> +       }
-> +}
-> +
-> +#endif
-> +
->  static uintptr_t load_pa, load_sz;
->
->  void create_kernel_page_table(pgd_t *pgdir, uintptr_t map_size)
-> @@ -405,6 +455,19 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->
->         pfn_base = PFN_DOWN(load_pa);
->
-> +#ifdef CONFIG_RELOCATABLE
-> +#ifdef CONFIG_64BIT
-> +       /*
-> +        * Early page table uses only one PGDIR, which makes it possible
-> +        * to map PGDIR_SIZE aligned on PGDIR_SIZE: if the relocation offset
-> +        * makes the kernel cross over a PGDIR_SIZE boundary, raise a bug
-> +        * since a part of the kernel would not get mapped.
-> +        * This cannot happen on rv32 as we use the entire page directory level.
-> +        */
-> +       BUG_ON(PGDIR_SIZE - (kernel_virt_addr & (PGDIR_SIZE - 1)) < load_sz);
-> +#endif
-> +       relocate_kernel(load_pa);
-> +#endif
->         /*
->          * Enforce boot alignment requirements of RV32 and
->          * RV64 by only allowing PMD or PGD mappings.
-> --
-> 2.20.1
->
+changes in v12:
+ - added SOB Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Looks good to me.
+changes in v11:
+ - module_remove part replaced by devm_add_action_or_reset in charger patch
+ - minor review comments solved in mfd and adc patch
 
-Reviewed-by: Zong Li <zong.li@sifive.com>
+I expect, that Lee will provide an immutable branch for me and
+Jonathan once the MFD bits have been reviewed. Please tell me,
+if I should prepare one instead.
+
+-- Sebastian
+
+changes in v10:
+ - fixed typo, \n in dev_err
+ - dt bindings Warning (unit_address_vs_reg) reported by bot
+
+changes in v9:
+ - fixed review comments in mp2629 power supply such as resource based
+   iio channel, replace workqueue by threaded irq, irq get with "_optional"
+
+changes in v8:
+ - fixed order of call in probe/remove in iio adc
+ - add ABI documentation for mp2629 power supply
+
+changes in v7:
+ - fixed probe/remove order, managed and unmanaged call mix use in adc.
+ - Documentation dual license, i2c node with controller address
+
+Overall looks good to me, FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+One question though in reply to patch 4.
+
+changes in v6:
+ - removed includes types.h in mfd, of_device.h in adc.
+ - fixed review comments parentheses, err check, kstrtouint
+
+changes in v5:
+ - removed platfrom data stored in mfd and directly accessed mfd struct in child
+ - fixed spell check and capitalization in mfd and documentation
+
+changes in v4:
+ - fixed capitalization in mfg Kconfig and documentation
+
+changes in v3:
+ - regmap for children passed using platform data and remove mfd driver info
+   access directly from children
+
+changes in v2:
+ - removed EXPORT_SYMBOL of register set/get helper
+ - regmap bit filed used, fixed other review comments
+
+This patch series add support for Battery charger control driver for Monolithic
+Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+power supply measurement and battery charger control driver.
+
+Thanks,
+Saravanan
+
+
+Saravanan Sekar (6):
+  dt-bindings: mfd: add document bindings for mp2629
+  mfd: mp2629: Add support for mps battery charger
+  iio: adc: mp2629: Add support for mp2629 ADC driver
+  power: supply: Add support for mps mp2629 battery charger
+  power: supply: mp2629: Add impedance compensation config
+  MAINTAINERS: Add entry for mp2629 Battery Charger driver
+
+ .../ABI/testing/sysfs-class-power-mp2629      |   8 +
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   |  62 ++
+ MAINTAINERS                                   |   5 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mp2629.c                          |  79 +++
+ drivers/power/supply/Kconfig                  |  10 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/mp2629_charger.c         | 669 ++++++++++++++++++
+ include/linux/mfd/mp2629.h                    |  26 +
+ 13 files changed, 1090 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ create mode 100644 drivers/iio/adc/mp2629_adc.c
+ create mode 100644 drivers/mfd/mp2629.c
+ create mode 100644 drivers/power/supply/mp2629_charger.c
+ create mode 100644 include/linux/mfd/mp2629.h
+
+-- 
+2.17.1
+
