@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA98C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933962086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCE1208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519571;
-	bh=14eDN6iWkvLygluEYtdkN4nLLdQl8xArd15UGUNLXjM=;
+	s=default; t=1590519574;
+	bh=s5uIdwHoq0DUL8XtbeEATZDxARzNHyHj8OxFlLF9QVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKUdORYkwXv1fcYlBbUVbccD/9kGMPDCQyKmIhkg2UbE9y8MwTzSFPRy/78NYfSHv
-	 Bh+1ZIHx4bQp3rWpeEu7qAyR8wjEkfiES2l9IUxTiYL/nQOcSMO4IV9/V4SpW1/ysb
-	 1HROEJKxcnRC0h7m/fyFNbaDGL1iKtbx69wvIQpU=
+	b=IpWjxGqi3aodlf/OmUTFx8ANInXV7IiQWWXVVtrTl/NSRAoGNYWLm0lci33zsAB3/
+	 5IiZqo8/NswAwbGLtj+YyOzCZDPIQXm6b3HHrWL3EOBIU94h/J+KENwyFSKFQSnz/H
+	 0WZp6mCPE96cunSyW7qqNwn7ZTXaehx434ZGvj+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389879AbgEZS7a (ORCPT
+        id S2390545AbgEZS7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52972 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390483AbgEZS7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:59:15 -0400
+        id S2389923AbgEZS70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E379E2084C;
-        Tue, 26 May 2020 18:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18843208DB;
+        Tue, 26 May 2020 18:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519555;
-        bh=14eDN6iWkvLygluEYtdkN4nLLdQl8xArd15UGUNLXjM=;
+        s=default; t=1590519565;
+        bh=s5uIdwHoq0DUL8XtbeEATZDxARzNHyHj8OxFlLF9QVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SY5DIdQBN9zX+cxVptq5apKsdoGBozi/spCV5nDrEoIp3CepU8L6cBSfrseu/EvRo
-         deD97NoX+IAb5zuSEXEse5jirQL5gOhthZi0wFwicjeswvS+z4OtxpkYmvqq5IL8EQ
-         wLlLjUw/pTmQbO+X9kyZgz9VIx4Nq0ZA7XPNkhEA=
+        b=Mc/uEHXFU1sQS+HDuHMhzVMNcZtN2GipUXXTfI7sxKjS3/moCL+L/ZJuvWunxuvBx
+         pCCdigEC2B+9rl62jMaZn0x1e2KSSGysM+umWz6c5nAgzQDg9/XVbG5e+E72uiMoYo
+         LBWVs23GyyRFZe0nmrOMFeR4chfDw59MFXt481CU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 50/64] dmaengine: tegra210-adma: Fix an error handling path in tegra_adma_probe()
-Date:   Tue, 26 May 2020 20:53:19 +0200
-Message-Id: <20200526183930.291900499@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.9 36/64] l2tp: initialise sessions refcount before making it reachable
+Date:   Tue, 26 May 2020 20:53:05 +0200
+Message-Id: <20200526183924.899863279@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -62,40 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 3a5fd0dbd87853f8bd2ea275a5b3b41d6686e761 upstream.
+commit 9ee369a405c57613d7c83a3967780c3e30c52ecc upstream.
 
-Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-has moved some code in the probe function and reordered the error handling
-path accordingly.
-However, a goto has been missed.
+Sessions must be fully initialised before calling
+l2tp_session_add_to_tunnel(). Otherwise, there's a short time frame
+where partially initialised sessions can be accessed by external users.
 
-Fix it and goto the right label if 'dma_async_device_register()' fails, so
-that all resources are released.
+Backporting Notes
 
-Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20200516214205.276266-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+l2tp_core.c: moving code that had been converted from atomic to
+refcount_t by an earlier change (which isn't being included in this
+patch series).
+
+Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/dma/tegra210-adma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/l2tp/l2tp_core.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -793,7 +793,7 @@ static int tegra_adma_probe(struct platf
- 	ret = dma_async_device_register(&tdma->dma_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
--		goto irq_dispose;
-+		goto rpm_put;
- 	}
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1847,6 +1847,8 @@ struct l2tp_session *l2tp_session_create
  
- 	ret = of_dma_controller_register(pdev->dev.of_node,
+ 		l2tp_session_set_header_len(session, tunnel->version);
+ 
++		l2tp_session_inc_refcount(session);
++
+ 		err = l2tp_session_add_to_tunnel(tunnel, session);
+ 		if (err) {
+ 			kfree(session);
+@@ -1854,10 +1856,6 @@ struct l2tp_session *l2tp_session_create
+ 			return ERR_PTR(err);
+ 		}
+ 
+-		/* Bump the reference count. The session context is deleted
+-		 * only when this drops to zero.
+-		 */
+-		l2tp_session_inc_refcount(session);
+ 		l2tp_tunnel_inc_refcount(tunnel);
+ 
+ 		/* Ensure tunnel socket isn't deleted */
 
 
