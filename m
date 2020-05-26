@@ -2,188 +2,178 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 141842070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEC520704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qlNFL+6O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eiHKETmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731561AbgEZHXM (ORCPT
+        id S1731580AbgEZHYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:23:12 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:18816 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731519AbgEZHXK (ORCPT
+        Tue, 26 May 2020 03:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgEZHYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:23:10 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200526072306epoutp04d8c5c97af322f8ffe8d74e783e87696e~Sgx6jUj-e1332513325epoutp04V
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:23:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200526072306epoutp04d8c5c97af322f8ffe8d74e783e87696e~Sgx6jUj-e1332513325epoutp04V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590477786;
-        bh=muDhJDlkbZ0tlCtDaGGVytLoRJDLRFQkoNGUuFxnJAQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=qlNFL+6OvSMtiJ9PHdp1UZfelCoddqpgiF6m7Czdit12hdX341od0TXXCyV1dNAhn
-         qv58yEogpUTMszItvlvYi9U5xENhXRlTqk1bye2ugMeMcBB91/BNZSlW8qVW4Rxn3S
-         hGdf7UetEccdeBjHGSSassJrTwvoTIXhA33XJAFs=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200526072305epcas1p34fce9a04cf5a4ab0c9cf4e6832dd0d07~Sgx5-i0VP1566015660epcas1p3N;
-        Tue, 26 May 2020 07:23:05 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49WQRD1tDFzMqYkl; Tue, 26 May
-        2020 07:23:04 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E2.48.04395.7D3CCCE5; Tue, 26 May 2020 16:23:03 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200526072303epcas1p2f4598250117d4718b73dd11c7adbf629~Sgx4UmWC70599605996epcas1p2r;
-        Tue, 26 May 2020 07:23:03 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200526072303epsmtrp2c4d152c159272c7de23fd1a3114836e3~Sgx4Twb8l2963929639epsmtrp2c;
-        Tue, 26 May 2020 07:23:03 +0000 (GMT)
-X-AuditID: b6c32a39-f7bff7000000112b-a0-5eccc3d7f701
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        90.F2.08382.7D3CCCE5; Tue, 26 May 2020 16:23:03 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200526072303epsmtip193c55d891e3daea8b703395b47fb81c1~Sgx4JZsJL3232332323epsmtip1W;
-        Tue, 26 May 2020 07:23:03 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200525115052.19243-3-kohada.t2@gmail.com>
-Subject: RE: [PATCH 3/4] exfat: add boot region verification
-Date:   Tue, 26 May 2020 16:23:03 +0900
-Message-ID: <00d201d6332e$7e6308a0$7b2919e0$@samsung.com>
+        Tue, 26 May 2020 03:24:33 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69CDC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:24:31 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u13so2147454wml.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=MecCjMd20t1+f6I9nwNK+2FBCJgJkQD5Pmqxvgh9VA8=;
+        b=eiHKETmZiOUORm6uj3B4kuDo0VRvtDLuGSC0gNQ3a59gj373QKgaE721sKr/ykkKkg
+         7qdUWclvwqMnNLFiJQqjOOugsHtPFLM6VSvw6jGro/v/ZXUj3U7qc3cxhrGVP5Clff5C
+         8I/kJG/n5bQk4GhT/fjWSKolKOJzr1yVQ8sa3VNlxlUkbdNRZnRxvvQcDeRvrUdeGhOX
+         vnUF6o45Z9ZzuAllwXv+BGt/2TaKUqdapTdBLjOcpj6v24tMnf5vLKUJ7owDZVWdzoRu
+         kiTlj5+sDCTHTBvmnRy3l/AhKDw/A1M3UghofyLUTYtjHz0QfkOD1gcfXFTNU12x61J9
+         25PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=MecCjMd20t1+f6I9nwNK+2FBCJgJkQD5Pmqxvgh9VA8=;
+        b=eFzTFdFoGiH70z33FV3av3IuyeN3QiT3VvF+yVIhPikzp1cjSAVjBnJxnk29wV6DdZ
+         Poiw2dhde6Xx8M9qmZBpbsvIor/b5uzN9UDO9QCNxt0u+MpZObizh6yX7o9DhETnSLxk
+         2MyP/3MEHuQqieDi0TbI/NzicxpT1bfbfSWZAcaESHQZE+OGatnf7EAkQdY2hzwPPQa6
+         oozSinC9klhKA52cU/hcSU8AePSumiQmGDzruuu+uXF4YkSD/CDlDesbX7FGhiaQRD2P
+         VGMJha3hNStKw8H6/ZqG6Rj1fQrBnLZzDEc80gy2d7faxmME74aQyof+MwXahWzy8Ja1
+         aLwQ==
+X-Gm-Message-State: AOAM532i5oE2hiHHZow9zHqmVwFIvsVggm3Q5bc0mWBvZJEghRbrbik+
+        g/ciBJ9WYd5SI9I9hbk1DSBP2w==
+X-Google-Smtp-Source: ABdhPJwmU+QRbZ/BsP6+F83Pu7Mwfeap63WbqvY224Kv0JCyRvDBG7exlrbFRDFk1GmkCzHs6nyaKg==
+X-Received: by 2002:a1c:acc8:: with SMTP id v191mr59767wme.154.1590477870140;
+        Tue, 26 May 2020 00:24:30 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id l17sm6343895wmi.3.2020.05.26.00.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 00:24:29 -0700 (PDT)
+Date:   Tue, 26 May 2020 08:24:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+Message-ID: <20200526072427.GC3628@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+ <20200515102848.GH271301@dell>
+ <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQEl0VwLAqGTGno4seWfP7lwGg+RAAIXHVMxAmZLU4yp9smngA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTNY6bTgVB8lgrXYqROxEQj0FJbBwPGoNEm+kFiNOoHdQIjoN2c
-        KQY1cQkGKkHj1qgVDBpXXGqUyKKVCApWkQ9Q0RBjXHBBRRQUjVptOzXyd+95595zznuPJpRn
-        KDVdbHPygo2zMFQMebVtuja1t60zT/v69xz2e00fyX7wu0n2us9Psj3N1RTb8+cLyZ4a2U+y
-        9YFbsnly00h1h9xUvj8gN5W1n6VMTZ6nctPu+jpkGr48OZdaZckq4rkCXtDwtnx7QbGtMJtZ
-        vNQ832wwanWpukx2NqOxcVY+m1mwJDd1YbEl6IXRbOAsJUEolxNFJn1ulmAvcfKaIrvozGZ4
-        R4HFodM60kTOKpbYCtPy7dY5Oq02wxBkrrYU3e7agRzVcaW+hndR21B7TCWKpgHPgvd/eqlK
-        FEMrcSMCt3cvITVfELy83h85+YbAVTZK/hvZ01cWYfkQ1Af65VLzDsEjvxuFWBROhcCvFipU
-        q3Aa+P2SCIG3R8HpOyPBcZqOxpngakoKceJxFtw4N0CFYBKnwFCFKgQrgozACWmlAo8H/+FX
-        YRMEToaGj9WEZEgDP/pPyUKjKpwDF73REkUFR3aWh30CPkbDnTOBKIm/AKqO1kbCxMNAR71c
-        qtUwPOgLWwC8GT63RNa7ELwdzZZqPTzxXgpLEXg6eJvTJXgKNP2sQZJsHAx+rZJJWxTgKldK
-        lBTY3d0WMZAElRVD8j2I8YzJ5RmTyzMmgOe/WC0i61AC7xCthbyocxjGPvVlFP6lMzIbUXvX
-        klaEacTEKtjz9/KUMm6DuNHaioAmGJUi534QUhRwGzfxgt0slFh4sRUZgre+l1BPyLcH/7zN
-        adYZMvR6PTvLONto0DOJCnevJU+JCzknv47nHbzwby6KjlZvQ+6qwe8LG5abP3XGTT25dX37
-        YNKKF6YruxLKV7qNO/MOCt2xYvzHASwYXRfUQ7evJdYcyBl+jL42r5qPmxLWNTxHEzl5x9XO
-        7Y03W2Krkl2yN96p1nGlPmLRoWktk/bFzfyd8ezBsmu130rvip3JE9z0i7VrUPqW7hUPnx8Y
-        rYg/3s2QYhGnm0EIIvcXyywlCrsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LZdlhJTvf64TNxBtt+KFv8mHubxeLNyaks
-        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
-        YvT4vEkugC2KyyYlNSezLLVI3y6BK+PouRbGgjl8FXu3v2RqYDzG1cXIySEhYCIx4XYzcxcj
-        F4eQwG5Gid6bLUwQCWmJYyfOACU4gGxhicOHiyFqnjNKfNvylwWkhk1AV+Lfn/1sILaIgJ7E
-        yZPX2UCKmAWamSS+PVsCNXU7o8SdW4tYQCZxClhKdOyUBmkQFrCR2Lf6FRtImEVAVeJDuwhI
-        mBeo4t+SqYwQtqDEyZlPwDqZgea3bQQLMwvIS2x/O4cZ4kwFiZ9Pl7GClIgIOEmsW88JUSIi
-        MbuzjXkCo/AsJINmIQyahWTQLCQdCxhZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525i
-        BEeUluYOxu2rPugdYmTiYDzEKMHBrCTC63T2dJwQb0piZVVqUX58UWlOavEhRmkOFiVx3huF
-        C+OEBNITS1KzU1MLUotgskwcnFINTOFVfYcnzy2Z/H7jDskjLp77LFVN9+86rflphdTez1pN
-        v7qTolZ1RXSfWFW7b+3+1Jv6130ctq3ZybZ3QQJ72LMFPL1xvdvnpXR5GLq9NZA8OEn35Ktd
-        Z1sf6m7RnnwwvYS/rECcO+iEQfPTYxez/5yZ/Ny995NViGXgLofDv1ezmHyNn9p+SK+mW2xq
-        GI+n0K/Dv+0/sjG9Pjfzu/ZBozmP3+ytFbq1rzCovvPHrINRF4yOyjEmvboSN/dGaLH4HAUD
-        3v3L2fTP1fO43JWYIyfKeV24ZdWXGIvlqmLX/DwSEovezLZ8X3Rr7oJj0u9kj4bujTB+LC+t
-        Orm99chM667mHTNk/0hwrD96rOho5z0lluKMREMt5qLiRAD5naEiFwMAAA==
-X-CMS-MailID: 20200526072303epcas1p2f4598250117d4718b73dd11c7adbf629
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200525115119epcas1p381d6e579b478e05e007a1521c2a103f8
-References: <20200525115052.19243-1-kohada.t2@gmail.com>
-        <CGME20200525115119epcas1p381d6e579b478e05e007a1521c2a103f8@epcas1p3.samsung.com>
-        <20200525115052.19243-3-kohada.t2@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[snip]
-> +static int exfat_verify_boot_region(struct super_block *sb) {
-> +	struct buffer_head *bh = NULL;
-> +	u32 chksum = 0, *p_sig, *p_chksum;
-> +	int sn, i;
-> +
-> +	/* read boot sector sub-regions */
-> +	for (sn = 0; sn < 11; sn++) {
-> +		bh = sb_bread(sb, sn);
-> +		if (!bh)
-> +			return -EIO;
-> +
-> +		if (sn != 0 && sn <= 8) {
-> +			/* extended boot sector sub-regions */
-> +			p_sig = (u32 *)&bh->b_data[sb->s_blocksize - 4];
-> +			if (le32_to_cpu(*p_sig) != EXBOOT_SIGNATURE) {
-> +				exfat_err(sb, "no exboot-signature");
-                                exfat_warn(sb, "Invalid exboot-signature(sector = %d): 0x%08x", sn, *p_sig);
-> +				brelse(bh);
-> +				return -EINVAL;
-Don't make mount error, Just print warning message.
-> +			}
-> +		}
-> +
-> +		chksum = exfat_calc_chksum32(bh->b_data, sb->s_blocksize,
-> +			chksum, sn ? CS_DEFAULT : CS_BOOT_SECTOR);
-> +		brelse(bh);
-> +	}
-> +
-> +	/* boot checksum sub-regions */
-> +	bh = sb_bread(sb, sn);
-> +	if (!bh)
-> +		return -EIO;
-> +
-> +	for (i = 0; i < sb->s_blocksize; i += sizeof(u32)) {
-> +		p_chksum = (u32 *)&bh->b_data[i];
-> +		if (le32_to_cpu(*p_chksum) != chksum) {
-> +			exfat_err(sb, "mismatch checksum");
-Print invalid checksum value also.
-> +			brelse(bh);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +	brelse(bh);
-> +	return 0;
-> +}
-> +
->  /* mount the file system volume */
->  static int __exfat_fill_super(struct super_block *sb)  { @@ -498,6 +542,12 @@ static int
-> __exfat_fill_super(struct super_block *sb)
->  		goto free_bh;
->  	}
+On Mon, 25 May 2020, Michael Walle wrote:
+
+> Am 2020-05-15 12:28, schrieb Lee Jones:
+> > On Thu, 30 Apr 2020, Michael Walle wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > Am 2020-04-23 19:45, schrieb Michael Walle:
+> > > > There might be multiple children with the device tree compatible, for
+> > > > example if a MFD has multiple instances of the same function. In this
+> > > > case only the first is matched and the other children get a wrong
+> > > > of_node reference.
+> > > > Add a new option to match also against the unit address of the child
+> > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+> > > 
+> > > 
+> > > Do you think this is feasible? I guess this is the biggest uncertainty
+> > > for me at the moment in this patch series.
+> > 
+> > I think it sounds fine in principle.  So long as it doesn't change the
+> > existing behaviour when of_reg isn't set.
+> > 
+> > > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > > ---
+> > > >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+> > > >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+> > > >  2 files changed, 40 insertions(+), 15 deletions(-)
+
+[...]
+
+> > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> > > > index d01d1299e49d..c2c0ad6b14f3 100644
+> > > > --- a/include/linux/mfd/core.h
+> > > > +++ b/include/linux/mfd/core.h
+> > > > @@ -13,8 +13,11 @@
+> > > >  #include <linux/platform_device.h>
+> > > >
+> > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> > > > +#define MFD_OF_REG_VALID	BIT(31)
+> > 
+> > What about 64bit platforms?
 > 
-> +	ret = exfat_verify_boot_region(sb);
-> +	if (ret) {
-> +		exfat_err(sb, "invalid boot region");
-> +		goto free_bh;
-> +	}
-> +
->  	ret = exfat_create_upcase_table(sb);
->  	if (ret) {
->  		exfat_err(sb, "failed to load upcase table");
-> --
-> 2.25.1
+> The idea was to have this as a logical number. I.e. for now you may only
+> have one subdevice per unique compatible string. In fact, if you have a
+> look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
+> subdevices. But there is only one DT node for all three of it. I guess
+> this works as long as you don't use phandles to reference the pwm node
+> in the device tree. Or you don't want to use device tree properties
+> per subdevice (for example the "timeout-sec" of a watchdog device).
+> 
+> So to circumvent this, I thought of having the unit-address (and thus
+> the "reg" property) to differentiate between multiple subdevices. Now
+> there is one special case for me: this board management controller
+> might be upgradable and it might change internally. Thus I came up
+> with that logical numbering of subdevices. Rob doesn't seem to be a
+> fan of that, though. Therefore, having bit 31 as a valid indicator
+> leaves you with 2^31 logical devices, which should be enough ;)
+> 
+> Rob proposed to have the internal offset as the unit-address. But
+> in that case I can also use devm_of_platform_populate() and don't
+> need the OF_MFD_CELL_REG; I'd just parse the reg offset in each
+> individual subdevice driver. But like I said, I wanted to keep the
+> internal offsets out of the device tree.
 
+Oh, I see what you're doing.
 
+So you're adding an arbitrary ID to the device's reg property in DT?
+
+How is this not a hack?
+
+Why don't you use the full address for identification?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
