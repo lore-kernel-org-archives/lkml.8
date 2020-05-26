@@ -2,94 +2,122 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E81C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B96BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF34207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FDE2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lOvf70PK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PI5VSdda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388663AbgEZQUf (ORCPT
+        id S1729331AbgEZQVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgEZQUe (ORCPT
+        Tue, 26 May 2020 12:21:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23367 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728332AbgEZQVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:20:34 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA46C03E96E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:20:33 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci23so36334pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tLFWEc70kSJC3xDiyEWNVnyhuZzVWGIzcJ1Nk8rcOc0=;
-        b=lOvf70PKmmBPmGfNSvXTYx9cNld/SJ4GdwXQvxyEWWWH1t24w5+WMVVyi9NbSTFCuo
-         UK25Jfcc2kwV14PFFGZMUXnXGG/ZHoFAzR8a9RxeKmOFXG09X+v7nlHd/ZSRWUHPzodk
-         QJfCvytXjqlRnpksslKFGoPUsAsLRdnDs5BS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tLFWEc70kSJC3xDiyEWNVnyhuZzVWGIzcJ1Nk8rcOc0=;
-        b=n/TgTFhRDqw39yxgvFmcQ2hWY/xIdFQRgNzYwE+6z5y7J1puLlTELuozxZBFyQj6lj
-         4gzIGf4umI+84DvFATSVcPKCmNXojj99HMzL3Af380KN9KmWJkZ7ywR/PpNm5sPoV9u5
-         pxpiduX8mMLUty+Bb8/nBuyBIcGnrC48AcADUAIQa+4zY65Bd7WI+Dm9z7EpqWvqk+9B
-         gd5K234Cq4ivcOs3EXLFONtBBgzZt0cSsHZ59Aek5TSohLE52HLJ4+XXh4hvDiMoPLJf
-         S1xuizN+zG+wbYKALGhzb3scOMcekmMxWq/qdpNTCG6iZvmXaxktPLjm71CY4b48y4dP
-         gcOw==
-X-Gm-Message-State: AOAM532BEaPJluy4rcz6RZKWRf/5Z+17HhkAm81ZVLixROCM2IuTH0pK
-        Q6NWqO2XuK7MxT8tfamVVcLynw==
-X-Google-Smtp-Source: ABdhPJxEYTpmqGrCSWR6f1rzHdEg5LhA1BVPPbzcg+Vydop3DHCm/xEy4uzlTCOqImNwTjC3mqZ4Rg==
-X-Received: by 2002:a17:90a:fb96:: with SMTP id cp22mr27442990pjb.201.1590510033184;
-        Tue, 26 May 2020 09:20:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b63sm46799pfg.86.2020.05.26.09.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 09:20:32 -0700 (PDT)
-Date:   Tue, 26 May 2020 09:20:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, sashal@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
-Message-ID: <202005260918.72DE289@keescook>
-References: <20200526052848.605423-1-andi@firstfloor.org>
- <20200526065618.GC2580410@kroah.com>
- <20200526154835.GW499505@tassilo.jf.intel.com>
+        Tue, 26 May 2020 12:21:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590510091;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=++oMQ8DAzk3stWgAeDWQyIugeO5lrOVIAn/CXGwtVkI=;
+        b=PI5VSddaRYnHCwbpxyWs/ZqYOXNx41JWPFZLEquW4LcaZt3szA8bs4UtDGNUkF/kNIX6FS
+        q/QxYgnnOrTHCHeCC9xEGWhGRQF+V33Qcqogf1smtyuztE2a187JColM4BI/wZ6GN5nm7K
+        sHwD2lnl2ZXm8ulXdQc5Tv3QGGZvLu8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-ZIZ60EleMaySfh3xy6gibg-1; Tue, 26 May 2020 12:21:29 -0400
+X-MC-Unique: ZIZ60EleMaySfh3xy6gibg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 766868014D7;
+        Tue, 26 May 2020 16:21:28 +0000 (UTC)
+Received: from x1.home (ovpn-114-203.phx2.redhat.com [10.3.114.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 289BD6E50D;
+        Tue, 26 May 2020 16:21:28 +0000 (UTC)
+Date:   Tue, 26 May 2020 10:21:27 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] vfio/pci: fix a null-ptr-deref in
+ vfio_config_free()
+Message-ID: <20200526102127.5afc9035@x1.home>
+In-Reply-To: <20200522011829.17301-1-cai@lca.pw>
+References: <20200522011829.17301-1-cai@lca.pw>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526154835.GW499505@tassilo.jf.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:48:35AM -0700, Andi Kleen wrote:
-> On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
-> > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
-> > > +		if (val & X86_CR4_FSGSBASE) {
-> > > +			WARN_ONCE(1, "CR4 unexpectedly set FSGSBASE!?\n");
-> > 
-> > What about those systems that panic-on-warn?
+On Thu, 21 May 2020 21:18:29 -0400
+Qian Cai <cai@lca.pw> wrote:
+
+> It is possible vfio_config_init() does not call vfio_cap_len(), and then
+> vdev->msi_perm == NULL. Later, in vfio_config_free(), it could trigger a
+> null-ptr-deref.
 > 
-> I assume they're ok with "panic on root hole"
+>  BUG: kernel NULL pointer dereference, address: 0000000000000000
+>  RIP: 0010:vfio_config_free+0x7a/0xe0 [vfio_pci]
+>  vfio_config_free+0x7a/0xe0:
+>  free_perm_bits at drivers/vfio/pci/vfio_pci_config.c:340
+>  (inlined by) vfio_config_free at drivers/vfio/pci/vfio_pci_config.c:1760
+>  Call Trace:
+>   vfio_pci_release+0x3a4/0x9e0 [vfio_pci]
+>   vfio_device_fops_release+0x50/0x80 [vfio]
+>   __fput+0x200/0x460
+>   ____fput+0xe/0x10
+>   task_work_run+0x127/0x1b0
+>   do_exit+0x782/0x10d0
+>   do_group_exit+0xc7/0x1c0
+>   __x64_sys_exit_group+0x2c/0x30
+>   do_syscall_64+0x64/0x350
+>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Fixes: bea890bdb161 ("vfio/pci: fix memory leaks in alloc_perm_bits()")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  drivers/vfio/pci/vfio_pci_config.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 
-Exactly. :) The pinning infrastructure is pretty small; will that just
-get backported? (Also, we can probably rework the pinning to avoid the
-special-casing and use a mask/value pair to notice a bit getting turned
-_on_ as well...)
+I may get yelled at for it, but I need to break my next branch to fix
+the lockdep issue you noted in my series, so I'm going to go ahead and
+roll this into your previous patch.  Thanks,
 
--- 
-Kees Cook
+Alex
+ 
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index d127a0c50940..8746c943247a 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -1757,9 +1757,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
+>  	vdev->vconfig = NULL;
+>  	kfree(vdev->pci_config_map);
+>  	vdev->pci_config_map = NULL;
+> -	free_perm_bits(vdev->msi_perm);
+> -	kfree(vdev->msi_perm);
+> -	vdev->msi_perm = NULL;
+> +	if (vdev->msi_perm) {
+> +		free_perm_bits(vdev->msi_perm);
+> +		kfree(vdev->msi_perm);
+> +		vdev->msi_perm = NULL;
+> +	}
+>  }
+>  
+>  /*
+
