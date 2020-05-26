@@ -2,91 +2,76 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82287C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8982B2088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Df8GllVi"
+	by mail.kernel.org (Postfix) with ESMTP id 521D22088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404177AbgEZWZR (ORCPT
+        id S2390600AbgEZW1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:25:17 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:32748 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389889AbgEZWZQ (ORCPT
+        Tue, 26 May 2020 18:27:22 -0400
+Received: from smtprelay0004.hostedemail.com ([216.40.44.4]:34966 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389382AbgEZW1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=from:subject:to:cc:content-type:content-transfer-encoding;
-        s=001; bh=gYebp9rzYUVBATcyaT/NfFRbcFQwq1Ai5f6uhR6SvfA=;
-        b=Df8GllViA4xdGWlSI7AzAilMI50SV8LNsHjpdMBiDjx076/Wb5G8nZ2SjYfPKuQgXPij
-        0TX+paptKResOztyP7Bb/hnwYBl/7l/Uy4/IsXWWy8wZ6GsyvG2b9rL5FUuyxviLE7kUyS
-        loxU517BiJ/EoXHTQIKqTqmpcBo+SgOxk=
-Received: by filterdrecv-p3iad2-8ddf98858-4fqk8 with SMTP id filterdrecv-p3iad2-8ddf98858-4fqk8-19-5ECD974A-54
-        2020-05-26 22:25:15.015279878 +0000 UTC m=+5347060.449712244
-Received: from bionic.localdomain (unknown)
-        by ismtpd0007p1lon1.sendgrid.net (SG) with ESMTP
-        id pOuU-hH5TrqIU--iWX2dZg
-        Tue, 26 May 2020 22:25:14.675 +0000 (UTC)
-From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH] media: v4l2-ctrls: Unset correct HEVC loop filter flag
-Date:   Tue, 26 May 2020 22:25:15 +0000 (UTC)
-Message-Id: <20200526222511.19250-1-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.17.1
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h4NucujZqb2jdTqOb?=
- =?us-ascii?Q?eyTrc=2F1=2Fgi0sEhPbGFU5ou9bsWpLl0pN10UM=2FX8?=
- =?us-ascii?Q?siVB8aR03r7zPmISozzjuB+5kGzEgftPnZjkDfq?=
- =?us-ascii?Q?6rApNnujN4=2FA8rbQSOQz2QxMDPTPZAos9HqYGzJ?=
- =?us-ascii?Q?3G8uxVGdS9hBgK6=2Fmd1uk2M0gyUguSKNa4yF6Ab?=
- =?us-ascii?Q?bI5WwW1OPmFDmyJwIRipA=3D=3D?=
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>
-Content-Type: text/plain; charset=us-ascii
+        Tue, 26 May 2020 18:27:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 43B8718029139;
+        Tue, 26 May 2020 22:27:21 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rain73_061635826d4d
+X-Filterd-Recvd-Size: 1963
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 26 May 2020 22:27:19 +0000 (UTC)
+Message-ID: <b0854ec2906323d34514875a58a79d4cb74e44b0.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: Update my maintainer entries to reorder
+ email addresses
+From:   Joe Perches <joe@perches.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab+huawei@kernel.org,
+        davem@davemloft.net, robh@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Tue, 26 May 2020 15:27:18 -0700
+In-Reply-To: <661f53a3-b15c-76b0-f220-0d292b0843d5@linuxfoundation.org>
+References: <20200523021928.67126-1-skhan@linuxfoundation.org>
+         <7366c990d4352e093ff7d17953079d7f0420c3a9.camel@perches.com>
+         <661f53a3-b15c-76b0-f220-0d292b0843d5@linuxfoundation.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wrong loop filter flag is unset when tiles enabled flag is not set,
-this cause HEVC decoding issues with Rockchip Video Decoder.
+On Tue, 2020-05-26 at 11:04 -0600, Shuah Khan wrote:
+> On 5/22/20 8:26 PM, Joe Perches wrote:
+> > On Fri, 2020-05-22 at 20:19 -0600, Shuah Khan wrote:
+> > > get_maintainer.pl picks only the first email address found in the file.
+> > > Reorder my email addresses so it finds my linuxfoundation.org email.
+> > 
+> > OK.
+[]
+> Sadly, people that don't run get_maintainer.pl, leave alone running it
+> with --noremove-duplicates option. So your suggestion doesn't really
+> help me.
+> 
+> My preference is to get patches to both Inboxes if possible which isn't
+> possible unless -noremove-duplicate is default. Having this option as
+> default probably will annoy lot of people . So I am not asking for
+> that.
+> 
+> That being said, I don't understand your comment. Are you recommending
+> using just one email in these entries?
 
-Fix this by unsetting the loop filter across tiles enabled flag instead of
-the pps loop filter across slices enabled flag when tiles are disabled.
+Yes.  And maybe set an autoforward rule in that email to
+forward the received email to your other address.
 
-Fixes: 256fa3920874 ("media: v4l: Add definitions for HEVC stateless decoding")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index b2e5804f1aa9..ebd7054d18ac 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -2081,7 +2081,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- 			       sizeof(p_hevc_pps->row_height_minus1));
- 
- 			p_hevc_pps->flags &=
--				~V4L2_HEVC_PPS_FLAG_PPS_LOOP_FILTER_ACROSS_SLICES_ENABLED;
-+				~V4L2_HEVC_PPS_FLAG_LOOP_FILTER_ACROSS_TILES_ENABLED;
- 		}
- 
- 		if (p_hevc_pps->flags &
--- 
-2.17.1
 
