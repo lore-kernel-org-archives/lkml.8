@@ -2,101 +2,116 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E31C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8993E2088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19EB207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yFrvO5Xl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bnWhzRKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390408AbgEZTv7 (ORCPT
+        id S1728646AbgEZTwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
+        Tue, 26 May 2020 15:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389346AbgEZTvj (ORCPT
+        with ESMTP id S2390418AbgEZTwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:51:39 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB2FC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:51:39 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r10so10551343pgv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:51:39 -0700 (PDT)
+        Tue, 26 May 2020 15:52:02 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D54EC03E96F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:52:01 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id e125so13060585lfd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=39qQrTBLEctUrGanLy/C45/WjdVfQkC7faPzmr+qhpI=;
-        b=yFrvO5Xl3qNEXOkExAlKW5HCKxIsDSMlTDL6yu/qdDNmAN9gaTkhr8Ji+yI9XJMB6r
-         Yyj0QZ3VaFi/iX801MVu58AB5V7toUQ/3YSKHrzjYv7i2pgw3diwzJ9VU9sKkiQ+CqO5
-         +3TnFQnSzV+5hEs5v5Y4SsfGIfcKj9q7W3SSj/g2m24bxPjK6B7OSCJCgOwvDr/T+fH0
-         FXKEQYV/edda3rOI2u6He8F3YutgqUpDtRr1cjsP0bBekPjb/tjeT+Zdyk9nrP1RvMHF
-         IL3sBKXh1sO3XzmReF4iBAlL3BzPeFNzf+QnoSzUJnqeO7X206hePi35FPbwAjeQ87ro
-         IySQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eBEPuPRe4Vv2CIYhMh2f1CuE2rLakV/r952j5euzgs8=;
+        b=bnWhzRKVsaWXVi38IqofrgRQO1+O7g9G0wdnz61VvLTxmGpf0Fg8OK7MAptjxxMn3T
+         kHaTgIILdbWOUvZ50Uyaodde5Gj5I8XzkPC6W7EQK+hxASYjt5Sh36CvVntc1Ox6e4AM
+         6rDBHoaKOeBgjFYeUVH8aJzZGm+JLhmsB+9sI8gsqKrdVDncLLtGJ98HUrkDNkVhKNmf
+         qwfCbSXVlKEzR3ziDVHFYZMhK/sFnYDl6XrECA+oMoNnDGkkgT7L0UZcyjdkgz3nnMMq
+         gKTv9rkTMxjDqh+JFrLhdYXj6IWJwGLH4WZExZxsbyKo6fpi38b+eoChPqqLK+RQf2k+
+         Bhiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=39qQrTBLEctUrGanLy/C45/WjdVfQkC7faPzmr+qhpI=;
-        b=dss8ekl07z4UO94771MxSI22qPaoumKZyZZsFbO5n4GBrODCxB6ZnrwFr9tYJ7iJnD
-         QsX2oWwsBXJ6Fn6FrdsHrgSiXlOA2y0cVwFSI+n9DLltbccXSESxI+a2OD4WKAWJzYN+
-         KvWQBlFLkOfdTkeQLQOOeFSL2KnV1kzHGRV6cYH1RxWgV7Nmq8UQhEJeLU9tBG9b2PQN
-         nmDkS5k28LoLfsXc6QMpFgPyEOQSpWnacdran5JrnKw73J9CRCmSsW3zBzz01jeVC4qq
-         2KsTfkXXlxaIj2mhDMHd+b0DjufsqWW1mdw2/28s1+BMDlozxzBJAw0ppVOwADB2HphR
-         /efQ==
-X-Gm-Message-State: AOAM53385JCtJntdACJ2z3sz22A+HNIeNSngUp7qi9VdRmDuyGXhwt8H
-        Iwvh60PTDhF0u8l7DHZ0YIriMw==
-X-Google-Smtp-Source: ABdhPJywnc6qZ+WtihMTbkb+pFwn9JjcTK1HqNCVBDIVrphWDInm6gN1LVPRjjrnGs3CvW4hueDaXA==
-X-Received: by 2002:a62:14d6:: with SMTP id 205mr417227pfu.75.1590522699174;
-        Tue, 26 May 2020 12:51:39 -0700 (PDT)
-Received: from x1.lan ([2605:e000:100e:8c61:94bb:59d2:caf6:70e1])
-        by smtp.gmail.com with ESMTPSA id c184sm313943pfc.57.2020.05.26.12.51.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:51:38 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 09/12] xfs: flag files as supporting buffered async reads
-Date:   Tue, 26 May 2020 13:51:20 -0600
-Message-Id: <20200526195123.29053-10-axboe@kernel.dk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526195123.29053-1-axboe@kernel.dk>
-References: <20200526195123.29053-1-axboe@kernel.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eBEPuPRe4Vv2CIYhMh2f1CuE2rLakV/r952j5euzgs8=;
+        b=NpVLJGieVljEme7yzisjz6yEkSWnbmgJrHuxXOsgIxOKUriR0Ptv2SP7zf7NDbfDXl
+         TMgW4f3lVRWYXlTrpl4DNztfuKfmbyBo0k9pWqFpSRDwBGQA20p4R3G+FM6NvK2bTF2m
+         U/NAHhiK8nqnfRqU2Uu0hYaZpGhCUjUIgSyTM7Xphjt15txGsEkyDUmWNZUdl4IMZt6I
+         6Q/7Bh22YHCRxCHgF1L0jpoBHSmswFoHTSSR0bGNZI/A5qh7Y6vzjvXIyFMyGKV/e2LK
+         NsZ/TVVeR1wySHKMBe/rm+1iQupMrQD6bg9wTsKvoLBHr/0bRtu3lMdXYHNnsIYMfOiJ
+         oF5w==
+X-Gm-Message-State: AOAM533Tlw4xFFQDR0XuroW8UaX0jy3s9/Kdl0jQREhARhFcmIHWHlGY
+        VBxBhyds3g5IUqk+lU059oQSVW5hUViZMw11f/ZAYg==
+X-Google-Smtp-Source: ABdhPJzlR6LQriHCuEiGE/6Qirb1H9ZITawQCPoXz9As27TgLBKfSZTPQcDuOcWf7Fk6FiSnZhxZUdI8yRzAAC8OiFQ=
+X-Received: by 2002:a05:6512:6ca:: with SMTP id u10mr1293382lff.184.1590522719828;
+ Tue, 26 May 2020 12:51:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200522055350.806609-1-areber@redhat.com> <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
+ <20200525080541.GF104922@dcbz.redhat.com> <877dwybxvi.fsf@x220.int.ebiederm.org>
+ <CALKUemw0UZ67yaDwAomHh0n8QZfjd52QvgEXTJ4R3JSrQjZX9g@mail.gmail.com>
+In-Reply-To: <CALKUemw0UZ67yaDwAomHh0n8QZfjd52QvgEXTJ4R3JSrQjZX9g@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 26 May 2020 21:51:33 +0200
+Message-ID: <CAG48ez3PFoy11H11so-xXSJf4HM6Ndkufxk40sLj8JFvO6+BPQ@mail.gmail.com>
+Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
+To:     Christine Flood <chf@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Adrian Reber <areber@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>,
+        "Haley, Andrew" <aph@redhat.com>,
+        "Bhole, Deepak" <dbhole@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-XFS uses generic_file_read_iter(), which already supports this.
+On Tue, May 26, 2020 at 9:01 PM Christine Flood <chf@redhat.com> wrote:
+> Java applications suffer from slow startup times due to dynamic class loa=
+ding and warming up the Just In Time compilers.  Not all Java users have ro=
+ot access on their machines.  Enabling CRIU in user mode solves this proble=
+m for us.  We are about to release a user library that will allow check poi=
+nting Java from within Java.  Having to run this as root would severely lim=
+it its utility.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/xfs/xfs_file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Have you looked into whether it would be practical to restore the
+saved process state with different PIDs, and then fix up all places
+that might have stored the old PIDs? As long as all threads are
+managed by the JVM, that might be doable, right?
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 4b8bdecc3863..97f44fbf17f2 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1080,7 +1080,7 @@ xfs_file_open(
- 		return -EFBIG;
- 	if (XFS_FORCED_SHUTDOWN(XFS_M(inode->i_sb)))
- 		return -EIO;
--	file->f_mode |= FMODE_NOWAIT;
-+	file->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;
- 	return 0;
- }
- 
--- 
-2.26.2
-
+If you did that, you would also solve the problem of not being able to
+start two copies of the same image (because their PIDs would collide)
+or randomly not being able to start processes (because their PIDs
+collide with other existing things).
