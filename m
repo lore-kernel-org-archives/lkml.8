@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA72C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF43EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B6020B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D4520B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520378;
-	bh=jfyz9oqs6eHVNMoOj+ndiLbYCz73HTyt7i3ncvxZRBI=;
+	s=default; t=1590520380;
+	bh=9WfN8TrM9dUs8IFLzvFT0ojQuTob51q7V/MhlfmIgPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVYA2hCDPsBlAp7X424zoKSKCuUokJUIL5CbAMIIcCBFlrnxqCm598s3VM8boOP9L
-	 tSQIOXAOT0rVQ9qgE53dFYHZ91szEUoL1vz/uO2Q5OWHfwQjxxhaRm39zk1/0gxNWS
-	 QQ0zqPerEtO8VBXwgaDnOX8C4tS9DxV8LvEUGryI=
+	b=XqeT4X59bRoVrc5MMRYGoZh7SKqBxwl1PM7f9im8//jJnmI9ysIQYIjiDCp+41mqS
+	 zyYUmC2S1IoSvAV03r8O+uREKX4kkNwvsLZsg6ugVLw1sVTGsOfsB6er9q/Fn+upAh
+	 rVVt7BNJHOmrau55cU/64CZ3ZNiAlVIjUmcZMtyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404171AbgEZTM5 (ORCPT
+        id S2404185AbgEZTNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392133AbgEZTMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:52 -0400
+        id S2389413AbgEZTKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B62208A7;
-        Tue, 26 May 2020 19:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26EA4208A7;
+        Tue, 26 May 2020 19:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520372;
-        bh=jfyz9oqs6eHVNMoOj+ndiLbYCz73HTyt7i3ncvxZRBI=;
+        s=default; t=1590520252;
+        bh=9WfN8TrM9dUs8IFLzvFT0ojQuTob51q7V/MhlfmIgPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8knQnHPPlx91aTgGBYuTouyZFgMwA44QQTBMceAWCeVA9CJEBgWtNrPHvWp5f1h3
-         rAM/qa8SZ7RtZhTrzY31kK6i3JtMpDSYXcZoq8RqKd9N47EDSuSQKDWi9qci6u/qhs
-         sZJyTAM3Q32L14/mps3M5DqURDEWDO+cWgUhR7hw=
+        b=e1XkJ9vKUxs/y//L4ANLVdW9+13oaAN7GkIFWydDP/DmnJeDXAZ6xxXTBeKhScFGo
+         mubMl248wYJRoOM2I8M2c5mZWo/VLD7IzKTi4S6zjG/FE8Ia0u+9NOOwMvVzOIiH8/
+         mILDW5yXw/WORs7bxlrJvx8QwFtIJhaA2ri6iLGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fabian Schindlatz <fabian.schindlatz@fau.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 026/126] HID: logitech: Add support for Logitech G11 extra keys
-Date:   Tue, 26 May 2020 20:52:43 +0200
-Message-Id: <20200526183939.926776792@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 080/111] Revert "gfs2: Dont demote a glock until its revokes are written"
+Date:   Tue, 26 May 2020 20:53:38 +0200
+Message-Id: <20200526183940.474966795@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,53 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabian Schindlatz <fabian.schindlatz@fau.de>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit b1bd0f75288f60e8d142a1b3e979ed0192c04931 ]
+[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
 
-The Logitech G11 keyboard is a cheap variant of the G15 without the LCD
-screen. It uses the same layout for its extra and macro keys (G1 - G18,
-M1-M3, MR) and - from the input subsystem's perspective - behaves just
-like the G15, so we can treat it as such.
+This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
 
-Tested it with my own keyboard.
+This patch fixes a regression: patch df5db5f9ee112 allowed function
+run_queue() to bypass its call to do_xmote() if revokes were queued for
+the glock. That's wrong because its call to do_xmote() is what is
+responsible for calling the go_sync() glops functions to sync both
+the ail list and any revokes queued for it. By bypassing the call,
+gfs2 could get into a stand-off where the glock could not be demoted
+until its revokes are written back, but the revokes would not be
+written back because do_xmote() was never called.
 
-Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+It "sort of" works, however, because there are other mechanisms like
+the log flush daemon (logd) that can sync the ail items and revokes,
+if it deems it necessary. The problem is: without file system pressure,
+it might never deem it necessary.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-lg-g15.c | 4 ++++
- 2 files changed, 5 insertions(+)
+ fs/gfs2/glock.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 309510a72c5e..40697af0ca35 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -756,6 +756,7 @@
- #define USB_DEVICE_ID_LOGITECH_RUMBLEPAD2	0xc218
- #define USB_DEVICE_ID_LOGITECH_RUMBLEPAD2_2	0xc219
- #define USB_DEVICE_ID_LOGITECH_G15_LCD		0xc222
-+#define USB_DEVICE_ID_LOGITECH_G11		0xc225
- #define USB_DEVICE_ID_LOGITECH_G15_V2_LCD	0xc227
- #define USB_DEVICE_ID_LOGITECH_G510		0xc22d
- #define USB_DEVICE_ID_LOGITECH_G510_USB_AUDIO	0xc22e
-diff --git a/drivers/hid/hid-lg-g15.c b/drivers/hid/hid-lg-g15.c
-index ad4b5412a9f4..ef0cbcd7540d 100644
---- a/drivers/hid/hid-lg-g15.c
-+++ b/drivers/hid/hid-lg-g15.c
-@@ -872,6 +872,10 @@ error_hw_stop:
- }
- 
- static const struct hid_device_id lg_g15_devices[] = {
-+	/* The G11 is a G15 without the LCD, treat it as a G15 */
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
-+		USB_DEVICE_ID_LOGITECH_G11),
-+		.driver_data = LG_G15 },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
- 			 USB_DEVICE_ID_LOGITECH_G15_LCD),
- 		.driver_data = LG_G15 },
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 21820a5b388f..0290a22ebccf 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -639,9 +639,6 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
+-		smp_mb();
+-		if (atomic_read(&gl->gl_revokes) != 0)
+-			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
 -- 
 2.25.1
 
