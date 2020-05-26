@@ -2,100 +2,141 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C481220870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D07207ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KLAMdLRr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bh4WBNHC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgEZEle (ORCPT
+        id S1725891AbgEZEpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 00:41:34 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59962 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgEZEld (ORCPT
+        Tue, 26 May 2020 00:45:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23879 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725771AbgEZEpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 00:41:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590468092; x=1622004092;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=caE/9/0SQ6+2/9eb0G93tHduQ5lAktlVlar54l5ivz8=;
-  b=KLAMdLRr/GXbG2QpUHgAaJf9I6DlDhPG7tWrsi/4+HozEjDJ7w9M8xqW
-   CFFYbWcjHV7pSoykRz1kHo75oHulx+A/FkNN4iTtOl++9i3t3r0Nfg6bq
-   f++spJ4pv3I98gUqMxCwWqvrt9nIzW6smpZh5nE8x7Qh88I9CPwBN/ac6
-   A=;
-IronPort-SDR: 1I2yxgpQGronPtIVGFQbJPBNll2qNecEq6eWNw/8qKHwTIPYkDBpDa1+IrLgw6TjjTHOt2Vc6S
- g6nuZvCSpF7w==
-X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
-   d="scan'208";a="33514062"
-Subject: Re: linux-next: manual merge of the akpm-current tree with the tip tree
-Thread-Topic: linux-next: manual merge of the akpm-current tree with the tip tree
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 26 May 2020 04:41:19 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 6B3BFA22CF;
-        Tue, 26 May 2020 04:41:18 +0000 (UTC)
-Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 04:41:18 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 04:41:17 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Tue, 26 May 2020 04:41:17 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@elte.hu" <mingo@elte.hu>, "hpa@zytor.com" <hpa@zytor.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-CC:     "jroedel@suse.de" <jroedel@suse.de>,
+        Tue, 26 May 2020 00:45:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590468346; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=pOqLTEYmcv/1WZ4CUindBKPntxB4V+2joT4aCQzD+kc=; b=bh4WBNHCUaFV1nP7s7LvZzNw525+shifY2LGvCGmkSA7DP4unc8PAQ/FXSahrb+beFfvF2qa
+ GRIBuDh8xVMTJWKd7D4jaMpwENjg+0+llJNj51BACIQnG2jzALTAxJRy2Jcn1Ve4BOTNr9ni
+ 4V0seQlqLb2vx067T5Xel7yyHCk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ecc9eedb4f0a9ae22756c4b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 04:45:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 14837C43395; Tue, 26 May 2020 04:45:33 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [157.32.229.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 56C60C433C9;
+        Tue, 26 May 2020 04:45:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 56C60C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
-Thread-Index: AQHWMoRxHm7E9gHusUGGqipfCnsbV6i5ysCA
-Date:   Tue, 26 May 2020 04:41:17 +0000
-Message-ID: <7cb7ccbdec1b8fd56be345bfa86648c4763c2473.camel@amazon.com>
-References: <20200525210443.0904d583@canb.auug.org.au>
-In-Reply-To: <20200525210443.0904d583@canb.auug.org.au>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.175]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4C2C8DB2A7E9CB4A80D03C43F7D35508@amazon.com>
-Content-Transfer-Encoding: base64
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
+ <e4ebd476-1c34-0c58-bba0-14dfd4d31941@xs4all.nl>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <8bae16f8-2f03-0d44-fe29-ee9451c4be23@codeaurora.org>
+Date:   Tue, 26 May 2020 10:15:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <e4ebd476-1c34-0c58-bba0-14dfd4d31941@xs4all.nl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA1LTI1IGF0IDIxOjA0ICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
-Og0KPiBIaSBhbGwsDQo+IA0KPiBUb2RheSdzIGxpbnV4LW5leHQgbWVyZ2Ugb2YgdGhlIGFrcG0t
-Y3VycmVudCB0cmVlIGdvdCBhIGNvbmZsaWN0IGluOg0KPiANCj4gICBhcmNoL3g4Ni9tbS90bGIu
-Yw0KPiANCj4gYmV0d2VlbiBjb21taXQ6DQo+IA0KPiAgIDgzY2U1NmY3MTJhZiAoIng4Ni9tbTog
-UmVmYWN0b3IgY29uZF9pYnBiKCkgdG8gc3VwcG9ydCBvdGhlciB1c2UgY2FzZXMiKQ0KPiANCj4g
-ZnJvbSB0aGUgdGlwIHRyZWUgYW5kIGNvbW1pdDoNCj4gDQo+ICAgMzZjOGUzNGQwM2ExICgieDg2
-L21tOiByZW1vdmUgdm1hbGxvYyBmYXVsdGluZyIpDQo+IA0KPiBmcm9tIHRoZSBha3BtLWN1cnJl
-bnQgdHJlZS4NCj4gDQo+IEkgZml4ZWQgaXQgdXAgKHNlZSBiZWxvdykgYW5kIGNhbiBjYXJyeSB0
-aGUgZml4IGFzIG5lY2Vzc2FyeS4gVGhpcw0KPiBpcyBub3cgZml4ZWQgYXMgZmFyIGFzIGxpbnV4
-LW5leHQgaXMgY29uY2VybmVkLCBidXQgYW55IG5vbiB0cml2aWFsDQo+IGNvbmZsaWN0cyBzaG91
-bGQgYmUgbWVudGlvbmVkIHRvIHlvdXIgdXBzdHJlYW0gbWFpbnRhaW5lciB3aGVuIHlvdXIgdHJl
-ZQ0KPiBpcyBzdWJtaXR0ZWQgZm9yIG1lcmdpbmcuICBZb3UgbWF5IGFsc28gd2FudCB0byBjb25z
-aWRlciBjb29wZXJhdGluZw0KPiB3aXRoIHRoZSBtYWludGFpbmVyIG9mIHRoZSBjb25mbGljdGlu
-ZyB0cmVlIHRvIG1pbmltaXNlIGFueSBwYXJ0aWN1bGFybHkNCj4gY29tcGxleCBjb25mbGljdHMu
-DQo+IA0KDQpUaGUgY2hhbmdlcyBsb29rIHJlYXNvbmFibGUgdG8gbWUgKGluIHRlcm1zIG9mIHRo
-ZSBtZXJnZSByZXNvbHV0aW9uKS4NCg0KQWNrZWQtYnk6IEJhbGJpciBTaW5naCA8YnNpbmdoYXJv
-cmFAZ21haWwuY29tPg0KDQo=
+Hi,
+
+On 5/25/2020 5:52 PM, Hans Verkuil wrote:
+> On 25/05/2020 13:55, Linus Walleij wrote:
+>> On Sat, May 23, 2020 at 7:11 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>>
+>>> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
+>>> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
+>>> callback is implemented then genirq takes unlazy path to disable irq.
+>>>
+>>> Underlying irqchip may not want to implement irq_disable callback to lazy
+>>> disable irq when client drivers invokes disable_irq(). By overriding
+>>> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
+>>>
+>>> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
+>>> if irqchip implemented irq_disable. In cases where irq_disable is not
+>>> implemented irq_mask is overridden. Similarly override irq_enable callback
+>>> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
+>>>
+>>> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
+>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> I definitely want Hans Verkuils test and review on this, since it
+>> is a usecase that he is really dependent on.
+> Maulik, since I am no longer subscribed to linux-gpio, can you mail the
+> series to me?
+>
+> I have two use-cases, but I can only test one (I don't have access to the
+> SBC I need to test the other use-case for the next few months).
+>
+> Once I have the whole series I'll try to test the first use-case and at
+> least look into the code if this series could affect the second use-case.
+>
+> Regards,
+>
+> 	Hans
+
+Hi Hans,
+
+Mailed you the entire series.
+
+Thanks,
+Maulik
+>
+>> Also the irqchip people preferredly.
+>>
+>> But it does seem to mop up my mistakes and fix this up properly!
+>>
+>> So with some testing I'll be happy to merge it, even this one
+>> patch separately if Hans can verify that it works.
+>>
+>> Yours,
+>> Linus Walleij
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
