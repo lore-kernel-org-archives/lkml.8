@@ -2,196 +2,241 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37762C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD172C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AAA20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A192E20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lVQuxTuc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OWLNLeHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbgEZMIX (ORCPT
+        id S2388740AbgEZMJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:08:23 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:14839 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbgEZMIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:08:22 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecd06b10001>; Tue, 26 May 2020 20:08:17 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 26 May 2020 05:08:17 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Tue, 26 May 2020 05:08:17 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 12:08:17 +0000
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.50) by
- HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 26 May 2020 12:08:16 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQmQNp99m+ZdNfuuBrnB7OPfPdSbM6UpGMZjItLmOgnVP8c+snrcIeCE2x1qim20Sgcr1AxLufvEBRXjSXvWXdIbJym6c041Bi7CIHwxyFAgqVHF8sobVOw8ofl2BMRFydLt69MSNJKtB2vkkmwI94SH2JzXyaAISDyDUZlASzeSGXTWOeDV7eYGTskZliDMcXNIpYu/eT38dC1RWwqocDSdsFTW4Reddunn9HmVgG74RvwzqMJ/VQeN5uvilZJi7Zkq3oFrykXeeG3U5iigqeC/LshKyUKkxU/HuOiWsvEciFw82TjEjuaV3DjOj/i1OVtqnNGUOOBdERsvxC0J0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZDPTDFnpOfS4bsZMNe4onIbn3X4+jpNXTtVH1rIm7dg=;
- b=nde1DE3QUDbuSmTJyGzQpguSn/0wSg6qL8VZNRDFiSuPcAO+rE6WRB3DNgfuuSN73HoejlfPdYS7OX1s9nLVV65yq4L3zxucMSqWZBp9g979PII+ZpBsTGx/xgk5vdqlF+d8/4rN2Bt6FIYHL5B9VFXk+mGZO6y+60CcVyFoz/Mpu8q0nz5utAjlb58uesBJvUpMItRgSdNbwAosqzNRvNAZrVn0z4EkvKwesLVDDE3Us4r+iMj6Hvgp1h+iqPfEYe4Adwa+lt5VqqJUXtZWIsiYsn35UaHweqN6+YxTVCFuuT+Fb0Iv5JNgMFApEhvjWjI67ghAl4uj0tZkg2kC3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB3014.namprd12.prod.outlook.com (2603:10b6:a03:d8::11)
- by BYAPR12MB3463.namprd12.prod.outlook.com (2603:10b6:a03:ac::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Tue, 26 May
- 2020 12:08:15 +0000
-Received: from BYAPR12MB3014.namprd12.prod.outlook.com
- ([fe80::ad7c:1862:e032:66f6]) by BYAPR12MB3014.namprd12.prod.outlook.com
- ([fe80::ad7c:1862:e032:66f6%7]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 12:08:14 +0000
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "kamil@wypas.org" <kamil@wypas.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     Bibek Basu <bbasu@nvidia.com>, Bitan Biswas <bbiswas@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
- module support
-Thread-Topic: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
- module support
-Thread-Index: AQHWMxtmVPDRpufQoUeveXztGYgnVKi6PzOAgAAEX/A=
-Date:   Tue, 26 May 2020 12:08:14 +0000
-Message-ID: <BYAPR12MB30145EC4578F64EAD1233357ADB00@BYAPR12MB3014.namprd12.prod.outlook.com>
-References: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
- <53619c02-8c0f-3eec-cccc-16e779b8c425@roeck-us.net>
-In-Reply-To: <53619c02-8c0f-3eec-cccc-16e779b8c425@roeck-us.net>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=spatra@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-05-26T12:08:11.8694480Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=132bc317-5ca9-4b07-a311-d93334cdd251;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: roeck-us.net; dkim=none (message not signed)
- header.d=none;roeck-us.net; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [124.123.74.49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 43c69598-980e-4c5b-00b5-08d8016d77f5
-x-ms-traffictypediagnostic: BYAPR12MB3463:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3463ECB96FFB35C0747F3852ADB00@BYAPR12MB3463.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 041517DFAB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KYtluHhAasvcMDuhhVLc1fbC+P55j4Gv5rJ7gy8+qUsWWp70foqIx6p1i5hEkjBv+aXZsS0SlEcdjfG70Y26yF3N87+n0jiKDQHMEYeJhEu2hdAdL4Gddgy8NjLnOYaZ/dHFKV8vriA6PTCum27RNA881+9Old7gkCQYPQr1qczatZkR77ebAicpi5EcCG6XFgru492WoGllZu2FOh/hcljqHfaRJpqKX00d32zFbi8gUMSTxp3fN43QFMEbhHDYIiL4sxlnSpnGcr5ZkEGQYUuEFx6h1XxZPHyKCxAHwgbLCuNh56eQazdkeqC2ZazkQ8Drp6RA91wdOx0d3+yd9Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3014.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(346002)(376002)(366004)(396003)(55016002)(66946007)(9686003)(53546011)(6506007)(186003)(54906003)(86362001)(71200400001)(4326008)(316002)(52536014)(110136005)(7696005)(5660300002)(64756008)(2906002)(66446008)(478600001)(76116006)(8936002)(26005)(66476007)(66556008)(33656002)(8676002)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: L1nMdTWreQImNdQgcTx02dW0+HX4G/aSJARehlFuWhcrOpu9Dy6cDfR+Fg/oRR3M/ivFHBO/iV5ZXHXl63Pvg1RjQAQvbpF70Ar1Zp7xbNV+T3dfSZX3t+vzyAv4sD65EhURGoRZ50AstPgyKslm/yL7kdd6u/Fzs0BTqbUxYs0yMLjytrACZTrepa0qfPk5s9WjzpMNXD6qM0m2FEAU4j6PDtKhh7LB7CIXFetlAAntWslvVhvuhXsRBMsarfJqvpIEVmvRKALsQ57riwA/ZcWPMlpIIhyKhuBpe3b83rfeWSEwkG7mzBvO2l6oRG3s4nH1wDPzrlgWBDat6VFylMMhWelMp2d07QkeDUrWTRwbmxdHfukrdf/zKWgVqORGNB3LfusGcsDX4j0w0AkRwLMJih6DS/y14GNLUINnls3qAOjLDoFrSjh8TtlmCP5iehtZ4wH2hbgt1sDC9eKLEFB1wj20BV412O2s/jJfMWM=
+        Tue, 26 May 2020 08:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729062AbgEZMJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:09:02 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1192FC03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:09:02 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w15so12116758lfe.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kulYH3lmmnPKwAS9+Zs0TnGDE8yYdLKMfltc9Vjgfe0=;
+        b=OWLNLeHWpYS7i/mjtJQHfLmxjDJmeg6ICAaWI/gjdUNUqCB6IuyVTO3eP7+6UaC9ov
+         AFjSHUDGNDJ1F0y6zoLxRQkI+u+GCITEap29n+N7q/KNHktDRarjizn+r2g8uaYGc/mm
+         iiVuQ20JoEyWLI+XWZqkaCO6zAQNhRuJiIhTIo/E+HfOLxCilnr932+hDAQsTtHUTKtD
+         s4XAXhljFRdvW6SEOkVELKzX2jEqdEFA3eIRpFlBtdw2ak8F1+Fi057vTVdyIip0jhTI
+         Hq6HdPM1KYBA9lgf40mvhYM5b39Dau58MnQvxieRNn3qGidz5S49im0uzna4N0PPInUS
+         lvow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kulYH3lmmnPKwAS9+Zs0TnGDE8yYdLKMfltc9Vjgfe0=;
+        b=fNqNvcVCPT7AZpgtrBlITAAxauQyETwmp9gIjLPEoBNtfEcgmu02X/nVZM3hyf7Gce
+         CEqNEftc95o6knsNVheDEobF9vMWfTeAOljPeGamr968lLMPKgE6SNTBC+9QDlR3bdUJ
+         Cj1zb/1laUEc22W6WR2c4obWt2/9twkiXsZDSa3Yl1X6i9HCaKvnGKVNZP5gONkIe+Jc
+         zw72wU7FqpGVWPcer5CW6fEiW4DL10ePG5mqKCMN6npM7Jy8CFoEmSz4+WI/23H/no+R
+         btVN86na7D+u/uP2Wyop66ePOlJm2EfKTzuZGlrN9tXn6BtDrBFkonL0KKXkdAEBlEKB
+         2ldg==
+X-Gm-Message-State: AOAM532Dz1DQLNPa2R87KH+TZ4G5YT6hRyXi/B+XU/q8XghN5uuJ0jbY
+        WTdBKSvxeuaQ1GJ6dqR5xzZEsmxVGkKJzjGTVxxhmA==
+X-Google-Smtp-Source: ABdhPJxnUrjRwYL1PCx9h/92qPSRPfBbMYlzq9PSv1CkoagdOL2NPMTdT2aIY/vV/6tokloW2gHDWvIe512j8u603Vg=
+X-Received: by 2002:a05:6512:2027:: with SMTP id s7mr378257lfs.15.1590494940286;
+ Tue, 26 May 2020 05:09:00 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43c69598-980e-4c5b-00b5-08d8016d77f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2020 12:08:14.6354
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6eSP+FOIFJQRYcgjgJcOk/J2KHX21Kq+5ImlxYoFz/of5TsJvC2vEnfhgackvMbM9zXJ93OMfZuouHYafr1OuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3463
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590494897; bh=ZDPTDFnpOfS4bsZMNe4onIbn3X4+jpNXTtVH1rIm7dg=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=lVQuxTuczD0XN4ig3mg+HykBsbgzbj7RAW9i860H4KbEIpGh8RTNTse2GXW7XYEPe
-         Tf0oHqPPtSyz14rKMEY1kmnuYxLrSIZdRjMaGAhkyqbJ+SYqspt8Hv6cnfWjMfrYt3
-         vlTd8246EPjuDKhXKdSWOs+9iqS5RM/KvU8HnyL5uziz1LQk8H/Hfu+7xQ6khFMjgh
-         PHb2+bE4w/uyefGj2RY1e4UpoejV18doRUAx3uiaLwn92IBZelohZc3HUhWl6WSE5/
-         rnjI2LrGcyU/KoEf4Cjz/ScLU3tXseC9idTzX1gOtIczMaoOfgdcaps7pL+cBDZChx
-         nDU/NmKPtu+lg==
+References: <1590158071-15325-1-git-send-email-sumit.garg@linaro.org>
+ <20200522160258.yq63iigp74u3ngtn@holly.lan> <CAFA6WYPrB1m1YDf54-OFNWmmTOv+8T5ZyTx14fxqZ-Jvx6fQQQ@mail.gmail.com>
+ <20200526111050.qfvdlw3jp2gokktg@holly.lan>
+In-Reply-To: <20200526111050.qfvdlw3jp2gokktg@holly.lan>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 26 May 2020 17:38:48 +0530
+Message-ID: <CAFA6WYPhf5WEp7K7++J5Qisy=H2UF8tmShmad=Xzr23ctkOuAA@mail.gmail.com>
+Subject: Re: [RFC] kdb: Switch kdb_printf to use safer console poll APIs
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJv
-ZWNrIDxncm9lY2s3QGdtYWlsLmNvbT4gT24gQmVoYWxmIE9mIEd1ZW50ZXIgUm9lY2sNCj4gU2Vu
-dDogVHVlc2RheSwgTWF5IDI2LCAyMDIwIDU6MTIgUE0NCj4gVG86IFNhbmRpcGFuIFBhdHJhIDxz
-cGF0cmFAbnZpZGlhLmNvbT47IFRoaWVycnkgUmVkaW5nDQo+IDx0cmVkaW5nQG52aWRpYS5jb20+
-OyBKb25hdGhhbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPjsgdS5rbGVpbmUtDQo+IGtv
-ZW5pZ0BwZW5ndXRyb25peC5kZTsga2FtaWxAd3lwYXMub3JnOyBqZGVsdmFyZUBzdXNlLmNvbTsN
-Cj4gcm9iaCtkdEBrZXJuZWwub3JnDQo+IENjOiBCaWJlayBCYXN1IDxiYmFzdUBudmlkaWEuY29t
-PjsgQml0YW4gQmlzd2FzIDxiYmlzd2FzQG52aWRpYS5jb20+Ow0KPiBsaW51eC1wd21Admdlci5r
-ZXJuZWwub3JnOyBsaW51eC1od21vbkB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC10ZWdyYUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBod21vbjogcHdt
-LWZhbjogQWRkIHByb2ZpbGUgc3VwcG9ydCBhbmQgYWRkIHJlbW92ZQ0KPiBtb2R1bGUgc3VwcG9y
-dA0KPiANCj4gRXh0ZXJuYWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mgb3IgYXR0
-YWNobWVudHMNCj4gDQo+IA0KPiBPbiA1LzI1LzIwIDEwOjA2IFBNLCBTYW5kaXBhbiBQYXRyYSB3
-cm90ZToNCj4gPiBUaGlzIGNoYW5nZSBoYXMgMiBwYXJ0czoNCj4gPiAxLiBBZGQgc3VwcG9ydCBm
-b3IgcHJvZmlsZXMgbW9kZSBzZXR0aW5ncy4NCj4gPiAgICAgVGhpcyBhbGxvd3MgZGlmZmVyZW50
-IGZhbiBzZXR0aW5ncyBmb3IgdHJpcCBwb2ludCB0ZW1wL2h5c3QvcHdtLg0KPiA+ICAgICBUMTk0
-IGhhcyBtdWx0aXBsZSBmYW4tcHJvZmlsZXMgc3VwcG9ydC4NCj4gPg0KPiA+IDIuIEFkZCBwd20t
-ZmFuIHJlbW92ZSBzdXBwb3J0LiBUaGlzIGlzIGVzc2VudGlhbCBzaW5jZSB0aGUgY29uZmlnIGlz
-DQo+ID4gICAgIHRyaXN0YXRlIGNhcGFibGUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBTYW5k
-aXBhbiBQYXRyYSA8c3BhdHJhQG52aWRpYS5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaHdt
-b24vcHdtLWZhbi5jIHwgMTEyDQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKSwg
-MTIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9od21vbi9wd20t
-ZmFuLmMgYi9kcml2ZXJzL2h3bW9uL3B3bS1mYW4uYyBpbmRleA0KPiA+IDMwYjdiM2UuLjI2ZGI1
-ODkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9od21vbi9wd20tZmFuLmMNCj4gPiArKysgYi9k
-cml2ZXJzL2h3bW9uL3B3bS1mYW4uYw0KPiANCj4gWyAuLi4gXQ0KPiANCj4gPg0KPiA+ICtzdGF0
-aWMgaW50IHB3bV9mYW5fcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4g
-PiArICAgICBzdHJ1Y3QgcHdtX2Zhbl9jdHggKmN0eCA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBk
-ZXYpOw0KPiA+ICsgICAgIHN0cnVjdCBwd21fYXJncyBhcmdzOw0KPiA+ICsNCj4gPiArICAgICBp
-ZiAoIWN0eCkNCj4gPiArICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+ICsNCj4gPiAr
-ICAgICBpZiAoSVNfRU5BQkxFRChDT05GSUdfVEhFUk1BTCkpDQo+ID4gKyAgICAgICAgICAgICB0
-aGVybWFsX2Nvb2xpbmdfZGV2aWNlX3VucmVnaXN0ZXIoY3R4LT5jZGV2KTsNCj4gPiArDQo+ID4g
-KyAgICAgcHdtX2dldF9hcmdzKGN0eC0+cHdtLCAmYXJncyk7DQo+ID4gKyAgICAgcHdtX2NvbmZp
-ZyhjdHgtPnB3bSwgMCwgYXJncy5wZXJpb2QpOw0KPiA+ICsgICAgIHB3bV9kaXNhYmxlKGN0eC0+
-cHdtKTsNCj4gPiArDQo+ID4gKyAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+IA0KPiBJ
-IGRvbid0IHRoaW5rIHlvdSBhY3R1YWxseSB0ZXN0ZWQgdGhpcy4gSSB3b3VsZCBzdWdnZXN0IHRv
-IG1ha2UgeW91cnNlbGYgZmFtaWxpYXINCj4gd2l0aCAnZGV2bScgZnVuY3Rpb25zIGFuZCB0aGVp
-ciB1c2UsIGFuZCB0aGVuIHJlc3VibWl0Lg0KPiANCg0KVGhhbmtzIEd1ZW50ZXIuDQpJIG1pc3Nl
-ZCB0byBtZW50aW9uIGFib3V0IGRldm0gd2hpbGUgdW5yZWdpc3RlcmluZyB0aGUgY29vbGluZyBk
-ZXZpY2UuDQpUaGF0IHdvdWxkIGRlZmluaXRlbHkgY2F1c2UgYSBtaXN0YWtlIGluIGNvZGUuIEkg
-YW0gbm90aW5nIGl0IGZvciBmdXJ0aGVyIHBhdGNoLg0KDQpGb3IgYSBiZXR0ZXIgY2xhcml0eSwg
-SSB3aWxsIHB1c2ggbmV4dCB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2ggdG8gaGFuZGxlIG9ubHkgbXVs
-dGlwbGUgcHJvZmlsZXMgc3VwcG9ydC4NCiJyZW1vdmUgZmFuIG1vZHVsZSIgd2lsbCBiZSBzdXBw
-b3J0ZWQgYnkgYSBzZXBhcmF0ZSBwYXRjaCBhbHRvZ2V0aGVyLg0KDQoNClRoYW5rcyAmIFJlZ2Fy
-ZHMsDQpTYW5kaXBhbg0KDQo+IFRoYW5rcywNCj4gR3VlbnRlcg0K
+On Tue, 26 May 2020 at 16:40, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Tue, May 26, 2020 at 01:16:17PM +0530, Sumit Garg wrote:
+> > On Fri, 22 May 2020 at 21:33, Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > >
+> > > On Fri, May 22, 2020 at 08:04:31PM +0530, Sumit Garg wrote:
+> > > > In kgdb NMI context, polling driver APIs are more safer to use instead
+> > > > of console APIs since the polling drivers know they will execute from
+> > > > all sorts of crazy places. And for the most common use cases this would
+> > > > also result in no console handler ever being called. So switch to use
+> > > > polling driver APIs in case a particular console supports polling mode.
+> > >
+> > > This comment seems rather half hearted, not least because it doesn't
+> > > explain what the current problem is nor why using the polling API is
+> > > safer.
+> > >
+> >
+> > TBH, some sentences in the above comment were borrowed from your
+> > suggestion here [1]. But I agree that it doesn't portray the complete
+> > picture. So how about:
+> >
+> > ====
+> > In kgdb NMI context, calling console handlers isn't safe due to locks
+> > used in those handlers which could lead to a deadlock. Although, using
+> > oops_in_progress increases the chance to bypass locks in most console
+> > handlers but it might not be sufficient enough in case a console uses
+> > more locks (VT/TTY is good example).
+> >
+> > So instead switch to use lockless polling driver APIs in case a
+> > particular console supports polling mode which is common for most kdb
+> > use-cases and would result in no console handler ever being called.
+> > ====
+>
+> Better, although the later paragraph still seems rather vague to me.
+> Compare to:
+>
+> Currently when a driver provides both polling I/O and a console then kdb
+> will output using the console. We can increase robustness by using the
+> currently active polling I/O driver (which should be lockless) instead
+> of the corresponding console. For several common cases (e.g. an
+> embedded system with a single serial port that is used both for console
+> output and debugger I/O) this will result in no console handler being
+> used.
+>
+
+Looks good, will use it instead.
+
+>
+> > [1] https://lkml.org/lkml/2020/5/20/356
+> >
+> > > Compare the above against the advice in
+> > > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+> > > and I think it comes up short. Perhaps also consider Ingo Molnar's much
+> > > more concise suggestion on describing changes:
+> > >
+> > > : Please use the customary changelog style we use in the kernel:
+> > > :   " Current code does (A), this has a problem when (B).
+> > > :   We can improve this doing (C), because (D)."
+> > > -- http://lkml.iu.edu/hypermail//linux/kernel/1311.1/01157.html
+> >
+> > Thanks for the pointers.
+> >
+> > >
+> > >
+> > > > Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > > ---
+> > > >  kernel/debug/kdb/kdb_io.c | 39 +++++++++++++++++++++++++++++++++------
+> > > >  1 file changed, 33 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> > > > index 3a5a068..8e0d581 100644
+> > > > --- a/kernel/debug/kdb/kdb_io.c
+> > > > +++ b/kernel/debug/kdb/kdb_io.c
+> > > > @@ -24,6 +24,7 @@
+> > > >  #include <linux/kgdb.h>
+> > > >  #include <linux/kdb.h>
+> > > >  #include <linux/kallsyms.h>
+> > > > +#include <linux/tty_driver.h>
+> > > >  #include "kdb_private.h"
+> > > >
+> > > >  #define CMD_BUFLEN 256
+> > > > @@ -699,11 +700,24 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
+> > > >                       }
+> > > >               }
+> > > >               for_each_console(c) {
+> > > > +                     int line;
+> > > > +                     struct tty_driver *p;
+> > > > +
+> > > >                       if (!(c->flags & CON_ENABLED))
+> > > >                               continue;
+> > > > -                     ++oops_in_progress;
+> > > > -                     c->write(c, cp, retlen - (cp - kdb_buffer));
+> > > > -                     --oops_in_progress;
+> > > > +                     p = c->device ? c->device(c, &line) : NULL;
+> > > > +                     if (p && p->ops && p->ops->poll_put_char) {
+> > >
+> > > What prevents this logic from matching an active console that hasn't
+> > > been selected as the polling driver?
+> >
+> > Yes you are correct and it could lead to invoking poll_put_char()
+> > without poll_init(). And we couldn't invoke poll_init() here as that
+> > still comes with locks and could sleep. So one way to overcome this
+> > would be to pass selected polling driver via dbg_io_ops and use
+> > polling APIs only if the underlying console driver matches that
+> > polling driver.
+>
+> Agree.
+>
+> Note that this is all I ever expected to look at when I commented about
+> before.
+
+Okay.
+
+>
+>
+> > > > +                             len = retlen - (cp - kdb_buffer);
+> > > > +                             cp2 = cp;
+> > > > +                             while (len--) {
+> > > > +                                     p->ops->poll_put_char(p, line, *cp2);
+> > > > +                                     cp2++;
+> > > > +                             }
+> > >
+> > > Assuming it is possible to identify the console that matches the
+> > > currently selected polling driver can't we just drop the
+> > > is_console test and get rid of this branch entirely.
+> >
+> > Have a look at my suggested approach above.
+> >
+> > >
+> > > The only reason for the is_console test is to avoid issuing messages
+> > > twice so if we are able to suppress the c->write() for the same UART
+> > > then is_console check becomes pointless and can go.
+> >
+> > I did consider removing is_console check but it looks like it's not
+> > only limited to polling drivers but also used at other places (see [1]
+> > [2]) as well.
+> >
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/early/ehci-dbgp.c#n1061
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/kgdb_nmi.c#n48
+>
+> IIUC you mean that the logic to match devices only works for tty drivers
+> and there examples are not tty drivers.
+>
+> This could probably be solved but no need to get too tied in knots. It's
+> fine to keep the is_console check for now.
+>
+
+Okay.
+
+> However rather than replicate the polled I/O write code a third and
+> fourth time lets get the I/O logic pulled out into proper functions.
+>
+
+Sure, will do the refactoring.
+
+-Sumit
+
+>
+>
+> Daniel.
