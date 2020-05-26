@@ -2,50 +2,58 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAB820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3476720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520516;
-	bh=zcyVS/NHVYgcarFW3W2ZpzEq8bYzC9EzovUz+I2DAyw=;
+	s=default; t=1590520523;
+	bh=SbiT9tShyeJeTrafTHaX26vSwjPfBaUpDXmf1AKE84s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XcX1L11Iq1O3RSA9RafMfVNz0y2Q81bKbUKOwAw+80bu/eM1mgVCfM+duuAP7/j04
-	 XFRgFpUk2pxyHrIa75VuNq79A7dTwZrEfrCm2zTELtSU7AnO/43E3W5mNVeSzwN931
-	 Vct3C7i1mZl+YjE6m2oC6zVdBwhRTxxVTbAZOJwI=
+	b=x8n5mld78fuPm9OFYOXf/dz+kmTB6KbO9l2GT2ncyuqw1gZuEdKno63M/rH5QFT8a
+	 /yYk5FSd/nmXhHgG9X7ldcgpcEeEw5u/NJ1zH/Ny/P2E+WS3+2A82ipIw+LCAy2wop
+	 SKnYygC7brqiQNezz731ESiNks07Mdu+DaoiUIYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404397AbgEZTPP (ORCPT
+        id S2404420AbgEZTPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46672 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404196AbgEZTPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:11 -0400
+        id S2404399AbgEZTPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30ABD208B3;
-        Tue, 26 May 2020 19:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC6F220776;
+        Tue, 26 May 2020 19:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520510;
-        bh=zcyVS/NHVYgcarFW3W2ZpzEq8bYzC9EzovUz+I2DAyw=;
+        s=default; t=1590520518;
+        bh=SbiT9tShyeJeTrafTHaX26vSwjPfBaUpDXmf1AKE84s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSZIA+gafZ33oeMDnYNIekdQHiYkWZG/SE0R7XCNo3GlJ/QDi/iA4nPtDekMB+9Is
-         qyyn78euZ7YRNsAppnPncBtHYvTs4H0ky3SKiklh163mg5bGE9GnlRyo/MYY1Zxz+l
-         NigwDByTjIokYRv+7V30awp/DLnjCe4zfUU300Ww=
+        b=imBhyMSYV9z5hTshpA7v4M55aIch34jdmFY4MwzdyWwh4claVc9M7uHqyBEccoLNQ
+         nz7aDfPZ6SoYmbvdfwxNg21bCHrhob+EQAyc3VuCHsvYAdA26kWWrgQjgJ4Jo8JSaR
+         DD2FfpNGGBBWE5YRndS3gdBhV3OZe3JMK/RVOrIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 071/126] powerpc/64s: Disable STRICT_KERNEL_RWX
-Date:   Tue, 26 May 2020 20:53:28 +0200
-Message-Id: <20200526183944.154484688@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Qian Cai <cai@lca.pw>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 109/126] kasan: disable branch tracing for core runtime
+Date:   Tue, 26 May 2020 20:54:06 +0200
+Message-Id: <20200526183946.749248277@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -58,46 +66,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Marco Elver <elver@google.com>
 
-commit 8659a0e0efdd975c73355dbc033f79ba3b31e82c upstream.
+commit 33cd65e73abd693c00c4156cf23677c453b41b3b upstream.
 
-Several strange crashes have been eventually traced back to
-STRICT_KERNEL_RWX and its interaction with code patching.
+During early boot, while KASAN is not yet initialized, it is possible to
+enter reporting code-path and end up in kasan_report().
 
-Various paths in our ftrace, kprobes and other patching code need to
-be hardened against patching failures, otherwise we can end up running
-with partially/incorrectly patched ftrace paths, kprobes or jump
-labels, which can then cause strange crashes.
+While uninitialized, the branch there prevents generating any reports,
+however, under certain circumstances when branches are being traced
+(TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
+reboots without warning.
 
-Although fixes for those are in development, they're not -rc material.
+To prevent similar issues in future, we should disable branch tracing
+for the core runtime.
 
-There also seem to be problems with the underlying strict RWX logic,
-which needs further debugging.
-
-So for now disable STRICT_KERNEL_RWX on 64-bit to prevent people from
-enabling the option and tripping over the bugs.
-
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200520133605.972649-1-mpe@ellerman.id.au
+[elver@google.com: remove duplicate DISABLE_BRANCH_PROFILING, per Qian Cai]
+  Link: https://lore.kernel.org/lkml/20200517011732.GE24705@shao2-debian/
+  Link: http://lkml.kernel.org/r/20200522075207.157349-1-elver@google.com
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r//20200517011732.GE24705@shao2-debian/
+Link: http://lkml.kernel.org/r/20200519182459.87166-1-elver@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/kasan/Makefile  |    8 ++++----
+ mm/kasan/generic.c |    1 -
+ mm/kasan/tags.c    |    1 -
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -129,7 +129,7 @@ config PPC
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
--	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
-+	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC32 && !HIBERNATION)
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE
- 	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -14,10 +14,10 @@ CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+ # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
+ 
+-CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+ 
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+ obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -15,7 +15,6 @@
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define DISABLE_BRANCH_PROFILING
+ 
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
+--- a/mm/kasan/tags.c
++++ b/mm/kasan/tags.c
+@@ -12,7 +12,6 @@
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define DISABLE_BRANCH_PROFILING
+ 
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
 
 
