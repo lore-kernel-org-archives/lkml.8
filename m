@@ -2,51 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0113820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668E620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520820;
-	bh=8cvxJMJFDcmUm/5T5Iw939tVnqpy6rotxOWw3C4jB4A=;
+	s=default; t=1590520825;
+	bh=rrjn21lIwbVsYMAky8QjM0Drt8vWHEafCQYkuckifaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p6Tgv4BBbSyWyJ9zt3Y/u8eX1sMXpH6TlECSXSkehqGhu/ATz9siV7LC/afN0BVG3
-	 PvEBMV7CpYkMboac/5unNrchmMoczGhO0ow1Zq1Kjm+XiA6TiH4j6ZTBvfIIgXutcL
-	 ElM/DexW1T1hTHn7Zgzt+Us8HphTYfe5ekWm4hdI=
+	b=TVi17Xf0iSxxkE+aqoGqyGUlklv6wnF0KKn21NjaPZ+ntF8qH2D+sH0HcNeSXQSqY
+	 pgI2Ap8rPhqrPVcJYXBUYyyWTnVb5sHM316F2JTnJey0jK1HEHNkM2dDlN0ZIh4Zh7
+	 j/YhV9lltvhR4oZ+OHoFwt7S+IfP3YkVqlbNKPrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392315AbgEZTUT (ORCPT
+        id S2392102AbgEZTMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:20:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42296 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392115AbgEZTMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:41 -0400
+        id S2392087AbgEZTMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DE1B20888;
-        Tue, 26 May 2020 19:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B32208A7;
+        Tue, 26 May 2020 19:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520361;
-        bh=8cvxJMJFDcmUm/5T5Iw939tVnqpy6rotxOWw3C4jB4A=;
+        s=default; t=1590520351;
+        bh=rrjn21lIwbVsYMAky8QjM0Drt8vWHEafCQYkuckifaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kC1drTAIp4oQFo/3Ky9m02ulvf89CQpo88GrTVViPlBYeWs7bgGzGqulMCx0I5IFb
-         TlgDh/64BBJxfGWMo8D2MeZMSwxm/nFl+dq0utQ1lTPM8V313OzMqOcmYwAMoTipq4
-         Zf/mI4C9qTsDELg1uwz3oj4sXYZZ4auYrrGANiiQ=
+        b=qkgNua5pCGOq3E8HksnHhNxR9LX3bP88zTrCMNzL9E5Tiak/rbaTf6Hc2kcdKxvxi
+         lEzBcosnhZXGSRm0FjLDQqmDsdNXoby54dmhU9wJqSld3ecOEHXqNvr1BXylQQwsLI
+         9FemQQNeeAGNTY9llZeGsh90bTm+ggbM4fNh6Epo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 049/126] iommu/amd: Call domain_flush_complete() in update_domain()
-Date:   Tue, 26 May 2020 20:53:06 +0200
-Message-Id: <20200526183942.154803551@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Petrov <mmrmaximuzz@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 045/126] stmmac: fix pointer check after utilization in stmmac_interrupt
+Date:   Tue, 26 May 2020 20:53:02 +0200
+Message-Id: <20200526183941.778481795@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,35 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Maxim Petrov <mmrmaximuzz@gmail.com>
 
-[ Upstream commit f44a4d7e4f1cdef73c90b1dc749c4d8a7372a8eb ]
+[ Upstream commit f42234ffd531ca6b13d9da02faa60b72eccf8334 ]
 
-The update_domain() function is expected to also inform the hardware
-about domain changes. This needs a COMPLETION_WAIT command to be sent
-to all IOMMUs which use the domain.
+The paranoidal pointer check in IRQ handler looks very strange - it
+really protects us only against bogus drivers which request IRQ line
+with null pointer dev_id. However, the code fragment is incorrect
+because the dev pointer is used before the actual check which leads
+to undefined behavior. Remove the check to avoid confusing people
+with incorrect code.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200504125413.16798-4-joro@8bytes.org
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 18c995a16d80..2aa46a6de172 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2345,6 +2345,7 @@ static void update_domain(struct protection_domain *domain)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 7da18c9afa01..d564459290ce 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3988,7 +3988,7 @@ static int stmmac_set_features(struct net_device *netdev,
+ /**
+  *  stmmac_interrupt - main ISR
+  *  @irq: interrupt number.
+- *  @dev_id: to pass the net device pointer.
++ *  @dev_id: to pass the net device pointer (must be valid).
+  *  Description: this is the main driver interrupt service routine.
+  *  It can call:
+  *  o DMA service routine (to manage incoming frame reception and transmission
+@@ -4012,11 +4012,6 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
+ 	if (priv->irq_wake)
+ 		pm_wakeup_event(priv->device, 0);
  
- 	/* Flush domain TLB(s) and wait for completion */
- 	domain_flush_tlb_pde(domain);
-+	domain_flush_complete(domain);
- }
- 
- int __init amd_iommu_init_api(void)
+-	if (unlikely(!dev)) {
+-		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+-		return IRQ_NONE;
+-	}
+-
+ 	/* Check if adapter is up */
+ 	if (test_bit(STMMAC_DOWN, &priv->state))
+ 		return IRQ_HANDLED;
 -- 
 2.25.1
 
