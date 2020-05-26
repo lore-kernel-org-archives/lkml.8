@@ -2,69 +2,105 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E35C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C175C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 939D22088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qCb428az"
+	by mail.kernel.org (Postfix) with ESMTP id 3D384208C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590531673;
+	bh=k6NIXNBHoIFJMYLYcaW8jcJWWohY5des9NYh3DMl9v0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KyD40wnTRFnagCP1xKx2GS7RRjn0uloGiVtEKcgPdPCx8+57T9kroTOZawGp5dBm0
+	 jCfvrp+LGNWliZxGoHPqynrpPae05rnHtH7j/AHKJjG3tNgWB0bW/gRSVFyHCRPehq
+	 tjgkAVYI4fKdSVZBazlj6Dsw7d2QQgLJQGeFwrbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403979AbgEZWUs (ORCPT
+        id S2404052AbgEZWVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389613AbgEZWUr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:20:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936ABC061A0F;
-        Tue, 26 May 2020 15:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XwPxUzMrfLWiY+zeasG0pmVYiHQIhzIbdSNkNN6qGgw=; b=qCb428azsiFiTY3bfIEilqYWFi
-        EnnHHEGu+Ie2Gj2UbFpnLKRlezSYIlFDBUxXxeo/dJAoHM76uyjoDDXP2BhtDXrIxNFhyePSK81jq
-        ISE4poEM92gnIinv4Z/Nc7v51Oea47l7msRB34LGfa4QJNv4ZJZBbrmc5cQ45hKvBGqqx0yTkLPZk
-        wzvDQsTy5OvgTlCNaPg2vBimDwIaxRnhoUGRP7WyPCxSrrxJYznOS4hJnfY7G14vfrIRiwHVovwIi
-        rz841xgkYwTe5YxUfoVHZVy//+p0uOkRMT+YsKA9emMroCkfnMhb4esqSZou4Ak8KG9gY7xEOmuAC
-        Eld9a4jQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdhwF-0000yf-DI; Tue, 26 May 2020 22:20:47 +0000
-Date:   Tue, 26 May 2020 15:20:47 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     William Kucharski <william.kucharski@oracle.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 36/36] mm: Align THP mappings for non-DAX
-Message-ID: <20200526222047.GJ17206@bombadil.infradead.org>
-References: <20200515131656.12890-1-willy@infradead.org>
- <20200515131656.12890-37-willy@infradead.org>
- <B06C1160-D40B-4D38-8ECF-F8BDE80F6DC0@oracle.com>
+        Tue, 26 May 2020 18:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389613AbgEZWVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 18:21:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E6702088E;
+        Tue, 26 May 2020 22:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590531671;
+        bh=k6NIXNBHoIFJMYLYcaW8jcJWWohY5des9NYh3DMl9v0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NjbrWojNPIP9ULpJoH0B3tWwkklW2Z0wpLZJEcvPJfFqWKz/a65iA0chn3WfRjxkL
+         HXkAegoMHuaX3JkVpmInezV/jdykRI9EI1YjKpbYb2LthaE0G2XDS/YqOsExkZGd1v
+         UXhY+Guu4J1Ye/nzO2SmV9cd4+WpStIE1aqLZbi4=
+Date:   Wed, 27 May 2020 00:21:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v3 02/18] nitro_enclaves: Define the PCI device interface
+Message-ID: <20200526222109.GB179549@kroah.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-3-andraprs@amazon.com>
+ <20200526064455.GA2580530@kroah.com>
+ <bd25183c-3b2d-7671-f699-78988a39a633@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <B06C1160-D40B-4D38-8ECF-F8BDE80F6DC0@oracle.com>
+In-Reply-To: <bd25183c-3b2d-7671-f699-78988a39a633@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 04:05:58PM -0600, William Kucharski wrote:
-> Thinking about this, if the intent is to make THP usable for any
-> greater than PAGESIZE page size, this routine should probably go back
-> to taking a size or perhaps order parameter so it could be called to
-> align addresses accordingly rather than hard code PMD_SIZE.
+On Tue, May 26, 2020 at 08:01:36PM +0300, Paraschiv, Andra-Irina wrote:
+> 
+> 
+> On 26/05/2020 09:44, Greg KH wrote:
+> > On Tue, May 26, 2020 at 01:13:18AM +0300, Andra Paraschiv wrote:
+> > > +struct enclave_get_slot_req {
+> > > +	/* Context ID (CID) for the enclave vsock device. */
+> > > +	u64 enclave_cid;
+> > > +} __attribute__ ((__packed__));
+> > Can you really "pack" a single member structure?
+> > 
+> > Anyway, we have better ways to specify this instead of the "raw"
+> > __attribute__ option.  But first see if you really need any of these, at
+> > first glance, I do not think you do at all, and they can all be removed.
+> 
+> There are a couple of data structures with more than one member and multiple
+> field sizes. And for the ones that are not, gathered as feedback from
+> previous rounds of review that should consider adding a "flags" field in
+> there for further extensibility.
 
-Yes, that's a good point.  For example, on ARM, we'd want to 64kB-align
-files which we could use 64kB pages, but there would be no point doing
-that on x86.  I'll revert to the earlier version of this patch that
-you sent.  Not sure how best to allow the architecture to tell us what
-page sizes are useful to align to, but that earlier patch is a better
-base to build on than this version.
+Please do not do that in ioctls.  Just create new calls instead of
+trying to "extend" existing ones.  It's always much easier.
+
+> I can modify to have "__packed" instead of the attribute callout.
+
+Make sure you even need that, as I don't think you do for structures
+like the above one, right?
+
+thanks,
+
+greg k-h
