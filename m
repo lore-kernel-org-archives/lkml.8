@@ -2,198 +2,101 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB785C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A69AB207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D792071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EeM0kRyN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8L3Jyz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgEZAMk (ORCPT
+        id S1728837AbgEZASF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 20:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55428 "EHLO
+        Mon, 25 May 2020 20:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgEZAMj (ORCPT
+        with ESMTP id S1725783AbgEZASE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 20:12:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DC5C061A0E;
-        Mon, 25 May 2020 17:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=2gQXzxPn1mcNo1x+VTCevyXqO93PV22DXQ1XG6KVVyQ=; b=EeM0kRyNn6m1rpzWGVTQEZL16R
-        KI/rxRWfNVgyHfJq9XVRq/pcD8Bx3sIsUwFlLL4OdEqy7C8z9337XfVl5QCBzCkhpiQgwDNjPBSN1
-        pXbmrtV+pdlsatWa8vtpmKTdwFKUeEnlGc2XjPu+cVxbP86+atTxvqw0n+7cEkxnmypfgT1773Tx/
-        vitFLSjl2BS5IjIbP+ynV1pGEo2Tgt/skSfoU8ue4aLw9PHq+Y1zjVF8nZ5cdv3PGkACwf+sCL6wA
-        fUBQwc7Y1mMWgyzcpmq+CYzYTVYLeJ7eA/2OO82tO+esywnErfDqlNC9NK6l9Nvdx0UW+IszliCor
-        jhtNd5kQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdNCa-000459-9l; Tue, 26 May 2020 00:12:16 +0000
-Subject: Re: [PATCH 1/2] software node: implement software_node_unregister()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 25 May 2020 20:18:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA68C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 17:18:02 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cx22so466776pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 17:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sgmk8Rx6GsFz+nunlwuNBUy97Y+yWoceMW4ZfumqYDE=;
+        b=N8L3Jyz2AfKBc/zg6WI2PBaEFBdMF/DTnCmydgqGvjgxCTQP8Hzd+oKBoLhL5Qwr+P
+         Bo/3zyWn2hV4gdEbrKqPHjVsMdE4EQJNiWLm3FxUpdswyFcWMRrvajd6P6KN4x525d7h
+         qpt69BpO8S9UB7fqnva6VgqPXHw0jvQmTo5sj35wkNwl7OkCM9OQ2Jov8fexd7nzEeAl
+         cEV1hh/IXTedWpvSl+f4KbxJvagbNScbLmN6AjYL0x+ja+myDza4pTfVG6ZUz/B5T2Zq
+         koMhkjS95MjHXOyNR7w91gTjAAzQYNglj7zI1nLyoXHoRz9QInI/4ma+9rwhxLTIJ2ku
+         XwPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sgmk8Rx6GsFz+nunlwuNBUy97Y+yWoceMW4ZfumqYDE=;
+        b=CnkTf29YhkDNcpgryAzOXaNduA9mTw/uA7NW/N4pOP0H+AQFVRmV2+Poi16yDBcGn7
+         WN1m+s1N17Dp6DMFAh0Ah5TmFC9ILQrGcJv1ZESTtIx9CcF/GF9MM7UcFEvFOKH+tL8B
+         gwW2yj1T7NwqJSjL6w0W4rMzbZ8CIJGKQEpTcNFr13etY7CoK0qOaUvMR7cdwc4rdFOL
+         ab+bGyS4jpLca/daA++vaAFDS3IfCV2lG8t1239XRXE6tx/z6zT+wT6I8GDJnXC+V2uL
+         rEH/+V5QLR/7h5594KYdtzdFix4FWoiIqqyP9haAPNXOVxTBTsB02cT2EXkD4GX+HenE
+         H8pA==
+X-Gm-Message-State: AOAM531R218iKGckUzDOYqRTJGJ9guWd+eVvh1oj6UZ9Lzpuesa8Ywg0
+        Blo4s9Vg2umcz/lpPZnsIAnS3bVK2cg=
+X-Google-Smtp-Source: ABdhPJz5Fe1j3KtwugTmqy8XMIQPl0IOUAyO8xKSIydGEW/ZC3dZZMgc2OgYqVwLj0GUVnPimAvrOw==
+X-Received: by 2002:a17:90b:23d4:: with SMTP id md20mr24582982pjb.164.1590452281672;
+        Mon, 25 May 2020 17:18:01 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id q44sm14096772pja.29.2020.05.25.17.18.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 17:18:00 -0700 (PDT)
+Date:   Tue, 26 May 2020 00:17:58 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
-Cc:     linux@roeck-us.net, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        stable <stable@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <232ef951-e20d-0c7c-a8a2-7c4fa910fa8a@infradead.org>
-Date:   Mon, 25 May 2020 17:12:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Subject: Re: [PATCH 00/19] perf: ftrace enhancement
+Message-ID: <20200526001757.7bj3x4f65j43ityk@mail.google.com>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200520203128.GN32678@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200524153041.2361-1-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520203128.GN32678@kernel.org>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/20 8:30 AM, Greg Kroah-Hartman wrote:
-> Sometimes it is better to unregister individual nodes instead of trying
-> to do them all at once with software_node_unregister_nodes(), so create
-> software_node_unregister() so that you can unregister them one at a
-> time.
+On Wed, May 20, 2020 at 05:31:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, May 10, 2020 at 11:06:09PM +0800, Changbin Du escreveu:
+> > The perf has basic kernel ftrace support but lack support of most tracing
+> > options. This serias is target to enhance the perf ftrace functionality so
+> > that we can make full use of kernel ftrace with only perf.
 > 
-> This is especially important when creating nodes in a hierarchy, with
-> parent -> children representations.  Children always need to be removed
-> before a parent is, as the swnode logic assumes this is going to be the
-> case.
+> Quite a lot! Going thru it now.
 > 
-> Fix up the lib/test_printf.c fwnode_pointer() test which to use this new
-> function as it had the problem of tearing things down in the backwards
-> order.
-> 
-> Fixes: f1ce39df508d ("lib/test_printf: Add tests for %pfw printk modifier")
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Cc: stable <stable@vger.kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> - Arnaldo
+>  
+Hi Arnaldo, thanks for your detailed review. Sorry for slow response since I am
+just getting busy with my own affairs. I'll do the changes acoording
+to your comments one by one as soon as possilbe.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-thanks.
-
-> ---
->  drivers/base/swnode.c    | 27 +++++++++++++++++++++------
->  include/linux/property.h |  1 +
->  lib/test_printf.c        |  4 +++-
->  3 files changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index de8d3543e8fe..770b1f47a625 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -712,17 +712,18 @@ EXPORT_SYMBOL_GPL(software_node_register_nodes);
->   * @nodes: Zero terminated array of software nodes to be unregistered
->   *
->   * Unregister multiple software nodes at once.
-> + *
-> + * NOTE: Be careful using this call if the nodes had parent pointers set up in
-> + * them before registering.  If so, it is wiser to remove the nodes
-> + * individually, in the correct order (child before parent) instead of relying
-> + * on the sequential order of the list of nodes in the array.
->   */
->  void software_node_unregister_nodes(const struct software_node *nodes)
->  {
-> -	struct swnode *swnode;
->  	int i;
->  
-> -	for (i = 0; nodes[i].name; i++) {
-> -		swnode = software_node_to_swnode(&nodes[i]);
-> -		if (swnode)
-> -			fwnode_remove_software_node(&swnode->fwnode);
-> -	}
-> +	for (i = 0; nodes[i].name; i++)
-> +		software_node_unregister(&nodes[i]);
->  }
->  EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
->  
-> @@ -741,6 +742,20 @@ int software_node_register(const struct software_node *node)
->  }
->  EXPORT_SYMBOL_GPL(software_node_register);
->  
-> +/**
-> + * software_node_unregister - Unregister static software node
-> + * @node: The software node to be unregistered
-> + */
-> +void software_node_unregister(const struct software_node *node)
-> +{
-> +	struct swnode *swnode;
-> +
-> +	swnode = software_node_to_swnode(node);
-> +	if (swnode)
-> +		fwnode_remove_software_node(&swnode->fwnode);
-> +}
-> +EXPORT_SYMBOL_GPL(software_node_unregister);
-> +
->  struct fwnode_handle *
->  fwnode_create_software_node(const struct property_entry *properties,
->  			    const struct fwnode_handle *parent)
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index d86de017c689..0d4099b4ce1f 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -441,6 +441,7 @@ int software_node_register_nodes(const struct software_node *nodes);
->  void software_node_unregister_nodes(const struct software_node *nodes);
->  
->  int software_node_register(const struct software_node *node);
-> +void software_node_unregister(const struct software_node *node);
->  
->  int software_node_notify(struct device *dev, unsigned long action);
->  
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 6b1622f4d7c2..fc63b8959d42 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -637,7 +637,9 @@ static void __init fwnode_pointer(void)
->  	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
->  	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
->  
-> -	software_node_unregister_nodes(softnodes);
-> +	software_node_unregister(&softnodes[2]);
-> +	software_node_unregister(&softnodes[1]);
-> +	software_node_unregister(&softnodes[0]);
->  }
->  
->  static void __init
-> 
-
-
+[snip..]
 -- 
-~Randy
+Cheers,
+Changbin Du
