@@ -2,105 +2,112 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3056C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306FB2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519641;
-	bh=LsS3+PSIvW8Kau/n+6pr/cwnVZ7ma7hnw6/ulEOkfCM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6RlT28e5DORCDpAbi2li0vX/QIjjL45F9ehgnUztci8gWIKf6wQ9tIr4NDPF+q9Q
-	 hbY967z/bq87dd+7sX2nFaE1w80uo7k1l0Rh2Lff+nDxwf00sNniE/ok+U+mFrldqR
-	 xe1h5x0OGBIjuq1F/pxB7YM4vvLbbkUG2DytqNnM=
+	by mail.kernel.org (Postfix) with ESMTP id BE25B2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390791AbgEZTAk (ORCPT
+        id S2390798AbgEZTAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389533AbgEZTAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 737042084C;
-        Tue, 26 May 2020 19:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519635;
-        bh=LsS3+PSIvW8Kau/n+6pr/cwnVZ7ma7hnw6/ulEOkfCM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0Sk+nD5khnplevED6DjMTEP+pm53EvLJJV8taNRQnxPV7SEoVg+F2crrw3ArYsEP
-         ugjmnZhW8eYniN4JeYlNPTXPnSmXAWlpqqRHgBsPDgk2m/ahrHLSCmMyr+UtvKJr07
-         3k/xXcObZeXzKSRCUSiAgutcBpnZYnl7ehu6xwPw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/59] vhost/vsock: fix packet delivery order to monitoring devices
-Date:   Tue, 26 May 2020 20:53:02 +0200
-Message-Id: <20200526183913.796883425@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
-References: <20200526183907.123822792@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 26 May 2020 15:00:42 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:41755 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390758AbgEZTAj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:39 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MHWzP-1jqYz61nhB-00DWzw for <linux-kernel@vger.kernel.org>; Tue, 26 May
+ 2020 21:00:37 +0200
+Received: by mail-qt1-f172.google.com with SMTP id z1so4970154qtn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:00:37 -0700 (PDT)
+X-Gm-Message-State: AOAM533FP+3xy5hEgTc6kzXBQ37uL+tJvBpF1gubijXOwzz56oKi1jfr
+        OAcaKIo+hejGlvUo2is1mtFEMYXWkB+kiLC0Otk=
+X-Google-Smtp-Source: ABdhPJyxFIBjrso5flwbMzskJ0iFERf9bCDL1IHkg8XbIOolDiFbZCM5y+BlNca+wOzMJlz82Rirzft1rGNKPreeS40=
+X-Received: by 2002:ac8:1844:: with SMTP id n4mr300518qtk.142.1590519636182;
+ Tue, 26 May 2020 12:00:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200521142047.169334-1-elver@google.com> <20200521142047.169334-10-elver@google.com>
+ <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
+ <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
+ <20200526120245.GB27166@willie-the-truck> <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
+ <CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com> <20200526173312.GA30240@google.com>
+In-Reply-To: <20200526173312.GA30240@google.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 26 May 2020 21:00:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3ZawPnzmzx4q58--M1h=v4X-1GtQLiwL1=G6rDK8=Wpg@mail.gmail.com>
+Message-ID: <CAK8P3a3ZawPnzmzx4q58--M1h=v4X-1GtQLiwL1=G6rDK8=Wpg@mail.gmail.com>
+Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement expression
+To:     Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:YZvZtYzPL/ad9yexnmdrNznL+6Kj7ZbcdRnrfB6SJ6T3EEGT3S2
+ 1eZZL4jOMAVQMUSFSBEq6hpa87+1QwMQ0GGLzBKA/gpyJX3TDL0E0TN0QVzba/RTcJ2/fvG
+ 40MgQOmvi5nEEWeQ4yBoYAHqLzEfwOLrWkaHqh8WwPTsOaQbBVn81rOKdEsgrtbClT4NFaW
+ chuPy9zVoZmuxh+bwXgdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kgXZ+s1WhxA=:j4tArGneAtjwl0yJKAWwBc
+ yi3MVuFvE7LnXEgNrHZW3f+eHQaS/ssYpHTnuE3egIWG4ZTScgWkYnigUpl62Kex4A/8hTquW
+ JrOHIshNbWkEiF5Xrgy9SGk1CZ5Dd9J8dAQk3tqt+c0Jjw9E8Cw7OnyJWNKV5LeK0XJFrcgtb
+ Nx3KYK3q7W71sTh6XbKSDxUng2giWHY0nJq5ErFb0/L89Dv1pNWnZMAcNFoicYPPpJ+XjxGDq
+ tRKyHqDnQRBw0LIVP//J7SHqq7S8h2Fm12tBkQVSQXCIxgF6XTtF5VdcUa5ns2R7JBcxhE1LG
+ qKolhuXVGyxoGpCEI9+rF4K2GYXhfe4jRoLarZ8V7aTM1kDSfi+kcWsm3P3XVHGLTLZ97bKv/
+ bSKHxL76gfRx/VSLfRRzOM5MSBihiOEmf8A/q2XEy6vLNhw/ed0Lun98pFJKqFKALwihrdNyd
+ GD/hibBnWWySRJ6C/Rlzn9XbXh3f/D1F78HK5ygtwlmCjnXJDRPJXYECwQ2dALUue9o26sYqL
+ GXMrIe+y8ZtSilfYHg4blo7wpQ7HNpWKmwQZ31snQA41u6f+P7GKcTdaDiZZyXbPgf4HfWMfv
+ ojePz5MIKUrWTxuJMydE4LGAwRqHks/vryh6il680wuvvbu6EIxmeG2whycUOSs8PGG49SX4c
+ hEIGV3rtdLSo1xxu4S4+qHW4AFXjCfL+bcNMFfY0elQH2CjnZTPyVPeGuK2tRwB2EqK0RR1KJ
+ ZBRxjKxhF13CH1RqgW8L3x8gilZSbuIx15X4A7TJlj2cDa4NG4ocXx0ikGf8kJOc686uyxdKZ
+ 4g5elRdpIp4oEIgspvrJ5D68769mW3UlU5j6zo6N9USY3yV7HA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+On Tue, May 26, 2020 at 7:33 PM 'Marco Elver' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+> On Tue, 26 May 2020, Marco Elver wrote:
+> > On Tue, 26 May 2020 at 14:19, Arnd Bergmann <arnd@arndb.de> wrote:
+> > Note that an 'allyesconfig' selects KASAN and not KCSAN by default.
+> > But I think that's not relevant, since KCSAN-specific code was removed
+> > from ONCEs. In general though, it is entirely expected that we have a
+> > bit longer compile times when we have the instrumentation passes
+> > enabled.
+> >
+> > But as you pointed out, that's irrelevant, and the significant
+> > overhead is from parsing and pre-processing. FWIW, we can probably
+> > optimize Clang itself a bit:
+> > https://github.com/ClangBuiltLinux/linux/issues/1032#issuecomment-633712667
+>
+> Found that optimizing __unqual_scalar_typeof makes a noticeable
+> difference. We could use C11's _Generic if the compiler supports it (and
+> all supported versions of Clang certainly do).
+>
+> Could you verify if the below patch improves compile-times for you? E.g.
+> on fs/ocfs2/journal.c I was able to get ~40% compile-time speedup.
 
-[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
+Yes, that brings both the preprocessed size and the time to preprocess it
+with clang-11 back to where it is in mainline, and close to the speed with
+gcc-10 for this particular file.
 
-We want to deliver packets to monitoring devices before it is
-put in the virtqueue, to avoid that replies can appear in the
-packet capture before the transmitted packet.
+I also cross-checked with gcc-4.9 and gcc-10 and found that they do see
+the same increase in the preprocessor output, but it makes little difference
+for preprocessing performance on gcc.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/vhost/vsock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index 834e88e20550..3f2f34ebf51f 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -182,14 +182,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 			break;
- 		}
- 
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
--		added = true;
--
--		/* Deliver to monitoring devices all correctly transmitted
--		 * packets.
-+		/* Deliver to monitoring devices all packets that we
-+		 * will transmit.
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
-+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-+		added = true;
-+
- 		pkt->off += payload_len;
- 		total_len += payload_len;
- 
--- 
-2.25.1
-
-
-
+       Arnd
