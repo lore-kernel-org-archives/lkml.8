@@ -2,81 +2,157 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55747C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5D4207ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6917207ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JCqyYSiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731798AbgEZJVA (ORCPT
+        id S2388091AbgEZJU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:21:00 -0400
-Received: from smtp.asem.it ([151.1.184.197]:63461 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgEZJU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 05:20:59 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000280340.MSG 
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:20:54 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Tue, 26
- May 2020 11:20:53 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
- Transport; Tue, 26 May 2020 11:20:53 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH] dt-bindings: leds: fix macro names for pca955x
-Date:   Tue, 26 May 2020 11:20:52 +0200
-Message-ID: <20200526092052.24172-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731662AbgEZJU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 05:20:58 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484D6C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:20:57 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id c11so21443772ljn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tjIxLurGAZl3ClrqkcDTUozxTD1nDew3Brnlr2xXLqY=;
+        b=JCqyYSiMdYS1eYDRtnDeEiedABn2SLAJ9eHMlUwpGPm+5yJt1v4LCf6UvpJc84XRbE
+         1cfRRQoLViCSj/Ef6G2XQ1MnDs8XRyleZi6kQTJgM4lW4Eyurn8txIZenaHRroS5F4Ii
+         zqWLfi1rIGTUwxWPo6NxZWKxgXdkIdm6Z/9uTNfehAxFi1FZ5QXiVI/oLvhWfxfBZP04
+         64YHr1ZbYww9BFPrJ+2zK2C1+oW+dLlk/sZkNNq4aRcvkJ5DbIEeA679CTRIvnoSxtQM
+         qA8qkXqWSIUdnpytsjCspoXtwgmZPFRfsVg7QYO2gGDE+hSnc8P9Dw8ZhWPx2fnwvwsb
+         qrxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tjIxLurGAZl3ClrqkcDTUozxTD1nDew3Brnlr2xXLqY=;
+        b=OhSB2WrDzQKo5REKJ5pgfPIJQoZ8KceGGFUxIzA2EDg+LLQprQ6UN5grvx1hmGycw2
+         yk2xfRv7HxD825l4wj81b3HYa88Yp2gETZfedKiPS22KaESyxnpM/dFaFE2K7G9XhTwk
+         iZxoHbNQtsOybjOY4rKThrfnWLihc0hTDhOocPuVhbBk/QwYWcTuRKnpnbv3OXt8rQ77
+         XniQL3+ojlO0NgLqlh7JPjA62A3jT7LYI7PdiXooElf6C2qInQDQZsHA9x7I/OsNSUYd
+         rmo+Y1Rvyi/6abyIEw1jUZEkXPi5wtB/qiE0vJctD5K3TJXMN3meQWLf9I9M4QfrHiuo
+         FyfA==
+X-Gm-Message-State: AOAM530kFfYwry4qLsX4c9f8i/dTy8rGx0Qv+IR2wQQaBU8Z2N9nnzq4
+        nLhhnim+DpFd/A8kw7FveuYN22Vtzjye4K7NIerVbA==
+X-Google-Smtp-Source: ABdhPJwg6A/TEx1rm0SmH/Tfvf7jOImMZnrbm86NXCtz4hLlqpfrcSfkYxR6Rag1WIB7c/CsQ4iUICjgpzIFIhw1xII=
+X-Received: by 2002:a2e:711c:: with SMTP id m28mr162302ljc.104.1590484855739;
+ Tue, 26 May 2020 02:20:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020D.5ECCDF75.004F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+References: <20200513141134.25819-1-lars.povlsen@microchip.com>
+ <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
+ <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
+ <87r1v8oz9f.fsf@soft-dev15.microsemi.net>
+In-Reply-To: <87r1v8oz9f.fsf@soft-dev15.microsemi.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 May 2020 11:20:44 +0200
+Message-ID: <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation reports the wrong macro names
-related to the pca9532 instead of the pca955x
+On Mon, May 25, 2020 at 4:38 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Yes, the problem is they're not in sequence. F.ex. you could have ports
+> 0,1 enabled, skip 2,3,4 and have 5,6,7 enabled.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-index 7984efb767b4..7a5830f8d5ab 100644
---- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-@@ -26,9 +26,9 @@ LED sub-node properties:
- 		from 0 to 15 for the pca9552
- 		from 0 to  3 for the pca9553
- - type: (optional) either
--	PCA9532_TYPE_NONE
--	PCA9532_TYPE_LED
--	PCA9532_TYPE_GPIO
-+	PCA955X_TYPE_NONE
-+	PCA955X_TYPE_LED
-+	PCA955X_TYPE_GPIO
- 	see dt-bindings/leds/leds-pca955x.h (default to LED)
- - label : (optional)
- 	see Documentation/devicetree/bindings/leds/common.txt
--- 
-2.17.1
+Just use disabled nodes.
 
+That would look like this in my idea of a device tree:
+
+pinctrl@nnn {
+    gpio0: gpio@0 {
+        compatible = "foo";
+        status = "ok";
+        ....
+    };
+    gpio1: gpio@1 {
+        compatible = "foo";
+        status = "ok";
+        ....
+    };
+    gpio2: gpio@2 {
+        compatible = "foo";
+        status = "disabled";
+        ....
+    };
+    gpio3: gpio@3 {
+        compatible = "foo";
+        status = "disabled";
+        ....
+    };
+    gpio4: gpio@4 {
+        compatible = "foo";
+        status = "disabled";
+        ....
+    };
+    gpio5: gpio@5 {
+        compatible = "foo";
+        status = "ok";
+        ....
+    };
+    gpio6: gpio@6 {
+        compatible = "foo";
+        status = "ok";
+        ....
+    };
+    gpio7: gpio@7 {
+        compatible = "foo";
+        status = "ok";
+        ....
+    };
+};
+
+It is common to use the status to enable/disable nodes like this.
+
+In the Linux kernel is is possible to iterate over these subnodes and
+check which ones are enabled and disabled while keeping the
+index by using something like:
+
+i = 0;
+struct device_node *np, *child;
+for_each_child_of_node(np, child) {
+    if (of_device_is_available(child)) {
+        pr_info("populating device %d\n", i);
+    }
+    i++;
+}
+
+Certainly you can use i in the above loop to populate your registers
+etc from an indexed array.
+
+This way the consumers can pick their GPIO from the right port
+and everything just using e.g.
+my-gpios = <&gpio6 4 GPIO_OUT_LOW>;
+
+Yours,
+Linus Walleij
