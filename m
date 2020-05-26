@@ -2,201 +2,180 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E35C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E76620723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9C3207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M5i4NpTb"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YIZRmfxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389408AbgEZRYN (ORCPT
+        id S2388928AbgEZRYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:24:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59582 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389372AbgEZRYA (ORCPT
+        Tue, 26 May 2020 13:24:17 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:54259 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388662AbgEZRYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:24:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590513838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3PQLQ1HOSiMqraoWAtMOlxFwElh6NwQpX/PUsGYxfKs=;
-        b=M5i4NpTbXtBicqzfjWGK84JpsMIvX/b/Ltvec3pJs90Ze1hfzyWr6ZH99h15UlKC0npkdU
-        2DQnASsyXqhdOYHlIk7ep8ehcx4XCvtW8us3e5ymWIieudG21Ika0uw6iciNoY5HaplKMl
-        c6SjhjvHdz4fhdNWsvm4YPN/1914a6o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-C1XUDu1ZOQOguvyjM9x2Bw-1; Tue, 26 May 2020 13:23:57 -0400
-X-MC-Unique: C1XUDu1ZOQOguvyjM9x2Bw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE5E4100CCC1;
-        Tue, 26 May 2020 17:23:55 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FD025D9E7;
-        Tue, 26 May 2020 17:23:54 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH 27/28] selftests: kvm: add a SVM version of state-test
-Date:   Tue, 26 May 2020 13:23:07 -0400
-Message-Id: <20200526172308.111575-28-pbonzini@redhat.com>
-In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
-References: <20200526172308.111575-1-pbonzini@redhat.com>
+        Tue, 26 May 2020 13:24:11 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 048C510AB;
+        Tue, 26 May 2020 13:24:09 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Tue, 26 May 2020 13:24:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=N+2HgG
+        4kGwu+YjXYKXb+GfVj8egbu/mj++VICG8Oszo=; b=YIZRmfxqcVE3kvuGbPKBoq
+        aWnC2jlvWdbp2Lt+f/NVV4DkUFyQuSyGZMKzMgHuCEl3/s+OkYUb47jUx/u484wx
+        Z7qqK+0MIrCZ6Os/tkm6HspzXzxOf6Lt0kWLcphVkycKP+6iZ6DKCUscvaUbG/iX
+        zF1CLYq+6DK7dMscg9jL6u2f59/Y9WDLlQPlkTBUwqBhEdx8F72vo3QZJYqKrXOo
+        PzZV26QaY5sS+M+WQCC7Ru2RlthukPareVdqMxb5WiNZYOtwvPleQBu/pw05tQK/
+        Usz9d2rzzVzgFAKuegM6VUSe+e9HSZi3rLmQ/FgaVG2uwq3OW395VJyGQWixqCcA
+        ==
+X-ME-Sender: <xms:uFDNXoOKWlvBO4sOMkY-NgvlA80NCydWVcLBYHM9cQIZOZIckaphDw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvvddgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehgtderredtredvnecuhfhrohhmpeghohhj
+    thgvkhcurfhorhgtiiihkhcuoeifohhjuhesihhnvhhishhisghlvghthhhinhhgshhlrg
+    gsrdgtohhmqeenucggtffrrghtthgvrhhnpedtudevvdffheejveekieetjeduueduffeg
+    heffffejgeeuteehtdegudetgeetteenucfkphepledurddugeehrdduieelrdeiheenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeifohhjuhes
+    ihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
+X-ME-Proxy: <xmx:uFDNXu_HuNBaUwtbrVQMbyHId1nCU_d2i4qlTdMzZtV4PmyBkKsTrQ>
+    <xmx:uFDNXvQyAmwbSFm0SU5C80ugDB_oI_J4ZSrvvLET6WmkjoDviQuY-w>
+    <xmx:uFDNXgtWisxh10JbgC0YHmik5NZIgRAC41gJH1uCGOL72lkR-HfemQ>
+    <xmx:uVDNXo4AfRDmgMAtfuWyQkE0gRCE15mhx5uo1Bp9f5Mg0MKiIbEDKg>
+Received: from mail-itl.localdomain (91-145-169-65.internetia.net.pl [91.145.169.65])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 15AAF30665C7;
+        Tue, 26 May 2020 13:24:08 -0400 (EDT)
+Received: by mail-itl.localdomain (Postfix, from userid 1000)
+        id F1DA25CF91; Tue, 26 May 2020 19:24:03 +0200 (CEST)
+Date:   Tue, 26 May 2020 19:24:03 +0200
+From:   Wojtek Porczyk <woju@invisiblethingslab.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        sashal@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
+Message-ID: <20200526172403.GA14256@invisiblethingslab.com>
+References: <20200526052848.605423-1-andi@firstfloor.org>
+ <20200526065618.GC2580410@kroah.com>
+ <20200526154835.GW499505@tassilo.jf.intel.com>
+ <20200526163235.GA42137@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Disposition: inline
+In-Reply-To: <20200526163235.GA42137@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test is similar to the existing one for VMX, but simpler because we
-don't have to test shadow VMCS or vmptrld/vmptrst/vmclear.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- .../testing/selftests/kvm/x86_64/state_test.c | 69 +++++++++++++++----
- 1 file changed, 57 insertions(+), 12 deletions(-)
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
-index 5b1a016edf55..af8b6df6a13e 100644
---- a/tools/testing/selftests/kvm/x86_64/state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/state_test.c
-@@ -18,14 +18,46 @@
- #include "kvm_util.h"
- #include "processor.h"
- #include "vmx.h"
-+#include "svm_util.h"
- 
- #define VCPU_ID		5
-+#define L2_GUEST_STACK_SIZE 256
- 
--void l2_guest_code(void)
-+void svm_l2_guest_code(void)
-+{
-+	GUEST_SYNC(4);
-+	/* Exit to L1 */
-+	vmcall();
-+	GUEST_SYNC(6);
-+	/* Done, exit to L1 and never come back.  */
-+	vmcall();
-+}
-+
-+static void svm_l1_guest_code(struct svm_test_data *svm)
-+{
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb = svm->vmcb;
-+
-+	GUEST_ASSERT(svm->vmcb_gpa);
-+	/* Prepare for L2 execution. */
-+	generic_svm_setup(svm, svm_l2_guest_code,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+
-+	GUEST_SYNC(3);
-+	run_guest(vmcb, svm->vmcb_gpa);
-+	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-+	GUEST_SYNC(5);
-+	vmcb->save.rip += 3;
-+	run_guest(vmcb, svm->vmcb_gpa);
-+	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-+	GUEST_SYNC(7);
-+}
-+
-+void vmx_l2_guest_code(void)
- {
- 	GUEST_SYNC(6);
- 
--        /* Exit to L1 */
-+	/* Exit to L1 */
- 	vmcall();
- 
- 	/* L1 has now set up a shadow VMCS for us.  */
-@@ -42,10 +74,9 @@ void l2_guest_code(void)
- 	vmcall();
- }
- 
--void l1_guest_code(struct vmx_pages *vmx_pages)
-+static void vmx_l1_guest_code(struct vmx_pages *vmx_pages)
- {
--#define L2_GUEST_STACK_SIZE 64
--        unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
- 
- 	GUEST_ASSERT(vmx_pages->vmcs_gpa);
- 	GUEST_ASSERT(prepare_for_vmx_operation(vmx_pages));
-@@ -56,7 +87,7 @@ void l1_guest_code(struct vmx_pages *vmx_pages)
- 	GUEST_SYNC(4);
- 	GUEST_ASSERT(vmptrstz() == vmx_pages->vmcs_gpa);
- 
--	prepare_vmcs(vmx_pages, l2_guest_code,
-+	prepare_vmcs(vmx_pages, vmx_l2_guest_code,
- 		     &l2_guest_stack[L2_GUEST_STACK_SIZE]);
- 
- 	GUEST_SYNC(5);
-@@ -106,20 +137,31 @@ void l1_guest_code(struct vmx_pages *vmx_pages)
- 	GUEST_ASSERT(vmresume());
- }
- 
--void guest_code(struct vmx_pages *vmx_pages)
-+static u32 cpuid_ecx(u32 eax)
-+{
-+	u32 ecx;
-+	asm volatile("cpuid" : "=a" (eax), "=c" (ecx) : "0" (eax) : "ebx", "edx");
-+	return ecx;
-+}
-+
-+static void __attribute__((__flatten__)) guest_code(void *arg)
- {
- 	GUEST_SYNC(1);
- 	GUEST_SYNC(2);
- 
--	if (vmx_pages)
--		l1_guest_code(vmx_pages);
-+	if (arg) {
-+		if (cpuid_ecx(0x80000001) & CPUID_SVM)
-+			svm_l1_guest_code(arg);
-+		else
-+			vmx_l1_guest_code(arg);
-+	}
- 
- 	GUEST_DONE();
- }
- 
- int main(int argc, char *argv[])
- {
--	vm_vaddr_t vmx_pages_gva = 0;
-+	vm_vaddr_t nested_gva = 0;
- 
- 	struct kvm_regs regs1, regs2;
- 	struct kvm_vm *vm;
-@@ -136,8 +178,11 @@ int main(int argc, char *argv[])
- 	vcpu_regs_get(vm, VCPU_ID, &regs1);
- 
- 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
--		vcpu_alloc_vmx(vm, &vmx_pages_gva);
--		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
-+		if (kvm_get_supported_cpuid_entry(0x80000001)->ecx & CPUID_SVM)
-+			vcpu_alloc_svm(vm, &nested_gva);
-+		else
-+			vcpu_alloc_vmx(vm, &nested_gva);
-+		vcpu_args_set(vm, VCPU_ID, 1, nested_gva);
- 	} else {
- 		pr_info("will skip nested state checks\n");
- 		vcpu_args_set(vm, VCPU_ID, 1, 0);
--- 
-2.26.2
+On Tue, May 26, 2020 at 06:32:35PM +0200, Greg KH wrote:
+> On Tue, May 26, 2020 at 08:48:35AM -0700, Andi Kleen wrote:
+> > On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
+> > > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
+> > > > From: Andi Kleen <ak@linux.intel.com>
+> > > >=20
+> > > > Since there seem to be kernel modules floating around that set
+> > > > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+> > > > CR4 pinning just checks that bits are set, this also checks
+> > > > that the FSGSBASE bit is not set, and if it is clears it again.
+> > >=20
+> > > So we are trying to "protect" ourselves from broken out-of-tree kernel
+> > > modules now? =20
+> >=20
+> > Well it's a specific case where we know they're opening a root hole
+> > unintentionally. This is just an pragmatic attempt to protect the users=
+ in the=20
+> > short term.
+>=20
+> Can't you just go and fix those out-of-tree kernel modules instead?
+> What's keeping you all from just doing that instead of trying to force
+> the kernel to play traffic cop?
+
+We'd very much welcome any help really, but we're under impression that this
+couldn't be done correctly in a module, so this hack occured.
+
+This was written in 2015 as part of original (research) codebase for those
+reasons:
+- A module is easier to deploy by scientists, who are no kernel developers =
+and
+  no sysadmins either, so applying patchset and recompiling kernel is a big
+  ask.
+- It has no implications on security in SGX/Graphene threat model and in
+  expected deployment scenario.
+- This had no meaning to the actual research being done, so it wasn't cared
+  about.
+
+Let me expand the second point, because I understand both the module and the
+explanation looks wrong.
+
+Graphene is intended to be run in a cloud, where the CPU time is sold in
+a form of virtual machine, so the VM kernel, which would load this module, =
+is
+not trusted by hardware owner, so s/he don't care. But the owner of the
+enclave also doesn't care, because SGX' threat model assumes adversary who =
+is
+capable of arbitrary code execution in both kernel and userspace outside
+enclave. So the kernel immediately outside the enclave is a no-man's land,
+untrusted by both sides and forsaken, reduced to a compatibility layer
+between x86 and ELF.
+
+I acknowledge this is unusual threat model and certainly to mainline
+developers, who rarely encounter userspace that is more trusted than kernel.
+
+What we've failed at is to properly explain this, because if someone loads
+this module outside of this expected scenario, will certainly be exposed to
+a gaping root hole. Therefore we acknowledge this patch and as part of
+Graphene we'll probably maintain a patchset, until the support is upstream.
+Right now this will take us some time to change from our current kernel
+interfaces.
 
 
+--=20
+pozdrawiam / best regards
+Wojtek Porczyk
+Graphene / Invisible Things Lab
+=20
+ I do not fear computers,
+ I fear lack of them.
+    -- Isaac Asimov
+
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEaO0VFfpr0tEF6hYkv2vZMhA6I1EFAl7NULMACgkQv2vZMhA6
+I1HeVhAAopSXwAHYY1jjElt533B4ztTXw4rQVCXIs+nC3wCUerQ0Qib79WmofOBZ
+lcl/BUsIF+qo+yL7FagLcqnxGg5AGBYxJ9KXiFb/iha3jpRYLZpFyxAEr/Y+LCh3
+zmChvR+UYmONCapQDDW6B3IVMyLqeTUPxZ26kHOt2MMQyb+aGhtSPfxnFLtN0MHg
+2ST5TqOWQ+izMVu4xTOuuGZBs131oodfkC1s58KOF/r6OIdBx9zGbNBQeFS1OwXA
+bYLOijvk0Q9lMPyqq7FKJuHN2dH2uP/liLOosN+OUCfjQRbz34KptMakOSZ/FJTf
+2mUWq59579kkKfW9J5nwfj27I7vUejutXDy/YFImga4HwxqGQGbXIFtlDOEdKZ7U
+aXKugpGmqfzQnyUFbeLBetdkb3Lq0H8qEOLUpHPQiHrriMm7m/7q9hEDtzplk+WJ
+Yj5gLQlIyDaMO63PRi+tR6K8s9p2E9JL/hCOUtjptEWGjzDVptoFDKWXeGe8M9ak
+caGjZRQihWkjyzvG2/f4s3/0zJ6aA1NE909X9W7hPKY6y60WJkUySXFCkSpsO/GN
+1C6s/O7nOmLeHd1IHclpNbDLMxxRtoFMb7KPjAXsFsC2Zx8Pz+1TM094TGyggWcI
+7DD8dQRMKd+IayyDmuMrmULLRLqoThIbHVKAn0OUtZDvqnHvk24=
+=OSfl
+-----END PGP SIGNATURE-----
+
+--azLHFNyN32YCQGCU--
