@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C28C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E65EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA452208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF45120888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520219;
-	bh=M0EFsdENE1P9qddgZ9+RqpFDagZZYF2QDoBnYdkJz8c=;
+	s=default; t=1590520225;
+	bh=SPeYkcFpFZoRehp37NFquwBQemQ+n/t11s5zratbdBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ro/CJkTL3cE6k0qh20Ewq7i5lZRk3uBT4lR+Nff3bTYwU1VG33xwpQ61YpNZix25k
-	 DBha68yUtD2Nzgf0zVQwBfKkR07Ye3Y9VXq1NGqqQT3wtLB4JyNzKgMG+j7jpY3bIJ
-	 nKlSOUXkanxRPLuzW1BSFvIKD/OKU+KzDCL21ZkM=
+	b=WqsxePA3LArxviMxNr2NpG+hRk2V9c2AkKqv21f2dS/w6zT/xELFlndUoaAIH1P7h
+	 B2o+bvgWCJPQyRQ/QNdbAPr1ze82Voma17eH/6CpTLLyGWC8x/MTJHm8cccXd4NXRt
+	 U30CRoZAjd9vTg3pM8jyCAE2eN5jvMKSAFu3UNU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391931AbgEZTKS (ORCPT
+        id S2391424AbgEZTKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39396 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:10:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391921AbgEZTKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:15 -0400
+        id S2391925AbgEZTKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6562320888;
-        Tue, 26 May 2020 19:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D638C208A7;
+        Tue, 26 May 2020 19:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520214;
-        bh=M0EFsdENE1P9qddgZ9+RqpFDagZZYF2QDoBnYdkJz8c=;
+        s=default; t=1590520217;
+        bh=SPeYkcFpFZoRehp37NFquwBQemQ+n/t11s5zratbdBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPZ8X7D1DJ07oPzxE+bgDuz0Y2J6MuHVTs9/cs19twk5FzSAokIOgylyENB2MS3B1
-         6FJPWCNmBOOJoAe+2V+fzT3XLjrkSkl82eBekRX/W73SBYvd8vk8bWW7P2zl7Jhcpc
-         /vYHbqvA+yA5HxOC7xu3kloJ0FuuUBESJ9SUgpUQ=
+        b=HRQP9wO/Rw88KfErWfF1q7mOlTLYNWxUI7CPYGt0bJXH/8iSYOescBqsj3zvv5zJ+
+         duKTJblKNvOa6gFeVSrkez8m68OqEtnFheyBl91oeQW8/7u/YhLsIjtLMaB1X5yIQX
+         ueYXg45PIzzBePeOxHObHsoE69i0j0QptFD+MyUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/111] iio: adc: stm32-adc: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 26 May 2020 20:54:00 +0200
-Message-Id: <20200526183942.559041461@linuxfoundation.org>
+Subject: [PATCH 5.4 103/111] iio: adc: stm32-adc: fix device used to request dma
+Date:   Tue, 26 May 2020 20:54:01 +0200
+Message-Id: <20200526183942.642031806@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,52 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit 735404b846dffcb320264f62b76e6f70012214dd ]
+[ Upstream commit 52cd91c27f3908b88e8b25aed4a4d20660abcc45 ]
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+DMA channel request should use device struct from platform device struct.
+Currently it's using iio device struct. But at this stage when probing,
+device struct isn't yet registered (e.g. device_register is done in
+iio_device_register). Since commit 71723a96b8b1 ("dmaengine: Create
+symlinks between DMA channels and slaves"), a warning message is printed
+as the links in sysfs can't be created, due to device isn't yet registered:
+- Cannot create DMA slave symlink
+- Cannot create DMA dma:rx symlink
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Fix this by using device struct from platform device to request dma chan.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Fixes: 2763ea0585c99 ("iio: adc: stm32: add optional dma support")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/stm32-adc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/iio/adc/stm32-adc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 9f63ceb15865..a2279cccb584 100644
+index a2279cccb584..94fde39d9ff7 100644
 --- a/drivers/iio/adc/stm32-adc.c
 +++ b/drivers/iio/adc/stm32-adc.c
-@@ -1763,9 +1763,21 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
+@@ -1757,18 +1757,18 @@ static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
+ 	return 0;
+ }
+ 
+-static int stm32_adc_dma_request(struct iio_dev *indio_dev)
++static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct stm32_adc *adc = iio_priv(indio_dev);
  	struct dma_slave_config config;
  	int ret;
  
--	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
--	if (!adc->dma_chan)
-+	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	if (IS_ERR(adc->dma_chan)) {
-+		ret = PTR_ERR(adc->dma_chan);
-+		if (ret != -ENODEV) {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&indio_dev->dev,
-+					"DMA channel request failed with %d\n",
-+					ret);
-+			return ret;
-+		}
-+
-+		/* DMA is optional: fall back to IRQ mode */
-+		adc->dma_chan = NULL;
- 		return 0;
-+	}
+-	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
++	adc->dma_chan = dma_request_chan(dev, "rx");
+ 	if (IS_ERR(adc->dma_chan)) {
+ 		ret = PTR_ERR(adc->dma_chan);
+ 		if (ret != -ENODEV) {
+ 			if (ret != -EPROBE_DEFER)
+-				dev_err(&indio_dev->dev,
++				dev_err(dev,
+ 					"DMA channel request failed with %d\n",
+ 					ret);
+ 			return ret;
+@@ -1874,7 +1874,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
  
- 	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
- 					 STM32_DMA_BUFFER_SIZE,
+-	ret = stm32_adc_dma_request(indio_dev);
++	ret = stm32_adc_dma_request(dev, indio_dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.1
 
