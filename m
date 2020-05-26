@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36726C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAD22086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AC02084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519435;
-	bh=wf0ZVFQ7x8anE5OuhsDIZiFHHWobosTKSUdq6cG++ao=;
+	s=default; t=1590519436;
+	bh=n/NqSZUexd3WmAYJCy5QjSeuALoNAEoTCx58MVGOB5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sEqZ7hPpfujCdFSblQe8zCW7GPQAGN9GjY+Uj08F77EhJQ0mr28qHFXRNyyIcER6R
-	 iWjV44FTnKPJr5xho430aWaDHs6+6tv6rkTnxUVEB3WcG/9prkWUoojuMWxCFOZPUS
-	 XITGPJIv1cD+GqAd8xF2QRHSyy9tTajWmhTGWJ5M=
+	b=IWPiHfYuhW/ZSyv/0dnQZOQlj1kHlcxxjBzAYHvoEnTw/A5Ee3WYLjq6ZGQ5r/095
+	 QRk058MEQdOUcVjfHeqpASYbHskzCjdPwFyj/ISfP1DWziqPkjY7+e7rPnl5ljH4PO
+	 plr24z/H8kcb/ejHcgGCSlefpLCVRsL2wmn8O0Tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390048AbgEZS5O (ORCPT
+        id S2390040AbgEZS5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390013AbgEZS5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:06 -0400
+        id S2390011AbgEZS5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DE42084C;
-        Tue, 26 May 2020 18:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FAC20849;
+        Tue, 26 May 2020 18:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519426;
-        bh=wf0ZVFQ7x8anE5OuhsDIZiFHHWobosTKSUdq6cG++ao=;
+        s=default; t=1590519428;
+        bh=n/NqSZUexd3WmAYJCy5QjSeuALoNAEoTCx58MVGOB5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XeYnVC3osavgoKhILJxHVq2nG+Arc5dsal55SNaYqlJHGIXACeC5EhmcTz1DTBOnn
-         shsoc7B1FtblIybmNTNsIlmXKT0Kz1SS3NsfPbaGA0Bcn3j2XYspE/RzzMvFfi/jjB
-         hX8alvCiDWhcUpu66XmH6/1AQEl3+OG2Rf/HYGQw=
+        b=OfSbckdJOnTqUsvxfEQo4EVaeCbkFMQ8CDmvsF+HtHk6rsHA5vJcTor/kto5f7od/
+         HPplY9xDnwuTlLbLFweH/MtGZpDD/WOriiNd7djYpd2xcO9JbKgTfPYY/98HAMAWo7
+         HpwiHn2R68Ict/daoHwFvKIalQWursHpuUi5GUyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, greg@kroah.com
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "R. Parameswaran" <rparames@brocade.com>,
         "David S. Miller" <davem@davemloft.net>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 47/65] l2tp: define parameters of l2tp_tunnel_find*() as "const"
-Date:   Tue, 26 May 2020 20:53:06 +0200
-Message-Id: <20200526183922.327475322@linuxfoundation.org>
+Subject: [PATCH 4.4 65/65] l2tp: device MTU setup, tunnel socket needs a lock
+Date:   Tue, 26 May 2020 20:53:24 +0200
+Message-Id: <20200526183929.373249014@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -60,53 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: R. Parameswaran <parameswaran.r7@gmail.com>
 
-commit 2f858b928bf5a8174911aaec76b8b72a9ca0533d upstream.
+commit 57240d007816486131bee88cd474c2a71f0fe224 upstream.
 
-l2tp_tunnel_find() and l2tp_tunnel_find_nth() don't modify "net".
+The MTU overhead calculation in L2TP device set-up
+merged via commit b784e7ebfce8cfb16c6f95e14e8532d0768ab7ff
+needs to be adjusted to lock the tunnel socket while
+referencing the sub-data structures to derive the
+socket's IP overhead.
 
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Reported-by: Guillaume Nault <g.nault@alphalink.fr>
+Tested-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: R. Parameswaran <rparames@brocade.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
+Cc: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_core.c |    4 ++--
- net/l2tp/l2tp_core.h |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -378,7 +378,7 @@ exist:
+---
+ include/linux/net.h |    2 +-
+ net/l2tp/l2tp_eth.c |    2 ++
+ net/socket.c        |    2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -291,7 +291,7 @@ int kernel_sendpage(struct socket *sock,
+ int kernel_sock_ioctl(struct socket *sock, int cmd, unsigned long arg);
+ int kernel_sock_shutdown(struct socket *sock, enum sock_shutdown_cmd how);
  
- /* Lookup a tunnel by id
+-/* Following routine returns the IP overhead imposed by a socket.  */
++/* Routine returns the IP overhead imposed by a (caller-protected) socket. */
+ u32 kernel_sock_ip_overhead(struct sock *sk);
+ 
+ #define MODULE_ALIAS_NETPROTO(proto) \
+--- a/net/l2tp/l2tp_eth.c
++++ b/net/l2tp/l2tp_eth.c
+@@ -240,7 +240,9 @@ static void l2tp_eth_adjust_mtu(struct l
+ 		dev->needed_headroom += session->hdr_len;
+ 		return;
+ 	}
++	lock_sock(tunnel->sock);
+ 	l3_overhead = kernel_sock_ip_overhead(tunnel->sock);
++	release_sock(tunnel->sock);
+ 	if (l3_overhead == 0) {
+ 		/* L3 Overhead couldn't be identified, this could be
+ 		 * because tunnel->sock was NULL or the socket's
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3308,7 +3308,7 @@ EXPORT_SYMBOL(kernel_sock_shutdown);
+ /* This routine returns the IP overhead imposed by a socket i.e.
+  * the length of the underlying IP header, depending on whether
+  * this is an IPv4 or IPv6 socket and the length from IP options turned
+- * on at the socket.
++ * on at the socket. Assumes that the caller has a lock on the socket.
   */
--struct l2tp_tunnel *l2tp_tunnel_find(struct net *net, u32 tunnel_id)
-+struct l2tp_tunnel *l2tp_tunnel_find(const struct net *net, u32 tunnel_id)
+ u32 kernel_sock_ip_overhead(struct sock *sk)
  {
- 	struct l2tp_tunnel *tunnel;
- 	struct l2tp_net *pn = l2tp_pernet(net);
-@@ -396,7 +396,7 @@ struct l2tp_tunnel *l2tp_tunnel_find(str
- }
- EXPORT_SYMBOL_GPL(l2tp_tunnel_find);
- 
--struct l2tp_tunnel *l2tp_tunnel_find_nth(struct net *net, int nth)
-+struct l2tp_tunnel *l2tp_tunnel_find_nth(const struct net *net, int nth)
- {
- 	struct l2tp_net *pn = l2tp_pernet(net);
- 	struct l2tp_tunnel *tunnel;
---- a/net/l2tp/l2tp_core.h
-+++ b/net/l2tp/l2tp_core.h
-@@ -242,8 +242,8 @@ struct l2tp_session *l2tp_session_get_nt
- struct l2tp_session *l2tp_session_get_by_ifname(const struct net *net,
- 						const char *ifname,
- 						bool do_ref);
--struct l2tp_tunnel *l2tp_tunnel_find(struct net *net, u32 tunnel_id);
--struct l2tp_tunnel *l2tp_tunnel_find_nth(struct net *net, int nth);
-+struct l2tp_tunnel *l2tp_tunnel_find(const struct net *net, u32 tunnel_id);
-+struct l2tp_tunnel *l2tp_tunnel_find_nth(const struct net *net, int nth);
- 
- int l2tp_tunnel_create(struct net *net, int fd, int version, u32 tunnel_id,
- 		       u32 peer_tunnel_id, struct l2tp_tunnel_cfg *cfg,
 
 
