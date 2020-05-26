@@ -2,94 +2,111 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E43C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95D472068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590513641;
-	bh=hw5/1dbpQanUG01rMuj1Hh2J0RHIzJGURbw8c5pWpAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H8vQqUo28mgk4nNMgFQguYlul2HUzHiR47o0oUDzyO6c1g5ILFa1/qFdvz1yo/NH1
-	 Ju74YcJyrcA8Fsdx8VW7wpXkmWCFsktfVr73O7aFLx4oBHUUuZgmHJBd8lXus6KKUt
-	 ODG58RbklLDKsCiAnz8HmPD+OCLJw+94fUw7jfXk=
+	by mail.kernel.org (Postfix) with ESMTP id 3DE1720723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aZP0WA1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389065AbgEZRUl (ORCPT
+        id S2389167AbgEZRU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388061AbgEZRUk (ORCPT
+        Tue, 26 May 2020 13:20:57 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:35254 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388061AbgEZRU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:20:40 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C845C03E96D;
-        Tue, 26 May 2020 10:20:40 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n11so15923758qkn.8;
-        Tue, 26 May 2020 10:20:40 -0700 (PDT)
+        Tue, 26 May 2020 13:20:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5UGKXExeW+nhU16EFqfK9RzsDWq/8Qsk6MN8cmfOs4Q=;
-        b=fXVsQMGLbf3AGbHuPnQtv+E7wUV4PZgjmSB3XiMW5ldzvsV92NRJW0zZtBOWLkeWxg
-         itvONAkOSfEdL3l2EReMxObAhPx0DcObj7M8JTns9pgVP0V61MG3hM55v+dwzjjuMo01
-         zalrBdHDedUYhutoQlCSWg1o4Wc4WAlZgmbmXVbkZXBA1ELtSJ45Y5u/0fctnVJam8NM
-         IATgAm6VsAqHaPRC/MtWQTdDMcNPcDBMzHm7bfXZsW2IOHYLh4Dbu4bjtdYoEIXvjk9P
-         4rlmEoAjHS9+4V6WynMOk5TqiUnjVSE14QWM/3stzi476R5dxuxz1XjoygTNE2vP/XWd
-         3n8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=5UGKXExeW+nhU16EFqfK9RzsDWq/8Qsk6MN8cmfOs4Q=;
-        b=dNOLAawRMIi3zjcInzlAsmy+zQxvnkNBy/1ACkIHBjdH59kEu/53Xmt4Xu5t3CH0Ed
-         BhhSUXYdf4uffmqnGppXzoa+jJoYy1uEEN9tfqqf2jn7MfEpMWlrGYBTqN/RO1sZLPs8
-         lSfkwJzEl/2O+20g5o7Jl1IsLjbx3yXLhApwKi5c1o9qP+NCbaCzCmoCloryb7RfJ5aU
-         DPiZx87CJfSw71RLUysIFhiFQWsJWMyAADyzb4HhG1oMydZ7fPPv9+K63fAZq/bPl8ok
-         Q+moq4mBj8tkAv6dSo0GyEEqYU2raDaoGWF5Zy+RY3+zgp0XFfJL9evgauBKoCjWjhZG
-         OFMg==
-X-Gm-Message-State: AOAM530Q5NMVLKSe4M4JuhID+kMbNoj3Q+/6LbEMlGk31Cykyy1rRmmu
-        vn2kOnBMLOk53dcY6WJBQthtdHs5
-X-Google-Smtp-Source: ABdhPJysHKl3r5+RtXDnqyls0wrwrs5WQYYlIYzkgLgpTWiv6Y3X9QUSx3W/OHfGhuKm8e4cFj9JSw==
-X-Received: by 2002:a05:620a:147:: with SMTP id e7mr2457674qkn.267.1590513639385;
-        Tue, 26 May 2020 10:20:39 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:85c0])
-        by smtp.gmail.com with ESMTPSA id g5sm229443qti.87.2020.05.26.10.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 10:20:38 -0700 (PDT)
-Date:   Tue, 26 May 2020 13:20:37 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Zefan Li <lizefan@huawei.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cgroup: Remove stale comments
-Message-ID: <20200526172037.GC83516@mtj.thefacebook.com>
-References: <0ce73f20-6b19-38c7-81c5-b0b71013fcb7@huawei.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590513656; x=1622049656;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=SuRy4tavgBldQyqB1OdrVDKPEKHaP40bur786DRkLGI=;
+  b=aZP0WA1NcqTI3gMKPb38MdYdfgLVYs8QMEz0y4/NqEDQQne/gB5As9EC
+   F7Ok4GJVBxgXea+K97u9e1kfj6/qex/BUOxzanju11WxC06fNXsyYMn6N
+   8rKb3wNiVGnDlWeVx/JzYUaagJYQEaFhHRpddTi3Nv8yoEwVDgnTFj0qJ
+   8=;
+IronPort-SDR: vJG6PgGh8Agtr/CuoHTmeJWRy+SNtfwxtlp638MAvHfGQ/s7GwBIZURSgc22qGTliFuyV9idUM
+ UjbtLEQAhalw==
+X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
+   d="scan'208";a="46057669"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 May 2020 17:20:54 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 12FEEA2291;
+        Tue, 26 May 2020 17:20:54 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 17:20:53 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 17:20:43 +0000
+Subject: Re: [PATCH v3 03/18] nitro_enclaves: Define enclave info for internal
+ bookkeeping
+To:     Greg KH <greg@kroah.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-4-andraprs@amazon.com>
+ <20200526064601.GB2580530@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <b5cc525a-aeea-74ec-06fc-e9992077ba65@amazon.com>
+Date:   Tue, 26 May 2020 20:20:38 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ce73f20-6b19-38c7-81c5-b0b71013fcb7@huawei.com>
+In-Reply-To: <20200526064601.GB2580530@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D41UWC001.ant.amazon.com (10.43.162.107) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:13:11AM +0800, Zefan Li wrote:
-> - The default root is where we can create v2 cgroups.
-> - The __DEVEL__sane_behavior mount option has been removed long long ago.
-> 
-> Signed-off-by: Li Zefan <lizefan@huawei.com>
+CgpPbiAyNi8wNS8yMDIwIDA5OjQ2LCBHcmVnIEtIIHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDI2LCAy
+MDIwIGF0IDAxOjEzOjE5QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gKy8qIE5p
+dHJvIEVuY2xhdmVzIChORSkgbWlzYyBkZXZpY2UgKi8KPj4gK2V4dGVybiBzdHJ1Y3QgbWlzY2Rl
+dmljZSBuZV9taXNjZGV2aWNlOwo+IFdoeSBkb2VzIHlvdXIgbWlzYyBkZXZpY2UgbmVlZCB0byBi
+ZSBpbiBhIC5oIGZpbGU/Cj4KPiBIYXZpbmcgdGhlIHBhdGNoIHNlcmllcyBsaWtlIHRoaXMgKGFk
+ZCByYW5kb20gLmggZmlsZXMsIGFuZCB0aGVuIHN0YXJ0Cj4gdG8gdXNlIHRoZW0pLCBpcyBoYXJk
+IHRvIHJldmlldy4gIFdvdWxkIHlvdSB3YW50IHRvIHRyeSB0byByZXZpZXcgYQo+IHNlcmllcyB3
+cml0dGVuIGluIHRoaXMgd2F5PwoKVGhlIG1pc2MgZGV2aWNlIGlzIHJlZ2lzdGVyZWQgLyB1bnJl
+Z2lzdGVyZWQgd2hpbGUgaGF2aW5nIHRoZSBORSBQQ0kgCmRldmljZSBwcm9iZSAvIHJlbW92ZSwg
+YXMgYSBkZXBlbmRlbmN5IHRvIGFjdHVhbGx5IGhhdmluZyBhIFBDSSBkZXZpY2UgCndvcmtpbmcg
+dG8gZXhwb3NlIGEgbWlzYyBkZXZpY2UuCgpUaGUgd2F5IHRoZSBjb2RlYmFzZSBpcyBzcGxpdCBp
+biBmaWxlcyBpcyBtYWlubHkgdGhlIGlvY3RsIGxvZ2ljIC8gbWlzYyAKZGV2aWNlIGluIG9uZSBm
+aWxlIGFuZCB0aGUgUENJIGRldmljZSBsb2dpYyBpbiBhbm90aGVyIGZpbGU7IHRodXMgbm90IApo
+YXZlIGFsbCB0aGUgY29kZWJhc2UgaW4gYSBzaW5nbGUgYmlnIGZpbGUuIEdpdmVuIHRoZSBtaXNj
+IGRldmljZSAKKHVuKXJlZ2lzdGVyIGxvZ2ljIGFib3ZlLCB0aGUgbWlzYyBkZXZpY2UgbmVlZHMg
+dG8gYmUgYXZhaWxhYmxlIHRvIHRoZSAKUENJIGRldmljZSBzZXR1cCBsb2dpYy4KCkFuZHJhCgoK
+CgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBv
+ZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENv
+dW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlv
+biBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
 
-Applied to cgroup/for-5.8.
-
-Thanks.
-
--- 
-tejun
