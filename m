@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C64C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8169DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0B2208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D73020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520177;
-	bh=p9OcJyFAMvLDmi1flaOtACr8M52ClYUm0OlUxAf6mzQ=;
+	s=default; t=1590520184;
+	bh=7IKmBvPJx1xr7hrSb/vIGF8kI12tcK/bonIHJ5QucHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9M72ZtV8KcCTOEhxyIzqy40/Vj2nSvz9zlxklcBx0ROAKPYXvAjtJbrDICe6WM6j
-	 zs0vF3tCuLgAYtjby6NxiHz2Yy3IjcQKG674/GtNx4lX7PthxK1mbbmPNDR2ioyd+/
-	 wWwgkObsvnNf3SA2XbNo9jIvIwwX9Yn1MIEmsiGc=
+	b=iYEf5za9smcsKu7a2p3X/lrQbi31Z486tpHij9M2ba+wMJKAbYNp+n0egGjy5B/Ty
+	 ZCjHTyIrOlFMuggjepeDIehhAedDPhlKlujfFTvB8IOE45LMcYGCGS9gcDN7z1Pggj
+	 xB58jP4YGYF73gpxCRVmuUrqP1YU9DUPaACQC2LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391891AbgEZTJg (ORCPT
+        id S2403936AbgEZTJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38692 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391883AbgEZTJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:32 -0400
+        id S2391884AbgEZTJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFC8420776;
-        Tue, 26 May 2020 19:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F2020873;
+        Tue, 26 May 2020 19:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520172;
-        bh=p9OcJyFAMvLDmi1flaOtACr8M52ClYUm0OlUxAf6mzQ=;
+        s=default; t=1590520174;
+        bh=7IKmBvPJx1xr7hrSb/vIGF8kI12tcK/bonIHJ5QucHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aApTGsV1YphuczxV4JxSp3lm0VWQIlFBLPD3EAwCOVqC1fiXueMEb+nA6uZotZpBV
-         ulhv/D69fb6TIPZhIqrdURYbV1JhN143vAFdCe8n2cP6joOyet0woZBnyuZRrA7F0V
-         qqzeDuDzh4OVqYPErUDucXVzNhNtGPgxcunJJXGA=
+        b=T5giwNQkrIegXUn0ODLLo4TI8Tt7HS/GartJLafk3q2SqalwpwjCFovz3NRlYBUbz
+         JvY/qFipdOjP83fLb/095jOnu+4VCFQ6IylqGUAAw09G2+evzL0LyhzH0u6vco91gr
+         J1/7plPGmzJP3qISoEaMEqtioAxigkvBEJq0HzoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 087/111] iio: adc: ti-ads8344: Fix channel selection
-Date:   Tue, 26 May 2020 20:53:45 +0200
-Message-Id: <20200526183941.168613269@linuxfoundation.org>
+        stable@vger.kernel.org, Klaus Doth <kdlnx@doth.eu>
+Subject: [PATCH 5.4 088/111] misc: rtsx: Add short delay after exit from ASPM
+Date:   Tue, 26 May 2020 20:53:46 +0200
+Message-Id: <20200526183941.276181108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,69 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Klaus Doth <kdlnx@doth.eu>
 
-commit bcfa1e253d2e329e1ebab5c89f3c73f6dd17606c upstream.
+commit 7a839dbab1be59f5ed3b3b046de29e166784c9b4 upstream.
 
-During initial submission the selection of the channel was done using
-the scan_index member of the iio_chan_spec structure. It was an abuse
-because this member is supposed to be used with a buffer so it was
-removed.
+DMA transfers to and from the SD card stall for 10 seconds and run into
+timeout on RTS5260 card readers after ASPM was enabled.
 
-However there was still the need to be able to known how to select a
-channel, the correct member to store this information is address.
+Adding a short msleep after disabling ASPM fixes the issue on several
+Dell Precision 7530/7540 systems I tested.
 
-Thanks to this it is possible to select any other channel than the
-channel 0.
+This function is only called when waking up after the chip went into
+power-save after not transferring data for a few seconds. The added
+msleep does therefore not change anything in data transfer speed or
+induce any excessive waiting while data transfers are running, or the
+chip is sleeping. Only the transition from sleep to active is affected.
 
-Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/4434eaa7-2ee3-a560-faee-6cee63ebd6d4@doth.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/ti-ads8344.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/misc/cardreader/rtsx_pcr.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/iio/adc/ti-ads8344.c
-+++ b/drivers/iio/adc/ti-ads8344.c
-@@ -32,16 +32,17 @@ struct ads8344 {
- 	u8 rx_buf[3];
- };
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -143,6 +143,9 @@ static void rtsx_comm_pm_full_on(struct
  
--#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
-+#define ADS8344_VOLTAGE_CHANNEL(chan, addr)				\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
- 		.indexed = 1,						\
- 		.channel = chan,					\
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.address = addr,					\
- 	}
+ 	rtsx_disable_aspm(pcr);
  
--#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
-+#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, addr)		\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
- 		.indexed = 1,						\
-@@ -50,6 +51,7 @@ struct ads8344 {
- 		.differential = 1,					\
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.address = addr,					\
- 	}
++	/* Fixes DMA transfer timout issue after disabling ASPM on RTS5260 */
++	msleep(1);
++
+ 	if (option->ltr_enabled)
+ 		rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
  
- static const struct iio_chan_spec ads8344_channels[] = {
-@@ -105,7 +107,7 @@ static int ads8344_read_raw(struct iio_d
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		mutex_lock(&adc->lock);
--		*value = ads8344_adc_conversion(adc, channel->scan_index,
-+		*value = ads8344_adc_conversion(adc, channel->address,
- 						channel->differential);
- 		mutex_unlock(&adc->lock);
- 		if (*value < 0)
 
 
