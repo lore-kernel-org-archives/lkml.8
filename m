@@ -2,197 +2,119 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1DEF20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590509747;
-	bh=gUa5ba6GWA5xYBQnyy/CNy8dovH0TV4Cna3GtLzW9vY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KpbxcYOgD/111HHnaLduM+7KDAR/ATsy8+N7w3ranjSq6JRcEVBb3g5JmfplySNy9
-	 mKNREQOBq4LL8btFQCKAANitJZ6//wLOxkXOvc7B7ZqZ4UQRN2js6IfdNeXXvUKrcN
-	 9JF27yZpore407OSxTH2Ugds2JLb6xpOOk/w+Bic=
+	by mail.kernel.org (Postfix) with ESMTP id 389C220704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qew9FHZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgEZQPr (ORCPT
+        id S1729372AbgEZQP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727968AbgEZQPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:15:46 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8977A20704;
-        Tue, 26 May 2020 16:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590509746;
-        bh=gUa5ba6GWA5xYBQnyy/CNy8dovH0TV4Cna3GtLzW9vY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dxyu26eVjFiFixuGaFBOBgSkGNA/ucV+JYGmxPBgVqBFbFp+o7oQ+9IHd8fOKdSQ7
-         W97sBK+yFe3QdSrh/xUBwFqIchtzbo5U2bqHUXi0ClsPL5YpSaZFuWvQtp4ZPiTGLe
-         8L/KCbeUs62iZrZQqOu3+UVI73JojwevT8hnH7wI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7953340AFD; Tue, 26 May 2020 13:15:43 -0300 (-03)
-Date:   Tue, 26 May 2020 13:15:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Travis Downs <travis.downs@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V2] perf tools: Fix debuginfo search for Ubuntu
-Message-ID: <20200526161543.GB14219@kernel.org>
-References: <20200526155207.9172-1-adrian.hunter@intel.com>
+        Tue, 26 May 2020 12:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgEZQP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:15:56 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC87FC03E96D;
+        Tue, 26 May 2020 09:15:56 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cx22so40207pjb.1;
+        Tue, 26 May 2020 09:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=YqEvDdm+2FRvK2g2dpbk2MAAMjjDOpk7CCKnCxddFow=;
+        b=Qew9FHZ/T8F9VE7WbLHFYxT7UZdYTNQA1StkBFBnUWe/aEao547r51+4K9HjuOWMDJ
+         uyCLXXgnU8/K41YEQ0ozdihpsj8AG+vvYL/V7Isreq6H38Ebx0wAo252XIElvjDe8k77
+         kxbElRRST9MgTd7WifEdoXPi5GDuKDUrUdFBiw5StcJpTK65HhtsBwK4u2aTjRrQCPQu
+         5krB6Lh07i9ke7UbGhRu0tp7XruxzEso6VrHBgQ1ycIK+iv7suEyn3gSrlWnT4ITaris
+         qXvkTrtVdO/4QyM1KFDX0D59dX7sZN2GZu+xXrHaPksNflayJr0eKacetY5b4L1ho7W/
+         OlMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YqEvDdm+2FRvK2g2dpbk2MAAMjjDOpk7CCKnCxddFow=;
+        b=dqD5MgiwRWqHaInCeaWY1TCnc/DfR0tR3TfRgDpkn/waT1GJB3E9ZSEJ4Yj5HF+ICD
+         tugPdeBooCYBJA55n0XTsfyg/5ReiHaPbuIXh52tqTxZcJPsWn9rR1gdrBTav5dgCq8s
+         5TNaG74wt5lTHBroHJKOXKXw8r14cJEA7e0psccECHgRWCAEvPc7cC5zMHrQq2hi4oz3
+         ekAnUVIdZ8XjB4HJ8hTYPK481SelIlWP2vwZJHbDZdkD2Bd0MYi9B17l5u1vr8CZ7x8J
+         jCD0KeCfX89psVe44dYbmeWPvP6QzBrYWux5YFadSQJBMweEiNAos4QVS4HJSOu9FRx4
+         CxjA==
+X-Gm-Message-State: AOAM532nl/1uwg9rGCabz5iBh8s6P0vaVDx2qgD8wf65Eq7DnVwY3CY8
+        nh4oTCg2SalhEFiqXKBGLXW8x7m5
+X-Google-Smtp-Source: ABdhPJwMfbhWKQlvyzpNKVQ/t1vHhePAK9yYVH82BhLbp+pJptxgzrRKgEUNfCwhaHG2qRmc9lWuBw==
+X-Received: by 2002:a17:90a:4149:: with SMTP id m9mr11944pjg.200.1590509755882;
+        Tue, 26 May 2020 09:15:55 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u1sm33375pfu.151.2020.05.26.09.15.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 09:15:55 -0700 (PDT)
+Subject: Re: [PATCH] MIPS: BCM63xx: fix 6328 boot selection bit
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200526110324.1324754-1-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <862863b2-d73e-0c48-6503-c912c60c1b94@gmail.com>
+Date:   Tue, 26 May 2020 09:15:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526155207.9172-1-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200526110324.1324754-1-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 26, 2020 at 06:52:07PM +0300, Adrian Hunter escreveu:
-> Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
-> debug symbol files, putting files expected to be in
-> /usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
-> another dso_binary_type.
-> 
-> Example on Ubuntu 20.04
-> 
->   Before:
-> 
->     $ perf record -e intel_pt//u uname
->     Linux
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.030 MB perf.data ]
->     $ perf script --call-trace | head -5
->            uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
->            uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
->            uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
->            uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
->            uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
-> 
->   After:
-> 
->     $ perf script --call-trace | head -5
->            uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
->            uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
->            uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
->            uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
->            uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-> 
-> Reported-by: Travis Downs <travis.downs@gmail.com>
 
-Thanks, applied.
 
-- Arnaldo
+On 5/26/2020 4:03 AM, Álvaro Fernández Rojas wrote:
+> MISC_STRAP_BUS_BOOT_SEL_SHIFT is 18 according to Broadcom's GPL source code.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: stable@vger.kernel.org
+This is correct:
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Fixes: e5766aea5b9b ("MIPS: BCM63XX: Add basic BCM6328 support")
+
 > ---
+>  arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> 
-> Changes in V2:
-> 	Added  'break' after 'ret = -1'
-> 
-> 
->  tools/perf/util/dso.c          | 16 ++++++++++++++++
->  tools/perf/util/dso.h          |  1 +
->  tools/perf/util/probe-finder.c |  1 +
->  tools/perf/util/symbol.c       |  2 ++
->  4 files changed, 20 insertions(+)
-> 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index e68e1375e3c0..be991cbbe9f8 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -47,6 +47,7 @@ char dso__symtab_origin(const struct dso *dso)
->  		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
->  		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
->  		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
-> +		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
->  		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
->  		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
->  		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
-> @@ -129,6 +130,21 @@ int dso__read_binary_type_filename(const struct dso *dso,
->  		snprintf(filename + len, size - len, "%s", dso->long_name);
->  		break;
+> diff --git a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+> index bc3444cd4ef2..9ceb5e72889f 100644
+> --- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+> +++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+> @@ -1367,8 +1367,8 @@
+>  #define MISC_STRAPBUS_6328_REG		0x240
+>  #define STRAPBUS_6328_FCVO_SHIFT	7
+>  #define STRAPBUS_6328_FCVO_MASK		(0x1f << STRAPBUS_6328_FCVO_SHIFT)
+> -#define STRAPBUS_6328_BOOT_SEL_SERIAL	(1 << 28)
+> -#define STRAPBUS_6328_BOOT_SEL_NAND	(0 << 28)
+> +#define STRAPBUS_6328_BOOT_SEL_SERIAL	(1 << 18)
+> +#define STRAPBUS_6328_BOOT_SEL_NAND	(0 << 18)
 >  
-> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-> +		/*
-> +		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
-> +		 * /usr/lib/debug/lib when it is expected to be in
-> +		 * /usr/lib/debug/usr/lib
-> +		 */
-> +		if (strlen(dso->long_name) < 9 ||
-> +		    strncmp(dso->long_name, "/usr/lib/", 9)) {
-> +			ret = -1;
-> +			break;
-> +		}
-> +		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-> +		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
-> +		break;
-> +
->  	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
->  	{
->  		const char *last_slash;
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 42b3a278ac59..8b7958f02609 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -30,6 +30,7 @@ enum dso_binary_type {
->  	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
->  	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
->  	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-> +	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
->  	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
->  	DSO_BINARY_TYPE__GUEST_KMODULE,
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index e4cff49384f4..55924255c535 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -101,6 +101,7 @@ enum dso_binary_type distro_dwarf_types[] = {
->  	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
->  	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-> +	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
->  
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 7725c83996f4..44d81f90b604 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -79,6 +79,7 @@ static enum dso_binary_type binary_type_symtab[] = {
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
->  	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-> +	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
->  
-> @@ -1529,6 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
->  	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
->  	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
->  	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
->  	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
->  	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
->  		return !kmod && dso->kernel == DSO_TYPE_USER;
-> -- 
-> 2.17.1
+>  /*************************************************************************
+>   * _REG relative to RSET_PCIE
 > 
 
 -- 
-
-- Arnaldo
+Florian
