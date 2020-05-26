@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5209C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C39720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24FB20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521114;
-	bh=uWHtqgwf9tS3/OeykxzaJ2X3VTGQ34nRGG6/RGKo+Rg=;
+	s=default; t=1590521118;
+	bh=sfEmZzYhPeVOloIwz/2tq/ZwALlDcCqLPWzA6mRKkUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJrZGlEpMQAArfV6nw4H1Zk8gF6ufNrudd24GjZrSJUK6PCmkPODvUKS1YDVlsyJ4
-	 NHra3Dj/RiDx9cLlr0hKC/7g6oGU/G7amwMalcbTZCb2qE5yv4NddCSyRgUZBhBhSw
-	 oYslDjFTK+3fW5EPxyvYqO/uri7is9Iok1sCKktc=
+	b=y6EeisU3AD8xzGTucCoiVq4ytUKMDNbAK91Ef4e4/IJ7IX2v6PFIxT7U3OqHCaWrW
+	 6Xznx4YkL5bliyHphTYuo29CJSeeBXOVvv/6qmhDyPmd0ho/Kxqxkf3GIe1gIX4KcI
+	 ha719yrUSnmYa6lmJBK41FrbfWVxBJY9pd9eaOi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392540AbgEZTZN (ORCPT
+        id S2392555AbgEZTZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35616 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403886AbgEZTHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:04 -0400
+        id S2391691AbgEZTHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:07:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 808E620776;
-        Tue, 26 May 2020 19:07:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 036BE208A7;
+        Tue, 26 May 2020 19:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520024;
-        bh=uWHtqgwf9tS3/OeykxzaJ2X3VTGQ34nRGG6/RGKo+Rg=;
+        s=default; t=1590520021;
+        bh=sfEmZzYhPeVOloIwz/2tq/ZwALlDcCqLPWzA6mRKkUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYLCGkNmZaR2nthXQ0MgHrFGK5YhR7Eu9uNwhiEKqtLjjU/JBc7CAYGaZsR4DP4qc
-         7Q+It95/IyJ/2VY35IsS2yAqXUoycUzKYu6B6FA/JV8a3Xd+2vPiWiaENcjSSAgZML
-         6a6nmK5+is5ATs+QAz0KQaSNPEIJoEEW7BXHvOEs=
+        b=YRCQk5LEIkComvvvm+RuWnhBoVshRlDiLvexxzM23LAB6SqFN7+O6v/16C9i3i8lC
+         TwMYjqV1AO8eqW8FreyAk26YpxaFwDjKPQQ74i+mXtVCthWpZQlR/nwyh1cFnOpqFn
+         pl+0tAz4g8LR3/cdDSRBmRHUMgU3enTj92HG6+Lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 003/111] ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
-Date:   Tue, 26 May 2020 20:52:21 +0200
-Message-Id: <20200526183932.776338892@linuxfoundation.org>
+Subject: [PATCH 5.4 027/111] vhost/vsock: fix packet delivery order to monitoring devices
+Date:   Tue, 26 May 2020 20:52:45 +0200
+Message-Id: <20200526183935.318980223@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,69 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 0014cc04e8ec077dc482f00c87dfd949cfe2b98f ]
+[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
 
-Commit a408e4a86b36 ("ima: open a new file instance if no read
-permissions") tries to create a new file descriptor to calculate a file
-digest if the file has not been opened with O_RDONLY flag. However, if a
-new file descriptor cannot be obtained, it sets the FMODE_READ flag to
-file->f_flags instead of file->f_mode.
+We want to deliver packets to monitoring devices before it is
+put in the virtqueue, to avoid that replies can appear in the
+packet capture before the transmitted packet.
 
-This patch fixes this issue by replacing f_flags with f_mode as it was
-before that commit.
-
-Cc: stable@vger.kernel.org # 4.20.x
-Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_crypto.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/vhost/vsock.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 73044fc6a952..ad6cbbccc8d9 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -411,7 +411,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 	loff_t i_size;
- 	int rc;
- 	struct file *f = file;
--	bool new_file_instance = false, modified_flags = false;
-+	bool new_file_instance = false, modified_mode = false;
- 
- 	/*
- 	 * For consistency, fail file's opened with the O_DIRECT flag on
-@@ -431,13 +431,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 		f = dentry_open(&file->f_path, flags, file->f_cred);
- 		if (IS_ERR(f)) {
- 			/*
--			 * Cannot open the file again, lets modify f_flags
-+			 * Cannot open the file again, lets modify f_mode
- 			 * of original and continue
- 			 */
- 			pr_info_ratelimited("Unable to reopen file for reading.\n");
- 			f = file;
--			f->f_flags |= FMODE_READ;
--			modified_flags = true;
-+			f->f_mode |= FMODE_READ;
-+			modified_mode = true;
- 		} else {
- 			new_file_instance = true;
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index 6c089f655707..ca68a27b98ed 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -181,14 +181,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+ 			break;
  		}
-@@ -455,8 +455,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- out:
- 	if (new_file_instance)
- 		fput(f);
--	else if (modified_flags)
--		f->f_flags &= ~FMODE_READ;
-+	else if (modified_mode)
-+		f->f_mode &= ~FMODE_READ;
- 	return rc;
- }
+ 
+-		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+-		added = true;
+-
+-		/* Deliver to monitoring devices all correctly transmitted
+-		 * packets.
++		/* Deliver to monitoring devices all packets that we
++		 * will transmit.
+ 		 */
+ 		virtio_transport_deliver_tap_pkt(pkt);
+ 
++		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
++		added = true;
++
+ 		pkt->off += payload_len;
+ 		total_len += payload_len;
  
 -- 
 2.25.1
