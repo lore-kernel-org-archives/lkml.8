@@ -2,268 +2,225 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5820DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270CC2088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:19:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDpnfo8r"
+	by mail.kernel.org (Postfix) with ESMTP id CDDFE207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391138AbgEZUTt (ORCPT
+        id S2391180AbgEZUVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 16:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390072AbgEZUTs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 16:19:48 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5915C03E96D;
-        Tue, 26 May 2020 13:19:48 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id k22so2529878qtm.6;
-        Tue, 26 May 2020 13:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fEmKbhqlRqd5x7d/FDlBa3OpUKhE0rxHema7lw55rHM=;
-        b=PDpnfo8rNRTZGcVFVVYxLHkJjeTSNSQGS5HMpRs2ZsPwCxK1WpQIfLSZB5hpPQViBz
-         SBUt2sB84tOKsRxhg3QbGOpctyHiifrUjSrCLH2k7c/lyCA7mBCyWdT4K5VSrPz/+zk5
-         uo4PAZonRvVjT069YWXorv8GkbBsn3L3n656lvDMkH3cSZ4F3Z9rxvvKR/ryLoauAP5z
-         HQEQ/Jfz1yxUL4Ws267ED6okW33/PXFZLgnwRuUXOA9LfWfJLiuV9YSYjXb0sYVuaUlb
-         LunMoRMz7kx8rfSJv+SXf3XGvEgM9O9T5Q0NYnBX5cLLEcVgMN/ZzDBKzyZdx8O02su3
-         uetg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fEmKbhqlRqd5x7d/FDlBa3OpUKhE0rxHema7lw55rHM=;
-        b=J3q1l3m0bUGqgdqQclDaWs9/i/nufxgIi9dsyuw3cjJCxujK2jsxJBGjEtWPSJ0pUD
-         IjyK0SmNQhxqut4KsynepULZBdFg61wh0GX9RnlqLzsa9/lyAtmV1PnNLj8eQhe2twq0
-         R+tZ6x1FhHRoMtcnf92a+uPjbkET1+k98IzHpfEY3tsfeebRS86Cj3EXucf9PX2NkjvI
-         vxNUJqce0ZtXFBKYCCH0F/WUmud0l50sCa/9DTQ64e6ZH2XzsSJ/rsW2hkeRL9jVWdBv
-         Var6BEb7h1Y/HIFdlxengpkLASAQcvx/2WgY5QsjxQcKxAKC2trPAilAlYlrr+WVFH6z
-         MezA==
-X-Gm-Message-State: AOAM532sy1PdhKKdON5Q969FWRLlDq1LOSDmItow1L8PkRFeIxAHWAvh
-        62aRTw8o3mM/GNmmSgLf0KwK610BAjiEugJjltqyZpr1wWcTog==
-X-Google-Smtp-Source: ABdhPJwvxdxNR1ro618rHqsFMhl15F9HPvbqqcUZj+aMNxpSjmbIfcEaLXDjD2jjkTaE13LVZaLMd7jb/bxiCCzUkME=
-X-Received: by 2002:ac8:342b:: with SMTP id u40mr626589qtb.59.1590524387836;
- Tue, 26 May 2020 13:19:47 -0700 (PDT)
+        Tue, 26 May 2020 16:21:48 -0400
+Received: from mga02.intel.com ([134.134.136.20]:45437 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391079AbgEZUVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 16:21:47 -0400
+IronPort-SDR: pvYB7fr2c6mf+8HeD1VfUWXs54acOiGW7Vy6v8tRytpsyLUZlX0OtD6f2CH4fjBC3s/0udswDl
+ aNnjmwuV7N1g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 13:21:47 -0700
+IronPort-SDR: jCd6M+y//YJ9xkIXKU0k+J1LdLSqpcdNngBITKgdbSn0Z+4hXRHpJP3OuZVtzcgbQ51AjSBhfM
+ dyNmUxQ8tJDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="291328427"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 13:21:45 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jdg53-000Dxb-0F; Wed, 27 May 2020 04:21:45 +0800
+Date:   Wed, 27 May 2020 04:21:39 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.05.23a] BUILD SUCCESS
+ 80c56e3bab7761812ee57f8cb0b01a0e42021f17
+Message-ID: <5ecd7a53.r09gbnkt19ReNSL3%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
- <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
- <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
- <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com>
- <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com> <CAEf4BzajE6jCkbBQ+f0cG=Y+vAEPWGNhfOMFVVhoDZWjNV-oGA@mail.gmail.com>
- <d1113b47-a920-c0e4-9aa4-88781368a26f@gmail.com> <b92f9c0a-826c-d074-5389-8c340f7cccf2@gmail.com>
-In-Reply-To: <b92f9c0a-826c-d074-5389-8c340f7cccf2@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 26 May 2020 13:19:36 -0700
-Message-ID: <CAEf4BzZF6JO9Tpc2wRk1GDHKfDr0LeYz7LrHz93W1uNjSaq=bg@mail.gmail.com>
-Subject: Re: Some -serious- BPF-related litmus tests
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     luc.maranget@inria.fr, Andrii Nakryiko <andriin@fb.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
-        will@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 7:02 AM Akira Yokosawa <akiyks@gmail.com> wrote:
->
-> On Tue, 26 May 2020 19:50:47 +0900, Akira Yokosawa wrote:
-> > On Mon, 25 May 2020 16:31:05 -0700, Andrii Nakryiko wrote:
-> >> On Mon, May 25, 2020 at 3:01 PM Akira Yokosawa <akiyks@gmail.com> wrot=
-e:
-> >>>
-> > [...]
-> >>> Yes, that should work.
-> >>
-> >> Ok, assigning to zero didn't work (it still complained about
-> >> uninitialized read), but using a separate int *lenFail to assign to
-> >> rLenPtr worked. Curiously, if I used rLenPtr =3D len1; in error case, =
-it
-> >> actually takes a bit more time to verify.
-> >>
-> >> So I've converted everything else as you suggested. I compiled latest
-> >> herd7 and it doesn't produce any warnings. But it's also extremely
-> >> slow, compared to the herd7 that I get by default. Validating simple
-> >> 1p1c cases takes about 2.5x times longer (0.03s vs 0.07),
->
-> Wait a moment!
->
-> This 0.03s was the run time of the original 1p1c litmus test, wasn't it?
-> Then you are comparing apples and oranges.
->
-> How long does your default herd7 take to complete the updated 1p1c test?
->
->         Thanks, Akira
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.05.23a
+branch HEAD: 80c56e3bab7761812ee57f8cb0b01a0e42021f17  rcu: Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() noinstr
 
-It could be new test vs old test, so I re-ran again. Identical
-1p1c-unbound test:
+i386-tinyconfig vmlinux size:
 
-OLD version:
+========================================================================================
+ TOTAL  TEXT                                                                            
+========================================================================================
+  -224  -224  8747b07d1944 Merge branch 'kcsan-dev.2020.04.13c' into HEAD               
+     0     0  03e8e094dad9 Merge branch 'lkmm-dev.2020.05.16a' into HEAD                
+     0     0  17e0ee2a3ec9 torture:  Remove qemu dependency on EFI firmware             
+     0     0  c58148777978 torture: Add script to smoke-test commits in a branch        
+   +38   +38  396a79cc6818 fork: Annotate a data race in vm_area_dup()                  
+     0     0  8035e0fc710a x86/mm/pat: Mark an intentional data race                    
+     0     0  d7a51c24ee4b rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init 
+     0     0  e5efa2f1b7b6 locktorture: Use true and false to assign to bool variables  
+     0     0  7514d7f181ab srcu: Fix a typo in comment "amoritized"->"amortized"        
+     0     0  9dbd776542e3 rcu: Simplify the calculation of rcu_state.ncpus             
+     0     0  df12d657bcc0 docs: RCU: Convert checklist.txt to ReST                     
+     0     0  fdfeb779e1bd docs: RCU: Convert lockdep-splat.txt to ReST                 
+     0     0  68b5951f7eb2 docs: RCU: Convert lockdep.txt to ReST                       
+     0     0  ce9edc0c8a82 docs: RCU: Convert rculist_nulls.txt to ReST                 
+     0     0  1bee818b03c7 docs: RCU: Convert torture.txt to ReST                       
+     0     0  9100131711bc docs: RCU: Convert rcuref.txt to ReST                        
+     0     0  080f194cfa87 docs: RCU: Convert stallwarn.txt to ReST                     
+     0     0  6999f47d8456 docs: RCU: Don't duplicate chapter names in rculist_nulls.rs 
+     0     0  55ce2e8178f2 rcutorture: Add races with task-exit processing              
+     0     0  1c60a5e52538 torture: Set configfile variable to current scenario         
+     0     0  9969401f1706 rcutorture: Handle non-statistic bang-string error messages  
+     0     0  6f099e1b362b rcutorture: NULL rcu_torture_current earlier in cleanup code 
+     0     0  6816417616c4 kcsan: Add test suite                                        
+     0     0  848d16e04f52 doc: Timer problems can cause RCU CPU stall warnings         
+     0     0  2364a9f967ec rcu: Add callbacks-invoked counters                          
+     0     0  2775724beeef rcu: Add comment documenting rcu_callback_map's purpose      
+     0     0  bfd78bca7bdf Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom o 
+     0     0  8903088434e7 rcu/tree: Add better tracing for dyntick-idle                
+     0     0  c0601bb42994 rcu/tree: Clean up dynticks counter usage                    
+     0     0  3f3baaf3ac07 rcu/tree: Remove dynticks_nmi_nesting counter                
+     0     0  725e4ad9e020 trace: events: rcu: Change description of rcu_dyntick trace  
+    +1     0  a9b73fda34ec torture: Remove whitespace from identify_qemu_vcpus output   
+     0     0  6267bacdff81 torture: Add --allcpus argument to the kvm.sh script         
+    -1     0  5c6aa32472cb rcu: Grace-period-kthread related sleeps to idle priority    
+    +1     0  f334f4fee6e2 rcu: Priority-boost-related sleeps to idle priority          
+    -1     0  d49cb59f19b6 rcu: No-CBs-related sleeps to idle priority                  
+    +1     0  4cc4ce9b67ec rcu: Expedited grace-period sleeps to idle priority          
+     0     0  cef0575caddb rcu-tasks: Convert sleeps to idle priority                   
+     0     0  988aef3524e2 fs/btrfs: Add cond_resched() for try_release_extent_mapping( 
+     0     0  70ca490c7ab3 locking/osq_lock: Annotate a data race in osq_lock           
+     0     0  80fa4f7b355d doc: Tasks RCU must protect instructions before trampoline   
+    -1     0  a9e5aaae95b0 ubsan, kcsan: Don't combine sanitizer with kcov on clang     
+     0     0  39cedc46ebcc doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq      
+     0     0  e64b95584eb2 tick/nohz: Narrow down noise while setting current task's ti 
+     0     0  72c5501fac76 rcu: fix some kernel-doc warnings                            
+     0     0  eead282434f1 rcu: Remove initialized but unused rnp from check_slow_task( 
+     0     0  80c56e3bab77 rcu: Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() n 
+  -177  -177  b1fcf9b83c41..80c56e3bab77 (ALL COMMITS)                                  
+========================================================================================
 
-$ herd7 -version && herd7 -unroll 0 -conf linux-kernel.cfg
-../../Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+unbound.litmus
-7.52, Rev: exported
-Test bpf-rb+1p1c+unbound Allowed
-States 2
-0:rFail=3D0; 1:rFail=3D0; cx=3D0; len1=3D1; px=3D1;
-0:rFail=3D0; 1:rFail=3D0; cx=3D1; len1=3D1; px=3D1;
-Ok
-Witnesses
-Positive: 3 Negative: 0
-Condition exists (0:rFail=3D0 /\ 1:rFail=3D0 /\ px=3D1 /\ len1=3D1 /\ (cx=
-=3D0 \/ cx=3D1))
-Observation bpf-rb+1p1c+unbound Always 3 0
-Time bpf-rb+1p1c+unbound 0.03
-Hash=3D20a68cc69b09fbb79f407f825c015623
+elapsed time: 3564m
 
-LATEST from sources version:
+configs tested: 103
+configs skipped: 1
 
-$ herd7 -version && herd7 -unroll 0 -conf linux-kernel.cfg
-../../Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+unbound.litmus
-7.55+01(dev), Rev: 61e23aaee7bba87ccf4cdf1a620a3a9fa8f9a586
-Test bpf-rb+1p1c+unbound Allowed
-States 2
-0:rFail=3D0; 1:rFail=3D0; cx=3D0; len1=3D1; px=3D1;
-0:rFail=3D0; 1:rFail=3D0; cx=3D1; len1=3D1; px=3D1;
-Ok
-Witnesses
-Positive: 3 Negative: 0
-Condition exists (0:rFail=3D0 /\ 1:rFail=3D0 /\ px=3D1 /\ len1=3D1 /\ (cx=
-=3D0 \/ cx=3D1))
-Observation bpf-rb+1p1c+unbound Always 3 0
-Time bpf-rb+1p1c+unbound 0.06
-Hash=3D20a68cc69b09fbb79f407f825c015623
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Still 2x difference.
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+sh                           se7722_defconfig
+arc                        vdk_hs38_defconfig
+arm                          gemini_defconfig
+sh                          sdk7786_defconfig
+powerpc                      ppc64e_defconfig
+h8300                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+arc                              allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20200526
+i386                 randconfig-a004-20200526
+i386                 randconfig-a003-20200526
+i386                 randconfig-a006-20200526
+i386                 randconfig-a002-20200526
+i386                 randconfig-a005-20200526
+x86_64               randconfig-a015-20200526
+x86_64               randconfig-a013-20200526
+x86_64               randconfig-a016-20200526
+x86_64               randconfig-a012-20200526
+x86_64               randconfig-a014-20200526
+x86_64               randconfig-a011-20200526
+i386                 randconfig-a013-20200526
+i386                 randconfig-a015-20200526
+i386                 randconfig-a012-20200526
+i386                 randconfig-a011-20200526
+i386                 randconfig-a016-20200526
+i386                 randconfig-a014-20200526
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
->
-> >>                                                           but trying
-> >> to validate 2p1c case, which normally validates in 42s (unbounded) and
-> >> 110s (bounded), it took more than 20 minutes and hasn't finished,
-> >> before I gave up. So I don't know what's going on there...
-> >
-> > herdtools7 has recently been heavily restructured.
-> > On the performance regression, I must defer to Luc.
-> >
-> > Luc, do you have any idea?
-> >
-> >>
-> >> As for klitmus7, I managed to generate everything without warnings,
-> >> but couldn't make it build completely due to:
-> >>
-> >> $ make
-> >> make -C /lib/modules/5.6.13-01802-g938d64da97c6/build/
-> >
-> > So you are on Linux 5.6.x which requires cutting-edge klitmus7.
-> >
-> >> M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules modul=
-es
-> >> make[1]: Entering directory `/data/users/andriin/linux-build/fb-config=
-'
-> >> make[2]: Entering directory `/data/users/andriin/linux-build/default-x=
-86_64'
-> >>   CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodules=
-/litmus000.o
-> >> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000=
-.c:
-> >> In function =E2=80=98zyva=E2=80=99:
-> >> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000=
-.c:507:12:
-> >> warning: ISO C90 forbids variable length array =E2=80=98th=E2=80=99 [-=
-Wvla]
-> >>      struct task_struct *th[nth];
-> >>             ^~~~~~~~~~~
-> >> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000=
-.c:
-> >> In function =E2=80=98litmus_init=E2=80=99:
-> >> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000=
-.c:605:67:
-> >> error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from incomp=
-atible pointer
-> >> type [-Werror=3Dincompatible-pointer-types]
-> >>    struct proc_dir_entry *litmus_pde =3D
-> >> proc_create("litmus",0,NULL,&litmus_proc_fops);
-> >>
-> >> ^~~~~~~~~~~~~~~~~
-> >> In file included from
-> >> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000=
-.c:15:
-> >> /data/users/andriin/linux-fb/include/linux/proc_fs.h:64:24: note:
-> >> expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is of =
-type =E2=80=98const
-> >> struct file_operations *=E2=80=99
-> >>  struct proc_dir_entry *proc_create(const char *name, umode_t mode,
-> >> struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
-> >>                         ^~~~~~~~~~~
-> >> cc1: some warnings being treated as errors
-> >> make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymod=
-ules/litmus000.o]
-> >> Error 1
-> >> make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymod=
-ules]
-> >> Error 2
-> >> make[2]: Leaving directory `/data/users/andriin/linux-build/default-x8=
-6_64'
-> >> make[1]: *** [sub-make] Error 2
-> >> make[1]: Leaving directory `/data/users/andriin/linux-build/fb-config'
-> >> make: *** [all] Error 2
-> >>
-> >
-> > These errors suggest the klitmus7 you used is version 7.52 or some such=
-.
-> > You said you have built herd7 from the source.  Have you also built kli=
-tmus7?
-> >
-> > The up-to-date klitmus7 should generate code compatible with Linux 5.6.=
-x.
-> >
-> > Could you try with the latest one?
-> >
-> >         Thanks, Akira
-> >
-> >>
-> >> But at least it doesn't complain about atomic_t anymore. So anyways,
-> >> I'm going to post updated litmus tests separately from BPF ringbuf
-> >> patches, because Documentation/litmus-tests is not yet present in
-> >> bpf-next.
-> >>
-> >>>
-> >>> You can find a basic introduction of klitmus7 in tools/memory-model/R=
-EADME.
-> >>>
-> >>>         Thanks, Akira
-> >>>
-> >>>>
-> >>>>>
-> >>>>> Please note that if you are on Linux 5.6 (or later), you need an up=
--to-date
-> >>>>> klitmus7 due to a change in kernel API.
-> >>>>>
-> >>>>> Any question is welcome!
-> >>>>>
-> >>>>>         Thanks, Akira
-> >>>>>
-> >>
-> >> [...]
-> >>
-> >
->
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
