@@ -2,124 +2,130 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A89FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1A8208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B054D208A9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgEZOww (ORCPT
+        id S1729541AbgEZOw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:52:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:51792 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbgEZOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:52:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D055F30E;
-        Tue, 26 May 2020 07:52:50 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BE253F7C3;
-        Tue, 26 May 2020 07:52:47 -0700 (PDT)
-Date:   Tue, 26 May 2020 15:52:45 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
-        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
-        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
-        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
-        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
-        broonie@kernel.org, guohanjun@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
-Subject: Re: [PATCH v2 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
-Message-ID: <20200526145244.GG17051@gaia>
-References: <20200423135656.2712-1-yezhenyu2@huawei.com>
- <20200423135656.2712-6-yezhenyu2@huawei.com>
- <20200522154254.GD26492@gaia>
- <ddba6d98-29b5-0748-ba74-ec022f509270@huawei.com>
+        Tue, 26 May 2020 10:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729368AbgEZOwz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:52:55 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DF2C03E96D;
+        Tue, 26 May 2020 07:52:55 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jdawl-0004PS-Md; Tue, 26 May 2020 16:52:51 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 032F91C00FA;
+        Tue, 26 May 2020 16:52:51 +0200 (CEST)
+Date:   Tue, 26 May 2020 14:52:50 -0000
+From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/syscalls: Revert "x86/syscalls: Make
+ __X32_SYSCALL_BIT be unsigned long"
+Cc:     Thorsten Glaser <t.glaser@tarent.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>, stable@kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org>
+References: <92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ddba6d98-29b5-0748-ba74-ec022f509270@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <159050477082.17951.1414743958663563425.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 03:19:42PM +0800, Zhenyu Ye wrote:
-> On 2020/5/22 23:42, Catalin Marinas wrote:
-> > On Thu, Apr 23, 2020 at 09:56:55PM +0800, Zhenyu Ye wrote:
-> >> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-> >> index 3d7c01e76efc..3eff199d3507 100644
-> >> --- a/mm/pgtable-generic.c
-> >> +++ b/mm/pgtable-generic.c
-> >> @@ -101,6 +101,28 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
-> >>  
-> >>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> >>  
-> >> +#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
-> >> +
-> >> +#define FLUSH_Pxx_TLB_RANGE(_pxx)					\
-> >> +void flush_##_pxx##_tlb_range(struct vm_area_struct *vma,		\
-> >> +			      unsigned long addr, unsigned long end)	\
-> >> +{									\
-> >> +		struct mmu_gather tlb;					\
-> >> +									\
-> >> +		tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);		\
-> >> +		tlb_start_vma(&tlb, vma);				\
-> >> +		tlb_flush_##_pxx##_range(&tlb, addr, end - addr);	\
-> >> +		tlb_end_vma(&tlb, vma);					\
-> >> +		tlb_finish_mmu(&tlb, addr, end);			\
-> >> +}
-> > 
-> > I may have confused myself (flush_p??_tlb_* vs. tlb_flush_p??_*) but do
-> > actually need this whole tlb_gather thing here? IIUC (by grep'ing),
-> > flush_p?d_tlb_range() is only called on huge pages, so we should know
-> > the level already.
-> 
-> tlb_flush_##_pxx##_range() is used to set tlb->cleared_*,
-> flush_##_pxx##_tlb_range() will actually flush the TLB entry.
-> 
-> In arch64, tlb_flush_p?d_range() is defined as:
-> 
-> 	#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
-> 	#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+The following commit has been merged into the x86/urgent branch of tip:
 
-Currently, flush_p??_tlb_range() are generic and defined as above. I
-think in the generic code they can remain an alias for
-flush_tlb_range().
+Commit-ID:     700d3a5a664df267f01ec8887fd2d8ff98f67e7f
+Gitweb:        https://git.kernel.org/tip/700d3a5a664df267f01ec8887fd2d8ff98f67e7f
+Author:        Andy Lutomirski <luto@kernel.org>
+AuthorDate:    Fri, 08 May 2020 17:25:32 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 26 May 2020 16:42:43 +02:00
 
-On arm64, we can redefine them as:
+x86/syscalls: Revert "x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long"
 
-#define flush_pte_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 3)
-#define flush_pmd_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 2)
-#define flush_pud_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 1)
-#define flush_p4d_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 0)
+Revert
 
-(unless the compiler optimises away all the mmu_gather stuff in your
-macro above but they don't look trivial to me)
+  45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
 
-Also, I don't see the new flush_pte_* and flush_p4d_* macros used
-anywhere and I don't think they are needed. The pte equivalent is
-flush_tlb_page() (we need to make sure it's not used on a pmd in the
-hugetlb context).
+and add a comment to discourage someone else from making the same
+mistake again.
 
-> So even if we know the level here, we can not pass the value to tlbi
-> instructions (flush_tlb_range() is a common kernel interface and retro-fit it
-> needs lots of changes), according to Peter's suggestion, I finally decide to
-> pass the value of TTL by the tlb_gather_* frame.[1]
+It turns out that some user code fails to compile if __X32_SYSCALL_BIT
+is unsigned long. See, for example [1] below.
 
-My comment was about the generic implementation using mmu_gather as you
-are proposing. We don't need to change the flush_tlb_range() interface,
-nor do we need to rewrite flush_p??_tlb_range().
+ [ bp: Massage and do the same thing in the respective tools/ header. ]
 
--- 
-Catalin
+Fixes: 45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
+Reported-by: Thorsten Glaser <t.glaser@tarent.de>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: stable@kernel.org
+Link: [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=954294
+Link: https://lkml.kernel.org/r/92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org
+---
+ arch/x86/include/uapi/asm/unistd.h       | 11 +++++++++--
+ tools/arch/x86/include/uapi/asm/unistd.h |  2 +-
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/uapi/asm/unistd.h b/arch/x86/include/uapi/asm/unistd.h
+index 196fdd0..be5e2e7 100644
+--- a/arch/x86/include/uapi/asm/unistd.h
++++ b/arch/x86/include/uapi/asm/unistd.h
+@@ -2,8 +2,15 @@
+ #ifndef _UAPI_ASM_X86_UNISTD_H
+ #define _UAPI_ASM_X86_UNISTD_H
+ 
+-/* x32 syscall flag bit */
+-#define __X32_SYSCALL_BIT	0x40000000UL
++/*
++ * x32 syscall flag bit.  Some user programs expect syscall NR macros
++ * and __X32_SYSCALL_BIT to have type int, even though syscall numbers
++ * are, for practical purposes, unsigned long.
++ *
++ * Fortunately, expressions like (nr & ~__X32_SYSCALL_BIT) do the right
++ * thing regardless.
++ */
++#define __X32_SYSCALL_BIT	0x40000000
+ 
+ #ifndef __KERNEL__
+ # ifdef __i386__
+diff --git a/tools/arch/x86/include/uapi/asm/unistd.h b/tools/arch/x86/include/uapi/asm/unistd.h
+index 196fdd0..30d7d04 100644
+--- a/tools/arch/x86/include/uapi/asm/unistd.h
++++ b/tools/arch/x86/include/uapi/asm/unistd.h
+@@ -3,7 +3,7 @@
+ #define _UAPI_ASM_X86_UNISTD_H
+ 
+ /* x32 syscall flag bit */
+-#define __X32_SYSCALL_BIT	0x40000000UL
++#define __X32_SYSCALL_BIT	0x40000000
+ 
+ #ifndef __KERNEL__
+ # ifdef __i386__
