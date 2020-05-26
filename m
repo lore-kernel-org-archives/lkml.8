@@ -6,68 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85543C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E2B207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BE1207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590511557;
-	bh=XOChMk8gnrUoD6TmiuzV6PPv/YGwIxQm8tqk/nDusow=;
+	s=default; t=1590511571;
+	bh=T9Ezc7a1r4TivHOwjldsbyoxjBD6NDs54wx5Hd/nAUw=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ITspM8jhRR9gV2lUWjfJeOM4Go5hsSMu+2KEWsLsfO/GCUXLzDtsB2aFBQOzSWlmZ
-	 J/3hut5hAfTgjflBY8jyTYSlJbVhFq/OnDxFj4cFElNK9+l+RyPi4yx3PDgyF71pvS
-	 qATRkYpLmSvgoD7GWDu7tfFtTxADOXaPbLbfVEN8=
+	b=Pv7hRbdMAzNEzh/pCnyWnOTTsMaHn94WRegILfqd5iKoFX9xDtPzATVsDvxOmgfpE
+	 bcbJxEO2SFzrd/1jHsPeBp7iNkDpYHiir/Ty/KoHw2u+yJY9w1ZJiDAZYXGwDdg3Rk
+	 E5j0kAqIe4rj6Fa1xmLAATaKSReapVS30oVXYYLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbgEZQp4 (ORCPT
+        id S2388844AbgEZQqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 12:46:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388799AbgEZQpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:45:55 -0400
+        id S2388339AbgEZQqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:46:09 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2771120787;
-        Tue, 26 May 2020 16:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C409207D8;
+        Tue, 26 May 2020 16:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590511555;
-        bh=XOChMk8gnrUoD6TmiuzV6PPv/YGwIxQm8tqk/nDusow=;
+        s=default; t=1590511569;
+        bh=T9Ezc7a1r4TivHOwjldsbyoxjBD6NDs54wx5Hd/nAUw=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=tcmQUE3ryk37EbisWbA+aKPXcV4hwxJtkoKRvBtFxt++O2PQuAsURLEhcbL4Bt0gI
-         C0fgmYv4qEZZsxMjzGojjwnSQTFd0Y0oIlV122g2vfxKGh4cuS3rBz3N/Ww1pmL2HG
-         Qw/EZd+JkCoMY6PEKJpj/kgfaVCV/j70gCAelFlY=
-Date:   Tue, 26 May 2020 17:45:53 +0100
+        b=icoQ2hIogxa6UBGwFV5F6Lcz4MR1dDM/ZWl1u4SPtQsRaFSXt5aMAKLJqLc67uLYc
+         utHegEFlgjwO7vGIMkGBpBDlU4mj1A+mrfSSFObTmrMphWbdqAjCvtfD3SNZpuykRk
+         mREjprM+g/wX37zzFT5QafmEVZY9HO62nMp+7xSA=
+Date:   Tue, 26 May 2020 17:46:06 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     kjlu@umn.edu, Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        linux-omap@vger.kernel.org, alsa-devel@alsa-project.org,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Takashi Iwai <tiwai@suse.com>
-In-Reply-To: <20200525085848.4227-1-dinghao.liu@zju.edu.cn>
-References: <20200525085848.4227-1-dinghao.liu@zju.edu.cn>
-Subject: Re: [PATCH] [v2] ASoC: ti: Fix runtime PM imbalance in omap2_mcbsp_set_clks_src
-Message-Id: <159051153752.36309.9642221556598180618.b4-ty@kernel.org>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200523133859.5625-1-dinghao.liu@zju.edu.cn>
+References: <20200523133859.5625-1-dinghao.liu@zju.edu.cn>
+Subject: Re: [PATCH] spi: spi-fsl-lpspi: Fix runtime PM imbalance on error
+Message-Id: <159051156064.36444.17809778699218535545.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 16:58:48 +0800, Dinghao Liu wrote:
-> When clk_set_parent() returns an error code, a pairing
-> runtime PM usage counter increment is needed to keep the
-> counter balanced.
+On Sat, 23 May 2020 21:38:59 +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] ASoC: ti: Fix runtime PM imbalance in omap2_mcbsp_set_clks_src
-      commit: c553d290577093553098a56c954e516950c35c59
+[1/1] spi: spi-fsl-lpspi: Fix runtime PM imbalance on error
+      commit: 8d728808194a12186ce5af0b72c8a47b42476bc3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
