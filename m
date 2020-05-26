@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E955C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3F6420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C9F20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520692;
-	bh=5DSkam4qSpPOCtTfMpJff906uNdwjLVc5YIigu8a1XM=;
+	s=default; t=1590520700;
+	bh=zWsa3AUmB//Wf1mTtlrz0g0Yvlc+DxhzDn2A2kufhjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYM1P2lmySNp2BV651JKaokl0IN9D9bxuHgFPhcdqqzWmT/Bd5wSw6qQrc43yXs7r
-	 yx9z2E10+2pL0YxL4CRYG6HjsdVkG04cnJPHsiXFzCHkF9NrKvzqUj0mYVtJtavtCT
-	 LAFGsYf2vYcXfRrcMcYDPLhWd7WXWdljzw78TDjc=
+	b=K8SlxwP/yPi0WIMw6NC72+HWsVbgAhGhSSKOWdL2PD4AYtnK0TNYrZ5EZ6Oygbfrp
+	 NJDHZpUmNJHZbiUD8gRJV/GOn8IMNx8VdQka7L42S3A6HnF4tz6qFUGSm2voLjDbeE
+	 c/kd5TkaUkKCwlJLve9mBq9VCGWoPiY6KtdDxrG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392374AbgEZTSM (ORCPT
+        id S2392385AbgEZTSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44342 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:18:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404331AbgEZTNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:50 -0400
+        id S2404319AbgEZTNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 525A3208B3;
-        Tue, 26 May 2020 19:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D520E20888;
+        Tue, 26 May 2020 19:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520429;
-        bh=5DSkam4qSpPOCtTfMpJff906uNdwjLVc5YIigu8a1XM=;
+        s=default; t=1590520427;
+        bh=zWsa3AUmB//Wf1mTtlrz0g0Yvlc+DxhzDn2A2kufhjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BAb8UeVuDTNjrcMf5A1FH1DshI11jCj/PfJhhjkGDLnAY64OEZVuEqdVyyLANBDrE
-         Kp2F5syxm0HpehjQQC472efD/1JeFScGTJukOHc3uqm0n/DBZB/KhnCbWM/CQw23iv
-         F0/LQiYpSnqi3kpm9qkq4cevKc/buQJMgBYBmLnM=
+        b=Jfsa/Bm7+FMcIc5vGsqdDjJ/Jw0Z0NHp8xd0aauJRzz4xgHAGhDDLzr09nCEc+imn
+         pdqewc35sMv7ck+LCGE7bpK9HcSFrhZTx5WRoONgNvdSoDyfvCfPTIVh+X1LOENQj4
+         bEOaxeo1APGi+Py1a6bKN65sFeH0OvZaOYJsasMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.6 077/126] dmaengine: tegra210-adma: Fix an error handling path in tegra_adma_probe()
-Date:   Tue, 26 May 2020 20:53:34 +0200
-Message-Id: <20200526183944.643969579@linuxfoundation.org>
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 068/126] scsi: qla2xxx: Do not log message when reading port speed via sysfs
+Date:   Tue, 26 May 2020 20:53:25 +0200
+Message-Id: <20200526183943.897738690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -62,40 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ewan D. Milne <emilne@redhat.com>
 
-commit 3a5fd0dbd87853f8bd2ea275a5b3b41d6686e761 upstream.
+commit fb9024b0646939e59d8a0b6799b317070619795a upstream.
 
-Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-has moved some code in the probe function and reordered the error handling
-path accordingly.
-However, a goto has been missed.
+Calling ql_log() inside qla2x00_port_speed_show() is causing messages to be
+output to the console for no particularly good reason.  The sysfs read
+routine should just return the information to userspace.  The only reason
+to log a message is when the port speed actually changes, and this already
+occurs elsewhere.
 
-Fix it and goto the right label if 'dma_async_device_register()' fails, so
-that all resources are released.
-
-Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20200516214205.276266-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200504175416.15417-1-emilne@redhat.com
+Fixes: 4910b524ac9e ("scsi: qla2xxx: Add support for setting port speed")
+Cc: <stable@vger.kernel.org> # v5.1+
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/tegra210-adma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_attr.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -900,7 +900,7 @@ static int tegra_adma_probe(struct platf
- 	ret = dma_async_device_register(&tdma->dma_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
--		goto irq_dispose;
-+		goto rpm_put;
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -1777,9 +1777,6 @@ qla2x00_port_speed_show(struct device *d
+ 		return -EINVAL;
  	}
  
- 	ret = of_dma_controller_register(pdev->dev.of_node,
+-	ql_log(ql_log_info, vha, 0x70d6,
+-	    "port speed:%d\n", ha->link_data_rate);
+-
+ 	return scnprintf(buf, PAGE_SIZE, "%s\n", spd[ha->link_data_rate]);
+ }
+ 
 
 
