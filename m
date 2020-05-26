@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F117C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F34A20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A0C20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519975;
-	bh=1LLrEfPfAV+cGfCNECNu52XXltkAInRVKK30NZ1an0I=;
+	s=default; t=1590519978;
+	bh=k1pYullWqpInfsxDo6wY0GeaN+fOQTMAQ/FTViw8IwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVN+qrkeGc3YhPr4irdDvP7k+FwKh1MEQCpn+0lDMtKy+dk8pYJsqsAfKj2ydc0sN
-	 DCkdFIev2/ciDlo6TOTnfdonhYhPtBMP0HgFLzGM5Y0ei3mGHnqXddXS6x8AOohqjs
-	 Azg5zS5Xnj0vYTriQMqR1tX+c2vaVYcFvNGg1Xgc=
+	b=trmPqPFQDx04+YEy1g9N4Px0Xi2L7BnLrQgvi2lb9n6MHRK4TAUz7tdVBXmN5tDI4
+	 I9nlc1E+p2+qEYvqmi1/MP09OWnKYyCuJdp2hPZrJwxuGcpN9Pcy0R7xA7IlgRhg+s
+	 m/trjvysrFqVhObiiVdpw6YftrwuzZ3cZkN/D8Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391137AbgEZTGO (ORCPT
+        id S2391557AbgEZTGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391639AbgEZTGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:01 -0400
+        id S2390814AbgEZTGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C587C20776;
-        Tue, 26 May 2020 19:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17C4B20776;
+        Tue, 26 May 2020 19:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519961;
-        bh=1LLrEfPfAV+cGfCNECNu52XXltkAInRVKK30NZ1an0I=;
+        s=default; t=1590519963;
+        bh=k1pYullWqpInfsxDo6wY0GeaN+fOQTMAQ/FTViw8IwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugslCmFevgxOCDsWJq7V5LY1cw3QQS2ZfqZtkMXkHr1O2WpA1e5eVZuqvaG69gzl0
-         1Q2smdXGMJB70NBx5GjR56kHzXirGjHVYDMvM5d2lHdLl524nhJZjtuGVsJY7e5kOv
-         938IZ/lt/SGGp30mR8FoioBmBYEVaCck62TZn+m0=
+        b=y1ltvxEViEe4ASyGoPwY2+LfymGHpE3mtSmw+GOKz0mzT0w9ci0BQ0HsR8y+wdLLA
+         9VdPjxdZE10kCgqBwU3jHT5KHFWNgkFKaJHbJw8h1S5xOn6tqzrt5A4X2n/tsTUg8y
+         nSv0aTeD38N6qGX9OG4gGdEP77WSQYipsBe3T3YM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Arjun Vynipadath <arjun@chelsio.com>,
+        Ganesh Goudar <ganeshgr@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 59/81] net: bcmgenet: abort suspend on error
-Date:   Tue, 26 May 2020 20:53:34 +0200
-Message-Id: <20200526183933.620315588@linuxfoundation.org>
+Subject: [PATCH 4.19 60/81] cxgb4: free mac_hlist properly
+Date:   Tue, 26 May 2020 20:53:35 +0200
+Message-Id: <20200526183933.717662881@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,58 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Arjun Vynipadath <arjun@chelsio.com>
 
-[ Upstream commit c5a54bbcececa36852807c36157a86d808b62310 ]
+[ Upstream commit 2a8d84bf513823ba398f4b2dec41b8decf4041af ]
 
-If an error occurs during suspension of the driver the driver should
-restore the hardware configuration and return an error to force the
-system to resume.
+The locally maintained list for tracking hash mac table was
+not freed during driver remove.
 
-Fixes: 0db55093b566 ("net: bcmgenet: return correct value 'ret' from bcmgenet_power_down")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Arjun Vynipadath <arjun@chelsio.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 3 +++
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 6 ++++++
- 2 files changed, 9 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 60abf9fab810..047fc0cf0263 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -3722,6 +3722,9 @@ static int bcmgenet_suspend(struct device *d)
- 	/* Turn off the clocks */
- 	clk_disable_unprepare(priv->clk);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index c81d6c330548..c334b6206871 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -2296,6 +2296,8 @@ static int cxgb_up(struct adapter *adap)
  
-+	if (ret)
-+		bcmgenet_resume(d);
+ static void cxgb_down(struct adapter *adapter)
+ {
++	struct hash_mac_addr *entry, *tmp;
 +
- 	return ret;
+ 	cancel_work_sync(&adapter->tid_release_task);
+ 	cancel_work_sync(&adapter->db_full_task);
+ 	cancel_work_sync(&adapter->db_drop_task);
+@@ -2304,6 +2306,12 @@ static void cxgb_down(struct adapter *adapter)
+ 
+ 	t4_sge_stop(adapter);
+ 	t4_free_sge_resources(adapter);
++
++	list_for_each_entry_safe(entry, tmp, &adapter->mac_hlist, list) {
++		list_del(&entry->list);
++		kfree(entry);
++	}
++
+ 	adapter->flags &= ~FULL_INIT_DONE;
  }
- #endif /* CONFIG_PM_SLEEP */
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-index 2fbd027f0148..b3596e0ee47b 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -186,9 +186,15 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
- 	}
  
- 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
-+	if (!(reg & MPD_EN))
-+		return;	/* already powered up so skip the rest */
- 	reg &= ~MPD_EN;
- 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
- 
-+	reg = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
-+	reg &= ~(RBUF_HFB_EN | RBUF_ACPI_EN);
-+	bcmgenet_hfb_reg_writel(priv, reg, HFB_CTRL);
-+
- 	/* Disable CRC Forward */
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
- 	reg &= ~CMD_CRC_FWD;
 -- 
 2.25.1
 
