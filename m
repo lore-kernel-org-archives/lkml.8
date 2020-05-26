@@ -2,108 +2,190 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A260C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D49C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2F42084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D14820823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d2apTG1a"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="A4v0Bslm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389614AbgEZR0C (ORCPT
+        id S2389635AbgEZR0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 26 May 2020 13:26:05 -0400
+Received: from mout.gmx.net ([212.227.15.19]:41391 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389264AbgEZR0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 13:26:02 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28035 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388803AbgEZR0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:26:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590513960; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Im6hIGPpJqtxzbNyAwrxrzA8oUaUroHuS60646TlJzw=; b=d2apTG1am+hSxfRzHh5UFIdIWVDS9omKduDIiW5j72X4WOrHWbKiH39HbqFnr3jJLXGYBsTM
- 6NtLxTkpT182o3rDBnTFMmdhqWZ7vHrhEukg7N3DBh8DnOpTSt6EoHCrp13NzwR31O1ZZHp0
- wmnDmbFa/uKBhzEzw451Oarrggk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ecd51185086732481df4755 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 17:25:44
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5B8AEC433AD; Tue, 26 May 2020 17:25:44 +0000 (UTC)
-Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85926C433CA;
-        Tue, 26 May 2020 17:25:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85926C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v4 0/4] scsi: ufs: Fix WriteBooster and cleanup UFS driver
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, jejb@linux.ibm.com
-Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
-        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Virtual_Global_UFS_Upstream@mediatek.com
-References: <20200522083212.4008-1-stanley.chu@mediatek.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <a18ed057-e35b-b1b9-9ce2-718d7c3961fd@codeaurora.org>
-Date:   Tue, 26 May 2020 10:25:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590513938;
+        bh=jRQUdXsgzQMgsoTj3zhMgpmUWjrdF3Acrg1b6Z8xpEY=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=A4v0BslmcLcNmcz2gh40mjz6rRj+M0vuwF9XZQMXHAZGz9oh1R3fRf+rScycuHG1r
+         6EpMTQHna3GgMiAVMoax5W78imf5tOzBhbUnQjBDSI4YN6X7zaS17eSB7n4vFHDUiq
+         7/gthsuGZSN19ip9BjUk4s7t28S+o3i4QVaX+Y6Y=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MDQiS-1jlvL22TNm-00ATza; Tue, 26
+ May 2020 19:25:38 +0200
+Date:   Tue, 26 May 2020 19:25:27 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers/irqchip: Remove function callback casts
+Message-ID: <20200526172527.GA3465@ubuntu>
+References: <20200524162220.10186-1-oscar.carter@gmx.com>
+ <87tv04z3kq.wl-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200522083212.4008-1-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tv04z3kq.wl-maz@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:m3a9oA7bzONbhBBYj4xUCes6egeoZAkdLClOe9CxcLYlVv2WDx7
+ piDTMdQa8GqFrmy/UXRI5cWUDxtlru51xuA0vJNzCs7krQU/IYQzwTuhwiQGr6dva8X3zu0
+ Ock0CmFgaHXgmfmw/ejkQweQoAI8acoQbUYqm67xXiCKunRQtiEyKGRpJFLAAi9M6Z0Nwrk
+ LQ+1km6ffx4pn+J+HhlbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wlQoGyY6xPI=:ZdCx4xCaBt1yGZvkZ5OVHZ
+ P+VmGLfrCZ3t92BozzxtVGx1p7b4XlPel3ax6dpDeQjgN2/n17vyQO1gKZ/Rx3uNHqtPdgVWS
+ nMREAez10oszqwO/zVM9reKtpU7rv1DbTbZEro7ZP2VxhZ+QTljJ+54NnEYdaEVlLaaVwyYBK
+ qH8mXhYvP6jpMAXq8ah0NiKO/5YVzEdInSIY4xDfRIDQecHNoCTrYxGPN/iNyCrK63uluc6lq
+ HulYS1lOjCYvvc97mam8JNVD699I+7JF+qJK4BuwUwP8hhtz9rsurzybu3Wk4Dw+8JrXld4OH
+ /OnkgSKjU6VNyxAwhOSnCb903yoCYrODuHqJYoo1IhUgRk7BVe+nmI3WbfDXjRWFTTbhkbgcr
+ lmtWkYRdr3we2z3ZiKuRqLa9aDXRNhZjsmJFMR4ZsQ4eRuJam0r4taW5bePNmY6uuh9/u5OoF
+ fV6jCjfeYC0EgeUmeuEzQvIEGHgOguU8VotdRfsLLgwvRG5d+NUD6F99Lr6aD9RyxzTRRxZwX
+ Y2WTbtKRm7ytDcoPDDpBCAE7x+btjP+dpDPgJ09j8u0GVks6sHZqO9QETtebTlnk7gPTm2m4T
+ Yq4phjU17mFx8hswL7K5+V3kFnmbngvy+vDOdS6qJJzB+bvegb/xpI33YZCPIr6+qf778xUlY
+ bsOlOD9C5+q9Y7HVRE9cQjZfeYg6ec3UNU3LgYNwzbdrIDOYSfidua1+57/gI6vQypsHUMlt/
+ z7DVymVYPH9Yc1HGFHTm8DXMzVfyMCECY2OYKfV8EDoJMqWmv3cf0M8B3tuJy2IcWnbVhXxHD
+ rwgzwQT0Kh1314oAn4kZSchByJLsRAvpOMzj4wsmCouJimvuh86U/a0bYZDXMpK9/yaEfUC23
+ VSyUkomfQY/InFk3ggIOrWiq2AlgcNPRY9MPZTDRSQuvat2STYIC8ViGDF/AAJqVUKohc5f8I
+ jQWhAJV16zpedNLy1Oa40Du8FAKsiHqIlNcyM8cw/R3ZjnGPMzYDZO3j4F0knoODCQsV2C8/X
+ aotIAM2Ges62NO2DJ9E6RMsIwEyFbEewlZw8scrIW24FMs1rwBt5oh6n0JlHQvdQ5TqM16cV7
+ /t2ouA8i08MnvinYe+9OXggPFxmg2U2C8XVjrmEIFoGYNSA+t0RND2RebSpDaWdqkasmvVgRy
+ j35PPmVdpRzERW8/Z8LDxixCiLKTE2xHRPW8NoQz9D5T62arSY4QPeLq7DYQvksMUkAz1ODe8
+ FDfTg9/c65KzF4lFP
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/2020 1:32 AM, Stanley Chu wrote:
-> Hi,
-> 
-> This patch set fixes some WriteBooster issues and do small cleanup in UFS driver
-> 
-> v3 -> v4
->    - Squash patch [4] and [5] (Asutosh)
->    - Fix commit message in patch [4]
-> 
-> v2 -> v3
->    - Introduce patch [5] to fix possible VCC power drain during runtime suspend (Asutosh)
-> 
-> v1 -> v2
->    - Remove dummy new line in patch [4] (Asutosh)
->    - Add more limitation to allow WriteBooster flush during Hibern8 in runtime-suspend. Now the device power mode is kept as Active power mode only if link is put in Hibern8 or Auto-Hibern8 is enabled during runtime-suspend (Asutosh)
-> 
-> Stanley Chu (4):
->    scsi: ufs: Remove unnecessary memset for dev_info
->    scsi: ufs: Allow WriteBooster on UFS 2.2 devices
->    scsi: ufs: Fix index of attributes query for WriteBooster feature
->    scsi: ufs: Fix WriteBooster flush during runtime suspend
-> 
->   drivers/scsi/ufs/ufs-sysfs.c | 13 ++++-
->   drivers/scsi/ufs/ufs.h       |  2 +-
->   drivers/scsi/ufs/ufshcd.c    | 99 +++++++++++++++++++++++++-----------
->   drivers/scsi/ufs/ufshcd.h    |  3 +-
->   4 files changed, 82 insertions(+), 35 deletions(-)
-> 
+On Mon, May 25, 2020 at 11:55:33AM +0100, Marc Zyngier wrote:
+> On Sun, 24 May 2020 17:22:20 +0100,
+> Oscar Carter <oscar.carter@gmx.com> wrote:
+> >
+> >  include/linux/acpi.h    | 11 +++++++++++
+>
+> You now need to Cc the ACPI maintainers.
 
-This set looks good to me.
+Sorry for forgetting.
 
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+> >  include/linux/irqchip.h |  5 +++--
+> >  2 files changed, 14 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> > index d661cd0ee64d..fed49b276a90 100644
+> > --- a/include/linux/acpi.h
+> > +++ b/include/linux/acpi.h
+> > @@ -1154,6 +1154,17 @@ struct acpi_probe_entry {
+> >  			.driver_data =3D data, 				\
+> >  		   }
+> >
+> > +#define ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(table, name, table_id,	\
+> > +					  subtable, valid, data, fn)	\
+> > +	static const struct acpi_probe_entry __acpi_probe_##name	\
+> > +		__used __section(__##table##_acpi_probe_table) =3D {	\
+> > +			.id =3D table_id,					\
+> > +			.type =3D subtable,				\
+> > +			.subtable_valid =3D valid,			\
+> > +			.probe_subtbl =3D (acpi_tbl_entry_handler)fn,	\
+>
+> It strikes me that under the guise of removing function casts, you are
+> actually adding one! And this cast is actually hiding all sorts of
+> sins (remove it, and see things exploding).
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+Yes, if I remove it I see things exploiding. I'm very sorry.
+
+> I've fixed it with the patch below (ACPI is such a mess of data
+> structure case...).
+
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index d7006ef18a0d..3870e9d4d3a8 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -2117,7 +2117,7 @@ static void __init gic_acpi_setup_kvm_info(void)
+>  }
+>
+>  static int __init
+> -gic_acpi_init(struct acpi_subtable_header *header, const unsigned long =
+end)
+> +gic_acpi_init(union acpi_subtable_headers *header, const unsigned long =
+end)
+>  {
+>  	struct acpi_madt_generic_distributor *dist;
+>  	struct fwnode_handle *domain_handle;
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 30ab623343d3..fc431857ce90 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -1593,7 +1593,7 @@ static void __init gic_acpi_setup_kvm_info(void)
+>  	gic_set_kvm_info(&gic_v2_kvm_info);
+>  }
+>
+> -static int __init gic_v2_acpi_init(struct acpi_subtable_header *header,
+> +static int __init gic_v2_acpi_init(union acpi_subtable_headers *header,
+>  				   const unsigned long end)
+>  {
+>  	struct acpi_madt_generic_distributor *dist;
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index fed49b276a90..4f4ddbfce3d3 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1150,7 +1150,7 @@ struct acpi_probe_entry {
+>  			.id =3D table_id,					\
+>  			.type =3D subtable,				\
+>  			.subtable_valid =3D valid,			\
+> -			.probe_table =3D (acpi_tbl_table_handler)fn,	\
+> +			.probe_table =3D fn,				\
+>  			.driver_data =3D data, 				\
+>  		   }
+>
+> @@ -1161,7 +1161,7 @@ struct acpi_probe_entry {
+>  			.id =3D table_id,					\
+>  			.type =3D subtable,				\
+>  			.subtable_valid =3D valid,			\
+> -			.probe_subtbl =3D (acpi_tbl_entry_handler)fn,	\
+> +			.probe_subtbl =3D fn,				\
+>  			.driver_data =3D data,				\
+>  		}
+>
+
+Thanks for your help with this patch. I will do all the necessary changes
+and I will resend a new version.
+
+Do you mind if I add these two lines:
+
+Co-developed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+in the next version to give you credit?
+
+> Thanks,
+>
+> 	M.
+>
+> --
+> Without deviation from the norm, progress is not possible.
+
+Thanks,
+Oscar
