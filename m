@@ -2,136 +2,66 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07DD320849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="MCtzM4cn"
+	by mail.kernel.org (Postfix) with ESMTP id F234C20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590535652;
+	bh=9wFwMEDpELxNkJ7Vbh64tnSugngTTm31jnVLmWURg0c=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=qtZAk9R/ALHynjrkACpq8eeg9MW3qfilVEG2V+5Cm72fB14fxVCfobQSdtw+HYLWX
+	 dFphUS9MM1JA1Dkdlyhkj+jbs3AVDs4Fd9Y2lz3xP/yDeUpkHdGWUhwQUtqkmSNaFa
+	 TGnVaq993SQf45fCvbZhbHwmH0n/+PeAp6f/ZMaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725535AbgEZXWj (ORCPT
+        id S1725801AbgEZX1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:22:39 -0400
-Received: from one.firstfloor.org ([193.170.194.197]:46946 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgEZXWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:22:39 -0400
-X-Greylist: delayed 490 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 May 2020 19:22:38 EDT
-Received: by one.firstfloor.org (Postfix, from userid 503)
-        id 65ECC86865; Wed, 27 May 2020 01:14:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1590534866;
-        bh=XaqawHi8JwkBz2bthuRUNzJQekD3MBDj3VptsVzVMO8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MCtzM4cn1tNLYX8frSXM61tLCVHthkhmK+doC3ZwMN7P75Aha/fYCnehj391s5sBn
-         9zo8RYaJm0+MHkvOJgVCJQ7N7G0IN0jiM2IbA5WjxfUvRerSBR019ow17e/K8imQYB
-         h9Z9QKKtP8bzUN6N2bQvdTqUBeeZkuoizeFDri2E=
-Date:   Tue, 26 May 2020 16:14:25 -0700
-From:   Andi Kleen <andi@firstfloor.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andi Kleen <andi@firstfloor.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, sashal@kernel.org,
-        Andi Kleen <ak@linux.intel.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
-Message-ID: <20200526231423.qcsolcpll534sgro@two.firstfloor.org>
-References: <20200526052848.605423-1-andi@firstfloor.org>
- <202005260935.EB11D3EB7@keescook>
+        Tue, 26 May 2020 19:27:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725265AbgEZX1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 19:27:30 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77A6A206F1;
+        Tue, 26 May 2020 23:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590535650;
+        bh=9wFwMEDpELxNkJ7Vbh64tnSugngTTm31jnVLmWURg0c=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ZMruLDUYlIUhatgskVHCGOJFcz9mfQf7RdD2AcOVbNBy1tVAzY2PpujrNfKk8kxrQ
+         pGMBkNZ1t1Zj027uic4gyotB4X8dkHTKSbGwc/y/CzMfmlGm7AuoeHxo2kf3rd3bI8
+         1hAWKMvNH4aKeD7ye6QL2d1h1hFl1pE50t3Qn/Vg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005260935.EB11D3EB7@keescook>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200523040947.31946-1-jonathan@marek.ca>
+References: <20200523040947.31946-1-jonathan@marek.ca>
+Subject: Re: [PATCH] clk: qcom: sm8250 gcc depends on QCOM_GDSC
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Date:   Tue, 26 May 2020 16:27:29 -0700
+Message-ID: <159053564977.88029.4985972878621402819@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> And if this is going to be more permanent, we can separate the mask
-> (untested):
+Quoting Jonathan Marek (2020-05-22 21:09:47)
+> The driver will always fail to probe without QCOM_GDSC, so select it.
+>=20
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
 
-The FSGSBASE one should not be permanent, it will be replaced
-with the full FSGSBASE patches that set that bit correctly.
-
-I was a bit wary of enforcing it for all bits, there might be other
-CR4 bits which have benign uses. But I guess the risk of breaking
-something there is low.
-
--Andi
-
-
-> 
-> 
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index bed0cb83fe24..ead64f7420a5 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -347,6 +347,8 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
->  	cr4_clear_bits(X86_CR4_UMIP);
->  }
->  
-> +static const unsigned long cr4_pinned_mask =
-> +	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP | X86_CR4_FSGSBASE;
->  static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
->  static unsigned long cr4_pinned_bits __ro_after_init;
->  
-> @@ -371,20 +373,20 @@ EXPORT_SYMBOL(native_write_cr0);
->  
->  void native_write_cr4(unsigned long val)
->  {
-> -	unsigned long bits_missing = 0;
-> +	unsigned long bits_changed = 0;
->  
->  set_register:
->  	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
->  
->  	if (static_branch_likely(&cr_pinning)) {
-> -		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
-> -			bits_missing = ~val & cr4_pinned_bits;
-> -			val |= bits_missing;
-> +		if (unlikely((val & cr4_pinned_mask) != cr4_pinned_bits)) {
-> +			bits_changed = ~val & cr4_pinned_mask;
-> +			val = (val & ~cr4_pinned_mask) | cr4_pinned_bits;
->  			goto set_register;
->  		}
->  		/* Warn after we've set the missing bits. */
-> -		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
-> -			  bits_missing);
-> +		WARN_ONCE(bits_changed, "pinned CR4 bits changed: %lx!?\n",
-> +			  bits_changed);
->  	}
->  }
->  EXPORT_SYMBOL(native_write_cr4);
-> @@ -396,7 +398,7 @@ void cr4_init(void)
->  	if (boot_cpu_has(X86_FEATURE_PCID))
->  		cr4 |= X86_CR4_PCIDE;
->  	if (static_branch_likely(&cr_pinning))
-> -		cr4 |= cr4_pinned_bits;
-> +		cr4 = (cr4 & ~cr4_pinned_mask) | cr4_pinned_bits;
->  
->  	__write_cr4(cr4);
->  
-> @@ -411,10 +413,7 @@ void cr4_init(void)
->   */
->  static void __init setup_cr_pinning(void)
->  {
-> -	unsigned long mask;
-> -
-> -	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
-> -	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
-> +	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & cr4_pinned_mask;
->  	static_key_enable(&cr_pinning.key);
->  }
->  
-> 
-> -- 
-> Kees Cook
-> 
+Applied to clk-fixes
