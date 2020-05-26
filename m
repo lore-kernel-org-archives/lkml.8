@@ -2,98 +2,156 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17B82053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520651;
-	bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+7zzo/rNAGt4tdOKmnX/QkAI27oTYubkmnIkoLWgPcjK3KBTT2T2nQ6sHE0XYskC
-	 1xXi5ZeeMmjBbqibbkV0S7K0t91pu9+IA//ajFTlGQX8D/b0XpX7akxZtXaEbd3aTA
-	 cAemXBikFmD24gFEjRU84WmCFLJFO6nyXI0/ZkfI=
+	by mail.kernel.org (Postfix) with ESMTP id EC2C420DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="H4T37HFK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="H4T37HFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392179AbgEZTRa (ORCPT
+        id S2391578AbgEZTO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404049AbgEZTOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 26 May 2020 15:14:29 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:39442 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2392156AbgEZTOR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D8AB78EE181;
+        Tue, 26 May 2020 12:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1590520455;
+        bh=1riJEDBNgSCVf7jkch7dm+3/1NkeVaflehjozpLPb3c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=H4T37HFKxn8vwLL4D3+Az25gwQT6IArhj41gqGeEa/k1UFw37FlmFg7rUafbj95pH
+         1iJPGDeiWKMFNBzedpGMKDzGwNaKSSP1f7PfLcn8t3/pwnlIolh902LzzhtVl+j+56
+         PoyqPuoiBInHBAlZQ0UcHMsbWM7jQGXNYoWqjJ8c=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id czvt4mIAJ9Lv; Tue, 26 May 2020 12:14:15 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C610F20776;
-        Tue, 26 May 2020 19:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520473;
-        bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZugkH7W1Pi+D0FYBhsTi/W1r3qLem3WapDoPclmUV1H/bZm6RVVz/dHzIdkyjx6H3
-         qPUBw5CPL3d2R+60VrxdJ/oh3mZMEs1tqhKXVnPqMdPOq9vedtB/yX3LrrcANjKkYl
-         WKzZhKVgWcY+nPZJ39cu+zvSXOEbKJkwYLwpSrCs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH 5.6 093/126] staging: greybus: Fix uninitialized scalar variable
-Date:   Tue, 26 May 2020 20:53:50 +0200
-Message-Id: <20200526183945.702273669@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2A9948EE0D4;
+        Tue, 26 May 2020 12:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1590520455;
+        bh=1riJEDBNgSCVf7jkch7dm+3/1NkeVaflehjozpLPb3c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=H4T37HFKxn8vwLL4D3+Az25gwQT6IArhj41gqGeEa/k1UFw37FlmFg7rUafbj95pH
+         1iJPGDeiWKMFNBzedpGMKDzGwNaKSSP1f7PfLcn8t3/pwnlIolh902LzzhtVl+j+56
+         PoyqPuoiBInHBAlZQ0UcHMsbWM7jQGXNYoWqjJ8c=
+Message-ID: <1590520454.11810.40.camel@HansenPartnership.com>
+Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
+ mode"
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Mario Limonciello <mario.limonciello@dell.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Alex Guzman <alex@guzman.io>
+Date:   Tue, 26 May 2020 12:14:14 -0700
+In-Reply-To: <20200526183213.20720-1-mario.limonciello@dell.com>
+References: <20200526183213.20720-1-mario.limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Carter <oscar.carter@gmx.com>
+On Tue, 2020-05-26 at 13:32 -0500, Mario Limonciello wrote:
+> This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
+> 
+> This commit has caused regressions for the XPS 9560 containing
+> a Nuvoton TPM.
 
-commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
+Presumably this is using the tis driver?
 
-In the "gb_tty_set_termios" function the "newline" variable is declared
-but not initialized. So the "flow_control" member is not initialized and
-the OR / AND operations with itself results in an undefined value in
-this member.
+> As mentioned by the reporter all TPM2 commands are failing with:
+>   ERROR:tcti:src/tss2-tcti/tcti-device.c:290:tcti_device_receive()
+>   Failed to read response from fd 3, got errno 1: Operation not
+> permitted
+> 
+> The reporter bisected this issue back to this commit which was
+> backported to stable as commit 4d6ebc4.
 
-The purpose of the code is to set the flow control type, so remove the
-OR / AND self operator and set the value directly.
+I think the problem is request_locality ... for some inexplicable
+reason a failure there returns -1, which is EPERM to user space.
 
-Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
-Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+That seems to be a bug in the async code since everything else gives a
+ESPIPE error if tpm_try_get_ops fails ... at least no-one assumes it
+gives back a sensible return code.
+
+What I think is happening is that with the patch the TPM goes through a
+quick sequence of request, relinquish, request, relinquish and it's the
+third request which is failing (likely timing out).  Without the patch,
+the patch there's only one request,relinquish cycle because the ops are
+held while the async work is executed.  I have a vague recollection
+that there is a problem with too many locality request in quick
+succession, but I'll defer to Jason, who I think understands the
+intricacies of localities better than I do.
+
+If that's the problem, the solution looks simple enough: just move the
+ops get down because the priv state is already protected by the buffer
+mutex
+
+James
 
 ---
- drivers/staging/greybus/uart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/greybus/uart.c
-+++ b/drivers/staging/greybus/uart.c
-@@ -537,9 +537,9 @@ static void gb_tty_set_termios(struct tt
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 87f449340202..1784530b8387 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -189,15 +189,6 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
+ 		goto out;
  	}
  
- 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
--		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
- 	else
--		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = 0;
+-	/* atomic tpm command send and result receive. We only hold the ops
+-	 * lock during this period so that the tpm can be unregistered even if
+-	 * the char dev is held open.
+-	 */
+-	if (tpm_try_get_ops(priv->chip)) {
+-		ret = -EPIPE;
+-		goto out;
+-	}
+-
+ 	priv->response_length = 0;
+ 	priv->response_read = false;
+ 	*off = 0;
+@@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
+ 	if (file->f_flags & O_NONBLOCK) {
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
+-		tpm_put_ops(priv->chip);
+ 		mutex_unlock(&priv->buffer_mutex);
+ 		return size;
+ 	}
  
- 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
- 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
-
-
++	/* atomic tpm command send and result receive. We only hold the ops
++	 * lock during this period so that the tpm can be unregistered even if
++	 * the char dev is held open.
++	 */
++	if (tpm_try_get_ops(priv->chip)) {
++		ret = -EPIPE;
++		goto out;
++	}
++
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
