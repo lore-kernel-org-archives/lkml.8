@@ -2,177 +2,293 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C10C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE97C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A9920DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF56208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Lisgty72";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="MoR0AyYx"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="iaJc4Q0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391903AbgEZWKa (ORCPT
+        id S2391922AbgEZWKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:10:30 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:62188 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391578AbgEZWK1 (ORCPT
+        Tue, 26 May 2020 18:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391894AbgEZWKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:10:27 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 04QM8g6p006561;
-        Tue, 26 May 2020 15:08:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=lLrqFXOa2xXI54ecWTnzNhJNwm/ZGZtyng1ZSlrdymg=;
- b=Lisgty72EiZbHbrBlLCs2i/Gl8yKDjvlQJxs4kuEu/aoPWm4MNs/oVg2ry/bm7HVViAj
- RyGRQLh1zdIjqdKXAN7QY6Z62goehMvy1N+VcOIN3oqyGTnyAH34TEVyr4FN/5xQLmqn
- Qf+UDN7mCI4zzIdglvKn7sY4hfldXngc1K0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 316ygpnmqe-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 26 May 2020 15:08:45 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 26 May 2020 15:08:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gCCmI4pSjbN89GGdP/EkuZRXgwEWwYgiamZieJ/Kct/1bqiRq7vOlPYOUCjlik22ssug9Dr2hdD59FO/q/xnGrukrIT0a3sUbybsldCHpZXYW/ZRG1vkJ6+/0uQ9108QFB36EkSpY4dN/Cc+NJIUjN3R/3mAFx4QescdMVc+/M7KxU9N3UPqNiQRqfo6YJmE1HIq7XAgJySVNFq+L6r/vly1s5y5Sen+7iwHp8Ocu3wGymc/FxwzHinV6fNw+YE0oJ3/jRZeqp49CBp9GcZOV+ODBzII4ednK5keYVZKvGPktDqr/puRb2sWlgj1yhoFbqULPlLGQbiTavgoIF6KTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lLrqFXOa2xXI54ecWTnzNhJNwm/ZGZtyng1ZSlrdymg=;
- b=h+yCMoA+pNV5p7+B55vX/7mqCRr0vKM9uGK5zAsPdLysEVUk2vo4pfYSvkOn+UwA9py9LltmSsFR6yyq9BGxb9N5KCGN9AxqR5ytPJjqlw14Fi7NZaZX2fVptjldQmDqtst2Sa/qZruoYr5BLgko9ARQleJ2UhnQ3Zh/omScq/oWGlLYGHiahXL9NDeGDQI1d1FSNVqLiXcGXrArFaveKohZja6s+YYEDDc0iRRj9gw1eaNdXZp66Dlkf8b2cpsf5Pc9I7MxUpyGc05Ce4E50sGBTyrLVo6AvW0aJDrE5cToMHZOxIHUSBt57cJK5P+W1TJ91iR0FE3q8tSCTOmFlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lLrqFXOa2xXI54ecWTnzNhJNwm/ZGZtyng1ZSlrdymg=;
- b=MoR0AyYxS5m6LwofwZh3iK45MpH7rWrVnQL9HmnbVzHaqgG9BbK3vm0U3usFTrqlxcZ8fFf28V+wKWYB5cD9leVtjnfMsaI6ysogSXLxWnwi3H0St+8asq/SiDxVC3QMrWaE1myW5/jmnFsu3s0QJq+RNWHx5Hm89G794sPF+hs=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB2917.namprd15.prod.outlook.com (2603:10b6:a03:f5::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Tue, 26 May
- 2020 22:08:38 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::bdf1:da56:867d:f8a2]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::bdf1:da56:867d:f8a2%7]) with mapi id 15.20.3045.016; Tue, 26 May 2020
- 22:08:37 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [RFC] perf/core: allow ftrace for functions in
- kernel/event/core.c
-Thread-Topic: [RFC] perf/core: allow ftrace for functions in
- kernel/event/core.c
-Thread-Index: AQHWM6ViVS5deg/n5kWgZSYX+yJPDqi65OeAgAACB4CAAAIsgIAABAOA
-Date:   Tue, 26 May 2020 22:08:37 +0000
-Message-ID: <226406AB-1245-4F4E-879C-B3B0320811DD@fb.com>
-References: <20200526212826.4097888-1-songliubraving@fb.com>
- <20200526213913.GG2483@worktop.programming.kicks-ass.net>
- <A9B20D93-748B-4789-801E-91720E2D4F28@fb.com>
- <20200526215415.GH2483@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200526215415.GH2483@worktop.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:7e06]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1ddd179c-52a1-43ef-f20b-08d801c1576a
-x-ms-traffictypediagnostic: BYAPR15MB2917:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB29171B1CC082B2BBA8A055E1B3B00@BYAPR15MB2917.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 041517DFAB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9SYAsdiAxpeYQ6PShRXEqBahByQnRWUHD1HGKHxJkrjt+UakPW6Aun1lsFkHdIhkOCePgHIV/k9dR3JSopW5Ld66s9jkvox0b7ycBe3JqCgOZqQ/ehy5Bel0aIrnVxhrNrVi3TU4CCfNczzJeWPS0KPRKatWqCqShr/F/YA0X9EF2RxMRDG3cWX5dHDd5qByocNCoAkSkCxvAGkQTPbnwlF9tvgI+YH/4afbLPbZI2yN7JvaHZh6gN/YzdClrPUfZM++404Fsd8sNOqakJcw4OLpBDfHxDjqNik/T9vTOi3GcEPO+rffJcCPrYWJxWCB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(136003)(346002)(396003)(366004)(66946007)(6512007)(54906003)(53546011)(71200400001)(6506007)(186003)(86362001)(4326008)(316002)(6486002)(5660300002)(2616005)(478600001)(64756008)(2906002)(6916009)(66446008)(66556008)(76116006)(36756003)(33656002)(8676002)(8936002)(66476007)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: nZX0pTOPUh1RNsIyxZQk1/F4LiYkgKdTGCDo7T7qFZWVJsj8Q5ar2DdMgjnkCrqsCqYH3cGjsBGppiK4pDEvw9NwFb9gkTGc9wleNuqtD4WCM3Qr2tIjlrqjhzRLGcHzNuRdrLa3vDIM3orm6ScQkrXC7e9R908nEgO5h0FVHlNQ76GdPJWmjyDUMxnEWW50I2zlpLX0L49P1Ot2YwieaESqAjCRA7O8DDrIFTM9m4dWj88NEnRQABefoPWy+mPYPxCP9v54tQGjs03X1I/mYZYTsraWNKuRPIfPZw9eC2ykNMe50YeNuZHHVdGO2f8rKupKy0VOFcCpnZNce1P2iUHko6Dza53+NEtLAYoWxNcpF8PL3ViYTPXf8W3qf3ckD8f5GU1dlswOiLTAnfGmwQ0F6qDG7I090v0A0YE2ZJv0dAhK5WpPT+zIoGZAVuE3llmJm7yxkFvuxgLu8AelBhfBmXdBvC/rhaWB6MVgEyu84ffFb4nXo6u6FjjUUMmbz9nP0EvDV2z1KIZyKGFA9g==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0CB12D5A4073D946B2F7E1764B231177@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 26 May 2020 18:10:30 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63119C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:10:29 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id e125so13267479lfd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S8Sh+DjtPEAcfjFCLlA/An7vGsa0j6xUtlJx+u0SHCo=;
+        b=iaJc4Q0dVmQB2Nw7TDPjM5G/drSQCJ1I0yTkAzs35+wOBGWa8Y7ejBHHXXwVKMTMQ+
+         NkNdap9tqvkiIP9m0q7O1axUE2lvJgI92jZ0IOXLF2XRcaUzTSo/ftuzFdVXnVzObmWy
+         0CMdIgFTfIsBa7I+hhkQf7Fal4GZRNCYXpv14mQOa8XieWI923D6i4MsqVe56fxN2ZF6
+         rHv8DGtKKWb9J8y+3Z1O0+vbmnh2k4VRBjNiHod5ZDOy54y/27IGfws3tAvpafBWD1L+
+         Yi4zJuYg5k5tLPgIEIsylRkz7gp6zK4NNvnxczcZ7BEQ7VnR3CUUIWchfSRdBsju+uqK
+         jSdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S8Sh+DjtPEAcfjFCLlA/An7vGsa0j6xUtlJx+u0SHCo=;
+        b=HEWSV6qnN5Pt7I0+x8a/eYrx4pR57PY8J1sJgs/68/bHJOR0Zyr9fIQAIZSueL364g
+         CBCI5waUdrye3MjyH/FChSb/N15FFNsSDVeLx7AVZEjpTxMr17gLZUKxkeMJxYNVMP8J
+         +WPoe8RxAX2Q8t26um8zZTQ0bqizR9jwv8hj/6bH0nnTUE9KJVw4RDuJ4wps6ln2a6R1
+         horyPMH35IMGZUxUKOmJC8rCO0m3DaD+pkLGmJKF4l5r2n3qaPHRFHsGWQoA2zKIGPGK
+         wtxNqP3UV2DMhYfWHi94NLe4o6hrXyhMa4jYtZyGgVYjs93ZpJk8EUah6x1vn9wD4bYa
+         2DRQ==
+X-Gm-Message-State: AOAM5333tUchbAlgc3jamTPd/Yzs9m8DsAhr4+WGCQqiSauvNcszCE58
+        gKhucoiAih4ziM7aBhe/7gNW0g==
+X-Google-Smtp-Source: ABdhPJwnVJa8vgBbkVQ2tVPyuo9o5O4stVIJ3HJJkVTe15rtWt8oFnTtiz5Ih+h4GOvl+rvxKsG0aQ==
+X-Received: by 2002:a19:5f4e:: with SMTP id a14mr1482768lfj.57.1590531027702;
+        Tue, 26 May 2020 15:10:27 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id n2sm278570lfl.53.2020.05.26.15.10.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 15:10:27 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id D850A10230F; Wed, 27 May 2020 01:10:27 +0300 (+03)
+Date:   Wed, 27 May 2020 01:10:27 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [RFC 16/16] KVM: Unmap protected pages from direct mapping
+Message-ID: <20200526221027.ixxahg6ya2z5fppy@box>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+ <20200522125214.31348-17-kirill.shutemov@linux.intel.com>
+ <20200526061638.GA48741@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ddd179c-52a1-43ef-f20b-08d801c1576a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2020 22:08:37.8288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j2f6nC6Hiu7d1kdd6ZNMkIodVdeVHs77qeQUTAHj+f60PWvLIs8dH19r5b6zUBIPEOfdkZh0QQdypB5wk5OFyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2917
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- spamscore=0 mlxscore=0 bulkscore=0 cotscore=-2147483648 mlxlogscore=999
- phishscore=0 adultscore=0 priorityscore=1501 clxscore=1015 impostorscore=0
- lowpriorityscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005260171
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526061638.GA48741@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 26, 2020 at 09:16:38AM +0300, Mike Rapoport wrote:
+> On Fri, May 22, 2020 at 03:52:14PM +0300, Kirill A. Shutemov wrote:
+> > If the protected memory feature enabled, unmap guest memory from
+> > kernel's direct mappings.
+> > 
+> > Migration and KSM is disabled for protected memory as it would require a
+> > special treatment.
+> > 
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/mm/pat/set_memory.c |  1 +
+> >  include/linux/kvm_host.h     |  3 ++
+> >  mm/huge_memory.c             |  9 +++++
+> >  mm/ksm.c                     |  3 ++
+> >  mm/memory.c                  | 13 +++++++
+> >  mm/rmap.c                    |  4 ++
+> >  virt/kvm/kvm_main.c          | 74 ++++++++++++++++++++++++++++++++++++
+> >  7 files changed, 107 insertions(+)
+> > 
+> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> > index 6f075766bb94..13988413af40 100644
+> > --- a/arch/x86/mm/pat/set_memory.c
+> > +++ b/arch/x86/mm/pat/set_memory.c
+> > @@ -2227,6 +2227,7 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
+> >  
+> >  	arch_flush_lazy_mmu_mode();
+> >  }
+> > +EXPORT_SYMBOL_GPL(__kernel_map_pages);
+> >  
+> >  #ifdef CONFIG_HIBERNATION
+> >  bool kernel_page_present(struct page *page)
+> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > index b6944f88033d..e1d7762b615c 100644
+> > --- a/include/linux/kvm_host.h
+> > +++ b/include/linux/kvm_host.h
+> > @@ -705,6 +705,9 @@ int kvm_protect_all_memory(struct kvm *kvm);
+> >  int kvm_protect_memory(struct kvm *kvm,
+> >  		       unsigned long gfn, unsigned long npages, bool protect);
+> >  
+> > +void kvm_map_page(struct page *page, int nr_pages);
+> > +void kvm_unmap_page(struct page *page, int nr_pages);
+> > +
+> >  int gfn_to_page_many_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
+> >  			    struct page **pages, int nr_pages);
+> >  
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index c3562648a4ef..d8a444a401cc 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -33,6 +33,7 @@
+> >  #include <linux/oom.h>
+> >  #include <linux/numa.h>
+> >  #include <linux/page_owner.h>
+> > +#include <linux/kvm_host.h>
+> 
+> This does not seem right... 
 
+I agree. I try to find a more clean way to deal with it.
 
-> On May 26, 2020, at 2:54 PM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Tue, May 26, 2020 at 09:46:29PM +0000, Song Liu wrote:
->>=20
->>=20
->>> On May 26, 2020, at 2:39 PM, Peter Zijlstra <peterz@infradead.org> wrot=
-e:
->>>=20
->>> On Tue, May 26, 2020 at 02:28:26PM -0700, Song Liu wrote:
->>>> It is useful to trace functions in kernel/event/core.c. Allow ftrace f=
-or
->>>> them by removing $(CC_FLAGS_FTRACE) from Makefile.
->>>=20
->>> Did you try using the ftrace event with perf with this on?
->>=20
->> I have tried a few things, like=20
->>=20
->>  perf stat -e probe:perf_read -I 1000
->>  perf record -e probe:__x64_sys_perf_event_open -aR
->>=20
->> They all work fine.=20
->>=20
->> Do you have some tricky functions that we should double check?
->=20
-> I've no idea what probe: does. iirc there's something like
-> ftrace:function that is like regular function tracing.
+> >  #include <asm/tlb.h>
+> >  #include <asm/pgalloc.h>
+> > @@ -650,6 +651,10 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
+> >  		spin_unlock(vmf->ptl);
+> >  		count_vm_event(THP_FAULT_ALLOC);
+> >  		count_memcg_events(memcg, THP_FAULT_ALLOC, 1);
+> > +
+> > +		/* Unmap page from direct mapping */
+> > +		if (vma_is_kvm_protected(vma))
+> > +			kvm_unmap_page(page, HPAGE_PMD_NR);
+> 
+> ... and neither does this.
+> 
+> I think the map/unmap primitives shoud be a part of the generic mm and
+> not burried inside KVM.
 
-Those are kprobes. I have CONFIG_HAVE_KPROBES_ON_FTRACE=3Dy in .config.=20
+Well, yes. Except, kvm_map_page() also clears the page before bringing it
+back to direct mappings. Not sure yet how to deal with it.
 
->=20
-> At some point using that made the kernel really sick due to recursion
-> between ftrace and perf. Quite possibly that's been fixed, dunno.
+> >  	return 0;
+> > @@ -1886,6 +1891,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >  			page_remove_rmap(page, true);
+> >  			VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+> >  			VM_BUG_ON_PAGE(!PageHead(page), page);
+> > +
+> > +			/* Map the page back to the direct mapping */
+> > +			if (vma_is_kvm_protected(vma))
+> > +				kvm_map_page(page, HPAGE_PMD_NR);
+> >  		} else if (thp_migration_supported()) {
+> >  			swp_entry_t entry;
+> >  
+> > diff --git a/mm/ksm.c b/mm/ksm.c
+> > index 281c00129a2e..942b88782ac2 100644
+> > --- a/mm/ksm.c
+> > +++ b/mm/ksm.c
+> > @@ -527,6 +527,9 @@ static struct vm_area_struct *find_mergeable_vma(struct mm_struct *mm,
+> >  		return NULL;
+> >  	if (!(vma->vm_flags & VM_MERGEABLE) || !vma->anon_vma)
+> >  		return NULL;
+> > +	/* TODO */
+> 
+> Probably this is not something that should be done. For a security
+> sensitive environment that wants protected memory, KSM woudn't be
+> relevant anyway...
 
-I also tried on ctx_sched_out() and event_sched_out(). They also work
-as expected.=20
+Hm. True.
 
-Thanks,
-Song
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 71aac117357f..defc33d3a124 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -51,6 +51,7 @@
+> >  #include <linux/io.h>
+> >  #include <linux/lockdep.h>
+> >  #include <linux/kthread.h>
+> > +#include <linux/pagewalk.h>
+> >  
+> >  #include <asm/processor.h>
+> >  #include <asm/ioctl.h>
+> > @@ -2718,6 +2719,72 @@ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn)
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_vcpu_mark_page_dirty);
+> >  
+> > +void kvm_map_page(struct page *page, int nr_pages)
+> > +{
+> > +	int i;
+> > +
+> > +	/* Clear page before returning it to the direct mapping */
+> > +	for (i = 0; i < nr_pages; i++) {
+> > +		void *p = map_page_atomic(page + i);
+> > +		memset(p, 0, PAGE_SIZE);
+> > +		unmap_page_atomic(p);
+> > +	}
+> > +
+> > +	kernel_map_pages(page, nr_pages, 1);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_map_page);
+> > +
+> > +void kvm_unmap_page(struct page *page, int nr_pages)
+> > +{
+> > +	kernel_map_pages(page, nr_pages, 0);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_unmap_page);
+> > +
+> > +static int adjust_direct_mapping_pte_range(pmd_t *pmd, unsigned long addr,
+> > +					   unsigned long end,
+> > +					   struct mm_walk *walk)
+> > +{
+> > +	bool protect = (bool)walk->private;
+> > +	pte_t *pte;
+> > +	struct page *page;
+> > +
+> > +	if (pmd_trans_huge(*pmd)) {
+> > +		page = pmd_page(*pmd);
+> > +		if (is_huge_zero_page(page))
+> > +			return 0;
+> > +		VM_BUG_ON_PAGE(total_mapcount(page) != 1, page);
+> > +		/* XXX: Would it fail with direct device assignment? */
+> > +		VM_BUG_ON_PAGE(page_count(page) != 1, page);
+> > +		kernel_map_pages(page, HPAGE_PMD_NR, !protect);
+> > +		return 0;
+> > +	}
+> > +
+> > +	pte = pte_offset_map(pmd, addr);
+> > +	for (; addr != end; pte++, addr += PAGE_SIZE) {
+> > +		pte_t entry = *pte;
+> > +
+> > +		if (!pte_present(entry))
+> > +			continue;
+> > +
+> > +		if (is_zero_pfn(pte_pfn(entry)))
+> > +			continue;
+> > +
+> > +		page = pte_page(entry);
+> > +
+> > +		VM_BUG_ON_PAGE(page_mapcount(page) != 1, page);
+> > +		/* XXX: Would it fail with direct device assignment? */
+> > +		VM_BUG_ON_PAGE(page_count(page) !=
+> > +			       total_mapcount(compound_head(page)), page);
+> > +		kernel_map_pages(page, 1, !protect);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct mm_walk_ops adjust_direct_mapping_ops = {
+> > +	.pmd_entry	= adjust_direct_mapping_pte_range,
+> > +};
+> > +
+> 
+> All this seem to me an addition to set_memory APIs rather then KVM.
 
+Emm?.. I don't think walking userspace mapping is set_memory thing.
+And kernel_map_pages() is VMM interface already.
+
+-- 
+ Kirill A. Shutemov
