@@ -2,84 +2,74 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D34C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B902070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590505664;
-	bh=rh/ZwuBqEQdTP5hmpFrECM/X5iKXZZT4RSLrxOAfj5g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWDREsOJaV8jaa7umrlqWdZfvHKwNFTrh6liKCTZQqzJQFGZvoosfW4/IgkvNo2iZ
-	 vTy+LeE8jwrkps8viZH+UwaTqDkuTIpGHDv9x/hGyJTP4JaZB48hD+kw9q64BSjY4r
-	 YJknj+B5NcQFYrDbbr4yF6dbZcBaGELgBymbDD9g=
+	by mail.kernel.org (Postfix) with ESMTP id C1DC42070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:10:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxB2pwcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbgEZPHo (ORCPT
+        id S1729527AbgEZPKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:07:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43897 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEZPHn (ORCPT
+        Tue, 26 May 2020 11:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbgEZPKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:07:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 185so1979276pgb.10;
-        Tue, 26 May 2020 08:07:42 -0700 (PDT)
+        Tue, 26 May 2020 11:10:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73246C03E96D;
+        Tue, 26 May 2020 08:10:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ci23so1453104pjb.5;
+        Tue, 26 May 2020 08:10:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/PAeTgH6EFfvFnpLdTFbvRq34natBIZioqoaAH9SV2M=;
+        b=HxB2pwcs6+tFYMRqTRFvA3B4DE7SDOWWHJUaPBdyIalvBVvvFiLWZJSIqcYWnuDseR
+         sJXwr7rNgWLZcHsBzjpfSckHpLQKlwNMV7q7V9oiGy7LzXlaorNXCBuTTOAuJG9RLIvt
+         GowoodB7JPF/OEWXGrel5fsDSvMBIuk9flZiIkkayRE+9VcCCJ4JvqTIOK5opqYi8OfX
+         dQokAdXLqxTeEKZmBEKcLY08Z1XxZzrm3j5sY3R/ui8qmdr09Tqv76HE23P03qJfynrx
+         Q0LKyxVAsugZZ5cWCiSOhKq1JdobwxVG7VS255FHV7eaQuPUETz7ciUqi096ne5aWPLq
+         D61A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=L6RbYv5B1MYyKpilgE+iTClDmvIVUX2RuuOQOJ/aMVQ=;
-        b=WNsW+JqxQqm1qgxF7HiiTvL2d/DCKjcYs294L0UiPjee0afDrntI3Dv7MkN3DB76Du
-         mNXg/263fBRfosNnylqs89JZoQraoQPxshz2dELM0PkQKQ9+7weFdHVsWVfhs9hn4lVA
-         txQyd6nhTuucLSYbP6J/HKM54X/VArZPLuQBEDrYsbjxQQo3teaKkXwEl8bFh8Pp5XEz
-         SXJFJgsS3CCQU57kzkwFnMeqZyURJJYDQh0y39OViYK0iEK8zerZnUqa+Ax1gmUE+lv4
-         REXXBKowtySHX40Bxnw4TEh/9IFy2n9fxy7Y9iVn8U1wQehKRaOzcbA4Kq2rKH+Gr7Zo
-         qtGg==
-X-Gm-Message-State: AOAM531ubOra4Ak3AP8d0Sf28+v1lbmilc6fvK83qiSUC5dF2LSGtB/i
-        uWRNR+cjooxSQOmEcfIebiwG8KwnupR1zw==
-X-Google-Smtp-Source: ABdhPJwU5ShAKbAvJXQtY62vZ1/Gh7rdLSj1+p4Kod680hhz3y98c6Kz9js7ZW4bm3wIfIjpQ2UATQ==
-X-Received: by 2002:aa7:880f:: with SMTP id c15mr22560560pfo.94.1590505662105;
-        Tue, 26 May 2020 08:07:42 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id k18sm15699602pfg.217.2020.05.26.08.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:07:40 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0547C4230A; Tue, 26 May 2020 14:58:19 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     jeyu@kernel.org, davem@davemloft.net, kuba@kernel.org
-Cc:     michael.chan@broadcom.com, dchickles@marvell.com,
-        sburla@marvell.com, fmanlunas@marvell.com, aelior@marvell.com,
-        GR-everest-linux-l2@marvell.com, kvalo@codeaurora.org,
-        johannes@sipsolutions.net, akpm@linux-foundation.org,
-        arnd@arndb.de, rostedt@goodmis.org, mingo@redhat.com,
-        aquini@redhat.com, cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
-        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, derosier@gmail.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, vkoul@kernel.org,
-        mchehab+huawei@kernel.org, robh@kernel.org, mhiramat@kernel.org,
-        sfr@canb.auug.org.au, linux@dominikbrodowski.net,
-        glider@google.com, paulmck@kernel.org, elver@google.com,
-        bauerman@linux.ibm.com, yamada.masahiro@socionext.com,
-        samitolvanen@google.com, yzaikin@google.com, dvyukov@google.com,
-        rdunlap@infradead.org, corbet@lwn.net, dianders@chromium.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Igor Russkikh <irusskikh@marvell.com>
-Subject: [PATCH v3 8/8] qed: use new taint_firmware_crashed()
-Date:   Tue, 26 May 2020 14:58:15 +0000
-Message-Id: <20200526145815.6415-9-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200526145815.6415-1-mcgrof@kernel.org>
-References: <20200526145815.6415-1-mcgrof@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/PAeTgH6EFfvFnpLdTFbvRq34natBIZioqoaAH9SV2M=;
+        b=Gf8GRJaLhlCIsr3sAVhqxLDtfP+xW8qy2olHXaxw4dDPb3rJjgD/SNVhj8wpClDtYf
+         N13If/7VRVQ05LAAdTuSY2xfvvdZ2tXrQuzsA72fkz+bl1OBqbcslUFHRpFIsmiwlY5z
+         wN/kgbIGdXRTqaNJ/Fo8gWkNzpowqF37un3aFMLtDuZKnaL3TJgzPvCbsiCKoEbVCDyk
+         0pDNMMesd/zQBCJjRxfWMlbp092+Xj1I/N7uX0NYzZY7Pn0OkTBa237h+C6UYz1KfexJ
+         ZFr9ee8VLro17ZTzfr2Vh9x+R8r0qmDXGOt/D47XpTRib2pGnuH+ZaR9Kabkgp6220Vl
+         xlIg==
+X-Gm-Message-State: AOAM532Iy5QfksSP/hFJzZiufWRZeoVysNSnu+M+hS5iGyKR7slwoUnt
+        8Fuln0VHdiLk/aaymEXJ1pQ=
+X-Google-Smtp-Source: ABdhPJztqf+j91YDUmH604FAJKzvq76tLyH27bxF6Wn8v7Ve+rWa8JAQfaFRXeMbI/9knlgwQHgfdA==
+X-Received: by 2002:a17:902:bd0a:: with SMTP id p10mr1532434pls.102.1590505801956;
+        Tue, 26 May 2020 08:10:01 -0700 (PDT)
+Received: from localhost ([144.34.194.82])
+        by smtp.gmail.com with ESMTPSA id a2sm15530771pfl.28.2020.05.26.08.10.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 08:10:01 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     tjoseph@cadence.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, jonnyc@amazon.com,
+        thomas.petazzoni@bootlin.com, pratyush.anand@gmail.com,
+        linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1] PCI: controller: Remove duplicate error message
+Date:   Tue, 26 May 2020 23:09:54 +0800
+Message-Id: <20200526150954.4729-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,35 +77,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes use of the new taint_firmware_crashed() to help
-annotate when firmware for device drivers crash. When firmware
-crashes devices can sometimes become unresponsive, and recovery
-sometimes requires a driver unload / reload and in the worst cases
-a reboot.
+It will print an error message by itself when
+devm_pci_remap_cfg_resource() goes wrong. so remove the duplicate
+error message.
 
-Using a taint flag allows us to annotate when this happens clearly.
-
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
-Reviewed-by: Igor Russkikh <irusskikh@marvell.com>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- drivers/net/ethernet/qlogic/qed/qed_mcp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  4 +---
+ drivers/pci/controller/dwc/pcie-al.c               | 13 +++----------
+ drivers/pci/controller/dwc/pcie-armada8k.c         |  1 -
+ drivers/pci/controller/dwc/pcie-spear13xx.c        |  1 -
+ 4 files changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-index 9624616806e7..dd4357b0b5d1 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-@@ -566,6 +566,7 @@ _qed_mcp_cmd_and_union(struct qed_hwfn *p_hwfn,
- 		DP_NOTICE(p_hwfn,
- 			  "The MFW failed to respond to command 0x%08x [param 0x%08x].\n",
- 			  p_mb_params->cmd, p_mb_params->param);
-+		taint_firmware_crashed();
- 		qed_mcp_print_cpu_info(p_hwfn, p_ptt);
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 8c2543f28ba0..60bfb5bcbd37 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -234,10 +234,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
  
- 		spin_lock_bh(&p_hwfn->mcp_info->cmd_lock);
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+ 	rc->cfg_base = devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(rc->cfg_base)) {
+-		dev_err(dev, "missing \"cfg\"\n");
++	if (IS_ERR(rc->cfg_base))
+ 		return PTR_ERR(rc->cfg_base);
+-	}
+ 	rc->cfg_res = res;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
+diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+index 270868f3859a..d57d4ee15848 100644
+--- a/drivers/pci/controller/dwc/pcie-al.c
++++ b/drivers/pci/controller/dwc/pcie-al.c
+@@ -67,13 +67,8 @@ static int al_pcie_init(struct pci_config_window *cfg)
+ 	dev_dbg(dev, "Root port dbi res: %pR\n", res);
+ 
+ 	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(al_pcie->dbi_base)) {
+-		long err = PTR_ERR(al_pcie->dbi_base);
+-
+-		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
+-			res, err);
+-		return err;
+-	}
++	if (IS_ERR(al_pcie->dbi_base))
++		return PTR_ERR(al_pcie->dbi_base);
+ 
+ 	cfg->priv = al_pcie;
+ 
+@@ -408,10 +403,8 @@ static int al_pcie_probe(struct platform_device *pdev)
+ 
+ 	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
+-	if (IS_ERR(pci->dbi_base)) {
+-		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
++	if (IS_ERR(pci->dbi_base))
+ 		return PTR_ERR(pci->dbi_base);
+-	}
+ 
+ 	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+ 	if (!ecam_res) {
+diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+index 49596547e8c2..896b95d6917c 100644
+--- a/drivers/pci/controller/dwc/pcie-armada8k.c
++++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+@@ -317,7 +317,6 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+ 	base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, base);
+ 	if (IS_ERR(pci->dbi_base)) {
+-		dev_err(dev, "couldn't remap regs base %p\n", base);
+ 		ret = PTR_ERR(pci->dbi_base);
+ 		goto fail_clkreg;
+ 	}
+diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
+index 7d0cdfd8138b..cdfde1bd7d8e 100644
+--- a/drivers/pci/controller/dwc/pcie-spear13xx.c
++++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
+@@ -273,7 +273,6 @@ static int spear13xx_pcie_probe(struct platform_device *pdev)
+ 	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+ 	if (IS_ERR(pci->dbi_base)) {
+-		dev_err(dev, "couldn't remap dbi base %p\n", dbi_base);
+ 		ret = PTR_ERR(pci->dbi_base);
+ 		goto fail_clk;
+ 	}
 -- 
-2.26.2
+2.25.0
 
