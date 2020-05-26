@@ -2,80 +2,68 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7DA22075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F1B2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbgEZIhx (ORCPT
+        id S1731534AbgEZIkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:37:53 -0400
-Received: from smtp.asem.it ([151.1.184.197]:50217 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729611AbgEZIhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:37:51 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000280135.MSG 
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:37:47 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Tue, 26
- May 2020 10:37:44 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
- Transport; Tue, 26 May 2020 10:37:44 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH] dt-bindings: leds: fix macro names for pca955x
-Date:   Tue, 26 May 2020 10:37:43 +0200
-Message-ID: <20200526083743.21372-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 May 2020 04:40:12 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52519 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZIkM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:40:12 -0400
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B48AF200007;
+        Tue, 26 May 2020 08:40:08 +0000 (UTC)
+Date:   Tue, 26 May 2020 01:40:06 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] serial: 8250: Enable 16550A variants by default on non-x86
+Message-ID: <d32bdbf9fed2719c1180228464ba84dfcdeb5aa5.1590482037.git.josh@joshtriplett.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090207.5ECCD559.0079,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation reports the wrong macro names
-related to the pca9532 instead of the pca955x
+Some embedded devices still use these serial ports; make sure they're
+still enabled by default on architectures more likely to have them, to
+avoid rendering someone's console unavailable.
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
 ---
- Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-index 7984efb767b4..7a5830f8d5ab 100644
---- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-@@ -26,9 +26,9 @@ LED sub-node properties:
- 		from 0 to 15 for the pca9552
- 		from 0 to  3 for the pca9553
- - type: (optional) either
--	PCA9532_TYPE_NONE
--	PCA9532_TYPE_LED
--	PCA9532_TYPE_GPIO
-+	PCA955X_TYPE_NONE
-+	PCA955X_TYPE_LED
-+	PCA955X_TYPE_GPIO
- 	see dt-bindings/leds/leds-pca955x.h (default to LED)
- - label : (optional)
- 	see Documentation/devicetree/bindings/leds/common.txt
+Based on user reports from embedded devices that need these variants.
+
+ drivers/tty/serial/8250/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+index af0688156dd0..8195a31519ea 100644
+--- a/drivers/tty/serial/8250/Kconfig
++++ b/drivers/tty/serial/8250/Kconfig
+@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
+ config SERIAL_8250_16550A_VARIANTS
+ 	bool "Support for variants of the 16550A serial port"
+ 	depends on SERIAL_8250
++	default !X86
+ 	help
+ 	  The 8250 driver can probe for many variants of the venerable 16550A
+ 	  serial port. Doing so takes additional time at boot.
 -- 
-2.17.1
+2.27.0.rc0
 
