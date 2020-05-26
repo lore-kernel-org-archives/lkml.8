@@ -3,188 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D687C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C58A0204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C7F204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389340AbgEZNAN (ORCPT
+        id S1731737AbgEZNAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:00:13 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57302 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731765AbgEZM7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:59:40 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 229A2803086E;
-        Tue, 26 May 2020 12:59:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6BwnblpFgAFz; Tue, 26 May 2020 15:59:35 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
-        <soc@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/6] dt-bindings: bus: Add Baikal-T1 APB-bus binding
-Date:   Tue, 26 May 2020 15:59:24 +0300
-Message-ID: <20200526125928.17096-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 26 May 2020 09:00:49 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:8198 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726325AbgEZNAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 09:00:49 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Tue, 26 May 2020 21:00:23
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.78.173]
+Date:   Tue, 26 May 2020 21:00:23 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Alain Volmat" <alain.volmat@st.com>
+Cc:     kjlu@umn.edu, "Pierre-Yves MORDRET" <pierre-yves.mordret@st.com>,
+        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] i2c: stm32f7: Fix runtime PM imbalance in
+ stm32f7_i2c_reg_slave
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200526083400.GC10725@gnbcxd0016.gnb.st.com>
+References: <20200521070507.13015-1-dinghao.liu@zju.edu.cn>
+ <20200526083400.GC10725@gnbcxd0016.gnb.st.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-ID: <7548c995.d205f.1725111d7c4.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgDnX0PnEs1eVcoKAA--.2911W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgYMBlZdtOUN1wABsP
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW5GwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baikal-T1 CPU or DMAC MMIO requests are handled by the AMBA 3 AXI
-Interconnect which routes them to the AXI-APB bridge, which in turn
-serializes accesses and routes them to the corresponding APB slave device.
-This binding describes the AXI-APB bridge considered as the APB-bus. It is
-supposed to be compatible with "be,bt1-apb" and "simple-bus" drivers,
-should be equipped with EHB MMIO region and a region with no slave device
-mapped, interrupts line number, APB reference clock and domain reset line.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: linux-mips@vger.kernel.org
-Cc: soc@kernel.org
-
----
-
-Changelog v2:
-- Move driver to the bus subsystem.
-- Don't use a multi-arg clock phandle reference in the examples dt-bindings
-  property. Thus redundant include statement can be removed.
-- Use dual GPL/BSD license.
-- Use single lined copyright header.
-- Lowercase the unit-address.
-- Convert a dedicated EHB block binding to the Baikal-T1 APB-bus one.
-- Add APB reference clock and reset support.
-- Replace "additionalProperties: false" property with
-  "unevaluatedProperties: false".
-- Add reg-names property.
----
- .../bindings/bus/baikal,bt1-apb.yaml          | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
-
-diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
-new file mode 100644
-index 000000000000..d6a3b71ea835
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/baikal,bt1-apb.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Baikal-T1 APB-bus
-+
-+maintainers:
-+  - Serge Semin <fancer.lancer@gmail.com>
-+
-+description: |
-+  Baikal-T1 CPU or DMAC MMIO requests are handled by the AMBA 3 AXI Interconnect
-+  which routes them to the AXI-APB bridge. This interface is a single master
-+  multiple slaves bus in turn serializing IO accesses and routing them to the
-+  addressed APB slave devices. In case of any APB protocol collisions, slave
-+  device not responding on timeout an IRQ is raised with an erroneous address
-+  reported to the APB terminator (APB Errors Handler Block).
-+
-+allOf:
-+ - $ref: /schemas/simple-bus.yaml#
-+
-+properties:
-+  compatible:
-+    contains:
-+      const: baikal,bt1-apb
-+
-+  reg:
-+    items:
-+      - description: APB EHB MMIO registers
-+      - description: APB MMIO region with no any device mapped
-+
-+  reg-names:
-+    items:
-+      - const: ehb
-+      - const: nodev
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: APB reference clock
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+
-+  resets:
-+    items:
-+      - description: APB domain reset line
-+
-+  reset-names:
-+    items:
-+      - const: prst
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/mips-gic.h>
-+
-+    bus@1f059000 {
-+      compatible = "baikal,bt1-apb", "simple-bus";
-+      reg = <0 0x1f059000 0 0x1000>,
-+            <0 0x1d000000 0 0x2040000>;
-+      reg-names = "ehb", "nodev";
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      ranges;
-+
-+      interrupts = <GIC_SHARED 16 IRQ_TYPE_LEVEL_HIGH>;
-+
-+      clocks = <&ccu_sys 1>;
-+      clock-names = "pclk";
-+
-+      resets = <&ccu_sys 1>;
-+      reset-names = "prst";
-+    };
-+...
--- 
-2.26.2
-
+Cj4gT3ZlcmFsbCwgdGhlcmUgYXJlIHNldmVyYWwgb3RoZXIgY2FsbHMgdG8gcG1fcnVudGltZV9n
+ZXRfc3luYyB3aXRoaW4gdGhpcwo+IGRyaXZlciwgd291bGQgeW91IGxpa2UgdG8gZml4IHRoZW0g
+YWxsIGF0IG9uY2UgPwo+IAoKU3VyZSwgSSB3aWxsIHNlbmQgYSBuZXcgcGF0Y2ggdG8gbWVyZ2Ug
+dGhlbSBhbGwuCgo+IE9uIFRodSwgTWF5IDIxLCAyMDIwIGF0IDAzOjA1OjA3UE0gKzA4MDAsIERp
+bmdoYW8gTGl1IHdyb3RlOgo+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhl
+IHJ1bnRpbWUgUE0gdXNhZ2UgY291bnRlciBldmVuCj4gPiB0aGUgY2FsbCByZXR1cm5zIGFuIGVy
+cm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQKPiA+IG9uIHRoZSBl
+cnJvciBoYW5kbGluZyBwYXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4gPiAKPiA+
+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPgo+ID4g
+LS0tCj4gPiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1zdG0zMmY3LmMgfCA0ICsrKy0KPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiAKPiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLXN0bTMyZjcuYyBiL2RyaXZlcnMvaTJj
+L2J1c3Nlcy9pMmMtc3RtMzJmNy5jCj4gPiBpbmRleCAzMzBmZmVkMDExZTAuLjYwMmNmMzU2NDlj
+OCAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtc3RtMzJmNy5jCj4gPiAr
+KysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLXN0bTMyZjcuYwo+ID4gQEAgLTE3NjcsOCArMTc2
+NywxMCBAQCBzdGF0aWMgaW50IHN0bTMyZjdfaTJjX3JlZ19zbGF2ZShzdHJ1Y3QgaTJjX2NsaWVu
+dCAqc2xhdmUpCj4gPiAgCQlyZXR1cm4gcmV0Owo+ID4gIAo+ID4gIAlyZXQgPSBwbV9ydW50aW1l
+X2dldF9zeW5jKGRldik7Cj4gPiAtCWlmIChyZXQgPCAwKQo+ID4gKwlpZiAocmV0IDwgMCkgewo+
+ID4gKwkJcG1fcnVudGltZV9wdXRfYXV0b3N1c3BlbmQoZGV2KTsKPiAKPiBDb25zaWRlcmluZyB0
+aGF0IGlmIHdlIGZhaWwgaGVyZSB0aGVyZSBpcyBhIHZlcnkgZ29vZCBjaGFuY2UgdGhhdCB0aGlz
+IGlzIGR1ZQo+IHRvIHRoZSByZXN1bWUgZmFpbGluZywgcG1fcnVudGltZV9wdXRfbm9pZGxlIHdv
+dWxkIHByb2JhYmx5IG1ha2UgbW9yZSBzZW5zZQo+IHNpbmNlIHBtX3J1bnRpbWVfcHV0X2F1dG9z
+dXNwZW5kIHdpbGwgbW9zdCBwcm9iYWJseSBmYWlsIGFzIHdlbGwuCj4gCgpBZ3JlZS4gVGhhbmsg
+eW91IGZvciB5b3VyIGFkdmljZSEKClJlZ2FyZHMuCkRpbmdoYW8K
