@@ -2,164 +2,226 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26329C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB924C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19DE207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AiEeSq0g";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="RAvW8gEh"
+	by mail.kernel.org (Postfix) with ESMTP id 84922207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590473763;
+	bh=OxSFsKg1PycFHLkeCq0fALukk6xQ/Qv8MqdKEfRKfi8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=acwzbTM6FTDzqUcKPYfsPD7jLLm/ZZPbN1JA/WSdVvCxr3HEUSy1g7t8kfCc3RUpn
+	 rdwP8yss4tP+9xW0I6ZtfwhIOS5xWS1lZ8oZ5HXWYoBeSxtKi3/R5mblg6nkSA+B3/
+	 x9nSjChFknhgV8hliiI31dblOfBXRDj2WX7Lfo78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgEZGPu (ORCPT
+        id S1728078AbgEZGQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:15:50 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:15154 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgEZGPt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:15:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590473747; x=1622009747;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=HqokLzC4hDoDVjIbf1+5JFXJSDOpcInRtpbVntEiK58=;
-  b=AiEeSq0geElRQ5DqbWNAFYGJKOuef4DqA7Hdd0hsZiGz/m8MOIBZ8zjb
-   DD/r1hkWD35CsHV8Tn3M3jMDEvopslmB8mr5d65mFlj+8t7OAq+VTWmvR
-   F/NI9XI9by7ixGCHc/RDsNid8oSvXW6cJ71aFgQNXh5na8MgoVnDX1pcI
-   ZY8fGV+iSDOfVwjy6PP2dxdBMWKuNZkS6a47lgrNeL2ZJROifOE5e1KWk
-   PaWsp29stUZceVzUSZ5EDdvoVOUH4SXSyNKzkQ15JNR/NKzc0nPd0Ql5E
-   ZWataswBIE0p20ehmTDdZzwHoOr6uPtAj5i2iRLby5PQaKADEY4/tqbuP
-   A==;
-IronPort-SDR: QxRFRzZSXwMw1Rd8qvvKqUVor50nxo5kQ/64TvY+gvUvj5bCYTnNKOrZ/ur73R0X4nHShjhQ7D
- 6k2TiIEt/EXL86IIVhr0gFgZUPBFaEDkcGxTeIQPcAmZFCF9xxGJG9qHqHU0oKgmGAS/pnw/67
- qEObYbiyanSTkVoz106El/cJXl8a7NSRJ8Tg26nzb8mgBvEYS2laEUVog+704OCGupuwCL93lh
- FkblbUCM45zYPNow1B1MqR7EsFxVgxYqaF+43MELbXZuEJ3dnDh18wXWNYVUUXd/PFUP2Ecn0Y
- BT4=
-X-IronPort-AV: E=Sophos;i="5.73,436,1583164800"; 
-   d="scan'208";a="138503062"
-Received: from mail-dm6nam11lp2172.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.172])
-  by ob1.hgst.iphmx.com with ESMTP; 26 May 2020 14:15:46 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OiJBXo4QC3XIrKKjOwrt3sr1XiuyMK2OD51tsRx8iGm3uwkF30v0PbjLJOkeqsvLYKUvXrxoh9o7kEsuBnBPxHlADg9dECK5CK0eWU5F5cqAZQ5j+SGxpoVtyDI4P5Jygq8lQ7xh4AaWKmJ8Cq05z5+VJ9Why0HKQSsyc5ROGINo9fDligV1e18w669btzMbruzeSAkFAoCxGSdWyWhLyTbhSyVG2gP2+EzOn6EJjfTFoNYfLv8HB+RudKeGmrme2OfRcQctSr7Ru1Lx4VFGN6G2ZdX9HGzXnHAvhsa8JZIgR9BOITKZYu9SB6ZMLLrVN3aVeLDPJcsOf4YiPxiu5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HqokLzC4hDoDVjIbf1+5JFXJSDOpcInRtpbVntEiK58=;
- b=mQsANp4jsWHVv2qlzUVoHXv6rxQWEN7hFbollK+UaSxoJaJHbilCjn+G/glBaGXPy2ksn+6Pi0bYDzQtlU3WNQx15wXIwsEYbVEm9s8UN29g2pSI8Gre3L6u6ejOsWVseUqRZHqGNQljkjN2dBZxbtIsfRWwU0c3b3MpXRKEQceEQAA7ICEPE64A0wIifSQJDZUw/ggKPm1YUqEoqvW7wIUdp7HNNvN9GdyJGTp2fBAgqzUusvB8rWJwz0k03kKU6ahcIBv/jmh2E7KRaK7NiS+QlwVyJIjwt/S/KcLTE0/Uk0ULTiBGSArIpo9alTwq0jAjk1C1Bb0q83pxKNP2JA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HqokLzC4hDoDVjIbf1+5JFXJSDOpcInRtpbVntEiK58=;
- b=RAvW8gEh21FbNvdleeemMr88BMxfTV1TtFmcZcGX1dcDq7Nzu50OEO6XKnoExH1HdOW8/WxcwR0XHAfepSwflr8T91uT/G7bxSo+uCdNIpGk/mqZcrVFVaYDQ2NHREoWRvdV1A+LoYd2VwuZMk9dRhR5u/YjWjNe6iyc7s7TXRE=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4432.namprd04.prod.outlook.com (2603:10b6:805:33::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
- 2020 06:15:37 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 06:15:37 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>
-Subject: RE: Another approach of UFSHPB
-Thread-Topic: Another approach of UFSHPB
-Thread-Index: AQHWLi/ZJIgJKMJKI0iqt61IMTjbaqi0VZyAgAP8IICAAJtZAIAA/5Jw
-Date:   Tue, 26 May 2020 06:15:37 +0000
-Message-ID: <SN6PR04MB46400AED930A3DC5B94AED25FCB00@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <aaf130c2-27bd-977b-55df-e97859f4c097@acm.org>
- <835c57b9-f792-2460-c3cc-667031969d63@acm.org>
- <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
- <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
- <SN6PR04MB46408050B71E3A6225D6C495FCBA0@SN6PR04MB4640.namprd04.prod.outlook.com>
- <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
- <CGME20200516171420epcas2p108c570904c5117c3654d71e0a2842faa@epcms2p4>
- <231786897.01590385382061.JavaMail.epsvc@epcpadp2>
- <6eec7c64-d4c1-c76e-5c14-7904a8792275@acm.org>
-In-Reply-To: <6eec7c64-d4c1-c76e-5c14-7904a8792275@acm.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: acm.org; dkim=none (message not signed)
- header.d=none;acm.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f9df2c23-70de-4879-cd97-08d8013c3511
-x-ms-traffictypediagnostic: SN6PR04MB4432:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB4432C0655C136417158B9848FCB00@SN6PR04MB4432.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 041517DFAB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mgjdUEDVEqdCPMLqcv6pT+8gnh2awgoQVvfUrFMS2aO5sw1G3zhFvVFpyHPPGlmd0XRiMGkuKm6ZMwThYxdd0Z4bblISVzxAWpEcgRzbRNWfvz2tWKvxfQOpr+6jZ7nyWCVqMksY0ugJI6HpQ1y5gwhMR26yuxRd+dMdCeHwt79gv2CYzWmeBRDUgvD4JRQs1j7cNuENtoxbxDwAO/CqMeqzwMSqOCfPUi9jsT+1SrzDwY7Ws4eN71Oa5WF5F9wJrg4H7qt+nJ1kVQATTa+bzS0m5dy44pNPmezpeDKEMxSrC+fjtYijvXZpIJbMUuGJ5oxiE6DOPe5q3p0a79zWgJ8Vsz/zBH18+31wiGvHG+jE4g5QeANqoeWPbh+4KqK0iOj7TN1Owmxp91wVoErUTg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(8936002)(3480700007)(55016002)(66946007)(66446008)(9686003)(8676002)(26005)(110136005)(6506007)(5660300002)(54906003)(33656002)(76116006)(7696005)(66476007)(316002)(66556008)(53546011)(64756008)(478600001)(4326008)(71200400001)(2906002)(86362001)(7416002)(186003)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: XAFtSPt16/fq4xGx+ECbHiyQlBa0yYtqHZp4uhI4HzOJUoM4r+0lGjSEAV3fZ/Df9dqbxct0csVZx+fPKAT/lSVQ6qMiRnUZ7j2Cuj78/gqBK5KV7xsM+/VghN1aPw/xpS/d9jzQ3+EeqKlxdwpRhOPTf4yjC/IuxvBtdArgdd2kHrf+Mikn1XzylgM+mUdWMcIqCpKla9BxnbteV+98v6SDQnwWuooAgVjTYSMCvulIPHMK7MlI0LMtMHiv34mV6xJo31O082/FmjA7QZ0bTSoB5u8NI5WPPO8nmmbGYX7IN9Nav8+qGke1652XnN8th/QweR+ZKr9NEok4j+JPPo+K8FdrZJAk6FQ4tkRNJnO/znJmrY+EZMuxy1sV/h0LBR5p7xY0kFpMzzpTnd+0Lpi2yotWLfvwPfjjb+DU4vb8DkqIY0baUYsIC9o7q7l50Zsxo39Txq0T7oioQISiF8OiTwuUDTmlp63S9SxtNho=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 26 May 2020 02:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbgEZGQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:16:02 -0400
+Received: from kernel.org (unknown [87.70.212.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5545C207CB;
+        Tue, 26 May 2020 06:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590473761;
+        bh=OxSFsKg1PycFHLkeCq0fALukk6xQ/Qv8MqdKEfRKfi8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kjXWSk+yDAClp/K1lADNvHh0cBh0iJQ49Oq8CqmlRNsbbevhKuqwgLoJPfXLHwUuU
+         VAuZWwmgY8mKawGezWHkpFgAcMyP0QXZ+1ffbhqAigOXinrM9aKxaAL5GSkEDdMEy9
+         fRmF7ahduAJGkjY7Bf6bAjCi6VcdaxX2doQzDisQ=
+Date:   Tue, 26 May 2020 09:15:52 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [RFC 07/16] KVM: mm: Introduce VM_KVM_PROTECTED
+Message-ID: <20200526061552.GD13247@kernel.org>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+ <20200522125214.31348-8-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9df2c23-70de-4879-cd97-08d8013c3511
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2020 06:15:37.1357
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /q7BWgEi6E8Hvbn+BoNejq0gO9QmA7mjEYFERWCo1A39cmhrvS+259ZXO1/yONFFcZLfkQoRNuOeMiYyYcCU3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4432
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522125214.31348-8-kirill.shutemov@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAyMDIwLTA1LTI0IDIyOjQwLCBEYWVqdW4gUGFyayB3cm90ZToNCj4gPiBUaGUgSFBCIGRy
-aXZlciBpcyBjbG9zZSB0byB0aGUgVUZTIGNvcmUgZnVuY3Rpb24sIGJ1dCBpdCBpcyBub3QgZXNz
-ZW50aWFsDQo+ID4gZm9yIG9wZXJhdGluZyBVRlMgZGV2aWNlLiBXaXRoIHJlZmVyZW5jZSB0byB0
-aGlzIGFydGljbGUNCj4gPiAoaHR0cHM6Ly9sd24ubmV0L0FydGljbGVzLzY0NTgxMC8pLCB3ZSBp
-bXBsZW1lbnRlZCBleHRlbmRlZCBVRlMtZmVhdHVyZQ0KPiA+IGFzIGJ1cyBtb2RlbC4gQmVjYXVz
-ZSB0aGUgSFBCIGRyaXZlciBjb25zdW1lcyB0aGUgdXNlcidzIG1haW4gbWVtb3J5LCBpdA0KPiBz
-aG91bGQNCj4gPiBzdXBwb3J0IGJpbmQgLyB1bmJpbmQgZnVuY3Rpb25hbGl0eSBhcyBuZWVkZWQu
-IFdlIGltcGxlbWVudGVkIHRoZSBIUEINCj4gZHJpdmVyDQo+ID4gY2FuIGJlIHVuYmluZCAvIHVu
-bG9hZCBvbiBydW50aW1lLg0KPiANCj4gSSBkbyBub3QgYWdyZWUgdGhhdCB0aGUgYnVzIG1vZGVs
-IGlzIHRoZSBiZXN0IGNob2ljZSBmb3IgZnJlZWluZyBjYWNoZQ0KPiBtZW1vcnkgaWYgaXQgaXMg
-bm8gbG9uZ2VyIG5lZWRlZC4gQSBzaHJpbmtlciBpcyBwcm9iYWJseSBhIG11Y2ggYmV0dGVyDQo+
-IGNob2ljZSBiZWNhdXNlIHRoZSBjYWxsYmFjayBmdW5jdGlvbnMgaW4gYSBzaHJpbmtlciBnZXQg
-aW52b2tlZCB3aGVuIGENCj4gc3lzdGVtIGlzIHVuZGVyIG1lbW9yeSBwcmVzc3VyZS4gU2VlIGFs
-c28gcmVnaXN0ZXJfc2hyaW5rZXIoKSwNCj4gdW5yZWdpc3Rlcl9zaHJpbmtlcigpIGFuZCBzdHJ1
-Y3Qgc2hyaW5rZXIgaW4gaW5jbHVkZS9saW51eC9zaHJpbmtlci5oLg0KU2luY2UgdGhpcyBkaXNj
-dXNzaW9uIGlzIGNsb3NlbHkgcmVsYXRlZCB0byBjYWNoZSBhbGxvY2F0aW9uLA0KV2hhdCBpcyB5
-b3VyIG9waW5pb24gYWJvdXQgYWxsb2NhdGluZyB0aGUgcGFnZXMgZHluYW1pY2FsbHkgYXMgdGhl
-IHJlZ2lvbnMNCkFyZSBiZWluZyBhY3RpdmF0ZWQvZGVhY3RpdmF0ZWQsIGluIG9wcG9zZSBvZiBo
-b3cgaXQgaXMgZG9uZSB0b2RheSAtIA0KU3RhdGljYWxseSBvbiBpbml0IGZvciB0aGUgZW50aXJl
-IG1heC1hY3RpdmUtc3VicmVnaW9ucz8NCg==
+On Fri, May 22, 2020 at 03:52:05PM +0300, Kirill A. Shutemov wrote:
+> The new VMA flag that indicate a VMA that is not accessible to userspace
+> but usable by kernel with GUP if FOLL_KVM is specified.
+> 
+> The FOLL_KVM is only used in the KVM code. The code has to know how to
+> deal with such pages.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  include/linux/mm.h  |  8 ++++++++
+>  mm/gup.c            | 20 ++++++++++++++++----
+>  mm/huge_memory.c    | 20 ++++++++++++++++----
+>  mm/memory.c         |  3 +++
+>  mm/mmap.c           |  3 +++
+>  virt/kvm/async_pf.c |  4 ++--
+>  virt/kvm/kvm_main.c |  9 +++++----
+>  7 files changed, 53 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index e1882eec1752..4f7195365cc0 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -329,6 +329,8 @@ extern unsigned int kobjsize(const void *objp);
+>  # define VM_MAPPED_COPY	VM_ARCH_1	/* T if mapped copy of data (nommu mmap) */
+>  #endif
+>  
+> +#define VM_KVM_PROTECTED 0
+
+With all the ideas about removing pages from the direct mapi floating
+around I wouldn't limit this to KVM.
+
+VM_NOT_IN_DIRECT_MAP would describe such areas better, but I realise
+it's very far from perfect and nothing better does not comes to mind :)
+
+
+>  #ifndef VM_GROWSUP
+>  # define VM_GROWSUP	VM_NONE
+>  #endif
+> @@ -646,6 +648,11 @@ static inline bool vma_is_accessible(struct vm_area_struct *vma)
+>  	return vma->vm_flags & VM_ACCESS_FLAGS;
+>  }
+>  
+> +static inline bool vma_is_kvm_protected(struct vm_area_struct *vma)
+
+Ditto
+
+> +{
+> +	return vma->vm_flags & VM_KVM_PROTECTED;
+> +}
+> +
+>  #ifdef CONFIG_SHMEM
+>  /*
+>   * The vma_is_shmem is not inline because it is used only by slow
+> @@ -2773,6 +2780,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+>  #define FOLL_LONGTERM	0x10000	/* mapping lifetime is indefinite: see below */
+>  #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
+>  #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
+> +#define FOLL_KVM	0x80000 /* access to VM_KVM_PROTECTED VMAs */
+
+Maybe
+
+FOLL_DM		0x80000  /* access  memory dropped from the direct map */
+
+>  /*
+>   * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 87a6a59fe667..bd7b9484b35a 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+
+...
+
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index f609e9ec4a25..d56c3f6efc99 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -112,6 +112,9 @@ pgprot_t vm_get_page_prot(unsigned long vm_flags)
+>  				(VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]) |
+>  			pgprot_val(arch_vm_get_page_prot(vm_flags)));
+>  
+> +	if (vm_flags & VM_KVM_PROTECTED)
+> +		ret = PAGE_NONE;
+
+Nit: vma_is_kvm_protected()?
+
+> +
+>  	return arch_filter_pgprot(ret);
+>  }
+>  EXPORT_SYMBOL(vm_get_page_prot);
+> diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+> index 15e5b037f92d..7663e962510a 100644
+> --- a/virt/kvm/async_pf.c
+> +++ b/virt/kvm/async_pf.c
+> @@ -60,8 +60,8 @@ static void async_pf_execute(struct work_struct *work)
+>  	 * access remotely.
+>  	 */
+>  	down_read(&mm->mmap_sem);
+> -	get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE, NULL, NULL,
+> -			&locked);
+> +	get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE | FOLL_KVM, NULL,
+> +			      NULL, &locked);
+>  	if (locked)
+>  		up_read(&mm->mmap_sem);
+>  
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 033471f71dae..530af95efdf3 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1727,7 +1727,7 @@ unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *w
+>  
+>  static inline int check_user_page_hwpoison(unsigned long addr)
+>  {
+> -	int rc, flags = FOLL_HWPOISON | FOLL_WRITE;
+> +	int rc, flags = FOLL_HWPOISON | FOLL_WRITE | FOLL_KVM;
+>  
+>  	rc = get_user_pages(addr, 1, flags, NULL, NULL);
+>  	return rc == -EHWPOISON;
+> @@ -1771,7 +1771,7 @@ static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
+>  static int hva_to_pfn_slow(unsigned long addr, bool *async, bool write_fault,
+>  			   bool *writable, kvm_pfn_t *pfn)
+>  {
+> -	unsigned int flags = FOLL_HWPOISON;
+> +	unsigned int flags = FOLL_HWPOISON | FOLL_KVM;
+>  	struct page *page;
+>  	int npages = 0;
+>  
+> @@ -2255,7 +2255,7 @@ int copy_from_guest(void *data, unsigned long hva, int len)
+>  	int npages, seg;
+>  
+>  	while ((seg = next_segment(len, offset)) != 0) {
+> -		npages = get_user_pages_unlocked(hva, 1, &page, 0);
+> +		npages = get_user_pages_unlocked(hva, 1, &page, FOLL_KVM);
+>  		if (npages != 1)
+>  			return -EFAULT;
+>  		memcpy(data, page_address(page) + offset, seg);
+> @@ -2275,7 +2275,8 @@ int copy_to_guest(unsigned long hva, const void *data, int len)
+>  	int npages, seg;
+>  
+>  	while ((seg = next_segment(len, offset)) != 0) {
+> -		npages = get_user_pages_unlocked(hva, 1, &page, FOLL_WRITE);
+> +		npages = get_user_pages_unlocked(hva, 1, &page,
+> +						 FOLL_WRITE | FOLL_KVM);
+>  		if (npages != 1)
+>  			return -EFAULT;
+>  		memcpy(page_address(page) + offset, data, seg);
+> -- 
+> 2.26.2
+> 
+> 
+
+-- 
+Sincerely yours,
+Mike.
