@@ -2,111 +2,99 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE48C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6482C20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521545;
-	bh=L/FpKjXSou7uk/badrKTLDSFf91QARNH996AHbIbPls=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yk+1piPn0FOR0PuVtBqWv75kLyylLtCHn/iDQf5qEc0iI310SH7wPT6HEj0mfynkN
-	 iPfH4VTPvpK9tS07PMAYj2amedvj5frVIa01RXrRsfnNKJJyhzjab6rnqIXCjQjmIS
-	 sPGsXC+JU80tqvOuehbAAtPt9Bi3QX+1Qiw2WBTw=
+	by mail.kernel.org (Postfix) with ESMTP id ABF7A20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aQdEXYgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390125AbgEZTcZ (ORCPT
+        id S2391125AbgEZTc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:32:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390135AbgEZS5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53E982084C;
-        Tue, 26 May 2020 18:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519459;
-        bh=L/FpKjXSou7uk/badrKTLDSFf91QARNH996AHbIbPls=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzvwkZUmgUckUPZpiymkB12L1ersIZUrqkCmkpz7z6LfKOIIZOAzW8tyhjQ7J58d3
-         /rmYug4oXoY26Ikri9EHEMGM9Cm5fask66skBTxq6OkvbAyz4kS8BUn3nejGjcXBtx
-         VR9Up0OfeW0duC9wADNoXjuL94t2YeF5XdHntzjY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/64] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Tue, 26 May 2020 20:52:41 +0200
-Message-Id: <20200526183917.835608080@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
-References: <20200526183913.064413230@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 26 May 2020 15:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391003AbgEZTcY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:32:24 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3451C03E96E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:32:23 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y11so805918plt.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=mPMBSEoFG86rRhFkn52ippvpiiEp7k8qBw0SEV6Hwgk=;
+        b=aQdEXYgWnpFMIdZ08nHk9kPfqgbCMAss4Khem6x2kPel3ySPuXs9salp24OuZ41WyQ
+         fy/vR17C00aDRAvoC8WucIRTchIRjt7yZ/j+f5o+LiQk+tNp5DOVzt9sM/YwzzbURIQz
+         FE8lN9TD6Brz+iwZI0XWn1ZkXBxnucTstQIZbHOfrRN2V8TwjG4xlb8gmLBBl5haz63R
+         5W3HqOfzUVxq7AV+rYEW+fYlmVYEqFGioKV5WSDgoUICH5TPlCMLiL17N6sB6gCcKBiu
+         TAEN1opbo0YbMqX6l7DjDw8BlsZdfjE8dji6pvKUeMJncgplbIsETcJLCMa11ct3Iawv
+         7EUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mPMBSEoFG86rRhFkn52ippvpiiEp7k8qBw0SEV6Hwgk=;
+        b=dgi9VuIu3IrytKJKZ0pMU6dXq477y3ApO+pX3Q6dzu178BljhYyXC/0LT/6zaZQj/a
+         fwga2Xp7NuEbRbIcV+agqcFuXIOZas6T6J6wHXea6Wl1Sp9yJr8ooQpYKWasUeIY5oiS
+         a7LB7MCR3y8C+lS70bVASE6x3iwddjsk2MY8lU/Iu7qG0CGNPvSRVBtVuq9FS13pvLLw
+         VaTR6EmWT8vgVLE9n+LjPmtNEx96Sj8KFrVyWvMxs6KKrXVy+h+vGgICeoyvD7t4MGsh
+         2zZtmOivq+Tp9lrS7WQg8BpGaevZdhNp386CQh3dsIMybRE+8XeYL4keOMblmsDyKx8q
+         E/YA==
+X-Gm-Message-State: AOAM533ziUnvtJ5eZ5/OlzrWF4O00q/wgC57NvfvreT+Ag9HxajLyG8f
+        jyCcRKzjZ3Hh5kvzHW4NpAkJ+ioXAD7e7A==
+X-Google-Smtp-Source: ABdhPJz1+9mdYhlnOaOdqKsnmVPgb0+czO05jZqAokJjqgkvwtR2WA5G3WY3OLtL0JaaXWVfZ60U6g==
+X-Received: by 2002:a17:902:8d87:: with SMTP id v7mr2444717plo.153.1590521543229;
+        Tue, 26 May 2020 12:32:23 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:94bb:59d2:caf6:70e1? ([2605:e000:100e:8c61:94bb:59d2:caf6:70e1])
+        by smtp.gmail.com with ESMTPSA id y138sm310164pfb.33.2020.05.26.12.32.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 12:32:22 -0700 (PDT)
+Subject: Re: [PATCH 0/6] random patches for 5.8
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1590513806.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ff8f6fa6-e05a-5ac9-1d77-a8a96ca823db@kernel.dk>
+Date:   Tue, 26 May 2020 13:32:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1590513806.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+On 5/26/20 11:34 AM, Pavel Begunkov wrote:
+> Nothing insteresting in particular, just start flushing stashed patches.
+> Ones in this series are pretty easy and short.
+> 
+> Pavel Begunkov (6):
+>   io_uring: fix flush req->refs underflow
+>   io_uring: simplify io_timeout locking
+>   io_uring: don't re-read sqe->off in timeout_prep()
+>   io_uring: separate DRAIN flushing into a cold path
+>   io_uring: get rid of manual punting in io_close
+>   io_uring: let io_req_aux_free() handle fixed files
+> 
+>  fs/io_uring.c | 64 ++++++++++++++++++++-------------------------------
+>  1 file changed, 25 insertions(+), 39 deletions(-)
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+Applied 1-5, thanks.
 
-Add support for P80H84 touchscreen from eGalaxy:
-
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 25c006338100..4630b58634d8 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -353,6 +353,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
- 
- #define USB_VENDOR_ID_ELAN		0x04f3
- 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index fba655d639af..1207102823de 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1332,6 +1332,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
 -- 
-2.25.1
-
-
+Jens Axboe
 
