@@ -2,114 +2,135 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE71C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC45C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0366C20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DF720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYG5ZcBZ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zpX6gM+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgEZPQ2 (ORCPT
+        id S1729631AbgEZPRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbgEZPQ1 (ORCPT
+        Tue, 26 May 2020 11:17:18 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38500 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728205AbgEZPRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:16:27 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2AEC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:16:26 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id f89so9588334qva.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rvmRiO1axYsyxr5K067CYVfJq2RYqnnENI5i0SPdwNw=;
-        b=AYG5ZcBZg7DPNpdTYajmW8KMUjpQ97F75lHITc3mGrWGudUS7txKYRUe9Lf2xl5kMT
-         uQT0D1rrWGXEscQM+Qkdcyid7H/CNvz1XGnJrsQ9/EVLJ37aIF25kSQllRiDZAgw5+Y2
-         wpIpC1yt/rsAuDgTh6sD3eIM87JUBvOAkonat0cFNU5rSsyrg0YqRa8GN2FETQAW+RNy
-         BMqeLYt/qMF7EbybSHBp6+W8hqr4eYMU5yMaXvUQz0b5wiW0pX2oblojpsEsQYlrb9ov
-         u4bn9TvMhHPOyQFa/nkNiggh9WllA+MrPf3N1FlLjyQfkBZ0pMHgPrxBKmcuVqZ7Y8L3
-         484Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=rvmRiO1axYsyxr5K067CYVfJq2RYqnnENI5i0SPdwNw=;
-        b=LV36rJfkcmxm8agIGM0mMxsU2zDfZGCtprO/9o5/rgjwYQPrCapKcovQD/Q26hGBfm
-         46uKww79xy2ZeuQmEyUHmt2aSJ0KNZ5hU52D7sYqhI5yoXywjpsMBm4WBO3CbUjQxSvy
-         CN2GIEj01I/OyYGZVHNh2LnWVCSrjDW8aqV7B4e7XpuXSOhBV395w3JdZYtgIH41J1NG
-         OmjQ1fv0cIwcChl7MdMKft+U6fI83o0n9Wzrh2lPNUQ1UtEuL+2w4QY6BqKZ/LGg2PTA
-         72QHkbJx8XCthQColb2tb55dfl39Jp6nYlp1M+a+fMtN5C4Wbouln8XvMek3ooRgWLSZ
-         YoWA==
-X-Gm-Message-State: AOAM533FVmO4FQVMJh9oLot5MTWB7TrhmfAf8mwSHOO8q+ZtTsqc7J3e
-        Kvfb1WOJLz+dtv4pBSSxSLSCErSB
-X-Google-Smtp-Source: ABdhPJzBt3A987E2PyRC75PuhxUBsfQgYzwSjDBfR5Udgo6yButsxXR6+us3d5tX43L9+RAFKDKxLg==
-X-Received: by 2002:ad4:4e6f:: with SMTP id ec15mr20989235qvb.88.1590506185506;
-        Tue, 26 May 2020 08:16:25 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id m19sm9295311qtn.38.2020.05.26.08.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:16:24 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 26 May 2020 11:16:23 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] x86/boot: Check that there are no runtime
- relocations
-Message-ID: <20200526151623.GB2190602@rani.riverdale.lan>
-References: <20200524212816.243139-1-nivedita@alum.mit.edu>
- <20200525225918.1624470-5-nivedita@alum.mit.edu>
- <CAMj1kXHc4o91VkaChoyVzr4w-HOaashMPtkCKLaszMGCxhR_2A@mail.gmail.com>
+        Tue, 26 May 2020 11:17:17 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QFDG8V007562;
+        Tue, 26 May 2020 17:16:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=f15cWn5l7+qnePYQkKeXeKN4S4ucsruNAsfQ5NRJgnw=;
+ b=zpX6gM+963osYSTNm0NetVZRMoM9e8ye4AfJof65ff2WaNs3AZWKAyCrGWZ0mKNa0avq
+ M7epb9sAZb7vr4G3rGWmmRxm0NJeqUtG6ytTtelsiMqU2jglLeE4cRICnyvF5Kwyk+QZ
+ tRJ3PGRxR0XyqVESMIk1WuoNpUriT4FZmybFnruS3bZJRjXOstoRO4YlqGTAxZtQjZ+J
+ /Q9riOB8lFLuumg1MJkP2ytirbUl9PF/y71J+NeNorKQorPZApwmkq85xXZIzEeyFOUC
+ vg4mNSYsJRSPFUJp2nUdLUEGN0JLxixtZ8ogBlFJgTPT0Lrxjrz+4h1bjyrOezGuEINn rg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316tqh04wa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 17:16:29 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0AB3410002A;
+        Tue, 26 May 2020 17:16:29 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EE0F02C1DA0;
+        Tue, 26 May 2020 17:16:28 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 May 2020 17:16:28
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <hugues.fruchet@st.com>, <mchehab@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <pavel@ucw.cz>, <len.brown@intel.com>,
+        <valentin.schneider@arm.com>, <vincent.guittot@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [RFC 3/3] media: stm32-dcmi: Inform cpufreq governors about cpu load needs
+Date:   Tue, 26 May 2020 17:16:19 +0200
+Message-ID: <20200526151619.8779-4-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200526151619.8779-1-benjamin.gaignard@st.com>
+References: <20200526151619.8779-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHc4o91VkaChoyVzr4w-HOaashMPtkCKLaszMGCxhR_2A@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:11:56AM +0200, Ard Biesheuvel wrote:
-> On Tue, 26 May 2020 at 00:59, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >  # Compressed kernel should be built as PIE since it may be loaded at any
-> >  # address by the bootloader.
-> > -KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
-> > +KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
-> 
-> Do we still need -pie linking with these changes applied?
-> 
+When start streaming the CPU load could remain very low because almost
+all the capture pipeline is done in hardware (i.e. without using the CPU)
+and let believe to cpufreq governor that it could use lower frequencies.
+If the governor decides to use a too low frequency that becomes a problem
+when we need to acknowledge the interrupt during the blanking time.
 
-I think it's currently not strictly necessary -- eg the 64bit kernel
-doesn't get linked as pie right now with LLD or old binutils. However,
-it is safer to do so to ensure that the result remains PIC with future
-versions of the linker. There are linker optimizations that can convert
-certain PIC instructions when PIE is disabled. While I think they
-currently all focus on eliminating indirection through the GOT (and thus
-wouldn't be applicable any more), it's easy to imagine that they could
-get extended to, for eg, convert
-	leaq	foo(%rip), %rax
-to
-	movl	$foo, %eax
-with some nop padding, etc.
+To avoid this problem, DCMI driver informs the cpufreq governors by adding
+a cpufreq minimum load QoS resquest.
 
-Also, the relocation check that's being added here would only work with
-PIE linking.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/media/platform/stm32/stm32-dcmi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index b8931490b83b..774f2506b2f1 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_graph.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_qos.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/videodev2.h>
+@@ -173,6 +174,8 @@ struct stm32_dcmi {
+ 	struct media_device		mdev;
+ 	struct media_pad		vid_cap_pad;
+ 	struct media_pipeline		pipeline;
++
++	struct pm_qos_request		qos_request;
+ };
+ 
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -827,6 +830,9 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	else
+ 		reg_set(dcmi->regs, DCMI_IER, IT_OVR | IT_ERR);
+ 
++	cpufreq_minload_qos_add_request(&dcmi->qos_request,
++					CPUFREQ_GOV_QOS_MIN_LOAD_MAX_VALUE);
++
+ 	return 0;
+ 
+ err_pipeline_stop:
+@@ -859,6 +865,8 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+ 	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+ 	struct dcmi_buf *buf, *node;
+ 
++	cpufreq_minload_qos_remove_request(&dcmi->qos_request);
++
+ 	dcmi_pipeline_stop(dcmi);
+ 
+ 	media_pipeline_stop(&dcmi->vdev->entity);
+-- 
+2.15.0
+
