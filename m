@@ -2,108 +2,96 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8529DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61629207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="DiLoaq8f";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="DiLoaq8f"
+	by mail.kernel.org (Postfix) with ESMTP id B61A12078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590534418;
+	bh=Mrrxu5rbrEWO+ye/Jf6HWnjx+C15G0oR591gYkxr2wo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nw/As+C3XKWinRqEgfk6PWwSA17UoyLoLpJm56R+Ujg6pmk1Bp68wBn5n82mlLcXf
+	 xoiPV8NMLlyWMERfQ7XKGmsyP/2AxYMrB3VEDt4WZyHVGiNtYEjn7PxFe9CAamBnPW
+	 IzdotXZnOAY6g+EZGa1ZPLIeqfjYK7q04bgbM+cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392215AbgEZXGO (ORCPT
+        id S2392244AbgEZXG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:06:14 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42266 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389802AbgEZXGN (ORCPT
+        Tue, 26 May 2020 19:06:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36399 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389802AbgEZXG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:06:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E73BC8EE181;
-        Tue, 26 May 2020 16:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1590534372;
-        bh=UIJxxdcolMNBV1F2tHlacd/GA5Gqhl4Il9Tm33AYAaQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DiLoaq8fmnx68F+zW+NvPjpBkda+KC3ETTX4xGdOxk06zVmgscgPQCibtLWnUO0fI
-         TrgPDUtYdszzo7Jzqvc1MyVusz629oB29QWSpsnIlVu6BiWsBV2g5ZFbOs16Q3qcQc
-         +KFR+4/dX92dbBoqbQBi6OxEQQFaLODVUR4cB9N4=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KLmpmuVFYzlj; Tue, 26 May 2020 16:06:12 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 8D8B18EE0D4;
-        Tue, 26 May 2020 16:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1590534372;
-        bh=UIJxxdcolMNBV1F2tHlacd/GA5Gqhl4Il9Tm33AYAaQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DiLoaq8fmnx68F+zW+NvPjpBkda+KC3ETTX4xGdOxk06zVmgscgPQCibtLWnUO0fI
-         TrgPDUtYdszzo7Jzqvc1MyVusz629oB29QWSpsnIlVu6BiWsBV2g5ZFbOs16Q3qcQc
-         +KFR+4/dX92dbBoqbQBi6OxEQQFaLODVUR4cB9N4=
-Message-ID: <1590534370.15108.17.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Alex Guzman <alex@guzman.io>, Mario.Limonciello@dell.com,
-        peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Date:   Tue, 26 May 2020 16:06:10 -0700
-In-Reply-To: <da3027a2aa9d1b7110a65de919e88f42ef2e13bb.camel@guzman.io>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
-         <1590521924.15108.1.camel@HansenPartnership.com>
-         <da3027a2aa9d1b7110a65de919e88f42ef2e13bb.camel@guzman.io>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 26 May 2020 19:06:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id y18so3502692iow.3;
+        Tue, 26 May 2020 16:06:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qM7yTTkdzgug0yRlfKz1J9d+bTctskYEmlS+YtPQUx0=;
+        b=Hfe5jJZchQp8XxbQ/bQTbhliu6gGjU9T16K2/1rfBMxWlc1TFYxDVXqsWB7prbSc0P
+         CW667+eHmAA1bPwGSgET4mwlM6MQKVGHRbWEkdH1Xn7TEpFDzjIG/nsQMRkXzbeOf01H
+         DOePZ6ZraYCSzJFnEnSYekCFz699D+9H2z+jaQdFfkRPIEIJIbXr1U0QtrNBk58es5mV
+         TzCqT6J13o7i6+1EXuEcxDjFHTZSWzekGQZtcNkcWYbhx9VwANjdLA9MX3Dk5ijTK4id
+         elKzWukPdtuYyqoSzYoqXaMgN3au6gIY9eDtAaBKHicFcSq88FncWr+zhjGo5Fs5G8nF
+         j4qA==
+X-Gm-Message-State: AOAM532STG1SLIspTPazuP7e0u3XUwl5eEHWMtIAqcqbuSRkHnBd4dpg
+        nNnXtVcEG8szv3a0J3hU88NcnM4=
+X-Google-Smtp-Source: ABdhPJyliFM4XLARzE8rOlqfLPrXTbRE98ugFuGjKDNnMdP2uaXdGeeFWhb3mLqV1iWF0F+VV0o1kg==
+X-Received: by 2002:a02:3406:: with SMTP id x6mr32885jae.24.1590534416486;
+        Tue, 26 May 2020 16:06:56 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l21sm737449ili.8.2020.05.26.16.06.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 16:06:56 -0700 (PDT)
+Received: (nullmailer pid 560264 invoked by uid 1000);
+        Tue, 26 May 2020 23:06:55 -0000
+Date:   Tue, 26 May 2020 17:06:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 12/13] dt-bindings: clock: Add Marvell MMP Audio Clock
+ Controller binding
+Message-ID: <20200526230655.GA559890@bogus>
+References: <20200519224151.2074597-1-lkundrak@v3.sk>
+ <20200519224151.2074597-13-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519224151.2074597-13-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 15:19 -0700, Alex Guzman wrote:
-[...]
-> When using your patch, I get a hang when trying to use tpm2_getcap,
-> and dmesg shows some info.
+On Wed, 20 May 2020 00:41:50 +0200, Lubomir Rintel wrote:
+> This describes the bindings for a controller that generates master and bit
+> clocks for the I2S interface.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
+> ---
+> Changes since v1:
+> - Fix commit message wording
+> - Define MMP2_CLK_AUDIO_NR_CLKS
+> - Make clock ids start at 0, not 1
+> - Fix dt-bindings/clock/marvell,mmp2-audio.h file name
+> - Rename node from "clocks" to "clock-controller"
+> 
+>  .../clock/marvell,mmp2-audio-clock.yaml       | 74 +++++++++++++++++++
+>  .../dt-bindings/clock/marvell,mmp2-audio.h    | 10 +++
+>  2 files changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
+>  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
+> 
 
-Are you sure it's all applied?  This
-
-> [  570.913803]  tpm_tcg_write_bytes+0x2f/0x40
-> [  570.913805]  release_locality+0x49/0x220
-> [  570.913807]  tpm_relinquish_locality+0x1f/0x40
-> [  570.913808]  tpm_chip_stop+0x21/0x40
-> [  570.913810]  tpm_put_ops+0x9/0x30
-> [  570.913811]  tpm_common_write+0x179/0x190
-> [  570.913813]  vfs_write+0xb1/0x1a0
-
-Implies an unmatched tpm_put_ops() in the async write path, as though
-this hunk:
-
-> @@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *file,
-> const char __user *buf,
->         if (file->f_flags & O_NONBLOCK) {
->                 priv->command_enqueued = true;
->                 queue_work(tpm_dev_wq, &priv->async_work);
-> -               tpm_put_ops(priv->chip);
->                 mutex_unlock(&priv->buffer_mutex);
->                 return size;
->         }
-
-Is missing.  I actually booted the patch in my TPM based VM and it all
-seems to work OK when I execute tpm2_getcap (I verified it's using
-O_NONBLOCK) and tssgetcapability in sync mode.
-
-James
-
+Reviewed-by: Rob Herring <robh@kernel.org>
