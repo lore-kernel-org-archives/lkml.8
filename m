@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF363C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81F472086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8CC2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519861;
-	bh=7HsHtOfOIO92SqxH1tjL1YKJ4Tg2tQOLPD/uimkOM+c=;
+	s=default; t=1590519863;
+	bh=dwPwdG0SK+kS1i7Rh+GeJcYZE0NSE+OYrDVqABO7+H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JcsHEFfVbQ8cRxsgyHw+QVKwqJrW8pv6Zo/jevwavxuKauB2XCUTcdR6mac9mBOgx
-	 5ruXcE10RySaoavqoAQagddyVZiGj8pIEOTdtA/kDKBEzMNQsbqnOyVmtnM+PfBFq0
-	 yQeNeE0fKz1O6GwjznKloN+t52mFDETFaiJxxkK8=
+	b=BuaK8ZoUH17KP7YGiEAD+/raWDIbbWbSbuRM4NCxZiyuYefDH4Gzh0mhprIq2MwhI
+	 74IJrPLAd+jAOx/kvRzDlnjKmooxMi7VDhVqB3kHx1kO3IMeIa4dQBvkw4cpZvOhTj
+	 MjkUcKbjV0kMCDLmTQtVjkVe5QKSIwMMMAEVujXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391344AbgEZTEU (ORCPT
+        id S2391356AbgEZTEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:04:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59904 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390536AbgEZTES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:18 -0400
+        id S2390809AbgEZTEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C47420849;
-        Tue, 26 May 2020 19:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C455208B6;
+        Tue, 26 May 2020 19:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519857;
-        bh=7HsHtOfOIO92SqxH1tjL1YKJ4Tg2tQOLPD/uimkOM+c=;
+        s=default; t=1590519855;
+        bh=dwPwdG0SK+kS1i7Rh+GeJcYZE0NSE+OYrDVqABO7+H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rep29aMCyN670a8s7uh0ICTE/no34HVNuXYe6rKT2nvQSlr0VzhkUD+SLV3pyT9ns
-         bm2oq4Ix2/EMWf7yI7CSKvnYJ5HEVfgg++PL0wdqxge39q+5APEraVcXSWbvf5u69M
-         popPyesukJrads5nCt1RkmMqawPeI4DjdUSDprdQ=
+        b=TWqUin4CW90wDU6jv2jo8cW0285CyrkCkWaHKJFTq5yfbo/g6VDKGrvnWMjivlo9J
+         774li7Gq3dDiHYHntDgEINACt2yBUJdyuvIB55LmveGlERFjOStL8t6UXKCFEmz8iC
+         xg83i1MUSSIKZiInIhbfCF2aVEKqc6wdxds6JbYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 4.19 43/81] apparmor: Fix use-after-free in aa_audit_rule_init
-Date:   Tue, 26 May 2020 20:53:18 +0200
-Message-Id: <20200526183931.877574026@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 4.19 42/81] drm/etnaviv: fix perfmon domain interation
+Date:   Tue, 26 May 2020 20:53:17 +0200
+Message-Id: <20200526183931.808356135@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,38 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-commit c54d481d71c6849e044690d3960aaebc730224cc upstream.
+commit 40b697e256ccdb88aaff424b44b4d300eb8460e8 upstream.
 
-In the implementation of aa_audit_rule_init(), when aa_label_parse()
-fails the allocated memory for rule is released using
-aa_audit_rule_free(). But after this release, the return statement
-tries to access the label field of the rule which results in
-use-after-free. Before releasing the rule, copy errNo and return it
-after release.
+The GC860 has one GPU device which has a 2d and 3d core. In this case
+we want to expose perfmon information for both cores.
 
-Fixes: 52e8c38001d8 ("apparmor: Fix memory leak of rule on error exit path")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+The driver has one array which contains all possible perfmon domains
+with some meta data - doms_meta. Here we can see that for the GC860
+two elements of that array are relevant:
+
+  doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
+  doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
+
+The userspace driver wants to get a list of all perfmon domains and
+their perfmon signals. This is done by iterating over all domains and
+their signals. If the userspace driver wants to access the domain with
+id 8 the kernel driver fails and returns invalid data from doms_3d with
+and invalid offset.
+
+This results in:
+  Unable to handle kernel paging request at virtual address 00000000
+
+On such a device it is not possible to use the userspace driver at all.
+
+The fix for this off-by-one error is quite simple.
+
+Reported-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/apparmor/audit.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/apparmor/audit.c
-+++ b/security/apparmor/audit.c
-@@ -201,8 +201,9 @@ int aa_audit_rule_init(u32 field, u32 op
- 	rule->label = aa_label_parse(&root_ns->unconfined->label, rulestr,
- 				     GFP_KERNEL, true, false);
- 	if (IS_ERR(rule->label)) {
-+		int err = PTR_ERR(rule->label);
- 		aa_audit_rule_free(rule);
--		return PTR_ERR(rule->label);
-+		return err;
- 	}
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *p
+ 		if (!(gpu->identity.features & meta->feature))
+ 			continue;
  
- 	*vrule = rule;
+-		if (meta->nr_domains < (index - offset)) {
++		if (index - offset >= meta->nr_domains) {
+ 			offset += meta->nr_domains;
+ 			continue;
+ 		}
 
 
