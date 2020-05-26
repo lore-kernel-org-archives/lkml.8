@@ -2,52 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B87C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0732084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B5A20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519293;
-	bh=AcHfC1ZDD4MS4NcIUcX+UK+naJhhBGXIZhQh229VQfo=;
+	s=default; t=1590519294;
+	bh=ndlsGo9CG4KB47l0cX6yHBs/uO2HRZHZPAYIShWTe5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWGx0fMBe7ntYkhTDYjsF2GKrcdSLzMmzYv0zLXDYCAF84I6MSX1vYwIKU85B0G6V
-	 PXFml4kkWzzBMPHUofVXRPM45cz06XDhpnUUqYUhEmYXYDhLik3EN5lmbKj9oIYHVK
-	 QCnHOmHBNdMXqDTxemnRA5NMMLhk5sIr1szlwPec=
+	b=d5/jifvcAlgiQsVkTCo/kaLGmIDuReAtNneAdYNo1BSXWV4kio8b4RLeI7N9H/HH9
+	 klmMWT/cvC8JRwe4u7aceMZ3VN5jy8wr2CJEPhAi1bATjc0BXl8wiiKqu9gl9cYoWZ
+	 +VSpQyUJrfysWUOyP4q34rpY+lgW5QIC7W0+jLeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbgEZSyw (ORCPT
+        id S2389185AbgEZSyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:54:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389132AbgEZSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:54:51 -0400
+        id S2387398AbgEZSyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E80D820823;
-        Tue, 26 May 2020 18:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CD9C207FB;
+        Tue, 26 May 2020 18:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519290;
-        bh=AcHfC1ZDD4MS4NcIUcX+UK+naJhhBGXIZhQh229VQfo=;
+        s=default; t=1590519288;
+        bh=ndlsGo9CG4KB47l0cX6yHBs/uO2HRZHZPAYIShWTe5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rC5bCIFkUuhaDj980z/txUQtHdQtVJV/rFoOJs+SPYGSq3NpxTyGG+jDLqIIMrdT6
-         60jELOODMUNbQa9Lro9WMZVBfRnvTLCnv2QPaHIb3F3MifQnMfb+iajzv41cW0RpjE
-         DrIak2TeFkREUB8CyMsI8NJOgkwoVnGNgdfjqxBk=
+        b=qhcA+pWnFNNDEX1LsncMvO6Prbl13HLTAyFMJ4qXnJd33GyhxuI/sg4UGhVm5J3+r
+         IG/nfTXewka3Q9uZe4r1LPZJlV3sB0X20oP4OMfsceSFb+C8QREQcDHYgupnHg+J+2
+         /BcwmqNCU4LbdyYfJIK6/4rwxChdkLAoBdUkaS34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 11/65] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date:   Tue, 26 May 2020 20:52:30 +0200
-Message-Id: <20200526183910.346510065@linuxfoundation.org>
+        stable@vger.kernel.org, Tobias Klauser <tklauser@distanz.ch>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 02/65] padata: Remove unused but set variables
+Date:   Tue, 26 May 2020 20:52:21 +0200
+Message-Id: <20200526183907.344060994@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -60,73 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tobias Klauser <tklauser@distanz.ch>
 
-[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
+commit 119a0798dc42ed4c4f96d39b8b676efcea73aec6 upstream.
 
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
+Remove the unused but set variable pinst in padata_parallel_worker to
+fix the following warning when building with 'W=1':
 
-Besides not adding any extra functionality, initializing the WMI interface
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
+  kernel/padata.c: In function ‘padata_parallel_worker’:
+  kernel/padata.c:68:26: warning: variable ‘pinst’ set but not used [-Wunused-but-set-variable]
 
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
+Also remove the now unused variable pd which is only used to set pinst.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ kernel/padata.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index cccf250cd1e3..ee64c9512a3a 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -551,9 +551,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
- 	.detect_quirks = asus_nb_wmi_quirks,
- };
- 
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
- 
- static int __init asus_nb_wmi_init(void)
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -65,15 +65,11 @@ static int padata_cpu_hash(struct parall
+ static void padata_parallel_worker(struct work_struct *parallel_work)
  {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
+ 	struct padata_parallel_queue *pqueue;
+-	struct parallel_data *pd;
+-	struct padata_instance *pinst;
+ 	LIST_HEAD(local_list);
  
--- 
-2.25.1
-
+ 	local_bh_disable();
+ 	pqueue = container_of(parallel_work,
+ 			      struct padata_parallel_queue, work);
+-	pd = pqueue->pd;
+-	pinst = pd->pinst;
+ 
+ 	spin_lock(&pqueue->parallel.lock);
+ 	list_replace_init(&pqueue->parallel.list, &local_list);
 
 
