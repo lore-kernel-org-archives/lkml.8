@@ -2,113 +2,82 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88042C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6787520776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA15E20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRqDkXAh"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="H05nUKbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgEZFiy (ORCPT
+        id S1726612AbgEZFoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 01:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49076 "EHLO
+        Tue, 26 May 2020 01:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgEZFix (ORCPT
+        with ESMTP id S1725263AbgEZFoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 01:38:53 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11A1C061A0E;
-        Mon, 25 May 2020 22:38:53 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 131so1254253pfv.13;
-        Mon, 25 May 2020 22:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=TEpwLFvhdJnR4rjU7Ugp7j/UBW4cby4V0E/lSlZIC2A=;
-        b=dRqDkXAhUQqq4jKIqnZQcVMSc+nmulxIn8oBwA5cKzkJQBeQVkpu50Q4u+BhuUv1gH
-         iSsk9QGdD6CEpil6jNcyOQ6GwppqEKhEjSNSnOBG204oomjvsOGyP+Nza/14py2CtuON
-         sYN1JHc89qYwszU9hx8uqkyA8M81ruCWFGrBLh+cHmn59r2sxviOOZFHLEF7/yl5kNa7
-         RrYXh9FBng/tXMbq8zkTC7wVjOZx1fvh7xZIj2fFN5eRop2lY7NgCJ3Ki++2DXfJc5hI
-         bYvvh/uiHyY9c8tg2kkR1etcVQQyprHGXiS9iODGxU15LCQfz50k/z5hoSzh2G2I5q8K
-         R6ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TEpwLFvhdJnR4rjU7Ugp7j/UBW4cby4V0E/lSlZIC2A=;
-        b=Cge8cGhNeaMRGkjMIRW0Fr0ilINHdp6FFzWxohJvlXXfPn3OSWTULTpgeGlKJN+2o5
-         7zWl8PDn37IiqafDtuV7qVtm+ZBOp3jkUA5CQctvuUs4EnEU4z288xx2yvGdUvVmFnHR
-         7yjCfOkO1s5EJ3E3KIzfwlMeZYwWhjEzdlav9+YgN5Dlcpcfq131WXs6EUjSNcGnFxAW
-         72Z5KwTO3K1V8gGkC+NnOjMgrts7EzUaZLOyCSJdNV2mxxCdtdbJQcQJ4mIuA31hVMxR
-         vtIy72El/cOYr0gsJcXJ1l9X8gPNZBmE+WkMyNR1KhnVD4mqGDzx8s2Rz+mWESQSWUBB
-         asyQ==
-X-Gm-Message-State: AOAM531k++wYGfx77HXExBgsojY/ZomXQ8mh3z+S/xUxBIHCBRmVjlRi
-        K7sqNr5CAap4BXOiQpM1Lf1ba47e
-X-Google-Smtp-Source: ABdhPJwU6+yb4CNaNP614xORlUHrKpQ8SmzJEas/bYBWmkz6zcDW8qqB9KRkV689KfvC/QL6TxFnAg==
-X-Received: by 2002:a63:d148:: with SMTP id c8mr29277363pgj.51.1590471533034;
-        Mon, 25 May 2020 22:38:53 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id y6sm14105508pjw.15.2020.05.25.22.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 22:38:52 -0700 (PDT)
-Date:   Mon, 25 May 2020 22:38:50 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, geert+renesas@glider.be,
-        magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org,
-        sre@kernel.org, robh@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: reset: vexpress: fix build issue
-Message-ID: <20200526053850.GA2368760@ubuntu-s3-xlarge-x86>
-References: <20200522220103.908307-1-anders.roxell@linaro.org>
- <20200524222025.GA3116034@ubuntu-s3-xlarge-x86>
- <292277.1590449865@turing-police>
+        Tue, 26 May 2020 01:44:39 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A9CC061A0E;
+        Mon, 25 May 2020 22:44:39 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 49WNFb23Kfz9sRY; Tue, 26 May 2020 15:44:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1590471875; bh=j0PNgC0xr6mRDHCZ2htDfbQsT0XH5gFzuCdilAoQCBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H05nUKbvRSIH+7O5N9VUsnkHeRklB48VujBczf2Xtd7k/msK8glVNwOfwKFhBxaM2
+         RMEhFP3061zuW6+4Tyn4tcDNAEbnpgE5y/GbpnLgkqD9inO7dRTJ8JdJazRZlG5By1
+         dDTw25f7q0+rjMvV86X6zTMCLnL9GISRBtWJGAOBofFztGdhMaHaSDnzVJeKDOeTRr
+         P/gT1fm1rSHSwWvDzu+Yy/x7JV3Y4U7YJfxqHFYoVKLC8zIAnftSk9Bv7oB4+ke1/z
+         t+6gHdzDMsO3E/gW5yqaeDf4mGpMKKUTqOEkTCh4o4CEB+cdOrXQUL3itzvvSsvIix
+         ogkCA1YC4CmqQ==
+Date:   Tue, 26 May 2020 14:36:56 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
+Message-ID: <20200526043656.GA282305@thinks.paulus.ozlabs.org>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <292277.1590449865@turing-police>
+In-Reply-To: <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 07:37:45PM -0400, Valdis Klētnieks wrote:
-> On Sun, 24 May 2020 15:20:25 -0700, Nathan Chancellor said:
+On Mon, Apr 27, 2020 at 12:35:10PM +0800, Tianjia Zhang wrote:
+> The 'kvm_run' field already exists in the 'vcpu' structure, which
+> is the same structure as the 'kvm_run' in the 'vcpu_arch' and
+> should be deleted.
 > 
-> > arm-linux-gnueabi-ld: drivers/power/reset/vexpress-poweroff.o: in function `vexpress_reset_probe':
-> > vexpress-poweroff.c:(.text+0x36c): undefined reference to `devm_regmap_init_vexpress_config'
-> 
-> The part I can't figure out is that git blame tells me there's already an
-> export:
-> 
-> 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 154)   return regmap;
-> 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 155) }
-> b33cdd283bd91 (Arnd Bergmann   2014-05-26 17:25:22 +0200 156) EXPORT_SYMBOL_GPL(devm_regmap_init_vexpress_config);
-> 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 157)
-> 
-> but I can't figure out where or if drivers/power/reset/vexpress-poweroff.c gets
-> a MODULE_LICENSE from...
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-Correct, it is exported but that file is being built as a module whereas
-the file requiring it is beign builtin. As far as I understand, that
-will not work, hence the error.
+This looks fine.
 
-The issue with this patch is that ARCH_VEXPRESS still just selects
-POWER_RESET_VEXPRESS, which ignores "depends on", hence the Kconfig
-warning and not fixing the error.
+I assume each architecture sub-maintainer is taking the relevant
+patches from this series via their tree - is that right?
 
-I am not that much of a Kconfig guru to come up with a solution. I am
-just reporting it because arm allmodconfig is broken on -next due to
-this.
-
-Cheers,
-Nathan
+Reviewed-by: Paul Mackerras <paulus@ozlabs.org>
