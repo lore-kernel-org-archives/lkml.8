@@ -2,95 +2,262 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF03C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8542DC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD5F7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520410;
-	bh=XvJDTNIF45o9UFGQKYua3tOzrBKSO1492EQJkze+mBE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=shnVxYg+etXHJa+ASs9nzmNEedF7FNx4WIFqhfVqmkeD3170f7r+oaErXZ04ELitl
-	 3+IS7ZXIUU5EYibNFN+sjCI/soYqGibyn0e+MWBoZrXiXX34kuklcJCbuSH4ED13hS
-	 U4cNNqvnrGubiuSh48CLHF5Eb5Y1ImA5X2jRRG2c=
+	by mail.kernel.org (Postfix) with ESMTP id 5FD2820B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="O6pUaEBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404287AbgEZTNa (ORCPT
+        id S2404299AbgEZTNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404264AbgEZTNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:32 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45942 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404260AbgEZTNZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 15:13:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A93120888;
-        Tue, 26 May 2020 19:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520404;
-        bh=XvJDTNIF45o9UFGQKYua3tOzrBKSO1492EQJkze+mBE=;
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id ADABD30D766;
+        Tue, 26 May 2020 12:13:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com ADABD30D766
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520403;
+        bh=BVy8DtkdeXBmOOkbeG16lruOXBYUDAPR3V9ijJ0fk9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSfo6/N/jWFQguyr9yQzeamwDTmqm+3oF3Yq27pvCjUabQ4aTpju4mWmS34qqjZtp
-         KPi01VIUXZKU0joC/nrWQZWraRKdLJ1X/yq1WA4FDuU5bGtCy8TPPGoab64aVCQqR9
-         j22It7fWQ9gX59UA2O4jkhKzHuwzkFFyM5eLVTYE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Bahling <sbahling@suse.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 064/126] ALSA: iec1712: Initialize STDSP24 properly when using the model=staudio option
-Date:   Tue, 26 May 2020 20:53:21 +0200
-Message-Id: <20200526183943.534486974@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=O6pUaEBA21oH0g3GlaYWwTRTR+Xd8ijuJhBuX+B7NTuu+fm1HvDNLXqnXxDL3rsgH
+         dSQvUDk1aOKef+150WDi/met6UEb0qsXBrkc9t4SeBZSNQkPcsz7nMWpw/CnV6oO5q
+         XigvretWMP+pJwuBkg45xmO2sicUOs4lfz1jBbjg=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 2FCA014008B;
+        Tue, 26 May 2020 12:13:22 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 04/14] PCI: brcmstb: Add bcm7278 reigister info
+Date:   Tue, 26 May 2020 15:12:43 -0400
+Message-Id: <20200526191303.1492-5-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Bahling <sbahling@suse.com>
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-commit b0cb099062b0c18246c3a20caaab4c0afc303255 upstream.
+Add in compatibility strings and code for three Broadcom STB chips.  Some
+of the register locations, shifts, and masks are different for certain
+chips, requiring the use of different constants based on of_id.
 
-The ST Audio ADCIII is an STDSP24 card plus extension box. With commit
-e8a91ae18bdc ("ALSA: ice1712: Add support for STAudio ADCIII") we
-enabled the ADCIII ports using the model=staudio option but forgot
-this part to ensure the STDSP24 card is initialized properly.
+We would like to add the following at this time to the match list but we
+need to wait until the end of this patchset so that everything works.
 
-Fixes: e8a91ae18bdc ("ALSA: ice1712: Add support for STAudio ADCIII")
-Signed-off-by: Scott Bahling <sbahling@suse.com>
-Cc: <stable@vger.kernel.org>
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1048934
-Link: https://lore.kernel.org/r/20200518175728.28766-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
+    { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
+    { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
+    { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
 
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 ---
- sound/pci/ice1712/ice1712.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 108 +++++++++++++++++++++++---
+ 1 file changed, 96 insertions(+), 12 deletions(-)
 
---- a/sound/pci/ice1712/ice1712.c
-+++ b/sound/pci/ice1712/ice1712.c
-@@ -2332,7 +2332,8 @@ static int snd_ice1712_chip_init(struct
- 	pci_write_config_byte(ice->pci, 0x61, ice->eeprom.data[ICE_EEP1_ACLINK]);
- 	pci_write_config_byte(ice->pci, 0x62, ice->eeprom.data[ICE_EEP1_I2SID]);
- 	pci_write_config_byte(ice->pci, 0x63, ice->eeprom.data[ICE_EEP1_SPDIF]);
--	if (ice->eeprom.subvendor != ICE1712_SUBDEVICE_STDSP24) {
-+	if (ice->eeprom.subvendor != ICE1712_SUBDEVICE_STDSP24 &&
-+	    ice->eeprom.subvendor != ICE1712_SUBDEVICE_STAUDIO_ADCIII) {
- 		ice->gpio.write_mask = ice->eeprom.gpiomask;
- 		ice->gpio.direction = ice->eeprom.gpiodir;
- 		snd_ice1712_write(ice, ICE1712_IREG_GPIO_WRITE_MASK,
-
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 73020b4ff090..7c707e483181 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -120,9 +120,8 @@
+ #define  PCIE_EXT_SLOT_SHIFT				15
+ #define  PCIE_EXT_FUNC_SHIFT				12
+ 
+-#define PCIE_RGR1_SW_INIT_1				0x9210
+ #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
+-#define  PCIE_RGR1_SW_INIT_1_INIT_MASK			0x2
++#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
+ 
+ /* PCIe parameters */
+ #define BRCM_NUM_PCIE_OUT_WINS		0x4
+@@ -152,6 +151,76 @@
+ #define SSC_STATUS_SSC_MASK		0x400
+ #define SSC_STATUS_PLL_LOCK_MASK	0x800
+ 
++#define IDX_ADDR(pcie)	\
++	(pcie->reg_offsets[EXT_CFG_INDEX])
++#define DATA_ADDR(pcie)	\
++	(pcie->reg_offsets[EXT_CFG_DATA])
++#define PCIE_RGR1_SW_INIT_1(pcie) \
++	(pcie->reg_offsets[RGR1_SW_INIT_1])
++
++enum {
++	RGR1_SW_INIT_1,
++	EXT_CFG_INDEX,
++	EXT_CFG_DATA,
++};
++
++enum {
++	RGR1_SW_INIT_1_INIT_MASK,
++	RGR1_SW_INIT_1_INIT_SHIFT,
++};
++
++enum pcie_type {
++	GENERIC,
++	BCM7278,
++	BCM2711,
++};
++
++struct pcie_cfg_data {
++	const int *reg_field_info;
++	const int *offsets;
++	const enum pcie_type type;
++};
++
++static const int pcie_reg_field_info[] = {
++	[RGR1_SW_INIT_1_INIT_MASK] = 0x2,
++	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
++};
++
++static const int pcie_reg_field_info_bcm7278[] = {
++	[RGR1_SW_INIT_1_INIT_MASK] = 0x1,
++	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
++};
++
++static const int pcie_offsets[] = {
++	[RGR1_SW_INIT_1] = 0x9210,
++	[EXT_CFG_INDEX]  = 0x9000,
++	[EXT_CFG_DATA]   = 0x9004,
++};
++
++static const struct pcie_cfg_data generic_cfg = {
++	.reg_field_info	= pcie_reg_field_info,
++	.offsets	= pcie_offsets,
++	.type		= GENERIC,
++};
++
++static const int pcie_offset_bcm7278[] = {
++	[RGR1_SW_INIT_1] = 0xc010,
++	[EXT_CFG_INDEX] = 0x9000,
++	[EXT_CFG_DATA] = 0x9004,
++};
++
++static const struct pcie_cfg_data bcm7278_cfg = {
++	.reg_field_info = pcie_reg_field_info_bcm7278,
++	.offsets	= pcie_offset_bcm7278,
++	.type		= BCM7278,
++};
++
++static const struct pcie_cfg_data bcm2711_cfg = {
++	.reg_field_info	= pcie_reg_field_info,
++	.offsets	= pcie_offsets,
++	.type		= BCM2711,
++};
++
+ struct brcm_msi {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+@@ -176,6 +245,9 @@ struct brcm_pcie {
+ 	int			gen;
+ 	u64			msi_target_addr;
+ 	struct brcm_msi		*msi;
++	const int		*reg_offsets;
++	const int		*reg_field_info;
++	enum pcie_type		type;
+ };
+ 
+ /*
+@@ -602,20 +674,21 @@ static struct pci_ops brcm_pcie_ops = {
+ 
+ static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32 val)
+ {
+-	u32 tmp;
++	u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
++	u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
+ 
+-	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
+-	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
+-	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
++	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
++	tmp = (tmp & ~mask) | ((val << shift) & mask);
++	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+ }
+ 
+ static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie, u32 val)
+ {
+ 	u32 tmp;
+ 
+-	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
++	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+ 	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
+-	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
++	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+ }
+ 
+ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+@@ -924,10 +997,16 @@ static int brcm_pcie_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id brcm_pcie_match[] = {
++	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
++	{},
++};
++
+ static int brcm_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node, *msi_np;
+ 	struct pci_host_bridge *bridge;
++	const struct pcie_cfg_data *data;
+ 	struct brcm_pcie *pcie;
+ 	struct pci_bus *child;
+ 	struct resource *res;
+@@ -937,9 +1016,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	if (!bridge)
+ 		return -ENOMEM;
+ 
++	data = of_device_get_match_data(&pdev->dev);
++	if (!data) {
++		pr_err("failed to look up compatible string\n");
++		return -EINVAL;
++	}
++
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->dev = &pdev->dev;
+ 	pcie->np = np;
++	pcie->reg_offsets = data->offsets;
++	pcie->reg_field_info = data->reg_field_info;
++	pcie->type = data->type;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pcie->base = devm_ioremap_resource(&pdev->dev, res);
+@@ -1005,10 +1093,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-static const struct of_device_id brcm_pcie_match[] = {
+-	{ .compatible = "brcm,bcm2711-pcie" },
+-	{},
+-};
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+ 
+ static struct platform_driver brcm_pcie_driver = {
+-- 
+2.17.1
 
