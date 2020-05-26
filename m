@@ -2,86 +2,135 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213D7C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B2FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25462070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6807207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oItybm9+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZbleg6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbgEZJrB (ORCPT
+        id S1731834AbgEZJrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59204 "EHLO
+        Tue, 26 May 2020 05:47:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgEZJrA (ORCPT
+        with ESMTP id S1731827AbgEZJrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:47:00 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3479C08C5C1;
-        Tue, 26 May 2020 02:46:59 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id k8so1040841edq.4;
-        Tue, 26 May 2020 02:46:59 -0700 (PDT)
+        Tue, 26 May 2020 05:47:06 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005EEC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:47:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l11so19791654wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KA+bHp9rxExZP+OmYeJADOO2BQciqNprrH+ZtH7Ib5w=;
-        b=oItybm9+cVLjWxgJ+rDptOHtBHE6kr6yNWQsIox7nSinLI3JpxSaoqxAx920NjXfUi
-         Q2fSayYCnjKvr80kS/31ypg0JBNbsSO9kjdfk1K9BCA6PdaoF0vMDYRja0ZrUjGt9+G8
-         j7zT8z6juG9No67gRinhMFcUUzuVOLp4hEH4qkGVBKFM3YyrY3p0ghCzcaYsygfzGfs8
-         R62UadC3lGwAK123fEkCYcKbJGGCx7qavkYhKLq28co7nIYKlDTMl/53xkTv1k8xwR9o
-         PydReAVu6HK6OC6F2RAv7FIhUbPlDEomtieLPwvJRrmIwr5wtvxZ+apafRc2dDpEOX+X
-         +LCQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=jV12W3UygClgnjI8OwJfqrVttfZE3ZiDDLZ9k2Y3cMg=;
+        b=yZbleg6y3zSWwvAUhkU/8+05EwmWvvWWXpuA8kcTb+7i0zK3z42rIIMG2yiWyxc/Fd
+         WonT3lYNUAZ68HyBLBai/O4qjOy2xXRby3N1OAxntnnlkM6NfEzNuq0gHAa2rV/cEWWp
+         TKhWL+JVHx81ursRB6Ah7OtS7IG1mc9qj3oouGXMdyrIee1CPOLVDGX5C0eU5d4NGLd2
+         wdI7diUX58sJjcRuKCjsINY3QrBcI+00CX77afoGFe+aOa/BUV0lqzB5Gj6NkKazPRyY
+         y6zesexjQfrqDWCPI1AQnqbGVqavcv1BsJvi7BmOwSr6A9Y8dQTYO4InNaeE/eKYZ5ke
+         y+5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KA+bHp9rxExZP+OmYeJADOO2BQciqNprrH+ZtH7Ib5w=;
-        b=K4gQ7Fknk7UdQbpP8yr3tzM2fooP4hlG1cy96a9uleLg2hVldYRq/Il6+VjRZtEhtj
-         7LBSzxtr0hvL/+mh0V9uwK4V56k/otkav9ea98MfPBoQanA9fACO76s+VNInJPC0evm+
-         At/JgIHU/LgJ31xJYz3KY/8WkuBUpvUn6kAFYR2zBsqfR3cYOs2+tvZpldFqm2xBf3kV
-         oVLwr1QfHV9DvjNQoeqqhtFJzWt4h4wpZtqUsbKO/wJatBdE+NIRFuFLk+MLQZ6eqe1w
-         ZGaf9WNOB1Ps6BxWdespoyQR/aUTMufh97tjTZmBbyOHUD5QCH8kqM/WC61ia8/Iyhtp
-         gSJQ==
-X-Gm-Message-State: AOAM5310+hX5e2qi8I73XADKXEkcUPzNS+sL9uPtD3EcXOFg/rmQHJg4
-        qEVIPLhJP+sDML6VeTA7vb4u5bDU3Bot75y8Sdw=
-X-Google-Smtp-Source: ABdhPJz0ztayBlOshX2YgK2JYPAQqnJVAvCGzcRKxvIz1xNVZXJJ5SZZwaSyxwob8ClcShJxauvUdAHXGkGkvwLOURI=
-X-Received: by 2002:aa7:cd4e:: with SMTP id v14mr2135151edw.297.1590486417763;
- Tue, 26 May 2020 02:46:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=jV12W3UygClgnjI8OwJfqrVttfZE3ZiDDLZ9k2Y3cMg=;
+        b=cocHjKcHnnC43C9Z/BzSb2wrP8geWAYlX/DI4yNa7US3HodhDzsCYqcPhg5JtxklBh
+         U8B5n5+4GWrhBYPlhsh/JHAXZGAtDBdk1Kw3ICwRR92ncid4BEaXzLuuW1haO2aELOMs
+         cmHLzHQfJZ5NCAN0ExienvzaG2lEqWvxY7UWVsnncdH+SnAsZieX3uwcnskQYJs0PT8U
+         8Snre939HmwccPaRH5pxWn2okzOXQRAhiFAWnoFG2kp/uwnx8/Gm7BshbZ60kAxeGIdU
+         cH4wVDdiVEXGRvzhl4YZRbmtZG9/cHW0SDk6fUl7mojYtjH884+AuelPFGdNwu4pwDd3
+         eq5A==
+X-Gm-Message-State: AOAM532blT/L9EdshqYeXEvaJRkCe8KT6p7TREtHdDkIPNMndaY9Dd9x
+        9L9bMT1jHvk6IZBIWPcDtKHzUg==
+X-Google-Smtp-Source: ABdhPJwPPB4HSrbD5tV/YFMBUSyZ3AoSeTkgGu3q0At6aP5K3uE37QavYsRcBe8x711cYSRumx26uQ==
+X-Received: by 2002:adf:e90b:: with SMTP id f11mr5973359wrm.248.1590486424573;
+        Tue, 26 May 2020 02:47:04 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id b9sm1721101wrt.39.2020.05.26.02.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:47:04 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:47:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [GIT PULL] Immutable branch between MFD, IIO and Power due for the
+ v5.8 merge window
+Message-ID: <20200526094702.GN3628@dell>
+References: <20200526090646.25827-1-sravanhome@gmail.com>
 MIME-Version: 1.0
-References: <20200517131348.688405-1-bryan.odonoghue@linaro.org>
- <20200517131348.688405-3-bryan.odonoghue@linaro.org> <af35d732-08bf-fe95-3c98-063b32fe992a@nexus-software.ie>
-In-Reply-To: <af35d732-08bf-fe95-3c98-063b32fe992a@nexus-software.ie>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Tue, 26 May 2020 11:46:21 +0200
-Message-ID: <CAMS8qEWUBDy684UU1eLYcB5QFZtRcJEweG_9VO+9LxSKCF29iQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller
-To:     "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
-Cc:     "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Shawn Guo <shawn.guo@linaro.org>, p.zabel@pengutronix.de,
-        Vincent Knecht <vincent.knecht@mailoo.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200526090646.25827-1-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just adding my few cents, working fine on Asus Zenfone 2 Z00T, MSM8939.
+Enjoy!
 
-Tested-by: Konrad Dybcio <konradybcio@gmail.com>
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-iio-power-v5.8
+
+for you to fetch changes up to 904ac71f4b0c1c26ec47ff597cb3d3c7d36e618d:
+
+  MAINTAINERS: Add entry for mp2629 Battery Charger driver (2020-05-26 10:42:02 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, IIO and Power due for the v5.8 merge window
+
+----------------------------------------------------------------
+Saravanan Sekar (6):
+      dt-bindings: mfd: Add document bindings for mp2629
+      mfd: mp2629: Add support for mps battery charger
+      iio: adc: mp2629: Add support for mp2629 ADC driver
+      power: supply: Add support for mps mp2629 battery charger
+      power: supply: mp2629: Add impedance compensation config
+      MAINTAINERS: Add entry for mp2629 Battery Charger driver
+
+ Documentation/ABI/testing/sysfs-class-power-mp2629 |   8 +
+ .../devicetree/bindings/mfd/mps,mp2629.yaml        |  62 ++
+ MAINTAINERS                                        |   5 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/mp2629_adc.c                       | 208 +++++++
+ drivers/mfd/Kconfig                                |   9 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/mp2629.c                               |  79 +++
+ drivers/power/supply/Kconfig                       |  10 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/mp2629_charger.c              | 669 +++++++++++++++++++++
+ include/linux/mfd/mp2629.h                         |  26 +
+ 13 files changed, 1090 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ create mode 100644 drivers/iio/adc/mp2629_adc.c
+ create mode 100644 drivers/mfd/mp2629.c
+ create mode 100644 drivers/power/supply/mp2629_charger.c
+ create mode 100644 include/linux/mfd/mp2629.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
