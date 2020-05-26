@@ -6,284 +6,197 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B216DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E3E20704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898BA2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rXQQ6PTO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AJNSGDSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgEZOcj (ORCPT
+        id S1728333AbgEZOdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:32:39 -0400
-Received: from mail.efficios.com ([167.114.26.124]:38322 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgEZOcj (ORCPT
+        Tue, 26 May 2020 10:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727782AbgEZOdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:32:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 95B4D252C51;
-        Tue, 26 May 2020 10:32:37 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Bl4TVJzCQt3W; Tue, 26 May 2020 10:32:37 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 1DD32252C4E;
-        Tue, 26 May 2020 10:32:37 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1DD32252C4E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1590503557;
-        bh=GF2obO+VgsHTG0XENOWXkGrEmTFc90oxfInrENuMGe0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=rXQQ6PTO4QxyvPLZ+TN0Hc/sQILLKdv1QYbBERhf2MYfPejKGEgGU5gEbA5cfKC3L
-         TTlXCl/5Fz8ZkoW4TwHuYz3olt55XaaCDwznOaO5AS9j+8HbKC08fzZIgJHw0GpUbB
-         iIwMytJQf4LsotfZW8Et46SDlQOSJvdg8PmXW4nKQ4Zq/jNC38SjPrVFGXwXAaq9m6
-         EzQv2FnEeAjow9E9ek45plIGgkZZ6NWFnhKAlC5T9g1joijy7CBZN+DHPatv06zXzx
-         71+e2t1J4qybHA7nNTntXEHTMUzANNN0ao23qtsQ13z0CCZLSI9Vl4NZqsdHmY4nff
-         bdQ9CeohneLPA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2ni_ItOGEx50; Tue, 26 May 2020 10:32:37 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 02548252F1B;
-        Tue, 26 May 2020 10:32:37 -0400 (EDT)
-Date:   Tue, 26 May 2020 10:32:36 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <1701081361.34159.1590503556923.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87lflerhqt.fsf@oldenburg2.str.redhat.com>
-References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com> <20200501021439.2456-2-mathieu.desnoyers@efficios.com> <87v9kqbzse.fsf@oldenburg2.str.redhat.com> <941087675.33347.1590418305398.JavaMail.zimbra@efficios.com> <87367ovy6k.fsf@oldenburg2.str.redhat.com> <108939265.33525.1590428184533.JavaMail.zimbra@efficios.com> <87lflerhqt.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
- and thread creation (v19)
+        Tue, 26 May 2020 10:33:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DBAC03E96E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:33:18 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z6so24731877ljm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0XNs/z+HzuB59iVLQSidnn2zWHlhMfuK3vNWUtRr6ws=;
+        b=AJNSGDSfNLMhfW8MR4WMSxN7shbZzwvsA+SgXkvOo9gLJlrq/DvslmSb3llnMoHN+2
+         N07foBDeOt5oRmNg5k5/a4ShmiPB3Q6DsA+3nLPAniHEdspTxJ53jt4oeuS/X35T5BNX
+         Id2psjRd0f7exkYRf0M7MfCw3R9B6yQjRINOyIBI9yWRptDxCq/h/NimyA7hfW5P918O
+         upR2l+WMr4Y0BG85jYPVIuGe0K1wGOq0RlbLnt1+2ZVhRXSl4uzx9+AbVDWFg9jZnExm
+         QaPcayNeEuKyDBCxGLPetjvs4yL7AwOF0yy6g1gVjVUiVC08IYZHLbIGiSg/F65c1Xs8
+         4aWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0XNs/z+HzuB59iVLQSidnn2zWHlhMfuK3vNWUtRr6ws=;
+        b=pzl43h8xNQWn5vbkugfT9InN++4Z1ynE4IYl0igQqCrnJftEL7U/D/rLI0r93RRBYt
+         9yv0ddljHU9wpGJmXGk789qtBhM5NVMBArjyiRDP4QxaYvZbWeUbFJeMsHDvXrFeOTyn
+         8hWbuDlNNmW0oZFEnEy0BmrrcNYXOanTJdiLxBgwVCqSir6AUy+hi2bA5fa1sOV3AqRB
+         sySKgPQQrMsJeG5cied+sp01frvjArYXv6pmZz8MlH/rco7rwbB56SnbwXHGz7kFPtUH
+         r8PpJhnltgnvvgndy6CFGUESDcvxIMfRNTb/qLVTz0UfTidX88al8NM+TwpJ278P1umJ
+         0DOA==
+X-Gm-Message-State: AOAM530pWO1/8ZC/WWUiBabjyuCnc5lOUaVgPizAwE9pFL62rxOs/yLi
+        gdpf/2pKTIOFlUzyKHenauIIzs71SPZuYPJti0fwzg==
+X-Google-Smtp-Source: ABdhPJy0M6RjEyOLU2xO6uFHuus18qBN6s4gGcKzjgHFed2Oc1kL0YHpAX+ZT7CNHuAUNct3HxtD8lY7RTBQrIYFabk=
+X-Received: by 2002:a2e:9b4f:: with SMTP id o15mr709223ljj.358.1590503596476;
+ Tue, 26 May 2020 07:33:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v19)
-Thread-Index: 9Bb1L4ZyHRACPWplaZt58Bc2uwCz3w==
+References: <20200411115508.284500414@linuxfoundation.org> <20200411115513.709554942@linuxfoundation.org>
+ <OSAPR01MB366788E02572D95F246D6DEC92DD0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+ <20200413082137.GB2792388@kroah.com> <CA+G9fYsq5uADdbUG9RnVYOpmbGX+uEVRC-R6wfPCNtCgTyrj8w@mail.gmail.com>
+ <OSAPR01MB36677B25C6FE12897832B3DD92D20@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB36677B25C6FE12897832B3DD92D20@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 26 May 2020 20:03:04 +0530
+Message-ID: <CA+G9fYs2gucSrOanDB=CPm+RYH=QOaPeuExGmq0Qcrh5sVaciw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 50/54] drm/msm: stop abusing dma_map/unmap for cache
+To:     nobuhiro1.iwamatsu@toshiba.co.jp
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, swboyd@chromium.org,
+        jcrouse@codeaurora.org, Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 26, 2020, at 8:41 AM, Florian Weimer fweimer@redhat.com wrote:
+On Thu, 23 Apr 2020 at 05:03, <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+<trim>
+>
+> I think the following patch is needed for this.
+>
+> 9f614197c744002f9968e82c649fdf7fe778e1e7
+> 3de433c5b38af49a5fc7602721e2ab5d39f1e69c
+>
+> But I have no environment to check this now.
 
-> * Mathieu Desnoyers:
->=20
->> Something like this ?
->>
->> #ifdef __cplusplus
->> # if  __cplusplus >=3D 201103L
->> #  define rseq_static_assert (expr, diagnostic)         static_assert (e=
-xpr,
->> diagnostic)
->> #  define rseq_alignof                                  alignof
->> # endif
->> #elif __STDC_VERSION__ >=3D 201112L
->> # define rseq_static_assert (expr, diagnostic)          _Static_assert (=
-expr,
->> diagnostic)
->> # define rseq_alignof                                   _Alignof
->> #endif
->>
->> #ifndef rseq_static_assert
->> # define rseq_static_assert (expr, diagnostic)          /* nothing */
->> #endif
->=20
-> You can't have a space in #defines like that, no matter what GNU style
-> says. 8-)
+The above suggested two patches already in stable-rc 4.19 branch
+but i still notice Internal error: Oops: 96000144 [#1] PREEMPT SMP
+on arm64 qualcomm dragonboard-410c device while booting.
 
-Yes, I noticed when failing to build this ;)
+[    7.906343] msm 1a00000.mdss: bound 1a98000.dsi (ops dsi_ops [msm])
+[    7.912697] adreno 1c00000.gpu: 1c00000.gpu supply vdd not found,
+using dummy regulator
+[    7.918567] adreno 1c00000.gpu: Linked as a consumer to regulator.0
+[    7.926521] adreno 1c00000.gpu: 1c00000.gpu supply vddcx not found,
+using dummy regulator
+[    7.932759] msm 1a00000.mdss: A306: using IOMMU
+[    7.941207] Unable to handle kernel paging request at virtual
+address ffffffff80000000
+[    7.945375] Mem abort info:
+[    7.953353]   ESR = 0x96000144
+[    7.956034]   Exception class = DABT (current EL), IL = 32 bits
+[    7.970501]   EA = 0, S1PTW = 0
+[    7.970516] Data abort info:
+[    7.972485]   ISV = 0, ISS = 0x00000144
+[    7.975577]   CM = 1, WnR = 1
+[    7.979169] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+[    7.982295] [ffffffff80000000] pgd=0000000000000000
+[    7.989099] Internal error: Oops: 96000144 [#1] PREEMPT SMP
+[    7.993802] Modules linked in: msm(+) crc32_ce adv7511 cec
+mdt_loader drm_kms_helper drm drm_panel_orientation_quirks fuse
+[    7.999367] Process systemd-udevd (pid: 2849, stack limit =
+0x(____ptrval____))
+[    8.010474] CPU: 1 PID: 2849 Comm: systemd-udevd Not tainted
+4.19.125-rc1-00077-g0708fb235b9c #1
+[    8.017677] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    8.026703] pstate: 80000005 (Nzcv daif -PAN -UAO)
+[    8.033390] pc : __clean_dcache_area_poc+0x20/0x38
+[    8.037998] lr : __swiotlb_sync_sg_for_device+0x74/0xa0
+[    8.038001] sp : ffff00000e313490
+[    8.038004] x29: ffff00000e313490 x28: 0000000000000001
+[    8.038009] x27: ffff000000d56e40 x26: ffff800036301000
+[    8.038013] x25: ffff80003c108410 x24: ffff000009069998
+[    8.038018] x23: ffff80003c108810 x22: 0000000000000000
+[    8.038023] x21: 0000000000000001 x20: 0000000000000001
+[    8.038027] x19: ffff80003acd4480 x18: ffff0000092298c8
+[    8.038032] x17: 0000000000000000 x16: 0000000000000000
+[    8.038036] x15: 0000000000000010 x14: ffffffffffffffff
+[    8.038042] x13: ffff0000893987d7 x12: 0000000000000000
+[    8.038046] x11: 0000800036c56000 x10: ffff8000362ef368
+[    8.038050] x9 : 0000000000001000 x8 : ffff7e0000e71640
+[    8.038055] x7 : 0000000000000001 x6 : 0000000000000000
+[    8.038059] x5 : 0000000000000000 x4 : ffffffff80000000
+[    8.038064] x3 : 000000000000003f x2 : 0000000000000040
+[    8.038068] x1 : ffffffff80001000 x0 : ffffffff80000000
+[    8.038072] Call trace:
+[    8.038078]  __clean_dcache_area_poc+0x20/0x38
+[    8.038204]  get_pages+0x1cc/0x240 [msm]
+[    8.038327]  msm_gem_get_iova+0x94/0x138 [msm]
+[    8.141741]  _msm_gem_kernel_new+0x40/0xb0 [msm]
+[    8.145989]  msm_gem_kernel_new+0x10/0x18 [msm]
+[    8.150759]  msm_gpu_init+0x300/0x568 [msm]
+[    8.155004]  adreno_gpu_init+0x14c/0x268 [msm]
+[    8.159171]  a3xx_gpu_init+0x7c/0x108 [msm]
+[    8.163682]  adreno_bind+0x144/0x238 [msm]
+[    8.167676]  component_bind_all+0x110/0x278
+[    8.171939]  msm_drm_bind+0x104/0x760 [msm]
+[    8.175921]  try_to_bring_up_master+0x14c/0x1b0
+[    8.180086]  component_master_add_with_match+0xc0/0x100
+[    8.184697]  msm_pdev_probe+0x280/0x320 [msm]
+[    8.189810]  platform_drv_probe+0x50/0xa0
+[    8.194322]  really_probe+0x1f4/0x290
+[    8.198314]  driver_probe_device+0x54/0xe8
+[    8.201960]  __driver_attach+0xe0/0xe8
+[    8.205952]  bus_for_each_dev+0x70/0xb8
+[    8.209685]  driver_attach+0x20/0x28
+[    8.213417]  bus_add_driver+0x1a0/0x210
+[    8.217237]  driver_register+0x60/0x110
+[    8.220797]  __platform_driver_register+0x44/0x50
+[    8.224717]  msm_drm_register+0x54/0x68 [msm]
+[    8.229479]  do_one_initcall+0x54/0x154
+[    8.233819]  do_init_module+0x54/0x1c8
+[    8.237463]  load_module+0x1bf4/0x2190
+[    8.241282]  __se_sys_finit_module+0xb8/0xc8
+[    8.245016]  __arm64_sys_finit_module+0x18/0x20
+[    8.249445]  el0_svc_common+0x70/0x168
+[    8.253695]  el0_svc_handler+0x2c/0x80
+[    8.257514]  el0_svc+0x8/0xc
+[    8.261250] Code: 9ac32042 8b010001 d1000443 8a230000 (d50b7e20)
+[    8.264290] ---[ end trace 2effae58ca65f06b ]---
 
->=20
->> /* Ensure the compiler supports __attribute__ ((aligned)).  */
->> rseq_static_assert ((rseq_alignof (struct rseq_cs) >=3D 32, "alignment")=
-);
->> rseq_static_assert ((rseq_alignof (struct rseq) >=3D 32, "alignment"));
->=20
-> You need to move the ; into rseq_static_assert.  And if you use explicit
-> arguments, you can't use double parentheses.
+on stable-rc 4.19 branch git log show this info,
+$ git log  --oneline drivers/gpu/drm/msm/msm_gem.c | head
+05fe33cad985 drm/msm: Use the correct dma_sync calls harder
+39718d086d9b drm/msm: Use the correct dma_sync calls in msm_gem
+9c23e00804f8 drm/msm: stop abusing dma_map/unmap for cache
+a5f74ec7d3cb gpu: drm: msm: Change return type to vm_fault_t
+3976626ea3d2 drm/msm: Fix possible null dereference on failure of get_pages()
+d71b6bd80d96 drm/msm/dsi: fix direct caller of msm_gem_free_object()
+dc9a9b32053e drm/msm: Replace gem_object deprecated functions
+62e3a3e342af drm/msm: fix leak in failed get_pages
+7a88cbd8d65d Backmerge tag 'v4.14-rc7' into drm-next
+fad33f4b1073 drm/msm: add special _get_vaddr_active() for cmdstream dumps
 
-Why move the ";" into the macro ?
+link to full boot log,
+https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.124-77-g0708fb235b9c/testrun/1450572/log
+https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.124-77-g0708fb235b9c/testrun/1450572
 
-AFAIU, the only gain here would be to make sure we don't emit useless
-";" in the "/* nothing */" case. But does it matter ?
+Kernel config:
+https://builds.tuxbuild.com/Xp5Fh9e52QxohQeW6nazPA/kernel.config
 
-Examples I can find of "static_assert" explicitly have the ";" at the
-end, so I find it weird to integrate it into the rseq_static_assert
-macro, which makes it different from static_assert.
-
-Agreed on the need to remove the double-parentheses.
-
->=20
->>> And something similar for _Alignas/attribute aligned,
->>
->> I don't see where _Alignas is needed here ?
->>
->> For attribute aligned, what would be the oldest supported C and C++
->> standards ?
->=20
-> There are no standardized attributes for C, there is only _Alignas.
-> C++11 has an alignas specifier; it's not an attribute either.  I think
-> these are syntactically similar.
-
-There appears to be an interesting difference between attribute aligned
-and alignas. It seems like alignas cannot be used on a structure declaratio=
-n,
-only on fields, e.g.:
-
-struct blah {
-        int a;
-} _Alignas (16);
-
-o.c:3:1: warning: useless =E2=80=98_Alignas=E2=80=99 in empty declaration
- } _Alignas (16);
-
-But
-
-struct blah {
-        int _Alignas (16) a;
-};
-
-is OK. So if I change e.g. struct rseq_cs to align
-the first field:
-
-struct rseq_cs
-  {
-    /* Version of this structure.  */
-    uint32_t rseq_align (32) version;
-    /* enum rseq_cs_flags.  */
-    uint32_t flags;
-    uint64_t start_ip;
-    /* Offset from start_ip.  */
-    uint64_t post_commit_offset;
-    uint64_t abort_ip;
-  };
-
-It should work.
-
->=20
->>> with an error for
->>> older standards and !__GNUC__ compilers (because neither the type nor
->>> __thread can be represented there).
->>
->> By "type" you mean "struct rseq" here ? What does it contain that requir=
-es
->> a __GNUC__ compiler ?
->=20
-> __attribute__ and __thread support.
-
-OK
-
->=20
->> About __thread, I recall other compilers have other means to declare it.
->> In liburcu, I end up with the following:
->>
->> #if defined (__cplusplus) && (__cplusplus >=3D 201103L)
->> # define URCU_TLS_STORAGE_CLASS thread_local
->> #elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >=3D 201112L)
->> # define URCU_TLS_STORAGE_CLASS _Thread_local
->> #elif defined (_MSC_VER)
->> # define URCU_TLS_STORAGE_CLASS __declspec(thread)
->> #else
->> # define URCU_TLS_STORAGE_CLASS __thread
->> #endif
->>
->> Would something along those lines be OK for libc ?
->=20
-> Yes, it would be okay (minus the Visual C++ part).  This part does not
-> have to go into UAPI headers first.  A fallback definition of __thread
-> should be okay.  Outside glibc, the TLS model declaration is optional, I
-> think.  The glibc *definition* ensures that the variable is
-> initial-exec.
-
-AFAIU you are technically correct when stating that the tls model
-on the declaration is optional, but I think it's a good thing to have
-it there rather than only at the definition. It makes it clear to all
-users of this variable that its model is IE. Especially in scenarios where
-early-adopter libraries and applications can define their own __rseq_abi
-symbol, I think it's good to explicitly keep the IE tls model attribute in
-the header.
-
-I end up with the following:
-
-#ifdef __cplusplus
-# if  __cplusplus >=3D 201103L
-#  define rseq_static_assert(expr, diagnostic) static_assert (expr, diagnos=
-tic)
-#  define rseq_alignof(type)                   alignof (type)
-#  define rseq_alignas(x)                      alignas (x)
-#  define rseq_tls_storage_class               thread_local
-# endif
-#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
-# define rseq_static_assert(expr, diagnostic)  _Static_assert (expr, diagno=
-stic)
-# define rseq_alignof(type)                    _Alignof (type)
-# define rseq_alignas(x)                       _Alignas (x)
-# define rseq_tls_storage_class                _Thread_local
-#endif
-
-#ifndef rseq_static_assert
-/* Try to use _Static_assert macro from sys/cdefs.h.  */
-# ifdef _Static_assert
-#  define rseq_static_assert(expr, diagnostic) _Static_assert (expr, diagno=
-stic)
-# else
-#  define rseq_static_assert(expr, diagnostic) /* Nothing.  */
-# endif
-#endif
-
-/* Rely on GNU extensions for older standards and tls model.  */
-#ifdef __GNUC__
-# ifndef rseq_alignof
-#  define rseq_alignof(x) __alignof__ (x)
-# endif
-# ifndef rseq_alignas
-#  define rseq_alignas(x) __attribute__ ((aligned (x)))
-# endif
-# define rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-exec")))
-#else
-/* Specifying the TLS model on the declaration is optional.  */
-# define rseq_tls_model_ie /* Nothing.  */
-#endif
-
-/* Fall back to __thread for TLS storage class.  */
-#ifndef rseq_tls_storage_class
-# define rseq_tls_storage_class __thread
-#endif
-
-[...]
-
-/* Ensure the compiler supports rseq_align.  */
-rseq_static_assert (rseq_alignof (struct rseq_cs) >=3D 32, "alignment");
-rseq_static_assert (rseq_alignof (struct rseq) >=3D 32, "alignment");
-
-/* Allocations of struct rseq and struct rseq_cs on the heap need to
-   be aligned on 32 bytes.  Therefore, use of malloc is discouraged
-   because it does not guarantee alignment.  posix_memalign should be
-   used instead.  */
-
-extern rseq_tls_storage_class struct rseq __rseq_abi rseq_tls_model_ie;
-
-Thanks,
-
-Mathieu
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+>
+> Best regards,
+>   Nobuhiro
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
