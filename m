@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBD32084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF927208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519440;
-	bh=HS4dO0GbWK+cbuD9M/sp6XBeeNJS7vmNUhMjPvYwcpM=;
+	s=default; t=1590519444;
+	bh=KM+T7rK8LxTAusvClFFwqtI7Ma/8JjMwgBpdJRCQE5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1hSrfowijvB+v7Yh3omuNew1eBt5k3i3oFJQN2U/Yknotfa6IjUQQBVeiazBRscI
-	 6sI5kNMaXO3cNIgbC5l7rmD2fY/7TSIHt/LxRGGBxtJEEN2LpAgnH7HbBOz6MSRElr
-	 4B3vPDf5aORknD6PgwifK7T0ELK1WUwZot3dRdbM=
+	b=TaD8W8iZ+hjEXaLDiDWCwOsZ10Kfq2+XSZDy1UcFoutcoZZ1c27TPzctwKl5azcqw
+	 TfDEUslZ4jy9EGaF52hfKGG7VG6Rmtt7r5QrvoSVorkqb64v9pIJKNwyUufVvcJ376
+	 Pl8Tk/u9QFBIMa2ucysIFUuhVTU5TmmuPELoWK28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390072AbgEZS5T (ORCPT
+        id S2390081AbgEZS5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50362 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390024AbgEZS5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:12 -0400
+        id S2389286AbgEZS5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17E582084C;
-        Tue, 26 May 2020 18:57:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE9FF20849;
+        Tue, 26 May 2020 18:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519431;
-        bh=HS4dO0GbWK+cbuD9M/sp6XBeeNJS7vmNUhMjPvYwcpM=;
+        s=default; t=1590519439;
+        bh=KM+T7rK8LxTAusvClFFwqtI7Ma/8JjMwgBpdJRCQE5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVX9Y6POQKSjBFfM1kmdnfBX+DdFEudoDC2sr1612Ebb1cdIHq83Dh1blYCKEV0ns
-         WaXU8xTPRn7X7blBYceSZXkgx6yHUuh7mLFxk+bf0kGNqSPD4zo2ZLLCm85AMeyoDN
-         VdAg3gMGHGpzyqhsKcVqmCZvFyKJbqjYuu36QUig=
+        b=L6T0SUYmJvX9NslT6Ack8RgIRRRYkhvbPWLXkfi2Zx+H2k0Jdgfb5+yJGKW/0AjOk
+         zOLCfrG6YJVmlaRjNVn1d38eVEFkdyqtR0MXjn7VzDFlQJt57wZpm8VJk0K2zp3LwE
+         oWdIoGUqfEIzOe6Ld7+pdXLHQy/ObrZIPltS+DxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 48/65] l2tp: initialise sessions refcount before making it reachable
-Date:   Tue, 26 May 2020 20:53:07 +0200
-Message-Id: <20200526183922.661550701@linuxfoundation.org>
+Subject: [PATCH 4.4 51/65] l2tp: hold tunnel while handling genl tunnel updates
+Date:   Tue, 26 May 2020 20:53:10 +0200
+Message-Id: <20200526183923.939203552@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -62,48 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 9ee369a405c57613d7c83a3967780c3e30c52ecc upstream.
+commit 8c0e421525c9eb50d68e8f633f703ca31680b746 upstream.
 
-Sessions must be fully initialised before calling
-l2tp_session_add_to_tunnel(). Otherwise, there's a short time frame
-where partially initialised sessions can be accessed by external users.
+We need to make sure the tunnel is not going to be destroyed by
+l2tp_tunnel_destruct() concurrently.
 
-Backporting Notes
-
-l2tp_core.c: moving code that had been converted from atomic to
-refcount_t by an earlier change (which isn't being included in this
-patch series).
-
-Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
+Fixes: 309795f4bec2 ("l2tp: Add netlink control API for L2TP")
 Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_core.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/l2tp/l2tp_netlink.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1853,6 +1853,8 @@ struct l2tp_session *l2tp_session_create
+--- a/net/l2tp/l2tp_netlink.c
++++ b/net/l2tp/l2tp_netlink.c
+@@ -310,8 +310,8 @@ static int l2tp_nl_cmd_tunnel_modify(str
+ 	}
+ 	tunnel_id = nla_get_u32(info->attrs[L2TP_ATTR_CONN_ID]);
  
- 		l2tp_session_set_header_len(session, tunnel->version);
+-	tunnel = l2tp_tunnel_find(net, tunnel_id);
+-	if (tunnel == NULL) {
++	tunnel = l2tp_tunnel_get(net, tunnel_id);
++	if (!tunnel) {
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+@@ -322,6 +322,8 @@ static int l2tp_nl_cmd_tunnel_modify(str
+ 	ret = l2tp_tunnel_notify(&l2tp_nl_family, info,
+ 				 tunnel, L2TP_CMD_TUNNEL_MODIFY);
  
-+		l2tp_session_inc_refcount(session);
++	l2tp_tunnel_dec_refcount(tunnel);
 +
- 		err = l2tp_session_add_to_tunnel(tunnel, session);
- 		if (err) {
- 			kfree(session);
-@@ -1860,10 +1862,6 @@ struct l2tp_session *l2tp_session_create
- 			return ERR_PTR(err);
- 		}
- 
--		/* Bump the reference count. The session context is deleted
--		 * only when this drops to zero.
--		 */
--		l2tp_session_inc_refcount(session);
- 		l2tp_tunnel_inc_refcount(tunnel);
- 
- 		/* Ensure tunnel socket isn't deleted */
+ out:
+ 	return ret;
+ }
 
 
