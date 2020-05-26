@@ -2,192 +2,116 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F67C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 011C5208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:06:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mnmh8AbV"
+	by mail.kernel.org (Postfix) with ESMTP id D3495208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590530893;
+	bh=btXwG+8894ZAUlHjClZLGsQrNaYj/a/EcwRM/kzN5mg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FCsBHskzuYKlv6fvIoHQFcwJe9pwj+DAMi+nxZcpj+xzDNp8GA8BjTUmVirXonLk5
+	 b4hYxCZtttX0/+IE6LfmA+PZCLYYMlDKWASNTtm6GTijk0+TS7WJ3X1Gca54Oq5ixB
+	 Es/6eOs5rdMqcz+aUMhBaA6c4A8OOL3Uwqr5PUH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391855AbgEZWGh (ORCPT
+        id S2391808AbgEZWIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:06:37 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53238 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389342AbgEZWGg (ORCPT
+        Tue, 26 May 2020 18:08:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35962 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389342AbgEZWIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:06:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04QM26Ra180054;
-        Tue, 26 May 2020 22:06:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=RwI6eQ2bbknJ1r4XNGglP0jMsY6x/X/sOPh2/0y8Kzg=;
- b=Mnmh8AbVLi4wo6YwvLkhJuvQYH5+E5BdCzvER1Yn71YCKszo3UZDeYCw5AWk2vxl9yLW
- K7cR4yMXSXUi6p+aPuEE3pEMVl4nB3NfUL4j3RPupZh9jhhwvU1kxYiZ6czF4J54dIzh
- v9UPafW7bXEfxokJCBqvUxipgsLCTnuYMkIVy6iymjrA98w37Kh+WRJIjLBC8BRCrMKS
- IP8fpVRa6kJrm4WRCgHSry+yXqpHlJJ8D0NMujL4sKz+YWeVkedx3IJ2PcLwosXmGinQ
- Wod+knJCysGjE3Z9B7jwh13bkHuIeIAxEJ9hPN6krwSWqe/UA7K2F6pNk9ujPUYLkVPy 5A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 318xe1cc7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 22:06:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04QLxXVN137341;
-        Tue, 26 May 2020 22:06:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 317j5pq0x4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 May 2020 22:06:06 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04QM5x9T002437;
-        Tue, 26 May 2020 22:05:59 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 May 2020 15:05:59 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v4 36/36] mm: Align THP mappings for non-DAX
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20200515131656.12890-37-willy@infradead.org>
-Date:   Tue, 26 May 2020 16:05:58 -0600
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Tue, 26 May 2020 18:08:13 -0400
+Received: by mail-io1-f68.google.com with SMTP id y18so3370683iow.3;
+        Tue, 26 May 2020 15:08:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mXe3eMhOfw8Yi0mzveU2UUdf9WbJiPX68762lf2f3m8=;
+        b=lnGpxnl4Ptsii9Oal3CfKvRrQ6E70G0Es5XwkC6aYwMTShppiSQ48V2buS2xEMJp6n
+         n4foNO7lb0Uc7qLZ0usrc3jicmeTmeeP4PTChZbNlACtK+7zrJiwMYFYL0JaVhRd0yLe
+         R3iA1MagoO3zpwnt2OJrlbNjN0e0Q+9HxnTAN0VCylBabiegqtd7QLTd+zxeAkKByrjE
+         wYmryKC5xRhvPvJBes4T5RW2v2bK9R0hsvC+YNiJR6N88MqISKcW/bWDggbIqV+KXb7Q
+         skAnadg8HoE/Z/iRTVZM+jw1Jqp4vo+7yY5czD10RjY+T9ZXeohDV9kbqS8Bwc0fjGlm
+         52Dg==
+X-Gm-Message-State: AOAM532IsBhhZ2JVWIK7JNQXwfKh0tOtgAKH9tZxtA/80Aacwiz3OXgt
+        zSqSIkDytsg8jsDa/D51nw==
+X-Google-Smtp-Source: ABdhPJxua5/2ASeh+JDi3H6ENvlO5duKzfxD0bd/FxftWvnUVDU7fZZVP6RJWTWfF7tnoEbMyFvyDA==
+X-Received: by 2002:a02:b782:: with SMTP id f2mr3009396jam.91.1590530891856;
+        Tue, 26 May 2020 15:08:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o70sm677282ild.3.2020.05.26.15.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 15:08:10 -0700 (PDT)
+Received: (nullmailer pid 467130 invoked by uid 1000);
+        Tue, 26 May 2020 22:08:08 -0000
+Date:   Tue, 26 May 2020 16:08:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     daniel@ffwll.ch, linux-arm-msm@vger.kernel.org, jonas@kwiboo.se,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, a.hajda@samsung.com,
+        narmstrong@baylibre.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        robdclark@chromium.org, jeffrey.l.hugo@gmail.com,
+        jernej.skrabec@siol.net, airlied@linux.ie, spanda@codeaurora.org,
+        Laurent.pinchart@ideasonboard.com, swboyd@chromium.org,
+        bgolaszewski@baylibre.com, bjorn.andersson@linaro.org,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B06C1160-D40B-4D38-8ECF-F8BDE80F6DC0@oracle.com>
-References: <20200515131656.12890-1-willy@infradead.org>
- <20200515131656.12890-37-willy@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1011 impostorscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260169
+Subject: Re: [PATCH v6 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
+ yaml
+Message-ID: <20200526220808.GA467074@bogus>
+References: <20200513215902.261547-1-dianders@chromium.org>
+ <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thinking about this, if the intent is to make THP usable for any
-greater than PAGESIZE page size, this routine should probably go back
-to taking a size or perhaps order parameter so it could be called to
-align addresses accordingly rather than hard code PMD_SIZE.
-
-
-> On May 15, 2020, at 7:16 AM, Matthew Wilcox <willy@infradead.org> =
-wrote:
->=20
-> From: William Kucharski <william.kucharski@oracle.com>
->=20
-> When we have the opportunity to use transparent huge pages to map a
-> file, we want to follow the same rules as DAX.
->=20
-> Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-> [Inline __thp_get_unmapped_area() into thp_get_unmapped_area()]
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+On Wed, 13 May 2020 14:59:01 -0700, Douglas Anderson wrote:
+> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
+> Unless there's someone known to be better, I've set the maintainer in
+> the yaml as the first person to submit bindings.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > ---
-> mm/huge_memory.c | 40 +++++++++++++---------------------------
-> 1 file changed, 13 insertions(+), 27 deletions(-)
->=20
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 15a86b06befc..e78686b628ae 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -535,30 +535,30 @@ bool is_transparent_hugepage(struct page *page)
-> }
-> EXPORT_SYMBOL_GPL(is_transparent_hugepage);
->=20
-> -static unsigned long __thp_get_unmapped_area(struct file *filp,
-> -		unsigned long addr, unsigned long len,
-> -		loff_t off, unsigned long flags, unsigned long size)
-> +unsigned long thp_get_unmapped_area(struct file *filp, unsigned long =
-addr,
-> +		unsigned long len, unsigned long pgoff, unsigned long =
-flags)
-> {
-> +	loff_t off =3D (loff_t)pgoff << PAGE_SHIFT;
-> 	loff_t off_end =3D off + len;
-> -	loff_t off_align =3D round_up(off, size);
-> +	loff_t off_align =3D round_up(off, PMD_SIZE);
-> 	unsigned long len_pad, ret;
->=20
-> -	if (off_end <=3D off_align || (off_end - off_align) < size)
-> -		return 0;
-> +	if (off_end <=3D off_align || (off_end - off_align) < PMD_SIZE)
-> +		goto regular;
->=20
-> -	len_pad =3D len + size;
-> +	len_pad =3D len + PMD_SIZE;
-> 	if (len_pad < len || (off + len_pad) < off)
-> -		return 0;
-> +		goto regular;
->=20
-> 	ret =3D current->mm->get_unmapped_area(filp, addr, len_pad,
-> 					      off >> PAGE_SHIFT, flags);
->=20
-> 	/*
-> -	 * The failure might be due to length padding. The caller will =
-retry
-> -	 * without the padding.
-> +	 * The failure might be due to length padding.  Retry without
-> +	 * the padding.
-> 	 */
-> 	if (IS_ERR_VALUE(ret))
-> -		return 0;
-> +		goto regular;
->=20
-> 	/*
-> 	 * Do not try to align to THP boundary if allocation at the =
-address
-> @@ -567,23 +567,9 @@ static unsigned long =
-__thp_get_unmapped_area(struct file *filp,
-> 	if (ret =3D=3D addr)
-> 		return addr;
->=20
-> -	ret +=3D (off - ret) & (size - 1);
-> +	ret +=3D (off - ret) & (PMD_SIZE - 1);
-> 	return ret;
-> -}
-> -
-> -unsigned long thp_get_unmapped_area(struct file *filp, unsigned long =
-addr,
-> -		unsigned long len, unsigned long pgoff, unsigned long =
-flags)
-> -{
-> -	unsigned long ret;
-> -	loff_t off =3D (loff_t)pgoff << PAGE_SHIFT;
-> -
-> -	if (!IS_DAX(filp->f_mapping->host) || =
-!IS_ENABLED(CONFIG_FS_DAX_PMD))
-> -		goto out;
-> -
-> -	ret =3D __thp_get_unmapped_area(filp, addr, len, off, flags, =
-PMD_SIZE);
-> -	if (ret)
-> -		return ret;
-> -out:
-> +regular:
-> 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, =
-flags);
-> }
-> EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
-> --=20
-> 2.26.2
->=20
+> I removed Stephen's review tag on v5 since I squashed in a bunch of
+> other stuff.
+> 
+> Changes in v6: None
+> Changes in v5:
+> - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+> - specification => specifier.
+> - power up => power.
+> - Added back missing suspend-gpios.
+> - data-lanes and lane-polarities are are the right place now.
+> - endpoints don't need to be patternProperties.
+> - Specified more details for data-lanes and lane-polarities.
+> - Added old example back in, fixing bugs in it.
+> - Example i2c bus is just called "i2c", not "i2c1" now.
+> 
+>  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
+>  .../bindings/display/bridge/ti,sn65dsi86.yaml | 285 ++++++++++++++++++
+>  2 files changed, 285 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
