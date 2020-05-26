@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDE3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 592DD20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCC1208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520316;
-	bh=SJF7ayHG0PlJwtnPszo7WXe63iqjWcrlf1YigLZSo0Q=;
+	s=default; t=1590520318;
+	bh=5dYKczIvQ+iFI127IXOGGHsWU0/YsZaZeXftt1nV9sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HOvJR2Pqkrih4Hb6g+prs1Z4rBa7Lj+vlIO4KpBsxyJ/igA1+ABwcmsBBI9Al1Gg8
-	 RsI0e0vjoZj35t+lQPWfFaAnjPz9pHw4hZbcNz7WMxmbG/pR2hY1qmX6gcu3+8D6Ku
-	 d3yXIfVtnSRwCIRtDL9FnppPE3RiWM4dT4Ze/PFA=
+	b=NKsDNnZU4RqcmzDue6Acd0Ox2p2D4mtc3zMFWDEgVMcigG166eD2B6biCAyi5WZUZ
+	 UvYO0bqzsx2ufmD53AdFnD1mTIQLM1zu4c6dKYy5RiNYhSdk6vLOfvCXFAK/A6XLZW
+	 mGNPbt1ydvOMpznQO6PLfHNK9Mam3VFBFBA1oAOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391872AbgEZTLz (ORCPT
+        id S2392019AbgEZTL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41288 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391957AbgEZTLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:49 -0400
+        id S2391316AbgEZTLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28DD820888;
-        Tue, 26 May 2020 19:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9216C20888;
+        Tue, 26 May 2020 19:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520308;
-        bh=SJF7ayHG0PlJwtnPszo7WXe63iqjWcrlf1YigLZSo0Q=;
+        s=default; t=1590520311;
+        bh=5dYKczIvQ+iFI127IXOGGHsWU0/YsZaZeXftt1nV9sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEdpteJKTNjCI/5rTL3hVeJI2/UukGp61nlrLcIRzOHbiqy+toTqtlYURAUpT0Qti
-         fcjNFg660LfcxYRd8tLCzfj5FqLtrGO3Ow6Lm5FoZVtsjeWQ3SFpTXvi1/Jr+7IwZB
-         6+auEYW322pVsRyUtCzjDxBKIKVY8tr972RV1xrk=
+        b=D39f1VCS3kTRdOqZnNWknwJlxU3aZY2aweunWm+EtVrUPWjWYB4yXDqNcwhr+RUtd
+         PUpb2Lfk+H1jID3LS2EfymYbbawEivkWCJ246aC0SyUPr4jugmEczO+afQ2bBd6kqN
+         onaUAmvk5mwskfStdKPxR2WRQ5BJITAL0eH/P7J0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Chris Chiu <chiu@endlessm.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 008/126] ACPI: EC: PM: Avoid flushing EC work when EC GPE is inactive
-Date:   Tue, 26 May 2020 20:52:25 +0200
-Message-Id: <20200526183938.213752295@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 009/126] mtd: spinand: Propagate ECC information to the MTD structure
+Date:   Tue, 26 May 2020 20:52:26 +0200
+Message-Id: <20200526183938.309643594@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,99 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 607b9df63057a56f6172d560d5366cca6a030c76 ]
+[ Upstream commit 3507273d5a4d3c2e46f9d3f9ed9449805f5dff07 ]
 
-Flushing the EC work while suspended to idle when the EC GPE status
-is not set causes some EC wakeup events (notably power button and
-lid ones) to be missed after a series of spurious wakeups on the Dell
-XPS13 9360 in my office.
+This is done by default in the raw NAND core (nand_base.c) but was
+missing in the SPI-NAND core. Without these two lines the ecc_strength
+and ecc_step_size values are not exported to the user through sysfs.
 
-If that happens, the machine cannot be woken up from suspend-to-idle
-by the power button or lid status change and it needs to be woken up
-in some other way (eg. by a key press).
-
-Flushing the EC work only after successful dispatching the EC GPE,
-which means that its status has been set, avoids the issue, so change
-the code in question accordingly.
-
-Fixes: 7b301750f7f8 ("ACPI: EC: PM: Avoid premature returns from acpi_s2idle_wake()")
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Chris Chiu <chiu@endlessm.com>
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/ec.c    |  6 +++++-
- drivers/acpi/sleep.c | 15 ++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
+ drivers/mtd/nand/spi/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index 03b3067811c9..2713ddb3348c 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -2064,9 +2064,13 @@ bool acpi_ec_dispatch_gpe(void)
- 	 * to allow the caller to process events properly after that.
- 	 */
- 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
--	if (ret == ACPI_INTERRUPT_HANDLED)
-+	if (ret == ACPI_INTERRUPT_HANDLED) {
- 		pm_pr_dbg("EC GPE dispatched\n");
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 8dda51bbdd11..0d21c68bfe24 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -1049,6 +1049,10 @@ static int spinand_init(struct spinand_device *spinand)
  
-+		/* Flush the event and query workqueues. */
-+		acpi_ec_flush_work();
-+	}
+ 	mtd->oobavail = ret;
+ 
++	/* Propagate ECC information to mtd_info */
++	mtd->ecc_strength = nand->eccreq.strength;
++	mtd->ecc_step_size = nand->eccreq.step_size;
 +
- 	return false;
- }
- #endif /* CONFIG_PM_SLEEP */
-diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-index 3850704570c0..fd9d4e8318e9 100644
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -980,13 +980,6 @@ static int acpi_s2idle_prepare_late(void)
  	return 0;
- }
  
--static void acpi_s2idle_sync(void)
--{
--	/* The EC driver uses special workqueues that need to be flushed. */
--	acpi_ec_flush_work();
--	acpi_os_wait_events_complete(); /* synchronize Notify handling */
--}
--
- static bool acpi_s2idle_wake(void)
- {
- 	if (!acpi_sci_irq_valid())
-@@ -1018,7 +1011,7 @@ static bool acpi_s2idle_wake(void)
- 			return true;
- 
- 		/*
--		 * Cancel the wakeup and process all pending events in case
-+		 * Cancel the SCI wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
- 		 * Note that if any non-EC GPEs are active at this point, the
-@@ -1026,8 +1019,7 @@ static bool acpi_s2idle_wake(void)
- 		 * should be missed by canceling the wakeup here.
- 		 */
- 		pm_system_cancel_wakeup();
--
--		acpi_s2idle_sync();
-+		acpi_os_wait_events_complete();
- 
- 		/*
- 		 * The SCI is in the "suspended" state now and it cannot produce
-@@ -1060,7 +1052,8 @@ static void acpi_s2idle_restore(void)
- 	 * of GPEs.
- 	 */
- 	acpi_os_wait_events_complete(); /* synchronize GPE processing */
--	acpi_s2idle_sync();
-+	acpi_ec_flush_work(); /* flush the EC driver's workqueues */
-+	acpi_os_wait_events_complete(); /* synchronize Notify handling */
- 
- 	s2idle_wakeup = false;
- 
+ err_cleanup_nanddev:
 -- 
 2.25.1
 
