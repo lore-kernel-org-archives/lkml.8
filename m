@@ -2,295 +2,169 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB13C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0127320885
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590481393;
-	bh=YEzEGDq8eb4XxvW/RSR2MzW4ts+L/TLeDb70yhtakDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yo7xq9L+RMzV9BK6bagA7Auq2u5R4CPr4GyEaBcM3+uE6i5b70Yg6tU+z1OxxW9Y3
-	 PWbPPlo3iM9r5aTuADBNDuV3oql1DPmbFXrFjqs/+DmBn/knSLv3mTXeu15Se7xdb+
-	 plsNU+gOZbYccYGWkPKHFYZo5sgfARcJQqOvdQOg=
+	by mail.kernel.org (Postfix) with ESMTP id EFA6120885
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qnYTe/s6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgEZIXM (ORCPT
+        id S1731357AbgEZIXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46172 "EHLO
+        Tue, 26 May 2020 04:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIXJ (ORCPT
+        with ESMTP id S1726926AbgEZIXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:23:09 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EF4C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:23:08 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f5so2350522wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:23:08 -0700 (PDT)
+        Tue, 26 May 2020 04:23:20 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F005BC03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:23:19 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id c3so15231422wru.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=b8CUm1LFTnrJ7QRSnag0GsDVIfe8MydrGxtOgXBR5Yo=;
-        b=RJxJ4f1fuCKPldmZpekP1xrAS2jdfg/+o9NozeCD7s7uf1Ukm/yy3Ngu6aDLIHK0XZ
-         y8aOSoCem0Px9J7urMqIzuRLpoX5LXIivYqZbz5B/z+kji6muuRuYWoHnUxlRV5ACfMg
-         3D7jj3j2MEBxKxqCT2apiZ/cASVIsHHUXsp53ECEWANoqla8iwt8Q0qXEzoJnk3ybL5/
-         qUYuXdL6Ow0I2iVwTeK1YKZZA6nL6ynqZ5Wt6lG2ZgXErDItopR4oCVbdt4/E2ussFxh
-         1vkl5/IgAO6Eou5T9S9l3EEgUJWXRXnLep630k3MgTwLidkxc+MIVSpj+3m0kPQ7/ZAJ
-         yaug==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=lxyCshKXQK670lp3eg0wD7289YcA1Lwkj3Ng7mmafLs=;
+        b=qnYTe/s6t787vLOjZrCR7E8kILNC01/sv1hS76lMbRsLDOrfbA7kGX+kNDSF86jFTM
+         Hq1mzT/L91NqmeoB7Q6FXxkElurNzzNTDf8EOOtylCiivKchDq/CSm2/OSv/v+uuCbSG
+         51nFk7CWUqzsSUk43uroRWMxXwNp7+sB0BE/cxMcWU5jPvPvuBwx2VTGWd80lqFtGfdO
+         HZMRy+Mh7r3qwakuAq3VL0l1I8uYr/pB4dLF6aZm3nYlKqktb9GJBXcQgaRl5zGV7d6a
+         y4IUCrOhX5af617QUDVJlTm9qvQfZot0+kUuVR949x3/l2Tr0r2qE/ouRe9LQX1pbQXO
+         2fjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=b8CUm1LFTnrJ7QRSnag0GsDVIfe8MydrGxtOgXBR5Yo=;
-        b=Gf2hFFAZiqb7S1R/rje0AbCL9QI/tRVX25YA84rOoGCJgmy+g+qw7hQr2yu2VZNrKD
-         /X4dxiVIf1NYGgEkXzh5/nvYT53Mj0MlhyzNcLoChFLPfEsJV8xNkOVIZKDsuGxp1ySd
-         +viX0SINJqZ8CxGIbaqf+CS7+bZSvCYqhqyZpiBV/vFPqvQQ4i/SdqDDjz3pERDJjP+N
-         FVPgNi5QHfcox/nnBjZ+kppb6LEYG+6B1QA/7uQXuDJlnsIP985TfRG60PoBniU8d/ZL
-         d+P0311K9MTH9/lK/fdGee3uvuvFdPvTPN75RPhCZ+58Qy3aYvj2hi6fHMTIWAK7fDcI
-         inng==
-X-Gm-Message-State: AOAM533LOuuNsn3fQuun6RmXlaCtGci++wiqTG2/VIAagTq3GUy36WGn
-        vO7RU71Z8Z0L4WPZTou9BP8=
-X-Google-Smtp-Source: ABdhPJym0oRyYGoesH3HeHySi5ktRLsaYg4lcXoX4XP1MvxiZaj6fNVL7TV93E06lJsj/vT3Qt3Naw==
-X-Received: by 2002:a7b:c193:: with SMTP id y19mr276557wmi.158.1590481387052;
-        Tue, 26 May 2020 01:23:07 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u13sm962733wrp.53.2020.05.26.01.23.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=lxyCshKXQK670lp3eg0wD7289YcA1Lwkj3Ng7mmafLs=;
+        b=dbTsd9ooaaQB6y/GewGtK+k62GWNaLICjZzGlcdew3VclUuF3B3lDB+vb93mrf9Rem
+         P6hPAtC/1jz2/TTbayf933NOkBJrKgaO+H1fc/oj8PoIsTdrKBbs9txjsDm7yI2FcM9T
+         KqhVAV7uX8q/GHpG/u6nU4GxHaVL1Z9fJdUYmDTVIxx11iqWhf8PfZMr3TboeRHK7Odp
+         AdCvGr1+0TrH4eGgJg2PgrUXMXXBGhmvKqwiPEia74qnAtsx2h4nrSIQEBU/Z5ugsDk8
+         WViqPvezNCX7A9xU1bzSqlms85H4/C1KCfHang200n+MOU91Kca2TeImf4u5ndImUnBk
+         3uhw==
+X-Gm-Message-State: AOAM530EFFP6NNUp93NWe2zAy5G8QbF1PeKNKswHURWIvC8dkqBlnXdB
+        5/nHGRvCvfhBQAdWmrI4JLsaDg==
+X-Google-Smtp-Source: ABdhPJxwzw/7BRBfWh8fTKXxRUv9sUdwTSl737C6HaTrkgjVB2HZ6sVbcxRq22/JT54nalDRNQP8Cw==
+X-Received: by 2002:a5d:4bc5:: with SMTP id l5mr15619295wrt.104.1590481398187;
+        Tue, 26 May 2020 01:23:18 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id x8sm2791180wrs.43.2020.05.26.01.23.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 01:23:06 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:23:03 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V9 04/39] x86/entry: Provide
- idtentry_entry/exit_cond_rcu()
-Message-ID: <20200526082303.GB35238@gmail.com>
-References: <20200521200513.656533920@linutronix.de>
- <20200521202117.181397835@linutronix.de>
+        Tue, 26 May 2020 01:23:17 -0700 (PDT)
+Date:   Tue, 26 May 2020 09:23:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: sprd: Add wakeup capability for PMIC irq
+Message-ID: <20200526082316.GH3628@dell>
+References: <7361f34d712b027f0cd85dc36ee158f9b6076cef.1588833125.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200521202117.181397835@linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7361f34d712b027f0cd85dc36ee158f9b6076cef.1588833125.git.baolin.wang7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 07 May 2020, Baolin Wang wrote:
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
+> When changing to use suspend-to-idle to save power, the PMIC irq can not
+> wakeup the system due to lack of wakeup capability, which will cause
+> the sub-irqs (such as power key) of the PMIC can not wake up the system.
+> Thus we can add the wakeup capability for PMIC irq to solve this issue,
+> as well as removing the IRQF_NO_SUSPEND flag to allow PMIC irq to be
+> a wakeup source.
+> 
+> Reported-by: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+>  drivers/mfd/sprd-sc27xx-spi.c | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+> index ebdf2f1..3064a60 100644
+> --- a/drivers/mfd/sprd-sc27xx-spi.c
+> +++ b/drivers/mfd/sprd-sc27xx-spi.c
+> @@ -256,7 +256,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
+>  	}
+>  
+>  	ret = devm_regmap_add_irq_chip(&spi->dev, ddata->regmap, ddata->irq,
+> -				       IRQF_ONESHOT | IRQF_NO_SUSPEND, 0,
+> +				       IRQF_ONESHOT, 0,
+>  				       &ddata->irq_chip, &ddata->irq_data);
+>  	if (ret) {
+>  		dev_err(&spi->dev, "Failed to add PMIC irq chip %d\n", ret);
+> @@ -272,9 +272,36 @@ static int sprd_pmic_probe(struct spi_device *spi)
+>  		return ret;
+>  	}
+>  
+> +	device_init_wakeup(&spi->dev, 1);
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> After a lengthy discussion [1] it turned out that RCU does not need a full
-> rcu_irq_enter/exit() when RCU is already watching. All it needs if
-> NOHZ_FULL is active is to check whether the tick needs to be restarted.
-> 
-> This allows to avoid a separate variant for the pagefault handler which
-> cannot invoke rcu_irq_enter() on a kernel pagefault which might sleep.
-> 
-> The cond_rcu argument is only temporary and will be removed once the
-> existing users of idtentry_enter/exit() have been cleaned up. After that
-> the code can be significantly simplified.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: [1] https://lkml.kernel.org/r/20200515235125.628629605@linutronix.de
-> ---
-> V9: Reworked to the new RCU mode
-> ---
->  arch/x86/entry/common.c         |   84 ++++++++++++++++++++++++++++++----------
->  arch/x86/include/asm/idtentry.h |   14 +++++-
->  2 files changed, 77 insertions(+), 21 deletions(-)
-> 
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -512,8 +512,10 @@ SYSCALL_DEFINE0(ni_syscall)
+This is a bool.  Please use 'true'.
+
+>  	return 0;
 >  }
 >  
->  /**
-> - * idtentry_enter - Handle state tracking on idtentry
-> + * idtentry_enter_cond_rcu - Handle state tracking on idtentry with conditional
-> + *			     RCU handling
->   * @regs:	Pointer to pt_regs of interrupted context
-> + * @cond_rcu:	Invoke rcu_irq_enter() only if RCU is not watching
->   *
->   * Invokes:
->   *  - lockdep irqflag state tracking as low level ASM entry disabled
-> @@ -521,40 +523,81 @@ SYSCALL_DEFINE0(ni_syscall)
->   *
->   *  - Context tracking if the exception hit user mode.
->   *
-> - *  - RCU notification if the exception hit kernel mode.
-> - *
->   *  - The hardirq tracer to keep the state consistent as low level ASM
->   *    entry disabled interrupts.
-> + *
-> + * For kernel mode entries RCU handling is done conditional. If RCU is
-> + * watching then the only RCU requirement is to check whether the tick has
-> + * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
-> + * invoked on entry and rcu_irq_exit() on exit.
-> + *
-> + * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
-> + * solves the problem of kernel mode pagefaults which can schedule, which
-> + * is not possible after invoking rcu_irq_enter() without undoing it.
-> + *
-> + * For user mode entries enter_from_user_mode() must be invoked to
-> + * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
-> + * would not be possible.
-> + *
-> + * Returns: True if RCU has been adjusted on a kernel entry
-> + *	    False otherwise
-> + *
-> + * The return value must be fed into the rcu_exit argument of
-> + * idtentry_exit_cond_rcu().
->   */
-> -void noinstr idtentry_enter(struct pt_regs *regs)
-> +bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs, bool cond_rcu)
->  {
->  	if (user_mode(regs)) {
->  		enter_from_user_mode();
->  	} else {
-> -		lockdep_hardirqs_off(CALLER_ADDR0);
-> -		rcu_irq_enter();
-> -		instrumentation_begin();
-> -		trace_hardirqs_off_prepare();
-> -		instrumentation_end();
-> +		if (!cond_rcu || !__rcu_is_watching()) {
-> +			/*
-> +			 * If RCU is not watching then the same careful
-> +			 * sequence vs. lockdep and tracing is required
-> +			 * as in enter_from_user_mode().
-> +			 *
-> +			 * This only happens for IRQs that hits the idle
-> +			 * loop, i.e. if idle is not using MWAIT.
-> +			 */
-> +			lockdep_hardirqs_off(CALLER_ADDR0);
-> +			rcu_irq_enter();
-> +			instrumentation_begin();
-> +			trace_hardirqs_off_prepare();
-> +			instrumentation_end();
-> +			return true;
-> +		} else {
-> +			/*
-> +			 * If RCU is watching then RCU only wants to check
-> +			 * whether it needs to restart the tick in NOHZ
-> +			 * mode.
-> +			 */
-> +			instrumentation_begin();
-> +			rcu_irq_enter_check_tick();
-> +			/* Use the combo lockdep/tracing function */
-> +			trace_hardirqs_off();
-> +			instrumentation_end();
-> +		}
->  	}
-> +	return false;
->  }
+> +#ifdef CONFIG_PM_SLEEP
+> +static int sprd_pmic_suspend(struct device *dev)
+> +{
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct sprd_pmic *ddata = spi_get_drvdata(spi);
 
-Any objections to the simplified/flattened control flow below?
+Why don't you just use:
 
-Thanks,
+  dev_get_drvdata(dev)
 
-	Ingo
+... and skip the superfluous step?
 
- common.c |   59 +++++++++++++++++++++++++++++++----------------------------
- 1 file changed, 31 insertions(+), 28 deletions(-)
-Index: tip/arch/x86/entry/common.c
-===================================================================
---- tip.orig/arch/x86/entry/common.c
-+++ tip/arch/x86/entry/common.c
-@@ -549,35 +549,38 @@ bool noinstr idtentry_enter_cond_rcu(str
- {
- 	if (user_mode(regs)) {
- 		enter_from_user_mode();
--	} else {
--		if (!cond_rcu || !__rcu_is_watching()) {
--			/*
--			 * If RCU is not watching then the same careful
--			 * sequence vs. lockdep and tracing is required
--			 * as in enter_from_user_mode().
--			 *
--			 * This only happens for IRQs that hit the idle
--			 * loop, i.e. if idle is not using MWAIT.
--			 */
--			lockdep_hardirqs_off(CALLER_ADDR0);
--			rcu_irq_enter();
--			instrumentation_begin();
--			trace_hardirqs_off_prepare();
--			instrumentation_end();
--			return true;
--		} else {
--			/*
--			 * If RCU is watching then RCU only wants to check
--			 * whether it needs to restart the tick in NOHZ
--			 * mode.
--			 */
--			instrumentation_begin();
--			rcu_irq_enter_check_tick();
--			/* Use the combo lockdep/tracing function */
--			trace_hardirqs_off();
--			instrumentation_end();
--		}
-+		return false;
- 	}
-+
-+	if (!cond_rcu || !__rcu_is_watching()) {
-+		/*
-+		 * If RCU is not watching then the same careful
-+		 * sequence vs. lockdep and tracing is required
-+		 * as in enter_from_user_mode().
-+		 *
-+		 * This only happens for IRQs that hit the idle
-+		 * loop, i.e. if idle is not using MWAIT.
-+		 */
-+		lockdep_hardirqs_off(CALLER_ADDR0);
-+		rcu_irq_enter();
-+		instrumentation_begin();
-+		trace_hardirqs_off_prepare();
-+		instrumentation_end();
-+
-+		return true;
-+	}
-+
-+	/*
-+	 * If RCU is watching then RCU only wants to check
-+	 * whether it needs to restart the tick in NOHZ
-+	 * mode.
-+	 */
-+	instrumentation_begin();
-+	rcu_irq_enter_check_tick();
-+	/* Use the combo lockdep/tracing function */
-+	trace_hardirqs_off();
-+	instrumentation_end();
-+
- 	return false;
- }
- 
+> +	if (device_may_wakeup(dev))
+> +		enable_irq_wake(ddata->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sprd_pmic_resume(struct device *dev)
+> +{
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct sprd_pmic *ddata = spi_get_drvdata(spi);
 
+As above.
+
+> +	if (device_may_wakeup(dev))
+> +		disable_irq_wake(ddata->irq);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(sprd_pmic_pm_ops, sprd_pmic_suspend, sprd_pmic_resume);
+> +
+>  static const struct of_device_id sprd_pmic_match[] = {
+>  	{ .compatible = "sprd,sc2731", .data = &sc2731_data },
+>  	{},
+> @@ -286,6 +313,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
+>  		.name = "sc27xx-pmic",
+>  		.bus = &spi_bus_type,
+>  		.of_match_table = sprd_pmic_match,
+> +		.pm = &sprd_pmic_pm_ops,
+>  	},
+>  	.probe = sprd_pmic_probe,
+>  };
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
