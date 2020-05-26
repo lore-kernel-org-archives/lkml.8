@@ -2,53 +2,55 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D1C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5827E2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0A220776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520557;
-	bh=58sZryhHClRNOh5xFfcL9n0qtM8EcmENfS3L8UspiAE=;
+	s=default; t=1590520560;
+	bh=kx3TrV2JbUKa+5KdldsNkanjDhdA6+qB50fP9MVXPMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1UQFPWH3eW3+3MXF0umUrMKfu9oiHr1UvEAFVwrId938volGDa+pK1EOEUp6fUGNB
-	 1jToHvzrEVGX91ipguJyNAykmDGd1+bUCX6Qfi3igy4fYWEPc2Doui7CWeUhxLH+mY
-	 7XuXWhOMqUGhr9pkWVGV1O68Cq51F8xom2h1sQLY=
+	b=uidRXS1Iqa3zeaneWNWgDmTWbauu7GNlEjxhxcvHCtOwq664uVvEDjsoSig5q0k1c
+	 g1wZgwfLDTupAdJ9l00DCa2JtNpO0iZmp7IYjU97F+WbxXWg77e4N3Vo5DDSINcai4
+	 zy3W0ejTz6JrGgpQrO1pAWHOX2XHsEiKQOUre30I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404595AbgEZTP4 (ORCPT
+        id S2404603AbgEZTQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404265AbgEZTPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:39 -0400
+        id S2404586AbgEZTPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 835002053B;
-        Tue, 26 May 2020 19:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96E972053B;
+        Tue, 26 May 2020 19:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520539;
-        bh=58sZryhHClRNOh5xFfcL9n0qtM8EcmENfS3L8UspiAE=;
+        s=default; t=1590520554;
+        bh=kx3TrV2JbUKa+5KdldsNkanjDhdA6+qB50fP9MVXPMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pL1f3NVStKeFwVXPg29kPESrjJMx/egD8i8qvg6kz9BE4UKtfAQqJTQ4+D6etYMw3
-         UM8Qh4fbRyvLYiNGFInaY8F1dggD/pGUGRo1iGDEjaGjWDPs9ucNdlI+KnioRr5txb
-         GFWNmF36ns2hTO8OxEN2yoFdlGv2pwzOhEg+3Po8=
+        b=0LCkiAIX3fgb96TCU9aVjxiybcfxRU97RkjJPiMjqPfr4gw7PydF2TxBCpMfJgdRT
+         m9kAbt/LDkK88SCvvJxHIkQk4e3R1vjvCM0TU3/6RbvKu1fkiTDjXWarIuzKGczO3N
+         p/DRFGbf+N0urO5emhLBVzBKAUBnWxDJby7WPX+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.6 120/126] x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
-Date:   Tue, 26 May 2020 20:54:17 +0200
-Message-Id: <20200526183947.470231101@linuxfoundation.org>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 126/126] sched/fair: Fix enqueue_task_fair() warning some more
+Date:   Tue, 26 May 2020 20:54:23 +0200
+Message-Id: <20200526183947.858661331@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,70 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Phil Auld <pauld@redhat.com>
 
-commit 187b96db5ca79423618dfa29a05c438c34f9e1f0 upstream.
+[ Upstream commit b34cb07dde7c2346dec73d053ce926aeaa087303 ]
 
-Normally, show_trace_log_lvl() scans the stack, looking for text
-addresses to print.  In parallel, it unwinds the stack with
-unwind_next_frame().  If the stack address matches the pointer returned
-by unwind_get_return_address_ptr() for the current frame, the text
-address is printed normally without a question mark.  Otherwise it's
-considered a breadcrumb (potentially from a previous call path) and it's
-printed with a question mark to indicate that the address is unreliable
-and typically can be ignored.
+sched/fair: Fix enqueue_task_fair warning some more
 
-Since the following commit:
+The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
+did not fully resolve the issues with the rq->tmp_alone_branch !=
+&rq->leaf_cfs_rq_list warning in enqueue_task_fair. There is a case where
+the first for_each_sched_entity loop exits due to on_rq, having incompletely
+updated the list.  In this case the second for_each_sched_entity loop can
+further modify se. The later code to fix up the list management fails to do
+what is needed because se does not point to the sched_entity which broke out
+of the first loop. The list is not fixed up because the throttled parent was
+already added back to the list by a task enqueue in a parallel child hierarchy.
 
-  f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
+Address this by calling list_add_leaf_cfs_rq if there are throttled parents
+while doing the second for_each_sched_entity loop.
 
-... for inactive tasks, show_trace_log_lvl() prints *only* unreliable
-addresses (prepended with '?').
-
-That happens because, for the first frame of an inactive task,
-unwind_get_return_address_ptr() returns the wrong return address
-pointer: one word *below* the task stack pointer.  show_trace_log_lvl()
-starts scanning at the stack pointer itself, so it never finds the first
-'reliable' address, causing only guesses to being printed.
-
-The first frame of an inactive task isn't a normal stack frame.  It's
-actually just an instance of 'struct inactive_task_frame' which is left
-behind by __switch_to_asm().  Now that this inactive frame is actually
-exposed to callers, fix unwind_get_return_address_ptr() to interpret it
-properly.
-
-Fixes: f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: fe61468b2cb ("sched/fair: Fix enqueue_task_fair warning")
+Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Phil Auld <pauld@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200522135435.vbxs7umku5pyrdbk@treble
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20200512135222.GC2201@lorien.usersys.redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c |    7 +++++++
+ kernel/sched/fair.c | 7 +++++++
  1 file changed, 7 insertions(+)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -314,12 +314,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_addr
- 
- unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
- {
-+	struct task_struct *task = state->task;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 7cd86641b44b..603d3d3cbf77 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5298,6 +5298,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+ 			goto enqueue_throttle;
 +
- 	if (unwind_done(state))
- 		return NULL;
++               /*
++                * One parent has been throttled and cfs_rq removed from the
++                * list. Add it back to not break the leaf list.
++                */
++               if (throttled_hierarchy(cfs_rq))
++                       list_add_leaf_cfs_rq(cfs_rq);
+ 	}
  
- 	if (state->regs)
- 		return &state->regs->ip;
- 
-+	if (task != current && state->sp == task->thread.sp) {
-+		struct inactive_task_frame *frame = (void *)task->thread.sp;
-+		return &frame->ret_addr;
-+	}
-+
- 	if (state->sp)
- 		return (unsigned long *)state->sp - 1;
- 
+ enqueue_throttle:
+-- 
+2.25.1
+
 
 
