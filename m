@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2931C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AE4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84661208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F316420EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520450;
-	bh=kQNd34cmik6TcoAVHlkHhkO1e2MtsAltfeIAfLZeifU=;
+	s=default; t=1590520455;
+	bh=XSQb4Zp5cDsFHLtoAkY8MQ1hc/uoWgOtYUAeCqjEU30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TyF6dL7YAtRF+aJDvjZOKID+ydK0YsDNmQLNBvV8JB63SToeJHe4kCbDeGQ0uHuJ4
-	 IYoJtPeTsNhw85qtwjIfV4uMvQuBsudQoU5plIuDFivbdcz7Tge8cn2EU8aWRrHZaO
-	 mrVhS/9RvJFY2sIdwOzIcWq13m0UIpWUAz8kPBMk=
+	b=E37+cCqh3p48i0we5/72mVbi3Ka/mKB/5ypdyXnelOg+q8MX7cmZSCZ1oWZDKkxGR
+	 julRDhehyEnZTpcKbiyjPni58Z8XNxp9aBKSPCZN72TgJU9HNEyXwKQ6lGMPtR5Yuk
+	 sjV0NWfdlHf1hrn7+xcvZ4rhJxmCe634RIK0YD30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392144AbgEZTOJ (ORCPT
+        id S2392155AbgEZTOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392026AbgEZTOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:02 -0400
+        id S2392021AbgEZTOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8560F208B8;
-        Tue, 26 May 2020 19:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D37120776;
+        Tue, 26 May 2020 19:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520442;
-        bh=kQNd34cmik6TcoAVHlkHhkO1e2MtsAltfeIAfLZeifU=;
+        s=default; t=1590520444;
+        bh=XSQb4Zp5cDsFHLtoAkY8MQ1hc/uoWgOtYUAeCqjEU30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lj+UKqLujONiQuQXsWupvvedgmX00pPnn2hccHHUiIu2CWcQ3DpDovoaiAsgJIXV3
-         ZLHRtHPizZATjvsW11bkdHTEdHgdRiCqFOtLQNDpaXw4DtK6iVXbJYUCyPGiZwxr75
-         nsXMs2wDI7sEQsVs/1VSksQaNE1o+vDI1HJuAspY=
+        b=chw5r5Ak5NO/M2+IKN+TpzdX5xVTcWrtsgkhyNaOFbF0xKeEYP5bDsyLPqmLOMA4N
+         KxFTw7iDr2UW9VTWL8rSSwZU1+CILl+JQS7FdmSWxf39zS7cq3Y9Ku1sn0NUzwREpo
+         1goOza5mE5mDyFaMBn/SZj0wgkp6LEGi9h8baRpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 082/126] vsprintf: dont obfuscate NULL and error pointers
-Date:   Tue, 26 May 2020 20:53:39 +0200
-Message-Id: <20200526183944.975389852@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Colin Xu <colin.xu@intel.com>
+Subject: [PATCH 5.6 083/126] drm/i915/gvt: Init DPLL/DDI vreg for virtual display instead of inheritance.
+Date:   Tue, 26 May 2020 20:53:40 +0200
+Message-Id: <20200526183945.041012547@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -63,122 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Colin Xu <colin.xu@intel.com>
 
-commit 7bd57fbc4a4ddedc664cad0bbced1b469e24e921 upstream.
+commit f965b68188ab59a40a421ced1b05a2fea638465c upstream.
 
-I don't see what security concern is addressed by obfuscating NULL
-and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-of sites where %p is used (over 10000) and the fact that NULL pointers
-aren't uncommon, it probably wouldn't take long for an attacker to
-find the hash that corresponds to 0.  Although harder, the same goes
-for most common error values, such as -1, -2, -11, -14, etc.
+Init value of some display vregs rea inherited from host pregs. When
+host display in different status, i.e. all monitors unpluged, different
+display configurations, etc., GVT virtual display setup don't consistent
+thus may lead to guest driver consider display goes malfunctional.
 
-The NULL part actually fixes a regression: NULL pointers weren't
-obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-dereferencing invalid pointers") which went into 5.2.  I'm tacking
-the IS_ERR() part on here because error pointers won't leak kernel
-addresses and printing them as pointers shouldn't be any different
-from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-debugging based on existing pr_debug and friends excruciating.
+The added init vreg values are based on PRMs and fixed by calcuation
+from current configuration (only PIPE_A) and the virtual EDID.
 
-Note that the "always print 0's for %pK when kptr_restrict == 2"
-behaviour which goes way back is left as is.
-
-Example output with the patch applied:
-
-                             ptr         error-ptr              NULL
- %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
- %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
- %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
- %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
- %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
-
-Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 04d348ae3f0a ("drm/i915/gvt: vGPU display virtualization")
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Colin Xu <colin.xu@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200508060506.216250-1-colin.xu@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_printf.c |   19 ++++++++++++++++++-
- lib/vsprintf.c    |    7 +++++++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gvt/display.c |   49 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
 
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -214,6 +214,7 @@ test_string(void)
- #define PTR_STR "ffff0123456789ab"
- #define PTR_VAL_NO_CRNG "(____ptrval____)"
- #define ZEROS "00000000"	/* hex 32 zero bits */
-+#define ONES "ffffffff"		/* hex 32 one bits */
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -207,14 +207,41 @@ static void emulate_monitor_status_chang
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG0) |
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG1) |
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG2);
+-		vgpu_vreg_t(vgpu, LCPLL1_CTL) |=
+-				LCPLL_PLL_ENABLE |
+-				LCPLL_PLL_LOCK;
+-		vgpu_vreg_t(vgpu, LCPLL2_CTL) |= LCPLL_PLL_ENABLE;
+-
++		/*
++		 * Only 1 PIPE enabled in current vGPU display and PIPE_A is
++		 *  tied to TRANSCODER_A in HW, so it's safe to assume PIPE_A,
++		 *   TRANSCODER_A can be enabled. PORT_x depends on the input of
++		 *   setup_virtual_dp_monitor, we can bind DPLL0 to any PORT_x
++		 *   so we fixed to DPLL0 here.
++		 * Setup DPLL0: DP link clk 1620 MHz, non SSC, DP Mode
++		 */
++		vgpu_vreg_t(vgpu, DPLL_CTRL1) =
++			DPLL_CTRL1_OVERRIDE(DPLL_ID_SKL_DPLL0);
++		vgpu_vreg_t(vgpu, DPLL_CTRL1) |=
++			DPLL_CTRL1_LINK_RATE(DPLL_CTRL1_LINK_RATE_1620, DPLL_ID_SKL_DPLL0);
++		vgpu_vreg_t(vgpu, LCPLL1_CTL) =
++			LCPLL_PLL_ENABLE | LCPLL_PLL_LOCK;
++		vgpu_vreg_t(vgpu, DPLL_STATUS) = DPLL_LOCK(DPLL_ID_SKL_DPLL0);
++		/*
++		 * Golden M/N are calculated based on:
++		 *   24 bpp, 4 lanes, 154000 pixel clk (from virtual EDID),
++		 *   DP link clk 1620 MHz and non-constant_n.
++		 * TODO: calculate DP link symbol clk and stream clk m/n.
++		 */
++		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) = 63 << TU_SIZE_SHIFT;
++		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) |= 0x5b425e;
++		vgpu_vreg_t(vgpu, PIPE_DATA_N1(TRANSCODER_A)) = 0x800000;
++		vgpu_vreg_t(vgpu, PIPE_LINK_M1(TRANSCODER_A)) = 0x3cd6e;
++		vgpu_vreg_t(vgpu, PIPE_LINK_N1(TRANSCODER_A)) = 0x80000;
+ 	}
  
- static int __init
- plain_format(void)
-@@ -245,6 +246,7 @@ plain_format(void)
- #define PTR_STR "456789ab"
- #define PTR_VAL_NO_CRNG "(ptrval)"
- #define ZEROS ""
-+#define ONES ""
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_B)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_B);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_B);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_B);
+ 		vgpu_vreg_t(vgpu, SFUSE_STRAP) |= SFUSE_STRAP_DDIB_DETECTED;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
+@@ -235,6 +262,12 @@ static void emulate_monitor_status_chang
+ 	}
  
- static int __init
- plain_format(void)
-@@ -330,14 +332,28 @@ test_hashed(const char *fmt, const void
- 	test(buf, fmt, p);
- }
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_C)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_C);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_C);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_C);
+ 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTC_HOTPLUG_CPT;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
+@@ -255,6 +288,12 @@ static void emulate_monitor_status_chang
+ 	}
  
-+/*
-+ * NULL pointers aren't hashed.
-+ */
- static void __init
- null_pointer(void)
- {
--	test_hashed("%p", NULL);
-+	test(ZEROS "00000000", "%p", NULL);
- 	test(ZEROS "00000000", "%px", NULL);
- 	test("(null)", "%pE", NULL);
- }
- 
-+/*
-+ * Error pointers aren't hashed.
-+ */
-+static void __init
-+error_pointer(void)
-+{
-+	test(ONES "fffffff5", "%p", ERR_PTR(-11));
-+	test(ONES "fffffff5", "%px", ERR_PTR(-11));
-+	test("(efault)", "%pE", ERR_PTR(-11));
-+}
-+
- #define PTR_INVALID ((void *)0x000000ab)
- 
- static void __init
-@@ -649,6 +665,7 @@ test_pointer(void)
- {
- 	plain();
- 	null_pointer();
-+	error_pointer();
- 	invalid_pointer();
- 	symbol_ptr();
- 	kernel_ptr();
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -794,6 +794,13 @@ static char *ptr_to_id(char *buf, char *
- 	unsigned long hashval;
- 	int ret;
- 
-+	/*
-+	 * Print the real pointer value for NULL and error pointers,
-+	 * as they are not actual addresses.
-+	 */
-+	if (IS_ERR_OR_NULL(ptr))
-+		return pointer_string(buf, end, ptr, spec);
-+
- 	/* When debugging early boot use non-cryptographically secure hash. */
- 	if (unlikely(debug_boot_weak_hash)) {
- 		hashval = hash_long((unsigned long)ptr, 32);
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_D)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_D);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_D);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_D);
+ 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTD_HOTPLUG_CPT;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
 
 
