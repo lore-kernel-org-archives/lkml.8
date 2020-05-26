@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7EA20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDBA20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520899;
-	bh=tKXQmljvVS67CsXNIjd1NAZlest5cr4b3g4C5vd/z5I=;
+	s=default; t=1590520905;
+	bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=feZxKfuXI+qq31VHktPi8O+4ZQW5nhWbDOdYaAoN3yUuS2ZrKIdhXRdjbhZCSUHnF
-	 XonvzQuaAqIum5SgDsUadzwkZk11xuuUi03O2UuYwT3U81DQV9X11vJzRGX3wzwUpq
-	 SC7kEDKsSR/f9HTnvB0ltGN2K7io3vUPcalUDoJ0=
+	b=HtQnf5v30Gc9f5xt0HMUl3Mm5quRI1FsEMORSJkN8qJPhp58m5H2Yox4rUw0xaMDt
+	 eckeGnTnVQbcuv8mhiZVtOg3wANJs7oEO32jTwZReqv0iAF8SXt5I2TYxTVVRogmz8
+	 +63d9bp26ihizCHypTOFyIlSmms2n2aIAMhuOGIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404441AbgEZTVi (ORCPT
+        id S2404044AbgEZTLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404079AbgEZTLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:31 -0400
+        id S2391950AbgEZTLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8409220888;
-        Tue, 26 May 2020 19:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C2D20776;
+        Tue, 26 May 2020 19:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520291;
-        bh=tKXQmljvVS67CsXNIjd1NAZlest5cr4b3g4C5vd/z5I=;
+        s=default; t=1590520278;
+        bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dFQbviB7SYEkvihwSxFgx2m9C5PbGoxGpouApP3JqWjOThcAEDhAtZyj1d9m0MwJY
-         ojCgql0KH0i1QtrfQRBXIgMVPZPvBqkwXi4eRVbKklJG8eNYFv+LbD8QkdgyfHbqZO
-         sLcBGyk9z+tgFm+UB2KeKnEbagq41gSuHO0Rnvjw=
+        b=wEZDJHCxGO+t0aeuK1nM1KbIUaAFt/GFiB0qs1a1q0WWtkcUPMzlPw2OWTyXlFNlH
+         SvLmWflc1ZCBVS89LD/dSeVzBPDvhurcMLlfn1/dTThKnT5np72nLG17m+Hdj4qHhd
+         Tml+dOVbeEVmE60RMmQpFZkJMf5rSEs0D8dPpoJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Tom Murphy <murphyt7@tcd.ie>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 021/126] iommu: Fix deferred domain attachment
-Date:   Tue, 26 May 2020 20:52:38 +0200
-Message-Id: <20200526183939.443147529@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 017/126] i2c: mux: demux-pinctrl: Fix an error handling path in i2c_demux_pinctrl_probe()
+Date:   Tue, 26 May 2020 20:52:34 +0200
+Message-Id: <20200526183939.056537380@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,88 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit bd421264ed307dd296eab036851221b225071a32 ]
+[ Upstream commit e9d1a0a41d4486955e96552293c1fcf1fce61602 ]
 
-The IOMMU core code has support for deferring the attachment of a domain
-to a device. This is needed in kdump kernels where the new domain must
-not be attached to a device before the device driver takes it over.
+A call to 'i2c_demux_deactivate_master()' is missing in the error handling
+path, as already done in the remove function.
 
-When the AMD IOMMU driver got converted to use the dma-iommu
-implementation, the deferred attaching got lost. The code in
-dma-iommu.c has support for deferred attaching, but it calls into
-iommu_attach_device() to actually do it. But iommu_attach_device()
-will check if the device should be deferred in it code-path and do
-nothing, breaking deferred attachment.
-
-Move the is_deferred_attach() check out of the attach_device path and
-into iommu_group_add_device() to make deferred attaching work from the
-dma-iommu code.
-
-Fixes: 795bbbb9b6f8 ("iommu/dma-iommu: Handle deferred devices")
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Tom Murphy <murphyt7@tcd.ie>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/20200519130340.14564-1-joro@8bytes.org
+Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iommu.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 8d2477941fd9..22b28076d48e 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -692,6 +692,15 @@ out:
- 	return ret;
- }
- 
-+static bool iommu_is_attach_deferred(struct iommu_domain *domain,
-+				     struct device *dev)
-+{
-+	if (domain->ops->is_attach_deferred)
-+		return domain->ops->is_attach_deferred(domain, dev);
-+
-+	return false;
-+}
-+
- /**
-  * iommu_group_add_device - add a device to an iommu group
-  * @group: the group into which to add the device (reference should be held)
-@@ -746,7 +755,7 @@ rename:
- 
- 	mutex_lock(&group->mutex);
- 	list_add_tail(&device->list, &group->devices);
--	if (group->domain)
-+	if (group->domain  && !iommu_is_attach_deferred(group->domain, dev))
- 		ret = __iommu_attach_device(group->domain, dev);
- 	mutex_unlock(&group->mutex);
- 	if (ret)
-@@ -1652,9 +1661,6 @@ static int __iommu_attach_device(struct iommu_domain *domain,
- 				 struct device *dev)
- {
- 	int ret;
--	if ((domain->ops->is_attach_deferred != NULL) &&
--	    domain->ops->is_attach_deferred(domain, dev))
--		return 0;
- 
- 	if (unlikely(domain->ops->attach_dev == NULL))
- 		return -ENODEV;
-@@ -1726,8 +1732,7 @@ EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
--	if ((domain->ops->is_attach_deferred != NULL) &&
--	    domain->ops->is_attach_deferred(domain, dev))
-+	if (iommu_is_attach_deferred(domain, dev))
- 		return;
- 
- 	if (unlikely(domain->ops->detach_dev == NULL))
+diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+index 0e16490eb3a1..5365199a31f4 100644
+--- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
++++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+@@ -272,6 +272,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
+ err_rollback_available:
+ 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
+ err_rollback:
++	i2c_demux_deactivate_master(priv);
+ 	for (j = 0; j < i; j++) {
+ 		of_node_put(priv->chan[j].parent_np);
+ 		of_changeset_destroy(&priv->chan[j].chgset);
 -- 
 2.25.1
 
