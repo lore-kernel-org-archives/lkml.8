@@ -2,157 +2,100 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3402EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B314EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093D6207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590496261;
-	bh=5/SVqVi0YEdMCJmqhHdu4IDKtCwy0jXqz4i9FcBsuH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MKkO2SNaDrmGmKtnPg8+Zrj4gJj64C2z48Pbr363G3NCe//mj/mttjTFZ7aZUvl+t
-	 SiBuU/s4jd9Him7NblkJU2KS4jb48mc2Avg6nlltgE5MVTmv9hqqDpFsbv4n02I+FS
-	 7FB3SdsO9QiajxOabIqjWnkKXaONrxFnLuwH6abc=
+	by mail.kernel.org (Postfix) with ESMTP id 8E75420899
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jrdqXp9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389077AbgEZMbA (ORCPT
+        id S1729123AbgEZMcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388433AbgEZMa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:30:59 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF2C208C3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590496258;
-        bh=5/SVqVi0YEdMCJmqhHdu4IDKtCwy0jXqz4i9FcBsuH4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AG0an2TnXZ/DeP5Jmydbm6MjPyFTxAzDCiUGkl4A5VzLV32NZIcz8dCfKtv3F4hOC
-         HaQf8FVCh5/5nXRD+8lQ83GDeUYk0XxVaO0AKr2RYbSC0ZjIQ7oH1P3MlY2gGgm/a1
-         W8d8eape8Qn0FTUCb48Jn3OFb7OeEy9g53xwqnAU=
-Received: by mail-io1-f50.google.com with SMTP id s18so7773057ioe.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:30:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532QRmTLz9Wc8To8BaYDE/579HYDAaNbKQ6jUEs2W9I8/RQWWU4a
-        +yN5RWakFQH3So3Up5kA1c5dFK3TiqIxttiJAcU=
-X-Google-Smtp-Source: ABdhPJxSyU/yErhKKPg5PQ3lRiM4fMNculwc5Nk1hMliEDJWDeT/yvuyc4QW9Mn8TIlXSfSj+j9rGuz0DHOst8Ri9hY=
-X-Received: by 2002:a02:3341:: with SMTP id k1mr763821jak.74.1590496258034;
- Tue, 26 May 2020 05:30:58 -0700 (PDT)
+        Tue, 26 May 2020 08:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbgEZMcb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:32:31 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FA2C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:32:30 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so2945889wmd.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vCPx6qkjkE87GQ9zi7thXK76HafQnhLa7mqK8w32S30=;
+        b=jrdqXp9lUpIatzfYVL+cQoa4ruiktjr8CSsE9h+7UL1IiwRuzXFynNx5aC/qF7JDFa
+         yyaeKeUNvHnC7/qVjyO6aoXPVNeeZnNIrSVBccy6AMLyV8slMgVi++ys2abbzRjv9BvT
+         etiaY3eBReqaPJUX9038zKU8jhcANuTP/YYKmc+yRvJYOTNwk1vuCxTyvI+3nZL0zaH+
+         8mMdKQZ0oOzrun9ioR9EeHyP8bPZpmG0C8DeTYwdj6YEP3qsFcWiuymGjdUw0XXpkKXx
+         5/YOoe4kJW3/WotL2f2gGmzcwmYWHgt6rIo3Fd8RyKdXYdNxNXDDVlQRu6GiQqh1WOTo
+         sGqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vCPx6qkjkE87GQ9zi7thXK76HafQnhLa7mqK8w32S30=;
+        b=PLIPssFlX7n20u1dBLgYCYAN15ZBqz1DZMsobrDLeda8Owgohw05dpB69d/T7zFsIO
+         E6PUuGnTqbMCbEyTMATsUrncwLHbMICfR8uLpGGHYAxB24I87iDX/IH9jYA+d/Sr5JVX
+         xU02GP1kAoqSOpuAzcZ/DtgUEVEDR3/z22Th1d0+O6uxKt2MQaotIKpZEPGXXdoQL1nN
+         giyYVYLec5eM/+5j4lcvQf09nQFPGIkWYRWrbtC/3vCCwN5N+iq8jY8QmESjkvTARb1B
+         AXuw5l1RLy5Y1+pc3JeE4dqpG4wql3K3O3Ad2zcD3jnkC0RfR9ZVEQWCAesXB7Eh0t6Q
+         dDkg==
+X-Gm-Message-State: AOAM531FakKB+aINz0H+dlwf27S2EldwRrL/I+ytS5I+1s4LFNQUm1lq
+        vHfXEMYv/rY0lN3situVSMilmrKWxD0=
+X-Google-Smtp-Source: ABdhPJwEhE6qT7i0uQZ+ESmFPmcPpC2XBvQ2DEcOeE/E0+JCU4q+/iukwgyZQFnboBg2ZmQxIGbtxA==
+X-Received: by 2002:a1c:1f85:: with SMTP id f127mr863428wmf.163.1590496349257;
+        Tue, 26 May 2020 05:32:29 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:20c0:f1c8:831b:d98f? ([2a01:e34:ed2f:f020:20c0:f1c8:831b:d98f])
+        by smtp.googlemail.com with ESMTPSA id d13sm20821509wmb.39.2020.05.26.05.32.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 05:32:28 -0700 (PDT)
+Subject: Re: [PATCH v4] thermal: qoriq: Update the settings for TMUv2
+To:     Yuantian Tang <andy.tang@nxp.com>, rui.zhang@intel.com,
+        edubezval@gmail.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200526060212.4118-1-andy.tang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <62609db2-52e6-3982-7241-8b812e024c34@linaro.org>
+Date:   Tue, 26 May 2020 14:32:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200524212816.243139-1-nivedita@alum.mit.edu>
- <20200525225918.1624470-1-nivedita@alum.mit.edu> <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
-In-Reply-To: <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 26 May 2020 14:30:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
-Message-ID: <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
- compressed kernel
-To:     sedat.dilek@gmail.com
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200526060212.4118-1-andy.tang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 at 14:29, Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Tue, May 26, 2020 at 12:59 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > The compressed kernel currently contains bogus runtime relocations in
-> > the startup code in head_{32,64}.S, which are generated by the linker,
-> > but must not actually be processed at runtime.
-> >
-> > This generates warnings when linking with the BFD linker, and errors
-> > with LLD, which defaults to erroring on runtime relocations in read-only
-> > sections. It also requires the -z noreloc-overflow hack for the 64-bit
-> > kernel, which prevents us from linking it as -pie on an older BFD linker
-> > (<= 2.26) or on LLD, because the locations that are to be apparently
-> > relocated are only 32-bits in size and so cannot normally have
-> > R_X86_64_RELATIVE relocations.
-> >
-> > This series aims to get rid of these relocations. It is based on
-> > efi/next, where the latest patches touch the head code to eliminate the
-> > global offset table.
-> >
-> > The first patch is an independent fix for LLD, to avoid an orphan
-> > section in arch/x86/boot/setup.elf.
-> >
-> > The second patch gets rid of almost all the relocations. It uses
-> > standard PIC addressing technique for 32-bit, i.e. loading a register
-> > with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
-> > references to access variables. For 64-bit, there is 32-bit code that
-> > cannot use RIP-relative addressing, and also cannot use the 32-bit
-> > method, since GOTOFF references are 64-bit only. This is instead handled
-> > using a macro to replace a reference like gdt with (gdt-startup_32)
-> > instead. The assembler will generate a PC32 relocation entry, with
-> > addend set to (.-startup_32), and these will be replaced with constants
-> > at link time. This works as long as all the code using such references
-> > lives in the same section as startup_32, i.e. in .head.text.
-> >
-> > The third patch addresses a remaining issue with the BFD linker, which
-> > insists on generating runtime relocations for absolute symbols. We use
-> > z_input_len and z_output_len, defined in the generated piggy.S file, as
-> > symbols whose absolute "addresses" are actually the size of the
-> > compressed payload and the size of the decompressed kernel image
-> > respectively. LLD does not generate relocations for these two symbols,
-> > but the BFD linker does, prior to the upcoming 2.35. To get around this,
-> > piggy.S is extended to also define two u32 variables (in .rodata) with
-> > the lengths, and the head code is modified to use those instead of the
-> > symbol addresses.
-> >
-> > An alternative way to handle z_input_len/z_output_len would be to just
-> > include piggy.S in head_{32,64}.S instead of as a separate object file,
-> > since the GNU assembler doesn't generate relocations for symbols set to
-> > constants.
-> >
-> > The last patch adds a check in the linker script to ensure that no
-> > runtime relocations get reintroduced. Since the GOT has been eliminated
-> > as well, the compressed kernel has no runtime relocations whatsoever any
-> > more.
-> >
-> > Changes from v1:
-> > - Add .text.* to setup.ld instead of just .text.startup
-> > - Rename the la() macro introduced in the second patch for 64-bit to
-> >   rva(), and rework the explanatory comment.
-> > - In the last patch, check both .rel.dyn and .rela.dyn, instead of just
-> >   one per arch.
-> >
->
-> Hi,
->
-> I would like to test this patchset v2 on top of Linux v5.7-rc7 together with:
->
-> [1] x86/boot: Discard .discard.unreachable for arch/x86/boot/compressed/vmlinux
-> [2] x86/boot: Correct relocation destination on old linkers
->
-> I tried to pull efi/next on top of Linux v5.7-rc7 and cleaned up the
-> merge problems, but I am not sure I did it correctly.
-> So, which patches are really relevant from efi/next?
->
-> What's your suggestions?
->
+On 26/05/2020 08:02, Yuantian Tang wrote:
+> For TMU v2, TMSAR registers need to be set properly to get the
+> accurate temperature values.
+> Also the temperature read needs to be converted to degree Celsius
+> since it is in degrees Kelvin.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-efi/next is here:
+Applied, thanks!
 
-https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
 
-You'll need the top 3 patches.
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
