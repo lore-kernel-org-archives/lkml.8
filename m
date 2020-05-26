@@ -2,84 +2,106 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E13C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7391E20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990F920899
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590476182;
+	bh=nawe3MBL7YxVPoyFPa9J+pBh9x816z61tkOvrywTjF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IpBq/7XledX89vODq/EKze0h+kpwcdtWlIkWj36oR8V8Dv/ArTegzTql7bx8Wy30N
+	 /Cr5QA3C0P0Q5RubvSvNce28s0MXyD9RbKsCa09WAOjwCSHYX/N1HK5hRCDdgIBzXo
+	 SKrK1yfzEGm9KKG+rFmmYyiA3JqWonxCiygZ7egk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbgEZGxW (ORCPT
+        id S1730430AbgEZG4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:53:22 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:62936 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgEZGxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:53:22 -0400
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="35739056"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 26 May 2020 14:53:18 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(20967:0:AUTH_RELAY)
-        (envelope-from <jingle.wu@emc.com.tw>); Tue, 26 May 2020 14:53:18 +0800 (CST)
-Received: from 192.168.33.11
-        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2484:0:AUTH_RELAY)
-        (envelope-from <jingle.wu@emc.com.tw>); Tue, 26 May 2020 14:53:16 +0800 (CST)
-From:   "jingle" <jingle.wu@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <phoenix@emc.com.tw>, <dave.wang@emc.com.tw>,
-        <josh.chen@emc.com.tw>
-References: <20200526022246.4542-1-jingle.wu@emc.com.tw> <20200526041719.GH89269@dtor-ws>
-In-Reply-To: <20200526041719.GH89269@dtor-ws>
-Subject: RE: [PATCH] Input: elantech - Remove read/write registers in attr.
-Date:   Tue, 26 May 2020 14:53:15 +0800
-Message-ID: <001701d6332a$54ebc970$fec35c50$@emc.com.tw>
+        Tue, 26 May 2020 02:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgEZG4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:56:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 929EB20776;
+        Tue, 26 May 2020 06:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590476181;
+        bh=nawe3MBL7YxVPoyFPa9J+pBh9x816z61tkOvrywTjF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kirELv+kRS3LZp4kRekX2KxHQsvPM0Pg5Np/ECJASkjy5BEidyNh7gJQALZnn3FRE
+         h23lhEzkP4YB7Kuz/ylMuKEFGWl7PbWwxORDj4/R+QGOEhq07HNUYQKAcA/sczEE1Q
+         M0IjQada3t6JicUgfCLlFqyqrhpnC7LJgPUZq6ko=
+Date:   Tue, 26 May 2020 08:56:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     x86@kernel.org, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, sashal@kernel.org,
+        Andi Kleen <ak@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
+Message-ID: <20200526065618.GC2580410@kroah.com>
+References: <20200526052848.605423-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-thread-index: AQJkLPP72s3DFgLZomzEGNYQSBUd1gGlmuz5p5DNyNA=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYwMTFcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05MjgyY2JmMi05ZjFkLTExZWEtODRlNy1mMDc5NTk2OWU3NWVcYW1lLXRlc3RcOTI4MmNiZjQtOWYxZC0xMWVhLTg0ZTctZjA3OTU5NjllNzVlYm9keS50eHQiIHN6PSI4MzkiIHQ9IjEzMjM0OTQ5NTk1OTI5MDgzNCIgaD0ib3RDQzJqWjlMUTZzMGFZWHQ1Q2ZNVkdvdGVFPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
-x-dg-rorf: true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526052848.605423-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Dmitry:
+On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> Since there seem to be kernel modules floating around that set
+> FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+> CR4 pinning just checks that bits are set, this also checks
+> that the FSGSBASE bit is not set, and if it is clears it again.
 
-These changes would not affect all the behavior of the old IC, including all
-the TP functions
+So we are trying to "protect" ourselves from broken out-of-tree kernel
+modules now?  Why stop with this type of check, why not just forbid them
+entirely if we don't trust them?  :)
 
-THANKS
-JINGLE
+> Note this patch will need to be undone when the full FSGSBASE
+> patches are merged. But it's a reasonable solution for v5.2+
+> stable at least. Sadly the older kernels don't have the necessary
+> infrastructure for this (although a simpler version of this
+> could be added there too)
+> 
+> Cc: stable@vger.kernel.org # v5.2+
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/common.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index bed0cb83fe24..1f5b7871ae9a 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -385,6 +385,11 @@ void native_write_cr4(unsigned long val)
+>  		/* Warn after we've set the missing bits. */
+>  		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+>  			  bits_missing);
+> +		if (val & X86_CR4_FSGSBASE) {
+> +			WARN_ONCE(1, "CR4 unexpectedly set FSGSBASE!?\n");
 
------Original Message-----
-From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] 
-Sent: Tuesday, May 26, 2020 12:17 PM
-To: Jingle.Wu
-Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org;
-phoenix@emc.com.tw; dave.wang@emc.com.tw; josh.chen@emc.com.tw
-Subject: Re: [PATCH] Input: elantech - Remove read/write registers in attr.
+Like this will actually be noticed by anyone who calls this?  What is a
+user supposed to do about this?
 
-Hi Jingle,
+What about those systems that panic-on-warn?
 
-On Tue, May 26, 2020 at 10:22:46AM +0800, Jingle.Wu wrote:
-> New Elan IC would not be accessed with the specific regiters.
+> +			val &= ~X86_CR4_FSGSBASE;
 
-What about older Elaan parts? We can't simply drop compatibility with older
-chips in newer kernels.
+So you just prevented them from setting this, thereby fixing up their
+broken code that will never be fixed because you did this?  Why do this?
 
-Thanks.
+thanks,
 
---
-Dmitry
-
+greg k-h
