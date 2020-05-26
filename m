@@ -2,102 +2,98 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A52C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C90206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B20206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z+OLIvRO"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="s75QVjRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgEZX3g (ORCPT
+        id S1725969AbgEZXaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:29:36 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45613 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbgEZX3g (ORCPT
+        Tue, 26 May 2020 19:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgEZXaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:29:36 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E7EC05C0111;
-        Tue, 26 May 2020 19:29:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 26 May 2020 19:29:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0aoEel
-        7QwWSvuMMO0ZKyF50ptOju77GvcTrXezZ8Pz0=; b=Z+OLIvRONrhbYRqxPNcvZG
-        d+fZnLbMYg41svLzh/37xeA0mw6lEvwG5fRcwVVZldspt2abB5h8ieHKhfBZgZmQ
-        8U3zraek5ybYkMoKQ+hhC9WQJfG5sMxS7W5jR3u+Tao+U6dDes/I9k6Vp0oWS5mA
-        9G9NJQ10dSHBgwQPJPQcPxDUOUHlevKvGPTMZa+nDtrw4N0z4BsCOvO62wzPBwnD
-        AadJZaaFxB/LATBqg85PH926VKiq4SKZchanJvv+ph25IPGmE20pNhCTOZf9bgTI
-        aAbSpqbqtbeuHR/HA0IWd8gUtl3TjME8kF8y4RMFUG3u+lLAbjfkAvqa5RXUZ6MA
-        ==
-X-ME-Sender: <xms:XqbNXv3uO5-vGRxJnoRlcZ6nPsDzcWzGmFkwhmNhfbJd3qRuiqaLmA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvfedgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
-    teenucfkphepjeelrddujeeirddvgedruddtjeenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhg
-X-ME-Proxy: <xmx:XqbNXuErbqSq3__avKPA0LNC-6LhFz0ME4IqvQ2mu5n_rz3t09ShnQ>
-    <xmx:XqbNXv4sIYcwYxm9pKX6gxHn9d7WwVDTyvmdNh1NR0slnyXS5GKhsw>
-    <xmx:XqbNXk3Il1rCO_zEOs8-bRuBUHqM4E04iPxF_ADslWllKkT9Fmm4vQ>
-    <xmx:XqbNXuDBWcS_1YkVC0XVYQZ9uP0WxfA0ni8ELIxKiG_qG4cwiUE4Zw>
-Received: from localhost (bzq-79-176-24-107.red.bezeqint.net [79.176.24.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 284B430665DD;
-        Tue, 26 May 2020 19:29:33 -0400 (EDT)
-Date:   Wed, 27 May 2020 02:29:25 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mlxsw: spectrum_router: remove redundant initialization
- of pointer br_dev
-Message-ID: <20200526232925.GA1509289@splinter>
-References: <20200526225649.64257-1-colin.king@canonical.com>
+        Tue, 26 May 2020 19:30:14 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E830C03E96E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 16:30:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c185so8511260qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 16:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=muYolnYZmufgcHzMuhz5medXrKFllBeZIV0QKir0gLA=;
+        b=s75QVjRxg1JImvQV+OJMPp/TgNXfTCYbs0KzsaS+JyUdWLHTSXt07wIK/DyhXy/4Fw
+         ngwEw8trvE9ofv4Ss5sJt27CBrf6KW2qUPLwCI/JMw1oVicsBcyjtwRhnDWvtOussLU7
+         l3R5cDpM58uiYnvcA9/wD64TafQp+MRCs/7EsFnYX9wKOGZvNQg+IvyyF/TNz3MCCYVq
+         wF0QPWYk4znAPrklYVi6kQTnaQfF5hbZkgWHLvBuyHKOOoHlnEe9LBlrN83sDLtZGmS+
+         lvTCicmEhZm8xyceiNENWlVhycsgTzO5q9yVOIrDW3ZvhEDeVzmsqQy4TaT6tEy/qtaH
+         B26g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=muYolnYZmufgcHzMuhz5medXrKFllBeZIV0QKir0gLA=;
+        b=o3UdlpJaU/nxEYEDnlAUhaTct4fDPIb3eKGCKCSFZOlHolFbaCMbUzbxtlXPYv4ZRy
+         OgniEy3NwmVq0hNGpY0eGS2ifqu+USbhKY+d0I4g9+3FA80BOm/EuCkP5EJ1vw2DaGko
+         +XAALAw7Sxe1pmaXia6O9HfQv+sq0jMRfmAPQIlOLcYeGqCspYnruycsMRKH0nTflz88
+         /JIZLgDmC6eUeE2bCyucSjsGjd5Tl+UQkghaULOszDpoeYA7in6KjdPeQPOCIFxrDcLx
+         wdu9r9Kkq05duZ7IdqcLqPcHYClsPA/zr+upbXelNV4F998IQIkd79F8VV22jNT9iR6C
+         DKPw==
+X-Gm-Message-State: AOAM530uBY1XGCthkvwdAYfeenZN4vDJgnFTNNKHE3tT9KcSCwyYVkEj
+        QdaS89xccO5CgjoIYvmyPtXDuduGZyjHIQ==
+X-Google-Smtp-Source: ABdhPJwz3LWDpaFCddkPLoA/lLv2hAE0TJMt/S/YcrFyegb0aLfFp9jP+WvWm8sKW3V0K3dLSRV2FQ==
+X-Received: by 2002:a37:684:: with SMTP id 126mr1338066qkg.486.1590535812308;
+        Tue, 26 May 2020 16:30:12 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id v1sm906851qkb.19.2020.05.26.16.30.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 16:30:11 -0700 (PDT)
+Subject: Re: [PATCH 01/10] clk: qcom: clk-alpha-pll: remove unused/incorrect
+ PLL_CAL_VAL
+To:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200524210615.17035-1-jonathan@marek.ca>
+ <20200524210615.17035-2-jonathan@marek.ca>
+ <159053527806.88029.14584721858766224777@swboyd.mtv.corp.google.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <86a7c49f-44ea-11d3-2983-8443ad7ec309@marek.ca>
+Date:   Tue, 26 May 2020 19:30:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526225649.64257-1-colin.king@canonical.com>
+In-Reply-To: <159053527806.88029.14584721858766224777@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:56:49PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-> index 71aee4914619..8f485f9a07a7 100644
-> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-> @@ -7572,11 +7572,12 @@ static struct mlxsw_sp_fid *
->  mlxsw_sp_rif_vlan_fid_get(struct mlxsw_sp_rif *rif,
->  			  struct netlink_ext_ack *extack)
->  {
-> -	struct net_device *br_dev = rif->dev;
-> +	struct net_device *br_dev;
->  	u16 vid;
->  	int err;
->  
->  	if (is_vlan_dev(rif->dev)) {
-> +
-
-Colin, please drop the extra blank line and mention in subject prefix
-that the patch is for net-next. Thanks!
-
->  		vid = vlan_dev_vlan_id(rif->dev);
->  		br_dev = vlan_dev_real_dev(rif->dev);
->  		if (WARN_ON(!netif_is_bridge_master(br_dev)))
-> -- 
-> 2.25.1
+On 5/26/20 7:21 PM, Stephen Boyd wrote:
+> Quoting Jonathan Marek (2020-05-24 14:06:02)
+>> 0x44 isn't a register offset, it is the value that goes into CAL_L_VAL.
+>>
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
 > 
+> Any fixes tag?
+> 
+
+This doesn't fix anything (its unused as the commit message says), does 
+that still qualify for a fixes tag?
