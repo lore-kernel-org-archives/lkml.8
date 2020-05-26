@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03087C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9F2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD7462068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99EF2068D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590505111;
-	bh=UlWxHR2+JjYrbrsIo9RFWetNsJ8HeI3W97glk4AJMH4=;
+	s=default; t=1590505115;
+	bh=OcCdR7LKLgC914RG8kQDQ2gMex21XC0MywA8RY7F+cE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FSVTHdt2VelMnHBdpf5aPxnLp+WabKXV6RxvWf4yBLdBbgGyNDSzHYWeP/7D5pDDi
-	 NVJNpVXuLWuDD2PxRgEYSAwFj2O3TyWI7WUSHAnghOYB+Q0/PueEx98yFYGwXMg696
-	 zg9IwSH72zd0F9NfwPVNyBEMc2OBWF6JwuT+aZys=
+	b=ver+0jbw0p5oku/qnJCsBM7BGZYhdZM9h7tfwN7mPVLNKusF2/QhLvn06kl5xLXk5
+	 EEE2l+A+ZYipJtNVB0JusZ883mo1fD0uzt0ySUoP0cZyzhFHbC8xJyZWPq9XwcUHuy
+	 nDVWVIQuU3/XrsCeMUzAlktPN8zXDhc2cDQJInEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbgEZO6b (ORCPT
+        id S1731422AbgEZO6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:58:31 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39115 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730005AbgEZO6X (ORCPT
+        Tue, 26 May 2020 10:58:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46592 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730281AbgEZO60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:58:23 -0400
-Received: by mail-pj1-f65.google.com with SMTP id n15so1444922pjt.4;
-        Tue, 26 May 2020 07:58:23 -0700 (PDT)
+        Tue, 26 May 2020 10:58:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 131so1906858pfv.13;
+        Tue, 26 May 2020 07:58:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3I2sdug0etgqRHUdoxPJvhoiBePAC70+vSrOonIbSmY=;
-        b=gnPM68K4OMYi8H80K+LxCMjIukqQIxtfjbU4+DN/qzmtkc6B1iiWxGeBGLg8foQls+
-         OMty6AUbfvcGbwARJunK/BXC7fpTBwiyuemqaXK6eMBEtaYzvpxukTWsAiE4irVaGurC
-         AwwXWgNf2jT/T3tLyg/jRS6FHPWhJ7GzTLwJRqKeSsqhZMRGkU1wy//Yr4a/OBP9z/8T
-         uamyz2no9bGF77LL3JwNY9jVkK3PsmIhFudyXSXiPaqg4XXXrzZbX8v+rW8mliNRVQOa
-         v4VzgH2khUpZQoxs05U8n/EEtXgCm6ma0OA6yCmAloE9ZtukaQhOQlW9ivzs61TFCsAr
-         EWOg==
-X-Gm-Message-State: AOAM533GGA9HbgMJAiWcDZv8mCpSw4ce+WCINBdLElApSOMSc8+MkRfS
-        xlpGRpK7qLhkkrGpEiyYxP59ETshl1gLig==
-X-Google-Smtp-Source: ABdhPJyjRrdsWMoCxqbfI7BL+YTvTkoryEu9WdlGL6BL8aPe2MsI0L6OK3sqfARxDBSdcSpYKPtcKg==
-X-Received: by 2002:a17:90a:7bcb:: with SMTP id d11mr26606068pjl.209.1590505101907;
-        Tue, 26 May 2020 07:58:21 -0700 (PDT)
+        bh=EvSxJvzu8CuJNVtnMN+6EPtAduMBjuHw07i/r14VRgA=;
+        b=Is2tpGym8gzbx0crDhBSjU2sp3DGafM9CeR1DqYxWmWhneuziQa0UR9PVE2aBQMKL0
+         md14tfuZT+jDe5VMt6OoH09VltZ5GqMgjvZ4A6NJNg3UYR4I1O6JbpE2dwLm7ZoiqlrT
+         e4YzWuTItW82cjZgDQh0NeGLOk4oRRThf0g4YW/KkoGkTqW/iGTnND0bx4mpokAHx0Me
+         XOwiMZosPpfnuV4NB+UKkHdQxw28WcNSvGHSjQBqTalzYs0slE4naa/XJ8WVbEaqPvsM
+         QyBwmKnJpDAzkDla1RMEI0b97VGHUOhfP2Xu5O6JKVRZTGLyVdAd/8D0F4G7jxncqKPQ
+         Vqxg==
+X-Gm-Message-State: AOAM533Pbykkqz1uTEfgnIcDYv71oiswuVW3PEYazRp7lv79TxO4/459
+        oQzrqhS2QHLwkRs0wtDVqHnvzwnTJEZiGg==
+X-Google-Smtp-Source: ABdhPJxnO0fX0HJIoxald0Wt4I5kJb9sYmEvLY5dFdfg1I0//8tMTs+SRIAt5tW4ZCLckmZj7qQyMg==
+X-Received: by 2002:a63:f442:: with SMTP id p2mr1439345pgk.234.1590505104559;
+        Tue, 26 May 2020 07:58:24 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t2sm16362pgh.89.2020.05.26.07.58.19
+        by smtp.gmail.com with ESMTPSA id m18sm77891pjl.14.2020.05.26.07.58.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 07:58:19 -0700 (PDT)
+        Tue, 26 May 2020 07:58:22 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 9DD6C40E7B; Tue, 26 May 2020 14:58:17 +0000 (UTC)
+        id 2FDE941D00; Tue, 26 May 2020 14:58:18 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org, davem@davemloft.net, kuba@kernel.org
 Cc:     michael.chan@broadcom.com, dchickles@marvell.com,
@@ -73,9 +73,9 @@ Cc:     michael.chan@broadcom.com, dchickles@marvell.com,
         rdunlap@infradead.org, corbet@lwn.net, dianders@chromium.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v3 1/8] kernel.h: move taint and system state flags to uapi
-Date:   Tue, 26 May 2020 14:58:08 +0000
-Message-Id: <20200526145815.6415-2-mcgrof@kernel.org>
+Subject: [PATCH v3 3/8] taint: add firmware crash taint support
+Date:   Tue, 26 May 2020 14:58:10 +0000
+Message-Id: <20200526145815.6415-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200526145815.6415-1-mcgrof@kernel.org>
 References: <20200526145815.6415-1-mcgrof@kernel.org>
@@ -86,106 +86,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The taint and system state flags will be used in a subsequent patch
-exposing these to userspace, so move them to uapi. We keep the
-TAINT_FLAGS_COUNT outside of uapi, as this value can change per release.
+Device drivers firmware can crash, and *sometimes*, this can leave your
+system in a state which makes the device or subsystem completely useless.
+In the worst of cases not even removing the module and adding it back again
+will correct your situation and you are left with no other option but to do
+a full system reboot. Some drivers have work arounds for these situations,
+and sometimes they can recover the device / functionality but not all
+device drivers have these arrangements and in the worst cases requiring
+a full reboot is completely hidden from the user experience, leaving them
+dumbfounded with what has happened.
+
+Detecting this by inspecting /proc/sys/kernel/tainted instead of scraping
+some magical words from the kernel log, which is driver specific, is much
+easier. So instead provide a helper which lets drivers annotate this.
+
+Once this happens, scrapers can easily look for modules taint flags for a
+firmware crash. This will taint both the kernel and respective calling
+module.
+
+The new helper taint_firmware_crashed() uses LOCKDEP_STILL_OK as this fact
+should in no way shape or form affect lockdep. This taint is device driver
+specific.
+
+While extending the declaration of add_taint_module(), just make the flag
+unsigned int clear.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- include/linux/kernel.h      | 34 +---------------------------------
- include/uapi/linux/kernel.h | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+), 33 deletions(-)
+ Documentation/admin-guide/tainted-kernels.rst |  6 ++++++
+ include/linux/kernel.h                        |  2 +-
+ include/linux/module.h                        | 13 +++++++++++++
+ include/trace/events/module.h                 |  3 ++-
+ include/uapi/linux/kernel.h                   |  1 +
+ kernel/module.c                               | 13 +++++++++----
+ kernel/panic.c                                |  1 +
+ tools/debugging/kernel-chktaint               |  7 +++++++
+ 8 files changed, 40 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+index 71e9184a9079..92530f1d60ae 100644
+--- a/Documentation/admin-guide/tainted-kernels.rst
++++ b/Documentation/admin-guide/tainted-kernels.rst
+@@ -100,6 +100,7 @@ Bit  Log  Number  Reason that got the kernel tainted
+  15  _/K   32768  kernel has been live patched
+  16  _/X   65536  auxiliary taint, defined for and used by distros
+  17  _/T  131072  kernel was built with the struct randomization plugin
++ 18  _/Q  262144  driver firmware crash annotation
+ ===  ===  ======  ========================================================
+ 
+ Note: The character ``_`` is representing a blank in this table to make reading
+@@ -162,3 +163,8 @@ More detailed explanation for tainting
+      produce extremely unusual kernel structure layouts (even performance
+      pathological ones), which is important to know when debugging. Set at
+      build time.
++
++ 18) ``Q`` used by device drivers to annotate that the device driver's firmware
++     has crashed and the device's operation has been severely affected. The
++     device may be left in a crippled state, requiring full driver removal /
++     addition, system reboot, or it is unclear how long recovery will take.
 diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 82d91547d122..337634363d00 100644
+index 337634363d00..a1974907c320 100644
 --- a/include/linux/kernel.h
 +++ b/include/linux/kernel.h
-@@ -569,40 +569,8 @@ extern unsigned long get_taint(void);
- extern int root_mountflags;
- 
+@@ -571,7 +571,7 @@ extern int root_mountflags;
  extern bool early_boot_irqs_disabled;
-+extern enum system_states  system_state;
+ extern enum system_states  system_state;
  
--/*
-- * Values used for system_state. Ordering of the states must not be changed
-- * as code checks for <, <=, >, >= STATE.
-- */
--extern enum system_states {
--	SYSTEM_BOOTING,
--	SYSTEM_SCHEDULING,
--	SYSTEM_RUNNING,
--	SYSTEM_HALT,
--	SYSTEM_POWER_OFF,
--	SYSTEM_RESTART,
--	SYSTEM_SUSPEND,
--} system_state;
--
--/* This cannot be an enum because some may be used in assembly source. */
--#define TAINT_PROPRIETARY_MODULE	0
--#define TAINT_FORCED_MODULE		1
--#define TAINT_CPU_OUT_OF_SPEC		2
--#define TAINT_FORCED_RMMOD		3
--#define TAINT_MACHINE_CHECK		4
--#define TAINT_BAD_PAGE			5
--#define TAINT_USER			6
--#define TAINT_DIE			7
--#define TAINT_OVERRIDDEN_ACPI_TABLE	8
--#define TAINT_WARN			9
--#define TAINT_CRAP			10
--#define TAINT_FIRMWARE_WORKAROUND	11
--#define TAINT_OOT_MODULE		12
--#define TAINT_UNSIGNED_MODULE		13
--#define TAINT_SOFTLOCKUP		14
--#define TAINT_LIVEPATCH			15
--#define TAINT_AUX			16
--#define TAINT_RANDSTRUCT		17
- #define TAINT_FLAGS_COUNT		18
+-#define TAINT_FLAGS_COUNT		18
++#define TAINT_FLAGS_COUNT		19
  #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
  
+ struct taint_flag {
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 2e6670860d27..b3e143d2993e 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -705,6 +705,14 @@ static inline bool is_livepatch_module(struct module *mod)
+ bool is_module_sig_enforced(void);
+ void set_module_sig_enforced(void);
+ 
++void add_taint_module(struct module *mod, unsigned int flag,
++		      enum lockdep_ok lockdep_ok);
++
++static inline void taint_firmware_crashed(void)
++{
++	add_taint_module(THIS_MODULE, TAINT_FIRMWARE_CRASH, LOCKDEP_STILL_OK);
++}
++
+ #else /* !CONFIG_MODULES... */
+ 
+ static inline struct module *__module_address(unsigned long addr)
+@@ -852,6 +860,11 @@ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
+ 	return ptr;
+ }
+ 
++static inline void taint_firmware_crashed(void)
++{
++	add_taint(TAINT_FIRMWARE_CRASH, LOCKDEP_STILL_OK);
++}
++
+ #endif /* CONFIG_MODULES */
+ 
+ #ifdef CONFIG_SYSFS
+diff --git a/include/trace/events/module.h b/include/trace/events/module.h
+index 097485c73c01..b749ea25affd 100644
+--- a/include/trace/events/module.h
++++ b/include/trace/events/module.h
+@@ -26,7 +26,8 @@ struct module;
+ 	{ (1UL << TAINT_OOT_MODULE),		"O" },		\
+ 	{ (1UL << TAINT_FORCED_MODULE),		"F" },		\
+ 	{ (1UL << TAINT_CRAP),			"C" },		\
+-	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" })
++	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" },		\
++	{ (1UL << TAINT_FIRMWARE_CRASH),	"Q" })
+ 
+ TRACE_EVENT(module_load,
+ 
 diff --git a/include/uapi/linux/kernel.h b/include/uapi/linux/kernel.h
-index 0ff8f7477847..4bbd4093eb64 100644
+index 4bbd4093eb64..1e364659afca 100644
 --- a/include/uapi/linux/kernel.h
 +++ b/include/uapi/linux/kernel.h
-@@ -12,4 +12,39 @@
+@@ -45,6 +45,7 @@ enum system_states {
+ #define TAINT_LIVEPATCH			15
+ #define TAINT_AUX			16
+ #define TAINT_RANDSTRUCT		17
++#define TAINT_FIRMWARE_CRASH		18
+ /* be sure to update TAINT_FLAGS_COUNT when extending this */
  
- #define __KERNEL_DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
- 
-+/*
-+ * Values used for system_state. Ordering of the states must not be changed
-+ * as code checks for <, <=, >, >= STATE.
-+ */
-+enum system_states {
-+	SYSTEM_BOOTING,
-+	SYSTEM_SCHEDULING,
-+	SYSTEM_RUNNING,
-+	SYSTEM_HALT,
-+	SYSTEM_POWER_OFF,
-+	SYSTEM_RESTART,
-+	SYSTEM_SUSPEND,
-+};
-+
-+/* This cannot be an enum because some may be used in assembly source. */
-+#define TAINT_PROPRIETARY_MODULE	0
-+#define TAINT_FORCED_MODULE		1
-+#define TAINT_CPU_OUT_OF_SPEC		2
-+#define TAINT_FORCED_RMMOD		3
-+#define TAINT_MACHINE_CHECK		4
-+#define TAINT_BAD_PAGE			5
-+#define TAINT_USER			6
-+#define TAINT_DIE			7
-+#define TAINT_OVERRIDDEN_ACPI_TABLE	8
-+#define TAINT_WARN			9
-+#define TAINT_CRAP			10
-+#define TAINT_FIRMWARE_WORKAROUND	11
-+#define TAINT_OOT_MODULE		12
-+#define TAINT_UNSIGNED_MODULE		13
-+#define TAINT_SOFTLOCKUP		14
-+#define TAINT_LIVEPATCH			15
-+#define TAINT_AUX			16
-+#define TAINT_RANDSTRUCT		17
-+/* be sure to update TAINT_FLAGS_COUNT when extending this */
-+
  #endif /* _UAPI_LINUX_KERNEL_H */
+diff --git a/kernel/module.c b/kernel/module.c
+index 9b85d58441a2..538def226332 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -326,13 +326,18 @@ static inline int strong_try_module_get(struct module *mod)
+ 		return -ENOENT;
+ }
+ 
+-static inline void add_taint_module(struct module *mod, unsigned flag,
+-				    enum lockdep_ok lockdep_ok)
++void add_taint_module(struct module *mod, unsigned int flag,
++		      enum lockdep_ok lockdep_ok)
+ {
+ 	add_taint(flag, lockdep_ok);
+-	set_bit(flag, &mod->taints);
+-	panic_uevent_taint(flag, mod);
++
++	/* Skip this if the module is built-in */
++	if (mod) {
++		set_bit(flag, &mod->taints);
++		panic_uevent_taint(flag, mod);
++	}
+ }
++EXPORT_SYMBOL_GPL(add_taint_module);
+ 
+ /*
+  * A thread that wants to hold a reference to a module only while it
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 48e9e2efa5bb..cb1c5619e983 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -387,6 +387,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+ 	[ TAINT_LIVEPATCH ]		= { 'K', ' ', true },
+ 	[ TAINT_AUX ]			= { 'X', ' ', true },
+ 	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
++	[ TAINT_FIRMWARE_CRASH ]	= { 'Q', ' ', true },
+ };
+ 
+ /**
+diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
+index 2240cb56e6e5..c397c6aabea7 100755
+--- a/tools/debugging/kernel-chktaint
++++ b/tools/debugging/kernel-chktaint
+@@ -194,6 +194,13 @@ else
+ 	addout "T"
+ 	echo " * kernel was built with the struct randomization plugin (#17)"
+ fi
++T=`expr $T / 2`
++if [ `expr $T % 2` -eq 0 ]; then
++	addout " "
++else
++	addout "Q"
++	echo " * a device driver's firmware has crashed (#18)"
++fi
+ 
+ echo "For a more detailed explanation of the various taint flags see"
+ echo " Documentation/admin-guide/tainted-kernels.rst in the the Linux kernel sources"
 -- 
 2.26.2
 
