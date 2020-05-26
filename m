@@ -2,230 +2,100 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72593C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED3520723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PceOAieZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0A7AC20723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590513895;
+	bh=WXYCcCFzHUdbB9KLas9uzteSeA6GV64kG5wAwquPbs8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EbCKSD+aihXK0KJLvvxulIIxjMas/QIYKAepDR28lgFcH+3N61WaQuRBlQ3gMvQpc
+	 tqVHjcHvWF24lmbfsIkO04zqZVsKtUwyy7Hc+LhTGxdEO4MM0TrqrSHfVrFQxY0H0y
+	 U4qauoakcdnZiIIqDljUOGV4zJlbd0v2rBemSBN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389482AbgEZRYs (ORCPT
+        id S2389504AbgEZRYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:24:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42541 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389286AbgEZRXu (ORCPT
+        Tue, 26 May 2020 13:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388844AbgEZRXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:23:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590513828;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NPzf8jthkc3mK7puYcrp+lqGBjeiplYKeF6jSGMzJ00=;
-        b=PceOAieZV+klHXCIpU+YUOzaFj3wbdDuTsMvV8QohhzeXnm+gJ9ONX2FtKTfxMwgzlDJCg
-        eUeGHaQPBgi33GYVN7sFwZUGHKp7uda5awBckl9tQT1u9EXZUQ04G0XeDbt0xL1C+xO7wb
-        DC3ssFSIQIkBw+gXFVmiHx9J1Z0rrxU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-5RjTTSXgMXC4W81t4PTvsA-1; Tue, 26 May 2020 13:23:46 -0400
-X-MC-Unique: 5RjTTSXgMXC4W81t4PTvsA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CC48100CCC8;
-        Tue, 26 May 2020 17:23:45 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8393F5C1D6;
-        Tue, 26 May 2020 17:23:42 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH 19/28] KVM: nSVM: extract svm_set_gif
-Date:   Tue, 26 May 2020 13:22:59 -0400
-Message-Id: <20200526172308.111575-20-pbonzini@redhat.com>
-In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
-References: <20200526172308.111575-1-pbonzini@redhat.com>
+        Tue, 26 May 2020 13:23:44 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF73C03E96D;
+        Tue, 26 May 2020 10:23:43 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id dh1so9783207qvb.13;
+        Tue, 26 May 2020 10:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SYQZMFTEBJ18xeJeS1buRtQuG/fExe+cZBQxRWLCEdI=;
+        b=DBB2dXXyQS8i2KL6fgI0iY3v+kzmXamXskvxCjgHOeueAxTFhY4qC9ElWV+f2i479K
+         QgcXP98W5NFfdi6cLmwRIm5jRaajZ8Xq7c0jS72HCWME/8Aas5rcXPl/uwSEOB+PWYmO
+         Z3J++foQU1ozkoo2brpOSl+duSw8dye0KsWj/pmWQjzzjVRDRm7PUb6cnoCrFBZvZwMW
+         InpmBDBrFiYlJd+AhV8vkCA3HCv+Ri0pjM+wDegKgRiYKUdb2EOcEM6peCwi5NR1/peF
+         tGUKznRKDoHnuAvvD+pPYLR7nxGJWvxFBE7FlmmQc/4cwA0CRXHJEEDCXEqIH6PsKNep
+         vYRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=SYQZMFTEBJ18xeJeS1buRtQuG/fExe+cZBQxRWLCEdI=;
+        b=n7+QUx2OtX1zV0w2oYk0t7Pef67ElN6QPRgQKAHQOc9kLv8K7Ozbqa8zM9UuucCvEv
+         WY+3Gj0lpo1uLHr+4saZL53Y5Ebj6Z0GJTTFf1Rhm7Wzx3oO3Qx1BBo//GOouIcW+A8u
+         O50yZorojILT/RlDB8I4MfeTDnubo6r5qO/LRBlUHDUhXwEV/XcolkzVcdAbMarB1D5s
+         7M7pqdU2HNNKGN7OhWFXGJhYeYe4bsq+MYn57/yRco3IKTRwxCqbzRrEuVlCZR6CJQQi
+         VnXZVWzJFMTMsSioeZeU5YubTi/seKIW9yst7FFeP3CrAuEwXk0MEcDhkn5hOuyr0dHn
+         IrpQ==
+X-Gm-Message-State: AOAM532doG7CK3oRbmPA1EDfzOkVsbLyBSx4qu1NptfTr7Ld7E+b586t
+        oCdmE8sKOqqQd/v7g0l0XUc=
+X-Google-Smtp-Source: ABdhPJxNcrcKF+fqaOMGL5W+NexLSdpNhiaupcVndx+6tqKzg2Z+N1bEowXKJaoJNYdwASCyIlLg3w==
+X-Received: by 2002:ad4:4d03:: with SMTP id l3mr21657230qvl.158.1590513823004;
+        Tue, 26 May 2020 10:23:43 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:85c0])
+        by smtp.gmail.com with ESMTPSA id d56sm277843qtb.54.2020.05.26.10.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 10:23:42 -0700 (PDT)
+Date:   Tue, 26 May 2020 13:23:40 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Wu Bo <wubo40@huawei.com>
+Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, Markus.Elfring@web.de,
+        linux-kernel@vger.kernel.org, liuzhiqiang26@huawei.com,
+        linfeilong@huawei.com
+Subject: Re: [PATCH] blkcg:Fix memory leaks in blkg_conf_prep()
+Message-ID: <20200526172340.GD83516@mtj.thefacebook.com>
+References: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract the code that is needed to implement CLGI and STGI,
-so that we can run it from VMRUN and vmexit (and in the future,
-KVM_SET_NESTED_STATE).  Skip the request for KVM_REQ_EVENT unless needed,
-subsuming the evaluate_pending_interrupts optimization that is found
-in enter_svm_guest_mode.
+On Mon, May 18, 2020 at 08:36:06PM +0800, Wu Bo wrote:
+> From: Wu Bo <wubo40@huawei.com>
+> 
+> If a call of the function blkg_lookup_check() failed,
+> we should be release the previously allocated block group 
+> before jumping to the lable 'fail_unlock' in the implementation of 
+> the function blkg_conf_prep().
+> 
+> Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Wu Bo <wubo40@huawei.com>
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/irq.c        |  1 +
- arch/x86/kvm/svm/nested.c | 22 ++---------------
- arch/x86/kvm/svm/svm.c    | 51 ++++++++++++++++++++++++++-------------
- arch/x86/kvm/svm/svm.h    |  1 +
- 4 files changed, 38 insertions(+), 37 deletions(-)
+Acked-by: Tejun Heo <tj@kernel.org>
 
-diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-index 54f7ea68083b..99d118ffc67d 100644
---- a/arch/x86/kvm/irq.c
-+++ b/arch/x86/kvm/irq.c
-@@ -83,6 +83,7 @@ int kvm_cpu_has_injectable_intr(struct kvm_vcpu *v)
- 
- 	return kvm_apic_has_interrupt(v) != -1; /* LAPIC */
- }
-+EXPORT_SYMBOL_GPL(kvm_cpu_has_injectable_intr);
- 
- /*
-  * check if there is pending interrupt without
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 4355286b2726..f5956ecfeeac 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -333,10 +333,6 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
- void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 			  struct vmcb *nested_vmcb)
- {
--	bool evaluate_pending_interrupts =
--		is_intercept(svm, INTERCEPT_VINTR) ||
--		is_intercept(svm, INTERCEPT_IRET);
--
- 	svm->nested.vmcb = vmcb_gpa;
- 	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
- 		svm->vcpu.arch.hflags |= HF_HIF_MASK;
-@@ -347,21 +343,7 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	nested_prepare_vmcb_save(svm, nested_vmcb);
- 	nested_prepare_vmcb_control(svm);
- 
--	/*
--	 * If L1 had a pending IRQ/NMI before executing VMRUN,
--	 * which wasn't delivered because it was disallowed (e.g.
--	 * interrupts disabled), L0 needs to evaluate if this pending
--	 * event should cause an exit from L2 to L1 or be delivered
--	 * directly to L2.
--	 *
--	 * Usually this would be handled by the processor noticing an
--	 * IRQ/NMI window request.  However, VMRUN can unblock interrupts
--	 * by implicitly setting GIF, so force L0 to perform pending event
--	 * evaluation by requesting a KVM_REQ_EVENT.
--	 */
--	enable_gif(svm);
--	if (unlikely(evaluate_pending_interrupts))
--		kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
-+	svm_set_gif(svm, true);
- }
- 
- int nested_svm_vmrun(struct vcpu_svm *svm)
-@@ -505,7 +487,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	svm->vcpu.arch.mp_state = KVM_MP_STATE_RUNNABLE;
- 
- 	/* Give the current vmcb to the guest */
--	disable_gif(svm);
-+	svm_set_gif(svm, false);
- 
- 	nested_vmcb->save.es     = vmcb->save.es;
- 	nested_vmcb->save.cs     = vmcb->save.cs;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0654c5672b1a..df3fcaa827c7 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1981,6 +1981,38 @@ static int vmrun_interception(struct vcpu_svm *svm)
- 	return nested_svm_vmrun(svm);
- }
- 
-+void svm_set_gif(struct vcpu_svm *svm, bool value)
-+{
-+	if (value) {
-+		/*
-+		 * If VGIF is enabled, the STGI intercept is only added to
-+		 * detect the opening of the SMI/NMI window; remove it now.
-+		 * Likewise, clear the VINTR intercept, we will set it
-+		 * again while processing KVM_REQ_EVENT if needed.
-+		 */
-+		if (vgif_enabled(svm))
-+			clr_intercept(svm, INTERCEPT_STGI);
-+		if (is_intercept(svm, SVM_EXIT_VINTR))
-+			svm_clear_vintr(svm);
-+
-+		enable_gif(svm);
-+		if (svm->vcpu.arch.smi_pending ||
-+		    svm->vcpu.arch.nmi_pending ||
-+		    kvm_cpu_has_injectable_intr(&svm->vcpu))
-+			kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
-+	} else {
-+		disable_gif(svm);
-+
-+		/*
-+		 * After a CLGI no interrupts should come.  But if vGIF is
-+		 * in use, we still rely on the VINTR intercept (rather than
-+		 * STGI) to detect an open interrupt window.
-+		*/
-+		if (!vgif_enabled(svm))
-+			svm_clear_vintr(svm);
-+	}
-+}
-+
- static int stgi_interception(struct vcpu_svm *svm)
- {
- 	int ret;
-@@ -1988,18 +2020,8 @@ static int stgi_interception(struct vcpu_svm *svm)
- 	if (nested_svm_check_permissions(svm))
- 		return 1;
- 
--	/*
--	 * If VGIF is enabled, the STGI intercept is only added to
--	 * detect the opening of the SMI/NMI window; remove it now.
--	 */
--	if (vgif_enabled(svm))
--		clr_intercept(svm, INTERCEPT_STGI);
--
- 	ret = kvm_skip_emulated_instruction(&svm->vcpu);
--	kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
--
--	enable_gif(svm);
--
-+	svm_set_gif(svm, true);
- 	return ret;
- }
- 
-@@ -2011,12 +2033,7 @@ static int clgi_interception(struct vcpu_svm *svm)
- 		return 1;
- 
- 	ret = kvm_skip_emulated_instruction(&svm->vcpu);
--
--	disable_gif(svm);
--
--	/* After a CLGI no interrupts should come */
--	svm_clear_vintr(svm);
--
-+	svm_set_gif(svm, false);
- 	return ret;
- }
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 7e79f0af1204..10b7b55720a0 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -357,6 +357,7 @@ void disable_nmi_singlestep(struct vcpu_svm *svm);
- bool svm_smi_blocked(struct kvm_vcpu *vcpu);
- bool svm_nmi_blocked(struct kvm_vcpu *vcpu);
- bool svm_interrupt_blocked(struct kvm_vcpu *vcpu);
-+void svm_set_gif(struct vcpu_svm *svm, bool value);
- 
- /* nested.c */
- 
+Thanks.
+
 -- 
-2.26.2
-
-
+tejun
