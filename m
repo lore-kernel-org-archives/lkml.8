@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A231C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A687208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C96208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520296;
-	bh=JkD+MiY/FPpyZmUTHCm6tsWL4xVIOLfpF+zm5aPlmO0=;
+	s=default; t=1590520299;
+	bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzA5BRbO7LXm37ACmoWSoG/5VIPVC3nUltxD/Aw9dz1P4PWqGWfS732Ra4Q8Zar7i
-	 LpA5iCIVnt3jvBAZhf31Dbzqw1Iyfyxq+NlpQGuACQ0plgP8DTfoATXCoMUQSvN7ZV
-	 0MqRbEGOj553aG6IwjdFpeDzRKrmykKxChxypUUU=
+	b=E18ypS3VWr91K2tIJKD6UEri6698chkuNP8G8K2ftbSQj6lPefjrezoOAZJ7dY7r0
+	 XERiAWTTfavggDXvs3qBGmStOFw0e1Kem8a8ZcGDHWwe7uHAlmuG591g0UXV6CDaGG
+	 kPchHZNh135CkyvFVf5ZNJAyKCYYdUeukOz8uCEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390176AbgEZTLf (ORCPT
+        id S2390494AbgEZTLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40860 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404065AbgEZTL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:29 -0400
+        id S2404081AbgEZTLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A78720776;
-        Tue, 26 May 2020 19:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9CC1208A7;
+        Tue, 26 May 2020 19:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520288;
-        bh=JkD+MiY/FPpyZmUTHCm6tsWL4xVIOLfpF+zm5aPlmO0=;
+        s=default; t=1590520293;
+        bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zCdioIMp/fhXJhuzQ/pZuYWlaNbpVy4bSvLTMNd91oWv+8w/4VWzUNmMJ5PuqjqYr
-         WW9AYEDABobYrC7t1oEBVfEnqJ35AGYUIEdix2nwNP5rCZJ7kYSWeACpdOrjkHSia9
-         pXLwA1bUTM5OX2z1fDR84RXWr9fOXdOQbvYkMP9I=
+        b=WkUzu5gaN+Sot9HZq/1vYTNIQPXkwzLjFsmYSlhDiiT/WGv2NhzLeAM1jAgMxRbPd
+         UsddypYzs97rMsvorwNZzwY0iB2tQZoyPwsXsUuid1SRTcbgcRjB86liAWvNw6aB3r
+         gQuM8ZqRGLbGqkFMlMk+jZDeRbGShVQsQN//q2G8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 020/126] mtd: Fix mtd not registered due to nvmem name collision
-Date:   Tue, 26 May 2020 20:52:37 +0200
-Message-Id: <20200526183939.346533689@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 022/126] kbuild: avoid concurrency issue in parallel building dtbs and dtbs_check
+Date:   Tue, 26 May 2020 20:52:39 +0200
+Message-Id: <20200526183939.539216647@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -62,58 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 7b01b7239d0dc9832e0d0d23605c1ff047422a2c ]
+[ Upstream commit b5154bf63e5577faaaca1d942df274f7de91dd2a ]
 
-When the nvmem framework is enabled, a nvmem device is created per mtd
-device/partition.
+'make dtbs_check' checks the shecma in addition to building *.dtb files,
+in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
+So, you do not have to do 'make dtbs dtbs_check', but I want to keep
+the build system as robust as possible in any use.
 
-It is not uncommon that a device can have multiple mtd devices with
-partitions that have the same name. Eg, when there DT overlay is allowed
-and the same device with mtd is attached twice.
+Currently, 'dtbs' and 'dtbs_check' are independent of each other.
+In parallel building, two threads descend into arch/*/boot/dts/,
+one for dtbs and the other for dtbs_check, then end up with building
+the same DTB simultaneously.
 
-Under that circumstances, the mtd fails to register due to a name
-duplication on the nvmem framework.
+This commit fixes the concurrency issue. Otherwise, I see build errors
+like follows:
 
-With this patch we use the mtdX name instead of the partition name,
-which is unique.
+$ make ARCH=arm64 defconfig
+$ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
+  <snip>
+  DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
+  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
+make[2]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
+fixdep: parse error; no targets found
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
+make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
+make[1]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
 
-[    8.948991] sysfs: cannot create duplicate filename '/bus/nvmem/devices/Production Data'
-[    8.948992] CPU: 7 PID: 246 Comm: systemd-udevd Not tainted 5.5.0-qtec-standard #13
-[    8.948993] Hardware name: AMD Dibbler/Dibbler, BIOS 05.22.04.0019 10/26/2019
-[    8.948994] Call Trace:
-[    8.948996]  dump_stack+0x50/0x70
-[    8.948998]  sysfs_warn_dup.cold+0x17/0x2d
-[    8.949000]  sysfs_do_create_link_sd.isra.0+0xc2/0xd0
-[    8.949002]  bus_add_device+0x74/0x140
-[    8.949004]  device_add+0x34b/0x850
-[    8.949006]  nvmem_register.part.0+0x1bf/0x640
-...
-[    8.948926] mtd mtd8: Failed to register NVMEM device
-
-Fixes: c4dfa25ab307 ("mtd: add support for reading MTD devices via the nvmem API")
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 5fac4355b9c2..559b6930b6f6 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -551,7 +551,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
+diff --git a/Makefile b/Makefile
+index 713f93cceffe..d00e14219e27 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1248,11 +1248,15 @@ ifneq ($(dtstree),)
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
  
- 	config.id = -1;
- 	config.dev = &mtd->dev;
--	config.name = mtd->name;
-+	config.name = dev_name(&mtd->dev);
- 	config.owner = THIS_MODULE;
- 	config.reg_read = mtd_nvmem_reg_read;
- 	config.size = mtd->size;
+ PHONY += dtbs dtbs_install dtbs_check
+-dtbs dtbs_check: include/config/kernel.release scripts_dtc
++dtbs: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
+ 
++ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
++dtbs: dt_binding_check
++endif
++
+ dtbs_check: export CHECK_DTBS=1
+-dtbs_check: dt_binding_check
++dtbs_check: dtbs
+ 
+ dtbs_install:
+ 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
 -- 
 2.25.1
 
