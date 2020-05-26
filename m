@@ -2,96 +2,176 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE2EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C97CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61A12078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590534418;
-	bh=Mrrxu5rbrEWO+ye/Jf6HWnjx+C15G0oR591gYkxr2wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nw/As+C3XKWinRqEgfk6PWwSA17UoyLoLpJm56R+Ujg6pmk1Bp68wBn5n82mlLcXf
-	 xoiPV8NMLlyWMERfQ7XKGmsyP/2AxYMrB3VEDt4WZyHVGiNtYEjn7PxFe9CAamBnPW
-	 IzdotXZnOAY6g+EZGa1ZPLIeqfjYK7q04bgbM+cI=
+	by mail.kernel.org (Postfix) with ESMTP id 58FED2078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijFcx3sJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392244AbgEZXG6 (ORCPT
+        id S2404519AbgEZXHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:06:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36399 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389802AbgEZXG5 (ORCPT
+        Tue, 26 May 2020 19:07:22 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57354 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389802AbgEZXHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:06:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id y18so3502692iow.3;
-        Tue, 26 May 2020 16:06:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qM7yTTkdzgug0yRlfKz1J9d+bTctskYEmlS+YtPQUx0=;
-        b=Hfe5jJZchQp8XxbQ/bQTbhliu6gGjU9T16K2/1rfBMxWlc1TFYxDVXqsWB7prbSc0P
-         CW667+eHmAA1bPwGSgET4mwlM6MQKVGHRbWEkdH1Xn7TEpFDzjIG/nsQMRkXzbeOf01H
-         DOePZ6ZraYCSzJFnEnSYekCFz699D+9H2z+jaQdFfkRPIEIJIbXr1U0QtrNBk58es5mV
-         TzCqT6J13o7i6+1EXuEcxDjFHTZSWzekGQZtcNkcWYbhx9VwANjdLA9MX3Dk5ijTK4id
-         elKzWukPdtuYyqoSzYoqXaMgN3au6gIY9eDtAaBKHicFcSq88FncWr+zhjGo5Fs5G8nF
-         j4qA==
-X-Gm-Message-State: AOAM532STG1SLIspTPazuP7e0u3XUwl5eEHWMtIAqcqbuSRkHnBd4dpg
-        nNnXtVcEG8szv3a0J3hU88NcnM4=
-X-Google-Smtp-Source: ABdhPJyliFM4XLARzE8rOlqfLPrXTbRE98ugFuGjKDNnMdP2uaXdGeeFWhb3mLqV1iWF0F+VV0o1kg==
-X-Received: by 2002:a02:3406:: with SMTP id x6mr32885jae.24.1590534416486;
-        Tue, 26 May 2020 16:06:56 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l21sm737449ili.8.2020.05.26.16.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 16:06:56 -0700 (PDT)
-Received: (nullmailer pid 560264 invoked by uid 1000);
-        Tue, 26 May 2020 23:06:55 -0000
-Date:   Tue, 26 May 2020 17:06:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 12/13] dt-bindings: clock: Add Marvell MMP Audio Clock
- Controller binding
-Message-ID: <20200526230655.GA559890@bogus>
-References: <20200519224151.2074597-1-lkundrak@v3.sk>
- <20200519224151.2074597-13-lkundrak@v3.sk>
+        Tue, 26 May 2020 19:07:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590534440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z/cPDNnfZwS0saAPWel+OCX7+QFUn/80dLbmwhQAzY0=;
+        b=ijFcx3sJCisUgqnDid9a7IhoHrIlM3ELjgRsanOaYnupmT9ECcge2eL4eKPL0Pc8e+fxYb
+        W4Ol+Zd/Tod2Ztz3efdkRfHDD3SpvLUk9wCSkp4i6t/0Ip8MowZvKfUqajWxX7u7XYabwm
+        Xq1lQZUOTWvYKM23mpjG7QxJaLCMvV8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-_XID7VbqOomQugx1txeZ1A-1; Tue, 26 May 2020 19:07:18 -0400
+X-MC-Unique: _XID7VbqOomQugx1txeZ1A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFA28107ACCD;
+        Tue, 26 May 2020 23:07:16 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA6A460C47;
+        Tue, 26 May 2020 23:07:15 +0000 (UTC)
+Date:   Tue, 26 May 2020 17:07:15 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Ashok Raj <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>
+Subject: Re: [PATCH] iommu: Relax ACS requirement for Intel RCiEP devices.
+Message-ID: <20200526170715.18c0ee98@x1.home>
+In-Reply-To: <1590531455-19757-1-git-send-email-ashok.raj@intel.com>
+References: <1590531455-19757-1-git-send-email-ashok.raj@intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519224151.2074597-13-lkundrak@v3.sk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 00:41:50 +0200, Lubomir Rintel wrote:
-> This describes the bindings for a controller that generates master and bit
-> clocks for the I2S interface.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v1:
-> - Fix commit message wording
-> - Define MMP2_CLK_AUDIO_NR_CLKS
-> - Make clock ids start at 0, not 1
-> - Fix dt-bindings/clock/marvell,mmp2-audio.h file name
-> - Rename node from "clocks" to "clock-controller"
-> 
->  .../clock/marvell,mmp2-audio-clock.yaml       | 74 +++++++++++++++++++
->  .../dt-bindings/clock/marvell,mmp2-audio.h    | 10 +++
->  2 files changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
->  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
-> 
+On Tue, 26 May 2020 15:17:35 -0700
+Ashok Raj <ashok.raj@intel.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> All Intel platforms guarantee that all root complex implementations
+> must send transactions up to IOMMU for address translations. Hence for
+> RCiEP devices that are Vendor ID Intel, can claim exception for lack of
+> ACS support.
+>=20
+>=20
+> 3.16 Root-Complex Peer to Peer Considerations
+> When DMA remapping is enabled, peer-to-peer requests through the
+> Root-Complex must be handled
+> as follows:
+> =E2=80=A2 The input address in the request is translated (through first-l=
+evel,
+>   second-level or nested translation) to a host physical address (HPA).
+>   The address decoding for peer addresses must be done only on the
+>   translated HPA. Hardware implementations are free to further limit
+>   peer-to-peer accesses to specific host physical address regions
+>   (or to completely disallow peer-forwarding of translated requests).
+> =E2=80=A2 Since address translation changes the contents (address field) =
+of
+>   the PCI Express Transaction Layer Packet (TLP), for PCI Express
+>   peer-to-peer requests with ECRC, the Root-Complex hardware must use
+>   the new ECRC (re-computed with the translated address) if it
+>   decides to forward the TLP as a peer request.
+> =E2=80=A2 Root-ports, and multi-function root-complex integrated endpoint=
+s, may
+>   support additional peerto-peer control features by supporting PCI Expre=
+ss
+>   Access Control Services (ACS) capability. Refer to ACS capability in
+>   PCI Express specifications for details.
+>=20
+> Since Linux didn't give special treatment to allow this exception, certain
+> RCiEP MFD devices are getting grouped in a single iommu group. This
+> doesn't permit a single device to be assigned to a guest for instance.
+>=20
+> In one vendor system: Device 14.x were grouped in a single IOMMU group.
+>=20
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+>=20
+> After the patch:
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+>=20
+> 14.0 and 14.2 are integrated devices, but legacy end points.
+> Whereas 14.3 was a PCIe compliant RCiEP.
+>=20
+> 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+> Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+>=20
+> This permits assigning this device to a guest VM.
+>=20
+> Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> To: Joerg Roedel <joro@8bytes.org>
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+> Cc: Mark Scott <mscott@forcepoint.com>,
+> Cc: Romil Sharma <rsharma@forcepoint.com>
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> ---
+>  drivers/iommu/iommu.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 2b471419e26c..31b595dfedde 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1187,7 +1187,18 @@ static struct iommu_group *get_pci_function_alias_=
+group(struct pci_dev *pdev,
+>  	struct pci_dev *tmp =3D NULL;
+>  	struct iommu_group *group;
+> =20
+> -	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
+> +	/*
+> +	 * Intel VT-d Specification Section 3.16, Root-Complex Peer to Peer
+> +	 * Considerations manadate that all transactions in RCiEP's and
+> +	 * even Integrated MFD's *must* be sent up to the IOMMU. P2P is
+> +	 * only possible on translated addresses. This gives enough
+> +	 * guarantee that such devices can be forgiven for lack of ACS
+> +	 * support.
+> +	 */
+> +	if (!pdev->multifunction ||
+> +	    (pdev->vendor =3D=3D PCI_VENDOR_ID_INTEL &&
+> +	     pci_pcie_type(pdev) =3D=3D PCI_EXP_TYPE_RC_END) ||
+> +	     pci_acs_enabled(pdev, REQ_ACS_FLAGS))
+>  		return NULL;
+> =20
+>  	for_each_pci_dev(tmp) {
+
+Hi Ashok,
+
+As this is an Intel/VT-d standard, not a PCIe standard, why not
+implement this in pci_dev_specific_acs_enabled() with all the other
+quirks?  Thanks,
+
+Alex
+
