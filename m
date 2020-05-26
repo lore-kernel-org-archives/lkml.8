@@ -7,55 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83237C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62582208C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F422084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519400;
-	bh=adv0QSe3iiSbjP1Ge3btRJ6xjH+WMLX/YiNT23xUmiM=;
+	s=default; t=1590519403;
+	bh=d8qyrN4DPb2N3ftZo6Hiec9Gpr562S31ueMm/cn9glI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ybR3icbPDKg9snL8DRq+cwN1JLBX7kOawL28/QU3o64St8ZzqV6z8vl0SvnEfPwf/
-	 QEZC4kRCCtSp1gcUoVjU9RtdJHVYcB70AV169XlVRxDEm89k9SNT6265dGXZe3TI9j
-	 U8xIEZ9laLjuPeArCb8hEC4fIIO5tXrrq7EHYAQA=
+	b=2HfKYsQfzwiprHOE1VNy86qF+Nc2Dks3N4KjfveVTL8RSXbPGltChgdFT7E8Mr2QG
+	 AfPC7fO9dDwXsWz6jHK40Dj7Ell8qCGizHxlnMRaWcQLbZSDnXWlGZKvZZc5ovKKwy
+	 c4TccVQ/R7PrSZ2Yg4UqDoXrQDayeG/xTiGHpNWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389901AbgEZS4j (ORCPT
+        id S2389914AbgEZS4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389878AbgEZS4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:36 -0400
+        id S2389891AbgEZS4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:56:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5374120849;
-        Tue, 26 May 2020 18:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B94192084C;
+        Tue, 26 May 2020 18:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519395;
-        bh=adv0QSe3iiSbjP1Ge3btRJ6xjH+WMLX/YiNT23xUmiM=;
+        s=default; t=1590519398;
+        bh=d8qyrN4DPb2N3ftZo6Hiec9Gpr562S31ueMm/cn9glI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C2KADdKw7/Q5qbboXZvxEOlCyHCH+0U6uY5qLmHsyO45fVEbP7tQ2lNkNiKMjfFkj
-         v+WMoQlHbjxB5qQKaHtzQ1YaxZ4WfMlQZDyHNVpU1JUFCcgu2QuN2dypCjWimf3yeH
-         OJ69KvAKC6NNKGTBYiEPOpWDIIGu/Did/ESNQGbE=
+        b=GPoHIiURMoSn6/ZBBb+YszwQV21MuJdC0lcf8q3NZFhqZKDD3SZfFq1/EEyDxefM4
+         ESI5DBzCLn+eof7KMMafvBCWlE9n+auWbv+igRDn6hXRREilc7WCz5CqvhzdU3kz/g
+         i0vHx3i9MNF9N4axu6ZeQjZnDCjGxwQDsMjX6+CU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 01/65] igb: use igb_adapter->io_addr instead of e1000_hw->hw_addr
-Date:   Tue, 26 May 2020 20:52:20 +0200
-Message-Id: <20200526183907.044923689@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.4 46/65] l2tp: define parameters of l2tp_session_get*() as "const"
+Date:   Tue, 26 May 2020 20:53:05 +0200
+Message-Id: <20200526183921.973806878@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,70 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cao jin <caoj.fnst@cn.fujitsu.com>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 629823b872402451b42462414da08dddd0e2c93d upstream.
+commit 9aaef50c44f132e040dcd7686c8e78a3390037c5 upstream.
 
-When running as guest, under certain condition, it will oops as following.
-writel() in igb_configure_tx_ring() results in oops, because hw->hw_addr
-is NULL. While other register access won't oops kernel because they use
-wr32/rd32 which have a defense against NULL pointer.
+Make l2tp_pernet()'s parameter constant, so that l2tp_session_get*() can
+declare their "net" variable as "const".
+Also constify "ifname" in l2tp_session_get_by_ifname().
 
-    [  141.225449] pcieport 0000:00:1c.0: AER: Multiple Uncorrected (Fatal)
-    error received: id=0101
-    [  141.225523] igb 0000:01:00.1: PCIe Bus Error:
-    severity=Uncorrected (Fatal), type=Unaccessible,
-    id=0101(Unregistered Agent ID)
-    [  141.299442] igb 0000:01:00.1: broadcast error_detected message
-    [  141.300539] igb 0000:01:00.0 enp1s0f0: PCIe link lost, device now
-    detached
-    [  141.351019] igb 0000:01:00.1 enp1s0f1: PCIe link lost, device now
-    detached
-    [  143.465904] pcieport 0000:00:1c.0: Root Port link has been reset
-    [  143.465994] igb 0000:01:00.1: broadcast slot_reset message
-    [  143.466039] igb 0000:01:00.0: enabling device (0000 -> 0002)
-    [  144.389078] igb 0000:01:00.1: enabling device (0000 -> 0002)
-    [  145.312078] igb 0000:01:00.1: broadcast resume message
-    [  145.322211] BUG: unable to handle kernel paging request at
-    0000000000003818
-    [  145.361275] IP: [<ffffffffa02fd38d>]
-    igb_configure_tx_ring+0x14d/0x280 [igb]
-    [  145.400048] PGD 0
-    [  145.438007] Oops: 0002 [#1] SMP
-
-A similar issue & solution could be found at:
-    http://patchwork.ozlabs.org/patch/689592/
-
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-Acked-by: Alexander Duyck <alexander.h.duyck@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/intel/igb/igb_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_core.c |    7 ++++---
+ net/l2tp/l2tp_core.h |    5 +++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -3296,7 +3296,7 @@ void igb_configure_tx_ring(struct igb_ad
- 	     tdba & 0x00000000ffffffffULL);
- 	wr32(E1000_TDBAH(reg_idx), tdba >> 32);
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -119,7 +119,7 @@ static inline struct l2tp_tunnel *l2tp_t
+ 	return sk->sk_user_data;
+ }
  
--	ring->tail = hw->hw_addr + E1000_TDT(reg_idx);
-+	ring->tail = adapter->io_addr + E1000_TDT(reg_idx);
- 	wr32(E1000_TDH(reg_idx), 0);
- 	writel(0, ring->tail);
+-static inline struct l2tp_net *l2tp_pernet(struct net *net)
++static inline struct l2tp_net *l2tp_pernet(const struct net *net)
+ {
+ 	BUG_ON(!net);
  
-@@ -3652,7 +3652,7 @@ void igb_configure_rx_ring(struct igb_ad
- 	     ring->count * sizeof(union e1000_adv_rx_desc));
+@@ -231,7 +231,7 @@ l2tp_session_id_hash(struct l2tp_tunnel
+ /* Lookup a session. A new reference is held on the returned session.
+  * Optionally calls session->ref() too if do_ref is true.
+  */
+-struct l2tp_session *l2tp_session_get(struct net *net,
++struct l2tp_session *l2tp_session_get(const struct net *net,
+ 				      struct l2tp_tunnel *tunnel,
+ 				      u32 session_id, bool do_ref)
+ {
+@@ -306,7 +306,8 @@ EXPORT_SYMBOL_GPL(l2tp_session_get_nth);
+ /* Lookup a session by interface name.
+  * This is very inefficient but is only used by management interfaces.
+  */
+-struct l2tp_session *l2tp_session_get_by_ifname(struct net *net, char *ifname,
++struct l2tp_session *l2tp_session_get_by_ifname(const struct net *net,
++						const char *ifname,
+ 						bool do_ref)
+ {
+ 	struct l2tp_net *pn = l2tp_pernet(net);
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -234,12 +234,13 @@ out:
+ 	return tunnel;
+ }
  
- 	/* initialize head and tail */
--	ring->tail = hw->hw_addr + E1000_RDT(reg_idx);
-+	ring->tail = adapter->io_addr + E1000_RDT(reg_idx);
- 	wr32(E1000_RDH(reg_idx), 0);
- 	writel(0, ring->tail);
- 
+-struct l2tp_session *l2tp_session_get(struct net *net,
++struct l2tp_session *l2tp_session_get(const struct net *net,
+ 				      struct l2tp_tunnel *tunnel,
+ 				      u32 session_id, bool do_ref);
+ struct l2tp_session *l2tp_session_get_nth(struct l2tp_tunnel *tunnel, int nth,
+ 					  bool do_ref);
+-struct l2tp_session *l2tp_session_get_by_ifname(struct net *net, char *ifname,
++struct l2tp_session *l2tp_session_get_by_ifname(const struct net *net,
++						const char *ifname,
+ 						bool do_ref);
+ struct l2tp_tunnel *l2tp_tunnel_find(struct net *net, u32 tunnel_id);
+ struct l2tp_tunnel *l2tp_tunnel_find_nth(struct net *net, int nth);
 
 
