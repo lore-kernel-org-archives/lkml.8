@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD60DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0103C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0AF52084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C162D208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519720;
-	bh=QerE36CISrCUueRSxCUY/hNwSK8W+jL8bcRw33Mi5pY=;
+	s=default; t=1590519723;
+	bh=NMEBRsZuFeSwo6hyj6E/8Y3EaRKS6l+MKMDuJjdmF6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BDY9VEP2X3sqDotEaFKNq9qNR8CVE7IVLi4f9GIlIC0tRihhaQ4cHWbCbYCTUQDG2
-	 YvvjJHNU356gIGy9VlVVmoZvC20eDCPY+pZIc92bvMlxNjirpcQ1bchgee5U7ThUxF
-	 mM/2lVf9sH+koHIrRntWam0xQP1gcGquLhsx4RbA=
+	b=XZt+B2kETtLeunRHoCq5lVlFA0ko7F36SLfWDLIRMPvt8UNatzCmbl0rh9Bx/nCfy
+	 96W10Hf9eBlsKKqVyUlTw1Bf4RvF490f+b8YukV28KV2Ymwf9g73PdQIioXBro4pGM
+	 lmqgzpF4hpwVXUE1Z4GjqVPFJdUY5JPs8RNJWsf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391028AbgEZTCA (ORCPT
+        id S2403821AbgEZTCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391017AbgEZTB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:57 -0400
+        id S2390372AbgEZTCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E89B020849;
-        Tue, 26 May 2020 19:01:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C68F620849;
+        Tue, 26 May 2020 19:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519716;
-        bh=QerE36CISrCUueRSxCUY/hNwSK8W+jL8bcRw33Mi5pY=;
+        s=default; t=1590519719;
+        bh=NMEBRsZuFeSwo6hyj6E/8Y3EaRKS6l+MKMDuJjdmF6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fY0yXwzoCDP18UZUCFzSjwiUkWCAGWkDB6Bi/yeWSUVCxLt4wkmDlf8anv1oMSS/X
-         OB7yv9dbymKADB8Gc8Y2u2ZfudNB4fq8/8NUSQBUmjH8153IHm67de2cMaaw+37YyR
-         UzwtpZP3bYIEzXSHmvN6miGu+mn9gFzYZbGvCDqY=
+        b=YZlg6efFfNouyQveS4vdKa3hCLCrUQkJQ+vi210yHqOsC/jmndcor7bI6gglnTZHW
+         NXA86N0fqtTFevrQ+9kiIVXI6mPGrk8kkYrrACJUpNlufhDFS0OrMJpHEJaaZ2pe1y
+         wBfnPfNUjDkaYCKI9XuOzsShu6yuuiX0oZGOSnFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arjun Vynipadath <arjun@chelsio.com>,
-        Casey Leedom <leedom@chelsio.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/59] cxgb4/cxgb4vf: Fix mac_hlist initialization and free
-Date:   Tue, 26 May 2020 20:53:33 +0200
-Message-Id: <20200526183922.214934912@linuxfoundation.org>
+Subject: [PATCH 4.14 49/59] Revert "gfs2: Dont demote a glock until its revokes are written"
+Date:   Tue, 26 May 2020 20:53:34 +0200
+Message-Id: <20200526183922.400590870@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -62,114 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arjun Vynipadath <arjun@chelsio.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit b539ea60f5043b9acd7562f04fa2117f18776cbb ]
+[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
 
-Null pointer dereference seen when cxgb4vf driver is unloaded
-without bringing up any interfaces, moving mac_hlist initialization
-to driver probe and free the mac_hlist in remove to fix the issue.
+This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
 
-Fixes: 24357e06ba51 ("cxgb4vf: fix memleak in mac_hlist initialization")
-Signed-off-by: Arjun Vynipadath <arjun@chelsio.com>
-Signed-off-by: Casey Leedom <leedom@chelsio.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch fixes a regression: patch df5db5f9ee112 allowed function
+run_queue() to bypass its call to do_xmote() if revokes were queued for
+the glock. That's wrong because its call to do_xmote() is what is
+responsible for calling the go_sync() glops functions to sync both
+the ail list and any revokes queued for it. By bypassing the call,
+gfs2 could get into a stand-off where the glock could not be demoted
+until its revokes are written back, but the revokes would not be
+written back because do_xmote() was never called.
+
+It "sort of" works, however, because there are other mechanisms like
+the log flush daemon (logd) that can sync the ail items and revokes,
+if it deems it necessary. The problem is: without file system pressure,
+it might never deem it necessary.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   | 19 ++++++++++---------
- .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |  6 +++---
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ fs/gfs2/glock.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 9d1438c3c3ca..6eb65b870da7 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -2241,8 +2241,6 @@ static int cxgb_up(struct adapter *adap)
- #if IS_ENABLED(CONFIG_IPV6)
- 	update_clip(adap);
- #endif
--	/* Initialize hash mac addr list*/
--	INIT_LIST_HEAD(&adap->mac_hlist);
- 	return err;
- 
-  irq_err:
-@@ -2256,8 +2254,6 @@ static int cxgb_up(struct adapter *adap)
- 
- static void cxgb_down(struct adapter *adapter)
- {
--	struct hash_mac_addr *entry, *tmp;
--
- 	cancel_work_sync(&adapter->tid_release_task);
- 	cancel_work_sync(&adapter->db_full_task);
- 	cancel_work_sync(&adapter->db_drop_task);
-@@ -2267,11 +2263,6 @@ static void cxgb_down(struct adapter *adapter)
- 	t4_sge_stop(adapter);
- 	t4_free_sge_resources(adapter);
- 
--	list_for_each_entry_safe(entry, tmp, &adapter->mac_hlist, list) {
--		list_del(&entry->list);
--		kfree(entry);
--	}
--
- 	adapter->flags &= ~FULL_INIT_DONE;
- }
- 
-@@ -4970,6 +4961,9 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 			     (is_t5(adapter->params.chip) ? STATMODE_V(0) :
- 			      T6_STATMODE_V(0)));
- 
-+	/* Initialize hash mac addr list */
-+	INIT_LIST_HEAD(&adapter->mac_hlist);
-+
- 	for_each_port(adapter, i) {
- 		netdev = alloc_etherdev_mq(sizeof(struct port_info),
- 					   MAX_ETH_QSETS);
-@@ -5260,6 +5254,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- static void remove_one(struct pci_dev *pdev)
- {
- 	struct adapter *adapter = pci_get_drvdata(pdev);
-+	struct hash_mac_addr *entry, *tmp;
- 
- 	if (!adapter) {
- 		pci_release_regions(pdev);
-@@ -5303,6 +5298,12 @@ static void remove_one(struct pci_dev *pdev)
- 		if (adapter->num_uld || adapter->num_ofld_uld)
- 			t4_uld_mem_free(adapter);
- 		free_some_resources(adapter);
-+		list_for_each_entry_safe(entry, tmp, &adapter->mac_hlist,
-+					 list) {
-+			list_del(&entry->list);
-+			kfree(entry);
-+		}
-+
- #if IS_ENABLED(CONFIG_IPV6)
- 		t4_cleanup_clip_tbl(adapter);
- #endif
-diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-index 26ba18ea08c6..fa116f0a107d 100644
---- a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-@@ -715,9 +715,6 @@ static int adapter_up(struct adapter *adapter)
- 		if (adapter->flags & USING_MSIX)
- 			name_msix_vecs(adapter);
- 
--		/* Initialize hash mac addr list*/
--		INIT_LIST_HEAD(&adapter->mac_hlist);
--
- 		adapter->flags |= FULL_INIT_DONE;
- 	}
- 
-@@ -2936,6 +2933,9 @@ static int cxgb4vf_pci_probe(struct pci_dev *pdev,
- 	if (err)
- 		goto err_unmap_bar;
- 
-+	/* Initialize hash mac addr list */
-+	INIT_LIST_HEAD(&adapter->mac_hlist);
-+
- 	/*
- 	 * Allocate our "adapter ports" and stitch everything together.
- 	 */
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 1e2ff4b32c79..aea1ed0aebd0 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -636,9 +636,6 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
+-		smp_mb();
+-		if (atomic_read(&gl->gl_revokes) != 0)
+-			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
 -- 
 2.25.1
 
