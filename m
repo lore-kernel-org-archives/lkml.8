@@ -2,88 +2,164 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD27AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15857C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D0820888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hfe62d57"
+	by mail.kernel.org (Postfix) with ESMTP id EA4A020888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590520682;
+	bh=aE1R5VaeXY/7No8XOaYL5qSng5iIu55Y54sVmyyaUHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J1A+Sl6dwPlPTliHWmseUXPr6I8vcF/leaeCdhxZBl9UGyrhb/vBUT4uHTGg7pKx0
+	 bkPr0g1TaI7hB1vEm4AZZ2UBj3/XojZJGueMvZcodK1BGNYHL1PnEPgwFoqSb7Yauk
+	 fJ2m+10mfVf72kHHQpKvxATMNWMj9+MYvH2fBZlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392013AbgEZTN6 (ORCPT
+        id S2392360AbgEZTSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:13:58 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46306 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404321AbgEZTNt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:49 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 96E9D30D79D;
-        Tue, 26 May 2020 12:13:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 96E9D30D79D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1590520427;
-        bh=TD+pvEeaAmIZ4gEFvHmv/B24eOz6zs85BaHEGnwgiAs=;
+        Tue, 26 May 2020 15:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392004AbgEZTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 950E5208C3;
+        Tue, 26 May 2020 19:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590520437;
+        bh=aE1R5VaeXY/7No8XOaYL5qSng5iIu55Y54sVmyyaUHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfe62d57qbpTb415H8SRSPuUrUqZluoAya3dfh+fSyJ9MbVu1AW5egz29Yp3LLa+M
-         iEflTmOjHNRly4fFxUAznA7LsnQUKYPmnwIdfFojAjXwFw6Vd0B6Ss+ffLdxznWJ4F
-         p2bsM+eNnOpY3gXvhELGIBH+6tuAwByMYRoY4w7k=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id F092C140069;
-        Tue, 26 May 2020 12:13:45 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 14/14] PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
-Date:   Tue, 26 May 2020 15:12:53 -0400
-Message-Id: <20200526191303.1492-15-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+        b=UP2EUTK4B9XlJBT0JUfxvnE1SFU8npAcLciRhHZYraElh8gSQ/zjDkzUD9ReNzS3B
+         T7lU3QmRvva5zHDu6qSF+tgA8kCVwm6Oyzs5iH8jy78PcwI8vW/OBYKfgGt5Crazwj
+         vyrCXHzui19Y4byx+wsJbX6u37h8YHZ6Z/SJJQh8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sanjay Kumar <sanjay.k.kumar@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.6 080/126] dmaengine: idxd: fix interrupt completion after unmasking
+Date:   Tue, 26 May 2020 20:53:37 +0200
+Message-Id: <20200526183944.843946067@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
+References: <20200526183937.471379031@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the support is in place with previous commits, we add several
-chips that use the BrcmSTB driver.
+From: Dave Jiang <dave.jiang@intel.com>
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+commit 4f302642b70c1348773fe7e3ded9fc315fa92990 upstream.
+
+The current implementation may miss completions after we unmask the
+interrupt. In order to make sure we process all competions, we need to:
+1. Do an MMIO read from the device as a barrier to ensure that all PCI
+   writes for completions have arrived.
+2. Check for any additional completions that we missed.
+
+Fixes: 8f47d1a5e545 ("dmaengine: idxd: connect idxd to dmaengine subsystem")
+
+Reported-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/158834641769.35613.1341160109892008587.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/controller/pcie-brcmstb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/idxd/device.c |    7 +++++++
+ drivers/dma/idxd/irq.c    |   26 +++++++++++++++++++-------
+ 2 files changed, 26 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 131cf0a51398..22dbecb5403c 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1189,6 +1189,10 @@ static int brcm_pcie_remove(struct platform_device *pdev)
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -62,6 +62,13 @@ int idxd_unmask_msix_vector(struct idxd_
+ 	perm.ignore = 0;
+ 	iowrite32(perm.bits, idxd->reg_base + offset);
  
- static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
-+	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
-+	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-+	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-+	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
- 	{},
- };
++	/*
++	 * A readback from the device ensures that any previously generated
++	 * completion record writes are visible to software based on PCI
++	 * ordering rules.
++	 */
++	perm.bits = ioread32(idxd->reg_base + offset);
++
+ 	return 0;
+ }
  
--- 
-2.17.1
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -173,6 +173,7 @@ static int irq_process_pending_llist(str
+ 	struct llist_node *head;
+ 	int queued = 0;
+ 
++	*processed = 0;
+ 	head = llist_del_all(&irq_entry->pending_llist);
+ 	if (!head)
+ 		return 0;
+@@ -197,6 +198,7 @@ static int irq_process_work_list(struct
+ 	struct list_head *node, *next;
+ 	int queued = 0;
+ 
++	*processed = 0;
+ 	if (list_empty(&irq_entry->work_list))
+ 		return 0;
+ 
+@@ -218,10 +220,9 @@ static int irq_process_work_list(struct
+ 	return queued;
+ }
+ 
+-irqreturn_t idxd_wq_thread(int irq, void *data)
++static int idxd_desc_process(struct idxd_irq_entry *irq_entry)
+ {
+-	struct idxd_irq_entry *irq_entry = data;
+-	int rc, processed = 0, retry = 0;
++	int rc, processed, total = 0;
+ 
+ 	/*
+ 	 * There are two lists we are processing. The pending_llist is where
+@@ -244,15 +245,26 @@ irqreturn_t idxd_wq_thread(int irq, void
+ 	 */
+ 	do {
+ 		rc = irq_process_work_list(irq_entry, &processed);
+-		if (rc != 0) {
+-			retry++;
++		total += processed;
++		if (rc != 0)
+ 			continue;
+-		}
+ 
+ 		rc = irq_process_pending_llist(irq_entry, &processed);
+-	} while (rc != 0 && retry != 10);
++		total += processed;
++	} while (rc != 0);
++
++	return total;
++}
++
++irqreturn_t idxd_wq_thread(int irq, void *data)
++{
++	struct idxd_irq_entry *irq_entry = data;
++	int processed;
+ 
++	processed = idxd_desc_process(irq_entry);
+ 	idxd_unmask_msix_vector(irq_entry->idxd, irq_entry->id);
++	/* catch anything unprocessed after unmasking */
++	processed += idxd_desc_process(irq_entry);
+ 
+ 	if (processed == 0)
+ 		return IRQ_NONE;
+
 
