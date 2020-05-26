@@ -2,135 +2,103 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBCB20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADCF20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fj8x4BcI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGjDmsOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389745AbgEZVdP (ORCPT
+        id S2389854AbgEZVdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:33:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52192 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388740AbgEZVdO (ORCPT
+        Tue, 26 May 2020 17:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388740AbgEZVdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:33:14 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QLX8rf000603;
-        Tue, 26 May 2020 16:33:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590528788;
-        bh=BlTc2XD4wveY6Y5v42t1Iy3n20uEtWA8G60rMOOS12M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fj8x4BcIDJiQKBswYbydlLW1JBAuSaRwx4NH0Ka2036RykFLtbC4ZWm4Lzn7aFWk3
-         Lyu1RAR7BnYlLGOpYen7MixGckUHqpEoRANIHWkiQ2puVTYDWsGEKVqr9mVDoTxBg8
-         J2k7iLndDXfXN/DbPqU6kQ6C+vsporWRx16+z1wU=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QLX8oJ045675
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 16:33:08 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 16:33:07 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 16:33:07 -0500
-Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QLX7jN024529;
-        Tue, 26 May 2020 16:33:07 -0500
-Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20200506163033.3843-1-m-karicheri2@ti.com>
- <87r1vdkxes.fsf@intel.com>
- <CA+h21hqiV71wc0v=-KkPbWNyXSY+-oiz+DsQLAe1XEJw7eP=_Q@mail.gmail.com>
- <a7d1ebef-7161-9ecc-09ca-83f868ff7dac@ti.com>
- <CA+h21hp+khuj0jV9+keDuzPDe11Xz1Rs8KKkt=n8MeWVHkcmvQ@mail.gmail.com>
-From:   Murali Karicheri <m-karicheri2@ti.com>
-Message-ID: <2e9e56e4-be15-9745-f984-15f9188cdf80@ti.com>
-Date:   Tue, 26 May 2020 17:33:06 -0400
+        Tue, 26 May 2020 17:33:15 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A0BC061A0F;
+        Tue, 26 May 2020 14:33:15 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p30so10679871pgl.11;
+        Tue, 26 May 2020 14:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j3hVOp0liWWCUJVNOiyTPzyXy/QJ2NvCerFTV87ycss=;
+        b=GGjDmsOgTTiI7R3BLlJU0vbgxubrZ+ftnl+Kxc9bQzyy6vDvKwg9v/AqfXsXUU0IDK
+         ZRplh83OMgY21yAFIstEpcR+9ctXjScECvQtGp22jjO/MuE7a0XBeSdKzDVBt0za/a1J
+         tAH6yK88ahQBRMmXsqpZrBYXMBrzQ0UjkIW7mVcqm5MNRHQe3oypGxbI3H4tLns0wgyb
+         7ANZp1vnP3+ZOA9iirLWvk4DNmiOUycwOSIBDWNVImUXUqTnsL8arQgpIwdOZuXzZxC7
+         WzqKdRY267IApA3aeh9NSDrI1XQSegY6BDlvoovndg2aRxpRfXUv7qg8cPt4FbRSsbXr
+         hYZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j3hVOp0liWWCUJVNOiyTPzyXy/QJ2NvCerFTV87ycss=;
+        b=CdtODL+iPgA4CEqWxyFU/e1fgpWDOEdko+o+3kTuO11Vy9swJXRIqCw/Yg1K2D75WS
+         f0L1CFb8M0kJ9ddMvIA/HC6kcQHpj8NIoIveZz0jkrffTNqPN2Mebj5nZUjjTGhONOeY
+         WDbc8pzI5r0Rz4WhyjLgPyAiLTaIb5EuXgor2qoLxPP4pw8qkDqYYg46zq14E6BlfLjS
+         sUqi1idgeB23jygmh+P3HP2eSRU/WowSLUZpOLJgDyTPgtyFx5oKdE7zoj3ZYViq/Hfx
+         jmbgh27/4yBVMnZMxwBkvs1/G2B7uM/h2rMelrXfZN2/uo393iSA9GoI5O3ZRWbocwmv
+         1xww==
+X-Gm-Message-State: AOAM532vWzOXnm5jBTYGKninDmO511EpXUlCOu2yg2Bo3xwYcl3D/F6h
+        e2fT9FzpV9jHwl2dPVT00/LrFSGy7aY=
+X-Google-Smtp-Source: ABdhPJwadwvNjSPXipWEqKXGx3b6nE58nTZY95Z4jOnwtALHI/c2AodDJbsWEm+Ml1xxXssTWtL0Pg==
+X-Received: by 2002:a62:834b:: with SMTP id h72mr712713pfe.237.1590528794658;
+        Tue, 26 May 2020 14:33:14 -0700 (PDT)
+Received: from [192.168.1.5] ([75.164.7.205])
+        by smtp.gmail.com with ESMTPSA id p1sm352318pjz.36.2020.05.26.14.33.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 14:33:13 -0700 (PDT)
+Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
+ mode"
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Alex Guzman <alex@guzman.io>
+References: <20200526183213.20720-1-mario.limonciello@dell.com>
+ <1590520454.11810.40.camel@HansenPartnership.com>
+ <f63afdc1-6c40-dc0d-bb9a-154bc51d3b95@gmail.com>
+ <1590523214.15108.4.camel@HansenPartnership.com>
+From:   Tadeusz Struk <tstruk@gmail.com>
+Message-ID: <705c9df6-e8cd-2829-c579-2bf039360eec@gmail.com>
+Date:   Tue, 26 May 2020 14:33:13 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hp+khuj0jV9+keDuzPDe11Xz1Rs8KKkt=n8MeWVHkcmvQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1590523214.15108.4.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir
+On 5/26/20 1:00 PM, James Bottomley wrote:
+> I don't think there is a root cause other than a TIS TPM is getting
+> annoyed by us cycling localities too rapidly because we don't do an
+> actual TPM operation between request and relinquish.  Since the first
+> request/relinquish seems unnecessary for the async case, moving the ops
+> get eliminates the problem.
 
-On 5/26/20 2:25 PM, Vladimir Oltean wrote:
-> Hi Murali,
-> 
-> On Tue, 26 May 2020 at 17:12, Murali Karicheri <m-karicheri2@ti.com> wrote:
->>
->> Hi Vladimir,
->>
-> 
->> I haven't looked the spec for 802.1CB. If they re-use HSR/PRP Tag in the
->> L2 protocol it make sense to enhance the driver. Else I don't see any
->> re-use possibility. Do you know the above?
->>
->> Thanks
->>
->> Murali
-> 
-> IEEE 802.1CB redundancy tag sits between Source MAC address and
-> Ethertype or any VLAN tag, is 6 bytes in length, of which:
-> - first 2 bytes are the 0xf1c1 EtherType
-> - next 2 bytes are reserved
-> - last 2 bytes are the sequence number
-> There is also a pre-standard version of the IEEE 802.1CB redundancy
-> tag, which is only 4 bytes in length. I assume vendors of pre-standard
-> equipment will want to have support for this 4-byte tag as well, as
-> well as a mechanism of converting between HSR/PRP/pre-standard 802.1CB
-> tag on one set of ports, and 802.1CB on another set of ports.
-> 
-Thanks for sharing the details. I also took a quick glance at the
-802.1CB spec today. It answered also my above question
-1) In addition to FRER tag, it also includes HSR tag and PRP trailer
-that can be provisioned through management objects.
-2) Now I think I get what Vinicius refers to the interoperability. there
-can be HSR tag received on ingress port and PRP on the egress port of
-a relay function.
-
-Essentially tag usage is configurable on a stream basis. Since both
-HSR and PRP functions for frame formatting and decoding would be
-re-usable. In addition driver could be enhanced for FRER functions.
-
-Regards,
-
-Murali
->>
->> --
->> Murali Karicheri
->> Texas Instruments
-> 
-> Thanks,
-> -Vladimir
-> 
-
--- 
-Murali Karicheri
-Texas Instruments
+Could be, so maybe we could try both patches.
+More debug info on the error path won't hurt.
+Thanks,
+Tadeusz
