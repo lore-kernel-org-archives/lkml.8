@@ -2,146 +2,220 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A881AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA0802073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D165207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hwDz0FXf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aV+EtZWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgEZRRj (ORCPT
+        id S1729519AbgEZRSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:17:39 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37707 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728523AbgEZRRi (ORCPT
+        Tue, 26 May 2020 13:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728581AbgEZRSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:17:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590513457; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=cZseVKyM7byZX8GzsmhKM3pgrExfy9wX8Sb9mIb2EQY=; b=hwDz0FXf/DwJTAaLCdsgRMEu8+EcNiEz41YjdXjdhk+jGgLgYkRx2Rl2mZDSKGF0wqv0S51D
- 8N1Ti5rPjFRrQGsHSvI3DgYKBTDxfKsOPOkqqttYSyoSvgXrssCQPG1vn+9Ef26RXq79YrC2
- pfQ5G7ZctTm0vqEqCj6JzSqcOcw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ecd4f1f809d9049674c22cc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 17:17:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 16EFEC433AF; Tue, 26 May 2020 17:17:19 +0000 (UTC)
-Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 13AAAC433CA;
-        Tue, 26 May 2020 17:17:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 13AAAC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v2 1/3] scsi: ufshcd: Update the set frequency to devfreq
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, c_vkoul@quicinc.com,
-        hongwus@codeaurora.org
-Cc:     Avri Altman <Avri.Altman@wdc.com>, Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <cover.1585160616.git.asutoshd@codeaurora.org>
- <d0c6c22455811e9f0eda01f9bc70d1398b51b2bd.1585160616.git.asutoshd@codeaurora.org>
- <CAOCk7NrrBoO2k1M7XX0W6L2+efBbo-s6WVaKZx4EtSqNpCaUyA@mail.gmail.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <f52a59df-5697-9e82-d12d-292ee9653f45@codeaurora.org>
-Date:   Tue, 26 May 2020 10:17:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <CAOCk7NrrBoO2k1M7XX0W6L2+efBbo-s6WVaKZx4EtSqNpCaUyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 26 May 2020 13:18:38 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2283C03E96E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:18:38 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id h129so21039261ybc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=qz8XL5HjRypO1RoMKqirUSXQ6SNzxq1AQO7Af1uk7eg=;
+        b=aV+EtZWfxq8hZz390kw22ff2bERfaAxS+NwmsZdiIUYAvoCIzy6goI4eJRxT3jrPh8
+         xZYkVZxurB1Lv/uWfUfFZ3pJ5UsvfeEIXy854tkDM9LazUXsuIeOmUybAr4CYx3HQmVF
+         qyGFlExpbOoOyFc7nVlxMSoptdyr/Q9z8Xo/uO/3QgOoZd9/YiPasUywI8nfmj9Vlg8u
+         IVLFQthtuCm0vWlOg2NN9zs23tyOQBP6RENrKAVbXKWf/MOCFN11o2vkNBkxIN20dZzL
+         RqrWSqv9lpx2dbFJ6M0CSj/EZEFGfKqE1UBO6lue5FJgw9NbeGY1eKIIgrXnUwRlX98o
+         rIBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=qz8XL5HjRypO1RoMKqirUSXQ6SNzxq1AQO7Af1uk7eg=;
+        b=qQ0IOYNruWacdowNpzmZBI4aG53UWDMRN45KusL8EukNReVW4oR1Bv/Q5FFz4k99ZJ
+         +M7ys2vgZSWNfcmllZi/QvFBc/MgDWjIOA6NkpX7IKFNkg7uYGimxGavSJPzehgBjC/W
+         cbtwqz0NrNsUmmYBhA4B/i5rFD8K7XBZ3ZWfgMQCs1wLaqD+1Dopdqqhn+hgO8viAwkG
+         +oirJyAl0AwX6UD0nZesjeYLiaugHp2p11G6fBXEOcv5z5Ub6cKjsHqoy/fmk0KAImv8
+         bRriIxFIdHf/1o4W9Bjo1/Oso9/QSfqKil4kAAJrUbkexPiDxDZTJIMtk07CUkoWpRYL
+         6v2A==
+X-Gm-Message-State: AOAM531yEdexj9CT4UXVOjpkmnMphHZ/9mAjNGpIs+n9lwyNcKtMkpOz
+        2JbGZ8jHkyakCT5juIQHkZFHPEPmN+Whmq6c0T4=
+X-Google-Smtp-Source: ABdhPJxDPm+wkkMpsgRhYQTwpsCoaf6b9kFkH+TSAz8TH+6AQcwtg18bXA+ESWI7ZJpAj2iTVtikPUMoMUzhnggZv7s=
+X-Received: by 2002:a25:253:: with SMTP id 80mr3241130ybc.405.1590513517344;
+ Tue, 26 May 2020 10:18:37 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:18:29 -0700
+In-Reply-To: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
+Message-Id: <20200526171830.151966-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v5] Makefile: support compressed debug info
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Blaikie <blaikie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey
-On 5/25/2020 3:19 PM, Jeffrey Hugo wrote:
-> On Wed, Mar 25, 2020 at 12:29 PM Asutosh Das <asutoshd@codeaurora.org> wrote:
->>
->> Currently, the frequency that devfreq provides the
->> driver to set always leads the clocks to be scaled up.
->> Hence, round the clock-rate to the nearest frequency
->> before deciding to scale.
->>
->> Also update the devfreq statistics of current frequency.
->>
->> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> 
-> This change appears to cause issues for the Lenovo Miix 630, as
-> identified by git bisect.
-> 
+As debug information gets larger and larger, it helps significantly save
+the size of vmlinux images to compress the information in the debug
+information sections. Note: this debug info is typically split off from
+the final compressed kernel image, which is why vmlinux is what's used
+in conjunction with GDB. Minimizing the debug info size should have no
+impact on boot times, or final compressed kernel image size.
 
-Thanks for reporting this.
+All of the debug sections will have a `C` flag set.
+$ readelf -S <object file>
 
-> On 5.6-final, My boot log looks normal.  On 5.7-rc7, the Lenovo Miix
-> 630 rarely boots, usually stuck in some kind of infinite printk loop.
-> 
-> If I disable some of the UFS logging, I can capture this from the
-> logs, as soon as UFS inits -
-> 
-> [    4.353860] ufshcd-qcom 1da4000.ufshc: ufshcd_intr: Unhandled
-> interrupt 0x00000000
-> [    4.359605] ufshcd-qcom 1da4000.ufshc: ufshcd_intr: Unhandled
-> interrupt 0x00000000
-> [    4.365412] ufshcd-qcom 1da4000.ufshc: ufshcd_check_errors:
-> saved_err 0x4 saved_uic_err 0x2
-> [    4.371121] ufshcd-qcom 1da4000.ufshc: hba->ufs_version = 0x210,
-> hba->capabilities = 0x1587001f
-> [    4.376846] ufshcd-qcom 1da4000.ufshc: hba->outstanding_reqs =
-> 0x100000, hba->outstanding_tasks = 0x0
-> [    4.382636] ufshcd-qcom 1da4000.ufshc: last_hibern8_exit_tstamp at
-> 0 us, hibern8_exit_cnt = 0
-> [    4.388368] ufshcd-qcom 1da4000.ufshc: No record of pa_err
-> [    4.394001] ufshcd-qcom 1da4000.ufshc: dl_err[0] = 0x80000001 at 3873626 us
-> [    4.399577] ufshcd-qcom 1da4000.ufshc: No record of nl_err
-> [    4.405053] ufshcd-qcom 1da4000.ufshc: No record of tl_err
-> [    4.410464] ufshcd-qcom 1da4000.ufshc: No record of dme_err
-> [    4.415747] ufshcd-qcom 1da4000.ufshc: No record of auto_hibern8_err
-> [    4.420950] ufshcd-qcom 1da4000.ufshc: No record of fatal_err
-> [    4.426013] ufshcd-qcom 1da4000.ufshc: No record of link_startup_fail
-> [    4.430950] ufshcd-qcom 1da4000.ufshc: No record of resume_fail
-> [    4.435786] ufshcd-qcom 1da4000.ufshc: No record of suspend_fail
-> [    4.440538] ufshcd-qcom 1da4000.ufshc: dev_reset[0] = 0x0 at 3031009 us
-> [    4.445199] ufshcd-qcom 1da4000.ufshc: No record of host_reset
-> [    4.449750] ufshcd-qcom 1da4000.ufshc: No record of task_abort
-> [    4.454214] ufshcd-qcom 1da4000.ufshc: clk: core_clk, rate: 50000000
-> [    4.458590] ufshcd-qcom 1da4000.ufshc: clk: core_clk_unipro, rate: 37500000
-> 
-> I don't understand how this change is breaking things, but it clearly is for me.
-> 
-> What kind of additional data would be useful to get to the bottom of this?
-> 
+$ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+    vmlinux.gcc75.uncompressed.dwarf4
 
-++
+    FILE SIZE        VM SIZE
+ --------------  --------------
+  +0.0%     +18  [ = ]       0    [Unmapped]
+ -73.3%  -114Ki  [ = ]       0    .debug_aranges
+ -76.2% -2.01Mi  [ = ]       0    .debug_frame
+ -73.6% -2.89Mi  [ = ]       0    .debug_str
+ -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+ -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+ -70.5% -9.04Mi  [ = ]       0    .debug_line
+ -79.3% -10.9Mi  [ = ]       0    .debug_loc
+ -39.5% -88.6Mi  [ = ]       0    .debug_info
+ -18.2%  -123Mi  [ = ]       0    TOTAL
 
-Let me take a look and get back on this.
+$ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+    vmlinux.clang11.uncompressed.dwarf4
 
+    FILE SIZE        VM SIZE
+ --------------  --------------
+  +0.0%     +23  [ = ]       0    [Unmapped]
+ -65.6%    -871  [ = ]       0    .debug_aranges
+ -77.4% -1.84Mi  [ = ]       0    .debug_frame
+ -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+ -73.1% -2.43Mi  [ = ]       0    .debug_str
+ -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+ -65.9% -8.62Mi  [ = ]       0    .debug_line
+ -86.2% -40.0Mi  [ = ]       0    .debug_loc
+ -42.0% -64.1Mi  [ = ]       0    .debug_info
+ -22.1%  -122Mi  [ = ]       0    TOTAL
+
+For x86_64 defconfig + LLVM=1 (before):
+Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
+Maximum resident set size (kbytes): 43856
+
+For x86_64 defconfig + LLVM=1 (after):
+Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
+Maximum resident set size (kbytes): 1566776
+
+Thanks to:
+Nick Clifton helped us to provide the minimal binutils version.
+Sedat Dilet found an increase in size of debug .deb package.
+
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Sedat Dilek <sedat.dilek@gmail.com>
+Suggested-by: David Blaikie <blaikie@google.com>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V4 -> V5:
+* Drop unrelated hunk from a dirty tree.
+
+Changes V3 -> V4:
+* Add thanks line to commit message as per Masahiro.
+* Swap Sugguested-by to Cc for two lines in commit message, as per
+  Masahiro.
+
+Changes V2 -> V3:
+* Fix blaikie@'s email addr.
+* Fix Fangrui's Reviewed-by tag as per Masahiro.
+* Fix help text as per Masahiro.
+* Fix -Wa$(comma)foo as per Masahiro.
+
+Changes V1 -> V2:
+* rebase on linux-next.
+* Add assembler flags as per Fangrui.
+* Add note about KDEB_COMPRESS+scripts/package/builddeb
+  as per Sedat and Masahiro.
+* Add note about bintutils version requirements as per Nick C.
+* Add note about measured increased build time and max RSS.
+ Makefile          |  6 ++++++
+ lib/Kconfig.debug | 17 +++++++++++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 71687bfe1cd9..be8835296754 100644
+--- a/Makefile
++++ b/Makefile
+@@ -822,6 +822,12 @@ DEBUG_CFLAGS	+= $(call cc-option, -femit-struct-debug-baseonly) \
+ 		   $(call cc-option,-fno-var-tracking)
+ endif
+ 
++ifdef CONFIG_DEBUG_INFO_COMPRESSED
++DEBUG_CFLAGS	+= -gz=zlib
++KBUILD_AFLAGS	+= -Wa,--compress-debug-sections=zlib
++KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
++endif
++
+ KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+ export DEBUG_CFLAGS
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index b8f023e054b9..7fc82dcf814b 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -225,6 +225,23 @@ config DEBUG_INFO_REDUCED
+ 	  DEBUG_INFO build and compile times are reduced too.
+ 	  Only works with newer gcc versions.
+ 
++config DEBUG_INFO_COMPRESSED
++	bool "Compressed debugging information"
++	depends on DEBUG_INFO
++	depends on $(cc-option,-gz=zlib)
++	depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
++	depends on $(ld-option,--compress-debug-sections=zlib)
++	help
++	  Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
++	  5.0+, binutils 2.26+, and zlib.
++
++	  Users of dpkg-deb via scripts/package/builddeb may find an increase in
++	  size of their debug .deb packages with this config set, due to the
++	  debug info being compressed with zlib, then the object files being
++	  recompressed with a different compression scheme. But this is still
++	  preferable to setting $KDEB_COMPRESS to "none" which would be even
++	  larger.
++
+ config DEBUG_INFO_SPLIT
+ 	bool "Produce split debuginfo in .dwo files"
+ 	depends on DEBUG_INFO
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+2.27.0.rc0.183.gde8f92d652-goog
+
