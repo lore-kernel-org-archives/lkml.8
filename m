@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB569C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8EB32084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2765820873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519732;
-	bh=2ZR9YJXhpD7td3fOOI0PfY8rcLlwdV+cAdxddc1WQTM=;
+	s=default; t=1590519737;
+	bh=c12BwEXWJ5Nu5rhjeaqvBJv87i+JvJvCDPFzsV+LjxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhg3Sc31j9z92GmJyB3hfVh64oVsAwDfLgTAZ10LeXfBKJMpIl0WgqAmOpZMXm7tY
-	 mzsmRIdO+E20hZXD0nuGr2jzN+Jb929WtaOrYVTBFjs7jMD41IjYUMgg7WAdPOiKKe
-	 /Ky/+Szzk/3A1gpV96aqxEAgAm41ipNSzqCfOx4A=
+	b=xTk9QXImln2wgTK6Q2x/Iok/9BCDekPc8cKGAkJyjECnYSaahm7lWdeHvxWB4CWVA
+	 0GOfaaVoIpi8CqgzZnoaTwpxVcL6NmDguR3DY/zS0+XrNHw1BGvZBxVTCmlXHv06q9
+	 rwdPMIBVKn1GjNnjPkNEYGA8X63Cbl4iCa7wMQ1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390254AbgEZTCM (ORCPT
+        id S2391067AbgEZTCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:02:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56736 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390363AbgEZTCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:02:04 -0400
+        id S2403815AbgEZTCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B953F20849;
-        Tue, 26 May 2020 19:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7547E20849;
+        Tue, 26 May 2020 19:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519724;
-        bh=2ZR9YJXhpD7td3fOOI0PfY8rcLlwdV+cAdxddc1WQTM=;
+        s=default; t=1590519733;
+        bh=c12BwEXWJ5Nu5rhjeaqvBJv87i+JvJvCDPFzsV+LjxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YLZiB3T/N1H+fUiJt2bCMoXE5pir/guxSJCowuwG25qxSOC8WeAUP0zURToyYkHPa
-         rtVEaRjDOewNsco7ALwBfDTQwSS9pnobsnRgpRlLC6LGTCLbi3ZGo4P89fLfC2w4Nq
-         Hn5Gt4klDIeUgzIFlGUxSwMVc8c4fl6xCirR7GDE=
+        b=Epfhh69VKjegnBUoBV2qJthu45KSQZo85lS4hzKTnYyDM4bhXizxDadCl1sGkXzJN
+         kat9T/xQNawu7hro3YOLCgmOYSjY9I1R53YBc2w2JP+DTFL26b4uvV+4J665CaqcIm
+         uXhoHq6nNvOi5J4MqVNoNe4TE4l7LE1QApaHh/7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH 4.14 51/59] staging: greybus: Fix uninitialized scalar variable
-Date:   Tue, 26 May 2020 20:53:36 +0200
-Message-Id: <20200526183922.834256456@linuxfoundation.org>
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 55/59] rapidio: fix an error in get_user_pages_fast() error handling
+Date:   Tue, 26 May 2020 20:53:40 +0200
+Message-Id: <20200526183923.849955495@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -58,42 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Carter <oscar.carter@gmx.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
+commit ffca476a0a8d26de767cc41d62b8ca7f540ecfdd upstream.
 
-In the "gb_tty_set_termios" function the "newline" variable is declared
-but not initialized. So the "flow_control" member is not initialized and
-the OR / AND operations with itself results in an undefined value in
-this member.
+In the case of get_user_pages_fast() returning fewer pages than
+requested, rio_dma_transfer() does not quite do the right thing.  It
+attempts to release all the pages that were requested, rather than just
+the pages that were pinned.
 
-The purpose of the code is to set the flow control type, so remove the
-OR / AND self operator and set the value directly.
+Fix the error handling so that only the pages that were successfully
+pinned are released.
 
-Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
-Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200517235620.205225-2-jhubbard@nvidia.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/uart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rapidio/devices/rio_mport_cdev.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/staging/greybus/uart.c
-+++ b/drivers/staging/greybus/uart.c
-@@ -538,9 +538,9 @@ static void gb_tty_set_termios(struct tt
- 	}
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -904,6 +904,11 @@ rio_dma_transfer(struct file *filp, u32
+ 				rmcd_error("pinned %ld out of %ld pages",
+ 					   pinned, nr_pages);
+ 			ret = -EFAULT;
++			/*
++			 * Set nr_pages up to mean "how many pages to unpin, in
++			 * the error handler:
++			 */
++			nr_pages = pinned;
+ 			goto err_pg;
+ 		}
  
- 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
--		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
- 	else
--		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = 0;
- 
- 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
- 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
 
 
