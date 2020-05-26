@@ -2,161 +2,1243 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA99C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12285C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA082084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93132089D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VmvcfV+w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDAPYAXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389023AbgEZLEs (ORCPT
+        id S2388810AbgEZLEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 07:04:48 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:54912 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389004AbgEZLEq (ORCPT
+        Tue, 26 May 2020 07:04:54 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23464 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389006AbgEZLEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 07:04:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590491085; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=SKBdhs63Zp2CNDzdiohqN/c3xb5urkHJTxlo1SdluWA=; b=VmvcfV+w2UFlOhZKMY6i3W/t7qnb61gBsnKC3HBAfBZjP19eOkq/FrPV1lTEDSP/84dH/c4f
- cryxSprXaL6oegMeLb3r7/gzE+F5IlFFdTrCI5f4u+kwhyeVtX875McOtDHKhOI3SBMDzZTC
- jPVouq+4XVqY4dIYr/eF4pduhxE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5eccf7b03131442d9595171a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 11:04:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7D019C43395; Tue, 26 May 2020 11:04:15 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9663FC433C6;
-        Tue, 26 May 2020 11:04:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9663FC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org>
- <20200514171352.GP4525@google.com>
- <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org>
- <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org> <87r1vl3e42.fsf@kernel.org>
- <20200518183512.GE2165@builder.lan>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <b20775ba-7870-b0ca-7c65-d72a08fdacb2@codeaurora.org>
-Date:   Tue, 26 May 2020 16:34:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 26 May 2020 07:04:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590491086;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5O6wmB+OtEgOpdTgMhwmvMej/HndgSjcssxfpqUYQvo=;
+        b=CDAPYAXx8VjJzCPRfvfkZOaH0Adt1owKDq7K9reCkr2w/r6y2r8kim2HhRg/RcGLrAEYJz
+        bQPCjD1yBCUvvqXIQpCbrdwYwFEwjT/NAtvP5VoWBxB+ZRvcLGfVBkUBT+LjcG6Yq8CCQR
+        +4vQFFEOO7R/jgErBsof9Q6KTagCOCc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-LKGVitLFNeKFP4_bKF6zPA-1; Tue, 26 May 2020 07:04:44 -0400
+X-MC-Unique: LKGVitLFNeKFP4_bKF6zPA-1
+Received: by mail-wm1-f69.google.com with SMTP id g194so956870wmg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:04:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5O6wmB+OtEgOpdTgMhwmvMej/HndgSjcssxfpqUYQvo=;
+        b=HOEORs971UpDxTrNQbCltyHls+YIxjj+b0C5pRHFRIqfcPYG02DwutxdDSKDfFlH7f
+         ZqwjXr6BfDaaq07he9HB6zaMksGj4CyrwFrjpyc4lfs41PhcwlHSvreWgeqU7dhFZxjD
+         ZLr7jl8GrAwz7Fd8DvJRBozja7b8TVS+9TkE9YEoe8fHrV+YW2o84vakw1HsdQqt6tLN
+         Cgqwcz5lBqOqMNT2MLzRHRRffe6gYYuwIqIjvHlxNDtk6p1QDbHFC6Xq3MU7vFs5LNk7
+         rlY0wsmnkjYb2BxSgLF2cRIiTPoUpmrYAF4XY6aOWUh5UDxVbY/z7gFWBuXEetI9bGWi
+         2nkw==
+X-Gm-Message-State: AOAM533fu4sU80Rx5pcLoEsj44HzbXJPPDsxOnQQwoRM9g3P1AxW4ESh
+        aUNT4rAW0XQEEf/EUJq1ibNs1GNfPPEqe9Q+71o4romkYGga9dAkpwhG/5bmIfAg1if4IIgFjbC
+        LzkY9jWalKT08EwM0SfUtiPFr
+X-Received: by 2002:a1c:c2c5:: with SMTP id s188mr923816wmf.18.1590491082945;
+        Tue, 26 May 2020 04:04:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5nQZudivZ6Pr1hFC05FMBitfCfMfBgLsi4yLshtoZEJ/TmA0F8Yn3yi1E4u4AmyKLDArSrw==
+X-Received: by 2002:a1c:c2c5:: with SMTP id s188mr923747wmf.18.1590491082186;
+        Tue, 26 May 2020 04:04:42 -0700 (PDT)
+Received: from localhost.localdomain.com ([194.230.155.118])
+        by smtp.gmail.com with ESMTPSA id d6sm22928240wrj.90.2020.05.26.04.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 04:04:30 -0700 (PDT)
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Subject: [PATCH v3 3/7] kunit: tests for stats_fs API
+Date:   Tue, 26 May 2020 13:03:13 +0200
+Message-Id: <20200526110318.69006-4-eesposit@redhat.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200526110318.69006-1-eesposit@redhat.com>
+References: <20200526110318.69006-1-eesposit@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518183512.GE2165@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe,
+Add kunit tests to extensively test the stats_fs API functionality.
 
-Please let me know how to go forward with this patch
+In order to run them, the kernel .config must set CONFIG_KUNIT=y
+and a new .kunitconfig file must be created with CONFIG_STATS_FS=y
+and CONFIG_STATS_FS_TEST=y
 
-Regards
+Tests can be then started by running the following command from the root
+directory of the linux kernel source tree:
+./tools/testing/kunit/kunit.py run --timeout=30 --jobs=`nproc --all`
 
-Sandeep
+Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+---
+ fs/Kconfig                   |    6 +
+ fs/stats_fs/Makefile         |    2 +
+ fs/stats_fs/stats_fs-tests.c | 1097 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 1105 insertions(+)
+ create mode 100644 fs/stats_fs/stats_fs-tests.c
 
-On 5/19/2020 12:05 AM, Bjorn Andersson wrote:
-> On Thu 14 May 23:29 PDT 2020, Felipe Balbi wrote:
->
->> Hi,
->>
->> Georgi Djakov <georgi.djakov@linaro.org> writes:
->>>>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
->>>>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
->>>>>>>>> +{
->>>>>>>>> +	struct device *dev = qcom->dev;
->>>>>>>>> +	int ret;
->>>>>>>>> +
->>>>>>>>> +	if (!device_is_bound(&qcom->dwc3->dev))
->>>>>>>>> +		return -EPROBE_DEFER;
->>>>>>>> this breaks allmodconfig. I'm dropping this series from my queue for
->>>>>>>> this merge window.
->>>>>>> Sorry, I meant this patch ;-)
->>>>>> I guess that's due to INTERCONNECT being a module. There is currently a
->>>>> I believe it's because of this:
->>>>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko] undefined!
->>>>>
->>>>>> discussion about this  with Viresh and Georgi in response to another
->>>>>> automated build failure. Viresh suggests changing CONFIG_INTERCONNECT
->>>>>> from tristate to bool, which seems sensible to me given that interconnect
->>>>>> is a core subsystem.
->>>>> The problem you are talking about would arise when INTERCONNECT=m and
->>>>> USB_DWC3_QCOM=y and it definitely exists here and could be triggered with
->>>>> randconfig build. So i suggest to squash also the diff below.
->>>>>
->>>>> Thanks,
->>>>> Georgi
->>>>>
->>>>> ---8<---
->>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
->>>>> index 206caa0ea1c6..6661788b1a76 100644
->>>>> --- a/drivers/usb/dwc3/Kconfig
->>>>> +++ b/drivers/usb/dwc3/Kconfig
->>>>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
->>>>>   	tristate "Qualcomm Platform"
->>>>>   	depends on ARCH_QCOM || COMPILE_TEST
->>>>>   	depends on EXTCON || !EXTCON
->>>>> +	depends on INTERCONNECT || !INTERCONNECT
->>>> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to device_is_bound()
->>> Agree, but just to clarify, that these are two separate issues that need to
->>> be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=y combined
->>> with INTERCONNECT=m is the second one.
->> If INTERCONNECT=m, QCOM3 shouldn't be y. I think the following is
->> enough:
->>
->> 	depends on INTERCONNECT=y || INTERCONNECT=USB_DWC3_QCOM
->>
-> This misses the case where INTERCONNECT=n and USB_DWC3_QCOM=[ym] which
-> I don't see a reason for breaking.
->
-> But if only INTERCONNECT where a bool, then we don't need to specify a
-> depends on, because it will either be there, or the stubs will.
-> We've come to this conclusion in a lot of different frameworks and I
-> don't see why we should do this differently with INTERCONNECT.
->
-> Regards,
-> Bjorn
-
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 684ad61129ab..02bbb0e4cdf7 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -227,6 +227,12 @@ config STATS_FS
+ 	  stats_fs is a virtual file system that provides counters and
+ 	  other statistics about the running kernel.
+ 
++config STATS_FS_TEST
++	bool "Tests for stats_fs"
++	depends on STATS_FS && KUNIT
++	help
++	  tests for the stats_fs API.
++
+ config STATS_FS_API
+ 	bool
+ 	imply STATS_FS
+diff --git a/fs/stats_fs/Makefile b/fs/stats_fs/Makefile
+index bd988daa4c39..bc59a54d5721 100644
+--- a/fs/stats_fs/Makefile
++++ b/fs/stats_fs/Makefile
+@@ -1,5 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ stats_fs-objs	:= stats_fs.o
++stats_fs-tests-objs	:= stats_fs-tests.o
+ 
+ obj-$(CONFIG_STATS_FS)	    += stats_fs.o
+ obj-$(CONFIG_STATS_FS_STUB) += stub.o
++obj-$(CONFIG_STATS_FS_TEST) += stats_fs-tests.o
+diff --git a/fs/stats_fs/stats_fs-tests.c b/fs/stats_fs/stats_fs-tests.c
+new file mode 100644
+index 000000000000..bbac133d7fe7
+--- /dev/null
++++ b/fs/stats_fs/stats_fs-tests.c
+@@ -0,0 +1,1097 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/module.h>
++#include <linux/errno.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/slab.h>
++#include <linux/anon_inodes.h>
++#include <linux/spinlock.h>
++#include <linux/uaccess.h>
++#include <linux/rwsem.h>
++#include <linux/list.h>
++#include <linux/kref.h>
++
++#include <linux/limits.h>
++#include <linux/stats_fs.h>
++#include <kunit/test.h>
++#include "internal.h"
++
++#define STATS_FS_STAT(el, x, ...)                                              \
++	{                                                                      \
++		.name = #x, .offset = offsetof(struct container, el.x),        \
++		##__VA_ARGS__                                                  \
++	}
++
++#define ARR_SIZE(el) ((int)(sizeof(el) / sizeof(struct stats_fs_value) - 1))
++
++struct test_values_struct {
++	uint64_t u64;
++	int32_t s32;
++	bool bo;
++	uint8_t u8;
++	int16_t s16;
++};
++
++struct container {
++	struct test_values_struct vals;
++};
++
++struct stats_fs_value test_values[6] = {
++	STATS_FS_STAT(vals, u64, .type = &stats_fs_type_u64,
++		      .aggr_kind = STATS_FS_NONE,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	STATS_FS_STAT(vals, s32, .type = &stats_fs_type_s32,
++		      .aggr_kind = STATS_FS_NONE),
++	STATS_FS_STAT(vals, bo, .type = &stats_fs_type_bool,
++		      .aggr_kind = STATS_FS_NONE,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	STATS_FS_STAT(vals, u8, .type = &stats_fs_type_u8,
++		      .aggr_kind = STATS_FS_NONE),
++	STATS_FS_STAT(vals, s16, .type = &stats_fs_type_s16,
++		      .aggr_kind = STATS_FS_NONE,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	{ NULL },
++};
++
++struct stats_fs_value test_aggr[4] = {
++	STATS_FS_STAT(vals, s32, .type = &stats_fs_type_s32,
++		      .aggr_kind = STATS_FS_MIN,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	STATS_FS_STAT(vals, bo, .type = &stats_fs_type_bool,
++		      .aggr_kind = STATS_FS_MAX,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	STATS_FS_STAT(vals, u64, .type = &stats_fs_type_u64,
++		      .aggr_kind = STATS_FS_SUM,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	{ NULL },
++};
++
++struct stats_fs_value test_same_name[3] = {
++	STATS_FS_STAT(vals, s32, .type = &stats_fs_type_s32,
++		      .aggr_kind = STATS_FS_NONE),
++	STATS_FS_STAT(vals, s32, .type = &stats_fs_type_s32,
++		      .aggr_kind = STATS_FS_MIN),
++	{ NULL },
++};
++
++struct stats_fs_value test_all_aggr[6] = {
++	STATS_FS_STAT(vals, s32, .type = &stats_fs_type_s32,
++		      .aggr_kind = STATS_FS_MIN),
++	STATS_FS_STAT(vals, bo, .type = &stats_fs_type_bool,
++		      .aggr_kind = STATS_FS_COUNT_ZERO,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	STATS_FS_STAT(vals, u64, .type = &stats_fs_type_u64,
++		      .aggr_kind = STATS_FS_SUM),
++	STATS_FS_STAT(vals, u8, .type = &stats_fs_type_u8,
++		      .aggr_kind = STATS_FS_AVG,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	STATS_FS_STAT(vals, s16, .type = &stats_fs_type_s16,
++		      .aggr_kind = STATS_FS_MAX,
++		      .value_flag = STATS_FS_FLOATING_VALUE),
++	{ NULL },
++};
++
++#define def_u64 ((uint64_t)64)
++
++#define def_val_s32 ((int32_t)S32_MIN)
++#define def_val_bool ((bool)true)
++#define def_val_u8 ((uint8_t)127)
++#define def_val_s16 ((int16_t)10000)
++
++#define def_val2_s32 ((int32_t)S16_MAX)
++#define def_val2_bool ((bool)false)
++#define def_val2_u8 ((uint8_t)255)
++#define def_val2_s16 ((int16_t)-20000)
++
++struct container cont = {
++	.vals = {
++			.u64 = def_u64,
++			.s32 = def_val_s32,
++			.bo = def_val_bool,
++			.u8 = def_val_u8,
++			.s16 = def_val_s16,
++		},
++};
++
++struct container cont2 = {
++	.vals = {
++			.u64 = def_u64,
++			.s32 = def_val2_s32,
++			.bo = def_val2_bool,
++			.u8 = def_val2_u8,
++			.s16 = def_val2_s16,
++		},
++};
++
++static void get_stats_at_addr(struct stats_fs_source *src, void *addr,
++			      int *aggr, int *val, int use_addr)
++{
++	struct stats_fs_value *entry;
++	struct stats_fs_value_source *src_entry;
++	int counter_val = 0, counter_aggr = 0;
++
++	list_for_each_entry (src_entry, &src->values_head, list_element) {
++		if (use_addr && src_entry->base_addr != addr)
++			continue;
++
++		for (entry = src_entry->values; entry->name; entry++) {
++			if (entry->aggr_kind == STATS_FS_NONE)
++				counter_val++;
++			else
++				counter_aggr++;
++		}
++	}
++
++	if (aggr)
++		*aggr = counter_aggr;
++
++	if (val)
++		*val = counter_val;
++}
++
++int source_has_subsource(struct stats_fs_source *src,
++			 struct stats_fs_source *sub)
++{
++	struct stats_fs_source *entry;
++
++	list_for_each_entry (entry, &src->subordinates_head, list_element) {
++		if (entry == sub)
++			return 1;
++	}
++	return 0;
++}
++
++int get_number_subsources(struct stats_fs_source *src)
++{
++	struct stats_fs_source *entry;
++	int counter = 0;
++
++	list_for_each_entry (entry, &src->subordinates_head, list_element) {
++		counter++;
++	}
++	return counter;
++}
++
++int get_number_values(struct stats_fs_source *src)
++{
++	int counter = 0;
++
++	get_stats_at_addr(src, NULL, NULL, &counter, 0);
++	return counter;
++}
++
++int get_total_number_values(struct stats_fs_source *src)
++{
++	struct stats_fs_source *sub_entry;
++	int counter = 0;
++
++	get_stats_at_addr(src, NULL, NULL, &counter, 0);
++
++	list_for_each_entry (sub_entry, &src->subordinates_head, list_element) {
++		counter += get_total_number_values(sub_entry);
++	}
++
++	return counter;
++}
++
++int get_number_aggregates(struct stats_fs_source *src)
++{
++	int counter = 0;
++
++	get_stats_at_addr(src, NULL, &counter, NULL, 1);
++	return counter;
++}
++
++int get_number_values_with_base(struct stats_fs_source *src, void *addr)
++{
++	int counter = 0;
++
++	get_stats_at_addr(src, addr, NULL, &counter, 1);
++	return counter;
++}
++
++int get_number_aggr_with_base(struct stats_fs_source *src, void *addr)
++{
++	int counter = 0;
++
++	get_stats_at_addr(src, addr, &counter, NULL, 1);
++	return counter;
++}
++
++static void test_empty_folder(struct kunit *test)
++{
++	struct stats_fs_source *src;
++
++	src = stats_fs_source_create(0, "kvm_%d", 123);
++	KUNIT_EXPECT_EQ(test, strcmp(src->name, "kvm_123"), 0);
++	KUNIT_EXPECT_EQ(test, get_number_subsources(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	stats_fs_source_put(src);
++}
++
++static void test_add_subfolder(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub;
++
++	src = stats_fs_source_create(0, "parent");
++	sub = stats_fs_source_create(0, "child");
++	stats_fs_source_add_subordinate(src, sub);
++	KUNIT_EXPECT_EQ(test, source_has_subsource(src, sub), true);
++	KUNIT_EXPECT_EQ(test, get_number_subsources(src), 1);
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_values(sub), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(sub), 0);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	stats_fs_source_put(sub);
++	sub = stats_fs_source_create(0, "not a child");
++	KUNIT_EXPECT_EQ(test, source_has_subsource(src, sub), false);
++	KUNIT_EXPECT_EQ(test, get_number_subsources(src), 1);
++
++	stats_fs_source_put(sub);
++	stats_fs_source_put(src);
++}
++
++static void test_add_value(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++
++	// add values
++	n = stats_fs_source_add_values(src, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++
++	// add same values, nothing happens
++	n = stats_fs_source_add_values(src, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, -EEXIST);
++	n = get_number_values_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++
++	// size is invaried
++	KUNIT_EXPECT_EQ(test, get_number_values(src), ARR_SIZE(test_values));
++
++	// no aggregates
++	n = get_number_aggr_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, get_number_values(src), ARR_SIZE(test_values));
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++
++	stats_fs_source_put(src);
++}
++
++static void test_add_value_in_subfolder(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub, *sub_not;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub = stats_fs_source_create(0, "child");
++
++	// src -> sub
++	stats_fs_source_add_subordinate(src, sub);
++
++	// add values
++	n = stats_fs_source_add_values(sub, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(sub, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src),
++			ARR_SIZE(test_values));
++
++	KUNIT_EXPECT_EQ(test, get_number_values(sub), ARR_SIZE(test_values));
++	// no values in sub
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(sub), 0);
++
++	// different folder
++	sub_not = stats_fs_source_create(0, "not a child");
++
++	// add values
++	n = stats_fs_source_add_values(sub_not, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(sub_not, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src),
++			ARR_SIZE(test_values));
++
++	// remove sub, check values is 0
++	stats_fs_source_remove_subordinate(src, sub);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	// re-add sub, check value are added
++	stats_fs_source_add_subordinate(src, sub);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src),
++			ARR_SIZE(test_values));
++
++	// add sub_not, check value are twice as many
++	stats_fs_source_add_subordinate(src, sub_not);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src),
++			ARR_SIZE(test_values) * 2);
++
++	KUNIT_EXPECT_EQ(test, get_number_values(sub_not),
++			ARR_SIZE(test_values));
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(sub_not), 0);
++
++	stats_fs_source_put(sub);
++	stats_fs_source_put(sub_not);
++	stats_fs_source_put(src);
++}
++
++static void test_search_value(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++
++	// add values
++	n = stats_fs_source_add_values(src, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++
++	// get u64
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ((bool)ret), def_val_bool);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	// get a non-added value
++	n = stats_fs_source_get_value_by_name(src, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	stats_fs_source_put(src);
++}
++
++static void test_search_value_in_subfolder(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub = stats_fs_source_create(0, "child");
++
++	// src -> sub
++	stats_fs_source_add_subordinate(src, sub);
++
++	// add values to sub
++	n = stats_fs_source_add_values(sub, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(sub, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++
++	n = stats_fs_source_get_value_by_name(sub, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(sub, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(sub, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ((bool)ret), def_val_bool);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(sub, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++	n = stats_fs_source_get_value_by_name(src, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	stats_fs_source_put(sub);
++	stats_fs_source_put(src);
++}
++
++static void test_search_value_in_empty_folder(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "empty folder");
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_subsources(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(src, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	stats_fs_source_put(src);
++}
++
++static void test_add_aggregate(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++
++	// add aggr to src, no values
++	n = stats_fs_source_add_values(src, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	// count values
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++
++	// add same array again, should not be added
++	n = stats_fs_source_add_values(src, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, -EEXIST);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), ARR_SIZE(test_aggr));
++
++	stats_fs_source_put(src);
++}
++
++static void test_add_aggregate_in_subfolder(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub, *sub_not;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub = stats_fs_source_create(0, "child");
++	// src->sub
++	stats_fs_source_add_subordinate(src, sub);
++
++	// add aggr to sub
++	n = stats_fs_source_add_values(sub, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	KUNIT_EXPECT_EQ(test, get_number_values(sub), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(sub), ARR_SIZE(test_aggr));
++
++	// not a child
++	sub_not = stats_fs_source_create(0, "not a child");
++
++	// add aggr to "not a child"
++	n = stats_fs_source_add_values(sub_not, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub_not, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++	KUNIT_EXPECT_EQ(test, get_number_values(src), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), 0);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	// remove sub
++	stats_fs_source_remove_subordinate(src, sub);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	// re-add both
++	stats_fs_source_add_subordinate(src, sub);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++	stats_fs_source_add_subordinate(src, sub_not);
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	KUNIT_EXPECT_EQ(test, get_number_values(sub_not), 0);
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(sub_not),
++			ARR_SIZE(test_aggr));
++
++	stats_fs_source_put(sub);
++	stats_fs_source_put(sub_not);
++	stats_fs_source_put(src);
++}
++
++static void test_search_aggregate(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	n = stats_fs_source_add_values(src, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++	n = get_number_aggr_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, (int64_t)ret, S64_MAX);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	n = stats_fs_source_get_value_by_name(src, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++	stats_fs_source_put(src);
++}
++
++static void test_search_aggregate_in_subfolder(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub = stats_fs_source_create(0, "child");
++
++	stats_fs_source_add_subordinate(src, sub);
++
++	n = stats_fs_source_add_values(sub, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++	n = get_number_aggr_with_base(sub, &cont);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	// no u64 in test_aggr
++	n = stats_fs_source_get_value_by_name(sub, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(sub, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, (int64_t)ret, S64_MAX);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(sub, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	n = stats_fs_source_get_value_by_name(sub, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++	n = stats_fs_source_get_value_by_name(src, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	stats_fs_source_put(sub);
++	stats_fs_source_put(src);
++}
++
++void test_search_same(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	n = stats_fs_source_add_values(src, test_same_name, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, 1);
++	n = get_number_aggr_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, 1);
++
++	n = stats_fs_source_add_values(src, test_same_name, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, -EEXIST);
++	n = get_number_values_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, 1);
++	n = get_number_aggr_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, 1);
++
++	// returns first the value
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	stats_fs_source_put(src);
++}
++
++static void test_add_mixed(struct kunit *test)
++{
++	struct stats_fs_source *src;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++
++	n = stats_fs_source_add_values(src, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_add_values(src, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++
++	n = stats_fs_source_add_values(src, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, -EEXIST);
++	n = get_number_values_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++	n = stats_fs_source_add_values(src, test_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, -EEXIST);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++
++	KUNIT_EXPECT_EQ(test, get_number_values(src), ARR_SIZE(test_values));
++	KUNIT_EXPECT_EQ(test, get_number_aggregates(src), ARR_SIZE(test_aggr));
++	stats_fs_source_put(src);
++}
++
++static void test_search_mixed(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub = stats_fs_source_create(0, "child");
++	stats_fs_source_add_subordinate(src, sub);
++
++	// src has the aggregates, sub the values. Just search
++	n = stats_fs_source_add_values(sub, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(sub, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++	n = stats_fs_source_add_values(src, test_aggr, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_aggr));
++
++	// u64 is sum so again same value
++	n = stats_fs_source_get_value_by_name(sub, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	// s32 is min so return the value also in the aggregate
++	n = stats_fs_source_get_value_by_name(sub, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	// bo is max
++	n = stats_fs_source_get_value_by_name(sub, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, (bool)ret, def_val_bool);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, (bool)ret, def_val_bool);
++	KUNIT_EXPECT_EQ(test, n, 0);
++
++	n = stats_fs_source_get_value_by_name(sub, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++	n = stats_fs_source_get_value_by_name(src, "does not exist", &ret);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	KUNIT_EXPECT_EQ(test, n, -ENOENT);
++
++	stats_fs_source_put(sub);
++	stats_fs_source_put(src);
++}
++
++static void test_all_aggregations_agg_val_val(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub1, *sub2;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub1 = stats_fs_source_create(0, "child1");
++	sub2 = stats_fs_source_create(0, "child2");
++	stats_fs_source_add_subordinate(src, sub1);
++	stats_fs_source_add_subordinate(src, sub2);
++
++	n = stats_fs_source_add_values(sub1, test_all_aggr, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub1, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++	n = stats_fs_source_add_values(sub2, test_all_aggr, &cont2, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub2, &cont2);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	n = stats_fs_source_add_values(src, test_all_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	// sum
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, def_u64 * 2);
++
++	// min
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++
++	// count_0
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 1ull);
++
++	// avg
++	n = stats_fs_source_get_value_by_name(src, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 191ull);
++
++	// max
++	n = stats_fs_source_get_value_by_name(src, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int16_t)ret, def_val_s16);
++
++	stats_fs_source_put(sub1);
++	stats_fs_source_put(sub2);
++	stats_fs_source_put(src);
++}
++
++static void test_all_aggregations_val_agg_val(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub1, *sub2;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub1 = stats_fs_source_create(0, "child1");
++	sub2 = stats_fs_source_create(0, "child2");
++	stats_fs_source_add_subordinate(src, sub1);
++	stats_fs_source_add_subordinate(src, sub2);
++
++	n = stats_fs_source_add_values(src, test_all_aggr, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++	n = stats_fs_source_add_values(sub2, test_all_aggr, &cont2, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub2, &cont2);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	n = stats_fs_source_add_values(sub1, test_all_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub1, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++	n = stats_fs_source_get_value_by_name(sub1, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	n = stats_fs_source_get_value_by_name(sub2, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++	n = stats_fs_source_get_value_by_name(sub1, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int64_t)ret, S64_MAX); // MIN
++	n = stats_fs_source_get_value_by_name(sub2, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val2_s32);
++
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (bool)ret, def_val_bool);
++	n = stats_fs_source_get_value_by_name(sub1, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	n = stats_fs_source_get_value_by_name(sub2, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (bool)ret, def_val2_bool);
++
++	n = stats_fs_source_get_value_by_name(src, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (uint8_t)ret, def_val_u8);
++	n = stats_fs_source_get_value_by_name(sub1, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 0ull);
++	n = stats_fs_source_get_value_by_name(sub2, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (uint8_t)ret, def_val2_u8);
++
++	n = stats_fs_source_get_value_by_name(src, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int16_t)ret, def_val_s16);
++	n = stats_fs_source_get_value_by_name(sub1, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int64_t)ret, S64_MIN); // MAX
++	n = stats_fs_source_get_value_by_name(sub2, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int16_t)ret, def_val2_s16);
++
++	stats_fs_source_put(sub1);
++	stats_fs_source_put(sub2);
++	stats_fs_source_put(src);
++}
++
++static void test_all_aggregations_agg_val_val_sub(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub1, *sub11;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub1 = stats_fs_source_create(0, "child1");
++	sub11 = stats_fs_source_create(0, "child11");
++	stats_fs_source_add_subordinate(src, sub1);
++	stats_fs_source_add_subordinate(sub1, sub11); // changes here!
++
++	n = stats_fs_source_add_values(sub1, test_values, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(sub1, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++	n = stats_fs_source_add_values(sub11, test_values, &cont2, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_values_with_base(sub11, &cont2);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_values));
++
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src),
++			ARR_SIZE(test_values) * 2);
++
++	n = stats_fs_source_add_values(sub1, test_all_aggr, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub1, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++	n = stats_fs_source_add_values(sub11, test_all_aggr, &cont2, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub11, &cont2);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	n = stats_fs_source_add_values(src, test_all_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	// sum
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, def_u64 * 2);
++
++	// min
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++
++	// count_0
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 1ull);
++
++	// avg
++	n = stats_fs_source_get_value_by_name(src, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 191ull);
++
++	// max
++	n = stats_fs_source_get_value_by_name(src, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int16_t)ret, def_val_s16);
++
++	stats_fs_source_put(sub1);
++	stats_fs_source_put(sub11);
++	stats_fs_source_put(src);
++}
++
++static void test_all_aggregations_agg_no_val_sub(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub1, *sub11;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub1 = stats_fs_source_create(0, "child1");
++	sub11 = stats_fs_source_create(0, "child11");
++	stats_fs_source_add_subordinate(src, sub1);
++	stats_fs_source_add_subordinate(sub1, sub11);
++
++	n = stats_fs_source_add_values(sub11, test_all_aggr, &cont2, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub11, &cont2);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	n = stats_fs_source_add_values(src, test_all_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	// sum
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, def_u64);
++
++	// min
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val2_s32);
++
++	// count_0
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 1ull);
++
++	// avg
++	n = stats_fs_source_get_value_by_name(src, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (uint8_t)ret, def_val2_u8);
++
++	// max
++	n = stats_fs_source_get_value_by_name(src, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int16_t)ret, def_val2_s16);
++
++	stats_fs_source_put(sub1);
++	stats_fs_source_put(sub11);
++	stats_fs_source_put(src);
++}
++
++static void test_all_aggregations_agg_agg_val_sub(struct kunit *test)
++{
++	struct stats_fs_source *src, *sub1, *sub11, *sub12;
++	uint64_t ret;
++	int n;
++
++	src = stats_fs_source_create(0, "parent");
++	sub1 = stats_fs_source_create(0, "child1");
++	sub11 = stats_fs_source_create(0, "child11");
++	sub12 = stats_fs_source_create(0, "child12");
++	stats_fs_source_add_subordinate(src, sub1);
++	stats_fs_source_add_subordinate(sub1, sub11);
++	stats_fs_source_add_subordinate(sub1, sub12);
++
++	n = stats_fs_source_add_values(sub11, test_all_aggr, &cont2, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub11, &cont2);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	n = stats_fs_source_add_values(sub12, test_all_aggr, &cont, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub12, &cont);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	KUNIT_EXPECT_EQ(test, get_total_number_values(src), 0);
++
++	n = stats_fs_source_add_values(src, test_all_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(src, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	n = stats_fs_source_add_values(sub1, test_all_aggr, NULL, 0);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	n = get_number_aggr_with_base(sub1, NULL);
++	KUNIT_EXPECT_EQ(test, n, ARR_SIZE(test_all_aggr));
++
++	// sum
++	n = stats_fs_source_get_value_by_name(src, "u64", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, def_u64 * 2);
++
++	// min
++	n = stats_fs_source_get_value_by_name(src, "s32", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ((int32_t)ret), def_val_s32);
++
++	// count_0
++	n = stats_fs_source_get_value_by_name(src, "bo", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, ret, 1ull);
++
++	// avg
++	n = stats_fs_source_get_value_by_name(src, "u8", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (uint8_t)ret,
++			(uint8_t)((def_val2_u8 + def_val_u8) / 2));
++
++	// max
++	n = stats_fs_source_get_value_by_name(src, "s16", &ret);
++	KUNIT_EXPECT_EQ(test, n, 0);
++	KUNIT_EXPECT_EQ(test, (int16_t)ret, def_val_s16);
++
++	stats_fs_source_put(sub1);
++	stats_fs_source_put(sub11);
++	stats_fs_source_put(sub12);
++	stats_fs_source_put(src);
++}
++
++static struct kunit_case stats_fs_test_cases[] = {
++	KUNIT_CASE(test_empty_folder),
++	KUNIT_CASE(test_add_subfolder),
++	KUNIT_CASE(test_add_value),
++	KUNIT_CASE(test_add_value_in_subfolder),
++	KUNIT_CASE(test_search_value),
++	KUNIT_CASE(test_search_value_in_subfolder),
++	KUNIT_CASE(test_search_value_in_empty_folder),
++	KUNIT_CASE(test_add_aggregate),
++	KUNIT_CASE(test_add_aggregate_in_subfolder),
++	KUNIT_CASE(test_search_aggregate),
++	KUNIT_CASE(test_search_aggregate_in_subfolder),
++	KUNIT_CASE(test_search_same),
++	KUNIT_CASE(test_add_mixed),
++	KUNIT_CASE(test_search_mixed),
++	KUNIT_CASE(test_all_aggregations_agg_val_val),
++	KUNIT_CASE(test_all_aggregations_val_agg_val),
++	KUNIT_CASE(test_all_aggregations_agg_val_val_sub),
++	KUNIT_CASE(test_all_aggregations_agg_no_val_sub),
++	KUNIT_CASE(test_all_aggregations_agg_agg_val_sub),
++	{}
++};
++
++static struct kunit_suite stats_fs_test_suite = {
++	.name = "stats_fs",
++	.test_cases = stats_fs_test_cases,
++};
++
++kunit_test_suite(stats_fs_test_suite);
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.25.4
 
