@@ -2,150 +2,156 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF111C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61542089D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="box0P1wo"
+	by mail.kernel.org (Postfix) with ESMTP id B77752073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389196AbgEZMl1 (ORCPT
+        id S2389220AbgEZMlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:41:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20026 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388497AbgEZMl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:41:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590496885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WsRwgk9yIsXFnSEXFT2w5jAISXwAreFSORAIbunvzRM=;
-        b=box0P1woWfbLxR0QIIWWDJCdxQ5bkHvcGarHEVFAc/LXlSE0F5ek9mS9AxM+cbjngvPeT4
-        buZ1GVpvHabdyStErkTf1YZn2VKpyKpuSZkSylKfKYf3LixLF7DtJCXAQzu2qpIf3ZYZzQ
-        /NOpBTUxp+IFOb8atvRQsUsgdsc2dSc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-J_sAvGetPgm4HTtpzu6Dxw-1; Tue, 26 May 2020 08:41:21 -0400
-X-MC-Unique: J_sAvGetPgm4HTtpzu6Dxw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4BAAE1800D42;
-        Tue, 26 May 2020 12:41:19 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-180.ams2.redhat.com [10.36.112.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DB661CA;
-        Tue, 26 May 2020 12:41:16 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup and thread creation (v19)
-References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com>
-        <20200501021439.2456-2-mathieu.desnoyers@efficios.com>
-        <87v9kqbzse.fsf@oldenburg2.str.redhat.com>
-        <941087675.33347.1590418305398.JavaMail.zimbra@efficios.com>
-        <87367ovy6k.fsf@oldenburg2.str.redhat.com>
-        <108939265.33525.1590428184533.JavaMail.zimbra@efficios.com>
-Date:   Tue, 26 May 2020 14:41:14 +0200
-In-Reply-To: <108939265.33525.1590428184533.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Mon, 25 May 2020 13:36:24 -0400
-        (EDT)")
-Message-ID: <87lflerhqt.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 26 May 2020 08:41:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60738 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388497AbgEZMlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:41:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B997AAFCD;
+        Tue, 26 May 2020 12:41:45 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id CF2036032A; Tue, 26 May 2020 14:41:39 +0200 (CEST)
+Date:   Tue, 26 May 2020 14:41:39 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+Message-ID: <20200526124139.mvsn52cixu2t5ljz@lion.mk-sys.cz>
+References: <20200526091025.25243-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526091025.25243-1-o.rempel@pengutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+On Tue, May 26, 2020 at 11:10:25AM +0200, Oleksij Rempel wrote:
+> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> auto-negotiation support, we needed to be able to configure the
+> MASTER-SLAVE role of the port manually or from an application in user
+> space.
+> 
+> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> force MASTER or SLAVE role. See IEEE 802.3-2018:
+> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> 40.5.2 MASTER-SLAVE configuration resolution
+> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> 
+> The MASTER-SLAVE role affects the clock configuration:
+> 
+> -------------------------------------------------------------------------------
+> When the  PHY is configured as MASTER, the PMA Transmit function shall
+> source TX_TCLK from a local clock source. When configured as SLAVE, the
+> PMA Transmit function shall source TX_TCLK from the clock recovered from
+> data stream provided by MASTER.
+> 
+> iMX6Q                     KSZ9031                XXX
+> ------\                /-----------\        /------------\
+>       |                |           |        |            |
+>  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+>       |<--- 125 MHz ---+-<------/  |        | \          |
+> ------/                \-----------/        \------------/
+>                                                ^
+>                                                 \-TX_TCLK
+> 
+> -------------------------------------------------------------------------------
+> 
+> Since some clock or link related issues are only reproducible in a
+> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+> to provide generic (not 100BASE-T1 specific) interface to the user space
+> for configuration flexibility and trouble shooting.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
 
-> Something like this ?
->
-> #ifdef __cplusplus
-> # if  __cplusplus >= 201103L
-> #  define rseq_static_assert (expr, diagnostic)         static_assert (expr, diagnostic)
-> #  define rseq_alignof                                  alignof
-> # endif
-> #elif __STDC_VERSION__ >= 201112L
-> # define rseq_static_assert (expr, diagnostic)          _Static_assert (expr, diagnostic)
-> # define rseq_alignof                                   _Alignof
-> #endif
->
-> #ifndef rseq_static_assert
-> # define rseq_static_assert (expr, diagnostic)          /* nothing */
-> #endif
+Please document the new command line argument in both "ethtool --help"
+output and manual page.
 
-You can't have a space in #defines like that, no matter what GNU style
-says. 8-)
+I would also prefer updating the UAPI header copies in a separate commit
+which would update all of them to a state of a specific kernel commit
+(either 4.8-rc1 or current net-next); cherry picking specific changes
+may lead to missing some parts. An easy way would be
 
-> /* Ensure the compiler supports __attribute__ ((aligned)).  */
-> rseq_static_assert ((rseq_alignof (struct rseq_cs) >= 32, "alignment"));
-> rseq_static_assert ((rseq_alignof (struct rseq) >= 32, "alignment"));
+  # switch to kernel repository and check out what you want to copy from
+  make ... INSTALL_HDR_PATH=$somewhere headers_install
+  # switch back to ethtool repository
+  cd uapi
+  find . -type f -exec cp -v ${somewhere}/include/{} {} \;
 
-You need to move the ; into rseq_static_assert.  And if you use explicit
-arguments, you can't use double parentheses.
+Also, as the kernel counterpart is only in net-next at the moment, this
+should probably wait until after ethtool 5.7 release (perhaps it would
+be helpful to have a "next" branch like iproute2). I'll submit my queued
+patches for 5.7 later this week; should have done so long ago but
+I hoped to have the netlink friendly test framework finished before I do
+(test-features.c is tied to ioctl interface too tightly).
 
->> And something similar for _Alignas/attribute aligned,
->
-> I don't see where _Alignas is needed here ?
->
-> For attribute aligned, what would be the oldest supported C and C++
-> standards ?
+[...]
+> @@ -827,6 +861,14 @@ static const struct lookup_entry_u32 duplex_values[] = {
+>  	{}
+>  };
+>  
+> +static const struct lookup_entry_u32 master_slave_values[] = {
 
-There are no standardized attributes for C, there is only _Alignas.
-C++11 has an alignas specifier; it's not an attribute either.  I think
-these are syntactically similar.
+This should be struct lookup_entry_u8, you are using it with
+nl_parse_lookup_u8() to generate an NLA_U8 attribute.
 
->> with an error for
->> older standards and !__GNUC__ compilers (because neither the type nor
->> __thread can be represented there).
->
-> By "type" you mean "struct rseq" here ? What does it contain that requires
-> a __GNUC__ compiler ?
+Michal
 
-__attribute__ and __thread support.
-
-> About __thread, I recall other compilers have other means to declare it.
-> In liburcu, I end up with the following:
->
-> #if defined (__cplusplus) && (__cplusplus >= 201103L)
-> # define URCU_TLS_STORAGE_CLASS thread_local
-> #elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)
-> # define URCU_TLS_STORAGE_CLASS _Thread_local
-> #elif defined (_MSC_VER)
-> # define URCU_TLS_STORAGE_CLASS __declspec(thread)
-> #else
-> # define URCU_TLS_STORAGE_CLASS __thread
-> #endif
->
-> Would something along those lines be OK for libc ?
-
-Yes, it would be okay (minus the Visual C++ part).  This part does not
-have to go into UAPI headers first.  A fallback definition of __thread
-should be okay.  Outside glibc, the TLS model declaration is optional, I
-think.  The glibc *definition* ensures that the variable is
-initial-exec.
-
-Thanks,
-Florian
-
+> +	{ .arg = "master-preferred",	.val = PORT_MODE_CFG_MASTER_PREFERRED },
+> +	{ .arg = "slave-preferred",	.val = PORT_MODE_CFG_SLAVE_PREFERRED },
+> +	{ .arg = "master-force",	.val = PORT_MODE_CFG_MASTER_FORCE },
+> +	{ .arg = "slave-force",		.val = PORT_MODE_CFG_SLAVE_FORCE },
+> +	{}
+> +};
+> +
+>  char wol_bit_chars[WOL_MODE_COUNT] = {
+>  	[WAKE_PHY_BIT]		= 'p',
+>  	[WAKE_UCAST_BIT]	= 'u',
+> @@ -917,6 +959,14 @@ static const struct param_parser sset_params[] = {
+>  		.handler_data	= duplex_values,
+>  		.min_argc	= 1,
+>  	},
+> +	{
+> +		.arg		= "master-slave",
+> +		.group		= ETHTOOL_MSG_LINKMODES_SET,
+> +		.type		= ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
+> +		.handler	= nl_parse_lookup_u8,
+> +		.handler_data	= master_slave_values,
+> +		.min_argc	= 1,
+> +	},
+>  	{
+>  		.arg		= "wol",
+>  		.group		= ETHTOOL_MSG_WOL_SET,
