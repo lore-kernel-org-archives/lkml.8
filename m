@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FD3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE8C2208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1601F20C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520012;
-	bh=QUJlVGNioV1dIbnsMinW6SWdcfVxvx0IG1RhC0AISco=;
+	s=default; t=1590520014;
+	bh=6S1ZVz/Nu5RytmAE3pYQv0MP7oNAREJUuYy1rCPjnqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CT5KxRD3aqILKQbqD8098y+fO2A0kCATnKXaRfMi9Xl72EqjTtgF8Xwi+RY9nkz5N
-	 p3CRqVHSPg4D662GsJPvcKjEV3aSzmgjV1xVnOmexdel3d67Oo6kLzfkXfnCJ0uX+A
-	 wwGqTrYfEs6zcex3MmjXxq7CicyvDXhDn2haCZwE=
+	b=StUWONUKUR/n6vtRsDZOj/nFCTnz0t85Y2gcE9VZuFl6/6OpAm1H0+/St907uDVju
+	 bHNGyustgbZAvOeskMlwmviwt9SAdsZnNn2PnI+NaddyMD9xFjwjqUF+CdY7fFPiCO
+	 b87TyK3KC9L2GRLdHwJxElNTTt6Ii1SujopzuAGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391675AbgEZTGv (ORCPT
+        id S2391555AbgEZTFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35118 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391210AbgEZTGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:45 -0400
+        id S2391039AbgEZTFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E5D208B3;
-        Tue, 26 May 2020 19:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD29F20776;
+        Tue, 26 May 2020 19:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520004;
-        bh=QUJlVGNioV1dIbnsMinW6SWdcfVxvx0IG1RhC0AISco=;
+        s=default; t=1590519946;
+        bh=6S1ZVz/Nu5RytmAE3pYQv0MP7oNAREJUuYy1rCPjnqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J35OhnZLx8+DVXOoHmukyiIF3NhtIjQve6xRWiq5H9Sd0KXlYE7pyCI+Iv2/9FWZl
-         MWG5yfUJoK4gkQBh4S7vRxQac54ygrE4tdqWZP9R9aHx4npp9hg7sPHFU4jZd7Q2e1
-         pDVkljkfYDYE0rTXkPtbEIoSoTbc5NbUS9g+YDwI=
+        b=1vUQUahlpKw073u36B4W8Jg3PG+mUZF2R/QHAk1IHh5DLH8lK4VGgm5IC/7HmaP5L
+         peNT1Y2xVeW5gQMe1sFTYGgF3Rr4Sb0i5vyPz1W6kYwzcpA6nGFBi1gxqgWITaj+2K
+         e5ZYzQ+VXX5aQkcRpXiiT5qMAVngMHHMpQJOLQ6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20 ?= 
-        <frederic.pierret@qubes-os.org>, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/111] gcc-common.h: Update for GCC 10
-Date:   Tue, 26 May 2020 20:52:38 +0200
-Message-Id: <20200526183934.602470999@linuxfoundation.org>
+Subject: [PATCH 4.19 79/81] rxrpc: Trace discarded ACKs
+Date:   Tue, 26 May 2020 20:53:54 +0200
+Message-Id: <20200526183935.810869824@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
-References: <20200526183932.245016380@linuxfoundation.org>
+In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
+References: <20200526183923.108515292@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,85 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit c7527373fe28f97d8a196ab562db5589be0d34b9 ]
+[ Upstream commit d1f129470e6cb79b8b97fecd12689f6eb49e27fe ]
 
-Remove "params.h" include, which has been dropped in GCC 10.
+Add a tracepoint to track received ACKs that are discarded due to being
+outside of the Tx window.
 
-Remove is_a_helper() macro, which is now defined in gimple.h, as seen
-when running './scripts/gcc-plugin.sh g++ g++ gcc':
-
-In file included from <stdin>:1:
-./gcc-plugins/gcc-common.h:852:13: error: redefinition of ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’
-  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from ./gcc-plugins/gcc-common.h:125,
-                 from <stdin>:1:
-/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’ previously declared here
- 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Add -Wno-format-diag to scripts/gcc-plugins/Makefile to avoid
-meaningless warnings from error() formats used by plugins:
-
-scripts/gcc-plugins/structleak_plugin.c: In function ‘int plugin_init(plugin_name_args*, plugin_gcc_version*)’:
-scripts/gcc-plugins/structleak_plugin.c:253:12: warning: unquoted sequence of 2 consecutive punctuation characters ‘'-’ in format [-Wformat-diag]
-  253 |   error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
-Link: https://lore.kernel.org/r/20200407113259.270172-1-frederic.pierret@qubes-os.org
-[kees: include -Wno-format-diag for plugin builds]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gcc-plugins/Makefile     | 1 +
- scripts/gcc-plugins/gcc-common.h | 4 ++++
- 2 files changed, 5 insertions(+)
+ include/trace/events/rxrpc.h | 35 +++++++++++++++++++++++++++++++++++
+ net/rxrpc/input.c            | 12 ++++++++++--
+ 2 files changed, 45 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index aa0d0ec6936d..9e95862f2788 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -11,6 +11,7 @@ else
-   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
-   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
-   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
-+  HOST_EXTRACXXFLAGS += -Wno-format-diag
-   export HOST_EXTRACXXFLAGS
- endif
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index 0924119bcfa4..bc5b232440b6 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -1549,6 +1549,41 @@ TRACE_EVENT(rxrpc_notify_socket,
+ 		      __entry->serial)
+ 	    );
  
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 17f06079a712..9ad76b7f3f10 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -35,7 +35,9 @@
- #include "ggc.h"
- #include "timevar.h"
++TRACE_EVENT(rxrpc_rx_discard_ack,
++	    TP_PROTO(unsigned int debug_id, rxrpc_serial_t serial,
++		     rxrpc_seq_t first_soft_ack, rxrpc_seq_t call_ackr_first,
++		     rxrpc_seq_t prev_pkt, rxrpc_seq_t call_ackr_prev),
++
++	    TP_ARGS(debug_id, serial, first_soft_ack, call_ackr_first,
++		    prev_pkt, call_ackr_prev),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,	debug_id	)
++		    __field(rxrpc_serial_t,	serial		)
++		    __field(rxrpc_seq_t,	first_soft_ack)
++		    __field(rxrpc_seq_t,	call_ackr_first)
++		    __field(rxrpc_seq_t,	prev_pkt)
++		    __field(rxrpc_seq_t,	call_ackr_prev)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->debug_id		= debug_id;
++		    __entry->serial		= serial;
++		    __entry->first_soft_ack	= first_soft_ack;
++		    __entry->call_ackr_first	= call_ackr_first;
++		    __entry->prev_pkt		= prev_pkt;
++		    __entry->call_ackr_prev	= call_ackr_prev;
++			   ),
++
++	    TP_printk("c=%08x r=%08x %08x<%08x %08x<%08x",
++		      __entry->debug_id,
++		      __entry->serial,
++		      __entry->first_soft_ack,
++		      __entry->call_ackr_first,
++		      __entry->prev_pkt,
++		      __entry->call_ackr_prev)
++	    );
++
+ #endif /* _TRACE_RXRPC_H */
  
-+#if BUILDING_GCC_VERSION < 10000
- #include "params.h"
-+#endif
+ /* This part must be outside protection */
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index d9beb28fc32f..4cc3b54ebc49 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -879,8 +879,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
  
- #if BUILDING_GCC_VERSION <= 4009
- #include "pointer-set.h"
-@@ -847,6 +849,7 @@ static inline gimple gimple_build_assign_with_ops(enum tree_code subcode, tree l
- 	return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
- }
+ 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+ 	if (before(first_soft_ack, call->ackr_first_seq) ||
+-	    before(prev_pkt, call->ackr_prev_seq))
++	    before(prev_pkt, call->ackr_prev_seq)) {
++		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++					   first_soft_ack, call->ackr_first_seq,
++					   prev_pkt, call->ackr_prev_seq);
+ 		return;
++	}
  
-+#if BUILDING_GCC_VERSION < 10000
- template <>
- template <>
- inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-@@ -860,6 +863,7 @@ inline bool is_a_helper<const greturn *>::test(const_gimple gs)
- {
- 	return gs->code == GIMPLE_RETURN;
- }
-+#endif
+ 	buf.info.rxMTU = 0;
+ 	ioffset = offset + nr_acks + 3;
+@@ -892,8 +896,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
  
- static inline gasm *as_a_gasm(gimple stmt)
- {
+ 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+ 	if (before(first_soft_ack, call->ackr_first_seq) ||
+-	    before(prev_pkt, call->ackr_prev_seq))
++	    before(prev_pkt, call->ackr_prev_seq)) {
++		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++					   first_soft_ack, call->ackr_first_seq,
++					   prev_pkt, call->ackr_prev_seq);
+ 		goto out;
++	}
+ 	call->acks_latest_ts = skb->tstamp;
+ 	call->acks_latest = sp->hdr.serial;
+ 
 -- 
 2.25.1
 
