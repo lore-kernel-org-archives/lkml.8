@@ -2,52 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A09C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971BDC433DF
 	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490BC208B8
+	by mail.kernel.org (Postfix) with ESMTP id 768D3214D8
 	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1590520606;
-	bh=RjmHMWWe8YXSrJwNZvIfEJBZB1lX6YjjRZ3JJxhnAPI=;
+	bh=+/JqMvW1b6/2UGdBzKQ5fPyQRh+jz9mwgffvKbkkk7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XO7zK2EDG9YpbbWtXi98hmT0K6MEbzXa0WwipNT1cxVoduAFCp5eKl7yAniQlEq0u
-	 QTDzm4rboTHE8T3t1ifiHuj7AyFvHnLu8016sTe7gSpmLpnn8jEw9XLDQQdHBUfHMY
-	 cAi+PJAADxibgjrDTzqT+sI1ket2+LjJy9s369V8=
+	b=y5joW7nv8o9PYDr2yCssbPf5c7VXjvya1gGfE/L3bze4ocC8MhKIObqa7XMB4FkMw
+	 mpHrqWEA1tQkjDCl8qKBpUDf//Q3/pUiS73Yhpm0ZSmW7814cyIUSDgoCxyfyD+3n1
+	 dm0S5/H7rzwBAR/6W4iJlTnrUC7L6ozo8Yv9R1nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404479AbgEZTPr (ORCPT
+        id S2404455AbgEZTPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392252AbgEZTPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:44 -0400
+        id S2404440AbgEZTPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D992208B8;
-        Tue, 26 May 2020 19:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A54C22053B;
+        Tue, 26 May 2020 19:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520543;
-        bh=RjmHMWWe8YXSrJwNZvIfEJBZB1lX6YjjRZ3JJxhnAPI=;
+        s=default; t=1590520531;
+        bh=+/JqMvW1b6/2UGdBzKQ5fPyQRh+jz9mwgffvKbkkk7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwW6IHBGUIEYP0l3/UZpTBoARVJYfsOCEeDk8gHBWEH5pfi76v+aYPSTuC9Otxbv6
-         ErbC2PYxM83gC3rHD0cE7L4jMp5bfNHfZwdX7ZqJqfYQWjGiSyQiVlOXjT3Xf1R+GF
-         XpL6AlvbHiEWgYs+9E7C4GK/QW842QSuFI2NEG94=
+        b=R9GNDILWzuHHvTQCXFJlXW3Ny5mUHB6qM8pkF0Eg4A9cWDm12M5Y/lAsCPQDgNTH/
+         5tRqIyvAcVNHMNEFCiJS1GDOFiOePETSG77gY3YQWPT2/lbFsOudVfquk+QUfni6dP
+         jwZXb3T3D0fG8FQIl6Kc0CnV33l9PoN5OhgF9cVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Botsch <botsch@cnf.cornell.edu>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 122/126] rxrpc: Fix ack discard
-Date:   Tue, 26 May 2020 20:54:19 +0200
-Message-Id: <20200526183947.599543710@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 5.6 076/126] apparmor: Fix aa_label refcnt leak in policy_update
+Date:   Tue, 26 May 2020 20:53:33 +0200
+Message-Id: <20200526183944.575436795@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,157 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 441fdee1eaf050ef0040bde0d7af075c1c6a6d8b ]
+commit c6b39f070722ea9963ffe756bfe94e89218c5e63 upstream.
 
-The Rx protocol has a "previousPacket" field in it that is not handled in
-the same way by all protocol implementations.  Sometimes it contains the
-serial number of the last DATA packet received, sometimes the sequence
-number of the last DATA packet received and sometimes the highest sequence
-number so far received.
+policy_update() invokes begin_current_label_crit_section(), which
+returns a reference of the updated aa_label object to "label" with
+increased refcount.
 
-AF_RXRPC is using this to weed out ACKs that are out of date (it's possible
-for ACK packets to get reordered on the wire), but this does not work with
-OpenAFS which will just stick the sequence number of the last packet seen
-into previousPacket.
+When policy_update() returns, "label" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-The issue being seen is that big AFS FS.StoreData RPC (eg. of ~256MiB) are
-timing out when partly sent.  A trace was captured, with an additional
-tracepoint to show ACKs being discarded in rxrpc_input_ack().  Here's an
-excerpt showing the problem.
+The reference counting issue happens in one exception handling path of
+policy_update(). When aa_may_manage_policy() returns not NULL, the
+refcnt increased by begin_current_label_crit_section() is not decreased,
+causing a refcnt leak.
 
- 52873.203230: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 0002449c q=00024499 fl=09
+Fix this issue by jumping to "end_section" label when
+aa_may_manage_policy() returns not NULL.
 
-A DATA packet with sequence number 00024499 has been transmitted (the "q="
-field).
+Fixes: 5ac8c355ae00 ("apparmor: allow introspecting the loaded policy pre internal transform")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- ...
- 52873.243296: rxrpc_rx_ack: c=000004ae 00012a2b DLY r=00024499 f=00024497 p=00024496 n=0
- 52873.243376: rxrpc_rx_ack: c=000004ae 00012a2c IDL r=0002449b f=00024499 p=00024498 n=0
- 52873.243383: rxrpc_rx_ack: c=000004ae 00012a2d OOS r=0002449d f=00024499 p=0002449a n=2
-
-The Out-Of-Sequence ACK indicates that the server didn't see DATA sequence
-number 00024499, but did see seq 0002449a (previousPacket, shown as "p=",
-skipped the number, but firstPacket, "f=", which shows the bottom of the
-window is set at that point).
-
- 52873.252663: rxrpc_retransmit: c=000004ae q=24499 a=02 xp=14581537
- 52873.252664: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 000244bc q=00024499 fl=0b *RETRANS*
-
-The packet has been retransmitted.  Retransmission recurs until the peer
-says it got the packet.
-
- 52873.271013: rxrpc_rx_ack: c=000004ae 00012a31 OOS r=000244a1 f=00024499 p=0002449e n=6
-
-More OOS ACKs indicate that the other packets that are already in the
-transmission pipeline are being received.  The specific-ACK list is up to 6
-ACKs and NAKs.
-
- ...
- 52873.284792: rxrpc_rx_ack: c=000004ae 00012a49 OOS r=000244b9 f=00024499 p=000244b6 n=30
- 52873.284802: rxrpc_retransmit: c=000004ae q=24499 a=0a xp=63505500
- 52873.284804: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 000244c2 q=00024499 fl=0b *RETRANS*
- 52873.287468: rxrpc_rx_ack: c=000004ae 00012a4a OOS r=000244ba f=00024499 p=000244b7 n=31
- 52873.287478: rxrpc_rx_ack: c=000004ae 00012a4b OOS r=000244bb f=00024499 p=000244b8 n=32
-
-At this point, the server's receive window is full (n=32) with presumably 1
-NAK'd packet and 31 ACK'd packets.  We can't transmit any more packets.
-
- 52873.287488: rxrpc_retransmit: c=000004ae q=24499 a=0a xp=61327980
- 52873.287489: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 000244c3 q=00024499 fl=0b *RETRANS*
- 52873.293850: rxrpc_rx_ack: c=000004ae 00012a4c DLY r=000244bc f=000244a0 p=00024499 n=25
-
-And now we've received an ACK indicating that a DATA retransmission was
-received.  7 packets have been processed (the occupied part of the window
-moved, as indicated by f= and n=).
-
- 52873.293853: rxrpc_rx_discard_ack: c=000004ae r=00012a4c 000244a0<00024499 00024499<000244b8
-
-However, the DLY ACK gets discarded because its previousPacket has gone
-backwards (from p=000244b8, in the ACK at 52873.287478 to p=00024499 in the
-ACK at 52873.293850).
-
-We then end up in a continuous cycle of retransmit/discard.  kafs fails to
-update its window because it's discarding the ACKs and can't transmit an
-extra packet that would clear the issue because the window is full.
-OpenAFS doesn't change the previousPacket value in the ACKs because no new
-DATA packets are received with a different previousPacket number.
-
-Fix this by altering the discard check to only discard an ACK based on
-previousPacket if there was no advance in the firstPacket.  This allows us
-to transmit a new packet which will cause previousPacket to advance in the
-next ACK.
-
-The check, however, needs to allow for the possibility that previousPacket
-may actually have had the serial number placed in it instead - in which
-case it will go outside the window and we should ignore it.
-
-Fixes: 1a2391c30c0b ("rxrpc: Fix detection of out of order acks")
-Reported-by: Dave Botsch <botsch@cnf.cornell.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/input.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+ security/apparmor/apparmorfs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 2f22f082a66c..3be4177baf70 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -802,6 +802,30 @@ static void rxrpc_input_soft_acks(struct rxrpc_call *call, u8 *acks,
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -454,7 +454,7 @@ static ssize_t policy_update(u32 mask, c
+ 	 */
+ 	error = aa_may_manage_policy(label, ns, mask);
+ 	if (error)
+-		return error;
++		goto end_section;
+ 
+ 	data = aa_simple_write_to_buffer(buf, size, size, pos);
+ 	error = PTR_ERR(data);
+@@ -462,6 +462,7 @@ static ssize_t policy_update(u32 mask, c
+ 		error = aa_replace_profiles(ns, label, mask, data);
+ 		aa_put_loaddata(data);
  	}
- }
++end_section:
+ 	end_current_label_crit_section(label);
  
-+/*
-+ * Return true if the ACK is valid - ie. it doesn't appear to have regressed
-+ * with respect to the ack state conveyed by preceding ACKs.
-+ */
-+static bool rxrpc_is_ack_valid(struct rxrpc_call *call,
-+			       rxrpc_seq_t first_pkt, rxrpc_seq_t prev_pkt)
-+{
-+	rxrpc_seq_t base = READ_ONCE(call->ackr_first_seq);
-+
-+	if (after(first_pkt, base))
-+		return true; /* The window advanced */
-+
-+	if (before(first_pkt, base))
-+		return false; /* firstPacket regressed */
-+
-+	if (after_eq(prev_pkt, call->ackr_prev_seq))
-+		return true; /* previousPacket hasn't regressed. */
-+
-+	/* Some rx implementations put a serial number in previousPacket. */
-+	if (after_eq(prev_pkt, base + call->tx_winsize))
-+		return false;
-+	return true;
-+}
-+
- /*
-  * Process an ACK packet.
-  *
-@@ -865,8 +889,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	}
- 
- 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
--	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq)) {
-+	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
- 		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
- 					   first_soft_ack, call->ackr_first_seq,
- 					   prev_pkt, call->ackr_prev_seq);
-@@ -882,8 +905,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	spin_lock(&call->input_lock);
- 
- 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
--	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq)) {
-+	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
- 		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
- 					   first_soft_ack, call->ackr_first_seq,
- 					   prev_pkt, call->ackr_prev_seq);
--- 
-2.25.1
-
+ 	return error;
 
 
