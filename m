@@ -2,227 +2,239 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5231C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16D820C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590526396;
-	bh=Es55q4XzZ0cVihpUYXDpSKr3s+QtePR/w/wcQdig9LA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ebEw3hm3WOiytfHrW+wZ/oKCChyJSgGq0Hsk+Tcqeg8RoKA5q41P1XPQ1k3+a9NM/
-	 KrHYPXbzQTZC4GIVc+bK6yQWFhUtiCVF0wt6aaeLGvZg+HxB0Ctt0fwZMPd8b2/nCg
-	 ESCQkm/TbGLH1PkI1ayA9yMkJkZIsI4XH93c3G/A=
+	by mail.kernel.org (Postfix) with ESMTP id 8654D20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404070AbgEZUxP (ORCPT
+        id S2404146AbgEZUxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 16:53:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38388 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404010AbgEZUxP (ORCPT
+        Tue, 26 May 2020 16:53:34 -0400
+Received: from smtp-190c.mail.infomaniak.ch ([185.125.25.12]:44249 "EHLO
+        smtp-190c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404097AbgEZUxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 16:53:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id d7so23643673ioq.5;
-        Tue, 26 May 2020 13:53:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qjmwyia8m0idHo7LSD/jUZIkRzjqZXNiiim0DOiQRZg=;
-        b=uCLCeBuVoVtMJCluG3aKXYME8nFsxbV4h2SgwvaB1I30SckKZ+qpV/NT/3QNEBMPw9
-         OK9FOJ2yM+m9/FbxilerpSzWDGlnPD6kRiqv6USCbqJNBj7dzatxsbHjI/jfx1uOejqn
-         Oblr9+im0nVP/UUB8NhMicdmpKakhuPTN+A06G61IGPU+rjtUOIZShrE6oF+UV0cL9o6
-         eCqKM7megByJC1ny5b1w0Yp18Euxpb/i+be3cEB8EOh7MGzjAVNHRCjX0GGmJPmhnC6V
-         3XPRlmEhQbEvCSD7B0KLYVAQxI+azi4bF9l2cqUhCuC4AD7r3CGnM2DvSOXCwqt8s5oj
-         WVLA==
-X-Gm-Message-State: AOAM531p/och7esOkCa3TFbMt6SIAycy2/Axpj+Lr+zVp5KK63DyNXI9
-        MRBM1G4fQcSvuf1sTllnXQ==
-X-Google-Smtp-Source: ABdhPJwDNco5Muj0tbO/Tcz6zkkPMhylBcvTg1YWB0BRz9M/iDI5+3oQwITya3FlxOlrjEMqsrnFjQ==
-X-Received: by 2002:a5d:8e0d:: with SMTP id e13mr18640719iod.132.1590526393661;
-        Tue, 26 May 2020 13:53:13 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t17sm545168ilm.7.2020.05.26.13.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 13:53:12 -0700 (PDT)
-Received: (nullmailer pid 351420 invoked by uid 1000);
-        Tue, 26 May 2020 20:53:12 -0000
-Date:   Tue, 26 May 2020 14:53:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     sre@kernel.org, sspatil@android.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: Re: [PATCH v8 2/3] Add the bindings for the bq25150 and bq25155
- 500mA charging ICs from Texas Instruments.
-Message-ID: <20200526205312.GA337476@bogus>
-References: <20200520122027.31320-1-dmurphy@ti.com>
- <20200520122027.31320-3-dmurphy@ti.com>
+        Tue, 26 May 2020 16:53:34 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49WmQK1CNTzlhWZn;
+        Tue, 26 May 2020 22:53:29 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49WmQH0DMHzlhLCS;
+        Tue, 26 May 2020 22:53:26 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v18 00/12] Landlock LSM
+Date:   Tue, 26 May 2020 22:53:10 +0200
+Message-Id: <20200526205322.23465-1-mic@digikod.net>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520122027.31320-3-dmurphy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 07:20:26AM -0500, Dan Murphy wrote:
-> From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> 
-> The BQ2515X family of devices are highly integrated battery management
-> ICs that integrate the most common functions for wearable devices
-> namely a charger, an output voltage rail, ADC for battery and system
-> monitoring, and a push-button controller.
-> 
-> Datasheets:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> 
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> ---
->  .../bindings/power/supply/bq2515x.yaml        | 106 ++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.yaml b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> new file mode 100644
-> index 000000000000..83487957fc8c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> @@ -0,0 +1,106 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/bq2515x.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI bq2515x 500-mA Linear charger family
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> +
-> +description: |
-> +  The BQ2515x family is a highly integrated battery charge management IC that
-> +  integrates the most common functions for wearable devices, namely a charger,
-> +  an output voltage rail, ADC for battery and system monitoring, and
-> +  push-button controller.
-> +
-> +  Specifications about the charger can be found at:
-> +    http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> +    http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,bq25150
-> +      - ti,bq25155
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: I2C address of the charger.
-> +
-> +  ac-detect-gpios:
-> +    description: |
-> +       GPIO used for connecting the bq2515x device PG (AC Detect)
-> +       pin.  This pin should be used if possible as this is the
-> +       recommended way to obtain the charger's input PG state.
-> +       If this pin is not specified a software-based approach for PG
-> +       detection is used.
+Hi,
 
-How many? (maxItems: 1)
+This new patch series mainly extend the LSM framework and fixes some
+issues:
+* Replace landlock_release_inodes() with a new LSM hook
+  security_sb_delete() which is called at superblock shutdown (before
+  unmount).
+* Replace struct super_block->s_landlock_inode_refs with the LSM
+  infrastructure management of the superblock: Casey Schaufler's work on
+  LSM stacking.
 
-Same for the rest of the GPIOs.
 
-> +
-> +  reset-gpios:
-> +    description: |
-> +       GPIO used for hardware reset.
-> +
-> +  low-power-gpios:
-> +    description: |
-> +       GPIO used for low power mode of IC.
+The SLOC count is 1304 for security/landlock/ and 1733 for
+tools/testing/selftest/landlock/ .  Test coverage for security/landlock/
+is 93.6% of lines.  The code not covered only deals with internal kernel
+errors (e.g. memory allocation) and race conditions.
 
-powerdown-gpios is the somewhat standard name for this.
+The compiled documentation is available here:
+https://landlock.io/linux-doc/landlock-v18/security/landlock/index.html
 
-> +
-> +  charge-enable-gpios:
-> +    description: |
-> +       GPIO used to turn on and off charging.
-> +
+This series can be applied on top of v5.7-rc7.  This can be tested with
+CONFIG_SECURITY_LANDLOCK and CONFIG_SAMPLE_LANDLOCK.  This patch series
+can be found in a Git repository here:
+https://github.com/landlock-lsm/linux/commits/landlock-v18
+I would really appreciate constructive comments on this patch series.
 
-> +  constant-charge-current-max-microamp:
-> +    description: |
-> +       Maximum charging current in micro Amps.
-> +    minimum: 50000
-> +    maximum: 600000
-> +
-> +  precharge-current-max-microamp:
-> +    description: |
-> +       Maximum precharging current in micro Amps.
-> +    minimum: 1250
-> +    maximum: 77500
-> +
-> +  input-current-limit-microamp:
-> +    description: |
-> +       Maximum input current in micro Amps.
-> +    minimum: 50000
-> +    maximum: 500000
-> +
-> +  constant-charge-voltage-max-microvolt:
-> +    description: |
-> +       Maximum charging voltage in micro volts.
-> +    minimum: 3600000
-> +    maximum: 4600000
 
-Other than input-current-limit-microamp, none of these should be part of 
-this schema as they apply to the battery node. There's not really a way 
-for us to express something like this.
+# Landlock LSM
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
+The goal of Landlock is to enable to restrict ambient rights (e.g.
+global filesystem access) for a set of processes.  Because Landlock is a
+stackable LSM [2], it makes possible to create safe security sandboxes
+as new security layers in addition to the existing system-wide
+access-controls. This kind of sandbox is expected to help mitigate the
+security impact of bugs or unexpected/malicious behaviors in user-space
+applications. Landlock empowers any process, including unprivileged
+ones, to securely restrict themselves.
 
-Add:
+Landlock is inspired by seccomp-bpf but instead of filtering syscalls
+and their raw arguments, a Landlock rule can restrict the use of kernel
+objects like file hierarchies, according to the kernel semantic.
+Landlock also takes inspiration from other OS sandbox mechanisms: XNU
+Sandbox, FreeBSD Capsicum or OpenBSD Pledge/Unveil.
 
-additionalProperties: false
 
-> +
-> +examples:
-> +  - |
-> +    bat: battery {
-> +      compatible = "simple-battery";
-> +      constant-charge-current-max-microamp = <50000>;
-> +      precharge-current-microamp = <2500>;
-> +      constant-charge-voltage-max-microvolt = <4000000>;
-> +    };
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      bq25150: charger@6b {
-> +        compatible = "ti,bq25150";
-> +        reg = <0x6b>;
-> +        monitored-battery = <&bat>;
+Previous version:
+https://lore.kernel.org/lkml/20200511192156.1618284-1-mic@digikod.net/
 
-Not documented.
 
-> +        input-current-limit-microamp = <100000>;
-> +
-> +        ac-detect-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +        reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +        low-power-gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
-> +        charge-enable-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-> +      };
-> +    };
-> -- 
-> 2.26.2
-> 
+[1] https://lore.kernel.org/lkml/e07fe473-1801-01cc-12ae-b3167f95250e@digikod.net/
+[2] https://lore.kernel.org/lkml/50db058a-7dde-441b-a7f9-f6837fe8b69f@schaufler-ca.com/
+
+
+Casey Schaufler (1):
+  LSM: Infrastructure management of the superblock
+
+Mickaël Salaün (11):
+  landlock: Add object management
+  landlock: Add ruleset and domain management
+  landlock: Set up the security framework and manage credentials
+  landlock: Add ptrace restrictions
+  fs,security: Add sb_delete hook
+  landlock: Support filesystem access-control
+  landlock: Add syscall implementation
+  arch: Wire up landlock() syscall
+  selftests/landlock: Add initial tests
+  samples/landlock: Add a sandbox manager example
+  landlock: Add user and kernel documentation
+
+ Documentation/security/index.rst              |    1 +
+ Documentation/security/landlock/index.rst     |   18 +
+ Documentation/security/landlock/kernel.rst    |   69 +
+ Documentation/security/landlock/user.rst      |  268 +++
+ MAINTAINERS                                   |   12 +
+ arch/Kconfig                                  |    7 +
+ arch/alpha/kernel/syscalls/syscall.tbl        |    1 +
+ arch/arm/tools/syscall.tbl                    |    1 +
+ arch/arm64/include/asm/unistd.h               |    2 +-
+ arch/arm64/include/asm/unistd32.h             |    2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |    1 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |    1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |    1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |    1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |    1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |    1 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |    1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |    1 +
+ arch/s390/kernel/syscalls/syscall.tbl         |    1 +
+ arch/sh/kernel/syscalls/syscall.tbl           |    1 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |    1 +
+ arch/um/Kconfig                               |    1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |    1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |    1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |    1 +
+ fs/super.c                                    |    1 +
+ include/linux/lsm_hook_defs.h                 |    1 +
+ include/linux/lsm_hooks.h                     |    3 +
+ include/linux/security.h                      |    4 +
+ include/linux/syscalls.h                      |    3 +
+ include/uapi/asm-generic/unistd.h             |    4 +-
+ include/uapi/linux/landlock.h                 |  302 +++
+ kernel/sys_ni.c                               |    3 +
+ samples/Kconfig                               |    7 +
+ samples/Makefile                              |    1 +
+ samples/landlock/.gitignore                   |    1 +
+ samples/landlock/Makefile                     |   15 +
+ samples/landlock/sandboxer.c                  |  228 +++
+ security/Kconfig                              |   11 +-
+ security/Makefile                             |    2 +
+ security/landlock/Kconfig                     |   18 +
+ security/landlock/Makefile                    |    4 +
+ security/landlock/common.h                    |   20 +
+ security/landlock/cred.c                      |   46 +
+ security/landlock/cred.h                      |   58 +
+ security/landlock/fs.c                        |  610 ++++++
+ security/landlock/fs.h                        |   60 +
+ security/landlock/object.c                    |   66 +
+ security/landlock/object.h                    |   91 +
+ security/landlock/ptrace.c                    |  120 ++
+ security/landlock/ptrace.h                    |   14 +
+ security/landlock/ruleset.c                   |  342 ++++
+ security/landlock/ruleset.h                   |  157 ++
+ security/landlock/setup.c                     |   40 +
+ security/landlock/setup.h                     |   18 +
+ security/landlock/syscall.c                   |  532 +++++
+ security/security.c                           |   51 +-
+ security/selinux/hooks.c                      |   58 +-
+ security/selinux/include/objsec.h             |    6 +
+ security/selinux/ss/services.c                |    3 +-
+ security/smack/smack.h                        |    6 +
+ security/smack/smack_lsm.c                    |   35 +-
+ tools/testing/selftests/Makefile              |    1 +
+ tools/testing/selftests/landlock/.gitignore   |    2 +
+ tools/testing/selftests/landlock/Makefile     |   29 +
+ tools/testing/selftests/landlock/base_test.c  |  163 ++
+ tools/testing/selftests/landlock/common.h     |  108 +
+ tools/testing/selftests/landlock/config       |    5 +
+ tools/testing/selftests/landlock/fs_test.c    | 1730 +++++++++++++++++
+ .../testing/selftests/landlock/ptrace_test.c  |  293 +++
+ tools/testing/selftests/landlock/true.c       |    5 +
+ 71 files changed, 5596 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/security/landlock/index.rst
+ create mode 100644 Documentation/security/landlock/kernel.rst
+ create mode 100644 Documentation/security/landlock/user.rst
+ create mode 100644 include/uapi/linux/landlock.h
+ create mode 100644 samples/landlock/.gitignore
+ create mode 100644 samples/landlock/Makefile
+ create mode 100644 samples/landlock/sandboxer.c
+ create mode 100644 security/landlock/Kconfig
+ create mode 100644 security/landlock/Makefile
+ create mode 100644 security/landlock/common.h
+ create mode 100644 security/landlock/cred.c
+ create mode 100644 security/landlock/cred.h
+ create mode 100644 security/landlock/fs.c
+ create mode 100644 security/landlock/fs.h
+ create mode 100644 security/landlock/object.c
+ create mode 100644 security/landlock/object.h
+ create mode 100644 security/landlock/ptrace.c
+ create mode 100644 security/landlock/ptrace.h
+ create mode 100644 security/landlock/ruleset.c
+ create mode 100644 security/landlock/ruleset.h
+ create mode 100644 security/landlock/setup.c
+ create mode 100644 security/landlock/setup.h
+ create mode 100644 security/landlock/syscall.c
+ create mode 100644 tools/testing/selftests/landlock/.gitignore
+ create mode 100644 tools/testing/selftests/landlock/Makefile
+ create mode 100644 tools/testing/selftests/landlock/base_test.c
+ create mode 100644 tools/testing/selftests/landlock/common.h
+ create mode 100644 tools/testing/selftests/landlock/config
+ create mode 100644 tools/testing/selftests/landlock/fs_test.c
+ create mode 100644 tools/testing/selftests/landlock/ptrace_test.c
+ create mode 100644 tools/testing/selftests/landlock/true.c
+
+-- 
+2.26.2
+
