@@ -2,150 +2,102 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D027DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A63AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29EB207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kgFR34KB"
+	by mail.kernel.org (Postfix) with ESMTP id 458EB2078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgEZPea (ORCPT
+        id S1730021AbgEZPe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729088AbgEZPea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:34:30 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F83C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:34:29 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b190so10317219pfg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8W11mCFaZlqqgwjd6pr/5BoHKN+oaQPu3yE26VkZIxk=;
-        b=kgFR34KBsx0oI1+MKKstfa5lW1H5kQ16Y3jO42RlsqGTyZe7QT5tmf1xmKgWNZI6ub
-         XyrEvbKspvwFeI1YqvY+nWDW2SVEsc2mJiHS0OKG0sbHzL+pYMGEGFTVbP8Y9eVmH9Wc
-         o65pnCp6nWc1vf1fxko35nOU3W0XLc3OwdzFU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8W11mCFaZlqqgwjd6pr/5BoHKN+oaQPu3yE26VkZIxk=;
-        b=A1HjMxxMupb9F3l4d3wfXjBrEn8oRl2G4lO1Ctt52MGv6/YtKtvSB0AM4j8Bx8Gu5/
-         y7ERwa9JRdoXt2YkAsFl+AVizRtmefREKlZEkY1xOGklmBqETPDgDoC6aZdeTiQrEjaN
-         sJqwNxwCyzRh06prKDKFsFqfeZYOdW9wfeVS9yzSM80E4N1lURk3DZWUFpM4qKuuoVL0
-         /T5/SER5VqQIHBcZ+DGrOXazpww4Kb84i27ekPY3hEY0iyaMlr4w1Y/pExLvPRmE3376
-         j1DTiz7PzxS13Rx8rqAxybmfTAK7cWcwZGhGT4px0ZxTE2JCWRmsFLdXoozRWaYFmduB
-         Mctw==
-X-Gm-Message-State: AOAM530wRnnA6sf/bXS49D7tfebnO4r30IaJZds9ieS3T097Q6a+71YN
-        REfJkCdOhzZx9+6vie9Rr1GGCA==
-X-Google-Smtp-Source: ABdhPJwvQUuJk+3JmCR8WIBdZSU/GvEbA9MR1r4bCTHrtiDU0sJOoFq1RbVUiRntAYHcL1SgZGUWCA==
-X-Received: by 2002:a63:c34a:: with SMTP id e10mr1608669pgd.412.1590507268516;
-        Tue, 26 May 2020 08:34:28 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id r1sm83636pgb.37.2020.05.26.08.34.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 08:34:27 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:34:25 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Zijun Hu <zijuhu@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        rjliao@codeaurora.org
-Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix qca6390 enable failure after
- warm reboot
-Message-ID: <20200526153425.GD4525@google.com>
-References: <1590461850-9908-1-git-send-email-zijuhu@codeaurora.org>
+        Tue, 26 May 2020 11:34:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:15153 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728830AbgEZPe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:34:58 -0400
+IronPort-SDR: O98dEh0Zvs/+K6vTlRDfSSCjltkJmlzmKswzVnq0RyUT94PZJKDdBMJQj9HvLFBlOOMeBx4GkH
+ OpNUAr/9PZNw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:34:57 -0700
+IronPort-SDR: TN5+3JgQvkZsl+te3qpnFMymhcJOiGLgqzwCX0HYuGRWB1PS0ilM83NsiGKythrEDG/n5LfGZi
+ V63i28NHf6cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="291234586"
+Received: from unknown (HELO [10.254.102.121]) ([10.254.102.121])
+  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 08:34:56 -0700
+Subject: Re: [PATCH] ASoC: Intel: sst: Fix runtime PM imbalance in
+ sst_power_control
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200525070701.3888-1-dinghao.liu@zju.edu.cn>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <922ac37c-0a5a-dff7-0cd7-d3487cf9ff00@linux.intel.com>
+Date:   Tue, 26 May 2020 08:25:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1590461850-9908-1-git-send-email-zijuhu@codeaurora.org>
+In-Reply-To: <20200525070701.3888-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:57:30AM +0800, Zijun Hu wrote:
-> Warm reboot can not restore qca6390 controller baudrate
-> to default due to lack of controllable BT_EN pin or power
-> supply, so fails to download firmware after warm reboot.
+
+
+On 5/25/20 2:06 AM, Dinghao Liu wrote:
+> When sst_load_fw() returns an error code, a pairing runtime
+> PM usage counter decrement is needed to keep the counter
+> balanced.
 > 
-> Fixed by sending EDL_SOC_RESET VSC to reset controller
-> within added device shutdown implementation.
-> 
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 > ---
->  drivers/bluetooth/hci_qca.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>   sound/soc/intel/atom/sst/sst_drv_interface.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index e4a6823..b479e51 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1975,6 +1975,32 @@ static void qca_serdev_remove(struct serdev_device *serdev)
->  	hci_uart_unregister_device(&qcadev->serdev_hu);
->  }
->  
-> +static void qca_serdev_shutdown(struct device *dev)
-> +{
-> +	int res;
+> diff --git a/sound/soc/intel/atom/sst/sst_drv_interface.c b/sound/soc/intel/atom/sst/sst_drv_interface.c
+> index 762495385d5c..3897985b254f 100644
+> --- a/sound/soc/intel/atom/sst/sst_drv_interface.c
+> +++ b/sound/soc/intel/atom/sst/sst_drv_interface.c
+> @@ -150,6 +150,7 @@ static int sst_power_control(struct device *dev, bool state)
+>   		if ((ctx->sst_state == SST_RESET) && (usage_count == 1)) {
+>   			ret = sst_load_fw(ctx);
+>   			if (ret) {
+> +				pm_runtime_put_sync(dev);
+>   				dev_err(dev, "FW download fail %d\n", ret);
+>   				sst_set_fw_state_locked(ctx, SST_RESET);
+>   				ret = sst_pm_runtime_put(ctx);
 
-nit: 'ret' would be a more standard name
+this change doesn't seem quite right, if you look the code below there 
+is no PM imbalance, is there?
 
-> +	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
-> +	struct serdev_device *serdev = to_serdev_device(dev);
-> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-> +	const u8 ibs_wake_cmd[] = { 0xFD };
-> +	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
-> +
-> +	if (qcadev->btsoc_type == QCA_QCA6390) {
-> +		serdev_device_write_flush(serdev);
-> +		res = serdev_device_write_buf(serdev,
-> +				ibs_wake_cmd, sizeof(ibs_wake_cmd));
-> +		BT_DBG("%s: send ibs_wake_cmd res = %d", __func__, res);
+int sst_pm_runtime_put(struct intel_sst_drv *sst_drv)
+{
+	int ret;
 
-Why use BT_DBG regardless of the result, instead of using BT_ERR/WARN only
-in the failure case? And does it actually make sense to continue in case of
-an error?
+	pm_runtime_mark_last_busy(sst_drv->dev);
+	ret = pm_runtime_put_autosuspend(sst_drv->dev);
+	if (ret < 0)
+		return ret;
+	return 0;
+}
 
-> +		serdev_device_wait_until_sent(serdev, timeout);
-> +		usleep_range(8000, 10000);
-> +
-> +		serdev_device_write_flush(serdev);
-> +		res = serdev_device_write_buf(serdev,
-> +				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
-> +		BT_DBG("%s: send edl_reset_soc_cmd res = %d", __func__, res);
-
-ditto
-
-> +		serdev_device_wait_until_sent(serdev, timeout);
-> +		usleep_range(8000, 10000);
-> +	}
-> +}
-> +
->  static int __maybe_unused qca_suspend(struct device *dev)
->  {
->  	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-> @@ -2100,6 +2126,7 @@ static struct serdev_device_driver qca_serdev_driver = {
->  		.name = "hci_uart_qca",
->  		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
->  		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
-> +		.shutdown = qca_serdev_shutdown,
->  		.pm = &qca_pm_ops,
->  	},
->  };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
-> 
