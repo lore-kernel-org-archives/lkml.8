@@ -2,168 +2,174 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65857C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93179207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:51:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="IcILxIPH"
+	by mail.kernel.org (Postfix) with ESMTP id 3FCBB206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgEZPvy (ORCPT
+        id S1730337AbgEZPwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:51:54 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:47295 "EHLO cmta18.telus.net"
+        Tue, 26 May 2020 11:52:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16503 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbgEZPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:51:54 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id dbrojbJ6MVEJfdbrpjmJc2; Tue, 26 May 2020 09:51:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1590508312; bh=rvRTnl21xY1bE06cPy+n/6GL8pvu7dqzkWh0KRXTCgw=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=IcILxIPHyQAqBA07zd26fJ+SDdIIIj8H3VFVte0eoS0OrZy3eENxW5kgl2k6niPwa
-         2ODrLMBAWdYlg18hgOi0JBLulhkBTnC7egAoIKtBqVFqOeFRj+TmrQsa1Rl/5kXfOa
-         4YdKP0xiOvHZSlxc7wTeZ2Q6lyY2hFrJWae7gRSHA5uxOPJCCcAF4pOXUJ52VqcY65
-         vE8q3WQvJRBQrqxJIhNU0MoGHMNzkgbNKHrLi0hlpQCBcDHgY3OyWmtJopGKu3WgrS
-         zv5neatDZgJX1+qN1vagQy74385B3RHHi/nR4J/rYJzpunamTbUvXBr9EFAOfh555U
-         CHfvuoVrSg4sg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=KIck82No c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8
- a=FGbulvE0AAAA:8 a=TkEsygaeObAnKy-4MokA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=svzTaB3SJmTkU8mK-ULk:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>
-Cc:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Len Brown'" <len.brown@intel.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
-References: <3169564.ZRsPWhXyMD@kreacher> <87mu5wre1v.fsf@intel.com> <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com> <87a71vraus.fsf@intel.com> <CAJZ5v0j4EYLej+Xb=huAGTDEH_0mgRShBkjBeib38exmss60Sg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j4EYLej+Xb=huAGTDEH_0mgRShBkjBeib38exmss60Sg@mail.gmail.com>
-Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
-Date:   Tue, 26 May 2020 08:51:48 -0700
-Message-ID: <000801d63375$927946a0$b76bd3e0$@net>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdYzNmRr0lgQYeCwTpGIV0wU6iZXRgALoz3Q
-X-CMAE-Envelope: MS4wfMXTJ9StKBHKi6NbuF8/H5aacLAutS9AAM/3BjdeZfjwAlD/+YO/yGGP1H3zVmSzO7IFG/3Q2XG7cKpE1iidsZZxyNw9twBAInuOYvh8+jE1casRbEXD
- 2j34mVbcsyng5C4XT6H39bJFgCkXrBQYfr0hfCThpAIoLBdQr1GL7UZxz7J1dwqYLpDqwnBtlpsnATkArCROEyUOGlSZ3PqLxt0LwEo3uq2vvz2blYtNqqYm
- B0pNpQHb5mnAUMjk/D65zmzWteteEYDTMaaS8CMHGRMDVtTCfWNS6/KLz3xYhk0jlvOTh74iDd5umB9ArCtM0Rgt64SeMzcfSGu5CGk7iFGQTMgogFOWzTpi
- mgSpO2eUhIunqU8aS9kRCYnGTELQeCXgByqdKgsjPDzog95SWUGjvW0Qmb4Yd1R3FLrXXa0c3Iy8BI38twSYid8REDx2E2oIs3qiKCzLcNe1JtBxtL0=
+        id S1727862AbgEZPwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:52:40 -0400
+IronPort-SDR: B53ZAw18geE0Zbo5I7cjZ8mvdmVBimlxU4ncEoseokAB/WgGIHxxYDJhH6as429f3tOdV9F+t9
+ mAgCDUNUslNA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:52:39 -0700
+IronPort-SDR: 44g6sDoR7n/BAYK0w9U5/4yjUYGTfZBf64OzjcGRtZC3scTEBL+sjuOvJIIwbcmF3HynN9Ann7
+ YVU5ZbjIyHZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="302143780"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.157])
+  by orsmga008.jf.intel.com with ESMTP; 26 May 2020 08:52:37 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Travis Downs <travis.downs@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH V2] perf tools: Fix debuginfo search for Ubuntu
+Date:   Tue, 26 May 2020 18:52:07 +0300
+Message-Id: <20200526155207.9172-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.05.26 01:19 Rafael J. Wysocki wrote:
->  to On Mon, May 25, 2020 at 10:57 PM Francisco Jerez
-> > "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> > > On Mon, May 25, 2020 at 3:39 AM Francisco Jerez
-> >
-> > Why not HWP_MIN_PERF?  That would leave the HWP quite some room for
-> > maneuvering (the whole HWP_MIN_PERF-HWP_MAX_PERF P-state range, it's not
-> > like P-state selection would be entirely driven by the kernel), while
-> > avoiding every failure scenario I was describing in my previous reply.
+Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
+debug symbol files, putting files expected to be in
+/usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
+another dso_binary_type.
 
-I have re-done my tests.
-The problem that I observe seems specific to hwp itself
-and not this patch and it's use in passive mode.
-I see the exact same thing with intel_pstate/powersave.
-[1] detail A.
+Example on Ubuntu 20.04
+
+  Before:
+
+    $ perf record -e intel_pt//u uname
+    Linux
+    [ perf record: Woken up 1 times to write data ]
+    [ perf record: Captured and wrote 0.030 MB perf.data ]
+    $ perf script --call-trace | head -5
+           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
+           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
+           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
+           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
+           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
+
+  After:
+
+    $ perf script --call-trace | head -5
+           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
+           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
+           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+
+Reported-by: Travis Downs <travis.downs@gmail.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+---
 
 
-Test: still simple single threaded load sweep,
-at 347 hertz work/sleep frequency.
-What do I see?
+Changes in V2:
+	Added  'break' after 'ret = -1'
 
-Unexpected frequency drops at around 70% load.
-Example, from trace:
 
-First, the thing has been going for awhile at 4.8 GHz.
+ tools/perf/util/dso.c          | 16 ++++++++++++++++
+ tools/perf/util/dso.h          |  1 +
+ tools/perf/util/probe-finder.c |  1 +
+ tools/perf/util/symbol.c       |  2 ++
+ 4 files changed, 20 insertions(+)
 
-Old epp ; new epp ; freq GHz; load % ; duration mS
-80	  ; 82      ; 4.57    ; 61.94  ; 20.001
-82      ; 80	; 4.57    ; 62.47  ; 40.003
-80      ; 44      ; 3.73    ;	68.63  ; 62.009  <<<< What? Why freq down? Why long duration?
-44      ;  0      ; 1.96    ; 100.23 ; 19.995  <<<< Even lower freq. load overruns.
- 0      ; 73      ; 4.56    ; 82.93  ; 40.07   <<<< O.K. recovered, but damage done.
-73      ; 46      ; 2.36    ;	79.19  ; 20.94   <<< now things oscillate a little.
-46      ; 0       ; 1.9884  ;	100.24 ; 20.99
- 0      ; 75      ; 4.5624  ;	82.1   ; 41.002  <<< Event ends. Next event in 487 milliseconds.
-
-Observation: Events are often, but not always, preceded by a longer than normal duration.
-However, long durations are also not out of the ordinary in passive mode.
-
-And yes, the above trace was with DELAY_HWP 20,000, but I do have trace examples
-with it at 5,000. This was just a particularly good example.
-
-Observation (from looking at a lot of trace data): There are phase delays
-between the two systems, intel_cpufreq and hwp, and sometimes they seem to
-oscillate a little and fight each other. There maybe some problematic
-work/sleep frequencies where the oscillation builds into a full blown
-resonance. 
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index e68e1375e3c0..be991cbbe9f8 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -47,6 +47,7 @@ char dso__symtab_origin(const struct dso *dso)
+ 		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
+ 		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
+ 		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
++		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
+ 		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
+ 		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
+ 		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
+@@ -129,6 +130,21 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 		snprintf(filename + len, size - len, "%s", dso->long_name);
+ 		break;
  
-Why does hwp drop the frequency?
-
-This system is otherwise fairly idle,
-so maybe because the pll drops down during the non work periods.
-
-Maybe HWP thinks the system is idle and drops the frequency.
-I can eliminate the overruns by disabling deep idle states such
-that the PLL vote is never relinquished, but it's not a fair test.
-
-Note that the above response can be "tuned".
-If we take the conversation algorithm from target frequency to EPP
-and introduce and offset, the above can be improved.
-
-At what cost? More sluggishness, for a large positive offset.
-So, the overruns just move from the steady state side of the task to
-when the task starts. I did not find if there is a "sweet spot"
-between offset and system response, and I do not think there is value
-added in trying.
-
-Note: With original settings, I rarely observe a problem with the step
-function response to a new task.
-
-> 
-> Actually, I have been thinking about the HWP min as an alternative
-> that may be worth evaluating.
-> 
-> However, I would rather set the HWP min to something like 80% if the
-> cpufreq request.
-
-Yes, this is a good idea and should not suffer from the two servo systems
-fighting each other.
-
-I got 0 overruns, verses 2240 overruns with no min limitation (100 second test).
-
-As for INTEL_CPUFREQ_TRANSITION_DELAY_HWP, I'll probably use
-10 milliseconds moving forward, because that is what I am most
-familiar with from years ago work on the this driver. But, I did
-not observe any issue with 5 milliseconds.
-
-[1] http://www.smythies.com/~doug/linux/intel_pstate/passive-hwp/passive-hwp-but-active-powersave.png
-
-Other replaced graphs:
-
-http://www.smythies.com/~doug/linux/intel_pstate/passive-hwp/passive-hwp-ondemand.png
-http://www.smythies.com/~doug/linux/intel_pstate/passive-hwp/passive-hwp-schedutil.png
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++		/*
++		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
++		 * /usr/lib/debug/lib when it is expected to be in
++		 * /usr/lib/debug/usr/lib
++		 */
++		if (strlen(dso->long_name) < 9 ||
++		    strncmp(dso->long_name, "/usr/lib/", 9)) {
++			ret = -1;
++			break;
++		}
++		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
++		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
++		break;
++
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+ 	{
+ 		const char *last_slash;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 42b3a278ac59..8b7958f02609 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -30,6 +30,7 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
+ 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE,
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index e4cff49384f4..55924255c535 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -101,6 +101,7 @@ enum dso_binary_type distro_dwarf_types[] = {
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
  
-... Doug
-
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 7725c83996f4..44d81f90b604 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -79,6 +79,7 @@ static enum dso_binary_type binary_type_symtab[] = {
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
+ 
+@@ -1529,6 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+ 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+ 		return !kmod && dso->kernel == DSO_TYPE_USER;
+-- 
+2.17.1
 
