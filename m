@@ -2,100 +2,70 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D300C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B96C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FA1206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497592078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgEZQMh (ORCPT
+        id S1728361AbgEZQOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:12:37 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58934 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbgEZQMg (ORCPT
+        Tue, 26 May 2020 12:14:04 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58817 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgEZQOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:12:36 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DD16A803086B;
-        Tue, 26 May 2020 16:12:33 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id h4VA-Y7ucsL7; Tue, 26 May 2020 19:12:33 +0300 (MSK)
-Date:   Tue, 26 May 2020 19:12:32 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-mips@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: memory: Add Baikal-T1 L2-cache
- Control Block binding
-Message-ID: <20200526161232.cmrn5iydtcffua2p@mobilestation>
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
- <20200526125928.17096-4-Sergey.Semin@baikalelectronics.ru>
- <20200526160915.GA4042264@bogus>
+        Tue, 26 May 2020 12:14:04 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id EBCC2C000D;
+        Tue, 26 May 2020 16:14:00 +0000 (UTC)
+Date:   Tue, 26 May 2020 09:13:57 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] serial: 8250: Enable 16550A variants by default on non-x86
+Message-ID: <a20b5fb7dd295cfb48160eecf4bdebd76332d67d.1590509426.git.josh@joshtriplett.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526160915.GA4042264@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:09:15AM -0600, Rob Herring wrote:
-> On Tue, 26 May 2020 15:59:25 +0300, Serge Semin wrote:
-> > There is a single register provided by the SoC system controller,
-> > which can be used to tune the L2-cache RAM up. It only provides a way
-> > to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
-> > compatible string the device node can be optionally equipped with the
-> > properties of Tag/Data/WS latencies.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: soc@kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - Move driver to the memory subsystem.
-> > - Use dual GPL/BSD license.
-> > - Use single lined copyright header.
-> > - Move "allOf" restrictions to the root level of the properties.
-> > - Discard syscon compatible string and reg property.
-> > - The DT node is supposed to be a child of the Baikal-T1 system controller
-> >   node.
-> > 
-> > Changelog v3:
-> > - Get the reg property back even though the driver is using the parental
-> >   syscon regmap.
-> > - The DT schema will live separately from the system controller, but the
-> >   corresponding sub-node of the later DT schema will $ref this one.
-> > - Set non-default latencies in the example.
-> > ---
-> >  .../memory-controllers/baikal,bt1-l2-ctl.yaml | 63 +++++++++++++++++++
-> >  1 file changed, 63 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Some embedded devices still use these serial ports; make sure they're
+still enabled by default on architectures more likely to have them, to
+avoid rendering someone's console unavailable.
 
-Great! Thanks.
+Reported-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reported-by: Maxim Kochetkov <fido_max@inbox.ru>
+Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+---
 
--Sergey
+v2: Add Reported-by lines.
+
+ drivers/tty/serial/8250/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+index af0688156dd0..8195a31519ea 100644
+--- a/drivers/tty/serial/8250/Kconfig
++++ b/drivers/tty/serial/8250/Kconfig
+@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
+ config SERIAL_8250_16550A_VARIANTS
+ 	bool "Support for variants of the 16550A serial port"
+ 	depends on SERIAL_8250
++	default !X86
+ 	help
+ 	  The 8250 driver can probe for many variants of the venerable 16550A
+ 	  serial port. Doing so takes additional time at boot.
+-- 
+2.27.0.rc0
