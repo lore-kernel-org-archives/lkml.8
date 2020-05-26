@@ -2,257 +2,475 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCAF2068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="Hnqv/uTw"
+	by mail.kernel.org (Postfix) with ESMTP id A700A204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgEZNom (ORCPT
+        id S1729396AbgEZNpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:44:42 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:38413 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgEZNol (ORCPT
+        Tue, 26 May 2020 09:45:40 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32968 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726618AbgEZNpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:44:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1590500682; x=1622036682;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=B/v3kU+6ifVN37aCOfBDL/cRb6TeFupXOz2xgVvHHxU=;
-  b=Hnqv/uTwHqeTnr30FCMEqx+TDgKZ6M0QztrB6Comc3N4SW2FB0iat6er
-   0m/yyCGjQhqUqgsprl50GVIxJp+XuMe/g7mQS1YDPOZijIvV6sK15rP/A
-   iU8u1ZRgfteD4IJWSNHdi+NUlKpLsw2f0AA9JrivW1tGtY330/LMM9UV1
-   M=;
-IronPort-SDR: VK6uPIpDLfCBYuybNRRWM8Oyeic7vwIMBHzxyfYfUbDDvagDejAusAjvaajvd1xwZN1lKOIXwV
- L1963FLUvbrw==
-X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
-   d="scan'208";a="45995375"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 May 2020 13:44:40 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 025F9C07D4;
-        Tue, 26 May 2020 13:44:38 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 13:44:38 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.82) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 13:44:33 +0000
-Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        "Matt Wilson" <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-8-andraprs@amazon.com>
- <20200526065133.GD2580530@kroah.com>
- <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
- <20200526123300.GA2798@kroah.com>
- <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
- <20200526131708.GA9296@kroah.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
-Date:   Tue, 26 May 2020 15:44:30 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Tue, 26 May 2020 09:45:39 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QDfhT7032104;
+        Tue, 26 May 2020 09:45:28 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3170r61gch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 09:45:27 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 04QDjQxg023086
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 26 May 2020 09:45:26 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 26 May 2020 09:45:25 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 26 May 2020 09:45:25 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 26 May 2020 09:45:25 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04QDjMnC027868;
+        Tue, 26 May 2020 09:45:23 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
+        <fabrice.gasnier@st.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3] iio: stm32-adc:  remove usage of iio_priv_to_dev() helper
+Date:   Tue, 26 May 2020 16:44:48 +0300
+Message-ID: <20200526134448.7328-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200525090720.72696-1-alexandru.ardelean@analog.com>
+References: <20200525090720.72696-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526131708.GA9296@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.82]
-X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 cotscore=-2147483648 adultscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005260105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We may want to get rid of the iio_priv_to_dev() helper. The reason is that
+we will hide some of the members of the iio_dev structure (to prevent
+drivers from accessing them directly), and that will also mean hiding the
+implementation of the iio_priv_to_dev() helper inside the IIO core.
 
+Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
+may not be fast anymore, so a general idea is to try to get rid of the
+iio_priv_to_dev() altogether.
+The iio_priv() helper won't be affected by the rework, as the iio_dev
+struct will keep a reference to the private information.
 
-On 26.05.20 15:17, Greg KH wrote:
-> =
+For this driver, not using iio_priv_to_dev(), means reworking some paths to
+pass the iio device and using iio_priv() to access the private information.
 
-> On Tue, May 26, 2020 at 02:44:18PM +0200, Alexander Graf wrote:
->>
->>
->> On 26.05.20 14:33, Greg KH wrote:
->>>
->>> On Tue, May 26, 2020 at 01:42:41PM +0200, Alexander Graf wrote:
->>>>
->>>>
->>>> On 26.05.20 08:51, Greg KH wrote:
->>>>>
->>>>> On Tue, May 26, 2020 at 01:13:23AM +0300, Andra Paraschiv wrote:
->>>>>> +#define NE "nitro_enclaves: "
->>>>>
->>>>> Again, no need for this.
->>>>>
->>>>>> +#define NE_DEV_NAME "nitro_enclaves"
->>>>>
->>>>> KBUILD_MODNAME?
->>>>>
->>>>>> +#define NE_IMAGE_LOAD_OFFSET (8 * 1024UL * 1024UL)
->>>>>> +
->>>>>> +static char *ne_cpus;
->>>>>> +module_param(ne_cpus, charp, 0644);
->>>>>> +MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enc=
-laves");
->>>>>
->>>>> Again, please do not do this.
->>>>
->>>> I actually asked her to put this one in specifically.
->>>>
->>>> The concept of this parameter is very similar to isolcpus=3D and maxcp=
-us=3D in
->>>> that it takes CPUs away from Linux and instead donates them to the
->>>> underlying hypervisor, so that it can spawn enclaves using them.
->>>>
->>>>   From an admin's point of view, this is a setting I would like to keep
->>>> persisted across reboots. How would this work with sysfs?
->>>
->>> How about just as the "initial" ioctl command to set things up?  Don't
->>> grab any cpu pools until asked to.  Otherwise, what happens when you
->>> load this module on a system that can't support it?
->>
->> That would give any user with access to the enclave device the ability to
->> remove CPUs from the system. That's clearly a CAP_ADMIN task in my book.
-> =
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> Ok, what's wrong with that?
+Changelog v2 -> v3:
+- update doc-strings; warnings show-up during build with W=1 arg
 
-Would you want random users to get the ability to hot unplug CPUs from =
+Changelog v1 -> v2:
+- converted to pass reference to IIO device in function hooks (vs
+  reference
+  to adc private data)
 
-your system? At unlimited quantity? I don't :).
+ drivers/iio/adc/stm32-adc.c | 118 +++++++++++++++++++-----------------
+ 1 file changed, 63 insertions(+), 55 deletions(-)
 
-> =
-
->> Hence this whole split: The admin defines the CPU Pool, users can safely
->> consume this pool to spawn enclaves from it.
-> =
-
-> But having the admin define that at module load / boot time, is a major
-> pain.  What tools do they have that allow them to do that easily?
-
-The normal toolbox: editing /etc/default/grub, adding an =
-
-/etc/modprobe.d/ file.
-
-When but at module load / boot time would you define it? I really don't =
-
-want to have a device node that in theory "the world" can use which then =
-
-allows any user on the system to hot unplug every CPU but 0 from my system.
-
-> =
-
->> So I really don't think an ioctl would be a great user experience. Same =
-for
->> a sysfs file - although that's probably slightly better than the ioctl.
-> =
-
-> You already are using ioctls to control this thing, right?  What's wrong
-> with "one more"? :)
-
-So what we *could* do is add an ioctl to set the pool size which then =
-
-does a CAP_ADMIN check. That however means you now are in priority hell:
-
-A user that wants to spawn an enclave as part of an nginx service would =
-
-need to create another service to set the pool size and indicate the =
-
-dependency in systemd control files.
-
-Is that really better than a module parameter?
-
-> =
-
->> Other options I can think of:
->>
->>    * sysctl (for modules?)
-> =
-
-> Ick.
-> =
-
->>    * module parameter (as implemented here)
-> =
-
-> Ick.
-> =
-
->>    * proc file (deprecated FWIW)
-> =
-
-> Ick.
-> =
-
->> The key is the tenant split: Admin sets the pool up, user consumes. This
->> setup should happen (early) on boot, so that system services can spawn
->> enclaves.
-> =
-
-> But it takes more than jus this initial "split up" to set the pool up,
-
-I don't quite follow. The initial "split up" is all it takes. From the =
-
-hypervisor's point of view, the physical underlying cores will not be =
-
-used to schedule the parent as soon as an enclave is running on them. =
-
-Which CPUs are available for enclaves however is purely a parent OS =
-
-construct, hence the module parameter.
-
-> right?  Why not make this part of that initial process?  What makes this
-> so special you have to do this at module load time only?
-
-What is the "initial process"? It's really 2 stages: One stage to create =
-
-a pool (CAP_ADMIN) which makes sure that some cores become invisible to =
-
-the Linux scheduler and one stage to spawn an enclave (normal user =
-
-permission) on those pool's CPUs.
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index ae622ee6d08c..1dd97ec5571c 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -162,10 +162,10 @@ struct stm32_adc_cfg {
+ 	struct stm32_adc_trig_info	*trigs;
+ 	bool clk_required;
+ 	bool has_vregready;
+-	int (*prepare)(struct stm32_adc *);
+-	void (*start_conv)(struct stm32_adc *, bool dma);
+-	void (*stop_conv)(struct stm32_adc *);
+-	void (*unprepare)(struct stm32_adc *);
++	int (*prepare)(struct iio_dev *);
++	void (*start_conv)(struct iio_dev *, bool dma);
++	void (*stop_conv)(struct iio_dev *);
++	void (*unprepare)(struct iio_dev *);
+ 	const unsigned int *smp_cycles;
+ };
+ 
+@@ -538,10 +538,11 @@ static void stm32_adc_set_res(struct stm32_adc *adc)
+ 
+ static int stm32_adc_hw_stop(struct device *dev)
+ {
+-	struct stm32_adc *adc = dev_get_drvdata(dev);
++	struct iio_dev *indio_dev = dev_get_drvdata(dev);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 
+ 	if (adc->cfg->unprepare)
+-		adc->cfg->unprepare(adc);
++		adc->cfg->unprepare(indio_dev);
+ 
+ 	if (adc->clk)
+ 		clk_disable_unprepare(adc->clk);
+@@ -551,7 +552,8 @@ static int stm32_adc_hw_stop(struct device *dev)
+ 
+ static int stm32_adc_hw_start(struct device *dev)
+ {
+-	struct stm32_adc *adc = dev_get_drvdata(dev);
++	struct iio_dev *indio_dev = dev_get_drvdata(dev);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 
+ 	if (adc->clk) {
+@@ -563,7 +565,7 @@ static int stm32_adc_hw_start(struct device *dev)
+ 	stm32_adc_set_res(adc);
+ 
+ 	if (adc->cfg->prepare) {
+-		ret = adc->cfg->prepare(adc);
++		ret = adc->cfg->prepare(indio_dev);
+ 		if (ret)
+ 			goto err_clk_dis;
+ 	}
+@@ -579,7 +581,7 @@ static int stm32_adc_hw_start(struct device *dev)
+ 
+ /**
+  * stm32f4_adc_start_conv() - Start conversions for regular channels.
+- * @adc: stm32 adc instance
++ * @indio_dev: IIO device instance
+  * @dma: use dma to transfer conversion result
+  *
+  * Start conversions for regular channels.
+@@ -587,8 +589,10 @@ static int stm32_adc_hw_start(struct device *dev)
+  * conversions, in IIO buffer modes. Otherwise, use ADC interrupt with direct
+  * DR read instead (e.g. read_raw, or triggered buffer mode without DMA).
+  */
+-static void stm32f4_adc_start_conv(struct stm32_adc *adc, bool dma)
++static void stm32f4_adc_start_conv(struct iio_dev *indio_dev, bool dma)
+ {
++	struct stm32_adc *adc = iio_priv(indio_dev);
++
+ 	stm32_adc_set_bits(adc, STM32F4_ADC_CR1, STM32F4_SCAN);
+ 
+ 	if (dma)
+@@ -605,8 +609,10 @@ static void stm32f4_adc_start_conv(struct stm32_adc *adc, bool dma)
+ 		stm32_adc_set_bits(adc, STM32F4_ADC_CR2, STM32F4_SWSTART);
+ }
+ 
+-static void stm32f4_adc_stop_conv(struct stm32_adc *adc)
++static void stm32f4_adc_stop_conv(struct iio_dev *indio_dev)
+ {
++	struct stm32_adc *adc = iio_priv(indio_dev);
++
+ 	stm32_adc_clr_bits(adc, STM32F4_ADC_CR2, STM32F4_EXTEN_MASK);
+ 	stm32_adc_clr_bits(adc, STM32F4_ADC_SR, STM32F4_STRT);
+ 
+@@ -615,8 +621,9 @@ static void stm32f4_adc_stop_conv(struct stm32_adc *adc)
+ 			   STM32F4_ADON | STM32F4_DMA | STM32F4_DDS);
+ }
+ 
+-static void stm32h7_adc_start_conv(struct stm32_adc *adc, bool dma)
++static void stm32h7_adc_start_conv(struct iio_dev *indio_dev, bool dma)
+ {
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	enum stm32h7_adc_dmngt dmngt;
+ 	unsigned long flags;
+ 	u32 val;
+@@ -635,9 +642,9 @@ static void stm32h7_adc_start_conv(struct stm32_adc *adc, bool dma)
+ 	stm32_adc_set_bits(adc, STM32H7_ADC_CR, STM32H7_ADSTART);
+ }
+ 
+-static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
++static void stm32h7_adc_stop_conv(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 	u32 val;
+ 
+@@ -652,9 +659,9 @@ static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
+ 	stm32_adc_clr_bits(adc, STM32H7_ADC_CFGR, STM32H7_DMNGT_MASK);
+ }
+ 
+-static int stm32h7_adc_exit_pwr_down(struct stm32_adc *adc)
++static int stm32h7_adc_exit_pwr_down(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 	u32 val;
+ 
+@@ -690,9 +697,9 @@ static void stm32h7_adc_enter_pwr_down(struct stm32_adc *adc)
+ 	stm32_adc_set_bits(adc, STM32H7_ADC_CR, STM32H7_DEEPPWD);
+ }
+ 
+-static int stm32h7_adc_enable(struct stm32_adc *adc)
++static int stm32h7_adc_enable(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 	u32 val;
+ 
+@@ -713,9 +720,9 @@ static int stm32h7_adc_enable(struct stm32_adc *adc)
+ 	return ret;
+ }
+ 
+-static void stm32h7_adc_disable(struct stm32_adc *adc)
++static void stm32h7_adc_disable(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 	u32 val;
+ 
+@@ -730,12 +737,12 @@ static void stm32h7_adc_disable(struct stm32_adc *adc)
+ 
+ /**
+  * stm32h7_adc_read_selfcalib() - read calibration shadow regs, save result
+- * @adc: stm32 adc instance
++ * @indio_dev: IIO device instance
+  * Note: Must be called once ADC is enabled, so LINCALRDYW[1..6] are writable
+  */
+-static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
++static int stm32h7_adc_read_selfcalib(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int i, ret;
+ 	u32 lincalrdyw_mask, val;
+ 
+@@ -774,12 +781,12 @@ static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
+ 
+ /**
+  * stm32h7_adc_restore_selfcalib() - Restore saved self-calibration result
+- * @adc: stm32 adc instance
++ * @indio_dev: IIO device instance
+  * Note: ADC must be enabled, with no on-going conversions.
+  */
+-static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
++static int stm32h7_adc_restore_selfcalib(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int i, ret;
+ 	u32 lincalrdyw_mask, val;
+ 
+@@ -847,12 +854,12 @@ static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
+ 
+ /**
+  * stm32h7_adc_selfcalib() - Procedure to calibrate ADC
+- * @adc: stm32 adc instance
++ * @indio_dev: IIO device instance
+  * Note: Must be called once ADC is out of power down.
+  */
+-static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
++static int stm32h7_adc_selfcalib(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int ret;
+ 	u32 val;
+ 
+@@ -903,7 +910,7 @@ static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
+ 
+ /**
+  * stm32h7_adc_prepare() - Leave power down mode to enable ADC.
+- * @adc: stm32 adc instance
++ * @indio_dev: IIO device instance
+  * Leave power down mode.
+  * Configure channels as single ended or differential before enabling ADC.
+  * Enable ADC.
+@@ -912,30 +919,31 @@ static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
+  * - Only one input is selected for single ended (e.g. 'vinp')
+  * - Two inputs are selected for differential channels (e.g. 'vinp' & 'vinn')
+  */
+-static int stm32h7_adc_prepare(struct stm32_adc *adc)
++static int stm32h7_adc_prepare(struct iio_dev *indio_dev)
+ {
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int calib, ret;
+ 
+-	ret = stm32h7_adc_exit_pwr_down(adc);
++	ret = stm32h7_adc_exit_pwr_down(indio_dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = stm32h7_adc_selfcalib(adc);
++	ret = stm32h7_adc_selfcalib(indio_dev);
+ 	if (ret < 0)
+ 		goto pwr_dwn;
+ 	calib = ret;
+ 
+ 	stm32_adc_writel(adc, STM32H7_ADC_DIFSEL, adc->difsel);
+ 
+-	ret = stm32h7_adc_enable(adc);
++	ret = stm32h7_adc_enable(indio_dev);
+ 	if (ret)
+ 		goto pwr_dwn;
+ 
+ 	/* Either restore or read calibration result for future reference */
+ 	if (calib)
+-		ret = stm32h7_adc_restore_selfcalib(adc);
++		ret = stm32h7_adc_restore_selfcalib(indio_dev);
+ 	else
+-		ret = stm32h7_adc_read_selfcalib(adc);
++		ret = stm32h7_adc_read_selfcalib(indio_dev);
+ 	if (ret)
+ 		goto disable;
+ 
+@@ -944,16 +952,18 @@ static int stm32h7_adc_prepare(struct stm32_adc *adc)
+ 	return 0;
+ 
+ disable:
+-	stm32h7_adc_disable(adc);
++	stm32h7_adc_disable(indio_dev);
+ pwr_dwn:
+ 	stm32h7_adc_enter_pwr_down(adc);
+ 
+ 	return ret;
+ }
+ 
+-static void stm32h7_adc_unprepare(struct stm32_adc *adc)
++static void stm32h7_adc_unprepare(struct iio_dev *indio_dev)
+ {
+-	stm32h7_adc_disable(adc);
++	struct stm32_adc *adc = iio_priv(indio_dev);
++
++	stm32h7_adc_disable(indio_dev);
+ 	stm32h7_adc_enter_pwr_down(adc);
+ }
+ 
+@@ -1160,7 +1170,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+ 
+ 	stm32_adc_conv_irq_enable(adc);
+ 
+-	adc->cfg->start_conv(adc, false);
++	adc->cfg->start_conv(indio_dev, false);
+ 
+ 	timeout = wait_for_completion_interruptible_timeout(
+ 					&adc->completion, STM32_ADC_TIMEOUT);
+@@ -1173,7 +1183,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+ 		ret = IIO_VAL_INT;
+ 	}
+ 
+-	adc->cfg->stop_conv(adc);
++	adc->cfg->stop_conv(indio_dev);
+ 
+ 	stm32_adc_conv_irq_disable(adc);
+ 
+@@ -1227,8 +1237,8 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
+ 
+ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
+ {
+-	struct stm32_adc *adc = data;
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = data;
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+ 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+ 
+@@ -1240,8 +1250,8 @@ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
+ 
+ static irqreturn_t stm32_adc_isr(int irq, void *data)
+ {
+-	struct stm32_adc *adc = data;
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = data;
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+ 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+ 
+@@ -1514,7 +1524,7 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
+ 	if (!adc->dma_chan)
+ 		stm32_adc_conv_irq_enable(adc);
+ 
+-	adc->cfg->start_conv(adc, !!adc->dma_chan);
++	adc->cfg->start_conv(indio_dev, !!adc->dma_chan);
+ 
+ 	return 0;
+ 
+@@ -1547,7 +1557,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	struct device *dev = indio_dev->dev.parent;
+ 
+-	adc->cfg->stop_conv(adc);
++	adc->cfg->stop_conv(indio_dev);
+ 	if (!adc->dma_chan)
+ 		stm32_adc_conv_irq_disable(adc);
+ 
+@@ -1891,7 +1901,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	indio_dev->info = &stm32_adc_iio_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE | INDIO_HARDWARE_TRIGGERED;
+ 
+-	platform_set_drvdata(pdev, adc);
++	platform_set_drvdata(pdev, indio_dev);
+ 
+ 	ret = of_property_read_u32(pdev->dev.of_node, "reg", &adc->offset);
+ 	if (ret != 0) {
+@@ -1905,7 +1915,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_threaded_irq(&pdev->dev, adc->irq, stm32_adc_isr,
+ 					stm32_adc_threaded_isr,
+-					0, pdev->name, adc);
++					0, pdev->name, indio_dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to request IRQ\n");
+ 		return ret;
+@@ -1989,8 +1999,8 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 
+ static int stm32_adc_remove(struct platform_device *pdev)
+ {
+-	struct stm32_adc *adc = platform_get_drvdata(pdev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 	iio_device_unregister(indio_dev);
+@@ -2012,8 +2022,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
+ #if defined(CONFIG_PM_SLEEP)
+ static int stm32_adc_suspend(struct device *dev)
+ {
+-	struct stm32_adc *adc = dev_get_drvdata(dev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+ 
+ 	if (iio_buffer_enabled(indio_dev))
+ 		__stm32_adc_buffer_predisable(indio_dev);
+@@ -2023,8 +2032,7 @@ static int stm32_adc_suspend(struct device *dev)
+ 
+ static int stm32_adc_resume(struct device *dev)
+ {
+-	struct stm32_adc *adc = dev_get_drvdata(dev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+ 	int ret;
+ 
+ 	ret = pm_runtime_force_resume(dev);
+-- 
+2.17.1
 
