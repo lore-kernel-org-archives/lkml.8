@@ -2,112 +2,105 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0266C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F87C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1E82078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590505986;
-	bh=mLAN8D6oIJoa3xggwgfTsbQUrUGKyiAShX7jqMOfqpQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jYrke3JvQDFeqYWg96tIoZxUCNaES1UTz2cWGo0Ilwxa/ieO819LddtrRXSv4AwVk
-	 4uyziuYzCbuNkIA9XyIsjIRzfp8QP3Msg0AKcjyuQqKjrCWIqg9Yp7xPWECoAW7qcb
-	 KJZOOEsiqYKsnqNsl7V3AQJk2UntDC82Wmu4LdKA=
+	by mail.kernel.org (Postfix) with ESMTP id 840872078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgEZPNG (ORCPT
+        id S1729584AbgEZPOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbgEZPNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:13:05 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDDE12078C;
-        Tue, 26 May 2020 15:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590505984;
-        bh=mLAN8D6oIJoa3xggwgfTsbQUrUGKyiAShX7jqMOfqpQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TwwVC+24PxfZ9n8pI3uZo1gP7BUT14m+GVWVUjEuzJ19b989LBWKZjSDjv/kPV1ex
-         L6uQJSmJPjTj8IXOAE5zqwykadOzOqlPyc4fH9x/KqRNyGBVD62xdvunQ1MvXvKizj
-         2XBl6a+OPGFq6NlEgOuIG4xeKo2Nm0kKRMRoalz8=
-Received: by mail-oi1-f179.google.com with SMTP id j145so18969007oib.5;
-        Tue, 26 May 2020 08:13:04 -0700 (PDT)
-X-Gm-Message-State: AOAM531+aFI0HyQnJlBo0CYWapiZsZzGwyXGu/0pWcg16srZRy5Ken2n
-        yiH5UP3Jxvshw3ntVYqbrJ6QpB8gK0fyrf6zJg==
-X-Google-Smtp-Source: ABdhPJxnWdsB33/h+eNDJFncCR1n3OmMuD+wbzq8824aW+7RwYNdy8Fq+5CjchUFaYrWK3vesXy9roYP9HkRJfjTDcY=
-X-Received: by 2002:aca:f084:: with SMTP id o126mr14928427oih.106.1590505984103;
- Tue, 26 May 2020 08:13:04 -0700 (PDT)
+        Tue, 26 May 2020 11:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgEZPOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:14:04 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E823C03E96D;
+        Tue, 26 May 2020 08:14:04 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jdbHD-0004uA-PJ; Tue, 26 May 2020 17:13:59 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4491B1C00FA;
+        Tue, 26 May 2020 17:13:59 +0200 (CEST)
+Date:   Tue, 26 May 2020 15:13:59 -0000
+From:   "tip-bot2 for YueHaibing" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/io_apic: Remove unused function mp_init_irq_at_boot()
+Cc:     YueHaibing <yuehaibing@huawei.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200508140808.49428-1-yuehaibing@huawei.com>
+References: <20200508140808.49428-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20200522033631.32574-1-kishon@ti.com> <20200522033631.32574-4-kishon@ti.com>
- <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com> <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
-In-Reply-To: <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 26 May 2020 09:12:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
-Message-ID: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
-Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
- perform only 32-bit accesses
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159050603911.17951.11028887642635728430.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Rob,
->
-> On 5/22/2020 9:24 PM, Rob Herring wrote:
-> > On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >>
-> >> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
-> >> 32-bit accesses for reading or writing to Cadence registers. Convert all
-> >> read and write accesses to 32-bit in Cadence PCIe driver in preparation
-> >> for adding PCIe support in TI's J721E SoC.
-> >
-> > Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
-> > with this and never can be given the PCI_COMMAND and PCI_STATUS
-> > registers are in the same word (IIRC, that's the main reason 32-bit
-> > config space accesses are broken). So this isn't going to work at
->
-> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
-> could be reset while raising legacy interrupt. While this cannot be avoided for
-> TI's J721E, other platforms doesn't have to have this limitation.
-> > least for EP accesses. And maybe you need a custom .raise_irq() hook
-> > to minimize any problems (such as making the RMW atomic at least from
-> > the endpoint's perspective).
->
-> This is to make sure EP doesn't update in-consistent state when RC is updating
-> the PCI_STATUS register? Since this involves two different systems, how do we
-> make this atomic?
+The following commit has been merged into the x86/cleanups branch of tip:
 
-You can't make it atomic WRT both systems, but is there locking around
-each RMW? Specifically, are preemption and interrupts disabled to
-ensure time between a read and write are minimized? You wouldn't want
-interrupts disabled during the delay too though (i.e. around
-.raise_irq()).
+Commit-ID:     fd52a75ca3545c965ff58a78b6ff0b0dc7d8d228
+Gitweb:        https://git.kernel.org/tip/fd52a75ca3545c965ff58a78b6ff0b0dc7d8d228
+Author:        YueHaibing <yuehaibing@huawei.com>
+AuthorDate:    Fri, 08 May 2020 22:08:08 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 26 May 2020 17:01:20 +02:00
 
-BTW, I've asked this question before, but aren't PCI legacy interrupts
-level triggered? If so, isn't generating a pulse wrong?
+x86/io_apic: Remove unused function mp_init_irq_at_boot()
 
-Rob
+There are no callers in-tree anymore since
+
+  ef9e56d894ea ("x86/ioapic: Remove obsolete post hotplug update")
+
+so remove it.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200508140808.49428-1-yuehaibing@huawei.com
+---
+ arch/x86/kernel/apic/io_apic.c | 13 -------------
+ 1 file changed, 13 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 913c886..ce61e3e 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -154,19 +154,6 @@ static inline bool mp_is_legacy_irq(int irq)
+ 	return irq >= 0 && irq < nr_legacy_irqs();
+ }
+ 
+-/*
+- * Initialize all legacy IRQs and all pins on the first IOAPIC
+- * if we have legacy interrupt controller. Kernel boot option "pirq="
+- * may rely on non-legacy pins on the first IOAPIC.
+- */
+-static inline int mp_init_irq_at_boot(int ioapic, int irq)
+-{
+-	if (!nr_legacy_irqs())
+-		return 0;
+-
+-	return ioapic == 0 || mp_is_legacy_irq(irq);
+-}
+-
+ static inline struct irq_domain *mp_ioapic_irqdomain(int ioapic)
+ {
+ 	return ioapics[ioapic].irqdomain;
