@@ -2,150 +2,118 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEEA20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E8520776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590494573;
+	bh=WcHaLBfV+u85yPM/yBzsl+UKP18EOXaGG8MIp0mxU9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kpVzDtQnw7VSqyUid2nxaZee+OzrGVkPIPofEXY75HcFjJQ+ShuoTHF5dAiNqcEOU
+	 YXQoURMQ0yndqFmSy5XBVrTlBEK20uu/ln+RDAgn5t4DkJ+JI0YvAB7SRQA8AuLbIJ
+	 sLX8kkqaNiXMl2VZ+QkKASSP+cVQD3g0Xw9+q0pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732009AbgEZMAo convert rfc822-to-8bit (ORCPT
+        id S1729027AbgEZMCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:00:44 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2085 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727948AbgEZMAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:00:43 -0400
-Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 8CC2A219BB824B1F228F;
-        Tue, 26 May 2020 20:00:40 +0800 (CST)
-Received: from DGGEML531-MBS.china.huawei.com ([169.254.5.130]) by
- DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
- 14.03.0487.000; Tue, 26 May 2020 20:00:34 +0800
-From:   "Gonglei (Arei)" <arei.gonglei@huawei.com>
-To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     LABBE Corentin <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Jason Wang" <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Markus Elfring" <Markus.Elfring@web.de>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
- virtio_crypto_skcipher_finalize_req()
-Thread-Topic: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
- virtio_crypto_skcipher_finalize_req()
-Thread-Index: AQHWMwyZcHiP+r3rKk+F0nYZAiiWqKi6Qu8g
-Date:   Tue, 26 May 2020 12:00:33 +0000
-Message-ID: <33183CC9F5247A488A2544077AF19020DF5EA250@dggeml531-mbs.china.huawei.com>
-References: <20200526031956.1897-1-longpeng2@huawei.com>
- <20200526031956.1897-3-longpeng2@huawei.com>
-In-Reply-To: <20200526031956.1897-3-longpeng2@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.133.225.234]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 26 May 2020 08:02:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727844AbgEZMCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:02:52 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5AD62073B;
+        Tue, 26 May 2020 12:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590494572;
+        bh=WcHaLBfV+u85yPM/yBzsl+UKP18EOXaGG8MIp0mxU9Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BwvigOdeh53MruG9iZWYt3ga4Q2t47Jgi/T9Hyy+IqKns1AAYvAa8Zmi/nl3m5qBp
+         VnCEh9vtQdjyZMp2XgOmnnmqesi9BiwmPQsIB9bEfK1TPry2gCmFF8IrmLkATrVEs7
+         leP5KjAKCH1ngNeUOcjm1ZGRPo2Ljc/2lO9d0WaM=
+Date:   Tue, 26 May 2020 13:02:46 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement
+ expression
+Message-ID: <20200526120245.GB27166@willie-the-truck>
+References: <20200521142047.169334-1-elver@google.com>
+ <20200521142047.169334-10-elver@google.com>
+ <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
+ <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 26, 2020 at 12:42:16PM +0200, Arnd Bergmann wrote:
+> On Thu, May 21, 2020 at 10:21 PM 'Nick Desaulniers' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > On Thu, May 21, 2020 at 7:22 AM 'Marco Elver' via Clang Built Linux
+> > <clang-built-linux@googlegroups.com> wrote:
+> > >
+> > > It appears that compilers have trouble with nested statement
+> > > expressions. Therefore remove one level of statement expression nesting
+> > > from the data_race() macro. This will help us avoid potential problems
+> > > in future as its usage increases.
+> > >
+> > > Link: https://lkml.kernel.org/r/20200520221712.GA21166@zn.tnic
+> > > Acked-by: Will Deacon <will@kernel.org>
+> > > Signed-off-by: Marco Elver <elver@google.com>
+> >
+> > Thanks Marco, I can confirm this series fixes the significant build
+> > time regressions.
+> >
+> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> >
+> > More measurements in: https://github.com/ClangBuiltLinux/linux/issues/1032
+> >
+> > Might want:
+> > Reported-by: Borislav Petkov <bp@suse.de>
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > too.
+> 
+> I find this patch only solves half the problem: it's much faster than
+> without the
+> patch, but still much slower than the current mainline version. As far as I'm
+> concerned, I think the build speed regression compared to mainline is not yet
+> acceptable, and we should try harder.
+> 
+> I have not looked too deeply at it yet, but this is what I found from looking
+> at a file in a randconfig build:
+> 
+> Configuration: see https://pastebin.com/raw/R9erCwNj
 
-> -----Original Message-----
-> From: Longpeng (Mike, Cloud Infrastructure Service Product Dept.)
-> Sent: Tuesday, May 26, 2020 11:20 AM
-> To: linux-crypto@vger.kernel.org
-> Cc: Longpeng (Mike, Cloud Infrastructure Service Product Dept.)
-> <longpeng2@huawei.com>; LABBE Corentin <clabbe@baylibre.com>; Gonglei
-> (Arei) <arei.gonglei@huawei.com>; Herbert Xu
-> <herbert@gondor.apana.org.au>; Michael S. Tsirkin <mst@redhat.com>; Jason
-> Wang <jasowang@redhat.com>; David S. Miller <davem@davemloft.net>;
-> Markus Elfring <Markus.Elfring@web.de>;
-> virtualization@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
-> stable@vger.kernel.org
-> Subject: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
-> virtio_crypto_skcipher_finalize_req()
-> 
-> The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
-> ( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory of
-> request structure.
-> 
-> In crypto_authenc_init_tfm(), the reqsize is set to:
->   [PART 1] sizeof(authenc_request_ctx) +
->   [PART 2] ictx->reqoff +
->   [PART 3] MAX(ahash part, skcipher part) and the 'PART 3' is used by both
-> ahash and skcipher in turn.
-> 
-> When the virtio_crypto driver finish skcipher req, it'll call ->complete callback(in
-> crypto_finalize_skcipher_request) and then free its resources whose pointers
-> are recorded in 'skcipher parts'.
-> 
-> However, the ->complete is 'crypto_authenc_encrypt_done' in this case, it will
-> use the 'ahash part' of the request and change its content, so virtio_crypto
-> driver will get the wrong pointer after ->complete finish and mistakenly free
-> some other's memory. So the system will crash when these memory will be used
-> again.
-> 
-> The resources which need to be cleaned up are not used any more. But the
-> pointers of these resources may be changed in the function
-> "crypto_finalize_skcipher_request". Thus release specific resources before
-> calling this function.
-> 
-> Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-> Reported-by: LABBE Corentin <clabbe@baylibre.com>
-> Cc: Gonglei <arei.gonglei@huawei.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Markus Elfring <Markus.Elfring@web.de>
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Message-Id: <20200123101000.GB24255@Red>
-> Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-> ---
+So this .config actually has KCSAN enabled. Do you still see the slowdown
+with that disabled? Although not ideal, having a longer compiler time when
+the compiler is being asked to perform instrumentation doesn't seem like a
+show-stopper to me.
 
-Acked-by: Gonglei <arei.gonglei@huawei.com>
-
-Regards,
--Gonglei
-
->  drivers/crypto/virtio/virtio_crypto_algs.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c
-> b/drivers/crypto/virtio/virtio_crypto_algs.c
-> index 5f8243563009..52261b6c247e 100644
-> --- a/drivers/crypto/virtio/virtio_crypto_algs.c
-> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-> @@ -582,10 +582,11 @@ static void virtio_crypto_skcipher_finalize_req(
->  		scatterwalk_map_and_copy(req->iv, req->dst,
->  					 req->cryptlen - AES_BLOCK_SIZE,
->  					 AES_BLOCK_SIZE, 0);
-> -	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
-> -					   req, err);
->  	kzfree(vc_sym_req->iv);
->  	virtcrypto_clear_request(&vc_sym_req->base);
-> +
-> +	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
-> +					   req, err);
->  }
-> 
->  static struct virtio_crypto_algo virtio_crypto_algs[] = { {
-> --
-> 2.23.0
-
+Will
