@@ -4,54 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D34CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF22086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEA0208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519449;
-	bh=Ixw+AZ2/9aUXpsrUmjMWraZuosPH9C7c5E4GL8nLkLY=;
+	s=default; t=1590519457;
+	bh=HdsLc+/2oQmiq9OsPK83xe8aK/rkwX/OMi3Atsgxbpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ex2hrUFUe88Fgt2ij6QxOB2WDL7vBtzYFcJbHTpVvs/ERNl5eEWLynVaRWy4oNLIN
-	 bePsfYuUQpDK/ARCuCA18BSMjJYuHmmuvBJQvVNLiXW5ofLlO5fOEUgcciQs/uOdJB
-	 /g3r1YGc29P8QXQ/rDfFqBB27dT41hmwUa5OWZVg=
+	b=Tq9elCqngsTKOGyGOvUTDZ3K12hU9+SkWR5jBS7a8GyCWZdwxfrTTNf5T0Ju7JJ2a
+	 x/iNs4ropAAVZErmeVaOLlKT2mMCNQYy85ipX/DkuhK83fUclhXsgrA+8gKOYKYNeW
+	 RDjp1VDIqmeKP4llsjFFHOFYXouMOvbrX2rzB/yI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390103AbgEZS52 (ORCPT
+        id S2390124AbgEZS5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389284AbgEZS5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:25 -0400
+        id S2389306AbgEZS5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE4F920849;
-        Tue, 26 May 2020 18:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BA52086A;
+        Tue, 26 May 2020 18:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519444;
-        bh=Ixw+AZ2/9aUXpsrUmjMWraZuosPH9C7c5E4GL8nLkLY=;
+        s=default; t=1590519451;
+        bh=HdsLc+/2oQmiq9OsPK83xe8aK/rkwX/OMi3Atsgxbpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hp2AKteQbyn7pU5ljnTFcSnV2tfY5jbj18hm9VlSeSIt78WH0XPaLEabRD3e49m/K
-         UoAW/keJ0pLX63URjiUwdY7jvtKV0ZMPWk89h/Ee74CfBeXWuJM+k65XPGE21Oyx8z
-         D+NDXLkbPiVVtEM0PqqNfimcq5lf/kf4D+FPMDG4=
+        b=aM4Cm8gmwbSmpRv/UIHTh67p+d7g+xziRv2BuEmKLQMinPTBidLsqMPLr4qVIGxgg
+         BweXodbPM5q7UdlQ9NNmCjBDRtjsqD6GToa0HRTt0dXSd46Pkqy828+fJa8aRlRnTx
+         hxH1XlhZsQ4G6KwaStse1r7PB2NMkTdNMFmZMp5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, greg@kroah.com
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 53/65] l2tp: hold tunnel used while creating sessions with netlink
-Date:   Tue, 26 May 2020 20:53:12 +0200
-Message-Id: <20200526183925.004594283@linuxfoundation.org>
+        stable@vger.kernel.org, Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 01/64] igb: use igb_adapter->io_addr instead of e1000_hw->hw_addr
+Date:   Tue, 26 May 2020 20:52:30 +0200
+Message-Id: <20200526183913.559071071@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
-References: <20200526183905.988782958@linuxfoundation.org>
+In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
+References: <20200526183913.064413230@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,109 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Cao jin <caoj.fnst@cn.fujitsu.com>
 
-commit e702c1204eb57788ef189c839c8c779368267d70 upstream.
+commit 629823b872402451b42462414da08dddd0e2c93d upstream.
 
-Use l2tp_tunnel_get() to retrieve tunnel, so that it can't go away on
-us. Otherwise l2tp_tunnel_destruct() might release the last reference
-count concurrently, thus freeing the tunnel while we're using it.
+When running as guest, under certain condition, it will oops as following.
+writel() in igb_configure_tx_ring() results in oops, because hw->hw_addr
+is NULL. While other register access won't oops kernel because they use
+wr32/rd32 which have a defense against NULL pointer.
 
-Fixes: 309795f4bec2 ("l2tp: Add netlink control API for L2TP")
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
+    [  141.225449] pcieport 0000:00:1c.0: AER: Multiple Uncorrected (Fatal)
+    error received: id=0101
+    [  141.225523] igb 0000:01:00.1: PCIe Bus Error:
+    severity=Uncorrected (Fatal), type=Unaccessible,
+    id=0101(Unregistered Agent ID)
+    [  141.299442] igb 0000:01:00.1: broadcast error_detected message
+    [  141.300539] igb 0000:01:00.0 enp1s0f0: PCIe link lost, device now
+    detached
+    [  141.351019] igb 0000:01:00.1 enp1s0f1: PCIe link lost, device now
+    detached
+    [  143.465904] pcieport 0000:00:1c.0: Root Port link has been reset
+    [  143.465994] igb 0000:01:00.1: broadcast slot_reset message
+    [  143.466039] igb 0000:01:00.0: enabling device (0000 -> 0002)
+    [  144.389078] igb 0000:01:00.1: enabling device (0000 -> 0002)
+    [  145.312078] igb 0000:01:00.1: broadcast resume message
+    [  145.322211] BUG: unable to handle kernel paging request at
+    0000000000003818
+    [  145.361275] IP: [<ffffffffa02fd38d>]
+    igb_configure_tx_ring+0x14d/0x280 [igb]
+    [  145.400048] PGD 0
+    [  145.438007] Oops: 0002 [#1] SMP
+
+A similar issue & solution could be found at:
+    http://patchwork.ozlabs.org/patch/689592/
+
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+Acked-by: Alexander Duyck <alexander.h.duyck@intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_netlink.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/net/l2tp/l2tp_netlink.c
-+++ b/net/l2tp/l2tp_netlink.c
-@@ -502,8 +502,9 @@ static int l2tp_nl_cmd_session_create(st
- 		ret = -EINVAL;
- 		goto out;
- 	}
-+
- 	tunnel_id = nla_get_u32(info->attrs[L2TP_ATTR_CONN_ID]);
--	tunnel = l2tp_tunnel_find(net, tunnel_id);
-+	tunnel = l2tp_tunnel_get(net, tunnel_id);
- 	if (!tunnel) {
- 		ret = -ENODEV;
- 		goto out;
-@@ -511,24 +512,24 @@ static int l2tp_nl_cmd_session_create(st
+---
+ drivers/net/ethernet/intel/igb/igb_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -3395,7 +3395,7 @@ void igb_configure_tx_ring(struct igb_ad
+ 	     tdba & 0x00000000ffffffffULL);
+ 	wr32(E1000_TDBAH(reg_idx), tdba >> 32);
  
- 	if (!info->attrs[L2TP_ATTR_SESSION_ID]) {
- 		ret = -EINVAL;
--		goto out;
-+		goto out_tunnel;
- 	}
- 	session_id = nla_get_u32(info->attrs[L2TP_ATTR_SESSION_ID]);
+-	ring->tail = hw->hw_addr + E1000_TDT(reg_idx);
++	ring->tail = adapter->io_addr + E1000_TDT(reg_idx);
+ 	wr32(E1000_TDH(reg_idx), 0);
+ 	writel(0, ring->tail);
  
- 	if (!info->attrs[L2TP_ATTR_PEER_SESSION_ID]) {
- 		ret = -EINVAL;
--		goto out;
-+		goto out_tunnel;
- 	}
- 	peer_session_id = nla_get_u32(info->attrs[L2TP_ATTR_PEER_SESSION_ID]);
+@@ -3734,7 +3734,7 @@ void igb_configure_rx_ring(struct igb_ad
+ 	     ring->count * sizeof(union e1000_adv_rx_desc));
  
- 	if (!info->attrs[L2TP_ATTR_PW_TYPE]) {
- 		ret = -EINVAL;
--		goto out;
-+		goto out_tunnel;
- 	}
- 	cfg.pw_type = nla_get_u16(info->attrs[L2TP_ATTR_PW_TYPE]);
- 	if (cfg.pw_type >= __L2TP_PWTYPE_MAX) {
- 		ret = -EINVAL;
--		goto out;
-+		goto out_tunnel;
- 	}
+ 	/* initialize head and tail */
+-	ring->tail = hw->hw_addr + E1000_RDT(reg_idx);
++	ring->tail = adapter->io_addr + E1000_RDT(reg_idx);
+ 	wr32(E1000_RDH(reg_idx), 0);
+ 	writel(0, ring->tail);
  
- 	if (tunnel->version > 2) {
-@@ -550,7 +551,7 @@ static int l2tp_nl_cmd_session_create(st
- 			u16 len = nla_len(info->attrs[L2TP_ATTR_COOKIE]);
- 			if (len > 8) {
- 				ret = -EINVAL;
--				goto out;
-+				goto out_tunnel;
- 			}
- 			cfg.cookie_len = len;
- 			memcpy(&cfg.cookie[0], nla_data(info->attrs[L2TP_ATTR_COOKIE]), len);
-@@ -559,7 +560,7 @@ static int l2tp_nl_cmd_session_create(st
- 			u16 len = nla_len(info->attrs[L2TP_ATTR_PEER_COOKIE]);
- 			if (len > 8) {
- 				ret = -EINVAL;
--				goto out;
-+				goto out_tunnel;
- 			}
- 			cfg.peer_cookie_len = len;
- 			memcpy(&cfg.peer_cookie[0], nla_data(info->attrs[L2TP_ATTR_PEER_COOKIE]), len);
-@@ -602,7 +603,7 @@ static int l2tp_nl_cmd_session_create(st
- 	if ((l2tp_nl_cmd_ops[cfg.pw_type] == NULL) ||
- 	    (l2tp_nl_cmd_ops[cfg.pw_type]->session_create == NULL)) {
- 		ret = -EPROTONOSUPPORT;
--		goto out;
-+		goto out_tunnel;
- 	}
- 
- 	/* Check that pseudowire-specific params are present */
-@@ -612,7 +613,7 @@ static int l2tp_nl_cmd_session_create(st
- 	case L2TP_PWTYPE_ETH_VLAN:
- 		if (!info->attrs[L2TP_ATTR_VLAN_ID]) {
- 			ret = -EINVAL;
--			goto out;
-+			goto out_tunnel;
- 		}
- 		break;
- 	case L2TP_PWTYPE_ETH:
-@@ -640,6 +641,8 @@ static int l2tp_nl_cmd_session_create(st
- 		}
- 	}
- 
-+out_tunnel:
-+	l2tp_tunnel_dec_refcount(tunnel);
- out:
- 	return ret;
- }
 
 
