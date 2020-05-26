@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4933C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB529208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C29820888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="k/UO9kJu"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fg2aAQz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391964AbgEZTNh (ORCPT
+        id S2391984AbgEZTNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:13:37 -0400
+        Tue, 26 May 2020 15:13:39 -0400
 Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45882 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404270AbgEZTN3 (ORCPT
+        by vger.kernel.org with ESMTP id S2404276AbgEZTNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:29 -0400
+        Tue, 26 May 2020 15:13:31 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id CE20430D60E;
-        Tue, 26 May 2020 12:13:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com CE20430D60E
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id DA41E30D7C1;
+        Tue, 26 May 2020 12:13:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com DA41E30D7C1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1590520406;
-        bh=hcMFng61Xf+UhN2NiPz5gx2U/ueSlTd/rkIbspf5ZRs=;
+        s=dkimrelay; t=1590520409;
+        bh=I2huJ0KFkONce8j/+e+QRSy6cB3XNR9TsoPznvkU2Jw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/UO9kJuqjJtUBZS5PaRYl5wCu8pq1woT6I+Q/4Y/m0S7D7z2zS4k9K2OnEY5tzq0
-         SySqHD1Ujg6kDfDAqAwza/3WmqbPv8yPDIhBWYT99z+gnYE86LDdmOXQFGDJVdTpGB
-         V2TYJoT1IkFpLcl9E7XxDl6inn8FIVCMl7tjUh3k=
+        b=Fg2aAQz45xb5DAruU7sGQr1UidMxZfi/xtgoMr+VjKNVmXXSRQIFaytKVw8S/QZDd
+         xZ2NlVPcT8LPV99VRTPmy7Xs4ce+tiGExlPw6two4bZZ5i5s5f62+e7qUx0zmaOr0f
+         W/aHSXckNYniX3hxc9D2Qg1LfeTY+MgS3gQRVbqU=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 5010C14008B;
-        Tue, 26 May 2020 12:13:25 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id A9E33140069;
+        Tue, 26 May 2020 12:13:28 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 06/14] PCI: brcmstb: Add bcm7278 PERST support
-Date:   Tue, 26 May 2020 15:12:45 -0400
-Message-Id: <20200526191303.1492-7-james.quinlan@broadcom.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 08/14] of: Include a dev param in of_dma_get_range()
+Date:   Tue, 26 May 2020 15:12:47 -0400
+Message-Id: <20200526191303.1492-9-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
 References: <20200526191303.1492-1-james.quinlan@broadcom.com>
@@ -62,52 +56,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+Currently there is only one caller of of_dma_get_range().  A struct device
+*dev param is needed For implementing multiple dma offsets.  This function
+will still work if dev == NULL.
 
-The PERST bit was moved to a different register in 7278-type STB chips.  In
-addition, the polarity of the bit was also changed; for other chips writing
-a 1 specified assert; for 7278-type chips, writing a 0 specifies assert.
-
-Signal-wise, PERST is an asserted-low signal.
-
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/of/address.c    | 4 +++-
+ drivers/of/device.c     | 2 +-
+ drivers/of/of_private.h | 8 ++++----
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index f444751e247c..0bcae9eba048 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -81,6 +81,7 @@
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 8eea3f6e29a4..96d8cfb14a60 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -920,6 +920,7 @@ EXPORT_SYMBOL(of_io_request_and_map);
  
- #define PCIE_MISC_PCIE_CTRL				0x4064
- #define  PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_MASK	0x1
-+#define PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_MASK		0x4
- 
- #define PCIE_MISC_PCIE_STATUS				0x4068
- #define  PCIE_MISC_PCIE_STATUS_PCIE_PORT_MASK		0x80
-@@ -686,9 +687,17 @@ static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie, u32 val)
+ /**
+  * of_dma_get_range - Get DMA range info
++ * @dev:	device pointer; only needed for a corner case.
+  * @np:		device node to get DMA range info
+  * @dma_addr:	pointer to store initial DMA address of DMA range
+  * @paddr:	pointer to store initial CPU address of DMA range
+@@ -935,7 +936,8 @@ EXPORT_SYMBOL(of_io_request_and_map);
+  * It returns -ENODEV if "dma-ranges" property was not found
+  * for this device in DT.
+  */
+-int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
++int of_dma_get_range(struct device *dev, struct device_node *np, u64 *dma_addr,
++		     u64 *paddr, u64 *size)
  {
- 	u32 tmp;
+ 	struct device_node *node = of_node_get(np);
+ 	const __be32 *ranges = NULL;
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 27203bfd0b22..ef6a741f9f0b 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -95,7 +95,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 	const struct iommu_ops *iommu;
+ 	u64 mask, end;
  
--	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
--	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
--	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+	if (pcie->type == BCM7278) {
-+		/* Perst bit has moved and assert value is 0 */
-+		tmp = readl(pcie->base + PCIE_MISC_PCIE_CTRL);
-+		u32p_replace_bits(&tmp,
-+				  !val, PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_MASK);
-+		writel(tmp, pcie->base +  PCIE_MISC_PCIE_CTRL);
-+	} else {
-+		tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+		u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
-+		writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+	}
+-	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
++	ret = of_dma_get_range(dev, np, &dma_addr, &paddr, &size);
+ 	if (ret < 0) {
+ 		/*
+ 		 * For legacy reasons, we have to assume some devices need
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index edc682249c00..7a83d3a81ab6 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -158,11 +158,11 @@ extern int of_bus_n_addr_cells(struct device_node *np);
+ extern int of_bus_n_size_cells(struct device_node *np);
+ 
+ #ifdef CONFIG_OF_ADDRESS
+-extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+-			    u64 *paddr, u64 *size);
++extern int of_dma_get_range(struct device *dev, struct device_node *np,
++			    u64 *dma_addr, u64 *paddr, u64 *size);
+ #else
+-static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+-				   u64 *paddr, u64 *size)
++static inline int of_dma_get_range(struct device *dev, struct device_node *np,
++				   u64 *dma_addr, u64 *paddr, u64 *size)
+ {
+ 	return -ENODEV;
  }
- 
- static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
 -- 
 2.17.1
 
