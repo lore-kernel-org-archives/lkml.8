@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F548C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B0420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAB820776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520512;
-	bh=dx72DlEhizNWX/XIZA22NubdAcBm3H7jRg6ps1o/qVE=;
+	s=default; t=1590520516;
+	bh=zcyVS/NHVYgcarFW3W2ZpzEq8bYzC9EzovUz+I2DAyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M8bCTyY3tlMOa6liitK+RrW7aUoG3kal2RY1DLY+PQ/T/eEyPTV7jHt774gar117X
-	 QYfUZH1NXlPCNnhYCKd04pumcCTX1OElspYxI6+lYgHZxfKggK6TpvL2b31GRvZOei
-	 Ifte5hbFaVJ62clhL/H9i+Keg76jAI0PJK9SD0AI=
+	b=XcX1L11Iq1O3RSA9RafMfVNz0y2Q81bKbUKOwAw+80bu/eM1mgVCfM+duuAP7/j04
+	 XFRgFpUk2pxyHrIa75VuNq79A7dTwZrEfrCm2zTELtSU7AnO/43E3W5mNVeSzwN931
+	 Vct3C7i1mZl+YjE6m2oC6zVdBwhRTxxVTbAZOJwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404389AbgEZTPL (ORCPT
+        id S2404397AbgEZTPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392251AbgEZTPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:08 -0400
+        id S2404196AbgEZTPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA108208A7;
-        Tue, 26 May 2020 19:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30ABD208B3;
+        Tue, 26 May 2020 19:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520508;
-        bh=dx72DlEhizNWX/XIZA22NubdAcBm3H7jRg6ps1o/qVE=;
+        s=default; t=1590520510;
+        bh=zcyVS/NHVYgcarFW3W2ZpzEq8bYzC9EzovUz+I2DAyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWn0ogPYS0qPCmq25pkcGUETJUbN415O3HG1jLRgEANXqg/vPoP7zYuyoMvBG7T91
-         dDywiQZsRp3M3jzp8N+SQz2uawsmj3/M0NdNhfp1o9gfxmSfiUdII3XPLJX/X8j7eP
-         P6ccYIbFxGG3bUmFVK3/1QXwf1C6fy6HCXX5OXJc=
+        b=TSZIA+gafZ33oeMDnYNIekdQHiYkWZG/SE0R7XCNo3GlJ/QDi/iA4nPtDekMB+9Is
+         qyyn78euZ7YRNsAppnPncBtHYvTs4H0ky3SKiklh163mg5bGE9GnlRyo/MYY1Zxz+l
+         NigwDByTjIokYRv+7V30awp/DLnjCe4zfUU300Ww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.6 106/126] s390/kaslr: add support for R_390_JMP_SLOT relocation type
-Date:   Tue, 26 May 2020 20:54:03 +0200
-Message-Id: <20200526183946.546777067@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 071/126] powerpc/64s: Disable STRICT_KERNEL_RWX
+Date:   Tue, 26 May 2020 20:53:28 +0200
+Message-Id: <20200526183944.154484688@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,41 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 4c1cbcbd6c56c79de2c07159be4f55386bb0bef2 upstream.
+commit 8659a0e0efdd975c73355dbc033f79ba3b31e82c upstream.
 
-With certain kernel configurations, the R_390_JMP_SLOT relocation type
-might be generated, which is not expected by the KASLR relocation code,
-and the kernel stops with the message "Unknown relocation type".
+Several strange crashes have been eventually traced back to
+STRICT_KERNEL_RWX and its interaction with code patching.
 
-This was found with a zfcpdump kernel config, where CONFIG_MODULES=n
-and CONFIG_VFIO=n. In that case, symbol_get() is used on undefined
-__weak symbols in virt/kvm/vfio.c, which results in the generation
-of R_390_JMP_SLOT relocation types.
+Various paths in our ftrace, kprobes and other patching code need to
+be hardened against patching failures, otherwise we can end up running
+with partially/incorrectly patched ftrace paths, kprobes or jump
+labels, which can then cause strange crashes.
 
-Fix this by handling R_390_JMP_SLOT similar to R_390_GLOB_DAT.
+Although fixes for those are in development, they're not -rc material.
 
-Fixes: 805bc0bc238f ("s390/kernel: build a relocatable kernel")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+There also seem to be problems with the underlying strict RWX logic,
+which needs further debugging.
+
+So for now disable STRICT_KERNEL_RWX on 64-bit to prevent people from
+enabling the option and tripping over the bugs.
+
+Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
+Cc: stable@vger.kernel.org # v4.13+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200520133605.972649-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/machine_kexec_reloc.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/kernel/machine_kexec_reloc.c
-+++ b/arch/s390/kernel/machine_kexec_reloc.c
-@@ -28,6 +28,7 @@ int arch_kexec_do_relocs(int r_type, voi
- 		break;
- 	case R_390_64:		/* Direct 64 bit.  */
- 	case R_390_GLOB_DAT:
-+	case R_390_JMP_SLOT:
- 		*(u64 *)loc = val;
- 		break;
- 	case R_390_PC16:	/* PC relative 16 bit.	*/
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -129,7 +129,7 @@ config PPC
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
+-	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
++	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC32 && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE
+ 	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
 
 
