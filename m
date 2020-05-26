@@ -2,142 +2,91 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF666C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2C5207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:34:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Q1G6ImSR"
+	by mail.kernel.org (Postfix) with ESMTP id 88ACA2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590496719;
+	bh=pL92zS03C5lYp9vj1hO2q87jO0TlE1bYou2NP1lydAQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J7n77FPg3KXsiorfY95+ewA00X4G77glVT3Ouw76HIlLPPmOyUP1mDztj6CSTN9/p
+	 /Cdy5Yr9qe7FaKgcEFaj9LgkPK1rtAhEyMxMhI2A6GV5GDXBpX/YZeZpbWDJxK8frf
+	 5j4xSz0RA9cDoOdwYgoLsxuP/cQcFpj0tcW9jImI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbgEZMeq (ORCPT
+        id S2389124AbgEZMii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389076AbgEZMep (ORCPT
+        Tue, 26 May 2020 08:38:38 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:39345 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388497AbgEZMii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:34:45 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A3EC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:34:45 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id bs4so17499545edb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JUFqBLf1RiIPnvjRp2NeVt7jf0hFenXjeR9kjT+Rdf0=;
-        b=Q1G6ImSRc/01YqdhB6mWCmEe/l4IF827QZZCdkXZi5fpxWvRPUQLlrm6r3Aqsf+Q5p
-         i7C9AzPEpnqFga5IAaazmqb0xjO2eq24t34iW7ZdFGDkmS8zo8ojsurxUDg1u2enqyFv
-         8Bm/L705TWD6kTYco6/L6nYO7BudiVhZjXMJD7N3P/Cn9wV2pdYXLlrkSPuW/MAWxutu
-         Ve1d5ejarNGPbce+dqUHzszZqDGXomMcuIlE4U2wrY11wMy0dF62LuvytGOQmzjqnKvP
-         gWn3PVFimungMQz+ZhioqxaziPvDG/GW1qNjStXmyLSCKPkIJChDzfLQyE+4joc9Cpsw
-         jX2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JUFqBLf1RiIPnvjRp2NeVt7jf0hFenXjeR9kjT+Rdf0=;
-        b=SS+MaeFI61Nv3Hpz8rXzee4Yo4+kDI2SNy68eSzB5wp30FYBCEb1w1fTt8VrJsqG6n
-         eNo8GnBG/B5de3u9pwUWJ8AOuIltbqNXZhaTYe+ZgYhwNGBwTpttE5lpBruNvlHCcgY/
-         9XVq/Ayf380nOstStvJfu01mBNiX7V6JldcBsUeafZNHRMxws73T+blERJpM/fh+DOcr
-         6rBbJ/COCtCCyCFZlLGFYNu85Z21AheFwZQQ72IZyli66hicRWXzq1nCH9l8vz2qiIcK
-         smBAYZ6YXoUHGFUQVIhj/LCJmsZWZ1TqkNjGs0pfDWAHxtUDdLkWlVF83I0l/2TZLBhM
-         V0Bg==
-X-Gm-Message-State: AOAM532EVBAax84rIrIz35UjzCzOvbliUErpSYDf9p1ACPaBwQfeweqb
-        2xyvODlsDWsktK5zrz641MswUkvmuLfECjMifevk
-X-Google-Smtp-Source: ABdhPJwVhTK/f1+ttt/wIH/DF4otAgZkYmCBshCaTHZu+pV434ay6yyTjaqEoYxYdPBJpQQXAqjcQZ1DMw1Wtx1TaHg=
-X-Received: by 2002:aa7:cf17:: with SMTP id a23mr16099251edy.128.1590496483906;
- Tue, 26 May 2020 05:34:43 -0700 (PDT)
+        Tue, 26 May 2020 08:38:38 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 04QCcC2u029236;
+        Tue, 26 May 2020 21:38:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 04QCcC2u029236
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590496696;
+        bh=gGTuSpyZuADWEH2NTxB4z6UBAsLbC7ydTen9vmPthvc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FIZ3ejq7AvsM6xAiZKt/y8OAod+Rd9ZviWPEFq/yyTxD3ImjLFIlVA27k1jt6RJmk
+         ZTwbWt6gCNtN1NajHmuEjoNOYIJkXNavIUrtk0KQCeK//gbFcrO+wub3AtZ+2TZFlx
+         kpbkdiB0nXqbEqK0Ute5+V/HWVvqqq4BGVwWxb5NKERtX59AfktQYQAgdxG+dIEud8
+         bsqm3ZnGY9SfYuO74mv3VDW6SntKNAfkW6vDldwf8PNexums9ZEQSNghk7xykv1wmO
+         MafNEdM/VDLkeRfWYuon17Z0jse4vUJlndfJ4JkTCUF7buJgqLr3H/Sec1rfI9pYIV
+         rpVQvjKPlW4XQ==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] m68k: pass -D options to KBUILD_CPPFLAGS instead of KBUILD_{A,C}FLAGS
+Date:   Tue, 26 May 2020 21:38:10 +0900
+Message-Id: <20200526123810.301667-4-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200526123810.301667-1-masahiroy@kernel.org>
+References: <20200526123810.301667-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-References: <20200402055640.6677-1-frextrite@gmail.com> <20200524081117.GA29@workstation-LAP.localdomain>
- <20200525131741.s6lgb263fpo5uszk@madcap2.tricolour.ca> <20200525180421.GA19@workstation-LAP.localdomain>
-In-Reply-To: <20200525180421.GA19@workstation-LAP.localdomain>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 26 May 2020 08:34:33 -0400
-Message-ID: <CAHC9VhQ_jNbNFChy3i6AfmOkEQtER_pxrd5uCJwpfNeedyUM4Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3 RESEND] sched: Remove __rcu annotation from cred pointer
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Paris <eparis@redhat.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        linux-audit@redhat.com, Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 2:04 PM Amol Grover <frextrite@gmail.com> wrote:
-> On Mon, May 25, 2020 at 09:17:41AM -0400, Richard Guy Briggs wrote:
-> > On 2020-05-24 13:41, Amol Grover wrote:
-> > > On Thu, Apr 02, 2020 at 11:26:38AM +0530, Amol Grover wrote:
-> > > > task_struct::cred (subjective credentials) is *always* used
-> > > > task-synchronously, hence, does not require RCU semantics.
-> > > >
-> > > > task_struct::real_cred (objective credentials) can be used in
-> > > > RCU context and its __rcu annotation is retained.
-> > > >
-> > > > However, task_struct::cred and task_struct::real_cred *may*
-> > > > point to the same object, hence, the object pointed to by
-> > > > task_struct::cred *may* have RCU delayed freeing.
-> > > >
-> > > > Suggested-by: Jann Horn <jannh@google.com>
-> > > > Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > >
-> > > Hello everyone,
-> > >
-> > > Could you please go through patches 1/3 and 2/3 and if deemed OK, give
-> > > your acks. I sent the original patch in beginning of February (~4 months
-> > > back) and resent the patches again in beginning of April due to lack of
-> > > traffic. Paul Moore was kind enough to ack twice - the 3/3 and its
-> > > resend patch. However these 2 patches still remain. I'd really
-> > > appreciate if someone reviewed them.
-> >
-> > I asked on April 3 which upstream tree you expect this patchset to go
-> > through and I did not see a reply.  Do you have a specific target or is
-> > the large addressee list assuming someone else is taking this set?  All
-> > we have seen is that it is not intended to go through the audit tree.
-> >
->
-> Apologies for it. As Paul Moore replied, initially I assumed this
-> patchset to not go through the audit tree as the audit specific changes
-> were secondary to the main change (though certainly I did not think
-> which upstream tree the patchset would go through). But now I am okay
-> with the patchset making it to upstream via audit tree if it is fine by
-> the maintainers.
+Precisely, -D is a preprocessor option.
 
-This patchset is not appropriate for the audit tree as the most
-significant changes are not audit related.
+KBUILD_CPPFLAGS is passed to for compiling .c and .S files too.
 
-My ACK on patch 3/3 was, and is, conditional on the previous patches
-being acceptable to the greater kernel community; this is the main
-reason why I didn't ACK patch 1/3 or 2/3.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ arch/m68k/Makefile | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/m68k/Makefile b/arch/m68k/Makefile
+index ae6e29da3a3e..c28f9f917ac0 100644
+--- a/arch/m68k/Makefile
++++ b/arch/m68k/Makefile
+@@ -70,9 +70,8 @@ ifdef CONFIG_MMU
+ KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
+ else
+ # we can use a m68k-linux-gcc toolchain with these in place
+-KBUILD_CFLAGS += -DUTS_SYSNAME=\"uClinux\"
+-KBUILD_CFLAGS += -D__uClinux__
+-KBUILD_AFLAGS += -D__uClinux__
++KBUILD_CPPFLAGS += -DUTS_SYSNAME=\"uClinux\"
++KBUILD_CPPFLAGS += -D__uClinux__
+ endif
+ 
+ KBUILD_LDFLAGS := -m m68kelf
 -- 
-paul moore
-www.paul-moore.com
+2.25.1
+
