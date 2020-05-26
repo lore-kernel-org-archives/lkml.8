@@ -2,96 +2,76 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5757CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E226C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFE7206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="c+Y9Yxlm"
+	by mail.kernel.org (Postfix) with ESMTP id 53F8C2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgEZPBF (ORCPT
+        id S1729818AbgEZPBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:01:05 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:50874 "EHLO rere.qmqm.pl"
+        Tue, 26 May 2020 11:01:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:51970 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbgEZPBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:01:05 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49Wcbf1BFgz8L;
-        Tue, 26 May 2020 17:01:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1590505262; bh=5eoWOCSdKM+lSnXRhtSkJsDrLufv/HLpEsk0JbM9g6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c+Y9YxlmFWtn2WaNwfZJdGE1DhP5Doxf6E6dQMaz3HGUrCT7wPf8H6l7bkONr4eEj
-         UKTqbathgIRAijpN+hDrPq8r9WHRJwUwWdShDzb9yv7Pw651t2VejN9CnXg3itiwX4
-         ZQ9d/OOhhw7iQj1EcsmvIVDmqDxC71LZUShUDN2vSldUtXYaafw+kyydg99IVYKwAr
-         47JvXlbsojgNiD+RFRlBlVBSvGH2Kn8AoYqQKV1MsNtG1HoUcGWBB7v6GTAgXSuHD3
-         PgIGeiPYIQEPFbRnnd/g5dld1PduSYKPaT0FT+9299X9OchhuF3uN0EqQnVWOXDdCN
-         S9sThJJOyqlig==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Tue, 26 May 2020 17:01:01 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mfd: tps65910: Correct power-off programming sequence
-Message-ID: <20200526145952.GA2517@qmqm.qmqm.pl>
-References: <20200524192643.18207-1-digetx@gmail.com>
+        id S1728110AbgEZPBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:01:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8C8A30E;
+        Tue, 26 May 2020 08:01:38 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B893B3F52E;
+        Tue, 26 May 2020 08:01:37 -0700 (PDT)
+Date:   Tue, 26 May 2020 16:01:35 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] arm64/cpufeature: Add get_arm64_ftr_reg_nowarn()
+Message-ID: <20200526150135.GI17051@gaia>
+References: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200524192643.18207-1-digetx@gmail.com>
+In-Reply-To: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 10:26:43PM +0300, Dmitry Osipenko wrote:
-> This patch fixes system shutdown on a devices that use TPS65910 as a
-> system's power controller. In accordance to the TPS65910 datasheet, the
-> PMIC's state-machine transitions into the OFF state only when DEV_OFF
-> bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
-> otherwise PMIC won't get into a proper state on shutdown. Devices like
-> Nexus 7 tablet and Ouya game console are now shutting down properly.
-
-The datasheets of 65910 and 65911 say that ON and SLP bits are cleared
-during OFF state. But I guess the hardware might work differently.
-
-[...]
-> --- a/drivers/mfd/tps65910.c
-> +++ b/drivers/mfd/tps65910.c
-> @@ -440,8 +440,13 @@ static void tps65910_power_off(void)
->  			DEVCTRL_PWR_OFF_MASK) < 0)
->  		return;
+On Tue, May 26, 2020 at 07:09:13PM +0530, Anshuman Khandual wrote:
+> @@ -632,8 +654,6 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
+>  	const struct arm64_ftr_bits *ftrp;
+>  	struct arm64_ftr_reg *reg = get_arm64_ftr_reg(sys_reg);
 >  
-> -	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-> -			DEVCTRL_DEV_ON_MASK);
-> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-> +			DEVCTRL_DEV_SLP_MASK) < 0)
-> +		return;
-> +
-> +	tps65910_reg_update_bits(tps65910, TPS65910_DEVCTRL,
-> +				 DEVCTRL_DEV_OFF_MASK | DEVCTRL_DEV_ON_MASK,
-> +				 DEVCTRL_DEV_OFF_MASK);
->  }
+> -	BUG_ON(!reg);
+> -
+>  	for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
+>  		u64 ftr_mask = arm64_ftr_mask(ftrp);
+>  		s64 ftr_new = arm64_ftr_value(ftrp, new);
+> @@ -762,7 +782,6 @@ static int check_update_ftr_reg(u32 sys_id, int cpu, u64 val, u64 boot)
+>  {
+>  	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+>  
+> -	BUG_ON(!regp);
+>  	update_cpu_ftr_reg(regp, val);
+>  	if ((boot & regp->strict_mask) == (val & regp->strict_mask))
+>  		return 0;
+> @@ -776,9 +795,6 @@ static void relax_cpu_ftr_reg(u32 sys_id, int field)
+>  	const struct arm64_ftr_bits *ftrp;
+>  	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+>  
+> -	if (WARN_ON(!regp))
+> -		return;
 
-There is tps65910_reg_set_bits() at the start of function. I guess it
-doesn't work if your changes are needed. Maybe you can remove it?
+I think Will wanted an early return in all these functions not just
+removing the BUG_ON(). I'll let him clarify.
 
-I would also include your observations about the chip's behaviour in the
-commit message so it doesn't get "fixed" later.
-
-Best Regards,
-Micha³ Miros³aw
+-- 
+Catalin
