@@ -2,126 +2,110 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66B02073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHLFLLeF"
+	by mail.kernel.org (Postfix) with ESMTP id A26B32073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590484147;
+	bh=QxOylHPo5NQ4oLBn5CdZFp5DNHHJklUQnFlygTO6XMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ny4SGcL2zR0dJ3NFTyayU0IeKs9KKxupB7fOS8sh9Pz20VTcmYlRhC4sI0ELw9/21
+	 dx9S29ctCfedR8Q8TUr2+VkP7MhyGhqkiSPOihKRREfCyHwdq5NN9J1i7KFv1l1z7w
+	 YQ22a1vSxZNqGhrR0L1az7a52bwkc2oQ3TmbG7Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbgEZJIv (ORCPT
+        id S1731757AbgEZJJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728568AbgEZJIv (ORCPT
+        Tue, 26 May 2020 05:09:07 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39299 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgEZJJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:08:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BD5C03E97E;
-        Tue, 26 May 2020 02:08:50 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u26so691066wmn.1;
-        Tue, 26 May 2020 02:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=D9wfhCD13viX76m43SED+Jj6BeIdQ6QwBRVJn5ceVDk=;
-        b=eHLFLLeF6LA8ioOE6mAOdFGFzSHCMFsv7X3H0JBkkI+wR+F140cZ4YZKeZRCGPOY5Z
-         mEV03n2nYK1Df3A4NHPSSnwgG+hEvACSQkNhUqpg2hgOSOTJmzRLcsRuT4yvIGhCVdmU
-         fp2aDTK1YrV0p8GVhZDkW5UqEdAL+2Pb6n+1Xtb51jhVfOfZGg1Hvn8Y7SjoEKxS0vAF
-         UhbFa26bX1/llMcSZDrOiJ94gF/Tf7KGF5vwZ68bNi9oumZJcBGoBOeyqVPCh8Hr7GNs
-         36x6M7er+HoZMweI/hfnz6nszsjUvu35bKHeRgId/U/FkGDmomxNJOeH0C6HxAW1LZlu
-         PD9w==
+        Tue, 26 May 2020 05:09:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t18so5566095wru.6;
+        Tue, 26 May 2020 02:09:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=D9wfhCD13viX76m43SED+Jj6BeIdQ6QwBRVJn5ceVDk=;
-        b=MvcxssyoS1GlcKbrDz/+51QTesURg9irm7Eb/k3sL1Qiyxy3K5zp19maV+PoV4m3sl
-         Paq/Ou2QxXBa1HPtBqxZ8QQnLDtjxIHI0uxzGg5qF7f6hXoQJQplnwWZBHesHMMRL10y
-         xR2+cUkgh7vL26/GWKNb++M9UcPPANwzkk86nA+7N1YVxwcLjI2UhBxNtREhNdi87FLE
-         W+jmOYz8+IeJ7WXM62VRBGfgWnlU/Kp/cGvCYeeS8lf3HwqhlvknSBCreJXiCfYX9fP2
-         38wZ28zr1xa5uRYLdDR4tT8bslakRQo0i1WhOfMQz0qPLVEZyBkbAtBZ0HVjjwpQFALZ
-         VfvA==
-X-Gm-Message-State: AOAM532Myz11dY9uco5M+6qD3NRASti+nBTFC6WGH2HFJO6/fczrQhL1
-        dZgxJT+Ml9c3/U62aQ4bxZ8=
-X-Google-Smtp-Source: ABdhPJyQagEWrqlFAtpxcHsU8JrmYjmMriWqc2P4j2/epVFNiQq+AIPx9zdirJi+3hgc3xmfYK5HWA==
-X-Received: by 2002:a1c:4857:: with SMTP id v84mr306052wma.96.1590484129590;
-        Tue, 26 May 2020 02:08:49 -0700 (PDT)
-Received: from [192.168.196.177] (gw-eduroam.dar.cam.ac.uk. [131.111.194.10])
-        by smtp.gmail.com with ESMTPSA id u23sm21889146wmu.20.2020.05.26.02.08.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 02:08:48 -0700 (PDT)
-Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
-To:     Jann Horn <jannh@google.com>, Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>
-References: <20200522055350.806609-1-areber@redhat.com>
- <CAG48ez3rh2a3PYRRkcu50LU9qPCaeOE8BJL=AmTwDD3qcA+xFA@mail.gmail.com>
-From:   Radostin Stoyanov <rstoyanov1@gmail.com>
-Message-ID: <dad30f72-7db0-062f-d9ae-e813176ba7d2@gmail.com>
-Date:   Tue, 26 May 2020 10:09:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mKd3JTZJplU94QhSKbd/esureWVCaIfQr3MBhsFOydU=;
+        b=JP1t2cqm2SVT1Q4DCatQdYHGn8I3e/sa2hyC5U5BhY1jtaJg44fgqGfVOUr553z7IN
+         /Mg/oIJp9bwevUY8KcfzVmIIiL1B/hV8j2AJ95GOCseSawd4qJUixZHbMsz6PYbMgJu5
+         inkgEsndHe7zSvbxd1SdqCabKqvV4MMuHGxOmOMt04DH1q48+/st1E2JpZ1LNB/O6tXS
+         McjVEqY10IkuOj8MdBa1Pw9mItt8J+bFMbtCxTQh7HDPIBCYzsksMOrVgnzv7/jHa3q5
+         9g4jWtOdSNwYgA9E71XHivBuhYQkHRgX+f/hBmqcnQGITfyl1qGzVz1bHZIlLEtw2VLd
+         KP2w==
+X-Gm-Message-State: AOAM532ux4NkS87NSDmNbQ7wxrsvBowzwO8mKy/+7AoSwUvelyExZY1v
+        BrF5H4tuU+wFZpH0ma3jKB5DhauC
+X-Google-Smtp-Source: ABdhPJzPzLK8j+Jjs7Zi3RaE1b1BwpiXzaWJ/jf4rjIE+RvGFP9AEm4LkOXcV313giaSc3ZJ2hBKvw==
+X-Received: by 2002:adf:f702:: with SMTP id r2mr19812123wrp.191.1590484144074;
+        Tue, 26 May 2020 02:09:04 -0700 (PDT)
+Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
+        by smtp.gmail.com with ESMTPSA id n17sm20446723wrr.42.2020.05.26.02.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:09:03 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:09:01 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/2] iommu/hyper-v: Constify hyperv_ir_domain_ops
+Message-ID: <20200526090901.xuzobaw2v4lapfdc@debian>
+References: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
+ <20200525214958.30015-2-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez3rh2a3PYRRkcu50LU9qPCaeOE8BJL=AmTwDD3qcA+xFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525214958.30015-2-rikard.falkeborn@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/2020 22:53, Jann Horn wrote:
-> On Fri, May 22, 2020 at 7:55 AM Adrian Reber <areber@redhat.com> wrote:
->> This enables CRIU to checkpoint and restore a process as non-root.
->>
->> Over the last years CRIU upstream has been asked a couple of time if it
->> is possible to checkpoint and restore a process as non-root. The answer
->> usually was: 'almost'.
->>
->> The main blocker to restore a process was that selecting the PID of the
->> restored process, which is necessary for CRIU, is guarded by CAP_SYS_ADMIN.
-> And if you were restoring the process into your own PID namespace, so
-> that you actually have a guarantee that this isn't going to blow up in
-> your face because one of your PIDs is allocated for a different
-> process, this part of the problem could be simplified.
->
-> I don't get why your users are fine with a "oh it kinda works 99% of
-> the time but sometimes it randomly doesn't and then you have to go
-> reboot or whatever" model.
-Transparent checkpoint and restore of a process tree is not simple, 
-especially when it is done entirely in user-space. To best of my 
-knowledge, CRIU is the only tool out there that is able to achieve this, 
-it is actively being tested and maintained, and it has been integrated 
-into several container runtimes. Like any other software, CRIU has 
-limitations but, as said in the README file, contributions are welcome.
+On Mon, May 25, 2020 at 11:49:57PM +0200, Rikard Falkeborn wrote:
+> The struct hyperv_ir_domain_ops is not modified and can be made const to
+> allow the compiler to put it in read-only memory.
+> 
+> Before:
+>    text    data     bss     dec     hex filename
+>    2916    1180    1120    5216    1460 drivers/iommu/hyperv-iommu.o
+> 
+> After:
+>    text    data     bss     dec     hex filename
+>    3044    1052    1120    5216    1460 drivers/iommu/hyperv-iommu.o
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+
+Acked-by: Wei Liu <wei.liu@kernel.org>
+
+> ---
+>  drivers/iommu/hyperv-iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+> index a386b83e0e34..3c0c67a99c7b 100644
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -131,7 +131,7 @@ static int hyperv_irq_remapping_activate(struct irq_domain *domain,
+>  	return 0;
+>  }
+>  
+> -static struct irq_domain_ops hyperv_ir_domain_ops = {
+> +static const struct irq_domain_ops hyperv_ir_domain_ops = {
+>  	.alloc = hyperv_irq_remapping_alloc,
+>  	.free = hyperv_irq_remapping_free,
+>  	.activate = hyperv_irq_remapping_activate,
+> -- 
+> 2.26.2
+> 
