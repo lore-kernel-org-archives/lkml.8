@@ -2,195 +2,173 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC466C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAFB2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:32:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TxHGmW0M"
+	by mail.kernel.org (Postfix) with ESMTP id 9DDA0208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgEZLcj (ORCPT
+        id S1730697AbgEZLdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 07:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgEZLcj (ORCPT
+        Tue, 26 May 2020 07:33:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726974AbgEZLdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 07:32:39 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA373C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:32:38 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l15so23680185lje.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N3aU8bQ2jt19toIdkwK4iimsCUAHj37+zUJ/z8dG82c=;
-        b=TxHGmW0M/1J5kA67dTHib6mjP7IqlmXB9GlPXLnj3brNAtLjENIk88ciWY00CFrxgh
-         m+RVHnNpqmSoAmn0koZ4VVVv6Q8kij/9A1DQWcHw5NKCJPlqkcB/PoNqDhyiWHyl1iaj
-         zEPAGqTTOUnZBomUlkcEEjud7qxatQaGdOU7DXRnWr8MnBbpiXXPwEQFgujvP3Mhq0jt
-         KgGPg0GPrFObpIdq9Qmg9LZXRK6i2WYpw5FgQEWoJqeiLwnsW8YIpZroi2BnnirKRE1u
-         Te3lMIxX9v3MiDlAkkFy2ES3BpkILyrkkioDjGf+EdIFsoI0j5f3Z1YOQU0m5o9ZCAGa
-         zNVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N3aU8bQ2jt19toIdkwK4iimsCUAHj37+zUJ/z8dG82c=;
-        b=AGIqaLRJlWZNzawFegAJuD9cwVCqrzLM6EE4bbzaji0JwYvNdNerJGbtbAGtL6pg61
-         vFOJ0mQC+o6SyRpukFP8v1Q5DgVGuezxtb8ApQhwjq5VQff+pjU5NJYSMVjXOwCJ/StS
-         3EDH5CA0t8rstAOOzLfisGbFW9l8w1aIgG3URG3AZhgmKyWYloFZRElCpVC4cmp8qDEw
-         8ED2jYppqDBj5jZZzfzBmSegMQkeVCNo5cAfdu5dcXqBmigmo/LRjx/FjsPrmiP3ov/3
-         j0mmjG65sG2IvKR+WVM7hVZh/oU9rECnCnb65BOy1115mcP3E4C7kOaes4EFK7q1eVjA
-         xCQQ==
-X-Gm-Message-State: AOAM531PpdrrFmx5jFl06ZLyoZqs6ppA2ghkhy6dtfipqV8IN0RpStZ5
-        rRSbJeaHBU6TpKLxLQIrCWSxYp6bOpv6D3XuCD/NKA==
-X-Google-Smtp-Source: ABdhPJxM6A8ot4e/2DXXh6aue4hLFO5ial0ZBwWU8vJG+VNoWIczU4kxVWFCMR36ozh5h1OSlYeLxEUkI+61oop6giU=
-X-Received: by 2002:a05:651c:32d:: with SMTP id b13mr401630ljp.283.1590492757082;
- Tue, 26 May 2020 04:32:37 -0700 (PDT)
+        Tue, 26 May 2020 07:33:04 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QBWH67110624;
+        Tue, 26 May 2020 07:32:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316yqj1uym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 07:32:51 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04QBWpsP112583;
+        Tue, 26 May 2020 07:32:51 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316yqj1uxf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 07:32:51 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04QBPEH4020485;
+        Tue, 26 May 2020 11:32:49 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 316uf8wtx3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 11:32:49 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04QBVX3e57934122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 May 2020 11:31:33 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F2D6C4C062;
+        Tue, 26 May 2020 11:32:46 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 185F84C04A;
+        Tue, 26 May 2020 11:32:46 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.200.96])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 26 May 2020 11:32:45 +0000 (GMT)
+Date:   Tue, 26 May 2020 14:32:44 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     mgorman@suse.de, david@redhat.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, cai@lca.pw,
+        mhocko@kernel.org
+Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
+ fast_isolate_freepages()
+Message-ID: <20200526113244.GH13212@linux.ibm.com>
+References: <20200521014407.29690-1-bhe@redhat.com>
+ <20200521092612.GP1059226@linux.ibm.com>
+ <20200521155225.GA20045@MiWiFi-R3L-srv>
+ <20200521171836.GU1059226@linux.ibm.com>
+ <20200522070114.GE26955@MiWiFi-R3L-srv>
+ <20200522072524.GF26955@MiWiFi-R3L-srv>
+ <20200522142053.GW1059226@linux.ibm.com>
+ <20200526084543.GG26955@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-References: <20200513212451.1919013-1-megous@megous.com> <20200513212451.1919013-4-megous@megous.com>
-In-Reply-To: <20200513212451.1919013-4-megous@megous.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 May 2020 13:32:25 +0200
-Message-ID: <CACRpkdZpiQ7E_v-Gfk6vFcUEiMazvixYaL0ksKeP=Tq3O6Fh=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] drm: panel: Add Xingbangda XBD599 panel (ST7703 controller)
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526084543.GG26955@MiWiFi-R3L-srv>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_01:2020-05-26,2020-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=5 clxscore=1015 priorityscore=1501 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0
+ spamscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005260083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
+Hello Baoquan,
 
-I see you took over this driver submission from
-Icenowy.
+On Tue, May 26, 2020 at 04:45:43PM +0800, Baoquan He wrote:
+> On 05/22/20 at 05:20pm, Mike Rapoport wrote:
+> > Hello Baoquan,
+> > 
+> > On Fri, May 22, 2020 at 03:25:24PM +0800, Baoquan He wrote:
+> > > On 05/22/20 at 03:01pm, Baoquan He wrote:
+> > > > 
+> > > > So let's add these unavailable ranges into memblock and reserve them
+> > > > in init_unavailable_range() instead. With this change, they will be added
+> > > > into appropriate node and zone in memmap_init(), and initialized in
+> > > > reserve_bootmem_region() just like any other memblock reserved regions.
+> > > 
+> > > Seems this is not right. They can't get nid in init_unavailable_range().
+> > > Adding e820 ranges may let them get nid. But the hole range won't be
+> > > added to memblock, and still has the issue.
+> > > 
+> > > Nack this one for now, still considering.
+> > 
+> > Why won't we add  the e820 reserved ranges to memblock.memory during
+> > early boot as I suggested?
+> > 
+> > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> > index c5399e80c59c..b0940c618ed9 100644
+> > --- a/arch/x86/kernel/e820.c
+> > +++ b/arch/x86/kernel/e820.c
+> > @@ -1301,8 +1301,11 @@ void __init e820__memblock_setup(void)
+> >  		if (end != (resource_size_t)end)
+> >  			continue;
+> >  
+> > -		if (entry->type == E820_TYPE_SOFT_RESERVED)
+> > +		if (entry->type == E820_TYPE_SOFT_RESERVED ||
+> > +		    entry->type == E820_TYPE_RESERVED) {
+> > +			memblock_add(entry->addr, entry->size);
+> >  			memblock_reserve(entry->addr, entry->size);
+> > +		}
+> >  
+> >  		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
+> >  			continue;
+> > 
+> > The setting of node later  in numa_init() will assign the proper node
+> > for these regions as it does for the usable memory.
+> 
+> Yes, if it's only related to e820 reserved region, this truly works.
+> 
+> However, it also has ACPI table regions. That's why I changed to call
+> the problematic area as firmware reserved ranges later.
+> 
+> Bisides, you can see below line, there's another reserved region which only
+> occupies one page in one memory seciton. If adding to memblock.memory, we also
+> will build struct mem_section and the relevant struct pages for the whole
+> section. And then the holes around that page will be added and initialized in
+> init_unavailable_mem(). numa_init() will assign proper node for memblock.memory
+> and memblock.reserved, but won't assign proper node for the holes.
+> 
+> ~~~
+> [    0.000000] BIOS-e820: [mem 0x00000000fed80000-0x00000000fed80fff] reserved
+> ~~~
+> 
+> So I still think we should not add firmware reserved range into
+> memblock for fixing this issue.
+> 
+> And, the fix in the original patch seems necessary. You can see in
+> compaction code, the migration source is chosen from LRU pages or
+> movable pages, the migration target has to be got from Buddy. However,
+> only the min_pfn in fast_isolate_freepages(), it's calculated by
+> distance between cc->free_pfn - cc->migrate_pfn, we can't guarantee it's
+> safe, then use it as the target to handle.
 
-On Wed, May 13, 2020 at 11:24 PM Ondrej Jirman <megous@megous.com> wrote:
+I do not object to your original fix with careful check for pfn validity.
 
-> From: Icenowy Zheng <icenowy@aosc.io>
->
-> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
-> Xingbangda, which is used on PinePhone final assembled phones.
->
-> It is based on Sitronix ST7703 LCD controller.
->
-> Add support for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+But I still think that the memory reserved by the firmware is still
+memory and it should be added to memblock.memory. This way the memory
+map will be properly initialized from the very beginning and we won't
+need init_unavailable_mem() and alike workarounds and. Obviously, the patch
+above is not enough, but it's a small step in this direction.
 
-(...)
->  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
+I believe that improving the early memory initialization would make many
+things simpler and more robust, but that's a different story :)
 
-Nice!
-
-> +       /*
-> +        * Init sequence was supplied by the panel vendor.
-> +        */
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC,
-> +                         0xF1, 0x12, 0x83);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
-> +                         0x33, 0x81, 0x05, 0xF9, 0x0E, 0x0E, 0x20, 0x00,
-> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
-> +                         0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4F, 0x11,
-> +                         0x00, 0x00, 0x37);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
-> +                         0x25, 0x22, 0x20, 0x03);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
-> +                         0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
-> +                         0x00, 0x00);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
-> +                         0x73, 0x73, 0x50, 0x50, 0x00, 0xC0, 0x08, 0x70,
-> +                         0x00);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0xF0, 0x12, 0xF0);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
-> +                         0x00, 0x00, 0x0B, 0x0B, 0x10, 0x10, 0x00, 0x00,
-> +                         0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
-> +       dsi_dcs_write_seq(dsi, 0xC6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
-> +                         0x74, 0x00, 0x32, 0x32, 0x77, 0xF1, 0xFF, 0xFF,
-> +                         0xCC, 0xCC, 0x77, 0x77);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x07, 0x07);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x2C, 0x2C);
-> +       dsi_dcs_write_seq(dsi, 0xBF, 0x02, 0x11, 0x00);
-> +
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
-> +                         0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
-> +                         0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-> +                         0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
-> +                         0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
-> +                         0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
-> +                         0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-> +                         0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
-> +                         0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +                         0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
-> +                         0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
-> +                         0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-> +                         0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
-> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
-> +                         0xA5, 0x00, 0x00, 0x00, 0x00);
-> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
-> +                         0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
-> +                         0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
-> +                         0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
-> +                         0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
-> +                         0x12, 0x18);
-> +       msleep(20);
-
-This stuff is really hard or impossible to understand without the
-datasheet.
-
-In my previous review I wrote:
-
-It appears that the Himax HX8363 is using the same display controller
-if you look at the datasheet:
-http://www.datasheet-pdf.com/PDF/HX8369-A-Datasheet-Himax-729024
-There you find an explanation to some of the commands.
-
-That means, try to get rid of as much of the magic bytes as you can
-and use proper #defines. I know it takes some work but the result
-is so much more useful and readable.
-
-Further I wrote:
-
-You should definately insert code to read the MTP bytes:
-0xDA manufacturer
-0xDB driver version
-0xDC LCD module/driver
-And print these, se e.g. my newly added NT35510 driver or
-the Sony ACX424AKP driver.
-
-So please do that.
-
-Yours,
-Linus Walleij
+-- 
+Sincerely yours,
+Mike.
