@@ -2,114 +2,154 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5057C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD3A20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="ar/mZUlI"
+	by mail.kernel.org (Postfix) with ESMTP id C175220870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590474555;
+	bh=1bi6tm/grFse4a4MPlt1A7X1cCrCLhJ1NkOLAEX78B4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tUdXwpLdxrBiQKeyM8UElrBdFDniX3wqChLPu/1PhwkWVuyGDsj/VdFFOt36U4a/f
+	 vALvQX1hyk9BS/HfHp8x4a2Q1RETKUfXdGoYPTJ+SByCtmyeGAxS1AX0DT6T1/VfXb
+	 aImypMbLfyUs4rgqND7blYgAwNTgcO3uWrEY5raQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbgEZG0f (ORCPT
+        id S1728179AbgEZG3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgEZG0e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:26:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901E1C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:26:34 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 5so792673pjd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D3oJjqxF038PAanM9YgOnN3aymIalIBeYa6R2RlB7aM=;
-        b=ar/mZUlISeoa/YvBkyRo5k2xzWfkZqVsKjW76QCwIA9CSsBy0Z8NV9gfqv0Wr7ntSD
-         1+G1fkBMj0jdKcK8Hie2ZKaa/8l5CaO8eKoAxmXEz771osTlC4ay4BdDoy4YlmlIUuHg
-         EKbpQYiqa7ac1trIdzZ3cI8sVLoLUjLHIgPloZ8Udo1OWbME6c5eK0Xbo672MOWmMeYP
-         eoZdbsNMgCAAC3PZh3/b5etXBsTe+1KAG5SluLtJOEwZZWxftzxuG0n5KfeoBmCssAle
-         FFzEwSM++kKL8upc6+k1Tiep0B7otIZ0WLY7pAZt9ujpNNEajrvLAiruyCdPT/IQ8mLE
-         eYXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D3oJjqxF038PAanM9YgOnN3aymIalIBeYa6R2RlB7aM=;
-        b=SbMZfYyX+tOcuXhSIv4o51G9No8hNYXnGH5l/MQ7iPfeAhGe0i4vmLlzMcIoFIts0l
-         eNWYKb7rxmEv0nFn9CX2mhuo7WP1teQVtoVz40PTyLy2r9UKGuG36ipO/3YgUojOqF3T
-         rN90emPLckh8vFdld7xOUD++9P9n584q0Uc3uuohNO6qya4ejp7r3WxX+qYynzp63CG0
-         Q0EQABh01ZsKmUXeqyjxVqeObOdXRaHMXenngqGv7D4XKEkqEkBB6EcvHUtO0KjyPQbl
-         QaKS3/p58cmMUImapfW/5lBONZVzJskpMUtqF8rchJAEKOalKMnfi1BNVpmh/RAF45W4
-         jEag==
-X-Gm-Message-State: AOAM532tbr1DcjzfN9YIAUx4o6brG4EUE4rP3ses22Rp/YACNzI/q61N
-        S6y9GQF5qXPeiQP/E2YAkDhrSQ==
-X-Google-Smtp-Source: ABdhPJyGUmR2KNz023iEAm+9LZ7uPanEpwEpqAX6A8/mIJrn0/OKY7UzAd/GWpw14vjA/TPT0D8SJw==
-X-Received: by 2002:a17:90a:23a4:: with SMTP id g33mr24011855pje.79.1590474393881;
-        Mon, 25 May 2020 23:26:33 -0700 (PDT)
-Received: from localhost.localdomain (59-127-47-130.HINET-IP.hinet.net. [59.127.47.130])
-        by smtp.gmail.com with ESMTPSA id i14sm14584574pfo.162.2020.05.25.23.26.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 May 2020 23:26:33 -0700 (PDT)
-From:   Chris Chiu <chiu@endlessm.com>
-To:     perex@perex.cz, tiwai@suse.com, benquike@gmail.com
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH] ALSA: usb: mixer: volume quirk for ESS Technology Asus USB DAC
-Date:   Tue, 26 May 2020 14:26:13 +0800
-Message-Id: <20200526062613.55401-1-chiu@endlessm.com>
-X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
+        Tue, 26 May 2020 02:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbgEZG3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:29:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16BB720776;
+        Tue, 26 May 2020 06:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590474553;
+        bh=1bi6tm/grFse4a4MPlt1A7X1cCrCLhJ1NkOLAEX78B4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CEuTqWd4htM5rnZTZTTs7KjKExi5VbYKBm7qjorcqYoryx9oIiphApHho10cGGRx1
+         Agdy03TJrym0qVFbxxU2kgMBIDkJOHcnJgvbjQZYdBkFwW6o+19JoZVo6t3t9emwV5
+         or6ZS+9iyvwILaw2rAQlwIx6oF1sf7bVQ4nh8a5M=
+Date:   Tue, 26 May 2020 08:29:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sanjay R Mehta <sanmehta@amd.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Sanjay R Mehta <Sanju.Mehta@amd.com>,
+        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
+        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PTDMA controller
+Message-ID: <20200526062911.GA2578492@kroah.com>
+References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
+ <1588108416-49050-2-git-send-email-Sanju.Mehta@amd.com>
+ <20200504055539.GJ1375924@vkoul-mobl>
+ <f016a02b-ebc4-6280-dff4-25e189ff2d49@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f016a02b-ebc4-6280-dff4-25e189ff2d49@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Asus USB DAC is a USB type-C audio dongle for connecting to
-the headset and headphone. The volume minimum value -23040 which
-is 0xa600 in hexadecimal with the resolution value 1 indicates
-this should be endianness issue caused by the firmware bug. Add
-a volume quirk to fix the volume control problem.
+On Tue, May 26, 2020 at 11:35:02AM +0530, Sanjay R Mehta wrote:
+> Apologies for my delayed response.
+> 
+> >> +#include <linux/module.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/pci.h>
+> >> +#include <linux/dma-mapping.h>
+> >> +#include <linux/interrupt.h>
+> >> +
+> >> +#include "ptdma.h"
+> >> +
+> >> +static int cmd_queue_length = 32;
+> >> +module_param(cmd_queue_length, uint, 0644);
+> >> +MODULE_PARM_DESC(cmd_queue_length,
+> >> +              " length of the command queue, a power of 2 (2 <= val <= 128)");
+> > 
+> > Any reason for this as module param? who will configure this and how?
+> > 
+> The command queue length can be from 2 to 64K command.
+> Therefore added as module parameter to allow the length of the queue to be specified at load time.
 
-Also fixes this warning:
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [5] FU [Headset Capture Volume] ch = 1, val = -23040/0/1
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [7] FU [Headset Playback Volume] ch = 1, val = -23040/0/1
+Please no, this is not the 1990's.  No one can use them easily, make
+this configurable on a per-device basis if you really need to be able to
+change this.
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
- sound/usb/mixer.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+But step back, why do you need to change this at all?  Why do you have a
+limit and why can you not just do this dynamically?  The goal here
+should not have any user-changable options at all, it should "just
+work".
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 81b2db0edd5f..0b568a9fdab3 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1171,6 +1171,14 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
- 			cval->res = 384;
- 		}
- 		break;
-+	case USB_ID(0x0495, 0x3042): /* ESS Technology Asus USB DAC */
-+		if ((strstr(kctl->id.name, "Playback Volume") != NULL) ||
-+			strstr(kctl->id.name, "Capture Volume") != NULL) {
-+			cval->min >>= 8;
-+			cval->max = 0;
-+			cval->res = 1;
-+		}
-+		break;
- 	}
- }
- 
--- 
-2.20.1
+> >> + * List of PTDMAs, PTDMA count, read-write access lock, and access functions
+> >> + *
+> >> + * Lock structure: get pt_unit_lock for reading whenever we need to
+> >> + * examine the PTDMA list. While holding it for reading we can acquire
+> >> + * the RR lock to update the round-robin next-PTDMA pointer. The unit lock
+> >> + * must be acquired before the RR lock.
+> >> + *
+> >> + * If the unit-lock is acquired for writing, we have total control over
+> >> + * the list, so there's no value in getting the RR lock.
+> >> + */
+> >> +static DEFINE_RWLOCK(pt_unit_lock);
+> >> +static LIST_HEAD(pt_units);
+> >> +
+> >> +static struct pt_device *pt_rr;
+> > 
+> > why do we need these globals and not in driver context?
+> > 
+> The AMD SOC has multiple PT controller's with the same PCI device ID and hence the same driver is probed for each instance.
+> The driver stores the pt_device context of each PT controller in this global list.
 
+That's horrid and not needed at all.  No driver should have a static
+list anymore, again, this isn't the 1990's :)
+
+> >> +static void pt_add_device(struct pt_device *pt)
+> >> +{
+> >> +     unsigned long flags;
+> >> +
+> >> +     write_lock_irqsave(&pt_unit_lock, flags);
+> >> +     list_add_tail(&pt->entry, &pt_units);
+> >> +     if (!pt_rr)
+> >> +             /*
+> >> +              * We already have the list lock (we're first) so this
+> >> +              * pointer can't change on us. Set its initial value.
+> >> +              */
+> >> +             pt_rr = pt;
+> >> +     write_unlock_irqrestore(&pt_unit_lock, flags);
+> >> +}
+> > 
+> > Can you please explain what do you mean by having a list of devices and
+> > why are we adding/removing dynamically?
+> > 
+> Since AMD SOC has many PT controller's with the same PCI device ID and
+> hence the same driver probed for initialization of each PT controller device instance.
+
+That's fine, PCI drivers should all work on a per-device basis and not
+care if there are 1, or 1000 of the same device in the system.
+
+> Also, the number of PT controller varies for different AMD SOC's.
+
+Again, that's fine.
+
+> Therefore the dynamic adding/removing of each PT controller context to global device list implemented.
+
+Such a list should never be needed, unless you are doing something
+really wrong.  Please remove it and use the proper PCI device driver
+apis for your individual instances instead.
+
+thanks,
+
+greg k-h
