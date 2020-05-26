@@ -2,180 +2,77 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758C020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830FB20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:01:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="flbcARId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgEZQ5D (ORCPT
+        id S1728731AbgEZRBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:57:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58729 "EHLO mga12.intel.com"
+        Tue, 26 May 2020 13:01:07 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50046 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbgEZQ5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:57:02 -0400
-IronPort-SDR: oIHRVtthYxI7JBehFK1KuCLOzFT0WArfgLts5cZ+1vAxwaffI70j2ojBuRXsAZbUpiGZYz/GRP
- R6opfkIno4GA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 09:57:02 -0700
-IronPort-SDR: Er2zNXmgAzjRa4OAXcIq2b/xKyApj7yAEdoa4+gewOIBv7hNZ1+ASgdTNPQGRDP2fUT7g6IaUD
- cmfxEw6lq4OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="301780640"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 26 May 2020 09:56:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdcsv-0092P9-QH; Tue, 26 May 2020 19:57:01 +0300
-Date:   Tue, 26 May 2020 19:57:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] serial: 8250_dw: Fix common clocks usage race
- condition
-Message-ID: <20200526165701.GX1634618@smile.fi.intel.com>
-References: <20200526160316.26136-1-Sergey.Semin@baikalelectronics.ru>
- <20200526160316.26136-4-Sergey.Semin@baikalelectronics.ru>
+        id S1728485AbgEZRBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 13:01:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=JUa7NTp3MITz+c/BLwyNNO//1H9K5Fw9a3TgKoCCEH0=; b=flbcARIdaYE+eRIoutOFYWhg/R
+        Ik0nzRQgQu5vLb2ObJNSEiUbH0l7+RjnlC3VCMY1L3jmI8AibNWSyhOrmaNQoQYME082TuJaPpKF6
+        VmGpiMvaeqwrgxIBMR3EPXpI0yMZKzTF8+zOvpLAqFVGLCP2tUKNh+y9XmaR0EcbNTn0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jdcwm-003IxZ-5L; Tue, 26 May 2020 19:01:00 +0200
+Date:   Tue, 26 May 2020 19:01:00 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com,
+        allan.nielsen@microchip.com
+Subject: Re: [PATCH net-next 0/4] net: phy: mscc-miim: reduce waiting time
+ between MDIO transactions
+Message-ID: <20200526170100.GM768009@lunn.ch>
+References: <20200526162256.466885-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526160316.26136-4-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200526162256.466885-1-antoine.tenart@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:03:16PM +0300, Serge Semin wrote:
-> The race condition may happen if the UART reference clock is shared with
-> some other device (on Baikal-T1 SoC it's another DW UART port). In this
-> case if that device changes the clock rate while serial console is using
-> it the DW 8250 UART port might not only end up with an invalid uartclk
-> value saved, but may also experience a distorted output data since
-> baud-clock could have been changed. In order to fix this lets at least
-> try to adjust the 8250 port setting like UART clock rate in case if the
-> reference clock rate change is discovered. The driver will call the new
-> method to update 8250 UART port clock rate settings. It's done by means of
-> the clock event notifier registered at the port startup and unregistered
-> in the shutdown callback method.
+On Tue, May 26, 2020 at 06:22:52PM +0200, Antoine Tenart wrote:
+> Hello,
 > 
-> Note 1. In order to avoid deadlocks we had to execute the UART port update
-> method in a dedicated deferred work. This is due to (in my opinion
-> redundant) the clock update implemented in the dw8250_set_termios()
-> method.
-> Note 2. Before the ref clock is manually changed by the custom
-> set_termios() function we swap the port uartclk value with new rate
-> adjusted to be suitable for the requested baud. It is necessary in
-> order to effectively disable a functionality of the ref clock events
-> handler for the current UART port, since uartclk update will be done
-> a bit further in the generic serial8250_do_set_termios() function.
+> This series aims at reducing the waiting time between MDIO transactions
+> when using the MSCC MIIM MDIO controller.
 
-...
+Hi Antoine
 
-> +static void dw8250_clk_work_cb(struct work_struct *work)
-> +{
-> +	struct dw8250_data *d = work_to_dw8250_data(work);
-> +	struct uart_8250_port *up;
-> +	unsigned long rate;
-> +
-> +	rate = clk_get_rate(d->clk);
+There are a couple of other things you can look at:
 
-> +	if (rate) {
+Can you disable the pre-amble on the MDIO transaction. It requires
+that both the bus master and all devices on the bus support it, but
+when it is usable, you half the number of bits sent over the wire.
 
-	if (rate <= 0)
-		return;
+Can you control the frequency of MDC? 802.3 says 2.5MHz, but many
+devices support higher speeds. Again, you need all devices on the bus
+to support the speed.
 
-?
+When accessing raw TDR data for cable tests i also have a lot of PHY
+accesses. I implemented both of these for the FEC MDIO bus, and made
+it a lot faster.
 
-> +		up = serial8250_get_port(d->data.line);
-> +
-> +		serial8250_update_uartclk(&up->port, rate);
-> +	}
-> +}
-
-...
-
-> +static int dw8250_startup(struct uart_port *p)
-> +{
-> +	struct dw8250_data *d = to_dw8250_data(p->private_data);
-> +	int ret;
-> +
-> +	/*
-> +	 * Some platforms may provide a reference clock shared between several
-> +	 * devices. In this case before using the serial port first we have to
-> +	 * make sure that any clock state change is known to the UART port at
-> +	 * least post factum.
-> +	 */
-
-> +	if (d->clk) {
-
-Do you need this?
-
-> +		ret = clk_notifier_register(d->clk, &d->clk_notifier);
-
-Okay, seems clk_notifier_register() and its counterpart should be fixed for
-optional clocks.
-
-> +		if (ret)
-> +			dev_warn(p->dev, "Failed to set the clock notifier\n");
-
-So, what does this warning mean on the platforms which does not need notifier
-at all (i.o.w. all but baikal)?
-
-> +		/*
-> +		 * Get current reference clock rate to make sure the UART port
-> +		 * is equipped with an up-to-date value before it's started up.
-> +		 */
-
-Why? We call ->set_termios() for it, no?
-
-> +		p->uartclk = clk_get_rate(d->clk);
-> +		if (!p->uartclk) {
-> +			dev_err(p->dev, "Clock rate not defined\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	return serial8250_do_startup(p);
-> +}
-> +
-> +static void dw8250_shutdown(struct uart_port *p)
-> +{
-> +	struct dw8250_data *d = to_dw8250_data(p->private_data);
-> +
-> +	serial8250_do_shutdown(p);
-> +
-
-> +	if (d->clk) {
-
-Ditto.
-
-> +		clk_notifier_unregister(d->clk, &d->clk_notifier);
-> +
-> +		flush_work(&d->clk_work);
-> +	}
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+   Andrew
