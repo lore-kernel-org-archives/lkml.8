@@ -2,70 +2,73 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1433C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC7420704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6019920704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSRk60Z5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0kP3mGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389248AbgEZRfq (ORCPT
+        id S2389301AbgEZRfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
+        Tue, 26 May 2020 13:35:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388784AbgEZRfn (ORCPT
+        with ESMTP id S2389264AbgEZRfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:35:43 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA8AC03E96D;
-        Tue, 26 May 2020 10:35:42 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id l21so24730596eji.4;
-        Tue, 26 May 2020 10:35:42 -0700 (PDT)
+        Tue, 26 May 2020 13:35:47 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABB2C03E96D;
+        Tue, 26 May 2020 10:35:46 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g9so18336310edw.10;
+        Tue, 26 May 2020 10:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=vcMNbORvIjJ2la5oap9DjFcpa/YIWrMblMOSotFUClk=;
-        b=eSRk60Z5I56xBZBdTUOJ4envTL5Y2lMwiTIgL3XrXP55VyO69IGkjPTk3A2j28qsls
-         WxDRQHHyqrRmj4zaTjZpWvMXu70IX2Vn4G32CRw/BDz90FS2TKchSp0zUMio8tS2pJMr
-         JyJHt7ArONILqWOmA3/NHq0lN6QOxuZYQBp/kRqi41D7m7Kr78WSodKMNODAtijMrl3d
-         b5+V0hxU2Cs/Fje9MyjVUlpyS/RBOW9cmjMTIn22l3/OLzbklxTJ6VslXi01IHWPSXkT
-         XhcgWQJl+tUZVzcXWnX5U0+ydAaWif7uuzysOw3Vp2bDo7v27HF4+uvaGjn8TgZj1DLr
-         PJuw==
+        bh=oRCoOKG6n792Uft3QuY79MALpzXxmbefAeR0TN6gqZ8=;
+        b=r0kP3mGG7xRmIHhVugzcGvdtsWvbm8focNbE9sZrFhvWyotDQ+wGkGHXMSONQliGwy
+         QlzJ9iu+2s2Zn6l3zuW6qZP7x6aBh4udTR75PYcOiIIZpQReYEZZBLJCXcgNoUt5gBDL
+         vwQRIeqINPBsQgaf67G6pM+N4aEO4j5SCZhJZ9jKWcvaUinuoMZ9O+Q+wMZVfaJk72O7
+         5DBbqDehDJexG1PFpxX1hfWMGl+uzFe6+CIWnCLTWN7EZGmSLdiLakB/r4a1YZClScfq
+         ipeE3w21lTkbpLxIPc2SiaLrd3ltNoiFhyESsxsQCxhCnUbv/6uPqF/EEC19Y6YoOkz2
+         L6Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vcMNbORvIjJ2la5oap9DjFcpa/YIWrMblMOSotFUClk=;
-        b=lVDJgcGgaiA/fIxi2exF4KbFR+AD5iMhFr6+SEC2ax5FTXlcm57l/4q0pADXgycpzt
-         f7VAAGfa8MF2B9n6ovBPtaQk1/WZOpNVsdaI+0a1vtoZDKPrhfW7yD6GFKSVTVZDapBn
-         aRF1lJb2areeudQuWjlUdS9LHHfguIEnzhPi3/6bUPBmtmaIPDfK+k6kSC5P58RWzd1Y
-         ZddTeTzp1n0X1uPWTCUGyBCIwsl5C2iXSmtZ4xQ3toCC4l7T1uQtTXFSiSyccjOAGfee
-         aMBWMx5yoEyTFWcb8/hZpBhkg9E9gKPGrSZR1bJHC+6f5emtIa4IsIgThAFRfLeMMopP
-         HP9g==
-X-Gm-Message-State: AOAM5330Y+lUcWPgJpT0hz54+lK294FC67lTCdYfwEB0MzGH3f4+ZUFX
-        XdQWNAvfvPmZAj/waI6217c=
-X-Google-Smtp-Source: ABdhPJyK0sQ6Non1RS6u11ZqHLO9HSHJJemplDjJkxZGjagrE5vFaLeEv/X6XvyHlterzThMRcBJ/g==
-X-Received: by 2002:a17:906:4088:: with SMTP id u8mr2156486ejj.444.1590514541446;
-        Tue, 26 May 2020 10:35:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oRCoOKG6n792Uft3QuY79MALpzXxmbefAeR0TN6gqZ8=;
+        b=ZOJNNn/ddTmGIskr5vQAbVUvJVBEcv6fRx0fO91iZFNM9mHb4WtSs0HZAP6APkY7b+
+         E9MagbqmO428spFaxbLYWLg0w00VGag4J8ElsecZaaokq+vEnW932hy7GjNTrj6ysndb
+         WQFF/JmliSpPOKvlQ4Cr+JbnhbVzcIvYuWNoGNdG2xNjMe2wOxgCISiluIZNrmz0td1k
+         xBKgO5zeu93PlGd6LfnK59ATzsvWCKQ1cEhukpItO1ParloBmeDu56BcY+W990l5RLhR
+         FOiGBfFxkb0NmgX75RQT3VkY0YzdfeAGeaspw118b/rzYXA1ELF28lDV/vCTwsxRkOJc
+         KlOA==
+X-Gm-Message-State: AOAM5317r9739Cs0R04tyfCWl4kG3pnnA9TmA9ZKPKo9/GErMudPo1sZ
+        AEZpFK1XTwA0BVHVkCRNUJw=
+X-Google-Smtp-Source: ABdhPJzjCxU7PesLbJdA1/9IXSNHs/HY1FQ9SVbQm/7CnleQDzyF+ggew1QbmLvhUJnk9mZ7n8tZKA==
+X-Received: by 2002:a05:6402:1547:: with SMTP id p7mr20485077edx.31.1590514545098;
+        Tue, 26 May 2020 10:35:45 -0700 (PDT)
 Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id bz8sm391326ejc.94.2020.05.26.10.35.40
+        by smtp.gmail.com with ESMTPSA id bz8sm391326ejc.94.2020.05.26.10.35.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 10:35:40 -0700 (PDT)
+        Tue, 26 May 2020 10:35:44 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] random patches for 5.8
-Date:   Tue, 26 May 2020 20:34:01 +0300
-Message-Id: <cover.1590513806.git.asml.silence@gmail.com>
+Subject: [PATCH 3/6] io_uring: don't re-read sqe->off in timeout_prep()
+Date:   Tue, 26 May 2020 20:34:04 +0300
+Message-Id: <dfb9555d60282d5c8f5eb43d70af0e5980f32ab3.1590513806.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1590513806.git.asml.silence@gmail.com>
+References: <cover.1590513806.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,20 +76,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing insteresting in particular, just start flushing stashed patches.
-Ones in this series are pretty easy and short.
+SQEs are user writable, don't read sqe->off twice in io_timeout_prep()
 
-Pavel Begunkov (6):
-  io_uring: fix flush req->refs underflow
-  io_uring: simplify io_timeout locking
-  io_uring: don't re-read sqe->off in timeout_prep()
-  io_uring: separate DRAIN flushing into a cold path
-  io_uring: get rid of manual punting in io_close
-  io_uring: let io_req_aux_free() handle fixed files
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- fs/io_uring.c | 64 ++++++++++++++++++++-------------------------------
- 1 file changed, 25 insertions(+), 39 deletions(-)
-
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index e30fc17dd268..067ebdeb1ba4 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4803,18 +4803,19 @@ static int io_timeout_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ {
+ 	struct io_timeout_data *data;
+ 	unsigned flags;
++	u32 off = READ_ONCE(sqe->off);
+ 
+ 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
+ 		return -EINVAL;
+ 	if (sqe->ioprio || sqe->buf_index || sqe->len != 1)
+ 		return -EINVAL;
+-	if (sqe->off && is_timeout_link)
++	if (off && is_timeout_link)
+ 		return -EINVAL;
+ 	flags = READ_ONCE(sqe->timeout_flags);
+ 	if (flags & ~IORING_TIMEOUT_ABS)
+ 		return -EINVAL;
+ 
+-	req->timeout.count = READ_ONCE(sqe->off);
++	req->timeout.count = off;
+ 
+ 	if (!req->io && io_alloc_async_ctx(req))
+ 		return -ENOMEM;
 -- 
 2.24.0
 
