@@ -2,217 +2,336 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E294CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50604C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE7E020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="vS7fMYrr"
+	by mail.kernel.org (Postfix) with ESMTP id 16DBD20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590521519;
+	bh=bPqYd4e57Viu1hPvvYuijDsua1yQEVhriXs9sYnPFaU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IPQHJ4PTMyloWquLG9WWaAnEV+nV/buYgLbuJ8zYjWQhLzil9XXAhQeN64WKCsfcx
+	 R7RuIkcOikgvDFCrF3N8LVSN7qRyuECX98vOJDKddHUSablo3RbeTXgCq+yd5UP08Q
+	 VNnxrMMJv5iJBnPoObfV9xAZghFdXC0Kv66ZhLys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgEZTbz (ORCPT
+        id S2390319AbgEZS6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728986AbgEZTbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:31:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C758C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:31:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so10528947pgb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YFRI8Pzmi8Hkgh9xlFXYHyu3aYx5I7yE+6THkxrPB8I=;
-        b=vS7fMYrrAgg3oUBGa3cYcSiEpyRDaWgj11jtVR7CjRp4pnKrHNU7NTOnemnYkB25eH
-         2vlyjn5eK/YrvhhtNTGrdGOtMzQtXOFGCeDNsTVjIdts8nhNoF//GK8Uk4zkQJZ3l/FE
-         jwjFlTFdVaxtBWbXt1VQcFnYhGZYrxybxa3sysnJVEs1ztOhd8JnIvTA25P7TbsI2Urk
-         Vst1Z2KUJ2TwNHGQlj2QR6AioGdlYUileOiWYqvlKJrm5FllyzZseAWzHHGcTlC8jMjt
-         oASNMVbCiQkQ5RvIvbvkOBTKbyGva0jrx6L7Rs0VKJ2ljfP7VVb67hqEaZdQKNSYIwRi
-         6rlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=YFRI8Pzmi8Hkgh9xlFXYHyu3aYx5I7yE+6THkxrPB8I=;
-        b=cQr1+5/lLxKZcSsRIfq3h0nRh639RCMEWV7DslOrEOdLcw/aaQ1ws7gIvI5VgYFd60
-         /7rFPALrkPSiEk/gTNReEftAUC+UG/tLNZMsiBDvxcasngjC+3AIHNdB254UyxBoty5F
-         aiMshscui1lsHlnmg9C6N0C6nf+kVpNNNtg8lmGPQk3kCQ/xwJuf9j5Gwp9nRoNe7jCK
-         dlaHo5c/ZVmB5HPAh5yiO8K2nQrwFUwUaJLf+NxTp8tpOv3SpBf+8KktsyRED4cnOtlp
-         eGkVNHLn3owo/lkT8itbdkOFCrhO5HDRheLOEbFSawzWr+VX+u4ODRaNIxI1MzwOd8aT
-         w8fQ==
-X-Gm-Message-State: AOAM5329qPttoEYe64rj6nCNUIIZNsveQRlBZQy8rNsTQxcsTK8P1LJO
-        nnJ+CVXdiDzm/5onS+F0JIZ6kw==
-X-Google-Smtp-Source: ABdhPJx7PaDMUCSP3dWG8db1wbzMCLv5XsRADqttAo+C1oTetQidFR58rZotM4lHGR9W7RN7Be9DSA==
-X-Received: by 2002:a63:de06:: with SMTP id f6mr475817pgg.238.1590521504497;
-        Tue, 26 May 2020 12:31:44 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id d18sm238566pjv.34.2020.05.26.12.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:31:43 -0700 (PDT)
-Date:   Tue, 26 May 2020 12:31:43 -0700 (PDT)
-X-Google-Original-Date: Tue, 26 May 2020 12:31:41 PDT (-0700)
-Subject:     Re: [PATCH 1/1] riscv: sort select statements alphanumerically
-In-Reply-To: <0609f8f0c0c7182fda08fc395161ec11309c63fb.1589859647.git.zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-7c33e65d-d59d-400e-a056-cd44958c9222@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 26 May 2020 14:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390292AbgEZS6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:58:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC49C2084C;
+        Tue, 26 May 2020 18:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519497;
+        bh=bPqYd4e57Viu1hPvvYuijDsua1yQEVhriXs9sYnPFaU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PYQDPTubgDMX/FjqzMaprtMp9vEbrjd5jb5ZO/B5xEa8hRjRRu1Ueh7CIy41OlswA
+         em8BdbUtgLcX1YQL6spjboQ6iNes4C1x1avi4LgL0v2DsBHayIO+5AplmqNTTSmAO4
+         m4cDmXNALkJD7LKIraodjFYYQC8DCEcMjoSuPXMU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 26/64] watchdog: Fix the race between the release of watchdog_core_data and cdev
+Date:   Tue, 26 May 2020 20:52:55 +0200
+Message-Id: <20200526183921.197954687@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
+References: <20200526183913.064413230@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 20:42:04 PDT (-0700), zong.li@sifive.com wrote:
-> Like patch b1b3f49 ("ARM: config: sort select statements alphanumerically")
-> , we sort all our select statements alphanumerically by using the perl
-> script in patch b1b3f49 as above.
->
-> As suggested by Andrew Morton:
->
->   This is a pet peeve of mine.  Any time there's a long list of items
->   (header file inclusions, kconfig entries, array initalisers, etc) and
->   someone wants to add a new item, they *always* go and stick it at the
->   end of the list.
->
->   Guys, don't do this.  Either put the new item into a randomly-chosen
->   position or, probably better, alphanumerically sort the list.
->
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> ---
->  arch/riscv/Kconfig | 70 +++++++++++++++++++++++-----------------------
->  1 file changed, 35 insertions(+), 35 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 74ce5c5249e9..8244b8f7e7c3 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -12,64 +12,64 @@ config 32BIT
->
->  config RISCV
->  	def_bool y
-> -	select OF
-> -	select OF_EARLY_FLATTREE
-> -	select OF_IRQ
->  	select ARCH_HAS_BINFMT_FLAT
-> +	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> +	select ARCH_HAS_DEBUG_WX
-> +	select ARCH_HAS_GCOV_PROFILE_ALL
-> +	select ARCH_HAS_GIGANTIC_PAGE
-> +	select ARCH_HAS_MMIOWB
-> +	select ARCH_HAS_PTE_SPECIAL
-> +	select ARCH_HAS_SET_DIRECT_MAP
-> +	select ARCH_HAS_SET_MEMORY
-> +	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
-> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
->  	select ARCH_WANT_FRAME_POINTERS
-> +	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
->  	select CLONE_BACKWARDS
->  	select COMMON_CLK
-> +	select EDAC_SUPPORT
-> +	select GENERIC_ARCH_TOPOLOGY if SMP
-> +	select GENERIC_ATOMIC64 if !64BIT
->  	select GENERIC_CLOCKEVENTS
-> +	select GENERIC_IOREMAP
-> +	select GENERIC_IRQ_MULTI_HANDLER
->  	select GENERIC_IRQ_SHOW
->  	select GENERIC_PCI_IOMAP
-> +	select GENERIC_PTDUMP if MMU
->  	select GENERIC_SCHED_CLOCK
-> +	select GENERIC_SMP_IDLE_THREAD
->  	select GENERIC_STRNCPY_FROM_USER if MMU
->  	select GENERIC_STRNLEN_USER if MMU
-> -	select GENERIC_SMP_IDLE_THREAD
-> -	select GENERIC_ATOMIC64 if !64BIT
-> -	select GENERIC_IOREMAP
-> -	select GENERIC_PTDUMP if MMU
->  	select HAVE_ARCH_AUDITSYSCALL
-> +	select HAVE_ARCH_KASAN if MMU && 64BIT
-> +	select HAVE_ARCH_KGDB
-> +	select HAVE_ARCH_KGDB_QXFER_PKT
-> +	select HAVE_ARCH_MMAP_RND_BITS if MMU
->  	select HAVE_ARCH_SECCOMP_FILTER
-> +	select HAVE_ARCH_TRACEHOOK
->  	select HAVE_ASM_MODVERSIONS
-> +	select HAVE_COPY_THREAD_TLS
->  	select HAVE_DMA_CONTIGUOUS if MMU
-> +	select HAVE_EBPF_JIT if MMU
->  	select HAVE_FUTEX_CMPXCHG if FUTEX
-> +	select HAVE_PCI
->  	select HAVE_PERF_EVENTS
->  	select HAVE_PERF_REGS
->  	select HAVE_PERF_USER_STACK_DUMP
->  	select HAVE_SYSCALL_TRACEPOINTS
->  	select IRQ_DOMAIN
-> -	select SPARSE_IRQ
-> -	select SYSCTL_EXCEPTION_TRACE
-> -	select HAVE_ARCH_TRACEHOOK
-> -	select HAVE_PCI
->  	select MODULES_USE_ELF_RELA if MODULES
->  	select MODULE_SECTIONS if MODULES
-> -	select THREAD_INFO_IN_TASK
-> +	select OF
-> +	select OF_EARLY_FLATTREE
-> +	select OF_IRQ
->  	select PCI_DOMAINS_GENERIC if PCI
->  	select PCI_MSI if PCI
->  	select RISCV_TIMER
-> -	select GENERIC_IRQ_MULTI_HANDLER
-> -	select GENERIC_ARCH_TOPOLOGY if SMP
-> -	select ARCH_HAS_PTE_SPECIAL
-> -	select ARCH_HAS_MMIOWB
-> -	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> -	select HAVE_EBPF_JIT if MMU
-> -	select EDAC_SUPPORT
-> -	select ARCH_HAS_GIGANTIC_PAGE
-> -	select ARCH_HAS_SET_DIRECT_MAP
-> -	select ARCH_HAS_SET_MEMORY
-> -	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
-> -	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
->  	select SPARSEMEM_STATIC if 32BIT
-> -	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-> -	select HAVE_ARCH_MMAP_RND_BITS if MMU
-> -	select ARCH_HAS_GCOV_PROFILE_ALL
-> -	select HAVE_COPY_THREAD_TLS
-> -	select HAVE_ARCH_KASAN if MMU && 64BIT
-> -	select HAVE_ARCH_KGDB
-> -	select HAVE_ARCH_KGDB_QXFER_PKT
-> -	select ARCH_HAS_DEBUG_WX
-> +	select SPARSE_IRQ
-> +	select SYSCTL_EXCEPTION_TRACE
-> +	select THREAD_INFO_IN_TASK
->
->  config ARCH_MMAP_RND_BITS_MIN
->  	default 18 if 64BIT
-> @@ -196,11 +196,11 @@ config ARCH_RV64I
->  	bool "RV64I"
->  	select 64BIT
->  	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && GCC_VERSION >= 50000
-> -	select HAVE_FUNCTION_TRACER
-> -	select HAVE_FUNCTION_GRAPH_TRACER
-> -	select HAVE_FTRACE_MCOUNT_RECORD
->  	select HAVE_DYNAMIC_FTRACE if MMU
->  	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
-> +	select HAVE_FTRACE_MCOUNT_RECORD
-> +	select HAVE_FUNCTION_GRAPH_TRACER
-> +	select HAVE_FUNCTION_TRACER
->  	select SWIOTLB if MMU
->
->  endchoice
+From: Kevin Hao <haokexin@gmail.com>
 
-Thanks.  This is on for-next, except I re-ran the script as there have been
-some changes.
+commit 72139dfa2464e43957d330266994740bb7be2535 upstream.
+
+The struct cdev is embedded in the struct watchdog_core_data. In the
+current code, we manage the watchdog_core_data with a kref, but the
+cdev is manged by a kobject. There is no any relationship between
+this kref and kobject. So it is possible that the watchdog_core_data is
+freed before the cdev is entirely released. We can easily get the
+following call trace with CONFIG_DEBUG_KOBJECT_RELEASE and
+CONFIG_DEBUG_OBJECTS_TIMERS enabled.
+  ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x38
+  WARNING: CPU: 23 PID: 1028 at lib/debugobjects.c:481 debug_print_object+0xb0/0xf0
+  Modules linked in: softdog(-) deflate ctr twofish_generic twofish_common camellia_generic serpent_generic blowfish_generic blowfish_common cast5_generic cast_common cmac xcbc af_key sch_fq_codel openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+  CPU: 23 PID: 1028 Comm: modprobe Not tainted 5.3.0-next-20190924-yoctodev-standard+ #180
+  Hardware name: Marvell OcteonTX CN96XX board (DT)
+  pstate: 00400009 (nzcv daif +PAN -UAO)
+  pc : debug_print_object+0xb0/0xf0
+  lr : debug_print_object+0xb0/0xf0
+  sp : ffff80001cbcfc70
+  x29: ffff80001cbcfc70 x28: ffff800010ea2128
+  x27: ffff800010bad000 x26: 0000000000000000
+  x25: ffff80001103c640 x24: ffff80001107b268
+  x23: ffff800010bad9e8 x22: ffff800010ea2128
+  x21: ffff000bc2c62af8 x20: ffff80001103c600
+  x19: ffff800010e867d8 x18: 0000000000000060
+  x17: 0000000000000000 x16: 0000000000000000
+  x15: ffff000bd7240470 x14: 6e6968207473696c
+  x13: 5f72656d6974203a x12: 6570797420746365
+  x11: 6a626f2029302065 x10: 7461747320657669
+  x9 : 7463612820657669 x8 : 3378302f3078302b
+  x7 : 0000000000001d7a x6 : ffff800010fd5889
+  x5 : 0000000000000000 x4 : 0000000000000000
+  x3 : 0000000000000000 x2 : ffff000bff948548
+  x1 : 276a1c9e1edc2300 x0 : 0000000000000000
+  Call trace:
+   debug_print_object+0xb0/0xf0
+   debug_check_no_obj_freed+0x1e8/0x210
+   kfree+0x1b8/0x368
+   watchdog_cdev_unregister+0x88/0xc8
+   watchdog_dev_unregister+0x38/0x48
+   watchdog_unregister_device+0xa8/0x100
+   softdog_exit+0x18/0xfec4 [softdog]
+   __arm64_sys_delete_module+0x174/0x200
+   el0_svc_handler+0xd0/0x1c8
+   el0_svc+0x8/0xc
+
+This is a common issue when using cdev embedded in a struct.
+Fortunately, we already have a mechanism to solve this kind of issue.
+Please see commit 233ed09d7fda ("chardev: add helper function to
+register char devs with a struct device") for more detail.
+
+In this patch, we choose to embed the struct device into the
+watchdog_core_data, and use the API provided by the commit 233ed09d7fda
+to make sure that the release of watchdog_core_data and cdev are
+in sequence.
+
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20191008112934.29669-1-haokexin@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+[bwh: Backported to 4.9:
+ - There's no reboot notifier here
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/watchdog/watchdog_dev.c |   67 +++++++++++++++++-----------------------
+ 1 file changed, 30 insertions(+), 37 deletions(-)
+
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -38,7 +38,6 @@
+ #include <linux/init.h>		/* For __init/__exit/... */
+ #include <linux/jiffies.h>	/* For timeout functions */
+ #include <linux/kernel.h>	/* For printk/panic/... */
+-#include <linux/kref.h>		/* For data references */
+ #include <linux/miscdevice.h>	/* For handling misc devices */
+ #include <linux/module.h>	/* For module stuff/... */
+ #include <linux/mutex.h>	/* For mutexes */
+@@ -53,14 +52,14 @@
+ 
+ /*
+  * struct watchdog_core_data - watchdog core internal data
+- * @kref:	Reference count.
++ * @dev:	The watchdog's internal device
+  * @cdev:	The watchdog's Character device.
+  * @wdd:	Pointer to watchdog device.
+  * @lock:	Lock for watchdog core.
+  * @status:	Watchdog core internal status bits.
+  */
+ struct watchdog_core_data {
+-	struct kref kref;
++	struct device dev;
+ 	struct cdev cdev;
+ 	struct watchdog_device *wdd;
+ 	struct mutex lock;
+@@ -794,7 +793,7 @@ static int watchdog_open(struct inode *i
+ 	file->private_data = wd_data;
+ 
+ 	if (!hw_running)
+-		kref_get(&wd_data->kref);
++		get_device(&wd_data->dev);
+ 
+ 	/* dev/watchdog is a virtual (and thus non-seekable) filesystem */
+ 	return nonseekable_open(inode, file);
+@@ -806,11 +805,11 @@ out_clear:
+ 	return err;
+ }
+ 
+-static void watchdog_core_data_release(struct kref *kref)
++static void watchdog_core_data_release(struct device *dev)
+ {
+ 	struct watchdog_core_data *wd_data;
+ 
+-	wd_data = container_of(kref, struct watchdog_core_data, kref);
++	wd_data = container_of(dev, struct watchdog_core_data, dev);
+ 
+ 	kfree(wd_data);
+ }
+@@ -870,7 +869,7 @@ done:
+ 	 */
+ 	if (!running) {
+ 		module_put(wd_data->cdev.owner);
+-		kref_put(&wd_data->kref, watchdog_core_data_release);
++		put_device(&wd_data->dev);
+ 	}
+ 	return 0;
+ }
+@@ -889,17 +888,22 @@ static struct miscdevice watchdog_miscde
+ 	.fops		= &watchdog_fops,
+ };
+ 
++static struct class watchdog_class = {
++	.name =		"watchdog",
++	.owner =	THIS_MODULE,
++	.dev_groups =	wdt_groups,
++};
++
+ /*
+  *	watchdog_cdev_register: register watchdog character device
+  *	@wdd: watchdog device
+- *	@devno: character device number
+  *
+  *	Register a watchdog character device including handling the legacy
+  *	/dev/watchdog node. /dev/watchdog is actually a miscdevice and
+  *	thus we set it up like that.
+  */
+ 
+-static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
++static int watchdog_cdev_register(struct watchdog_device *wdd)
+ {
+ 	struct watchdog_core_data *wd_data;
+ 	int err;
+@@ -907,7 +911,6 @@ static int watchdog_cdev_register(struct
+ 	wd_data = kzalloc(sizeof(struct watchdog_core_data), GFP_KERNEL);
+ 	if (!wd_data)
+ 		return -ENOMEM;
+-	kref_init(&wd_data->kref);
+ 	mutex_init(&wd_data->lock);
+ 
+ 	wd_data->wdd = wdd;
+@@ -934,23 +937,33 @@ static int watchdog_cdev_register(struct
+ 		}
+ 	}
+ 
++	device_initialize(&wd_data->dev);
++	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
++	wd_data->dev.class = &watchdog_class;
++	wd_data->dev.parent = wdd->parent;
++	wd_data->dev.groups = wdd->groups;
++	wd_data->dev.release = watchdog_core_data_release;
++	dev_set_drvdata(&wd_data->dev, wdd);
++	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
++
+ 	/* Fill in the data structures */
+ 	cdev_init(&wd_data->cdev, &watchdog_fops);
+-	wd_data->cdev.owner = wdd->ops->owner;
+ 
+ 	/* Add the device */
+-	err = cdev_add(&wd_data->cdev, devno, 1);
++	err = cdev_device_add(&wd_data->cdev, &wd_data->dev);
+ 	if (err) {
+ 		pr_err("watchdog%d unable to add device %d:%d\n",
+ 			wdd->id,  MAJOR(watchdog_devt), wdd->id);
+ 		if (wdd->id == 0) {
+ 			misc_deregister(&watchdog_miscdev);
+ 			old_wd_data = NULL;
+-			kref_put(&wd_data->kref, watchdog_core_data_release);
++			put_device(&wd_data->dev);
+ 		}
+ 		return err;
+ 	}
+ 
++	wd_data->cdev.owner = wdd->ops->owner;
++
+ 	/* Record time of most recent heartbeat as 'just before now'. */
+ 	wd_data->last_hw_keepalive = jiffies - 1;
+ 
+@@ -960,7 +973,7 @@ static int watchdog_cdev_register(struct
+ 	 */
+ 	if (watchdog_hw_running(wdd)) {
+ 		__module_get(wdd->ops->owner);
+-		kref_get(&wd_data->kref);
++		get_device(&wd_data->dev);
+ 		queue_delayed_work(watchdog_wq, &wd_data->work, 0);
+ 	}
+ 
+@@ -979,7 +992,7 @@ static void watchdog_cdev_unregister(str
+ {
+ 	struct watchdog_core_data *wd_data = wdd->wd_data;
+ 
+-	cdev_del(&wd_data->cdev);
++	cdev_device_del(&wd_data->cdev, &wd_data->dev);
+ 	if (wdd->id == 0) {
+ 		misc_deregister(&watchdog_miscdev);
+ 		old_wd_data = NULL;
+@@ -992,15 +1005,9 @@ static void watchdog_cdev_unregister(str
+ 
+ 	cancel_delayed_work_sync(&wd_data->work);
+ 
+-	kref_put(&wd_data->kref, watchdog_core_data_release);
++	put_device(&wd_data->dev);
+ }
+ 
+-static struct class watchdog_class = {
+-	.name =		"watchdog",
+-	.owner =	THIS_MODULE,
+-	.dev_groups =	wdt_groups,
+-};
+-
+ /*
+  *	watchdog_dev_register: register a watchdog device
+  *	@wdd: watchdog device
+@@ -1012,27 +1019,14 @@ static struct class watchdog_class = {
+ 
+ int watchdog_dev_register(struct watchdog_device *wdd)
+ {
+-	struct device *dev;
+-	dev_t devno;
+ 	int ret;
+ 
+-	devno = MKDEV(MAJOR(watchdog_devt), wdd->id);
+-
+-	ret = watchdog_cdev_register(wdd, devno);
++	ret = watchdog_cdev_register(wdd);
+ 	if (ret)
+ 		return ret;
+ 
+-	dev = device_create_with_groups(&watchdog_class, wdd->parent,
+-					devno, wdd, wdd->groups,
+-					"watchdog%d", wdd->id);
+-	if (IS_ERR(dev)) {
+-		watchdog_cdev_unregister(wdd);
+-		return PTR_ERR(dev);
+-	}
+-
+ 	ret = watchdog_register_pretimeout(wdd);
+ 	if (ret) {
+-		device_destroy(&watchdog_class, devno);
+ 		watchdog_cdev_unregister(wdd);
+ 	}
+ 
+@@ -1050,7 +1044,6 @@ int watchdog_dev_register(struct watchdo
+ void watchdog_dev_unregister(struct watchdog_device *wdd)
+ {
+ 	watchdog_unregister_pretimeout(wdd);
+-	device_destroy(&watchdog_class, wdd->wd_data->cdev.dev);
+ 	watchdog_cdev_unregister(wdd);
+ }
+ 
+
+
