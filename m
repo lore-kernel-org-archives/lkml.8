@@ -2,85 +2,124 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7619FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A24AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A93B20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5127620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k0gOJrG8"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bw++BqBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389767AbgEZV1Q (ORCPT
+        id S2390719AbgEZV17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55760 "EHLO
+        Tue, 26 May 2020 17:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388967AbgEZV1Q (ORCPT
+        with ESMTP id S2390398AbgEZV16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:27:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFFEC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qdvaRsxr7i84jB+7s5+FQWOnyFJl2KHp4wWCRvGNhl4=; b=k0gOJrG8ryKOn+EtI9ACNut+fY
-        iJi7u6W4t5O0tUdkoZGQ4VnxsX01fLajBEeuMmRlbGkGCX//4DsE4fakfbnrKs/ykwqXAnzqbQ0s+
-        iABr7FXdYeHMAFSoHbdsbZWSPsGcpSqy3P2IDHCncUCoKniP61MsEkSJVxS3LI1XGVvyp8sH23sef
-        y2wyNWNy2e8UlslE7ovjhDeDOfDKeevEiIaVaSwlYfUax52+vmZ71VtSmj2cGqUoE4tpjcp+Klz8a
-        LfEF3jo22xQyA3NxEG56VDgKGzb2tyO+2Agz93akuS8OOdHpgBoIhTPJj1RsNAEAXfGS9PL0dM5ge
-        XZML54fA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdh6M-0008EJ-Mu; Tue, 26 May 2020 21:27:10 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E43A99834AB; Tue, 26 May 2020 23:27:07 +0200 (CEST)
-Date:   Tue, 26 May 2020 23:27:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/lockdep: Increase MAX_LOCKDEP_ENTRIES by half
-Message-ID: <20200526212707.GE2483@worktop.programming.kicks-ass.net>
-References: <20200526174349.8312-1-longman@redhat.com>
- <20200526185850.GE991@lca.pw>
- <20200526195630.GF325280@hirez.programming.kicks-ass.net>
- <b88d5379-687d-8c14-40ae-221c79500996@redhat.com>
+        Tue, 26 May 2020 17:27:58 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99EDC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:27:58 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f18so5541671qkh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8nz3CDdcS0xjg02CzjJ/lD/bQypLpbpXtrEAGZZGJUk=;
+        b=bw++BqBUqQLwetAA+/ZijHCPOEGMEeXrj+Qs81iqTH2f8gn3pTZQ68PSv7k6Kt+20V
+         hUHG7KXbyZ0Tnp8Z6P6JlBw6WYpSwvwlHcWA8RPpKumqh0HJ7Qm7z9vUu61SVsibaaU8
+         Pp5/SndwTBno2mTJzp2xXXhGCRk3aomYP0b5o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8nz3CDdcS0xjg02CzjJ/lD/bQypLpbpXtrEAGZZGJUk=;
+        b=jgGx+ollFBxCguYeAEkH90M1m2nRwfCOl8A90GHOV0274F65UnR3d8FbGH6q8nyxsl
+         RQ3n+94L6aWHI/EDqKFXqhZDV4MqruG3/D1P15s5jo5TO3WFKPkByBUIp6JIehjeIu16
+         JBpw8/tdax32tThNgzCHdEuymEziLYh19HO6nLRI0jMv88imksJDzDqO5ori52BXeuYV
+         fyJa33px+KorNMoTXyGIf33P5iJNudRvvPQJP9NV9+BJyQF9JQhxurLTEoPNIUjsgpoA
+         Gujc7CbeOHnEzqM+tXU7CFhGWc3h1+IKiY1U5PERBZtqJtYDOe7A/vUYui8aO5tZFo7/
+         y42A==
+X-Gm-Message-State: AOAM530lw7JZZYVvA+XMgsCMzI6vsOD9+mo2b4J61BabXi/El3hE9HgT
+        j1zXWaObBl7St1/iN3ZuMFHl7A==
+X-Google-Smtp-Source: ABdhPJw3XUatTVpVI17pXopA5eDOr2OQSshcYbBh2ZNq2C7/GcywYOXahUTWvoavCbET3sGzaTubfA==
+X-Received: by 2002:a37:a111:: with SMTP id k17mr897818qke.376.1590528477822;
+        Tue, 26 May 2020 14:27:57 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o6sm802514qtd.59.2020.05.26.14.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 14:27:57 -0700 (PDT)
+Date:   Tue, 26 May 2020 17:27:56 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200526212756.GF76276@google.com>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200526152137.GB76276@google.com>
+ <20200526162946.GK2869@paulmck-ThinkPad-P72>
+ <20200526201840.GC76276@google.com>
+ <20200526210947.GP2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b88d5379-687d-8c14-40ae-221c79500996@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200526210947.GP2869@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 04:30:58PM -0400, Waiman Long wrote:
-> On 5/26/20 3:56 PM, Peter Zijlstra wrote:
-> > On Tue, May 26, 2020 at 02:58:50PM -0400, Qian Cai wrote:
-> > 
-> > > I still don't understand why reading all sysfs files on this system
-> > > could increase that much, but here is the lockdep file after
-> > > running sysfs read to see if you could spot anything obviously,
+On Tue, May 26, 2020 at 02:09:47PM -0700, Paul E. McKenney wrote:
+[...]
+> > > > BTW, I'm really itching to give it a try to make the scheduler more deadlock
+> > > > resilient (that is, if the scheduler wake up path detects a deadlock, then it
+> > > > defers the wake up using timers, or irq_work on its own instead of passing
+> > > > the burden of doing so to the callers). Thoughts?
 > > > 
-> > > https://cailca.github.io/files/lockdep.txt
-> > 00000000f011a2a5 OPS:      20 FD:   45 BD:    1 .+.+: kn->active#834
+> > > I have used similar approaches within RCU, but on the other hand the
+> > > scheduler often has tighter latency constraints than RCU does.	So I
+> > > think that is a better question for the scheduler maintainers than it
+> > > is for me.  ;-)
 > > 
-> > is that somewhere near the number of CPUs you have?
-> > 
-> > Anyway, there's very long "kn->active#..." chains in there, which seems
-> > to suggest some annotation is all sorts of buggered.
-> > 
-> It is actually one active lock per instance of the kerfs_node structures.
-> That means more than 800 sysfs files are accessed in some way. As we could
-> have much more than 800 sysfs files in the system, we could easily overwhelm
-> the lockdep tables if we really try to access all of them.
+> > Ok, it definitely keeps coming up in my radar first with the
+> > rcu_read_unlock_special() stuff, and now the nocb ;-). Perhaps it could also
+> > be good for a conference discussion!
+> 
+> Again, please understand that RCU has way looser latency constraints
+> than the scheduler does.  Adding half a jiffy to wakeup latency might
+> not go over well, especially in the real-time application area.
 
-A lock per instance is crazy, that's not what lockdep is made for.
-Fixing this seems like a far better idea than increasing the numbers.
+Yeah, agreed that the "deadlock detection" code should be pretty light weight
+if/when it is written.
+
+> But what did the scheduler maintainers say about this idea?
+
+Last I remember when it came up during the rcu_read_unlock_special() deadlock
+discussions, there's no way to know for infra like RCU to know that it was
+invoked from the scheduler.
+
+The idea I am bringing up now (about the scheduler itself detecting a
+recursion) was never brought up (not yet) with the sched maintainers (at
+least not by me).
+
+thanks,
+
+ - Joel
+
+
+
