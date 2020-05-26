@@ -2,200 +2,154 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2575220890
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D81B20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="B5QkVLst"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gIQEf+q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbgEZHDw (ORCPT
+        id S1731579AbgEZHEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:03:52 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:53131 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731436AbgEZHDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:03:51 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id dTclj6RswFjnUdTcpjebLd; Tue, 26 May 2020 09:03:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1590476628; bh=0kXAkIhbXptFYgFRJWtoCtz7iA4IcdHi+f8YJW692hk=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=B5QkVLst8+j5DVXFsTIEir01KJ1/NMcSTAnSbdbSgUABvWnS5E4sq0A6MjSsKRMPH
-         Zr0ahpmWBNwylX+FAIVnMi2uvVEdLNrfPc+F0my4c4Bpr3XMlqBWg+75gnNTufA22u
-         wgp9578mdHMurl2aQympWa3GGh3qqssHjTr7/OWHb5D+/aJO2dzlpZXiSWyNWIulu8
-         8jQGSCT3hsptPz2vUX2WakqMzQ3O9xv9O7jiXOVNmRCbZng6T8D28/Y4G4io4ddb/c
-         aYzP6peDbZ57rIYB0nn1zB8nSdt3PabZbjhRpMRrjzbnI+JYvyup7fhuXXs4hQtuqh
-         DQs8giybdwzqw==
-Subject: Re: [RFC PATCH 0/3] METADATA design using V4l2 Request API
-To:     dikshita@codeaurora.org, linux-media@vger.kernel.org,
-        stanimir.varbanov@linaro.org, sakari.ailus@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org,
-        linux-media-owner@vger.kernel.org
-References: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
- <66208196d7668fe184f6c9d8c6c69c8b@codeaurora.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <7d11d3ba-7a76-1b18-c7c6-d9efc5de1500@xs4all.nl>
-Date:   Tue, 26 May 2020 09:03:43 +0200
+        Tue, 26 May 2020 03:04:02 -0400
+Received: from mout.web.de ([212.227.17.11]:43949 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731436AbgEZHEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 03:04:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590476607;
+        bh=4fceq8vaTOMSo1ynATqC6pvDF2OSXWw+csa59KTJiw4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=gIQEf+q+Gqykc2TfHpVQy8b093zq0kaWgl8ONcRdY+wOUhnCklR1o/W/aLdTu5U0B
+         sKLSMYTO9z0sGzhKn213ID/p68FN458B56qkl/mNzpXjWvEbvezAE5C8MR9maau0TK
+         xD2TBI672X/BO/Auq+nvggH2TCT2kcmRM8bOOjnA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.141.233]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MwjJo-1ipKlh2FmE-00y4Ia; Tue, 26
+ May 2020 09:03:27 +0200
+Subject: Re: [PATCH v2 1/2] crypto: virtio: Fix src/dst scatterlist
+ calculation in __virtio_crypto_skcipher_do_req()
+To:     "Longpeng(Mike)" <longpeng2@huawei.com>,
+        linux-crypto@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Cc:     Corentin Labbe <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Gonglei <arei.gonglei@huawei.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200526031956.1897-1-longpeng2@huawei.com>
+ <20200526031956.1897-2-longpeng2@huawei.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <d58a046a-e559-55be-16ba-64db43a06568@web.de>
+Date:   Tue, 26 May 2020 09:03:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <66208196d7668fe184f6c9d8c6c69c8b@codeaurora.org>
+In-Reply-To: <20200526031956.1897-2-longpeng2@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfBueupDa55MQv2WHpZ1p8Yac3h6A33f9Y6tcGYTDATu2d4lKuHE0607/uuLPD0ezKFIf8I3VGm0xF/xvRR+K/EoSEkPJ5cBMwiM9+7++tE04himiCy+D
- x70CMv4f/klWlsF32vtxbwPuqyrZOTt1kyiZUdYsYlLSaiUOVVZ57mrsjnAQc4DtU5zOfztJ+Uu6cU0ayLngkUCTF+Bb6qc+Ja6Eu3+O5tX09gDfKsWNPXsu
- 3fdM5ZnILePcM2nT6q39xgxLgia9N31dqIsXDxxFfaxuz88aAmezNv6PV2U0st9tEr7mBNVl/PJLGYtMKQ/cGfKsAXHjHKy8KVRqhGdlvt4SoqGY8fUyrhOL
- xcltwyWD15rQ2i5bIQEllXo8HSifhKhkcjob07HTtweh/E7rryQW4JDbDP3Q1Le23dH2ctAxozD/pOQx4pXKFhcfBv/qRx+8AMzlf24N0sM7EInK4xCYgq+V
- XcNwmZhL58DNI1dzp5P3de4vuUqkAdVIj6rouOsPAM6KNzkXpJJLbgjHuhk=
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mwIDtqbnN3sr6FHLWLd3pAlrzyCI3agWEZgJkR30fcd5ggjBt7n
+ Z9cVs3yOc8aZsbn+e+XgyJJpxuy2L03JUle6RzYiim4nZ2+L8L9oPxHfhJW6TYib26C3/N1
+ pD6D5uwD2Ltw4FVlRj9Gt9FFdXgy396S4Lk/L8BpZ8MHZcVxH0H7W4m/cq5d6XDyNasOOzp
+ vy54Ad1iFfOXAXuZwu1lQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3wmfId0TF1o=:vvxME5t4d7Z6VrCjrsvVEB
+ 7VqPzrSG+nXd6gxznMl+Cd7GuowqFR51gXq0RYy7byfo99qomoVg06UaoiBy+Z9DWszwWaPlJ
+ TUPLb6NHgR6zR41AoaK89vcl+5FQuBJcJKoDas4PVTHOdO2VMT4hHZ2dE3ZL/AehP1r5vGXTZ
+ 1w6U3pQnbkQcoCxc3PE2sD+bLFq/VjGhwSrv/fNP3ZHLiYPm4BaqVKf0dFQZASj/xidXydk6j
+ Ty8N3bD315ze5tJUI3bxBERUAUTMvqaBQNeSmCX2sNFhphOe1TV4v+nlNqntY2VPg4EzPqtZV
+ 1f8Oenqk4dKA/BUL3yQbToqARdCgg0pt4Xl/3YMwdQeVyESqFA9TK/pNyspaO8L6/pH5mjoUr
+ plMEdtgIRr6gD8e0tziy85tJvFJH1nvWPtLBqNTLOIrSBEjshmFq8eOZJNMpMPZza4Mjazbe1
+ Z6p/GIlAzbQ5ND/s+udx+wSrUEvNEWWt4h9cCRJXg5LWm8wMCBm/i0IFzdWkTaoFvB1zPcAfi
+ T33TSTbjR51F6d+HP4I4c9ilVmZF4NCuoXYuErd00e2+6KRlqP4/yfsDodWa8SpzK+nIlaNW0
+ F5FNQ6kf+YwvkrRPQmZMlpEHlje/o47LJ4qkBnnwbcCPxSVcDe35hWigf8qvzei9YcHlWTl9v
+ +PpwVPcXWM6uaQ9Jj4WzQvX0k9lVjWBK1OPtOjZQQR8Qni1NdEpEzYXE1HgWsQlk/A4/AmY2d
+ 6Oetv/a4C2gPSXcwiD62moIs+f+1mYE1ETCo3wWirkuz6KwhWxI2BgzwLulh7YH5LV/sixkFd
+ qQYyGDcY9GGkxYg9CHnuSoaA+PoKrCUh+V9k13sTZMir9zvtwbN0uOrrPkMCfAfEwJ4Aq/HeM
+ W9PostV+WUIbWUre4y8hIB1WL1uCkDCSjcgQLtoUBgihRlUZ6Q8RV6S0QKZS0nX7Np1EM1KnG
+ QFVzSf9GiiRlVWmccEzkYXBOMFeUzFZaGVTWK+uTZj/4WA/es4zAdii7oOovN+hiLmKmDkz6w
+ mi+yBDG5qNjznZILabbp06s0Oe7jL+91H62nqzFic6VGiIRmzrCqQIK34NkpQSI+aVPiJZ0nZ
+ PLhGEE5tyFxiCV/prBJ8ETjsvonE1x/nVXipFz4Mycd9kLTCvHo6Mkdx46BTa9Ww2x95SOsGg
+ JFGLtwnded/qt3taiF8Ihx6St247kb5JbT950L5gMMrJPXvQcIuVc0GK3f7OIyVEutDlNZLc9
+ MH++ft+PGj2akCbui
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/05/2020 08:31, dikshita@codeaurora.org wrote:
-> Hi,
-> 
-> A gentle reminder for the review.
+> Fix it by sg_next() on calculation of src/dst scatterlist.
 
-It's on my TODO list. I hope to get to it this week or next week at the
-latest.
+Wording adjustment:
+=E2=80=A6 by calling the function =E2=80=9Csg_next=E2=80=9D =E2=80=A6
+
+
+=E2=80=A6
+> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+> @@ -350,13 +350,18 @@ __virtio_crypto_skcipher_do_req(struct virtio_cryp=
+to_sym_request *vc_sym_req,
+=E2=80=A6
+>  	src_nents =3D sg_nents_for_len(req->src, req->cryptlen);
+> +	if (src_nents < 0) {
+> +		pr_err("Invalid number of src SG.\n");
+> +		return src_nents;
+> +	}
+> +
+>  	dst_nents =3D sg_nents(req->dst);
+=E2=80=A6
+
+I suggest to move the addition of such input parameter validation
+to a separate update step.
 
 Regards,
-
-	Hans
-
-> 
-> On 2020-05-08 11:51, Dikshita Agarwal wrote:
->> There are many commercialized video use cases which needs metadata info
->> to be circulated between v4l2 client and v4l2 driver.
->>
->> METADATA has following requirements associated:
->> •Metadata is an optional info available for a buffer. It is not
->> mandatorily for every buffer.
->>  For ex. consider metadata ROI (Region Of Interest). ROI is specified
->> by clients to indicate
->>  the region where enhanced quality is desired. This metadata is given
->> as an input information
->>  to encoder output plane. Client may or may not specify the ROI for a
->> frame during encode as
->>  an input metadata. Also if the client has not provided ROI metadata
->> for a given frame,
->>  it would be incorrect to take the metadata from previous frame. If the 
->> data and
->>  metadata is asynchronous, it would be difficult for hardware to decide 
->> if it
->>  needs to wait for metadata buffer or not before processing the input
->> frame for encoding.
->> •Synchronize the buffer requirement across both the video node/session
->>  (incase metadata is being processed as a separate v4l2 video 
->> node/session).
->>  This is to avoid buffer starvation.
->> •Associate the metadata buffer with the data buffer without adding any
->> pipeline delay
->>  in waiting for each other. This is applicable both at the hardware
->> side (the processing end)
->>  and client side (the receiving end).
->> •Low latency usecases like WFD/split rendering/game streaming/IMS have
->> sub-50ms e2e latency
->>  requirements, and it is not practical to stall the pipeline due to
->> inherent framework latencies.
->>  High performance usecase like high-frame rate playback/record can
->> lead to frame loss during any pipeline latency.
->>
->> To address all above requirements, we used v4l2 Request API as 
->> interlace.
->>
->> As an experiment, We have introduced new control
->> V4L2_CID_MPEG_VIDEO_VENUS_METADATA
->> to contain the METADATA info. Exact controls can be finalized once the
->> interface is discussed.
->>
->> For setting metadata from userspace to kernel, let say on encode output 
->> plane,
->> following code sequence was followed
->> 1. Video driver is registering for media device and creating a media
->> node in /dev
->> 2. Request fd is allocated by calling MEDIA_IOC_REQUEST_ALLOC IOCTL on 
->> media fd.
->> 3. METADATA configuration is being applied on request fd using
->> VIDIOC_S_EXT_CTRLS IOCTL
->>    and the same request fd is added to buf structure structure before
->> calling VIDIOC_QBUF on video fd.
->> 4. The same request is queued through MEDIA_REQUEST_IOC_QUEUE IOCTL to
->> driver then, as a result
->>    to which METADATA control will be applied to buffer through S_CTRL.
->> 5. Once control is applied and request is completed,
->> MEDIA_REQUEST_IOC_REINIT IOCTL is called
->>    to re-initialize the request.
->>
->> We could achieve the same on capture plane as well by removing few
->> checks present currently
->> in v4l2 core which restrict the implementation to only output plane.
->>
->> We profiled below data with this implementation :
->> 1. Total time taken ( round trip ) for setting up control data on video 
->> driver
->>    with VIDIOC_S_EXT_CTRLS, QBUF and Queue Request: 737us
->> 2. Time taken for first QBUF on Output plane to reach driver with
->> REQUEST API enabled (One way): 723us
->> 3. Time taken for first QBUF on Output plane to reach driver without
->> REQUEST API (One way) : 250us
->> 4. Time taken by each IOCTL to complete ( round trip ) with REQUEST
->> API enabled :
->>     a. VIDIOC_S_EXT_CTRLS : 201us
->>     b. VIDIOC_QBUF : 92us
->>     c. MEDIA_REQUEST_IOC_QUEUE: 386us
->>
->> Kindly share your feedback/comments on the design/call sequence.
->> Also as we experimented and enabled the metadata on capture plane as
->> well, please comment if any issue in
->> allowing the metadata exchange on capture plane as well.
->>
->> Reference for client side implementation can be found at [1].
->>
->> Thanks,
->> Dikshita
->>
->> [1]
->> https://git.linaro.org/people/stanimir.varbanov/v4l2-encode.git/log/?h=dikshita/request-api
->>
->> Dikshita Agarwal (3):
->>   Register for media device
->>     - Initialize and register for media device
->>     - define venus_m2m_media_ops
->>     - Implement APIs to register/unregister media controller.
->>   Enable Request API for output buffers
->>     - Add dependency on MEDIA_CONTROLLER_REQUEST_API in Kconfig.
->>     - Initialize vb2 ops buf_out_validate and buf_request_complete.
->>     - Add support for custom Metadata control
->> V4L2_CID_MPEG_VIDEO_VENUS_METADATA
->>     - Implemeted/Integrated APIs for Request setup/complete.
->>   Enable Request API for Capture Buffers
->>
->>  drivers/media/common/videobuf2/videobuf2-v4l2.c |   4 +-
->>  drivers/media/platform/Kconfig                  |   2 +-
->>  drivers/media/platform/qcom/venus/core.h        |  36 ++++
->>  drivers/media/platform/qcom/venus/helpers.c     | 247 
->> +++++++++++++++++++++++-
->>  drivers/media/platform/qcom/venus/helpers.h     |  15 ++
->>  drivers/media/platform/qcom/venus/venc.c        |  63 +++++-
->>  drivers/media/platform/qcom/venus/venc_ctrls.c  |  61 +++++-
->>  drivers/media/v4l2-core/v4l2-ctrls.c            |  10 +
->>  drivers/media/v4l2-core/v4l2-mem2mem.c          |  17 +-
->>  include/media/v4l2-ctrls.h                      |   1 +
->>  include/media/venus-ctrls.h                     |  22 +++
->>  11 files changed, 465 insertions(+), 13 deletions(-)
->>  create mode 100644 include/media/venus-ctrls.h
-
+Markus
