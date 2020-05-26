@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A34208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1DD208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520079;
-	bh=6LNzY0Vl6iJUSjmKIy/aIBiCGtpRDHKWJNqshSO9a1A=;
+	s=default; t=1590520086;
+	bh=HGUPNIe73QIjL27PZuX7tKHL8j52LyP2cHr0uS7yZtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hrjxpcqg0mC6OGgTXMfqe+FEI8+iwrNGNuGj2gMuRrSItFg2PEmxi+HQDFfpQNuFF
-	 5IgWpIPcNgkPQev3P10Jo50dEm8tQ4PlsBwBlzzBGnu9UtdgvMx9M8eBFB/DVQnF7k
-	 sjYH9bVK8kPzf4TX9urgtxXTFsoFXcxys9dGnmGQ=
+	b=V8mQ5YKHIvxkN/RoMPMS40vAaVbyoWp/mSQl4AwVzfuVyUOzOBJHU8nWUzlVwhlfL
+	 /BbSIgFbxw2xSvczYrJxBEV1e0mcxxultQLdVJezTROulyiHg2Pnyi3h3AhV6v5d9d
+	 XS6GkUGg2VehBFwJOoUPx7u9Nxb64lBkYlbpOVmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391079AbgEZTH6 (ORCPT
+        id S2391757AbgEZTIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391741AbgEZTHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:54 -0400
+        id S2391102AbgEZTIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC817208DB;
-        Tue, 26 May 2020 19:07:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 829B220776;
+        Tue, 26 May 2020 19:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520073;
-        bh=6LNzY0Vl6iJUSjmKIy/aIBiCGtpRDHKWJNqshSO9a1A=;
+        s=default; t=1590520079;
+        bh=HGUPNIe73QIjL27PZuX7tKHL8j52LyP2cHr0uS7yZtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nlil3N4NzSf03kSlHblBIY1yyDOpXBbjJsmgGjfbmGqv+ClH9przMHXVHMTCawQOu
-         yHITPenVrDigGOwmhnmuVljtxicWSgWYCiYEKP+WdmKgnYlHknZSRrjWo/6qYXyKuf
-         SbyG0gjDinLKBrHd4FFnuIf8rs/ka1GgGFnlAacs=
+        b=W3WEI8DskkaH5DCuP78rGPIV9HGJHDdUgKNQhuE9sBRT0+HmHtbCIhZt9v6ccDBGK
+         5/OZtniYDiOfS7LxHsxWiR5nr7UWJOrVz8IPvGGDveaQ0E7MASEJNI1P7o0KxOpaxo
+         mcvbhJDp3yCnT/rjcJrsrN1XKa1kpdUixWmmoYAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/111] ALSA: hda - constify and cleanup static NodeID tables
-Date:   Tue, 26 May 2020 20:53:06 +0200
-Message-Id: <20200526183937.442950981@linuxfoundation.org>
+Subject: [PATCH 5.4 050/111] ALSA: hda: Manage concurrent reg access more properly
+Date:   Tue, 26 May 2020 20:53:08 +0200
+Message-Id: <20200526183937.615609255@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,351 +60,442 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit caf3c0437aaf2e63624c4aaf94c0dd38d1f897e3 ]
+[ Upstream commit 1a462be52f4505a2719631fb5aa7bfdbd37bfd8d ]
 
-Make hda_nid_t tables static const, as they are not intended to be
-modified by callees.
+In the commit 8e85def5723e ("ALSA: hda: enable regmap internal
+locking"), we re-enabled the regmap lock due to the reported
+regression that showed the possible concurrent accesses.  It was a
+temporary workaround, and there are still a few opened races even
+after the revert.  In this patch, we cover those still opened windows
+with a proper mutex lock and disable the regmap internal lock again.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/5150c94101c9534f4c8e987324f6912c16d459f6.1578043216.git.mirq-linux@rere.qmqm.pl
+First off, the patch introduces a new snd_hdac_device.regmap_lock
+mutex that is applied for each snd_hdac_regmap_*() call, including
+read, write and update helpers.  The mutex is applied carefully so
+that it won't block the self-power-up procedure in the helper
+function.  Also, this assures the protection for the accesses without
+regmap, too.
+
+The snd_hdac_regmap_update_raw() is refactored to use the standard
+regmap_update_bits_check() function instead of the open-code.  The
+non-regmap case is still open-coded but it's an easy part.  The all
+read and write operations are in the single mutex protection, so it's
+now race-free.
+
+In addition, a couple of new helper functions are added:
+snd_hdac_regmap_update_raw_once() and snd_hdac_regmap_sync().  Both
+are called from HD-audio legacy driver.  The former is to initialize
+the given verb bits but only once when it's not initialized yet.  Due
+to this condition, the function invokes regcache_cache_only(), and
+it's now performed inside the regmap_lock (formerly it was racy) too.
+The latter function is for simply invoking regcache_sync() inside the
+regmap_lock, which is called from the codec resume call path.
+Along with that, the HD-audio codec driver code is slightly modified /
+simplified to adapt those new functions.
+
+And finally, snd_hdac_regmap_read_raw(), *_write_raw(), etc are
+rewritten with the helper macro.  It's just for simplification because
+the code logic is identical among all those functions.
+
+Tested-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200109090104.26073-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_generic.c    |  4 +--
- sound/pci/hda/patch_analog.c   |  6 ++--
- sound/pci/hda/patch_ca0132.c   | 12 +++----
- sound/pci/hda/patch_conexant.c |  6 ++--
- sound/pci/hda/patch_realtek.c  | 62 +++++++++++++++++-----------------
- sound/pci/hda/patch_sigmatel.c |  4 +--
- sound/pci/hda/patch_via.c      |  4 +--
- 7 files changed, 49 insertions(+), 49 deletions(-)
+ include/sound/hda_regmap.h    |   3 +
+ include/sound/hdaudio.h       |   1 +
+ sound/hda/hdac_device.c       |   1 +
+ sound/hda/hdac_regmap.c       | 142 +++++++++++++++++++++++++---------
+ sound/pci/hda/hda_codec.c     |  30 +++----
+ sound/pci/hda/hda_generic.c   |   2 +-
+ sound/pci/hda/hda_local.h     |   2 +
+ sound/pci/hda/patch_hdmi.c    |   2 +-
+ sound/pci/hda/patch_realtek.c |   4 +-
+ sound/pci/hda/patch_via.c     |   2 +-
+ 10 files changed, 135 insertions(+), 54 deletions(-)
 
+diff --git a/include/sound/hda_regmap.h b/include/sound/hda_regmap.h
+index 5141f8ffbb12..4c1b9bebbd60 100644
+--- a/include/sound/hda_regmap.h
++++ b/include/sound/hda_regmap.h
+@@ -24,6 +24,9 @@ int snd_hdac_regmap_write_raw(struct hdac_device *codec, unsigned int reg,
+ 			      unsigned int val);
+ int snd_hdac_regmap_update_raw(struct hdac_device *codec, unsigned int reg,
+ 			       unsigned int mask, unsigned int val);
++int snd_hdac_regmap_update_raw_once(struct hdac_device *codec, unsigned int reg,
++				    unsigned int mask, unsigned int val);
++void snd_hdac_regmap_sync(struct hdac_device *codec);
+ 
+ /**
+  * snd_hdac_regmap_encode_verb - encode the verb to a pseudo register
+diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
+index fb9dce4c6928..44e57bcc4a57 100644
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -87,6 +87,7 @@ struct hdac_device {
+ 
+ 	/* regmap */
+ 	struct regmap *regmap;
++	struct mutex regmap_lock;
+ 	struct snd_array vendor_verbs;
+ 	bool lazy_cache:1;	/* don't wake up for writes */
+ 	bool caps_overwriting:1; /* caps overwrite being in process */
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index 9f3e37511408..c946fd8beebc 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -57,6 +57,7 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
+ 	codec->addr = addr;
+ 	codec->type = HDA_DEV_CORE;
+ 	mutex_init(&codec->widget_lock);
++	mutex_init(&codec->regmap_lock);
+ 	pm_runtime_set_active(&codec->dev);
+ 	pm_runtime_get_noresume(&codec->dev);
+ 	atomic_set(&codec->in_pm, 0);
+diff --git a/sound/hda/hdac_regmap.c b/sound/hda/hdac_regmap.c
+index 286361ecd640..2596a881186f 100644
+--- a/sound/hda/hdac_regmap.c
++++ b/sound/hda/hdac_regmap.c
+@@ -363,6 +363,7 @@ static const struct regmap_config hda_regmap_cfg = {
+ 	.reg_write = hda_reg_write,
+ 	.use_single_read = true,
+ 	.use_single_write = true,
++	.disable_locking = true,
+ };
+ 
+ /**
+@@ -425,12 +426,29 @@ EXPORT_SYMBOL_GPL(snd_hdac_regmap_add_vendor_verb);
+ static int reg_raw_write(struct hdac_device *codec, unsigned int reg,
+ 			 unsigned int val)
+ {
++	int err;
++
++	mutex_lock(&codec->regmap_lock);
+ 	if (!codec->regmap)
+-		return hda_reg_write(codec, reg, val);
++		err = hda_reg_write(codec, reg, val);
+ 	else
+-		return regmap_write(codec->regmap, reg, val);
++		err = regmap_write(codec->regmap, reg, val);
++	mutex_unlock(&codec->regmap_lock);
++	return err;
+ }
+ 
++/* a helper macro to call @func_call; retry with power-up if failed */
++#define CALL_RAW_FUNC(codec, func_call)				\
++	({							\
++		int _err = func_call;				\
++		if (_err == -EAGAIN) {				\
++			_err = snd_hdac_power_up_pm(codec);	\
++			if (_err >= 0)				\
++				_err = func_call;		\
++			snd_hdac_power_down_pm(codec);		\
++		}						\
++		_err;})
++
+ /**
+  * snd_hdac_regmap_write_raw - write a pseudo register with power mgmt
+  * @codec: the codec object
+@@ -442,42 +460,29 @@ static int reg_raw_write(struct hdac_device *codec, unsigned int reg,
+ int snd_hdac_regmap_write_raw(struct hdac_device *codec, unsigned int reg,
+ 			      unsigned int val)
+ {
+-	int err;
+-
+-	err = reg_raw_write(codec, reg, val);
+-	if (err == -EAGAIN) {
+-		err = snd_hdac_power_up_pm(codec);
+-		if (err >= 0)
+-			err = reg_raw_write(codec, reg, val);
+-		snd_hdac_power_down_pm(codec);
+-	}
+-	return err;
++	return CALL_RAW_FUNC(codec, reg_raw_write(codec, reg, val));
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_regmap_write_raw);
+ 
+ static int reg_raw_read(struct hdac_device *codec, unsigned int reg,
+ 			unsigned int *val, bool uncached)
+ {
++	int err;
++
++	mutex_lock(&codec->regmap_lock);
+ 	if (uncached || !codec->regmap)
+-		return hda_reg_read(codec, reg, val);
++		err = hda_reg_read(codec, reg, val);
+ 	else
+-		return regmap_read(codec->regmap, reg, val);
++		err = regmap_read(codec->regmap, reg, val);
++	mutex_unlock(&codec->regmap_lock);
++	return err;
+ }
+ 
+ static int __snd_hdac_regmap_read_raw(struct hdac_device *codec,
+ 				      unsigned int reg, unsigned int *val,
+ 				      bool uncached)
+ {
+-	int err;
+-
+-	err = reg_raw_read(codec, reg, val, uncached);
+-	if (err == -EAGAIN) {
+-		err = snd_hdac_power_up_pm(codec);
+-		if (err >= 0)
+-			err = reg_raw_read(codec, reg, val, uncached);
+-		snd_hdac_power_down_pm(codec);
+-	}
+-	return err;
++	return CALL_RAW_FUNC(codec, reg_raw_read(codec, reg, val, uncached));
+ }
+ 
+ /**
+@@ -504,6 +509,35 @@ int snd_hdac_regmap_read_raw_uncached(struct hdac_device *codec,
+ 	return __snd_hdac_regmap_read_raw(codec, reg, val, true);
+ }
+ 
++static int reg_raw_update(struct hdac_device *codec, unsigned int reg,
++			  unsigned int mask, unsigned int val)
++{
++	unsigned int orig;
++	bool change;
++	int err;
++
++	mutex_lock(&codec->regmap_lock);
++	if (codec->regmap) {
++		err = regmap_update_bits_check(codec->regmap, reg, mask, val,
++					       &change);
++		if (!err)
++			err = change ? 1 : 0;
++	} else {
++		err = hda_reg_read(codec, reg, &orig);
++		if (!err) {
++			val &= mask;
++			val |= orig & ~mask;
++			if (val != orig) {
++				err = hda_reg_write(codec, reg, val);
++				if (!err)
++					err = 1;
++			}
++		}
++	}
++	mutex_unlock(&codec->regmap_lock);
++	return err;
++}
++
+ /**
+  * snd_hdac_regmap_update_raw - update a pseudo register with power mgmt
+  * @codec: the codec object
+@@ -515,20 +549,58 @@ int snd_hdac_regmap_read_raw_uncached(struct hdac_device *codec,
+  */
+ int snd_hdac_regmap_update_raw(struct hdac_device *codec, unsigned int reg,
+ 			       unsigned int mask, unsigned int val)
++{
++	return CALL_RAW_FUNC(codec, reg_raw_update(codec, reg, mask, val));
++}
++EXPORT_SYMBOL_GPL(snd_hdac_regmap_update_raw);
++
++static int reg_raw_update_once(struct hdac_device *codec, unsigned int reg,
++			       unsigned int mask, unsigned int val)
+ {
+ 	unsigned int orig;
+ 	int err;
+ 
+-	val &= mask;
+-	err = snd_hdac_regmap_read_raw(codec, reg, &orig);
+-	if (err < 0)
+-		return err;
+-	val |= orig & ~mask;
+-	if (val == orig)
+-		return 0;
+-	err = snd_hdac_regmap_write_raw(codec, reg, val);
++	if (!codec->regmap)
++		return reg_raw_update(codec, reg, mask, val);
++
++	mutex_lock(&codec->regmap_lock);
++	regcache_cache_only(codec->regmap, true);
++	err = regmap_read(codec->regmap, reg, &orig);
++	regcache_cache_only(codec->regmap, false);
+ 	if (err < 0)
+-		return err;
+-	return 1;
++		err = regmap_update_bits(codec->regmap, reg, mask, val);
++	mutex_unlock(&codec->regmap_lock);
++	return err;
+ }
+-EXPORT_SYMBOL_GPL(snd_hdac_regmap_update_raw);
++
++/**
++ * snd_hdac_regmap_update_raw_once - initialize the register value only once
++ * @codec: the codec object
++ * @reg: pseudo register
++ * @mask: bit mask to update
++ * @val: value to update
++ *
++ * Performs the update of the register bits only once when the register
++ * hasn't been initialized yet.  Used in HD-audio legacy driver.
++ * Returns zero if successful or a negative error code
++ */
++int snd_hdac_regmap_update_raw_once(struct hdac_device *codec, unsigned int reg,
++				    unsigned int mask, unsigned int val)
++{
++	return CALL_RAW_FUNC(codec, reg_raw_update_once(codec, reg, mask, val));
++}
++EXPORT_SYMBOL_GPL(snd_hdac_regmap_update_raw_once);
++
++/**
++ * snd_hdac_regmap_sync - sync out the cached values for PM resume
++ * @codec: the codec object
++ */
++void snd_hdac_regmap_sync(struct hdac_device *codec)
++{
++	if (codec->regmap) {
++		mutex_lock(&codec->regmap_lock);
++		regcache_sync(codec->regmap);
++		mutex_unlock(&codec->regmap_lock);
++	}
++}
++EXPORT_SYMBOL_GPL(snd_hdac_regmap_sync);
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 6cb72336433a..07c03c32715a 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -1267,6 +1267,18 @@ int snd_hda_override_amp_caps(struct hda_codec *codec, hda_nid_t nid, int dir,
+ }
+ EXPORT_SYMBOL_GPL(snd_hda_override_amp_caps);
+ 
++static unsigned int encode_amp(struct hda_codec *codec, hda_nid_t nid,
++			       int ch, int dir, int idx)
++{
++	unsigned int cmd = snd_hdac_regmap_encode_amp(nid, ch, dir, idx);
++
++	/* enable fake mute if no h/w mute but min=mute */
++	if ((query_amp_caps(codec, nid, dir) &
++	     (AC_AMPCAP_MUTE | AC_AMPCAP_MIN_MUTE)) == AC_AMPCAP_MIN_MUTE)
++		cmd |= AC_AMP_FAKE_MUTE;
++	return cmd;
++}
++
+ /**
+  * snd_hda_codec_amp_update - update the AMP mono value
+  * @codec: HD-audio codec
+@@ -1282,12 +1294,8 @@ EXPORT_SYMBOL_GPL(snd_hda_override_amp_caps);
+ int snd_hda_codec_amp_update(struct hda_codec *codec, hda_nid_t nid,
+ 			     int ch, int dir, int idx, int mask, int val)
+ {
+-	unsigned int cmd = snd_hdac_regmap_encode_amp(nid, ch, dir, idx);
++	unsigned int cmd = encode_amp(codec, nid, ch, dir, idx);
+ 
+-	/* enable fake mute if no h/w mute but min=mute */
+-	if ((query_amp_caps(codec, nid, dir) &
+-	     (AC_AMPCAP_MUTE | AC_AMPCAP_MIN_MUTE)) == AC_AMPCAP_MIN_MUTE)
+-		cmd |= AC_AMP_FAKE_MUTE;
+ 	return snd_hdac_regmap_update_raw(&codec->core, cmd, mask, val);
+ }
+ EXPORT_SYMBOL_GPL(snd_hda_codec_amp_update);
+@@ -1335,16 +1343,11 @@ EXPORT_SYMBOL_GPL(snd_hda_codec_amp_stereo);
+ int snd_hda_codec_amp_init(struct hda_codec *codec, hda_nid_t nid, int ch,
+ 			   int dir, int idx, int mask, int val)
+ {
+-	int orig;
++	unsigned int cmd = encode_amp(codec, nid, ch, dir, idx);
+ 
+ 	if (!codec->core.regmap)
+ 		return -EINVAL;
+-	regcache_cache_only(codec->core.regmap, true);
+-	orig = snd_hda_codec_amp_read(codec, nid, ch, dir, idx);
+-	regcache_cache_only(codec->core.regmap, false);
+-	if (orig >= 0)
+-		return 0;
+-	return snd_hda_codec_amp_update(codec, nid, ch, dir, idx, mask, val);
++	return snd_hdac_regmap_update_raw_once(&codec->core, cmd, mask, val);
+ }
+ EXPORT_SYMBOL_GPL(snd_hda_codec_amp_init);
+ 
+@@ -2905,8 +2908,7 @@ static void hda_call_codec_resume(struct hda_codec *codec)
+ 	else {
+ 		if (codec->patch_ops.init)
+ 			codec->patch_ops.init(codec);
+-		if (codec->core.regmap)
+-			regcache_sync(codec->core.regmap);
++		snd_hda_regmap_sync(codec);
+ 	}
+ 
+ 	if (codec->jackpoll_interval)
 diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 10d502328b76..fc001c64ef20 100644
+index fc001c64ef20..6815f9dc8545 100644
 --- a/sound/pci/hda/hda_generic.c
 +++ b/sound/pci/hda/hda_generic.c
-@@ -4401,7 +4401,7 @@ EXPORT_SYMBOL_GPL(snd_hda_gen_fix_pin_power);
-  */
+@@ -6027,7 +6027,7 @@ int snd_hda_gen_init(struct hda_codec *codec)
+ 	/* call init functions of standard auto-mute helpers */
+ 	update_automute_all(codec);
  
- /* check each pin in the given array; returns true if any of them is plugged */
--static bool detect_jacks(struct hda_codec *codec, int num_pins, hda_nid_t *pins)
-+static bool detect_jacks(struct hda_codec *codec, int num_pins, const hda_nid_t *pins)
- {
- 	int i;
- 	bool present = false;
-@@ -4420,7 +4420,7 @@ static bool detect_jacks(struct hda_codec *codec, int num_pins, hda_nid_t *pins)
- }
+-	regcache_sync(codec->core.regmap);
++	snd_hda_regmap_sync(codec);
  
- /* standard HP/line-out auto-mute helper */
--static void do_automute(struct hda_codec *codec, int num_pins, hda_nid_t *pins,
-+static void do_automute(struct hda_codec *codec, int num_pins, const hda_nid_t *pins,
- 			int *paths, bool mute)
- {
- 	struct hda_gen_spec *spec = codec->spec;
-diff --git a/sound/pci/hda/patch_analog.c b/sound/pci/hda/patch_analog.c
-index bc9dd8e6fd86..c64895f99299 100644
---- a/sound/pci/hda/patch_analog.c
-+++ b/sound/pci/hda/patch_analog.c
-@@ -389,7 +389,7 @@ static int patch_ad1986a(struct hda_codec *codec)
- {
- 	int err;
- 	struct ad198x_spec *spec;
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0x1a, 0x03,
- 		0x1b, 0x03,
- 		0x1c, 0x04,
-@@ -519,9 +519,9 @@ static int ad1983_add_spdif_mux_ctl(struct hda_codec *codec)
+ 	if (spec->vmaster_mute.sw_kctl && spec->vmaster_mute.hook)
+ 		snd_hda_sync_vmaster_hook(&spec->vmaster_mute);
+diff --git a/sound/pci/hda/hda_local.h b/sound/pci/hda/hda_local.h
+index 3942e1b528d8..3dca65d79b02 100644
+--- a/sound/pci/hda/hda_local.h
++++ b/sound/pci/hda/hda_local.h
+@@ -138,6 +138,8 @@ int snd_hda_codec_reset(struct hda_codec *codec);
+ void snd_hda_codec_register(struct hda_codec *codec);
+ void snd_hda_codec_cleanup_for_unbind(struct hda_codec *codec);
  
- static int patch_ad1983(struct hda_codec *codec)
- {
-+	static const hda_nid_t conn_0c[] = { 0x08 };
-+	static const hda_nid_t conn_0d[] = { 0x09 };
- 	struct ad198x_spec *spec;
--	static hda_nid_t conn_0c[] = { 0x08 };
--	static hda_nid_t conn_0d[] = { 0x09 };
- 	int err;
++#define snd_hda_regmap_sync(codec)	snd_hdac_regmap_sync(&(codec)->core)
++
+ enum {
+ 	HDA_VMUTE_OFF,
+ 	HDA_VMUTE_ON,
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index d48263d1f6a2..d41c91468ab3 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2359,7 +2359,7 @@ static int generic_hdmi_resume(struct hda_codec *codec)
+ 	int pin_idx;
  
- 	err = alloc_ad_spec(codec);
-diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index adad3651889e..1e904dd15ab3 100644
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -7803,23 +7803,23 @@ static void sbz_region2_exit(struct hda_codec *codec)
+ 	codec->patch_ops.init(codec);
+-	regcache_sync(codec->core.regmap);
++	snd_hda_regmap_sync(codec);
  
- static void sbz_set_pin_ctl_default(struct hda_codec *codec)
- {
--	hda_nid_t pins[5] = {0x0B, 0x0C, 0x0E, 0x12, 0x13};
-+	static const hda_nid_t pins[] = {0x0B, 0x0C, 0x0E, 0x12, 0x13};
- 	unsigned int i;
- 
- 	snd_hda_codec_write(codec, 0x11, 0,
- 			AC_VERB_SET_PIN_WIDGET_CONTROL, 0x40);
- 
--	for (i = 0; i < 5; i++)
-+	for (i = 0; i < ARRAY_SIZE(pins); i++)
- 		snd_hda_codec_write(codec, pins[i], 0,
- 				AC_VERB_SET_PIN_WIDGET_CONTROL, 0x00);
- }
- 
- static void ca0132_clear_unsolicited(struct hda_codec *codec)
- {
--	hda_nid_t pins[7] = {0x0B, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13};
-+	static const hda_nid_t pins[] = {0x0B, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13};
- 	unsigned int i;
- 
--	for (i = 0; i < 7; i++) {
-+	for (i = 0; i < ARRAY_SIZE(pins); i++) {
- 		snd_hda_codec_write(codec, pins[i], 0,
- 				AC_VERB_SET_UNSOLICITED_ENABLE, 0x00);
- 	}
-@@ -7843,10 +7843,10 @@ static void sbz_gpio_shutdown_commands(struct hda_codec *codec, int dir,
- 
- static void zxr_dbpro_power_state_shutdown(struct hda_codec *codec)
- {
--	hda_nid_t pins[7] = {0x05, 0x0c, 0x09, 0x0e, 0x08, 0x11, 0x01};
-+	static const hda_nid_t pins[] = {0x05, 0x0c, 0x09, 0x0e, 0x08, 0x11, 0x01};
- 	unsigned int i;
- 
--	for (i = 0; i < 7; i++)
-+	for (i = 0; i < ARRAY_SIZE(pins); i++)
- 		snd_hda_codec_write(codec, pins[i], 0,
- 				AC_VERB_SET_POWER_STATE, 0x03);
- }
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index 1e20e85e9b46..396b5503038a 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -116,7 +116,7 @@ static void cx_auto_parse_eapd(struct hda_codec *codec)
- }
- 
- static void cx_auto_turn_eapd(struct hda_codec *codec, int num_pins,
--			      hda_nid_t *pins, bool on)
-+			      const hda_nid_t *pins, bool on)
- {
- 	int i;
- 	for (i = 0; i < num_pins; i++) {
-@@ -960,10 +960,10 @@ static const struct hda_model_fixup cxt5066_fixup_models[] = {
- static void add_cx5051_fake_mutes(struct hda_codec *codec)
- {
- 	struct conexant_spec *spec = codec->spec;
--	static hda_nid_t out_nids[] = {
-+	static const hda_nid_t out_nids[] = {
- 		0x10, 0x11, 0
- 	};
--	hda_nid_t *p;
-+	const hda_nid_t *p;
- 
- 	for (p = out_nids; *p; p++)
- 		snd_hda_override_amp_caps(codec, *p, HDA_OUTPUT,
+ 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
+ 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 004d2f638cf2..151099b8c394 100644
+index a0e7d711cbb5..499c8150ebb8 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -465,10 +465,10 @@ static void set_eapd(struct hda_codec *codec, hda_nid_t nid, int on)
- static void alc_auto_setup_eapd(struct hda_codec *codec, bool on)
- {
- 	/* We currently only handle front, HP */
--	static hda_nid_t pins[] = {
-+	static const hda_nid_t pins[] = {
- 		0x0f, 0x10, 0x14, 0x15, 0x17, 0
- 	};
--	hda_nid_t *p;
-+	const hda_nid_t *p;
- 	for (p = pins; *p; p++)
- 		set_eapd(codec, *p, on);
+@@ -908,7 +908,7 @@ static int alc_resume(struct hda_codec *codec)
+ 	if (!spec->no_depop_delay)
+ 		msleep(150); /* to avoid pop noise */
+ 	codec->patch_ops.init(codec);
+-	regcache_sync(codec->core.regmap);
++	snd_hda_regmap_sync(codec);
+ 	hda_call_check_power_status(codec, 0x01);
+ 	return 0;
  }
-@@ -1939,19 +1939,19 @@ static void alc889_fixup_dac_route(struct hda_codec *codec,
- {
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		/* fake the connections during parsing the tree */
--		hda_nid_t conn1[2] = { 0x0c, 0x0d };
--		hda_nid_t conn2[2] = { 0x0e, 0x0f };
--		snd_hda_override_conn_list(codec, 0x14, 2, conn1);
--		snd_hda_override_conn_list(codec, 0x15, 2, conn1);
--		snd_hda_override_conn_list(codec, 0x18, 2, conn2);
--		snd_hda_override_conn_list(codec, 0x1a, 2, conn2);
-+		static const hda_nid_t conn1[] = { 0x0c, 0x0d };
-+		static const hda_nid_t conn2[] = { 0x0e, 0x0f };
-+		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
-+		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn1), conn1);
-+		snd_hda_override_conn_list(codec, 0x18, ARRAY_SIZE(conn2), conn2);
-+		snd_hda_override_conn_list(codec, 0x1a, ARRAY_SIZE(conn2), conn2);
- 	} else if (action == HDA_FIXUP_ACT_PROBE) {
- 		/* restore the connections */
--		hda_nid_t conn[5] = { 0x0c, 0x0d, 0x0e, 0x0f, 0x26 };
--		snd_hda_override_conn_list(codec, 0x14, 5, conn);
--		snd_hda_override_conn_list(codec, 0x15, 5, conn);
--		snd_hda_override_conn_list(codec, 0x18, 5, conn);
--		snd_hda_override_conn_list(codec, 0x1a, 5, conn);
-+		static const hda_nid_t conn[] = { 0x0c, 0x0d, 0x0e, 0x0f, 0x26 };
-+		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn), conn);
-+		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn), conn);
-+		snd_hda_override_conn_list(codec, 0x18, ARRAY_SIZE(conn), conn);
-+		snd_hda_override_conn_list(codec, 0x1a, ARRAY_SIZE(conn), conn);
+@@ -3756,7 +3756,7 @@ static int alc269_resume(struct hda_codec *codec)
+ 		msleep(200);
  	}
- }
  
-@@ -1959,8 +1959,8 @@ static void alc889_fixup_dac_route(struct hda_codec *codec,
- static void alc889_fixup_mbp_vref(struct hda_codec *codec,
- 				  const struct hda_fixup *fix, int action)
- {
-+	static const hda_nid_t nids[] = { 0x14, 0x15, 0x19 };
- 	struct alc_spec *spec = codec->spec;
--	static hda_nid_t nids[3] = { 0x14, 0x15, 0x19 };
- 	int i;
+-	regcache_sync(codec->core.regmap);
++	snd_hda_regmap_sync(codec);
+ 	hda_call_check_power_status(codec, 0x01);
  
- 	if (action != HDA_FIXUP_ACT_INIT)
-@@ -1996,7 +1996,7 @@ static void alc889_fixup_mac_pins(struct hda_codec *codec,
- static void alc889_fixup_imac91_vref(struct hda_codec *codec,
- 				     const struct hda_fixup *fix, int action)
- {
--	static hda_nid_t nids[2] = { 0x18, 0x1a };
-+	static const hda_nid_t nids[] = { 0x18, 0x1a };
- 
- 	if (action == HDA_FIXUP_ACT_INIT)
- 		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
-@@ -2006,7 +2006,7 @@ static void alc889_fixup_imac91_vref(struct hda_codec *codec,
- static void alc889_fixup_mba11_vref(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
--	static hda_nid_t nids[1] = { 0x18 };
-+	static const hda_nid_t nids[] = { 0x18 };
- 
- 	if (action == HDA_FIXUP_ACT_INIT)
- 		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
-@@ -2016,7 +2016,7 @@ static void alc889_fixup_mba11_vref(struct hda_codec *codec,
- static void alc889_fixup_mba21_vref(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
--	static hda_nid_t nids[2] = { 0x18, 0x19 };
-+	static const hda_nid_t nids[] = { 0x18, 0x19 };
- 
- 	if (action == HDA_FIXUP_ACT_INIT)
- 		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
-@@ -2098,7 +2098,7 @@ static void alc1220_fixup_clevo_p950(struct hda_codec *codec,
- 				     const struct hda_fixup *fix,
- 				     int action)
- {
--	hda_nid_t conn1[1] = { 0x0c };
-+	static const hda_nid_t conn1[] = { 0x0c };
- 
- 	if (action != HDA_FIXUP_ACT_PRE_PROBE)
- 		return;
-@@ -2107,8 +2107,8 @@ static void alc1220_fixup_clevo_p950(struct hda_codec *codec,
- 	/* We therefore want to make sure 0x14 (front headphone) and
- 	 * 0x1b (speakers) use the stereo DAC 0x02
- 	 */
--	snd_hda_override_conn_list(codec, 0x14, 1, conn1);
--	snd_hda_override_conn_list(codec, 0x1b, 1, conn1);
-+	snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
-+	snd_hda_override_conn_list(codec, 0x1b, ARRAY_SIZE(conn1), conn1);
- }
- 
- static void alc_fixup_headset_mode_no_hp_mic(struct hda_codec *codec,
-@@ -5371,7 +5371,7 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
- 	 * the speaker output becomes too low by some reason on Thinkpads with
- 	 * ALC298 codec
- 	 */
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
- 		0
- 	};
-@@ -5632,9 +5632,9 @@ static void alc290_fixup_mono_speakers(struct hda_codec *codec,
- 		/* DAC node 0x03 is giving mono output. We therefore want to
- 		   make sure 0x14 (front speaker) and 0x15 (headphones) use the
- 		   stereo DAC, while leaving 0x17 (bass speaker) for node 0x03. */
--		hda_nid_t conn1[2] = { 0x0c };
--		snd_hda_override_conn_list(codec, 0x14, 1, conn1);
--		snd_hda_override_conn_list(codec, 0x15, 1, conn1);
-+		static const hda_nid_t conn1[] = { 0x0c };
-+		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
-+		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn1), conn1);
- 	}
- }
- 
-@@ -5649,8 +5649,8 @@ static void alc298_fixup_speaker_volume(struct hda_codec *codec,
- 		   Pin Complex), since Node 0x02 has Amp-out caps, we can adjust
- 		   speaker's volume now. */
- 
--		hda_nid_t conn1[1] = { 0x0c };
--		snd_hda_override_conn_list(codec, 0x17, 1, conn1);
-+		static const hda_nid_t conn1[] = { 0x0c };
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn1), conn1);
- 	}
- }
- 
-@@ -5659,8 +5659,8 @@ static void alc295_fixup_disable_dac3(struct hda_codec *codec,
- 				      const struct hda_fixup *fix, int action)
- {
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		hda_nid_t conn[2] = { 0x02, 0x03 };
--		snd_hda_override_conn_list(codec, 0x17, 2, conn);
-+		static const hda_nid_t conn[] = { 0x02, 0x03 };
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
- 	}
- }
- 
-@@ -5669,8 +5669,8 @@ static void alc285_fixup_speaker2_to_dac1(struct hda_codec *codec,
- 					  const struct hda_fixup *fix, int action)
- {
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		hda_nid_t conn[1] = { 0x02 };
--		snd_hda_override_conn_list(codec, 0x17, 1, conn);
-+		static const hda_nid_t conn[] = { 0x02 };
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
- 	}
- }
- 
-@@ -5757,7 +5757,7 @@ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
- 	struct alc_spec *spec = codec->spec;
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0x21, 0x03, 0x1b, 0x03, 0x16, 0x02,
- 		0
- 	};
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index 894f3f509e76..4b9300babc7d 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -795,7 +795,7 @@ static int find_mute_led_cfg(struct hda_codec *codec, int default_polarity)
- static bool has_builtin_speaker(struct hda_codec *codec)
- {
- 	struct sigmatel_spec *spec = codec->spec;
--	hda_nid_t *nid_pin;
-+	const hda_nid_t *nid_pin;
- 	int nids, i;
- 
- 	if (spec->gen.autocfg.line_out_type == AUTO_PIN_SPEAKER_OUT) {
-@@ -2182,7 +2182,7 @@ static void hp_envy_ts_fixup_dac_bind(struct hda_codec *codec,
- 					    int action)
- {
- 	struct sigmatel_spec *spec = codec->spec;
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0xd, 0x13,
- 		0
- 	};
+ 	/* on some machine, the BIOS will clear the codec gpio data when enter
 diff --git a/sound/pci/hda/patch_via.c b/sound/pci/hda/patch_via.c
-index 29dcdb8b36db..b40d01e01832 100644
+index b40d01e01832..7ef8f3105cdb 100644
 --- a/sound/pci/hda/patch_via.c
 +++ b/sound/pci/hda/patch_via.c
-@@ -1038,8 +1038,8 @@ static const struct snd_pci_quirk vt2002p_fixups[] = {
-  */
- static void fix_vt1802_connections(struct hda_codec *codec)
- {
--	static hda_nid_t conn_24[] = { 0x14, 0x1c };
--	static hda_nid_t conn_33[] = { 0x1c };
-+	static const hda_nid_t conn_24[] = { 0x14, 0x1c };
-+	static const hda_nid_t conn_33[] = { 0x1c };
- 
- 	snd_hda_override_conn_list(codec, 0x24, ARRAY_SIZE(conn_24), conn_24);
- 	snd_hda_override_conn_list(codec, 0x33, ARRAY_SIZE(conn_33), conn_33);
+@@ -396,7 +396,7 @@ static int via_resume(struct hda_codec *codec)
+ 	/* some delay here to make jack detection working (bko#98921) */
+ 	msleep(10);
+ 	codec->patch_ops.init(codec);
+-	regcache_sync(codec->core.regmap);
++	snd_hda_regmap_sync(codec);
+ 	return 0;
+ }
+ #endif
 -- 
 2.25.1
 
