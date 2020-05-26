@@ -2,52 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEAC220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CC020776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520133;
-	bh=XFGAr/yVdP6a32+0QjjFLnsP3iMu2ZOO/HMkOvz2H2c=;
+	s=default; t=1590520137;
+	bh=sEoCjZlqKfa6vt6v2CMQeBLb5LvhqTwVsJNGIM7aBLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HifWck3h/L5JLID+j8IFQBv46mLMkctS9fU7/eBpo4BvL4WbadkDOE+MtoN1cNMjV
-	 mQAOBaWYS50i+FhLuqed5jLPcaP8zWZFquDFHpVM0iWpTw+frfXT6XeC+4r/uBFPLX
-	 darxZE9LnfVz/5290q+FDrijUROxobitH+kULu0w=
+	b=Z3wdITiq8FeOV18wJu5jzIlNGfCgv5KCEmmFW2sZjWgNPREHY4wA825PAuX3dmzZ9
+	 xPjqc7WWK4KE7LQYHhLuFfYfwroko1ljHX9zbv23XsildA5lrRbWQOZupmO4R84xRl
+	 98r8gNb70zgylGJ3AaEVq4iPKOT6w3OAGnpVac04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403928AbgEZTIx (ORCPT
+        id S2391524AbgEZTI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:08:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403914AbgEZTIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:08:48 -0400
+        id S2388975AbgEZTIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADFB320873;
-        Tue, 26 May 2020 19:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B6120873;
+        Tue, 26 May 2020 19:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520128;
-        bh=XFGAr/yVdP6a32+0QjjFLnsP3iMu2ZOO/HMkOvz2H2c=;
+        s=default; t=1590520130;
+        bh=sEoCjZlqKfa6vt6v2CMQeBLb5LvhqTwVsJNGIM7aBLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a+HDDuknKw8kWUBfArTlNFiA3/aNLWRsqGiuQGdQbqgz0EaZg76ECSfwSO25xFS4+
-         j4XPgsKsmU1+s4mbiOEJli4DBP7Ay9lDZxHo5DOUXLgApGU8loT9VBXyB1e+6VB3Pg
-         /tMltBfhuq8cJgAw6OpsE5JPB6u072vVk1/8S9Fg=
+        b=KGFtiPuTbfOuBTTuHBWYOSe93b9A40cJkSqctmCMLOZ9fcbDZSKpPOZdFXbNvtKka
+         bmsqKsuSyzMXG2MnUMUBr1yaQkst59+OsMDGK6cgyeY1jtsgID/vjK/EVMsABK5Jdm
+         GCUcr5CV0vV5nPuwGZluW1fSZ7kM/PdXe7ueCOwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/111] HID: i2c-hid: reset Synaptics SYNA2393 on resume
-Date:   Tue, 26 May 2020 20:52:50 +0200
-Message-Id: <20200526183935.860166811@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 5.4 068/111] apparmor: Fix aa_label refcnt leak in policy_update
+Date:   Tue, 26 May 2020 20:53:26 +0200
+Message-Id: <20200526183939.294250474@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,55 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 538f67407e2c0e5ed2a46e7d7ffa52f2e30c7ef8 ]
+commit c6b39f070722ea9963ffe756bfe94e89218c5e63 upstream.
 
-On the Dell XPS 9570, the Synaptics SYNA2393 touchpad generates spurious
-interrupts after resuming from suspend until it receives some input or
-is reset. Add it to the quirk I2C_HID_QUIRK_RESET_ON_RESUME so that it
-is reset when resuming from suspend.
+policy_update() invokes begin_current_label_crit_section(), which
+returns a reference of the updated aa_label object to "label" with
+increased refcount.
 
-More information about the bug can be found in this mailing list
-discussion: https://www.spinics.net/lists/linux-input/msg59530.html
+When policy_update() returns, "label" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-Signed-off-by: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The reference counting issue happens in one exception handling path of
+policy_update(). When aa_may_manage_policy() returns not NULL, the
+refcnt increased by begin_current_label_crit_section() is not decreased,
+causing a refcnt leak.
+
+Fix this issue by jumping to "end_section" label when
+aa_may_manage_policy() returns not NULL.
+
+Fixes: 5ac8c355ae00 ("apparmor: allow introspecting the loaded policy pre internal transform")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-ids.h              | 3 +++
- drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
- 2 files changed, 5 insertions(+)
+ security/apparmor/apparmorfs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 48eba9c4f39a..3341133df3a8 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1089,6 +1089,9 @@
- #define USB_DEVICE_ID_SYMBOL_SCANNER_2	0x1300
- #define USB_DEVICE_ID_SYMBOL_SCANNER_3	0x1200
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -424,7 +424,7 @@ static ssize_t policy_update(u32 mask, c
+ 	 */
+ 	error = aa_may_manage_policy(label, ns, mask);
+ 	if (error)
+-		return error;
++		goto end_section;
  
-+#define I2C_VENDOR_ID_SYNAPTICS     0x06cb
-+#define I2C_PRODUCT_ID_SYNAPTICS_SYNA2393   0x7a13
-+
- #define USB_VENDOR_ID_SYNAPTICS		0x06cb
- #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001
- #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 479934f7d241..b525b2715e07 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -179,6 +179,8 @@ static const struct i2c_hid_quirks {
- 		 I2C_HID_QUIRK_BOGUS_IRQ },
- 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
- 		 I2C_HID_QUIRK_RESET_ON_RESUME },
-+	{ I2C_VENDOR_ID_SYNAPTICS, I2C_PRODUCT_ID_SYNAPTICS_SYNA2393,
-+		 I2C_HID_QUIRK_RESET_ON_RESUME },
- 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
- 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
- 	{ 0, 0 }
--- 
-2.25.1
-
+ 	data = aa_simple_write_to_buffer(buf, size, size, pos);
+ 	error = PTR_ERR(data);
+@@ -432,6 +432,7 @@ static ssize_t policy_update(u32 mask, c
+ 		error = aa_replace_profiles(ns, label, mask, data);
+ 		aa_put_loaddata(data);
+ 	}
++end_section:
+ 	end_current_label_crit_section(label);
+ 
+ 	return error;
 
 
