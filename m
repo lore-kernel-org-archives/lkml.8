@@ -2,97 +2,101 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46545208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:22:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="dDVgagmL"
+	by mail.kernel.org (Postfix) with ESMTP id 68404207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388625AbgEZJWt (ORCPT
+        id S2388658AbgEZJWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:22:49 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:34282 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgEZJWt (ORCPT
+        Tue, 26 May 2020 05:22:54 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52848 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388425AbgEZJWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:22:49 -0400
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 99C1820CF1;
-        Tue, 26 May 2020 09:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590484968; bh=1A7r30/ddO3YA2iwUg/iQ9hDTh5suKpgGWHi+jEZjWE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDVgagmLdmWB27rdrU+DYce+G6UbOoqtem4yEuPVs8vU4ceVlKwyyGBaVLXGYDyC1
-         T9b/7rFsjCK1gZQhRcgRepMcCB5cwiUh0nDXz82gY97MszRvpGCAq4uZ+yq4avhcZq
-         YH0xzxtARQE6FsVV9Bo4ldiIgzQAU6DfaRGH0nY7MSWPuhA0ZIYcK2S+hot8x2sRx/
-         dBzmTHttwwKwv+L6Y/IvAtLZwxdcjndcPd4UWKt60T2DbpfzgaYO2Ew+9Et7v8wbmj
-         aQTf8eLrVMwQosJguKomKZXCfcogVbktToSasgvndzNxr5PK2jdFAA0vx0LpBn+9+y
-         Gyjl1FHPL/jOA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v11 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
-Date:   Tue, 26 May 2020 17:21:15 +0800
-Message-Id: <20200526092130.145550-5-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200526092130.145550-1-jiaxun.yang@flygoat.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200526092130.145550-1-jiaxun.yang@flygoat.com>
+        Tue, 26 May 2020 05:22:53 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6BB7C1C02C5; Tue, 26 May 2020 11:22:51 +0200 (CEST)
+Date:   Tue, 26 May 2020 11:22:50 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: leds: fix macro names for pca955x
+Message-ID: <20200526092250.GB12838@amd>
+References: <20200526092052.24172-1-f.suligoi@asem.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Disposition: inline
+In-Reply-To: <20200526092052.24172-1-f.suligoi@asem.it>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCI Host controller node for Loongson64 with RS780E PCH dts.
-Note that PCI interrupts are probed via legacy way, as different
-machine have different interrupt arrangement, we can't cover all
-of them in dt.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-index 8687c4f7370a..d0d5d60a8697 100644
---- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-@@ -9,6 +9,18 @@ bus@10000000 {
- 				0 0x40000000 0 0x40000000 0 0x40000000
- 				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space */>;
- 
-+		pci@1a000000 {
-+			compatible = "loongson,rs780e-pci";
-+			device_type = "pci";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			reg = <0 0x1a000000 0 0x02000000>;
-+
-+			ranges = <0x01000000 0 0x00004000 0 0x18004000 0 0x00004000>,
-+				 <0x02000000 0 0x40000000 0 0x40000000 0 0x40000000>;
-+		};
-+
- 		isa {
- 			compatible = "isa";
- 			#address-cells = <2>;
--- 
-2.27.0.rc0
+On Tue 2020-05-26 11:20:52, Flavio Suligoi wrote:
+> The documentation reports the wrong macro names
+> related to the pca9532 instead of the pca955x
+>=20
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 
+Nothing obviously wrong, but why did you send it twice within half an
+hour?
+								Pavel
+
+>  Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Do=
+cumentation/devicetree/bindings/leds/leds-pca955x.txt
+> index 7984efb767b4..7a5830f8d5ab 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+> @@ -26,9 +26,9 @@ LED sub-node properties:
+>  		from 0 to 15 for the pca9552
+>  		from 0 to  3 for the pca9553
+>  - type: (optional) either
+> -	PCA9532_TYPE_NONE
+> -	PCA9532_TYPE_LED
+> -	PCA9532_TYPE_GPIO
+> +	PCA955X_TYPE_NONE
+> +	PCA955X_TYPE_LED
+> +	PCA955X_TYPE_GPIO
+>  	see dt-bindings/leds/leds-pca955x.h (default to LED)
+>  - label : (optional)
+>  	see Documentation/devicetree/bindings/leds/common.txt
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7M3+oACgkQMOfwapXb+vL1iQCgnMFgoyAI93TGZbBPfLRftwVb
+ZD8An2uhQlu0n1Bcfem0zYVqj+KELHWc
+=BxPE
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
