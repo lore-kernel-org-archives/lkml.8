@@ -2,100 +2,81 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB044C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE245C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8088620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A7d9iE7b"
+	by mail.kernel.org (Postfix) with ESMTP id 87534208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbgEZH6Z (ORCPT
+        id S1731721AbgEZH6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgEZH6X (ORCPT
+        Tue, 26 May 2020 03:58:33 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43081 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgEZH6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:58:23 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C09C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:58:23 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v19so2227989wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=dJ7nNUH8waduGIyWxEV016jy3YBm4py1dEFZ4+moc0s=;
-        b=A7d9iE7b9Upf36zlLWHFUh7N1P1CY4mQqszhIpb9d5Sl8zevcB1DdmcwQavIqWQbmw
-         pX+23S3Y1u3fl+wZ932ldGkO8w6Lrtdl76NH7X0zFC1xB8ALdR3JhznT+pd07/KSSnsf
-         hCNw+RSP5VLmcXqsozFu77d+Obd993ZdQ9KthTUkdwwx5xKTcb+n12El7J8g2uHUZw7s
-         T/kxf3Nm+HWWBNgPaItR7FgJhTv8WyEaKfpONmcc1Py0NV6pLjU7LcHxvNrlRdSJr7im
-         ACQBHGegYS3SNrFf59kTSNyyP10AXgMMR2wvqDAM4Wh2QHgxSgJIYVk/PAfvvrItr5on
-         ZwJw==
+        Tue, 26 May 2020 03:58:32 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i22so17887254oik.10;
+        Tue, 26 May 2020 00:58:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dJ7nNUH8waduGIyWxEV016jy3YBm4py1dEFZ4+moc0s=;
-        b=CCOOB4+hoJwBQRbOrs78Ffr3vEr6S3z5YCTs9mjdF8uJCH7Jqg+Xe5qq+OhIPJptZt
-         1ytRT7XpYO0h/VZFZ8/MbexThCHtEv2fEMC3PnBB4Ic+2iOeOdVIx7d6prXDOUjBTX9o
-         5IJIiPl5zxyjpE6/bGs6R+6qSO+k3CtKiZxI8NwV8rQwz4AanbwWGO9KgNacEqPDQpt+
-         iMCZDSnNBtLIQyYF8yO2FC66av1xfk2089C9TWDLV/7SejjcWcIon9mnHP3bocYtGCgk
-         +AxZpbU12H5/qg46CJJho77KBwoNgrLbyAZf9RziOx3DpDSz9Rd8bt8waH545BBjqeA8
-         bN2A==
-X-Gm-Message-State: AOAM531lbVjo3jOEbenjtUNH4SnDBCS3uedghQB5+SvAjP7iENq45LiE
-        t4ze/qLPlkcRhZgob6sMKkizv0trLTw=
-X-Google-Smtp-Source: ABdhPJy8TQ7mKu5n0oMECEFkFjYc1EBZIzKzt2vRKCSKp3QhxeDkjqVyOGQXnuS+OyFgvG/1kqiDJw==
-X-Received: by 2002:a1c:a1c5:: with SMTP id k188mr176648wme.41.1590479902146;
-        Tue, 26 May 2020 00:58:22 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id j4sm18893746wrx.24.2020.05.26.00.58.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:58:21 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:58:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mfd: stmfx: fix stmfx_irq_init error path
-Message-ID: <20200526075819.GF3628@dell>
-References: <20200422090833.9743-1-amelie.delaunay@st.com>
- <20200422090833.9743-3-amelie.delaunay@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fFg5VInugckNYRSPB/5nIRNnLiledbeloAVGrfPRVwo=;
+        b=hSpwME0Jvgp74EvN7EW0C8X9UQZRdAFT7kg9kl4M96AEOfkbXqkXhL7GAHoP69kQ4j
+         2Fd0GTcSAQzM0RRWMlDLi1QPBWWsQ+8SMZ9h++0U02tmf3kkkrbQzcw58COvCfVlZBij
+         XkH5T9cbo8mzCzL1RMagL5ink7VQbYL5mbB9RdHe3sZU0q8nJX2aJpOT+66D+avRmey+
+         RHy6dinofB6hTIZimaKt+ECAaT0qtBVJG7v2UfwFQKC54wsO0YMT8iO2FIn8N9dd9eQM
+         QuYgqNAnCA03NmWzV0+y7RnKWt26IgeL6k3oMV8qJw3y4FszIVTOvlSaIt7UKRoMvdJ1
+         2BvA==
+X-Gm-Message-State: AOAM5323OTmrwGIkjTsfi2lYXE2zlI+ZtTKLKXivrpLMcqOGs8ItRumK
+        waQ86cH0IUGVj/SRgrv3lz7BrpO4B5/jUfv7iJE=
+X-Google-Smtp-Source: ABdhPJxREYi5U3JmV9gwphb6VMEMF7Qq5pOiGcCkf+XNeuGntebapZGhN/8WTuy5s/pp0mLmYXoBpoVLF0Z7FGrn0a4=
+X-Received: by 2002:a05:6808:1:: with SMTP id u1mr13638964oic.54.1590479911282;
+ Tue, 26 May 2020 00:58:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200422090833.9743-3-amelie.delaunay@st.com>
+References: <1590420129-7531-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590420129-7531-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590420129-7531-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 26 May 2020 09:58:20 +0200
+Message-ID: <CAMuHMdXq3PseC-KxWgYenCr+fJ7CkseJeVsZ0vnCxPqhT7xaaA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] ARM: dts: r8a7742-iwg21d-q7: Enable Ethernet avb
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Amelie Delaunay wrote:
+On Mon, May 25, 2020 at 5:23 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Enable ethernet avb on iWave RZ/G1H carrier board.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-> In case the interrupt signal can't be configured, IRQ domain needs to be
-> removed.
-> 
-> Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  drivers/mfd/stmfx.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-Applied, thanks.
+Gr{oetje,eeting}s,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
