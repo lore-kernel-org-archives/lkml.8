@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05BDC20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC542086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519830;
-	bh=FVRhLzacGoEhzd4mO/2FsiTrK9j4U0vluiHtXiSMJ1E=;
+	s=default; t=1590519832;
+	bh=9wooUAzaTno/kY/mbONJsFckuZKxSdzMioT47pJvhqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHiK3cS2T7OF7O8kBLTFShq4ewscegXXIz9oaowTJsCXblcp2bt1hUeFdtqijd/Xv
-	 Qxxdkmg7phJ9TxOE68sN2dtfSpkPspqclBuEmS9P13dSTa6nuz1RQ535wuUeSSZ8A2
-	 KUfbOPf2XwK8BQyYEQpcSaZRe3M/cUp2UTlma16s=
+	b=GjtGDkEyJaan0E7XISNuydTMmXHFlbhxFhr204ALvgCGXWWNQPEdNxXi0jQ9yxtIu
+	 eMG5S+SBYuRUdq+5SaYAZo2L41Q5RCknPQ4xZnx9bNm2LRG+WmML+qEM8OkAlXNOgl
+	 RjO8NLtAT6haAs6hvxrELaFWKormZt2vY4bA0DnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391278AbgEZTDs (ORCPT
+        id S2391287AbgEZTDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59122 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391252AbgEZTDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:46 -0400
+        id S2391272AbgEZTDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC7B420849;
-        Tue, 26 May 2020 19:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 642B62086A;
+        Tue, 26 May 2020 19:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519825;
-        bh=FVRhLzacGoEhzd4mO/2FsiTrK9j4U0vluiHtXiSMJ1E=;
+        s=default; t=1590519827;
+        bh=9wooUAzaTno/kY/mbONJsFckuZKxSdzMioT47pJvhqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfPa+2Jb29EczjX9LfKwxVp0WGgq8Mtz5cGHCTnCQxMOZBQvdhZHqNKW6tOGmE5up
-         iKf4z68bWkc6gprw6XLEX2RWf5PVtizzD/MnY96PDr9fHnoOj+rDjHzEmDUfbCSGd1
-         n3iavfpTQxAkVsBSsk8Ogqg3PswLgFobSczNe5o8=
+        b=ee3hujN5iHQ08gIkBgmrppgu131kzITYeVK9uLaDB5EZcszcQMRnQAu4ClqYSBlis
+         rSZPbVlaEy2ktwIbLrCuILWLrRT7nKKrJz2TDdznL/grN5NkKl1ZIRe9i4Kg+A5iTu
+         OEnS5G1wKTKrJR83Vu8oEEDFqb5nJKt4uhQCVSAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Petrov <mmrmaximuzz@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/81] stmmac: fix pointer check after utilization in stmmac_interrupt
-Date:   Tue, 26 May 2020 20:53:06 +0200
-Message-Id: <20200526183930.897646125@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 32/81] USB: core: Fix misleading driver bug report
+Date:   Tue, 26 May 2020 20:53:07 +0200
+Message-Id: <20200526183930.993182715@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,49 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Petrov <mmrmaximuzz@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit f42234ffd531ca6b13d9da02faa60b72eccf8334 ]
+[ Upstream commit ac854131d9844f79e2fdcef67a7707227538d78a ]
 
-The paranoidal pointer check in IRQ handler looks very strange - it
-really protects us only against bogus drivers which request IRQ line
-with null pointer dev_id. However, the code fragment is incorrect
-because the dev pointer is used before the actual check which leads
-to undefined behavior. Remove the check to avoid confusing people
-with incorrect code.
+The syzbot fuzzer found a race between URB submission to endpoint 0
+and device reset.  Namely, during the reset we call usb_ep0_reinit()
+because the characteristics of ep0 may have changed (if the reset
+follows a firmware update, for example).  While usb_ep0_reinit() is
+running there is a brief period during which the pointers stored in
+udev->ep_in[0] and udev->ep_out[0] are set to NULL, and if an URB is
+submitted to ep0 during that period, usb_urb_ep_type_check() will
+report it as a driver bug.  In the absence of those pointers, the
+routine thinks that the endpoint doesn't exist.  The log message looks
+like this:
 
-Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 2 != type 2
+WARNING: CPU: 0 PID: 9241 at drivers/usb/core/urb.c:478
+usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+
+Now, although submitting an URB while the device is being reset is a
+questionable thing to do, it shouldn't count as a driver bug as severe
+as submitting an URB for an endpoint that doesn't exist.  Indeed,
+endpoint 0 always exists, even while the device is in its unconfigured
+state.
+
+To prevent these misleading driver bug reports, this patch updates
+usb_disable_endpoint() to avoid clearing the ep_in[] and ep_out[]
+pointers when the endpoint being disabled is ep0.  There's no danger
+of leaving a stale pointer in place, because the usb_host_endpoint
+structure being pointed to is stored permanently in udev->ep0; it
+doesn't get deallocated until the entire usb_device structure does.
+
+Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2005011558590.903-100000@netrider.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/usb/core/message.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 9c7b1d8e8220..c41879a955b5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3684,7 +3684,7 @@ static int stmmac_set_features(struct net_device *netdev,
- /**
-  *  stmmac_interrupt - main ISR
-  *  @irq: interrupt number.
-- *  @dev_id: to pass the net device pointer.
-+ *  @dev_id: to pass the net device pointer (must be valid).
-  *  Description: this is the main driver interrupt service routine.
-  *  It can call:
-  *  o DMA service routine (to manage incoming frame reception and transmission
-@@ -3708,11 +3708,6 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
- 	if (priv->irq_wake)
- 		pm_wakeup_event(priv->device, 0);
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index fcf84bfc08e3..f705ea52eb97 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1143,11 +1143,11 @@ void usb_disable_endpoint(struct usb_device *dev, unsigned int epaddr,
  
--	if (unlikely(!dev)) {
--		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
--		return IRQ_NONE;
--	}
--
- 	/* Check if adapter is up */
- 	if (test_bit(STMMAC_DOWN, &priv->state))
- 		return IRQ_HANDLED;
+ 	if (usb_endpoint_out(epaddr)) {
+ 		ep = dev->ep_out[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_out[epnum] = NULL;
+ 	} else {
+ 		ep = dev->ep_in[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_in[epnum] = NULL;
+ 	}
+ 	if (ep) {
 -- 
 2.25.1
 
