@@ -2,116 +2,379 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC620C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4508520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590507717;
-	bh=gZ8aNmKdT4zxOHADWbLT5Y6H7LmM9caifHy5dcL7o1w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KBNfZwaawt6MiQielqyuDKZJLlhLGzIcEcTPCVv4R+3pIwhPZjz7SnbBTWJOJg3vs
-	 5WzOElHqZBHrPEF+e2Q1oTEWyn+tkPXqD5l2DqG4pcr/paGL3GdazeExBvpBPPi8Ki
-	 W3PTHn6fNrtbHma7peeUgWh/n+CrJJspcJR3uVyk=
+	by mail.kernel.org (Postfix) with ESMTP id 9E1D9206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbgEZPl4 (ORCPT
+        id S1729436AbgEZPlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbgEZPlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:41:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58566 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729481AbgEZPlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 11:41:36 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97EB4208C7;
-        Tue, 26 May 2020 15:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590507695;
-        bh=gZ8aNmKdT4zxOHADWbLT5Y6H7LmM9caifHy5dcL7o1w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Rz0KVAKpuQWjbYVqG4KX84a/Z2Zt/9Ql+miy0TU2C8vgkSO0PKYNUlF+XR1rC8KGE
-         mh5sj0zdQJcaRR4rzJF+iAFeCl4Ewnku9jGmDJ+IE0NVkPLvrYsaAFvztrx3rMj64U
-         L8w9Hs820XIx3lSpLEb6FRx8eXc56ZIvb4NDhCtw=
-Received: by mail-ot1-f54.google.com with SMTP id v17so16702199ote.0;
-        Tue, 26 May 2020 08:41:35 -0700 (PDT)
-X-Gm-Message-State: AOAM531xjewdXXNAVed+SjfPj9YTZrP3lN95WPzw0Rc1y+0tzutO1EXp
-        gCDL/Rq61GcR6zkBErk9lAWLWoG/xXoKvawOTw==
-X-Google-Smtp-Source: ABdhPJyw5d4vkXtjRoAzpvfuHmTQkWPHTHP8fjfXFmWwTl18r8lTB38VHOpsCiY4+6yITwPGZ8kGTMGihvRi8sPe2BQ=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr1226309ote.107.1590507694863;
- Tue, 26 May 2020 08:41:34 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1786C803086F;
+        Tue, 26 May 2020 15:41:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id P3liY5ESx7ym; Tue, 26 May 2020 18:41:32 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 4/7] watchdog: dw_wdt: Support devices with non-fixed TOP values
+Date:   Tue, 26 May 2020 18:41:20 +0300
+Message-ID: <20200526154123.24402-5-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526154123.24402-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526154123.24402-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200522220103.908307-1-anders.roxell@linaro.org>
- <20200524222025.GA3116034@ubuntu-s3-xlarge-x86> <292277.1590449865@turing-police>
- <20200526053850.GA2368760@ubuntu-s3-xlarge-x86>
-In-Reply-To: <20200526053850.GA2368760@ubuntu-s3-xlarge-x86>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 26 May 2020 09:41:20 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ9LnCpH92bXfk4ryXrTgzbPM03=PYLTzQXazuznJM=hg@mail.gmail.com>
-Message-ID: <CAL_JsqJ9LnCpH92bXfk4ryXrTgzbPM03=PYLTzQXazuznJM=hg@mail.gmail.com>
-Subject: Re: [PATCH] power: reset: vexpress: fix build issue
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-" On Mon, May 25, 2020 at 11:38 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Mon, May 25, 2020 at 07:37:45PM -0400, Valdis Kl=C4=93tnieks wrote:
-> > On Sun, 24 May 2020 15:20:25 -0700, Nathan Chancellor said:
-> >
-> > > arm-linux-gnueabi-ld: drivers/power/reset/vexpress-poweroff.o: in fun=
-ction `vexpress_reset_probe':
-> > > vexpress-poweroff.c:(.text+0x36c): undefined reference to `devm_regma=
-p_init_vexpress_config'
-> >
-> > The part I can't figure out is that git blame tells me there's already =
-an
-> > export:
-> >
-> > 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 154)   return =
-regmap;
-> > 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 155) }
-> > b33cdd283bd91 (Arnd Bergmann   2014-05-26 17:25:22 +0200 156) EXPORT_SY=
-MBOL_GPL(devm_regmap_init_vexpress_config);
-> > 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 157)
-> >
-> > but I can't figure out where or if drivers/power/reset/vexpress-powerof=
-f.c gets
-> > a MODULE_LICENSE from...
->
-> Correct, it is exported but that file is being built as a module whereas
-> the file requiring it is beign builtin. As far as I understand, that
-> will not work, hence the error.
->
-> The issue with this patch is that ARCH_VEXPRESS still just selects
-> POWER_RESET_VEXPRESS, which ignores "depends on", hence the Kconfig
-> warning and not fixing the error.
->
-> I am not that much of a Kconfig guru to come up with a solution. I am
-> just reporting it because arm allmodconfig is broken on -next due to
-> this.
+In case if the DW Watchdog IP core is synthesised with
+WDT_USE_FIX_TOP == false, the TOP interval indexes make the device
+to load a custom periods to the counter. These periods are hardwired
+at the IP synthesis stage and can be within [2^8, 2^(WDT_CNT_WIDTH - 1)].
+Alas their values can't be detected at runtime and must be somehow
+supplied to the driver so one could properly determine the watchdog
+timeout intervals. For this purpose we suggest to have a vendor-
+specific dts property "snps,watchdog-tops" utilized, which would
+provide an array of sixteen counter values. At device probe stage they
+will be used to initialize the watchdog device timeouts determined
+from the array values and current clocks source rate.
 
-Commit "ARM: vexpress: Don't select VEXPRESS_CONFIG" needs to be
-reverted. I've asked Arnd to revert it.
+In order to have custom TOP values supported the driver must be
+altered in the following way. First of all the fixed-top values
+ready-to-use array must be determined for compatibility with currently
+supported devices, which were synthesised with WDT_USE_FIX_TOP == true.
+It will be used if either fixed TOP feature is detected being enabled or
+no custom TOPs are fetched from the device dt node. Secondly at the probe
+stage we must initialize an array of the watchdog timeouts corresponding
+to the detected TOPs list and the reference clock rate. For generality the
+procedure of initialization is designed in a way to support the TOPs array
+with no limitations on the items order or value. Finally the watchdog
+period search methods should be altered to support the new timeouts data
+structure.
 
-Anders patch is still needed for arm64.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-Rob
+---
+
+Changelog v2:
+- Rearrange SoBs.
+- Add "ms" suffix to the methods returning msec and convert the methods
+  with no "ms" suffix to return a timeout in sec.
+- Make sure minimum timeout is at least 1 sec.
+- Refactor the timeouts calculation procedure to retain the timeouts in
+  the ascending order.
+- Make sure there is no integer overflow in milliseconds calculation. It
+  is saved in a dedicated uint field of the timeout structure.
+---
+ drivers/watchdog/dw_wdt.c | 191 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 167 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index fba21de2bbad..693c0d1fd796 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -13,6 +13,8 @@
+  */
+ 
+ #include <linux/bitops.h>
++#include <linux/limits.h>
++#include <linux/kernel.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
+@@ -34,21 +36,40 @@
+ #define WDOG_CURRENT_COUNT_REG_OFFSET	    0x08
+ #define WDOG_COUNTER_RESTART_REG_OFFSET     0x0c
+ #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
++#define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
++#define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
+ 
+-/* The maximum TOP (timeout period) value that can be set in the watchdog. */
+-#define DW_WDT_MAX_TOP		15
++/* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
++#define DW_WDT_NUM_TOPS		16
++#define DW_WDT_FIX_TOP(_idx)	(1U << (16 + _idx))
+ 
+ #define DW_WDT_DEFAULT_SECONDS	30
+ 
++static const u32 dw_wdt_fix_tops[DW_WDT_NUM_TOPS] = {
++	DW_WDT_FIX_TOP(0), DW_WDT_FIX_TOP(1), DW_WDT_FIX_TOP(2),
++	DW_WDT_FIX_TOP(3), DW_WDT_FIX_TOP(4), DW_WDT_FIX_TOP(5),
++	DW_WDT_FIX_TOP(6), DW_WDT_FIX_TOP(7), DW_WDT_FIX_TOP(8),
++	DW_WDT_FIX_TOP(9), DW_WDT_FIX_TOP(10), DW_WDT_FIX_TOP(11),
++	DW_WDT_FIX_TOP(12), DW_WDT_FIX_TOP(13), DW_WDT_FIX_TOP(14),
++	DW_WDT_FIX_TOP(15)
++};
++
+ static bool nowayout = WATCHDOG_NOWAYOUT;
+ module_param(nowayout, bool, 0);
+ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+ 		 "(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+ 
++struct dw_wdt_timeout {
++	u32 top_val;
++	unsigned int sec;
++	unsigned int msec;
++};
++
+ struct dw_wdt {
+ 	void __iomem		*regs;
+ 	struct clk		*clk;
+ 	unsigned long		rate;
++	struct dw_wdt_timeout	timeouts[DW_WDT_NUM_TOPS];
+ 	struct watchdog_device	wdd;
+ 	struct reset_control	*rst;
+ 	/* Save/restore */
+@@ -64,20 +85,66 @@ static inline int dw_wdt_is_enabled(struct dw_wdt *dw_wdt)
+ 		WDOG_CONTROL_REG_WDT_EN_MASK;
+ }
+ 
+-static inline int dw_wdt_top_in_seconds(struct dw_wdt *dw_wdt, unsigned top)
++static unsigned int dw_wdt_find_best_top(struct dw_wdt *dw_wdt,
++					 unsigned int timeout, u32 *top_val)
+ {
++	int idx;
++
+ 	/*
+-	 * There are 16 possible timeout values in 0..15 where the number of
+-	 * cycles is 2 ^ (16 + i) and the watchdog counts down.
++	 * Find a TOP with timeout greater or equal to the requested number.
++	 * Note we'll select a TOP with maximum timeout if the requested
++	 * timeout couldn't be reached.
+ 	 */
+-	return (1U << (16 + top)) / dw_wdt->rate;
++	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
++		if (dw_wdt->timeouts[idx].sec >= timeout)
++			break;
++	}
++
++	if (idx == DW_WDT_NUM_TOPS)
++		--idx;
++
++	*top_val = dw_wdt->timeouts[idx].top_val;
++
++	return dw_wdt->timeouts[idx].sec;
+ }
+ 
+-static int dw_wdt_get_top(struct dw_wdt *dw_wdt)
++static unsigned int dw_wdt_get_min_timeout(struct dw_wdt *dw_wdt)
+ {
+-	int top = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET) & 0xF;
++	int idx;
++
++	/*
++	 * We'll find a timeout greater or equal to one second anyway because
++	 * the driver probe would have failed if there was none.
++	 */
++	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
++		if (dw_wdt->timeouts[idx].sec)
++			break;
++	}
+ 
+-	return dw_wdt_top_in_seconds(dw_wdt, top);
++	return dw_wdt->timeouts[idx].sec;
++}
++
++static unsigned int dw_wdt_get_max_timeout_ms(struct dw_wdt *dw_wdt)
++{
++	struct dw_wdt_timeout *timeout = &dw_wdt->timeouts[DW_WDT_NUM_TOPS - 1];
++	u64 msec;
++
++	msec = (u64)timeout->sec * MSEC_PER_SEC + timeout->msec;
++
++	return msec < UINT_MAX ? msec : UINT_MAX;
++}
++
++static unsigned int dw_wdt_get_timeout(struct dw_wdt *dw_wdt)
++{
++	int top_val = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET) & 0xF;
++	int idx;
++
++	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
++		if (dw_wdt->timeouts[idx].top_val == top_val)
++			break;
++	}
++
++	return dw_wdt->timeouts[idx].sec;
+ }
+ 
+ static int dw_wdt_ping(struct watchdog_device *wdd)
+@@ -93,17 +160,10 @@ static int dw_wdt_ping(struct watchdog_device *wdd)
+ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+ {
+ 	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+-	int i, top_val = DW_WDT_MAX_TOP;
++	unsigned int timeout;
++	u32 top_val;
+ 
+-	/*
+-	 * Iterate over the timeout values until we find the closest match. We
+-	 * always look for >=.
+-	 */
+-	for (i = 0; i <= DW_WDT_MAX_TOP; ++i)
+-		if (dw_wdt_top_in_seconds(dw_wdt, i) >= top_s) {
+-			top_val = i;
+-			break;
+-		}
++	timeout = dw_wdt_find_best_top(dw_wdt, top_s, &top_val);
+ 
+ 	/*
+ 	 * Set the new value in the watchdog.  Some versions of dw_wdt
+@@ -120,7 +180,7 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+ 	 * wdd->max_hw_heartbeat_ms
+ 	 */
+ 	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
+-		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
++		wdd->timeout = timeout;
+ 	else
+ 		wdd->timeout = top_s;
+ 
+@@ -238,6 +298,86 @@ static int dw_wdt_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(dw_wdt_pm_ops, dw_wdt_suspend, dw_wdt_resume);
+ 
++/*
++ * In case if DW WDT IP core is synthesized with fixed TOP feature disabled the
++ * TOPs array can be arbitrary ordered with nearly any sixteen uint numbers
++ * depending on the system engineer imagination. The next method handles the
++ * passed TOPs array to pre-calculate the effective timeouts and to sort the
++ * TOP items out in the ascending order with respect to the timeouts.
++ */
++
++static void dw_wdt_handle_tops(struct dw_wdt *dw_wdt, const u32 *tops)
++{
++	struct dw_wdt_timeout tout, *dst;
++	int val, tidx;
++	u64 msec;
++
++	/*
++	 * We walk over the passed TOPs array and calculate corresponding
++	 * timeouts in seconds and milliseconds. The milliseconds granularity
++	 * is needed to distinguish the TOPs with very close timeouts and to
++	 * set the watchdog max heartbeat setting further.
++	 */
++	for (val = 0; val < DW_WDT_NUM_TOPS; ++val) {
++		tout.top_val = val;
++		tout.sec = tops[val] / dw_wdt->rate;
++		msec = (u64)tops[val] * MSEC_PER_SEC;
++		do_div(msec, dw_wdt->rate);
++		tout.msec = msec - ((u64)tout.sec * MSEC_PER_SEC);
++
++		/*
++		 * Find a suitable place for the current TOP in the timeouts
++		 * array so that the list is remained in the ascending order.
++		 */
++		for (tidx = 0; tidx < val; ++tidx) {
++			dst = &dw_wdt->timeouts[tidx];
++			if (tout.sec > dst->sec || (tout.sec == dst->sec &&
++			    tout.msec >= dst->msec))
++				continue;
++			else
++				swap(*dst, tout);
++		}
++
++		dw_wdt->timeouts[val] = tout;
++	}
++}
++
++static int dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
++{
++	u32 data, of_tops[DW_WDT_NUM_TOPS];
++	const u32 *tops;
++	int ret;
++
++	/*
++	 * Retrieve custom or fixed counter values depending on the
++	 * WDT_USE_FIX_TOP flag found in the component specific parameters
++	 * #1 register.
++	 */
++	data = readl(dw_wdt->regs + WDOG_COMP_PARAMS_1_REG_OFFSET);
++	if (data & WDOG_COMP_PARAMS_1_USE_FIX_TOP) {
++		tops = dw_wdt_fix_tops;
++	} else {
++		ret = of_property_read_variable_u32_array(dev_of_node(dev),
++			"snps,watchdog-tops", of_tops, DW_WDT_NUM_TOPS,
++			DW_WDT_NUM_TOPS);
++		if (ret < 0) {
++			dev_warn(dev, "No valid TOPs array specified\n");
++			tops = dw_wdt_fix_tops;
++		} else {
++			tops = of_tops;
++		}
++	}
++
++	/* Convert the specified TOPs into an array of watchdog timeouts. */
++	dw_wdt_handle_tops(dw_wdt, tops);
++	if (!dw_wdt->timeouts[DW_WDT_NUM_TOPS - 1].sec) {
++		dev_err(dev, "No any valid TOP detected\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int dw_wdt_drv_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -275,12 +415,15 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+ 
+ 	reset_control_deassert(dw_wdt->rst);
+ 
++	ret = dw_wdt_init_timeouts(dw_wdt, dev);
++	if (ret)
++		goto out_disable_clk;
++
+ 	wdd = &dw_wdt->wdd;
+ 	wdd->info = &dw_wdt_ident;
+ 	wdd->ops = &dw_wdt_ops;
+-	wdd->min_timeout = 1;
+-	wdd->max_hw_heartbeat_ms =
+-		dw_wdt_top_in_seconds(dw_wdt, DW_WDT_MAX_TOP) * 1000;
++	wdd->min_timeout = dw_wdt_get_min_timeout(dw_wdt);
++	wdd->max_hw_heartbeat_ms = dw_wdt_get_max_timeout_ms(dw_wdt);
+ 	wdd->parent = dev;
+ 
+ 	watchdog_set_drvdata(wdd, dw_wdt);
+@@ -293,7 +436,7 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+ 	 * devicetree.
+ 	 */
+ 	if (dw_wdt_is_enabled(dw_wdt)) {
+-		wdd->timeout = dw_wdt_get_top(dw_wdt);
++		wdd->timeout = dw_wdt_get_timeout(dw_wdt);
+ 		set_bit(WDOG_HW_RUNNING, &wdd->status);
+ 	} else {
+ 		wdd->timeout = DW_WDT_DEFAULT_SECONDS;
+-- 
+2.26.2
+
