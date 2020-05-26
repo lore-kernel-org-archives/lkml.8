@@ -2,97 +2,124 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0663BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8587AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6778207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D99F20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388625AbgEZDOQ (ORCPT
+        id S2388554AbgEZDU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 23:14:16 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44516 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388460AbgEZDOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 23:14:16 -0400
-Received: by mail-io1-f72.google.com with SMTP id a2so8827025iok.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 20:14:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=joFXon7CblHokYzFCF1EV1PGkA1ca25LvjLj5Ttj9ko=;
-        b=UWcGT/rEa4SPyMOKjQfz1/j8WEeap0sFBiM8m1RIiKkOy2U+RnsaaMEipSNzjM0DYt
-         5GZrPkdOmU5x/emI4CYEQqFKqbwv56pvT9eSfXqdZE/7RLv9Im+nTSjZNugpn++ZmLtU
-         yAXNeb/v3FaycJLw/JSYoBWppiceoUeEadRWmij8AdB8/EL8iC+PHfoWfzvyz9KrPdlh
-         1zeLPH4P+HljB++nM38Ics/8+DhBnY1sY4P/XQbIKLrrXDJAv82M/2w2zkp2vby5oBJ2
-         S03AG57DMNStK1A54gIPVpr9hr2G3sGGptFKv5loPeFxEzSMvFAPou4rxv8ZgpPnrs33
-         QSOw==
-X-Gm-Message-State: AOAM5334eFYjtvy0G01Y8GuGjRD8zV2TgXAsJ9li7g7+aWCB7VihVghf
-        W5zqC7KNbDsOEE6rCOm7qwpyHdioWVhT3eAacbwmX9r9hUD3
-X-Google-Smtp-Source: ABdhPJwI+1e1Ms4/Xikha1KS0aLzHd1uhWCm7BZsOf9aftktHwQMTI8wEGZ1lZ/VavH1nlFQbsCREdu4qRzKIabuZgdJQ3i+ayMl
+        Mon, 25 May 2020 23:20:26 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41004 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725267AbgEZDU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 23:20:26 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6DDA9432C042A5EE1AD0;
+        Tue, 26 May 2020 11:20:24 +0800 (CST)
+Received: from DESKTOP-27KDQMV.china.huawei.com (10.174.151.115) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 26 May 2020 11:20:16 +0800
+From:   "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     <linux-crypto@vger.kernel.org>
+CC:     "Longpeng(Mike)" <longpeng2@huawei.com>,
+        LABBE Corentin <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Gonglei <arei.gonglei@huawei.com>
+Subject: [PATCH v2 1/2] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
+Date:   Tue, 26 May 2020 11:19:55 +0800
+Message-ID: <20200526031956.1897-2-longpeng2@huawei.com>
+X-Mailer: git-send-email 2.25.0.windows.1
+In-Reply-To: <20200526031956.1897-1-longpeng2@huawei.com>
+References: <20200526031956.1897-1-longpeng2@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9b8a:: with SMTP id r10mr15737658iom.171.1590462854441;
- Mon, 25 May 2020 20:14:14 -0700 (PDT)
-Date:   Mon, 25 May 2020 20:14:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000077bd5f05a6847d01@google.com>
-Subject: INFO: trying to register non-static key in calculate_sigpending
-From:   syzbot <syzbot+eb1b67ef4194d8f9ebff@syzkaller.appspotmail.com>
-To:     christian@brauner.io, ebiederm@xmission.com,
-        linux-kernel@vger.kernel.org, oleg@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.151.115]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The system will crash when the users insmod crypto/tcrypt.ko with mode=38
+( testing "cts(cbc(aes))" ).
 
-syzbot found the following crash on:
+Usually the next entry of one sg will be @sg@ + 1, but if this sg element
+is part of a chained scatterlist, it could jump to the start of a new
+scatterlist array. Fix it by sg_next() on calculation of src/dst
+scatterlist.
 
-HEAD commit:    d2f8825a Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12470c26100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b3368ce0cc5f5ace
-dashboard link: https://syzkaller.appspot.com/bug?extid=eb1b67ef4194d8f9ebff
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+eb1b67ef4194d8f9ebff@syzkaller.appspotmail.com
-
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 1080 Comm: syz-executor.4 Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:913 [inline]
- register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
- __lock_acquire+0x104/0x4c50 kernel/locking/lockdep.c:4234
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
- __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
- _raw_spin_lock_irq+0x5b/0x80 kernel/locking/spinlock.c:167
- spin_lock_irq include/linux/spinlock.h:378 [inline]
- calculate_sigpending+0x42/0xa0 kernel/signal.c:196
- ret_from_fork+0x8/0x30 arch/x86/entry/entry_64.S:335
-
-
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Message-Id: <20200123101000.GB24255@Red>
+Signed-off-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/crypto/virtio/virtio_crypto_algs.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index fd045e64972a..5f8243563009 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -350,13 +350,18 @@ __virtio_crypto_skcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 	int err;
+ 	unsigned long flags;
+ 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
+-	int i;
+ 	u64 dst_len;
+ 	unsigned int num_out = 0, num_in = 0;
+ 	int sg_total;
+ 	uint8_t *iv;
++	struct scatterlist *sg;
+ 
+ 	src_nents = sg_nents_for_len(req->src, req->cryptlen);
++	if (src_nents < 0) {
++		pr_err("Invalid number of src SG.\n");
++		return src_nents;
++	}
++
+ 	dst_nents = sg_nents(req->dst);
+ 
+ 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
+@@ -442,12 +447,12 @@ __virtio_crypto_skcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 	vc_sym_req->iv = iv;
+ 
+ 	/* Source data */
+-	for (i = 0; i < src_nents; i++)
+-		sgs[num_out++] = &req->src[i];
++	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
++		sgs[num_out++] = sg;
+ 
+ 	/* Destination data */
+-	for (i = 0; i < dst_nents; i++)
+-		sgs[num_out + num_in++] = &req->dst[i];
++	for (sg = req->dst; sg; sg = sg_next(sg))
++		sgs[num_out + num_in++] = sg;
+ 
+ 	/* Status */
+ 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
+-- 
+2.23.0
+
