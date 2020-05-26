@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864CEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1632BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64BB120721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EF220721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521158;
-	bh=WvgeDUlBuFvjwO26UKDgxLQqw5bDZjtGnMdSOqGdDts=;
+	s=default; t=1590521162;
+	bh=cmVh0OPeml6D5NC6kDs0bsSrpH4XAy+2xRC/rnWJl84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIdACF2PlWdvKEty2gj9djtEW9bY6QrjevP1Dc3Up8bKfi3U7yuwOOso9IEIU6Zid
-	 8lKd6EXmQV6aaeouvAEBXKxF+17Pxn2Jy6NLtLJ3nVT06qIEO7K/sz8bnTvbDCkH3I
-	 vyXeT1iNYSor1m0D++27R8jED2AV2sSZcFIaehPI=
+	b=rfKyF4KdtdNnN13fsPDcmAxoUiFc4Mfqi29vjkXUlVCxSEWqWkTBsx4idO7YYeqVF
+	 KvlUQkT3uxoHR//ntebeVBzf2XOaNG1QfsNZ5H/x7HN+3AWaXwxtTDa1jKoqNaxmJu
+	 pWqqcbhZdWbWlny3DAldL8vxEvQbysfuPVFnXG28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390075AbgEZTGW (ORCPT
+        id S2391922AbgEZT0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403875AbgEZTGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:12 -0400
+        id S2390278AbgEZTGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF24D20776;
-        Tue, 26 May 2020 19:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC3A20873;
+        Tue, 26 May 2020 19:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519971;
-        bh=WvgeDUlBuFvjwO26UKDgxLQqw5bDZjtGnMdSOqGdDts=;
+        s=default; t=1590519981;
+        bh=cmVh0OPeml6D5NC6kDs0bsSrpH4XAy+2xRC/rnWJl84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPNV5Wn8kqRw6h0rux8Um2+MiL0UAd7ciXfSMHpEW4fpqGo7nVySXGpkUWSN7SaTM
-         gFeGqbNNIVXIQOe38uHBcphAfEFsvlANUZwkh+IaO3hm/caGwtZsYBviLTG68p8Myl
-         iVPWS2g9WYf0wAZeRdycX/go8L007nl4TZNdb4F8=
+        b=M2z7NTUUdWCxY+J/baluyE9whPqhbZYQxiY7Jaj6TVfp63toiQz2Ye4BwLcxLbLaB
+         EW4LYaNe7UfB6ef+xila9f5IXCA6AL0WrC4Bq/JgqD9p1v+5O0ro3Eww7pk4vc56IX
+         D2F+47qin2ONSTPv0FOXHb20yPUPBxvyGkl6HBDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Pedro dAquino Filocre F S Barbuda 
-        <pbarbuda@microsoft.com>, Vishal Verma <vishal.l.verma@intel.com>,
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/81] libnvdimm/btt: Fix LBA masking during free list population
-Date:   Tue, 26 May 2020 20:53:28 +0200
-Message-Id: <20200526183932.993059888@linuxfoundation.org>
+Subject: [PATCH 5.4 012/111] iommu/amd: Fix over-read of ACPI UID from IVRS table
+Date:   Tue, 26 May 2020 20:52:30 +0200
+Message-Id: <20200526183933.727706104@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
-References: <20200526183923.108515292@linuxfoundation.org>
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,151 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Verma <vishal.l.verma@intel.com>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-[ Upstream commit 9dedc73a4658ebcc0c9b58c3cb84e9ac80122213 ]
+[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
 
-The Linux BTT implementation assumes that log entries will never have
-the 'zero' flag set, and indeed it never sets that flag for log entries
-itself.
+IVRS parsing code always tries to read 255 bytes from memory when
+retrieving ACPI device path, and makes an assumption that firmware
+provides a zero-terminated string. Both of those are bugs: the entry
+is likely to be shorter than 255 bytes, and zero-termination is not
+guaranteed.
 
-However, the UEFI spec is ambiguous on the exact format of the LBA field
-of a log entry, specifically as to whether it should include the
-additional flag bits or not. While a zero bit doesn't make sense in the
-context of a log entry, other BTT implementations might still have it set.
+With Acer SF314-42 firmware these issues manifest visibly in dmesg:
 
-If an implementation does happen to have it set, we would happily read
-it in as the next block to write to for writes. Since a high bit is set,
-it pushes the block number out of the range of an 'arena', and we fail
-such a write with an EIO.
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
 
-Follow the robustness principle, and tolerate such implementations by
-stripping out the zero flag when populating the free list during
-initialization. Additionally, use the same stripped out entries for
-detection of incomplete writes and map restoration that happens at this
-stage.
+The first three lines show how the code over-reads adjacent table
+entries into the UID, and in the last line it even reads garbage data
+beyond the end of the IVRS table itself.
 
-Add a sysfs file 'log_zero_flags' that indicates the ability to accept
-such a layout to userspace applications. This enables 'ndctl
-check-namespace' to recognize whether the kernel is able to handle zero
-flags, or whether it should attempt a fix-up under the --repair option.
+Since each entry has the length of the UID (uidl member of ivhd_entry
+struct), use that for memcpy, and manually add a zero terminator.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Dexuan Cui <decui@microsoft.com>
-Reported-by: Pedro d'Aquino Filocre F S Barbuda <pbarbuda@microsoft.com>
-Tested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Avoid zero-filling hid and uid arrays up front, and instead ensure
+the uid array is always zero-terminated. No change needed for the hid
+array, as it was already properly zero-terminated.
+
+Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
+Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c      | 25 +++++++++++++++++++------
- drivers/nvdimm/btt.h      |  2 ++
- drivers/nvdimm/btt_devs.c |  8 ++++++++
- 3 files changed, 29 insertions(+), 6 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index d78cfe82ad5c..1064a703ccec 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -542,8 +542,8 @@ static int arena_clear_freelist_error(struct arena_info *arena, u32 lane)
- static int btt_freelist_init(struct arena_info *arena)
- {
- 	int new, ret;
--	u32 i, map_entry;
- 	struct log_entry log_new;
-+	u32 i, map_entry, log_oldmap, log_newmap;
- 
- 	arena->freelist = kcalloc(arena->nfree, sizeof(struct free_entry),
- 					GFP_KERNEL);
-@@ -555,16 +555,22 @@ static int btt_freelist_init(struct arena_info *arena)
- 		if (new < 0)
- 			return new;
- 
-+		/* old and new map entries with any flags stripped out */
-+		log_oldmap = ent_lba(le32_to_cpu(log_new.old_map));
-+		log_newmap = ent_lba(le32_to_cpu(log_new.new_map));
-+
- 		/* sub points to the next one to be overwritten */
- 		arena->freelist[i].sub = 1 - new;
- 		arena->freelist[i].seq = nd_inc_seq(le32_to_cpu(log_new.seq));
--		arena->freelist[i].block = le32_to_cpu(log_new.old_map);
-+		arena->freelist[i].block = log_oldmap;
- 
- 		/*
- 		 * FIXME: if error clearing fails during init, we want to make
- 		 * the BTT read-only
- 		 */
--		if (ent_e_flag(log_new.old_map)) {
-+		if (ent_e_flag(log_new.old_map) &&
-+				!ent_normal(log_new.old_map)) {
-+			arena->freelist[i].has_err = 1;
- 			ret = arena_clear_freelist_error(arena, i);
- 			if (ret)
- 				dev_err_ratelimited(to_dev(arena),
-@@ -572,7 +578,7 @@ static int btt_freelist_init(struct arena_info *arena)
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index ef14b00fa94b..135ae5222cf3 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -1331,8 +1331,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
  		}
+ 		case IVHD_DEV_ACPI_HID: {
+ 			u16 devid;
+-			u8 hid[ACPIHID_HID_LEN] = {0};
+-			u8 uid[ACPIHID_UID_LEN] = {0};
++			u8 hid[ACPIHID_HID_LEN];
++			u8 uid[ACPIHID_UID_LEN];
+ 			int ret;
  
- 		/* This implies a newly created or untouched flog entry */
--		if (log_new.old_map == log_new.new_map)
-+		if (log_oldmap == log_newmap)
- 			continue;
+ 			if (h->type != 0x40) {
+@@ -1349,6 +1349,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			}
  
- 		/* Check if map recovery is needed */
-@@ -580,8 +586,15 @@ static int btt_freelist_init(struct arena_info *arena)
- 				NULL, NULL, 0);
- 		if (ret)
- 			return ret;
--		if ((le32_to_cpu(log_new.new_map) != map_entry) &&
--				(le32_to_cpu(log_new.old_map) == map_entry)) {
-+
-+		/*
-+		 * The map_entry from btt_read_map is stripped of any flag bits,
-+		 * so use the stripped out versions from the log as well for
-+		 * testing whether recovery is needed. For restoration, use the
-+		 * 'raw' version of the log entries as that captured what we
-+		 * were going to write originally.
-+		 */
-+		if ((log_newmap != map_entry) && (log_oldmap == map_entry)) {
- 			/*
- 			 * Last transaction wrote the flog, but wasn't able
- 			 * to complete the map write. So fix up the map.
-diff --git a/drivers/nvdimm/btt.h b/drivers/nvdimm/btt.h
-index db3cb6d4d0d4..ddff49c707b0 100644
---- a/drivers/nvdimm/btt.h
-+++ b/drivers/nvdimm/btt.h
-@@ -44,6 +44,8 @@
- #define ent_e_flag(ent) (!!(ent & MAP_ERR_MASK))
- #define ent_z_flag(ent) (!!(ent & MAP_TRIM_MASK))
- #define set_e_flag(ent) (ent |= MAP_ERR_MASK)
-+/* 'normal' is both e and z flags set */
-+#define ent_normal(ent) (ent_e_flag(ent) && ent_z_flag(ent))
++			uid[0] = '\0';
+ 			switch (e->uidf) {
+ 			case UID_NOT_PRESENT:
  
- enum btt_init_state {
- 	INIT_UNCHECKED = 0,
-diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
-index e341498876ca..9486acc08402 100644
---- a/drivers/nvdimm/btt_devs.c
-+++ b/drivers/nvdimm/btt_devs.c
-@@ -159,11 +159,19 @@ static ssize_t size_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(size);
+@@ -1363,8 +1364,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			case UID_IS_CHARACTER:
  
-+static ssize_t log_zero_flags_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "Y\n");
-+}
-+static DEVICE_ATTR_RO(log_zero_flags);
-+
- static struct attribute *nd_btt_attributes[] = {
- 	&dev_attr_sector_size.attr,
- 	&dev_attr_namespace.attr,
- 	&dev_attr_uuid.attr,
- 	&dev_attr_size.attr,
-+	&dev_attr_log_zero_flags.attr,
- 	NULL,
- };
+-				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
+-				uid[ACPIHID_UID_LEN - 1] = '\0';
++				memcpy(uid, &e->uid, e->uidl);
++				uid[e->uidl] = '\0';
  
+ 				break;
+ 			default:
 -- 
 2.25.1
 
