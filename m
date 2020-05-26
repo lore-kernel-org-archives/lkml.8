@@ -2,111 +2,127 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE1720723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7131120723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aZP0WA1N"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HHFrg6pa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389167AbgEZRU5 (ORCPT
+        id S2388913AbgEZRXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:20:57 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:35254 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388061AbgEZRU4 (ORCPT
+        Tue, 26 May 2020 13:23:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50519 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388606AbgEZRXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:20:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590513656; x=1622049656;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=SuRy4tavgBldQyqB1OdrVDKPEKHaP40bur786DRkLGI=;
-  b=aZP0WA1NcqTI3gMKPb38MdYdfgLVYs8QMEz0y4/NqEDQQne/gB5As9EC
-   F7Ok4GJVBxgXea+K97u9e1kfj6/qex/BUOxzanju11WxC06fNXsyYMn6N
-   8rKb3wNiVGnDlWeVx/JzYUaagJYQEaFhHRpddTi3Nv8yoEwVDgnTFj0qJ
-   8=;
-IronPort-SDR: vJG6PgGh8Agtr/CuoHTmeJWRy+SNtfwxtlp638MAvHfGQ/s7GwBIZURSgc22qGTliFuyV9idUM
- UjbtLEQAhalw==
-X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
-   d="scan'208";a="46057669"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 May 2020 17:20:54 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 12FEEA2291;
-        Tue, 26 May 2020 17:20:54 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 17:20:53 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 17:20:43 +0000
-Subject: Re: [PATCH v3 03/18] nitro_enclaves: Define enclave info for internal
- bookkeeping
-To:     Greg KH <greg@kroah.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-4-andraprs@amazon.com>
- <20200526064601.GB2580530@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <b5cc525a-aeea-74ec-06fc-e9992077ba65@amazon.com>
-Date:   Tue, 26 May 2020 20:20:38 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Tue, 26 May 2020 13:23:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590513793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zsEdUKbb64cuYor8Oe940GH4M856nl/MDSfp4PY7VdM=;
+        b=HHFrg6pahuuMKDFSPKS1YAXWRNne20bpspXYICCjdWvwdoNBpNuV7tFN6ioPrhudeU+GJl
+        heXEugvYHi8iNJGEXLZxqHfoxhbuiYD0Q4U71KetVRNh0Sa8tgYrFl9bWMTbyaS5OOASnE
+        xHbc6t1Fg+swFzTYqK00Mi1cLt1VeYU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-tDkVSMwVPNyrTROUAdq4iA-1; Tue, 26 May 2020 13:23:11 -0400
+X-MC-Unique: tDkVSMwVPNyrTROUAdq4iA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41CBB835B43;
+        Tue, 26 May 2020 17:23:10 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F2441001B07;
+        Tue, 26 May 2020 17:23:09 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH 01/28] KVM: x86: track manually whether an event has been injected
+Date:   Tue, 26 May 2020 13:22:41 -0400
+Message-Id: <20200526172308.111575-2-pbonzini@redhat.com>
+In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
+References: <20200526172308.111575-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526064601.GB2580530@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D41UWC001.ant.amazon.com (10.43.162.107) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNi8wNS8yMDIwIDA5OjQ2LCBHcmVnIEtIIHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDI2LCAy
-MDIwIGF0IDAxOjEzOjE5QU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gKy8qIE5p
-dHJvIEVuY2xhdmVzIChORSkgbWlzYyBkZXZpY2UgKi8KPj4gK2V4dGVybiBzdHJ1Y3QgbWlzY2Rl
-dmljZSBuZV9taXNjZGV2aWNlOwo+IFdoeSBkb2VzIHlvdXIgbWlzYyBkZXZpY2UgbmVlZCB0byBi
-ZSBpbiBhIC5oIGZpbGU/Cj4KPiBIYXZpbmcgdGhlIHBhdGNoIHNlcmllcyBsaWtlIHRoaXMgKGFk
-ZCByYW5kb20gLmggZmlsZXMsIGFuZCB0aGVuIHN0YXJ0Cj4gdG8gdXNlIHRoZW0pLCBpcyBoYXJk
-IHRvIHJldmlldy4gIFdvdWxkIHlvdSB3YW50IHRvIHRyeSB0byByZXZpZXcgYQo+IHNlcmllcyB3
-cml0dGVuIGluIHRoaXMgd2F5PwoKVGhlIG1pc2MgZGV2aWNlIGlzIHJlZ2lzdGVyZWQgLyB1bnJl
-Z2lzdGVyZWQgd2hpbGUgaGF2aW5nIHRoZSBORSBQQ0kgCmRldmljZSBwcm9iZSAvIHJlbW92ZSwg
-YXMgYSBkZXBlbmRlbmN5IHRvIGFjdHVhbGx5IGhhdmluZyBhIFBDSSBkZXZpY2UgCndvcmtpbmcg
-dG8gZXhwb3NlIGEgbWlzYyBkZXZpY2UuCgpUaGUgd2F5IHRoZSBjb2RlYmFzZSBpcyBzcGxpdCBp
-biBmaWxlcyBpcyBtYWlubHkgdGhlIGlvY3RsIGxvZ2ljIC8gbWlzYyAKZGV2aWNlIGluIG9uZSBm
-aWxlIGFuZCB0aGUgUENJIGRldmljZSBsb2dpYyBpbiBhbm90aGVyIGZpbGU7IHRodXMgbm90IApo
-YXZlIGFsbCB0aGUgY29kZWJhc2UgaW4gYSBzaW5nbGUgYmlnIGZpbGUuIEdpdmVuIHRoZSBtaXNj
-IGRldmljZSAKKHVuKXJlZ2lzdGVyIGxvZ2ljIGFib3ZlLCB0aGUgbWlzYyBkZXZpY2UgbmVlZHMg
-dG8gYmUgYXZhaWxhYmxlIHRvIHRoZSAKUENJIGRldmljZSBzZXR1cCBsb2dpYy4KCkFuZHJhCgoK
-CgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBv
-ZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENv
-dW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlv
-biBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
+Instead of calling kvm_event_needs_reinjection, track its
+future return value in a variable.  This will be useful in
+the next patch.
+
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/x86.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b226fb8abe41..064a7ea0e671 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7713,11 +7713,14 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu)
+ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
++	bool can_inject = true;
+ 
+ 	/* try to reinject previous events if any */
+ 
+-	if (vcpu->arch.exception.injected)
++	if (vcpu->arch.exception.injected) {
+ 		kvm_x86_ops.queue_exception(vcpu);
++		can_inject = false;
++	}
+ 	/*
+ 	 * Do not inject an NMI or interrupt if there is a pending
+ 	 * exception.  Exceptions and interrupts are recognized at
+@@ -7733,10 +7736,13 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ 	 * fully complete the previous instruction.
+ 	 */
+ 	else if (!vcpu->arch.exception.pending) {
+-		if (vcpu->arch.nmi_injected)
++		if (vcpu->arch.nmi_injected) {
+ 			kvm_x86_ops.set_nmi(vcpu);
+-		else if (vcpu->arch.interrupt.injected)
++			can_inject = false;
++		} else if (vcpu->arch.interrupt.injected) {
+ 			kvm_x86_ops.set_irq(vcpu);
++			can_inject = false;
++		}
+ 	}
+ 
+ 	WARN_ON_ONCE(vcpu->arch.exception.injected &&
+@@ -7786,10 +7792,11 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ 		}
+ 
+ 		kvm_x86_ops.queue_exception(vcpu);
++		can_inject = false;
+ 	}
+ 
+-	/* Don't consider new event if we re-injected an event */
+-	if (kvm_event_needs_reinjection(vcpu))
++	/* Finish re-injection before considering new events */
++	if (!can_inject)
+ 		return 0;
+ 
+ 	if (vcpu->arch.smi_pending &&
+-- 
+2.26.2
+
 
