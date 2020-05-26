@@ -2,54 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36726C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCF5F2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAD22086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519429;
-	bh=EdGQCx22tbM38b0Jb+wVTLYFKvjDqoUuGV5CoJixVO0=;
+	s=default; t=1590519435;
+	bh=wf0ZVFQ7x8anE5OuhsDIZiFHHWobosTKSUdq6cG++ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ziUsQoAHs7MFKJqYaC6GxQ9GpCqHDY/w/Q2NTpb5ln8V5VYMXE14+BdPQW99d/len
-	 7gxByNxbFp1ruc0LdLrh4+al6WRWC1/flpKr7TacIf8s4kH2FkcuxxjWJHRoZwbfnT
-	 Uhto9DuwG+ko8fGqLKT6rcrbVjTD09TmxrhCjMt4=
+	b=sEqZ7hPpfujCdFSblQe8zCW7GPQAGN9GjY+Uj08F77EhJQ0mr28qHFXRNyyIcER6R
+	 iWjV44FTnKPJr5xho430aWaDHs6+6tv6rkTnxUVEB3WcG/9prkWUoojuMWxCFOZPUS
+	 XITGPJIv1cD+GqAd8xF2QRHSyy9tTajWmhTGWJ5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390033AbgEZS5I (ORCPT
+        id S2390048AbgEZS5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50194 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390011AbgEZS5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:03 -0400
+        id S2390013AbgEZS5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CA120849;
-        Tue, 26 May 2020 18:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88DE42084C;
+        Tue, 26 May 2020 18:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519423;
-        bh=EdGQCx22tbM38b0Jb+wVTLYFKvjDqoUuGV5CoJixVO0=;
+        s=default; t=1590519426;
+        bh=wf0ZVFQ7x8anE5OuhsDIZiFHHWobosTKSUdq6cG++ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSOLbiZRQ6kepghAMVxHej2p3PL2n9pAtooTkyA7Yefnr8orQvkY/L4pr5h5qkpe2
-         8GVXVME58SVf7p+zff5oByIPMQf+gr2offDwKYvWsn29FPMLHU44f6h5U2mh+DfQPP
-         zSIBMhRVuV4yYsmdOygFzZzyHkq7O0iEuEaPi67k=
+        b=XeYnVC3osavgoKhILJxHVq2nG+Arc5dsal55SNaYqlJHGIXACeC5EhmcTz1DTBOnn
+         shsoc7B1FtblIybmNTNsIlmXKT0Kz1SS3NsfPbaGA0Bcn3j2XYspE/RzzMvFfi/jjB
+         hX8alvCiDWhcUpu66XmH6/1AQEl3+OG2Rf/HYGQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 64/65] iio: sca3000: Remove an erroneous get_device()
-Date:   Tue, 26 May 2020 20:53:23 +0200
-Message-Id: <20200526183929.129743752@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.4 47/65] l2tp: define parameters of l2tp_tunnel_find*() as "const"
+Date:   Tue, 26 May 2020 20:53:06 +0200
+Message-Id: <20200526183922.327475322@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -62,40 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-[ Upstream commit 928edefbc18cd8433f7df235c6e09a9306e7d580 ]
+commit 2f858b928bf5a8174911aaec76b8b72a9ca0533d upstream.
 
-This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
-call.
-Remove it.
+l2tp_tunnel_find() and l2tp_tunnel_find_nth() don't modify "net".
 
-While at it add a missing \n at the end of the message.
-
-Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/iio/accel/sca3000_ring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/l2tp/l2tp_core.c |    4 ++--
+ net/l2tp/l2tp_core.h |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/iio/accel/sca3000_ring.c b/drivers/staging/iio/accel/sca3000_ring.c
-index 20b878d35ea2..fc8b6f179ec6 100644
---- a/drivers/staging/iio/accel/sca3000_ring.c
-+++ b/drivers/staging/iio/accel/sca3000_ring.c
-@@ -56,7 +56,7 @@ static int sca3000_read_data(struct sca3000_state *st,
- 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
- 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
- 	if (ret) {
--		dev_err(get_device(&st->us->dev), "problem reading register");
-+		dev_err(&st->us->dev, "problem reading register");
- 		goto error_free_rx;
- 	}
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -378,7 +378,7 @@ exist:
  
--- 
-2.25.1
-
+ /* Lookup a tunnel by id
+  */
+-struct l2tp_tunnel *l2tp_tunnel_find(struct net *net, u32 tunnel_id)
++struct l2tp_tunnel *l2tp_tunnel_find(const struct net *net, u32 tunnel_id)
+ {
+ 	struct l2tp_tunnel *tunnel;
+ 	struct l2tp_net *pn = l2tp_pernet(net);
+@@ -396,7 +396,7 @@ struct l2tp_tunnel *l2tp_tunnel_find(str
+ }
+ EXPORT_SYMBOL_GPL(l2tp_tunnel_find);
+ 
+-struct l2tp_tunnel *l2tp_tunnel_find_nth(struct net *net, int nth)
++struct l2tp_tunnel *l2tp_tunnel_find_nth(const struct net *net, int nth)
+ {
+ 	struct l2tp_net *pn = l2tp_pernet(net);
+ 	struct l2tp_tunnel *tunnel;
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -242,8 +242,8 @@ struct l2tp_session *l2tp_session_get_nt
+ struct l2tp_session *l2tp_session_get_by_ifname(const struct net *net,
+ 						const char *ifname,
+ 						bool do_ref);
+-struct l2tp_tunnel *l2tp_tunnel_find(struct net *net, u32 tunnel_id);
+-struct l2tp_tunnel *l2tp_tunnel_find_nth(struct net *net, int nth);
++struct l2tp_tunnel *l2tp_tunnel_find(const struct net *net, u32 tunnel_id);
++struct l2tp_tunnel *l2tp_tunnel_find_nth(const struct net *net, int nth);
+ 
+ int l2tp_tunnel_create(struct net *net, int fd, int version, u32 tunnel_id,
+ 		       u32 peer_tunnel_id, struct l2tp_tunnel_cfg *cfg,
 
 
