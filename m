@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E46FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2188C20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB9720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520882;
-	bh=t8k+A26nle/JylAK0rDU4ayMbCakUSWlwZOpncrVqrs=;
+	s=default; t=1590520883;
+	bh=rFk4ndRXik1qE5fwJ3x+1OM2AUjpwZLqi+jCYlMawr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1WbqaIWY3rAh/vvyo9xQqjc3XJrU6XsNV4/5g5s6BapHMnoIRMujYJ664pcAJeS2v
-	 hOFHaLc48jWloFZYVBA/oqr3RIIr/SfYAC8Ef0xt1hgh3YqLv6DuQEKHvVynuaZ+Tn
-	 zUX5aKu+Pc6Uu6oxjGnfq2WgyjpFJ3W+BFc5aifI=
+	b=RRAEI484vMJFfHSeJtKx+phpUeEhV74xLobJiqLaaSIyZ7TGvmyZHdgF9FwrAX0Ot
+	 0dE6Jff2rIsOfT9zNkE8ygancuEjI6NPhCXujyg08SkhikbE1Vb5Zx1+Uk0xFi0WYK
+	 I0z/8Yi5wAXClPRIFfsWMtsWgdXh46xQ7SKXaPus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392142AbgEZTVU (ORCPT
+        id S2392470AbgEZTVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41522 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391255AbgEZTMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:01 -0400
+        id S2391545AbgEZTME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8419920888;
-        Tue, 26 May 2020 19:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91EAA208B3;
+        Tue, 26 May 2020 19:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520321;
-        bh=t8k+A26nle/JylAK0rDU4ayMbCakUSWlwZOpncrVqrs=;
+        s=default; t=1590520324;
+        bh=rFk4ndRXik1qE5fwJ3x+1OM2AUjpwZLqi+jCYlMawr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2n+d2RwbvWrfb3mLb4vk8KeJHniK9PRqBeptFbLz4F20bht8z8EoJtOfmgEFxaby
-         I1ushbBoi9DMBjuNvptukq3nx3DGha9dx6MEVojCi5Jq/JADfaZWK0yCEu1DcffxC3
-         ZRuYzxFcIZvWEVardXIz5tnt2Nb7b5qg7RJQvX+0=
+        b=yHeG3Mn51OlqOzLp3W/AQUKD+SA35IKZnnG65NbtAiOkD8HWdAuqCGHKD2RxNuppF
+         Gp2nQW6aAHnWCuqkTnthLt3QR3+dxb2mjC+nLEYuAs3M3g078P4i9IiZMLq5/QDsRo
+         2fbGXOEfTBn7PGt66fIWWQTe7IyfLpZMF7VrYCOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Shay Agroskin <shayagr@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 034/126] component: Silence bind error on -EPROBE_DEFER
-Date:   Tue, 26 May 2020 20:52:51 +0200
-Message-Id: <20200526183940.715734254@linuxfoundation.org>
+Subject: [PATCH 5.6 035/126] net/ena: Fix build warning in ena_xdp_set()
+Date:   Tue, 26 May 2020 20:52:52 +0200
+Message-Id: <20200526183940.822041433@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,51 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Gavin Shan <gshan@redhat.com>
 
-[ Upstream commit 7706b0a76a9697021e2bf395f3f065c18f51043d ]
+[ Upstream commit caec66198d137c26f0d234abc498866a58c64150 ]
 
-If a component fails to bind due to -EPROBE_DEFER we should not log an
-error as this is not a real failure.
+This fixes the following build warning in ena_xdp_set(), which is
+observed on aarch64 with 64KB page size.
 
-Fixes messages like:
-vc4-drm soc:gpu: failed to bind 3f902000.hdmi (ops vc4_hdmi_ops): -517
-vc4-drm soc:gpu: master bind failed: -517
+   In file included from ./include/net/inet_sock.h:19,
+      from ./include/net/ip.h:27,
+      from drivers/net/ethernet/amazon/ena/ena_netdev.c:46:
+   drivers/net/ethernet/amazon/ena/ena_netdev.c: In function         \
+   ‘ena_xdp_set’:                                                    \
+   drivers/net/ethernet/amazon/ena/ena_netdev.c:557:6: warning:      \
+   format ‘%lu’                                                      \
+   expects argument of type ‘long unsigned int’, but argument 4      \
+   has type ‘int’                                                    \
+   [-Wformat=] "Failed to set xdp program, the current MTU (%d) is   \
+   larger than the maximum allowed MTU (%lu) while xdp is on",
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200411190241.89404-1-james.hilliard1@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Acked-by: Shay Agroskin <shayagr@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/component.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index c7879f5ae2fb..53b19daca750 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -256,7 +256,8 @@ static int try_to_bring_up_master(struct master *master,
- 	ret = master->ops->bind(master->dev);
- 	if (ret < 0) {
- 		devres_release_group(master->dev, NULL);
--		dev_info(master->dev, "master bind failed: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_info(master->dev, "master bind failed: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -610,8 +611,9 @@ static int component_bind(struct component *component, struct master *master,
- 		devres_release_group(component->dev, NULL);
- 		devres_release_group(master->dev, NULL);
- 
--		dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
--			dev_name(component->dev), component->ops, ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
-+				dev_name(component->dev), component->ops, ret);
- 	}
- 
- 	return ret;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+index 8795e0b1dc3c..8984aa211112 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+@@ -69,7 +69,7 @@
+  * 16kB.
+  */
+ #if PAGE_SIZE > SZ_16K
+-#define ENA_PAGE_SIZE SZ_16K
++#define ENA_PAGE_SIZE (_AC(SZ_16K, UL))
+ #else
+ #define ENA_PAGE_SIZE PAGE_SIZE
+ #endif
 -- 
 2.25.1
 
