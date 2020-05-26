@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99150C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5FA2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED7C20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520584;
-	bh=yLwlTBvyODr7QfsTZrWpi8MtZSOJe6d+ppkpOxpaDyc=;
+	s=default; t=1590520585;
+	bh=cEyHBFC3X+SM8f+LOE2aDFSiIZ9pf7/5DTMY407Jr9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ds5muGffjA6MRNC47AvPiJK8WSa0dzY2eVkoVosK7oJ+/wIwwne1/SICM5NSKh9RY
-	 kgzzUkgVT2+Ew0o9nojILAE952j5pVX4lX2gjKiSDkXXZdLX/XTAPBqPJ5SaPQfeRo
-	 lX2WDaDczHsQ4JocHic3empaAtsyV+p4zhHS1XhQ=
+	b=NiX26xMCqAqBq6QqcAdLlDuxAkjIyWiXfk594mjWGQRd6xeU0Q+IyhAYHz44wxSE2
+	 jlcORDM0FxnoJuBWZzmWTqZMspVPRzjwOYYKnGMzgXvieLa6aYCzudj/89+K8JOlcy
+	 NSuz89za1+U82X8WyuBld81eND4qNrg0hwf8BR+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404480AbgEZTQU (ORCPT
+        id S2404516AbgEZTQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392277AbgEZTQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:16:14 -0400
+        id S2392285AbgEZTQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:16:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C4D620776;
-        Tue, 26 May 2020 19:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82E9E2053B;
+        Tue, 26 May 2020 19:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520574;
-        bh=yLwlTBvyODr7QfsTZrWpi8MtZSOJe6d+ppkpOxpaDyc=;
+        s=default; t=1590520577;
+        bh=cEyHBFC3X+SM8f+LOE2aDFSiIZ9pf7/5DTMY407Jr9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjmopDElBH7RjfFyj+/+XdAM7AQxkpEfyW+tsPg412VAqUJT8xofKNryovhMTvLWd
-         1IzX8EzjnJ0mPvoOGU3GyQzmb+49oo/aUEflL0JWFuamxRVWifX9oVvtc8Di/ixhv6
-         E4M62CRWn5tnFPw/eo9INGjpQ/l63yRx7Mjf744I=
+        b=SWJFRRwKoszdZ5Ew7l3CTmkYCFbt1cO8001BT3ofQfEP/LpKbgvOvRFfjKw+bATbX
+         v/F2ulhRsrzyZHcKRWHLoUfdqGlqZMk/0/gUYgbBdPN4ARZQf+mztYZIXYeHSsJ9jU
+         uUdyXtbXW7yG1NoLmEn7Vp3CiYiKLGDa2Rw+t+aU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>
-Subject: [PATCH 5.6 119/126] flow_dissector: Drop BPF flow dissector prog ref on netns cleanup
-Date:   Tue, 26 May 2020 20:54:16 +0200
-Message-Id: <20200526183947.404142438@linuxfoundation.org>
+        stable@vger.kernel.org,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 110/126] sh: include linux/time_types.h for sockios
+Date:   Tue, 26 May 2020 20:54:07 +0200
+Message-Id: <20200526183946.817686379@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,93 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 5cf65922bb15279402e1e19b5ee8c51d618fa51f upstream.
+commit fc94cf2092c7c1267fa2deb8388d624f50eba808 upstream.
 
-When attaching a flow dissector program to a network namespace with
-bpf(BPF_PROG_ATTACH, ...) we grab a reference to bpf_prog.
+Using the socket ioctls on arch/sh (and only there) causes build time
+problems when __kernel_old_timeval/__kernel_old_timespec are not already
+visible to the compiler.
 
-If netns gets destroyed while a flow dissector is still attached, and there
-are no other references to the prog, we leak the reference and the program
-remains loaded.
+Add an explict include line for the header that defines these
+structures.
 
-Leak can be reproduced by running flow dissector tests from selftests/bpf:
-
-  # bpftool prog list
-  # ./test_flow_dissector.sh
-  ...
-  selftests: test_flow_dissector [PASS]
-  # bpftool prog list
-  4: flow_dissector  name _dissect  tag e314084d332a5338  gpl
-          loaded_at 2020-05-20T18:50:53+0200  uid 0
-          xlated 552B  jited 355B  memlock 4096B  map_ids 3,4
-          btf_id 4
-  #
-
-Fix it by detaching the flow dissector program when netns is going away.
-
-Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/20200521083435.560256-1-jakub@cloudflare.com
+Fixes: 8c709f9a0693 ("y2038: sh: remove timeval/timespec usage from headers")
+Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
+Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200519131327.1836482-1-arnd@arndb.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/flow_dissector.c |   26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ arch/sh/include/uapi/asm/sockios.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -160,12 +160,10 @@ out:
- 	return ret;
- }
+--- a/arch/sh/include/uapi/asm/sockios.h
++++ b/arch/sh/include/uapi/asm/sockios.h
+@@ -2,6 +2,8 @@
+ #ifndef __ASM_SH_SOCKIOS_H
+ #define __ASM_SH_SOCKIOS_H
  
--int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
-+static int flow_dissector_bpf_prog_detach(struct net *net)
- {
- 	struct bpf_prog *attached;
--	struct net *net;
- 
--	net = current->nsproxy->net_ns;
- 	mutex_lock(&flow_dissector_mutex);
- 	attached = rcu_dereference_protected(net->flow_dissector_prog,
- 					     lockdep_is_held(&flow_dissector_mutex));
-@@ -179,6 +177,24 @@ int skb_flow_dissector_bpf_prog_detach(c
- 	return 0;
- }
- 
-+int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
-+{
-+	return flow_dissector_bpf_prog_detach(current->nsproxy->net_ns);
-+}
++#include <linux/time_types.h>
 +
-+static void __net_exit flow_dissector_pernet_pre_exit(struct net *net)
-+{
-+	/* We're not racing with attach/detach because there are no
-+	 * references to netns left when pre_exit gets called.
-+	 */
-+	if (rcu_access_pointer(net->flow_dissector_prog))
-+		flow_dissector_bpf_prog_detach(net);
-+}
-+
-+static struct pernet_operations flow_dissector_pernet_ops __net_initdata = {
-+	.pre_exit = flow_dissector_pernet_pre_exit,
-+};
-+
- /**
-  * __skb_flow_get_ports - extract the upper layer ports and return them
-  * @skb: sk_buff to extract the ports from
-@@ -1838,7 +1854,7 @@ static int __init init_default_flow_diss
- 	skb_flow_dissector_init(&flow_keys_basic_dissector,
- 				flow_keys_basic_dissector_keys,
- 				ARRAY_SIZE(flow_keys_basic_dissector_keys));
--	return 0;
--}
- 
-+	return register_pernet_subsys(&flow_dissector_pernet_ops);
-+}
- core_initcall(init_default_flow_dissectors);
+ /* Socket-level I/O control calls. */
+ #define FIOGETOWN	_IOR('f', 123, int)
+ #define FIOSETOWN 	_IOW('f', 124, int)
 
 
