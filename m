@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F151C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9066C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4295C20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F51C20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520127;
-	bh=+CcGc1ePsAEy4vbCoNwEklXLyLYAmR7rlXdXCWM57Is=;
+	s=default; t=1590520130;
+	bh=Pb3w8EfsuE0U2OZBSl6Xdlzscep5epzAj1g46ZuRWZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XuNWKY2KrPxo0XR8hDdr24O1g380q0yqXr1vW+K2GklaPIIAGupwGmkyYS8GcW3Wl
-	 ZkESzlf6NJ9BOuJnGjSsf6YRDNOT5x+sJXobuJCWGreWlZYGkZyDS5BKwhKRtqm9P+
-	 4ruIyAh+ftE4w41j9Y8M24+7txb2iIlDZ57Q9lmU=
+	b=OSSqxMlrWC6M63JP9u3V+KB7KKvLdFKSFxb359lr9tXqjzsKHmDjGl0FtTWYb/iSE
+	 C0uEGskD5fnpyt/jC61053CG6vM4AP7zND83O65DJq7usC+aBd65//wfYTA3bDN/16
+	 SvotE9bvclhtPqyrorAp7o1PwYSxG5EVNT1RfGPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391808AbgEZTIp (ORCPT
+        id S2391033AbgEZTIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403842AbgEZTIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:08:37 -0400
+        id S2391806AbgEZTIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08BB0208C3;
-        Tue, 26 May 2020 19:08:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4C8D20776;
+        Tue, 26 May 2020 19:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520117;
-        bh=+CcGc1ePsAEy4vbCoNwEklXLyLYAmR7rlXdXCWM57Is=;
+        s=default; t=1590520125;
+        bh=Pb3w8EfsuE0U2OZBSl6Xdlzscep5epzAj1g46ZuRWZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRIer6hdk5fTHXUiQnGtU/giZX3vndG7PfyafZ/vrPwmoma/HGtr2JtNQs4ei+ucV
-         HxJOyDGb54A4ILghJ3phSXdEyXBe5biok9L3tq3wiyGR87IJDtIgxCBbly/UYNtC5D
-         lfjljxySYrnW9fTawrgJyhyPLhCfTLD/CbfU4Jok=
+        b=IuFaiC7vmQj6z+mhYuzWds/vnuUO0dMKLXr0yIFzl6ZpbegtUGZRrXkX4mU6K63RQ
+         jMKgEmpdyFfzOIzM4YPAoYJn078VgUHS0OfiLJFMNUbtyEf6QVkhP81up3zBltHe7N
+         /rfRk5ZzHiXDONAyfg88dO8PkGtuoxEyJ9+W1a0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keno Fischer <keno@juliacomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>, Bin Lu <Bin.Lu@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.4 064/111] arm64: Fix PTRACE_SYSEMU semantics
-Date:   Tue, 26 May 2020 20:53:22 +0200
-Message-Id: <20200526183938.924435089@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 5.4 067/111] apparmor: fix potential label refcnt leak in aa_change_profile
+Date:   Tue, 26 May 2020 20:53:25 +0200
+Message-Id: <20200526183939.201163831@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,58 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keno Fischer <keno@juliacomputing.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 1cf6022bd9161081215028203919c33fcfa6debb upstream.
+commit a0b845ffa0d91855532b50fc040aeb2d8338dca4 upstream.
 
-Quoth the man page:
-```
-       If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
-       tracee enters syscall-enter-stop just prior to entering any system
-       call (which will not be executed if the restart was using
-       PTRACE_SYSEMU, regardless of any change made to registers at this
-       point or how the tracee is restarted after this stop).
-```
+aa_change_profile() invokes aa_get_current_label(), which returns
+a reference of the current task's label.
 
-The parenthetical comment is currently true on x86 and powerpc,
-but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
-flag after the syscall entry ptrace stop. However, at this point,
-it reflects which method was used to re-start the syscall
-at the entry stop, rather than the method that was used to reach it.
-Fix that by recording the original flag before performing the ptrace
-stop, bringing the behavior in line with documentation and x86/powerpc.
+According to the comment of aa_get_current_label(), the returned
+reference must be put with aa_put_label().
+However, when the original object pointed by "label" becomes
+unreachable because aa_change_profile() returns or a new object
+is assigned to "label", reference count increased by
+aa_get_current_label() is not decreased, causing a refcnt leak.
 
-Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
-Cc: <stable@vger.kernel.org> # 5.3.x-
-Signed-off-by: Keno Fischer <keno@juliacomputing.com>
-Acked-by: Will Deacon <will@kernel.org>
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Bin Lu <Bin.Lu@arm.com>
-[catalin.marinas@arm.com: moved 'flags' bit masking]
-[catalin.marinas@arm.com: changed 'flags' type to unsigned long]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fix this by calling aa_put_label() before aa_change_profile() return
+and dropping unnecessary aa_get_current_label().
+
+Fixes: 9fcf78cca198 ("apparmor: update domain transitions that are subsets of confinement at nnp")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/ptrace.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ security/apparmor/domain.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1829,10 +1829,11 @@ static void tracehook_report_syscall(str
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -1334,6 +1334,7 @@ int aa_change_profile(const char *fqname
+ 		ctx->nnp = aa_get_label(label);
  
- int syscall_trace_enter(struct pt_regs *regs)
- {
--	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
--		test_thread_flag(TIF_SYSCALL_EMU)) {
-+	unsigned long flags = READ_ONCE(current_thread_info()->flags);
-+
-+	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
- 		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
--		if (!in_syscall(regs) || test_thread_flag(TIF_SYSCALL_EMU))
-+		if (!in_syscall(regs) || (flags & _TIF_SYSCALL_EMU))
- 			return -1;
+ 	if (!fqname || !*fqname) {
++		aa_put_label(label);
+ 		AA_DEBUG("no profile name");
+ 		return -EINVAL;
+ 	}
+@@ -1352,8 +1353,6 @@ int aa_change_profile(const char *fqname
+ 			op = OP_CHANGE_PROFILE;
  	}
  
+-	label = aa_get_current_label();
+-
+ 	if (*fqname == '&') {
+ 		stack = true;
+ 		/* don't have label_parse() do stacking */
 
 
