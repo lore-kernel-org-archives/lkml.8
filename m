@@ -2,54 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A902C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A147DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6778A20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7816120776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521185;
-	bh=gkOodJPnHPt2bn5Ii9IrOlStnEZJDKD9xkLvRS4kHSQ=;
+	s=default; t=1590521193;
+	bh=DmrPKJdFBUauhwiCz6LXqWQZmO9spHTtVfvNF0ftHWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9h4dej1V8QSp4TQdeWgOr0EDIX+Zdh6o7pp24pBEWmQlQC+Malam4ZiICjqKR3MM
-	 jbBUNOQ65inhIv6TnxaCGti37vtSIYQuR+8IcuWuWiay8U9B6BvHWcr68X6XLoUUnl
-	 99qFGEzPEJ45Eu+nzb7DzR6JstMno/YBz126Tlz8=
+	b=vs5MEYpAhw/P7n1aA3m6AYnXXptpn5d3x579yLPKksQJKt3EFnqyVtBSokP5RFYh9
+	 GxSTqfaGNi1H6GtpNdN28Q2SJywMxbEDQ+K26+BrldGzIIEiI3/RSbxH6EZu7g/35r
+	 V4FYDOy0Bfb8Dll/5zy6iNC2oytC98JMuF33jY6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391560AbgEZT0Y (ORCPT
+        id S2391626AbgEZT0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391521AbgEZTFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:41 -0400
+        id S2391500AbgEZTFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B54120873;
-        Tue, 26 May 2020 19:05:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF1B6208B3;
+        Tue, 26 May 2020 19:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519940;
-        bh=gkOodJPnHPt2bn5Ii9IrOlStnEZJDKD9xkLvRS4kHSQ=;
+        s=default; t=1590519931;
+        bh=DmrPKJdFBUauhwiCz6LXqWQZmO9spHTtVfvNF0ftHWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v8lnzqQel1Q/+KR2D0czq2NPxE0lTz/t1dClrK+cK94hGLXDNC2Imj71YtQ8Meu2/
-         hZ4nDpOyHgX8gia06ssSsDHcOVhirLzhQvYCG92Q24B31XtL6NQJrEXy67sHJSqXuk
-         F+RcI26UDFNXlIofENiGq7CjguzZzODOuEeCHHxc=
+        b=oFAF/TLXHYlteOhG9l0TenptNPFBFG6fdjuK7UzConQUjoFkX4xu5LKC4xvpeJ/SH
+         cw2NXOVslZ3OgXER4kmyd8m6aQKvwL6FLCBoE5heirfEOypa3/2w/7osXZWImquuRT
+         SHvkb5LE+s49YNFfKRGy7EnBeNl4X65vw4uomS7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 77/81] iio: adc: stm32-dfsdm: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 26 May 2020 20:53:52 +0200
-Message-Id: <20200526183935.612357218@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        David Howells <dhowells@redhat.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH 4.19 73/81] rxrpc: Fix a memory leak in rxkad_verify_response()
+Date:   Tue, 26 May 2020 20:53:48 +0200
+Message-Id: <20200526183935.161434550@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -62,48 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit a9ab624edd9186fbad734cfe5d606a6da3ca34db ]
+commit f45d01f4f30b53c3a0a1c6c1c154acb7ff74ab9f upstream.
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+A ticket was not released after a call of the function
+"rxkad_decrypt_ticket" failed. Thus replace the jump target
+"temporary_error_free_resp" by "temporary_error_free_ticket".
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Fixes: 8c2f826dc3631 ("rxrpc: Don't put crypto buffers on the stack")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Olivier Moysan <olivier.moysan@st.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/rxrpc/rxkad.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index f5586dd6414d..516d7d22d9f4 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -933,9 +933,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
- 	};
- 	int ret;
+--- a/net/rxrpc/rxkad.c
++++ b/net/rxrpc/rxkad.c
+@@ -1118,7 +1118,7 @@ static int rxkad_verify_response(struct
+ 	ret = rxkad_decrypt_ticket(conn, skb, ticket, ticket_len, &session_key,
+ 				   &expiry, _abort_code);
+ 	if (ret < 0)
+-		goto temporary_error_free_resp;
++		goto temporary_error_free_ticket;
  
--	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
--	if (!adc->dma_chan)
--		return -EINVAL;
-+	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	if (IS_ERR(adc->dma_chan)) {
-+		int ret = PTR_ERR(adc->dma_chan);
-+
-+		adc->dma_chan = NULL;
-+		return ret;
-+	}
+ 	/* use the session key from inside the ticket to decrypt the
+ 	 * response */
+@@ -1200,7 +1200,6 @@ protocol_error:
  
- 	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
- 					 DFSDM_DMA_BUFFER_SIZE,
--- 
-2.25.1
-
+ temporary_error_free_ticket:
+ 	kfree(ticket);
+-temporary_error_free_resp:
+ 	kfree(response);
+ temporary_error:
+ 	/* Ignore the response packet if we got a temporary error such as
 
 
