@@ -2,125 +2,171 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E36FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1911B206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E79206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aOxeeiHs"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="p/H6CoBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbgEZPxe (ORCPT
+        id S1731387AbgEZPyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbgEZPxd (ORCPT
+        Tue, 26 May 2020 11:54:50 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:44023 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727862AbgEZPyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:53:33 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A0DC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:53:33 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id r16so845970qvm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jlzpUqOYdHV1vxWH1ghpZ5NGGPs3KIgh2WBW3uooNyo=;
-        b=aOxeeiHs3Gji6/AEWR2ZvosQKYQBQENiEkhQwl1NKLn2O8TIhxXA5l5jX4IwCXpTNy
-         LCe/8dGn9TpuIppdW2DyEuF5xO3Wu5PyEoimljK59a1Nm+wbIDPvNiMeQ0rIB6VR0L0A
-         7vUw+l9TFFsVgnqBLpm+GQ/e+z2ikDYnGqFOzDtizixstcS8d0h9wKJuxDvLw7z2t5CF
-         oM8HEcXf1ctNDH75ArYQ7Z86jPiVZ02Yz21UTZJ3wr6V4lfkUIUVGNBRuYHGVmL3yVSb
-         q+IGL1+xtTMNSaJ3RzXqImGG3L8SG2cTydkGE/F1hqcrWzaqZvkYG/8WqhlVZTEjV1BF
-         AZGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jlzpUqOYdHV1vxWH1ghpZ5NGGPs3KIgh2WBW3uooNyo=;
-        b=Pzs+GDg6GN9cjq9uMskXt4138owO464BhI1cypgdAxVWM45fcBKdhx1GPRClJlvD2w
-         7BFHr+nICZx8aWO6PNSBb1L38Xvu/TDHHykfgI6tmhR/D/xaYRPboHdPCn8MmOE+Zy2N
-         gRQHQTLIcdTPo7E3wMpnrOBjQ9cZ7IXG3AKIbN/JMbE1hqqC2klJqEF5dDBXujjWzNwH
-         K+6mIlCwyja+3miRwtcwezMNgCAv+scfY4slfguvWU57WBB1y9mpB6WBkm5/bInMw1dv
-         r2o/uNdvP8b8AAeiwHDidzIc0CUtkWDGZU2s0NarsbT5LBKRcjzoS61yJrXmZf4IAEc1
-         I7tw==
-X-Gm-Message-State: AOAM5337otOMJKYnAwvolWDxnwesm2daNZ5r8wGIj0WfNuXFgnBiMVJP
-        pnNxc9YGcwNENgKDPGVUXikf1Q==
-X-Google-Smtp-Source: ABdhPJzonweq5dYvv3Hmq6kHR/xpDqKc1wJWZ6DuU5wFcA1lHqG8wEGPtzkZiqfBxBTQ/1rffOABUQ==
-X-Received: by 2002:a0c:ee25:: with SMTP id l5mr19982495qvs.5.1590508412775;
-        Tue, 26 May 2020 08:53:32 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id v1sm21344qkb.19.2020.05.26.08.53.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 08:53:32 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jdbtT-00012F-Km; Tue, 26 May 2020 12:53:31 -0300
-Date:   Tue, 26 May 2020 12:53:31 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, John Hubbard <jhubbard@nvidia.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, cai@lca.pw,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
- on disabled memory
-Message-ID: <20200526155331.GN744@ziepe.ca>
-References: <20200523235257.GC939059@xz-x1>
- <20200525122607.GC744@ziepe.ca>
- <20200525142806.GC1058657@xz-x1>
- <20200525144651.GE744@ziepe.ca>
- <20200525151142.GE1058657@xz-x1>
- <20200525165637.GG744@ziepe.ca>
- <3d9c1c8b-5278-1c4d-0e9c-e6f8fdb75853@nvidia.com>
- <20200526003705.GK744@ziepe.ca>
- <20200526134954.GA1125781@xz-x1>
- <20200526083218.40402f01@x1.home>
+        Tue, 26 May 2020 11:54:49 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 25A9823E2C;
+        Tue, 26 May 2020 17:54:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590508485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fea62NxmJK3eV7EnGjkH2PK8+sAxiTRywctVj4jahAw=;
+        b=p/H6CoByMx+/VRkUqo+zYBHQEDnzKf87T6UB5OckeCGd559i5IIHZzp0KffewoWwrz88Ae
+        h4yBFkejNH9BHFDcaRt1kgJ81Y0dFZk9I17TNByb0x/PZd+5Ojh4zOlgnTuQUvHMWc5GBK
+        mSDPNjq9ejnJ/5I3fr34XdPofcyMOs0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526083218.40402f01@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 26 May 2020 17:54:38 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+In-Reply-To: <20200526072427.GC3628@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc> <20200515102848.GH271301@dell>
+ <159e68b4ce53630ef906b2fcbca925bd@walle.cc> <20200526072427.GC3628@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:32:18AM -0600, Alex Williamson wrote:
-> > > Certainly there is no reason to optimize the fringe case of vfio
-> > > sleeping if there is and incorrect concurrnent attempt to disable the
-> > > a BAR.  
-> > 
-> > If fixup_user_fault() (which is always with ALLOW_RETRY && !RETRY_NOWAIT) is
-> > the only path for the new fault(), then current way seems ok.  Not sure whether
-> > this would worth a WARN_ON_ONCE(RETRY_NOWAIT) in the fault() to be clear of
-> > that fact.
+Am 2020-05-26 09:24, schrieb Lee Jones:
+> On Mon, 25 May 2020, Michael Walle wrote:
 > 
-> Thanks for the discussion over the weekend folks.  Peter, I take it
-> you'd be satisfied if this patch were updated as:
+>> Am 2020-05-15 12:28, schrieb Lee Jones:
+>> > On Thu, 30 Apr 2020, Michael Walle wrote:
+>> >
+>> > > Hi Lee,
+>> > >
+>> > > Am 2020-04-23 19:45, schrieb Michael Walle:
+>> > > > There might be multiple children with the device tree compatible, for
+>> > > > example if a MFD has multiple instances of the same function. In this
+>> > > > case only the first is matched and the other children get a wrong
+>> > > > of_node reference.
+>> > > > Add a new option to match also against the unit address of the child
+>> > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+>> > >
+>> > >
+>> > > Do you think this is feasible? I guess this is the biggest uncertainty
+>> > > for me at the moment in this patch series.
+>> >
+>> > I think it sounds fine in principle.  So long as it doesn't change the
+>> > existing behaviour when of_reg isn't set.
+>> >
+>> > > > Signed-off-by: Michael Walle <michael@walle.cc>
+>> > > > ---
+>> > > >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+>> > > >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+>> > > >  2 files changed, 40 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index aabba6439a5b..35bd7cd4e268 100644
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -1528,6 +1528,13 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
->  	struct vfio_pci_device *vdev = vma->vm_private_data;
->  	vm_fault_t ret = VM_FAULT_NOPAGE;
->  
-> +	/*
-> +	 * We don't expect to be called with NOWAIT and there are conflicting
-> +	 * opinions on whether NOWAIT suggests we shouldn't wait for locks or
-> +	 * just shouldn't wait for I/O.
-> +	 */
-> +	WARN_ON_ONCE(vmf->flags & FAULT_FLAG_RETRY_NOWAIT);
+> [...]
+> 
+>> > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+>> > > > index d01d1299e49d..c2c0ad6b14f3 100644
+>> > > > --- a/include/linux/mfd/core.h
+>> > > > +++ b/include/linux/mfd/core.h
+>> > > > @@ -13,8 +13,11 @@
+>> > > >  #include <linux/platform_device.h>
+>> > > >
+>> > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+>> > > > +#define MFD_OF_REG_VALID	BIT(31)
+>> >
+>> > What about 64bit platforms?
+>> 
+>> The idea was to have this as a logical number. I.e. for now you may 
+>> only
+>> have one subdevice per unique compatible string. In fact, if you have 
+>> a
+>> look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
+>> subdevices. But there is only one DT node for all three of it. I guess
+>> this works as long as you don't use phandles to reference the pwm node
+>> in the device tree. Or you don't want to use device tree properties
+>> per subdevice (for example the "timeout-sec" of a watchdog device).
+>> 
+>> So to circumvent this, I thought of having the unit-address (and thus
+>> the "reg" property) to differentiate between multiple subdevices. Now
+>> there is one special case for me: this board management controller
+>> might be upgradable and it might change internally. Thus I came up
+>> with that logical numbering of subdevices. Rob doesn't seem to be a
+>> fan of that, though. Therefore, having bit 31 as a valid indicator
+>> leaves you with 2^31 logical devices, which should be enough ;)
+>> 
+>> Rob proposed to have the internal offset as the unit-address. But
+>> in that case I can also use devm_of_platform_populate() and don't
+>> need the OF_MFD_CELL_REG; I'd just parse the reg offset in each
+>> individual subdevice driver. But like I said, I wanted to keep the
+>> internal offsets out of the device tree.
+> 
+> Oh, I see what you're doing.
+> 
+> So you're adding an arbitrary ID to the device's reg property in DT?
 
-I don't think this is right, this implies there is some reason this
-code fails with FAULT_FLAG_RETRY_NOWAIT - but it is fine as written,
-AFAICT
+Yes.
 
-Jason
+> How is this not a hack?
+
+Well IMHO this is not more or less a hack as the current of_node
+handling of MFD devices, which happens to work only because there
+is only one device per compatible string (or it doesn't really work,
+like in the stericsson,ab8500-pwm case). The of_node is assigned
+according to the compatible string, just like in my case, only that
+I have two subdevices with the same compatible string.
+
+> Why don't you use the full address for identification?
+
+Like I said, in the long term I would like to have support for
+different versions of the board management controller without having
+to change the device tree and have device tree bindings for the
+subdevices at the same time. But it seems, that this is not possible
+and I guess I have to bite the bullet and may need to provide another
+device tree if the controller might be updated.
+
+-michael
