@@ -2,217 +2,100 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E72EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B99BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F41208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519353;
-	bh=eMtE+JBaMmlzLtICDuGyHLpacDpmAxayQKApB2U+tyI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2snjPJjWzwJJ3oFPfmEdVY0R6WcIyzsjD/mX7Yvqbk0/8tC8Y0vkFOqv5Of1aew/
-	 ksPzXValIFFQrh/yNkGHd6zMwvARWTLkBplcQdGlxPMZ1MwxPdEnfAgD0cRpEIHPcD
-	 ik28m3OlJGxldvVuPworHN7tAc0l7Jmoi9DSVgfk=
+	by mail.kernel.org (Postfix) with ESMTP id 0B410208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="csLBG7MW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbgEZSzw (ORCPT
+        id S2389654AbgEZSzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389600AbgEZSzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21452086A;
-        Tue, 26 May 2020 18:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519345;
-        bh=eMtE+JBaMmlzLtICDuGyHLpacDpmAxayQKApB2U+tyI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C8Aa2Wz/DuWTZ6lS80+3+ywk8anX5gMH7bUF14dvaJcJMVD0mO3SZeCwNAhvpUzeq
-         672RfLB2XD38NbhRGUSgPGAPJuVFbqv5zCUzjTLKFf1hgcPTP1AjPfoNKX3x1sd9gW
-         XcY+o9mD9cXWXvxrLfuCeVootN74omv4ypXMKSFw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Theodore Tso <tytso@mit.edu>,
-        Sultan Alsawaf <sultan@kerneltoast.com>
-Subject: [PATCH 4.4 31/65] ext4: lock the xattr block before checksuming it
-Date:   Tue, 26 May 2020 20:52:50 +0200
-Message-Id: <20200526183917.592537446@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
-References: <20200526183905.988782958@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 26 May 2020 14:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389623AbgEZSzp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4772CC03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:55:45 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id nu7so184522pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=mP6Cu0mgfRIdytKJmT/JbpqFGV5hti6hDDcYjXsp/n8=;
+        b=csLBG7MWmFDFdyDmAAKhK0DYdONM8BHZYeFGTC879KpVj6Y5Xk9doyuUkTKGKdCiHi
+         HfmAj4dC0cDcFBzY60F/ZTZbf47RRLBKsfVyQ+yGxEpMt/1nTlSUAcKXI8s+ieYL+zUU
+         X8wuWyyDODagttgQCaEPsRv5TGBmu1cP5EwDA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=mP6Cu0mgfRIdytKJmT/JbpqFGV5hti6hDDcYjXsp/n8=;
+        b=IvPqnlSGmQ5uuf4X0jsHmU7jknaqRcdEyUPXvLWgLS/5G0rofZjwlMr3+mBZ9d9dL9
+         ZL0W7658yMgzzkju9zAof7l04fkqczf0CXUM6wncXX1jat/Eh0f74GZa5H0XM8Na9aUQ
+         rtZTCGs4xvYDXkK1reYzMdJSKV5pkjLoDwrh/OXVV5zLrko8Dz9+X2F21nAqPsAGVTew
+         Jx+3ToDNSsJi7xD+sIwNAm+FSKRtXJ7ZFULLV6fyMH6uliIFN2rQ+pIC+3XFNQAu2bB5
+         NhbqneBk50b8nZdHc+BasR2vr/WEUbigNzVizrHiVpsmfF8fPTaJ8GJi/vqyIiJLvjqw
+         +QuQ==
+X-Gm-Message-State: AOAM531V5JZHoArtoPaOx6tDzK1Wb7t+vW43La/2IiA/isJtFUeufaip
+        wP8ya5m5J2JOGv0r+qkJWts3+g==
+X-Google-Smtp-Source: ABdhPJwQICMwBntB9aeujLedOj2O9kL1o7DOX7kSwX8RdQ0FSeMECkQjs44736Z3YvI7DbRdr2NpLg==
+X-Received: by 2002:a17:90a:e016:: with SMTP id u22mr707865pjy.28.1590519344815;
+        Tue, 26 May 2020 11:55:44 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x191sm263045pfd.37.2020.05.26.11.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 11:55:44 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200526173117.155339-1-ndesaulniers@google.com>
+References: <20200526173117.155339-1-ndesaulniers@google.com>
+Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
+        Stephen Boyd <swboyd@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, Manoj Gupta <manojgupta@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>
+Date:   Tue, 26 May 2020 11:55:43 -0700
+Message-ID: <159051934304.88029.10469584232447870375@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+Quoting Nick Desaulniers (2020-05-26 10:31:14)
+> Custom toolchains that modify the default target to -mthumb cannot
+> compile the arm64 compat vdso32, as
+> arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> contains assembly that's invalid in -mthumb.  Force the use of -marm,
+> always.
+>=20
+> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=3D1084372
+> Cc: Stephen Boyd <swboyd@google.com>
+> Reported-by: Luis Lozano <llozano@google.com>
+> Tested-by: Manoj Gupta <manojgupta@google.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
 
-commit dac7a4b4b1f664934e8b713f529b629f67db313c upstream.
-
-We must lock the xattr block before calculating or verifying the
-checksum in order to avoid spurious checksum failures.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=193661
-
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/ext4/xattr.c |   66 +++++++++++++++++++++++++++-----------------------------
- 1 file changed, 32 insertions(+), 34 deletions(-)
-
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -139,31 +139,26 @@ static __le32 ext4_xattr_block_csum(stru
- }
- 
- static int ext4_xattr_block_csum_verify(struct inode *inode,
--					sector_t block_nr,
--					struct ext4_xattr_header *hdr)
-+					struct buffer_head *bh)
- {
--	if (ext4_has_metadata_csum(inode->i_sb) &&
--	    (hdr->h_checksum != ext4_xattr_block_csum(inode, block_nr, hdr)))
--		return 0;
--	return 1;
--}
--
--static void ext4_xattr_block_csum_set(struct inode *inode,
--				      sector_t block_nr,
--				      struct ext4_xattr_header *hdr)
--{
--	if (!ext4_has_metadata_csum(inode->i_sb))
--		return;
-+	struct ext4_xattr_header *hdr = BHDR(bh);
-+	int ret = 1;
- 
--	hdr->h_checksum = ext4_xattr_block_csum(inode, block_nr, hdr);
-+	if (ext4_has_metadata_csum(inode->i_sb)) {
-+		lock_buffer(bh);
-+		ret = (hdr->h_checksum == ext4_xattr_block_csum(inode,
-+							bh->b_blocknr, hdr));
-+		unlock_buffer(bh);
-+	}
-+	return ret;
- }
- 
--static inline int ext4_handle_dirty_xattr_block(handle_t *handle,
--						struct inode *inode,
--						struct buffer_head *bh)
-+static void ext4_xattr_block_csum_set(struct inode *inode,
-+				      struct buffer_head *bh)
- {
--	ext4_xattr_block_csum_set(inode, bh->b_blocknr, BHDR(bh));
--	return ext4_handle_dirty_metadata(handle, inode, bh);
-+	if (ext4_has_metadata_csum(inode->i_sb))
-+		BHDR(bh)->h_checksum = ext4_xattr_block_csum(inode,
-+						bh->b_blocknr, BHDR(bh));
- }
- 
- static inline const struct xattr_handler *
-@@ -226,7 +221,7 @@ ext4_xattr_check_block(struct inode *ino
- 	if (buffer_verified(bh))
- 		return 0;
- 
--	if (!ext4_xattr_block_csum_verify(inode, bh->b_blocknr, BHDR(bh)))
-+	if (!ext4_xattr_block_csum_verify(inode, bh))
- 		return -EFSBADCRC;
- 	error = ext4_xattr_check_names(BFIRST(bh), bh->b_data + bh->b_size,
- 				       bh->b_data);
-@@ -590,23 +585,23 @@ ext4_xattr_release_block(handle_t *handl
- 		le32_add_cpu(&BHDR(bh)->h_refcount, -1);
- 		if (ce)
- 			mb_cache_entry_release(ce);
-+
-+		ext4_xattr_block_csum_set(inode, bh);
- 		/*
- 		 * Beware of this ugliness: Releasing of xattr block references
- 		 * from different inodes can race and so we have to protect
- 		 * from a race where someone else frees the block (and releases
- 		 * its journal_head) before we are done dirtying the buffer. In
- 		 * nojournal mode this race is harmless and we actually cannot
--		 * call ext4_handle_dirty_xattr_block() with locked buffer as
-+		 * call ext4_handle_dirty_metadata() with locked buffer as
- 		 * that function can call sync_dirty_buffer() so for that case
- 		 * we handle the dirtying after unlocking the buffer.
- 		 */
- 		if (ext4_handle_valid(handle))
--			error = ext4_handle_dirty_xattr_block(handle, inode,
--							      bh);
-+			error = ext4_handle_dirty_metadata(handle, inode, bh);
- 		unlock_buffer(bh);
- 		if (!ext4_handle_valid(handle))
--			error = ext4_handle_dirty_xattr_block(handle, inode,
--							      bh);
-+			error = ext4_handle_dirty_metadata(handle, inode, bh);
- 		if (IS_SYNC(inode))
- 			ext4_handle_sync(handle);
- 		dquot_free_block(inode, EXT4_C2B(EXT4_SB(inode->i_sb), 1));
-@@ -837,13 +832,14 @@ ext4_xattr_block_set(handle_t *handle, s
- 					ext4_xattr_rehash(header(s->base),
- 							  s->here);
- 			}
-+			ext4_xattr_block_csum_set(inode, bs->bh);
- 			unlock_buffer(bs->bh);
- 			if (error == -EFSCORRUPTED)
- 				goto bad_block;
- 			if (!error)
--				error = ext4_handle_dirty_xattr_block(handle,
--								      inode,
--								      bs->bh);
-+				error = ext4_handle_dirty_metadata(handle,
-+								   inode,
-+								   bs->bh);
- 			if (error)
- 				goto cleanup;
- 			goto inserted;
-@@ -912,10 +908,11 @@ inserted:
- 				le32_add_cpu(&BHDR(new_bh)->h_refcount, 1);
- 				ea_bdebug(new_bh, "reusing; refcount now=%d",
- 					le32_to_cpu(BHDR(new_bh)->h_refcount));
-+				ext4_xattr_block_csum_set(inode, new_bh);
- 				unlock_buffer(new_bh);
--				error = ext4_handle_dirty_xattr_block(handle,
--								      inode,
--								      new_bh);
-+				error = ext4_handle_dirty_metadata(handle,
-+								   inode,
-+								   new_bh);
- 				if (error)
- 					goto cleanup_dquot;
- 			}
-@@ -965,11 +962,12 @@ getblk_failed:
- 				goto getblk_failed;
- 			}
- 			memcpy(new_bh->b_data, s->base, new_bh->b_size);
-+			ext4_xattr_block_csum_set(inode, new_bh);
- 			set_buffer_uptodate(new_bh);
- 			unlock_buffer(new_bh);
- 			ext4_xattr_cache_insert(ext4_mb_cache, new_bh);
--			error = ext4_handle_dirty_xattr_block(handle,
--							      inode, new_bh);
-+			error = ext4_handle_dirty_metadata(handle, inode,
-+							   new_bh);
- 			if (error)
- 				goto cleanup;
- 		}
-
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
