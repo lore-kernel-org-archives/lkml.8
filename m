@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5783C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1F8520721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA26C20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521223;
-	bh=36qQNXW0vrV1cpauf0h8+fAq47FTsFqzhPggG0em0tY=;
+	s=default; t=1590521230;
+	bh=hrbJyOLEuxk36OPNi1fKCASFHtlHY4Zp1pnVLXNnWFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqfkqJ59+AWK7RIleOgKXw5tvE7QeKLWfVAAomkSBBcG4nHf/ML1vzVTg78fstToJ
-	 8GDiDIjCfG0aRL6uv6tcB2hhjYwgLPw/wqZ+ih5/1lKdvAEN+G3eDpLv0q+v2CM/Aq
-	 aVVyvGNSoGGqk8e6H2OCgNzPO8WIfcAsq0Ubb5QQ=
+	b=QG9hAQpceJ+adXZKJ1GWsPR/Rhzg+TdRavqZFrjrYIXnqUPxbwiOWvHgZigz9+lTL
+	 KbBSO+Ean9mTz9rBvRokV/NTU3hG0TF5/LHyFMiBzIjW2JTZBoPoD5kdh+8lRsGitl
+	 o6rwfkvJB0cLfChekp3FMXZM2LVlhYW6I28VhPfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403763AbgEZTEq (ORCPT
+        id S2391422AbgEZT1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60448 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390877AbgEZTEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:42 -0400
+        id S2390273AbgEZTEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DF720873;
-        Tue, 26 May 2020 19:04:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F87920849;
+        Tue, 26 May 2020 19:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519882;
-        bh=36qQNXW0vrV1cpauf0h8+fAq47FTsFqzhPggG0em0tY=;
+        s=default; t=1590519875;
+        bh=hrbJyOLEuxk36OPNi1fKCASFHtlHY4Zp1pnVLXNnWFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFjzTiwgzIZilijDB2bJwtBLk0Nx0gb+L0+O7FxOpkdfoMoH3Sg0/lW76gGrEfAeS
-         2/zFsNJVlCbofUB1ooaltPECsD2XB2eiaOd87Y8PWnm+xjiednG9Watn0YypdYteVI
-         K4VDVxfNnXQChgqHK+G96sIs7+NKmqz57NbtcrGA=
+        b=z/3lB3vEz1sKEpO09avOvLf73ordnElXrDEl1HPHfiQqxcb1ZWlyRtOrH1cPll6dj
+         V8F+Oduhwx+fkEW4iIHb4SD6eK65fBGN4GpNryM0QKfSIy3VeBHT60LTWsrxZnSA8E
+         SepBQxqLIdPLCgzQ4zgtKVngoluAfrLYPCeOoN1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/81] libnvdimm/btt: Remove unnecessary code in btt_freelist_init
-Date:   Tue, 26 May 2020 20:53:27 +0200
-Message-Id: <20200526183932.900018493@linuxfoundation.org>
+Subject: [PATCH 4.19 49/81] powerpc: Remove STRICT_KERNEL_RWX incompatibility with RELOCATABLE
+Date:   Tue, 26 May 2020 20:53:24 +0200
+Message-Id: <20200526183932.664564063@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,49 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Verma <vishal.l.verma@intel.com>
+From: Russell Currey <ruscur@russell.cc>
 
-[ Upstream commit 2f8c9011151337d0bc106693f272f9bddbccfab2 ]
+[ Upstream commit c55d7b5e64265fdca45c85b639013e770bde2d0e ]
 
-We call btt_log_read() twice, once to get the 'old' log entry, and again
-to get the 'new' entry. However, we have no use for the 'old' entry, so
-remove it.
+I have tested this with the Radix MMU and everything seems to work, and
+the previous patch for Hash seems to fix everything too.
+STRICT_KERNEL_RWX should still be disabled by default for now.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Please test STRICT_KERNEL_RWX + RELOCATABLE!
+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191224064126.183670-2-ruscur@russell.cc
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/powerpc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 75ae2c508a04..d78cfe82ad5c 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -541,9 +541,9 @@ static int arena_clear_freelist_error(struct arena_info *arena, u32 lane)
- 
- static int btt_freelist_init(struct arena_info *arena)
- {
--	int old, new, ret;
-+	int new, ret;
- 	u32 i, map_entry;
--	struct log_entry log_new, log_old;
-+	struct log_entry log_new;
- 
- 	arena->freelist = kcalloc(arena->nfree, sizeof(struct free_entry),
- 					GFP_KERNEL);
-@@ -551,10 +551,6 @@ static int btt_freelist_init(struct arena_info *arena)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < arena->nfree; i++) {
--		old = btt_log_read(arena, i, &log_old, LOG_OLD_ENT);
--		if (old < 0)
--			return old;
--
- 		new = btt_log_read(arena, i, &log_new, LOG_NEW_ENT);
- 		if (new < 0)
- 			return new;
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 6f475dc5829b..da48a2ca272e 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -139,7 +139,7 @@ config PPC
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
+ 	select ARCH_HAS_SG_CHAIN
+-	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
++	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
 -- 
 2.25.1
 
