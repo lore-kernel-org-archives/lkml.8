@@ -2,121 +2,77 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFD520787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D26206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HOv5Kvfb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMJzEbVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgEZQGG (ORCPT
+        id S1728836AbgEZQHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:06:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgEZQGF (ORCPT
+        Tue, 26 May 2020 12:07:13 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38869 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727941AbgEZQHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:06:05 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDF9C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:06:05 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n15so21622pjt.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3lKumICFqyFYrifsebtGoakO5VK89B9abdeZRmwK6ew=;
-        b=HOv5KvfbMqTD/xQ/ROlpU3bcOVjFptEwe2f/EQw/HAma8s4kRySgfWHZ9e8m+4QrgE
-         HW1GWv4ZRcMmEpC83PhRkRwJEk2/0BkcTX3OrzQrJ/iQNGfaYnUeJEApneVQniuqAowy
-         2D0Djf5m/KmGOZMjkbPEKneQ/xhUdS9YyEz9Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3lKumICFqyFYrifsebtGoakO5VK89B9abdeZRmwK6ew=;
-        b=M2DVH7ZZ/lajUYbC+IArGp0uzxi19D67u2iospQ3sevXURe2G4bFtJK5+L1hUFSDOQ
-         G1aITXPNxDJk3XyCS+WuVefLPGBnGvsrh6A1ulS8lH0nL2UwSYP3S/o6UoQdigfKnQQx
-         jqcCGriVTJPJwhEXnk3df/6H7fAqNnrtg7fX1ndYyJYcQiP5G7SdKR5Kq4KFKpWHmauK
-         6NqgjWpIvCjaBSCl4+MpMh6dSDb4dEBWbPG1XYOasNVZ2RIxt2nTqCLnhKR919f/mNJ6
-         Gf6fKUNhFEHt4jRv84CgeuAGg0qT29cfCo5dhnW42yQDdoNWUy+wNmMSkWsTINmB/cj4
-         /kbQ==
-X-Gm-Message-State: AOAM533I932dvS8IcKvljtwb5ElNn1YeBy9LHUm1SfJyYjYnq2wR3Xr6
-        DddjbJTY0PVWW3/K6YBGq1F62g==
-X-Google-Smtp-Source: ABdhPJyPU/803MdN1gbwFuM5w5uPEtmyalLAnfyY5sqqxosrq91XftBIrLkRGJKuctZsiaK1FtyNrA==
-X-Received: by 2002:a17:902:868d:: with SMTP id g13mr1703283plo.246.1590509164803;
-        Tue, 26 May 2020 09:06:04 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 128sm23369pfd.114.2020.05.26.09.06.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 09:06:03 -0700 (PDT)
-Date:   Tue, 26 May 2020 09:06:02 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Zijun Hu <zijuhu@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        rjliao@codeaurora.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Improve controller ID info log
- level
-Message-ID: <20200526160602.GE4525@google.com>
-References: <1590464108-1333-1-git-send-email-zijuhu@codeaurora.org>
+        Tue, 26 May 2020 12:07:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590509232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ga1+aiKNAdSYKO4V4SMnVKbCjeKbc562al4JWbkomq0=;
+        b=UMJzEbVZXAWHPy+UjzIBPz6nq9iyTPqookxOKV6epyKvOO9rLKh0bgbJx/57srFBdin6Jy
+        APTNWWiSeLTTi+M8j2fuiaQSEvSWm7KClcX57OLoZJPkjBgv3yhO2Mrc3QdfTuf/6tPdHx
+        ldRcs/HzM5/UeQBD7nuUXpgE9twGGOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-TQD69dTlNy2Hwt2v7VI0Tw-1; Tue, 26 May 2020 12:07:10 -0400
+X-MC-Unique: TQD69dTlNy2Hwt2v7VI0Tw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 238A918017E8;
+        Tue, 26 May 2020 16:07:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A667D648DB;
+        Tue, 26 May 2020 16:07:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200525103310.455f50e0@lwn.net>
+References: <20200525103310.455f50e0@lwn.net> <20200516003917.2035545-1-list.lkml.keyrings@me.benboeckel.net> <20200516003917.2035545-2-list.lkml.keyrings@me.benboeckel.net>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     dhowells@redhat.com, Ben Boeckel <me@benboeckel.net>,
+        keyrings@vger.kernel.org, Ben Boeckel <mathstuf@gmail.com>,
+        jarkko.sakkinen@linux.intel.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Documentation: security: core.rst: add missing argument
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1590464108-1333-1-git-send-email-zijuhu@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3191880.1590509226.1@warthog.procyon.org.uk>
+Date:   Tue, 26 May 2020 17:07:06 +0100
+Message-ID: <3191881.1590509226@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:35:08AM +0800, Zijun Hu wrote:
-> Controller ID info got by VSC EDL_PATCH_GETVER is very
-> important, so improve its log level from DEBUG to INFO.
-> 
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
-> ---
->  drivers/bluetooth/btqca.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index 3ea866d..49e5aeb 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -74,10 +74,10 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
->  
->  	ver = (struct qca_btsoc_version *)(edl->data);
->  
-> -	BT_DBG("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
-> -	BT_DBG("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
-> -	BT_DBG("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
-> -	BT_DBG("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
-> +	bt_dev_info(hdev, "QCA Product:0x%08x", le32_to_cpu(ver->product_id));
-> +	bt_dev_info(hdev, "QCA Patch  :0x%08x", le16_to_cpu(ver->patch_ver));
-> +	bt_dev_info(hdev, "QCA ROM    :0x%08x", le16_to_cpu(ver->rom_ver));
-> +	bt_dev_info(hdev, "QCA SOC    :0x%08x", le32_to_cpu(ver->soc_id));
+Jonathan Corbet <corbet@lwn.net> wrote:
 
-nit: Now that these messages become more visible you could consider making the
-order a bit more consistent/hierarchical. Not sure what is the product ID vs.
-the SoC ID (product is a variant of the SoC?). IMO it would make sense to
-start with HW information, going from more generic to more specific, then do
-the same for firmware.
+> Applied, thanks.
 
-  SoC ID
-  Product ID	  // assuming this is a variant of the SoC
-  ROM version
-  Patch version	  // assuming this is a patch of the ROM firmware (?)
+Ah - I've applied it to my keys-next branch.
 
-Sorry if I got any of the concepts wrong, from the names they are not entirely
-clear to me.
+David
 
-In any case it's just a suggestion, feel free to ignore.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
