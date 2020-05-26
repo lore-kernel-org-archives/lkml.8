@@ -2,51 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C438C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E24C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F7F208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD10208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520147;
-	bh=TM6WfI2yS/1xAWydxy53ecVXQ4vOqACzs3+JD/B8Y5c=;
+	s=default; t=1590520151;
+	bh=8AJtd7XJLAdfUVy8MB+O0mDvZE4M9CTw6DQcKauIO0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwHPe1ly8QLtgqVUQNG+7c7LDBD62HL42wtHM1LcNjORU+f6E/kfRTAff1FmtB5sa
-	 YGpE+i7JwbbQ8r5iL2gk0dYtVjKSpOuSrXUmk/03FRDo5nojcujFh7Wl4AfJQgkZni
-	 bjFtVuPlB2ZpaFxCMTnhT02lAkr3qlwI06d2JPa0=
+	b=F/h3a4X71ttNgx5Hz9A8YbvABLy5fhxbi6RN/Gr5JF2FjnyxC67dp6cyL3G/r8lX6
+	 MPmsffNk099LuKY1HsQzWswW2qDDfVG6dY+LRB1jj38184x7HIfxLni6jMPouyRlyX
+	 h8/SNtZvE+k90gIXei4QcMInru72+vZSonr8eVUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391826AbgEZTJD (ORCPT
+        id S2390057AbgEZTJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391810AbgEZTI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:08:57 -0400
+        id S2391819AbgEZTI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15201208B3;
-        Tue, 26 May 2020 19:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4ED520776;
+        Tue, 26 May 2020 19:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520136;
-        bh=TM6WfI2yS/1xAWydxy53ecVXQ4vOqACzs3+JD/B8Y5c=;
+        s=default; t=1590520139;
+        bh=8AJtd7XJLAdfUVy8MB+O0mDvZE4M9CTw6DQcKauIO0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RMxOWwhRqywDFQ+ypGd6uMndNMiFKkwCFusD+CWNv27ImDbO0apPx0dCnli0qN8UG
-         irshvHCDeaRRihwP6Ojhi1sigpjjlJn06WQnNrPMQmNy+263dCnyu40xC+895ZVccL
-         SwF/KpRUBnDKNzI6GHaoGyDpH1xdDTxWuhcY1/RY=
+        b=pRe+mu3hMiWegLmKi/wDGhKHmJvzqZTc9HHNjJ/m4tEYuwj4DDLFfwz6ngeQr6y/3
+         VJC+8KBK3kGUnXTOZDXb1Bx5QSbfQHjoI84uu8+gyb9ob7EXycRJ7YEw9P4lkvvAgU
+         1Pw/lCt/9giUDMq+LbSejq09FOWxkJZjSU52lGUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 5.4 070/111] drm/etnaviv: Fix a leak in submit_pin_objects()
-Date:   Tue, 26 May 2020 20:53:28 +0200
-Message-Id: <20200526183939.489143423@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 033/111] x86/mm/cpa: Flush direct map alias during cpa
+Date:   Tue, 26 May 2020 20:52:51 +0200
+Message-Id: <20200526183935.966457158@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,35 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-commit ad99cb5e783bb03d512092db3387ead9504aad3d upstream.
+[ Upstream commit ab5130186d7476dcee0d4e787d19a521ca552ce9 ]
 
-If the mapping address is wrong then we have to release the reference to
-it before returning -EINVAL.
+As an optimization, cpa_flush() was changed to optionally only flush
+the range in @cpa if it was small enough.  However, this range does
+not include any direct map aliases changed in cpa_process_alias(). So
+small set_memory_() calls that touch that alias don't get the direct
+map changes flushed. This situation can happen when the virtual
+address taking variants are passed an address in vmalloc or modules
+space.
 
-Fixes: 088880ddc0b2 ("drm/etnaviv: implement softpin")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In these cases, force a full TLB flush.
 
+Note this issue does not extend to cases where the set_memory_() calls are
+passed a direct map address, or page array, etc, as the primary target. In
+those cases the direct map would be flushed.
+
+Fixes: 935f5839827e ("x86/mm/cpa: Optimize cpa_flush_array() TLB invalidation")
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200424105343.GA20730@hirez.programming.kicks-ass.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/mm/pageattr.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c
-@@ -240,8 +240,10 @@ static int submit_pin_objects(struct etn
- 		}
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index a19a71b4d185..281e584cfe39 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -42,7 +42,8 @@ struct cpa_data {
+ 	unsigned long	pfn;
+ 	unsigned int	flags;
+ 	unsigned int	force_split		: 1,
+-			force_static_prot	: 1;
++			force_static_prot	: 1,
++			force_flush_all		: 1;
+ 	struct page	**pages;
+ };
  
- 		if ((submit->flags & ETNA_SUBMIT_SOFTPIN) &&
--		     submit->bos[i].va != mapping->iova)
-+		     submit->bos[i].va != mapping->iova) {
-+			etnaviv_gem_mapping_unreference(mapping);
- 			return -EINVAL;
-+		}
+@@ -352,10 +353,10 @@ static void cpa_flush(struct cpa_data *data, int cache)
+ 		return;
+ 	}
  
- 		atomic_inc(&etnaviv_obj->gpu_active);
+-	if (cpa->numpages <= tlb_single_page_flush_ceiling)
+-		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+-	else
++	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
+ 		flush_tlb_all();
++	else
++		on_each_cpu(__cpa_flush_tlb, cpa, 1);
  
+ 	if (!cache)
+ 		return;
+@@ -1584,6 +1585,8 @@ static int cpa_process_alias(struct cpa_data *cpa)
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
+ 
++		cpa->force_flush_all = 1;
++
+ 		ret = __change_page_attr_set_clr(&alias_cpa, 0);
+ 		if (ret)
+ 			return ret;
+@@ -1604,6 +1607,7 @@ static int cpa_process_alias(struct cpa_data *cpa)
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
+ 
++		cpa->force_flush_all = 1;
+ 		/*
+ 		 * The high mapping range is imprecise, so ignore the
+ 		 * return value.
+-- 
+2.25.1
+
 
 
