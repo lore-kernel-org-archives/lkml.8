@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5731C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48200C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF9B42053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F06208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520641;
-	bh=lweYTe6LKmpV+mCrP7HUm/q1uq9IlaV6ZTeIbPR7c+E=;
+	s=default; t=1590520644;
+	bh=+CcGc1ePsAEy4vbCoNwEklXLyLYAmR7rlXdXCWM57Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dO+t9cZqgZUEdkBCQfn7xW/zwWaMy/njmX2+1BYeoqHGDvoUIr2mDaZSp6UuymWuR
-	 rnxS4dWviJmj9L46uf+KYoqo5Go46czKqPtwiFUNF55V02VxdKzA6+UD5IDM6dTaA6
-	 gAgbC9gAakjtE00eGbdO60ZSDAvYE6U+btl9pT8U=
+	b=niIyn8qSnbxUYCw9ES6lctAdDBm3W9N4wvH6ZLkH3UD5vjZ08u4DYj6CPZOTI5O1U
+	 A13R76PgDYfakvlC/cE3x/Dp76wpz3exDugohpTARZwxxnIjdgj6X53vJlZ/I5tSHT
+	 03Aajghvg7if47hNnd9IJSHkgenAfSMErXQhDKHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392192AbgEZTOm (ORCPT
+        id S2392299AbgEZTRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45588 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404383AbgEZTOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:36 -0400
+        id S2392194AbgEZTOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402F920888;
-        Tue, 26 May 2020 19:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854DE208B6;
+        Tue, 26 May 2020 19:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520475;
-        bh=lweYTe6LKmpV+mCrP7HUm/q1uq9IlaV6ZTeIbPR7c+E=;
+        s=default; t=1590520483;
+        bh=+CcGc1ePsAEy4vbCoNwEklXLyLYAmR7rlXdXCWM57Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6Mlt3EMMpBavMXnJOFGDPZhCpZd/tlwKw4e+SmWyeXtOL7LkpTlxXJs9X4wHILK/
-         Iq3VBqth9p/DdBE94n0AvpcUtRH4f+V+a+zAG1I9voiQ/P3OLvlbDbdhFaw27brPrr
-         zb4zwVURZ8Xn3LZDOEUZ/pyec6ynBC3mFTMNAi/A=
+        b=adaos+ajNlz0M/auPW+kLOxzpSf12qRFk1IWPowfesM3u+fR5NPiT487tJAxjiWsU
+         lTdoJWxf1T5pGoeJADIyv1k5dBsjvMWd94G3CcYF1hvmjhSDrg5bhI1SUMhOIwLUB0
+         8cBjAkXo+dRCH90QTjiez3nKc3q4z49ZXK3RZ7dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.6 094/126] iio: adc: stm32-adc: fix device used to request dma
-Date:   Tue, 26 May 2020 20:53:51 +0200
-Message-Id: <20200526183945.766707040@linuxfoundation.org>
+        stable@vger.kernel.org, Keno Fischer <keno@juliacomputing.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>, Bin Lu <Bin.Lu@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.6 070/126] arm64: Fix PTRACE_SYSEMU semantics
+Date:   Tue, 26 May 2020 20:53:27 +0200
+Message-Id: <20200526183944.066155821@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,64 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Keno Fischer <keno@juliacomputing.com>
 
-commit 52cd91c27f3908b88e8b25aed4a4d20660abcc45 upstream.
+commit 1cf6022bd9161081215028203919c33fcfa6debb upstream.
 
-DMA channel request should use device struct from platform device struct.
-Currently it's using iio device struct. But at this stage when probing,
-device struct isn't yet registered (e.g. device_register is done in
-iio_device_register). Since commit 71723a96b8b1 ("dmaengine: Create
-symlinks between DMA channels and slaves"), a warning message is printed
-as the links in sysfs can't be created, due to device isn't yet registered:
-- Cannot create DMA slave symlink
-- Cannot create DMA dma:rx symlink
+Quoth the man page:
+```
+       If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
+       tracee enters syscall-enter-stop just prior to entering any system
+       call (which will not be executed if the restart was using
+       PTRACE_SYSEMU, regardless of any change made to registers at this
+       point or how the tracee is restarted after this stop).
+```
 
-Fix this by using device struct from platform device to request dma chan.
+The parenthetical comment is currently true on x86 and powerpc,
+but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
+flag after the syscall entry ptrace stop. However, at this point,
+it reflects which method was used to re-start the syscall
+at the entry stop, rather than the method that was used to reach it.
+Fix that by recording the original flag before performing the ptrace
+stop, bringing the behavior in line with documentation and x86/powerpc.
 
-Fixes: 2763ea0585c99 ("iio: adc: stm32: add optional dma support")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
+Cc: <stable@vger.kernel.org> # 5.3.x-
+Signed-off-by: Keno Fischer <keno@juliacomputing.com>
+Acked-by: Will Deacon <will@kernel.org>
+Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+Tested-by: Bin Lu <Bin.Lu@arm.com>
+[catalin.marinas@arm.com: moved 'flags' bit masking]
+[catalin.marinas@arm.com: changed 'flags' type to unsigned long]
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/stm32-adc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/ptrace.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1812,18 +1812,18 @@ static int stm32_adc_chan_of_init(struct
- 	return 0;
- }
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1829,10 +1829,11 @@ static void tracehook_report_syscall(str
  
--static int stm32_adc_dma_request(struct iio_dev *indio_dev)
-+static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
+ int syscall_trace_enter(struct pt_regs *regs)
  {
- 	struct stm32_adc *adc = iio_priv(indio_dev);
- 	struct dma_slave_config config;
- 	int ret;
- 
--	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	adc->dma_chan = dma_request_chan(dev, "rx");
- 	if (IS_ERR(adc->dma_chan)) {
- 		ret = PTR_ERR(adc->dma_chan);
- 		if (ret != -ENODEV) {
- 			if (ret != -EPROBE_DEFER)
--				dev_err(&indio_dev->dev,
-+				dev_err(dev,
- 					"DMA channel request failed with %d\n",
- 					ret);
- 			return ret;
-@@ -1930,7 +1930,7 @@ static int stm32_adc_probe(struct platfo
- 	if (ret < 0)
- 		return ret;
- 
--	ret = stm32_adc_dma_request(indio_dev);
-+	ret = stm32_adc_dma_request(dev, indio_dev);
- 	if (ret < 0)
- 		return ret;
+-	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
+-		test_thread_flag(TIF_SYSCALL_EMU)) {
++	unsigned long flags = READ_ONCE(current_thread_info()->flags);
++
++	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
+ 		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
+-		if (!in_syscall(regs) || test_thread_flag(TIF_SYSCALL_EMU))
++		if (!in_syscall(regs) || (flags & _TIF_SYSCALL_EMU))
+ 			return -1;
+ 	}
  
 
 
