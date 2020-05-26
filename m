@@ -2,68 +2,83 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C674C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C278C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B35208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22961207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590510760;
+	bh=aH1fxzKkh8oPDxVH7mWTxxRoboBCqxnYW/72VwKzH5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UHmww19y0dlm2w9YX7FNE2oq7wy0DofG3gbmrCV4epd9IP96kd5WU3uVFem0S+/2w
+	 SmuwIZK65epaFw3MyB3Nik1+8TgKSG+pljFKEBz5IiAKHNESn8nFKDd1LzNEIlSWcF
+	 JEQ+spipHuauKQYjI1I8wXJZKNHZ0DeCSHfvgqIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbgEZQcO (ORCPT
+        id S2388828AbgEZQcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388061AbgEZQcN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:32:13 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEEBFC03E96D;
-        Tue, 26 May 2020 09:32:13 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jdcUN-0006VB-5r; Tue, 26 May 2020 18:31:39 +0200
-Date:   Tue, 26 May 2020 18:31:39 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH] srcu: Avoid local_irq_save() before acquiring spinlock_t
-Message-ID: <20200526163139.frcfbomohqocuvme@linutronix.de>
-References: <20200520102407.GF317569@hirez.programming.kicks-ass.net>
- <20200520120608.mwros5jurmidxxfv@linutronix.de>
- <20200520184345.GU2869@paulmck-ThinkPad-P72>
- <20200522151255.rtqnuk2cl3dpruou@linutronix.de>
- <20200522173953.GI2869@paulmck-ThinkPad-P72>
- <20200523150831.wdrthklakwm6wago@linutronix.de>
- <20200524190356.eqohmrmbilonm4u7@linutronix.de>
- <20200525032717.GV2869@paulmck-ThinkPad-P72>
- <20200526134134.5uq62linhbog43q3@linutronix.de>
- <20200526161609.GJ2869@paulmck-ThinkPad-P72>
+        Tue, 26 May 2020 12:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388061AbgEZQcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:32:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 916502073B;
+        Tue, 26 May 2020 16:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590510759;
+        bh=aH1fxzKkh8oPDxVH7mWTxxRoboBCqxnYW/72VwKzH5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C8HUlHTjOdQmagDAuTUKqO201Qq3KYFEEwj2yfxa6nAttPsk8i8j6Y3EIyqsHG6Xf
+         uaoW31+bxcYnB7IUywcCG+uOyvURvdgqXbaB+EPJfnZzo1yMRWa3vjAj1zUw5KM7OR
+         D1IUnpfdN6H5zVXeFabr5gbl9cS53KDljOIVzRyE=
+Date:   Tue, 26 May 2020 18:32:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        sashal@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
+Message-ID: <20200526163235.GA42137@kroah.com>
+References: <20200526052848.605423-1-andi@firstfloor.org>
+ <20200526065618.GC2580410@kroah.com>
+ <20200526154835.GW499505@tassilo.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526161609.GJ2869@paulmck-ThinkPad-P72>
+In-Reply-To: <20200526154835.GW499505@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-26 09:16:09 [-0700], Paul E. McKenney wrote:
-> Queued, thank you!!!
-thank you.
+On Tue, May 26, 2020 at 08:48:35AM -0700, Andi Kleen wrote:
+> On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
+> > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
+> > > From: Andi Kleen <ak@linux.intel.com>
+> > > 
+> > > Since there seem to be kernel modules floating around that set
+> > > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+> > > CR4 pinning just checks that bits are set, this also checks
+> > > that the FSGSBASE bit is not set, and if it is clears it again.
+> > 
+> > So we are trying to "protect" ourselves from broken out-of-tree kernel
+> > modules now?  
+> 
+> Well it's a specific case where we know they're opening a root hole
+> unintentionally. This is just an pragmatic attempt to protect the users in the 
+> short term.
 
-> 							Thanx, Paul
+Can't you just go and fix those out-of-tree kernel modules instead?
+What's keeping you all from just doing that instead of trying to force
+the kernel to play traffic cop?
 
-Sebastian
+thanks,
+
+greg k-h
