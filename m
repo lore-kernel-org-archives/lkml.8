@@ -2,93 +2,130 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F326B20812
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O3HjhkoF"
+	by mail.kernel.org (Postfix) with ESMTP id E7A1420812
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388659AbgEZDfS (ORCPT
+        id S2388634AbgEZDqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 23:35:18 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57053 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388634AbgEZDfR (ORCPT
+        Mon, 25 May 2020 23:46:19 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:36140 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388550AbgEZDqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 23:35:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590464116; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=PVVBvwC+Tvjc3HogjrsgVETQLb6LhmmPRAVYzJBvsRw=; b=O3HjhkoFV0HEJtkMpqGrE/m991oqWullCIDlq07mlmYVSc37BbLiq1+fcj8rNSqAjR2PY+lE
- 3NupZ6ni9G0u4lb9xIaQHAB1g/wF2TUeP50CtAlLyX3Ex0uIztk8X022MrNj2ALMK87ETDC9
- d2ZK2mrV42N5S/ABjfSGlfWuWLs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ecc8e7342288e951f8ae6a5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 03:35:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 61296C433C9; Tue, 26 May 2020 03:35:15 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD196C433C6;
-        Tue, 26 May 2020 03:35:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD196C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v1] Bluetooth: hci_qca: Improve controller ID info log level
-Date:   Tue, 26 May 2020 11:35:08 +0800
-Message-Id: <1590464108-1333-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 25 May 2020 23:46:16 -0400
+Received: by mail-il1-f197.google.com with SMTP id n1so1437240ilh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 20:46:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=FygU0grI+bkcvE0/tZ2c6MWT1VSUmVI/0YBfDJK44v0=;
+        b=SYjU4wIib5BYGtfUmTwfbgkT3y7PHVmo+pxJmhDAPAqH92lxhFnhnl47om8Y/hCuVi
+         ZmWp6fVribPysWnC7jPnlEKzeAILxOwO5m6vqXOqRzjowIQnkcBkmR0J59rWokD07+9L
+         OBJNr6g2CC6W1vZTtkJw1WZL8PDuKg8HGKPjf8kyHSObRaEZSOqPKouutHoNIFk0bhVT
+         PzQjAQIH0JbQyx1lj6SEyJXnGPta/I8VVDZLcXe37sVOUcenM6ljXwS4Cp0TOS39x8SI
+         YNVngbjZtnDG54vWLKo/6R79LkOYGSFAZ3TwJpwPmQphIo91PGhURrmzAi5Dxlfswm8I
+         Hzww==
+X-Gm-Message-State: AOAM531qAlCwjVZF7rY/sWn9MZTwh8hG8ow3doW1ry4At7N4QkrE2wSi
+        LwlFQNUEKKSRKTP3m0sMEf2/QrXLsap/id7X0TKcgRBtj+Qw
+X-Google-Smtp-Source: ABdhPJyeDYLP4rScU7LxmN0VShaRSdid+cuDEJCi8qeQ9F5DW1VQNshOBs0PXP+3c+FIFj6nI3nukr/ZgLf3ncHl16neANrKhP9c
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:2f06:: with SMTP id q6mr15497020iow.135.1590464774531;
+ Mon, 25 May 2020 20:46:14 -0700 (PDT)
+Date:   Mon, 25 May 2020 20:46:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e9f3e705a684ef9a@google.com>
+Subject: general protection fault in tomoyo_check_acl
+From:   syzbot <syzbot+cff8c4c75acd8c6fb842@syzkaller.appspotmail.com>
+To:     jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        penguin-kernel@I-love.SAKURA.ne.jp, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Controller ID info got by VSC EDL_PATCH_GETVER is very
-important, so improve its log level from DEBUG to INFO.
+Hello,
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+syzbot found the following crash on:
+
+HEAD commit:    d2f8825a Merge tag 'for_linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c55922100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b3368ce0cc5f5ace
+dashboard link: https://syzkaller.appspot.com/bug?extid=cff8c4c75acd8c6fb842
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cff8c4c75acd8c6fb842@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xe000026660000003: 0000 [#1] PREEMPT SMP KASAN
+KASAN: probably user-memory-access in range [0x0000333300000018-0x000033330000001f]
+CPU: 0 PID: 12489 Comm: systemd-rfkill Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:tomoyo_check_acl+0xa9/0x3e0 security/tomoyo/domain.c:173
+Code: 00 0f 85 2d 03 00 00 49 8b 1c 24 49 39 dc 0f 84 bd 01 00 00 e8 28 65 14 fe 48 8d 7b 18 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <0f> b6 04 28 38 d0 7f 08 84 c0 0f 85 a7 02 00 00 44 0f b6 73 18 31
+RSP: 0018:ffffc90016987bc8 EFLAGS: 00010246
+RAX: 0000066660000003 RBX: 0000333300000000 RCX: ffffffff835ed028
+RDX: 0000000000000000 RSI: ffffffff835ecff8 RDI: 0000333300000018
+RBP: dffffc0000000000 R08: ffff8880a1cce1c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880a72db990
+R13: ffffc90016987c80 R14: 0000000000000033 R15: 0000000000000002
+FS:  00007f9e4b6ba8c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9e4b399e30 CR3: 000000004df8d000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tomoyo_path_number_perm+0x314/0x4d0 security/tomoyo/file.c:733
+ security_file_ioctl+0x6c/0xb0 security/security.c:1460
+ ksys_ioctl+0x50/0x180 fs/ioctl.c:765
+ __do_sys_ioctl fs/ioctl.c:780 [inline]
+ __se_sys_ioctl fs/ioctl.c:778 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7f9e4adab80a
+Code: ff e9 62 fe ff ff 66 2e 0f 1f 84 00 00 00 00 00 53 49 89 f0 48 63 ff be 01 54 00 00 b8 10 00 00 00 48 83 ec 30 48 89 e2 0f 05 <48> 3d 00 f0 ff ff 77 6e 85 c0 89 c3 75 5c 8b 04 24 8b 54 24 0c 4c
+RSP: 002b:00007fffcc16ea20 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000007 RCX: 00007f9e4adab80a
+RDX: 00007fffcc16ea20 RSI: 0000000000005401 RDI: 0000000000000002
+RBP: 0000000000000007 R08: 00007fffcc16ea60 R09: 0000000000000000
+R10: 0000000000020d50 R11: 0000000000000202 R12: 000056153471ef90
+R13: 00007fffcc16ec30 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 1f05c0d7f6671379 ]---
+RIP: 0010:tomoyo_check_acl+0xa9/0x3e0 security/tomoyo/domain.c:173
+Code: 00 0f 85 2d 03 00 00 49 8b 1c 24 49 39 dc 0f 84 bd 01 00 00 e8 28 65 14 fe 48 8d 7b 18 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <0f> b6 04 28 38 d0 7f 08 84 c0 0f 85 a7 02 00 00 44 0f b6 73 18 31
+RSP: 0018:ffffc90016987bc8 EFLAGS: 00010246
+RAX: 0000066660000003 RBX: 0000333300000000 RCX: ffffffff835ed028
+RDX: 0000000000000000 RSI: ffffffff835ecff8 RDI: 0000333300000018
+RBP: dffffc0000000000 R08: ffff8880a1cce1c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880a72db990
+R13: ffffc90016987c80 R14: 0000000000000033 R15: 0000000000000002
+FS:  00007f9e4b6ba8c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055f7b8031310 CR3: 000000004df8d000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/bluetooth/btqca.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 3ea866d..49e5aeb 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -74,10 +74,10 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
- 
- 	ver = (struct qca_btsoc_version *)(edl->data);
- 
--	BT_DBG("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
--	BT_DBG("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
--	BT_DBG("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
--	BT_DBG("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
-+	bt_dev_info(hdev, "QCA Product:0x%08x", le32_to_cpu(ver->product_id));
-+	bt_dev_info(hdev, "QCA Patch  :0x%08x", le16_to_cpu(ver->patch_ver));
-+	bt_dev_info(hdev, "QCA ROM    :0x%08x", le16_to_cpu(ver->rom_ver));
-+	bt_dev_info(hdev, "QCA SOC    :0x%08x", le32_to_cpu(ver->soc_id));
- 
- 	/* QCA chipset version can be decided by patch and SoC
- 	 * version, combination with upper 2 bytes from SoC
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
