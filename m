@@ -2,110 +2,144 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2952C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3B320776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521087;
-	bh=XFxzq4P6z49YtyaR0tqdRHJYwkOdYoyVEmIvsv0RGxE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RJ8KH/d2b5Aq5QRA5Hyqpf73gBleitohn0pybM3wufRPxllq77nTxIW7uQlSh1HTY
-	 goj6h7gTpdine1YB/reQJqTj3NnvXeFN46nPuvO902l3sf6SgMI8t0hwGIT0U859Dn
-	 zFiIiTot+DXpH29FASM0sW/qY1tedkQMX6jSnBPY=
+	by mail.kernel.org (Postfix) with ESMTP id 7597820776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ctp/VWvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392506AbgEZTYq (ORCPT
+        id S2392516AbgEZTYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391601AbgEZTHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21A34208A7;
-        Tue, 26 May 2020 19:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520043;
-        bh=XFxzq4P6z49YtyaR0tqdRHJYwkOdYoyVEmIvsv0RGxE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lO28p79K/Xou/nMN4DyQ2/dPTLmRKLgd7QE6Ltgw2rBb+oKPuxHFZOAt0MpvZ/YnJ
-         x/gln4TuCYR6lcBJBAVIfl34kWDp8SCrTNUJ0OeWG8FlNaN1wAPJrxdPOMlPB0t/a6
-         5WcWfOqXRt5C27Z6F4zKvtxj7PoFS8ZsMpoIYSDc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/111] component: Silence bind error on -EPROBE_DEFER
-Date:   Tue, 26 May 2020 20:52:47 +0200
-Message-Id: <20200526183935.555291617@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
-References: <20200526183932.245016380@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 26 May 2020 15:24:52 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24566 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403898AbgEZTHV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:07:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590520041; x=1622056041;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=YIt6AL12a3C5b+12pAPxl2an5c1FAkLevMmwCT632D0=;
+  b=Ctp/VWvopVWFTlX5iGXAjVDaShxtM64ozPoMV02DMbqNmmGrt2d5Ychs
+   atZG4UgLDp+t6Kcd/KG2DVNGX3cnBhf/som0O2padyWH0XzykwsWcxKP8
+   N0m+6+cc/cJ+DOX/jFH97p7NPviHEtkQWvgYgNaNWObY3g8za6oRFgmDv
+   U=;
+IronPort-SDR: KZ53qbEU54y20zeVN8G/Z3rMs2wmEyyu52wxzr0pjanhUchwX4iHFDsCXksnrj02AU19IRi8/J
+ qrQeVSuChVQQ==
+X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
+   d="scan'208";a="32235504"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 26 May 2020 18:35:53 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id AE5F5A1D05;
+        Tue, 26 May 2020 18:35:51 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 18:35:51 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.208) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 18:35:41 +0000
+Subject: Re: [PATCH v3 04/18] nitro_enclaves: Init PCI device driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-5-andraprs@amazon.com>
+ <20200526064819.GC2580530@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <b4bd54ca-8fe2-8ebd-f4fc-012ed2ac498a@amazon.com>
+Date:   Tue, 26 May 2020 21:35:33 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200526064819.GC2580530@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.208]
+X-ClientProxiedBy: EX13D29UWC003.ant.amazon.com (10.43.162.80) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
-
-[ Upstream commit 7706b0a76a9697021e2bf395f3f065c18f51043d ]
-
-If a component fails to bind due to -EPROBE_DEFER we should not log an
-error as this is not a real failure.
-
-Fixes messages like:
-vc4-drm soc:gpu: failed to bind 3f902000.hdmi (ops vc4_hdmi_ops): -517
-vc4-drm soc:gpu: master bind failed: -517
-
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200411190241.89404-1-james.hilliard1@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/base/component.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 1fdbd6ff2058..b9f20ada68b0 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -257,7 +257,8 @@ static int try_to_bring_up_master(struct master *master,
- 	ret = master->ops->bind(master->dev);
- 	if (ret < 0) {
- 		devres_release_group(master->dev, NULL);
--		dev_info(master->dev, "master bind failed: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_info(master->dev, "master bind failed: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -611,8 +612,9 @@ static int component_bind(struct component *component, struct master *master,
- 		devres_release_group(component->dev, NULL);
- 		devres_release_group(master->dev, NULL);
- 
--		dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
--			dev_name(component->dev), component->ops, ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
-+				dev_name(component->dev), component->ops, ret);
- 	}
- 
- 	return ret;
--- 
-2.25.1
-
-
+CgpPbiAyNi8wNS8yMDIwIDA5OjQ4LCBHcmVnIEtIIHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDI2LCAy
+MDIwIGF0IDAxOjEzOjIwQU0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4gVGhlIE5p
+dHJvIEVuY2xhdmVzIFBDSSBkZXZpY2UgaXMgdXNlZCBieSB0aGUga2VybmVsIGRyaXZlciBhcyBh
+IG1lYW5zIG9mCj4+IGNvbW11bmljYXRpb24gd2l0aCB0aGUgaHlwZXJ2aXNvciBvbiB0aGUgaG9z
+dCB3aGVyZSB0aGUgcHJpbWFyeSBWTSBhbmQKPj4gdGhlIGVuY2xhdmVzIHJ1bi4gSXQgaGFuZGxl
+cyByZXF1ZXN0cyB3aXRoIHJlZ2FyZCB0byBlbmNsYXZlIGxpZmV0aW1lLgo+Pgo+PiBTZXR1cCB0
+aGUgUENJIGRldmljZSBkcml2ZXIgYW5kIGFkZCBzdXBwb3J0IGZvciBNU0ktWCBpbnRlcnJ1cHRz
+Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUtQ2F0YWxpbiBWYXNpbGUgPGxleG52QGFt
+YXpvbi5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBDaW9ib3RhcnUgPGFsY2lvYUBh
+bWF6b24uY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyYSBQYXJhc2NoaXYgPGFuZHJhcHJzQGFt
+YXpvbi5jb20+Cj4+IC0tLQo+PiBDaGFuZ2Vsb2cKPj4KPj4gdjIgLT4gdjMKPj4KPj4gKiBSZW1v
+dmUgdGhlIEdQTCBhZGRpdGlvbmFsIHdvcmRpbmcgYXMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXIg
+aXMgYWxyZWFkeSBpbgo+PiBwbGFjZS4KPj4gKiBSZW1vdmUgdGhlIFdBUk5fT04gY2FsbHMuCj4+
+ICogUmVtb3ZlIGxpbnV4L2J1ZyBpbmNsdWRlIHRoYXQgaXMgbm90IG5lZWRlZC4KPj4gKiBVcGRh
+dGUgc3RhdGljIGNhbGxzIHNhbml0eSBjaGVja3MuCj4+ICogUmVtb3ZlICJyYXRlbGltaXRlZCIg
+ZnJvbSB0aGUgbG9ncyB0aGF0IGFyZSBub3QgaW4gdGhlIGlvY3RsIGNhbGwgcGF0aHMuCj4+ICog
+VXBkYXRlIGt6ZnJlZSgpIGNhbGxzIHRvIGtmcmVlKCkuCj4+Cj4+IHYxIC0+IHYyCj4+Cj4+ICog
+QWRkIGxvZyBwYXR0ZXJuIGZvciBORS4KPj4gKiBVcGRhdGUgUENJIGRldmljZSBzZXR1cCBmdW5j
+dGlvbnMgdG8gcmVjZWl2ZSBQQ0kgZGV2aWNlIGRhdGEgc3RydWN0dXJlIGFuZAo+PiB0aGVuIGdl
+dCBwcml2YXRlIGRhdGEgZnJvbSBpdCBpbnNpZGUgdGhlIGZ1bmN0aW9ucyBsb2dpYy4KPj4gKiBS
+ZW1vdmUgdGhlIEJVR19PTiBjYWxscy4KPj4gKiBBZGQgdGVhcmRvd24gZnVuY3Rpb24gZm9yIE1T
+SS1YIHNldHVwLgo+PiAqIFVwZGF0ZSBnb3RvIGxhYmVscyB0byBtYXRjaCB0aGVpciBwdXJwb3Nl
+Lgo+PiAqIEltcGxlbWVudCBUT0RPIGZvciBORSBQQ0kgZGV2aWNlIGRpc2FibGUgc3RhdGUgY2hl
+Y2suCj4+ICogVXBkYXRlIGZ1bmN0aW9uIG5hbWUgZm9yIE5FIFBDSSBkZXZpY2UgcHJvYmUgLyBy
+ZW1vdmUuCj4+IC0tLQo+PiAgIGRyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9uZV9wY2lfZGV2
+LmMgfCAyNTIgKysrKysrKysrKysrKysrKysrKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMjUy
+IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy92aXJ0L25pdHJv
+X2VuY2xhdmVzL25lX3BjaV9kZXYuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aXJ0L25p
+dHJvX2VuY2xhdmVzL25lX3BjaV9kZXYuYyBiL2RyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9u
+ZV9wY2lfZGV2LmMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAw
+Li4wYjY2MTY2Nzg3YjYKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9kcml2ZXJzL3ZpcnQvbml0
+cm9fZW5jbGF2ZXMvbmVfcGNpX2Rldi5jCj4+IEBAIC0wLDAgKzEsMjUyIEBACj4+ICsvLyBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+PiArLyoKPj4gKyAqIENvcHlyaWdodCAyMDIw
+IEFtYXpvbi5jb20sIEluYy4gb3IgaXRzIGFmZmlsaWF0ZXMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQu
+Cj4+ICsgKi8KPj4gKwo+PiArLyogTml0cm8gRW5jbGF2ZXMgKE5FKSBQQ0kgZGV2aWNlIGRyaXZl
+ci4gKi8KPj4gKwo+PiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4+ICsjaW5jbHVkZSA8bGlu
+dXgvZGV2aWNlLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvbGlzdC5oPgo+PiArI2luY2x1ZGUgPGxp
+bnV4L211dGV4Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+ICsjaW5jbHVkZSA8
+bGludXgvbml0cm9fZW5jbGF2ZXMuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9wY2kuaD4KPj4gKyNp
+bmNsdWRlIDxsaW51eC90eXBlcy5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L3dhaXQuaD4KPj4gKwo+
+PiArI2luY2x1ZGUgIm5lX21pc2NfZGV2LmgiCj4+ICsjaW5jbHVkZSAibmVfcGNpX2Rldi5oIgo+
+PiArCj4+ICsjZGVmaW5lIERFRkFVTFRfVElNRU9VVF9NU0VDUyAoMTIwMDAwKSAvKiAxMjAgc2Vj
+ICovCj4+ICsKPj4gKyNkZWZpbmUgTkUgIm5pdHJvX2VuY2xhdmVzOiAiCj4gV2h5IGlzIHRoaXMg
+bmVlZGVkPyAgVGhlIGRldl8qIGZ1bmN0aW9ucyBzaG91bGQgZ2l2ZSB5b3UgYWxsIHRoZQo+IGlu
+Zm9ybWF0aW9uIHRoYXQgeW91IG5lZWQgdG8gcHJvcGVybHkgZGVzY3JpYmUgdGhlIGRyaXZlciBh
+bmQgZGV2aWNlIGluCj4gcXVlc3Rpb24uICBObyBleHRyYSAicHJlZml4ZXMiIHNob3VsZCBiZSBu
+ZWVkZWQgYXQgYWxsLgoKVGhpcyB3YXMgbmVlZGVkIHRvIGhhdmUgYW4gaWRlbnRpZmllciBmb3Ig
+dGhlIG92ZXJhbGwgTkUgbG9naWMgLSBQQ0kgCmRldiwgaW9jdGwgYW5kIG1pc2MgZGV2LgoKVGhl
+IGlvY3RsIGFuZCBtaXNjIGRldiBsb2dpYyBoYXMgcHJfKiBsb2dzLCBidXQgSSBjYW4gdXBkYXRl
+IHRoZW0gdG8gCmRldl8qIHdpdGggbWlzYyBkZXYsIHRoZW4gcmVtb3ZlIHRoaXMgcHJlZml4LgoK
+VGhhbmsgeW91LgoKQW5kcmEKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkg
+Uy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxv
+b3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBS
+b21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
 
