@@ -2,68 +2,66 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F1B2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0E32075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbgEZIkM (ORCPT
+        id S1731593AbgEZIl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:40:12 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:52519 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:40:12 -0400
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B48AF200007;
-        Tue, 26 May 2020 08:40:08 +0000 (UTC)
-Date:   Tue, 26 May 2020 01:40:06 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] serial: 8250: Enable 16550A variants by default on non-x86
-Message-ID: <d32bdbf9fed2719c1180228464ba84dfcdeb5aa5.1590482037.git.josh@joshtriplett.org>
+        Tue, 26 May 2020 04:41:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62052 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgEZIl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:41:28 -0400
+IronPort-SDR: mUcErkdF/lE0u8lLi/iBP/Q28HO9hN8sOb9gcpi9/6nocRaUG073hPx3S8eVG65EYIpMDtzJP2
+ 8WQOAZ1gLlAQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 01:41:27 -0700
+IronPort-SDR: Jp9sm5uQgVWjK7gTNtw7ni0+LgjH5s3M7EDXDywezxYX2Xp1LtgLy2O9Tq3pVMyuXmXqFnsmMM
+ BLX6T9+36A+w==
+X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
+   d="scan'208";a="266379932"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 01:41:25 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 6A525208E1; Tue, 26 May 2020 11:41:23 +0300 (EEST)
+Date:   Tue, 26 May 2020 11:41:23 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] media: atomisp: fix a handful of spelling mistakes
+Message-ID: <20200526084123.GN7618@paasikivi.fi.intel.com>
+References: <20200521194432.357572-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200521194432.357572-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some embedded devices still use these serial ports; make sure they're
-still enabled by default on architectures more likely to have them, to
-avoid rendering someone's console unavailable.
+On Thu, May 21, 2020 at 08:44:32PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There are several spelling mistakes in various messages and literal
+> strings. Fix these.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
----
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Based on user reports from embedded devices that need these variants.
-
- drivers/tty/serial/8250/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index af0688156dd0..8195a31519ea 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -63,6 +63,7 @@ config SERIAL_8250_PNP
- config SERIAL_8250_16550A_VARIANTS
- 	bool "Support for variants of the 16550A serial port"
- 	depends on SERIAL_8250
-+	default !X86
- 	help
- 	  The 8250 driver can probe for many variants of the venerable 16550A
- 	  serial port. Doing so takes additional time at boot.
 -- 
-2.27.0.rc0
-
+Sakari Ailus
