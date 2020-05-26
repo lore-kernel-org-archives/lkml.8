@@ -2,86 +2,94 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01550C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB26A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rYoyg9+J"
+	by mail.kernel.org (Postfix) with ESMTP id 4D63C2088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590530567;
+	bh=r5BjwJ33UMuM3rWnoraQpEBTDPMrqWB7kBA1TqIttWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pn4ASPPH85HsI+WcEWg3hx98e6Ire0H1eDpHc7gc6Fx4qn+lrPZpx+wW+OWsXEeHX
+	 gTVqIPYUeAq0S0kgtA7GJhIEinS0H1ecK+NNJ5XlzT3GvHfHA0joGdSx+pY1/6SzE2
+	 9b3CcX3LH/jHUxmNto6bS/CNgNQC9+UZWnhuGGMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbgEZWCA (ORCPT
+        id S2391657AbgEZWCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391747AbgEZWB6 (ORCPT
+        Tue, 26 May 2020 18:02:46 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38854 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389510AbgEZWCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:01:58 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437A6C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:01:58 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q8so5960497qkm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wFyf2LBGYvGusFP43rIvmvMj6csrO70L2r6mtlSO9dc=;
-        b=rYoyg9+Je2ZBkMoBWH+yfXZTkMNPG3iZ7HGEW4+JjsmhEjNiDpAe1ETwdFHs+wTTlv
-         4yhWBvRVkVch6Vej6DUgMlS4Jc42HJEtgEQUjSxP9gTpcltSad7v0TEUXW13sdqFE2PJ
-         KEXFT7oict3RSbVycqpeCDDhp/h0RuzDMF9/Bmo9CeoypDDxe6T3c/OMAYLoNQm9lJPA
-         AnSJKjEMcLEQAXln/0ZWFX+/zbrpqpHb2PaqRGpRXME10WwcP6cdnVtE/J3zJH+hFXZU
-         eb8NHqLdWN174rh02bYHFO16mvHbBjThrty93MBSnpbbcsI/o+CNCLTH3SYehDygMlov
-         Xo+A==
+        Tue, 26 May 2020 18:02:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id d7so23831665ioq.5;
+        Tue, 26 May 2020 15:02:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wFyf2LBGYvGusFP43rIvmvMj6csrO70L2r6mtlSO9dc=;
-        b=VWYl7j+xXAYTLbRIF2HkIqyDyt9MobRMfhE7WL7Mm1DwHV3Xb1rViK4pDET4uDr48v
-         T++zMNPDoMGCwqEwgNnjkvF3ze9JgduLRkQ2fWvGnkI59X3SZtPapBirfT5rcCCNmMI6
-         HUZxiI62j0LRMDapBu5Uc2JfB85y0dgIDXJCrZ6/chD9GJdVX83pFM1otfzkkcicKKKu
-         LvTbyeSNDJTz9+DKPyYEnIOxw6EY9Tdt4ZZ4zosRucEDoAa/Swd4T1qz0mpx+GHAYtAw
-         iYj4CIekXrs24dgwl5pUReEPjt7Hy0yHkn2dnZNt9r1M+U13moc9HDrebviVJ+Mm0Dby
-         0gmg==
-X-Gm-Message-State: AOAM532wyxbkmAWA8VtYAJLBIHoMxQfaPBs+Hk10wjh5JwLPtLK0lFUC
-        VJGX4s83PjIAHpgyYrCnZOwZKg==
-X-Google-Smtp-Source: ABdhPJzYfNSECc3ExsPyOFv3thSrOj31TioNh+sxpB0emnK2SYr5mr5i6LVkpZtDvB3rkXw+/mjL8g==
-X-Received: by 2002:a37:e101:: with SMTP id c1mr942846qkm.433.1590530517442;
-        Tue, 26 May 2020 15:01:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2921])
-        by smtp.gmail.com with ESMTPSA id n68sm700264qkb.58.2020.05.26.15.01.56
+        bh=jX6sdAtb3ciZ8JNmjcS5iUUFx4ubuSGI6p1K1JU8YgI=;
+        b=WYBk85vF3urkNpxslwB6JKCka3Lb+ur08G8M/YJVBqqaeErtGgu0u63fL0yMKVcd84
+         ArF+TGZ4+I4c8BBiepSB6RIx33Xw+GRmIayRPvH/B+0airdq397VR2lNde/pp8BNrilP
+         cx2Jt9JVbqjfIKGvCXPxilxTw5C70gKG5VhPZj8nGTz/u2jG823WvjGgs8PZpylWed3j
+         qiFG64+r9FRq3cWs57J+x5uks+K2eMgHNnfy+b9sz4Ww9bONknc/Q+qycPA3SFhEucba
+         r1YY1yBX+kDKBPrdC4KpqjoJIrxS445cFxrmlf3SlYy5jHKZqhQafjAdHXvQOSGNpVmv
+         pEBg==
+X-Gm-Message-State: AOAM5339YTb69ho6iGcUXQEnueMYxqIbtCd4UHFs5i+K/IAn+38VvM5z
+        jq7/c1EQRqDp+Ava4v6Y8bgtSzg=
+X-Google-Smtp-Source: ABdhPJzSLNjKw9CoNEbUaxdGCx015TIUu/JFeRvW/aCNYbLb/Tcad2JaBktDYlfS7li4c/1MTGsltQ==
+X-Received: by 2002:a05:6602:2c8f:: with SMTP id i15mr11915911iow.45.1590530564985;
+        Tue, 26 May 2020 15:02:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y17sm601859ili.26.2020.05.26.15.02.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:01:56 -0700 (PDT)
-Date:   Tue, 26 May 2020 18:01:33 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 11/12] mm: add kiocb_wait_page_queue_init() helper
-Message-ID: <20200526220133.GE6781@cmpxchg.org>
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <20200526195123.29053-12-axboe@kernel.dk>
+        Tue, 26 May 2020 15:02:44 -0700 (PDT)
+Received: (nullmailer pid 458445 invoked by uid 1000);
+        Tue, 26 May 2020 22:02:42 -0000
+Date:   Tue, 26 May 2020 16:02:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Doug Anderson <dianders@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-usb@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v7 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
+ bindings
+Message-ID: <20200526220242.GA458289@bogus>
+References: <1590075499-21350-1-git-send-email-sanm@codeaurora.org>
+ <1590075499-21350-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526195123.29053-12-axboe@kernel.dk>
+In-Reply-To: <1590075499-21350-2-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:51:22PM -0600, Jens Axboe wrote:
-> Checks if the file supports it, and initializes the values that we need.
-> Caller passes in 'data' pointer, if any, and the callback function to
-> be used.
+On Thu, 21 May 2020 21:08:18 +0530, Sandeep Maheswaram wrote:
+> Convert USB DWC3 bindings to DT schema format using json-schema.
 > 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 -------------
+>  .../devicetree/bindings/usb/qcom,dwc3.yaml         | 167 +++++++++++++++++++++
+>  2 files changed, 167 insertions(+), 104 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> 
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Applied, thanks!
