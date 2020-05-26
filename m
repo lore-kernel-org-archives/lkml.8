@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8600AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51720C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5972020721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2396620721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521125;
-	bh=nDTVYaIqHLJyc3NSS823UpCWM75ENhoLTpYp/70/aQ4=;
+	s=default; t=1590521130;
+	bh=tV5FkDlTgvVcHJ4BfkDP1OA9x5FbR4EGVr+DCmKwrgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fCfDXNwXniZlPRoypT8ZDURVtiaaCrFh7LGjVeCj22gplG/ZCxnfzCFWw+aUSY66I
-	 dgJ0b8aeLiovFYPsX7oY7EnTUj+Q8euLqyXHuJ1RufLS0mHgGqOqAz7U0nuvVOhwak
-	 Ni5YmBGlWhThI/GCAGqepuOzHH+AB9CkCw5sVAEw=
+	b=h4mxTbyhf6gKV85jz2NaE2lMZWJrodmcrV3thEr6P5ZDF7kKZ4eksjwNJi8rlggVD
+	 w5HBAjIAJZ98USQ/FAHffTgcxAcVJ4mw67tDs80M22rtcGce1yuc0gt1FOgDvalAHg
+	 bjviKmIrXonOQ3KBHDo/+KEaDk3b+iolhqlaMseU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391228AbgEZTZX (ORCPT
+        id S2390593AbgEZTZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35362 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391679AbgEZTGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:54 -0400
+        id S2391210AbgEZTGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884B9208B6;
-        Tue, 26 May 2020 19:06:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F571208A7;
+        Tue, 26 May 2020 19:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520014;
-        bh=nDTVYaIqHLJyc3NSS823UpCWM75ENhoLTpYp/70/aQ4=;
+        s=default; t=1590520011;
+        bh=tV5FkDlTgvVcHJ4BfkDP1OA9x5FbR4EGVr+DCmKwrgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/0Z0of0kqeO2MMN+Ql3okkVBJJ7l+C2Zby3n+DVBS4Ewgt7VWji8puUOoMzD14fF
-         8DPb0ez+ry57uBZ5tPSqPepU+bk/qGSunw8T1RNI4URvNuYzHmPz4wy7bKCXzgaZQo
-         4PnKHYiAOslNb6Yvu0CX2APi9VQ1UDFeqSwz1y2I=
+        b=NE4au4WOA4mxXL0DrFZp6Wtywg5UKeiTIk56d+hSJxSnQlkc94ZvmXnbcZA9AQxJE
+         GyswxsFbqGe8Q1vSGrc1Qm5GCJ4EuK9BPVY7iGnDh+hrC4lqi2WefTZ1geRlMUuiLO
+         UM28ATDoQBc3oBAmd1qshSUJCV3BveZL3bo4bOfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Arun Easi <aeasi@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/111] scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
-Date:   Tue, 26 May 2020 20:52:42 +0200
-Message-Id: <20200526183935.024328652@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 023/111] HID: alps: ALPS_1657 is too specific; use U1_UNICORN_LEGACY instead
+Date:   Tue, 26 May 2020 20:52:41 +0200
+Message-Id: <20200526183934.916096716@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -63,40 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Easi <aeasi@marvell.com>
+From: Jiri Kosina <jkosina@suse.cz>
 
-[ Upstream commit 45a76264c26fd8cfd0c9746196892d9b7e2657ee ]
+[ Upstream commit 185af3e775b693f773d9a4b5a8c3cda69fc8ca0f ]
 
-In NPIV environment, a NPIV host may use a queue pair created by base host
-or other NPIVs, so the check for a queue pair created by this NPIV is not
-correct, and can cause an abort to fail, which in turn means the NVME
-command not returned.  This leads to hang in nvme_fc layer in
-nvme_fc_delete_association() which waits for all I/Os to be returned, which
-is seen as hang in the application.
+HID_DEVICE_ID_ALPS_1657 PID is too specific, as there are many other
+ALPS hardware IDs using this particular touchpad.
 
-Link: https://lore.kernel.org/r/20200331104015.24868-3-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Rename the identifier to HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY in order
+to describe reality better.
+
+Fixes: 640e403b1fd24 ("HID: alps: Add AUI1657 device ID")
+Reported-by: Xiaojian Cao <xiaojian.cao@cn.alps.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-alps.c | 2 +-
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 1ef8907314e5..62a16463f025 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -3117,7 +3117,7 @@ qla24xx_abort_command(srb_t *sp)
- 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
- 	    "Entered %s.\n", __func__);
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index c2a2bd528890..b2ad319a74b9 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -802,7 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
+-	case HID_DEVICE_ID_ALPS_1657:
++	case HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index cc2b6f497f53..48eba9c4f39a 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -79,9 +79,9 @@
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_PTP	0x121F
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
++#define HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY         0x121E
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-#define HID_DEVICE_ID_ALPS_1657         0x121E
  
--	if (vha->flags.qpairs_available && sp->qpair)
-+	if (sp->qpair)
- 		req = sp->qpair->req;
- 	else
- 		return QLA_FUNCTION_FAILED;
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.25.1
 
