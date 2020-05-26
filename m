@@ -2,59 +2,57 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC62A208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1AC208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519619;
-	bh=cgLqGv5nPb4Lg9Ph52g2GJmojZxHEfYCVVn3Qfk63sw=;
+	s=default; t=1590519622;
+	bh=2ML5aCYXzCaQ6S/ljZLPRz4848O4m93afjXnxPUfktE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpwUzPeKBkGznGoQEd2QteKwczB87yK7PFEW98n+BmZw/jz/1j1ZphgpdNfGvnTks
-	 ATXfs5JEmlFOD/ttmpBrft3worjnulanHNK/u7nWDI3/WhiCdPvnBewOxR6FlRPFKC
-	 l4MAKqCmFLpVqphLUSCHNYetxsZi8LRVcT7Bxu8o=
+	b=Px1VjlxKVkxPOhf4BH8nBR2eUuUQBKMnee/oRm1TvNhkbADwWY1PDtBj1v+htv71d
+	 bQlCb0YtuWTQh1MjB6nkAFYY3kkUti8ozAYxXITwBxlaxddw5XAkv6ubiv+P4YUxgk
+	 PZs7ILO3ALOm7bdyi+Q8s+rq08WVzUhgMJzW+6LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390707AbgEZTAT (ORCPT
+        id S2390716AbgEZTAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54282 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:00:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390684AbgEZTAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:16 -0400
+        id S2390649AbgEZTAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8315A20849;
-        Tue, 26 May 2020 19:00:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDD582084C;
+        Tue, 26 May 2020 19:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519616;
-        bh=cgLqGv5nPb4Lg9Ph52g2GJmojZxHEfYCVVn3Qfk63sw=;
+        s=default; t=1590519618;
+        bh=2ML5aCYXzCaQ6S/ljZLPRz4848O4m93afjXnxPUfktE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YgJeUrHC6agsQ/1CQ2Lm3TRMkCKdT+U7K8HO15L0J4cXUNxQQP+rxjJ5EA7v3lZzn
-         jP65mnAlv70dmnbd+1eo4oJ3wXWJVSA9LD1XFS0yWSrjIT1ZGFFvkrFyO3fwn7VRM7
-         FSWrXsQmjgsTh0uGovCD+c6VYoKac5pCqFEvOhTg=
+        b=wEkCx6hjrrFaslcs14fg5ufisHHRYFRM3DCfWy6CoLG3jN+31brWF2w8ILjM/C4pl
+         7kEOANEscaT4wmFuvXtsAtzlxVSx6ARHScNtYAUUfSnksLCVqVbYFmXFOzByDLI6Iw
+         AYlXSNSizKv9cEokR+ayeFAYbBII0lpyZ+zEVyMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Shijie Luo <luoshijie1@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 01/59] ext4: add cond_resched() to ext4_protect_reserved_inode
-Date:   Tue, 26 May 2020 20:52:46 +0200
-Message-Id: <20200526183907.638284580@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 10/59] iommu/amd: Fix over-read of ACPI UID from IVRS table
+Date:   Tue, 26 May 2020 20:52:55 +0200
+Message-Id: <20200526183911.396505254@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,65 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shijie Luo <luoshijie1@huawei.com>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-commit af133ade9a40794a37104ecbcc2827c0ea373a3c upstream.
+[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
 
-When journal size is set too big by "mkfs.ext4 -J size=", or when
-we mount a crafted image to make journal inode->i_size too big,
-the loop, "while (i < num)", holds cpu too long. This could cause
-soft lockup.
+IVRS parsing code always tries to read 255 bytes from memory when
+retrieving ACPI device path, and makes an assumption that firmware
+provides a zero-terminated string. Both of those are bugs: the entry
+is likely to be shorter than 255 bytes, and zero-termination is not
+guaranteed.
 
-[  529.357541] Call trace:
-[  529.357551]  dump_backtrace+0x0/0x198
-[  529.357555]  show_stack+0x24/0x30
-[  529.357562]  dump_stack+0xa4/0xcc
-[  529.357568]  watchdog_timer_fn+0x300/0x3e8
-[  529.357574]  __hrtimer_run_queues+0x114/0x358
-[  529.357576]  hrtimer_interrupt+0x104/0x2d8
-[  529.357580]  arch_timer_handler_virt+0x38/0x58
-[  529.357584]  handle_percpu_devid_irq+0x90/0x248
-[  529.357588]  generic_handle_irq+0x34/0x50
-[  529.357590]  __handle_domain_irq+0x68/0xc0
-[  529.357593]  gic_handle_irq+0x6c/0x150
-[  529.357595]  el1_irq+0xb8/0x140
-[  529.357599]  __ll_sc_atomic_add_return_acquire+0x14/0x20
-[  529.357668]  ext4_map_blocks+0x64/0x5c0 [ext4]
-[  529.357693]  ext4_setup_system_zone+0x330/0x458 [ext4]
-[  529.357717]  ext4_fill_super+0x2170/0x2ba8 [ext4]
-[  529.357722]  mount_bdev+0x1a8/0x1e8
-[  529.357746]  ext4_mount+0x44/0x58 [ext4]
-[  529.357748]  mount_fs+0x50/0x170
-[  529.357752]  vfs_kern_mount.part.9+0x54/0x188
-[  529.357755]  do_mount+0x5ac/0xd78
-[  529.357758]  ksys_mount+0x9c/0x118
-[  529.357760]  __arm64_sys_mount+0x28/0x38
-[  529.357764]  el0_svc_common+0x78/0x130
-[  529.357766]  el0_svc_handler+0x38/0x78
-[  529.357769]  el0_svc+0x8/0xc
-[  541.356516] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [mount:18674]
+With Acer SF314-42 firmware these issues manifest visibly in dmesg:
 
-Link: https://lore.kernel.org/r/20200211011752.29242-1-luoshijie1@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
 
+The first three lines show how the code over-reads adjacent table
+entries into the UID, and in the last line it even reads garbage data
+beyond the end of the IVRS table itself.
+
+Since each entry has the length of the UID (uidl member of ivhd_entry
+struct), use that for memcpy, and manually add a zero terminator.
+
+Avoid zero-filling hid and uid arrays up front, and instead ensure
+the uid array is always zero-terminated. No change needed for the hid
+array, as it was already properly zero-terminated.
+
+Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
+Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/amd_iommu_init.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -153,6 +153,7 @@ static int ext4_protect_reserved_inode(s
- 		return PTR_ERR(inode);
- 	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
- 	while (i < num) {
-+		cond_resched();
- 		map.m_lblk = i;
- 		map.m_len = num - i;
- 		n = ext4_map_blocks(NULL, inode, &map, 0);
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 6c228144b3da..ec9a20e06941 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -1317,8 +1317,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 		}
+ 		case IVHD_DEV_ACPI_HID: {
+ 			u16 devid;
+-			u8 hid[ACPIHID_HID_LEN] = {0};
+-			u8 uid[ACPIHID_UID_LEN] = {0};
++			u8 hid[ACPIHID_HID_LEN];
++			u8 uid[ACPIHID_UID_LEN];
+ 			int ret;
+ 
+ 			if (h->type != 0x40) {
+@@ -1335,6 +1335,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			}
+ 
++			uid[0] = '\0';
+ 			switch (e->uidf) {
+ 			case UID_NOT_PRESENT:
+ 
+@@ -1349,8 +1350,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			case UID_IS_CHARACTER:
+ 
+-				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
+-				uid[ACPIHID_UID_LEN - 1] = '\0';
++				memcpy(uid, &e->uid, e->uidl);
++				uid[e->uidl] = '\0';
+ 
+ 				break;
+ 			default:
+-- 
+2.25.1
+
 
 
