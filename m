@@ -2,90 +2,91 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2B7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334282088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590531872;
-	bh=+/z0/+hnPJaoiqbXkh+HK+ZmZS+ELK7quhDJ0OM1D2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oG6vGr1MF40ptRRE9QE1Ppfa9oHvrWQjdOAmwIu5IpBX2iJOf5KUEvLE8T3mOiQdC
-	 jTVLl39VLdK1hyaswL9YiEcm2j2Jnfue9/KGeYciep8SU0lqOY4e/PKLF5N9ebyzeH
-	 RaAsif+dg9nXlUWwG7XY0DCxEuiuSFIj8RjJzz2A=
+	by mail.kernel.org (Postfix) with ESMTP id 8982B2088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Df8GllVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391969AbgEZWYb (ORCPT
+        id S2404177AbgEZWZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:24:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36784 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390051AbgEZWYa (ORCPT
+        Tue, 26 May 2020 18:25:17 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:32748 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389889AbgEZWZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:24:30 -0400
-Received: by mail-io1-f67.google.com with SMTP id y18so3409610iow.3;
-        Tue, 26 May 2020 15:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b+tWQ04Ezy413BCxEPkyaWDBFIHzDQJRTdPoSP1wkus=;
-        b=afpSXc7cYfecOkCLF0rVkDLaqoHg8RaCOvWoAPKbPIT+hrCOz5gm8mhvI0IlfgLsI7
-         cdIdHbSJofv2nPyp67e6UONkSpBQuwhqIv8X+Wk0RJFSCNd7lhujXQjOAEc6KjjKuth2
-         FND60Q/ftTPjzNUy70Iw6zL0O+RnyPMSX19jxtovEMJvgb6yeCRKKvJBtTqgQeLiRjSe
-         dB/LvTGA7ybhRFWub82pSyC51II/zqTL/E4QV7j9UJ2FniSofpIp/0ncg7pGfdcRZdkR
-         VAhmDcKiE4b304t4MX2GuHg4pdCXv/SBx63hBM+JPEak0BfbO+jY9p1Tkd93Xe8I/rjV
-         KCNA==
-X-Gm-Message-State: AOAM531TdGR7ORZWY6VpArknqAGqmGWa7yo4ds2GxDrDdALNqS48Mdf/
-        C0K6TTjsM43/1JIBtY6WIEA/UAk=
-X-Google-Smtp-Source: ABdhPJxs6wqH9u8vn+Z/jIYH604XOlL8g4F6C/yPbBYo2wCXlkbZFk5Q4dd/j7YdMhjb3QR4GcqTdQ==
-X-Received: by 2002:a5d:9d03:: with SMTP id j3mr5630889ioj.176.1590531869094;
-        Tue, 26 May 2020 15:24:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r17sm657002ilc.33.2020.05.26.15.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:24:28 -0700 (PDT)
-Received: (nullmailer pid 492521 invoked by uid 1000);
-        Tue, 26 May 2020 22:24:27 -0000
-Date:   Tue, 26 May 2020 16:24:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v6 1/5] dt-bindings: iio: magnetometer: ak8975: reword
- gpios, add interrupts, fix style
-Message-ID: <20200526222427.GA492338@bogus>
-References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
- <20200525151117.32540-2-jonathan.albrieux@gmail.com>
-MIME-Version: 1.0
+        Tue, 26 May 2020 18:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=from:subject:to:cc:content-type:content-transfer-encoding;
+        s=001; bh=gYebp9rzYUVBATcyaT/NfFRbcFQwq1Ai5f6uhR6SvfA=;
+        b=Df8GllViA4xdGWlSI7AzAilMI50SV8LNsHjpdMBiDjx076/Wb5G8nZ2SjYfPKuQgXPij
+        0TX+paptKResOztyP7Bb/hnwYBl/7l/Uy4/IsXWWy8wZ6GsyvG2b9rL5FUuyxviLE7kUyS
+        loxU517BiJ/EoXHTQIKqTqmpcBo+SgOxk=
+Received: by filterdrecv-p3iad2-8ddf98858-4fqk8 with SMTP id filterdrecv-p3iad2-8ddf98858-4fqk8-19-5ECD974A-54
+        2020-05-26 22:25:15.015279878 +0000 UTC m=+5347060.449712244
+Received: from bionic.localdomain (unknown)
+        by ismtpd0007p1lon1.sendgrid.net (SG) with ESMTP
+        id pOuU-hH5TrqIU--iWX2dZg
+        Tue, 26 May 2020 22:25:14.675 +0000 (UTC)
+From:   Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH] media: v4l2-ctrls: Unset correct HEVC loop filter flag
+Date:   Tue, 26 May 2020 22:25:15 +0000 (UTC)
+Message-Id: <20200526222511.19250-1-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.17.1
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h4NucujZqb2jdTqOb?=
+ =?us-ascii?Q?eyTrc=2F1=2Fgi0sEhPbGFU5ou9bsWpLl0pN10UM=2FX8?=
+ =?us-ascii?Q?siVB8aR03r7zPmISozzjuB+5kGzEgftPnZjkDfq?=
+ =?us-ascii?Q?6rApNnujN4=2FA8rbQSOQz2QxMDPTPZAos9HqYGzJ?=
+ =?us-ascii?Q?3G8uxVGdS9hBgK6=2Fmd1uk2M0gyUguSKNa4yF6Ab?=
+ =?us-ascii?Q?bI5WwW1OPmFDmyJwIRipA=3D=3D?=
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525151117.32540-2-jonathan.albrieux@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 17:10:35 +0200, Jonathan Albrieux wrote:
-> Reword gpios documentation, add interrupt documentation and fix styles.
-> Update example to use interrupts instead of gpios.
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../bindings/iio/magnetometer/ak8975.txt      | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
+Wrong loop filter flag is unset when tiles enabled flag is not set,
+this cause HEVC decoding issues with Rockchip Video Decoder.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fix this by unsetting the loop filter across tiles enabled flag instead of
+the pps loop filter across slices enabled flag when tiles are disabled.
+
+Fixes: 256fa3920874 ("media: v4l: Add definitions for HEVC stateless decoding")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index b2e5804f1aa9..ebd7054d18ac 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2081,7 +2081,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+ 			       sizeof(p_hevc_pps->row_height_minus1));
+ 
+ 			p_hevc_pps->flags &=
+-				~V4L2_HEVC_PPS_FLAG_PPS_LOOP_FILTER_ACROSS_SLICES_ENABLED;
++				~V4L2_HEVC_PPS_FLAG_LOOP_FILTER_ACROSS_TILES_ENABLED;
+ 		}
+ 
+ 		if (p_hevc_pps->flags &
+-- 
+2.17.1
+
