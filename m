@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F117C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A884CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A0C20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AAE20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519978;
-	bh=k1pYullWqpInfsxDo6wY0GeaN+fOQTMAQ/FTViw8IwM=;
+	s=default; t=1590519980;
+	bh=H3zYurp4vws08k5KeeuCCQoUZXnK6XFe5PA6kHN1Gm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trmPqPFQDx04+YEy1g9N4Px0Xi2L7BnLrQgvi2lb9n6MHRK4TAUz7tdVBXmN5tDI4
-	 I9nlc1E+p2+qEYvqmi1/MP09OWnKYyCuJdp2hPZrJwxuGcpN9Pcy0R7xA7IlgRhg+s
-	 m/trjvysrFqVhObiiVdpw6YftrwuzZ3cZkN/D8Vo=
+	b=ROn3UyQw0umXUEOvw7io+dJ86FQrcIbire5wEwg3g6VdTs9AXlSqftMLHnIsock69
+	 IIb4lDrRW0Wd5XdUkQKrQszbKOmLOG1XeSs7G4RX7T9QbdQAUOR5Mh1jQObRI6arNr
+	 h0nAnb134MPZQLzVohGcIXuZhAyPUtbEQbWIj/fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391557AbgEZTGR (ORCPT
+        id S2391574AbgEZTGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390814AbgEZTGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:03 -0400
+        id S2403867AbgEZTGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17C4B20776;
-        Tue, 26 May 2020 19:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E5A20776;
+        Tue, 26 May 2020 19:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519963;
-        bh=k1pYullWqpInfsxDo6wY0GeaN+fOQTMAQ/FTViw8IwM=;
+        s=default; t=1590519968;
+        bh=H3zYurp4vws08k5KeeuCCQoUZXnK6XFe5PA6kHN1Gm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1ltvxEViEe4ASyGoPwY2+LfymGHpE3mtSmw+GOKz0mzT0w9ci0BQ0HsR8y+wdLLA
-         9VdPjxdZE10kCgqBwU3jHT5KHFWNgkFKaJHbJw8h1S5xOn6tqzrt5A4X2n/tsTUg8y
-         nSv0aTeD38N6qGX9OG4gGdEP77WSQYipsBe3T3YM=
+        b=D1pkQgGh3cyaKGm99TzyjpviPVa13cHx3170afuQMpyeOmciUVU57Rzp9da1WDNk2
+         ROm4wzUOPyJV7Dx3G1ry4unN5WPXKmS5nVxNoQ5y1xwgiBRpeuSK5dxI5ZAwhWFRES
+         6jVfJqNRuds42JvArtB9EYMx7LKwA9uBhAyMZ8tc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arjun Vynipadath <arjun@chelsio.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/81] cxgb4: free mac_hlist properly
-Date:   Tue, 26 May 2020 20:53:35 +0200
-Message-Id: <20200526183933.717662881@linuxfoundation.org>
+Subject: [PATCH 4.19 62/81] tty: serial: qcom_geni_serial: Fix wrap around of TX buffer
+Date:   Tue, 26 May 2020 20:53:37 +0200
+Message-Id: <20200526183933.937416893@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,47 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arjun Vynipadath <arjun@chelsio.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 2a8d84bf513823ba398f4b2dec41b8decf4041af ]
+[ Upstream commit 3c66eb4ba18dd1cab0d1bde651cde6d8bdb47696 ]
 
-The locally maintained list for tracking hash mac table was
-not freed during driver remove.
+Before commit a1fee899e5bed ("tty: serial: qcom_geni_serial: Fix
+softlock") the size of TX transfers was limited to the TX FIFO size,
+and wrap arounds of the UART circular buffer were split into two
+transfers. With the commit wrap around are allowed within a transfer.
+The TX FIFO of the geni serial port uses a word size of 4 bytes. In
+case of a circular buffer wrap within a transfer the driver currently
+may write an incomplete word to the FIFO, with some bytes containing
+data from the circular buffer and others being zero. Since the
+transfer isn't completed yet the zero bytes are sent as if they were
+actual data.
 
-Signed-off-by: Arjun Vynipadath <arjun@chelsio.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Handle wrap arounds of the TX buffer properly and ensure that words
+written to the TX FIFO always contain valid data (unless the transfer
+is completed).
+
+Fixes: a1fee899e5bed ("tty: serial: qcom_geni_serial: Fix softlock")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Tested-by: Ryan Case <ryandcase@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/tty/serial/qcom_geni_serial.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index c81d6c330548..c334b6206871 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -2296,6 +2296,8 @@ static int cxgb_up(struct adapter *adap)
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 4458419f053b..0d405cc58e72 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -705,7 +705,7 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
+ 	avail *= port->tx_bytes_pw;
  
- static void cxgb_down(struct adapter *adapter)
- {
-+	struct hash_mac_addr *entry, *tmp;
-+
- 	cancel_work_sync(&adapter->tid_release_task);
- 	cancel_work_sync(&adapter->db_full_task);
- 	cancel_work_sync(&adapter->db_drop_task);
-@@ -2304,6 +2306,12 @@ static void cxgb_down(struct adapter *adapter)
+ 	tail = xmit->tail;
+-	chunk = min3(avail, pending, (size_t)(UART_XMIT_SIZE - tail));
++	chunk = min(avail, pending);
+ 	if (!chunk)
+ 		goto out_write_wakeup;
  
- 	t4_sge_stop(adapter);
- 	t4_free_sge_resources(adapter);
-+
-+	list_for_each_entry_safe(entry, tmp, &adapter->mac_hlist, list) {
-+		list_del(&entry->list);
-+		kfree(entry);
-+	}
-+
- 	adapter->flags &= ~FULL_INIT_DONE;
- }
+@@ -727,19 +727,21 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
  
+ 		memset(buf, 0, ARRAY_SIZE(buf));
+ 		tx_bytes = min_t(size_t, remaining, port->tx_bytes_pw);
+-		for (c = 0; c < tx_bytes ; c++)
+-			buf[c] = xmit->buf[tail + c];
++
++		for (c = 0; c < tx_bytes ; c++) {
++			buf[c] = xmit->buf[tail++];
++			tail &= UART_XMIT_SIZE - 1;
++		}
+ 
+ 		iowrite32_rep(uport->membase + SE_GENI_TX_FIFOn, buf, 1);
+ 
+ 		i += tx_bytes;
+-		tail += tx_bytes;
+ 		uport->icount.tx += tx_bytes;
+ 		remaining -= tx_bytes;
+ 		port->tx_remaining -= tx_bytes;
+ 	}
+ 
+-	xmit->tail = tail & (UART_XMIT_SIZE - 1);
++	xmit->tail = tail;
+ 
+ 	/*
+ 	 * The tx fifo watermark is level triggered and latched. Though we had
 -- 
 2.25.1
 
