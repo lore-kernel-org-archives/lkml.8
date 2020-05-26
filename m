@@ -2,137 +2,108 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A260C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07AD7204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2F42084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQFZW3Gb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d2apTG1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389620AbgEZRZv (ORCPT
+        id S2389614AbgEZR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:25:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30858 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388974AbgEZRXR (ORCPT
+        Tue, 26 May 2020 13:26:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:28035 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388803AbgEZR0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:23:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590513796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HyUo5osn8O60giU9X+BI43bKXabBUWmHM+tPt7Ss3Cs=;
-        b=BQFZW3GbIvAdbthhyuuc8oy7PJiZe1hrVpiOb871z4VlQJ618ELZvKzxPudHu1ch4fKYqC
-        8TJ1U5kpoWfJfP7PLTbqhrZOu4gJhhVjCBxX32rbhQk4oBQESM1KnFWikU9q1dVCUsz8np
-        QCWzTAvDjGk0MfGBOFzzltB8Id3LQtk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-yT8TsOWuOcOqxk2CWRgDYA-1; Tue, 26 May 2020 13:23:14 -0400
-X-MC-Unique: yT8TsOWuOcOqxk2CWRgDYA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 26 May 2020 13:26:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590513960; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Im6hIGPpJqtxzbNyAwrxrzA8oUaUroHuS60646TlJzw=; b=d2apTG1am+hSxfRzHh5UFIdIWVDS9omKduDIiW5j72X4WOrHWbKiH39HbqFnr3jJLXGYBsTM
+ 6NtLxTkpT182o3rDBnTFMmdhqWZ7vHrhEukg7N3DBh8DnOpTSt6EoHCrp13NzwR31O1ZZHp0
+ wmnDmbFa/uKBhzEzw451Oarrggk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ecd51185086732481df4755 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 17:25:44
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5B8AEC433AD; Tue, 26 May 2020 17:25:44 +0000 (UTC)
+Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A940C107ACF6;
-        Tue, 26 May 2020 17:23:13 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2076E10013DB;
-        Tue, 26 May 2020 17:23:13 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH 06/28] KVM: SVM: always update CR3 in VMCB
-Date:   Tue, 26 May 2020 13:22:46 -0400
-Message-Id: <20200526172308.111575-7-pbonzini@redhat.com>
-In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
-References: <20200526172308.111575-1-pbonzini@redhat.com>
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85926C433CA;
+        Tue, 26 May 2020 17:25:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85926C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v4 0/4] scsi: ufs: Fix WriteBooster and cleanup UFS driver
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Virtual_Global_UFS_Upstream@mediatek.com
+References: <20200522083212.4008-1-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <a18ed057-e35b-b1b9-9ce2-718d7c3961fd@codeaurora.org>
+Date:   Tue, 26 May 2020 10:25:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200522083212.4008-1-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-svm_load_mmu_pgd is delaying the write of GUEST_CR3 to prepare_vmcs02 as
-an optimization, but this is only correct before the nested vmentry.
-If userspace is modifying CR3 with KVM_SET_SREGS after the VM has
-already been put in guest mode, the value of CR3 will not be updated.
-Remove the optimization, which almost never triggers anyway.
-This was was added in commit 689f3bf21628 ("KVM: x86: unify callbacks
-to load paging root", 2020-03-16) just to keep the two vendor-specific
-modules closer, but we'll fix VMX too.
+On 5/22/2020 1:32 AM, Stanley Chu wrote:
+> Hi,
+> 
+> This patch set fixes some WriteBooster issues and do small cleanup in UFS driver
+> 
+> v3 -> v4
+>    - Squash patch [4] and [5] (Asutosh)
+>    - Fix commit message in patch [4]
+> 
+> v2 -> v3
+>    - Introduce patch [5] to fix possible VCC power drain during runtime suspend (Asutosh)
+> 
+> v1 -> v2
+>    - Remove dummy new line in patch [4] (Asutosh)
+>    - Add more limitation to allow WriteBooster flush during Hibern8 in runtime-suspend. Now the device power mode is kept as Active power mode only if link is put in Hibern8 or Auto-Hibern8 is enabled during runtime-suspend (Asutosh)
+> 
+> Stanley Chu (4):
+>    scsi: ufs: Remove unnecessary memset for dev_info
+>    scsi: ufs: Allow WriteBooster on UFS 2.2 devices
+>    scsi: ufs: Fix index of attributes query for WriteBooster feature
+>    scsi: ufs: Fix WriteBooster flush during runtime suspend
+> 
+>   drivers/scsi/ufs/ufs-sysfs.c | 13 ++++-
+>   drivers/scsi/ufs/ufs.h       |  2 +-
+>   drivers/scsi/ufs/ufshcd.c    | 99 +++++++++++++++++++++++++-----------
+>   drivers/scsi/ufs/ufshcd.h    |  3 +-
+>   4 files changed, 82 insertions(+), 35 deletions(-)
+> 
 
-Fixes: 689f3bf21628 ("KVM: x86: unify callbacks to load paging root")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c |  6 +-----
- arch/x86/kvm/svm/svm.c    | 16 +++++-----------
- 2 files changed, 6 insertions(+), 16 deletions(-)
+This set looks good to me.
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 166b88fc9509..81e0fbd5e267 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -256,11 +256,7 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
- 	svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
- 	svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
--	if (npt_enabled) {
--		svm->vmcb->save.cr3 = nested_vmcb->save.cr3;
--		svm->vcpu.arch.cr3 = nested_vmcb->save.cr3;
--	} else
--		(void)kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3);
-+	(void)kvm_set_cr3(&svm->vcpu, nested_vmcb->save.cr3);
- 
- 	/* Guest paging mode is active - reset mmu */
- 	kvm_mmu_reset_context(&svm->vcpu);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 270061fa6cfa..abe277a3216b 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3447,7 +3447,6 @@ static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- static void svm_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long root)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
--	bool update_guest_cr3 = true;
- 	unsigned long cr3;
- 
- 	cr3 = __sme_set(root);
-@@ -3456,18 +3455,13 @@ static void svm_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long root)
- 		mark_dirty(svm->vmcb, VMCB_NPT);
- 
- 		/* Loading L2's CR3 is handled by enter_svm_guest_mode.  */
--		if (is_guest_mode(vcpu))
--			update_guest_cr3 = false;
--		else if (test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
--			cr3 = vcpu->arch.cr3;
--		else /* CR3 is already up-to-date.  */
--			update_guest_cr3 = false;
-+		if (!test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
-+			return;
-+		cr3 = vcpu->arch.cr3;
- 	}
- 
--	if (update_guest_cr3) {
--		svm->vmcb->save.cr3 = cr3;
--		mark_dirty(svm->vmcb, VMCB_CR);
--	}
-+	svm->vmcb->save.cr3 = cr3;
-+	mark_dirty(svm->vmcb, VMCB_CR);
- }
- 
- static int is_disabled(void)
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
 -- 
-2.26.2
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
