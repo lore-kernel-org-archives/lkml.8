@@ -2,76 +2,148 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11094C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D0D2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88632075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GAmK3J9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404554AbgEZW4y (ORCPT
+        id S2404597AbgEZW5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:56:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34720 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404359AbgEZW4y (ORCPT
+        Tue, 26 May 2020 18:57:47 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5598 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403871AbgEZW5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:56:54 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jdiV7-0003WM-HL; Tue, 26 May 2020 22:56:49 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mlxsw: spectrum_router: remove redundant initialization of pointer br_dev
-Date:   Tue, 26 May 2020 23:56:49 +0100
-Message-Id: <20200526225649.64257-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 26 May 2020 18:57:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecd9e910000>; Tue, 26 May 2020 15:56:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 26 May 2020 15:57:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 15:57:46 -0700
+Received: from [10.2.50.17] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
+ 2020 22:57:45 +0000
+Subject: Re: [PATCH] drm/radeon: Convert get_user_pages() --> pin_user_pages()
+To:     Souptick Joarder <jrdr.linux@gmail.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <daniel@ffwll.ch>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1590526802-3008-1-git-send-email-jrdr.linux@gmail.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <69a033cf-63b2-7da6-6a5e-a5bbc94b8afb@nvidia.com>
+Date:   Tue, 26 May 2020 15:57:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1590526802-3008-1-git-send-email-jrdr.linux@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590533777; bh=+/fm5fCUttIpqWTs0jSX13YUVmAx0K1Rl+iVpdhLRU4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GAmK3J9YLRYobQGF3pU5h7D1OHgDb3X9cRCMTdfTrpn9a6Ug+ktStJkaSedHNhev7
+         Fo0vLXo87hVswKPIZrVmA4Qad4UngVJEtHMrQH6kwS9m4O6rMu72TLsc0S0AgpXtp0
+         6YrG8FclCWX5vGNFF0Z9qZftM0wEKd9HoofGhsVFt/HwaXv+MgZhVZTAdTs1Xfnfbv
+         kVSbGn0HLF8g3M/GXt6hCipT4+nlfZjlc+fjVw48lSwCraUg53VW+Jbc/m5oQrP4h+
+         /0B7f5m2/ezoX/4zBj0oJOW8iGBUcdUjgFfggXIl8HMpaNNy0dCV3q1BwLksAfrQ/w
+         3HQlFGHaa5r1w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 2020-05-26 14:00, Souptick Joarder wrote:
+> This code was using get_user_pages(), in a "Case 2" scenario
+> (DMA/RDMA), using the categorization from [1]. That means that it's
+> time to convert the get_user_pages() + release_pages() calls to
+> pin_user_pages() + unpin_user_pages() calls.
+> 
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+> 
+> [1] Documentation/core-api/pin_user_pages.rst
+> 
+> [2] "Explicit pinning of user-space pages":
+>      https://lwn.net/Articles/807108/
+> 
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> 
+> Hi,
+> 
+> I'm compile tested this, but unable to run-time test, so any testing
+> help is much appriciated.
+> ---
+>   drivers/gpu/drm/radeon/radeon_ttm.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
+> index 5d50c9e..e927de2 100644
+> --- a/drivers/gpu/drm/radeon/radeon_ttm.c
+> +++ b/drivers/gpu/drm/radeon/radeon_ttm.c
+> @@ -506,7 +506,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+>   		uint64_t userptr = gtt->userptr + pinned * PAGE_SIZE;
+>   		struct page **pages = ttm->pages + pinned;
+>   
+> -		r = get_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
+> +		r = pin_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
+>   				   pages, NULL);
+>   		if (r < 0)
+>   			goto release_pages;
+> @@ -535,7 +535,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+>   	kfree(ttm->sg);
+>   
+>   release_pages:
+> -	release_pages(ttm->pages, pinned);
+> +	unpin_user_pages(ttm->pages, pinned);
+>   	return r;
+>   }
+>   
+> @@ -562,7 +562,7 @@ static void radeon_ttm_tt_unpin_userptr(struct ttm_tt *ttm)
+>   			set_page_dirty(page);
 
-The pointer br_dev is being initialized with a value that is never read
-and is being updated with a new value later on. The initialization
-is redundant and can be removed.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Maybe we also need a preceding patch, to fix the above? It should be
+set_page_dirty_lock(), rather than set_page_dirty(), unless I'm overlooking
+something (which is very possible!).
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 71aee4914619..8f485f9a07a7 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -7572,11 +7572,12 @@ static struct mlxsw_sp_fid *
- mlxsw_sp_rif_vlan_fid_get(struct mlxsw_sp_rif *rif,
- 			  struct netlink_ext_ack *extack)
- {
--	struct net_device *br_dev = rif->dev;
-+	struct net_device *br_dev;
- 	u16 vid;
- 	int err;
- 
- 	if (is_vlan_dev(rif->dev)) {
-+
- 		vid = vlan_dev_vlan_id(rif->dev);
- 		br_dev = vlan_dev_real_dev(rif->dev);
- 		if (WARN_ON(!netif_is_bridge_master(br_dev)))
+Either way, from a tunnel vision perspective of changing gup to pup, this
+looks good to me, so
+
+     Acked-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
 -- 
-2.25.1
+John Hubbard
+NVIDIA
+
+>   
+>   		mark_page_accessed(page);
+> -		put_page(page);
+> +		unpin_user_page(page);
+>   	}
+>   
+>   	sg_free_table(ttm->sg);
+> 
 
