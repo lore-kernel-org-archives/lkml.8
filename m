@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A12C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C42C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F632089D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF26207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="cxFv3bw2"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="cdAKnMqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbgEZHDL (ORCPT
+        id S1731519AbgEZHDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
+        Tue, 26 May 2020 03:03:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731463AbgEZHDI (ORCPT
+        with ESMTP id S1731493AbgEZHDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:03:08 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7533C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:08 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id fs4so806502pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:08 -0700 (PDT)
+        Tue, 26 May 2020 03:03:13 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C4BC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:13 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z26so9700830pfk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=d8KymXTIzfL2DSySO92h+GogegkiWUPCyUDxjM568ZM=;
-        b=cxFv3bw23gIV9vLNTY/nx1wiGqjTbYw5ZKltp1+uU4praWpkIJFiquaCjv7zUhITZH
-         hLtzReZc5ey1Tu5w8Lg4xYJHQm8ekSZEigmTQV7t6mh9vp01QEFb8h1FfZB1nxpWdYYa
-         +YCdq6HTr8Wo4ztifajntKUGTit1pHDa1Y3lh2c7B4Z89CBXehqxXUKtMs2qDDCMkQ0J
-         +UJlf55Zn5cpB4mbtlFqt83D4kofK9VdXjmO/4HHABFE6wst6yb/gFXg4sz2Ur19QCOG
-         /TVJonzBguoGdK3XGWA3TVqRkXbk+3GuNHu6hkW55blmoyuunVXUB3AsDc4dv5EYhC0P
-         7u5Q==
+        bh=CZAQ2yIHOpDAH2UTCLB6O9HhqoA1ZFeT/EUsKmrzS4k=;
+        b=cdAKnMqGMm8Jo5vs8lhRe/r8T+Rn2BeLMPucXDYIRP/pNjWfnvz6A/rBSBHrJi/ld+
+         oUsO+7h8ExlR0LVyyTMQpjPvdV0wIFwg5oKuTLLcjZVk81WTjbLbBYSgGIV22QfDG3cy
+         c8FIsiOpS6ov2hSg/QUdvwFOvcaraqJuLjCkYvq7SEHxY8sA9rWGHic8tMXOXilgRONs
+         0TE+zaC+JOutgHrBJacctMHpEZEA7+MhWXfsp9dq1+mwTrq8iPgoeZsy6atIKS3hPSld
+         zvjNwI89V6fz6f/FCJzCAFW1qArzOQ/yPv2LyTJPCYaCBIZMhJkfE9pZZ+SZFqcqvRTl
+         uCXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d8KymXTIzfL2DSySO92h+GogegkiWUPCyUDxjM568ZM=;
-        b=GY6M41X5EdQoczr+19bH+rm2KuIv/rvv/KvixHG5Dneu5lSP0FZeE7H+cU9ggcTi4u
-         zRupv/rpivFg0KSZV2HbxTf3hSODHq9O7PwmGZhr7MM+hKRw270asH+4qFv8dyCw+3sV
-         KqyYhBsTRn+pFevWla6xOE1E/kLS8Zjkph4oABy2ylHDJSFv62F5P2xLQzkSaX0a/ztH
-         jINXC6zqta5ldaaqIg42zTaRVKFjzXmm4H5428fwTCg7vXfFne+GjshxzHIhiDCFZPLr
-         z2LR+EjdAJnR+lGshXFAPQKjZbVEZfxyyXYC9YYBJu4s8yxI0qCniboyRs/wA9n5D9lU
-         Chyg==
-X-Gm-Message-State: AOAM530o3BEAC2jld5KDsKTp5D82IXAwilF7TP06qMDHNG4nGXgOXs5b
-        g5s83bfsN0F/vI97rFqisyFqPw==
-X-Google-Smtp-Source: ABdhPJxpSvle0lTpxOGzUm0bS79NHDX1pYJ3AliqMsFV9gAzrL0dNzHrIyynOanHjduYV7E5n6rQUA==
-X-Received: by 2002:a17:90b:3010:: with SMTP id hg16mr24750860pjb.157.1590476588424;
-        Tue, 26 May 2020 00:03:08 -0700 (PDT)
+        bh=CZAQ2yIHOpDAH2UTCLB6O9HhqoA1ZFeT/EUsKmrzS4k=;
+        b=PoOtnh7Lf4aWXssP46sEkuBADa+r3krO0uAb/F2TiyogRMVHDm2FtvboRyM+8UzZsk
+         /Kh3qM3bp4Utj7Eez25vTY9eigtlKSz+xuNmv4SDJ146bjf7/XCSO/S5sWMshhYiY9fU
+         rKNIuuR3KCDWd7CabN8I6fC5407ESLvUs1Mtd6wbe8r11+q+L/myzIceZzx1VvLCh43u
+         crM/blUGvAlotsa6CGYEjVoJ409QawScd1xq/eZFGLsB/9RBuml885WzpxwBCb9gg1hL
+         NBb6OQvB0fJVVKETdhp1H/CwpM/F0sAjyS3eLbkhNQxLvRh1q00JEgzDYvHmqkkfrG+g
+         I2Wg==
+X-Gm-Message-State: AOAM530J4qekSZENX2bTlxOAqJajEhPbXcGrREOENkoroCH22D/gVygJ
+        wMHW6v6pQdN3NFIxuLJeBS7f47oI0aHDGw==
+X-Google-Smtp-Source: ABdhPJx1Eg2xcBobFSmRgpac9WACoP9MHbEciD0ZLQh/NGHwWjM9cibWyk7+SlliWZnX4m86NCr10A==
+X-Received: by 2002:a62:cfc5:: with SMTP id b188mr19952093pfg.251.1590476592719;
+        Tue, 26 May 2020 00:03:12 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.03.06
+        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:03:08 -0700 (PDT)
+        Tue, 26 May 2020 00:03:12 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, oleg@redhat.com
-Subject: [RFC PATCH v4 09/13] riscv: Add vector struct and assembler definitions
-Date:   Tue, 26 May 2020 15:02:38 +0800
-Message-Id: <1f20f778318bf18e47eace08e54983fed23ba019.1590474856.git.greentime.hu@sifive.com>
+Subject: [RFC PATCH v4 11/13] riscv: Add ptrace vector support
+Date:   Tue, 26 May 2020 15:02:40 +0800
+Message-Id: <fa27814191feb2498b396758447ac2b745fd1121.1590474856.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590474856.git.greentime.hu@sifive.com>
 References: <cover.1590474856.git.greentime.hu@sifive.com>
@@ -79,79 +79,193 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-Add vector state context struct in struct thread and asm-offsets.c
-definitions.
+This patch adds ptrace support for riscv vector. The vector registers will
+be saved in datap pointer of __riscv_v_state. This pointer will be set
+right after the __riscv_v_state data structure then it will be put in ubuf
+for ptrace system call to get or set. It will check if the datap got from
+ubuf is set to the correct address or not when the ptrace system call is
+trying to set the vector registers.
 
-The vector registers will be saved in datap pointer of __riscv_v_state. It
-will be dynamically allocated in kernel space. It will be put right after
-the __riscv_v_state data structure in user space.
-
-[greentime.hu@sifive.com: add support for dynamic vlen, add vcsr and remove
-vxsat, vxrm because these data can be get in vcsr, add new macros for
-_riscv_v_state elements offset and remove unused ones]
+[greentime.hu@sifive.com: add support for dynamic vlen, fix vtype not
+saved bug]
 Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/include/asm/processor.h   |  1 +
- arch/riscv/include/uapi/asm/ptrace.h | 13 +++++++++++++
- arch/riscv/kernel/asm-offsets.c      |  8 ++++++++
- 3 files changed, 22 insertions(+)
+ arch/riscv/include/uapi/asm/elf.h |   1 +
+ arch/riscv/kernel/ptrace.c        | 114 ++++++++++++++++++++++++++++++
+ include/uapi/linux/elf.h          |   1 +
+ 3 files changed, 116 insertions(+)
 
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index 3ddb798264f1..217273375cfb 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -32,6 +32,7 @@ struct thread_struct {
- 	unsigned long sp;	/* Kernel mode stack */
- 	unsigned long s[12];	/* s[0]: frame pointer */
- 	struct __riscv_d_ext_state fstate;
-+	struct __riscv_v_state vstate;
- };
+diff --git a/arch/riscv/include/uapi/asm/elf.h b/arch/riscv/include/uapi/asm/elf.h
+index d696d6610231..099434d075a7 100644
+--- a/arch/riscv/include/uapi/asm/elf.h
++++ b/arch/riscv/include/uapi/asm/elf.h
+@@ -23,6 +23,7 @@ typedef struct user_regs_struct elf_gregset_t;
+ typedef __u64 elf_fpreg_t;
+ typedef union __riscv_fp_state elf_fpregset_t;
+ #define ELF_NFPREG (sizeof(struct __riscv_d_ext_state) / sizeof(elf_fpreg_t))
++#define ELF_NVREG  (sizeof(struct __riscv_v_state) / sizeof(elf_greg_t))
  
- #define INIT_THREAD {					\
-diff --git a/arch/riscv/include/uapi/asm/ptrace.h b/arch/riscv/include/uapi/asm/ptrace.h
-index 882547f6bd5c..661b0466b850 100644
---- a/arch/riscv/include/uapi/asm/ptrace.h
-+++ b/arch/riscv/include/uapi/asm/ptrace.h
-@@ -77,6 +77,19 @@ union __riscv_fp_state {
- 	struct __riscv_q_ext_state q;
- };
- 
-+struct __riscv_v_state {
-+	__u32 magic;
-+	__u32 size;
-+	unsigned long vstart;
-+	unsigned long vl;
-+	unsigned long vtype;
-+	unsigned long vcsr;
-+	void *datap;
-+#if __riscv_xlen == 32
-+	__u32 __padding;
+ #if __riscv_xlen == 64
+ #define ELF_RISCV_R_SYM(r_info)		ELF64_R_SYM(r_info)
+diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
+index 444dc7b0fd78..9b9bd1c02362 100644
+--- a/arch/riscv/kernel/ptrace.c
++++ b/arch/riscv/kernel/ptrace.c
+@@ -10,6 +10,7 @@
+ #include <asm/ptrace.h>
+ #include <asm/syscall.h>
+ #include <asm/thread_info.h>
++#include <asm/switch_to.h>
+ #include <linux/audit.h>
+ #include <linux/ptrace.h>
+ #include <linux/elf.h>
+@@ -26,6 +27,9 @@ enum riscv_regset {
+ #ifdef CONFIG_FPU
+ 	REGSET_F,
+ #endif
++#ifdef CONFIG_VECTOR
++	REGSET_V,
 +#endif
-+} __attribute__((aligned(16)));
-+
- #endif /* __ASSEMBLY__ */
+ };
  
- #endif /* _UAPI_ASM_RISCV_PTRACE_H */
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index 07cb9c10de4e..6627fde230b2 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -70,6 +70,14 @@ void asm_offsets(void)
- 	OFFSET(TASK_THREAD_F31, task_struct, thread.fstate.f[31]);
- 	OFFSET(TASK_THREAD_FCSR, task_struct, thread.fstate.fcsr);
+ static int riscv_gpr_get(struct task_struct *target,
+@@ -92,6 +96,107 @@ static int riscv_fpr_set(struct task_struct *target,
+ }
+ #endif
  
-+	OFFSET(RISCV_V_STATE_MAGIC, __riscv_v_state, magic);
-+	OFFSET(RISCV_V_STATE_SIZE, __riscv_v_state, size);
-+	OFFSET(RISCV_V_STATE_VSTART, __riscv_v_state, vstart);
-+	OFFSET(RISCV_V_STATE_VL, __riscv_v_state, vl);
-+	OFFSET(RISCV_V_STATE_VTYPE, __riscv_v_state, vtype);
-+	OFFSET(RISCV_V_STATE_VCSR, __riscv_v_state, vcsr);
-+	OFFSET(RISCV_V_STATE_DATAP, __riscv_v_state, datap);
++#ifdef CONFIG_VECTOR
++static int riscv_vr_get(struct task_struct *target,
++			 const struct user_regset *regset,
++			 unsigned int pos, unsigned int count,
++			 void *kbuf, void __user *ubuf)
++{
++	int ret, size;
++	struct __riscv_v_state *vstate = &target->thread.vstate;
++	/* Set the datap right after the address of vstate. */
++	void *datap = ubuf + sizeof(struct __riscv_v_state);
++	u32 magic = RVV_MAGIC;
 +
- 	DEFINE(PT_SIZE, sizeof(struct pt_regs));
- 	OFFSET(PT_EPC, pt_regs, epc);
- 	OFFSET(PT_RA, pt_regs, ra);
++	/* Copy the magic number. */
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &magic, 0,
++				  sizeof(u32));
++	if (unlikely(ret))
++		return ret;
++
++	/* Copy rest of vstate except datap. */
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, vstate, 0,
++				  RISCV_V_STATE_DATAP);
++	if (unlikely(ret))
++		return ret;
++
++	/* Copy the pointer datap itself. */
++	pos = 0;
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &datap, 0,
++				  sizeof(vstate->datap));
++	if (unlikely(ret))
++		return ret;
++
++#if __riscv_xlen == 32
++	/* Skip copy _padding. */
++	size = sizeof(vstate->__padding);
++	count -= size;
++	ubuf += size;
++#endif
++
++	/* Copy all the vector registers. */
++	pos = 0;
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++				  vstate->datap, 0, vstate->size);
++	return ret;
++}
++
++static int riscv_vr_set(struct task_struct *target,
++			 const struct user_regset *regset,
++			 unsigned int pos, unsigned int count,
++			 const void *kbuf, const void __user *ubuf)
++{
++	int ret, size;
++	struct __riscv_v_state *vstate = &target->thread.vstate;
++	const void *datap = ubuf + sizeof(struct __riscv_v_state);
++	const void *datap_addr = ubuf + RISCV_V_STATE_DATAP;
++	long val_datap;
++
++	/* Skip copy magic because kernel doesn't need to use it. */
++	size = sizeof(vstate->magic);
++	pos += size;
++	count -= size;
++	ubuf += size;
++
++	/* Copy rest of the vstate except datap and __padding. */
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, vstate, 0,
++				 RISCV_V_STATE_DATAP);
++	if (unlikely(ret))
++		return ret;
++
++	/* Check if the datap is correct address of ubuf. */
++	__get_user(val_datap, (long *)datap_addr);
++	if (val_datap != (long)datap)
++		return -EFAULT;
++
++	/* Skip copy datap. */
++	size = sizeof(vstate->datap);
++	count -= size;
++	ubuf += size;
++
++#if __riscv_xlen == 32
++	/* Skip copy _padding. */
++	size = sizeof(vstate->__padding);
++	count -= size;
++	ubuf += size;
++#endif
++
++	/* Copy all the vector registers. */
++	pos = 0;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, vstate->datap,
++				 0, vstate->size);
++	return ret;
++}
++static unsigned int riscv_vr_get_size(struct task_struct *target,
++				      const struct user_regset *regset)
++{
++	if (!has_vector)
++		return 0;
++
++	return sizeof(struct __riscv_v_state) + riscv_vsize;
++}
++#endif
++
+ static const struct user_regset riscv_user_regset[] = {
+ 	[REGSET_X] = {
+ 		.core_note_type = NT_PRSTATUS,
+@@ -111,6 +216,15 @@ static const struct user_regset riscv_user_regset[] = {
+ 		.set = &riscv_fpr_set,
+ 	},
+ #endif
++#ifdef CONFIG_VECTOR
++	[REGSET_V] = {
++		.core_note_type = NT_RISCV_VECTOR,
++		.align = 16,
++		.get = riscv_vr_get,
++		.set = riscv_vr_set,
++		.get_size = riscv_vr_get_size,
++	},
++#endif
+ };
+ 
+ static const struct user_regset_view riscv_user_native_view = {
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 34c02e4290fe..e428f9e8710a 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -428,6 +428,7 @@ typedef struct elf64_shdr {
+ #define NT_MIPS_DSP	0x800		/* MIPS DSP ASE registers */
+ #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode */
+ #define NT_MIPS_MSA	0x802		/* MIPS SIMD registers */
++#define NT_RISCV_VECTOR	0x900		/* RISC-V vector registers */
+ 
+ /* Note header in a PT_NOTE section */
+ typedef struct elf32_note {
 -- 
 2.26.2
 
