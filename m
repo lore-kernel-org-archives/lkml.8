@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC620C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C799920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB2B20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519760;
-	bh=fFEOXF3plrai/a3m0dkwy26qMlQ6dTKXCiMfGpEA8MU=;
+	s=default; t=1590519763;
+	bh=icfMV+3Qw8xRr0W9Ef+XkW1RsearV5WsBG6CAr3JNew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzgTpqs0driNj7Tjiu8AJJGLKYhpdIvXx8//nxIfIWITAQsVr34BJlbk+e5YuDwcu
-	 GgpwswsMjzz83bhkIoVUd29bimVli/JZnUPYsISLtmPk8nEMF7YNp16s8vT7URszOP
-	 HcKtigRjkw0z5Ve3mVG7TxhgdRDVofHwZU86llt4=
+	b=yAGgJo97mZjkVKrU2b/Wt5oBszmwhI6lfAu7RpiI8HRUSc+GRsOM23djDG5Lmd5Uc
+	 EWNzm06rd0YP7LdFuuBhuuXJATFzwWGfA24Il4VLJC2d4MloJ+SPhnr2B6palztguB
+	 qakRTZ3v8rYtMi6blnfWM9HYHz79VLkM7QUp0H9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391134AbgEZTCk (ORCPT
+        id S2389360AbgEZTCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391107AbgEZTCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:02:33 -0400
+        id S2391115AbgEZTCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8832C20873;
-        Tue, 26 May 2020 19:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 659FE208C3;
+        Tue, 26 May 2020 19:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519752;
-        bh=fFEOXF3plrai/a3m0dkwy26qMlQ6dTKXCiMfGpEA8MU=;
+        s=default; t=1590519756;
+        bh=icfMV+3Qw8xRr0W9Ef+XkW1RsearV5WsBG6CAr3JNew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a43Yw7/fqUjkBRFMLzcg+yQk9ExgpPLswziBxoefI4WqDeOhhndjf+lW7+GlwLs24
-         DV9Qez9iKa3sa64ChwsaM/KgXZQLfMX/rv1XwCUwh1AezM4TjH+SWomWJw6AlJ+ab6
-         4mFvX+4hNNHmBBTjX6tb/ZrLdNLqtUUHakB9ssmU=
+        b=RKRnTGZ7gXPMvNd1u9fTI8M2JqMyGS1+TxBBDLeL9RNNjAKLlAzX/FFTZ/BJA+1YE
+         bLeRZoVK+4We908Pk0d95koBylEbKqTB8EhLHUZYDG67L9hZ38oTTpp1wZTyhAvsXT
+         1oHg/pkZv5wRBsNyv6IS5civ4wdfdbnYIT39Hw00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.14 32/59] l2tp: initialise l2tp_eth sessions before registering them
-Date:   Tue, 26 May 2020 20:53:17 +0200
-Message-Id: <20200526183918.392731522@linuxfoundation.org>
+Subject: [PATCH 4.14 34/59] l2tp: initialise PPP sessions before registering them
+Date:   Tue, 26 May 2020 20:53:19 +0200
+Message-Id: <20200526183918.894935065@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -62,227 +62,188 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit ee28de6bbd78c2e18111a0aef43ea746f28d2073 upstream.
+commit f98be6c6359e7e4a61aaefb9964c1db31cb9ec0c upstream.
 
-Sessions must be initialised before being made externally visible by
-l2tp_session_register(). Otherwise the session may be concurrently
-deleted before being initialised, which can confuse the deletion path
-and eventually lead to kernel oops.
+pppol2tp_connect() initialises L2TP sessions after they've been exposed
+to the rest of the system by l2tp_session_register(). This puts
+sessions into transient states that are the source of several races, in
+particular with session's deletion path.
 
-Therefore, we need to move l2tp_session_register() down in
-l2tp_eth_create(), but also handle the intermediate step where only the
-session or the netdevice has been registered.
+This patch centralises the initialisation code into
+pppol2tp_session_init(), which is called before the registration phase.
+The only field that can't be set before session registration is the
+pppol2tp socket pointer, which has already been converted to RCU. So
+pppol2tp_connect() should now be race-free.
 
-We can't just call l2tp_session_register() in ->ndo_init() because
-we'd have no way to properly undo this operation in ->ndo_uninit().
-Instead, let's register the session and the netdevice in two different
-steps and protect the session's device pointer with RCU.
+The session's .session_close() callback is now set before registration.
+Therefore, it's always called when l2tp_core deletes the session, even
+if it was created by pppol2tp_session_create() and hasn't been plugged
+to a pppol2tp socket yet. That'd prevent session free because the extra
+reference taken by pppol2tp_session_close() wouldn't be dropped by the
+socket's ->sk_destruct() callback (pppol2tp_session_destruct()).
+We could set .session_close() only while connecting a session to its
+pppol2tp socket, or teach pppol2tp_session_close() to avoid grabbing a
+reference when the session isn't connected, but that'd require adding
+some form of synchronisation to be race free.
 
-And now that we allow the session's .dev field to be NULL, we don't
-need to prevent the netdevice from being removed anymore. So we can
-drop the dev_hold() and dev_put() calls in l2tp_eth_create() and
-l2tp_eth_dev_uninit().
+Instead of that, we can just let the pppol2tp socket hold a reference
+on the session as soon as it starts depending on it (that is, in
+pppol2tp_connect()). Then we don't need to utilise
+pppol2tp_session_close() to hold a reference at the last moment to
+prevent l2tp_core from dropping it.
 
-Fixes: d9e31d17ceba ("l2tp: Add L2TP ethernet pseudowire support")
+When releasing the socket, pppol2tp_release() now deletes the session
+using the standard l2tp_session_delete() function, instead of merely
+removing it from hash tables. l2tp_session_delete() drops the reference
+the sessions holds on itself, but also makes sure it doesn't remove a
+session twice. So it can safely be called, even if l2tp_core already
+tried, or is concurrently trying, to remove the session.
+Finally, pppol2tp_session_destruct() drops the reference held by the
+socket.
+
+Fixes: fd558d186df2 ("l2tp: Split pppol2tp patch into separate l2tp and ppp parts")
 Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_eth.c |  106 ++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 75 insertions(+), 31 deletions(-)
+ net/l2tp/l2tp_ppp.c |   69 ++++++++++++++++++++++++++++------------------------
+ 1 file changed, 38 insertions(+), 31 deletions(-)
 
---- a/net/l2tp/l2tp_eth.c
-+++ b/net/l2tp/l2tp_eth.c
-@@ -54,7 +54,7 @@ struct l2tp_eth {
- 
- /* via l2tp_session_priv() */
- struct l2tp_eth_sess {
--	struct net_device	*dev;
-+	struct net_device __rcu *dev;
- };
- 
- 
-@@ -72,7 +72,14 @@ static int l2tp_eth_dev_init(struct net_
- 
- static void l2tp_eth_dev_uninit(struct net_device *dev)
- {
--	dev_put(dev);
-+	struct l2tp_eth *priv = netdev_priv(dev);
-+	struct l2tp_eth_sess *spriv;
-+
-+	spriv = l2tp_session_priv(priv->session);
-+	RCU_INIT_POINTER(spriv->dev, NULL);
-+	/* No need for synchronize_net() here. We're called by
-+	 * unregister_netdev*(), which does the synchronisation for us.
-+	 */
- }
- 
- static int l2tp_eth_dev_xmit(struct sk_buff *skb, struct net_device *dev)
-@@ -130,8 +137,8 @@ static void l2tp_eth_dev_setup(struct ne
- static void l2tp_eth_dev_recv(struct l2tp_session *session, struct sk_buff *skb, int data_len)
- {
- 	struct l2tp_eth_sess *spriv = l2tp_session_priv(session);
--	struct net_device *dev = spriv->dev;
--	struct l2tp_eth *priv = netdev_priv(dev);
-+	struct net_device *dev;
-+	struct l2tp_eth *priv;
- 
- 	if (session->debug & L2TP_MSG_DATA) {
- 		unsigned int length;
-@@ -155,16 +162,25 @@ static void l2tp_eth_dev_recv(struct l2t
- 	skb_dst_drop(skb);
- 	nf_reset(skb);
- 
-+	rcu_read_lock();
-+	dev = rcu_dereference(spriv->dev);
-+	if (!dev)
-+		goto error_rcu;
-+
-+	priv = netdev_priv(dev);
- 	if (dev_forward_skb(dev, skb) == NET_RX_SUCCESS) {
- 		atomic_long_inc(&priv->rx_packets);
- 		atomic_long_add(data_len, &priv->rx_bytes);
- 	} else {
- 		atomic_long_inc(&priv->rx_errors);
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -449,9 +449,6 @@ static void pppol2tp_session_close(struc
+ 			inet_shutdown(sk->sk_socket, SEND_SHUTDOWN);
+ 		sock_put(sk);
  	}
-+	rcu_read_unlock();
-+
- 	return;
- 
-+error_rcu:
-+	rcu_read_unlock();
- error:
--	atomic_long_inc(&priv->rx_errors);
- 	kfree_skb(skb);
+-
+-	/* Don't let the session go away before our socket does */
+-	l2tp_session_inc_refcount(session);
  }
  
-@@ -175,11 +191,15 @@ static void l2tp_eth_delete(struct l2tp_
+ /* Really kill the session socket. (Called from sock_put() if
+@@ -507,8 +504,7 @@ static int pppol2tp_release(struct socke
+ 	if (session != NULL) {
+ 		struct pppol2tp_session *ps;
  
- 	if (session) {
- 		spriv = l2tp_session_priv(session);
--		dev = spriv->dev;
-+
-+		rtnl_lock();
-+		dev = rtnl_dereference(spriv->dev);
- 		if (dev) {
--			unregister_netdev(dev);
--			spriv->dev = NULL;
-+			unregister_netdevice(dev);
-+			rtnl_unlock();
- 			module_put(THIS_MODULE);
-+		} else {
-+			rtnl_unlock();
- 		}
- 	}
- }
-@@ -189,9 +209,20 @@ static void l2tp_eth_show(struct seq_fil
- {
- 	struct l2tp_session *session = arg;
- 	struct l2tp_eth_sess *spriv = l2tp_session_priv(session);
--	struct net_device *dev = spriv->dev;
-+	struct net_device *dev;
-+
-+	rcu_read_lock();
-+	dev = rcu_dereference(spriv->dev);
-+	if (!dev) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	dev_hold(dev);
-+	rcu_read_unlock();
+-		__l2tp_session_unhash(session);
+-		l2tp_session_queue_purge(session);
++		l2tp_session_delete(session);
  
- 	seq_printf(m, "   interface %s\n", dev->name);
-+
-+	dev_put(dev);
+ 		ps = l2tp_session_priv(session);
+ 		mutex_lock(&ps->sk_lock);
+@@ -600,6 +596,35 @@ static void pppol2tp_show(struct seq_fil
  }
  #endif
  
-@@ -268,21 +299,14 @@ static int l2tp_eth_create(struct net *n
- 				      peer_session_id, cfg);
- 	if (IS_ERR(session)) {
- 		rc = PTR_ERR(session);
--		goto out;
++static void pppol2tp_session_init(struct l2tp_session *session)
++{
++	struct pppol2tp_session *ps;
++	struct dst_entry *dst;
++
++	session->recv_skb = pppol2tp_recv;
++	session->session_close = pppol2tp_session_close;
++#if IS_ENABLED(CONFIG_L2TP_DEBUGFS)
++	session->show = pppol2tp_show;
++#endif
++
++	ps = l2tp_session_priv(session);
++	mutex_init(&ps->sk_lock);
++	ps->tunnel_sock = session->tunnel->sock;
++	ps->owner = current->pid;
++
++	/* If PMTU discovery was enabled, use the MTU that was discovered */
++	dst = sk_dst_get(session->tunnel->sock);
++	if (dst) {
++		u32 pmtu = dst_mtu(dst);
++
++		if (pmtu) {
++			session->mtu = pmtu - PPPOL2TP_HEADER_OVERHEAD;
++			session->mru = pmtu - PPPOL2TP_HEADER_OVERHEAD;
++		}
++		dst_release(dst);
++	}
++}
++
+ /* connect() handler. Attach a PPPoX socket to a tunnel UDP socket
+  */
+ static int pppol2tp_connect(struct socket *sock, struct sockaddr *uservaddr,
+@@ -611,7 +636,6 @@ static int pppol2tp_connect(struct socke
+ 	struct l2tp_session *session = NULL;
+ 	struct l2tp_tunnel *tunnel;
+ 	struct pppol2tp_session *ps;
+-	struct dst_entry *dst;
+ 	struct l2tp_session_cfg cfg = { 0, };
+ 	int error = 0;
+ 	u32 tunnel_id, peer_tunnel_id;
+@@ -763,8 +787,8 @@ static int pppol2tp_connect(struct socke
+ 			goto end;
+ 		}
+ 
++		pppol2tp_session_init(session);
+ 		ps = l2tp_session_priv(session);
+-		mutex_init(&ps->sk_lock);
+ 		l2tp_session_inc_refcount(session);
+ 
+ 		mutex_lock(&ps->sk_lock);
+@@ -777,26 +801,6 @@ static int pppol2tp_connect(struct socke
+ 		drop_refcnt = true;
+ 	}
+ 
+-	ps->owner	     = current->pid;
+-	ps->tunnel_sock = tunnel->sock;
+-
+-	session->recv_skb	= pppol2tp_recv;
+-	session->session_close	= pppol2tp_session_close;
+-#if IS_ENABLED(CONFIG_L2TP_DEBUGFS)
+-	session->show		= pppol2tp_show;
+-#endif
+-
+-	/* If PMTU discovery was enabled, use the MTU that was discovered */
+-	dst = sk_dst_get(tunnel->sock);
+-	if (dst != NULL) {
+-		u32 pmtu = dst_mtu(dst);
+-
+-		if (pmtu != 0)
+-			session->mtu = session->mru = pmtu -
+-				PPPOL2TP_HEADER_OVERHEAD;
+-		dst_release(dst);
 -	}
 -
--	l2tp_session_inc_refcount(session);
--	rc = l2tp_session_register(session, tunnel);
--	if (rc < 0) {
--		kfree(session);
--		goto out;
-+		goto err;
- 	}
+ 	/* Special case: if source & dest session_id == 0x0000, this
+ 	 * socket is being created to manage the tunnel. Just set up
+ 	 * the internal context for use by ioctl() and sockopt()
+@@ -830,6 +834,12 @@ out_no_ppp:
+ 	rcu_assign_pointer(ps->sk, sk);
+ 	mutex_unlock(&ps->sk_lock);
  
- 	dev = alloc_netdev(sizeof(*priv), name, name_assign_type,
- 			   l2tp_eth_dev_setup);
- 	if (!dev) {
- 		rc = -ENOMEM;
--		goto out_del_session;
-+		goto err_sess;
- 	}
- 
- 	dev_net_set(dev, net);
-@@ -302,28 +326,48 @@ static int l2tp_eth_create(struct net *n
- #endif
- 
- 	spriv = l2tp_session_priv(session);
--	spriv->dev = dev;
- 
--	rc = register_netdev(dev);
--	if (rc < 0)
--		goto out_del_dev;
-+	l2tp_session_inc_refcount(session);
-+
-+	rtnl_lock();
-+
-+	/* Register both device and session while holding the rtnl lock. This
-+	 * ensures that l2tp_eth_delete() will see that there's a device to
-+	 * unregister, even if it happened to run before we assign spriv->dev.
++	/* Keep the reference we've grabbed on the session: sk doesn't expect
++	 * the session to disappear. pppol2tp_session_destruct() is responsible
++	 * for dropping it.
 +	 */
-+	rc = l2tp_session_register(session, tunnel);
-+	if (rc < 0) {
-+		rtnl_unlock();
-+		goto err_sess_dev;
-+	}
++	drop_refcnt = false;
 +
-+	rc = register_netdevice(dev);
-+	if (rc < 0) {
-+		rtnl_unlock();
-+		l2tp_session_delete(session);
-+		l2tp_session_dec_refcount(session);
-+		free_netdev(dev);
-+
-+		return rc;
-+	}
+ 	sk->sk_state = PPPOX_CONNECTED;
+ 	l2tp_info(session, L2TP_MSG_CONTROL, "%s: created\n",
+ 		  session->name);
+@@ -853,7 +863,6 @@ static int pppol2tp_session_create(struc
+ {
+ 	int error;
+ 	struct l2tp_session *session;
+-	struct pppol2tp_session *ps;
  
--	__module_get(THIS_MODULE);
--	/* Must be done after register_netdev() */
- 	strlcpy(session->ifname, dev->name, IFNAMSIZ);
-+	rcu_assign_pointer(spriv->dev, dev);
-+
-+	rtnl_unlock();
-+
- 	l2tp_session_dec_refcount(session);
+ 	/* Error if tunnel socket is not prepped */
+ 	if (!tunnel->sock) {
+@@ -876,9 +885,7 @@ static int pppol2tp_session_create(struc
+ 		goto err;
+ 	}
  
--	dev_hold(dev);
-+	__module_get(THIS_MODULE);
+-	ps = l2tp_session_priv(session);
+-	mutex_init(&ps->sk_lock);
+-	ps->tunnel_sock = tunnel->sock;
++	pppol2tp_session_init(session);
  
- 	return 0;
- 
--out_del_dev:
--	free_netdev(dev);
--	spriv->dev = NULL;
--out_del_session:
--	l2tp_session_delete(session);
-+err_sess_dev:
- 	l2tp_session_dec_refcount(session);
--out:
-+	free_netdev(dev);
-+err_sess:
-+	kfree(session);
-+err:
- 	return rc;
- }
- 
+ 	error = l2tp_session_register(session, tunnel);
+ 	if (error < 0)
 
 
