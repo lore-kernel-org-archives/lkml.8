@@ -2,114 +2,107 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED96220787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB72820776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jVjFVak2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732060AbgEZMTi (ORCPT
+        id S1731577AbgEZMV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:19:38 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:45847 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731015AbgEZMTh (ORCPT
+        Tue, 26 May 2020 08:21:59 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31041 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728602AbgEZMV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:19:37 -0400
-Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M1HmE-1jbtrZ3BjG-002saG for <linux-kernel@vger.kernel.org>; Tue, 26 May
- 2020 14:19:35 +0200
-Received: by mail-qt1-f175.google.com with SMTP id i68so15891567qtb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:19:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532Ae+BXV0G+53KiIvJJEjthnSLnIHhOyLXc+LPrWg84Q9XeZZ3g
-        /YT1d8h6D7+YIrj7CC7ZSGfc5Nbwr0OIB5MQIKQ=
-X-Google-Smtp-Source: ABdhPJwdD1D/KIQJZpMZeGW018U6HWC8yka4YAqI3CIEYgVww9sz2HdZxhqCV/zv/PcyZ7/B1gLTyWI084lrF1/gt+A=
-X-Received: by 2002:ac8:1844:: with SMTP id n4mr902345qtk.142.1590495574644;
- Tue, 26 May 2020 05:19:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521142047.169334-1-elver@google.com> <20200521142047.169334-10-elver@google.com>
- <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
- <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com> <20200526120245.GB27166@willie-the-truck>
-In-Reply-To: <20200526120245.GB27166@willie-the-truck>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 May 2020 14:19:18 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
-Message-ID: <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
-Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement expression
-To:     Will Deacon <will@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Tue, 26 May 2020 08:21:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590495718;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=soLiUMo1lnFMwt1Vi+a2BILbN4jeczbvV9zPKest7O4=;
+        b=jVjFVak2lisq2YxjUt96Ycb3eEgXc4tdRjy6q1hhODXsyN95qvdrzXjFHJBrMYkOcM/vJz
+        ePgi8/yxsLfd9K1q8v8JF6ycyhOQ8wpguGfs3sguHJKpKqrqRZpDrhFM1fLdXP+CA8oI1a
+        E/G0MlVHX8n5q6TPMbLQTwdGPBwyE5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-16-UVGk70JiOa6mSY0lpXqE5w-1; Tue, 26 May 2020 08:21:54 -0400
+X-MC-Unique: UVGk70JiOa6mSY0lpXqE5w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B391005510;
+        Tue, 26 May 2020 12:21:52 +0000 (UTC)
+Received: from llong.com (ovpn-115-53.rdu2.redhat.com [10.10.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76C827A8A0;
+        Tue, 26 May 2020 12:21:48 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:SE/gvWfeE/SIzGMqtl2A7Q68ELumP+NF2vxdMaVGdsuooOGS7oQ
- AXlaZqD/Bvl2LS/gorZuENzakgLPCaNxABbf/iOiwKlkaj9v4/0F33VLlLKNnxO834yrgHL
- WhryL4Pxw1lA7IXqT4maY0Q5nVyS0yMg+npx6BqfK3yBUEvA+A2jODF16EQj3L43lP7wxQS
- ljzAhrAgXEGuT1KbISNFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ELzj+VvYnQo=:185uAJ9MGsse8OYnf45WCV
- 4/2P+DWDdBDCb4LaKhYWsNhzLY3coCVLT3wvgST7mZ4HLcUGoSjuXCltA/jZph2p6nSx8+kmy
- PQaWu2F9Iz6m4SIb+gnCAUEVOd0U1CvuwHdcetWp4P38aafPd1GZRh1RN32WHPPpBpinXCchl
- jCRZNhPPUIiWkprcZPQrSFOzS4myHO8qtIlwhZgyyG/pT8e+kqkuCJR2qvbPu8XEAgusllWcD
- 3Tdxfpn/DIZ9gDZ+HKy4p5BQ2vbQCHh0qX6mQvQuCp3iZf767hZ2WocP4H/5D6P8ro+esa4SU
- JkySshoi9VDQt06l1g6MVlxhvadGXv010K/qO5H8R9gHRK53+nCGT4grN3AwPja5hA4961jZj
- nMYwUt/3E8vkPLTbsL/6Cltd/fWpM4V5ugx6IuIg/WfHlbf9XgRfzqZ0oZiInLZOCZd0I7S8+
- vo9FywNV56sFbsPBgAB0Azfpo9O+r8c0R5uBYFyk1d3uY1emtutFZaLS4sB5eeWkhpl+iOS66
- yepci+ri1jTcRNOY+DDHyhTHc9wMW3bwFoVMVrXc83RlwlJITNkcOpuhRVM1kOl6HOm3dMi4X
- gG0P8TytIqtNy0RRDfFGFX/EU//EtKIPYgxwzusQdT/HWQlRVKMSK7xriLDoDkeAMhIjg7U3i
- Bw9AH1iiL1mp3WGpCCk9Sh7Zq8lUeuvFfqcOvMLrIMpjZm7/lskUzC7flCMXv43GCMrKwVCM6
- zb/ekI+BM4IDu18NO7nAchcYGpleF5O/oji/DLouC8bICgCtAxikpjajZ596DWXVEF4rI04Ku
- bxhCDObEo0YLy3fwyAUfY1B+rvyM02QpHfdpmDGJzrolMmsUXE=
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
+Subject: [PATCH] x86, spinlock: Remove obsolete ticket spinlock macros and types
+Date:   Tue, 26 May 2020 08:20:14 -0400
+Message-Id: <20200526122014.25241-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 2:02 PM Will Deacon <will@kernel.org> wrote:
-> On Tue, May 26, 2020 at 12:42:16PM +0200, Arnd Bergmann wrote:
-> >
-> > I find this patch only solves half the problem: it's much faster than
-> > without the
-> > patch, but still much slower than the current mainline version. As far as I'm
-> > concerned, I think the build speed regression compared to mainline is not yet
-> > acceptable, and we should try harder.
-> >
-> > I have not looked too deeply at it yet, but this is what I found from looking
-> > at a file in a randconfig build:
-> >
-> > Configuration: see https://pastebin.com/raw/R9erCwNj
->
-> So this .config actually has KCSAN enabled. Do you still see the slowdown
-> with that disabled?
+Even though the x86 ticket spinlock code has been removed in the
+commit cfd8983f03c7 ("x86, locking/spinlocks: Remove ticket (spin)lock
+implementation") a while ago, there are still some ticket spinlock
+specific macros and types left in the asm/spinlock_types.h header file
+that are no longer used. Remove those as well to avoid confusion.
 
-Yes, enabling or disabling KCSAN seems to make no difference to
-compile speed in this config and source file, I still get the 12 seconds
-preprocessing time and 9MB file size with KCSAN disabled, possibly
-a few percent smaller/faster. I actually thought that CONFIG_FTRACE
-had a bigger impact, but disabling that also just reduces the time
-by a few percent rather than getting it down to the expected milliseconds.
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ arch/x86/include/asm/spinlock_types.h | 22 ----------------------
+ 1 file changed, 22 deletions(-)
 
-> Although not ideal, having a longer compiler time when
-> the compiler is being asked to perform instrumentation doesn't seem like a
-> show-stopper to me.
+diff --git a/arch/x86/include/asm/spinlock_types.h b/arch/x86/include/asm/spinlock_types.h
+index bf3e34b25afc..323db6c5852a 100644
+--- a/arch/x86/include/asm/spinlock_types.h
++++ b/arch/x86/include/asm/spinlock_types.h
+@@ -3,29 +3,7 @@
+ #define _ASM_X86_SPINLOCK_TYPES_H
+ 
+ #include <linux/types.h>
+-
+-#ifdef CONFIG_PARAVIRT_SPINLOCKS
+-#define __TICKET_LOCK_INC	2
+-#define TICKET_SLOWPATH_FLAG	((__ticket_t)1)
+-#else
+-#define __TICKET_LOCK_INC	1
+-#define TICKET_SLOWPATH_FLAG	((__ticket_t)0)
+-#endif
+-
+-#if (CONFIG_NR_CPUS < (256 / __TICKET_LOCK_INC))
+-typedef u8  __ticket_t;
+-typedef u16 __ticketpair_t;
+-#else
+-typedef u16 __ticket_t;
+-typedef u32 __ticketpair_t;
+-#endif
+-
+-#define TICKET_LOCK_INC	((__ticket_t)__TICKET_LOCK_INC)
+-
+-#define TICKET_SHIFT	(sizeof(__ticket_t) * 8)
+-
+ #include <asm-generic/qspinlock_types.h>
+-
+ #include <asm-generic/qrwlock_types.h>
+ 
+ #endif /* _ASM_X86_SPINLOCK_TYPES_H */
+-- 
+2.18.1
 
-I agree in general, but building an allyesconfig kernel is still an important
-use case that should not take twice as long after a small kernel change
-regardless of whether a new feature is used or not. (I have not actually
-compared the overall build speed for allmodconfig, as this takes a really
-long time at the moment)
-
-        Arnd
