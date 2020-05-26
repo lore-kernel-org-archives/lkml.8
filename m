@@ -2,99 +2,168 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A554AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8361A207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D982087D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="fWV/9lzt"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eqK3SQsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgEZGI6 (ORCPT
+        id S1726928AbgEZGK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgEZGI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:08:57 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EA2C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:08:57 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id bs4so16634843edb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:08:56 -0700 (PDT)
+        Tue, 26 May 2020 02:10:29 -0400
+Received: from mail-bn8nam11on2065.outbound.protection.outlook.com ([40.107.236.65]:39136
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726207AbgEZGK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:10:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oVM5xHMTq7eu2xPtIBszwAdtDXd/6lMZaqrMlFJyMCVmr4vLQFPGL0T2DJ0be3TA4rNtEO0GkC4de6J8TgDEV23ak2nyF8UHY2GgZoDqU0jxCYfod5pqhFLlsxJeo9HjgDRBwhM/qi/Ggusg7VuX+cwGNMQX90QWuisZEJoFBxCWnlSaDI79FJCrjQLqoSHLUgwenGcESbmpRlMrzHtHrP0u66daZQ+GAjTSupWNddsrwO4sKPHHeRscGkBr/WS6qmG3+TOdKK+vpjWXzJ4hVUQecHw035nLUc/Eykq4x1qc+MZjsvB/oTj9b0FLdcWSsXGslP+aeku3v2y6BJ0fyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IVdE3LEia6LaEeCUMw1Ox1io46n8dusWNR4GW1NtiBM=;
+ b=drTwubObJJgowZuLkVeQmBH2lQVwgxaMWHleWzEDx+6QMQCgORO9neWV6/0BbUbFg2653QKBa4i8jSXF7GltrZSNy10j1Fz6gYW1ZmdrW6faedRhx/TcXeyQWHGxGdsKoo0/6M7Jc0S3G+0KvPgJz434Hr5ppplc9B2seGLSmw2gyPmR2L3m3SKopXE3RUw7cdDx7Yvpzae0LuUJVb/YNEXcg3uLZnKv34v9ge9mvGCji/Nzrb6JruEdvBbGYtnbe9Gycd0f5F8EKT+P7w5aEH4QIAoNDKJKWXlnToACNCO6qP6C7cu/8mT6aBNH0xozMK8tIWiM0aa1eMht0Pluhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V5YTh51mOSkEuxU21BvSuS/w+t0LyTN4bdZGeF4brQo=;
-        b=fWV/9lztW7nmFrKNP0PJ4RtoJAO6nrDX3GUlHhH4zIRcu804CcMll+BcR/TH+zTrIi
-         VbimfFrLLAZRbnIDe4AovAH/2WLLd6lnUM9Mmhm0hZjDtq/EUCKd36hg6LZq+np9n/oj
-         PIaajG/lFoLSUHfjAO5tASEwXekSEHmOnEB94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V5YTh51mOSkEuxU21BvSuS/w+t0LyTN4bdZGeF4brQo=;
-        b=UwiDd00w4nwt1OtWOlwiRqmR8g+n2+bGEji4+I9fjkEr5isJ/jJoPdUOz59GNgWwNJ
-         tVMVfWAZO70ZbFqLrHe4MZ1hQuzh87e/yZ7fEtxDuMBOiT0W/7b4T3mrfP8ywogzSFZZ
-         nXkirvQ0qhIC1pQihKfKUJV3cac2bmmUzcVh86QOJ6fWV224BNZ/4TqwdMMsLJssCNEv
-         gtYK9JL5vEo430pbJbtoP8ifikfch0mnr906Z2pId/zXPd75xikf93tlW2xd4YgdzUG+
-         09smnPcs+ECdQGF3DzeMZEPKVd9Hs6Dv7RDXUDVpBAbAd0o2OVjA/hZoOgaTCuSyGarF
-         VMtQ==
-X-Gm-Message-State: AOAM532oxC2T6mJ8GCZySbcoT1Ab9NaGYQElW/0SQfix9JHnPzdk47Y0
-        z5qKA1+q6eQD1mcTXgRcrbpaArM1eEmLIy/2FVqDLg==
-X-Google-Smtp-Source: ABdhPJzib02G90pJOtMeOUHnKCP2wPTxzVpDsQuhN4DT9I2bM+InsgjG5fVPNFXE6LDET7T6rqwFER52/c6lbAlIXeA=
-X-Received: by 2002:a05:6402:b38:: with SMTP id bo24mr18800566edb.24.1590473335434;
- Mon, 25 May 2020 23:08:55 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IVdE3LEia6LaEeCUMw1Ox1io46n8dusWNR4GW1NtiBM=;
+ b=eqK3SQsgRZ1Me6bzbPShbipk+xmIGYvnmu5uxZbV6zaJR6Hk3kj2yVq135eXjy/RtV+n8e8SATgkt1dIyry5Qwc0aiFKbjJw0zBEfvim43NNe1hPE/qHqMEtfbLilkBpDqm5Xob1o5P7Z7RjL0m+IHkoMkB2EVMo/SHSpE9225w=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3420.namprd12.prod.outlook.com (2603:10b6:5:3a::27) by
+ DM6PR12MB3291.namprd12.prod.outlook.com (2603:10b6:5:186::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.24; Tue, 26 May 2020 06:10:24 +0000
+Received: from DM6PR12MB3420.namprd12.prod.outlook.com
+ ([fe80::d007:1b50:9d7c:632f]) by DM6PR12MB3420.namprd12.prod.outlook.com
+ ([fe80::d007:1b50:9d7c:632f%5]) with mapi id 15.20.3021.029; Tue, 26 May 2020
+ 06:10:24 +0000
+Subject: Re: [PATCH v4 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA
+ information
+To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
+ <1588108416-49050-4-git-send-email-Sanju.Mehta@amd.com>
+ <20200504062002.GL1375924@vkoul-mobl>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <280220fd-9780-e2b4-7a5a-26f3a0119c43@amd.com>
+Date:   Tue, 26 May 2020 11:40:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200504062002.GL1375924@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BMXPR01CA0061.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:2c::25) To DM6PR12MB3420.namprd12.prod.outlook.com
+ (2603:10b6:5:3a::27)
 MIME-Version: 1.0
-References: <20200524233942.8702-1-sargun@sargun.me> <20200524233942.8702-5-sargun@sargun.me>
- <20200525142043.jkdsfabntqusizxz@wittgenstein>
-In-Reply-To: <20200525142043.jkdsfabntqusizxz@wittgenstein>
-From:   Sargun Dhillon <sargun@sargun.me>
-Date:   Mon, 25 May 2020 23:08:19 -0700
-Message-ID: <CAMp4zn_JFEVQd3PpOod=R11fSFOQYVWpS3bVQensOQyhc=BQag@mail.gmail.com>
-Subject: Re: [PATCH 4/5] seccomp: Add SECCOMP_ADDFD_FLAG_MOVE flag to add fd ioctl
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Jann Horn <jannh@google.com>, Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Matt Denton <mpdenton@google.com>,
-        Kees Cook <keescook@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2406:7400:70:65d3::1] (2406:7400:70:65d3::1) by BMXPR01CA0061.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Tue, 26 May 2020 06:10:18 +0000
+X-Originating-IP: [2406:7400:70:65d3::1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0aa435aa-2cad-4522-e4e0-08d8013b7a73
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3291:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB329175B0D9E64EE28C4DD9DDE5B00@DM6PR12MB3291.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 041517DFAB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5sqVS8LgW5zwGpRWyKjRhEF0eW8fmeVc1U2DoEvSgtLGCz/lSzpbS3yUEjGFPkey52A4FVNEfhIF33i1IVMKDdf/c7S3Fi6/kcz+2ZqghTThHPgUw7mdzC0lJB7F2tMOilwOi0BUC47a0JJCI5/qS8ohAGkDoV3QTR/8MIdcPFRjcf5WlCjAzenZ8zDZecvn7wCXegk/SrU9tECYKWyB2jEdJqqzhyaQ9D4gETD9Wh83wtI+uv2QJ7HKWTb3tD3+0INtHUnYaEcuByVteH/9TOto/lE42WSDQLS/TJYccXAHQfL/bARccoQXOL1z/BYoSCU032XQq8Unw9sYLqWnRj+7ELMHbIeK1DBMF0Hrh1Jb/sPv9N0/S7G1bclrV0oz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3420.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(36756003)(8936002)(2616005)(110136005)(8676002)(316002)(4326008)(478600001)(2906002)(31696002)(6666004)(6486002)(6636002)(66556008)(66476007)(66946007)(52116002)(5660300002)(16526019)(186003)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: roIws0FCNRzp0/2Nqt1CZTQRM2olUAatpl427LEl/5xlZoNKoJcT5zQCtLBCFWuGGRUHYsfgyQb1a94JVIQtmQ/jwbuypmSPex9Sc6mTTcHyFZ3qlMtT+uq7PkwntNht5dPDQyrJuapODiUK+5R+xqjbtaUxKb5X2SFSkjunPQLDRW0uGYlKvk+WwCtRUFtUKJRJ9jwAP/G9lD4dTpslKAKXD704ttnC9TYAJ5opD//mDQv7F7LaLgwD3M5A4cKhNrjZv0/idDF9Y8ThmuB1ryh3W6FsqXhDp95k70KB17/dVslFbtWyfZcvkUrGKp10pNCqrEabcxbkevRHUN0qAl1e4BHEdWlFfzACX8z1VNdTfkzacJcGFxmw2O3RdxOO5I8sNGmG89SYeLcExSr+DK5+BNP0S99JCeFji7VNeRdta3hzwaXVvK/cjaAOTk56y4kfSNyTaBaDRz3+q90WEdpfADlvs82FXqCFbgceqz5twuz2ZtIDEFrmZG48Jds/
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa435aa-2cad-4522-e4e0-08d8013b7a73
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 06:10:24.3188
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OjEnk7euP4VqtFCbQe5FcU5KSmYa22Nq3qEb3bnavcB/LztiakpbxmWl0Aldi1zVxuMLDTcXS3ufkDQICJlTDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3291
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > + * they are created in. Specifcally, sockets, and their interactions with the
-> > + * net_cls and net_prio cgroup v1 controllers. This "moves" the file descriptor
-> > + * so that it takes on the cgroup controller's configuration in the process
-> > + * that the file descriptor is being added to.
-> > + */
-> > +#define SECCOMP_ADDFD_FLAG_MOVE              (1UL << 1)
->
-> I'm not happy about the name because "moving" has much more to do with
-> transferring ownership than what we are doing here. After a "move" the
-> fd shouldn't be valid anymore. But that might just be my thinking.
->
-> But why make this opt-in and not do it exactly like when you send around
-> fds and make this mandatory?
+>> +static const struct file_operations pt_debugfs_info_ops = {
+>> +     .owner = THIS_MODULE,
+>> +     .open = simple_open,
+>> +     .read = ptdma_debugfs_info_read,
+>> +     .write = NULL,
+>> +};
+>> +
+>> +static const struct file_operations pt_debugfs_queue_ops = {
+>> +     .owner = THIS_MODULE,
+>> +     .open = simple_open,
+>> +     .read = ptdma_debugfs_queue_read,
+>> +     .write = ptdma_debugfs_queue_write,
+>> +};
+>> +
+>> +static const struct file_operations pt_debugfs_stats_ops = {
+>> +     .owner = THIS_MODULE,
+>> +     .open = simple_open,
+>> +     .read = ptdma_debugfs_stats_read,
+>> +     .write = ptdma_debugfs_stats_write,
+>> +};
+> 
+> pls convert to use DEFINE_SHOW_ATTRIBUTE()
+> 
+Sure, will incorporate the changes in next version of patch.
 
-Based upon Tycho's comments in an offline thread, I'm going to make
-this the default
-(setting the cgroup metadata) to mirror what SCM_RIGHTS does, and then
-if we come
-up with a good use case where we need to preserve *cgroup v1*
-metadata, then we can
-add an opt-out flag in the future.
+>> +void ptdma_debugfs_setup(struct pt_device *pt)
+>> +{
+>> +     struct pt_cmd_queue *cmd_q;
+>> +     char name[MAX_NAME_LEN + 1];
+>> +     struct dentry *debugfs_q_instance;
+>> +
+>> +     if (!debugfs_initialized())
+>> +             return;
+>> +
+>> +     mutex_lock(&pt_debugfs_lock);
+>> +     if (!pt_debugfs_dir)
+>> +             pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
+>> +     mutex_unlock(&pt_debugfs_lock);
+>> +
+>> +     pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
+>> +
+>> +     debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
+>> +                         &pt_debugfs_info_ops);
+>> +
+>> +     debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
+>> +                         &pt_debugfs_stats_ops);
+>> +
+>> +     cmd_q = &pt->cmd_q;
+>> +
+>> +     snprintf(name, MAX_NAME_LEN - 1, "q");
+>> +
+>> +     debugfs_q_instance =
+>> +             debugfs_create_dir(name, pt->debugfs_instance);
+>> +
+>> +     debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
+>> +                         &pt_debugfs_queue_ops);
+> 
+> Pls use dbg_dev_root in struct dma_device as root for your own debugfs
+> 
+Sure, will incorporate the changes in next version of patch.
+
+> Thanks
+> --
+> ~Vinod
+> 
