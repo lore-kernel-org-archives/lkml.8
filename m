@@ -2,135 +2,135 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0937AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1170CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBF1920723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlMqhymq"
+	by mail.kernel.org (Postfix) with ESMTP id DF61F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgEZPbI (ORCPT
+        id S1729652AbgEZPdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgEZPbH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:31:07 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CE1C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:31:07 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x12so16390886qts.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nVAali8dSpr9v23zA2CiQyVc5uAWU4kfctYwAsBlH/o=;
-        b=MlMqhymqjZPS+Xk2oM/nsOGlwmsVKEvRj4bQK8+GHRYvx7kOElq385DciMHFdWZ2pN
-         GASgbbgs5hMREcR6xa8j4+PrKAcUIuIBVetVBWfpypo0erTrV+EC1lpQSQmubuOlzucY
-         hPblqe0W+D0iSCX2mYKLxLF9ycsTl5mJ7XTnOXIWbOztP301r5zS4/LWrcSFzWRFamxz
-         Ng5lqfW4+c8KpRlAtmj+N7aQvvugxtYrPSLWk2xEhuPvLDW7ZbSvJBR3nscZTHMEt2wc
-         d6Qx7q2Wld8mQ8o9zjYRS5SH6TO3ik47KhkD9QwpkXfO5t6Ooj89/j5cbP1Zf+mPboKl
-         d1+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=nVAali8dSpr9v23zA2CiQyVc5uAWU4kfctYwAsBlH/o=;
-        b=A3KTFr907yXAcjCcPh0+h1gZuJX+9KjdSRiDEjBm+t0F/ZAN9CvJxuJxszX9Ae4QGi
-         FP9rYs4eNYUo7xJ3rnhinpJVuy+HZmZl70Qatwms+jVFG4BOIArBzd7jZslT4KYBGjqO
-         JPX4yyTd1CxcLsRS+VXfI/cv5l2xpBnk/WEcbNRlY+lNkmlkbYHEk58vcXdaGHQzFce+
-         gn/bIvbyOQw44U6FV/ROLg4+flZnhGh9XJ/1usreMcKVr9t7xtBdtIWXQyTZuBFQxpBA
-         8NLm27bTv/fMmZhLfqkHrj9I9/rseZUA7aFj7xvQmiYl6OYneesyWYbjkgdLlJXZ6v8p
-         fltQ==
-X-Gm-Message-State: AOAM533IlImyph6zD91nZmjODT7vBgwqhjpVIUR4gIpU2uPatc8onse1
-        XNCqlPHQUXrSikRthHCSLpQ=
-X-Google-Smtp-Source: ABdhPJxnBiPFtjIpt6qPHHje38BhJSIddHhrmpv1FHc/VrjNRsNLAJGH/3oSj7NAnqQw0VXpp90IGQ==
-X-Received: by 2002:ac8:768c:: with SMTP id g12mr1859594qtr.51.1590507066478;
-        Tue, 26 May 2020 08:31:06 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n63sm7791312qkn.104.2020.05.26.08.31.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:31:05 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 26 May 2020 11:31:04 -0400
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
- compressed kernel
-Message-ID: <20200526153104.GC2190602@rani.riverdale.lan>
-References: <20200524212816.243139-1-nivedita@alum.mit.edu>
- <20200525225918.1624470-1-nivedita@alum.mit.edu>
- <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
- <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
- <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com>
- <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
- <CA+icZUWTKJ=-OGJPzqm6HNQMkB1uS_B0ydU-9Xa035wB7vA4iw@mail.gmail.com>
- <CA+icZUU54K8z2--6fS=LEaMJGgeWfudViT7ETMsSYF1i59_4mg@mail.gmail.com>
- <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com>
+        Tue, 26 May 2020 11:33:47 -0400
+Received: from mga05.intel.com ([192.55.52.43]:13369 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbgEZPdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:33:46 -0400
+IronPort-SDR: hzG5JAQAcnX16NXrlVBVUYrMGunCsg3k/g4g7/kscG23i7uVb3gjFMewyI1RLJVwALABzvX4c6
+ tjqcrEhbaDgw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:33:45 -0700
+IronPort-SDR: nRnoLIoNHfPkKLn4f9P3ixflHY/LfK8O2t0bt5XrmJ3yMKcapWyMAQzjd5MjHsxypE/CTaz6dh
+ qtXgDIX5nIwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="270112433"
+Received: from mashaikh-mobl1.amr.corp.intel.com (HELO [10.255.1.194]) ([10.255.1.194])
+  by orsmga006.jf.intel.com with ESMTP; 26 May 2020 08:33:36 -0700
+Subject: Re: [PATCH v5] arch/x86: Update config and kernel doc for MPK feature
+ on AMD
+To:     Borislav Petkov <bp@alien8.de>, Babu Moger <babu.moger@amd.com>
+Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, x86@kernel.org,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, mchehab+samsung@kernel.org,
+        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
+        akpm@linux-foundation.org, steven.price@arm.com,
+        rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <158940940570.47998.17107695356894054769.stgit@naples-babu.amd.com>
+ <20200523122149.GF27431@zn.tnic>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <23ee5cfa-22ec-a367-04f2-4bca8edcfa9e@intel.com>
+Date:   Tue, 26 May 2020 08:33:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200523122149.GF27431@zn.tnic>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 05:07:24PM +0200, Sedat Dilek wrote:
-> > >
-> >
-> > Maybe this should be:
-> >
-> > [ arch/x86/boot/compressed/Makefile ]
-> >
-> > -KBUILD_CFLAGS += -include hidden.h
-> > +KBUILD_CFLAGS += -include ./hidden.h
-> >
+On 5/23/20 5:21 AM, Borislav Petkov wrote:
+>> +config X86_MEMORY_PROTECTION_KEYS
+>> +	# Set the "INTEL_"-free option whenever the "INTEL_" one is set.
+>> +	# The "INTEL_" one should be removed and replaced by this option
+>> +	# after 5.10. This avoids exposing most 'oldconfig' users to this
+>> +	# churn.
+>> +	def_bool X86_INTEL_MEMORY_PROTECTION_KEYS
+> I only picked up the discussion from the sidelines but why do we need
+> this at all? If we don't want to have churn, then we can leave it be
+> called X86_INTEL_MEMORY_PROTECTION_KEYS, not change the manpage and
+> have this depend on CPU_SUP_AMD too so that people can select it on AMD
+> machines, and get on with our lives.
 > 
-> NOPE.
-> 
-> This works:
-> 
-> [ arch/x86/boot/compressed/Makefile ]
-> 
-> -KBUILD_CFLAGS += -include hidden.h
-> +KBUILD_CFLAGS += -include ./arch/x86/boot/compressed/hidden.h
-> 
-> $ ll arch/x86/boot/bzImage arch/x86/boot/compressed/vmlinux
-> -rw-r--r-- 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/bzImage
-> -rwxr-xr-x 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/compressed/vmlinux
-> 
-> - Sedat -
+> So what's up?
 
-It needs to either be $(srctree)/$(src)/hidden.h, or we should add
--I $(srctree)/$(src) to the KBUILD_CFLAGS. The latter option is added
-automatically when building in a separate builddir with O=${KOBJ} (which
-is how I, and I assume Ard, was testing), but for some reason is not
-added when building in-tree. The -include option doesn't automatically
-search the directory of the source file.
+Thanks for pointing that out.  I think this ended up mixing together the
+two alternative, which doesn't make much sense.
 
--include file Process file as if "#include "file"" appeared as the first
-line of the primary source file.  However, the first directory searched
-for file is the preprocessor's working directory instead of the
-directory containing the main source file.  If not found there, it is
-searched for in the remainder of the "#include "..."" search chain as
-normal.
+Babu, let's just leave the config option _naming_ entirely in place.
+The only change should be to the dependencies and the description text.
