@@ -2,63 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A1C20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2123520721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521361;
-	bh=exwDoKqglk05Dqmr7hl1WwibewZcm/lnYHdAHOBm8xw=;
+	s=default; t=1590521364;
+	bh=4c0Dilxy/m4zNS9uxSrxfs0CPMb4M2smHfnv6POAEWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PW4vfvEGe5y2giYhOCCwa3zlQZd1R8nx3FGtCWGPUz6Djd/ve3rhGdkTY4LTKwSv/
-	 9QpUdv4GdNdgucDUrokFm6I2mARFiEl0o1YpCKYC3Syez/TNoFUpHhyzlrARoqsAd3
-	 7jmWQtCQlT+ErgE1iJEU51uI+gNYzhHE/V87UVCM=
+	b=Bl0zNKeqwwGQp+9dB3WBxa0jkJfHZINHlZFetyRWwYomcS3uJNwwwTDVH6F4SJ9bS
+	 RO4KkysnLqulzeJwhDKrpgWR6mQdJnA6arrw4MD2n5lz4eThrhugyB8gPrOD6whw0x
+	 tEZsaAJqdnzkRZSaM7t0PAQ8UhmifzP3bRTHeOJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403810AbgEZTBv (ORCPT
+        id S2403800AbgEZTBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403797AbgEZTBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:42 -0400
+        id S2390975AbgEZTBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E5C2084C;
-        Tue, 26 May 2020 19:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB6B2086A;
+        Tue, 26 May 2020 19:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519701;
-        bh=exwDoKqglk05Dqmr7hl1WwibewZcm/lnYHdAHOBm8xw=;
+        s=default; t=1590519704;
+        bh=4c0Dilxy/m4zNS9uxSrxfs0CPMb4M2smHfnv6POAEWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWFwlDUWDAUUX1JoPenvUzgGn/IHz9npMQlfzfaNgChkYRFAAPPUdAuMLWpidcNT0
-         auReHGYDP1rvb8WH0syv4lO0Ovdr72ZMeK3RJu9nzuJktK6e0YrzqbLs0OT5HiN9kn
-         dQLLLFYTCM3ivfyxZcnZJ9VCRghjNkfGB04l9Q8w=
+        b=PQ5gzDXr5P5IXtjdKrxEHxJ+3A73KASQDfKpTM0cmnI3GR2Yb4SBSRzwrfCgAgO8c
+         WhyC/eQscMRNkjaERd2WTvsXOKXIgel/qjJO0KLBn7+vpMaxXTnVl/0KU0xc0R62sS
+         vHMD1+iTrPIkREycrB8MCTMCiUJ7vMEH+C5WhLYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 43/59] ubsan: build ubsan.c more conservatively
-Date:   Tue, 26 May 2020 20:53:28 +0200
-Message-Id: <20200526183921.075930036@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 44/59] libnvdimm/btt: Remove unnecessary code in btt_freelist_init
+Date:   Tue, 26 May 2020 20:53:29 +0200
+Message-Id: <20200526183921.286541733@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -71,69 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Vishal Verma <vishal.l.verma@intel.com>
 
-commit af700eaed0564d5d3963a7a51cb0843629d7fe3d upstream.
+[ Upstream commit 2f8c9011151337d0bc106693f272f9bddbccfab2 ]
 
-objtool points out several conditions that it does not like, depending
-on the combination with other configuration options and compiler
-variants:
+We call btt_log_read() twice, once to get the 'old' log entry, and again
+to get the 'new' entry. However, we have no use for the 'old' entry, so
+remove it.
 
-stack protector:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
-
-stackleak plugin:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-
-kasan:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
-
-The stackleak and kasan options just need to be disabled for this file
-as we do for other files already.  For the stack protector, we already
-attempt to disable it, but this fails on clang because the check is
-mixed with the gcc specific -fno-conserve-stack option.  According to
-Andrey Ryabinin, that option is not even needed, dropping it here fixes
-the stackprotector issue.
-
-Link: http://lkml.kernel.org/r/20190722125139.1335385-1-arnd@arndb.de
-Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
-Link: https://lore.kernel.org/lkml/20190722091050.2188664-1-arnd@arndb.de/t/
-Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvdimm/btt.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -256,7 +256,8 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string
- obj-$(CONFIG_UBSAN) += ubsan.o
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index 471498469d0a..61e519f1d768 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -540,9 +540,9 @@ static int arena_clear_freelist_error(struct arena_info *arena, u32 lane)
  
- UBSAN_SANITIZE_ubsan.o := n
--CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-+KASAN_SANITIZE_ubsan.o := n
-+CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
+ static int btt_freelist_init(struct arena_info *arena)
+ {
+-	int old, new, ret;
++	int new, ret;
+ 	u32 i, map_entry;
+-	struct log_entry log_new, log_old;
++	struct log_entry log_new;
  
- obj-$(CONFIG_SBITMAP) += sbitmap.o
+ 	arena->freelist = kcalloc(arena->nfree, sizeof(struct free_entry),
+ 					GFP_KERNEL);
+@@ -550,10 +550,6 @@ static int btt_freelist_init(struct arena_info *arena)
+ 		return -ENOMEM;
  
+ 	for (i = 0; i < arena->nfree; i++) {
+-		old = btt_log_read(arena, i, &log_old, LOG_OLD_ENT);
+-		if (old < 0)
+-			return old;
+-
+ 		new = btt_log_read(arena, i, &log_new, LOG_NEW_ENT);
+ 		if (new < 0)
+ 			return new;
+-- 
+2.25.1
+
 
 
