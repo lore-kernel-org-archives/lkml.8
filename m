@@ -2,84 +2,91 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44716C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C800C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E84D20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="NAsyf310"
+	by mail.kernel.org (Postfix) with ESMTP id 3EA8920849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590521044;
+	bh=VNNTZ+tHJRLYRmbvvddtQu3W8kD7fUtrchDsBp/rkY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T7d0tGp4VlKoOXuUvgAdEKZZ/ufA0PSkedLWunS6pkp/PYPpj5tnVg7Hj72uujeJc
+	 yOiwiCUJ9C6BaaHEO8OTE3e5uxzal2QMFTWXMz9HvTMwWh9ocg1/YPgeOBcDNNc7Ev
+	 MdvndGrWvNfzLgIe7F9jAFjx5U4G0j0oFbaI60vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404537AbgEZTX4 (ORCPT
+        id S2391317AbgEZTYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:23:56 -0400
-Received: from mout.gmx.net ([212.227.15.18]:36483 "EHLO mout.gmx.net"
+        Tue, 26 May 2020 15:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404527AbgEZTXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:23:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590521031;
-        bh=Lci+jQawl8c8OvJkMVS3BSHSPIYtCtie4ClFMQvOiFc=;
-        h=X-UI-Sender-Class:To:From:Subject:Date;
-        b=NAsyf310YJ3pl4J9JtjFPE6e3bTxh9cs0I3bBA5h2XwrnMsO3KT31s0AgvpzjIRys
-         3YaPIT+BR0B61agsTopcc0T8yRujRSEv+6K2kued0XPTHrB/gSswan1LQNwcr8JVUd
-         iVCiofiCRGBpY6gPF45Py8BiPxM0y810RYcwC+l0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from obelix.fritz.box ([46.142.6.196]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWih0-1jWy8l2RGy-00X7Ro; Tue, 26
- May 2020 21:23:51 +0200
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-From:   Ronald Warsow <rwarsow@gmx.de>
-Subject: Re: [PATCH 5.6 000/126] 5.6.15-rc1 review
-Message-ID: <db05fccd-0221-2227-babe-64b1e16b4656@gmx.de>
-Date:   Tue, 26 May 2020 21:23:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2391402AbgEZTI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3516520873;
+        Tue, 26 May 2020 19:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590520107;
+        bh=VNNTZ+tHJRLYRmbvvddtQu3W8kD7fUtrchDsBp/rkY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YF27Pm1zSDXRUw0oq62F2iU+AaRNcN/4Mto4QclUQy9okSTpQagkGCAFk98ifnATr
+         WDPJW9xOecbdfQYhWjEjD+VdQ5eu75KTmI97oL61D2s7jtBnD7CPYfKIPGx1AdrRwH
+         8kDGCpX3Lo4peSFXctr4ziwBR9Pw1iwUZfL/L1GE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 060/111] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
+Date:   Tue, 26 May 2020 20:53:18 +0200
+Message-Id: <20200526183938.536401093@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nd/r8N99KsO1y2QW5Sy2d53cc6FZx3PgiGxAw1X3hEkcRdB58Wh
- UCOaCtMXWB4+GsWlEc5/UUnWoPYRaXa8e/7N6rzqzKbg0M4n6nVIkZu5pNOPoDj0LvbNJ76
- LVjjKJm5Pc4QEdSB97b8nAf9nd1lTTxiYMOy7Y49+MRXQwmzYKkLHV4jGHAcvVIfBlN/EM6
- e/S9cPi4/9Vdc2QMYjwbw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k4nX9Q9sCx4=:Due9qigGzlBS4yn0mAgAhm
- duSkQEBgc4DsEQuD/JarvAUoUMmAHwUOMDAxjlkmZjohn1JYB4rdczSw+MdZFd0YqhYFRDWUk
- VqPPDHdvWVwupABLGzVSEoPbCGths6xMrY9VHXwMQ/IwLHYZy0ecwmKdQTARMALMYX1SXT+v7
- i2WZcD8saTKafopSWruNRoxgeVW3nvMyXYt4KklpI7m/bYrDYgewV2IVHqOdytuUJNdeSSfBv
- Q7giuP3fPsD3jzym4r29vT/E0rGhwe3zn5hOcgKfKUH4GCpqHNEmptYBBtdujJyX21QDbSfA2
- cINqql2E3FXfsvr2b/ltOMj6Q9vUNZmsrE2G0drnvWSfG9rp/CdWhMJPwMGyq9otZ5eSpc+KQ
- yTPVoSDN3Rh2fIasX69Ms6mO2Su7VST5+K10YYIFb/4vY3h+PGHEaRKfpLGUsnj5JruA3lZhG
- SMt88ZEwDurwgZHCfrgr6Q96g7ujjFWGURZfExgciteIU80wrdmNEZTxfRNlckVcuy+hMXxPg
- hU8r6GTmvbuF1/bxngnYNxf7TBaJnBpnWs6cNKGUKhniW65eZG/rR1xZwEldbvvZ0U9TUahxa
- pqM2HaR72gXxt+NsLbQWExxbeX7FmRfyO9xXNVrs7IpuHvLePAFuYfXSSRSOfh8gKkpFwPcC3
- 8vOON7hdcLD4nkcs0DcPFL2qFZvNBT+PDlDM/ysAPIGcHGNal3HOwYDZAv4OhYvKl7NPiJoPF
- sTApteQ4hTcyBIkM2pT9tNP6mIO1Sf+y0+Vf+/3NONk/FORJ7yr4wdYHJUlaptLikNItYPpw+
- Vdmun6j4qBFJbhw2iki2vNmSM1aqCtH2G/CQpi0kaJOLcDYluju5FHN6FXi5AIHUmUeDDo54s
- +/vn6dltN+wgsdbx58KN9cuKyCHEqqnr2fXCD2ES6MFYmkWC9Dj2Z8F8VO5lK7Atxd+DsBbxi
- pBma1ZCujdLmMhF0vyxaTY4Qbt18KGkUP08s7FL+XVcLU7YeCKgIu6UwbBbhiKk9QxsrkM5Qt
- 5vcosdRDq5orxdR9l/5iLnB4D61Yx39v6PkHT7rovSXpwfi8iX6ZAM6aNYdPNWzqy6GvOsyas
- r0O1INCmul/n4cNY1E6EVDim1FIP6lzlf2+HJR4J0o9NZ4gFGXmDBtl5dlFC5n3QxYK3o5T+J
- PUhA2uy+9tiP9PoMLPABbfulZqxNa1jruscK6QTg8GlhWADVfLJIQXfMTWhuoZSlP9AqtdkfS
- pIaA6wTM2FPr3w1r1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hallo
+From: Christian Lachner <gladiac@gmail.com>
 
-5.6.15-rc1 compiles, boots and works without errors here on an
-Intel-i7-6700-box
+commit d9e8fe0cffbfdd18de96fa68ee2a8b667a0b046e upstream.
 
-Thanks !
+The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
+requires a similar workaround for Clevo laptops to enforce the
+DAC/mixer connection path. Set up a quirk entry for that.
 
-=2D-
-regards
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+Signed-off-by: Christian Lachner <gladiac@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200518053844.42743-2-gladiac@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Ronald
+---
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2457,6 +2457,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+
+
