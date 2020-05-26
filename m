@@ -2,518 +2,190 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5E820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDEB20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hgpb8Z/4"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="ld08dpCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbgEZMZr (ORCPT
+        id S2388766AbgEZM2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:25:47 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:64926 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEZMZq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:25:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590495945; x=1622031945;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7caSpJDOYbfmfhHUMrphNGEzSCSt9D14rvBrScef4tg=;
-  b=hgpb8Z/4tlaLHOAnJl94RcG5QCQntc42cqzR6Lbnuvj29inwkRfjOzAX
-   vxwTsGMu86fgwPT8qf4JdsrVyHasTUJI/MQEESHKdkcc8IGlPXs1ZGhJm
-   sVK2JjGjE6KXi6aP6hzNOTuVQCgXdLS73/2pqTd4pvIwHwUcD3021fA3W
-   VFWriqQS6EqMrPEpA5vYvmG3nPXMj7FKGjXIETVMlz8mXzfgP2q8jL/4B
-   BIQWnbypDHpReiEZbaDvrtJbqrLYUqbEwcJ/BjrXyMSZH8sTqPSKLdEDj
-   RjDQb9unl4T0kV/W3VkbiGW4xiKYgaH0h7o2h3Fhnho1UpQXMJunkqYkG
-   Q==;
-IronPort-SDR: udowxAXOOV95/EA3qjnxZqGC/zAyF3gW3VPonSbZgyXlOxazYvQrsWCO+a2bV2aCpkvipatVb+
- Y/bmJ4NFE8VJ0aR1bR2DdeOCPbUV7i856iZsUMCMdQDm4W3N0/TdAX/tQwrcgrGnzrimTSQERZ
- eOqv/Maa1KopUErXPOMq7anI1xdrRtoYP2N9+BUs1m8uxZLzL9rQpoK+ItAqrIypPi58sAkE0q
- k5czvPZ8sJSW/onTkHz4G44LnYFoo4n299P11q4OtvXABk1iB6U+pTw4dAWKxkQ67j85ny3APt
- eVQ=
-X-IronPort-AV: E=Sophos;i="5.73,437,1583218800"; 
-   d="scan'208";a="13519485"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 May 2020 05:25:44 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 26 May 2020 05:25:44 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 26 May 2020 05:25:42 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>, <mkubecek@suse.cz>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next] bridge: mrp: Rework the MRP netlink interface
-Date:   Tue, 26 May 2020 14:22:49 +0000
-Message-ID: <20200526142249.386410-1-horatiu.vultur@microchip.com>
+        Tue, 26 May 2020 08:28:12 -0400
+Received: from mail-eopbgr130108.outbound.protection.outlook.com ([40.107.13.108]:27904
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726437AbgEZM2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:28:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WYrtLlCcLcEvuM1fd2OpF5enCfiVuLwushvMco6TqHeNVIQSivHMKTM0QofMrhzfkXb94sL8RSBBXD6a8/MMfQUhJO86hR28c75Mwd3Ed+oRIvDHWmINz375Tyl0X1wTexKDnxxpZ8wB3oTpt9fKwt0G8b8uLXYJ9kUgbBKVabTmMU6HW1F96LtgDiQp4JnO6e3hORBLac9+P7zT7nlBIMkl9fPShp3dFiHxqgG5Nn9dUaxoADGiJT33Jq5Dg+3c5ngPuMwJ0yFzcfSOja1BcunZJlIDAdzjQS2sLyLpcsdk+fO/Q4L6G1D0M2DnNLDU/S5q1Y+pr6b6HcYFiJXraQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=asBaxkY48HPwqYMczS6U0a5yZjLj4CRDkTzC4wCxeQM=;
+ b=nnWnvOX1MRBbioYXaSiImkrZq5oYCMFQiPdwDj6c93jWbb9WWkE4Zrxa47NLeXM0Ng/QLUM/P2R8vxezx5i7U6BgOb77tjuOGFDeHnyEnn6swPpXD/W/EvwUXP9vP1bfIU5SrInToi9mu0ypXFQRIgSfDbvm/e1wW6rtGa6JK0rxTnwl4vZt5DJE0diT0uocnz4Y23fBUHArX3h732qx8wfh3wBjZJxM3CaVKRWmEStIf+wx8L4KWWDn6JhNmuBRKgfbLcUkEosM/YSPVUThwvza1XO+09+OzPfv0lj/f3g4zM5LnEL2Ocr/6I19ZiPAJDJ77kpBfP+7Z0kORI7wsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=asBaxkY48HPwqYMczS6U0a5yZjLj4CRDkTzC4wCxeQM=;
+ b=ld08dpCm7NtaM1yg4hv5UTkkrzMDNWXHPJpF2i8hVRgrAYCdn8WCBybOz0rSbkDaLhD5v2lk5okvMrvm/wUF2uizzPKD97jDWthtlYPWx8u7bLhUQQuyG4qCNd9hQfOSnAQlRTaiOAcMFx/ZbOiKwZzu6tgSfpSNPjvqsEusemI=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nokia.com;
+Received: from AM0PR07MB3937.eurprd07.prod.outlook.com (2603:10a6:208:4c::20)
+ by AM0PR07MB5618.eurprd07.prod.outlook.com (2603:10a6:208:fb::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.8; Tue, 26 May
+ 2020 12:28:07 +0000
+Received: from AM0PR07MB3937.eurprd07.prod.outlook.com
+ ([fe80::55f1:90c6:a5ae:2c82]) by AM0PR07MB3937.eurprd07.prod.outlook.com
+ ([fe80::55f1:90c6:a5ae:2c82%4]) with mapi id 15.20.3045.012; Tue, 26 May 2020
+ 12:28:07 +0000
+From:   Alexander A Sverdlin <alexander.sverdlin@nokia.com>
+To:     netdev@vger.kernel.org
+Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] macvlan: Skip loopback packets in RX handler
+Date:   Tue, 26 May 2020 14:27:51 +0200
+Message-Id: <20200526122751.409917-1-alexander.sverdlin@nokia.com>
 X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: HE1PR05CA0319.eurprd05.prod.outlook.com
+ (2603:10a6:7:92::14) To AM0PR07MB3937.eurprd07.prod.outlook.com
+ (2603:10a6:208:4c::20)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ulegcpsvhp1.emea.nsn-net.net (131.228.2.0) by HE1PR05CA0319.eurprd05.prod.outlook.com (2603:10a6:7:92::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Tue, 26 May 2020 12:28:06 +0000
+X-Mailer: git-send-email 2.26.2
+X-Originating-IP: [131.228.2.0]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dd6d0462-2d93-472f-54aa-08d801703e7f
+X-MS-TrafficTypeDiagnostic: AM0PR07MB5618:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR07MB561869894C0431DAA3DE16C288B00@AM0PR07MB5618.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 041517DFAB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /D3k8jj1XKeAJb+64M+b/Wy8Q0zXgYTbXMaulCCC759U2uRRpAVvy7D9fA9qBu/Mkg1iIGYy34BB/HpBwU9VOP5FUnN2LUH3fuQfMdLH2zcAA88rdxqyl2B/u6tpcI2cRgu6xbDguiY1TG70/m3DtTdKpFuoWD7jNWQ0gYAMNNx8uG79vbvP3GX8hpzDwD47I4etB1F8h46oeTmXleJnXyHRIG7xIKQAcRg9zICQjL+bfnFYsNeFOz/T3CYN77mtV3xuSgPsi824hILQuTpajQJZ/Rsin+56rBVTzEC+etZPN56NaVpKKK8syMa/0SHO
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR07MB3937.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(2616005)(956004)(6512007)(6506007)(6916009)(86362001)(52116002)(478600001)(36756003)(16526019)(186003)(26005)(1076003)(4326008)(8936002)(66476007)(66946007)(66556008)(6486002)(5660300002)(8676002)(2906002)(6666004)(54906003)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Nx+jxjq41bNskmahzGCQym7978+R+fuZTT0IYDHxa/OFcMU1ht3glx2QQadcnGRV55Qnngwn7AHOYVC/bsNLehSCWcWSmqN/ZuAEn4uEoRRrL1vHLbjPxxvHSxMhNvBZGC/ES9W6m03+RWbn7RJqyo8uHsMc4I0mJJXBiV2w2IZ4nWvIU+MFZI9/pCSHZxm7PHHc1/a6Rxc1QUWUjaOgJGQuw/WLRUQ1CVjynJRPw/GGMAHm8DDOuSReN59Zu8KV7w4VzdEdUKqSy/YIvwv3y21XHTqIZ8Rnc+X9IYLv15w1lFyLuUhARnj1WJh+PGH/9UH/BotogiZ4CeqytRI8dCud+jOgarPRE0IOhmw4GUs9t1TgJKXVw0+/txrEYOEIBStDZ1xEIzpkeYy+pt6t3REJ/wJBPlIUFdywGuU3ZA65u2bugoRHkUgAfsHaVEPrDZFf0VABTnWcKuS0JYO0itwn/vPS1MCWzrwdOQiOaxk=
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd6d0462-2d93-472f-54aa-08d801703e7f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 12:28:07.1011
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ad75G8VguW47b+ESHiaLyeLxvGhbgb9Tuxnq5B30SCAIVTBDHMMknVMaihFgleyn9yyEaCTEdVkQICr0J/HYdrfyLabaaoaUYZryFAYGbrQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR07MB5618
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch rework the MRP netlink interface. Before, each attribute
-represented a binary structure which made it hard to be extended.
-Therefore update the MRP netlink interface such that each existing
-attribute to be a nested attribute which contains the fields of the
-binary structures.
-In this way the MRP netlink interface can be extended without breaking
-the backwards compatibility. It is also using strict checking for
-attributes under the MRP top attribute.
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Ignore loopback-originatig packets soon enough and don't try to process L2
+header where it doesn't exist. The very similar br_handle_frame() in bridge
+code performs exactly the same check.
+
+This is an example of such ICMPv6 packet:
+
+skb len=96 headroom=40 headlen=96 tailroom=56
+mac=(40,0) net=(40,40) trans=80
+shinfo(txflags=0 nr_frags=0 gso(size=0 type=0 segs=0))
+csum(0xae2e9a2f ip_summed=1 complete_sw=0 valid=0 level=0)
+hash(0xc97ebd88 sw=1 l4=1) proto=0x86dd pkttype=5 iif=24
+dev name=etha01.212 feat=0x0x0000000040005000
+skb headroom: 00000000: 00 7c 86 52 84 88 ff ff 00 00 00 00 00 00 08 00
+skb headroom: 00000010: 45 00 00 9e 5d 5c 40 00 40 11 33 33 00 00 00 01
+skb headroom: 00000020: 02 40 43 80 00 00 86 dd
+skb linear:   00000000: 60 09 88 bd 00 38 3a ff fe 80 00 00 00 00 00 00
+skb linear:   00000010: 00 40 43 ff fe 80 00 00 ff 02 00 00 00 00 00 00
+skb linear:   00000020: 00 00 00 00 00 00 00 01 86 00 61 00 40 00 00 2d
+skb linear:   00000030: 00 00 00 00 00 00 00 00 03 04 40 e0 00 00 01 2c
+skb linear:   00000040: 00 00 00 78 00 00 00 00 fd 5f 42 68 23 87 a8 81
+skb linear:   00000050: 00 00 00 00 00 00 00 00 01 01 02 40 43 80 00 00
+skb tailroom: 00000000: ...
+skb tailroom: 00000010: ...
+skb tailroom: 00000020: ...
+skb tailroom: 00000030: ...
+
+Call Trace, how it happens exactly:
+ ...
+ macvlan_handle_frame+0x321/0x425 [macvlan]
+ ? macvlan_forward_source+0x110/0x110 [macvlan]
+ __netif_receive_skb_core+0x545/0xda0
+ ? enqueue_task_fair+0xe5/0x8e0
+ ? __netif_receive_skb_one_core+0x36/0x70
+ __netif_receive_skb_one_core+0x36/0x70
+ process_backlog+0x97/0x140
+ net_rx_action+0x1eb/0x350
+ ? __hrtimer_run_queues+0x136/0x2e0
+ __do_softirq+0xe3/0x383
+ do_softirq_own_stack+0x2a/0x40
+ </IRQ>
+ do_softirq.part.4+0x4e/0x50
+ netif_rx_ni+0x60/0xd0
+ dev_loopback_xmit+0x83/0xf0
+ ip6_finish_output2+0x575/0x590 [ipv6]
+ ? ip6_cork_release.isra.1+0x64/0x90 [ipv6]
+ ? __ip6_make_skb+0x38d/0x680 [ipv6]
+ ? ip6_output+0x6c/0x140 [ipv6]
+ ip6_output+0x6c/0x140 [ipv6]
+ ip6_send_skb+0x1e/0x60 [ipv6]
+ rawv6_sendmsg+0xc4b/0xe10 [ipv6]
+ ? proc_put_long+0xd0/0xd0
+ ? rw_copy_check_uvector+0x4e/0x110
+ ? sock_sendmsg+0x36/0x40
+ sock_sendmsg+0x36/0x40
+ ___sys_sendmsg+0x2b6/0x2d0
+ ? proc_dointvec+0x23/0x30
+ ? addrconf_sysctl_forward+0x8d/0x250 [ipv6]
+ ? dev_forward_change+0x130/0x130 [ipv6]
+ ? _raw_spin_unlock+0x12/0x30
+ ? proc_sys_call_handler.isra.14+0x9f/0x110
+ ? __call_rcu+0x213/0x510
+ ? get_max_files+0x10/0x10
+ ? trace_hardirqs_on+0x2c/0xe0
+ ? __sys_sendmsg+0x63/0xa0
+ __sys_sendmsg+0x63/0xa0
+ do_syscall_64+0x6c/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 ---
- include/uapi/linux/if_bridge.h |  64 ++++++++-
- net/bridge/br_mrp.c            |   8 +-
- net/bridge/br_mrp_netlink.c    | 248 ++++++++++++++++++++++++++++-----
- net/bridge/br_private_mrp.h    |   2 +-
- 4 files changed, 272 insertions(+), 50 deletions(-)
+ drivers/net/macvlan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index bd8c95488f161..5a43eb86c93bf 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -169,17 +169,69 @@ enum {
- 	__IFLA_BRIDGE_MRP_MAX,
- };
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index e7289d6..7cea2fa 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -447,6 +447,10 @@ static rx_handler_result_t macvlan_handle_frame(struct sk_buff **pskb)
+ 	int ret;
+ 	rx_handler_result_t handle_res;
  
-+#define IFLA_BRIDGE_MRP_MAX (__IFLA_BRIDGE_MRP_MAX - 1)
++	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
++	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
++		return RX_HANDLER_PASS;
 +
-+enum {
-+	IFLA_BRIDGE_MRP_INSTANCE_UNSPEC,
-+	IFLA_BRIDGE_MRP_INSTANCE_RING_ID,
-+	IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX,
-+	IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX,
-+	__IFLA_BRIDGE_MRP_INSTANCE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_INSTANCE_MAX (__IFLA_BRIDGE_MRP_INSTANCE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_PORT_STATE_UNSPEC,
-+	IFLA_BRIDGE_MRP_PORT_STATE_STATE,
-+	__IFLA_BRIDGE_MRP_PORT_STATE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_PORT_STATE_MAX (__IFLA_BRIDGE_MRP_PORT_STATE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_PORT_ROLE_UNSPEC,
-+	IFLA_BRIDGE_MRP_PORT_ROLE_ROLE,
-+	__IFLA_BRIDGE_MRP_PORT_ROLE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_PORT_ROLE_MAX (__IFLA_BRIDGE_MRP_PORT_ROLE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_RING_STATE_UNSPEC,
-+	IFLA_BRIDGE_MRP_RING_STATE_RING_ID,
-+	IFLA_BRIDGE_MRP_RING_STATE_STATE,
-+	__IFLA_BRIDGE_MRP_RING_STATE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_RING_STATE_MAX (__IFLA_BRIDGE_MRP_RING_STATE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_RING_ROLE_UNSPEC,
-+	IFLA_BRIDGE_MRP_RING_ROLE_RING_ID,
-+	IFLA_BRIDGE_MRP_RING_ROLE_ROLE,
-+	__IFLA_BRIDGE_MRP_RING_ROLE_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_RING_ROLE_MAX (__IFLA_BRIDGE_MRP_RING_ROLE_MAX - 1)
-+
-+enum {
-+	IFLA_BRIDGE_MRP_START_TEST_UNSPEC,
-+	IFLA_BRIDGE_MRP_START_TEST_RING_ID,
-+	IFLA_BRIDGE_MRP_START_TEST_INTERVAL,
-+	IFLA_BRIDGE_MRP_START_TEST_MAX_MISS,
-+	IFLA_BRIDGE_MRP_START_TEST_PERIOD,
-+	__IFLA_BRIDGE_MRP_START_TEST_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_START_TEST_MAX (__IFLA_BRIDGE_MRP_START_TEST_MAX - 1)
-+
- struct br_mrp_instance {
- 	__u32 ring_id;
- 	__u32 p_ifindex;
- 	__u32 s_ifindex;
- };
- 
--struct br_mrp_port_role {
--	__u32 ring_id;
--	__u32 role;
--};
--
- struct br_mrp_ring_state {
- 	__u32 ring_id;
- 	__u32 ring_state;
-@@ -197,8 +249,6 @@ struct br_mrp_start_test {
- 	__u32 period;
- };
- 
--#define IFLA_BRIDGE_MRP_MAX (__IFLA_BRIDGE_MRP_MAX - 1)
--
- struct bridge_stp_xstats {
- 	__u64 transition_blk;
- 	__u64 transition_fwd;
-diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-index 528d767eb026f..8ea59504ef47a 100644
---- a/net/bridge/br_mrp.c
-+++ b/net/bridge/br_mrp.c
-@@ -376,24 +376,24 @@ int br_mrp_set_port_state(struct net_bridge_port *p,
-  * note: already called with rtnl_lock
-  */
- int br_mrp_set_port_role(struct net_bridge_port *p,
--			 struct br_mrp_port_role *role)
-+			 enum br_mrp_port_role_type role)
- {
- 	struct br_mrp *mrp;
- 
- 	if (!p || !(p->flags & BR_MRP_AWARE))
- 		return -EINVAL;
- 
--	mrp = br_mrp_find_id(p->br, role->ring_id);
-+	mrp = br_mrp_find_port(p->br, p);
- 
- 	if (!mrp)
- 		return -EINVAL;
- 
--	if (role->role == BR_MRP_PORT_ROLE_PRIMARY)
-+	if (role == BR_MRP_PORT_ROLE_PRIMARY)
- 		rcu_assign_pointer(mrp->p_port, p);
- 	else
- 		rcu_assign_pointer(mrp->s_port, p);
- 
--	br_mrp_port_switchdev_set_role(p, role->role);
-+	br_mrp_port_switchdev_set_role(p, role);
- 
- 	return 0;
- }
-diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-index 4a08a99519b04..cfad5d1cff050 100644
---- a/net/bridge/br_mrp_netlink.c
-+++ b/net/bridge/br_mrp_netlink.c
-@@ -8,19 +8,204 @@
- 
- static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
- 	[IFLA_BRIDGE_MRP_UNSPEC]	= { .type = NLA_REJECT },
--	[IFLA_BRIDGE_MRP_INSTANCE]	= { .type = NLA_EXACT_LEN,
--				    .len = sizeof(struct br_mrp_instance)},
--	[IFLA_BRIDGE_MRP_PORT_STATE]	= { .type = NLA_U32 },
--	[IFLA_BRIDGE_MRP_PORT_ROLE]	= { .type = NLA_EXACT_LEN,
--				    .len = sizeof(struct br_mrp_port_role)},
--	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_EXACT_LEN,
--				    .len = sizeof(struct br_mrp_ring_state)},
--	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_EXACT_LEN,
--				    .len = sizeof(struct br_mrp_ring_role)},
--	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_EXACT_LEN,
--				    .len = sizeof(struct br_mrp_start_test)},
-+	[IFLA_BRIDGE_MRP_INSTANCE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_PORT_STATE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_PORT_ROLE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_NESTED },
- };
- 
-+static const struct nla_policy
-+br_mrp_instance_policy[IFLA_BRIDGE_MRP_INSTANCE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_INSTANCE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_INSTANCE_RING_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]	= { .type = NLA_U32 },
-+};
-+
-+int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
-+			  int cmd, struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_INSTANCE_MAX + 1];
-+	struct br_mrp_instance inst;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_INSTANCE_MAX, attr,
-+			       br_mrp_instance_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_INSTANCE_RING_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX] ||
-+	    !tb[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX])
-+		return -EINVAL;
-+
-+	memset(&inst, 0, sizeof(inst));
-+
-+	inst.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_RING_ID]);
-+	inst.p_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]);
-+	inst.s_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]);
-+
-+	if (cmd == RTM_SETLINK)
-+		return br_mrp_add(br, &inst);
-+	else
-+		return br_mrp_del(br, &inst);
-+
-+	return 0;
-+}
-+
-+static const struct nla_policy
-+br_mrp_port_state_policy[IFLA_BRIDGE_MRP_PORT_STATE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_PORT_STATE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_PORT_STATE_STATE]	= { .type = NLA_U32 },
-+};
-+
-+int br_mrp_port_state_parse(struct net_bridge_port *p, struct nlattr *attr,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_PORT_STATE_MAX + 1];
-+	enum br_mrp_port_state_type state;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_PORT_STATE_MAX, attr,
-+			       br_mrp_port_state_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_PORT_STATE_STATE])
-+		return -EINVAL;
-+
-+	state = nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE_STATE]);
-+
-+	return br_mrp_set_port_state(p, state);
-+}
-+
-+static const struct nla_policy
-+br_mrp_port_role_policy[IFLA_BRIDGE_MRP_PORT_ROLE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_PORT_ROLE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_PORT_ROLE_ROLE]	= { .type = NLA_U32 },
-+};
-+
-+int br_mrp_port_role_parse(struct net_bridge_port *p, struct nlattr *attr,
-+			   struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_PORT_ROLE_MAX + 1];
-+	enum br_mrp_port_role_type role;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_PORT_ROLE_MAX, attr,
-+			       br_mrp_port_role_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_PORT_ROLE_ROLE])
-+		return -EINVAL;
-+
-+	role = nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_ROLE_ROLE]);
-+
-+	return br_mrp_set_port_role(p, role);
-+}
-+
-+static const struct nla_policy
-+br_mrp_ring_state_policy[IFLA_BRIDGE_MRP_RING_STATE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_RING_STATE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_RING_STATE_RING_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_RING_STATE_STATE]	= { .type = NLA_U32 },
-+};
-+
-+int br_mrp_ring_state_parse(struct net_bridge *br, struct nlattr *attr,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_RING_STATE_MAX + 1];
-+	struct br_mrp_ring_state state;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_RING_STATE_MAX, attr,
-+			       br_mrp_ring_state_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_RING_STATE_RING_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_RING_STATE_STATE])
-+		return -EINVAL;
-+
-+	memset(&state, 0x0, sizeof(state));
-+
-+	state.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_RING_STATE_RING_ID]);
-+	state.ring_state = nla_get_u32(tb[IFLA_BRIDGE_MRP_RING_STATE_STATE]);
-+
-+	return br_mrp_set_ring_state(br, &state);
-+}
-+
-+static const struct nla_policy
-+br_mrp_ring_role_policy[IFLA_BRIDGE_MRP_RING_ROLE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_RING_ROLE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_RING_ROLE_ROLE]	= { .type = NLA_U32 },
-+};
-+
-+int br_mrp_ring_role_parse(struct net_bridge *br, struct nlattr *attr,
-+			   struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_RING_ROLE_MAX + 1];
-+	struct br_mrp_ring_role role;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_RING_ROLE_MAX, attr,
-+			       br_mrp_ring_role_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_RING_ROLE_RING_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_RING_ROLE_ROLE])
-+		return -EINVAL;
-+
-+	memset(&role, 0x0, sizeof(role));
-+
-+	role.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_RING_ROLE_RING_ID]);
-+	role.ring_role = nla_get_u32(tb[IFLA_BRIDGE_MRP_RING_ROLE_ROLE]);
-+
-+	return br_mrp_set_ring_role(br, &role);
-+}
-+
-+static const struct nla_policy
-+br_mrp_start_test_policy[IFLA_BRIDGE_MRP_START_TEST_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_START_TEST_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_START_TEST_RING_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_START_TEST_INTERVAL]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_START_TEST_MAX_MISS]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_START_TEST_PERIOD]	= { .type = NLA_U32 },
-+};
-+
-+int br_mrp_start_test_parse(struct net_bridge *br, struct nlattr *attr,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_START_TEST_MAX + 1];
-+	struct br_mrp_start_test test;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_START_TEST_MAX, attr,
-+			       br_mrp_start_test_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_START_TEST_RING_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_START_TEST_INTERVAL] ||
-+	    !tb[IFLA_BRIDGE_MRP_START_TEST_MAX_MISS] ||
-+	    !tb[IFLA_BRIDGE_MRP_START_TEST_PERIOD])
-+		return -EINVAL;
-+
-+	memset(&test, 0x0, sizeof(test));
-+
-+	test.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_TEST_RING_ID]);
-+	test.interval = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_TEST_INTERVAL]);
-+	test.max_miss = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_TEST_MAX_MISS]);
-+	test.period = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_TEST_PERIOD]);
-+
-+	return br_mrp_start_test(br, &test);
-+}
-+
- int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
- {
-@@ -44,58 +229,45 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 		return err;
- 
- 	if (tb[IFLA_BRIDGE_MRP_INSTANCE]) {
--		struct br_mrp_instance *instance =
--			nla_data(tb[IFLA_BRIDGE_MRP_INSTANCE]);
--
--		if (cmd == RTM_SETLINK)
--			err = br_mrp_add(br, instance);
--		else
--			err = br_mrp_del(br, instance);
-+		err = br_mrp_instance_parse(br, tb[IFLA_BRIDGE_MRP_INSTANCE],
-+					    cmd, extack);
- 		if (err)
- 			return err;
- 	}
- 
- 	if (tb[IFLA_BRIDGE_MRP_PORT_STATE]) {
--		enum br_mrp_port_state_type state =
--			nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE]);
--
--		err = br_mrp_set_port_state(p, state);
-+		err = br_mrp_port_state_parse(p, tb[IFLA_BRIDGE_MRP_PORT_STATE],
-+					      extack);
- 		if (err)
- 			return err;
- 	}
- 
- 	if (tb[IFLA_BRIDGE_MRP_PORT_ROLE]) {
--		struct br_mrp_port_role *role =
--			nla_data(tb[IFLA_BRIDGE_MRP_PORT_ROLE]);
--
--		err = br_mrp_set_port_role(p, role);
-+		err = br_mrp_port_role_parse(p, tb[IFLA_BRIDGE_MRP_PORT_ROLE],
-+					     extack);
- 		if (err)
- 			return err;
- 	}
- 
- 	if (tb[IFLA_BRIDGE_MRP_RING_STATE]) {
--		struct br_mrp_ring_state *state =
--			nla_data(tb[IFLA_BRIDGE_MRP_RING_STATE]);
--
--		err = br_mrp_set_ring_state(br, state);
-+		err = br_mrp_ring_state_parse(br,
-+					      tb[IFLA_BRIDGE_MRP_RING_STATE],
-+					      extack);
- 		if (err)
- 			return err;
- 	}
- 
- 	if (tb[IFLA_BRIDGE_MRP_RING_ROLE]) {
--		struct br_mrp_ring_role *role =
--			nla_data(tb[IFLA_BRIDGE_MRP_RING_ROLE]);
--
--		err = br_mrp_set_ring_role(br, role);
-+		err = br_mrp_ring_role_parse(br, tb[IFLA_BRIDGE_MRP_RING_ROLE],
-+					     extack);
- 		if (err)
- 			return err;
- 	}
- 
- 	if (tb[IFLA_BRIDGE_MRP_START_TEST]) {
--		struct br_mrp_start_test *test =
--			nla_data(tb[IFLA_BRIDGE_MRP_START_TEST]);
--
--		err = br_mrp_start_test(br, test);
-+		err = br_mrp_start_test_parse(br,
-+					      tb[IFLA_BRIDGE_MRP_START_TEST],
-+					      extack);
- 		if (err)
- 			return err;
- 	}
-diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-index 2921a4b59f8e7..a0f53cc3ab85c 100644
---- a/net/bridge/br_private_mrp.h
-+++ b/net/bridge/br_private_mrp.h
-@@ -37,7 +37,7 @@ int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance);
- int br_mrp_set_port_state(struct net_bridge_port *p,
- 			  enum br_mrp_port_state_type state);
- int br_mrp_set_port_role(struct net_bridge_port *p,
--			 struct br_mrp_port_role *role);
-+			 enum br_mrp_port_role_type role);
- int br_mrp_set_ring_state(struct net_bridge *br,
- 			  struct br_mrp_ring_state *state);
- int br_mrp_set_ring_role(struct net_bridge *br, struct br_mrp_ring_role *role);
+ 	port = macvlan_port_get_rcu(skb->dev);
+ 	if (is_multicast_ether_addr(eth->h_dest)) {
+ 		unsigned int hash;
 -- 
-2.26.2
+2.10.2
 
