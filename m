@@ -2,168 +2,215 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82D982087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:10:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eqK3SQsg"
+	by mail.kernel.org (Postfix) with ESMTP id 5EA43208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgEZGK3 (ORCPT
+        id S1726974AbgEZGL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:10:29 -0400
-Received: from mail-bn8nam11on2065.outbound.protection.outlook.com ([40.107.236.65]:39136
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726207AbgEZGK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:10:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oVM5xHMTq7eu2xPtIBszwAdtDXd/6lMZaqrMlFJyMCVmr4vLQFPGL0T2DJ0be3TA4rNtEO0GkC4de6J8TgDEV23ak2nyF8UHY2GgZoDqU0jxCYfod5pqhFLlsxJeo9HjgDRBwhM/qi/Ggusg7VuX+cwGNMQX90QWuisZEJoFBxCWnlSaDI79FJCrjQLqoSHLUgwenGcESbmpRlMrzHtHrP0u66daZQ+GAjTSupWNddsrwO4sKPHHeRscGkBr/WS6qmG3+TOdKK+vpjWXzJ4hVUQecHw035nLUc/Eykq4x1qc+MZjsvB/oTj9b0FLdcWSsXGslP+aeku3v2y6BJ0fyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IVdE3LEia6LaEeCUMw1Ox1io46n8dusWNR4GW1NtiBM=;
- b=drTwubObJJgowZuLkVeQmBH2lQVwgxaMWHleWzEDx+6QMQCgORO9neWV6/0BbUbFg2653QKBa4i8jSXF7GltrZSNy10j1Fz6gYW1ZmdrW6faedRhx/TcXeyQWHGxGdsKoo0/6M7Jc0S3G+0KvPgJz434Hr5ppplc9B2seGLSmw2gyPmR2L3m3SKopXE3RUw7cdDx7Yvpzae0LuUJVb/YNEXcg3uLZnKv34v9ge9mvGCji/Nzrb6JruEdvBbGYtnbe9Gycd0f5F8EKT+P7w5aEH4QIAoNDKJKWXlnToACNCO6qP6C7cu/8mT6aBNH0xozMK8tIWiM0aa1eMht0Pluhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IVdE3LEia6LaEeCUMw1Ox1io46n8dusWNR4GW1NtiBM=;
- b=eqK3SQsgRZ1Me6bzbPShbipk+xmIGYvnmu5uxZbV6zaJR6Hk3kj2yVq135eXjy/RtV+n8e8SATgkt1dIyry5Qwc0aiFKbjJw0zBEfvim43NNe1hPE/qHqMEtfbLilkBpDqm5Xob1o5P7Z7RjL0m+IHkoMkB2EVMo/SHSpE9225w=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3420.namprd12.prod.outlook.com (2603:10b6:5:3a::27) by
- DM6PR12MB3291.namprd12.prod.outlook.com (2603:10b6:5:186::32) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.24; Tue, 26 May 2020 06:10:24 +0000
-Received: from DM6PR12MB3420.namprd12.prod.outlook.com
- ([fe80::d007:1b50:9d7c:632f]) by DM6PR12MB3420.namprd12.prod.outlook.com
- ([fe80::d007:1b50:9d7c:632f%5]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 06:10:24 +0000
-Subject: Re: [PATCH v4 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA
- information
-To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
- <1588108416-49050-4-git-send-email-Sanju.Mehta@amd.com>
- <20200504062002.GL1375924@vkoul-mobl>
-From:   Sanjay R Mehta <sanmehta@amd.com>
-Message-ID: <280220fd-9780-e2b4-7a5a-26f3a0119c43@amd.com>
-Date:   Tue, 26 May 2020 11:40:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200504062002.GL1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXPR01CA0061.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::25) To DM6PR12MB3420.namprd12.prod.outlook.com
- (2603:10b6:5:3a::27)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2406:7400:70:65d3::1] (2406:7400:70:65d3::1) by BMXPR01CA0061.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Tue, 26 May 2020 06:10:18 +0000
-X-Originating-IP: [2406:7400:70:65d3::1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0aa435aa-2cad-4522-e4e0-08d8013b7a73
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3291:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB329175B0D9E64EE28C4DD9DDE5B00@DM6PR12MB3291.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 041517DFAB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5sqVS8LgW5zwGpRWyKjRhEF0eW8fmeVc1U2DoEvSgtLGCz/lSzpbS3yUEjGFPkey52A4FVNEfhIF33i1IVMKDdf/c7S3Fi6/kcz+2ZqghTThHPgUw7mdzC0lJB7F2tMOilwOi0BUC47a0JJCI5/qS8ohAGkDoV3QTR/8MIdcPFRjcf5WlCjAzenZ8zDZecvn7wCXegk/SrU9tECYKWyB2jEdJqqzhyaQ9D4gETD9Wh83wtI+uv2QJ7HKWTb3tD3+0INtHUnYaEcuByVteH/9TOto/lE42WSDQLS/TJYccXAHQfL/bARccoQXOL1z/BYoSCU032XQq8Unw9sYLqWnRj+7ELMHbIeK1DBMF0Hrh1Jb/sPv9N0/S7G1bclrV0oz
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3420.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(36756003)(8936002)(2616005)(110136005)(8676002)(316002)(4326008)(478600001)(2906002)(31696002)(6666004)(6486002)(6636002)(66556008)(66476007)(66946007)(52116002)(5660300002)(16526019)(186003)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: roIws0FCNRzp0/2Nqt1CZTQRM2olUAatpl427LEl/5xlZoNKoJcT5zQCtLBCFWuGGRUHYsfgyQb1a94JVIQtmQ/jwbuypmSPex9Sc6mTTcHyFZ3qlMtT+uq7PkwntNht5dPDQyrJuapODiUK+5R+xqjbtaUxKb5X2SFSkjunPQLDRW0uGYlKvk+WwCtRUFtUKJRJ9jwAP/G9lD4dTpslKAKXD704ttnC9TYAJ5opD//mDQv7F7LaLgwD3M5A4cKhNrjZv0/idDF9Y8ThmuB1ryh3W6FsqXhDp95k70KB17/dVslFbtWyfZcvkUrGKp10pNCqrEabcxbkevRHUN0qAl1e4BHEdWlFfzACX8z1VNdTfkzacJcGFxmw2O3RdxOO5I8sNGmG89SYeLcExSr+DK5+BNP0S99JCeFji7VNeRdta3hzwaXVvK/cjaAOTk56y4kfSNyTaBaDRz3+q90WEdpfADlvs82FXqCFbgceqz5twuz2ZtIDEFrmZG48Jds/
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa435aa-2cad-4522-e4e0-08d8013b7a73
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 06:10:24.3188
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OjEnk7euP4VqtFCbQe5FcU5KSmYa22Nq3qEb3bnavcB/LztiakpbxmWl0Aldi1zVxuMLDTcXS3ufkDQICJlTDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3291
+        Tue, 26 May 2020 02:11:27 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16985 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbgEZGL0 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:11:26 -0400
+IronPort-SDR: aZsdxTGTJrWmyYYcZSpi6a5uefnPhSbiIU/Ki9Bq9Q2e6wQeLN9g0PU/0InK+C9bXs4agmgYmg
+ c5gaflRnSQsQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 23:11:25 -0700
+IronPort-SDR: +zmhc9xuCLCqBLBT3xguOAlET9BGwCBxKJR37kJq/FxDldUMyoEV2EtGTwysjrYvhHw/fOhuTl
+ yVI2ON6VqPEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
+   d="scan'208";a="291068638"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga004.fm.intel.com with ESMTP; 25 May 2020 23:11:23 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v4 0/7] perf: Stream comparison
+Date:   Tue, 26 May 2020 14:09:13 +0800
+Message-Id: <20200526060920.26490-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +static const struct file_operations pt_debugfs_info_ops = {
->> +     .owner = THIS_MODULE,
->> +     .open = simple_open,
->> +     .read = ptdma_debugfs_info_read,
->> +     .write = NULL,
->> +};
->> +
->> +static const struct file_operations pt_debugfs_queue_ops = {
->> +     .owner = THIS_MODULE,
->> +     .open = simple_open,
->> +     .read = ptdma_debugfs_queue_read,
->> +     .write = ptdma_debugfs_queue_write,
->> +};
->> +
->> +static const struct file_operations pt_debugfs_stats_ops = {
->> +     .owner = THIS_MODULE,
->> +     .open = simple_open,
->> +     .read = ptdma_debugfs_stats_read,
->> +     .write = ptdma_debugfs_stats_write,
->> +};
-> 
-> pls convert to use DEFINE_SHOW_ATTRIBUTE()
-> 
-Sure, will incorporate the changes in next version of patch.
+Sometimes, a small change in a hot function reducing the cycles of
+this function, but the overall workload doesn't get faster. It is
+interesting where the cycles are moved to.
 
->> +void ptdma_debugfs_setup(struct pt_device *pt)
->> +{
->> +     struct pt_cmd_queue *cmd_q;
->> +     char name[MAX_NAME_LEN + 1];
->> +     struct dentry *debugfs_q_instance;
->> +
->> +     if (!debugfs_initialized())
->> +             return;
->> +
->> +     mutex_lock(&pt_debugfs_lock);
->> +     if (!pt_debugfs_dir)
->> +             pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
->> +     mutex_unlock(&pt_debugfs_lock);
->> +
->> +     pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
->> +
->> +     debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
->> +                         &pt_debugfs_info_ops);
->> +
->> +     debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
->> +                         &pt_debugfs_stats_ops);
->> +
->> +     cmd_q = &pt->cmd_q;
->> +
->> +     snprintf(name, MAX_NAME_LEN - 1, "q");
->> +
->> +     debugfs_q_instance =
->> +             debugfs_create_dir(name, pt->debugfs_instance);
->> +
->> +     debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
->> +                         &pt_debugfs_queue_ops);
-> 
-> Pls use dbg_dev_root in struct dma_device as root for your own debugfs
-> 
-Sure, will incorporate the changes in next version of patch.
+What it would like is to diff before/after streams. The stream is the
+branch history which is aggregated by the branch records from perf
+samples. For example, the callchains aggregated from the branch records.
+By browsing the hot stream, we can understand the hot code path.
 
-> Thanks
-> --
-> ~Vinod
-> 
+By browsing the hot streams, we can understand the hot code path.
+By comparing the cycles variation of same streams between old perf
+data and new perf data, we can understand if the cycles are moved
+to other codes.
+
+The before stream is the stream in perf.data.old. The after stream
+is the stream in perf.data.
+
+Diffing before/after streams compares top N hottest streams between
+two perf data files.
+
+If all entries of one stream in perf.data.old are fully matched with
+all entries of another stream in perf.data, we think two streams
+are matched, otherwise the streams are not matched.
+
+For example,
+
+   cycles: 1, hits: 26.80%                 cycles: 1, hits: 27.30%
+--------------------------              --------------------------
+             main div.c:39                           main div.c:39
+             main div.c:44                           main div.c:44
+
+The above streams are matched and we can see for the same streams the
+cycles (1) are equal and the callchain hit percents are slightly changed
+(26.80% vs. 27.30%). That's expected.
+
+Now let's see examples.
+
+perf record -b ...      Generate perf.data.old with branch data
+perf record -b ...      Generate perf.data with branch data
+perf diff --stream
+
+[ Matched hot streams ]
+
+hot chain pair 1:
+            cycles: 1, hits: 27.77%                  cycles: 1, hits: 9.24%
+        ---------------------------              --------------------------
+                      main div.c:39                           main div.c:39
+                      main div.c:44                           main div.c:44
+
+hot chain pair 2:
+           cycles: 34, hits: 20.06%                cycles: 27, hits: 16.98%
+        ---------------------------              --------------------------
+          __random_r random_r.c:360               __random_r random_r.c:360
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:380               __random_r random_r.c:380
+          __random_r random_r.c:357               __random_r random_r.c:357
+              __random random.c:293                   __random random.c:293
+              __random random.c:293                   __random random.c:293
+              __random random.c:291                   __random random.c:291
+              __random random.c:291                   __random random.c:291
+              __random random.c:291                   __random random.c:291
+              __random random.c:288                   __random random.c:288
+                     rand rand.c:27                          rand rand.c:27
+                     rand rand.c:26                          rand rand.c:26
+                           rand@plt                                rand@plt
+                           rand@plt                                rand@plt
+              compute_flag div.c:25                   compute_flag div.c:25
+              compute_flag div.c:22                   compute_flag div.c:22
+                      main div.c:40                           main div.c:40
+                      main div.c:40                           main div.c:40
+                      main div.c:39                           main div.c:39
+
+hot chain pair 3:
+             cycles: 9, hits: 4.48%                  cycles: 6, hits: 4.51%
+        ---------------------------              --------------------------
+          __random_r random_r.c:360               __random_r random_r.c:360
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:380               __random_r random_r.c:380
+
+[ Hot streams in old perf data only ]
+
+hot chain 1:
+            cycles: 18, hits: 6.75%
+         --------------------------
+          __random_r random_r.c:360
+          __random_r random_r.c:388
+          __random_r random_r.c:388
+          __random_r random_r.c:380
+          __random_r random_r.c:357
+              __random random.c:293
+              __random random.c:293
+              __random random.c:291
+              __random random.c:291
+              __random random.c:291
+              __random random.c:288
+                     rand rand.c:27
+                     rand rand.c:26
+                           rand@plt
+                           rand@plt
+              compute_flag div.c:25
+              compute_flag div.c:22
+                      main div.c:40
+
+hot chain 2:
+            cycles: 29, hits: 2.78%
+         --------------------------
+              compute_flag div.c:22
+                      main div.c:40
+                      main div.c:40
+                      main div.c:39
+
+[ Hot streams in new perf data only ]
+
+hot chain 1:
+                                                     cycles: 4, hits: 4.54%
+                                                 --------------------------
+                                                              main div.c:42
+                                                      compute_flag div.c:28
+
+hot chain 2:
+                                                     cycles: 5, hits: 3.51%
+                                                 --------------------------
+                                                              main div.c:39
+                                                              main div.c:44
+                                                              main div.c:42
+                                                      compute_flag div.c:28
+
+ v4:
+ ---
+ The previous version is too huge and it's hard for reviewing.
+
+ 1. V4 removes the code which supports the source line mapping
+    table. Now we only supports the basic functionality for 
+    stream comparison.
+
+ 2. Refactor the code in a generic way.
+ 
+ v3:
+ ---
+ v2 has 14 patches, it's hard to review.
+ v3 is only 7 patches for basic stream comparison.
+
+Jin Yao (7):
+  perf util: Create streams
+  perf util: Get the evsel_streams by evsel_idx
+  perf util: Compare two streams
+  perf util: Link stream pair
+  perf util: Calculate the sum of total streams hits
+  perf util: Report hot streams
+  perf diff: Support hot streams comparison
+
+ tools/perf/Documentation/perf-diff.txt |   4 +
+ tools/perf/builtin-diff.c              | 133 +++++++++-
+ tools/perf/util/Build                  |   1 +
+ tools/perf/util/callchain.c            |  99 +++++++
+ tools/perf/util/callchain.h            |   9 +
+ tools/perf/util/stream.c               | 343 +++++++++++++++++++++++++
+ tools/perf/util/stream.h               |  42 +++
+ 7 files changed, 618 insertions(+), 13 deletions(-)
+ create mode 100644 tools/perf/util/stream.c
+ create mode 100644 tools/perf/util/stream.h
+
+-- 
+2.17.1
+
