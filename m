@@ -2,82 +2,75 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA15E20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="H05nUKbv"
+	by mail.kernel.org (Postfix) with ESMTP id 2A1DE20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgEZFoj (ORCPT
+        id S1726768AbgEZFpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 01:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgEZFoj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 01:44:39 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A9CC061A0E;
-        Mon, 25 May 2020 22:44:39 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1003)
-        id 49WNFb23Kfz9sRY; Tue, 26 May 2020 15:44:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1590471875; bh=j0PNgC0xr6mRDHCZ2htDfbQsT0XH5gFzuCdilAoQCBw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H05nUKbvRSIH+7O5N9VUsnkHeRklB48VujBczf2Xtd7k/msK8glVNwOfwKFhBxaM2
-         RMEhFP3061zuW6+4Tyn4tcDNAEbnpgE5y/GbpnLgkqD9inO7dRTJ8JdJazRZlG5By1
-         dDTw25f7q0+rjMvV86X6zTMCLnL9GISRBtWJGAOBofFztGdhMaHaSDnzVJeKDOeTRr
-         P/gT1fm1rSHSwWvDzu+Yy/x7JV3Y4U7YJfxqHFYoVKLC8zIAnftSk9Bv7oB4+ke1/z
-         t+6gHdzDMsO3E/gW5yqaeDf4mGpMKKUTqOEkTCh4o4CEB+cdOrXQUL3itzvvSsvIix
-         ogkCA1YC4CmqQ==
-Date:   Tue, 26 May 2020 14:36:56 +1000
-From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        chenhuacai@gmail.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
-Message-ID: <20200526043656.GA282305@thinks.paulus.ozlabs.org>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
+        Tue, 26 May 2020 01:45:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:45351 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726627AbgEZFpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 01:45:54 -0400
+IronPort-SDR: cYCDDN57SYWv3gyfhkPgFALO1bAQ1n50S0EEuww/sV5j2DMP69Qw3F17neFOipxamcHQpvJ0yn
+ v+L6BmG3xc0w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 22:45:53 -0700
+IronPort-SDR: VrZAgiJ3sCkCb6lsrASVA/z7T1Akr6WTiyRnpRtyLJz1jkmpGlnpYfXcfHJwoMgpPXPumxxKZ8
+ 7Gi3cm0LtUmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
+   d="scan'208";a="301989735"
+Received: from msimion-mobl1.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.249.41.199])
+  by orsmga008.jf.intel.com with ESMTP; 25 May 2020 22:45:51 -0700
+Subject: Re: linux-next: manual merge of the net-next tree with the bpf tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200526131243.0915e58c@canb.auug.org.au>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Message-ID: <56beee70-d2a7-e3d7-d37d-863c52d4e833@intel.com>
+Date:   Tue, 26 May 2020 07:45:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
+In-Reply-To: <20200526131243.0915e58c@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 12:35:10PM +0800, Tianjia Zhang wrote:
-> The 'kvm_run' field already exists in the 'vcpu' structure, which
-> is the same structure as the 'kvm_run' in the 'vcpu_arch' and
-> should be deleted.
-> 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+On 2020-05-26 05:12, Stephen Rothwell wrote:
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-This looks fine.
+The fix looks good!
 
-I assume each architecture sub-maintainer is taking the relevant
-patches from this series via their tree - is that right?
+I'll keep this is mind, and try not to repeat similar conflicts for 
+future patches.
 
-Reviewed-by: Paul Mackerras <paulus@ozlabs.org>
+Thanks for the fixup, and for the clarification!
+
+
+Cheers,
+Björn
