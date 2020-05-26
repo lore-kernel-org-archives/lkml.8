@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A03C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DF220888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851E720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520480;
-	bh=dw6to2wRQ3SmfWu7X9TKk6vCDa1Vn/DKpM9BwBWsZAc=;
+	s=default; t=1590520488;
+	bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpX6Jr91lx7YZ7zqEbDh4MwutoUrk+67KxJHo0cBc9AewSR5XwrwdC7DxB0N5nf9l
-	 eXE13INQ6bdDjvLqTcGCfX9gungUVdpHxOPF1i4qLy8dpSBKygydD4ttcTz8dPM7VZ
-	 F7iNpkMAULAaeZMNh3GBKFX8zK/WsXhrEegS1CKY=
+	b=yux7oj0l2TaQo7pPGc/shDzyRbfFaN+tsLdoXssv1C7AMEShpk0XocJE9TYviAAyw
+	 1ghPoL5JUffFVE63nrt7j+naePT+ompOg/fY3oeba7gg0hEksV9wA/CG8tbDWKQAAO
+	 39HzECM3D76pOUrxit7w2YAGmOKzhSf+nrihJDOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391915AbgEZTOj (ORCPT
+        id S2392206AbgEZTOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392165AbgEZTOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:30 -0400
+        id S2392097AbgEZTOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3C2E20776;
-        Tue, 26 May 2020 19:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB03208A7;
+        Tue, 26 May 2020 19:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520470;
-        bh=dw6to2wRQ3SmfWu7X9TKk6vCDa1Vn/DKpM9BwBWsZAc=;
+        s=default; t=1590520480;
+        bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uR68SBQSt5qWhpjlFuijJ6XvO0HGyXqKP80f64pIJHtnSGfvhKTjKKO+vCTPHaS1D
-         J+c/Jnlc53nBvSAb0giYFjMB7wclRaVrGGi49uxgkacLBGcty+yM6Nj8TWTDmyTLm0
-         oaXAjk4nRHdJngYRwJeaNq3WlWsI/w/TqEJWRVLw=
+        b=kQA7MpP7YWPupfektjNPQT+odYfpnvXivKFy6IxV4YXw9g44Z2l676HiLPJuKCGal
+         H7wv+TBB8X8OMxxa+OO1iNTtCMPL4TIpEtbCRCQnASGQyy4V2SmjJp90uA5awx5xZE
+         ODPFzQq2qMAIhMidiQxZaA4FBRSAGU6Y/30XPaQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.6 092/126] staging: kpc2000: fix error return code in kp2000_pcie_probe()
-Date:   Tue, 26 May 2020 20:53:49 +0200
-Message-Id: <20200526183945.637923263@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.6 096/126] iio: sca3000: Remove an erroneous get_device()
+Date:   Tue, 26 May 2020 20:53:53 +0200
+Message-Id: <20200526183945.895950958@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,49 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit b17884ccf29e127b16bba6aea1438c851c9f5af1 upstream.
+commit 928edefbc18cd8433f7df235c6e09a9306e7d580 upstream.
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function. Also
-removed var 'rv' since we can use 'err' instead.
+This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
+call.
+Remove it.
 
-Fixes: 7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200506134735.102041-1-weiyongjun1@huawei.com
+While at it add a missing \n at the end of the message.
+
+Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/kpc2000/kpc2000/core.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/iio/accel/sca3000.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/kpc2000/kpc2000/core.c
-+++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -298,7 +298,6 @@ static int kp2000_pcie_probe(struct pci_
- {
- 	int err = 0;
- 	struct kp2000_device *pcard;
--	int rv;
- 	unsigned long reg_bar_phys_addr;
- 	unsigned long reg_bar_phys_len;
- 	unsigned long dma_bar_phys_addr;
-@@ -445,11 +444,11 @@ static int kp2000_pcie_probe(struct pci_
- 	if (err < 0)
- 		goto err_release_dma;
- 
--	rv = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
--			 pcard->name, pcard);
--	if (rv) {
-+	err = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
-+			  pcard->name, pcard);
-+	if (err) {
- 		dev_err(&pcard->pdev->dev,
--			"%s: failed to request_irq: %d\n", __func__, rv);
-+			"%s: failed to request_irq: %d\n", __func__, err);
- 		goto err_disable_msi;
+--- a/drivers/iio/accel/sca3000.c
++++ b/drivers/iio/accel/sca3000.c
+@@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3
+ 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
+ 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+ 	if (ret) {
+-		dev_err(get_device(&st->us->dev), "problem reading register");
++		dev_err(&st->us->dev, "problem reading register\n");
+ 		return ret;
  	}
  
 
