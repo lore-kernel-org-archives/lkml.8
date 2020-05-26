@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E61BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5877EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D494208C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D47E20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520998;
-	bh=h3nanM41ukwymtF8exi7HnqTu4nfJo7K4MCWXtWxfmo=;
+	s=default; t=1590521002;
+	bh=QaKC/aax4G83a5/xHH+1SHXQu1XZhb2umndWLuaw1hI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YN9e5n7OFMG0ynYa3XvMcDD2I20G7KP37838Z2g4M7ndFrWWTvN2h0NPEfgdZaWxP
-	 vEWuiAhjqmNSQHo59TCRGlssUy57Vg4MlWvpII+j5Lw7yFCciLhL/uZROXtAs+GlmX
-	 BdRRJy3/9iHUan5BszwlcVKnXnga9jhz4+ILlYFM=
+	b=rxGrokFsRRKhZiGyo6uQaGtZGX3YP8vKQqoa0Bs37Ko5CRW+VfFX95MAMD1JZJsaU
+	 uJTnt6Zun9Dswe2XLwYkUmksibC40xSh17AOdkMuLtQgyzAj+0MDT4vhu5XnyENiut
+	 Q/6AGGjiMPD6uKEBjcz2eGGeOpMTxCGWuYts2Uus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391860AbgEZTJY (ORCPT
+        id S2390545AbgEZTXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391837AbgEZTJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:15 -0400
+        id S2391847AbgEZTJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9AD8208E4;
-        Tue, 26 May 2020 19:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B2E208A7;
+        Tue, 26 May 2020 19:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520154;
-        bh=h3nanM41ukwymtF8exi7HnqTu4nfJo7K4MCWXtWxfmo=;
+        s=default; t=1590520159;
+        bh=QaKC/aax4G83a5/xHH+1SHXQu1XZhb2umndWLuaw1hI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D561jYbp40cVHAkKYjOKtcN3aA/iEz1iu1bU6Eexx7DAHiLNV11w/MzeXQ4k2MJd2
-         L0tKjr+XP+xvaD4tijehL6Pp8mQ246oFF3jSyJ7xFpTCVg4Uu+Wo/Vp/1DgniIwYl/
-         CI1+r5EIFVBmFaqbsAP1UPAzUdsfVJF4ddFAHsTA=
+        b=F6KkU4ae9Vk86i7G8ZYvRtIWIEVyZWef+fMQmapGeTBg+/NKks37MM3cBm2f70xGO
+         3PjAvqnPrs5sZJTnvoAPyX7yOeUW+1bKeDnv5neFjI3dLmA02vRrnARvGZ/xPYaobt
+         FKPrra20jGy2lG3QetzYXzHYu1JD3X1WJnb/cze0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 072/111] dmaengine: owl: Use correct lock in owl_dma_get_pchan()
-Date:   Tue, 26 May 2020 20:53:30 +0200
-Message-Id: <20200526183939.696726405@linuxfoundation.org>
+        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 082/111] staging: iio: ad2s1210: Fix SPI reading
+Date:   Tue, 26 May 2020 20:53:40 +0200
+Message-Id: <20200526183940.662314539@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -62,98 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-commit f8f482deb078389b42768b2193e050a81aae137d upstream.
+commit 5e4f99a6b788047b0b8a7496c2e0c8f372f6edf2 upstream.
 
-When the kernel is built with lockdep support and the owl-dma driver is
-used, the following message is shown:
+If the serial interface is used, the 8-bit address should be latched using
+the rising edge of the WR/FSYNC signal.
 
-[    2.496939] INFO: trying to register non-static key.
-[    2.501889] the code is fine but needs lockdep annotation.
-[    2.507357] turning off the locking correctness validator.
-[    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-[    2.519084] Hardware name: Generic DT based system
-[    2.523878] Workqueue: events_freezable mmc_rescan
-[    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-[    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-[    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-[    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-[    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-[    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-[    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-[    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-[    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-[    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-[    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-[    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-[    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-[    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-[    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-[    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-[    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-[    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-[    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-[    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-[    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-[    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+This basically means that a CS change is required between the first byte
+sent, and the second one.
+This change splits the single-transfer transfer of 2 bytes into 2 transfers
+with a single byte, and CS change in-between.
 
-The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+Note fixes tag is not accurate, but reflects a point beyond which there
+are too many refactors to make backporting straight forward.
 
-However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-'owl_dma_terminate_pchan()'.
-
-Therefore, this patch substitutes 'pchan->lock' with 'od->lock' and
-removes the 'lock' attribute in 'owl_dma_pchan' struct.
-
-Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA driver")
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Andreas Färber <afaerber@suse.de>
-Link: https://lore.kernel.org/r/c6e6cdaca252b5364bd294093673951036488cf0.1588439073.git.cristian.ciocaltea@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: b19e9ad5e2cb ("staging:iio:resolver:ad2s1210 general driver cleanup.")
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/owl-dma.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/staging/iio/resolver/ad2s1210.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -175,13 +175,11 @@ struct owl_dma_txd {
-  * @id: physical index to this channel
-  * @base: virtual memory base for the dma channel
-  * @vchan: the virtual channel currently being served by this physical channel
-- * @lock: a lock to use when altering an instance of this struct
-  */
- struct owl_dma_pchan {
- 	u32			id;
- 	void __iomem		*base;
- 	struct owl_dma_vchan	*vchan;
--	spinlock_t		lock;
- };
+--- a/drivers/staging/iio/resolver/ad2s1210.c
++++ b/drivers/staging/iio/resolver/ad2s1210.c
+@@ -130,17 +130,24 @@ static int ad2s1210_config_write(struct
+ static int ad2s1210_config_read(struct ad2s1210_state *st,
+ 				unsigned char address)
+ {
+-	struct spi_transfer xfer = {
+-		.len = 2,
+-		.rx_buf = st->rx,
+-		.tx_buf = st->tx,
++	struct spi_transfer xfers[] = {
++		{
++			.len = 1,
++			.rx_buf = &st->rx[0],
++			.tx_buf = &st->tx[0],
++			.cs_change = 1,
++		}, {
++			.len = 1,
++			.rx_buf = &st->rx[1],
++			.tx_buf = &st->tx[1],
++		},
+ 	};
+ 	int ret = 0;
  
- /**
-@@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get
- 	for (i = 0; i < od->nr_pchans; i++) {
- 		pchan = &od->pchans[i];
+ 	ad2s1210_set_mode(MOD_CONFIG, st);
+ 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
+ 	st->tx[1] = AD2S1210_REG_FAULT;
+-	ret = spi_sync_transfer(st->sdev, &xfer, 1);
++	ret = spi_sync_transfer(st->sdev, xfers, 2);
+ 	if (ret < 0)
+ 		return ret;
  
--		spin_lock_irqsave(&pchan->lock, flags);
-+		spin_lock_irqsave(&od->lock, flags);
- 		if (!pchan->vchan) {
- 			pchan->vchan = vchan;
--			spin_unlock_irqrestore(&pchan->lock, flags);
-+			spin_unlock_irqrestore(&od->lock, flags);
- 			break;
- 		}
- 
--		spin_unlock_irqrestore(&pchan->lock, flags);
-+		spin_unlock_irqrestore(&od->lock, flags);
- 	}
- 
- 	return pchan;
 
 
