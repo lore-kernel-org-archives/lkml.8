@@ -2,130 +2,175 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2957EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7631BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06AF2207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496AE2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oo5M/TaH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rX7IYOai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbgEZRNt (ORCPT
+        id S1730145AbgEZRN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbgEZRNr (ORCPT
+        Tue, 26 May 2020 13:13:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49574 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728138AbgEZRNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:13:47 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C29C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:13:47 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so8922072plo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q2tb1AeXDG23hGcjPRVLc3Ey0WPkny9sKX+WHXY3/jE=;
-        b=Oo5M/TaH3pNzpNedOe2MYvvOmsz2XJ84O5UlH4IlnyLsYMHsQ6bgeG7Q/WNWoSRWq1
-         2OJlzomHtoAWDBvswVFFuexScHm5Fa/cQ/YraURXCayL3QB6c8VuweasdqaDaFoOx1nX
-         BBQJuKDRuiyho3y4Doe0y4gAVgl/7WznfZcZK4PRpNyU1MXmCaBF+o6Tsm+KOdFKeXhO
-         D5JU+mimzwLXKI/Yb7ODL5Cr9psd/pL4PEY7johaMnR3hqIFE35G3ki5ScjutK2XLjR1
-         s1s+qOMAXpDBX/FzjSAKfYYajcPLruR5YvEpbLsMMKk+0ApEcK9nAD/kvrfzf2Sqzuth
-         JQbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q2tb1AeXDG23hGcjPRVLc3Ey0WPkny9sKX+WHXY3/jE=;
-        b=nX1AkEYmqS8yYdqYkRxDOEA46kQdHds7jtRYleQ+WCVsLc4U3OQwJ0mRj/Ja2hTTNz
-         bf3azB4up2RTKtJD/fND5ngnuOcA6/GG7+WPOz/j63iwVXH+aTQ/rUmA6t+EEKkZNhE+
-         NyB82ArG2kftOFSqW8o6e91/NDX+BH2mp524EGyX4WiIhk9UWiEDQaZ2X1CH0ETGSzY5
-         dwLcuwQqbU9XIQvVIwVgVHlfxDulprALlnYW9cNd1q27boYr2H6ONQbmJqw8U0K+zVMs
-         W3v3i09gXhJGrkxMZruworNlUznEmCy9cpNqEVDIKbf2ee4+igHuMIbyEvEnHH0RNM2g
-         GVag==
-X-Gm-Message-State: AOAM530+OcO0RPhHoLZrAsECjXRGKU1iIacVAoqMHGgfdgv9V4+r4Z7c
-        4Y6N7Ft9lhjGBbA2aCX0cmFBV9l84CvzfA==
-X-Google-Smtp-Source: ABdhPJwoUaqy5Bl8ODQ3VUb6GKBRHOl8j5ZMl6fP/mhF/NAKEj5ubdbjbyZwMoacoCaw5JXdeK3DTA==
-X-Received: by 2002:a17:90a:34cc:: with SMTP id m12mr238695pjf.123.1590513226563;
-        Tue, 26 May 2020 10:13:46 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id g7sm55515pjs.48.2020.05.26.10.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 10:13:45 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:13:40 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] x86/boot: Check that there are no runtime
- relocations
-Message-ID: <20200526171340.pdbautbix5ygdvgp@google.com>
-References: <20200524212816.243139-1-nivedita@alum.mit.edu>
- <20200525225918.1624470-5-nivedita@alum.mit.edu>
- <CAMj1kXHc4o91VkaChoyVzr4w-HOaashMPtkCKLaszMGCxhR_2A@mail.gmail.com>
- <20200526151623.GB2190602@rani.riverdale.lan>
+        Tue, 26 May 2020 13:13:54 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHDUvn063142;
+        Tue, 26 May 2020 12:13:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590513210;
+        bh=ejlDgcPP3cXkKRJfCcQk8SnvedIMryuVsn7rTYr6g6A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rX7IYOaiZRS795auwmZ93DPJry/1eKaDZtP+TGY07q0yt3Bq7GMsbZpzUi9q2jND2
+         NB9OkVGNTr3/qYWGV2IKhHEwLZz4aanUsBhfIwEusBOl8udEaYBDpPt4bpoBuVwYl8
+         28sTfFmw6IIyOfSOyzpPdPKk6d3EFpxolD+Egeoo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHDUuE077132
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 May 2020 12:13:30 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 12:13:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 12:13:30 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHDP4q025611;
+        Tue, 26 May 2020 12:13:26 -0500
+Subject: Re: [PATCH v2 0/2] drivers: provide devm_platform_request_irq()
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <baruch@tkos.co.il>,
+        <paul@crapouillou.net>, <khilman@baylibre.com>,
+        <shawnguo@kernel.org>, <festevam@gmail.com>, <vz@mleia.com>,
+        <heiko@sntech.de>, <linus.walleij@linaro.org>, <baohua@kernel.org>,
+        <ardb@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200523145157.16257-1-zhengdejin5@gmail.com>
+ <20200523160828.GE3459@ninjato> <20200523170933.GA16771@nuc8i5>
+ <ad90d9b5-5906-fef3-85b8-00c7eff70e61@xilinx.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <52fdb5f6-2108-4857-8d0f-3f17ee863781@ti.com>
+Date:   Tue, 26 May 2020 20:13:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200526151623.GB2190602@rani.riverdale.lan>
+In-Reply-To: <ad90d9b5-5906-fef3-85b8-00c7eff70e61@xilinx.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020-05-26, Arvind Sankar wrote:
->On Tue, May 26, 2020 at 08:11:56AM +0200, Ard Biesheuvel wrote:
->> On Tue, 26 May 2020 at 00:59, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->> >  # Compressed kernel should be built as PIE since it may be loaded at any
->> >  # address by the bootloader.
->> > -KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
->> > +KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
+
+On 25/05/2020 10:05, Michal Simek wrote:
+> On 23. 05. 20 19:09, Dejin Zheng wrote:
+>> On Sat, May 23, 2020 at 06:08:29PM +0200, Wolfram Sang wrote:
+>>> On Sat, May 23, 2020 at 10:51:55PM +0800, Dejin Zheng wrote:
+>>>> It will call devm_request_irq() after platform_get_irq() function
+>>>> in many drivers, sometimes, it is not right for the error handling
+>>>> of these two functions in some drivers. so provide this function
+>>>> to simplify the driver.
+>>>>
+>>>> the first patch will provide devm_platform_request_irq(), and the
+>>>> other patch will convert to devm_platform_request_irq() in some
+>>>> i2c bus dirver.
+>>>>
+>>>> v1 -> v2:
+>>>> 	- I give up this series of patches in v1 version. I resend this
+>>>> 	  patches v2 by that discussion:
+>>>> 	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+>>>> 	  The patch content has not changed.
+>>>
+>>> I don't understand. v1 has been nacked because of technical reasons. How
+>>> did the discussion above change the situation? Am I missing something?
+>>>
+>> No, you are not missing something. Maybe I did not explain clearly.
 >>
->> Do we still need -pie linking with these changes applied?
+>> The v1 has been nacked because Grygorii told me that the
+>> function platform_get_irq() should be done as early as possible to avoid
+>> unnecessary initialization steps, and the function devm_request_irq()
+>> should be done late in probe when driver and HW are actually ready to
+>> handle IRQs. It can do the other things between the two funtions. I agree
+>> with him that it may be necessary in some complex drives. So abandon the
+>> patch v1.
 >>
->
->I think it's currently not strictly necessary -- eg the 64bit kernel
->doesn't get linked as pie right now with LLD or old binutils. However,
->it is safer to do so to ensure that the result remains PIC with future
->versions of the linker. There are linker optimizations that can convert
->certain PIC instructions when PIE is disabled. While I think they
->currently all focus on eliminating indirection through the GOT (and thus
->wouldn't be applicable any more),
+>> Base on the discussion of you and Michal, I think maybe this patch is also
+>> needed for the simple driver or the driver of already use it like that:
+>> 	
+>> 	irq = platform_get_irq(pdev, 0);
+>> 	if (irq < 0)
+>> 		return irq;
+>> 	ret = devm_request_irq()
+>>
+>> It provides a common error handling and reduce one function call for each
+>> drivers, more easier to use and simplify code. So resend it.
+>>
+>> BR,
+>> Dejin
+>>
+>>>>
+>>>> Dejin Zheng (2):
+>>>>    drivers: provide devm_platform_request_irq()
+>>>>    i2c: busses: convert to devm_platform_request_irq()
+>>>>
+>>>>   drivers/base/platform.c            | 33 ++++++++++++++++++++++++++++++
+>>>>   drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++------------
+>>>>   drivers/i2c/busses/i2c-cadence.c   | 10 +++------
+>>>>   drivers/i2c/busses/i2c-digicolor.c | 10 +++------
+>>>>   drivers/i2c/busses/i2c-emev2.c     |  5 ++---
+>>>>   drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
+>>>>   drivers/i2c/busses/i2c-meson.c     | 13 ++++--------
+>>>>   drivers/i2c/busses/i2c-mxs.c       |  9 +++-----
+>>>>   drivers/i2c/busses/i2c-pnx.c       |  9 ++------
+>>>>   drivers/i2c/busses/i2c-rcar.c      |  9 +++-----
+>>>>   drivers/i2c/busses/i2c-rk3x.c      | 14 +++----------
+>>>>   drivers/i2c/busses/i2c-sirf.c      | 10 ++-------
+>>>>   drivers/i2c/busses/i2c-stu300.c    |  4 ++--
+>>>>   drivers/i2c/busses/i2c-synquacer.c | 12 +++--------
+>>>>   include/linux/platform_device.h    |  4 ++++
+>>>>   15 files changed, 72 insertions(+), 91 deletions(-)
+> 
+> If you look at all driver except for cadence one it doesn't do any
+> change and I can't see any issue with it because sequences are the same
+> as were before.
+> 
+> Regarding Cadence and Grygorii's comments:
+> We are not checking that id->irq is valid that's why even if that fails
+> driver continues to work. Which means that this change doesn't increase
+> boot time or change code flow.
+> On Xilinx devices cadence i2c is connected to ARM GIC which is
+> initialized very early and IRC controller should be up and running all
+> the time.
+> That's why I can't see any issue which this change on Cadence driver too.
 
-There are 3 forms described by x86-64 psABI B.2 Optimize GOTPCRELX Relocations
 
-(1) movq foo@GOTPCREL(%rip), %reg -> leaq foo(%rip), %reg
-(2) call *foo@GOTPCREL(%rip) -> nop; call foo
-(3) jmp *foo@GOTPCREL(%rip) -> jmp foo; nop
+My main point was to pay attention on changes, which may be risky
+especially when they are part of bulk changes (such optimization tend to spread
+fast and all over the kernel without proper review).
 
-ld.bfd and gold perform (1) even for R_X86_64_GOTPCREL. LLD requires R_X86_64_[REX_]GOTPCRELX
+Sry, if i introduced some misunderstanding, but it seems worked and this patch has got more attention.
+There are no objection from my side to use devm_platform_get_and_ioremap_resource() if driver
+owners find it acceptable.
 
->it's easy to imagine that they could
->get extended to, for eg, convert
->	leaq	foo(%rip), %rax
->to
->	movl	$foo, %eax
->with some nop padding, etc.
-
-Not with NOP padding, but probably with instruction prefixes. It is
-unclear the rewriting will be beneficial. Rewriting instructions definitely requires a
-dedicated relocation type like R_X86_64_[REX_]GOTPCRELX.
-
->Also, the relocation check that's being added here would only work with
->PIE linking.
+-- 
+Best regards,
+grygorii
