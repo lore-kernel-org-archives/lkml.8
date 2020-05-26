@@ -2,113 +2,100 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D836FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABCAF207ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590467946;
-	bh=qcaKmI4fvRBY3YN+p3LJ2ANFZnuN83WNUpjNp3A1Ujw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QrTIJK5Z+BE0n7klLnPP4CkkUJI73F6IHBj6KaTAjAcrUcQ6QdF+blH/IxtF1MFex
-	 uM+S97piAK14K7lPB6y8snghE0uLtpXkDw2R59CKiMUQ6i6sbaawyS1oJ3FhSk0qk0
-	 KeSOTcRACZjtz5n9MhbmnFRvxtBJ2Gl6It9hSELA=
+	by mail.kernel.org (Postfix) with ESMTP id C481220870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:41:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KLAMdLRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgEZEjF (ORCPT
+        id S1725937AbgEZEle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 00:39:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgEZEjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 00:39:05 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C52208B3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590467944;
-        bh=qcaKmI4fvRBY3YN+p3LJ2ANFZnuN83WNUpjNp3A1Ujw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RmlSdhv+dSvKI9hlbRJKaNnTOWmyu3cZDTqQM8ikQebw1NbwU9dgg6R8AFmTF5ZZO
-         ZgpeWsNJftiF+T6ys5oO2G+1d4imJ1mHpy7f8zo9YfaCmoycP1jkhJ0B0GC3NTe9r/
-         NqalKYT7cB0fKOPNKaYjYkLppXuRhQxzjrrvcgK8=
-Received: by mail-wr1-f49.google.com with SMTP id x13so4385386wrv.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 21:39:04 -0700 (PDT)
-X-Gm-Message-State: AOAM531SyFwevUcDt99wJYYx9j8ZrZsPuBkE5G1R5FRcNSVO0+un6+CI
-        A36yHj9gdZlrewXqBRFnoiRu+3GAHq4MXRMcGqdyGQ==
-X-Google-Smtp-Source: ABdhPJx5RGhYX6nKGk1B5a57xXXKXzkKRexSu+Efxo1Skiy5fG7LRt7/mJn57txrauT2IYdRkzMraOjrZaqL8ppDdbE=
-X-Received: by 2002:adf:ea11:: with SMTP id q17mr16122724wrm.75.1590467942702;
- Mon, 25 May 2020 21:39:02 -0700 (PDT)
+        Tue, 26 May 2020 00:41:34 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59962 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgEZEld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 00:41:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590468092; x=1622004092;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=caE/9/0SQ6+2/9eb0G93tHduQ5lAktlVlar54l5ivz8=;
+  b=KLAMdLRr/GXbG2QpUHgAaJf9I6DlDhPG7tWrsi/4+HozEjDJ7w9M8xqW
+   CFFYbWcjHV7pSoykRz1kHo75oHulx+A/FkNN4iTtOl++9i3t3r0Nfg6bq
+   f++spJ4pv3I98gUqMxCwWqvrt9nIzW6smpZh5nE8x7Qh88I9CPwBN/ac6
+   A=;
+IronPort-SDR: 1I2yxgpQGronPtIVGFQbJPBNll2qNecEq6eWNw/8qKHwTIPYkDBpDa1+IrLgw6TjjTHOt2Vc6S
+ g6nuZvCSpF7w==
+X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
+   d="scan'208";a="33514062"
+Subject: Re: linux-next: manual merge of the akpm-current tree with the tip tree
+Thread-Topic: linux-next: manual merge of the akpm-current tree with the tip tree
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 26 May 2020 04:41:19 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 6B3BFA22CF;
+        Tue, 26 May 2020 04:41:18 +0000 (UTC)
+Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 04:41:18 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 04:41:17 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Tue, 26 May 2020 04:41:17 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@elte.hu" <mingo@elte.hu>, "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+CC:     "jroedel@suse.de" <jroedel@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
+Thread-Index: AQHWMoRxHm7E9gHusUGGqipfCnsbV6i5ysCA
+Date:   Tue, 26 May 2020 04:41:17 +0000
+Message-ID: <7cb7ccbdec1b8fd56be345bfa86648c4763c2473.camel@amazon.com>
+References: <20200525210443.0904d583@canb.auug.org.au>
+In-Reply-To: <20200525210443.0904d583@canb.auug.org.au>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.175]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4C2C8DB2A7E9CB4A80D03C43F7D35508@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200525152517.GY325280@hirez.programming.kicks-ass.net>
- <20200526014221.2119-1-laijs@linux.alibaba.com> <20200526014221.2119-5-laijs@linux.alibaba.com>
- <CALCETrWyMY-0Z_NJ7DnF4PsSnhnbNsgt14X1GWkajcms-ZUSQA@mail.gmail.com> <CAJhGHyC82f+=YXYmv8zC=zPxZmk+TW_n+5pjcBE-2T8S9t5K0g@mail.gmail.com>
-In-Reply-To: <CAJhGHyC82f+=YXYmv8zC=zPxZmk+TW_n+5pjcBE-2T8S9t5K0g@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 25 May 2020 21:38:51 -0700
-X-Gmail-Original-Message-ID: <CALCETrW6mazV1JVXYtGW7tUXveNvMKnFwi4zqWUgwMXax_Ea_Q@mail.gmail.com>
-Message-ID: <CALCETrW6mazV1JVXYtGW7tUXveNvMKnFwi4zqWUgwMXax_Ea_Q@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 4/7] x86/hw_breakpoint: Prevent data breakpoints on user_pcid_flush_mask
-To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 9:31 PM Lai Jiangshan
-<jiangshanlai+lkml@gmail.com> wrote:
->
-> On Tue, May 26, 2020 at 12:21 PM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > On Mon, May 25, 2020 at 6:42 PM Lai Jiangshan <laijs@linux.alibaba.com> wrote:
-> > >
-> > > The percpu user_pcid_flush_mask is used for CPU entry
-> > > If a data breakpoint on it, it will cause an unwanted #DB.
-> > > Protect the full cpu_tlbstate structure to be sure.
-> > >
-> > > There are some other percpu data used in CPU entry, but they are
-> > > either in already-protected cpu_tss_rw or are safe to trigger #DB
-> > > (espfix_waddr, espfix_stack).
-> >
-> > How hard would it be to rework this to have DECLARE_PERCPU_NODEBUG()
-> > and DEFINE_PERCPU_NODEBUG() or similar?
->
->
-> I don't know, but it is an excellent idea. Although the patchset
-> protects only 2 or 3 portions of percpu data, but there is many
-> percpu data used in tracing or kprobe code. They are needed to be
-> protected too.
->
-> Adds CC:
-> Steven Rostedt <rostedt@goodmis.org>
-> Masami Hiramatsu <mhiramat@kernel.org>
-
-PeterZ is moving things in the direction of more aggressively
-disabling hardware breakpoints in the nasty paths where we won't
-survive a hardware breakpoint.  Does the tracing code have portions
-that won't survive a limited amount of recursion?
-
-I'm hoping that we can keep the number of no-breakpoint-here percpu
-variables low.  Maybe we could recruit objtool to help make sure we
-got all of them, but that would be a much larger project.
-
-Would we currently survive a breakpoint on the thread stack?  I don't
-see any extremely obvious reason that we wouldn't.  Blocking such a
-breakpoint would be annoying.
+T24gTW9uLCAyMDIwLTA1LTI1IGF0IDIxOjA0ICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
+Og0KPiBIaSBhbGwsDQo+IA0KPiBUb2RheSdzIGxpbnV4LW5leHQgbWVyZ2Ugb2YgdGhlIGFrcG0t
+Y3VycmVudCB0cmVlIGdvdCBhIGNvbmZsaWN0IGluOg0KPiANCj4gICBhcmNoL3g4Ni9tbS90bGIu
+Yw0KPiANCj4gYmV0d2VlbiBjb21taXQ6DQo+IA0KPiAgIDgzY2U1NmY3MTJhZiAoIng4Ni9tbTog
+UmVmYWN0b3IgY29uZF9pYnBiKCkgdG8gc3VwcG9ydCBvdGhlciB1c2UgY2FzZXMiKQ0KPiANCj4g
+ZnJvbSB0aGUgdGlwIHRyZWUgYW5kIGNvbW1pdDoNCj4gDQo+ICAgMzZjOGUzNGQwM2ExICgieDg2
+L21tOiByZW1vdmUgdm1hbGxvYyBmYXVsdGluZyIpDQo+IA0KPiBmcm9tIHRoZSBha3BtLWN1cnJl
+bnQgdHJlZS4NCj4gDQo+IEkgZml4ZWQgaXQgdXAgKHNlZSBiZWxvdykgYW5kIGNhbiBjYXJyeSB0
+aGUgZml4IGFzIG5lY2Vzc2FyeS4gVGhpcw0KPiBpcyBub3cgZml4ZWQgYXMgZmFyIGFzIGxpbnV4
+LW5leHQgaXMgY29uY2VybmVkLCBidXQgYW55IG5vbiB0cml2aWFsDQo+IGNvbmZsaWN0cyBzaG91
+bGQgYmUgbWVudGlvbmVkIHRvIHlvdXIgdXBzdHJlYW0gbWFpbnRhaW5lciB3aGVuIHlvdXIgdHJl
+ZQ0KPiBpcyBzdWJtaXR0ZWQgZm9yIG1lcmdpbmcuICBZb3UgbWF5IGFsc28gd2FudCB0byBjb25z
+aWRlciBjb29wZXJhdGluZw0KPiB3aXRoIHRoZSBtYWludGFpbmVyIG9mIHRoZSBjb25mbGljdGlu
+ZyB0cmVlIHRvIG1pbmltaXNlIGFueSBwYXJ0aWN1bGFybHkNCj4gY29tcGxleCBjb25mbGljdHMu
+DQo+IA0KDQpUaGUgY2hhbmdlcyBsb29rIHJlYXNvbmFibGUgdG8gbWUgKGluIHRlcm1zIG9mIHRo
+ZSBtZXJnZSByZXNvbHV0aW9uKS4NCg0KQWNrZWQtYnk6IEJhbGJpciBTaW5naCA8YnNpbmdoYXJv
+cmFAZ21haWwuY29tPg0KDQo=
