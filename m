@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B478EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A231C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5E020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A687208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520291;
-	bh=lAm2lEdjnD+8xOhLGJf5QyoQipYEWFhTNMRALZMd/cg=;
+	s=default; t=1590520296;
+	bh=JkD+MiY/FPpyZmUTHCm6tsWL4xVIOLfpF+zm5aPlmO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yRDsKzeHQ1lFr7BgXdDpYyIJv/PsyrIRMM5WP/Mqlcs5GBK1XAPABe2Nppo+twLkr
-	 NLe557ElRflIEXbmAXNF50b4UtTw+gOjA5C6Zs+p6PXj6P3k3fKYKtfHePJJ+rfuGp
-	 jR7OMu3010KDHpjENSgsjJj/oRLmd8Z4+vUXtO80=
+	b=MzA5BRbO7LXm37ACmoWSoG/5VIPVC3nUltxD/Aw9dz1P4PWqGWfS732Ra4Q8Zar7i
+	 LpA5iCIVnt3jvBAZhf31Dbzqw1Iyfyxq+NlpQGuACQ0plgP8DTfoATXCoMUQSvN7ZV
+	 0MqRbEGOj553aG6IwjdFpeDzRKrmykKxChxypUUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404073AbgEZTLa (ORCPT
+        id S2390176AbgEZTLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40748 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404057AbgEZTLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:24 -0400
+        id S2404065AbgEZTL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30F0E20776;
-        Tue, 26 May 2020 19:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A78720776;
+        Tue, 26 May 2020 19:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520283;
-        bh=lAm2lEdjnD+8xOhLGJf5QyoQipYEWFhTNMRALZMd/cg=;
+        s=default; t=1590520288;
+        bh=JkD+MiY/FPpyZmUTHCm6tsWL4xVIOLfpF+zm5aPlmO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SKUqiJn1HlGtyXcXB2/N7b/ThcnOjEjvG77lQvj+BEj4t1rRLTy7R4qas+BMyQ4rv
-         6QFlIs9erLts0LhpFbKHvc1PfPtq7KxV9qpNq5K7wyIMRCWMOPOSf0iA++RXpZgW50
-         5zzbQVJBuAfR3bYyXJmoS+vHO+A7/ATg2+fxlDkI=
+        b=zCdioIMp/fhXJhuzQ/pZuYWlaNbpVy4bSvLTMNd91oWv+8w/4VWzUNmMJ5PuqjqYr
+         WW9AYEDABobYrC7t1oEBVfEnqJ35AGYUIEdix2nwNP5rCZJ7kYSWeACpdOrjkHSia9
+         pXLwA1bUTM5OX2z1fDR84RXWr9fOXdOQbvYkMP9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 019/126] afs: Dont unlock fetched data pages until the op completes successfully
-Date:   Tue, 26 May 2020 20:52:36 +0200
-Message-Id: <20200526183939.238916173@linuxfoundation.org>
+Subject: [PATCH 5.6 020/126] mtd: Fix mtd not registered due to nvmem name collision
+Date:   Tue, 26 May 2020 20:52:37 +0200
+Message-Id: <20200526183939.346533689@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,126 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
 
-[ Upstream commit 9d1be4f4dc5ff1c66c86acfd2c35765d9e3776b3 ]
+[ Upstream commit 7b01b7239d0dc9832e0d0d23605c1ff047422a2c ]
 
-Don't call req->page_done() on each page as we finish filling it with
-the data coming from the network.  Whilst this might speed up the
-application a bit, it's a problem if there's a network failure and the
-operation has to be reissued.
+When the nvmem framework is enabled, a nvmem device is created per mtd
+device/partition.
 
-If this happens, an oops occurs because afs_readpages_page_done() clears
-the pointer to each page it unlocks and when a retry happens, the
-pointers to the pages it wants to fill are now NULL (and the pages have
-been unlocked anyway).
+It is not uncommon that a device can have multiple mtd devices with
+partitions that have the same name. Eg, when there DT overlay is allowed
+and the same device with mtd is attached twice.
 
-Instead, wait till the operation completes successfully and only then
-release all the pages after clearing any terminal gap (the server can
-give us less data than we requested as we're allowed to ask for more
-than is available).
+Under that circumstances, the mtd fails to register due to a name
+duplication on the nvmem framework.
 
-KASAN produces a bug like the following, and even without KASAN, it can
-oops and panic.
+With this patch we use the mtdX name instead of the partition name,
+which is unique.
 
-    BUG: KASAN: wild-memory-access in _copy_to_iter+0x323/0x5f4
-    Write of size 1404 at addr 0005088000000000 by task md5sum/5235
+[    8.948991] sysfs: cannot create duplicate filename '/bus/nvmem/devices/Production Data'
+[    8.948992] CPU: 7 PID: 246 Comm: systemd-udevd Not tainted 5.5.0-qtec-standard #13
+[    8.948993] Hardware name: AMD Dibbler/Dibbler, BIOS 05.22.04.0019 10/26/2019
+[    8.948994] Call Trace:
+[    8.948996]  dump_stack+0x50/0x70
+[    8.948998]  sysfs_warn_dup.cold+0x17/0x2d
+[    8.949000]  sysfs_do_create_link_sd.isra.0+0xc2/0xd0
+[    8.949002]  bus_add_device+0x74/0x140
+[    8.949004]  device_add+0x34b/0x850
+[    8.949006]  nvmem_register.part.0+0x1bf/0x640
+...
+[    8.948926] mtd mtd8: Failed to register NVMEM device
 
-    CPU: 0 PID: 5235 Comm: md5sum Not tainted 5.7.0-rc3-fscache+ #250
-    Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
-    Call Trace:
-     memcpy+0x39/0x58
-     _copy_to_iter+0x323/0x5f4
-     __skb_datagram_iter+0x89/0x2a6
-     skb_copy_datagram_iter+0x129/0x135
-     rxrpc_recvmsg_data.isra.0+0x615/0xd42
-     rxrpc_kernel_recv_data+0x1e9/0x3ae
-     afs_extract_data+0x139/0x33a
-     yfs_deliver_fs_fetch_data64+0x47a/0x91b
-     afs_deliver_to_call+0x304/0x709
-     afs_wait_for_call_to_complete+0x1cc/0x4ad
-     yfs_fs_fetch_data+0x279/0x288
-     afs_fetch_data+0x1e1/0x38d
-     afs_readpages+0x593/0x72e
-     read_pages+0xf5/0x21e
-     __do_page_cache_readahead+0x128/0x23f
-     ondemand_readahead+0x36e/0x37f
-     generic_file_buffered_read+0x234/0x680
-     new_sync_read+0x109/0x17e
-     vfs_read+0xe6/0x138
-     ksys_read+0xd8/0x14d
-     do_syscall_64+0x6e/0x8a
-     entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 196ee9cd2d04 ("afs: Make afs_fs_fetch_data() take a list of pages")
-Fixes: 30062bd13e36 ("afs: Implement YFS support in the fs client")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c4dfa25ab307 ("mtd: add support for reading MTD devices via the nvmem API")
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/fsclient.c  | 8 ++++----
- fs/afs/yfsclient.c | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/mtd/mtdcore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index 68fc46634346..d2b3798c1932 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -385,8 +385,6 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		ASSERTCMP(req->offset, <=, PAGE_SIZE);
- 		if (req->offset == PAGE_SIZE) {
- 			req->offset = 0;
--			if (req->page_done)
--				req->page_done(req);
- 			req->index++;
- 			if (req->remain > 0)
- 				goto begin_page;
-@@ -440,11 +438,13 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 		if (req->offset < PAGE_SIZE)
- 			zero_user_segment(req->pages[req->index],
- 					  req->offset, PAGE_SIZE);
--		if (req->page_done)
--			req->page_done(req);
- 		req->offset = 0;
- 	}
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index 5fac4355b9c2..559b6930b6f6 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -551,7 +551,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
  
-+	if (req->page_done)
-+		for (req->index = 0; req->index < req->nr_pages; req->index++)
-+			req->page_done(req);
-+
- 	_leave(" = 0 [done]");
- 	return 0;
- }
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index b5b45c57e1b1..fe413e7a5cf4 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -497,8 +497,6 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 		ASSERTCMP(req->offset, <=, PAGE_SIZE);
- 		if (req->offset == PAGE_SIZE) {
- 			req->offset = 0;
--			if (req->page_done)
--				req->page_done(req);
- 			req->index++;
- 			if (req->remain > 0)
- 				goto begin_page;
-@@ -556,11 +554,13 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 		if (req->offset < PAGE_SIZE)
- 			zero_user_segment(req->pages[req->index],
- 					  req->offset, PAGE_SIZE);
--		if (req->page_done)
--			req->page_done(req);
- 		req->offset = 0;
- 	}
- 
-+	if (req->page_done)
-+		for (req->index = 0; req->index < req->nr_pages; req->index++)
-+			req->page_done(req);
-+
- 	_leave(" = 0 [done]");
- 	return 0;
- }
+ 	config.id = -1;
+ 	config.dev = &mtd->dev;
+-	config.name = mtd->name;
++	config.name = dev_name(&mtd->dev);
+ 	config.owner = THIS_MODULE;
+ 	config.reg_read = mtd_nvmem_reg_read;
+ 	config.size = mtd->size;
 -- 
 2.25.1
 
