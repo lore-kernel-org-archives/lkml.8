@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E002C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D292208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9EB2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519880;
-	bh=C5RUA5PleN6pmherb3qSxADrS/EbTQI2T3y1YchV8eg=;
+	s=default; t=1590519885;
+	bh=q52oCTslmfWu8UFWSgvt3snEHbJZpSrBNpItw+cgWkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFmvy0B2iqa5kfRpG03UOcy7MX26czybPwmHSOPdJy5ovg6iFsvrLiomvoiT+tzCX
-	 VIuC4CRXpY7Tn4przoj5oJMQZ/5zGJDxdAovDWUqFqOfdQ5B51nvOTcSjezNGmn7xq
-	 VIw/bqUU19qrCWUhHoIzsViBt5joJ5US/Q7lmzzw=
+	b=B1s1nPn8xDQ5VhHpr7Mk7h6WBO8wFdmOYh0lpVI8wVZbBrvtBKrccuJhYlCgj0Sml
+	 GaYhEkf8cSfVZzEvODu4hp+lvqvUbtqQVxfKzbE3D7rvfP2YMKcmfuY4qCaEG4VyR+
+	 /gh4Nk9sejiH+WzH1iJuAe1UkAnufNPYdl4AXBlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391390AbgEZTEj (ORCPT
+        id S2391399AbgEZTEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60328 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390485AbgEZTEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:38 -0400
+        id S2390485AbgEZTEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05A3A2086A;
-        Tue, 26 May 2020 19:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40CB20849;
+        Tue, 26 May 2020 19:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519877;
-        bh=C5RUA5PleN6pmherb3qSxADrS/EbTQI2T3y1YchV8eg=;
+        s=default; t=1590519880;
+        bh=q52oCTslmfWu8UFWSgvt3snEHbJZpSrBNpItw+cgWkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZDzXkUY2ezRE/NARSdu56QRM9TbcF2jF8kDmNBgrtaqSvccYIQuMiNhgdvqSm9+5
-         9nuuuDh2oyZ47bcZbFq0PUuP0dZYYfyDtNcFnxK/JUI9DrUX56K5mn/lBvkhXoEzYO
-         1otTLrucc0Wtf+7EuseA9ix5aj92uXyT+cv3bm0k=
+        b=LBKhqsS2y2hUOvAJCGaxF3sRfpl1uf+wpovO9SjY9Q52iZYpIi9Bn9Z6/0mmNIWGX
+         UQGxMvszU51ySP20vL4cM/qacmK9w+KpamUnnxn9NrJ12yYFGjoyanl1b2yPVgv3vW
+         2hFPIKKfU/lRbj0eshDfP+BF6tiOiZjswhmdy/Z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 50/81] powerpc/64s: Disable STRICT_KERNEL_RWX
-Date:   Tue, 26 May 2020 20:53:25 +0200
-Message-Id: <20200526183932.737734715@linuxfoundation.org>
+Subject: [PATCH 4.19 51/81] nfit: Add Hyper-V NVDIMM DSM command set to white list
+Date:   Tue, 26 May 2020 20:53:26 +0200
+Message-Id: <20200526183932.809967880@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -59,48 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 8659a0e0efdd975c73355dbc033f79ba3b31e82c ]
+[ Upstream commit 1194c4133195dfcb6c5fc0935d54bbed872a5285 ]
 
-Several strange crashes have been eventually traced back to
-STRICT_KERNEL_RWX and its interaction with code patching.
+Add the Hyper-V _DSM command set to the white list of NVDIMM command
+sets.
 
-Various paths in our ftrace, kprobes and other patching code need to
-be hardened against patching failures, otherwise we can end up running
-with partially/incorrectly patched ftrace paths, kprobes or jump
-labels, which can then cause strange crashes.
+This command set is documented at http://www.uefi.org/RFIC_LIST
+(see "Virtual NVDIMM 0x1901").
 
-Although fixes for those are in development, they're not -rc material.
-
-There also seem to be problems with the underlying strict RWX logic,
-which needs further debugging.
-
-So for now disable STRICT_KERNEL_RWX on 64-bit to prevent people from
-enabling the option and tripping over the bugs.
-
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200520133605.972649-1-mpe@ellerman.id.au
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/nfit/core.c   | 17 ++++++++++++++---
+ drivers/acpi/nfit/nfit.h   |  6 +++++-
+ include/uapi/linux/ndctl.h |  1 +
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index da48a2ca272e..f38d153d2586 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -139,7 +139,7 @@ config PPC
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
- 	select ARCH_HAS_SG_CHAIN
--	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
-+	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC32 && !HIBERNATION)
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index 8340c81b258b..dd4c7289610e 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -1773,9 +1773,17 @@ static int acpi_nfit_add_dimm(struct acpi_nfit_desc *acpi_desc,
+ 	dev_set_drvdata(&adev_dimm->dev, nfit_mem);
+ 
+ 	/*
+-	 * Until standardization materializes we need to consider 4
+-	 * different command sets.  Note, that checking for function0 (bit0)
+-	 * tells us if any commands are reachable through this GUID.
++	 * There are 4 "legacy" NVDIMM command sets
++	 * (NVDIMM_FAMILY_{INTEL,MSFT,HPE1,HPE2}) that were created before
++	 * an EFI working group was established to constrain this
++	 * proliferation. The nfit driver probes for the supported command
++	 * set by GUID. Note, if you're a platform developer looking to add
++	 * a new command set to this probe, consider using an existing set,
++	 * or otherwise seek approval to publish the command set at
++	 * http://www.uefi.org/RFIC_LIST.
++	 *
++	 * Note, that checking for function0 (bit0) tells us if any commands
++	 * are reachable through this GUID.
+ 	 */
+ 	for (i = 0; i <= NVDIMM_FAMILY_MAX; i++)
+ 		if (acpi_check_dsm(adev_dimm->handle, to_nfit_uuid(i), 1, 1))
+@@ -1798,6 +1806,8 @@ static int acpi_nfit_add_dimm(struct acpi_nfit_desc *acpi_desc,
+ 			dsm_mask &= ~(1 << 8);
+ 	} else if (nfit_mem->family == NVDIMM_FAMILY_MSFT) {
+ 		dsm_mask = 0xffffffff;
++	} else if (nfit_mem->family == NVDIMM_FAMILY_HYPERV) {
++		dsm_mask = 0x1f;
+ 	} else {
+ 		dev_dbg(dev, "unknown dimm command family\n");
+ 		nfit_mem->family = -1;
+@@ -3622,6 +3632,7 @@ static __init int nfit_init(void)
+ 	guid_parse(UUID_NFIT_DIMM_N_HPE1, &nfit_uuid[NFIT_DEV_DIMM_N_HPE1]);
+ 	guid_parse(UUID_NFIT_DIMM_N_HPE2, &nfit_uuid[NFIT_DEV_DIMM_N_HPE2]);
+ 	guid_parse(UUID_NFIT_DIMM_N_MSFT, &nfit_uuid[NFIT_DEV_DIMM_N_MSFT]);
++	guid_parse(UUID_NFIT_DIMM_N_HYPERV, &nfit_uuid[NFIT_DEV_DIMM_N_HYPERV]);
+ 
+ 	nfit_wq = create_singlethread_workqueue("nfit");
+ 	if (!nfit_wq)
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 68848fc4b7c9..cc2ec62951de 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -34,11 +34,14 @@
+ /* https://msdn.microsoft.com/library/windows/hardware/mt604741 */
+ #define UUID_NFIT_DIMM_N_MSFT "1ee68b36-d4bd-4a1a-9a16-4f8e53d46e05"
+ 
++/* http://www.uefi.org/RFIC_LIST (see "Virtual NVDIMM 0x1901") */
++#define UUID_NFIT_DIMM_N_HYPERV "5746c5f2-a9a2-4264-ad0e-e4ddc9e09e80"
++
+ #define ACPI_NFIT_MEM_FAILED_MASK (ACPI_NFIT_MEM_SAVE_FAILED \
+ 		| ACPI_NFIT_MEM_RESTORE_FAILED | ACPI_NFIT_MEM_FLUSH_FAILED \
+ 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
+ 
+-#define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_MSFT
++#define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
+ 
+ #define NVDIMM_STANDARD_CMDMASK \
+ (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
+@@ -75,6 +78,7 @@ enum nfit_uuids {
+ 	NFIT_DEV_DIMM_N_HPE1 = NVDIMM_FAMILY_HPE1,
+ 	NFIT_DEV_DIMM_N_HPE2 = NVDIMM_FAMILY_HPE2,
+ 	NFIT_DEV_DIMM_N_MSFT = NVDIMM_FAMILY_MSFT,
++	NFIT_DEV_DIMM_N_HYPERV = NVDIMM_FAMILY_HYPERV,
+ 	NFIT_SPA_VOLATILE,
+ 	NFIT_SPA_PM,
+ 	NFIT_SPA_DCR,
+diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+index 2f2c43d633c5..7b0189d6dfa9 100644
+--- a/include/uapi/linux/ndctl.h
++++ b/include/uapi/linux/ndctl.h
+@@ -247,6 +247,7 @@ struct nd_cmd_pkg {
+ #define NVDIMM_FAMILY_HPE1 1
+ #define NVDIMM_FAMILY_HPE2 2
+ #define NVDIMM_FAMILY_MSFT 3
++#define NVDIMM_FAMILY_HYPERV 4
+ 
+ #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
+ 					struct nd_cmd_pkg)
 -- 
 2.25.1
 
