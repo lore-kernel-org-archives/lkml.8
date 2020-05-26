@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B085C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86CD221508
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FCA2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404654AbgEZWvx (ORCPT
+        id S2392167AbgEZWwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:51:53 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60366 "EHLO
+        Tue, 26 May 2020 18:52:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60326 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404608AbgEZWvt (ORCPT
+        with ESMTP id S2404568AbgEZWvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:51:49 -0400
+        Tue, 26 May 2020 18:51:47 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CEECE8030879;
-        Tue, 26 May 2020 22:51:45 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8FD838030869;
+        Tue, 26 May 2020 22:51:42 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zWst2UV7r8ga; Wed, 27 May 2020 01:51:45 +0300 (MSK)
+        with ESMTP id LF5qH_jv41A4; Wed, 27 May 2020 01:51:42 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -39,9 +39,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 10/10] dmaengine: dw: Initialize max_sg_nents with nollp flag
-Date:   Wed, 27 May 2020 01:50:21 +0300
-Message-ID: <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 06/10] dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
+Date:   Wed, 27 May 2020 01:50:17 +0300
+Message-ID: <20200526225022.20405-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,18 +53,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multi-block support provides a way to map the kernel-specific SG-table so
-the DW DMA device would handle it as a whole instead of handling the
-SG-list items or so called LLP block items one by one. So if true LLP
-list isn't supported by the DW DMA engine, then soft-LLP mode will be
-utilized to load and execute each LLP-block one by one. The soft-LLP mode
-of the DMA transactions execution might not work well for some DMA
-consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
-expose the nollp flag indicating the soft-LLP mode by means of the
-max_sg_nents capability, so the DMA consumer would be ready to somehow
-workaround errors caused by such mode being utilized.
+Full multi-block transfers functionality is enabled in DW DMA
+controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
+can be executed only if hardcode channel x LLP register feature isn't
+enabled, which can be switched on at the IP core synthesis for
+optimization. If it's enabled then the LLP register is hardcoded to
+zero, so the blocks chaining based on the LLPs is unsupported.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -74,33 +71,54 @@ Cc: devicetree@vger.kernel.org
 
 ---
 
+Changelog v2:
+- Rearrange SoBs.
+- Add comment about why hardware accelerated LLP list support depends
+  on both MBLK_EN and HC_LLP configs setting.
+- Use explicit bits state comparison operator.
+
 Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
+- Move the patch to the head of the series.
 ---
- drivers/dma/dw/core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/dma/dw/core.c | 11 ++++++++++-
+ drivers/dma/dw/regs.h |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 29c4ef08311d..b850eb7fd084 100644
+index 21cb2a58dbd2..33e99d95b3d3 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1054,6 +1054,15 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
- 
- 	caps->max_burst = dwc->max_burst;
+@@ -1178,8 +1178,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 			 */
+ 			dwc->block_size =
+ 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
 +
-+	/*
-+	 * It might be crucial for some devices to have the hardware
-+	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
-+	 * notation. So if LLPs are supported then max_sg_nents is set to
-+	 * zero which means unlimited number of SG entries can be handled in a
-+	 * single DMA transaction, otherwise it's just one SG entry.
-+	 */
-+	caps->max_sg_nents = dwc->nollp;
- }
++			/*
++			 * According to the DW DMA databook the true scatter-
++			 * gether LLPs aren't available if either multi-block
++			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
++			 * LLP register is hard-coded to zeros
++			 * (CHx_HC_LLP == 1).
++			 */
+ 			dwc->nollp =
+-				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
++				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
++				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
+ 		} else {
+ 			dwc->block_size = pdata->block_size;
+ 			dwc->nollp = !pdata->multi_block[i];
+diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
+index 3fce66ecee7a..1ab840b06e79 100644
+--- a/drivers/dma/dw/regs.h
++++ b/drivers/dma/dw/regs.h
+@@ -125,6 +125,7 @@ struct dw_dma_regs {
  
- int do_dma_probe(struct dw_dma_chip *chip)
+ /* Bitfields in DWC_PARAMS */
+ #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
++#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
+ 
+ /* bursts size */
+ enum dw_dma_msize {
 -- 
 2.26.2
 
