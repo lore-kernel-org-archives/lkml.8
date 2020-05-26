@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872FAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 678FA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65536208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519471;
-	bh=xVPAJUL4QixcC19EI5mfeY1zN8jTKfRe8D0KerT+vcI=;
+	s=default; t=1590519475;
+	bh=cO2riDSx2jLAx5ZL8lJ5UDHZRjMrSl2uLHgV3V/L+vY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHX2Ko5xoummC++MqZ4zPM7dl7enDCyYgD2e3mgpeGp+ITHSWcLcj+Vra3S27JV5V
-	 lM/3qgqzQmnFBhv6I7pFBMaobnZI38H1APBCD6GquDiiEa7nDo9Jjnxf7U9Igf5ex+
-	 VtRdriSSxHxjkLbfVCzGpCk566YONyl6wc7iYolM=
+	b=m1Soc1NxGUehxg9G6B3uPoA7O6HN5NEOS8HpRwly/cKmajfzA2pC4cm3byWK7v19w
+	 zodjA31po4vDon0+oDjB+2ynP7rUDES9TS2jdfUTjW/45DHCpNH3b50Y2836Ek4zRM
+	 W9uVv1qPvzaD5wLxw73xr3NFtH/HgSlulkgCw/mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390191AbgEZS5u (ORCPT
+        id S2390210AbgEZS5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390178AbgEZS5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:47 -0400
+        id S2390185AbgEZS5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A96B7208B6;
-        Tue, 26 May 2020 18:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18580214D8;
+        Tue, 26 May 2020 18:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519467;
-        bh=xVPAJUL4QixcC19EI5mfeY1zN8jTKfRe8D0KerT+vcI=;
+        s=default; t=1590519469;
+        bh=cO2riDSx2jLAx5ZL8lJ5UDHZRjMrSl2uLHgV3V/L+vY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M56idmHYalBkOAsrFH0Po9EaRe1recr3EihJhg+L/AP0dMcdHRRupvMGx1CIZuA+5
-         PGVo4aNiPbRl1Jw93s00AM9phe2S4j8hwjO/xC0fLUZHVB8xXSJjUR4JQ4Rv5xdKAg
-         xAsgpzk0SfgRTmZ8oFHZgyf5de1JBPpj04TyuKJc=
+        b=DnvDKKZ1t7HPySMzx7uqmv99ANv1cIMXtdJAKg2LLdilIFcQ11W3h4G1zNMyGjqsL
+         /4BIWtjQHPOmaCs+2T0gqYir1c6jFMwZGytVmf2UY18aIspeNJeQUVA1JhmCEsRAAt
+         QPIQ46Iv5U2cyOQD0jxh1KENzuF+zD81Vm1RXoEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/64] gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
-Date:   Tue, 26 May 2020 20:52:44 +0200
-Message-Id: <20200526183918.407241731@linuxfoundation.org>
+Subject: [PATCH 4.9 16/64] ceph: fix double unlock in handle_cap_export()
+Date:   Tue, 26 May 2020 20:52:45 +0200
+Message-Id: <20200526183918.707378282@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -61,59 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 846c68f7f1ac82c797a2f1db3344a2966c0fe2e1 ]
+[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
 
-In drivers/net/gtp.c, gtp_genl_dump_pdp() should set NLM_F_MULTI
-flag since it returns multipart message.
-This patch adds a new arg "flags" in gtp_genl_fill_info() so that
-flags can be set by the callers.
+If the ceph_mdsc_open_export_target_session() return fails, it will
+do a "goto retry", but the session mutex has already been unlocked.
+Re-lock the mutex in that case to ensure that we don't unlock it
+twice.
 
-Signed-off-by: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/ceph/caps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index a9e8a7356c41..fe844888e0ed 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -1108,11 +1108,11 @@ static struct genl_family gtp_genl_family = {
- };
- 
- static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
--			      u32 type, struct pdp_ctx *pctx)
-+			      int flags, u32 type, struct pdp_ctx *pctx)
- {
- 	void *genlh;
- 
--	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
-+	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
- 			    type);
- 	if (genlh == NULL)
- 		goto nlmsg_failure;
-@@ -1208,8 +1208,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
- 		goto err_unlock;
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index 617e9ae67f50..e11aacb35d6b 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -3394,6 +3394,7 @@ retry:
+ 		WARN_ON(1);
+ 		tsession = NULL;
+ 		target = -1;
++		mutex_lock(&session->s_mutex);
  	}
+ 	goto retry;
  
--	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
--				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
-+	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
-+				 0, info->nlhdr->nlmsg_type, pctx);
- 	if (err < 0)
- 		goto err_unlock_free;
- 
-@@ -1252,6 +1252,7 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
- 				    gtp_genl_fill_info(skb,
- 					    NETLINK_CB(cb->skb).portid,
- 					    cb->nlh->nlmsg_seq,
-+					    NLM_F_MULTI,
- 					    cb->nlh->nlmsg_type, pctx)) {
- 					cb->args[0] = i;
- 					cb->args[1] = j;
 -- 
 2.25.1
 
