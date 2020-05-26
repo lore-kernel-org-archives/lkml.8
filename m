@@ -2,52 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87283C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 532AD208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B2F208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519503;
-	bh=tkjXbCIZU4cnQZYUNnAN08QTrDRjEyW2tJ4zBswjrrc=;
+	s=default; t=1590519511;
+	bh=arCsPkA54XCuJCfaHuXlJjqpRC/9exgj7HZ4xsCLR0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JoM6HYQkpyZMGQwFLNCkpTYe06BWKJYjhrAd7200MmVB5n+9RQcFsduV4nyI5z2I7
-	 mxr+m5m1WFnS1kFk1ShPC0GueHYUOTxaJn5ANbSCT+CnH/MUM7IFdzpltv/bD491YL
-	 0LGbO4PlmnUqW1xEkpDOTLKVmbvemAE6pNG9z7lc=
+	b=j12C10anv5Sn0SzwomOLToaKs7hu3eq33kg5qu/RV4vpLc1TEUcQA4+eGwwdrjest
+	 MyIGLCKceZ0kEbtKAGKnmgL99UD5mGoGlFq/3yxhUihPnpicqROdDIVJzCt3fCNfcm
+	 BOUojzQKoYbyQbrd7jNHbQrP1L1DTlqmRZUi7Tv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390316AbgEZS6W (ORCPT
+        id S2390349AbgEZS63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:58:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389585AbgEZS6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:58:15 -0400
+        id S2390320AbgEZS6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:58:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81EB22086A;
-        Tue, 26 May 2020 18:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D306F208B3;
+        Tue, 26 May 2020 18:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519495;
-        bh=tkjXbCIZU4cnQZYUNnAN08QTrDRjEyW2tJ4zBswjrrc=;
+        s=default; t=1590519502;
+        bh=arCsPkA54XCuJCfaHuXlJjqpRC/9exgj7HZ4xsCLR0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPwKrZNBE/u7E3u/HcN9LTG4SWOobp93N4KZyBWdTzbzFKiwGSWUOLeH4l8kSIiYu
-         JScghD6tdFJpdk3oP6vxyimYFiMqNLztKYkio2tNeMHNYdUrH3Q23PJivlRb0H10Lf
-         iIszysVHjVUvGO7H/bw5Z6juKgB+iyIop4xTdSaU=
+        b=YdJG4UMHoM2oxKRMcj4aBjtDmwYFSYcJUBVXCqgU1wiDz13IL6km2cYDgo4Y0j93b
+         wVSDkUpuZHLs/izrAcM5CWKqhNKcGq/Ee8o4Kr7zNuSkK2JAQ7nVFCmGsKHnbjqfc6
+         FwAW5dukTpcvPYfymCMW61twfPmz9q9ZmNW3sz44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 25/64] arm64: fix the flush_icache_range arguments in machine_kexec
-Date:   Tue, 26 May 2020 20:52:54 +0200
-Message-Id: <20200526183920.689522330@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.9 28/64] net: l2tp: deprecate PPPOL2TP_MSG_* in favour of L2TP_MSG_*
+Date:   Tue, 26 May 2020 20:52:57 +0200
+Message-Id: <20200526183921.811733281@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -60,37 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Asbjørn Sloth Tønnesen <asbjorn@asbjorn.st>
 
-Commit d51c214541c5154dda3037289ee895ea3ded5ebd upstream.
+commit 47c3e7783be4e142b861d34b5c2e223330b05d8a upstream.
 
-The second argument is the end "pointer", not the length.
+PPPOL2TP_MSG_* and L2TP_MSG_* are duplicates, and are being used
+interchangeably in the kernel, so let's standardize on L2TP_MSG_*
+internally, and keep PPPOL2TP_MSG_* defined in UAPI for compatibility.
 
-Fixes: d28f6df1305a ("arm64/kexec: Add core kexec support")
-Cc: <stable@vger.kernel.org> # 4.8.x-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/machine_kexec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/networking/l2tp.txt |    8 ++++----
+ include/uapi/linux/if_pppol2tp.h  |   13 ++++++-------
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index bc96c8a7fc79..3e4b778f16a5 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -177,7 +177,8 @@ void machine_kexec(struct kimage *kimage)
- 	/* Flush the reboot_code_buffer in preparation for its execution. */
- 	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
- 	flush_icache_range((uintptr_t)reboot_code_buffer,
--		arm64_relocate_new_kernel_size);
-+			   (uintptr_t)reboot_code_buffer +
-+			   arm64_relocate_new_kernel_size);
+--- a/Documentation/networking/l2tp.txt
++++ b/Documentation/networking/l2tp.txt
+@@ -177,10 +177,10 @@ setsockopt on the PPPoX socket to set a
  
- 	/* Flush the kimage list and its buffers. */
- 	kexec_list_flush(kimage);
--- 
-2.25.1
-
+ The following debug mask bits are available:
+ 
+-PPPOL2TP_MSG_DEBUG    verbose debug (if compiled in)
+-PPPOL2TP_MSG_CONTROL  userspace - kernel interface
+-PPPOL2TP_MSG_SEQ      sequence numbers handling
+-PPPOL2TP_MSG_DATA     data packets
++L2TP_MSG_DEBUG    verbose debug (if compiled in)
++L2TP_MSG_CONTROL  userspace - kernel interface
++L2TP_MSG_SEQ      sequence numbers handling
++L2TP_MSG_DATA     data packets
+ 
+ If enabled, files under a l2tp debugfs directory can be used to dump
+ kernel state about L2TP tunnels and sessions. To access it, the
+--- a/include/uapi/linux/if_pppol2tp.h
++++ b/include/uapi/linux/if_pppol2tp.h
+@@ -18,6 +18,7 @@
+ #include <linux/types.h>
+ #include <linux/in.h>
+ #include <linux/in6.h>
++#include <linux/l2tp.h>
+ 
+ /* Structure used to connect() the socket to a particular tunnel UDP
+  * socket over IPv4.
+@@ -90,14 +91,12 @@ enum {
+ 	PPPOL2TP_SO_REORDERTO	= 5,
+ };
+ 
+-/* Debug message categories for the DEBUG socket option */
++/* Debug message categories for the DEBUG socket option (deprecated) */
+ enum {
+-	PPPOL2TP_MSG_DEBUG	= (1 << 0),	/* verbose debug (if
+-						 * compiled in) */
+-	PPPOL2TP_MSG_CONTROL	= (1 << 1),	/* userspace - kernel
+-						 * interface */
+-	PPPOL2TP_MSG_SEQ	= (1 << 2),	/* sequence numbers */
+-	PPPOL2TP_MSG_DATA	= (1 << 3),	/* data packets */
++	PPPOL2TP_MSG_DEBUG	= L2TP_MSG_DEBUG,
++	PPPOL2TP_MSG_CONTROL	= L2TP_MSG_CONTROL,
++	PPPOL2TP_MSG_SEQ	= L2TP_MSG_SEQ,
++	PPPOL2TP_MSG_DATA	= L2TP_MSG_DATA,
+ };
+ 
+ 
 
 
