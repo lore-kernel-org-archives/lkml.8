@@ -2,244 +2,124 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D21C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A5320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AE120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Z7tn9F7G";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hcHe3BI/"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="sXcb3w0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgEZPpg (ORCPT
+        id S1729081AbgEZPpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:45:36 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:59196 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730145AbgEZPpf (ORCPT
+        Tue, 26 May 2020 11:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728270AbgEZPpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:45:35 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QFcXAW030739;
-        Tue, 26 May 2020 08:45:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=lmIqcxqDWsnycd080LgSoxy5B38SnfJJQ+0KEcsrxJU=;
- b=Z7tn9F7GPzLuHAotHZNZdqQePaNggNvpfhOgavBa46v70uTn7ZtVJR9adry7qUdpXAhU
- UC0xnDS2Vyv4mHiu/9knu0Z6d2XZjwae4icHPmIUR/ViTXm34QRPLmgnk2vx3CQM9C1f
- yLPNw9QKbgd2UV/UEYi2AU0gFNnomk5fuY8= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 3171nhhtnf-16
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 26 May 2020 08:45:27 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 26 May 2020 08:45:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GFAZQh6/u19lDcPKf8wYct4MAT6GmKAhPY1ws6U65rtFXBqYnFGU1lsEZTmTMjOaqbc2lCuwD9hBPCcV1Ib8zx/D2jBLeDcalbfW27kOH5AJOme0uIi2SfieW5U/K/W52AF1oqKJkFzyG5cE9Y5wmgkYnhxxn7h80J2pps6g9dOfLrqe5buQRpuYm+X1CdFxwcuxDaQbEFBRydwmH43a+wfVvjWfmiiRegF5HOMg5Br0MuXgYeZEYV8LoeuxC5O0pNHD0uSY4y93rONZVK7Ohvm0rm0cJA0DQhzTTZAlg6PZR8YHeoGit67Y15luS10NtY9gkeJM8QG2ctbhbGf8qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lmIqcxqDWsnycd080LgSoxy5B38SnfJJQ+0KEcsrxJU=;
- b=TBbhIWRp0uvekFEZHo2LOwz1Ys8nOh5WiBOX2KNyXw76RvoWAWs2y7XAgaeV5z/bTOrkFAeoIWlJAvwvZhXh0Qz+/B0jyTLEjYxPvVaHhht8tzd3NnnI6xj2VYzCn8pqHpFD0Ep9uRT1A7ZD01y8D/9GIaNG9t3Y6x9Ec2m3Wk2MfPb94ga85FLZRqHn4vzYl2klHSY7w81BmCWSHMn7Mx00fUmFW+mWUJiCSmZxmo5O4OJEVpFaz0wKNMQry8CuowRWuxvfq6JAWRKjPo9f0qxyB0JIfpcUsOiqbcmuGzHNFUYJwgZBE5ez/n74RBKnX9uj4+GpUMTNW5qcL5SNIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lmIqcxqDWsnycd080LgSoxy5B38SnfJJQ+0KEcsrxJU=;
- b=hcHe3BI/E5K7ERnFuDF9u5RAazE7oe/Y3sNp7Rjeo3ZKHxGm/tB+EHB87tG4cRRFyZdhs6yLavzLCYQc1WnFT2RG4iqY1ZqPhFtmt7DdYrBl/vDIEe8KxNQZ8IShuZWNJXxqPBdpt9KGYccSC/kYe0LCC2BtQvsSBC5Ymr4PzFA=
-Authentication-Results: suse.cz; dkim=none (message not signed)
- header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
-Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
- (2603:10b6:805:e3::14) by SN6PR1501MB4110.namprd15.prod.outlook.com
- (2603:10b6:805:5e::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
- 2020 15:45:14 +0000
-Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
- ([fe80::3046:2fa:5da3:73be]) by SN6PR1501MB4141.namprd15.prod.outlook.com
- ([fe80::3046:2fa:5da3:73be%7]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 15:45:13 +0000
-Date:   Tue, 26 May 2020 08:45:08 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 18/19] kselftests: cgroup: add kernel memory
- accounting tests
-Message-ID: <20200526154508.GA364753@carbon.DHCP.thefacebook.com>
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-19-guro@fb.com>
- <d980935c-fecc-9682-7dab-bdcf33c12a9c@suse.cz>
+        Tue, 26 May 2020 11:45:53 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DB3C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:45:53 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id fb16so9645816qvb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H9NFd0yHlWGmdk/EMdYVrUqJ2vOLGczXKpbxrO9cBaM=;
+        b=sXcb3w0eQMDKcMmANV3bqeRrIPN376XqoY+mlxj5Ut31RFJurt5tGbdEwZIq3dbD4O
+         4Xc1eosEIel58VXlkkgjWLU6wV7f/ifJVJIY07JVrM+eeQDSfAJ1DRQpeBWK9MAn05CM
+         f65q0wh613K5qqBw7J2PgH74PTHqbY3svEhQF6173TcXPGfhIiy6D76vMl51zT4i5OQH
+         czyiNq+uFO6cGRDKUE2rCPkKOLxAxLqoLRpcQ/uA1g3ZUDLGtqUNp6RFcDu4AbU0e8fY
+         KqkZS1lI+fdy90NvlaVPglUzNlxWIrthSeVPMKt9kLvjdd+hs3o1FdwqWi0WbI2I2VAE
+         p/JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H9NFd0yHlWGmdk/EMdYVrUqJ2vOLGczXKpbxrO9cBaM=;
+        b=IWl7uamd5swqdDMs0kVlgimq50iLQtR/SHK0+xVE+FP+Zx8jIHA6ZVbgmFdG4gJpmA
+         sacs4tKuTt5s1sm0cdLN45Tvx/dyomylUPTlwq061P+b6+ubBSz7cW+sThIaNdRTq144
+         CwR0a3OdHl29IohabX2Q0quU2MBOoIXsD1MQuKgEqzeUQ0O9j4MPZutvdEeGTX9A1QNF
+         F14zY5Gt6f4UrjEp90u+6yKsNBJfrmj96muELdGDfNiq5Lg4PB3J/hCPO0TUP++6EfTu
+         Sy246QGR/2JkeX96pqaPPIyQ9QiY0ObuYqHmxG5HntgBAuFp/vjUNH3URorFLPE1UJrC
+         roxA==
+X-Gm-Message-State: AOAM530wD0wbwl0VlEf7D1aCaOxlQhJFvWJHWlOw4rf9wmlQSeu2jCs6
+        CzE9z5RlVQgnJFBdfSGfGpQlJA==
+X-Google-Smtp-Source: ABdhPJyGbmCuym3Nq9WvLw7q9NvhV/jtJ2jDr9IOuxTqLV6KU5lEVPsyp3uWaVf/cbyx7wDkA7kjDQ==
+X-Received: by 2002:ad4:404b:: with SMTP id r11mr21375700qvp.44.1590507952570;
+        Tue, 26 May 2020 08:45:52 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:8152])
+        by smtp.gmail.com with ESMTPSA id a27sm23969qtc.92.2020.05.26.08.45.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 08:45:51 -0700 (PDT)
+Date:   Tue, 26 May 2020 11:45:28 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH mmotm] mm/swap: fix livelock in __read_swap_cache_async()
+Message-ID: <20200526154528.GA850116@cmpxchg.org>
+References: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d980935c-fecc-9682-7dab-bdcf33c12a9c@suse.cz>
-X-ClientProxiedBy: BY3PR10CA0025.namprd10.prod.outlook.com
- (2603:10b6:a03:255::30) To SN6PR1501MB4141.namprd15.prod.outlook.com
- (2603:10b6:805:e3::14)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:c3d5) by BY3PR10CA0025.namprd10.prod.outlook.com (2603:10b6:a03:255::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.29 via Frontend Transport; Tue, 26 May 2020 15:45:10 +0000
-X-Originating-IP: [2620:10d:c090:400::5:c3d5]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40feedb6-dfbd-4a05-a03a-08d8018bc668
-X-MS-TrafficTypeDiagnostic: SN6PR1501MB4110:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR1501MB411077196569E02673F26225BEB00@SN6PR1501MB4110.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 041517DFAB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vXFo+66C2Z2Ow5Fx2AyvL+MrqzNvID85rUjJBOUtuze3DI7aBMHrqCL++50am/K/Sj0EpXKFahm8A8fVt0sibhzjjalM3Yai3iF3umomXqLCJBabNFWwewSFzCUyuDBocJwitaS0ODS1xTj3gE9YgLusmuHYM208jz5Yys0NcUfCRDRiLtquQg9KsY8baavv+4iA0GAEfl4NMcGkdAys4OECfQIeWEcaWxniIPOid0EDbjtw4UvAE7D479pQ77lM74tQ6wWjw2K+dBfzeC2o7mEt6Bm7S7IwmTBPPdQdluV72d18cfEbd5gauZk8lWVaBXNomUUw6gLg5ggbRI1jTA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB4141.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(39860400002)(136003)(396003)(9686003)(55016002)(316002)(33656002)(54906003)(8676002)(5660300002)(15650500001)(4326008)(86362001)(8936002)(1076003)(2906002)(53546011)(6506007)(186003)(16526019)(478600001)(6916009)(7696005)(66476007)(52116002)(66556008)(66946007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: pGbhUO5r49vXSWrdKh8XzEyG/TKGEhxn3H3zMOW58hySv2PwbrfKV38OK9hZV5z4G9pBt5r3w1JAkz6qZYtDA21W6oWe0YSf9h8FPvsqM9BL7yEXc1tLcTk/eq6DDQfvbmGWCVKXJxgbetYzczmlGHvMdoKnyS71R7RRC66gtPDL4Lke20U1k38tE17JtyxL4VyI68xrh4490LbVSksgRkdT0+tbU0wpTZxz6RwuT5d7hTBBaKqCrxMrUtuiTBXPxhaOGofFyhFV3rSkrdLsLlPwAj/BAYLiX/zUNhM/sJlOcayuLtAMyGA4F8NWL5LGF55Xyfkdi0JqN2Va7ignCzo6LLXkxWmIVi+2gY0nroW3ejNzAd5zKw8/4Zj9rJtWzgW9n+lEKc/oEAUTfH3KySuQKefPPcjcThZn/7IBRGXtRd+TlPrGIGtG4l1F0MwL8YYupTH1emv+uraUF3OHhH/uu3N4e1+xreQF9MU/zJNkRVSikBaLT++PY2RkqepsoHSVVKHrSeNHWAG+Gpa2TA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40feedb6-dfbd-4a05-a03a-08d8018bc668
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 15:45:13.5460
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ey+qLwhARDOfqo6KF/4L9LYnXBZ3C7t+RoYLRQeoDkok5Dx5CCxpiGCsM6U2fQcG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR1501MB4110
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 mlxscore=0 bulkscore=0
- suspectscore=2 cotscore=-2147483648 priorityscore=1501 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260121
-X-FB-Internal: deliver
+In-Reply-To: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 05:24:46PM +0200, Vlastimil Babka wrote:
-> On 4/22/20 10:47 PM, Roman Gushchin wrote:
-> > Add some tests to cover the kernel memory accounting functionality.
-> > These are covering some issues (and changes) we had recently.
-> > 
-> > 1) A test which allocates a lot of negative dentries, checks memcg
-> > slab statistics, creates memory pressure by setting memory.max
-> > to some low value and checks that some number of slabs was reclaimed.
-> > 
-> > 2) A test which covers side effects of memcg destruction: it creates
-> > and destroys a large number of sub-cgroups, each containing a
-> > multi-threaded workload which allocates and releases some kernel
-> > memory. Then it checks that the charge ans memory.stats do add up
-> > on the parent level.
-> > 
-> > 3) A test which reads /proc/kpagecgroup and implicitly checks that it
-> > doesn't crash the system.
-> > 
-> > 4) A test which spawns a large number of threads and checks that
-> > the kernel stacks accounting works as expected.
-> > 
-> > 5) A test which checks that living charged slab objects are not
-> > preventing the memory cgroup from being released after being deleted
-> > by a user.
-> > 
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > ---
-> >  tools/testing/selftests/cgroup/.gitignore  |   1 +
-> >  tools/testing/selftests/cgroup/Makefile    |   2 +
-> >  tools/testing/selftests/cgroup/test_kmem.c | 382 +++++++++++++++++++++
-> >  3 files changed, 385 insertions(+)
-> >  create mode 100644 tools/testing/selftests/cgroup/test_kmem.c
-> > 
-> > diff --git a/tools/testing/selftests/cgroup/.gitignore b/tools/testing/selftests/cgroup/.gitignore
-> > index aa6de65b0838..84cfcabea838 100644
-> > --- a/tools/testing/selftests/cgroup/.gitignore
-> > +++ b/tools/testing/selftests/cgroup/.gitignore
-> > @@ -2,3 +2,4 @@
-> >  test_memcontrol
-> >  test_core
-> >  test_freezer
-> > +test_kmem
-> > \ No newline at end of file
-> > diff --git a/tools/testing/selftests/cgroup/Makefile b/tools/testing/selftests/cgroup/Makefile
-> > index 967f268fde74..4794844a228e 100644
-> > --- a/tools/testing/selftests/cgroup/Makefile
-> > +++ b/tools/testing/selftests/cgroup/Makefile
-> > @@ -6,11 +6,13 @@ all:
-> >  TEST_FILES     := with_stress.sh
-> >  TEST_PROGS     := test_stress.sh
-> >  TEST_GEN_PROGS = test_memcontrol
-> > +TEST_GEN_PROGS = test_kmem
+On Thu, May 21, 2020 at 10:56:20PM -0700, Hugh Dickins wrote:
+> I've only seen this livelock on one machine (repeatably, but not to
+> order), and not fully analyzed it - two processes seen looping around
+> getting -EEXIST from swapcache_prepare(), I guess a third (at lower
+> priority? but wanting the same cpu as one of the loopers? preemption
+> or cond_resched() not enough to let it back in?) set SWAP_HAS_CACHE,
+> then went off into direct reclaim, scheduled away, and somehow could
+> not get back to add the page to swap cache and let them all complete.
 > 
-> Should be +=
+> Restore the page allocation in __read_swap_cache_async() to before
+> the swapcache_prepare() call: "mm: memcontrol: charge swapin pages
+> on instantiation" moved it outside the loop, which indeed looks much
+> nicer, but exposed this weakness.  We used to allocate new_page once
+> and then keep it across all iterations of the loop: but I think that
+> just optimizes for a rare case, and complicates the flow, so go with
+> the new simpler structure, with allocate+free each time around (which
+> is more considerate use of the memory too).
 > 
-> >  TEST_GEN_PROGS += test_core
-> >  TEST_GEN_PROGS += test_freezer
-> >  
-> >  include ../lib.mk
-> >  
-> >  $(OUTPUT)/test_memcontrol: cgroup_util.c ../clone3/clone3_selftests.h
-> > +$(OUTPUT)/test_kmem: cgroup_util.c ../clone3/clone3_selftests.h
-> >  $(OUTPUT)/test_core: cgroup_util.c ../clone3/clone3_selftests.h
-> >  $(OUTPUT)/test_freezer: cgroup_util.c ../clone3/clone3_selftests.h
-> > diff --git a/tools/testing/selftests/cgroup/test_kmem.c b/tools/testing/selftests/cgroup/test_kmem.c
-> > new file mode 100644
-> > index 000000000000..5bc1132fec6b
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/cgroup/test_kmem.c
-> > @@ -0,0 +1,382 @@
-> ...
-> > +/*
-> > + * This test allocates 100000 of negative dentries with long names.
-> > + * Then it checks that "slab" in memory.stat is larger than 1M.
-> > + * Then it sets memory.high to 1M and checks that at least 1/2
-> > + * of slab memory has been reclaimed.
-> > + */
-> > +static int test_kmem_basic(const char *root)
-> > +{
-> > +	int ret = KSFT_FAIL;
-> > +	char *cg = NULL;
-> > +	long slab0, slab1, current;
-> > +
-> > +	cg = cg_name(root, "kmem_basic_test");
-> > +	if (!cg)
-> > +		goto cleanup;
-> > +
-> > +	if (cg_create(cg))
-> > +		goto cleanup;
-> > +
-> > +	if (cg_run(cg, alloc_dcache, (void *)100000))
-> > +		goto cleanup;
-> > +
-> > +	slab0 = cg_read_key_long(cg, "memory.stat", "slab ");
-> > +	if (slab0 < (1 >> 20))
+> Fix the comment on the looping case, which has long been inaccurate:
+> it's not a racing get_swap_page() that's the problem here.
 > 
-> 1 << 20 ?
+> Fix the add_to_swap_cache() and mem_cgroup_charge() error recovery:
+> not swap_free(), but put_swap_page() to undo SWAP_HAS_CACHE, as was
+> done before; but delete_from_swap_cache() already includes it.
 > 
-> Anyway I was getting this:
-> not ok 1 test_kmem_basic
-> ok 2 test_kmem_memcg_deletion
-> ok 3 test_kmem_proc_kpagecgroup
-> not ok 4 test_kmem_kernel_stacks
-> ok 5 test_kmem_dead_cgroups
+> And one more nit: I don't think it makes any difference in practice,
+> but remove the "& GFP_KERNEL" mask from the mem_cgroup_charge() call:
+> add_to_swap_cache() needs that, to convert gfp_mask from user and page
+> cache allocation (e.g. highmem) to radix node allocation (lowmem), but
+> we don't need or usually apply that mask when charging mem_cgroup.
 > 
-> Adding some debugging into kmem_basic I found I get memory.stat == 0 at this
-> point thus it fails the fixed test (otherwise it was failing the <= 0 test after
-> writing to memory.high). But it's just a VM spinned by virtme which has a very
-> simple init, so perhaps things are not as initialized as expected.
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> ---
 
-Hm, it's strange, do you have any values in memory.stat::slab for any cgroups?
-Or can you send me your config (and kvm setup), I'll take a look.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Btw, thank you very much for reviewing the series! I appreciate it.
-I'll integrate your feedback into the next version, which I'm working on right now.
+> Mostly fixing mm-memcontrol-charge-swapin-pages-on-instantiation.patch
+> but now I see that mm-memcontrol-delete-unused-lrucare-handling.patch
+> made a further change here (took an arg off the mem_cgroup_charge call):
+> as is, this patch is diffed to go on top of both of them, and better
+> that I get it out now for Johannes look at; but could be rediffed for
+> folding into blah-instantiation.patch later.
 
-Thanks!
+IMO it's worth having as a separate change. Joonsoo was concerned
+about the ordering but I didn't see it. Having this sequence of
+changes on record would be good for later reference.
