@@ -2,82 +2,83 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D14C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C11C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA754207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FB620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590483623;
+	bh=STAm2RC3mfBdgq2YxbuI9GIS/umeg4tqG1qVVqpD+Qc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BIjJZ7f6EZRPnwklJHIVCAQM1fszme0iJOWz1+Q/Xtba7j0rPwVtj+mSy60auZgyt
+	 TuvcDX7SmBGt3eMvEtHNONtbXdQVPaYKT+eGyXlVFp3I/Skbo53fYZSQJb5hoGGaTT
+	 8L7idyABdo5MAVd0B0xbtmMwFvEwcb1AC3hJDGfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgEZI7k (ORCPT
+        id S1731645AbgEZJAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731428AbgEZI7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:59:39 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE12C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:59:39 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jdVPo-00084n-4S; Tue, 26 May 2020 10:58:28 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6FEEA100C2D; Tue, 26 May 2020 10:58:27 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V9 04/39] x86/entry: Provide idtentry_entry/exit_cond_rcu()
-In-Reply-To: <20200526082303.GB35238@gmail.com>
-References: <20200521200513.656533920@linutronix.de> <20200521202117.181397835@linutronix.de> <20200526082303.GB35238@gmail.com>
-Date:   Tue, 26 May 2020 10:58:27 +0200
-Message-ID: <87sgfnoyx8.fsf@nanos.tec.linutronix.de>
+        Tue, 26 May 2020 05:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731428AbgEZJAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 05:00:21 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A8FF205CB;
+        Tue, 26 May 2020 09:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590483621;
+        bh=STAm2RC3mfBdgq2YxbuI9GIS/umeg4tqG1qVVqpD+Qc=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=rFtS0fkfRy69LGOWRVQpHK8QF6CywMnRxb8BNmzOD7oO+D2sFnZx26Yv4LLE26WHg
+         XH1oC2r08o8SNr4a6CP2Cu9VwBGjPb2A3/HVXr3dxXq1y6XLx4UQxS+zBVBNBkubum
+         Gb2VT0WizmOl+rRE1I2herp8JjPa+t/n3TfmROfw=
+Date:   Tue, 26 May 2020 11:00:18 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Scott Shumate <scott.shumate@gmail.com>
+cc:     "Colenbrander, Roderick" <Roderick.Colenbrander@sony.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] HID: sony: Fix for broken buttons on DS3 USB dongles
+In-Reply-To: <e3496a04-3a96-f833-955f-69912a76bdac@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2005261059590.25812@cbobk.fhfr.pm>
+References: <46c1ab66-62d7-5dae-2f4d-7e722f1aff3a@gmail.com> <BY5PR13MB38264B60014D43193C53B38798BF0@BY5PR13MB3826.namprd13.prod.outlook.com> <e3496a04-3a96-f833-955f-69912a76bdac@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingo Molnar <mingo@kernel.org> writes:
-> * Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Any objections to the simplified/flattened control flow below?
+On Wed, 13 May 2020, Scott Shumate wrote:
 
-No, but you really don't want to do it at this point. Patch 7/39 is
-where you want to do that.
+> Hi Roderick,
+> 
+> The official DS3 has a Report Count(19) instead of Report Count(13) in the
+> exact same offset.  I have no idea what the silicon vendor for these dongles
+> was thinking but it's suspicious that the official count of 19 (0x13) turned
+> into 13 (0xd) in the knock-off.  It makes you wonder if the engineers confused
+> the decimal/hex numbers.
+> 
+> As buggy as all of these third-party devices are, I'm afraid relying on the
+> HID parser to get it right is only going to worse over time.  I do like your
+> idea of having each device register themselves.  It would be nice to have each
+> device provide a callback to decode its own report rather than handle a bunch
+> of special conditions and quirks in a unified report decoding function.  The
+> drawback of course is that its going to be a little more effort to maintain.
 
+I've added Cc: stable and Fixes: tag, and applied.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
 
