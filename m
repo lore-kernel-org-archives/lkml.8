@@ -2,125 +2,122 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B780C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49369207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5872073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:38:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UILgeofN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="qhIXUq65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbgEZKhs (ORCPT
+        id S1731939AbgEZKiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
+        Tue, 26 May 2020 06:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbgEZKhr (ORCPT
+        with ESMTP id S1728515AbgEZKiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:37:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72338C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:37:47 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z18so23814139lji.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aFAkmo/3cdktHlOyxHVabozodlR2MwWYHLZY7n5aStQ=;
-        b=UILgeofNTbfLZpZnyu/Ay1mqGxtWW0ZZ6cAk34g7BwBMaDbf0LVZBZvLI2QsLJvXnf
-         mnTqgr4ULcAja1d72GrBYGp5w50D+Ear2BwAp4oeG+59fubr+aYKgsVd3fhTiBFbl2cv
-         lAvY8OBUPsb+LxDm2LvDtVPIwSVWechKtvNbjBQ83zRdzz5UyFA0LoluoD+A3Y5Pjh1D
-         rcV4vuORjEFo6Q/v1YpEhqYjdJHfTN0Uiyt6quZ1LK0Dw0HCdKLlXN7B5SBZG6UQjI+f
-         pKrPSVmlEcjIdBUScKwavMUrxMsEPI3SSMJ+mELZkSrwTShPmdnEd/DBuf/tGGp7ob41
-         5/uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aFAkmo/3cdktHlOyxHVabozodlR2MwWYHLZY7n5aStQ=;
-        b=s4zeo/VQsy3pqxxVnFeDD3bWMQ98tQGWgE6H/9qX2m0SDAc1c1F1XooHmr0jXRB6O+
-         yvnNnWdbyyG6Te15Zu3u80VvcWwkihopD6wklTvfl7Xvzb/p0OnStx+ln/vM3yYJXPjP
-         h/Dt9k6pClmepC0wd4jHquw2hiUyFf6lmIKCR02INVPCIYprIxm5o0cRkWunqq96FlJS
-         wK9hjj2iWrGY7BOO1sivU/etanC/WBKOAGR+ngAgCNuHH0b0ndadDSSnlRYLcVtH+FXd
-         fHQj45NFOsVvg1sxFftgbgG0oZRGCMhNmG/l9zeMQuel7jU1/HbCDS1jmCi0mHjtN+Qn
-         iL5g==
-X-Gm-Message-State: AOAM530IHb8rXi1qGJa9iLFtjScTuSjLy+XmpazqV7o+2ObFh+LKA+Sc
-        2j3J3vSmkQztWk4Hlvhx4gxdr/TNgYM0PdhWhQfaIg==
-X-Google-Smtp-Source: ABdhPJy3vsaxtZM/4U4n6ugafhhOKAb4R7zuKibi+T/spqxAZX0b333XfjK5j3qjGwJqR3yQ/djKhbSNgw6Owtcl/E0=
-X-Received: by 2002:a2e:2204:: with SMTP id i4mr338122lji.110.1590489465850;
- Tue, 26 May 2020 03:37:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200525115235.5405-1-maxim.uvarov@linaro.org>
- <20200525115235.5405-3-maxim.uvarov@linaro.org> <7de3fea9-cd88-4dbf-aa27-3cb188fd6e85@forissier.org>
- <CAD8XO3amGVeyn9qsWE-AyGM=e36ubwxC4tiwGMVHYBL6E46ZhQ@mail.gmail.com> <4be64892-e027-a58d-09f5-0450088292f6@forissier.org>
-In-Reply-To: <4be64892-e027-a58d-09f5-0450088292f6@forissier.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 26 May 2020 16:07:34 +0530
-Message-ID: <CAFA6WYN7d=wEY_4wRmG4p5dBHHL1+0u8i5=uf6xZgv1UJsSgEA@mail.gmail.com>
-Subject: Re: [Tee-dev] [PATCHv3 2/3] optee: use uuid for sysfs driver entry
-To:     Jerome Forissier <jerome@forissier.org>
-Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tue, 26 May 2020 06:38:06 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468C4C03E97E;
+        Tue, 26 May 2020 03:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DcCPTegeL4/9yo2vCU/JGoVKdudEoFYRZ1hgMcX0JO0=; b=qhIXUq65KKmkwLWRnRnI9CLOIS
+        rD3r9RUkwcBrzCVqh8UlmI4LPMGuYe0mhot5T8qAOpfEpmpCQmJt5AMH+nKfagIPpkJRMleng1mxz
+        OyTK+NFKACihHd75NOPNlfEPWMGrMNPGsC1CL0dV/C0BrRk4VRNMqcAb0Anc8TK6hbWNnDiue89PQ
+        VT5+lRx38B/PrsaAuVranD0BLfTnG7SmrJxOOM7zDIHSsL7XlSdPJ4LJ5kMngek2ugR4+s3p7omsh
+        BmQoIVwFO4bL2f0m9dY/lEGh6ygghp/tRCaOp54B/zfoU6JcRyRvvI0pYLHODI1ez2TMXOONr8GyV
+        fwZhjEgQ==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:58843 helo=[192.168.10.61])
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1jdWyA-00012X-Db; Tue, 26 May 2020 12:38:02 +0200
+Subject: Re: [PATCH v5 6/8] drm/panel: Add ilitek ili9341 panel driver
+To:     dillon min <dillon.minfei@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        peterhuewe@gmx.de
-Content-Type: text/plain; charset="UTF-8"
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
+ <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com>
+ <CAHp75VebSZa6mwAETnM0t42RQCp4iM6_SNjmy3TB48ixsGKV8g@mail.gmail.com>
+ <CAL9mu0+jmcivC6zAXxK0-oXy3n44pAU1QGD7BDq=CT2D7twROQ@mail.gmail.com>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <c085e8f5-f626-28a9-1d3f-a1c277ec5052@tronnes.org>
+Date:   Tue, 26 May 2020 12:38:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAL9mu0+jmcivC6zAXxK0-oXy3n44pAU1QGD7BDq=CT2D7twROQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 at 21:24, Jerome Forissier <jerome@forissier.org> wrote:
->
->
->
-> On 5/25/20 3:36 PM, Maxim Uvarov wrote:
-> > On Mon, 25 May 2020 at 15:10, Jerome Forissier <jerome@forissier.org> wrote:
-> >>
-> >>
-> >>
-> >> On 5/25/20 1:52 PM, Maxim Uvarov wrote:
-> >>> Optee device names for sysfs needed to be unique
-> >>
-> >> s/Optee/OP-TEE/
-> >> s/needed/need/
-> >>
-> >>> and it's better if they will mean something. UUID for name
-> >>> looks like good solution:
-> >>> /sys/bus/tee/devices/optee-clnt-<uuid>
-> >>
-> >> How about mentioning it is the UUID of the Trusted Application on the
-> >> TEE side?
-> >>
-> >
-> > Jerome, do you think optee-ta-<uuid> is more suitable here?
->
-> Yes, a bit better I think. More "self explanatory"... kind of :)
->
 
-+1
 
-> Is it possible to have several devices bound to the same TA? I think
-> nothing forbids this although we may not have any use case for now...
->
+Den 26.05.2020 11.08, skrev dillon min:
+> Hi Andy,
+> 
+> Thanks for input.
+> 
+> On Tue, May 26, 2020 at 3:46 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>>
+>> On Mon, May 25, 2020 at 6:46 AM <dillon.minfei@gmail.com> wrote:
+>>>
+>>> From: dillon min <dillon.minfei@gmail.com>
+>>>
+>>>     This driver combine tiny/ili9341.c mipi_dbi_interface driver
+>>>     with mipi_dpi_interface driver, can support ili9341 with serial
+>>>     mode or parallel rgb interface mode by register configuration.
+>>
+>> Noralf told once that this driver should be unified with mi0283qt.c.
+>>
+>> So, what should we do here?
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+> 
+> from sam's suggestion, we can't setup two drivers to support one panel
+> in the tree. so, i copy the mipi dbi part from tiny/ili9341.c. to this driver
+> from register settings and dts binding is keep the same to tiny/ili9341.c.
+> 
+> so, in my opinion if tiny/ili9341.c is unified with mi0283qt.c, this
+> driver should be
+> too.
+> 
 
-A single TA is represented via a single device represented via UUID on
-the TEE bus. And I can't think of a scenario where the user may not
-want to split the TA so as to support a particular driver in Linux.
+There's a discussion about MIPI DBI panels here:
 
--Sumit
+MIPI DSI, DBI, and tinydrm drivers
+https://lists.freedesktop.org/archives/dri-devel/2020-May/267031.html
 
-> --
-> Jerome
-> _______________________________________________
-> Tee-dev mailing list
-> Tee-dev@lists.linaro.org
-> https://lists.linaro.org/mailman/listinfo/tee-dev
+Noralf.
+
+> thanks.
+> 
+> best regards,
+> 
+> Dillon,
+> 
