@@ -2,114 +2,272 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0631C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D780C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F293208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590524159;
-	bh=Pdby3gr/3jgSVdOYxfNGxNR2pYsSdQiVnkueqiY4dvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h3mNRxeoJLHqLAaT0EFszsgCh9bHo93vfO6TYctUoYwhsTNgGDR78gXTjQeq+UdhE
-	 ue/kyT2KACOHUOqndiXxI7O46L2RNm8TgTUMduZ34OimvwEAYlP7+QqZ5aZFcPKXXw
-	 VjiPtytr1DJ9dwFbuY0A57lYAuE0oVpqhx/Kw2RE=
+	by mail.kernel.org (Postfix) with ESMTP id 497852088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7OGT7lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390965AbgEZUP7 (ORCPT
+        id S2391031AbgEZUQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 16:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
+        Tue, 26 May 2020 16:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389565AbgEZUP6 (ORCPT
+        with ESMTP id S2390995AbgEZUQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 16:15:58 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8D3C03E96D;
-        Tue, 26 May 2020 13:15:58 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x29so4098512qtv.4;
-        Tue, 26 May 2020 13:15:58 -0700 (PDT)
+        Tue, 26 May 2020 16:16:02 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15E3C03E96D;
+        Tue, 26 May 2020 13:16:01 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n141so9641695qke.2;
+        Tue, 26 May 2020 13:16:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OIlePaEo2DB2lWCSsF6hOGAO/zJmXGR+8z88QbPZwuA=;
-        b=vGsBr5wQpHw68zyoZJvgzHNbkgx9psh74mtNJxqpEOgwrQpmej8EZzHAX4XhlgkBAw
-         LMMIEgnCRPb4utbn/CnS0mmTr+9tLCJAcYDlmkThNex0SAFcxXvxSps/IwKCuihbUAKw
-         /YcMZCmkST4MESr2kDzOSDrPgMTVh1fkmousvPmqj4Hy3X3bCPQ3tan68m6KlRjj6Vfw
-         lyXF9bpOir119aygoHP9wIQ4fbD1LqHyTM0finKJh1dqqGmjdDn+ChV2eLSCqAIhqsiL
-         PW+Vqyz2HPxXk9Fl5HlmTArOGH2iJoMyRZoYlGJgHisGrNuaCiLCovFib5xYjl8eju23
-         E5Vw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OPSTz3+9sL2j3CNpWrd73Z+W3szJ+Rl89CpGrZfEGXY=;
+        b=D7OGT7lwvBc9ui6tQG2wQjKXvF4bduIo/Gh4TwJYBME2EKlurLMFbr9vrt9hpc9RFI
+         GWZNCavsf9YAg3OvTW+qXMOQtr9o/CzG8k8cEhSzF7XDHjoI3zsTr8DhfDLuD28GNdxy
+         +RG5BQlpeQ+7ua+bb194hjapymfbrlv27YmsHDLT7G8dsuDmb+QiJglndoCNk4mHxmX5
+         4EFAQczSFX3MRNZLtEp87sdxpg4KWoD/9xgcHLcUSRFKtj9QQcIsXeUH2aVuEL5kEkdm
+         6uqq63WTVb7uPGOjb8Y6+Zj/S02Yw/yRwdCg1pwcUSHc1FC6tol2aZP7Cip/lyWCxwwi
+         qJpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=OIlePaEo2DB2lWCSsF6hOGAO/zJmXGR+8z88QbPZwuA=;
-        b=G3Tubp4O6NyRlMp5HODukT/RmnuLxpnnTsxzEpImLqwAD8jTDmnb1NCxfC/yZWRVlx
-         6SOpey42TZiZ3VHsOqQ1MjFrKL9NuNKQU/lSVMc+6Rasmt6flDJS6ldQEsmIQ8dcocKq
-         WdmhI7tRXSsmIqX94PdcIx71kkXkl7bIxBRze06jC+iwknfyE6nBRl1KW2fCZ7gsjVR1
-         J0JyQyMdwGgYuvts8VfG4Mx+eo3ujlBDooN7ZcLGr8b1nNM+0K1eUT1djToy6cAFUmWa
-         YZ+t2/IRIVtcjq6T3E3BNNyf7gAS2P/mbDVUpM1QUu3Mjl5kuvHEPabCaLt5k+Nf7pKD
-         BL4g==
-X-Gm-Message-State: AOAM530MGvst9Tk6MMf/GDbGp+j4x4jI/sq6UnNasBPBo+SjYcOwKNHJ
-        tlTS79jkaE0YirVI3nVLZks=
-X-Google-Smtp-Source: ABdhPJwFsA+W7dNO8mOZJWz3XFO0b2jYFQzH2q6iPEOBfPshIJIwCkAhbjiGdUBp1YGreDe/vpnRNw==
-X-Received: by 2002:ac8:260b:: with SMTP id u11mr626092qtu.380.1590524157306;
-        Tue, 26 May 2020 13:15:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:85c0])
-        by smtp.gmail.com with ESMTPSA id d7sm518184qkk.26.2020.05.26.13.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 13:15:56 -0700 (PDT)
-Date:   Tue, 26 May 2020 16:15:54 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Boris Burkov <boris@bur.io>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH cgroup/for-5.8] cgroup: add cpu.stat file to root cgroup
-Message-ID: <20200526201554.GH83516@mtj.thefacebook.com>
-References: <20200526200800.3969430-1-boris@bur.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OPSTz3+9sL2j3CNpWrd73Z+W3szJ+Rl89CpGrZfEGXY=;
+        b=lBRYHmhK0lq/LwELzafmXT7xTDdEOjnDfrUW+dPXr8qkM/bKyEtX1GMcX2Ieqnlws5
+         O9uJOmNuEstYC2jD03hWB6Jq6oy9/YqfMfVX3SX4CtEcxvguBwRZgGTKtTKmX2J3HZuE
+         Urpcjv01jxfKmsgVjiI030e5PxIOdxisLFJ0/rUzK8vrZckDXTDK5t65c6VlBPDKNXMd
+         +/p4jbtXnBIY0W7dnsmzmQPc2CtbgiX0QSsn2fY2Ob9U9QzFAHNFFWdfOFyTV0WjZiEn
+         RU6bEIgODfiijcXLMJZG+A6MYpjBoyQGwL/KKRRmWOztNp2YFtN1CqOif5nGDDEP3TxG
+         C8Cw==
+X-Gm-Message-State: AOAM530qdSzJVISNrJT8sEb8Ijvl05UrMZkHu7SsS/3jRAJHNnD8l77C
+        lHir1UDAW/aovPRht9oMxOSEZMyiQG0/G4rCKKM=
+X-Google-Smtp-Source: ABdhPJy5uHT1787SR+PrHNYauXfRq8ltIDeLGSPFWzi22Fq05bz0Li/ElEv6zxIqs6ZD25P328y26fcrZ1KcatNwfYU=
+X-Received: by 2002:a37:a89:: with SMTP id 131mr635420qkk.92.1590524161143;
+ Tue, 26 May 2020 13:16:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526200800.3969430-1-boris@bur.io>
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
+ <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com>
+ <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com> <CAEf4BzajE6jCkbBQ+f0cG=Y+vAEPWGNhfOMFVVhoDZWjNV-oGA@mail.gmail.com>
+ <d1113b47-a920-c0e4-9aa4-88781368a26f@gmail.com>
+In-Reply-To: <d1113b47-a920-c0e4-9aa4-88781368a26f@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 26 May 2020 13:15:49 -0700
+Message-ID: <CAEf4BzZ0mCmUomn0poLk_ADJs9J-fZ0Um6QEqwg1TUL86TtgUg@mail.gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     luc.maranget@inria.fr, Andrii Nakryiko <andriin@fb.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, May 26, 2020 at 3:50 AM Akira Yokosawa <akiyks@gmail.com> wrote:
+>
+> On Mon, 25 May 2020 16:31:05 -0700, Andrii Nakryiko wrote:
+> > On Mon, May 25, 2020 at 3:01 PM Akira Yokosawa <akiyks@gmail.com> wrote=
+:
+> >>
+> [...]
+> >> Yes, that should work.
+> >
+> > Ok, assigning to zero didn't work (it still complained about
+> > uninitialized read), but using a separate int *lenFail to assign to
+> > rLenPtr worked. Curiously, if I used rLenPtr =3D len1; in error case, i=
+t
+> > actually takes a bit more time to verify.
+> >
+> > So I've converted everything else as you suggested. I compiled latest
+> > herd7 and it doesn't produce any warnings. But it's also extremely
+> > slow, compared to the herd7 that I get by default. Validating simple
+> > 1p1c cases takes about 2.5x times longer (0.03s vs 0.07), but trying
+> > to validate 2p1c case, which normally validates in 42s (unbounded) and
+> > 110s (bounded), it took more than 20 minutes and hasn't finished,
+> > before I gave up. So I don't know what's going on there...
+>
+> herdtools7 has recently been heavily restructured.
+> On the performance regression, I must defer to Luc.
+>
+> Luc, do you have any idea?
+>
+> >
+> > As for klitmus7, I managed to generate everything without warnings,
+> > but couldn't make it build completely due to:
+> >
+> > $ make
+> > make -C /lib/modules/5.6.13-01802-g938d64da97c6/build/
+>
+> So you are on Linux 5.6.x which requires cutting-edge klitmus7.
+>
 
-On Tue, May 26, 2020 at 01:08:00PM -0700, Boris Burkov wrote:
-> Currently, the root cgroup does not have a cpu.stat file. Add one which
-> is consistent with /proc/stat to capture global cpu statistics that
-> might not fall under cgroup accounting.
-> 
-> We haven't done this in the past because the data are already presented
-> in /proc/stat and we didn't want to add overhead from collecting root
-> cgroup stats when cgroups are configured, but no cgroups have been
-> created.
-> 
-> By keeping the data consistent with /proc/stat, I think we avoid the
-> first problem, while improving the usability of cgroups stats.
-> We avoid the second problem by computing the contents of cpu.stat from
-> existing data collected for /proc/stat anyway.
-> 
-> Signed-off-by: Boris Burkov <boris@bur.io>
-> Suggested-by: Tejun Heo <tj@kernel.org>
+Right, so I retried with the klitmus7 built from sources:
 
-If there are any objections, please holler. I'll wait a few days and
-route it through the cgroup tree.
+$ klitmus7 -version
 
-Thanks.
+                                    7.55+01(dev)
 
--- 
-tejun
+Still can't compile, though task_struct problem went away, proc_ops
+error is still present:
+
+$ make
+grep: /lib/modules/5.7.0-rc5-02014-gb16540c748e9/build/include/linux/proc_f=
+s.h:
+No such file or directory
+make -C /lib/modules/5.7.0-rc5-02014-gb16540c748e9/build/
+M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules modules
+make[1]: Entering directory `/data/users/andriin/linux-build/fb-config'
+make[2]: Entering directory `/data/users/andriin/linux-build/default-x86_64=
+'
+grep: /lib/modules/5.7.0-rc5-02014-gb16540c748e9/build/include/linux/proc_f=
+s.h:
+No such file or directory
+  CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodules/litm=
+us000.o
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:
+In function =E2=80=98litmus_init=E2=80=99:
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:62=
+1:67:
+error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from incompatibl=
+e pointer
+type [-Werror=3Dincompatible-pointer-types]
+   struct proc_dir_entry *litmus_pde =3D
+proc_create("litmus",0,NULL,&litmus_proc_ops);
+
+^~~~~~~~~~~~~~~~
+In file included from
+/home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.c:15=
+:
+/data/users/andriin/linux/include/linux/proc_fs.h:79:24: note:
+expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is of type =
+=E2=80=98const
+struct file_operations *=E2=80=99
+ struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
+                        ^~~~~~~~~~~
+cc1: some warnings being treated as errors
+make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodules/=
+litmus000.o]
+Error 1
+make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodules]
+Error 2
+make[2]: Leaving directory `/data/users/andriin/linux-build/default-x86_64'
+make[1]: *** [sub-make] Error 2
+make[1]: Leaving directory `/data/users/andriin/linux-build/fb-config'
+make: *** [all] Error 2
+
+Don't know if I'm missing some headers or whatever.
+
+> > M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules module=
+s
+> > make[1]: Entering directory `/data/users/andriin/linux-build/fb-config'
+> > make[2]: Entering directory `/data/users/andriin/linux-build/default-x8=
+6_64'
+> >   CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodules/=
+litmus000.o
+> > /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
+c:
+> > In function =E2=80=98zyva=E2=80=99:
+> > /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
+c:507:12:
+> > warning: ISO C90 forbids variable length array =E2=80=98th=E2=80=99 [-W=
+vla]
+> >      struct task_struct *th[nth];
+> >             ^~~~~~~~~~~
+> > /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
+c:
+> > In function =E2=80=98litmus_init=E2=80=99:
+> > /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
+c:605:67:
+> > error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from incompa=
+tible pointer
+> > type [-Werror=3Dincompatible-pointer-types]
+> >    struct proc_dir_entry *litmus_pde =3D
+> > proc_create("litmus",0,NULL,&litmus_proc_fops);
+> >
+> > ^~~~~~~~~~~~~~~~~
+> > In file included from
+> > /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
+c:15:
+> > /data/users/andriin/linux-fb/include/linux/proc_fs.h:64:24: note:
+> > expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is of t=
+ype =E2=80=98const
+> > struct file_operations *=E2=80=99
+> >  struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+> > struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
+> >                         ^~~~~~~~~~~
+> > cc1: some warnings being treated as errors
+> > make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodu=
+les/litmus000.o]
+> > Error 1
+> > make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodu=
+les]
+> > Error 2
+> > make[2]: Leaving directory `/data/users/andriin/linux-build/default-x86=
+_64'
+> > make[1]: *** [sub-make] Error 2
+> > make[1]: Leaving directory `/data/users/andriin/linux-build/fb-config'
+> > make: *** [all] Error 2
+> >
+>
+> These errors suggest the klitmus7 you used is version 7.52 or some such.
+> You said you have built herd7 from the source.  Have you also built klitm=
+us7?
+
+I did, but it wasn't in the PATH. I retried with latest klitmus7 and
+still run into problems.
+
+>
+> The up-to-date klitmus7 should generate code compatible with Linux 5.6.x.
+>
+> Could you try with the latest one?
+>
+>         Thanks, Akira
+>
+> >
+> > But at least it doesn't complain about atomic_t anymore. So anyways,
+> > I'm going to post updated litmus tests separately from BPF ringbuf
+> > patches, because Documentation/litmus-tests is not yet present in
+> > bpf-next.
+> >
+> >>
+> >> You can find a basic introduction of klitmus7 in tools/memory-model/RE=
+ADME.
+> >>
+> >>         Thanks, Akira
+> >>
+> >>>
+> >>>>
+> >>>> Please note that if you are on Linux 5.6 (or later), you need an up-=
+to-date
+> >>>> klitmus7 due to a change in kernel API.
+> >>>>
+> >>>> Any question is welcome!
+> >>>>
+> >>>>         Thanks, Akira
+> >>>>
+> >
+> > [...]
+> >
+>
