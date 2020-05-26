@@ -2,202 +2,115 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8284AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6406AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF3F20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7F02065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SAwBuIkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgEZSGx (ORCPT
+        id S2388499AbgEZSHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:06:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:13544 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgEZSGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:06:53 -0400
-IronPort-SDR: D247/DyVAw3Jld+4PYfjzqpA3IBef9yHI0COnLtBIHli/4ObJz255crzRj0jLe95Jwjkq1Y2/0
- fQkVhTGw+YIQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 11:06:52 -0700
-IronPort-SDR: q+pQDcn4f+N/hEXm8Qvt7pl3Xr3aIrKoloNX8RPGaEGmVHMomEVW9q5KhawnCFSUiDi4jKMJH/
- JNdh8L62gBFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="468395909"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga005.fm.intel.com with ESMTP; 26 May 2020 11:06:48 -0700
-Date:   Tue, 26 May 2020 11:06:48 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
-Message-ID: <20200526180648.GC35892@otc-nc-03>
-References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
- <20200504231936.2bc07fe3@x1.home>
- <20200505061107.GA22974@araj-mobl1.jf.intel.com>
- <20200505080514.01153835@x1.home>
- <20200505145605.GA13690@otc-nc-03>
- <20200505093414.6bae52e0@x1.home>
+        Tue, 26 May 2020 14:07:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbgEZSHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:07:15 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 546BBC03E96D;
+        Tue, 26 May 2020 11:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=WWC1kKHrVuEMdArPfAi+QV3k9NA3yhSI+2WZIe2uBMk=; b=SAwBuIkba3TDTbw9zVFFvtz/dV
+        dNQ36jvkyDBS2zQFDXQ6/W4n9iP4mnJ4Ls9dMtnni4Kx4rPwV6nduCEx4tSUsr21b3TU7zkk2gN/7
+        DeJYAR85x2SNaAOJqaha8kU653IRM+X4ixrtlAwg/xtqxkd23Fi81TVvzMTba9dj70sPSYe1hrOEY
+        78yNfsQnzMYwPENxSryuGQRvRd1Dai4sy7ItWz5u3Wfx4pvBEaSm+js24q5KBZVKQpKdJnTmvor9t
+        tMthAs3Dwu3rmZ+nQnm4ZcfaKqF35H0k2qAoA63i4mWQ09tTdqt3rW7iFwRX2LX9EsT1gEe+8fz3L
+        qqUM3qnA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jddyt-0004p4-1v; Tue, 26 May 2020 18:07:15 +0000
+Subject: Re: [PATCH] topology: Fix cpumask_of_node macro for
+ CONFIG_NEED_MULTIPLE_NODES=n
+To:     Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>
+References: <20200526174443.207610-1-linux@roeck-us.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <45fda375-3691-e722-000f-188dd13d2e0b@infradead.org>
+Date:   Tue, 26 May 2020 11:07:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200526174443.207610-1-linux@roeck-us.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200505093414.6bae52e0@x1.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-
-I was able to find better language in the IOMMU spec that gaurantees 
-the behavior we need. See below.
-
-
-On Tue, May 05, 2020 at 09:34:14AM -0600, Alex Williamson wrote:
-> On Tue, 5 May 2020 07:56:06 -0700
-> "Raj, Ashok" <ashok.raj@intel.com> wrote:
+On 5/26/20 10:44 AM, Guenter Roeck wrote:
+> The following compile error is seen in linux-next if
+> NUMA=n and CONFIG_NEED_MULTIPLE_NODES=n.
 > 
-> > On Tue, May 05, 2020 at 08:05:14AM -0600, Alex Williamson wrote:
-> > > On Mon, 4 May 2020 23:11:07 -0700
-> > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
-> > >   
-> > > > Hi Alex
-> > > > 
-> > > > + Joerg, accidently missed in the Cc.
-> > > > 
-> > > > On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote:  
-> > > > > On Mon,  4 May 2020 21:42:16 -0700
-> > > > > Ashok Raj <ashok.raj@intel.com> wrote:
-> > > > >     
-> > > > > > PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
-> > > > > > 
-> > > > > > PCIe 5.0 Specification.
-> > > > > > 6.12 Access Control Services (ACS)
-> > > > > > Implementation of ACS in RCiEPs is permitted but not required. It is
-> > > > > > explicitly permitted that, within a single Root Complex, some RCiEPs
-> > > > > > implement ACS and some do not. It is strongly recommended that Root Complex
-> > > > > > implementations ensure that all accesses originating from RCiEPs
-> > > > > > (PFs and VFs) without ACS capability are first subjected to processing by
-> > > > > > the Translation Agent (TA) in the Root Complex before further decoding and
-> > > > > > processing. The details of such Root Complex handling are outside the scope
-> > > > > > of this specification.
-> > > > > >   
-> > > > > 
-> > > > > Is the language here really strong enough to make this change?  ACS is
-> > > > > an optional feature, so being permitted but not required is rather
-> > > > > meaningless.  The spec is also specifically avoiding the words "must"
-> > > > > or "shall" and even when emphasized with "strongly", we still only have
-> > > > > a recommendation that may or may not be honored.  This seems like a
-> > > > > weak basis for assuming that RCiEPs universally honor this
-> > > > > recommendation.  Thanks,
-> > > > >     
-> > > > 
-> > > > We are speaking about PCIe spec, where people write it about 5 years ahead
-> > > > and every vendor tries to massage their product behavior with vague
-> > > > words like this..  :)
-> > > > 
-> > > > But honestly for any any RCiEP, or even integrated endpoints, there 
-> > > > is no way to send them except up north. These aren't behind a RP.  
-> > > 
-> > > But they are multi-function devices and the spec doesn't define routing
-> > > within multifunction packages.  A single function RCiEP will already be
-> > > assumed isolated within its own group.  
-> > 
-> > That's right. The other two devices only have legacy PCI headers. So 
-> > they can't claim to be RCiEP's but just integrated endpoints. The legacy
-> > devices don't even have a PCIe header.
-> > 
-> > I honestly don't know why these are groped as MFD's in the first place.
-> > 
-> > >    
-> > > > I did check with couple folks who are part of the SIG, and seem to agree
-> > > > that ACS treatment for RCiEP's doesn't mean much. 
-> > > > 
-> > > > I understand the language isn't strong, but it doesn't seem like ACS should
-> > > > be a strong requirement for RCiEP's and reasonable to relax.
-> > > > 
-> > > > What are your thoughts?   
-> > > 
-> > > I think hardware vendors have ACS at their disposal to clarify when
-> > > isolation is provided, otherwise vendors can submit quirks, but I don't
-> > > see that the "strongly recommended" phrasing is sufficient to assume
-> > > isolation between multifunction RCiEPs.  Thanks,  
-> > 
-> > You point is that integrated MFD endpoints, without ACS, there is no 
-> > gaurantee to SW that they are isolated.
-> > 
-> > As far as a quirk, do you think:
-> > 	- a cmdline optput for integrated endpoints, and RCiEP's suffice?
-> > 	  along with a compile time default that is strict enforcement
-> > 	- typical vid/did type exception list?
-> > 
-> > A more generic way to ask for exception would be scalable until we can stop
-> > those type of integrated devices. Or we need to maintain these device lists
-> > for eternity. 
+>   CC      drivers/hwmon/amd_energy.o
+> In file included from ../arch/x86/include/asm/cpumask.h:5:0,
+>                  from ../arch/x86/include/asm/msr.h:11,
+>                  from ../arch/x86/include/asm/processor.h:22,
+>                  from ../arch/x86/include/asm/cpu_device_id.h:16,
+>                  from ../drivers/hwmon/amd_energy.c:6:
+> ../drivers/hwmon/amd_energy.c: In function 'amd_energy_read':
+> ../include/asm-generic/topology.h:51:36: error:
+> 			void value not ignored as it ought to be
+>      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
+> ../include/linux/cpumask.h:618:72: note:
+> 			in definition of macro 'cpumask_first_and'
+>  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
+>                                                                         ^~~~~
+> ../drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro 'cpumask_of_node'
 > 
-> I don't think the language in the spec is anything sufficient to handle
-> RCiEP uniquely.  We've previously rejected kernel command line opt-outs
-> for ACS, and the extent to which those patches still float around the
-> user community and are blindly used to separate IOMMU groups are a
-> testament to the failure of this approach.  Users do not have a basis
-> for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
-> grouping, but the risk is entirely unknown.  A kconfig option is even
-> worse as that means if you consume a downstream kernel, the downstream
-> maintainers might have decided universally that isolation is less
-> important than functionality.
-
-We discussed this internally, and Intel vt-d spec does spell out clearly 
-in Section 3.16 Root-Complex Peer to Peer Considerations. The spec clearly
-calls out that all p2p must be done on translated addresses and therefore
-must go through the IOMMU.
-
-I suppose they should also have some similar platform gauranteed behavior
-for RCiEP's or MFD's *Must* behave as follows. The language is strict and
-when IOMMU is enabled in the platform, everything is sent up north to the
-IOMMU agent.
-
-3.16 Root-Complex Peer to Peer Considerations
-When DMA remapping is enabled, peer-to-peer requests through the
-Root-Complex must be handled
-as follows:
-• The input address in the request is translated (through first-level,
-  second-level or nested translation) to a host physical address (HPA).
-  The address decoding for peer addresses must be done only on the 
-  translated HPA. Hardware implementations are free to further limit 
-  peer-to-peer accesses to specific host physical address regions 
-  (or to completely disallow peer-forwarding of translated requests).
-• Since address translation changes the contents (address field) of the PCI
-  Express Transaction Layer Packet (TLP), for PCI Express peer-to-peer 
-  requests with ECRC, the Root-Complex hardware must use the new ECRC 
-  (re-computed with the translated address) if it decides to forward 
-  the TLP as a peer request.
-• Root-ports, and multi-function root-complex integrated endpoints, may
-  support additional peerto-peer control features by supporting PCI Express
-  Access Control Services (ACS) capability. Refer to ACS capability in 
-  PCI Express specifications for details.
-
-> to indicate where devices are isolated.  The hardware can do this
-> itself by implementing ACS, otherwise we need quirks.  I think we've
-> also generally been reluctant to accept quirks that provide a blanket
-> opt-out for a vendor because doing so is akin to trying to predict the
-> future (determining the behavior of all current and previous hardware
-> is generally a sufficiently impossible task already).  Perhaps if a
-> vendor has a published internal policy regarding RCiEP isolation and is
-> willing to stand by a quirk, there might be room to negotiate.  Thanks,
+> cpumask_of_node() is missing () around the 'node' parameter.
 > 
-> Alex
+> Fixes: b339752d054f ("cpumask: fix spurious cpumask_of_node() on non-NUMA multi-node configs")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+> ---
+>  include/asm-generic/topology.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
+> index 238873739550..5aa8705df87e 100644
+> --- a/include/asm-generic/topology.h
+> +++ b/include/asm-generic/topology.h
+> @@ -48,7 +48,7 @@
+>    #ifdef CONFIG_NEED_MULTIPLE_NODES
+>      #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
+>    #else
+> -    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
+> +    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
+>    #endif
+>  #endif
+>  #ifndef pcibus_to_node
+> 
+
+
+-- 
+~Randy
