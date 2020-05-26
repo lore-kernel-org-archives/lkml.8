@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2288C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A55C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E54A20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0144820776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521620;
-	bh=/y+QFQyJ/kREw8sHAXYswzLJNRZURqb3Y2G8HC42tgI=;
+	s=default; t=1590521625;
+	bh=O6m7d4JmFmQOQvDC8Pcbvpu1uaUd2naCs1xGgWdYlCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0splUd7rby5IcdpZ0wNbziJGcixDhMPVqrYzyqH2PH8GubBRNv9TAWZgmToJA6dLH
-	 ogejEo39qb2nTjtnE21VK2NxuCcNX+Arg8ISmX0yJovhKQiO8M1sG2N4cWXYl21rem
-	 jtZQzaaOl7LlpmfFmdn0uKGQaKpfVs/IzZYt3A0Q=
+	b=rwuwTLXy2rBu7Zq0HnzTdf5f1WpQu+Nwn3uk+CqIxjCKkPzbv3hq7pAbT74frKw6A
+	 ZauvNB4hGkXgCwTJNUu5xdqkLZG++X1+KZtJaLgg7nQPWIcOBQINWGXZZlWienMYRf
+	 pqd5b0wPdIk418PnhjhkQNROpoYJ41ITyPgj6jWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403817AbgEZTdj (ORCPT
+        id S2404274AbgEZTdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389732AbgEZS4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:08 -0400
+        id S2389705AbgEZS4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:56:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A802086A;
-        Tue, 26 May 2020 18:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50847208B6;
+        Tue, 26 May 2020 18:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519368;
-        bh=/y+QFQyJ/kREw8sHAXYswzLJNRZURqb3Y2G8HC42tgI=;
+        s=default; t=1590519362;
+        bh=O6m7d4JmFmQOQvDC8Pcbvpu1uaUd2naCs1xGgWdYlCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k0rEQ30L/fapCAZHWNYeiHWeKrBJlkeYPoTkt03eObRtJtCgb4PLu+L0onpzQ4TV1
-         yr3pw637llNIJ5qOAIxgKWGaxIhVAfckWqpdfbUMGL5Ni0H645vwN+kHAJpbz21hW3
-         v0vesIHM/XvDqm1it3Dza2u00H4EUMHBH0fDBBQQ=
+        b=H6Quc7gVAfUMX5EtuDQ6ssH1GpMw7uWfJqocw8hzSa2h9byQAuq4wCaF2hx6MxTLL
+         plFz5+IO1FTluUn0Yi5xhu1A6Y5f72PB4wbwV3lL+dbgSdwEoHvAFylW8i+3bvUCQx
+         +ZkPYlWZzGBoxsL6SXOQ3X/vcr7ndbEsg291Qug8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>,
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
+        Nicolas Schier <n.schier@avm.de>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 40/65] net: l2tp: deprecate PPPOL2TP_MSG_* in favour of L2TP_MSG_*
-Date:   Tue, 26 May 2020 20:52:59 +0200
-Message-Id: <20200526183919.654519563@linuxfoundation.org>
+Subject: [PATCH 4.4 38/65] l2tp: dont use l2tp_tunnel_find() in l2tp_ip and l2tp_ip6
+Date:   Tue, 26 May 2020 20:52:57 +0200
+Message-Id: <20200526183919.007164109@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -61,69 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Asbjørn Sloth Tønnesen <asbjorn@asbjorn.st>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 47c3e7783be4e142b861d34b5c2e223330b05d8a upstream.
+commit 8f7dc9ae4a7aece9fbc3e6637bdfa38b36bcdf09 upstream.
 
-PPPOL2TP_MSG_* and L2TP_MSG_* are duplicates, and are being used
-interchangeably in the kernel, so let's standardize on L2TP_MSG_*
-internally, and keep PPPOL2TP_MSG_* defined in UAPI for compatibility.
+Using l2tp_tunnel_find() in l2tp_ip_recv() is wrong for two reasons:
 
-Signed-off-by: Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
+  * It doesn't take a reference on the returned tunnel, which makes the
+    call racy wrt. concurrent tunnel deletion.
+
+  * The lookup is only based on the tunnel identifier, so it can return
+    a tunnel that doesn't match the packet's addresses or protocol.
+
+For example, a packet sent to an L2TPv3 over IPv6 tunnel can be
+delivered to an L2TPv2 over UDPv4 tunnel. This is worse than a simple
+cross-talk: when delivering the packet to an L2TP over UDP tunnel, the
+corresponding socket is UDP, where ->sk_backlog_rcv() is NULL. Calling
+sk_receive_skb() will then crash the kernel by trying to execute this
+callback.
+
+And l2tp_tunnel_find() isn't even needed here. __l2tp_ip_bind_lookup()
+properly checks the socket binding and connection settings. It was used
+as a fallback mechanism for finding tunnels that didn't have their data
+path registered yet. But it's not limited to this case and can be used
+to replace l2tp_tunnel_find() in the general case.
+
+Fix l2tp_ip6 in the same way.
+
+Fixes: 0d76751fad77 ("l2tp: Add L2TPv3 IP encapsulation (no UDP) support")
+Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Nicolas Schier <n.schier@avm.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/networking/l2tp.txt |    8 ++++----
- include/uapi/linux/if_pppol2tp.h  |   13 ++++++-------
- 2 files changed, 10 insertions(+), 11 deletions(-)
+ net/l2tp/l2tp_ip.c  |   22 ++++++++--------------
+ net/l2tp/l2tp_ip6.c |   23 ++++++++---------------
+ 2 files changed, 16 insertions(+), 29 deletions(-)
 
---- a/Documentation/networking/l2tp.txt
-+++ b/Documentation/networking/l2tp.txt
-@@ -177,10 +177,10 @@ setsockopt on the PPPoX socket to set a
+--- a/net/l2tp/l2tp_ip.c
++++ b/net/l2tp/l2tp_ip.c
+@@ -122,6 +122,7 @@ static int l2tp_ip_recv(struct sk_buff *
+ 	unsigned char *ptr, *optr;
+ 	struct l2tp_session *session;
+ 	struct l2tp_tunnel *tunnel = NULL;
++	struct iphdr *iph;
+ 	int length;
  
- The following debug mask bits are available:
+ 	if (!pskb_may_pull(skb, 4))
+@@ -180,23 +181,16 @@ pass_up:
+ 		goto discard;
  
--PPPOL2TP_MSG_DEBUG    verbose debug (if compiled in)
--PPPOL2TP_MSG_CONTROL  userspace - kernel interface
--PPPOL2TP_MSG_SEQ      sequence numbers handling
--PPPOL2TP_MSG_DATA     data packets
-+L2TP_MSG_DEBUG    verbose debug (if compiled in)
-+L2TP_MSG_CONTROL  userspace - kernel interface
-+L2TP_MSG_SEQ      sequence numbers handling
-+L2TP_MSG_DATA     data packets
+ 	tunnel_id = ntohl(*(__be32 *) &skb->data[4]);
+-	tunnel = l2tp_tunnel_find(net, tunnel_id);
+-	if (tunnel) {
+-		sk = tunnel->sock;
+-		sock_hold(sk);
+-	} else {
+-		struct iphdr *iph = (struct iphdr *) skb_network_header(skb);
+-
+-		read_lock_bh(&l2tp_ip_lock);
+-		sk = __l2tp_ip_bind_lookup(net, iph->daddr, 0, tunnel_id);
+-		if (!sk) {
+-			read_unlock_bh(&l2tp_ip_lock);
+-			goto discard;
+-		}
++	iph = (struct iphdr *)skb_network_header(skb);
  
- If enabled, files under a l2tp debugfs directory can be used to dump
- kernel state about L2TP tunnels and sessions. To access it, the
---- a/include/uapi/linux/if_pppol2tp.h
-+++ b/include/uapi/linux/if_pppol2tp.h
-@@ -17,6 +17,7 @@
+-		sock_hold(sk);
++	read_lock_bh(&l2tp_ip_lock);
++	sk = __l2tp_ip_bind_lookup(net, iph->daddr, 0, tunnel_id);
++	if (!sk) {
+ 		read_unlock_bh(&l2tp_ip_lock);
++		goto discard;
+ 	}
++	sock_hold(sk);
++	read_unlock_bh(&l2tp_ip_lock);
  
- #include <linux/types.h>
+ 	if (!xfrm4_policy_check(sk, XFRM_POLICY_IN, skb))
+ 		goto discard_put;
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -134,6 +134,7 @@ static int l2tp_ip6_recv(struct sk_buff
+ 	unsigned char *ptr, *optr;
+ 	struct l2tp_session *session;
+ 	struct l2tp_tunnel *tunnel = NULL;
++	struct ipv6hdr *iph;
+ 	int length;
  
-+#include <linux/l2tp.h>
+ 	if (!pskb_may_pull(skb, 4))
+@@ -193,24 +194,16 @@ pass_up:
+ 		goto discard;
  
- /* Structure used to connect() the socket to a particular tunnel UDP
-  * socket over IPv4.
-@@ -89,14 +90,12 @@ enum {
- 	PPPOL2TP_SO_REORDERTO	= 5,
- };
+ 	tunnel_id = ntohl(*(__be32 *) &skb->data[4]);
+-	tunnel = l2tp_tunnel_find(net, tunnel_id);
+-	if (tunnel) {
+-		sk = tunnel->sock;
+-		sock_hold(sk);
+-	} else {
+-		struct ipv6hdr *iph = ipv6_hdr(skb);
+-
+-		read_lock_bh(&l2tp_ip6_lock);
+-		sk = __l2tp_ip6_bind_lookup(net, &iph->daddr,
+-					    0, tunnel_id);
+-		if (!sk) {
+-			read_unlock_bh(&l2tp_ip6_lock);
+-			goto discard;
+-		}
++	iph = ipv6_hdr(skb);
  
--/* Debug message categories for the DEBUG socket option */
-+/* Debug message categories for the DEBUG socket option (deprecated) */
- enum {
--	PPPOL2TP_MSG_DEBUG	= (1 << 0),	/* verbose debug (if
--						 * compiled in) */
--	PPPOL2TP_MSG_CONTROL	= (1 << 1),	/* userspace - kernel
--						 * interface */
--	PPPOL2TP_MSG_SEQ	= (1 << 2),	/* sequence numbers */
--	PPPOL2TP_MSG_DATA	= (1 << 3),	/* data packets */
-+	PPPOL2TP_MSG_DEBUG	= L2TP_MSG_DEBUG,
-+	PPPOL2TP_MSG_CONTROL	= L2TP_MSG_CONTROL,
-+	PPPOL2TP_MSG_SEQ	= L2TP_MSG_SEQ,
-+	PPPOL2TP_MSG_DATA	= L2TP_MSG_DATA,
- };
+-		sock_hold(sk);
++	read_lock_bh(&l2tp_ip6_lock);
++	sk = __l2tp_ip6_bind_lookup(net, &iph->daddr, 0, tunnel_id);
++	if (!sk) {
+ 		read_unlock_bh(&l2tp_ip6_lock);
++		goto discard;
+ 	}
++	sock_hold(sk);
++	read_unlock_bh(&l2tp_ip6_lock);
  
- 
+ 	if (!xfrm6_policy_check(sk, XFRM_POLICY_IN, skb))
+ 		goto discard_put;
 
 
