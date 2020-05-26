@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A55C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D06C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0144820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC4A20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521625;
-	bh=O6m7d4JmFmQOQvDC8Pcbvpu1uaUd2naCs1xGgWdYlCc=;
+	s=default; t=1590521629;
+	bh=kBSF++gb6m4kTRiXsle1v76F4W+mwBGYsEFJVJcd0dA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwuwTLXy2rBu7Zq0HnzTdf5f1WpQu+Nwn3uk+CqIxjCKkPzbv3hq7pAbT74frKw6A
-	 ZauvNB4hGkXgCwTJNUu5xdqkLZG++X1+KZtJaLgg7nQPWIcOBQINWGXZZlWienMYRf
-	 pqd5b0wPdIk418PnhjhkQNROpoYJ41ITyPgj6jWU=
+	b=QEaeg8YvmBmOSnjzYUT8dIRH6pzs7Q2/44k+d3wvkfBWT4jnVpSMiscTv1NGA6yf2
+	 3lz80R295mXZ3Cml3ivA4YQC3kU+DrMdyNVVoG2G7WWAEfCYpxrhlQP+R13DEKJh5V
+	 aBXMsnUEPFI8gFx3ex+ch5tKsKgmWe2p84HNAYQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404274AbgEZTdn (ORCPT
+        id S2391577AbgEZTds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:33:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389705AbgEZS4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:03 -0400
+        id S2389678AbgEZSz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50847208B6;
-        Tue, 26 May 2020 18:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0155D208B8;
+        Tue, 26 May 2020 18:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519362;
-        bh=O6m7d4JmFmQOQvDC8Pcbvpu1uaUd2naCs1xGgWdYlCc=;
+        s=default; t=1590519355;
+        bh=kBSF++gb6m4kTRiXsle1v76F4W+mwBGYsEFJVJcd0dA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6Quc7gVAfUMX5EtuDQ6ssH1GpMw7uWfJqocw8hzSa2h9byQAuq4wCaF2hx6MxTLL
-         plFz5+IO1FTluUn0Yi5xhu1A6Y5f72PB4wbwV3lL+dbgSdwEoHvAFylW8i+3bvUCQx
-         +ZkPYlWZzGBoxsL6SXOQ3X/vcr7ndbEsg291Qug8=
+        b=0H8tOPrnmvs964ksSHKXaiVwIeNELiOv/M+zj4F6imOu82b/pOJrMHJE3TPZSBnkz
+         jI6NcN7PSiIsV/vTeo0DyPI/BHJTbmaiNPXJ1nZBkObjpiLQ0un5PhYLe75qpizoEE
+         zo1KG10csjxunPIBPEPNfgvXsSKnYUPL6b4/kfq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
-        Nicolas Schier <n.schier@avm.de>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 38/65] l2tp: dont use l2tp_tunnel_find() in l2tp_ip and l2tp_ip6
-Date:   Tue, 26 May 2020 20:52:57 +0200
-Message-Id: <20200526183919.007164109@linuxfoundation.org>
+Subject: [PATCH 4.4 35/65] l2tp: fix racy socket lookup in l2tp_ip and l2tp_ip6 bind()
+Date:   Tue, 26 May 2020 20:52:54 +0200
+Message-Id: <20200526183918.432782150@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -63,126 +62,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 8f7dc9ae4a7aece9fbc3e6637bdfa38b36bcdf09 upstream.
+commit d5e3a190937a1e386671266202c62565741f0f1a upstream.
 
-Using l2tp_tunnel_find() in l2tp_ip_recv() is wrong for two reasons:
+It's not enough to check for sockets bound to same address at the
+beginning of l2tp_ip{,6}_bind(): even if no socket is found at that
+time, a socket with the same address could be bound before we take
+the l2tp lock again.
 
-  * It doesn't take a reference on the returned tunnel, which makes the
-    call racy wrt. concurrent tunnel deletion.
+This patch moves the lookup right before inserting the new socket, so
+that no change can ever happen to the list between address lookup and
+socket insertion.
 
-  * The lookup is only based on the tunnel identifier, so it can return
-    a tunnel that doesn't match the packet's addresses or protocol.
+Care is taken to avoid side effects on the socket in case of failure.
+That is, modifications of the socket are done after the lookup, when
+binding is guaranteed to succeed, and before releasing the l2tp lock,
+so that concurrent lookups will always see fully initialised sockets.
 
-For example, a packet sent to an L2TPv3 over IPv6 tunnel can be
-delivered to an L2TPv2 over UDPv4 tunnel. This is worse than a simple
-cross-talk: when delivering the packet to an L2TP over UDP tunnel, the
-corresponding socket is UDP, where ->sk_backlog_rcv() is NULL. Calling
-sk_receive_skb() will then crash the kernel by trying to execute this
-callback.
+For l2tp_ip, 'ret' is set to -EINVAL before checking the SOCK_ZAPPED
+bit. Error code was mistakenly set to -EADDRINUSE on error by commit
+32c231164b76 ("l2tp: fix racy SOCK_ZAPPED flag check in l2tp_ip{,6}_bind()").
+Using -EINVAL restores original behaviour.
 
-And l2tp_tunnel_find() isn't even needed here. __l2tp_ip_bind_lookup()
-properly checks the socket binding and connection settings. It was used
-as a fallback mechanism for finding tunnels that didn't have their data
-path registered yet. But it's not limited to this case and can be used
-to replace l2tp_tunnel_find() in the general case.
+For l2tp_ip6, the lookup is now always done with the correct bound
+device. Before this patch, when binding to a link-local address, the
+lookup was done with the original sk->sk_bound_dev_if, which was later
+overwritten with addr->l2tp_scope_id. Lookup is now performed with the
+final sk->sk_bound_dev_if value.
 
-Fix l2tp_ip6 in the same way.
+Finally, the (addr_len >= sizeof(struct sockaddr_in6)) check has been
+dropped: addr is a sockaddr_l2tpip6 not sockaddr_in6 and addr_len has
+already been checked at this point (this part of the code seems to have
+been copy-pasted from net/ipv6/raw.c).
 
-Fixes: 0d76751fad77 ("l2tp: Add L2TPv3 IP encapsulation (no UDP) support")
-Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
 Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Nicolas Schier <n.schier@avm.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_ip.c  |   22 ++++++++--------------
- net/l2tp/l2tp_ip6.c |   23 ++++++++---------------
- 2 files changed, 16 insertions(+), 29 deletions(-)
+ net/l2tp/l2tp_ip.c  |   27 ++++++++++++---------------
+ net/l2tp/l2tp_ip6.c |   43 ++++++++++++++++++++-----------------------
+ 2 files changed, 32 insertions(+), 38 deletions(-)
 
 --- a/net/l2tp/l2tp_ip.c
 +++ b/net/l2tp/l2tp_ip.c
-@@ -122,6 +122,7 @@ static int l2tp_ip_recv(struct sk_buff *
- 	unsigned char *ptr, *optr;
- 	struct l2tp_session *session;
- 	struct l2tp_tunnel *tunnel = NULL;
-+	struct iphdr *iph;
- 	int length;
+@@ -269,15 +269,9 @@ static int l2tp_ip_bind(struct sock *sk,
+ 	if (addr->l2tp_family != AF_INET)
+ 		return -EINVAL;
  
- 	if (!pskb_may_pull(skb, 4))
-@@ -180,23 +181,16 @@ pass_up:
- 		goto discard;
- 
- 	tunnel_id = ntohl(*(__be32 *) &skb->data[4]);
--	tunnel = l2tp_tunnel_find(net, tunnel_id);
--	if (tunnel) {
--		sk = tunnel->sock;
--		sock_hold(sk);
--	} else {
--		struct iphdr *iph = (struct iphdr *) skb_network_header(skb);
+-	ret = -EADDRINUSE;
+-	read_lock_bh(&l2tp_ip_lock);
+-	if (__l2tp_ip_bind_lookup(net, addr->l2tp_addr.s_addr,
+-				  sk->sk_bound_dev_if, addr->l2tp_conn_id))
+-		goto out_in_use;
 -
--		read_lock_bh(&l2tp_ip_lock);
--		sk = __l2tp_ip_bind_lookup(net, iph->daddr, 0, tunnel_id);
--		if (!sk) {
--			read_unlock_bh(&l2tp_ip_lock);
--			goto discard;
--		}
-+	iph = (struct iphdr *)skb_network_header(skb);
+-	read_unlock_bh(&l2tp_ip_lock);
+-
+ 	lock_sock(sk);
++
++	ret = -EINVAL;
+ 	if (!sock_flag(sk, SOCK_ZAPPED))
+ 		goto out;
  
--		sock_hold(sk);
-+	read_lock_bh(&l2tp_ip_lock);
-+	sk = __l2tp_ip_bind_lookup(net, iph->daddr, 0, tunnel_id);
-+	if (!sk) {
- 		read_unlock_bh(&l2tp_ip_lock);
-+		goto discard;
- 	}
-+	sock_hold(sk);
-+	read_unlock_bh(&l2tp_ip_lock);
+@@ -294,14 +288,22 @@ static int l2tp_ip_bind(struct sock *sk,
+ 		inet->inet_rcv_saddr = inet->inet_saddr = addr->l2tp_addr.s_addr;
+ 	if (chk_addr_ret == RTN_MULTICAST || chk_addr_ret == RTN_BROADCAST)
+ 		inet->inet_saddr = 0;  /* Use device */
+-	sk_dst_reset(sk);
  
- 	if (!xfrm4_policy_check(sk, XFRM_POLICY_IN, skb))
- 		goto discard_put;
++	write_lock_bh(&l2tp_ip_lock);
++	if (__l2tp_ip_bind_lookup(net, addr->l2tp_addr.s_addr,
++				  sk->sk_bound_dev_if, addr->l2tp_conn_id)) {
++		write_unlock_bh(&l2tp_ip_lock);
++		ret = -EADDRINUSE;
++		goto out;
++	}
++
++	sk_dst_reset(sk);
+ 	l2tp_ip_sk(sk)->conn_id = addr->l2tp_conn_id;
+ 
+-	write_lock_bh(&l2tp_ip_lock);
+ 	sk_add_bind_node(sk, &l2tp_ip_bind_table);
+ 	sk_del_node_init(sk);
+ 	write_unlock_bh(&l2tp_ip_lock);
++
+ 	ret = 0;
+ 	sock_reset_flag(sk, SOCK_ZAPPED);
+ 
+@@ -309,11 +311,6 @@ out:
+ 	release_sock(sk);
+ 
+ 	return ret;
+-
+-out_in_use:
+-	read_unlock_bh(&l2tp_ip_lock);
+-
+-	return ret;
+ }
+ 
+ static int l2tp_ip_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 --- a/net/l2tp/l2tp_ip6.c
 +++ b/net/l2tp/l2tp_ip6.c
-@@ -134,6 +134,7 @@ static int l2tp_ip6_recv(struct sk_buff
- 	unsigned char *ptr, *optr;
- 	struct l2tp_session *session;
- 	struct l2tp_tunnel *tunnel = NULL;
-+	struct ipv6hdr *iph;
- 	int length;
+@@ -278,6 +278,7 @@ static int l2tp_ip6_bind(struct sock *sk
+ 	struct sockaddr_l2tpip6 *addr = (struct sockaddr_l2tpip6 *) uaddr;
+ 	struct net *net = sock_net(sk);
+ 	__be32 v4addr = 0;
++	int bound_dev_if;
+ 	int addr_type;
+ 	int err;
  
- 	if (!pskb_may_pull(skb, 4))
-@@ -193,24 +194,16 @@ pass_up:
- 		goto discard;
+@@ -296,13 +297,6 @@ static int l2tp_ip6_bind(struct sock *sk
+ 	if (addr_type & IPV6_ADDR_MULTICAST)
+ 		return -EADDRNOTAVAIL;
  
- 	tunnel_id = ntohl(*(__be32 *) &skb->data[4]);
--	tunnel = l2tp_tunnel_find(net, tunnel_id);
--	if (tunnel) {
--		sk = tunnel->sock;
--		sock_hold(sk);
--	} else {
--		struct ipv6hdr *iph = ipv6_hdr(skb);
+-	err = -EADDRINUSE;
+-	read_lock_bh(&l2tp_ip6_lock);
+-	if (__l2tp_ip6_bind_lookup(net, &addr->l2tp_addr,
+-				   sk->sk_bound_dev_if, addr->l2tp_conn_id))
+-		goto out_in_use;
+-	read_unlock_bh(&l2tp_ip6_lock);
 -
--		read_lock_bh(&l2tp_ip6_lock);
--		sk = __l2tp_ip6_bind_lookup(net, &iph->daddr,
--					    0, tunnel_id);
--		if (!sk) {
--			read_unlock_bh(&l2tp_ip6_lock);
--			goto discard;
--		}
-+	iph = ipv6_hdr(skb);
+ 	lock_sock(sk);
  
--		sock_hold(sk);
-+	read_lock_bh(&l2tp_ip6_lock);
-+	sk = __l2tp_ip6_bind_lookup(net, &iph->daddr, 0, tunnel_id);
-+	if (!sk) {
- 		read_unlock_bh(&l2tp_ip6_lock);
-+		goto discard;
+ 	err = -EINVAL;
+@@ -312,28 +306,25 @@ static int l2tp_ip6_bind(struct sock *sk
+ 	if (sk->sk_state != TCP_CLOSE)
+ 		goto out_unlock;
+ 
++	bound_dev_if = sk->sk_bound_dev_if;
++
+ 	/* Check if the address belongs to the host. */
+ 	rcu_read_lock();
+ 	if (addr_type != IPV6_ADDR_ANY) {
+ 		struct net_device *dev = NULL;
+ 
+ 		if (addr_type & IPV6_ADDR_LINKLOCAL) {
+-			if (addr_len >= sizeof(struct sockaddr_in6) &&
+-			    addr->l2tp_scope_id) {
+-				/* Override any existing binding, if another
+-				 * one is supplied by user.
+-				 */
+-				sk->sk_bound_dev_if = addr->l2tp_scope_id;
+-			}
++			if (addr->l2tp_scope_id)
++				bound_dev_if = addr->l2tp_scope_id;
+ 
+ 			/* Binding to link-local address requires an
+-			   interface */
+-			if (!sk->sk_bound_dev_if)
++			 * interface.
++			 */
++			if (!bound_dev_if)
+ 				goto out_unlock_rcu;
+ 
+ 			err = -ENODEV;
+-			dev = dev_get_by_index_rcu(sock_net(sk),
+-						   sk->sk_bound_dev_if);
++			dev = dev_get_by_index_rcu(sock_net(sk), bound_dev_if);
+ 			if (!dev)
+ 				goto out_unlock_rcu;
+ 		}
+@@ -348,13 +339,22 @@ static int l2tp_ip6_bind(struct sock *sk
  	}
-+	sock_hold(sk);
-+	read_unlock_bh(&l2tp_ip6_lock);
+ 	rcu_read_unlock();
  
- 	if (!xfrm6_policy_check(sk, XFRM_POLICY_IN, skb))
- 		goto discard_put;
+-	inet->inet_rcv_saddr = inet->inet_saddr = v4addr;
++	write_lock_bh(&l2tp_ip6_lock);
++	if (__l2tp_ip6_bind_lookup(net, &addr->l2tp_addr, bound_dev_if,
++				   addr->l2tp_conn_id)) {
++		write_unlock_bh(&l2tp_ip6_lock);
++		err = -EADDRINUSE;
++		goto out_unlock;
++	}
++
++	inet->inet_saddr = v4addr;
++	inet->inet_rcv_saddr = v4addr;
++	sk->sk_bound_dev_if = bound_dev_if;
+ 	sk->sk_v6_rcv_saddr = addr->l2tp_addr;
+ 	np->saddr = addr->l2tp_addr;
+ 
+ 	l2tp_ip6_sk(sk)->conn_id = addr->l2tp_conn_id;
+ 
+-	write_lock_bh(&l2tp_ip6_lock);
+ 	sk_add_bind_node(sk, &l2tp_ip6_bind_table);
+ 	sk_del_node_init(sk);
+ 	write_unlock_bh(&l2tp_ip6_lock);
+@@ -367,10 +367,7 @@ out_unlock_rcu:
+ 	rcu_read_unlock();
+ out_unlock:
+ 	release_sock(sk);
+-	return err;
+ 
+-out_in_use:
+-	read_unlock_bh(&l2tp_ip6_lock);
+ 	return err;
+ }
+ 
 
 
