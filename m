@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD60DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA822084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AF52084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519716;
-	bh=sBLqJNShOHXmDNNNqOoNbAAziCT3Qah9po5LF4SpzVA=;
+	s=default; t=1590519720;
+	bh=QerE36CISrCUueRSxCUY/hNwSK8W+jL8bcRw33Mi5pY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wg5fXvKMwZ7w0qGNii0s2pgf4ImH2D3v3Hnq00k+98Z9eZvvg3RYvROb6qT17Sd2U
-	 0hHugtynrxkb/8CckHNSDSW3JV9QltzUDwd+rJ0zNoJcRi8pzAZn8tlIPnaYZTwqcl
-	 +PuT6JkKIifJySJYSgHLikcAzL/8H39ApB8w+LhI=
+	b=BDY9VEP2X3sqDotEaFKNq9qNR8CVE7IVLi4f9GIlIC0tRihhaQ4cHWbCbYCTUQDG2
+	 YvvjJHNU356gIGy9VlVVmoZvC20eDCPY+pZIc92bvMlxNjirpcQ1bchgee5U7ThUxF
+	 mM/2lVf9sH+koHIrRntWam0xQP1gcGquLhsx4RbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389976AbgEZTBz (ORCPT
+        id S2391028AbgEZTCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56442 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403807AbgEZTBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:52 -0400
+        id S2391017AbgEZTB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE8992084C;
-        Tue, 26 May 2020 19:01:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E89B020849;
+        Tue, 26 May 2020 19:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519711;
-        bh=sBLqJNShOHXmDNNNqOoNbAAziCT3Qah9po5LF4SpzVA=;
+        s=default; t=1590519716;
+        bh=QerE36CISrCUueRSxCUY/hNwSK8W+jL8bcRw33Mi5pY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGyyZ0/6ssFOxkUFKVWvfUKoJwbOsRwRDizfCXK5GaUiTigseJYO4IvBDRIYy2k70
-         3km5mGxI8z86tHQaqFReRY3SkYuSMsjxoDSTOwqT4zAdHKz/W6WBRaeD2+xVWUPJWZ
-         DBIAwFE2Wcq1AvYx4CzRswiHGV71/aGhd5A8av7o=
+        b=fY0yXwzoCDP18UZUCFzSjwiUkWCAGWkDB6Bi/yeWSUVCxLt4wkmDlf8anv1oMSS/X
+         OB7yv9dbymKADB8Gc8Y2u2ZfudNB4fq8/8NUSQBUmjH8153IHm67de2cMaaw+37YyR
+         UzwtpZP3bYIEzXSHmvN6miGu+mn9gFzYZbGvCDqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/59] padata: purge get_cpu and reorder_via_wq from padata_do_serial
-Date:   Tue, 26 May 2020 20:53:14 +0200
-Message-Id: <20200526183917.791170399@linuxfoundation.org>
+        stable@vger.kernel.org, Arjun Vynipadath <arjun@chelsio.com>,
+        Casey Leedom <leedom@chelsio.com>,
+        Ganesh Goudar <ganeshgr@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 48/59] cxgb4/cxgb4vf: Fix mac_hlist initialization and free
+Date:   Tue, 26 May 2020 20:53:33 +0200
+Message-Id: <20200526183922.214934912@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -61,66 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Arjun Vynipadath <arjun@chelsio.com>
 
-[ Upstream commit 065cf577135a4977931c7a1e1edf442bfd9773dd ]
+[ Upstream commit b539ea60f5043b9acd7562f04fa2117f18776cbb ]
 
-With the removal of the padata timer, padata_do_serial no longer
-needs special CPU handling, so remove it.
+Null pointer dereference seen when cxgb4vf driver is unloaded
+without bringing up any interfaces, moving mac_hlist initialization
+to driver probe and free the mac_hlist in remove to fix the issue.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Fixes: 24357e06ba51 ("cxgb4vf: fix memleak in mac_hlist initialization")
+Signed-off-by: Arjun Vynipadath <arjun@chelsio.com>
+Signed-off-by: Casey Leedom <leedom@chelsio.com>
+Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 23 +++--------------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
+ .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   | 19 ++++++++++---------
+ .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |  6 +++---
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 6d0cdee9d321..f56ec63f60ba 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -323,24 +323,9 @@ static void padata_serial_worker(struct work_struct *serial_work)
-  */
- void padata_do_serial(struct padata_priv *padata)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 9d1438c3c3ca..6eb65b870da7 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -2241,8 +2241,6 @@ static int cxgb_up(struct adapter *adap)
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	update_clip(adap);
+ #endif
+-	/* Initialize hash mac addr list*/
+-	INIT_LIST_HEAD(&adap->mac_hlist);
+ 	return err;
+ 
+  irq_err:
+@@ -2256,8 +2254,6 @@ static int cxgb_up(struct adapter *adap)
+ 
+ static void cxgb_down(struct adapter *adapter)
  {
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct parallel_data *pd;
--	int reorder_via_wq = 0;
+-	struct hash_mac_addr *entry, *tmp;
 -
--	pd = padata->pd;
--
--	cpu = get_cpu();
--
--	/* We need to enqueue the padata object into the correct
--	 * per-cpu queue.
--	 */
--	if (cpu != padata->cpu) {
--		reorder_via_wq = 1;
--		cpu = padata->cpu;
+ 	cancel_work_sync(&adapter->tid_release_task);
+ 	cancel_work_sync(&adapter->db_full_task);
+ 	cancel_work_sync(&adapter->db_drop_task);
+@@ -2267,11 +2263,6 @@ static void cxgb_down(struct adapter *adapter)
+ 	t4_sge_stop(adapter);
+ 	t4_free_sge_resources(adapter);
+ 
+-	list_for_each_entry_safe(entry, tmp, &adapter->mac_hlist, list) {
+-		list_del(&entry->list);
+-		kfree(entry);
 -	}
 -
--	pqueue = per_cpu_ptr(pd->pqueue, cpu);
-+	struct parallel_data *pd = padata->pd;
-+	struct padata_parallel_queue *pqueue = per_cpu_ptr(pd->pqueue,
-+							   padata->cpu);
- 
- 	spin_lock(&pqueue->reorder.lock);
- 	list_add_tail(&padata->list, &pqueue->reorder.list);
-@@ -354,8 +339,6 @@ void padata_do_serial(struct padata_priv *padata)
- 	 */
- 	smp_mb__after_atomic();
- 
--	put_cpu();
--
- 	padata_reorder(pd);
+ 	adapter->flags &= ~FULL_INIT_DONE;
  }
- EXPORT_SYMBOL(padata_do_serial);
+ 
+@@ -4970,6 +4961,9 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			     (is_t5(adapter->params.chip) ? STATMODE_V(0) :
+ 			      T6_STATMODE_V(0)));
+ 
++	/* Initialize hash mac addr list */
++	INIT_LIST_HEAD(&adapter->mac_hlist);
++
+ 	for_each_port(adapter, i) {
+ 		netdev = alloc_etherdev_mq(sizeof(struct port_info),
+ 					   MAX_ETH_QSETS);
+@@ -5260,6 +5254,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ static void remove_one(struct pci_dev *pdev)
+ {
+ 	struct adapter *adapter = pci_get_drvdata(pdev);
++	struct hash_mac_addr *entry, *tmp;
+ 
+ 	if (!adapter) {
+ 		pci_release_regions(pdev);
+@@ -5303,6 +5298,12 @@ static void remove_one(struct pci_dev *pdev)
+ 		if (adapter->num_uld || adapter->num_ofld_uld)
+ 			t4_uld_mem_free(adapter);
+ 		free_some_resources(adapter);
++		list_for_each_entry_safe(entry, tmp, &adapter->mac_hlist,
++					 list) {
++			list_del(&entry->list);
++			kfree(entry);
++		}
++
+ #if IS_ENABLED(CONFIG_IPV6)
+ 		t4_cleanup_clip_tbl(adapter);
+ #endif
+diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
+index 26ba18ea08c6..fa116f0a107d 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
+@@ -715,9 +715,6 @@ static int adapter_up(struct adapter *adapter)
+ 		if (adapter->flags & USING_MSIX)
+ 			name_msix_vecs(adapter);
+ 
+-		/* Initialize hash mac addr list*/
+-		INIT_LIST_HEAD(&adapter->mac_hlist);
+-
+ 		adapter->flags |= FULL_INIT_DONE;
+ 	}
+ 
+@@ -2936,6 +2933,9 @@ static int cxgb4vf_pci_probe(struct pci_dev *pdev,
+ 	if (err)
+ 		goto err_unmap_bar;
+ 
++	/* Initialize hash mac addr list */
++	INIT_LIST_HEAD(&adapter->mac_hlist);
++
+ 	/*
+ 	 * Allocate our "adapter ports" and stitch everything together.
+ 	 */
 -- 
 2.25.1
 
