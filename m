@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A26C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E815208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F1F208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520159;
-	bh=qW1bDtDy0PK1OW718f5W77RyQ058t8EKD324HEPQDNQ=;
+	s=default; t=1590520163;
+	bh=kRGGgjOgo1DcPwnCKmyH1WLigFc+jT/yp6endMImLxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ItKjQDbUzfinG30EEvyDWaoQ8Dvn5Z7RHZFyDfHRbl0Vun8KOA/otdwb4EHB9JxK4
-	 9rczcZuMLqYho3oGySe+5nhVdTJX4O7npcUwtR+LF0zAKR57XTz1fQfZ/wh241hWPO
-	 oBrYA+ehG7mdGzo6Onag9i+xzsUrGqObow3Cpf1k=
+	b=KXpcgORHyTjF13J/S6aA5EOLBO0IUUj9/Q2Y6maaJSK0TOrGceF7MWgPTBA7zx4N4
+	 uO0Pb1XbH7kywBn+uTL7YNO7VuctInUbp+vv137bvOqDyTBKZSuy6jYgbg8GfmVW0H
+	 j+AxPFYdkr0NKPfOonTmTnvllMQQyqMoPpmVCywE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391281AbgEZTJS (ORCPT
+        id S2391852AbgEZTJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391538AbgEZTJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:09 -0400
+        id S2391822AbgEZTJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0F2208A7;
-        Tue, 26 May 2020 19:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABCC720873;
+        Tue, 26 May 2020 19:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520149;
-        bh=qW1bDtDy0PK1OW718f5W77RyQ058t8EKD324HEPQDNQ=;
+        s=default; t=1590520144;
+        bh=kRGGgjOgo1DcPwnCKmyH1WLigFc+jT/yp6endMImLxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgiYsM8zR1FYXhbjnpSaYK/UJ8HQAh0RHBK/Obx4iegw/oVEE/HHMzFfzQKFRmjIj
-         bpRE6A1oX1MK0xXEruYLCjz+LnuhiTKCUwAdHjcohp+DNVHIFir0gsM8r0MECPRyTK
-         69I2DKnfxaJ6CFj420GuhcXUWoukR0wjf9nW6foM=
+        b=zwck1zldvLC/i1rhEvVvIWDTtXzlxGVyWHItuOwYgkAJCq49pvmsY5vBkit7UlOki
+         ELHQ8r868wynNhQl/7C1/+gyiISUmsHjqTJVFPm5LZiOoTpmtwfsfXyvwcSVz0nmDK
+         cMUzEHQVAsFGp5VlqJSenqLSy69/Zjhvzw5/w7sE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 037/111] gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
-Date:   Tue, 26 May 2020 20:52:55 +0200
-Message-Id: <20200526183936.396273783@linuxfoundation.org>
+Subject: [PATCH 5.4 035/111] ftrace/selftest: make unresolved cases cause failure if --fail-unresolved set
+Date:   Tue, 26 May 2020 20:52:53 +0200
+Message-Id: <20200526183936.169074403@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,59 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit 846c68f7f1ac82c797a2f1db3344a2966c0fe2e1 ]
+[ Upstream commit b730d668138cb3dd9ce78f8003986d1adae5523a ]
 
-In drivers/net/gtp.c, gtp_genl_dump_pdp() should set NLM_F_MULTI
-flag since it returns multipart message.
-This patch adds a new arg "flags" in gtp_genl_fill_info() so that
-flags can be set by the callers.
+Currently, ftracetest will return 1 (failure) if any unresolved cases
+are encountered.  The unresolved status results from modules and
+programs not being available, and as such does not indicate any
+issues with ftrace itself.  As such, change the behaviour of
+ftracetest in line with unsupported cases; if unsupported cases
+happen, ftracetest still returns 0 unless --fail-unsupported.  Here
+--fail-unresolved is added and the default is to return 0 if
+unresolved results occur.
 
-Signed-off-by: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/testing/selftests/ftrace/ftracetest | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 3a53d222bfcc..d89ec99abcd6 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -1172,11 +1172,11 @@ out_unlock:
- static struct genl_family gtp_genl_family;
- 
- static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
--			      u32 type, struct pdp_ctx *pctx)
-+			      int flags, u32 type, struct pdp_ctx *pctx)
- {
- 	void *genlh;
- 
--	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
-+	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
- 			    type);
- 	if (genlh == NULL)
- 		goto nlmsg_failure;
-@@ -1230,8 +1230,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
- 		goto err_unlock;
- 	}
- 
--	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
--				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
-+	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
-+				 0, info->nlhdr->nlmsg_type, pctx);
- 	if (err < 0)
- 		goto err_unlock_free;
- 
-@@ -1274,6 +1274,7 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
- 				    gtp_genl_fill_info(skb,
- 					    NETLINK_CB(cb->skb).portid,
- 					    cb->nlh->nlmsg_seq,
-+					    NLM_F_MULTI,
- 					    cb->nlh->nlmsg_type, pctx)) {
- 					cb->args[0] = i;
- 					cb->args[1] = j;
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 144308a757b7..19e9236dec5e 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
+ echo "		-vv        Alias of -v -v (Show all results in stdout)"
+ echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+ echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
++echo "		--fail-unresolved Treat UNRESOLVED as a failure"
+ echo "		-d|--debug Debug mode (trace all shell commands)"
+ echo "		-l|--logdir <dir> Save logs on the <dir>"
+ echo "		            If <dir> is -, all logs output in console only"
+@@ -112,6 +113,10 @@ parse_opts() { # opts
+       UNSUPPORTED_RESULT=1
+       shift 1
+     ;;
++    --fail-unresolved)
++      UNRESOLVED_RESULT=1
++      shift 1
++    ;;
+     --logdir|-l)
+       LOG_DIR=$2
+       shift 2
+@@ -176,6 +181,7 @@ KEEP_LOG=0
+ DEBUG=0
+ VERBOSE=0
+ UNSUPPORTED_RESULT=0
++UNRESOLVED_RESULT=0
+ STOP_FAILURE=0
+ # Parse command-line options
+ parse_opts $*
+@@ -280,7 +286,7 @@ eval_result() { # sigval
+     $UNRESOLVED)
+       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
+       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+-      return 1 # this is a kind of bug.. something happened.
++      return $UNRESOLVED_RESULT # depends on use case
+     ;;
+     $UNTESTED)
+       prlog "	[${color_blue}UNTESTED${color_reset}]"
 -- 
 2.25.1
 
