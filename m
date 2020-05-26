@@ -2,124 +2,149 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20D520704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCA42065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLMKcn3x"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="tCp+jYFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgEZO2J (ORCPT
+        id S1728494AbgEZOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgEZO2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:28:08 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB48C03E96D;
-        Tue, 26 May 2020 07:28:08 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f18so3941855qkh.1;
-        Tue, 26 May 2020 07:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0TJ6yYccZvVBdf4f/G2i6OowH5C25Z8m9Ap0zEnVgR8=;
-        b=TLMKcn3xE73A18nE6utedMS8Vz8HXK+b0q/Divfxr42WLvfCj1VnejFo7V5BPdLF0q
-         W+VJW80hsx5pkyn2afaGJzSd1NY9lzi/WflZh7Okd/ujLflmIzup/UUhAjVe3hjLW/ov
-         /ckbc/JaidWP13F1n6QRu3E3MBXNO+SL6qBL9nAMf03UnJq5zUo+MGasn74WqYB3nHlM
-         RMvAQzvfJ3xtHcnQf7mOLh7b54gRFUEIEGn2cQ5cWzw7drZMeoCaq8lvxlN5DiCjmw1j
-         OWij/qP1w+bHGLFTVBEmayKa6pI5nJLWTt6wzU97k3DMGp051NXEEKMYkQDFm1nLdmm9
-         mfkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0TJ6yYccZvVBdf4f/G2i6OowH5C25Z8m9Ap0zEnVgR8=;
-        b=sWSG7rVHI6UhGH2cnK87AAiwlT/M2F1QHjCYfc9SX94bo+TKyxNOuCd6QDUis2mvGf
-         QNVihmYN3HqmLU5TqKOyJtgs+RKzoZt3AAd9+934j3JF67QnypK6NMR35XWkhcxOf/50
-         e2W31VfsON/dvS5hoJxlxYIpSnaDw00DoJFecTTKvfTBleUprwlPsi6EJPiJG+oxiuQQ
-         ynuwr0tX9l0Q6o/8DgJd6SKFSW6NiiZ6APZc4GwxKHy9YrXXX16S4TVbNXSHTclNAkCc
-         Yic+aekVfdeAt9dh5MhlIimDQ5244wMaykDU6lnsZu1JM/gPN2X7QKqYX3IKX3kXevwM
-         Phog==
-X-Gm-Message-State: AOAM532tGdnh9n/DpdPjWL5A6R70E8FMF5pN4C4vJBcpOLi90d7oaiZ/
-        S00JNO2l72xVBSiiI7okChI=
-X-Google-Smtp-Source: ABdhPJyK3oMuyeJ+F6B+ZijqpLzxAJ4vgdbS/Dm2ZGwMW4CXq3uWQNM1w7dewvLbX9tlS3HD2SWAuA==
-X-Received: by 2002:a37:78c1:: with SMTP id t184mr1585988qkc.213.1590503287516;
-        Tue, 26 May 2020 07:28:07 -0700 (PDT)
-Received: from dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com ([2620:10d:c091:480::1:6991])
-        by smtp.gmail.com with ESMTPSA id i14sm4786794qkl.105.2020.05.26.07.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 07:28:06 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:28:03 -0400
-From:   Dan Schatzberg <schatzberg.dan@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
-Message-ID: <20200526142803.GA1061@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
-References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
- <20200512132521.GA28700@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
- <20200512133545.GA26535@infradead.org>
+        Tue, 26 May 2020 10:30:51 -0400
+Received: from mout.web.de ([212.227.17.11]:39821 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbgEZOau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:30:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590503436;
+        bh=LTvGnCvacsKhwxG6no99uP2zREPyYqAbT4gjHDTiCDo=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=tCp+jYFErCwPgpLGF9Ud2wj8r1st88pHYAMt51IEeCs+UnEuEBzYuazUgww7IDB0b
+         BIsJQhb0xe9A+eFfuh6VnyPSG24saZO+JJ+wBXvTlz9dKFhm3vXxiYZLCb4tnUuCK8
+         GcjYRI4M8QTJ2joGgoXTVUApWbFy0CTCBlRqYDSc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.141.233]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LudP2-1ivlUK2WIK-00zntr; Tue, 26
+ May 2020 16:30:36 +0200
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Kangjie Lu <kjlu@umn.edu>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Improve exception handling in
+ qcom_pcie_probe()
+To:     Qiushi Wu <wu000273@umn.edu>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c0e71850-a67b-2aac-7ddc-186f3850c087@web.de>
+Date:   Tue, 26 May 2020 16:30:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512133545.GA26535@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uaAnp8RQwNdE+0ja7LvKxcJVKXYXo10dhh+a2vXz/p29Rlpefbb
+ nJAc4jU2thbXbeSaZ61S4c+XrWPiR4iJCf9W+0LHjawrvKUqS9IXjuR6W2OkiRoS0cug3nd
+ kYTYRsMedZ+EKtPJmMHTmBV5S+y/KQxrKoOuc7kHeEaBZA5KsZbu0dTtWK0sP5kC3siWYLB
+ rdLQWb3B7AwMLnCrSLPcQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GVR6XjNU5JY=:eFsWbXRGNZKCp4dJ2y/Dh5
+ L8XVV2KggePAQVTFbTF3twzxOk/nu1z+tADBUr78zK/dxQRKQC/qlnZFwyr/abR4WaVtcWgcb
+ uw6Z1g66QMqufV30ODUTISRxzukG7EGgiNGV4gL+uejUT4hJKCsIrijWjva1K3xTa0xzvoCKQ
+ VXFCQOJJwZFOqzaVRqbCxTHNl++PGrx0xrbkwxrZfrJzHIDYpm+q/owJYT+/iE14wgRlbJOae
+ /tSUXtnYs5bdJAhkdYNEvY4ZmjNxjMLofHA4Q8+8L1uOwRanALYRtwBy/j4QyY5ZjbQfBaaSE
+ Ej0dCl0Lve4qPw9+kvSvCobGGyxo1IqjSOMQQnJBAudvlEwIHz64w2keJqvuy8Dv8Q2auRnse
+ OTHQ+GN3ZNRt+H8DV/qElbTIdGXvsez+PhkU+HMpxjkOR4D7Qvl7xTu0chue5yFxUG31rVtu6
+ sYPTILckkLd7pt6FXiYL69fn5nXjTY2rnlwL+mgbQA/Bqvn7SjHjhonjI96VNMszxu8e6zn0Z
+ JNdfWCFHIvoFjWi6Ly9oipOdq9gIwFy0k386/4on7KAh1Hu+Q3C23OQMRZrkNfyP2jbtXMNvT
+ 39aXfVLXaanBBcMe71TpvVmlMuhK/hJfEjloiI7Wr5QZ/xjrqfviyb9Tmo34NKsQthtRNv+7l
+ ArCZePXZ35k0LI0YSrQG0IH19ZttAy9P19x5Zto9x9T62/T+X3Kt19VRsf9pSGq+ZrgWwW9Zf
+ HAqFByAPPWffxJ11ozekmkJCc8wyPZfd0y7wgkceTEUjjhePfu2p+kllknvTfKtfbp9vmq23p
+ 32yIDA3d0Zpo8BSM/d9DL2f2Vm7I+RBS/SnVspGfQChOQ4GlJwwBQunoVFiCqL3sgNrQf5drV
+ OAEC2I5+43cDoIcFs/z4nWvLTJjO/7l9ZfDP4LtO+nBOP7ek2PKQeNOCqzGEb9wgk3/AytXT3
+ reEVd74w+yg94Cz4W1YtRFmCAcOHTvOXem8vzyZbYT3z22fimUXaaXrRLrIgivE628mJpd74x
+ djDR0acTZkshIt6FCSy5IBvg0/W4DC9LPv+31w/6bmZt/TEycG3gWvXIIGT6y0CFga6DFbHsc
+ MGcmqwfK/anUj7Nr0pVnG7+DcMfYFAhAoP4whKNI2oa53malzrMvsKH7dQYzADaKtdxzjsQgU
+ GofmS9N+ac1Fm3oWH9gJ1WK201jrN13/v6fT/bkTAlaLDrc0vNCW80WEKsIhhbO5AZBGwpoqI
+ lebkxjVVz4Pb+hY+W
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:35:45AM -0700, Christoph Hellwig wrote:
-> On Tue, May 12, 2020 at 09:25:21AM -0400, Dan Schatzberg wrote:
-> > Seems like discussion on this patch series has died down. There's been
-> > a concern raised that we could generalize infrastructure across loop,
-> > md, etc. This may be possible, in the future, but it isn't clear to me
-> > how this would look like. I'm inclined to fix the existing issue with
-> > loop devices now (this is a problem we hit at FB) and address
-> > consolidation with other cases if and when those are addressed.
-> > 
-> > Jens, you've expressed interest in seeing this series go through the
-> > block tree so I'm interested in your perspective here. Barring any
-> > concrete implementation bugs, would you be okay merging this version?
-> 
-> Independ of any higher level issues you need to sort out the spinlock
-> mess I pointed out.
+Please avoid a typo in the patch subject (by a possible alternative?).
 
-Will do - I'll split out the lock-use refactor into a separate
-patch. Do you have particular concerns about re-using the existing
-spinlock? Its existing use is not contended so I didn't see any harm
-in extending its use. I'll add this justification to the commit
-message as well, but I'm tempted to leave the re-use as is instead of
-creating a new lock.
+
+> In function qcom_pcie_probe(), there are several error-handling problem.
+
+Wording adjustments:
+This function contained improvable implementation details according to
+exception handling.
+
+
+> because refcount will be increased even pm_runtime_get_sync() returns
+> an error.
+
+because the reference count will be increased despite of the failure.
+Thus add the missed function call.
+
+
+> 2. pm_runtime_disable() are called twice, =E2=80=A6
+=E2=80=A6
+Thus remove redundant function calls.
+
+Regards,
+Markus
