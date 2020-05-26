@@ -2,308 +2,295 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6020DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 443122070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0127320885
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590481393;
+	bh=YEzEGDq8eb4XxvW/RSR2MzW4ts+L/TLeDb70yhtakDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yo7xq9L+RMzV9BK6bagA7Auq2u5R4CPr4GyEaBcM3+uE6i5b70Yg6tU+z1OxxW9Y3
+	 PWbPPlo3iM9r5aTuADBNDuV3oql1DPmbFXrFjqs/+DmBn/knSLv3mTXeu15Se7xdb+
+	 plsNU+gOZbYccYGWkPKHFYZo5sgfARcJQqOvdQOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgEZIWq (ORCPT
+        id S1730085AbgEZIXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:22:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33863 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIWq (ORCPT
+        Tue, 26 May 2020 04:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZIXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:22:46 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jdUrB-00010T-TH; Tue, 26 May 2020 08:22:42 +0000
-Date:   Tue, 26 May 2020 10:22:40 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
+        Tue, 26 May 2020 04:23:09 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EF4C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:23:08 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f5so2350522wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b8CUm1LFTnrJ7QRSnag0GsDVIfe8MydrGxtOgXBR5Yo=;
+        b=RJxJ4f1fuCKPldmZpekP1xrAS2jdfg/+o9NozeCD7s7uf1Ukm/yy3Ngu6aDLIHK0XZ
+         y8aOSoCem0Px9J7urMqIzuRLpoX5LXIivYqZbz5B/z+kji6muuRuYWoHnUxlRV5ACfMg
+         3D7jj3j2MEBxKxqCT2apiZ/cASVIsHHUXsp53ECEWANoqla8iwt8Q0qXEzoJnk3ybL5/
+         qUYuXdL6Ow0I2iVwTeK1YKZZA6nL6ynqZ5Wt6lG2ZgXErDItopR4oCVbdt4/E2ussFxh
+         1vkl5/IgAO6Eou5T9S9l3EEgUJWXRXnLep630k3MgTwLidkxc+MIVSpj+3m0kPQ7/ZAJ
+         yaug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=b8CUm1LFTnrJ7QRSnag0GsDVIfe8MydrGxtOgXBR5Yo=;
+        b=Gf2hFFAZiqb7S1R/rje0AbCL9QI/tRVX25YA84rOoGCJgmy+g+qw7hQr2yu2VZNrKD
+         /X4dxiVIf1NYGgEkXzh5/nvYT53Mj0MlhyzNcLoChFLPfEsJV8xNkOVIZKDsuGxp1ySd
+         +viX0SINJqZ8CxGIbaqf+CS7+bZSvCYqhqyZpiBV/vFPqvQQ4i/SdqDDjz3pERDJjP+N
+         FVPgNi5QHfcox/nnBjZ+kppb6LEYG+6B1QA/7uQXuDJlnsIP985TfRG60PoBniU8d/ZL
+         d+P0311K9MTH9/lK/fdGee3uvuvFdPvTPN75RPhCZ+58Qy3aYvj2hi6fHMTIWAK7fDcI
+         inng==
+X-Gm-Message-State: AOAM533LOuuNsn3fQuun6RmXlaCtGci++wiqTG2/VIAagTq3GUy36WGn
+        vO7RU71Z8Z0L4WPZTou9BP8=
+X-Google-Smtp-Source: ABdhPJym0oRyYGoesH3HeHySi5ktRLsaYg4lcXoX4XP1MvxiZaj6fNVL7TV93E06lJsj/vT3Qt3Naw==
+X-Received: by 2002:a7b:c193:: with SMTP id y19mr276557wmi.158.1590481387052;
+        Tue, 26 May 2020 01:23:07 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u13sm962733wrp.53.2020.05.26.01.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 01:23:06 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:23:03 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Jann Horn <jannh@google.com>, Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Matt Denton <mpdenton@google.com>,
-        Kees Cook <keescook@google.com>
-Subject: Re: [PATCH 2/5] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <20200526082240.f3aqeemgopgdpi6z@wittgenstein>
-References: <20200524233942.8702-1-sargun@sargun.me>
- <20200524233942.8702-3-sargun@sargun.me>
- <20200525135036.vp2nmmx42y7dfznf@wittgenstein>
- <CAMp4zn9b_o+LS3U9KcNvvJS5hroPS=3oRMSVuN=VgbwbXB=mKg@mail.gmail.com>
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V9 04/39] x86/entry: Provide
+ idtentry_entry/exit_cond_rcu()
+Message-ID: <20200526082303.GB35238@gmail.com>
+References: <20200521200513.656533920@linutronix.de>
+ <20200521202117.181397835@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMp4zn9b_o+LS3U9KcNvvJS5hroPS=3oRMSVuN=VgbwbXB=mKg@mail.gmail.com>
+In-Reply-To: <20200521202117.181397835@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:59:18PM -0700, Sargun Dhillon wrote:
-> On Mon, May 25, 2020 at 6:50 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Sun, May 24, 2020 at 04:39:39PM -0700, Sargun Dhillon wrote:
-> > > This adds a seccomp notifier ioctl which allows for the listener to "add"
-> > > file descriptors to a process which originated a seccomp user
-> > > notification. This allows calls like mount, and mknod to be "implemented",
-> > > as the return value, and the arguments are data in memory. On the other
-> > > hand, calls like connect can be "implemented" using pidfd_getfd.
-> > >
-> > > Unfortunately, there are calls which return file descriptors, like
-> > > open, which are vulnerable to TOC-TOU attacks, and require that the
-> > > more privileged supervisor can inspect the argument, and perform the
-> > > syscall on behalf of the process generating the notifiation. This
-> > > allows the file descriptor generated from that open call to be
-> > > returned to the calling process.
-> > >
-> > > In addition, there is funcitonality to allow for replacement of
-> > > specific file descriptors, following dup2-like semantics.
-> > >
-> > > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> > > Suggested-by: Matt Denton <mpdenton@google.com>
-> > > Cc: Kees Cook <keescook@google.com>,
-> > > Cc: Jann Horn <jannh@google.com>,
-> > > Cc: Robert Sesek <rsesek@google.com>,
-> > > Cc: Chris Palmer <palmer@google.com>
-> > > Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Cc: Tycho Andersen <tycho@tycho.ws>
-> > > ---
-> > >  include/uapi/linux/seccomp.h |  25 ++++++
-> > >  kernel/seccomp.c             | 169 ++++++++++++++++++++++++++++++++++-
-> > >  2 files changed, 193 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > > index c1735455bc53..7d450a9e4c29 100644
-> > > --- a/include/uapi/linux/seccomp.h
-> > > +++ b/include/uapi/linux/seccomp.h
-> > > @@ -113,6 +113,27 @@ struct seccomp_notif_resp {
-> > >       __u32 flags;
-> > >  };
-> > >
-> > > +/* valid flags for seccomp_notif_addfd */
-> > > +#define SECCOMP_ADDFD_FLAG_SETFD     (1UL << 0) /* Specify remote fd */
-> > > +
-> > > +/**
-> > > + * struct seccomp_notif_addfd
-> > > + * @size: The size of the seccomp_notif_addfd datastructure
-> > > + * @fd: The local fd number
-> > > + * @id: The ID of the seccomp notification
-> > > + * @fd_flags: Flags the remote FD should be allocated under
-> > > + * @remote_fd: Optional remote FD number if SETFD option is set, otherwise 0.
-> > > + * @flags: SECCOMP_ADDFD_FLAG_*
-> > > + */
-> > > +struct seccomp_notif_addfd {
-> > > +     __u32 size;
-> > > +     __u32 fd;
-> > > +     __u64 id;
-> > > +     __u32 fd_flags;
-> > > +     __u32 remote_fd;
-> > > +     __u64 flags;
-> > > +};
-> >
-> > This was a little confusing to me at first. So fd is the fd from which
-> > we take the struct file and remote_fd is either -1 at which point we
-> > just allocate the next free fd number and if it is not we
-> > allocate/replace a specific one. Maybe it would be clearer if we did:
-> >
-> > struct seccomp_notif_addfd {
-> >         __u32 size;
-> >         __u64 id;
-> >         __u64 flags;
-> >         __u32 srcfd;
-> >         __u32 newfd;
-> >         __u32 newfd_flags;
-> > };
-> >
-> > No need to hide in the name that this is remote_dup2().
-> >
-> > > +
-> > >  #define SECCOMP_IOC_MAGIC            '!'
-> > >  #define SECCOMP_IO(nr)                       _IO(SECCOMP_IOC_MAGIC, nr)
-> > >  #define SECCOMP_IOR(nr, type)                _IOR(SECCOMP_IOC_MAGIC, nr, type)
-> > > @@ -124,4 +145,8 @@ struct seccomp_notif_resp {
-> > >  #define SECCOMP_IOCTL_NOTIF_SEND     SECCOMP_IOWR(1, \
-> > >                                               struct seccomp_notif_resp)
-> > >  #define SECCOMP_IOCTL_NOTIF_ID_VALID SECCOMP_IOR(2, __u64)
-> > > +/* On success, the return value is the remote process's added fd number */
-> > > +#define SECCOMP_IOCTL_NOTIF_ADDFD    SECCOMP_IOR(3,  \
-> > > +                                             struct seccomp_notif_addfd)
-> > > +
-> > >  #endif /* _UAPI_LINUX_SECCOMP_H */
-> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > index f6ce94b7a167..88940eeabaee 100644
-> > > --- a/kernel/seccomp.c
-> > > +++ b/kernel/seccomp.c
-> > > @@ -77,10 +77,42 @@ struct seccomp_knotif {
-> > >       long val;
-> > >       u32 flags;
-> > >
-> > > -     /* Signals when this has entered SECCOMP_NOTIFY_REPLIED */
-> > > +     /*
-> > > +      * Signals when this has changed states, such as the listener
-> > > +      * dying, a new seccomp addfd message, or changing to REPLIED
-> > > +      */
-> > >       struct completion ready;
-> > >
-> > >       struct list_head list;
-> > > +
-> > > +     /* outstanding addfd requests */
-> > > +     struct list_head addfd;
-> > > +};
-> > > +
-> > > +/**
-> > > + * struct seccomp_kaddfd - contianer for seccomp_addfd ioctl messages
-> >
-> >                               ^^^ typo
-> >
-> > > + *
-> > > + * @file: A reference to the file to install in the other task
-> > > + * @fd: The fd number to install it at. If the fd number is -1, it means the
-> > > + *      installing process should allocate the fd as normal.
-> > > + * @flags: The flags for the new file descriptor. At the moment, only O_CLOEXEC
-> > > + *         is allowed.
-> > > + * @ret: The return value of the installing process. It is set to the fd num
-> > > + *       upon success (>= 0).
-> > > + * @completion: Indicates that the installing process has completed fd
-> > > + *              installation, or gone away (either due to successful
-> > > + *              reply, or signal)
-> > > + *
-> > > + */
-> > > +struct seccomp_kaddfd {
-> > > +     struct file *file;
-> > > +     int fd;
-> > > +     unsigned int flags;
-> > > +
-> > > +     /* To only be set on reply */
-> > > +     int ret;
-> > > +     struct completion completion;
-> > > +     struct list_head list;
-> > >  };
-> > >
-> > >  /**
-> > > @@ -735,6 +767,35 @@ static u64 seccomp_next_notify_id(struct seccomp_filter *filter)
-> > >       return filter->notif->next_id++;
-> > >  }
-> > >
-> > > +static void seccomp_handle_addfd(struct seccomp_kaddfd *addfd)
-> > > +{
-> > > +     int ret;
-> > > +
-> > > +     /*
-> > > +      * Remove the notification, and reset the list pointers, indicating
-> > > +      * that it has been handled.
-> > > +      */
-> > > +     list_del_init(&addfd->list);
-> > > +
-> > > +     ret = security_file_receive(addfd->file);
-> > > +     if (ret)
-> > > +             goto out;
-> > > +
-> > > +     if (addfd->fd >= 0) {
-> > > +             ret = replace_fd(addfd->fd, addfd->file, addfd->flags);
-> > > +             if (ret >= 0)
-> > > +                     fput(addfd->file);
-> > > +     } else {
-> > > +             ret = get_unused_fd_flags(addfd->flags);
-> > > +             if (ret >= 0)
-> > > +                     fd_install(ret, addfd->file);
-> > > +     }
-> > > +
-> > > +out:
-> > > +     addfd->ret = ret;
-> > > +     complete(&addfd->completion);
-> > > +}
-> > > +
-> > >  static int seccomp_do_user_notification(int this_syscall,
-> > >                                       struct seccomp_filter *match,
-> > >                                       const struct seccomp_data *sd)
-> > > @@ -743,6 +804,7 @@ static int seccomp_do_user_notification(int this_syscall,
-> > >       u32 flags = 0;
-> > >       long ret = 0;
-> > >       struct seccomp_knotif n = {};
-> > > +     struct seccomp_kaddfd *addfd, *tmp;
-> > >
-> > >       mutex_lock(&match->notify_lock);
-> > >       err = -ENOSYS;
-> > > @@ -755,6 +817,7 @@ static int seccomp_do_user_notification(int this_syscall,
-> > >       n.id = seccomp_next_notify_id(match);
-> > >       init_completion(&n.ready);
-> > >       list_add(&n.list, &match->notif->notifications);
-> > > +     INIT_LIST_HEAD(&n.addfd);
-> > >
-> > >       up(&match->notif->request);
-> > >       wake_up_poll(&match->notif->wqh, EPOLLIN | EPOLLRDNORM);
-> > > @@ -763,14 +826,31 @@ static int seccomp_do_user_notification(int this_syscall,
-> > >       /*
-> > >        * This is where we wait for a reply from userspace.
-> > >        */
-> > > +wait:
-> > >       err = wait_for_completion_interruptible(&n.ready);
-> > >       mutex_lock(&match->notify_lock);
-> > >       if (err == 0) {
-> > > +             /* Check if we were woken up by a addfd message */
-> > > +             addfd = list_first_entry_or_null(&n.addfd,
-> > > +                                              struct seccomp_kaddfd, list);
-> > > +             if (addfd && n.state != SECCOMP_NOTIFY_REPLIED) {
-> > > +                     seccomp_handle_addfd(addfd);
-> > > +                     mutex_unlock(&match->notify_lock);
-> > > +                     goto wait;
-> > > +             }
-> > >               ret = n.val;
-> > >               err = n.error;
-> > >               flags = n.flags;
-> > >       }
-> > >
-> > > +     /* If there were any pending addfd calls, clear them out */
-> > > +     list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
-> > > +             /* The process went away before we got a chance to handle it */
-> > > +             addfd->ret = -ENOENT;
-> >
-> > Looks like it should be -ESRCH?
-> >
-> I'm a little confused on where we use ESRCH vs. ENOENT. It looks like
-> in the cookie
-> check (SECCOMP_IOCTL_NOTIF_ID_VALID), we return ENOENT on both error paths
-> -- whether the notification is missing, or whether the notification
-> was already replied to.
+
+* Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> I originally had this as ESRCH, but switched to ENOENT to be
-> consistent with that API.
+> After a lengthy discussion [1] it turned out that RCU does not need a full
+> rcu_irq_enter/exit() when RCU is already watching. All it needs if
+> NOHZ_FULL is active is to check whether the tick needs to be restarted.
+> 
+> This allows to avoid a separate variant for the pagefault handler which
+> cannot invoke rcu_irq_enter() on a kernel pagefault which might sleep.
+> 
+> The cond_rcu argument is only temporary and will be removed once the
+> existing users of idtentry_enter/exit() have been cleaned up. After that
+> the code can be significantly simplified.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: [1] https://lkml.kernel.org/r/20200515235125.628629605@linutronix.de
+> ---
+> V9: Reworked to the new RCU mode
+> ---
+>  arch/x86/entry/common.c         |   84 ++++++++++++++++++++++++++++++----------
+>  arch/x86/include/asm/idtentry.h |   14 +++++-
+>  2 files changed, 77 insertions(+), 21 deletions(-)
+> 
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -512,8 +512,10 @@ SYSCALL_DEFINE0(ni_syscall)
+>  }
+>  
+>  /**
+> - * idtentry_enter - Handle state tracking on idtentry
+> + * idtentry_enter_cond_rcu - Handle state tracking on idtentry with conditional
+> + *			     RCU handling
+>   * @regs:	Pointer to pt_regs of interrupted context
+> + * @cond_rcu:	Invoke rcu_irq_enter() only if RCU is not watching
+>   *
+>   * Invokes:
+>   *  - lockdep irqflag state tracking as low level ASM entry disabled
+> @@ -521,40 +523,81 @@ SYSCALL_DEFINE0(ni_syscall)
+>   *
+>   *  - Context tracking if the exception hit user mode.
+>   *
+> - *  - RCU notification if the exception hit kernel mode.
+> - *
+>   *  - The hardirq tracer to keep the state consistent as low level ASM
+>   *    entry disabled interrupts.
+> + *
+> + * For kernel mode entries RCU handling is done conditional. If RCU is
+> + * watching then the only RCU requirement is to check whether the tick has
+> + * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
+> + * invoked on entry and rcu_irq_exit() on exit.
+> + *
+> + * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
+> + * solves the problem of kernel mode pagefaults which can schedule, which
+> + * is not possible after invoking rcu_irq_enter() without undoing it.
+> + *
+> + * For user mode entries enter_from_user_mode() must be invoked to
+> + * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
+> + * would not be possible.
+> + *
+> + * Returns: True if RCU has been adjusted on a kernel entry
+> + *	    False otherwise
+> + *
+> + * The return value must be fed into the rcu_exit argument of
+> + * idtentry_exit_cond_rcu().
+>   */
+> -void noinstr idtentry_enter(struct pt_regs *regs)
+> +bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs, bool cond_rcu)
+>  {
+>  	if (user_mode(regs)) {
+>  		enter_from_user_mode();
+>  	} else {
+> -		lockdep_hardirqs_off(CALLER_ADDR0);
+> -		rcu_irq_enter();
+> -		instrumentation_begin();
+> -		trace_hardirqs_off_prepare();
+> -		instrumentation_end();
+> +		if (!cond_rcu || !__rcu_is_watching()) {
+> +			/*
+> +			 * If RCU is not watching then the same careful
+> +			 * sequence vs. lockdep and tracing is required
+> +			 * as in enter_from_user_mode().
+> +			 *
+> +			 * This only happens for IRQs that hits the idle
+> +			 * loop, i.e. if idle is not using MWAIT.
+> +			 */
+> +			lockdep_hardirqs_off(CALLER_ADDR0);
+> +			rcu_irq_enter();
+> +			instrumentation_begin();
+> +			trace_hardirqs_off_prepare();
+> +			instrumentation_end();
+> +			return true;
+> +		} else {
+> +			/*
+> +			 * If RCU is watching then RCU only wants to check
+> +			 * whether it needs to restart the tick in NOHZ
+> +			 * mode.
+> +			 */
+> +			instrumentation_begin();
+> +			rcu_irq_enter_check_tick();
+> +			/* Use the combo lockdep/tracing function */
+> +			trace_hardirqs_off();
+> +			instrumentation_end();
+> +		}
+>  	}
+> +	return false;
+>  }
 
-So, for the geth_nth_filter() it makes sense to me that it's ENOENT, for
-id valid, maybe too, for notify_{recv,send} I'd be inclined to say this
-should've been ESRCH. But whatever, it's too late for that and keeping
-it consistent matters more. But...
+Any objections to the simplified/flattened control flow below?
 
+Thanks,
 
-> Do we want the API to disclose information about half-done /
-> incomplete notifications?
+	Ingo
 
-we were doing that before, see notify_send
+ common.c |   59 +++++++++++++++++++++++++++++++----------------------------
+ 1 file changed, 31 insertions(+), 28 deletions(-)
+Index: tip/arch/x86/entry/common.c
+===================================================================
+--- tip.orig/arch/x86/entry/common.c
++++ tip/arch/x86/entry/common.c
+@@ -549,35 +549,38 @@ bool noinstr idtentry_enter_cond_rcu(str
+ {
+ 	if (user_mode(regs)) {
+ 		enter_from_user_mode();
+-	} else {
+-		if (!cond_rcu || !__rcu_is_watching()) {
+-			/*
+-			 * If RCU is not watching then the same careful
+-			 * sequence vs. lockdep and tracing is required
+-			 * as in enter_from_user_mode().
+-			 *
+-			 * This only happens for IRQs that hit the idle
+-			 * loop, i.e. if idle is not using MWAIT.
+-			 */
+-			lockdep_hardirqs_off(CALLER_ADDR0);
+-			rcu_irq_enter();
+-			instrumentation_begin();
+-			trace_hardirqs_off_prepare();
+-			instrumentation_end();
+-			return true;
+-		} else {
+-			/*
+-			 * If RCU is watching then RCU only wants to check
+-			 * whether it needs to restart the tick in NOHZ
+-			 * mode.
+-			 */
+-			instrumentation_begin();
+-			rcu_irq_enter_check_tick();
+-			/* Use the combo lockdep/tracing function */
+-			trace_hardirqs_off();
+-			instrumentation_end();
+-		}
++		return false;
+ 	}
++
++	if (!cond_rcu || !__rcu_is_watching()) {
++		/*
++		 * If RCU is not watching then the same careful
++		 * sequence vs. lockdep and tracing is required
++		 * as in enter_from_user_mode().
++		 *
++		 * This only happens for IRQs that hit the idle
++		 * loop, i.e. if idle is not using MWAIT.
++		 */
++		lockdep_hardirqs_off(CALLER_ADDR0);
++		rcu_irq_enter();
++		instrumentation_begin();
++		trace_hardirqs_off_prepare();
++		instrumentation_end();
++
++		return true;
++	}
++
++	/*
++	 * If RCU is watching then RCU only wants to check
++	 * whether it needs to restart the tick in NOHZ
++	 * mode.
++	 */
++	instrumentation_begin();
++	rcu_irq_enter_check_tick();
++	/* Use the combo lockdep/tracing function */
++	trace_hardirqs_off();
++	instrumentation_end();
++
+ 	return false;
+ }
+ 
 
-	if (knotif->state != SECCOMP_NOTIFY_SENT) {
-		ret = -EINPROGRESS;
-		goto out;
-	}
-
-we distinguish the !knotif case before that too. Might make sense to do
-the same for the fd case.
-
-Christian
