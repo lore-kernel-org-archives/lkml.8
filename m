@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79953C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53D9520849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5392084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519690;
-	bh=5/HI5uD/MgHLguB/CuZLIgLp1pq4W0DbYO90s2eO6oQ=;
+	s=default; t=1590519694;
+	bh=ixT+xyhnmjq0jPoZhX8b/v+1/Caxq23mw4srXvPfX3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F9S/Ccp6Q9cxC9VQtTSwFwsqOo+XK0MzUR0Bm+lghn6RofmdRXSz8hYPaEqAFxsnn
-	 q0Fq28CZi3BkP500zFEwAXB4XWkkV/lvuzPgx/hE7zyrlo5vyqY5nrsyQXm3oDk+Je
-	 vTIKHV0tE509V5Uqtp0668CsWWwbopJQ2Qh5SymM=
+	b=vweLipqWv2m8teCN2OD0xd1Jp552WkzXGVJRlZVY2THle86gWgvXad9gSG2VbYgec
+	 XEqwosUgbnI9UyUi48LsXurFmC4bSBvcA9IjCoBSU0dYQfzCK3gPePhOlY4qy3FRVv
+	 VmCWaZA6eXW0O3Hq+jtcQ+V0dkBTPgFjhD4JMHSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390964AbgEZTB3 (ORCPT
+        id S2389904AbgEZTBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389833AbgEZTBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:25 -0400
+        id S2390204AbgEZTB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80AFD20873;
-        Tue, 26 May 2020 19:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B5A20849;
+        Tue, 26 May 2020 19:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519684;
-        bh=5/HI5uD/MgHLguB/CuZLIgLp1pq4W0DbYO90s2eO6oQ=;
+        s=default; t=1590519686;
+        bh=ixT+xyhnmjq0jPoZhX8b/v+1/Caxq23mw4srXvPfX3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uE4xsNNMn1AweF3EREefnS/CHTQjnDJZkXyCRGR/MaptFznKMiKYWw04hrhrVadCK
-         y9forIi14BOTheDDTNBsMb/TMHeUsgeLn7deU02xoxAyViMOEnQK3OSDvuCSjMK3Vz
-         53J3SZuSbDb0BzzkdOU5ZNY6koYAbdL6aTN242Ko=
+        b=vh7NUHJLXEjRvIEzghTKHBC6nmayoYnGGEoKS1QU/cM/ZNRPpgIsA6XeUBunybkoQ
+         PsLFnaqjjB+xhpbYhLrd+8tOpPyFNZeO+NwGo0Aixd7IJFT7K98E4Ozoa6MnGSxwXH
+         UWNe5ELCfEnk29VvN9a4j1RhiB0XsXpmVqBl19CE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/59] padata: initialize pd->cpu with effective cpumask
-Date:   Tue, 26 May 2020 20:53:13 +0200
-Message-Id: <20200526183917.592937638@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: [PATCH 4.14 37/59] apparmor: Fix aa_label refcnt leak in policy_update
+Date:   Tue, 26 May 2020 20:53:22 +0200
+Message-Id: <20200526183919.409222748@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -61,76 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit ec9c7d19336ee98ecba8de80128aa405c45feebb ]
+commit c6b39f070722ea9963ffe756bfe94e89218c5e63 upstream.
 
-Exercising CPU hotplug on a 5.2 kernel with recent padata fixes from
-cryptodev-2.6.git in an 8-CPU kvm guest...
+policy_update() invokes begin_current_label_crit_section(), which
+returns a reference of the updated aa_label object to "label" with
+increased refcount.
 
-    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
-    # echo 0 > /sys/devices/system/cpu/cpu1/online
-    # echo c > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-    # modprobe tcrypt mode=215
+When policy_update() returns, "label" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-...caused the following crash:
+The reference counting issue happens in one exception handling path of
+policy_update(). When aa_may_manage_policy() returns not NULL, the
+refcnt increased by begin_current_label_crit_section() is not decreased,
+causing a refcnt leak.
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    #PF: supervisor read access in kernel mode
-    #PF: error_code(0x0000) - not-present page
-    PGD 0 P4D 0
-    Oops: 0000 [#1] SMP PTI
-    CPU: 2 PID: 134 Comm: kworker/2:2 Not tainted 5.2.0-padata-base+ #7
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
-    Workqueue: pencrypt padata_parallel_worker
-    RIP: 0010:padata_reorder+0xcb/0x180
-    ...
-    Call Trace:
-     padata_do_serial+0x57/0x60
-     pcrypt_aead_enc+0x3a/0x50 [pcrypt]
-     padata_parallel_worker+0x9b/0xe0
-     process_one_work+0x1b5/0x3f0
-     worker_thread+0x4a/0x3c0
-     ...
+Fix this issue by jumping to "end_section" label when
+aa_may_manage_policy() returns not NULL.
 
-In padata_alloc_pd, pd->cpu is set using the user-supplied cpumask
-instead of the effective cpumask, and in this case cpumask_first picked
-an offline CPU.
+Fixes: 5ac8c355ae00 ("apparmor: allow introspecting the loaded policy pre internal transform")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The offline CPU's reorder->list.next is NULL in padata_reorder because
-the list wasn't initialized in padata_init_pqueues, which only operates
-on CPUs in the effective mask.
-
-Fix by using the effective mask in padata_alloc_pd.
-
-Fixes: 6fc4dbcf0276 ("padata: Replace delayed timer with immediate workqueue in padata_reorder")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/apparmor/apparmorfs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 66d96ed62286..6d0cdee9d321 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -450,7 +450,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	atomic_set(&pd->refcnt, 1);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
--	pd->cpu = cpumask_first(pcpumask);
-+	pd->cpu = cpumask_first(pd->cpumask.pcpu);
- 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -426,7 +426,7 @@ static ssize_t policy_update(u32 mask, c
+ 	 */
+ 	error = aa_may_manage_policy(label, ns, mask);
+ 	if (error)
+-		return error;
++		goto end_section;
  
- 	return pd;
--- 
-2.25.1
-
+ 	data = aa_simple_write_to_buffer(buf, size, size, pos);
+ 	error = PTR_ERR(data);
+@@ -434,6 +434,7 @@ static ssize_t policy_update(u32 mask, c
+ 		error = aa_replace_profiles(ns, label, mask, data);
+ 		aa_put_loaddata(data);
+ 	}
++end_section:
+ 	end_current_label_crit_section(label);
+ 
+ 	return error;
 
 
