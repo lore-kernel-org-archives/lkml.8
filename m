@@ -2,182 +2,166 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C30FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90115C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379AF20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7957320723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgEZP26 (ORCPT
+        id S1729631AbgEZP3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:28:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44664 "EHLO mx2.suse.de"
+        Tue, 26 May 2020 11:29:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:38944 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbgEZP26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:28:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3E94BB260;
-        Tue, 26 May 2020 15:28:58 +0000 (UTC)
-Date:   Tue, 26 May 2020 17:28:47 +0200
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Stephen Warren <swarren@wwwdotorg.org>, robin.murphy@arm.com,
-        devicetree@vger.kernel.org, talho@nvidia.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, afaerber@suse.de,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 2/4] dt-bindings: sram: add documentation for
- reserved-only flag
-Message-ID: <20200526152847.GA16107@suse.de>
-References: <20200512144803.24344-1-ykaukab@suse.de>
- <20200512144803.24344-2-ykaukab@suse.de>
- <52f099e4-5c03-2141-f049-cd3adeb04c5b@wwwdotorg.org>
- <20200513104127.GA2309@suse.de>
- <efcc6b5e-423c-8ae1-8a46-d6a06c1a1bab@wwwdotorg.org>
- <20200519230326.GA827289@bogus>
- <20200520085558.GB2136208@ulmo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200520085558.GB2136208@ulmo>
+        id S1728815AbgEZP3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:29:43 -0400
+IronPort-SDR: 62fzOH2BlnGAWZrnti9GuhyP/IzV6hLZ2hLhR3mTjZJ96MbAfJoIhBzHXy9qONtSY7Y+ynkg4z
+ Fuzk2o/G+bTA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:29:42 -0700
+IronPort-SDR: jnJRvTL9gukLkg7yEltBlxK2ScxlKlf09k/l7Httbex6BHUn1aMajFaYO62eTP+JZ2PmoaUr/a
+ 47RSaQbC3RIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="442121513"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.157])
+  by orsmga005.jf.intel.com with ESMTP; 26 May 2020 08:29:40 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Travis Downs <travis.downs@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf tools: Fix debuginfo search for Ubuntu
+Date:   Tue, 26 May 2020 18:29:10 +0300
+Message-Id: <20200526152910.1587-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:55:58AM +0200, Thierry Reding wrote:
-> On Tue, May 19, 2020 at 05:03:26PM -0600, Rob Herring wrote:
-> > On Tue, May 19, 2020 at 10:16:43AM -0600, Stephen Warren wrote:
-> > > On 5/13/20 4:41 AM, Mian Yousaf Kaukab wrote:
-> > > > On Tue, May 12, 2020 at 01:45:28PM -0600, Stephen Warren wrote:
-> > > >> On 5/12/20 8:48 AM, Mian Yousaf Kaukab wrote:
-> > > >>> Add documentation for the new optional flag added for SRAM driver.
-> > > >>
-> > > >>> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-> > > >>
-> > > >>> +  reserved-only:
-> > > >>> +    description:
-> > > >>> +      The flag indicating, that only SRAM reserved regions have to be remapped.
-> > > >>> +      remapping type is selected depending upon no-memory-wc as usual.
-> > > >>> +    type: boolean
-> > > >>
-> > > >> This feels a bit like a SW flag rather than a HW description, so I'm not
-> > > >> sure it's appropriate to put it into DT.
-> > > > 
-> > > > Reserved regions themselves are software descriptions, no? Then we have 'pool'
-> > > > flag which is again a software flag and so on. This flag falls into same
-> > > > category and nothing out of ordinary.
-> > > 
-> > > I suppose that's true to some extent. This is indeed a description of
-> > > the system environment presented to the SW that consumes the DT, which
-> > > is a bit more than pure HW description but still a description of
-> > > something imposed externally rather than describing something that's up
-> > > to the discretion of the consuming SW. So, go ahead.
-> > > 
-> > > >> Are there any cases where the SW should map all of the SRAM, i.e. where
-> > > >> we wouldn't expect to set reserved-only? [...]
-> > > > 
-> > > > Yes, here are a few examples:
-> > > > arch/arm/boot/dts/aspeed-g*.dtsi
-> > > > arch/arm/boot/dts/at91*.dtsi
-> > > > arch/arm/boot/dts/bcm7445.dtsi
-> > > > Then arch/arm/boot/dts/dra7.dtsi is an example where we should map everything
-> > > > except the reserved region.
-> > > > 
-> > > >> [...] I'd expect reserved-only to be
-> > > >> the default, and perhaps only, mode of operation for the SRAM driver.
-> > > > 
-> > > > It will break compatibility with existing dtbs.
-> > > > 
-> > > >> If we can't do that because some SW currently expects to be able to map
-> > > >> arbitrary portions of the SRAM, shouldn't that SW be fixed to tell the
-> > > >> SRAM driver which parts it's using, hence still allowing the driver to
-> > > >> only map in-use portions?
-> > > > 
-> > > > User doesn’t need sram driver in that case. It can use genalloc api directly.
-> > > 
-> > > This sounds a bit odd. Without a driver for the reserved region, nothing
-> > > should be touching it, since otherwise there's no code that owns an
-> > > manages the region. If any code needs to consume the region, it should
-> > > obtain info about the region from some form of provider code that can
-> > > handle both the allocation and mapping. Anything else sounds like some
-> > > consumer code directly making use of DT nodes it doesn't own. But since
-> > > I'm not familiar enough with the SRAM driver and genalloc code that you
-> > > mention to fully understand the allocation paths I guess I won't object
-> > > for now, although it does still sound fishy.
-> > 
-> > I'm fine with the concept, but I don't think a single flag is adequate. 
-> > If there are reserved regions within the SRAM, then define child nodes 
-> > to mark those regions reserved. I don't think you need a new flag. Just 
-> > a 'reg' property and nothing else.
-> 
-> It sounds to me like there are two different interpretations of SRAM and
-> reserved regions. On one hand, as you suggest, we have one SRAM that's
-> made available as genalloc pool and then individual regions can be
-> marked as reserved so that they aren't added to that pool.
-> 
-> At the same time, each reserved region is also exposed as a separate
-> pool and that's in fact used by many consumers as a way of getting a
-> specific chunk of the SRAM for their own use (via phandle to the region
-> from the consumer's device tree node).
-> 
-> In addition to that, the reserved region code doesn't actually fully do
-> its job because while the reserved region isn't actually added to the
-> "top-level" SRAM pool, the memory is still mapped. At the same time this
-> is something that we actually want because, like I mentioned, some of
-> the consumers do want to get at their SRAM chunks via references to the
-> partitions.
-> 
-> The problem that this patch series is really trying to solve is another
-> still: the complete SRAM is always mapped to kernel memory, irrespective
-> of whether any regions are marked reserved or not and that can cause
-> speculative accesses to memory outside of the defined regions.
-> 
-> Stephen's suggestion is to default to only mapping memory for which a
-> partition has been defined in the SRAM and assuming that all SRAM
-> outside of those partitions is off limits. I think that's a sensible
-> default and it's unambiguous.
-> 
-> But as Yousaf points out that would break compatibility with existing
-> device trees. Depending on how you interpret the bindings one could
-> argue that those device trees are buggy and should have partitions
-> defined (in the cases I've looked at they end up using a fixed region
-> anyway, so that could've just been made explicit in the device tree).
-> 
-> However, it also looks like all of the users that rely on the original
-> behaviour where they can just access the full pool are those that don't
-> define any reserved regions, whereas all users that do reserve regions
-> will actually use those reserved regions.
-> 
-> So I think we can make use of this by differentiating in the driver
-> between SRAM nodes with or without children and change the behaviour
-> accordingly. I think that has the big advantage that it makes things
-> work as (I think) most people would expect and doesn't further
-> complicate the binding with extra flags.
+Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
+debug symbol files, putting files expected to be in
+/usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
+another dso_binary_type.
 
-I tend to agree on mapping partitions only if they exist. So far I could
-only find one exception. It is arch/arm/boot/dts/armada-370.dtsi which is
-using the top level pool as well as a partition to reserve 32 bytes at the
-bottom of sram. This can be fixed along with the sram driver change, by
-adding another partition for the rest of the sram and using its handle in
-the crypto@90000 instead of top-level sram node handle. Do you see anymore
-exceptions where both top level pool and the partitions both are being used?
+Example on Ubuntu 20.04
 
-Then on the backward compatibility topic, another issue is that boot code
-could add sram nodes dynamically. For example arch/arm/mach-k3/common.c in
-u-boot does it. This particular case will not break after the suggested change
-because it is not adding any partitions. However, there could be other
-boot-loaders which are not this lucky.
+  Before:
 
-> 
-> Thierry
+    $ perf record -e intel_pt//u uname
+    Linux
+    [ perf record: Woken up 1 times to write data ]
+    [ perf record: Captured and wrote 0.030 MB perf.data ]
+    $ perf script --call-trace | head -5
+           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
+           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
+           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
+           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
+           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
 
-/Yousaf
+  After:
+
+    $ perf script --call-trace | head -5
+           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
+           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
+           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+
+Reported-by: Travis Downs <travis.downs@gmail.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+---
+ tools/perf/util/dso.c          | 14 ++++++++++++++
+ tools/perf/util/dso.h          |  1 +
+ tools/perf/util/probe-finder.c |  1 +
+ tools/perf/util/symbol.c       |  2 ++
+ 4 files changed, 18 insertions(+)
+
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index e68e1375e3c0..15b635d6c83c 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -47,6 +47,7 @@ char dso__symtab_origin(const struct dso *dso)
+ 		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
+ 		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
+ 		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
++		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
+ 		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
+ 		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
+ 		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
+@@ -129,6 +130,19 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 		snprintf(filename + len, size - len, "%s", dso->long_name);
+ 		break;
+ 
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++		/*
++		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
++		 * /usr/lib/debug/lib when it is expected to be in
++		 * /usr/lib/debug/usr/lib
++		 */
++		if (strlen(dso->long_name) < 9 ||
++		    strncmp(dso->long_name, "/usr/lib/", 9))
++			ret = -1;
++		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
++		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
++		break;
++
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+ 	{
+ 		const char *last_slash;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 42b3a278ac59..8b7958f02609 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -30,6 +30,7 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
+ 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE,
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index e4cff49384f4..55924255c535 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -101,6 +101,7 @@ enum dso_binary_type distro_dwarf_types[] = {
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
+ 
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 7725c83996f4..44d81f90b604 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -79,6 +79,7 @@ static enum dso_binary_type binary_type_symtab[] = {
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
+ 
+@@ -1529,6 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+ 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+ 		return !kmod && dso->kernel == DSO_TYPE_USER;
+-- 
+2.17.1
 
