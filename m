@@ -2,175 +2,114 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ED4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8FD20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:28:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="C41jJIgi"
+	by mail.kernel.org (Postfix) with ESMTP id B9ACB20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590528751;
+	bh=hzpAMm6GNwKwC8RuiexegDiwWWnK2huIXZ53CLBXjxw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SdYD0Cd3rTr8bYSpJ+XM9+/XoBlyRCoMho5XEqu1Yf3sW+/gylHdb2HDYZhksr0kl
+	 aEZxiEPrY0bFoFymYLfMX5SRSJK3VVrXfafcoTqvWqnquyUrZyg04aAA0acDSFVhF0
+	 asbcCApJwkZpxsXo4zyn6SvvxcfTjRi/R/kexdyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403828AbgEZV2C (ORCPT
+        id S2389579AbgEZVcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:28:02 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:39417 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390211AbgEZV17 (ORCPT
+        Tue, 26 May 2020 17:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388740AbgEZVca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:27:59 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1E4162304C;
-        Tue, 26 May 2020 23:27:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590528477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v1prg2AxKlPkUY+YRJw3VW568pjZYParmSiyD+lvqy4=;
-        b=C41jJIgiWGa3naA6SPxOtWInxa4SXpkUwdeU9rmO4SvzAgfOeYc6sTjGKBzIkmgZegYZev
-        A6Y5Tvniz+HuZXZRtKBs18F4CWWtiYZ1OTpnIKtbxD9eoDbFfCDPoRyvOcgC49bvsq7vcq
-        8uOdm4qngOvyLCsdb0Q9Wch1K3JTkP8=
+        Tue, 26 May 2020 17:32:30 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362B5C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:32:30 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r125so13170098lff.13
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/KSqN/1uGFSWAMqjcchuGZIR3exJ8WM8bq7gNpjfuAI=;
+        b=fheyBaLlluDLksZ+2j65q0tTKxfK1g+WnuTKf3lXv190aV4fKXfwhttUxZ0VsqTlii
+         ARxk9QHilPvtC+sjmqpulPyab9zAp/voO602TJp0MrEWMqo2HJsGfYVYN0LKJAZq35I7
+         kQ5HQMhKqeWDvBXtAvAYAlYca6C9iIw6goapQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/KSqN/1uGFSWAMqjcchuGZIR3exJ8WM8bq7gNpjfuAI=;
+        b=OpMAQm4ut+IR/djcrT2dQZSDo0hbyUJM6ES3yDPm5ekXvZeh6jkCqX3gkHSRspNEBJ
+         v3QcgpFsIlyv1+zSW7uyKSJHzYOhZwnyKFns0d968Luaebucc+rcZU9FaQHu9XY+V5So
+         rd0aerK24NYfB038vgts5JmvCNR/b7ii7RO385wLqWohaWC9WeDXm9jtpRADNGuAtWd9
+         TtaQ0C4BzuCv7/fkFk6D/7+I/OgUg5erakEHv19xmS5HSkBZW51SPK5ootnXmF0V5kxx
+         JeRKtlHF4Hby11jz732SG1X2GbCqthO4z6Ir9kJ41hyITLrumaH5WjDEhYb8Z2gLqgGL
+         aDTw==
+X-Gm-Message-State: AOAM5335mcXgfDCpnHgFkNl49GjHgmGgUtkHeFeKPydtzs14/a4AQHil
+        vbr++t1nNRDVpZacSoBvu2c/rkIxi/c=
+X-Google-Smtp-Source: ABdhPJx4Cji/xzhcTPpf1Vdpa55DUZd8tQw2t7WayCeyCe4Rtn7HNmt46TNMOEsj44F+1aqNPTpc3g==
+X-Received: by 2002:a19:740e:: with SMTP id v14mr1436795lfe.62.1590528748246;
+        Tue, 26 May 2020 14:32:28 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id c22sm259438lfm.25.2020.05.26.14.32.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 14:32:26 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id h188so13227428lfd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:32:26 -0700 (PDT)
+X-Received: by 2002:a19:4048:: with SMTP id n69mr1410519lfa.31.1590528746289;
+ Tue, 26 May 2020 14:32:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 26 May 2020 23:27:57 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
-References: <20200525160741.21729-1-michael@walle.cc>
- <20200525160741.21729-3-michael@walle.cc>
- <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
-X-Sender: michael@walle.cc
+References: <871rn6a6e5.fsf@x220.int.ebiederm.org> <CAHk-=wh5cddDjyS2Av57Oc=qaowkx0XrtuJN=sErcq08qpnb7w@mail.gmail.com>
+ <87pnaq5tf9.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87pnaq5tf9.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 26 May 2020 14:32:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whTcs=GjYGs+KHSAL16vkrK1KRuxuWf8WdrR-W2k9wXaQ@mail.gmail.com>
+Message-ID: <CAHk-=whTcs=GjYGs+KHSAL16vkrK1KRuxuWf8WdrR-W2k9wXaQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull exec fix for v5.7
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, May 26, 2020 at 1:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> I don't see us touching cap_ambient anywhere except the line that does:
+>
+>         /* File caps or setid cancels ambient. */
+>         if (has_fcap || is_setid)
+>                 cap_clear(new->cap_ambient);
 
-Am 2020-05-26 19:29, schrieb Pierre-Louis Bossart:
->> +struct gpio_regmap {
->> +    struct device *parent;
->> +    struct regmap *regmap;
->> +    struct gpio_chip gpio_chip;
->> +
->> +    int reg_stride;
->> +    int ngpio_per_reg;
->> +    unsigned int reg_dat_base;
->> +    unsigned int reg_set_base;
->> +    unsigned int reg_clr_base;
->> +    unsigned int reg_dir_in_base;
->> +    unsigned int reg_dir_out_base;
-> 
-> I wonder if a base is enough, shouldn't there be a 'last' or something
-> that constrains the range of regmap addresses to be used for gpios?
+That's the one I was thinking of.
 
-This should be covered on the regmap, shouldn't it?
+I think it would have made more sense to simply initialize it there
+and have all accesses to cap_ambient in one place.
 
-> related question since I couldn't figure out how to convert my PCM512x
-> example, where there are 6 GPIOs configured with 3 regmap-visible
-> registers [1], to this mapping.
-> 
-> GPIO_EN defines if the GPIO is used or not (each bitfield is tied to a
-> GPIO)
-> 
-> GPIO_CONTROL_1 defines the level (each bitfield is tied to a GPIO)
-> 
-> GPIO_OUTPUT_1+offset defines what signal is routed to each GPIO. I am
-> really not sure how this part would be handled?
-> 
-> That's 8 registers total to deal with GPIOs.
+The (even better?) alternative would have been to simply just always
+re-initialize it in the caller.
 
-Looks like you need a custom xlate function:
+If this is about interpreter vs scripts, I really find it confusing
+how we make these kinds of re-initializations at the security layer
+that doesn't know about one vs the other.. Yes, in your cleanup
+branch, the "primary" thing becomes more clear, but it very much is
+_not_ clear within the context of this patch.
 
-int pcm512x_gpio_regmap_xlate(struct gpio_regmap *gpio, unsigned int 
-base,
-                               unsigned int offset, unsigned int *reg,
-                               unsigned int *mask)
-{
-   switch (base)
-   case GPIO_EN:
-   case GPIO_CONTROL_1:
-      *reg = base;
-      *mask = (1 << offset);
-      break;
-   case GPIO_OUTPUT_1:
-      *reg = base + offset;
-      *mask = ...
-      break;
-}
+Hmm?
 
-base is always one of the xx_base properties in the "struct
-gpio_regmap_config".
-
->> +/**
->> + * struct gpio_regmap_config - Description of a generic regmap
->> gpio_chip.
->> + *
->> + * @parent:        The parent device
->> + * @regmap:        The regmap used to access the registers
->> + *            given, the name of the device is used
->> + * @label:        (Optional) Descriptive name for GPIO controller.
->> + *            If not given, the name of the device is used.
->> + * @ngpio:        Number of GPIOs
->> + * @reg_dat_base:    (Optional) (in) register base address
->> + * @reg_set_base:    (Optional) set register base address
->> + * @reg_clr_base:    (Optional) clear register base address
->> + * @reg_dir_in_base:    (Optional) in setting register base address
->> + * @reg_dir_out_base:    (Optional) out setting register base
->> address
->> + * @reg_stride:        (Optional) May be set if the registers (of
->> the
->> + *            same type, dat, set, etc) are not consecutive.
->> + * @ngpio_per_reg:    Number of GPIOs per register
->> + * @irq_domain:        (Optional) IRQ domain if the controller is
->> + *            interrupt-capable
->> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
->> + *            offset to a register/bitmask pair. If not
->> + *            given the default gpio_regmap_simple_xlate()
->> + *            is used.
->> + *
->> + * The reg_mask_xlate translates a given base address and GPIO
->> offset to
->> + * register and mask pair. The base address is one of the given
->> reg_*_base.
->> + *
->> + * All base addresses may have the special value
->> GPIO_REGMAP_ADDR_ZERO
->> + * which forces the address to the value 0.
->> + */
->> +struct gpio_regmap_config {
->> +    struct device *parent;
->> +    struct regmap *regmap;
->> +
->> +    const char *label;
->> +    int ngpio;
-> 
-> could we add a .names field for the gpio_chip, I found this useful for
-> PCM512x GPIO support, e.g.
-
-Sure, I have the names in the device tree.
-
-But I'd prefer that you'd do a patch on top of this (assuming it is
-applied soon), because you can actually test it and there might be
-missing more.
-
-[snip]
-
--michael
+              Linus
