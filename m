@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B004C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDBA20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0297420776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520905;
-	bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
+	s=default; t=1590520913;
+	bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HtQnf5v30Gc9f5xt0HMUl3Mm5quRI1FsEMORSJkN8qJPhp58m5H2Yox4rUw0xaMDt
-	 eckeGnTnVQbcuv8mhiZVtOg3wANJs7oEO32jTwZReqv0iAF8SXt5I2TYxTVVRogmz8
-	 +63d9bp26ihizCHypTOFyIlSmms2n2aIAMhuOGIY=
+	b=Jyl36OSRK68P3HpKN1mRv0Tk1eyTXMn9KL3ZCX6nm6rzK8GyShD5IbsZiJZtsXdC1
+	 rVYpHiixzLKToZ3KBx1TsQ71Ctq+Q9TrykSjn8eRebn6PGblcweYL7n3pQS3AvKwcf
+	 B5wUl2qAhPN5Iq8Jl5eiGzV+uORyOltfdu4CT/fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404044AbgEZTLV (ORCPT
+        id S2404430AbgEZTVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40646 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:21:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391950AbgEZTLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:18 -0400
+        id S2391427AbgEZTLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C2D20776;
-        Tue, 26 May 2020 19:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FF520888;
+        Tue, 26 May 2020 19:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520278;
-        bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
+        s=default; t=1590520270;
+        bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEZDJHCxGO+t0aeuK1nM1KbIUaAFt/GFiB0qs1a1q0WWtkcUPMzlPw2OWTyXlFNlH
-         SvLmWflc1ZCBVS89LD/dSeVzBPDvhurcMLlfn1/dTThKnT5np72nLG17m+Hdj4qHhd
-         Tml+dOVbeEVmE60RMmQpFZkJMf5rSEs0D8dPpoJw=
+        b=2TZAVr4eSX95Ris7Vtv2FHOyiZz97dYZgt2LUinVpkQL9WL8FUhq37xy/JPeYkX4T
+         Yt7pItYTB826CIqj7yYOvXlWSqBRzEnAZ0CwVXDWLmz9jaS0du3SnBYN8b+Z/okP+W
+         n5fNgcruqVT7AB353aTAZP0KJL3XyCCb7XdapseY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 017/126] i2c: mux: demux-pinctrl: Fix an error handling path in i2c_demux_pinctrl_probe()
-Date:   Tue, 26 May 2020 20:52:34 +0200
-Message-Id: <20200526183939.056537380@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 014/126] iommu/amd: Fix over-read of ACPI UID from IVRS table
+Date:   Tue, 26 May 2020 20:52:31 +0200
+Message-Id: <20200526183938.780946925@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,33 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-[ Upstream commit e9d1a0a41d4486955e96552293c1fcf1fce61602 ]
+[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
 
-A call to 'i2c_demux_deactivate_master()' is missing in the error handling
-path, as already done in the remove function.
+IVRS parsing code always tries to read 255 bytes from memory when
+retrieving ACPI device path, and makes an assumption that firmware
+provides a zero-terminated string. Both of those are bugs: the entry
+is likely to be shorter than 255 bytes, and zero-termination is not
+guaranteed.
 
-Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+With Acer SF314-42 firmware these issues manifest visibly in dmesg:
+
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
+
+The first three lines show how the code over-reads adjacent table
+entries into the UID, and in the last line it even reads garbage data
+beyond the end of the IVRS table itself.
+
+Since each entry has the length of the UID (uidl member of ivhd_entry
+struct), use that for memcpy, and manually add a zero terminator.
+
+Avoid zero-filling hid and uid arrays up front, and instead ensure
+the uid array is always zero-terminated. No change needed for the hid
+array, as it was already properly zero-terminated.
+
+Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
+Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/amd_iommu_init.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-index 0e16490eb3a1..5365199a31f4 100644
---- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
-+++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-@@ -272,6 +272,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
- err_rollback_available:
- 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
- err_rollback:
-+	i2c_demux_deactivate_master(priv);
- 	for (j = 0; j < i; j++) {
- 		of_node_put(priv->chan[j].parent_np);
- 		of_changeset_destroy(&priv->chan[j].chgset);
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 2b9a67ecc6ac..5b81fd16f5fa 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -1329,8 +1329,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 		}
+ 		case IVHD_DEV_ACPI_HID: {
+ 			u16 devid;
+-			u8 hid[ACPIHID_HID_LEN] = {0};
+-			u8 uid[ACPIHID_UID_LEN] = {0};
++			u8 hid[ACPIHID_HID_LEN];
++			u8 uid[ACPIHID_UID_LEN];
+ 			int ret;
+ 
+ 			if (h->type != 0x40) {
+@@ -1347,6 +1347,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			}
+ 
++			uid[0] = '\0';
+ 			switch (e->uidf) {
+ 			case UID_NOT_PRESENT:
+ 
+@@ -1361,8 +1362,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			case UID_IS_CHARACTER:
+ 
+-				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
+-				uid[ACPIHID_UID_LEN - 1] = '\0';
++				memcpy(uid, &e->uid, e->uidl);
++				uid[e->uidl] = '\0';
+ 
+ 				break;
+ 			default:
 -- 
 2.25.1
 
