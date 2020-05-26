@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E38CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BE520888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D67A2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520721;
-	bh=ONsYDddsZTVKtfoCed08ZnVV6GO76273vrFEOVSs5A8=;
+	s=default; t=1590520725;
+	bh=ABke5fCnb4WtC7EIewoibSfRFGOJLJ1nVVXvihgqlJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ap/ENiqlpZKsyypiwu4qcu+MaL78gCjOah76sBXNNizvma4UM9K9lV3k+KKCH5IDj
-	 hMyGbPzciSRzOZAac/GjB4EKEc1FY/AZopl6vm5UjN1VBavLaxr7KORFedmstHWX9D
-	 JkEWv9zgkm5VfpoN080IcZmUKxkz5XKVwmjstn9M=
+	b=sdekR4RD7b/kNRsoLhmvSS3Xjab4wZk37BCwLZGuDnbF5eKfT8OLy+zLmim/LlllR
+	 RftjdwnvRIfWNc+3avLo0jKAejGcUrYoEHLmECxLKPh6RKco2MrcpWSykLHp9grXN9
+	 /nzud5g0w1W0d9LLgFIRhpa2EivV3aXZqzpDtEeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404214AbgEZTSk (ORCPT
+        id S2404331AbgEZTSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43906 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391970AbgEZTNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:37 -0400
+        id S2391048AbgEZTNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FDB2208B3;
-        Tue, 26 May 2020 19:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE2920888;
+        Tue, 26 May 2020 19:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520416;
-        bh=ONsYDddsZTVKtfoCed08ZnVV6GO76273vrFEOVSs5A8=;
+        s=default; t=1590520414;
+        bh=ABke5fCnb4WtC7EIewoibSfRFGOJLJ1nVVXvihgqlJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GRehLAe0vCwcgZZhg8JG2mlo9ZIFxGrnPZgecrPv9NI1q5hNgJY6pfb/jUAaVQFlB
-         knIV3X3Zp2uXBcQMtomhhhlJWwwpU6XhH/p6mLa/Y+kkpf3lOBLrU2zDwXzOcwp5/S
-         LKC5OpVSfNqwOuZw8GMfqcurH8Snmhf/XYSqbW44=
+        b=trWFktulLJBuA8fbgr8qhcmsgXHtGsmQ1QVuBQ46XyK1gFaL+WpAsi1LsPWxzg4rj
+         0ji15A+cKklbyltv4hc0Q8/bOnpGdjxNwWQFywIzDZ6JmFCR7Ef1lAPwqLcReLl1xZ
+         Oydl3GyYQMJ/DUch8pn39sPQtCAnljpTYM7Zirnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Quinn Tran <qutran@marvell.com>,
+        Arun Easi <aeasi@marvell.com>,
         Nilesh Javali <njavali@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 030/126] scsi: qla2xxx: Delete all sessions before unregister local nvme port
-Date:   Tue, 26 May 2020 20:52:47 +0200
-Message-Id: <20200526183940.315220710@linuxfoundation.org>
+Subject: [PATCH 5.6 029/126] scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
+Date:   Tue, 26 May 2020 20:52:46 +0200
+Message-Id: <20200526183940.206343877@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -63,64 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit c48f849d3f7a4ec1025105f446e29d395c4dcc2f ]
+[ Upstream commit 45a76264c26fd8cfd0c9746196892d9b7e2657ee ]
 
-Delete all sessions before unregistering local nvme port.  This allows nvme
-layer to decrement all active rport count down to zero.  Once the count is
-down to zero, nvme would call qla to continue with the npiv port deletion.
+In NPIV environment, a NPIV host may use a queue pair created by base host
+or other NPIVs, so the check for a queue pair created by this NPIV is not
+correct, and can cause an abort to fail, which in turn means the NVME
+command not returned.  This leads to hang in nvme_fc layer in
+nvme_fc_delete_association() which waits for all I/Os to be returned, which
+is seen as hang in the application.
 
-PID: 27448  TASK: ffff9e34b777c1c0  CPU: 0   COMMAND: "qaucli"
- 0 [ffff9e25e84abbd8] __schedule at ffffffff977858ca
- 1 [ffff9e25e84abc68] schedule at ffffffff97785d79
- 2 [ffff9e25e84abc78] schedule_timeout at ffffffff97783881
- 3 [ffff9e25e84abd28] wait_for_completion at ffffffff9778612d
- 4 [ffff9e25e84abd88] qla_nvme_delete at ffffffffc0e3024e [qla2xxx]
- 5 [ffff9e25e84abda8] qla24xx_vport_delete at ffffffffc0e024b9 [qla2xxx]
- 6 [ffff9e25e84abdf0] fc_vport_terminate at ffffffffc011c247 [scsi_transport_fc]
- 7 [ffff9e25e84abe28] store_fc_host_vport_delete at ffffffffc011cd94 [scsi_transport_fc]
- 8 [ffff9e25e84abe70] dev_attr_store at ffffffff974b376b
- 9 [ffff9e25e84abe80] sysfs_kf_write at ffffffff972d9a92
-10 [ffff9e25e84abe90] kernfs_fop_write at ffffffff972d907b
-11 [ffff9e25e84abec8] vfs_write at ffffffff9724c790
-12 [ffff9e25e84abf08] sys_write at ffffffff9724d55f
-13 [ffff9e25e84abf50] system_call_fastpath at ffffffff97792ed2
-    RIP: 00007fc0bd81a6fd  RSP: 00007ffff78d9648  RFLAGS: 00010202
-    RAX: 0000000000000001  RBX: 0000000000000022  RCX: 00007ffff78d96e0
-    RDX: 0000000000000022  RSI: 00007ffff78d94e0  RDI: 0000000000000008
-    RBP: 00007ffff78d9440   R8: 0000000000000000   R9: 00007fc0bd48b2cd
-    R10: 0000000000000017  R11: 0000000000000293  R12: 0000000000000000
-    R13: 00005624e4dac840  R14: 00005624e4da9a10  R15: 0000000000000000
-    ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
-
-Link: https://lore.kernel.org/r/20200331104015.24868-4-njavali@marvell.com
+Link: https://lore.kernel.org/r/20200331104015.24868-3-njavali@marvell.com
 Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Arun Easi <aeasi@marvell.com>
 Signed-off-by: Nilesh Javali <njavali@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c | 2 +-
+ drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index d7e7043f9eab..9556392652e3 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -2928,11 +2928,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
- 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
- 		msleep(1000);
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 9e09964f5c0e..7b341e41bb85 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3117,7 +3117,7 @@ qla24xx_abort_command(srb_t *sp)
+ 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
+ 	    "Entered %s.\n", __func__);
  
--	qla_nvme_delete(vha);
- 
- 	qla24xx_disable_vp(vha);
- 	qla2x00_wait_for_sess_deletion(vha);
- 
-+	qla_nvme_delete(vha);
- 	vha->flags.delete_progress = 1;
- 
- 	qlt_remove_target(ha, vha);
+-	if (vha->flags.qpairs_available && sp->qpair)
++	if (sp->qpair)
+ 		req = sp->qpair->req;
+ 	else
+ 		return QLA_FUNCTION_FAILED;
 -- 
 2.25.1
 
