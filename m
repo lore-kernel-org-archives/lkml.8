@@ -2,140 +2,128 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D63C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D925DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BC62084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45192088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:59:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K3VhsR5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388794AbgEZK6Q (ORCPT
+        id S2388804AbgEZK72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:58:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:49196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388501AbgEZK6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:58:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1942F31B;
-        Tue, 26 May 2020 03:58:13 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 358A93F6C4;
-        Tue, 26 May 2020 03:58:10 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:58:07 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maz@kernel.org, will@kernel.org,
-        catalin.marinas@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
-        aarcange@redhat.com, shan.gavin@gmail.com
-Subject: Re: [PATCH RFCv2 6/9] kvm/arm64: Export kvm_handle_user_mem_abort()
- with prefault mode
-Message-ID: <20200526105807.GE1363@C02TD0UTHF1T.local>
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-7-gshan@redhat.com>
+        Tue, 26 May 2020 06:59:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388680AbgEZK71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:59:27 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C53AAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:59:26 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id j21so9922083pgb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9Ou0qlu1mCa7PnwmjPJaB3DW9DwrRU3q8YGJo9GcDus=;
+        b=K3VhsR5LEfuu1zhCWSX8ZDiZ3ZxIlG7BA/03u2JIL4mG0pKb21JzuhyouVbtkkWOxd
+         zJS6OCY+FQ6P+e3aeiFTRfUQmzH3/gsnFD50DgO5tGr1qoja2y1HvgRC2Pw7TqGI63LP
+         4TJzSsDw/kvWPaVNrvmgbUvep6sybaicYksX0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9Ou0qlu1mCa7PnwmjPJaB3DW9DwrRU3q8YGJo9GcDus=;
+        b=JGVsY/Xw6TiO+yXZPQ2uMyJhqxfW24paY0s0LVbxEEaKwWLmjuEdyTg70kKOqlhr8V
+         b0EvtL/bxv9JP/gZ4LCQibQiVp5wPr/VJ6IA14+id6SHwgFO4SROvtIhZbciY58or7J4
+         QjLwsgmAnLgsY9B/0AmeighqZDxSX0CK5KvgFrQnyi0oG6GhcbDnH9On3NngTs9IhLyp
+         6EaND7YL5b7S/m//jYEVXkZBTAH3JgegkQn3TE1TPjHEOCFqtzlaWA0UxrhgCKogX3YF
+         22nH76O0AtChsRHzwKRGhJe6jP4rAW1YVKzauMZovqG18QFEE5gi9b7uIqPyP/KxYgst
+         rdQA==
+X-Gm-Message-State: AOAM533FDO8FCOnRFud++TuDaAcwEtSn2+y9srPBhLkov5DtJZT5LapD
+        uP5QfV/m2eFnFpDCP760GLvzLw==
+X-Google-Smtp-Source: ABdhPJxwt+9IRBaAm+bRoOfanDBMpGRNfprsaYldgxiuYvSUYxg+AZzdBZXgODn2wqRHGF504ZOpYQ==
+X-Received: by 2002:a63:2246:: with SMTP id t6mr502754pgm.211.1590490766229;
+        Tue, 26 May 2020 03:59:26 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:30f2:7a9c:387e:6c7])
+        by smtp.gmail.com with ESMTPSA id x13sm14637864pjr.20.2020.05.26.03.59.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 03:59:25 -0700 (PDT)
+From:   David Stevens <stevensd@chromium.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Stevens <stevensd@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: [PATCH v4 0/3] Support virtio cross-device resources
+Date:   Tue, 26 May 2020 19:58:08 +0900
+Message-Id: <20200526105811.30784-1-stevensd@chromium.org>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508032919.52147-7-gshan@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:29:16PM +1000, Gavin Shan wrote:
-> This renames user_mem_abort() to kvm_handle_user_mem_abort(), and
-> then export it. The function will be used in asynchronous page fault
-> to populate a page table entry once the corresponding page is populated
-> from the backup device (e.g. swap partition):
-> 
->    * Parameter @fault_status is replace by @esr.
->    * The parameters are reorder based on their importance.
+This patchset implements the current proposal for virtio cross-device
+resource sharing [1]. It will be used to import virtio resources into
+the virtio-video driver currently under discussion [2]. The patch
+under consideration to add support in the virtio-video driver is [3].
+It uses the APIs from v3 of this series, but the changes to update it
+are relatively minor.
 
-It seems like multiple changes are going on here, and it would be
-clearer with separate patches.
+This patchset adds a new flavor of dma-bufs that supports querying the
+underlying virtio object UUID, as well as adding support for exporting
+resources from virtgpu.
 
-Passing the ESR rather than the extracted fault status seems fine, but
-for clarirty it's be nicer to do this in its own patch.
+[1] https://markmail.org/thread/2ypjt5cfeu3m6lxu
+[2] https://markmail.org/thread/p5d3k566srtdtute
+[3] https://markmail.org/thread/j4xlqaaim266qpks
 
-Why is it necessary to re-order the function parameters? Does that align
-with other function prototypes?
+v3 -> v4 changes:
+ - Replace dma-buf hooks with virtio dma-buf from v1.
+ - Remove virtio_attach callback, as the work that had been done
+   in that callback is now done on dma-buf export. The documented
+   requirement that get_uuid only be called on attached virtio
+   dma-bufs is also removed.
+ - Rebase and add call to virtio_gpu_notify for ASSIGN_UUID.
 
-What exactly is the `prefault` parameter meant to do? It doesn't do
-anything currently, so it'd be better to introduce it later when logic
-using it is instroduced, or where callers will pass distinct values.
+David Stevens (3):
+  virtio: add dma-buf support for exported objects
+  virtio-gpu: add VIRTIO_GPU_F_RESOURCE_UUID feature
+  drm/virtio: Support virtgpu exported resources
 
-Thanks,
-Mark.
+ drivers/gpu/drm/virtio/virtgpu_drv.c   |  3 +
+ drivers/gpu/drm/virtio/virtgpu_drv.h   | 20 ++++++
+ drivers/gpu/drm/virtio/virtgpu_kms.c   |  4 ++
+ drivers/gpu/drm/virtio/virtgpu_prime.c | 98 +++++++++++++++++++++++++-
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 55 +++++++++++++++
+ drivers/virtio/Makefile                |  2 +-
+ drivers/virtio/virtio.c                |  6 ++
+ drivers/virtio/virtio_dma_buf.c        | 91 ++++++++++++++++++++++++
+ include/linux/virtio.h                 |  1 +
+ include/linux/virtio_dma_buf.h         | 58 +++++++++++++++
+ include/uapi/linux/virtio_gpu.h        | 19 +++++
+ 11 files changed, 353 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/virtio/virtio_dma_buf.c
+ create mode 100644 include/linux/virtio_dma_buf.h
 
-> 
-> This shouldn't cause any functional changes.
-> 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h |  4 ++++
->  virt/kvm/arm/mmu.c                | 14 ++++++++------
->  2 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 32c8a675e5a4..f77c706777ec 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -437,6 +437,10 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
->  			      struct kvm_vcpu_events *events);
->  
->  #define KVM_ARCH_WANT_MMU_NOTIFIER
-> +int kvm_handle_user_mem_abort(struct kvm_vcpu *vcpu, unsigned int esr,
-> +			      struct kvm_memory_slot *memslot,
-> +			      phys_addr_t fault_ipa, unsigned long hva,
-> +			      bool prefault);
->  int kvm_unmap_hva_range(struct kvm *kvm,
->  			unsigned long start, unsigned long end);
->  int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index e462e0368fd9..95aaabb2b1fc 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1656,12 +1656,12 @@ static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->  	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
->  }
->  
-> -static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-> -			  struct kvm_memory_slot *memslot, unsigned long hva,
-> -			  unsigned long fault_status)
-> +int kvm_handle_user_mem_abort(struct kvm_vcpu *vcpu, unsigned int esr,
-> +			      struct kvm_memory_slot *memslot,
-> +			      phys_addr_t fault_ipa, unsigned long hva,
-> +			      bool prefault)
->  {
-> -	int ret;
-> -	u32 esr = kvm_vcpu_get_esr(vcpu);
-> +	unsigned int fault_status = kvm_vcpu_trap_get_fault_type(esr);
->  	bool write_fault, writable, force_pte = false;
->  	bool exec_fault, needs_exec;
->  	unsigned long mmu_seq;
-> @@ -1674,6 +1674,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  	pgprot_t mem_type = PAGE_S2;
->  	bool logging_active = memslot_is_logging(memslot);
->  	unsigned long vma_pagesize, flags = 0;
-> +	int ret;
->  
->  	write_fault = kvm_is_write_fault(esr);
->  	exec_fault = kvm_vcpu_trap_is_iabt(esr);
-> @@ -1995,7 +1996,8 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		goto out_unlock;
->  	}
->  
-> -	ret = user_mem_abort(vcpu, fault_ipa, memslot, hva, fault_status);
-> +	ret = kvm_handle_user_mem_abort(vcpu, esr, memslot,
-> +					fault_ipa, hva, false);
->  	if (ret == 0)
->  		ret = 1;
->  out:
-> -- 
-> 2.23.0
-> 
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
