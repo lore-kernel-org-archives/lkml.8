@@ -2,171 +2,174 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B64C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C380C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8EA20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A51220776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TK4FemrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgEZOvC (ORCPT
+        id S1729460AbgEZOvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:51:02 -0400
-Received: from atl4mhfb03.myregisteredsite.com ([209.17.115.119]:43666 "EHLO
-        atl4mhfb03.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729141AbgEZOvC (ORCPT
+        Tue, 26 May 2020 10:51:32 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:38930 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729333AbgEZOvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:51:02 -0400
-Received: from jax4mhob18.registeredsite.com (jax4mhob18.registeredsite.com [64.69.218.106])
-        by atl4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 04QEow2W031301
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:50:58 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.203])
-        by jax4mhob18.registeredsite.com (8.14.4/8.14.4) with ESMTP id 04QEotek045137
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:50:56 -0400
-Received: (qmail 16270 invoked by uid 0); 26 May 2020 14:50:55 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 26 May 2020 14:50:55 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-usb@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org, balbi@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] usb/phy-generic: Add support for OTG VBUS supply control
-Date:   Tue, 26 May 2020 16:50:51 +0200
-Message-Id: <20200526145051.31520-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 May 2020 10:51:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590504691; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=c8RXii6pifQBdUf4+jgUL7EdFr2F1OlKXX/MPLtY3BE=; b=TK4FemrF0tArihT8pLlsvVKMC5D8kGttY+CCYAZmZeT809/vASziQehHAthFXOmVwfH9eBHT
+ kDl/ir3sn8eqByBpp2qoekLX5n96XpDGNygiIox07SaoX2NC/m5NkEdXSwnJaOS5xOmmRonQ
+ Z2q23BgEnR31mFgsaVIKHygSMc0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ecd2cf227386861261101e1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 14:51:30
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7AC6FC433CB; Tue, 26 May 2020 14:51:29 +0000 (UTC)
+Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9701BC433C6;
+        Tue, 26 May 2020 14:51:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9701BC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+From:   Zijun Hu <zijuhu@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org, zijuhu@codeaurora.org
+Subject: [PATCH v1] bluetooth: hci_qca: Fix QCA6390 memdump failure
+Date:   Tue, 26 May 2020 22:51:21 +0800
+Message-Id: <1590504681-6284-1-git-send-email-zijuhu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables support for VBUS on boards where the power is supplied
-by a regulator. The regulator is enabled when the USB port enters
-HOST mode.
+QCA6390 memdump VSE sometimes come to bluetooth driver
+with wrong sequence number as illustrated as follows:
+frame # in DEC: frame data in HEX
+1396: ff fd 01 08 74 05 00 37 8f 14
+1397: ff fd 01 08 75 05 00 ff bf 38
+1414: ff fd 01 08 86 05 00 fb 5e 4b
+1399: ff fd 01 08 77 05 00 f3 44 0a
+1400: ff fd 01 08 78 05 00 ca f7 41
+it is mistook for controller missing packets, so results
+in page fault after overwriting memdump buffer allocated.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+it is fixed by ignoring QCA6390 sequence number error
+and checking buffer space before writing.
+
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
 ---
- .../devicetree/bindings/usb/usb-nop-xceiv.txt |  3 ++
- drivers/usb/phy/phy-generic.c                 | 44 ++++++++++++++++++-
- drivers/usb/phy/phy-generic.h                 |  2 +
- 3 files changed, 48 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-index 4dc6a8ee3071..775a19fdb613 100644
---- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-@@ -16,6 +16,9 @@ Optional properties:
- 
- - vcc-supply: phandle to the regulator that provides power to the PHY.
- 
-+- vbus-supply: phandle to the regulator that provides the VBUS power for when
-+  the device is in HOST mode.
-+
- - reset-gpios: Should specify the GPIO for reset.
- 
- - vbus-detect-gpio: should specify the GPIO detecting a VBus insertion
-diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-index 661a229c105d..ebfb90764511 100644
---- a/drivers/usb/phy/phy-generic.c
-+++ b/drivers/usb/phy/phy-generic.c
-@@ -203,13 +203,43 @@ static int nop_set_host(struct usb_otg *otg, struct usb_bus *host)
- 	return 0;
- }
- 
-+static int nop_set_vbus(struct usb_otg *otg, bool enabled)
-+{
-+	struct usb_phy_generic *nop;
-+	int ret;
-+
-+	if (!otg)
-+		return -ENODEV;
-+
-+	nop = container_of(otg->usb_phy, struct usb_phy_generic, phy);
-+
-+	if (!nop->vbus_reg)
-+		return 0;
-+
-+	if (enabled) {
-+		if (nop->vbus_reg_enabled)
-+			return 0;
-+		ret = regulator_enable(nop->vbus_reg);
-+		if (ret < 0)
-+			return ret;
-+		nop->vbus_reg_enabled = true;
-+	} else {
-+		if (!nop->vbus_reg_enabled)
-+			return 0;
-+		ret = regulator_disable(nop->vbus_reg);
-+		if (ret < 0)
-+			return ret;
-+		nop->vbus_reg_enabled = false;
-+	}
-+}
-+
- int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- {
- 	enum usb_phy_type type = USB_PHY_TYPE_USB2;
- 	int err = 0;
- 
- 	u32 clk_rate = 0;
--	bool needs_vcc = false, needs_clk = false;
-+	bool needs_vcc = false, needs_clk = false, needs_vbus = false;
- 
- 	if (dev->of_node) {
- 		struct device_node *node = dev->of_node;
-@@ -219,6 +249,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 
- 		needs_vcc = of_property_read_bool(node, "vcc-supply");
- 		needs_clk = of_property_read_bool(node, "clocks");
-+		needs_vbus = of_property_read_bool(node, "vbus-supply");
- 	}
- 	nop->gpiod_reset = devm_gpiod_get_optional(dev, "reset",
- 						   GPIOD_ASIS);
-@@ -268,6 +299,16 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 			return -EPROBE_DEFER;
- 	}
- 
-+	nop->vbus_reg = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(nop->vbus_reg)) {
-+		dev_dbg(dev, "Error getting vbus regulator: %ld\n",
-+					PTR_ERR(nop->vbus_reg));
-+		if (needs_vbus)
-+			return -EPROBE_DEFER;
-+
-+		nop->vbus_reg = NULL;
-+	}
-+
- 	nop->dev		= dev;
- 	nop->phy.dev		= nop->dev;
- 	nop->phy.label		= "nop-xceiv";
-@@ -278,6 +319,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 	nop->phy.otg->usb_phy		= &nop->phy;
- 	nop->phy.otg->set_host		= nop_set_host;
- 	nop->phy.otg->set_peripheral	= nop_set_peripheral;
-+	nop->phy.otg->set_vbus		= nop_set_vbus;
- 
- 	return 0;
- }
-diff --git a/drivers/usb/phy/phy-generic.h b/drivers/usb/phy/phy-generic.h
-index 7ee80211a688..a3663639ea1e 100644
---- a/drivers/usb/phy/phy-generic.h
-+++ b/drivers/usb/phy/phy-generic.h
-@@ -14,7 +14,9 @@ struct usb_phy_generic {
- 	struct gpio_desc *gpiod_reset;
- 	struct gpio_desc *gpiod_vbus;
- 	struct regulator *vbus_draw;
-+	struct regulator *vbus_reg;
- 	bool vbus_draw_enabled;
-+	bool vbus_reg_enabled;
- 	unsigned long mA;
- 	unsigned int vbus;
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index e4a6823..ab90af6 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -114,6 +114,7 @@ struct qca_memdump_data {
+ 	char *memdump_buf_tail;
+ 	u32 current_seq_no;
+ 	u32 received_dump;
++	u32 ram_dump_size;
  };
+ 
+ struct qca_memdump_event_hdr {
+@@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
+ 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
+ 	u16 seq_no;
+ 	u32 dump_size;
++	u32 temp;
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+ 
+ 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
+ 
+@@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
+ 
+ 			skb_pull(skb, sizeof(dump_size));
+ 			memdump_buf = vmalloc(dump_size);
++			qca_memdump->ram_dump_size = dump_size;
+ 			qca_memdump->memdump_buf_head = memdump_buf;
+ 			qca_memdump->memdump_buf_tail = memdump_buf;
+ 		}
+@@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
+ 		 * packets in the buffer.
+ 		 */
+ 		while ((seq_no > qca_memdump->current_seq_no + 1) &&
++			(soc_type != QCA_QCA6390) &&
+ 			seq_no != QCA_LAST_SEQUENCE_NUM) {
+ 			bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
+ 				   qca_memdump->current_seq_no);
++			temp = qca_memdump->received_dump;
++			temp += QCA_DUMP_PACKET_SIZE;
++			if (temp > qca_memdump->ram_dump_size) {
++				bt_dev_err(hu->hdev,
++						"QCA memdump received %d, no space for missed packet",
++						qca_memdump->received_dump);
++				break;
++			}
+ 			memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
+ 			memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
+ 			qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
+ 			qca_memdump->current_seq_no++;
+ 		}
+ 
+-		memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
+-		memdump_buf = memdump_buf + skb->len;
+-		qca_memdump->memdump_buf_tail = memdump_buf;
+-		qca_memdump->current_seq_no = seq_no + 1;
+-		qca_memdump->received_dump += skb->len;
++		temp = qca_memdump->received_dump + skb->len;
++		if (temp <= qca_memdump->ram_dump_size) {
++			if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
++					(seq_no != qca_memdump->current_seq_no))
++				bt_dev_err(hu->hdev,
++						"QCA memdump unexpected packet %d",
++						seq_no);
++			bt_dev_dbg(hu->hdev,
++					"QCA memdump packet %d with length %d",
++					seq_no, skb->len);
++			memcpy(memdump_buf, (unsigned char *)skb->data,
++					skb->len);
++			memdump_buf = memdump_buf + skb->len;
++			qca_memdump->memdump_buf_tail = memdump_buf;
++			qca_memdump->current_seq_no = seq_no + 1;
++			qca_memdump->received_dump += skb->len;
++		} else {
++			bt_dev_err(hu->hdev,
++					"QCA memdump received %d, no space for packet %d",
++					qca_memdump->received_dump, seq_no);
++		}
+ 		qca->qca_memdump = qca_memdump;
+ 		kfree_skb(skb);
+ 		if (seq_no == QCA_LAST_SEQUENCE_NUM) {
+-			bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
+-				   qca_memdump->received_dump);
++			bt_dev_info(hu->hdev,
++					"QCA memdump Done, received %d, total %d",
++					qca_memdump->received_dump,
++					qca_memdump->ram_dump_size);
+ 			memdump_buf = qca_memdump->memdump_buf_head;
+ 			dev_coredumpv(&hu->serdev->dev, memdump_buf,
+ 				      qca_memdump->received_dump, GFP_KERNEL);
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
