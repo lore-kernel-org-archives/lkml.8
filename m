@@ -2,68 +2,123 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A730DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C136C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9022D207ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DE12089D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:36:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V5Uh8HJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725775AbgEZEfV (ORCPT
+        id S1726091AbgEZEgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 00:35:21 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:36090 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725891AbgEZEfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 00:35:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TzgjMIS_1590467711;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TzgjMIS_1590467711)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 May 2020 12:35:12 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCH 0/2] x86/entry: simplify RESTORE_CR3
-Date:   Tue, 26 May 2020 04:35:05 +0000
-Message-Id: <20200526043507.51977-1-laijs@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 26 May 2020 00:36:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:59261 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgEZEgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 00:36:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WLl50fF7z9sRK;
+        Tue, 26 May 2020 14:36:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590467794;
+        bh=4v8ocGM/APo2sSgppiU/a6nI3q4TeGO4rhe21S8OGMo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=V5Uh8HJBzGV7gcBzXAj8zRUgdsUcf4HxCOU4Fwqb2ObX2nf/TFqzbFgXYhx85LoTq
+         dxT277ChkPmq147KLwFVatU9YyVLPr4En646pqvi8T4NuqUqHCPzttLvknIIhTQdoo
+         4CbsVgsjR8qbRXpx908nBDiUMXdexy5CtcNTWlPNu5dsEzGWQAJVOI/xnUOFJMT0an
+         iJaTRq6aT/r/m8ZhVuAqFGToaMk2ra6wcB0shi+Pp8dZicO7MB9xwPNuFtCYPSgtAq
+         l0OU9lYL5dpeS0gum+9XqlTGVetUQJLJCx6tXhAjAH7rJ6+tQMf0pWOjnDrLC68RrF
+         ex0qYuxE8keGw==
+Date:   Tue, 26 May 2020 14:36:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     David Sterba <dsterba@suse.cz>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: build failure after merge of the block tree
+Message-ID: <20200526143630.7e7fbc79@canb.auug.org.au>
+In-Reply-To: <c0e6af76-46d8-ccf0-3874-0751f7622caf@kernel.dk>
+References: <20200525150837.54fe6977@canb.auug.org.au>
+        <c0e6af76-46d8-ccf0-3874-0751f7622caf@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/pxLirPxGa6MugXWK9gm1DQd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I searched percpu data touched by entry code for #DB
-protection[1], it seems to me RESTORE_CR3() does too much work,
-this patchset simplifies it.
+--Sig_/pxLirPxGa6MugXWK9gm1DQd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Patch 1 enhances 21e944591102("x86/mm: Optimize RESTORE_CR3") for
-kernel CR3.
+Hi all,
 
-Patch 2 *reverts* 21e944591102("x86/mm: Optimize RESTORE_CR3") for
-User CR3.
+On Mon, 25 May 2020 13:03:44 -0600 Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 5/24/20 11:08 PM, Stephen Rothwell wrote:
+> >=20
+> > After merging the block tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >=20
+> > mm/filemap.c: In function 'generic_file_buffered_read':
+> > mm/filemap.c:2075:9: error: 'written' undeclared (first use in this fun=
+ction); did you mean 'writeb'?
+> >  2075 |     if (written) {
+> >       |         ^~~~~~~
+> >       |         writeb
+> >=20
+> > Caused by commit
+> >=20
+> >   23d513106fd8 ("mm: support async buffered reads in generic_file_buffe=
+red_read()")
+> >=20
+> > from the block tree interacting with commit
+> >=20
+> >   6e66f10f2cac ("fs: export generic_file_buffered_read()")
+> >=20
+> > from the btrfs tree.
+> >=20
+> > [Aside: that btrfs tree commit talks about "correct the comments and va=
+riable
+> >     names", but changes "written" to "copied" in the function definition
+> >     but to "already_read" in the header file declaration ...]
+> >=20
+> > I ave applied the following merge fix patch: =20
+>=20
+> Looks like a frivolous change... Thanks for fixing this up Stephen.
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-Link: https://lore.kernel.org/lkml/20200525145102.122557-1-laijs@linux.alibaba.com
-Lai Jiangshan (2):
-  x86/entry: Don't write to CR3 when restoring to kernel CR3
-  x86/entry: always flush user CR3 in RESTORE_CR3
+The variable name change has been removed from the btrfs tree.
 
- arch/x86/entry/calling.h  | 36 ++++++++----------------------------
- arch/x86/entry/entry_64.S |  6 +++---
- 2 files changed, 11 insertions(+), 31 deletions(-)
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-2.20.1
+--Sig_/pxLirPxGa6MugXWK9gm1DQd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7MnM4ACgkQAVBC80lX
+0GxN0QgAkrTNBQkQoE+E8c1r8/lTP6z3sg4vMtkaNdAvj1KqOvGJ8nDw99s4APYR
+v4KnZ64ZjgK6Rc0mTwK05QRG80OvzLLTewpyINAT5bMzq9SjP3TIbKeYu1gINDZC
+nZD6mhryuq56q5gL4ifP+yshLjVg4kH8kn5rkREH+DK1uK1q4nUD+mfO871wUtCY
+CMVMC5pvRf+jOpgpYzAq+mLuEXfoVVkNCrBnqZuXpAKi29e878NTsrz9t9QkblxD
+1XZFaymjGGQ2f+nTSdjcBbhur/io3fQsrdpt5J/WgTlMnJMXK8yHPhRWPRZ98OjG
+cehbze+Hm6NMqtV9mN9wYanu//NgVA==
+=HJ9b
+-----END PGP SIGNATURE-----
+
+--Sig_/pxLirPxGa6MugXWK9gm1DQd--
