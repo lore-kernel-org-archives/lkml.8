@@ -2,87 +2,147 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F32B20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5EA2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="COoLYTQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgEZIMH (ORCPT
+        id S1728400AbgEZINv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:12:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:56944 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726971AbgEZIMH (ORCPT
+        Tue, 26 May 2020 04:13:51 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58694 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727011AbgEZINu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:12:07 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-126-_HU1P0XVP7yJ065bU5Iqnw-1; Tue, 26 May 2020 09:12:03 +0100
-X-MC-Unique: _HU1P0XVP7yJ065bU5Iqnw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 26 May 2020 09:12:02 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 26 May 2020 09:12:02 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Richard Weinberger' <richard.weinberger@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-CC:     "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Porter <porter@cs.unc.edu>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        "chang.seok.bae@intel.com" <chang.seok.bae@intel.com>
-Subject: RE: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-Thread-Topic: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-Thread-Index: AQHWMgPzfS83L7jCjkmVt+IA3E+z2Ki3rUyAgACxb4CAAacDQA==
-Date:   Tue, 26 May 2020 08:12:02 +0000
-Message-ID: <a95b490d33624d0e96198ac22d19c029@AcuMS.aculab.com>
-References: <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
- <20200515164013.GF29995@sasha-vm>
- <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
- <20200518153407.GA499505@tassilo.jf.intel.com>
- <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
- <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
- <20200519164853.GA19706@linux.intel.com>
- <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
- <87h7w7qy18.fsf@nanos.tec.linutronix.de>
- <A9483B8B-C0DD-46CB-AD5D-D12EC61BB331@zytor.com>
- <20200524211945.GX33628@sasha-vm>
- <CAFLxGvxeg6+DY1LMTzvJe3=iW=zLyUj4xTRda99DurKdS6TDWw@mail.gmail.com>
-In-Reply-To: <CAFLxGvxeg6+DY1LMTzvJe3=iW=zLyUj4xTRda99DurKdS6TDWw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 26 May 2020 04:13:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590480828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=F6dY7b577fJbY2Wvy6nSoJBff9CB2njzSCj4WHlFr/M=;
+        b=COoLYTQXrxNESnoPE4odcpJXhQxVybogSq5szfo1Cl3iCOtNraWbFmikJavySvAkUN+vqz
+        Qynd/IZfl5j1V5lqJUkvW2ZNV8rr+hkZ119QSSI6yubpsSgdL9Vk4a/Z1BkydkCfOstN3g
+        claNDsRX3r3d6NKRyUOHYNWXqjm+ukg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-33-RfyK_COPMb2ZHsotDGds_g-1; Tue, 26 May 2020 04:13:43 -0400
+X-MC-Unique: RfyK_COPMb2ZHsotDGds_g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2913E800688;
+        Tue, 26 May 2020 08:13:42 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.145])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E971179C45;
+        Tue, 26 May 2020 08:13:39 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: [PATCH] mm/gup: correct pin_user_pages.rst location
+Date:   Tue, 26 May 2020 10:13:38 +0200
+Message-Id: <20200526081338.179532-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUmljaGFyZCBXZWluYmVyZ2VyDQo+IFNlbnQ6IDI1IE1heSAyMDIwIDA4OjU1DQouLi4N
-Cj4gUDogU2FkbHkgdG9vLiBNb3N0bHkgYmVjYXVzZSBjdXN0b21lciBoYXMgY3VzdG9tIG1vZHVs
-ZSBhbmQgZm9yZ290IHRvIHNldCBpdCBHUEwNCg0KWW91IHdhbnQgdXMgdG8gbGllIHRoYXQgY3Vz
-dG9tIG1vZHVsZXMgYXJlIEdQTD8NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBM
-YWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBU
-LCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+pin_user_pages.rst lives in Documentation/core-api/, not Documentation/vm/,
+adjust all links accordingly.
+
+Fixes: 3faa52c03f44 ("mm/gup: track FOLL_PIN pages")
+Fixes: eddb1c228f79 ("mm/gup: introduce pin_user_pages*() and FOLL_PIN")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ include/linux/mm.h |  4 ++--
+ mm/gup.c           | 18 +++++++++---------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5a323422d783..1f2850465f59 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1219,7 +1219,7 @@ void unpin_user_pages(struct page **pages, unsigned long npages);
+  * used to track the pincount (instead using of the GUP_PIN_COUNTING_BIAS
+  * scheme).
+  *
+- * For more information, please see Documentation/vm/pin_user_pages.rst.
++ * For more information, please see Documentation/core-api/pin_user_pages.rst.
+  *
+  * @page:	pointer to page to be queried.
+  * @Return:	True, if it is likely that the page has been "dma-pinned".
+@@ -2834,7 +2834,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+  * releasing pages: get_user_pages*() pages must be released via put_page(),
+  * while pin_user_pages*() pages must be released via unpin_user_page().
+  *
+- * Please see Documentation/vm/pin_user_pages.rst for more information.
++ * Please see Documentation/core-api/pin_user_pages.rst for more information.
+  */
+ 
+ static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
+diff --git a/mm/gup.c b/mm/gup.c
+index 87a6a59fe667..87a3a4b400f9 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2845,10 +2845,10 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
+  * the arguments here are identical.
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+- * see Documentation/vm/pin_user_pages.rst for further details.
++ * see Documentation/core-api/pin_user_pages.rst for further details.
+  *
+- * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
++ * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
++ * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ int pin_user_pages_fast(unsigned long start, int nr_pages,
+ 			unsigned int gup_flags, struct page **pages)
+@@ -2885,10 +2885,10 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast);
+  * the arguments here are identical.
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+- * see Documentation/vm/pin_user_pages.rst for details.
++ * see Documentation/core-api/pin_user_pages.rst for details.
+  *
+- * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
++ * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
++ * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+ 			   unsigned long start, unsigned long nr_pages,
+@@ -2921,10 +2921,10 @@ EXPORT_SYMBOL(pin_user_pages_remote);
+  * FOLL_PIN is set.
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+- * see Documentation/vm/pin_user_pages.rst for details.
++ * see Documentation/core-api/pin_user_pages.rst for details.
+  *
+- * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
++ * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
++ * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ long pin_user_pages(unsigned long start, unsigned long nr_pages,
+ 		    unsigned int gup_flags, struct page **pages,
+-- 
+2.25.4
 
