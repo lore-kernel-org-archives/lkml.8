@@ -2,271 +2,109 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E49C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BF120706
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA66120706
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 03:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="m3PcL0Zl"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="c7I+JSwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388786AbgEZDXS (ORCPT
+        id S2388591AbgEZDZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 23:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
+        Mon, 25 May 2020 23:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388748AbgEZDXM (ORCPT
+        with ESMTP id S2388478AbgEZDZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 23:23:12 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC23C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 20:23:12 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f18so2485389qkh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 20:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+bFIbcYsC9fBmbchBO6h5hIPHmAfXi5c5B7gW9XUTV0=;
-        b=m3PcL0ZlYs2DMr2VV+60eq1MvSysu9xorywneHryCnresZL/iuIgChg+xtnJ+lqdjV
-         kRz0fyVNVuqx+s3N4ic2JLNDv8uQV+WEI8CdigfPQtQFETM8qnVtGDhCBZrIDdnu4hHh
-         149NCkXOFp5EiwiLljKHr9INPS2HfsSLgNBl/l09+21Xza9yntWILXDl04IWqyFZs58Y
-         WH0+kZVDCuvmX1ZJk/ZhmQaHnFjFjjZ1JvJwyUsZPxtN/09r363VblgOtpP9LAXqBx8c
-         1CfPun+IEmC5qbklneUg5yEbQh7yAiDSD1KRxE71KsccaIx5eaKHwqGl+t33vP4xaVDo
-         mPxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+bFIbcYsC9fBmbchBO6h5hIPHmAfXi5c5B7gW9XUTV0=;
-        b=kPNEmRV4s/j7JswEGWUnlBte0SLXFrrKcGub2sxxgpyAYhxBWpRqVW2nDD3+vHj3Tq
-         Iz+2QdWXUr+GsKsEm5wlWlNIwMRTaItmvdQsyJyNJAztC9NeoYV54hQm745fhoIBPloR
-         wYOlvSbqc37YhAPnqZKLkVzJOJp2Utj+7lvO5szh0L0hdrp2QlDo0C13XVqzFb5KPrxm
-         6yGNS9kgOpOxj8GRS8vcAmAnzaHDPBLDI1RX1NgWlZniAlUyfKDyEkBKJgN/7cJSkq0e
-         rkgE+gNA2e5MMxHdLiEj+p7m6XbUN5vzHFTZ+6Y4fHLqD0lEX65Bc8XpyVCfMuhI/F7W
-         2aQw==
-X-Gm-Message-State: AOAM533jLuzc9L5q6lzks8MOLEKEgWjucZk05u+TEmU9aMcXBG9XJ4as
-        YuqpJ27sCWOcBh8PC9HE+llIWA==
-X-Google-Smtp-Source: ABdhPJxqIU2gB4RW099dsUzZeDnAmqA8DR6tsNhFlP32sBFdPQ4YbsPkd6vs3UwNmBDEqeOjeJrQkw==
-X-Received: by 2002:a37:a309:: with SMTP id m9mr7033037qke.284.1590463391407;
-        Mon, 25 May 2020 20:23:11 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id k20sm2530796qtu.16.2020.05.25.20.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 20:23:11 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shubhashree Dhar <dhar@codeaurora.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 8/8] drm/msm/dpu: add SM8250 to hw catalog
-Date:   Mon, 25 May 2020 23:22:15 -0400
-Message-Id: <20200526032235.21930-9-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200526032235.21930-1-jonathan@marek.ca>
-References: <20200526032235.21930-1-jonathan@marek.ca>
+        Mon, 25 May 2020 23:25:18 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681E4C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 20:25:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WK8n41JWz9sRW;
+        Tue, 26 May 2020 13:25:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1590463515;
+        bh=EuyE1DTbxcWhCkVOvnT3Nye5fIuEnQS303Y4ecOW4aA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=c7I+JSwBWE0cUqbYPa7xs6INyMPaS3afiQUhP1Q8CifNu73WVZJZkdgXYlEpvgf5G
+         4oMnFAYK94XPOwaYcNgAn2hZ4PQwEqAxkVi5Or3xztH9tLXdnDiN0auD/x/+SmEPi4
+         dmlMdr1Yp1nfgXh4PT7/J4osQZTadbUmReJfdQh331dCHKkji6h63JXkG4ve0WpHKE
+         kbr2J4c1Z6khtVD4eAuvfaFify7x78t1cLOlrRgk0iNONukXge0RhDYDrLD6I7MRyq
+         gT1Df0FkqzKti0Rr+WXOe8Ksfq3YFvW9VThe+R9godADWqeevOTbxuBRV0h30kkjq1
+         pbm687WNakNqA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        ajd@linux.ibm.com,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Axtens <dja@axtens.net>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v2] relay: handle alloc_percpu returning NULL in relay_open
+In-Reply-To: <87ftbo232s.fsf@dja-thinkpad.axtens.net>
+References: <20191219121256.26480-1-dja@axtens.net> <alpine.DEB.2.21.1912201100400.68407@chino.kir.corp.google.com> <20200521152514.GA2868125@eldamar.local> <87ftbo232s.fsf@dja-thinkpad.axtens.net>
+Date:   Tue, 26 May 2020 13:25:36 +1000
+Message-ID: <878shffkcv.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This brings up basic video mode functionality for SM8250 DPU. Command mode
-and dual mixer/intf configurations are not working, future patches will
-address this. Scaler functionality and multiple planes is also untested.
+[ + akpm ]
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- .../gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    | 106 ++++++++++++++++++
- .../gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |   3 +
- 2 files changed, 109 insertions(+)
+Daniel Axtens <dja@axtens.net> writes:
+>>> > Check if alloc_percpu returns NULL.
+>>> > 
+>>> > This was found by syzkaller both on x86 and powerpc, and the reproducer
+>>> > it found on powerpc is capable of hitting the issue as an unprivileged
+>>> > user.
+>>> > 
+>>> > Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+>>> > Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+>>> > Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+>>> > Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+>>> > Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+>>> > Cc: Akash Goel <akash.goel@intel.com>
+>>> > Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
+>>> > Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+>>> > Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+>>> > Cc: stable@vger.kernel.org # v4.10+
+>>> > Signed-off-by: Daniel Axtens <dja@axtens.net>
+>>> 
+>>> Acked-by: David Rientjes <rientjes@google.com>
+>>
+>> It looks this one was never applied (which relates to CVE-2019-19462,
+>> as pointed by Guenter in 20191223163610.GA32267@roeck-us.net).
+>>
+>> Whas this lost or are there any issues pending?
+>
+> I'm not aware of any pending issues.
+>
+> (But, if anyone does have any objections I'm happy to revise the patch.)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index f99622870676..711ec1e6a543 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -107,6 +107,21 @@ static const struct dpu_caps sm8150_dpu_caps = {
- 	.max_vdeci_exp = MAX_VERT_DECIMATION,
- };
- 
-+static const struct dpu_caps sm8250_dpu_caps = {
-+	.max_mixer_width = DEFAULT_DPU_OUTPUT_LINE_WIDTH,
-+	.max_mixer_blendstages = 0xb,
-+	.max_linewidth = 4096,
-+	.qseed_type = DPU_SSPP_SCALER_QSEED3, /* TODO: qseed3 lite */
-+	.smart_dma_rev = DPU_SSPP_SMART_DMA_V2_5,
-+	.ubwc_version = DPU_HW_UBWC_VER_40,
-+	.has_src_split = true,
-+	.has_dim_layer = true,
-+	.has_idle_pc = true,
-+	.has_3d_merge = true,
-+	.max_linewidth = 4096,
-+	.pixel_ram_size = DEFAULT_PIXEL_RAM_SIZE,
-+};
-+
- static const struct dpu_mdp_cfg sdm845_mdp[] = {
- 	{
- 	.name = "top_0", .id = MDP_TOP,
-@@ -149,6 +164,33 @@ static const struct dpu_mdp_cfg sc7180_mdp[] = {
- 	},
- };
- 
-+static const struct dpu_mdp_cfg sm8250_mdp[] = {
-+	{
-+	.name = "top_0", .id = MDP_TOP,
-+	.base = 0x0, .len = 0x45C,
-+	.features = 0,
-+	.highest_bank_bit = 0x3, /* TODO: 2 for LP_DDR4 */
-+	.clk_ctrls[DPU_CLK_CTRL_VIG0] = {
-+			.reg_off = 0x2AC, .bit_off = 0},
-+	.clk_ctrls[DPU_CLK_CTRL_VIG1] = {
-+			.reg_off = 0x2B4, .bit_off = 0},
-+	.clk_ctrls[DPU_CLK_CTRL_VIG2] = {
-+			.reg_off = 0x2BC, .bit_off = 0},
-+	.clk_ctrls[DPU_CLK_CTRL_VIG3] = {
-+			.reg_off = 0x2C4, .bit_off = 0},
-+	.clk_ctrls[DPU_CLK_CTRL_DMA0] = {
-+			.reg_off = 0x2AC, .bit_off = 8},
-+	.clk_ctrls[DPU_CLK_CTRL_DMA1] = {
-+			.reg_off = 0x2B4, .bit_off = 8},
-+	.clk_ctrls[DPU_CLK_CTRL_CURSOR0] = {
-+			.reg_off = 0x2BC, .bit_off = 8},
-+	.clk_ctrls[DPU_CLK_CTRL_CURSOR1] = {
-+			.reg_off = 0x2C4, .bit_off = 8},
-+	.clk_ctrls[DPU_CLK_CTRL_REG_DMA] = {
-+			.reg_off = 0x2BC, .bit_off = 20},
-+	},
-+};
-+
- /*************************************************************
-  * CTL sub blocks config
-  *************************************************************/
-@@ -519,6 +561,14 @@ static const struct dpu_reg_dma_cfg sm8150_regdma = {
- 	.base = 0x0, .version = 0x00010001, .trigger_sel_off = 0x119c
- };
- 
-+static const struct dpu_reg_dma_cfg sm8250_regdma = {
-+	.base = 0x0,
-+	.version = 0x00010002,
-+	.trigger_sel_off = 0x119c,
-+	.xin_id = 7,
-+	.clk_ctrl = DPU_CLK_CTRL_REG_DMA,
-+};
-+
- /*************************************************************
-  * PERF data config
-  *************************************************************/
-@@ -656,6 +706,31 @@ static const struct dpu_perf_cfg sm8150_perf_data = {
- 	},
- };
- 
-+static const struct dpu_perf_cfg sm8250_perf_data = {
-+	.max_bw_low = 13700000,
-+	.max_bw_high = 16600000,
-+	.min_core_ib = 4800000,
-+	.min_llcc_ib = 0,
-+	.min_dram_ib = 800000,
-+	.danger_lut_tbl = {0xf, 0xffff, 0x0},
-+	.qos_lut_tbl = {
-+		{.nentry = ARRAY_SIZE(sc7180_qos_linear),
-+		.entries = sc7180_qos_linear
-+		},
-+		{.nentry = ARRAY_SIZE(sc7180_qos_macrotile),
-+		.entries = sc7180_qos_macrotile
-+		},
-+		{.nentry = ARRAY_SIZE(sc7180_qos_nrt),
-+		.entries = sc7180_qos_nrt
-+		},
-+		/* TODO: macrotile-qseed is different from macrotile */
-+	},
-+	.cdp_cfg = {
-+		{.rd_enable = 1, .wr_enable = 1},
-+		{.rd_enable = 1, .wr_enable = 0}
-+	},
-+};
-+
- /*************************************************************
-  * Hardware catalog init
-  *************************************************************/
-@@ -747,11 +822,42 @@ static void sm8150_cfg_init(struct dpu_mdss_cfg *dpu_cfg)
- 	};
- }
- 
-+/*
-+ * sm8250_cfg_init(): populate sm8250 dpu sub-blocks reg offsets
-+ * and instance counts.
-+ */
-+static void sm8250_cfg_init(struct dpu_mdss_cfg *dpu_cfg)
-+{
-+	*dpu_cfg = (struct dpu_mdss_cfg){
-+		.caps = &sm8250_dpu_caps,
-+		.mdp_count = ARRAY_SIZE(sm8250_mdp),
-+		.mdp = sm8250_mdp,
-+		.ctl_count = ARRAY_SIZE(sm8150_ctl),
-+		.ctl = sm8150_ctl,
-+		/* TODO: sspp qseed version differs from 845 */
-+		.sspp_count = ARRAY_SIZE(sdm845_sspp),
-+		.sspp = sdm845_sspp,
-+		.mixer_count = ARRAY_SIZE(sm8150_lm),
-+		.mixer = sm8150_lm,
-+		.pingpong_count = ARRAY_SIZE(sm8150_pp),
-+		.pingpong = sm8150_pp,
-+		.intf_count = ARRAY_SIZE(sm8150_intf),
-+		.intf = sm8150_intf,
-+		.vbif_count = ARRAY_SIZE(sdm845_vbif),
-+		.vbif = sdm845_vbif,
-+		.reg_dma_count = 1,
-+		.dma_cfg = sm8250_regdma,
-+		.perf = sm8250_perf_data,
-+		.mdss_irqs = 0xff,
-+	};
-+}
-+
- static const struct dpu_mdss_hw_cfg_handler cfg_handler[] = {
- 	{ .hw_rev = DPU_HW_VER_400, .cfg_init = sdm845_cfg_init},
- 	{ .hw_rev = DPU_HW_VER_401, .cfg_init = sdm845_cfg_init},
- 	{ .hw_rev = DPU_HW_VER_500, .cfg_init = sm8150_cfg_init},
- 	{ .hw_rev = DPU_HW_VER_501, .cfg_init = sm8150_cfg_init},
-+	{ .hw_rev = DPU_HW_VER_600, .cfg_init = sm8250_cfg_init},
- 	{ .hw_rev = DPU_HW_VER_620, .cfg_init = sc7180_cfg_init},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 31ddb2be9c57..cdd200194c4f 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -408,6 +408,7 @@ enum dpu_clk_ctrl_type {
- 	DPU_CLK_CTRL_CURSOR0,
- 	DPU_CLK_CTRL_CURSOR1,
- 	DPU_CLK_CTRL_INLINE_ROT0_SSPP,
-+	DPU_CLK_CTRL_REG_DMA,
- 	DPU_CLK_CTRL_MAX,
- };
- 
-@@ -577,6 +578,8 @@ struct dpu_reg_dma_cfg {
- 	DPU_HW_BLK_INFO;
- 	u32 version;
- 	u32 trigger_sel_off;
-+	u32 xin_id;
-+	enum dpu_clk_ctrl_type clk_ctrl;
- };
- 
- /**
--- 
-2.26.1
+It looks like kernel/relay.c is lacking a maintainer?
 
+Andrew are you able to pick this up for v5.8? It's pretty obviously
+correct, and has David's ack.
+
+Original is here if that helps:
+  https://lore.kernel.org/lkml/20191219121256.26480-1-dja@axtens.net/
+
+
+cheers
