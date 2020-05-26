@@ -2,81 +2,117 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97782C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7025F2087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590466667;
-	bh=x1WAXI2MxxnLa4yFnZKA0idaQEQ3kvC3jplhuJpq+Gg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZlPzDi6O8H/TKUrtuHPX5nl8UaqThZyt2hThZsXbQEJYVE4zXe7R130+3sYAhdh3J
-	 OKDpizNdbJO3+dpQtAAMetoueRHRMeSnveFe8cDYe4/h/6FIoBq29qNzj+30R3bDBT
-	 /cNBpjrVIxb+kLoEb3mT87uRtNzxNDxcgbYmeeks=
+	by mail.kernel.org (Postfix) with ESMTP id 6D147207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 04:23:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmMpwOkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgEZERq (ORCPT
+        id S1725897AbgEZEXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 00:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgEZERq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 00:17:46 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C8AA208A7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590466665;
-        bh=x1WAXI2MxxnLa4yFnZKA0idaQEQ3kvC3jplhuJpq+Gg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CkJNgSWspGqG+zaxQZ+W/RVZ0+lyQy4xHJ/F/ea1z9YYkY4tLlJW265/socMYUrY8
-         VWT6rzvAKyCjKdoqQQt46fRKpzrSf6tOCo8gxNYnlz1gcl5P4aVK6834J7LSL+XyFU
-         ti05uGY+z0cbUYoLQxCwgkgKP20z9CIZD/UDijNU=
-Received: by mail-wm1-f48.google.com with SMTP id c71so1823845wmd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 21:17:45 -0700 (PDT)
-X-Gm-Message-State: AOAM5328dz7YWHeFcsscOpKOwEEaM2//s9SAfPEEOw2URh82FqGFFwf0
-        Umi1e/oYz+Hee6GjinBwGVNxUjjlc8FKLVfKUXppCg==
-X-Google-Smtp-Source: ABdhPJxoSKfl0wLy1PGLUAYJSGayeMvkqz+7rtpj8a/C3XPWp7v4VscBOW71yibIv8x1Vq81BlZsKdJWI0tHr39eA6Q=
-X-Received: by 2002:a1c:7f96:: with SMTP id a144mr22008255wmd.176.1590466664042;
- Mon, 25 May 2020 21:17:44 -0700 (PDT)
+        Tue, 26 May 2020 00:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgEZEXe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 00:23:34 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE866C061A0E;
+        Mon, 25 May 2020 21:23:32 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g9so16467748edr.8;
+        Mon, 25 May 2020 21:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tkzgNeUNEbnNJvODhfdpaGDgefYg9bmlm6y6oms7G+c=;
+        b=jmMpwOkn+zb0iuktLXODw0ITTnfQgUYYIUn8kj0+0VE4HnMJ2oS0v/rtjhq+58ObQR
+         HcKQse3EBQoSWCXYdkHzQULOhoqQHiJg10YmK4zULLvuoMw0eK5eolwLwtRhJ4jiIQOT
+         XqZUBHNhDGqVJ5zWoyDp+c5gDow3hxrjnAfXZzDH4LtAeyM9IlyUPUlg9jIwGOnSDzs8
+         KKqTTObkJXjEYrMbDoXI33Cbte5NexMBR1KTJzRatBoppLO7Ya0oXsaED9FbTHan4nJg
+         9IbL+t7n8tdA1mkZIaY0N8SiQiKF1oPtmtPkxiZ6jb+ROO+0EQ2WukKCXg42rRl7VOPZ
+         yaWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tkzgNeUNEbnNJvODhfdpaGDgefYg9bmlm6y6oms7G+c=;
+        b=lmU+SmmcPxfk+fN3of5FFnu663CyB9r5i4PsaTxT5N2D74kTwQhqp4N9pfHqNOax34
+         cbKuqrgjxsO0CFsJCPsq7x8x+Bmc0xPqFgSdZjFbSSn3UQFnrnQXxfkHoooAa+6mqvaB
+         kGBv6FOCKxCAwGtx2aGMcszk/zbjBXQiM8ugxrfVyiZeg5VdQVSGikHzO7GBT1i0yinr
+         G3373exb5kG2KtV/+i+o+uVaahBlMOOZ+BC++esERiXWsX/+DIyqYyRVu032H+MprY2f
+         foelanhosZGs8wrNEYY7QNFVVo01uiXmMgI0e8KEIeIeQtcWrmb03MX3Wk5pBi+Utx4Y
+         C2GQ==
+X-Gm-Message-State: AOAM531ONpfOKxPQz8A5IOEBZTdtqCpJmuWRRYR3ZDoeRaYcPzewqKFn
+        nbeN2UIykNQu+MGp/dac6jaqoYstIlBDJfLcPxk=
+X-Google-Smtp-Source: ABdhPJz2Vn5CDQom18MJ+e1T3aah4Ow5CTNZ/6hbKDPvn1FphzxzUH9yeJd2lttpcr/cKAgnWBjUbZrluAWcO66UHwc=
+X-Received: by 2002:a05:6402:948:: with SMTP id h8mr17504187edz.127.1590467011223;
+ Mon, 25 May 2020 21:23:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200525152517.GY325280@hirez.programming.kicks-ass.net>
- <20200526014221.2119-1-laijs@linux.alibaba.com> <20200526014221.2119-5-laijs@linux.alibaba.com>
-In-Reply-To: <20200526014221.2119-5-laijs@linux.alibaba.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 25 May 2020 21:17:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrWyMY-0Z_NJ7DnF4PsSnhnbNsgt14X1GWkajcms-ZUSQA@mail.gmail.com>
-Message-ID: <CALCETrWyMY-0Z_NJ7DnF4PsSnhnbNsgt14X1GWkajcms-ZUSQA@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 4/7] x86/hw_breakpoint: Prevent data breakpoints on user_pcid_flush_mask
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
+References: <20200525235712.VqEFGWfKu%akpm@linux-foundation.org> <21b52c28-3ace-cd13-d8ce-f38f2c6b2a96@infradead.org>
+In-Reply-To: <21b52c28-3ace-cd13-d8ce-f38f2c6b2a96@infradead.org>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Tue, 26 May 2020 14:23:20 +1000
+Message-ID: <CAPM=9twdkW83Wd4G1pS7cP2nf3wOmYvKxUfKA9EUkOEf7BuvKg@mail.gmail.com>
+Subject: Re: mmotm 2020-05-25-16-56 uploaded (drm/nouveau)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 6:42 PM Lai Jiangshan <laijs@linux.alibaba.com> wrote:
+On Tue, 26 May 2020 at 13:50, Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> The percpu user_pcid_flush_mask is used for CPU entry
-> If a data breakpoint on it, it will cause an unwanted #DB.
-> Protect the full cpu_tlbstate structure to be sure.
+> On 5/25/20 4:57 PM, Andrew Morton wrote:
+> > The mm-of-the-moment snapshot 2020-05-25-16-56 has been uploaded to
+> >
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > mmotm-readme.txt says
+> >
+> > README for mm-of-the-moment:
+> >
+> > http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> >
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> >
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
+> >
 >
-> There are some other percpu data used in CPU entry, but they are
-> either in already-protected cpu_tss_rw or are safe to trigger #DB
-> (espfix_waddr, espfix_stack).
+> on x86_64:
+>
+> when CONFIG_DRM_NOUVEAU=y and CONFIG_FB=m:
+>
+> ld: drivers/gpu/drm/nouveau/nouveau_drm.o: in function `nouveau_drm_probe':
+> nouveau_drm.c:(.text+0x1d67): undefined reference to `remove_conflicting_pci_framebuffers'
 
-How hard would it be to rework this to have DECLARE_PERCPU_NODEBUG()
-and DEFINE_PERCPU_NODEBUG() or similar?
+I've pushed the fix for this to drm-next.
+
+Ben just used the wrong API.
+
+Dave.
