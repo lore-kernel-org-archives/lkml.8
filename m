@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FABC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96FE920849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74DC20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520953;
-	bh=XSQb4Zp5cDsFHLtoAkY8MQ1hc/uoWgOtYUAeCqjEU30=;
+	s=default; t=1590520954;
+	bh=z+fk0Pv+x94C2kIS/ampQZxF3sACccTi42Enl/SnzGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qd0TKzt+4VwRHOVWgUbZDltXFFFOSXEpzG+2a1i0HY2fKiRHOQqM07UEipoBnWLm5
-	 A7BinKlhZcSkX/e3uG+VTqYtuA4I2YmfzLeFTJko+8VN2KCawk/IFzTc/6Jjd9vqf6
-	 2C+CZLY/zWNslN2e/jiDqE7JqieWP+AwS6U5TvTE=
+	b=ILwF47EWXyaEyQspiM+K3X/+9duGJeR5h0AbjwzBATJu3DregDlze7Z0bWUbtbMuD
+	 q5CBTBKZhM2BfQwCHDgjyEBG6d5fvFfpPq930Y+2mXi1wDNB1hi1E8aTkxd2GGMUad
+	 9vV7P9Wi1m0DlXRGuMjflBbNCFr2SVr9L/+xSm9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392169AbgEZTWb (ORCPT
+        id S2392399AbgEZTWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39326 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391912AbgEZTKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:10 -0400
+        id S2390905AbgEZTKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4760C20873;
-        Tue, 26 May 2020 19:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC5FA208A7;
+        Tue, 26 May 2020 19:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520209;
-        bh=XSQb4Zp5cDsFHLtoAkY8MQ1hc/uoWgOtYUAeCqjEU30=;
+        s=default; t=1590520207;
+        bh=z+fk0Pv+x94C2kIS/ampQZxF3sACccTi42Enl/SnzGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQ1tzH2AraEMXV0NW/y1Rik0di3J1CZcOPJS4DBOzY6LK1ne7kaCJBcBi5xzjxD7F
-         IEuzKIarOo3U9WyY5liAKNHF7dsJzGWrLBP8SoR1tHm27ZmZobHDX4SvJO4PX/R8xd
-         EXe77+eprVvE84O0Iro+nVmaf7FbMgsRT7u037ns=
+        b=WDP/pM63BbVaW+mHgz1uASa6qFy0C7/EGrmimMSdx2iMT4MMvz4qFlydaAIKpHGFu
+         TH3Rj2aSIN/e6OvXCbj43pyb/+5Bz3QTpn4PzhQUyr91/I4BgDe14cx3t6FO02pvXh
+         3C1DR2eq3FmJgP8JXKbu5Y/rAEZHN7DVETvYUths=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Colin Xu <colin.xu@intel.com>
-Subject: [PATCH 5.4 074/111] drm/i915/gvt: Init DPLL/DDI vreg for virtual display instead of inheritance.
-Date:   Tue, 26 May 2020 20:53:32 +0200
-Message-Id: <20200526183939.874072051@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>
+Subject: [PATCH 5.4 100/111] flow_dissector: Drop BPF flow dissector prog ref on netns cleanup
+Date:   Tue, 26 May 2020 20:53:58 +0200
+Message-Id: <20200526183942.375473256@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,103 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Xu <colin.xu@intel.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-commit f965b68188ab59a40a421ced1b05a2fea638465c upstream.
+commit 5cf65922bb15279402e1e19b5ee8c51d618fa51f upstream.
 
-Init value of some display vregs rea inherited from host pregs. When
-host display in different status, i.e. all monitors unpluged, different
-display configurations, etc., GVT virtual display setup don't consistent
-thus may lead to guest driver consider display goes malfunctional.
+When attaching a flow dissector program to a network namespace with
+bpf(BPF_PROG_ATTACH, ...) we grab a reference to bpf_prog.
 
-The added init vreg values are based on PRMs and fixed by calcuation
-from current configuration (only PIPE_A) and the virtual EDID.
+If netns gets destroyed while a flow dissector is still attached, and there
+are no other references to the prog, we leak the reference and the program
+remains loaded.
 
-Fixes: 04d348ae3f0a ("drm/i915/gvt: vGPU display virtualization")
-Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Colin Xu <colin.xu@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200508060506.216250-1-colin.xu@intel.com
+Leak can be reproduced by running flow dissector tests from selftests/bpf:
+
+  # bpftool prog list
+  # ./test_flow_dissector.sh
+  ...
+  selftests: test_flow_dissector [PASS]
+  # bpftool prog list
+  4: flow_dissector  name _dissect  tag e314084d332a5338  gpl
+          loaded_at 2020-05-20T18:50:53+0200  uid 0
+          xlated 552B  jited 355B  memlock 4096B  map_ids 3,4
+          btf_id 4
+  #
+
+Fix it by detaching the flow dissector program when netns is going away.
+
+Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Stanislav Fomichev <sdf@google.com>
+Link: https://lore.kernel.org/bpf/20200521083435.560256-1-jakub@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gvt/display.c |   49 +++++++++++++++++++++++++++++++++----
- 1 file changed, 44 insertions(+), 5 deletions(-)
+ net/core/flow_dissector.c |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/i915/gvt/display.c
-+++ b/drivers/gpu/drm/i915/gvt/display.c
-@@ -207,14 +207,41 @@ static void emulate_monitor_status_chang
- 				SKL_FUSE_PG_DIST_STATUS(SKL_PG0) |
- 				SKL_FUSE_PG_DIST_STATUS(SKL_PG1) |
- 				SKL_FUSE_PG_DIST_STATUS(SKL_PG2);
--		vgpu_vreg_t(vgpu, LCPLL1_CTL) |=
--				LCPLL_PLL_ENABLE |
--				LCPLL_PLL_LOCK;
--		vgpu_vreg_t(vgpu, LCPLL2_CTL) |= LCPLL_PLL_ENABLE;
--
-+		/*
-+		 * Only 1 PIPE enabled in current vGPU display and PIPE_A is
-+		 *  tied to TRANSCODER_A in HW, so it's safe to assume PIPE_A,
-+		 *   TRANSCODER_A can be enabled. PORT_x depends on the input of
-+		 *   setup_virtual_dp_monitor, we can bind DPLL0 to any PORT_x
-+		 *   so we fixed to DPLL0 here.
-+		 * Setup DPLL0: DP link clk 1620 MHz, non SSC, DP Mode
-+		 */
-+		vgpu_vreg_t(vgpu, DPLL_CTRL1) =
-+			DPLL_CTRL1_OVERRIDE(DPLL_ID_SKL_DPLL0);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL1) |=
-+			DPLL_CTRL1_LINK_RATE(DPLL_CTRL1_LINK_RATE_1620, DPLL_ID_SKL_DPLL0);
-+		vgpu_vreg_t(vgpu, LCPLL1_CTL) =
-+			LCPLL_PLL_ENABLE | LCPLL_PLL_LOCK;
-+		vgpu_vreg_t(vgpu, DPLL_STATUS) = DPLL_LOCK(DPLL_ID_SKL_DPLL0);
-+		/*
-+		 * Golden M/N are calculated based on:
-+		 *   24 bpp, 4 lanes, 154000 pixel clk (from virtual EDID),
-+		 *   DP link clk 1620 MHz and non-constant_n.
-+		 * TODO: calculate DP link symbol clk and stream clk m/n.
-+		 */
-+		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) = 63 << TU_SIZE_SHIFT;
-+		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) |= 0x5b425e;
-+		vgpu_vreg_t(vgpu, PIPE_DATA_N1(TRANSCODER_A)) = 0x800000;
-+		vgpu_vreg_t(vgpu, PIPE_LINK_M1(TRANSCODER_A)) = 0x3cd6e;
-+		vgpu_vreg_t(vgpu, PIPE_LINK_N1(TRANSCODER_A)) = 0x80000;
- 	}
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -129,12 +129,10 @@ int skb_flow_dissector_bpf_prog_attach(c
+ 	return 0;
+ }
  
- 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_B)) {
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
-+			~DPLL_CTRL2_DDI_CLK_OFF(PORT_B);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
-+			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_B);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
-+			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_B);
- 		vgpu_vreg_t(vgpu, SFUSE_STRAP) |= SFUSE_STRAP_DDIB_DETECTED;
- 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
- 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
-@@ -235,6 +262,12 @@ static void emulate_monitor_status_chang
- 	}
+-int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
++static int flow_dissector_bpf_prog_detach(struct net *net)
+ {
+ 	struct bpf_prog *attached;
+-	struct net *net;
  
- 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_C)) {
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
-+			~DPLL_CTRL2_DDI_CLK_OFF(PORT_C);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
-+			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_C);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
-+			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_C);
- 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTC_HOTPLUG_CPT;
- 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
- 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
-@@ -255,6 +288,12 @@ static void emulate_monitor_status_chang
- 	}
+-	net = current->nsproxy->net_ns;
+ 	mutex_lock(&flow_dissector_mutex);
+ 	attached = rcu_dereference_protected(net->flow_dissector_prog,
+ 					     lockdep_is_held(&flow_dissector_mutex));
+@@ -169,6 +167,24 @@ static __be16 skb_flow_get_be16(const st
+ 	return 0;
+ }
  
- 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_D)) {
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
-+			~DPLL_CTRL2_DDI_CLK_OFF(PORT_D);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
-+			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_D);
-+		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
-+			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_D);
- 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTD_HOTPLUG_CPT;
- 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
- 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
++int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
++{
++	return flow_dissector_bpf_prog_detach(current->nsproxy->net_ns);
++}
++
++static void __net_exit flow_dissector_pernet_pre_exit(struct net *net)
++{
++	/* We're not racing with attach/detach because there are no
++	 * references to netns left when pre_exit gets called.
++	 */
++	if (rcu_access_pointer(net->flow_dissector_prog))
++		flow_dissector_bpf_prog_detach(net);
++}
++
++static struct pernet_operations flow_dissector_pernet_ops __net_initdata = {
++	.pre_exit = flow_dissector_pernet_pre_exit,
++};
++
+ /**
+  * __skb_flow_get_ports - extract the upper layer ports and return them
+  * @skb: sk_buff to extract the ports from
+@@ -1759,7 +1775,7 @@ static int __init init_default_flow_diss
+ 	skb_flow_dissector_init(&flow_keys_basic_dissector,
+ 				flow_keys_basic_dissector_keys,
+ 				ARRAY_SIZE(flow_keys_basic_dissector_keys));
+-	return 0;
+-}
+ 
++	return register_pernet_subsys(&flow_dissector_pernet_ops);
++}
+ core_initcall(init_default_flow_dissectors);
 
 
