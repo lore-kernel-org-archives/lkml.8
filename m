@@ -2,53 +2,55 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5877EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B8BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D47E20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD64620849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521002;
-	bh=QaKC/aax4G83a5/xHH+1SHXQu1XZhb2umndWLuaw1hI=;
+	s=default; t=1590521005;
+	bh=QugstcFABO9RP4budpXl3RxOzu6yYgeWrzluexp1PQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxGrokFsRRKhZiGyo6uQaGtZGX3YP8vKQqoa0Bs37Ko5CRW+VfFX95MAMD1JZJsaU
-	 uJTnt6Zun9Dswe2XLwYkUmksibC40xSh17AOdkMuLtQgyzAj+0MDT4vhu5XnyENiut
-	 Q/6AGGjiMPD6uKEBjcz2eGGeOpMTxCGWuYts2Uus=
+	b=ulZuPLSlHcFmsWLLIsZoJBE+tJsQglIM4+Jj5d6wzrEtoqpJm4/A5jldnrLBXRDTs
+	 8d3w9AFVECfoQvfX1lPP0sv3meTvm+U5phlot6UfR6tk7gRkgoDs30+d4r2I6VfO3m
+	 vEo2UmdSrtAZKGIVsnm1oaJAXorjkOH5ATxgkMyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390545AbgEZTXV (ORCPT
+        id S2392492AbgEZTXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38462 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391847AbgEZTJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:20 -0400
+        id S2391839AbgEZTJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B2E208A7;
-        Tue, 26 May 2020 19:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C752020776;
+        Tue, 26 May 2020 19:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520159;
-        bh=QaKC/aax4G83a5/xHH+1SHXQu1XZhb2umndWLuaw1hI=;
+        s=default; t=1590520157;
+        bh=QugstcFABO9RP4budpXl3RxOzu6yYgeWrzluexp1PQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6KkU4ae9Vk86i7G8ZYvRtIWIEVyZWef+fMQmapGeTBg+/NKks37MM3cBm2f70xGO
-         3PjAvqnPrs5sZJTnvoAPyX7yOeUW+1bKeDnv5neFjI3dLmA02vRrnARvGZ/xPYaobt
-         FKPrra20jGy2lG3QetzYXzHYu1JD3X1WJnb/cze0=
+        b=BJ17AbRkcWsnnPAp9XPa65sSX+xvBz2T/TD+nwb/CRN53pAPJVw4ITzHZ4cgoZI3T
+         v6nsXeVp4ih9Jh/9eV56zGk6gbK+/qPC0IrX+O/+nsY/M2r1cEq/XZ49oYFUPxx/17
+         JqMzyBil6P4yWJqXqkdq8ZST/4CCY6oPMEOGpWck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 082/111] staging: iio: ad2s1210: Fix SPI reading
-Date:   Tue, 26 May 2020 20:53:40 +0200
-Message-Id: <20200526183940.662314539@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 081/111] media: fdp1: Fix R-Car M3-N naming in debug message
+Date:   Tue, 26 May 2020 20:53:39 +0200
+Message-Id: <20200526183940.584206407@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,63 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 5e4f99a6b788047b0b8a7496c2e0c8f372f6edf2 upstream.
+[ Upstream commit c05b9d7b9f3ece2831e4e4829f10e904df296df8 ]
 
-If the serial interface is used, the 8-bit address should be latched using
-the rising edge of the WR/FSYNC signal.
+The official name is "R-Car M3-N", not "R-Car M3N".
 
-This basically means that a CS change is required between the first byte
-sent, and the second one.
-This change splits the single-transfer transfer of 2 bytes into 2 transfers
-with a single byte, and CS change in-between.
-
-Note fixes tag is not accurate, but reflects a point beyond which there
-are too many refactors to make backporting straight forward.
-
-Fixes: b19e9ad5e2cb ("staging:iio:resolver:ad2s1210 general driver cleanup.")
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 4e8c120de9268fc2 ("media: fdp1: Support M3N and E3 platforms")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/resolver/ad2s1210.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/media/platform/rcar_fdp1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/iio/resolver/ad2s1210.c
-+++ b/drivers/staging/iio/resolver/ad2s1210.c
-@@ -130,17 +130,24 @@ static int ad2s1210_config_write(struct
- static int ad2s1210_config_read(struct ad2s1210_state *st,
- 				unsigned char address)
- {
--	struct spi_transfer xfer = {
--		.len = 2,
--		.rx_buf = st->rx,
--		.tx_buf = st->tx,
-+	struct spi_transfer xfers[] = {
-+		{
-+			.len = 1,
-+			.rx_buf = &st->rx[0],
-+			.tx_buf = &st->tx[0],
-+			.cs_change = 1,
-+		}, {
-+			.len = 1,
-+			.rx_buf = &st->rx[1],
-+			.tx_buf = &st->tx[1],
-+		},
- 	};
- 	int ret = 0;
- 
- 	ad2s1210_set_mode(MOD_CONFIG, st);
- 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
- 	st->tx[1] = AD2S1210_REG_FAULT;
--	ret = spi_sync_transfer(st->sdev, &xfer, 1);
-+	ret = spi_sync_transfer(st->sdev, xfers, 2);
- 	if (ret < 0)
- 		return ret;
- 
+diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
+index cb93a13e1777..97bed45360f0 100644
+--- a/drivers/media/platform/rcar_fdp1.c
++++ b/drivers/media/platform/rcar_fdp1.c
+@@ -2369,7 +2369,7 @@ static int fdp1_probe(struct platform_device *pdev)
+ 		dprintk(fdp1, "FDP1 Version R-Car H3\n");
+ 		break;
+ 	case FD1_IP_M3N:
+-		dprintk(fdp1, "FDP1 Version R-Car M3N\n");
++		dprintk(fdp1, "FDP1 Version R-Car M3-N\n");
+ 		break;
+ 	case FD1_IP_E3:
+ 		dprintk(fdp1, "FDP1 Version R-Car E3\n");
+-- 
+2.25.1
+
 
 
