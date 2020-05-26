@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA430C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F46C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7650820849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5727520888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521210;
-	bh=rFP8p2t9V1tathkMCAdLBHRoFCWbEz2WeWGI5ORolCs=;
+	s=default; t=1590521212;
+	bh=0kG7rzBhywYYe9vAfuxYEHFHGEYOAtH8A3jXzEB/jls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EklsDOJYqGZkxl25x1hpJCGCBV5WzneAdfg5OVYptMTG3HVaJsirelUfd57cQndom
-	 RpcPsYGDzO3H7QZvVx+Mpqz1OgRy+Mi/7oMc5/wGb6qec4qXxNOpNsuyo0JfyupkVu
-	 THi6c6eldTN4oey7X75i5nMT0txdM23BoZkFzFk4=
+	b=KJvFMO//KycdVJirk3CuTlFxWf/hr9TbuehUDnaCZsFS2sS6OSo3KfNJAFH4p0twj
+	 kDDuaqHLRh5mtz+TsqOYP3tjKWazWMn5bpQXmW56l6dG6Nm6pRthdIYlBtIWW9K5dt
+	 wjTmBSsQzbwrMqMcF0Yyq07UBQ2tyMf06tlBH0kU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389393AbgEZT0t (ORCPT
+        id S2391455AbgEZTFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32978 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390840AbgEZTFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:09 -0400
+        id S2390801AbgEZTFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9D7D208B3;
-        Tue, 26 May 2020 19:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4B020849;
+        Tue, 26 May 2020 19:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519908;
-        bh=rFP8p2t9V1tathkMCAdLBHRoFCWbEz2WeWGI5ORolCs=;
+        s=default; t=1590519900;
+        bh=0kG7rzBhywYYe9vAfuxYEHFHGEYOAtH8A3jXzEB/jls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vp5GUUKCehXBeoo9F/ef87PWArab8bA9aGdQmgxp8biXHH/N+2pzicVaBARyrJc40
-         7e0c8x7og7JitCTcsYjE12F/u42MtcF+RqMbOvZvAz+qjfsYsZRyAjSRMUyJIVkOjA
-         i6OAEJYgOlnh+weyoHGhbGz3vENkXn3VnW7gvOPA=
+        b=1jvuEjPKcYkWoflCiaaUx54ZxfLKDof0eYPr5mhuEWu9FJdqE41TrcODB9cNlDb4k
+         zDA7OQ9nB3ntJbyY0pgZ4qyblEfajS/WGz4O4ULeKFnOSeF/ys4f2JqiezeFZsbWjM
+         RBcNfpQOXipXEXV6U7ufm9v/5YSNNRYajt0pekHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 65/81] staging: iio: ad2s1210: Fix SPI reading
-Date:   Tue, 26 May 2020 20:53:40 +0200
-Message-Id: <20200526183934.270943125@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 54/81] staging: most: core: replace strcpy() by strscpy()
+Date:   Tue, 26 May 2020 20:53:29 +0200
+Message-Id: <20200526183933.091481328@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,63 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 5e4f99a6b788047b0b8a7496c2e0c8f372f6edf2 upstream.
+[ Upstream commit 3970d0d81816310175b6272e709ee09dd3e05171 ]
 
-If the serial interface is used, the 8-bit address should be latched using
-the rising edge of the WR/FSYNC signal.
+The strcpy() function is being deprecated. Replace it by the safer
+strscpy() and fix the following Coverity warning:
 
-This basically means that a CS change is required between the first byte
-sent, and the second one.
-This change splits the single-transfer transfer of 2 bytes into 2 transfers
-with a single byte, and CS change in-between.
+"You might overrun the 80-character fixed-size string iface->p->name
+by copying iface->description without checking the length."
 
-Note fixes tag is not accurate, but reflects a point beyond which there
-are too many refactors to make backporting straight forward.
-
-Fixes: b19e9ad5e2cb ("staging:iio:resolver:ad2s1210 general driver cleanup.")
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Addresses-Coverity-ID: 1444760 ("Copy into fixed size buffer")
+Fixes: 131ac62253db ("staging: most: core: use device description as name")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/resolver/ad2s1210.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/staging/most/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/iio/resolver/ad2s1210.c
-+++ b/drivers/staging/iio/resolver/ad2s1210.c
-@@ -114,17 +114,24 @@ static int ad2s1210_config_write(struct
- static int ad2s1210_config_read(struct ad2s1210_state *st,
- 				unsigned char address)
- {
--	struct spi_transfer xfer = {
--		.len = 2,
--		.rx_buf = st->rx,
--		.tx_buf = st->tx,
-+	struct spi_transfer xfers[] = {
-+		{
-+			.len = 1,
-+			.rx_buf = &st->rx[0],
-+			.tx_buf = &st->tx[0],
-+			.cs_change = 1,
-+		}, {
-+			.len = 1,
-+			.rx_buf = &st->rx[1],
-+			.tx_buf = &st->tx[1],
-+		},
- 	};
- 	int ret = 0;
+diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
+index 25a077f4ea94..08f60ce6293d 100644
+--- a/drivers/staging/most/core.c
++++ b/drivers/staging/most/core.c
+@@ -1412,7 +1412,7 @@ int most_register_interface(struct most_interface *iface)
  
- 	ad2s1210_set_mode(MOD_CONFIG, st);
- 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
- 	st->tx[1] = AD2S1210_REG_FAULT;
--	ret = spi_sync_transfer(st->sdev, &xfer, 1);
-+	ret = spi_sync_transfer(st->sdev, xfers, 2);
- 	if (ret < 0)
- 		return ret;
- 
+ 	INIT_LIST_HEAD(&iface->p->channel_list);
+ 	iface->p->dev_id = id;
+-	strcpy(iface->p->name, iface->description);
++	strscpy(iface->p->name, iface->description, sizeof(iface->p->name));
+ 	iface->dev.init_name = iface->p->name;
+ 	iface->dev.bus = &mc.bus;
+ 	iface->dev.parent = &mc.dev;
+-- 
+2.25.1
+
 
 
