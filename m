@@ -2,114 +2,117 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E291520776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jUQs/+Xr"
+	by mail.kernel.org (Postfix) with ESMTP id C158A20704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:16:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590509805;
+	bh=LN7zbKbsYub3KwLajWlOYY1MFc0cxa8/xsLyxjCtM3U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LFKW2sT8o2GsMbCxZR6fWhoMxE4RvoIPv12weTUwm6wk84dJJDSJrmluJT75TyRsm
+	 QOo8nUSaUeKd5EL6vbJqmBT1REJxgb/tHwb39tvVOrHl/qcUTsMDDQAryNexyN+JJH
+	 nIUfaMCfaLtB+XPxsTs8JM1yxSl9EUo6gY0t1UxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgEZQQ1 (ORCPT
+        id S1729889AbgEZQQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:16:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgEZQQ0 (ORCPT
+        Tue, 26 May 2020 12:16:45 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:41747 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgEZQQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:16:26 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDABC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:16:25 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id j10so5381630wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QAvGGfTFG25ElrhD3qboczTVRvpcoz4/MxDPrOFLyQc=;
-        b=jUQs/+XrgKVA+BxYtYwJ9+JuBcKfqE7sTotIk1cJwTjNDdph4q8//KIKCWFWJXjuqF
-         bNvHT1mXU4vgLFZtgKfBQQ9XcnIDBptu/akIqUTWHm0cOtz2BEJS1ruk4/MNa1eH4klt
-         ZuFTkQLr8+q2ITQVc1NPo2IdaUCyWjFec4BlJyZFu2utsBGt4sDUF8vR2Fhu2Czulcg3
-         05T0h5z1DCFPvdQ5za1lUYlAooFdl+a+ZXRSnTlenUopOjd9D60o6A+qkKmbBYHacvu7
-         pAgh6ITLIy49AYE+6r1dZg7eAuTHLpX0avsd1ygJ2UgVJBrR1haYqXWV9/vSq/g2zOtc
-         35YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QAvGGfTFG25ElrhD3qboczTVRvpcoz4/MxDPrOFLyQc=;
-        b=LRpL1kwwdCFD7o0NoIrmT1uL/N3joosYFKEg4R8umYezI9KlZ7wXPdVBLjX/Ec1j13
-         IjdM7fAsBIhCaOppRLnYlhufVI8v2CtFreXQJdICE3ZnM6TYGIVX+fLU+CQCyS6zAez2
-         9sqnmXLMB7yzL3ZDeGo/EEmODkCz303DFzCG/Wq+aTBeFBiv0zybXPodN7jeEJPaXLCe
-         /X3nTkTsi9NoTT3hYEHs43c0pqy4qXpI6hmkRnu6KjbLaIhVF9UAfP8rln/wEQRwgDfg
-         +ivr54MPLwLT6G6keimCnJb5zU3Ziz7X3sSGdKmbnOrwhZrEL5O3q6rLCrE3Pd+WkTc2
-         DTSQ==
-X-Gm-Message-State: AOAM5333NpYyS+P0pPW6enWD60JqY1YUAyLXsmzpQUOlCj1mjU7nbw0D
-        NQQrYmpIqrHso9B74S/iTycphw==
-X-Google-Smtp-Source: ABdhPJw+Wg0GW1oC/oNFNRUHFRzDIfJRTiTYdwrWZ2pGrP6gCaf6ehHa7I8kx27W+5CJXurje+VdMQ==
-X-Received: by 2002:a5d:5585:: with SMTP id i5mr17353654wrv.112.1590509783661;
-        Tue, 26 May 2020 09:16:23 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id q13sm268377wrn.84.2020.05.26.09.16.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 09:16:22 -0700 (PDT)
-Date:   Tue, 26 May 2020 17:16:21 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, sumit.garg@linaro.org, jason.wessel@windriver.com,
-        dianders@chromium.org, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, will@kernel.org
-Subject: Re: x86/entry vs kgdb
-Message-ID: <20200526161621.7ucj5jn6rm5yednb@holly.lan>
-References: <20200525083605.GB317569@hirez.programming.kicks-ass.net>
- <20200525091832.GE325303@hirez.programming.kicks-ass.net>
+        Tue, 26 May 2020 12:16:44 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 04QGGSbN002250;
+        Wed, 27 May 2020 01:16:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04QGGSbN002250
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590509789;
+        bh=uPjRTQwS5XbBmKTVTFnwC9LPX23TTVJM7S9st4N2Cx0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=F/XRqKR54cLVKukwd8/MV/+PjjWyWqs7ISl7wVH8wSoSqkggeLSyRhf2/8akLARbN
+         eLoH4GWiL1e0VjucWJgx9rjfSDRyfC0P4ye2o6d2gXcsnvFrcGC2wVv4n83z+QVzZA
+         cCFnfSM/tHZGytL220NBUWNCN6JqEui7tm/usrqkTIV4pLttVo7jXQjcAWK6zH5kSj
+         zW3yaTmBrDmEHTtD61OQNr/+lybeYMo198EreWnp03aetTvKVTmcCvlc0/IqeeGBCl
+         SbP0gRf856YYx3iu9ZZbS9KqrX6DWB4pduhbbbMxUOV5vghHqRrHMw2xMytk81WzII
+         CGCi9Csa852Gw==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id b13so2676605vsm.13;
+        Tue, 26 May 2020 09:16:28 -0700 (PDT)
+X-Gm-Message-State: AOAM533oTKi9i4PXic8dubxEF2pBJWeObRE1MSs86E9SqgR2/J/x+Zj7
+        CZmm5mJxd28Aw4nVkeX84qYpuTuJbAgMfBKqUrs=
+X-Google-Smtp-Source: ABdhPJxavmIKiD1M2HJbOFH0B4qglDP86xzHproSsr1FZKQdun7AFDxHgu2+NwR7nOEZq0+9vHWqAa3EOL58nin+1Xw=
+X-Received: by 2002:a05:6102:1081:: with SMTP id s1mr1529406vsr.215.1590509787468;
+ Tue, 26 May 2020 09:16:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525091832.GE325303@hirez.programming.kicks-ass.net>
+References: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
+ <20200521220041.87368-1-ndesaulniers@google.com> <CAK7LNARtO5Pr2nxpoORSHDFWHbjP0waOmrn_TZ+rXhmYm+TORw@mail.gmail.com>
+ <CAKwvOd=qNa4fLY7ymVwvC3TwCH4DNLyEfygoTfBJ2y19xffQUg@mail.gmail.com>
+In-Reply-To: <CAKwvOd=qNa4fLY7ymVwvC3TwCH4DNLyEfygoTfBJ2y19xffQUg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 27 May 2020 01:15:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
+Message-ID: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: support compressed debug info
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blaikie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:18:32AM +0200, Peter Zijlstra wrote:
-> On Mon, May 25, 2020 at 10:36:05AM +0200, Peter Zijlstra wrote:
-> > Hi!
-> > 
-> > Since you seem to care about kgdb, I figured you might want to fix this
-> > before I mark it broken on x86 (we've been considering doing that for a
-> > while).
-> > 
-> > AFAICT the whole debugreg usage of kgdb-x86_64 is completely hosed; it
-> > doesn't respsect the normal exclusion zones as per arch_build_bp_info().
-> > 
-> > That is, breakpoints must never be in:
-> > 
-> >   - in the cpu_entry_area
-> >   - in .entry.text
-> >   - in .noinstr.text
-> >   - in anything else marked NOKPROBE
-> > 
-> > by not respecting these constraints it is trivial to completely and
-> > utterly hose the machine. The entry rework that is current underway will
-> > explicitly not deal with #DB triggering in any of those places.
-> 
-> This also very much includes single stepping those bits.  Which KGDB
-> obviously also does not respects.
-
-For breakpoints there's already a pre-poke validation hook that
-architectures can override if they want to. I can modify the default
-implementation to include checking the nokprobe list.
-
-Stepping is a bit more complex. There are hooks for some of the
-underlying work but not pre-step validation hook. I'll see if we can add
-one.
+On Wed, May 27, 2020 at 12:53 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> On Tue, May 26, 2020 at 3:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > > Suggested-by: David Blaikie <blaikie@google.com>
+> > > Suggested-by: Nick Clifton <nickc@redhat.com>
+> > > Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Reviewed-by: Fangrui Song <maskray@google.com>
+> > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> >
+> >
+> >
+> > Suggested-by seems strange to me, but
+> > I decided to not be worried too much.
+>
+> Ah, sorry, Monday was a holiday.  I unplugged for the long weekend.
+> https://en.wikipedia.org/wiki/Memorial_Day
+>
+> I like the suggestion to simply say "thanks to ..." in the commit
+> message and will use that next time.  I was ok to send a v4 with it.
 
 
-Daniel.
+If you send v4, I will replace.
+
+Thanks.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
