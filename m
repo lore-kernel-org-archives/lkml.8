@@ -2,218 +2,186 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E568020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jj4f8a19"
+	by mail.kernel.org (Postfix) with ESMTP id 951F920888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590520853;
+	bh=++VqZKrYqAQ5Dck8ZaiFp4nu/4KSfacu9BrCWRmdi6M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oQmpghxIdpN7QrjRUsqOom8zHNLCIlkdy4jkJje7TP+50ry75DvIksqt5mBrH+cdI
+	 lMBxMoqrSh7riXxvkQTwBcgaV8LXyeUnPXEkabdtFu2PGEMX8xjveVWPVrjj3fQ6IG
+	 +rUMd+A80iOb9Hhl4yUsD6t7T7igjDMAhMHRQ6bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392461AbgEZTUs (ORCPT
+        id S2392025AbgEZTMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392251AbgEZTUm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:20:42 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B41C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:20:41 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z22so13041985lfd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ly/hqC+OpwfmKTz5BxiBCk11qr5IjD5u5LkJ+5oge9k=;
-        b=jj4f8a195bN/b2zB0ZWQf3ep6OWmBs6zZXB82xREt0TC5NGBrTNUCijzfLG9tRAdIK
-         X99OlquY/pzaajwkJAmiKXLaJFMpFPjH+sLgBNlKWih4Uqb+kNLvNAQ+cAVkWfN4nZoE
-         jO27YRbzPZiI/0PDsa+cqiGOihNRASdZNJqytfExMb7zRpBrfdmx+rL0VObMbdXZLKGj
-         t8ezQ6snhHP0NF9+Mk8G3VSMMU4rMLwzdODFq1sIh6j/+5sHtR9UA+/aMuUW6Zlptv1J
-         4rK9T3xCCs/KmJbux2DwBioegj5HxMZluKwJyuaSOnzOMQql5XtnOqAJPianl5V41bLw
-         WBgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ly/hqC+OpwfmKTz5BxiBCk11qr5IjD5u5LkJ+5oge9k=;
-        b=PrLeIoJCsaEJq4Bg6vsTRdc0LpwlxNes19N9BWkw+yh5iEbTVbS1unQLCBygnnaOSu
-         tWGTRBDR8cCmj5QydMNBeV/YMOi9irAH0bd/DKXJCl4Snt9kIZi8xuRbbmRvH3MJ8H4N
-         /l+EB21SzWZAKFyuarCJ05JmkI18KKP6I60noG4Gu6gEx4CSV/nOeV4gEXc0fB2/ouq/
-         zW8b3Cgk/oe/jV0G4SeHYlJxJ1qJga5iCdDgeGA6hIy93l1+TFZUbrCEEvQfV5DRJsmG
-         5Bg1USP0eeqU4oGV5VeUsvP7m08OvnE7TmFdIX/K2aSxYTFRTTv8AWhn554H2KgbE8eS
-         OEZQ==
-X-Gm-Message-State: AOAM530Dh1CiXYK1GHXCui8ATKZLkt3PBp3QrL3wuAdgwN3D/io8mhk1
-        nsy+BrDny31P7NvC1gz6MgD4yKQ3cno=
-X-Google-Smtp-Source: ABdhPJyIwCdPdWx3iVuj+HKFf4k9Bryj+HGLN3dX9mcIw6ozQM5joA/WEGJP/4OCMDV7hiHVBnZw4w==
-X-Received: by 2002:a05:6512:411:: with SMTP id u17mr1203700lfk.106.1590520839212;
-        Tue, 26 May 2020 12:20:39 -0700 (PDT)
-Received: from localhost.localdomain ([176.59.41.83])
-        by smtp.gmail.com with ESMTPSA id i8sm180483lfo.62.2020.05.26.12.20.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:20:38 -0700 (PDT)
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
-        linux-integrity@vger.kernel.org, arnd@linaro.org,
-        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
-Subject: [PATCHv4 3/3] tpm_ftpm_tee: register driver on TEE bus
-Date:   Tue, 26 May 2020 22:20:29 +0300
-Message-Id: <20200526192029.863-4-maxim.uvarov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526192029.863-1-maxim.uvarov@linaro.org>
-References: <20200526192029.863-1-maxim.uvarov@linaro.org>
+        Tue, 26 May 2020 15:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404136AbgEZTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58E320888;
+        Tue, 26 May 2020 19:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590520336;
+        bh=++VqZKrYqAQ5Dck8ZaiFp4nu/4KSfacu9BrCWRmdi6M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HVTXCvV9esPjk9cvfKAJdhMHpTHfgOoK47pSE3DQFz8s61BUQV7NAxieC1xi6PvB+
+         GV2L8iV8wl38o5aZ/Vr3CobMT/gtisce0fpG/o6bJdxf5bgUn6fu9t5fuT7J5AqrLQ
+         fx+q9XjOJk0BVJLMWePlXGww9C388t8lc8TIAU4o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 040/126] selftests: fix kvm relocatable native/cross builds and installs
+Date:   Tue, 26 May 2020 20:52:57 +0200
+Message-Id: <20200526183941.314354114@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
+References: <20200526183937.471379031@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register driver on the TEE bus. The module tee registers bus,
-and module optee calls optee_enumerate_devices() to scan
-all devices on the bus. Trusted Application for this driver
-can be Early TA's (can be compiled into optee-os). In that
-case it will be on OPTEE bus before linux booting. Also
-optee-suplicant application is needed to be loaded between
-OPTEE module and ftpm module to maintain functionality
-for fTPM driver.
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@linaro.org>
+[ Upstream commit 66d69e081b526b6a6031f0d3ca8ddff71e5707a5 ]
+
+kvm test Makefile doesn't fully support cross-builds and installs.
+UNAME_M = $(shell uname -m) variable is used to define the target
+programs and libraries to be built from arch specific sources in
+sub-directories.
+
+For cross-builds to work, UNAME_M has to map to ARCH and arch specific
+directories and targets in this Makefile.
+
+UNAME_M variable to used to run the compiles pointing to the right arch
+directories and build the right targets for these supported architectures.
+
+TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
+LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
+
+x86_64 targets are named to include x86_64 as a suffix and directories
+for includes are in x86_64 sub-directory. s390x and aarch64 follow the
+same convention. "uname -m" doesn't result in the correct mapping for
+s390x and aarch64. Fix it to set UNAME_M correctly for s390x and aarch64
+cross-builds.
+
+In addition, Makefile doesn't create arch sub-directories in the case of
+relocatable builds and test programs under s390x and x86_64 directories
+fail to build. This is a problem for native and cross-builds. Fix it to
+create all necessary directories keying off of TEST_GEN_PROGS.
+
+The following use-cases work with this change:
+
+Native x86_64:
+make O=/tmp/kselftest -C tools/testing/selftests TARGETS=kvm install \
+ INSTALL_PATH=$HOME/x86_64
+
+arm64 cross-build:
+make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+	CROSS_COMPILE=aarch64-linux-gnu- defconfig
+
+make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+	CROSS_COMPILE=aarch64-linux-gnu- all
+
+make kselftest-install TARGETS=kvm O=$HOME/arm64_build ARCH=arm64 \
+	HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu-
+
+s390x cross-build:
+make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
+	CROSS_COMPILE=s390x-linux-gnu- defconfig
+
+make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
+	CROSS_COMPILE=s390x-linux-gnu- all
+
+make kselftest-install TARGETS=kvm O=$HOME/s390x_build/ ARCH=s390 \
+	HOSTCC=gcc CROSS_COMPILE=s390x-linux-gnu- all
+
+No regressions in the following use-cases:
+make -C tools/testing/selftests TARGETS=kvm
+make kselftest-all TARGETS=kvm
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm_ftpm_tee.c | 70 ++++++++++++++++++++++++++++-----
- 1 file changed, 60 insertions(+), 10 deletions(-)
+ tools/testing/selftests/kvm/Makefile | 29 +++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index 22bf553ccf9d..28da638360d8 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
-  * Return:
-  *	On success, 0. On failure, -errno.
-  */
--static int ftpm_tee_probe(struct platform_device *pdev)
-+static int ftpm_tee_probe(struct device *dev)
- {
- 	int rc;
- 	struct tpm_chip *chip;
--	struct device *dev = &pdev->dev;
- 	struct ftpm_tee_private *pvt_data = NULL;
- 	struct tee_ioctl_open_session_arg sess_arg;
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index d91c53b726e6..75dec268787f 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -5,8 +5,34 @@ all:
  
-@@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
- 	return rc;
- }
+ top_srcdir = ../../../..
+ KSFT_KHDR_INSTALL := 1
++
++# For cross-builds to work, UNAME_M has to map to ARCH and arch specific
++# directories and targets in this Makefile. "uname -m" doesn't map to
++# arch specific sub-directory names.
++#
++# UNAME_M variable to used to run the compiles pointing to the right arch
++# directories and build the right targets for these supported architectures.
++#
++# TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
++# LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
++#
++# x86_64 targets are named to include x86_64 as a suffix and directories
++# for includes are in x86_64 sub-directory. s390x and aarch64 follow the
++# same convention. "uname -m" doesn't result in the correct mapping for
++# s390x and aarch64.
++#
++# No change necessary for x86_64
+ UNAME_M := $(shell uname -m)
  
-+static int ftpm_plat_tee_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
++# Set UNAME_M for arm64 compile/install to work
++ifeq ($(ARCH),arm64)
++	UNAME_M := aarch64
++endif
++# Set UNAME_M s390x compile/install to work
++ifeq ($(ARCH),s390)
++	UNAME_M := s390x
++endif
 +
-+	return ftpm_tee_probe(dev);
-+}
-+
- /**
-  * ftpm_tee_remove() - remove the TPM device
-  * @pdev: the platform_device description.
-@@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
-  * Return:
-  *	0 always.
-  */
--static int ftpm_tee_remove(struct platform_device *pdev)
-+static int ftpm_tee_remove(struct device *dev)
- {
--	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-+	struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
+ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+@@ -47,7 +73,7 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+-LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+@@ -78,6 +104,7 @@ $(LIBKVM_OBJ): $(OUTPUT)/%.o: %.c
+ $(OUTPUT)/libkvm.a: $(LIBKVM_OBJ)
+ 	$(AR) crs $@ $^
  
- 	/* Release the chip */
- 	tpm_chip_unregister(pvt_data->chip);
-@@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
- 	return 0;
- }
++x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+ all: $(STATIC_LIBS)
+ $(TEST_GEN_PROGS): $(STATIC_LIBS)
  
-+static int ftpm_plat_tee_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	return ftpm_tee_remove(dev);
-+}
-+
- /**
-  * ftpm_tee_shutdown() - shutdown the TPM device
-  * @pdev: the platform_device description.
-  */
--static void ftpm_tee_shutdown(struct platform_device *pdev)
-+static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
- {
- 	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
- 
-@@ -347,17 +360,54 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
- 
--static struct platform_driver ftpm_tee_driver = {
-+static struct platform_driver ftpm_tee_plat_driver = {
- 	.driver = {
- 		.name = "ftpm-tee",
- 		.of_match_table = of_match_ptr(of_ftpm_tee_ids),
- 	},
--	.probe = ftpm_tee_probe,
--	.remove = ftpm_tee_remove,
--	.shutdown = ftpm_tee_shutdown,
-+	.shutdown = ftpm_plat_tee_shutdown,
-+	.probe = ftpm_plat_tee_probe,
-+	.remove = ftpm_plat_tee_remove,
-+};
-+
-+/* UUID of the fTPM TA */
-+static const struct tee_client_device_id optee_ftpm_id_table[] = {
-+	{UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
-+		   0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
-+	{}
- };
- 
--module_platform_driver(ftpm_tee_driver);
-+MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
-+
-+static struct tee_client_driver ftpm_tee_driver = {
-+	.id_table	= optee_ftpm_id_table,
-+	.driver		= {
-+		.name		= "optee-ftpm",
-+		.bus		= &tee_bus_type,
-+		.probe		= ftpm_tee_probe,
-+		.remove		= ftpm_tee_remove,
-+	},
-+};
-+
-+static int __init ftpm_mod_init(void)
-+{
-+	int rc;
-+
-+	rc = platform_driver_register(&ftpm_tee_plat_driver);
-+	if (rc)
-+		return rc;
-+
-+	return driver_register(&ftpm_tee_driver.driver);
-+}
-+
-+static void __exit ftpm_mod_exit(void)
-+{
-+	platform_driver_unregister(&ftpm_tee_plat_driver);
-+	driver_unregister(&ftpm_tee_driver.driver);
-+}
-+
-+module_init(ftpm_mod_init);
-+module_exit(ftpm_mod_exit);
- 
- MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
- MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
 -- 
-2.17.1
+2.25.1
+
+
 
