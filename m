@@ -2,193 +2,127 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6988CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E2720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB3220776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521395;
-	bh=kHG7Iurp5P4qCpo0FQjFbeSy0sAQuXTKMoEVhW1q9s0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ta/jxa/ijGIMKd8zC5MDg5ok1IxV40kFTAHzQhvMwhrr5M4BsF+zdZ4qp/NfJ7eNt
-	 JAvmIo/PB2r+sUIDQg3P5sKaeVZxfovK1hFoGdJimzRjEhifvXX0GwqGbooWsRjvt2
-	 qjGorfie36KaXFddYJFdrKdiFlddb0d7bG1HFijQ=
+	s=default; t=1590521402;
+	bh=cKvKhSaa6iR9xR6fOOVGDBo+K/GETrYvN5MflaL2/UM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wkLnTXPvkWY0Wm7mKhTZ0W1EGFUbxuKmLJvQq3s3ttB/9ptxJw8brmjgzflY5Sovv
+	 QvAXeFAN+D+ZXrfnpiqFoOvNPna3c0Fg/QW3jbmSWbsEAMJk2Hnf2TFaBn0/v2qPgm
+	 J0iP1WDGZBIY0PFOcWADiZ9JGeHYo+707+u59aqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404255AbgEZT3y (ORCPT
+        id S2404423AbgEZTaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:29:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43207 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403856AbgEZT3v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:29:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id h10so23334523iob.10;
-        Tue, 26 May 2020 12:29:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1udivP7wbmjRGQdrVG+bvSIgJ6k6K6sg5R0YTrdV/ZI=;
-        b=t4kC1jI7UiO4MZhJGkDRBUWQHV+9KoeFICr9vrDYhQOaoCuIv1xL9MybaaNyj/hY74
-         slBKtgm+RhZroQTHDrEgfRaJrzlhu0vMeW6j4FT/ld0ZSl3deXO6mHpQT94rXXvJaHt8
-         wG8MSmqWHrl84DeKLkzevdIPtfVfXxON0er/gpV7Zj1RknVLoplOQUx6OWH3h9D6YMYa
-         eMBhdd4JTxUNCdBs5Uxi8yfTVUdjxEGKkV3F0hgusWxPCdqTMuQbeCgf6jgPg/sG0i0k
-         hiR3us/Gq1Gad7DEG+1cQsBeEj+QX6rC+CRANcosBlTmwXthckUewY8Vo0cl4y9It/wR
-         QAKw==
-X-Gm-Message-State: AOAM533VX0b6tEowLTOYYjmVyWNQAgPAEuTdHj0KUOekpDGLMcaOErPq
-        l14RVi5xRDLv7WRbeL3Bs5Z2j3U=
-X-Google-Smtp-Source: ABdhPJyZBBk1sBbHouc7difwqpQlE+8v91JyFKG3/W2+MNks24BN0vbpZp7iptfxgr4ZzF78fd0cYA==
-X-Received: by 2002:a02:dc8:: with SMTP id 191mr2522550jax.95.1590521389948;
-        Tue, 26 May 2020 12:29:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r9sm420424ilm.10.2020.05.26.12.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:29:49 -0700 (PDT)
-Received: (nullmailer pid 224310 invoked by uid 1000);
-        Tue, 26 May 2020 19:29:47 -0000
-Date:   Tue, 26 May 2020 13:29:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
-        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        keescook@chromium.org, paul@crapouillou.net, krzk@kernel.org,
-        hns@goldelico.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        rick.tyliu@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v8 4/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200526192947.GA140311@bogus>
-References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
+        Tue, 26 May 2020 15:30:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390844AbgEZTAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B27D3208B8;
+        Tue, 26 May 2020 19:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519654;
+        bh=cKvKhSaa6iR9xR6fOOVGDBo+K/GETrYvN5MflaL2/UM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tgoKSYVBm/DfF+TrYIDE2FfFSRazmfJKDM/BlgXBYAsUniR7TGUUz0k+QUhOpXsay
+         kaiF5X9y6frqqdc3LL2tr7vDIV92qbAWqc+Byech7AlRgktbnHd/qN+5ov+GQ4zpN5
+         mS8T4csexpIkUMnzs9jAlUbsFpsd5f/goeizDHL8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 23/59] USB: core: Fix misleading driver bug report
+Date:   Tue, 26 May 2020 20:53:08 +0200
+Message-Id: <20200526183915.966278367@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
+References: <20200526183907.123822792@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:35:21PM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
-> 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->     v1->v2:
->     Change the two Document from txt to yaml.
->     
->     v2->v3:
->     Fix formatting errors.
->     
->     v3->v4:
->     Fix bugs in the two yaml files.
->     
->     v4->v5:
->     No change.
->     
->     v5->v6:
->     Rewrite the two yaml files.
->     
->     v6->v7:
->     1.Update compatible strings in "ingenic,cpu.yaml".
->     2.Fix formatting errors, and enum for compatible strings.
->     3.Remove unnecessary "ingenic,soc.yaml".
->     
->     v7->v8:
->     No change.
-> 
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> new file mode 100644
-> index 00000000..afb0207
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic XBurst family CPUs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> +
-> +description:
-> +  Ingenic XBurst family CPUs shall have the following properties.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Ingenic XBurst®1 CPU Cores
-> +        items:
+From: Alan Stern <stern@rowland.harvard.edu>
 
-This is a single compatible string, right? If so, drop items. 
+[ Upstream commit ac854131d9844f79e2fdcef67a7707227538d78a ]
 
-> +          enum:
-> +            - ingenic,xburst-mxu1.0
-> +            - ingenic,xburst-fpu1.0-mxu1.1
-> +            - ingenic,xburst-fpu2.0-mxu2.0
-> +
-> +      - description: Ingenic XBurst®2 CPU Cores
-> +        items:
-> +          enum:
-> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
+The syzbot fuzzer found a race between URB submission to endpoint 0
+and device reset.  Namely, during the reset we call usb_ep0_reinit()
+because the characteristics of ep0 may have changed (if the reset
+follows a firmware update, for example).  While usb_ep0_reinit() is
+running there is a brief period during which the pointers stored in
+udev->ep_in[0] and udev->ep_out[0] are set to NULL, and if an URB is
+submitted to ep0 during that period, usb_urb_ep_type_check() will
+report it as a driver bug.  In the absence of those pointers, the
+routine thinks that the endpoint doesn't exist.  The log message looks
+like this:
 
-Just: const: ingenic,xburst2-fpu2.1-mxu2.1-smt
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 2 != type 2
+WARNING: CPU: 0 PID: 9241 at drivers/usb/core/urb.c:478
+usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
 
-Continuing to append CPU features isn't going to scale well. Does 
-'xburst2' imply certain features? If so, not really any need to have 
-them be explicit.
+Now, although submitting an URB while the device is being reset is a
+questionable thing to do, it shouldn't count as a driver bug as severe
+as submitting an URB for an endpoint that doesn't exist.  Indeed,
+endpoint 0 always exists, even while the device is in its unconfigured
+state.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - device_type
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    cpus {
-> +    	#address-cells = <1>;
-> +    	#size-cells = <0>;
-> +
-> +    	cpu0: cpu@0 {
-> +    		device_type = "cpu";
-> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
-> +    		reg = <0>;
-> +    	};
-> +
-> +    	cpu1: cpu@1 {
-> +    		device_type = "cpu";
-> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
-> +    		reg = <1>;
-> +    	};
-> +    };
-> +...
-> -- 
-> 2.7.4
-> 
+To prevent these misleading driver bug reports, this patch updates
+usb_disable_endpoint() to avoid clearing the ep_in[] and ep_out[]
+pointers when the endpoint being disabled is ep0.  There's no danger
+of leaving a stale pointer in place, because the usb_host_endpoint
+structure being pointed to is stored permanently in udev->ep0; it
+doesn't get deallocated until the entire usb_device structure does.
+
+Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2005011558590.903-100000@netrider.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/core/message.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index 00e80cfe614c..298c91f83aee 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1082,11 +1082,11 @@ void usb_disable_endpoint(struct usb_device *dev, unsigned int epaddr,
+ 
+ 	if (usb_endpoint_out(epaddr)) {
+ 		ep = dev->ep_out[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_out[epnum] = NULL;
+ 	} else {
+ 		ep = dev->ep_in[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_in[epnum] = NULL;
+ 	}
+ 	if (ep) {
+-- 
+2.25.1
+
+
+
