@@ -2,152 +2,125 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4614BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE5D204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21764204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCDmrYuv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yfl024QV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389553AbgEZRZR (ORCPT
+        id S2389159AbgEZRXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:25:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37032 "EHLO
+        Tue, 26 May 2020 13:23:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40722 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388979AbgEZRXX (ORCPT
+        with ESMTP id S2388971AbgEZRXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:23:23 -0400
+        Tue, 26 May 2020 13:23:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590513801;
+        s=mimecast20190719; t=1590513796;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BSd3IEYZKR/6Qwx6J8GSXbc0+/BFad6M3JkDOg/O/o8=;
-        b=XCDmrYuvN99D6OBcH4SrEy6DWJWHeL/BVN8fVCULfn4qAT9i6by5txfVqZqwdhoJcnyYlz
-        bjAt+DJSNVf1emI0O1aR7EWcAzJnGzloa7pgR/IIZ25EqA3huKKlw8449H4nTYQaeGk/Lt
-        Sa5dRrThtpov6dhlgf/QYLdq1HKucqQ=
+        bh=ulAk7D9K90ziZEa7pahAMfwIfO9l0RLz4413qge8DP0=;
+        b=Yfl024QV1o+H/5gW9eYIsNw6olpDvv9YLqWbRqYTaTBDSM3JF7kiM50JzZAN9SGbJkzqNv
+        XcEg3PdHotKcUnC8MkVLpvSXQrWHS4K7pv3ToWBM2v5Bp+NpE7mpO9kXinlvPe5Q76ROKB
+        uPr8LrPX6jskT/SV2aAuIy398vKKCMI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-p6s6c6wzMamQDShczMNqaQ-1; Tue, 26 May 2020 13:23:17 -0400
-X-MC-Unique: p6s6c6wzMamQDShczMNqaQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-100-t4OT0t03PGCtSw_HkZpiNg-1; Tue, 26 May 2020 13:23:14 -0400
+X-MC-Unique: t4OT0t03PGCtSw_HkZpiNg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B20C5100CCC4;
-        Tue, 26 May 2020 17:23:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03FF78015D2;
+        Tue, 26 May 2020 17:23:13 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B34C5C1D6;
-        Tue, 26 May 2020 17:23:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F83010013DB;
+        Tue, 26 May 2020 17:23:12 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>
-Subject: [PATCH 10/28] KVM: nSVM: extract preparation of VMCB for nested run
-Date:   Tue, 26 May 2020 13:22:50 -0400
-Message-Id: <20200526172308.111575-11-pbonzini@redhat.com>
+Subject: [PATCH 05/28] KVM: nSVM: correctly inject INIT vmexits
+Date:   Tue, 26 May 2020 13:22:45 -0400
+Message-Id: <20200526172308.111575-6-pbonzini@redhat.com>
 In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
 References: <20200526172308.111575-1-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split out filling svm->vmcb.save and svm->vmcb.control before VMRUN.
-Only the latter will be useful when restoring nested SVM state.
-
-This patch introduces no semantic change, so the MMU setup is still
-done in nested_prepare_vmcb_save.  The next patch will clean up things.
+The usual drill at this point, except there is no code to remove because this
+case was not handled at all.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c | 40 +++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ arch/x86/kvm/svm/nested.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index ea00dcd8c39b..af7c9ce8c5ad 100644
+index bbf991cfe24b..166b88fc9509 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -245,21 +245,8 @@ static void load_nested_vmcb_control(struct vcpu_svm *svm,
- 	svm->vcpu.arch.tsc_offset += control->tsc_offset;
+@@ -25,6 +25,7 @@
+ #include "trace.h"
+ #include "mmu.h"
+ #include "x86.h"
++#include "lapic.h"
+ #include "svm.h"
+ 
+ static void nested_svm_inject_npf_exit(struct kvm_vcpu *vcpu,
+@@ -788,11 +789,37 @@ static void nested_svm_intr(struct vcpu_svm *svm)
+ 	nested_svm_vmexit(svm);
  }
  
--void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
--			  struct vmcb *nested_vmcb)
-+static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
++static inline bool nested_exit_on_init(struct vcpu_svm *svm)
++{
++	return (svm->nested.intercept & (1ULL << INTERCEPT_INIT));
++}
++
++static void nested_svm_init(struct vcpu_svm *svm)
++{
++	svm->vmcb->control.exit_code   = SVM_EXIT_INIT;
++	svm->vmcb->control.exit_info_1 = 0;
++	svm->vmcb->control.exit_info_2 = 0;
++
++	nested_svm_vmexit(svm);
++}
++
++
+ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
  {
--	bool evaluate_pending_interrupts =
--		is_intercept(svm, INTERCEPT_VINTR) ||
--		is_intercept(svm, INTERCEPT_IRET);
--
--	svm->nested.vmcb = vmcb_gpa;
--	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
--		svm->vcpu.arch.hflags |= HF_HIF_MASK;
--	else
--		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
--
--	load_nested_vmcb_control(svm, &nested_vmcb->control);
--
- 	if (nested_vmcb->control.nested_ctl & SVM_NESTED_CTL_NP_ENABLE)
- 		nested_svm_init_mmu_context(&svm->vcpu);
- 
-@@ -291,7 +278,10 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	svm->vmcb->save.dr7 = nested_vmcb->save.dr7;
- 	svm->vcpu.arch.dr6  = nested_vmcb->save.dr6;
- 	svm->vmcb->save.cpl = nested_vmcb->save.cpl;
-+}
- 
-+static void nested_prepare_vmcb_control(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
-+{
- 	svm_flush_tlb(&svm->vcpu);
- 	if (nested_vmcb->control.int_ctl & V_INTR_MASKING_MASK)
- 		svm->vcpu.arch.hflags |= HF_VINTR_MASK;
-@@ -321,6 +311,26 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	 */
- 	recalc_intercepts(svm);
- 
-+	mark_all_dirty(svm->vmcb);
-+}
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	bool block_nested_events =
+ 		kvm_event_needs_reinjection(vcpu) || svm->nested.nested_run_pending;
++	struct kvm_lapic *apic = vcpu->arch.apic;
 +
-+void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
-+			  struct vmcb *nested_vmcb)
-+{
-+	bool evaluate_pending_interrupts =
-+		is_intercept(svm, INTERCEPT_VINTR) ||
-+		is_intercept(svm, INTERCEPT_IRET);
-+
-+	svm->nested.vmcb = vmcb_gpa;
-+	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
-+		svm->vcpu.arch.hflags |= HF_HIF_MASK;
-+	else
-+		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
-+
-+	load_nested_vmcb_control(svm, &nested_vmcb->control);
-+	nested_prepare_vmcb_save(svm, nested_vmcb);
-+	nested_prepare_vmcb_control(svm, nested_vmcb);
-+
- 	/*
- 	 * If L1 had a pending IRQ/NMI before executing VMRUN,
- 	 * which wasn't delivered because it was disallowed (e.g.
-@@ -336,8 +346,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	enable_gif(svm);
- 	if (unlikely(evaluate_pending_interrupts))
- 		kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
--
--	mark_all_dirty(svm->vmcb);
- }
++	if (lapic_in_kernel(vcpu) &&
++	    test_bit(KVM_APIC_INIT, &apic->pending_events)) {
++		if (block_nested_events)
++			return -EBUSY;
++		if (!nested_exit_on_init(svm))
++			return 0;
++		nested_svm_init(svm);
++		return 0;
++	}
  
- int nested_svm_vmrun(struct vcpu_svm *svm)
+ 	if (vcpu->arch.exception.pending) {
+ 		if (block_nested_events)
 -- 
 2.26.2
 
