@@ -2,134 +2,89 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A14C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257B9207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:20:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ExgUCfJ+"
+	by mail.kernel.org (Postfix) with ESMTP id BD0B520878
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgEZFUV (ORCPT
+        id S1726363AbgEZF2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 01:20:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60903 "EHLO ozlabs.org"
+        Tue, 26 May 2020 01:28:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37666 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725771AbgEZFUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 01:20:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WMjY2cLJz9sRY;
-        Tue, 26 May 2020 15:20:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590470419;
-        bh=B6Hi4gILlLDp7n+DVdTtsXOFIPKhldJnkNXQiTB38Qc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ExgUCfJ+xAr19RuEbN8K4XUAah4iEWvNOsbfZLoM26Isf2EWYdrDodAZ1vuI0vG+V
-         SjiHrJnurJDbLxA7vFYGkMsFAGTnLGKPm3c6hPQu5cTK5evSvFlHsOEip+bq9bRMp2
-         UOyE8XHxMb6WdgoJ9Ukgf4q7wBxWSkogX75wt99LbZvXI12erCQoZFkw+aHDOQUWXM
-         eLgOX1znz+IKjtWB/344ha0DA2s861n0QJZs69VHzsFxAOW+puuW4Wgp7WhnfrpaIy
-         B89vs4X7oSBIA8KvP4C0iF5Bc8x1hE6a81wZb+AU3j3wmCUZoNiTp+QH9boIkmAzNz
-         taO1LBnCtHAXw==
-Date:   Tue, 26 May 2020 15:20:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Wim Van Sebroeck <wim@iguana.be>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: linux-next: manual merge of the devicetree tree with the watchdog
- tree
-Message-ID: <20200526152015.60b5bfd9@canb.auug.org.au>
+        id S1725771AbgEZF2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 01:28:50 -0400
+IronPort-SDR: R2KPo5WOs7BOqmxknrE1BqnD6MeX6wez7QPVTNsYoy4PeRLXOP8RzxKaRRTlZtLqCpUmQ884iA
+ mrTxho32bMyw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 22:28:50 -0700
+IronPort-SDR: PXyP/aEXuYvGVakR4IXAMHD2zuHe9IytR1+X3zCVrRkeyj65kZoSgTG/yPOHnW3ORzNr76Qq3V
+ TYIDCPiYbDwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
+   d="scan'208";a="266334379"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga003.jf.intel.com with ESMTP; 25 May 2020 22:28:50 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id F2932301C5E; Mon, 25 May 2020 22:28:49 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     x86@kernel.org
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        sashal@kernel.org, Andi Kleen <ak@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v1] x86: Pin cr4 FSGSBASE
+Date:   Mon, 25 May 2020 22:28:48 -0700
+Message-Id: <20200526052848.605423-1-andi@firstfloor.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IstNJLgrb5qemln70tKIKuh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IstNJLgrb5qemln70tKIKuh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Andi Kleen <ak@linux.intel.com>
 
-Hi all,
+Since there seem to be kernel modules floating around that set
+FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+CR4 pinning just checks that bits are set, this also checks
+that the FSGSBASE bit is not set, and if it is clears it again.
 
-Today's linux-next merge of the devicetree tree got a conflict in:
+Note this patch will need to be undone when the full FSGSBASE
+patches are merged. But it's a reasonable solution for v5.2+
+stable at least. Sadly the older kernels don't have the necessary
+infrastructure for this (although a simpler version of this
+could be added there too)
 
-  Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-
-between commit:
-
-  ff1ee6fb276c ("dt-bindings: watchdog: renesas,wdt: Document r8a7742 suppo=
-rt")
-
-from the watchdog tree and commit:
-
-  d0941cfb9fa8 ("dt-bindings: watchdog: renesas-wdt: Convert to json-schema=
-")
-
-from the devicetree tree.
-
-I fixed it up (I removed the file and added the patch below) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 26 May 2020 15:15:51 +1000
-Subject: [PATCH] dt-bindings: watchdog: renesas-wdt: fix up for yaml conver=
-sion
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/cpu/common.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/=
-Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-index 27e8c4accd67..572f4c912fef 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-@@ -24,6 +24,7 @@ properties:
-=20
-       - items:
-           - enum:
-+              - renesas,r8a7742-wdt      # RZ/G1H
-               - renesas,r8a7743-wdt      # RZ/G1M
-               - renesas,r8a7744-wdt      # RZ/G1N
-               - renesas,r8a7745-wdt      # RZ/G1E
---=20
-2.26.2
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index bed0cb83fe24..1f5b7871ae9a 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -385,6 +385,11 @@ void native_write_cr4(unsigned long val)
+ 		/* Warn after we've set the missing bits. */
+ 		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+ 			  bits_missing);
++		if (val & X86_CR4_FSGSBASE) {
++			WARN_ONCE(1, "CR4 unexpectedly set FSGSBASE!?\n");
++			val &= ~X86_CR4_FSGSBASE;
++			goto set_register;
++		}
+ 	}
+ }
+ EXPORT_SYMBOL(native_write_cr4);
+-- 
+2.25.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/IstNJLgrb5qemln70tKIKuh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Mpw8ACgkQAVBC80lX
-0GycoAf/cVP+jRU/ZUPUOWJoDaGcQo702ufuW+m6X5PQu1Z+CRC+Fl+GmhQhHkBa
-ai69+D9mdnfzk22DTxco4nAXqUy1ALDbux4TG8k6ppwslWaQ6ghP/TzdsuMKbFBM
-WHA5t+LouYzJV0zmVYIUVhdAqSdwvh1vGJMtHT2G8pGJWJWwzbwd2Qm6aR2h7f0t
-5glook8fBy16/b1hEKhKqSzKYoSnZnLgt5k09rpBVqyUtyFwCPV0r3GBDAf1TuQ8
-RDIz/A4PuYeBU47WAs2aB1pVabzutLAraCSqhe2dQrs4LZV0H7jkvpiFkV1f+Z0y
-wcy48bp+JrWZOCHHLN7dQv0Qdn9Sfw==
-=gkwN
------END PGP SIGNATURE-----
-
---Sig_/IstNJLgrb5qemln70tKIKuh--
