@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09028C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A185EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4CB20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B62F20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520228;
-	bh=Oqu2yOvrwuOCvuThZiTy/2R+0TTTq6zMYRIblVN+r5c=;
+	s=default; t=1590520231;
+	bh=jXEUcil0rT+2HSSRF1hUE7Nx8uOSS9Lc/yv3xd0bQjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tZXxF6BAM/Oat7TLdjO8QXrt2YwVcBnZPXmtoMyd6U1+LwGNnac26guuTDJxrTLG7
-	 EKm3QgPWbD9kWwvJZIxcMQSjNsLSX9YDJGQZ6L9ORDMbyQQgP/BcZgcf+FA5cjy4W7
-	 xtt5O8EMZ8hjqWy/w/6ZPQ1QwyPt1PuT86oMqbE0=
+	b=P3eDFMYvyGr+ZwJU2e9Vsuqz0dLmC4mSh1JBKo1e673Y4TXfGEVcfXWQfqQzGOQeA
+	 YU4JrxP+4ejMzTGa0swIgaHFeuH9NNOF/uYcklLnY1Qbod4sUnCtqdtkuE6AAFT4OJ
+	 0G09Vi9vUCEic1R/T1UiiZIK9DaRXUm0mvvEnorY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391425AbgEZTK2 (ORCPT
+        id S2391940AbgEZTKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:10:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39608 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391436AbgEZTKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:25 -0400
+        id S2390942AbgEZTKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66ACF20776;
-        Tue, 26 May 2020 19:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00244208B6;
+        Tue, 26 May 2020 19:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520224;
-        bh=Oqu2yOvrwuOCvuThZiTy/2R+0TTTq6zMYRIblVN+r5c=;
+        s=default; t=1590520222;
+        bh=jXEUcil0rT+2HSSRF1hUE7Nx8uOSS9Lc/yv3xd0bQjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bMJtdK6OnSJhL6XGWM3qVcTYesTGtfJyn+hEA98WbXYCtvPrLUldwCJZNu0uBDz8b
-         YKEMXpTSikwOot7B1z8V7nyv2lEZ9/ZPXJ2DZhllqtsqdTZQxGvCNt8Bo2m354dCB5
-         Wb5+avbQvrF+HqdVHvdhqP8m0tk7rTRtUWuduAM0=
+        b=VDhS1s9RNssVj/VHx3iSgASXUgaGXNuPvp54cLzQ9lXHi9sCzAjaYGx+pGBu+48P4
+         l+zhQrVyRAU9a6Uphv1vpx/sMc3QO/q4KWjyErHTv8naP8cuHG/TFh2vWZ1Osy7Fve
+         KBrdJY2faJ/wQeHliNTA00NTdt+S4kKQ7xLI/mHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/111] rxrpc: Trace discarded ACKs
-Date:   Tue, 26 May 2020 20:54:04 +0200
-Message-Id: <20200526183942.943064661@linuxfoundation.org>
+Subject: [PATCH 5.4 105/111] iio: adc: stm32-dfsdm: fix device used to request dma
+Date:   Tue, 26 May 2020 20:54:03 +0200
+Message-Id: <20200526183942.835400816@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,98 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit d1f129470e6cb79b8b97fecd12689f6eb49e27fe ]
+[ Upstream commit b455d06e6fb3c035711e8aab1ca18082ccb15d87 ]
 
-Add a tracepoint to track received ACKs that are discarded due to being
-outside of the Tx window.
+DMA channel request should use device struct from platform device struct.
+Currently it's using iio device struct. But at this stage when probing,
+device struct isn't yet registered (e.g. device_register is done in
+iio_device_register). Since commit 71723a96b8b1 ("dmaengine: Create
+symlinks between DMA channels and slaves"), a warning message is printed
+as the links in sysfs can't be created, due to device isn't yet registered:
+- Cannot create DMA slave symlink
+- Cannot create DMA dma:rx symlink
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fix this by using device struct from platform device to request dma chan.
+
+Fixes: eca949800d2d ("IIO: ADC: add stm32 DFSDM support for PDM microphone")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h | 35 +++++++++++++++++++++++++++++++++++
- net/rxrpc/input.c            | 12 ++++++++++--
- 2 files changed, 45 insertions(+), 2 deletions(-)
+ drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index ab75f261f04a..ba9efdc848f9 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1541,6 +1541,41 @@ TRACE_EVENT(rxrpc_notify_socket,
- 		      __entry->serial)
- 	    );
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index 4a9337a3f9a3..c2948defa785 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -62,7 +62,7 @@ enum sd_converter_type {
  
-+TRACE_EVENT(rxrpc_rx_discard_ack,
-+	    TP_PROTO(unsigned int debug_id, rxrpc_serial_t serial,
-+		     rxrpc_seq_t first_soft_ack, rxrpc_seq_t call_ackr_first,
-+		     rxrpc_seq_t prev_pkt, rxrpc_seq_t call_ackr_prev),
-+
-+	    TP_ARGS(debug_id, serial, first_soft_ack, call_ackr_first,
-+		    prev_pkt, call_ackr_prev),
-+
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int,	debug_id	)
-+		    __field(rxrpc_serial_t,	serial		)
-+		    __field(rxrpc_seq_t,	first_soft_ack)
-+		    __field(rxrpc_seq_t,	call_ackr_first)
-+		    __field(rxrpc_seq_t,	prev_pkt)
-+		    __field(rxrpc_seq_t,	call_ackr_prev)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->debug_id		= debug_id;
-+		    __entry->serial		= serial;
-+		    __entry->first_soft_ack	= first_soft_ack;
-+		    __entry->call_ackr_first	= call_ackr_first;
-+		    __entry->prev_pkt		= prev_pkt;
-+		    __entry->call_ackr_prev	= call_ackr_prev;
-+			   ),
-+
-+	    TP_printk("c=%08x r=%08x %08x<%08x %08x<%08x",
-+		      __entry->debug_id,
-+		      __entry->serial,
-+		      __entry->first_soft_ack,
-+		      __entry->call_ackr_first,
-+		      __entry->prev_pkt,
-+		      __entry->call_ackr_prev)
-+	    );
-+
- #endif /* _TRACE_RXRPC_H */
+ struct stm32_dfsdm_dev_data {
+ 	int type;
+-	int (*init)(struct iio_dev *indio_dev);
++	int (*init)(struct device *dev, struct iio_dev *indio_dev);
+ 	unsigned int num_channels;
+ 	const struct regmap_config *regmap_cfg;
+ };
+@@ -1359,11 +1359,12 @@ static void stm32_dfsdm_dma_release(struct iio_dev *indio_dev)
+ 	}
+ }
  
- /* This part must be outside protection */
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index e438bfd3fdf5..2f22f082a66c 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -866,8 +866,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+-static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
++static int stm32_dfsdm_dma_request(struct device *dev,
++				   struct iio_dev *indio_dev)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
  
- 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
- 	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq))
-+	    before(prev_pkt, call->ackr_prev_seq)) {
-+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+					   first_soft_ack, call->ackr_first_seq,
-+					   prev_pkt, call->ackr_prev_seq);
- 		return;
-+	}
+-	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
++	adc->dma_chan = dma_request_chan(dev, "rx");
+ 	if (IS_ERR(adc->dma_chan)) {
+ 		int ret = PTR_ERR(adc->dma_chan);
  
- 	buf.info.rxMTU = 0;
- 	ioffset = offset + nr_acks + 3;
-@@ -879,8 +883,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+@@ -1419,7 +1420,7 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+ 					  &adc->dfsdm->ch_list[ch->channel]);
+ }
  
- 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
- 	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq))
-+	    before(prev_pkt, call->ackr_prev_seq)) {
-+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+					   first_soft_ack, call->ackr_first_seq,
-+					   prev_pkt, call->ackr_prev_seq);
- 		goto out;
-+	}
- 	call->acks_latest_ts = skb->tstamp;
+-static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
++static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+@@ -1446,10 +1447,10 @@ static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
+ 	indio_dev->num_channels = 1;
+ 	indio_dev->channels = ch;
  
- 	call->ackr_first_seq = first_soft_ack;
+-	return stm32_dfsdm_dma_request(indio_dev);
++	return stm32_dfsdm_dma_request(dev, indio_dev);
+ }
+ 
+-static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
++static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+@@ -1493,17 +1494,17 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
+ 	init_completion(&adc->completion);
+ 
+ 	/* Optionally request DMA */
+-	ret = stm32_dfsdm_dma_request(indio_dev);
++	ret = stm32_dfsdm_dma_request(dev, indio_dev);
+ 	if (ret) {
+ 		if (ret != -ENODEV) {
+ 			if (ret != -EPROBE_DEFER)
+-				dev_err(&indio_dev->dev,
++				dev_err(dev,
+ 					"DMA channel request failed with %d\n",
+ 					ret);
+ 			return ret;
+ 		}
+ 
+-		dev_dbg(&indio_dev->dev, "No DMA support\n");
++		dev_dbg(dev, "No DMA support\n");
+ 		return 0;
+ 	}
+ 
+@@ -1616,7 +1617,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
+ 		adc->dfsdm->fl_list[adc->fl_id].sync_mode = val;
+ 
+ 	adc->dev_data = dev_data;
+-	ret = dev_data->init(iio);
++	ret = dev_data->init(dev, iio);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.1
 
