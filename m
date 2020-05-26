@@ -2,117 +2,134 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A32FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C158A20704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590509805;
-	bh=LN7zbKbsYub3KwLajWlOYY1MFc0cxa8/xsLyxjCtM3U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LFKW2sT8o2GsMbCxZR6fWhoMxE4RvoIPv12weTUwm6wk84dJJDSJrmluJT75TyRsm
-	 QOo8nUSaUeKd5EL6vbJqmBT1REJxgb/tHwb39tvVOrHl/qcUTsMDDQAryNexyN+JJH
-	 nIUfaMCfaLtB+XPxsTs8JM1yxSl9EUo6gY0t1UxI=
+	by mail.kernel.org (Postfix) with ESMTP id 0008720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:18:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t5yTsL+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgEZQQp (ORCPT
+        id S1728836AbgEZQSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:16:45 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:41747 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbgEZQQo (ORCPT
+        Tue, 26 May 2020 12:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbgEZQST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:16:44 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 04QGGSbN002250;
-        Wed, 27 May 2020 01:16:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04QGGSbN002250
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590509789;
-        bh=uPjRTQwS5XbBmKTVTFnwC9LPX23TTVJM7S9st4N2Cx0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F/XRqKR54cLVKukwd8/MV/+PjjWyWqs7ISl7wVH8wSoSqkggeLSyRhf2/8akLARbN
-         eLoH4GWiL1e0VjucWJgx9rjfSDRyfC0P4ye2o6d2gXcsnvFrcGC2wVv4n83z+QVzZA
-         cCFnfSM/tHZGytL220NBUWNCN6JqEui7tm/usrqkTIV4pLttVo7jXQjcAWK6zH5kSj
-         zW3yaTmBrDmEHTtD61OQNr/+lybeYMo198EreWnp03aetTvKVTmcCvlc0/IqeeGBCl
-         SbP0gRf856YYx3iu9ZZbS9KqrX6DWB4pduhbbbMxUOV5vghHqRrHMw2xMytk81WzII
-         CGCi9Csa852Gw==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id b13so2676605vsm.13;
-        Tue, 26 May 2020 09:16:28 -0700 (PDT)
-X-Gm-Message-State: AOAM533oTKi9i4PXic8dubxEF2pBJWeObRE1MSs86E9SqgR2/J/x+Zj7
-        CZmm5mJxd28Aw4nVkeX84qYpuTuJbAgMfBKqUrs=
-X-Google-Smtp-Source: ABdhPJxavmIKiD1M2HJbOFH0B4qglDP86xzHproSsr1FZKQdun7AFDxHgu2+NwR7nOEZq0+9vHWqAa3EOL58nin+1Xw=
-X-Received: by 2002:a05:6102:1081:: with SMTP id s1mr1529406vsr.215.1590509787468;
- Tue, 26 May 2020 09:16:27 -0700 (PDT)
+        Tue, 26 May 2020 12:18:19 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74B36C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:18:19 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id b71so20997400ilg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=W2wCu2SdkHFkQ1Ckp39G9Z9PbrnS7bq9ACqqoB/0oa0=;
+        b=t5yTsL+h2v6+Ce1k3GlaF5U0JrOWNaUPUg/e1r1fcDTUHtAK5AnNjKMAhyWAOHlLI/
+         xxJDCc9kLYKPIdB8NbL3qbEES2tg+Fpsmjiscv77V2oH2qwD6dLsBAByDOzObFY3Iqu1
+         u33Pm/cHUJUpMWEb0wEa8zA85tblduq1Aj5yENvu3jXcAKpYTIue9wxmkvZ4wVmwHyOX
+         7W+OPgEGiyGjkGqIpXxeAK7Oy0q5SCtyPv79OrunKD2WCopoKMsGkb/mVHAD7aElf0TE
+         v6RRFvUsk2Vz3c1kn59aRZnd4+Il4p0okDB++weWCUGWM71V42o/K0dc+6sl7htA/fae
+         oZ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=W2wCu2SdkHFkQ1Ckp39G9Z9PbrnS7bq9ACqqoB/0oa0=;
+        b=Y0di3fUq2is1tSg3F/pW+ounzvub7Xqs3vMX02DmZ/EiAv37oMeG4jGLdVdfPCDVId
+         49ItDVdMA/XmFMIicyCfSGNh8hX9KjqieSmmopxJJjMu8+X6q601PxN9rdzdAD2ksoOA
+         LP/91j67MZ8E26hjW2DprlhWWJiTfZmyFuciNqnxlLvTKVVpjvuOE+l3AKjUmm99pccE
+         x8Sd7J/HGCBINWRyo0z5jYcx0bjTBYR7hO4PsAfZCZQeF2XJ3IiJj6TfWx6G2eT6DaKR
+         L4QDDMgyE6P+8BnBt4gnitXykSiet+MNdDKJ5v7+awbgvhEKkgjjq6EZt8S6sIIpaLOA
+         HoBA==
+X-Gm-Message-State: AOAM533d1wCT3SbS3LE4hFSj+GcTTCYdQ+i5sVdUmpOR4TpWzUBZyXBk
+        tb7UBUndELu8vge5UU0XGtCQ7Ex6PaYCfhF8CLw=
+X-Google-Smtp-Source: ABdhPJykHuavW6UtEQRUWuCrUgwkuPBC0czhoJQVGm4eoWyDiIj2oNgHKKrpwlJ0ewPymE+knZ8REsyv6WVfZ7jQHqM=
+X-Received: by 2002:a92:5893:: with SMTP id z19mr1947013ilf.255.1590509898761;
+ Tue, 26 May 2020 09:18:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
- <20200521220041.87368-1-ndesaulniers@google.com> <CAK7LNARtO5Pr2nxpoORSHDFWHbjP0waOmrn_TZ+rXhmYm+TORw@mail.gmail.com>
- <CAKwvOd=qNa4fLY7ymVwvC3TwCH4DNLyEfygoTfBJ2y19xffQUg@mail.gmail.com>
-In-Reply-To: <CAKwvOd=qNa4fLY7ymVwvC3TwCH4DNLyEfygoTfBJ2y19xffQUg@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 27 May 2020 01:15:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
-Message-ID: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
-Subject: Re: [PATCH v3] Makefile: support compressed debug info
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+References: <20200524212816.243139-1-nivedita@alum.mit.edu>
+ <20200525225918.1624470-1-nivedita@alum.mit.edu> <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
+ <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
+ <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com>
+ <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
+ <CA+icZUWTKJ=-OGJPzqm6HNQMkB1uS_B0ydU-9Xa035wB7vA4iw@mail.gmail.com>
+ <CA+icZUU54K8z2--6fS=LEaMJGgeWfudViT7ETMsSYF1i59_4mg@mail.gmail.com> <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com>
+In-Reply-To: <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 26 May 2020 18:18:07 +0200
+Message-ID: <CA+icZUV2fvwQTnzUmWCiv4unzFb7HjUSTrYgHeYd0dgFi=oLMw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
+ compressed kernel
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Fangrui Song <maskray@google.com>,
-        Nick Clifton <nickc@redhat.com>,
-        David Blaikie <blaikie@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:53 AM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
+On Tue, May 26, 2020 at 5:07 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+
+...
+
+> > > patchset to previous build:
+> > >
+> > > $ git log --no-merges --oneline 5.7.0-rc7-1-amd64-clang..5.7.0-rc7-2-amd64-clang
+> > > 8b74901cb9e5 (for-5.7/x86-boot-remove-runtime-relocations-from-compressed-kernel-v2-nivedita76)
+> > > x86/boot: Check that there are no runtime relocations
+> > > 83fb1bc3b076 x86/boot: Remove runtime relocations from head_{32,64}.S
+> > > fede23dacbbd x86/boot: Remove run-time relocations from .head.text code
+> > > 3e5ea481b8fb x86/boot: Add .text.* to setup.ld
+> > > bec910ba3d67 x86/boot/compressed: Get rid of GOT fixup code
+> > > be834cee6f39 x86/boot/compressed: Force hidden visibility for all
+> > > symbol references
+> > > 9b7c7d8d2d7b x86/boot/compressed: Move .got.plt entries out of the .got section
+> > > ba6a49f806a0 (for-5.7/kbuild-compressed-debug-info) Makefile: support
+> > > compressed debug info
+> > > a1fb11944d11 (for-5.7/x86-boot-nivedita76) x86/boot: Correct
+> > > relocation destination on old linkers
+> > > c70e3890058f (for-5.7/x86-build-maskray) x86/boot: Discard
+> > > .discard.unreachable for arch/x86/boot/compressed/vmlinux
+
+...
+
+> This works:
 >
-> On Tue, May 26, 2020 at 3:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > > Suggested-by: David Blaikie <blaikie@google.com>
-> > > Suggested-by: Nick Clifton <nickc@redhat.com>
-> > > Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > Reviewed-by: Fangrui Song <maskray@google.com>
-> > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> >
-> >
-> >
-> > Suggested-by seems strange to me, but
-> > I decided to not be worried too much.
+> [ arch/x86/boot/compressed/Makefile ]
 >
-> Ah, sorry, Monday was a holiday.  I unplugged for the long weekend.
-> https://en.wikipedia.org/wiki/Memorial_Day
+> -KBUILD_CFLAGS += -include hidden.h
+> +KBUILD_CFLAGS += -include ./arch/x86/boot/compressed/hidden.h
 >
-> I like the suggestion to simply say "thanks to ..." in the commit
-> message and will use that next time.  I was ok to send a v4 with it.
+> $ ll arch/x86/boot/bzImage arch/x86/boot/compressed/vmlinux
+> -rw-r--r-- 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/bzImage
+> -rwxr-xr-x 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/compressed/vmlinux
+>
 
+I was able to build/link and boot on bare metal.
 
-If you send v4, I will replace.
+root@iniza:~# cat /proc/version
+Linux version 5.7.0-rc7-2-amd64-clang (sedat.dilek@gmail.com@iniza)
+(clang version 10.0.1rc1, LLD 10.0.1rc1) #2~bullseye+dileks1 SMP
+2020-05-26
 
-Thanks.
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+- Sedat -
