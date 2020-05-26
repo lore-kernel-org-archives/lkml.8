@@ -2,156 +2,144 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494EA20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PxJFdkDe"
+	by mail.kernel.org (Postfix) with ESMTP id 8011620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590520927;
+	bh=kI50Vt5LmPdZbRTT7exeYGAl0PpuM4dm5q6l4ppcETE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ro8hJE9mMvizx5W86doauXenrdswzOkP7WFSV1XOdr1Z1Pfsu+iI2lmdfwDyPZmG7
+	 WDpjUy2+NWVAnb4YvJfOeJI6oxzfo2+EwPtp6MloRYE7jHb5FNN+FzHTQ/Q0LDdpq2
+	 E1AYDmwAtpebqAenqtQ3E3k9EFYr9CrKF2rhOb7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392272AbgEZTWC (ORCPT
+        id S2403996AbgEZTKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:22:02 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38202 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391941AbgEZTKp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1590520241; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p9jm//+Z7Q5hm03MZeLwX34SXNnp8zZEFN+1T4rYbdM=;
-        b=PxJFdkDes4KukZbPwS5mMveTS9QphjYgDvbxZ7NKMoj6+38ulMiSySkxN1YXLQc7ZPi0Sn
-        +UpgL7qaS37Izf1cqqD7PdTi4j2eAdyiAkWC1ByRQ8BMkKUKru3O0BetJgCPNmO46Xq5et
-        cW+Zc/BXGPka2lWC4YReEAiLuQxRZSk=
-Date:   Tue, 26 May 2020 21:10:29 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, hns@goldelico.com, paul@boddie.org.uk,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <H9DYAQ.4YAB8VVZPLZO@crapouillou.net>
-In-Reply-To: <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
-References: <20200526170722.17206-1-zhouyanjie@wanyeetech.com>
-        <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
+        Tue, 26 May 2020 15:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391452AbgEZTKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EE2D20776;
+        Tue, 26 May 2020 19:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590520229;
+        bh=kI50Vt5LmPdZbRTT7exeYGAl0PpuM4dm5q6l4ppcETE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QxkaqWEsnFqylBpOBzo2NgjMfTMNYKjNmdsBwtCNDH9rUWm98x6r8fHZYsFo9lTSl
+         ZV7P3Rouev5sorTiGfv+IJMaW21hDFtGP6ZxtFCir5AwuNUZiW/xXnW/qUMGIhiQnm
+         OJ/0Yr3UGBrD7LMob+YOcJ2TvF1hUNXATp6kPXzU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Lo=C3=AFc=20Yhuel?= <loic.yhuel@gmail.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 108/111] tpm: check event log version before reading final events
+Date:   Tue, 26 May 2020 20:54:06 +0200
+Message-Id: <20200526183943.147751650@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+From: Loïc Yhuel <loic.yhuel@gmail.com>
 
-Le mer. 27 mai 2020 =C3=A0 1:07, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
->=20
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57=20
-> ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644=20
-> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->=20
-> diff --git=20
-> a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml=20
-> b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> new file mode 100644
-> index 000000000000..afb02071a756
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic XBurst family CPUs
-> +
-> +maintainers:
-> +  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.com=
->
-> +
-> +description:
-> +  Ingenic XBurst family CPUs shall have the following properties.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Ingenic XBurst=C2=AE1 CPU Cores
-> +        items:
+[ Upstream commit b4f1874c62168159fdb419ced4afc77c1b51c475 ]
 
-Strip the 'items', put the enum directly.
+This fixes the boot issues since 5.3 on several Dell models when the TPM
+is enabled. Depending on the exact grub binary, booting the kernel would
+freeze early, or just report an error parsing the final events log.
 
-> +          enum:
-> +            - ingenic,xburst-mxu1.0
-> +            - ingenic,xburst-fpu1.0-mxu1.1
-> +            - ingenic,xburst-fpu2.0-mxu2.0
-> +
-> +      - description: Ingenic XBurst=C2=AE2 CPU Cores
-> +        items:
+We get an event log in the SHA-1 format, which doesn't have a
+tcg_efi_specid_event_head in the first event, and there is a final events
+table which doesn't match the crypto agile format.
+__calc_tpm2_event_size reads bad "count" and "efispecid->num_algs", and
+either fails, or loops long enough for the machine to be appear frozen.
 
-Same here.
+So we now only parse the final events table, which is per the spec always
+supposed to be in the crypto agile format, when we got a event log in this
+format.
 
-> +          enum:
-> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - device_type
-> +  - compatible
-> +  - reg
+Fixes: c46f3405692de ("tpm: Reserve the TPM final events table")
+Fixes: 166a2809d65b2 ("tpm: Don't duplicate events from the final event log in the TCG2 log")
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1779611
+Signed-off-by: Loïc Yhuel <loic.yhuel@gmail.com>
+Link: https://lore.kernel.org/r/20200512040113.277768-1-loic.yhuel@gmail.com
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Matthew Garrett <mjg59@google.com>
+[ardb: warn when final events table is missing or in the wrong format]
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/firmware/efi/libstub/tpm.c | 5 +++--
+ drivers/firmware/efi/tpm.c         | 5 ++++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-device_type is not in the list of your properties.
+diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
+index eb9af83e4d59..aeeb1b2d8ede 100644
+--- a/drivers/firmware/efi/libstub/tpm.c
++++ b/drivers/firmware/efi/libstub/tpm.c
+@@ -64,7 +64,7 @@ void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
+ 	efi_status_t status;
+ 	efi_physical_addr_t log_location = 0, log_last_entry = 0;
+ 	struct linux_efi_tpm_eventlog *log_tbl = NULL;
+-	struct efi_tcg2_final_events_table *final_events_table;
++	struct efi_tcg2_final_events_table *final_events_table = NULL;
+ 	unsigned long first_entry_addr, last_entry_addr;
+ 	size_t log_size, last_entry_size;
+ 	efi_bool_t truncated;
+@@ -140,7 +140,8 @@ void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
+ 	 * Figure out whether any events have already been logged to the
+ 	 * final events structure, and if so how much space they take up
+ 	 */
+-	final_events_table = get_efi_config_table(sys_table_arg,
++	if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)
++		final_events_table = get_efi_config_table(sys_table_arg,
+ 						LINUX_EFI_TPM_FINAL_LOG_GUID);
+ 	if (final_events_table && final_events_table->nr_events) {
+ 		struct tcg_pcr_event2_head *header;
+diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+index 55b031d2c989..c1955d320fec 100644
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -62,8 +62,11 @@ int __init efi_tpm_eventlog_init(void)
+ 	tbl_size = sizeof(*log_tbl) + log_tbl->size;
+ 	memblock_reserve(efi.tpm_log, tbl_size);
+ 
+-	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR)
++	if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR ||
++	    log_tbl->version != EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
++		pr_warn(FW_BUG "TPM Final Events table missing or invalid\n");
+ 		goto out;
++	}
+ 
+ 	final_tbl = early_memremap(efi.tpm_final_log, sizeof(*final_tbl));
+ 
+-- 
+2.25.1
 
-Also, I think you need a clock in there.
-
--Paul
-
-> +
-> +examples:
-> +  - |
-> +    cpus {
-> +    	#address-cells =3D <1>;
-> +    	#size-cells =3D <0>;
-> +
-> +    	cpu0: cpu@0 {
-> +    		device_type =3D "cpu";
-> +    		compatible =3D "ingenic,xburst-fpu1.0-mxu1.1";
-> +    		reg =3D <0>;
-> +    	};
-> +
-> +    	cpu1: cpu@1 {
-> +    		device_type =3D "cpu";
-> +    		compatible =3D "ingenic,xburst-fpu1.0-mxu1.1";
-> +    		reg =3D <1>;
-> +    	};
-> +    };
-> +...
-> --
-> 2.11.0
->=20
 
 
