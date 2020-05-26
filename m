@@ -2,169 +2,116 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F7C20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB2E20723
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZavXb7lj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y8CfC4Qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgEZOi6 (ORCPT
+        id S1728333AbgEZOmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:38:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24570 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgEZOi5 (ORCPT
+        Tue, 26 May 2020 10:42:09 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59590 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbgEZOmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:38:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590503936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6m8Lhpcoj80QhrA0ctchODA1rmDmRzPJvm9p+zbvBas=;
-        b=ZavXb7ljmh6Rv38nQsSDkEA4GqKK24/Y4OJglkJLVNGRTCkWpjPhUpk3cz8Lo2fF+H390b
-        xmFozgWi/5nMFxGcUt5khQHF8JdGdK1N3MT7Cn2yUnmSwsXfo1S4rScimgyK2mzQLpbXQ1
-        eT2MiqAGLtzNci3F6b8WjSalI8y02jA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-KcFqvKDmMqOGUKMO9JSqPg-1; Tue, 26 May 2020 10:38:52 -0400
-X-MC-Unique: KcFqvKDmMqOGUKMO9JSqPg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA5131005510;
-        Tue, 26 May 2020 14:38:49 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-180.ams2.redhat.com [10.36.112.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F20A84648;
-        Tue, 26 May 2020 14:38:46 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup and thread creation (v19)
-References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com>
-        <20200501021439.2456-2-mathieu.desnoyers@efficios.com>
-        <87v9kqbzse.fsf@oldenburg2.str.redhat.com>
-        <941087675.33347.1590418305398.JavaMail.zimbra@efficios.com>
-        <87367ovy6k.fsf@oldenburg2.str.redhat.com>
-        <108939265.33525.1590428184533.JavaMail.zimbra@efficios.com>
-        <87lflerhqt.fsf@oldenburg2.str.redhat.com>
-        <1701081361.34159.1590503556923.JavaMail.zimbra@efficios.com>
-Date:   Tue, 26 May 2020 16:38:45 +0200
-In-Reply-To: <1701081361.34159.1590503556923.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Tue, 26 May 2020 10:32:36 -0400
-        (EDT)")
-Message-ID: <87ftbmpxqi.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 26 May 2020 10:42:08 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QEg2ZG031459;
+        Tue, 26 May 2020 09:42:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590504122;
+        bh=kEUtdtJZcvSXue8IMnS39FnD+QBwkTQxI7JxWo4gA6I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Y8CfC4Qv6HujKH0uud3dTelxQxNxL/RVthxxCrJbjAO3WrPhtKZZGFVZE9TyX/vsr
+         4GBPI6EjxvWfO1bM+P7zyYgsdujy0SCTf0DU8KZ+4GaO2C079sIEoZUuBouwefpPv2
+         0jotwPZHavrwV/7ZoQlVaqSDZE6gmmfrV2FZ0Fq4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QEg2OA004826
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 May 2020 09:42:02 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 09:41:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 09:41:06 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QEf5QL004730;
+        Tue, 26 May 2020 09:41:06 -0500
+Subject: Re: sound/soc/codecs/tlv320adcx140.c:776:34: warning: unused variable
+ 'tlv320adcx140_of_match'
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, <clang-built-linux@googlegroups.com>,
+        <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+References: <202005230320.TWdmRD2n%lkp@intel.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <a9949577-92ce-75dc-f8d7-96d758f3f1c0@ti.com>
+Date:   Tue, 26 May 2020 09:41:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <202005230320.TWdmRD2n%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Hello
 
-> AFAIU, the only gain here would be to make sure we don't emit useless
-> ";" in the "/* nothing */" case. But does it matter ?
-
-I don't think C allows empty constructs like this at the top level.
-
->>>> And something similar for _Alignas/attribute aligned,
->>>
->>> I don't see where _Alignas is needed here ?
->>>
->>> For attribute aligned, what would be the oldest supported C and C++
->>> standards ?
->>=20
->> There are no standardized attributes for C, there is only _Alignas.
->> C++11 has an alignas specifier; it's not an attribute either.  I think
->> these are syntactically similar.
+On 5/22/20 2:16 PM, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   4286d192c803571e8ca43b0f1f8ea04d663a278a
+> commit: 689c7655b50c5de2b6f0f42fecfb37bde5acf040 ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family
+> date:   3 months ago
+> config: mips-randconfig-r014-20200522 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 3393cc4cebf9969db94dc424b7a2b6195589c33b)
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # install mips cross compiling tool for clang build
+>          # apt-get install binutils-mips-linux-gnu
+>          git checkout 689c7655b50c5de2b6f0f42fecfb37bde5acf040
+>          # save the attached .config to linux build tree
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=mips
 >
-> There appears to be an interesting difference between attribute aligned
-> and alignas. It seems like alignas cannot be used on a structure declarat=
-ion,
-> only on fields, e.g.:
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
 >
-> struct blah {
->         int a;
-> } _Alignas (16);
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
 >
-> o.c:3:1: warning: useless =E2=80=98_Alignas=E2=80=99 in empty declaration
->  } _Alignas (16);
+>>> sound/soc/codecs/tlv320adcx140.c:776:34: warning: unused variable 'tlv320adcx140_of_match' [-Wunused-const-variable]
+> static const struct of_device_id tlv320adcx140_of_match[] = {
+> ^
+> 1 warning generated.
 >
-> But
+> vim +/tlv320adcx140_of_match +776 sound/soc/codecs/tlv320adcx140.c
 >
-> struct blah {
->         int _Alignas (16) a;
-> };
+>     775	
+>   > 776	static const struct of_device_id tlv320adcx140_of_match[] = {
+>     777		{ .compatible = "ti,tlv320adc3140" },
+>     778		{ .compatible = "ti,tlv320adc5140" },
+>     779		{ .compatible = "ti,tlv320adc6140" },
+>     780		{},
+>     781	};
+>     782	MODULE_DEVICE_TABLE(of, tlv320adcx140_of_match);
+>     783	
 
-Like the attribute, it needs to come right after the struct keyword, I
-think.  (Trailing attributes can be ambiguous, but not in this case.)
+I am not sure about this issue the same code appears in many drivers ie 
+the TAS2562 and that did not create a warning within this build AFAIK
 
-> is OK. So if I change e.g. struct rseq_cs to align
-> the first field:
->
-> struct rseq_cs
->   {
->     /* Version of this structure.  */
->     uint32_t rseq_align (32) version;
->     /* enum rseq_cs_flags.  */
->     uint32_t flags;
->     uint64_t start_ip;
->     /* Offset from start_ip.  */
->     uint64_t post_commit_offset;
->     uint64_t abort_ip;
->   };
->
-> It should work.
-
-Indeed.
-
-> /* Rely on GNU extensions for older standards and tls model.  */
-> #ifdef __GNUC__
-> # ifndef rseq_alignof
-> #  define rseq_alignof(x) __alignof__ (x)
-> # endif
-> # ifndef rseq_alignas
-> #  define rseq_alignas(x) __attribute__ ((aligned (x)))
-> # endif
-> # define rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-exec")=
-))
-> #else
-> /* Specifying the TLS model on the declaration is optional.  */
-> # define rseq_tls_model_ie /* Nothing.  */
-> #endif
->
-> /* Fall back to __thread for TLS storage class.  */
-> #ifndef rseq_tls_storage_class
-> # define rseq_tls_storage_class __thread
-> #endif
-
-If they are only used in the glibc headers, they should have __rseq
-prefixes, so that application code doesn't start using them (in case we
-have to change/fix them, or move the into <sys/cdefs.h> later).
-
-Rest looks fine.
-
-Thanks,
-Florian
+Dan
 
