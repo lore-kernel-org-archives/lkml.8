@@ -2,103 +2,657 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E13C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 407E820787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:53:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JI1at74G"
+	by mail.kernel.org (Postfix) with ESMTP id 6A9F8204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388801AbgEZMxa (ORCPT
+        id S1731734AbgEZM4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgEZMxa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:53:30 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0AB7C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:53:29 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WYmR1NcJz9sSk;
-        Tue, 26 May 2020 22:53:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1590497607;
-        bh=EtQztu5NmCVqCIZyOPV1ACDAhtqa29TG/2fKZ5rLLpM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=JI1at74GbvNS0bVZEFf4OJViTkUOEyGb9fPhmr2DTYm5O7v0GBZG/v95TXx6OEi/3
-         TJvX6neupQJbZFN5DwEeJCflq/AdfjG4KX2SVWUFJGqapba3Qhl9Th4l/pmHEIetbk
-         WPgw4N5388UQGaJPyZ2DAM+ns5FY1MpNoEA/+N4r3AWzP3n6gh1s58vWvPV4giPXQs
-         U6A98J/W8N/M0+FtXA/bEWw785sz4tDDsyqxXmwwC2Rj/dzm/CKtM5rvxXsM/W6xNj
-         Dxj+d3NsG23J/wrpteipjywiqGmjwQcXbj2l+RDakBFQju9YkcBSK8UFtWDvzB5a21
-         3gPpFoBMjaWCQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 07/45] powerpc/ptdump: Limit size of flags text to 1/2 chars on PPC32
-In-Reply-To: <e505c554-21b1-3d02-1ea5-c2a214b80ebb@csgroup.eu>
-References: <cover.1589866984.git.christophe.leroy@csgroup.eu> <83a7a0cfca6198e63caf7a16839bd18454961f52.1589866984.git.christophe.leroy@csgroup.eu> <87h7w4fvcy.fsf@mpe.ellerman.id.au> <e505c554-21b1-3d02-1ea5-c2a214b80ebb@csgroup.eu>
-Date:   Tue, 26 May 2020 22:53:50 +1000
-Message-ID: <87zh9ueu1t.fsf@mpe.ellerman.id.au>
+        Tue, 26 May 2020 08:56:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:50372 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbgEZM4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:56:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EE8B1FB;
+        Tue, 26 May 2020 05:56:41 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 820103F6C4;
+        Tue, 26 May 2020 05:56:37 -0700 (PDT)
+Date:   Tue, 26 May 2020 13:56:34 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maz@kernel.org, will@kernel.org,
+        catalin.marinas@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
+        aarcange@redhat.com, shan.gavin@gmail.com
+Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
+Message-ID: <20200526125634.GG1363@C02TD0UTHF1T.local>
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-10-gshan@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508032919.52147-10-gshan@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> Le 25/05/2020 =C3=A0 07:15, Michael Ellerman a =C3=A9crit=C2=A0:
->> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->>> In order to have all flags fit on a 80 chars wide screen,
->>> reduce the flags to 1 char (2 where ambiguous).
->>=20
->> I don't love this, the output is less readable. Is fitting on an 80 char
->> screen a real issue for you? I just make my terminal window bigger.
->
-> I don't have strong opinion about that, and the terminal can be made bigg=
-er.
-> I just don't like how messy it is, some flags are so big that they hide=20
-> other ones and getting it more ordered and more compact helped me during=
-=20
-> all the verifications I did with this series, but we can leave it as is=20
-> if you prefer.
+On Fri, May 08, 2020 at 01:29:19PM +1000, Gavin Shan wrote:
+> This supports asynchronous page fault for the guest. The design is
+> similar to what x86 has: on receiving a PAGE_NOT_PRESENT signal from
+> the host, the current task is either rescheduled or put into power
+> saving mode. The task will be waken up when PAGE_READY signal is
+> received. The PAGE_READY signal might be received in the context
+> of the suspended process, to be waken up. That means the suspended
+> process has to wake up itself, but it's not safe and prone to cause
+> dead-lock on CPU runqueue lock. So the wakeup is delayed on returning
+> from kernel space to user space or idle process is picked for running.
+> 
+> The signals are conveyed through the async page fault control block,
+> which was passed to host on enabling the functionality. On each page
+> fault, the control block is checked and switch to the async page fault
+> handling flow if any signals exist.
+> 
+> The feature is put into the CONFIG_KVM_GUEST umbrella, which is added
+> by this patch. So we have inline functions implemented in kvm_para.h,
+> like other architectures do, to check if async page fault (one of the
+> KVM para-virtualized features) is available. Also, the kernel boot
+> parameter "no-kvmapf" can be specified to disable the feature.
+> 
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> ---
+>  arch/arm64/Kconfig                 |  11 +
+>  arch/arm64/include/asm/exception.h |   3 +
+>  arch/arm64/include/asm/kvm_para.h  |  27 +-
+>  arch/arm64/kernel/entry.S          |  33 +++
+>  arch/arm64/kernel/process.c        |   4 +
+>  arch/arm64/mm/fault.c              | 434 +++++++++++++++++++++++++++++
+>  6 files changed, 505 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 40fb05d96c60..2d5e5ee62d6d 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1045,6 +1045,17 @@ config PARAVIRT
+>  	  under a hypervisor, potentially improving performance significantly
+>  	  over full virtualization.
+>  
+> +config KVM_GUEST
+> +	bool "KVM Guest Support"
+> +	depends on PARAVIRT
+> +	default y
+> +	help
+> +	  This option enables various optimizations for running under the KVM
+> +	  hypervisor. Overhead for the kernel when not running inside KVM should
+> +	  be minimal.
+> +
+> +	  In case of doubt, say Y
+> +
+>  config PARAVIRT_TIME_ACCOUNTING
+>  	bool "Paravirtual steal time accounting"
+>  	select PARAVIRT
+> diff --git a/arch/arm64/include/asm/exception.h b/arch/arm64/include/asm/exception.h
+> index 7a6e81ca23a8..d878afa42746 100644
+> --- a/arch/arm64/include/asm/exception.h
+> +++ b/arch/arm64/include/asm/exception.h
+> @@ -46,4 +46,7 @@ void bad_el0_sync(struct pt_regs *regs, int reason, unsigned int esr);
+>  void do_cp15instr(unsigned int esr, struct pt_regs *regs);
+>  void do_el0_svc(struct pt_regs *regs);
+>  void do_el0_svc_compat(struct pt_regs *regs);
+> +#ifdef CONFIG_KVM_GUEST
+> +void kvm_async_pf_delayed_wake(void);
+> +#endif
+>  #endif	/* __ASM_EXCEPTION_H */
+> diff --git a/arch/arm64/include/asm/kvm_para.h b/arch/arm64/include/asm/kvm_para.h
+> index 0ea481dd1c7a..b2f8ef243df7 100644
+> --- a/arch/arm64/include/asm/kvm_para.h
+> +++ b/arch/arm64/include/asm/kvm_para.h
+> @@ -3,6 +3,20 @@
+>  #define _ASM_ARM_KVM_PARA_H
+>  
+>  #include <uapi/asm/kvm_para.h>
+> +#include <linux/of.h>
+> +#include <asm/hypervisor.h>
+> +
+> +#ifdef CONFIG_KVM_GUEST
+> +static inline int kvm_para_available(void)
+> +{
+> +	return 1;
+> +}
+> +#else
+> +static inline int kvm_para_available(void)
+> +{
+> +	return 0;
+> +}
+> +#endif /* CONFIG_KVM_GUEST */
 
-I think I do.
+Please make these bool, and return true/false, as was the case with the
+existing stub.
 
-> Would you like a v5 without patches 7 and 8 ? Or I can just resend the=20
-> patches that will be impacted, that is 9 and 38 ?
+>  
+>  static inline bool kvm_check_and_clear_guest_paused(void)
+>  {
+> @@ -11,17 +25,16 @@ static inline bool kvm_check_and_clear_guest_paused(void)
+>  
+>  static inline unsigned int kvm_arch_para_features(void)
+>  {
+> -	return 0;
+> +	unsigned int features = 0;
+> +
+> +	if (kvm_arm_hyp_service_available(ARM_SMCCC_KVM_FUNC_APF))
+> +		features |= (1 << KVM_FEATURE_ASYNC_PF);
+> +
+> +	return features;
+>  }
+>  
+>  static inline unsigned int kvm_arch_para_hints(void)
+>  {
+>  	return 0;
+>  }
+> -
+> -static inline bool kvm_para_available(void)
+> -{
+> -	return false;
+> -}
+> -
+>  #endif /* _ASM_ARM_KVM_PARA_H */
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index ddcde093c433..15efd57129ff 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+> @@ -751,12 +751,45 @@ finish_ret_to_user:
+>  	enable_step_tsk x1, x2
+>  #ifdef CONFIG_GCC_PLUGIN_STACKLEAK
+>  	bl	stackleak_erase
+> +#endif
+> +#ifdef CONFIG_KVM_GUEST
+> +	bl	kvm_async_pf_delayed_wake
+>  #endif
 
-I dropped 7 and 8 and then fixed up 9 and 38, it was easy enough.
+Yuck. I am very much not keen on this living in the entry assembly.
 
-I used "coherent" and "huge".
+What precisely is this needed for?
 
-> With the change I get.
->
-> ---[ Start of kernel VM ]---
-> 0xc0000000-0xc0ffffff  0x00000000        16M   h  r   x  p        sh     a
-> 0xc1000000-0xc7ffffff  0x01000000       112M   h  rw     p        sh  d  a
-> ---[ vmalloc() Area ]---
-> 0xc9000000-0xc9003fff  0x050e4000        16K      rw     p        sh  d  a
-> 0xc9008000-0xc900bfff  0x050ec000        16K      rw     p        sh  d  a
-> 0xc9010000-0xc9013fff  0xd0000000        16K      rw     p  i  g  sh  d  a
-> 0xc9018000-0xc901bfff  0x050f0000        16K      rw     p        sh  d  a
+>  	kernel_exit 0
+>  ENDPROC(ret_to_user)
+>  
+>  	.popsection				// .entry.text
+>  
+> +#ifdef CONFIG_KVM_GUEST
+> +	.pushsection ".rodata", "a"
+> +SYM_DATA_START(__exception_handlers_offset)
+> +	.quad	0
+> +	.quad	0
+> +	.quad	0
+> +	.quad	0
+> +	.quad	el1_sync - vectors
+> +	.quad	el1_irq - vectors
+> +	.quad	0
+> +	.quad	el1_error - vectors
+> +	.quad	el0_sync - vectors
+> +	.quad	el0_irq - vectors
+> +	.quad	0
+> +	.quad	el0_error - vectors
+> +#ifdef CONFIG_COMPAT
+> +	.quad	el0_sync_compat - vectors
+> +	.quad	el0_irq_compat - vectors
+> +	.quad	0
+> +	.quad	el0_error_compat - vectors
+> +#else
+> +	.quad	0
+> +	.quad	0
+> +	.quad	0
+> +	.quad	0
+> +#endif
+> +SYM_DATA_END(__exception_handlers_offset)
+> +	.popsection				// .rodata
+> +#endif /* CONFIG_KVM_GUEST */
 
-It's definitely more compact :)
+This looks scary, and needs an introduction in the commit message.
 
-But I worry no one other than you will be able to decipher it, without
-constantly referring back to the source code.
+> +
+>  #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>  /*
+>   * Exception vectors trampoline.
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 56be4cbf771f..5e7ee553566d 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -53,6 +53,7 @@
+>  #include <asm/processor.h>
+>  #include <asm/pointer_auth.h>
+>  #include <asm/stacktrace.h>
+> +#include <asm/exception.h>
+>  
+>  #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+>  #include <linux/stackprotector.h>
+> @@ -70,6 +71,9 @@ void (*arm_pm_restart)(enum reboot_mode reboot_mode, const char *cmd);
+>  
+>  static void __cpu_do_idle(void)
+>  {
+> +#ifdef CONFIG_KVM_GUEST
+> +	kvm_async_pf_delayed_wake();
+> +#endif
+>  	dsb(sy);
+>  	wfi();
+>  }
 
-cheers
+This is meant to be a very low-level helper, so I don't think this
+should live here.
+
+If nothing else, this needs to have no overhead when async page faults
+are not in use, so this probably needs an inline with a static key.
+
+
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index c9cedc0432d2..cbf8b52135c9 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -19,10 +19,12 @@
+>  #include <linux/page-flags.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/sched/debug.h>
+> +#include <linux/swait.h>
+>  #include <linux/highmem.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/preempt.h>
+>  #include <linux/hugetlb.h>
+> +#include <linux/kvm_para.h>
+>  
+>  #include <asm/acpi.h>
+>  #include <asm/bug.h>
+> @@ -48,8 +50,31 @@ struct fault_info {
+>  	const char *name;
+>  };
+>  
+> +#ifdef CONFIG_KVM_GUEST
+> +struct kvm_task_sleep_node {
+> +	struct hlist_node	link;
+> +	struct swait_queue_head	wq;
+> +	u32			token;
+> +	struct task_struct	*task;
+> +	int			cpu;
+> +	bool			halted;
+> +	bool			delayed;
+> +};
+> +
+> +struct kvm_task_sleep_head {
+> +	raw_spinlock_t		lock;
+> +	struct hlist_head	list;
+> +};
+> +#endif /* CONFIG_KVM_GUEST */
+> +
+>  static const struct fault_info fault_info[];
+>  static struct fault_info debug_fault_info[];
+> +#ifdef CONFIG_KVM_GUEST
+> +extern char __exception_handlers_offset[];
+> +static bool async_pf_available = true;
+> +static DEFINE_PER_CPU(struct kvm_vcpu_pv_apf_data, apf_data) __aligned(64);
+> +static DEFINE_PER_CPU(struct kvm_task_sleep_head, apf_head);
+> +#endif
+>  
+>  static inline const struct fault_info *esr_to_fault_info(unsigned int esr)
+>  {
+> @@ -717,10 +742,281 @@ static const struct fault_info fault_info[] = {
+>  	{ do_bad,		SIGKILL, SI_KERNEL,	"unknown 63"			},
+>  };
+>  
+> +#ifdef CONFIG_KVM_GUEST
+> +static inline unsigned int kvm_async_pf_read_enabled(void)
+> +{
+> +	return __this_cpu_read(apf_data.enabled);
+> +}
+> +
+> +static inline void kvm_async_pf_write_enabled(unsigned int val)
+> +{
+> +	__this_cpu_write(apf_data.enabled, val);
+> +}
+> +
+> +static inline unsigned int kvm_async_pf_read_reason(void)
+> +{
+> +	return __this_cpu_read(apf_data.reason);
+> +}
+> +
+> +static inline void kvm_async_pf_write_reason(unsigned int val)
+> +{
+> +	__this_cpu_write(apf_data.reason, val);
+> +}
+> +
+> +#define kvm_async_pf_lock(b, flags)					\
+> +	raw_spin_lock_irqsave(&(b)->lock, (flags))
+> +#define kvm_async_pf_trylock(b, flags)					\
+> +	raw_spin_trylock_irqsave(&(b)->lock, (flags))
+> +#define kvm_async_pf_unlock(b, flags)					\
+> +	raw_spin_unlock_irqrestore(&(b)->lock, (flags))
+> +#define kvm_async_pf_unlock_and_clear(b, flags)				\
+> +	do {								\
+> +		raw_spin_unlock_irqrestore(&(b)->lock, (flags));	\
+> +		kvm_async_pf_write_reason(0);				\
+> +	} while (0)
+> +
+> +static struct kvm_task_sleep_node *kvm_async_pf_find(
+> +		struct kvm_task_sleep_head *b, u32 token)
+> +{
+> +	struct kvm_task_sleep_node *n;
+> +	struct hlist_node *p;
+> +
+> +	hlist_for_each(p, &b->list) {
+> +		n = hlist_entry(p, typeof(*n), link);
+> +		if (n->token == token)
+> +			return n;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static void kvm_async_pf_wait(u32 token, int in_kernel)
+> +{
+> +	struct kvm_task_sleep_head *b = this_cpu_ptr(&apf_head);
+> +	struct kvm_task_sleep_node n, *e;
+> +	DECLARE_SWAITQUEUE(wait);
+> +	unsigned long flags;
+> +
+> +	kvm_async_pf_lock(b, flags);
+> +	e = kvm_async_pf_find(b, token);
+> +	if (e) {
+> +		/* dummy entry exist -> wake up was delivered ahead of PF */
+> +		hlist_del(&e->link);
+> +		kfree(e);
+> +		kvm_async_pf_unlock_and_clear(b, flags);
+> +
+> +		return;
+> +	}
+> +
+> +	n.token = token;
+> +	n.task = current;
+> +	n.cpu = smp_processor_id();
+> +	n.halted = is_idle_task(current) ||
+> +		   (IS_ENABLED(CONFIG_PREEMPT_COUNT) ?
+> +		    preempt_count() > 1 || rcu_preempt_depth() : in_kernel);
+> +	n.delayed = false;
+> +	init_swait_queue_head(&n.wq);
+> +	hlist_add_head(&n.link, &b->list);
+> +	kvm_async_pf_unlock_and_clear(b, flags);
+> +
+> +	for (;;) {
+> +		if (!n.halted) {
+> +			prepare_to_swait_exclusive(&n.wq, &wait,
+> +						   TASK_UNINTERRUPTIBLE);
+> +		}
+> +
+> +		if (hlist_unhashed(&n.link))
+> +			break;
+> +
+> +		if (!n.halted) {
+> +			schedule();
+> +		} else {
+> +			dsb(sy);
+> +			wfi();
+> +		}
+
+Please don't open-code idle sequences. I strongly suspect this won't
+work with pseudo-nmi, and regardless we don't want to duplicate this.
+
+> +	}
+> +
+> +	if (!n.halted)
+> +		finish_swait(&n.wq, &wait);
+> +}
+> +
+> +/*
+> + * There are two cases the suspended processed can't be waken up
+> + * immediately: The waker is exactly the suspended process, or
+> + * the current CPU runqueue has been locked. Otherwise, we might
+> + * run into dead-lock.
+> + */
+> +static inline void kvm_async_pf_wake_one(struct kvm_task_sleep_node *n)
+> +{
+> +	if (n->task == current ||
+> +	    cpu_rq_is_locked(smp_processor_id())) {
+> +		n->delayed = true;
+> +		return;
+> +	}
+> +
+> +	hlist_del_init(&n->link);
+> +	if (n->halted)
+> +		smp_send_reschedule(n->cpu);
+> +	else
+> +		swake_up_one(&n->wq);
+> +}
+> +
+> +void kvm_async_pf_delayed_wake(void)
+> +{
+> +	struct kvm_task_sleep_head *b;
+> +	struct kvm_task_sleep_node *n;
+> +	struct hlist_node *p, *next;
+> +	unsigned int reason;
+> +	unsigned long flags;
+> +
+> +	if (!kvm_async_pf_read_enabled())
+> +		return;
+> +
+> +	/*
+> +	 * We're running in the edging context, we need to complete
+> +	 * the work as quick as possible. So we have a preliminary
+> +	 * check without holding the lock.
+> +	 */
+
+What is 'the edging context'?
+
+> +	b = this_cpu_ptr(&apf_head);
+> +	if (hlist_empty(&b->list))
+> +		return;
+> +
+> +	/*
+> +	 * Set the async page fault reason to something to avoid
+> +	 * receiving the signals, which might cause lock contention
+> +	 * and possibly dead-lock. As we're in guest context, it's
+> +	 * safe to set the reason here.
+> +	 *
+> +	 * There might be pending signals. For that case, we needn't
+> +	 * do anything. Otherwise, the pending signal will be lost.
+> +	 */
+> +	reason = kvm_async_pf_read_reason();
+> +	if (!reason) {
+> +		kvm_async_pf_write_reason(KVM_PV_REASON_PAGE_NOT_PRESENT +
+> +					  KVM_PV_REASON_PAGE_READY);
+> +	}
+
+Huh? Are we doing this to prevent the host from writing tho this area?
+
+> +
+> +	if (!kvm_async_pf_trylock(b, flags))
+> +		goto done;
+> +
+> +	hlist_for_each_safe(p, next, &b->list) {
+> +		n = hlist_entry(p, typeof(*n), link);
+> +		if (n->cpu != smp_processor_id())
+> +			continue;
+> +		if (!n->delayed)
+> +			continue;
+> +
+> +		kvm_async_pf_wake_one(n);
+> +	}
+> +
+> +	kvm_async_pf_unlock(b, flags);
+> +
+> +done:
+> +	if (!reason)
+> +		kvm_async_pf_write_reason(0);
+> +}
+> +NOKPROBE_SYMBOL(kvm_async_pf_delayed_wake);
+> +
+> +static void kvm_async_pf_wake_all(void)
+> +{
+> +	struct kvm_task_sleep_head *b;
+> +	struct kvm_task_sleep_node *n;
+> +	struct hlist_node *p, *next;
+> +	unsigned long flags;
+> +
+> +	b = this_cpu_ptr(&apf_head);
+> +	kvm_async_pf_lock(b, flags);
+> +
+> +	hlist_for_each_safe(p, next, &b->list) {
+> +		n = hlist_entry(p, typeof(*n), link);
+> +		kvm_async_pf_wake_one(n);
+> +	}
+> +
+> +	kvm_async_pf_unlock(b, flags);
+> +
+> +	kvm_async_pf_write_reason(0);
+> +}
+> +
+> +static void kvm_async_pf_wake(u32 token)
+> +{
+> +	struct kvm_task_sleep_head *b = this_cpu_ptr(&apf_head);
+> +	struct kvm_task_sleep_node *n;
+> +	unsigned long flags;
+> +
+> +	if (token == ~0) {
+> +		kvm_async_pf_wake_all();
+> +		return;
+> +	}
+> +
+> +again:
+> +	kvm_async_pf_lock(b, flags);
+> +
+> +	n = kvm_async_pf_find(b, token);
+> +	if (!n) {
+> +		/*
+> +		 * Async PF was not yet handled. Add dummy entry
+> +		 * for the token. Busy wait until other CPU handles
+> +		 * the async PF on allocation failure.
+> +		 */
+> +		n = kzalloc(sizeof(*n), GFP_ATOMIC);
+> +		if (!n) {
+> +			kvm_async_pf_unlock(b, flags);
+> +			cpu_relax();
+> +			goto again;
+> +		}
+> +		n->token = token;
+> +		n->task = current;
+> +		n->cpu = smp_processor_id();
+> +		n->halted = false;
+> +		n->delayed = false;
+> +		init_swait_queue_head(&n->wq);
+> +		hlist_add_head(&n->link, &b->list);
+> +	} else {
+> +		kvm_async_pf_wake_one(n);
+> +	}
+> +
+> +	kvm_async_pf_unlock_and_clear(b, flags);
+> +}
+> +
+> +static bool do_async_pf(unsigned long addr, unsigned int esr,
+> +		       struct pt_regs *regs)
+> +{
+> +	u32 reason;
+> +
+> +	if (!kvm_async_pf_read_enabled())
+> +		return false;
+> +
+> +	reason = kvm_async_pf_read_reason();
+> +	if (!reason)
+> +		return false;
+> +
+> +	switch (reason) {
+> +	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+> +		kvm_async_pf_wait((u32)addr, !user_mode(regs));
+> +		break;
+> +	case KVM_PV_REASON_PAGE_READY:
+> +		kvm_async_pf_wake((u32)addr);
+> +		break;
+> +	default:
+> +		if (reason) {
+> +			pr_warn("%s: Illegal reason %d\n", __func__, reason);
+> +			kvm_async_pf_write_reason(0);
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +#endif /* CONFIG_KVM_GUEST */
+> +
+>  void do_mem_abort(unsigned long addr, unsigned int esr, struct pt_regs *regs)
+>  {
+>  	const struct fault_info *inf = esr_to_fault_info(esr);
+>  
+> +#ifdef CONFIG_KVM_GUEST
+> +	if (do_async_pf(addr, esr, regs))
+> +		return;
+> +#endif
+> +
+>  	if (!inf->fn(addr, esr, regs))
+>  		return;
+>  
+> @@ -878,3 +1174,141 @@ void do_debug_exception(unsigned long addr_if_watchpoint, unsigned int esr,
+>  	debug_exception_exit(regs);
+>  }
+>  NOKPROBE_SYMBOL(do_debug_exception);
+> +
+> +#ifdef CONFIG_KVM_GUEST
+> +static int __init kvm_async_pf_available(char *arg)
+> +{
+> +	async_pf_available = false;
+> +	return 0;
+> +}
+> +early_param("no-kvmapf", kvm_async_pf_available);
+> +
+> +static void kvm_async_pf_enable(bool enable)
+> +{
+> +	struct arm_smccc_res res;
+> +	unsigned long *offsets = (unsigned long *)__exception_handlers_offset;
+> +	u32 enabled = kvm_async_pf_read_enabled();
+> +	u64 val;
+> +	int i;
+> +
+> +	if (enable == enabled)
+> +		return;
+> +
+> +	if (enable) {
+> +		/*
+> +		 * Asychonous page faults will be prohibited when CPU runs
+> +		 * instructions between the vector base and the maximal
+> +		 * offset, plus 4096. The 4096 is the assumped maximal
+> +		 * length for individual handler. The hardware registers
+> +		 * should be saved to stack at the beginning of the handlers,
+> +		 * so 4096 shuld be safe enough.
+> +		 */
+> +		val = 0;
+> +		for (i = 0; i < 16; i++) {
+> +			if (offsets[i] > val)
+> +				val = offsets[i];
+> +		}
+> +
+> +		val += 4096;
+
+NAK. This assumption is not true, and regardless we should not make any
+assumptions of this sort; we should derive this from the code
+explicitly. Guessing is not ok.
+
+Given that non-reentrant exception handling code is scattered across at
+least:
+
+* kernel/debug-monitors.c
+* kernel/entry.S
+* kernel/entry-common.S
+* kernel/traps.c
+* mm/fault.c
+
+... we *cannot* assume that fault handling code is virtually contiguous,
+and certainly cannot assume where this falls w.r.t. the architectural
+vectors that VBAR_ELx points to.
+
+How does x86 handle this?
+
+Thanks,
+Mark.
