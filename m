@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC40C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668E620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AF120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520825;
-	bh=rrjn21lIwbVsYMAky8QjM0Drt8vWHEafCQYkuckifaw=;
+	s=default; t=1590520829;
+	bh=JaCI0EjPvxTb7zB7hY+YRwycZ6E2oVyJSR+v7NnznEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TVi17Xf0iSxxkE+aqoGqyGUlklv6wnF0KKn21NjaPZ+ntF8qH2D+sH0HcNeSXQSqY
-	 pgI2Ap8rPhqrPVcJYXBUYyyWTnVb5sHM316F2JTnJey0jK1HEHNkM2dDlN0ZIh4Zh7
-	 j/YhV9lltvhR4oZ+OHoFwt7S+IfP3YkVqlbNKPrE=
+	b=CkAHN5xf1yeC2+WP4caoBigK7RcuUrtg6+YPN+gUR7q3CW+E9qJ3nrBDjvsUbLFJn
+	 CRCKNsMZRh+2heks0KbHdVVe+7Bq1d+iB021JxWpMHJ7J47Vv4t+s+3yWw95CtuYU7
+	 Aew0qV7dhBKIIvI8oVlJ/kcJX/qjaLqA1QcjtDqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392102AbgEZTMi (ORCPT
+        id S2391591AbgEZTM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392087AbgEZTMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:32 -0400
+        id S2392074AbgEZTMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58B32208A7;
-        Tue, 26 May 2020 19:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DEFD208A7;
+        Tue, 26 May 2020 19:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520351;
-        bh=rrjn21lIwbVsYMAky8QjM0Drt8vWHEafCQYkuckifaw=;
+        s=default; t=1590520344;
+        bh=JaCI0EjPvxTb7zB7hY+YRwycZ6E2oVyJSR+v7NnznEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qkgNua5pCGOq3E8HksnHhNxR9LX3bP88zTrCMNzL9E5Tiak/rbaTf6Hc2kcdKxvxi
-         lEzBcosnhZXGSRm0FjLDQqmDsdNXoby54dmhU9wJqSld3ecOEHXqNvr1BXylQQwsLI
-         9FemQQNeeAGNTY9llZeGsh90bTm+ggbM4fNh6Epo=
+        b=Xgwrx0aKJQZjQqyi96wbxJhQMFcfSxndgG9a7Z1NM0IemQZMTOaqc+7x9xbhh28eF
+         /Qtd3YN7hZwEtW8ymqs/bzbrvsU+vvPklBLPVcu+hDFew8leSdqI3VLAR5dxSJEvQQ
+         m4GeeQIkhgEU9ejYUxTctkwdPtrLyU+vSmFhv3e4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Petrov <mmrmaximuzz@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 045/126] stmmac: fix pointer check after utilization in stmmac_interrupt
-Date:   Tue, 26 May 2020 20:53:02 +0200
-Message-Id: <20200526183941.778481795@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 025/126] HID: multitouch: add eGalaxTouch P80H84 support
+Date:   Tue, 26 May 2020 20:52:42 +0200
+Message-Id: <20200526183939.830939599@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,49 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Petrov <mmrmaximuzz@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit f42234ffd531ca6b13d9da02faa60b72eccf8334 ]
+[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
 
-The paranoidal pointer check in IRQ handler looks very strange - it
-really protects us only against bogus drivers which request IRQ line
-with null pointer dev_id. However, the code fragment is incorrect
-because the dev pointer is used before the actual check which leads
-to undefined behavior. Remove the check to avoid confusing people
-with incorrect code.
+Add support for P80H84 touchscreen from eGalaxy:
 
-Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  idVendor           0x0eef D-WAV Scientific Co., Ltd
+  idProduct          0xc002
+  iManufacturer           1 eGalax Inc.
+  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
+
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 7da18c9afa01..d564459290ce 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3988,7 +3988,7 @@ static int stmmac_set_features(struct net_device *netdev,
- /**
-  *  stmmac_interrupt - main ISR
-  *  @irq: interrupt number.
-- *  @dev_id: to pass the net device pointer.
-+ *  @dev_id: to pass the net device pointer (must be valid).
-  *  Description: this is the main driver interrupt service routine.
-  *  It can call:
-  *  o DMA service routine (to manage incoming frame reception and transmission
-@@ -4012,11 +4012,6 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
- 	if (priv->irq_wake)
- 		pm_wakeup_event(priv->device, 0);
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 9f2213426556..309510a72c5e 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -385,6 +385,7 @@
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
++#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
  
--	if (unlikely(!dev)) {
--		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
--		return IRQ_NONE;
--	}
--
- 	/* Check if adapter is up */
- 	if (test_bit(STMMAC_DOWN, &priv->state))
- 		return IRQ_HANDLED;
+ #define USB_VENDOR_ID_ELAN		0x04f3
+ #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W	0x0401
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 362805ddf377..03c720b47306 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1922,6 +1922,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
++	{ .driver_data = MT_CLS_EGALAX,
++		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
++			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+ 
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
 -- 
 2.25.1
 
