@@ -2,168 +2,193 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14784C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6988CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5AA820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E2720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521390;
-	bh=8E0sLew2Jr0zphB0VSQglmqOBcvFzFjkzDJzRHNfIl0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHqpnYCyaXCbK/sMiIA6e9mKdHQlxmYIuIbIpAgnwoi/KpTd449nOgu0VFrp70M7Y
-	 Qb3414rJYEyD3f4shk2URXCkeo6t589iu14Gbl/dRqJJ+lM31jpJEnqglkZF7UtDqy
-	 Nw/0efMFJBlKr8ltVy/Yvzs4SiEB86265uLOv800=
+	s=default; t=1590521395;
+	bh=kHG7Iurp5P4qCpo0FQjFbeSy0sAQuXTKMoEVhW1q9s0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ta/jxa/ijGIMKd8zC5MDg5ok1IxV40kFTAHzQhvMwhrr5M4BsF+zdZ4qp/NfJ7eNt
+	 JAvmIo/PB2r+sUIDQg3P5sKaeVZxfovK1hFoGdJimzRjEhifvXX0GwqGbooWsRjvt2
+	 qjGorfie36KaXFddYJFdrKdiFlddb0d7bG1HFijQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403921AbgEZT3u (ORCPT
+        id S2404255AbgEZT3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390211AbgEZTBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AA9D2086A;
-        Tue, 26 May 2020 19:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519666;
-        bh=8E0sLew2Jr0zphB0VSQglmqOBcvFzFjkzDJzRHNfIl0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezpIp8Re3jvEOuDG3I0krEUOJdZRzZe5IBKh9jGyAst55Y/LPYMeE9ETmovfb6wqF
-         SuloPuCzrw/KjuqJhAhZJbYrCWXTo3Ft6t5nNBWZKMpXiFljGDECGuvw7gFbHIL168
-         jxeo6IELUIfKqOXDlp+/qU0+vZrVoJ+t319wddQ0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.14 04/59] padata: ensure the reorder timer callback runs on the correct CPU
-Date:   Tue, 26 May 2020 20:52:49 +0200
-Message-Id: <20200526183908.427562948@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
-References: <20200526183907.123822792@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 26 May 2020 15:29:54 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43207 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403856AbgEZT3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:29:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id h10so23334523iob.10;
+        Tue, 26 May 2020 12:29:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1udivP7wbmjRGQdrVG+bvSIgJ6k6K6sg5R0YTrdV/ZI=;
+        b=t4kC1jI7UiO4MZhJGkDRBUWQHV+9KoeFICr9vrDYhQOaoCuIv1xL9MybaaNyj/hY74
+         slBKtgm+RhZroQTHDrEgfRaJrzlhu0vMeW6j4FT/ld0ZSl3deXO6mHpQT94rXXvJaHt8
+         wG8MSmqWHrl84DeKLkzevdIPtfVfXxON0er/gpV7Zj1RknVLoplOQUx6OWH3h9D6YMYa
+         eMBhdd4JTxUNCdBs5Uxi8yfTVUdjxEGKkV3F0hgusWxPCdqTMuQbeCgf6jgPg/sG0i0k
+         hiR3us/Gq1Gad7DEG+1cQsBeEj+QX6rC+CRANcosBlTmwXthckUewY8Vo0cl4y9It/wR
+         QAKw==
+X-Gm-Message-State: AOAM533VX0b6tEowLTOYYjmVyWNQAgPAEuTdHj0KUOekpDGLMcaOErPq
+        l14RVi5xRDLv7WRbeL3Bs5Z2j3U=
+X-Google-Smtp-Source: ABdhPJyZBBk1sBbHouc7difwqpQlE+8v91JyFKG3/W2+MNks24BN0vbpZp7iptfxgr4ZzF78fd0cYA==
+X-Received: by 2002:a02:dc8:: with SMTP id 191mr2522550jax.95.1590521389948;
+        Tue, 26 May 2020 12:29:49 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r9sm420424ilm.10.2020.05.26.12.29.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 12:29:49 -0700 (PDT)
+Received: (nullmailer pid 224310 invoked by uid 1000);
+        Tue, 26 May 2020 19:29:47 -0000
+Date:   Tue, 26 May 2020 13:29:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
+        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        keescook@chromium.org, paul@crapouillou.net, krzk@kernel.org,
+        hns@goldelico.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
+        rick.tyliu@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH v8 4/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200526192947.GA140311@bogus>
+References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589898923-60048-6-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Krause <minipli@googlemail.com>
+On Tue, May 19, 2020 at 10:35:21PM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+> 
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     Change the two Document from txt to yaml.
+>     
+>     v2->v3:
+>     Fix formatting errors.
+>     
+>     v3->v4:
+>     Fix bugs in the two yaml files.
+>     
+>     v4->v5:
+>     No change.
+>     
+>     v5->v6:
+>     Rewrite the two yaml files.
+>     
+>     v6->v7:
+>     1.Update compatible strings in "ingenic,cpu.yaml".
+>     2.Fix formatting errors, and enum for compatible strings.
+>     3.Remove unnecessary "ingenic,soc.yaml".
+>     
+>     v7->v8:
+>     No change.
+> 
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> new file mode 100644
+> index 00000000..afb0207
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Ingenic XBurst family CPUs
+> +
+> +maintainers:
+> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> +
+> +description:
+> +  Ingenic XBurst family CPUs shall have the following properties.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: Ingenic XBurst®1 CPU Cores
+> +        items:
 
-commit cf5868c8a22dc2854b96e9569064bb92365549ca upstream.
+This is a single compatible string, right? If so, drop items. 
 
-The reorder timer function runs on the CPU where the timer interrupt was
-handled which is not necessarily one of the CPUs of the 'pcpu' CPU mask
-set.
+> +          enum:
+> +            - ingenic,xburst-mxu1.0
+> +            - ingenic,xburst-fpu1.0-mxu1.1
+> +            - ingenic,xburst-fpu2.0-mxu2.0
+> +
+> +      - description: Ingenic XBurst®2 CPU Cores
+> +        items:
+> +          enum:
+> +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
 
-Ensure the padata_reorder() callback runs on the correct CPU, which is
-one in the 'pcpu' CPU mask set and, preferrably, the next expected one.
-Do so by comparing the current CPU with the expected target CPU. If they
-match, call padata_reorder() right away. If they differ, schedule a work
-item on the target CPU that does the padata_reorder() call for us.
+Just: const: ingenic,xburst2-fpu2.1-mxu2.1-smt
 
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Continuing to append CPU features isn't going to scale well. Does 
+'xburst2' imply certain features? If so, not really any need to have 
+them be explicit.
 
----
- include/linux/padata.h |    2 ++
- kernel/padata.c        |   43 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
-
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -85,6 +85,7 @@ struct padata_serial_queue {
-  * @swork: work struct for serialization.
-  * @pd: Backpointer to the internal control structure.
-  * @work: work struct for parallelization.
-+ * @reorder_work: work struct for reordering.
-  * @num_obj: Number of objects that are processed by this cpu.
-  * @cpu_index: Index of the cpu.
-  */
-@@ -93,6 +94,7 @@ struct padata_parallel_queue {
-        struct padata_list    reorder;
-        struct parallel_data *pd;
-        struct work_struct    work;
-+       struct work_struct    reorder_work;
-        atomic_t              num_obj;
-        int                   cpu_index;
- };
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -282,11 +282,51 @@ static void padata_reorder(struct parall
- 	return;
- }
- 
-+static void invoke_padata_reorder(struct work_struct *work)
-+{
-+	struct padata_parallel_queue *pqueue;
-+	struct parallel_data *pd;
-+
-+	local_bh_disable();
-+	pqueue = container_of(work, struct padata_parallel_queue, reorder_work);
-+	pd = pqueue->pd;
-+	padata_reorder(pd);
-+	local_bh_enable();
-+}
-+
- static void padata_reorder_timer(unsigned long arg)
- {
- 	struct parallel_data *pd = (struct parallel_data *)arg;
-+	unsigned int weight;
-+	int target_cpu, cpu;
- 
--	padata_reorder(pd);
-+	cpu = get_cpu();
-+
-+	/* We don't lock pd here to not interfere with parallel processing
-+	 * padata_reorder() calls on other CPUs. We just need any CPU out of
-+	 * the cpumask.pcpu set. It would be nice if it's the right one but
-+	 * it doesn't matter if we're off to the next one by using an outdated
-+	 * pd->processed value.
-+	 */
-+	weight = cpumask_weight(pd->cpumask.pcpu);
-+	target_cpu = padata_index_to_cpu(pd, pd->processed % weight);
-+
-+	/* ensure to call the reorder callback on the correct CPU */
-+	if (cpu != target_cpu) {
-+		struct padata_parallel_queue *pqueue;
-+		struct padata_instance *pinst;
-+
-+		/* The timer function is serialized wrt itself -- no locking
-+		 * needed.
-+		 */
-+		pinst = pd->pinst;
-+		pqueue = per_cpu_ptr(pd->pqueue, target_cpu);
-+		queue_work_on(target_cpu, pinst->wq, &pqueue->reorder_work);
-+	} else {
-+		padata_reorder(pd);
-+	}
-+
-+	put_cpu();
- }
- 
- static void padata_serial_worker(struct work_struct *serial_work)
-@@ -413,6 +453,7 @@ static void padata_init_pqueues(struct p
- 		__padata_list_init(&pqueue->reorder);
- 		__padata_list_init(&pqueue->parallel);
- 		INIT_WORK(&pqueue->work, padata_parallel_worker);
-+		INIT_WORK(&pqueue->reorder_work, invoke_padata_reorder);
- 		atomic_set(&pqueue->num_obj, 0);
- 	}
- }
-
-
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - device_type
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    cpus {
+> +    	#address-cells = <1>;
+> +    	#size-cells = <0>;
+> +
+> +    	cpu0: cpu@0 {
+> +    		device_type = "cpu";
+> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+> +    		reg = <0>;
+> +    	};
+> +
+> +    	cpu1: cpu@1 {
+> +    		device_type = "cpu";
+> +    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+> +    		reg = <1>;
+> +    	};
+> +    };
+> +...
+> -- 
+> 2.7.4
+> 
