@@ -2,83 +2,318 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C11C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FB620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590483623;
-	bh=STAm2RC3mfBdgq2YxbuI9GIS/umeg4tqG1qVVqpD+Qc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BIjJZ7f6EZRPnwklJHIVCAQM1fszme0iJOWz1+Q/Xtba7j0rPwVtj+mSy60auZgyt
-	 TuvcDX7SmBGt3eMvEtHNONtbXdQVPaYKT+eGyXlVFp3I/Skbo53fYZSQJb5hoGGaTT
-	 8L7idyABdo5MAVd0B0xbtmMwFvEwcb1AC3hJDGfE=
+	by mail.kernel.org (Postfix) with ESMTP id B789520776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731645AbgEZJAW (ORCPT
+        id S1731659AbgEZJCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:00:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbgEZJAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:00:21 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 26 May 2020 05:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbgEZJCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 05:02:14 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01050C03E97E;
+        Tue, 26 May 2020 02:02:14 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A8FF205CB;
-        Tue, 26 May 2020 09:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590483621;
-        bh=STAm2RC3mfBdgq2YxbuI9GIS/umeg4tqG1qVVqpD+Qc=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=rFtS0fkfRy69LGOWRVQpHK8QF6CywMnRxb8BNmzOD7oO+D2sFnZx26Yv4LLE26WHg
-         XH1oC2r08o8SNr4a6CP2Cu9VwBGjPb2A3/HVXr3dxXq1y6XLx4UQxS+zBVBNBkubum
-         Gb2VT0WizmOl+rRE1I2herp8JjPa+t/n3TfmROfw=
-Date:   Tue, 26 May 2020 11:00:18 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Scott Shumate <scott.shumate@gmail.com>
-cc:     "Colenbrander, Roderick" <Roderick.Colenbrander@sony.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: sony: Fix for broken buttons on DS3 USB dongles
-In-Reply-To: <e3496a04-3a96-f833-955f-69912a76bdac@gmail.com>
-Message-ID: <nycvar.YFH.7.76.2005261059590.25812@cbobk.fhfr.pm>
-References: <46c1ab66-62d7-5dae-2f4d-7e722f1aff3a@gmail.com> <BY5PR13MB38264B60014D43193C53B38798BF0@BY5PR13MB3826.namprd13.prod.outlook.com> <e3496a04-3a96-f833-955f-69912a76bdac@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 400E1634C87;
+        Tue, 26 May 2020 12:01:27 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jdVSh-0002Rc-9W; Tue, 26 May 2020 12:01:27 +0300
+Date:   Tue, 26 May 2020 12:01:27 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 04/10] media: i2c: imx290: Add support for 2 data lanes
+Message-ID: <20200526090127.GG8214@valkosipuli.retiisi.org.uk>
+References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
+ <20200524192505.20682-5-andrey.konovalov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524192505.20682-5-andrey.konovalov@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020, Scott Shumate wrote:
+Hi Andrey,
 
-> Hi Roderick,
+On Sun, May 24, 2020 at 10:24:59PM +0300, Andrey Konovalov wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> The official DS3 has a Report Count(19) instead of Report Count(13) in the
-> exact same offset.  I have no idea what the silicon vendor for these dongles
-> was thinking but it's suspicious that the official count of 19 (0x13) turned
-> into 13 (0xd) in the knock-off.  It makes you wonder if the engineers confused
-> the decimal/hex numbers.
+> The IMX290 sensor can output frames with 2/4 CSI2 data lanes. This commit
+> adds support for 2 lane mode in addition to the 4 lane and also
+> configuring the data lane settings in the driver based on system
+> configuration.
 > 
-> As buggy as all of these third-party devices are, I'm afraid relying on the
-> HID parser to get it right is only going to worse over time.  I do like your
-> idea of having each device register themselves.  It would be nice to have each
-> device provide a callback to decode its own report rather than handle a bunch
-> of special conditions and quirks in a unified report decoding function.  The
-> drawback of course is that its going to be a little more effort to maintain.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> ---
+>  drivers/media/i2c/imx290.c | 133 ++++++++++++++++++++++++++++++++++---
+>  1 file changed, 124 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> index 7b1de1f0c8b7..a361c9ac8bd5 100644
+> --- a/drivers/media/i2c/imx290.c
+> +++ b/drivers/media/i2c/imx290.c
+> @@ -25,7 +25,18 @@
+>  #define IMX290_STANDBY 0x3000
+>  #define IMX290_REGHOLD 0x3001
+>  #define IMX290_XMSTA 0x3002
+> +#define IMX290_FR_FDG_SEL 0x3009
+>  #define IMX290_GAIN 0x3014
+> +#define IMX290_HMAX_LOW 0x301c
+> +#define IMX290_HMAX_HIGH 0x301d
+> +#define IMX290_PHY_LANE_NUM 0x3407
+> +#define IMX290_CSI_LANE_MODE 0x3443
+> +
+> +/* HMAX fields */
+> +#define IMX290_HMAX_2_1920 0x1130
+> +#define IMX290_HMAX_4_1920 0x0898
+> +#define IMX290_HMAX_2_720 0x19C8
+> +#define IMX290_HMAX_4_720 0x0CE4
+>  
+>  #define IMX290_DEFAULT_LINK_FREQ 445500000
+>  
+> @@ -56,6 +67,7 @@ struct imx290 {
+>  	struct device *dev;
+>  	struct clk *xclk;
+>  	struct regmap *regmap;
+> +	u8 nlanes;
+>  
+>  	struct v4l2_subdev sd;
+>  	struct v4l2_fwnode_endpoint ep;
+> @@ -89,14 +101,11 @@ static const struct regmap_config imx290_regmap_config = {
+>  
+>  static const struct imx290_regval imx290_global_init_settings[] = {
+>  	{ 0x3007, 0x00 },
+> -	{ 0x3009, 0x00 },
+>  	{ 0x3018, 0x65 },
+>  	{ 0x3019, 0x04 },
+>  	{ 0x301a, 0x00 },
+> -	{ 0x3443, 0x03 },
+>  	{ 0x3444, 0x20 },
+>  	{ 0x3445, 0x25 },
+> -	{ 0x3407, 0x03 },
+>  	{ 0x303a, 0x0c },
+>  	{ 0x3040, 0x00 },
+>  	{ 0x3041, 0x00 },
+> @@ -169,7 +178,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+>  	{ 0x3164, 0x1a },
+>  	{ 0x3480, 0x49 },
+>  	/* data rate settings */
+> -	{ 0x3009, 0x01 },
+>  	{ 0x3405, 0x10 },
+>  	{ 0x3446, 0x57 },
+>  	{ 0x3447, 0x00 },
+> @@ -187,8 +195,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+>  	{ 0x3453, 0x00 },
+>  	{ 0x3454, 0x17 },
+>  	{ 0x3455, 0x00 },
+> -	{ 0x301c, 0x98 },
+> -	{ 0x301d, 0x08 },
+>  };
+>  
+>  static const struct imx290_regval imx290_720p_settings[] = {
+> @@ -210,7 +216,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+>  	{ 0x3164, 0x1a },
+>  	{ 0x3480, 0x49 },
+>  	/* data rate settings */
+> -	{ 0x3009, 0x01 },
+>  	{ 0x3405, 0x10 },
+>  	{ 0x3446, 0x4f },
+>  	{ 0x3447, 0x00 },
+> @@ -228,8 +233,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+>  	{ 0x3453, 0x00 },
+>  	{ 0x3454, 0x17 },
+>  	{ 0x3455, 0x00 },
+> -	{ 0x301c, 0xe4 },
+> -	{ 0x301d, 0x0c },
+>  };
+>  
+>  static const struct imx290_regval imx290_10bit_settings[] = {
+> @@ -522,6 +525,25 @@ static int imx290_write_current_format(struct imx290 *imx290,
+>  	return 0;
+>  }
+>  
+> +static int imx290_set_hmax(struct imx290 *imx290, u32 val)
+> +{
+> +	int ret;
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_HMAX_LOW, (val & 0xff));
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting HMAX register\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_HMAX_HIGH, ((val >> 8) & 0xff));
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting HMAX register\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /* Start streaming */
+>  static int imx290_start_streaming(struct imx290 *imx290)
+>  {
+> @@ -551,6 +573,40 @@ static int imx290_start_streaming(struct imx290 *imx290)
+>  		return ret;
+>  	}
+>  
+> +	switch (imx290->nlanes) {
+> +	case 2:
+> +		if (imx290->current_mode->width == 1920) {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_2_1920);
+> +			if (ret < 0)
+> +				return ret;
+> +		} else {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_2_720);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +
+> +		break;
+> +	case 4:
+> +		if (imx290->current_mode->width == 1920) {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_4_1920);
+> +			if (ret < 0)
+> +				return ret;
+> +		} else {
+> +			ret = imx290_set_hmax(imx290, IMX290_HMAX_4_720);
+> +			if (ret < 0)
+> +				return ret;
 
-I've added Cc: stable and Fixes: tag, and applied.
+I think it'd be nicer to put this where the mode definitions are, to avoid
+scattering the configuration around the driver.
 
-Thanks,
+> +		}
+> +
+> +		break;
+> +	default:
+> +		/*
+> +		 * We should never hit this since the data lane count is
+> +		 * validated in probe itself
+> +		 */
+> +		dev_err(imx290->dev, "Lane configuration not supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Apply customized values from user */
+>  	ret = v4l2_ctrl_handler_setup(imx290->sd.ctrl_handler);
+>  	if (ret) {
+> @@ -607,6 +663,49 @@ static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
+>  				       imx290->supplies);
+>  }
+>  
+> +static int imx290_set_data_lanes(struct imx290 *imx290)
+> +{
+> +	int ret = 0, laneval, frsel;
+> +
+> +	switch (imx290->nlanes) {
+> +	case 2:
+> +		laneval = 0x01;
+> +		frsel = 0x02;
+> +		break;
+> +	case 4:
+> +		laneval = 0x03;
+> +		frsel = 0x01;
+> +		break;
+> +	default:
+> +		/*
+> +		 * We should never hit this since the data lane count is
+> +		 * validated in probe itself
+> +		 */
+> +		dev_err(imx290->dev, "Lane configuration not supported\n");
+> +		ret = -EINVAL;
+> +		goto exit;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_PHY_LANE_NUM, laneval);
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting Physical Lane number register\n");
+> +		goto exit;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_CSI_LANE_MODE, laneval);
+> +	if (ret) {
+> +		dev_err(imx290->dev, "Error setting CSI Lane mode register\n");
+> +		goto exit;
+> +	}
+> +
+> +	ret = imx290_write_reg(imx290, IMX290_FR_FDG_SEL, frsel);
+> +	if (ret)
+> +		dev_err(imx290->dev, "Error setting FR/FDG SEL register\n");
+> +
+> +exit:
+> +	return ret;
+> +}
+> +
+>  static int imx290_power_on(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> @@ -631,6 +730,9 @@ static int imx290_power_on(struct device *dev)
+>  	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
+>  	usleep_range(30000, 31000);
+>  
+> +	/* Set data lane count */
+> +	imx290_set_data_lanes(imx290);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -703,6 +805,16 @@ static int imx290_probe(struct i2c_client *client)
+>  		goto free_err;
+>  	}
+>  
+> +	/* Get number of data lanes */
+
+While at it, could you set the PHY type in the V4L2 fwnode endpoint before
+parsing the data using v4l2_fwnode_endpoint_alloc_parse()?
+
+> +	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
+> +	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
+> +		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
+> +		ret = -EINVAL;
+> +		goto free_err;
+> +	}
+> +
+> +	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
+> +
+>  	if (!imx290->ep.nr_of_link_frequencies) {
+>  		dev_err(dev, "link-frequency property not found in DT\n");
+>  		ret = -EINVAL;
+> @@ -823,6 +935,9 @@ static int imx290_probe(struct i2c_client *client)
+>  		goto free_entity;
+>  	}
+>  
+> +	/* Set data lane count */
+> +	imx290_set_data_lanes(imx290);
+> +
+>  	pm_runtime_set_active(dev);
+>  	pm_runtime_enable(dev);
+>  	pm_runtime_idle(dev);
 
 -- 
-Jiri Kosina
-SUSE Labs
+Regards,
 
+Sakari Ailus
