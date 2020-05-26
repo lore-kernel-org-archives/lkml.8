@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C552C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8A4207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1085E207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Vv8F37mw"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="FaftoKe+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgEZHCx (ORCPT
+        id S1731434AbgEZHC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
+        Tue, 26 May 2020 03:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEZHCw (ORCPT
+        with ESMTP id S1727873AbgEZHCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:02:52 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681BBC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:02:52 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x18so7167207pll.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:02:52 -0700 (PDT)
+        Tue, 26 May 2020 03:02:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8457DC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:02:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u22so8263074plq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Z0xKW5jGYiiw/3GeT46+0muUjmlt6YQxeB0UtKHbHyM=;
-        b=Vv8F37mwKuXZ6y6Td16tf0OUUP4hiVqV1UO/3rkj623bgN1I9ccIiuIUReqYK0kEOl
-         z95nqbfEpLcPYdvjItQhC9tHwQqtcoSb0qxCxd9zRpA16kGUzdsHLtI5EvyOCE0M7dQP
-         Cp9EaLylJDiyIKi3uDP7V28Cn73JrLniaq0PcZ6uv29k8P0nNIf1KFCAgTo1UHZ7Lut7
-         okCsi4st/LIAYpRmvAbbY2KSqfAa+zk28yH4vHKRdV05tcGY1okQvUqE35PdGGN0dhvU
-         NpgvU9/QCVU9TNrdrbj2Hb0MXA5ZVakywr/sexsFoyef0xUozbuJwgD2ex+/kTxifgL/
-         sgfA==
+        bh=82NB9lCPMwXynDeXK6u4yXJsBZGIDVjhoL3cA6mdRsQ=;
+        b=FaftoKe+0VZVQZfx6UqrMrjEGKXsDAMQES+qIZJ2/T5sVpacKZTqHEKzYwPkn8u3Yn
+         JKthoGXIp3ZuFeRPBM6tCVTFE1pvm/klC/QDuGmact9URjVXCTDaRzHQzGbV3nBoqTD+
+         3Afh4Z2yD7rE+JgNq6Gkeqa1IW5gxkucbB+RIhQihixaToLipBJVA/OeTmsRhrehKSRN
+         dGkDv15x2U1w9i9skTs3zr0XY28wbuxQy7ttu0tHLi6Ltu0Hu6kPXzOYpNRi71p44whN
+         03MbhRIsC1i9Ha6mwACeLPzjD2RXAAN2ZJUvJeIhRpsNjl85Pq4LwXZlGmEJkjOt5bn6
+         mkzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z0xKW5jGYiiw/3GeT46+0muUjmlt6YQxeB0UtKHbHyM=;
-        b=q+NiQdgVcgzrdUXkdmOEfcoRxhViFFHnKK9c3ln/Kjyl+yv4D4tHzDHrD8Gy+pMBYO
-         V7253KrLsw1vno6RnfzTCkAdb4kRqN4Tq+gKifuYD2gUuRaHh1rFgMMzZrooZes6nFOO
-         J48++8HpkjwMm9o0xn2Gp9qEs6eQuE54l6tbB/hQGc20jf/rdZLen5CwAlDHUw6VUAjy
-         ZZxtEyBCzYEG46Nlt9XrcLBmgXAbCg1U2zqiyWzpOZCVn98F3C/eyWqQk4fQDG+peLkP
-         hC/WMioJ/HnFQmSvXmTC50D5treLpeaQxP/ZtJO8Vk4Ces2OhqspOJyQWd0Qa9HJD052
-         W47w==
-X-Gm-Message-State: AOAM530//3eMml9kg1IhUEOOE6nETU49OoN2UM5QtjhmSEjIHSN/kr7H
-        umBk+AVg1fuMVbO1b2ZIbGv/YQ==
-X-Google-Smtp-Source: ABdhPJxeYDGp3LFQVg6j6dk5cVoVcGPzcAKqKwzg4Z7E15ygv7v81Xe5OwKMQK1KH/AW0urpZT5vCQ==
-X-Received: by 2002:a17:90a:aa8d:: with SMTP id l13mr25740072pjq.92.1590476571974;
-        Tue, 26 May 2020 00:02:51 -0700 (PDT)
+        bh=82NB9lCPMwXynDeXK6u4yXJsBZGIDVjhoL3cA6mdRsQ=;
+        b=Yi/6N8KpiYNNW9kSCjlfGzo/xVAqdZih07j169SxjwlGoJsNqNVkhKj7uFWX+wUcz1
+         y4b/hug01/4Tl8WbHDIDce1cQCIFjl6NF9x+GKTqdA4xnhwEvdn6leNv3yUBkbwE12Mz
+         u3zoGyiwMAAzjSngiHHB3FX1g3w1V57kzViQ0XybA1GZYjuipVThcXjuGiYh0BkbM0LA
+         iBpWVa0FJ+ZTVkaPSDNoufJ7/sKSPXwxNdpRUA5GSNpjGR69VDJAK7UjyxL5hXx/el5x
+         i6WtfirRfi7KIXyxNKBujySKTzKK9q5af3oSBkcArVzIUlGvnonN0ifknx2wiUVqhgQg
+         5Y3w==
+X-Gm-Message-State: AOAM531FYpLfCXCRi65nDw3dKSvsNc10qmrFIdpKBbOR05FNx+veqHfv
+        y7CiJWrf4kS4+skbQF0dvChPASMw13v0Mg==
+X-Google-Smtp-Source: ABdhPJyVEh5eCMuVwWRIqvOS5Rmwcsk10fGY/pssgC0u8rfLvDwccBtBh6NrYpEaRpu5pP8FSWPp2A==
+X-Received: by 2002:a17:902:bb86:: with SMTP id m6mr31111794pls.341.1590476574044;
+        Tue, 26 May 2020 00:02:54 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.02.50
+        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.02.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:02:51 -0700 (PDT)
+        Tue, 26 May 2020 00:02:53 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, oleg@redhat.com
-Subject: [RFC PATCH v4 01/13] ptrace: Use regset_size() for dynamic regset size.
-Date:   Tue, 26 May 2020 15:02:30 +0800
-Message-Id: <3700190a602a6d30fcbf76e1eea667e29a65c4c9.1590474856.git.greentime.hu@sifive.com>
+Subject: [RFC PATCH v4 02/13] riscv: Separate patch for cflags and aflags
+Date:   Tue, 26 May 2020 15:02:31 +0800
+Message-Id: <0c949212bff708dcbd530bfd7c13a04a2ca2bbd8.1590474856.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590474856.git.greentime.hu@sifive.com>
 References: <cover.1590474856.git.greentime.hu@sifive.com>
@@ -77,41 +77,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It uses regset_size() instead of using regset->n and regset->size directly.
-In this case, it will call the get_size() ported by arch dynamically to
-support dynamic regset size case.
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+From: Guo Ren <ren_guo@c-sky.com>
+
+Use "subst fd" in Makefile is a hack way and it's not convenient
+to add new ISA feature. Just separate them into riscv-march-cflags
+and riscv-march-aflags.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- kernel/ptrace.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/riscv/Makefile | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 43d6179508d6..6877105e1b1e 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -882,13 +882,18 @@ static int ptrace_regset(struct task_struct *task, int req, unsigned int type,
- 	const struct user_regset_view *view = task_user_regset_view(task);
- 	const struct user_regset *regset = find_regset(view, type);
- 	int regset_no;
-+	unsigned int size;
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index fb6e37db836d..957d064bead0 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -37,12 +37,18 @@ else
+ endif
  
--	if (!regset || (kiov->iov_len % regset->size) != 0)
-+	if (!regset)
- 		return -EINVAL;
- 
- 	regset_no = regset - view->regsets;
--	kiov->iov_len = min(kiov->iov_len,
--			    (__kernel_size_t) (regset->n * regset->size));
-+	size = regset_size(task, regset);
+ # ISA string setting
+-riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
+-riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
+-riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
+-riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
+-KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
+-KBUILD_AFLAGS += -march=$(riscv-march-y)
++riscv-march-cflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
++riscv-march-cflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
++riscv-march-$(CONFIG_FPU)			:= $(riscv-march-y)fd
++riscv-march-cflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-cflags-y)c
 +
-+	if ((kiov->iov_len % size) != 0)
-+		return -EINVAL;
++riscv-march-aflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
++riscv-march-aflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
++riscv-march-aflags-$(CONFIG_FPU)		:= $(riscv-march-aflags-y)fd
++riscv-march-aflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-aflags-y)c
 +
-+	kiov->iov_len = min(kiov->iov_len, (__kernel_size_t) size);
++KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
++KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
  
- 	if (req == PTRACE_GETREGSET)
- 		return copy_regset_to_user(task, view, regset_no, 0,
+ KBUILD_CFLAGS += -mno-save-restore
+ KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
 -- 
 2.26.2
 
