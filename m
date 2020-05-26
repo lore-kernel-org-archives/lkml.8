@@ -2,76 +2,209 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E49C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2078EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6CC20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECF22053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G6AZHxhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbgEZHGx (ORCPT
+        id S1731519AbgEZHHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:06:53 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:49329 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726990AbgEZHGx (ORCPT
+        Tue, 26 May 2020 03:07:16 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:16573 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726990AbgEZHHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:06:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=wetp.zy@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TzhXv2Y_1590476801;
-Received: from localhost(mailfrom:wetp.zy@linux.alibaba.com fp:SMTPD_---0TzhXv2Y_1590476801)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 May 2020 15:06:50 +0800
-From:   Wetp Zhang <wetp.zy@linux.alibaba.com>
-To:     n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm, memory_failure: only send BUS_MCEERR_AO to early-kill process
-Date:   Tue, 26 May 2020 15:06:41 +0800
-Message-Id: <1590476801-19882-1-git-send-email-wetp.zy@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 26 May 2020 03:07:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590476834; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=O6QvaVi3YfaFHLoCHa9DEncvz1BtpP9wyBrbMVGNqGk=; b=G6AZHxhG4U1eP0BDrH4AXwoVG07QAKvjEU82FO3++aG/X0t2hFZZiB05J6k+7rJRmU65e9N2
+ AVPqiXslMcU4FaTBHQfG+/U53AcnfZje0hajjvJTYGPAP2V3GUdAW2Jkse4+DncXZTdot/wy
+ 3b7GgdsAY6mAGsBww0ZTCrjTk8c=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5eccc0212dd9e15ae3969aa2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 07:07:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B48AEC433C6; Tue, 26 May 2020 07:07:12 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.171.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 89482C433C9;
+        Tue, 26 May 2020 07:07:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 89482C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCHv3/RESEND 1/3] soc: qcom: rpmh-rsc: Remove tcs_is_free()
+ API
+To:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+References: <20200521060425.24285-1-swboyd@chromium.org>
+ <20200521060425.24285-2-swboyd@chromium.org>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <aa0d22f3-1885-4937-7410-c6c467008c7a@codeaurora.org>
+Date:   Tue, 26 May 2020 12:37:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200521060425.24285-2-swboyd@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Yi <wetpzy@gmail.com>
+Hi,
 
-If a process don't need early-kill, it may not care the BUS_MCEERR_AO.
-Let the process to be killed when it really access the corrupted memory.
+Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
 
-Signed-off-by: Zhang Yi <wetpzy@gmail.com>
----
- mm/memory-failure.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Thanks,
+Maulik
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index a96364be8ab4..2db13d48865c 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -210,7 +210,7 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
- {
- 	struct task_struct *t = tk->tsk;
- 	short addr_lsb = tk->size_shift;
--	int ret;
-+	int ret = 0;
- 
- 	pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
- 		pfn, t->comm, t->pid);
-@@ -225,8 +225,9 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
- 		 * This could cause a loop when the user sets SIGBUS
- 		 * to SIG_IGN, but hopefully no one will do that?
- 		 */
--		ret = send_sig_mceerr(BUS_MCEERR_AO, (void __user *)tk->addr,
--				      addr_lsb, t);  /* synchronous? */
-+		if ((t->flags & PF_MCE_PROCESS) && (t->flags & PF_MCE_EARLY))
-+			ret = send_sig_mceerr(BUS_MCEERR_AO,
-+				(void __user *)tk->addr, addr_lsb, t);
- 	}
- 	if (ret < 0)
- 		pr_info("Memory failure: Error sending signal to %s:%d: %d\n",
+On 5/21/2020 11:34 AM, Stephen Boyd wrote:
+> This API does very little. Let's replace all the callsites with the
+> normal operations that would be done on top of the bitmap that
+> tcs_in_use is. This simplifies and reduces the code size.
+>
+> Cc: Maulik Shah <mkshah@codeaurora.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>   drivers/soc/qcom/rpmh-rsc.c | 59 +++++++++++++------------------------
+>   1 file changed, 20 insertions(+), 39 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 076fd27f3081..60fc56987659 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -184,22 +184,6 @@ static void write_tcs_reg_sync(const struct rsc_drv *drv, int reg, int tcs_id,
+>   		       data, tcs_id, reg);
+>   }
+>   
+> -/**
+> - * tcs_is_free() - Return if a TCS is totally free.
+> - * @drv:    The RSC controller.
+> - * @tcs_id: The global ID of this TCS.
+> - *
+> - * Returns true if nobody has claimed this TCS (by setting tcs_in_use).
+> - *
+> - * Context: Must be called with the drv->lock held.
+> - *
+> - * Return: true if the given TCS is free.
+> - */
+> -static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
+> -{
+> -	return !test_bit(tcs_id, drv->tcs_in_use);
+> -}
+> -
+>   /**
+>    * tcs_invalidate() - Invalidate all TCSes of the given type (sleep or wake).
+>    * @drv:  The RSC controller.
+> @@ -512,7 +496,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
+>    *
+>    * Return: 0 if nothing in flight or -EBUSY if we should try again later.
+>    *         The caller must re-enable interrupts between tries since that's
+> - *         the only way tcs_is_free() will ever return true and the only way
+> + *         the only way tcs_in_use will ever be updated and the only way
+>    *         RSC_DRV_CMD_ENABLE will ever be cleared.
+>    */
+>   static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
+> @@ -520,17 +504,14 @@ static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
+>   {
+>   	unsigned long curr_enabled;
+>   	u32 addr;
+> -	int i, j, k;
+> -	int tcs_id = tcs->offset;
+> +	int j, k;
+> +	int i = tcs->offset;
+>   
+> -	for (i = 0; i < tcs->num_tcs; i++, tcs_id++) {
+> -		if (tcs_is_free(drv, tcs_id))
+> -			continue;
+> -
+> -		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
+> +	for_each_set_bit_from(i, drv->tcs_in_use, tcs->offset + tcs->num_tcs) {
+> +		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i);
+>   
+>   		for_each_set_bit(j, &curr_enabled, MAX_CMDS_PER_TCS) {
+> -			addr = read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
+> +			addr = read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, i, j);
+>   			for (k = 0; k < msg->num_cmds; k++) {
+>   				if (addr == msg->cmds[k].addr)
+>   					return -EBUSY;
+> @@ -548,18 +529,19 @@ static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
+>    *
+>    * Must be called with the drv->lock held since that protects tcs_in_use.
+>    *
+> - * Return: The first tcs that's free.
+> + * Return: The first tcs that's free or -EBUSY if all in use.
+>    */
+>   static int find_free_tcs(struct tcs_group *tcs)
+>   {
+> -	int i;
+> +	const struct rsc_drv *drv = tcs->drv;
+> +	unsigned long i;
+> +	unsigned long max = tcs->offset + tcs->num_tcs;
+>   
+> -	for (i = 0; i < tcs->num_tcs; i++) {
+> -		if (tcs_is_free(tcs->drv, tcs->offset + i))
+> -			return tcs->offset + i;
+> -	}
+> +	i = find_next_zero_bit(drv->tcs_in_use, max, tcs->offset);
+> +	if (i >= max)
+> +		return -EBUSY;
+>   
+> -	return -EBUSY;
+> +	return i;
+>   }
+>   
+>   /**
+> @@ -757,8 +739,9 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+>    */
+>   static bool rpmh_rsc_ctrlr_is_busy(struct rsc_drv *drv)
+>   {
+> -	int m;
+> -	struct tcs_group *tcs = &drv->tcs[ACTIVE_TCS];
+> +	unsigned long set;
+> +	const struct tcs_group *tcs = &drv->tcs[ACTIVE_TCS];
+> +	unsigned long max;
+>   
+>   	/*
+>   	 * If we made an active request on a RSC that does not have a
+> @@ -769,12 +752,10 @@ static bool rpmh_rsc_ctrlr_is_busy(struct rsc_drv *drv)
+>   	if (!tcs->num_tcs)
+>   		tcs = &drv->tcs[WAKE_TCS];
+>   
+> -	for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
+> -		if (!tcs_is_free(drv, m))
+> -			return true;
+> -	}
+> +	max = tcs->offset + tcs->num_tcs;
+> +	set = find_next_bit(drv->tcs_in_use, max, tcs->offset);
+>   
+> -	return false;
+> +	return set < max;
+>   }
+>   
+>   /**
+
 -- 
-2.14.3 (Apple Git-98)
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
