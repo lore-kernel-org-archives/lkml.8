@@ -2,114 +2,86 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F98C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213D7C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372F9207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25462070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oItybm9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbgEZJqC (ORCPT
+        id S1731825AbgEZJrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
+        Tue, 26 May 2020 05:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgEZJqC (ORCPT
+        with ESMTP id S1728686AbgEZJrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:46:02 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08288C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:46:02 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jdW9I-0000j2-Ha; Tue, 26 May 2020 11:45:28 +0200
-Date:   Tue, 26 May 2020 11:45:26 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 07/25] lockdep: Add preemption disabled assertion API
-Message-ID: <20200526094526.GA428152@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-8-a.darwish@linutronix.de>
- <20200522175503.GQ325280@hirez.programming.kicks-ass.net>
- <20200523145942.vjk3z6pbj6yicqa4@linutronix.de>
- <20200523224132.GD2483@worktop.programming.kicks-ass.net>
- <20200525102241.GF325303@hirez.programming.kicks-ass.net>
- <20200526005231.GA377571@debian-buster-darwi.lab.linutronix.de>
- <20200526081350.GI317569@hirez.programming.kicks-ass.net>
+        Tue, 26 May 2020 05:47:00 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3479C08C5C1;
+        Tue, 26 May 2020 02:46:59 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id k8so1040841edq.4;
+        Tue, 26 May 2020 02:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KA+bHp9rxExZP+OmYeJADOO2BQciqNprrH+ZtH7Ib5w=;
+        b=oItybm9+cVLjWxgJ+rDptOHtBHE6kr6yNWQsIox7nSinLI3JpxSaoqxAx920NjXfUi
+         Q2fSayYCnjKvr80kS/31ypg0JBNbsSO9kjdfk1K9BCA6PdaoF0vMDYRja0ZrUjGt9+G8
+         j7zT8z6juG9No67gRinhMFcUUzuVOLp4hEH4qkGVBKFM3YyrY3p0ghCzcaYsygfzGfs8
+         R62UadC3lGwAK123fEkCYcKbJGGCx7qavkYhKLq28co7nIYKlDTMl/53xkTv1k8xwR9o
+         PydReAVu6HK6OC6F2RAv7FIhUbPlDEomtieLPwvJRrmIwr5wtvxZ+apafRc2dDpEOX+X
+         +LCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KA+bHp9rxExZP+OmYeJADOO2BQciqNprrH+ZtH7Ib5w=;
+        b=K4gQ7Fknk7UdQbpP8yr3tzM2fooP4hlG1cy96a9uleLg2hVldYRq/Il6+VjRZtEhtj
+         7LBSzxtr0hvL/+mh0V9uwK4V56k/otkav9ea98MfPBoQanA9fACO76s+VNInJPC0evm+
+         At/JgIHU/LgJ31xJYz3KY/8WkuBUpvUn6kAFYR2zBsqfR3cYOs2+tvZpldFqm2xBf3kV
+         oVLwr1QfHV9DvjNQoeqqhtFJzWt4h4wpZtqUsbKO/wJatBdE+NIRFuFLk+MLQZ6eqe1w
+         ZGaf9WNOB1Ps6BxWdespoyQR/aUTMufh97tjTZmBbyOHUD5QCH8kqM/WC61ia8/Iyhtp
+         gSJQ==
+X-Gm-Message-State: AOAM5310+hX5e2qi8I73XADKXEkcUPzNS+sL9uPtD3EcXOFg/rmQHJg4
+        qEVIPLhJP+sDML6VeTA7vb4u5bDU3Bot75y8Sdw=
+X-Google-Smtp-Source: ABdhPJz0ztayBlOshX2YgK2JYPAQqnJVAvCGzcRKxvIz1xNVZXJJ5SZZwaSyxwob8ClcShJxauvUdAHXGkGkvwLOURI=
+X-Received: by 2002:aa7:cd4e:: with SMTP id v14mr2135151edw.297.1590486417763;
+ Tue, 26 May 2020 02:46:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526081350.GI317569@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200517131348.688405-1-bryan.odonoghue@linaro.org>
+ <20200517131348.688405-3-bryan.odonoghue@linaro.org> <af35d732-08bf-fe95-3c98-063b32fe992a@nexus-software.ie>
+In-Reply-To: <af35d732-08bf-fe95-3c98-063b32fe992a@nexus-software.ie>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 26 May 2020 11:46:21 +0200
+Message-ID: <CAMS8qEWUBDy684UU1eLYcB5QFZtRcJEweG_9VO+9LxSKCF29iQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller
+To:     "Bryan O'Donoghue" <pure.logic@nexus-software.ie>
+Cc:     "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>, p.zabel@pengutronix.de,
+        Vincent Knecht <vincent.knecht@mailoo.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:13:50AM +0200, Peter Zijlstra wrote:
-> On Tue, May 26, 2020 at 02:52:31AM +0200, Ahmed S. Darwish wrote:
-> > Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > +#define lockdep_assert_irqs_enabled()					\
-> > > +do {									\
-> > > +	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
-> > > +} while (0)
-> > >
-> >
-> > Given that lockdep_off() is defined at lockdep.c as:
-> >
-> >   void lockdep_off(void)
-> >   {
-> >         current->lockdep_recursion += LOCKDEP_OFF;
-> >   }
-> >
-> > This would imply that all of the macros:
-> >
-> >   - lockdep_assert_irqs_enabled()
-> >   - lockdep_assert_irqs_disabled()
-> >   - lockdep_assert_in_irq()
-> >   - lockdep_assert_preemption_disabled()
-> >   - lockdep_assert_preemption_enabled()
-> >
-> > will do the lockdep checks *even if* lockdep_off() was called.
-> >
-> > This doesn't sound right. Even if all of the above macros call sites
-> > didn't care about lockdep_off()/on(), it is semantically incoherent.
->
-> lockdep_off() is an abomination and really should not exist.
->
-> That dm-cache-target.c thing, for example, is atrocious shite that will
-> explode on -rt. Whoever wrote that needs a 'medal'.
->
-> People using it deserve all the pain they get.
->
-> Also; IRQ state _should_ be tracked irrespective of tracking lock
-> dependencies -- I see that that currently isn't entirely the case, lemme
-> go fix that.
->
+Just adding my few cents, working fine on Asus Zenfone 2 Z00T, MSM8939.
 
-Exactly, currently all the lockdep IRQ checks gets nullified if
-lockdep_off() is called. That was the source of my confusion.
-
-If you'll have any extra patches on this, I can also queue them in the
-next iteration of this series, before this patch.
-
-Thanks a lot,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+Tested-by: Konrad Dybcio <konradybcio@gmail.com>
