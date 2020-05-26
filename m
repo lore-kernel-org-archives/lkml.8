@@ -2,120 +2,172 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C024C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999D720787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBB620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pzWZOeYx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="b1Kd3yy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbgEZIR7 (ORCPT
+        id S1729978AbgEZITQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:17:59 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:6767 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIR5 (ORCPT
+        Tue, 26 May 2020 04:19:16 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7535 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZITP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:17:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590481076; x=1622017076;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=YuHwdN8HqSyt2rwlrNv4QewZD9qbjngQahz+l0HDz1U=;
-  b=pzWZOeYx0tFeZO+kfYlaWI6UJNrhBfUb34vzIDXxWt1QwTuh5MWKrZSv
-   cuNL8v68TtO/TpyTEASMYQzqvOjtPFcNVId+z3c8vUz1RMzA5GrLtyfvX
-   kxONLvfgdlmHTOHHYwC7hzY13eos5cC4EPco4iHs/11fVVvkrNSuXDoa7
-   4=;
-IronPort-SDR: YEJC/bEhVyt+dqxhDujvHJzh0YafG1QvIz3nMyXnoKJvII3+YlbO87+LK9KEyaPG5MC3ywvXay
- 69bTv0HtyLSg==
-X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
-   d="scan'208";a="37619369"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 26 May 2020 08:17:54 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 283CBA18BE;
-        Tue, 26 May 2020 08:17:53 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 08:17:52 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 08:17:43 +0000
-Subject: Re: [PATCH v2 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Greg KH <gregkh@linuxfoundation.org>
+        Tue, 26 May 2020 04:19:15 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eccd0f70000>; Tue, 26 May 2020 01:19:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 26 May 2020 01:19:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 01:19:15 -0700
+Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
+ 2020 08:19:15 +0000
+Subject: Re: [PATCH] mm/gup: correct pin_user_pages.rst location
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, <linux-mm@kvack.org>
 CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
- <20200522062946.28973-8-andraprs@amazon.com>
- <20200522070708.GC771317@kroah.com>
- <fa3a72ef-ba0a-ada9-48bf-bd7cef0a8174@amazon.com>
- <20200526064243.GB2580410@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <e4d48349-ff54-77e3-8a87-8f320d702d7f@amazon.com>
-Date:   Tue, 26 May 2020 11:17:38 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>
+References: <20200526081338.179532-1-vkuznets@redhat.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <16496017-14a9-146a-c257-35f9d3c2d3cb@nvidia.com>
+Date:   Tue, 26 May 2020 01:19:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200526064243.GB2580410@kroah.com>
+In-Reply-To: <20200526081338.179532-1-vkuznets@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D37UWC001.ant.amazon.com (10.43.162.33) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590481143; bh=3sW4iiM0PCSt6YtpVfVEsIZMROlKg64amfSxZGfb1nc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=b1Kd3yy/vj+SjyNr/0DSJfxC4gckhSQ34lOoQ6Jhk0Kqx2T+w0xWk+EI5w91r2N0+
+         HQbzookzuMoLt8x+qdrZCPMIsQllOPfCpXrAU+RZmrxI2EJmKgytnh/egZF6zyoLNo
+         vF2bPMNkbUcKa6yjF/NyjTjJf7W/Ucx/GD05R0YSh8qkyNX/vRhe9jnf2VjkWQokoC
+         0kIdHJKnsdpGhp9/3SIhH3/Ezv6yb4WONFedE2wmVXUarwQP1dbw39VpnMGkI3OBiF
+         Zl6QkMnTskc6iUcrIiG6hhy1nJR56tkON1BG+LOh7eWr8CHTGop+g0UxEhdZDDgUwm
+         RD99ZnCqQOypA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNi8wNS8yMDIwIDA5OjQyLCBHcmVnIEtIIHdyb3RlOgo+IE9uIE1vbiwgTWF5IDI1LCAy
-MDIwIGF0IDExOjQ5OjUwUE0gKzAzMDAsIFBhcmFzY2hpdiwgQW5kcmEtSXJpbmEgd3JvdGU6Cj4+
-Cj4+IE9uIDIyLzA1LzIwMjAgMTA6MDcsIEdyZWcgS0ggd3JvdGU6Cj4+PiBPbiBGcmksIE1heSAy
-MiwgMjAyMCBhdCAwOToyOTozNUFNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+Pj4g
-K3N0YXRpYyBjaGFyICpuZV9jcHVzOwo+Pj4+ICttb2R1bGVfcGFyYW0obmVfY3B1cywgY2hhcnAs
-IDA2NDQpOwo+Pj4+ICtNT0RVTEVfUEFSTV9ERVNDKG5lX2NwdXMsICI8Y3B1LWxpc3Q+IC0gQ1BV
-IHBvb2wgdXNlZCBmb3IgTml0cm8gRW5jbGF2ZXMiKTsKPj4+IFRoaXMgaXMgbm90IHRoZSAxOTkw
-J3MsIGRvbid0IHVzZSBtb2R1bGUgcGFyYW1ldGVycyBpZiB5b3UgY2FuIGhlbHAgaXQuCj4+PiBX
-aHkgaXMgdGhpcyBuZWVkZWQsIGFuZCB3aGVyZSBpcyBpdCBkb2N1bWVudGVkPwo+PiBUaGlzIGlz
-IGEgQ1BVIHBvb2wgdGhhdCBjYW4gYmUgc2V0IGJ5IHRoZSByb290IHVzZXIgYW5kIHRoYXQgaW5j
-bHVkZXMgQ1BVcwo+PiBzZXQgYXNpZGUgdG8gYmUgdXNlZCBmb3IgdGhlIGVuY2xhdmUocykgc2V0
-dXA7IHRoZXNlIENQVXMgYXJlIG9mZmxpbmVkLiBGcm9tCj4+IHRoaXMgQ1BVIHBvb2wsIHRoZSBr
-ZXJuZWwgbG9naWMgY2hvb3NlcyB0aGUgQ1BVcyB0aGF0IGFyZSBzZXQgZm9yIHRoZQo+PiBjcmVh
-dGVkIGVuY2xhdmUocykuCj4+Cj4+IFRoZSBjcHUtbGlzdCBmb3JtYXQgaXMgbWF0Y2hpbmcgdGhl
-IHNhbWUgdGhhdCBpcyBkb2N1bWVudGVkIGhlcmU6Cj4+Cj4+IGh0dHBzOi8vd3d3Lmtlcm5lbC5v
-cmcvZG9jL2h0bWwvbGF0ZXN0L2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLmh0bWwKPj4K
-Pj4gSSd2ZSBhbHNvIHRob3VnaHQgb2YgaGF2aW5nIGEgc3lzZnMgZW50cnkgZm9yIHRoZSBzZXR1
-cCBvZiB0aGlzIGVuY2xhdmUgQ1BVCj4+IHBvb2wuCj4gT2ssIGJ1dCBhZ2FpbiwgZG8gbm90IHVz
-ZSBhIG1vZHVsZSBwYXJhbWV0ZXIsIHRoZXkgYXJlIGhhcmQgdG8gdXNlLAo+IHRvdWdoIHRvIGRv
-Y3VtZW50LCBhbmQgZ2xvYmFsLiAgQWxsIHRoaW5ncyB3ZSBtb3ZlZCBhd2F5IGZyb20gYSBsb25n
-Cj4gdGltZSBhZ28uICBQbGVhc2UgdXNlIHNvbWV0aGluZyBlbHNlIGZvciB0aGlzIChzeXNmcywg
-Y29uZmlnZnMsIGV0Yy4pCj4gaW5zdGVhZC4KCkFscmlnaHQsIGdvdCBpdCwgd2lsbCBtb3ZlIG9u
-IHRoZW4gd2l0aCB0aGUgb3RoZXIgb3B0aW9uIGZvciB2NC4KClRoYW5rIHlvdS4KCkFuZHJhCgoK
-CgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBv
-ZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENv
-dW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlv
-biBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
+On 2020-05-26 01:13, Vitaly Kuznetsov wrote:
+> pin_user_pages.rst lives in Documentation/core-api/, not Documentation/vm/,
+> adjust all links accordingly.
+> 
+> Fixes: 3faa52c03f44 ("mm/gup: track FOLL_PIN pages")
+> Fixes: eddb1c228f79 ("mm/gup: introduce pin_user_pages*() and FOLL_PIN")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   include/linux/mm.h |  4 ++--
+>   mm/gup.c           | 18 +++++++++---------
+>   2 files changed, 11 insertions(+), 11 deletions(-)
+
+Hi Vitaly,
+
+Thanks for the fix,
+
+     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+(+CC Souptick, who fixed a similar set of links, maybe in a different
+file, as I recall.)
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 5a323422d783..1f2850465f59 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1219,7 +1219,7 @@ void unpin_user_pages(struct page **pages, unsigned long npages);
+>    * used to track the pincount (instead using of the GUP_PIN_COUNTING_BIAS
+>    * scheme).
+>    *
+> - * For more information, please see Documentation/vm/pin_user_pages.rst.
+> + * For more information, please see Documentation/core-api/pin_user_pages.rst.
+>    *
+>    * @page:	pointer to page to be queried.
+>    * @Return:	True, if it is likely that the page has been "dma-pinned".
+> @@ -2834,7 +2834,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+>    * releasing pages: get_user_pages*() pages must be released via put_page(),
+>    * while pin_user_pages*() pages must be released via unpin_user_page().
+>    *
+> - * Please see Documentation/vm/pin_user_pages.rst for more information.
+> + * Please see Documentation/core-api/pin_user_pages.rst for more information.
+>    */
+>   
+>   static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 87a6a59fe667..87a3a4b400f9 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2845,10 +2845,10 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
+>    * the arguments here are identical.
+>    *
+>    * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+> - * see Documentation/vm/pin_user_pages.rst for further details.
+> + * see Documentation/core-api/pin_user_pages.rst for further details.
+>    *
+> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+> - * is NOT intended for Case 2 (RDMA: long-term pins).
+> + * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
+> + * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
+>    */
+>   int pin_user_pages_fast(unsigned long start, int nr_pages,
+>   			unsigned int gup_flags, struct page **pages)
+> @@ -2885,10 +2885,10 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast);
+>    * the arguments here are identical.
+>    *
+>    * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+> - * see Documentation/vm/pin_user_pages.rst for details.
+> + * see Documentation/core-api/pin_user_pages.rst for details.
+>    *
+> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+> - * is NOT intended for Case 2 (RDMA: long-term pins).
+> + * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
+> + * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
+>    */
+>   long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+>   			   unsigned long start, unsigned long nr_pages,
+> @@ -2921,10 +2921,10 @@ EXPORT_SYMBOL(pin_user_pages_remote);
+>    * FOLL_PIN is set.
+>    *
+>    * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+> - * see Documentation/vm/pin_user_pages.rst for details.
+> + * see Documentation/core-api/pin_user_pages.rst for details.
+>    *
+> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+> - * is NOT intended for Case 2 (RDMA: long-term pins).
+> + * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
+> + * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
+>    */
+>   long pin_user_pages(unsigned long start, unsigned long nr_pages,
+>   		    unsigned int gup_flags, struct page **pages,
+> 
 
