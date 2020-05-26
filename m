@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A42BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCF9208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08BFF20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520336;
-	bh=0s4kw//tMF6/0U/1tQBmB3KpJtoo0PmRghH2t4jItlg=;
+	s=default; t=1590520338;
+	bh=kRGGgjOgo1DcPwnCKmyH1WLigFc+jT/yp6endMImLxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufBieLgfXfZZSlMXrC0yPPJ5YP5ceUcLEtCnmJKRI5gGt6xMr19bEOto1/J4fDc8c
-	 8YMyWrx/q/sG3nwY8GP7pljYdfdXfT/OwpOM0elvwAgLLQvTjuWYk3KVEqqwFqeBAp
-	 wPZwrKyFd0Kbd1LRC08Bvrx5/AojnjaH4CWKUn0g=
+	b=TuW6NRGX0BlVl/39VlDn+RtFC0w5/inLcgR7pO1e1Xb4WxSabOohPjQijyp9cWjhW
+	 xR49SNoy+UIBobG5oGkq2RAV7InGjC7q6LgkBHIwBRG8S9s2bdb5gMyVLKKv3U8LFB
+	 HzA8XBnOuCMrjG1lkG7cegxWLKc73b7mOS3qfS60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403986AbgEZTMP (ORCPT
+        id S2404142AbgEZTMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403888AbgEZTMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:09 -0400
+        id S2391420AbgEZTMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9069320776;
-        Tue, 26 May 2020 19:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7324620776;
+        Tue, 26 May 2020 19:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520329;
-        bh=0s4kw//tMF6/0U/1tQBmB3KpJtoo0PmRghH2t4jItlg=;
+        s=default; t=1590520333;
+        bh=kRGGgjOgo1DcPwnCKmyH1WLigFc+jT/yp6endMImLxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vy1KLqWUgYUh1bUs+U6XHfYAFoPmQGR6LgPyWi/djNQYsgukWwFp9nIgL9R+gIWxP
-         pzkyocK9eohc49qQ5YWO/ZqSFUEC4ANETn4QFYrI38SfdoNK1uHM1z3o239CA7VYGC
-         8IBcJ/vkdSFgyD/tlym4D7iVgNSgq77oIdxH26Uw=
+        b=EibK8wy8J9KPbOZmHNknu1VHnyMAhaXo43pZDLwB12s8S4AWjJbpPDTyLBgrJFlJ+
+         KvyUAKBU/hiu8xHgARiRAZC75c11EYKGCdOT9KJbV+84oOtMy5Dp0CMmtih1/9JNLn
+         sVHqOBGELWwNnmaUNlk87sNGgq3ty+w31u/cX9uE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 037/126] HID: i2c-hid: reset Synaptics SYNA2393 on resume
-Date:   Tue, 26 May 2020 20:52:54 +0200
-Message-Id: <20200526183941.025193206@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 039/126] ftrace/selftest: make unresolved cases cause failure if --fail-unresolved set
+Date:   Tue, 26 May 2020 20:52:56 +0200
+Message-Id: <20200526183941.220520904@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,53 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit 538f67407e2c0e5ed2a46e7d7ffa52f2e30c7ef8 ]
+[ Upstream commit b730d668138cb3dd9ce78f8003986d1adae5523a ]
 
-On the Dell XPS 9570, the Synaptics SYNA2393 touchpad generates spurious
-interrupts after resuming from suspend until it receives some input or
-is reset. Add it to the quirk I2C_HID_QUIRK_RESET_ON_RESUME so that it
-is reset when resuming from suspend.
+Currently, ftracetest will return 1 (failure) if any unresolved cases
+are encountered.  The unresolved status results from modules and
+programs not being available, and as such does not indicate any
+issues with ftrace itself.  As such, change the behaviour of
+ftracetest in line with unsupported cases; if unsupported cases
+happen, ftracetest still returns 0 unless --fail-unsupported.  Here
+--fail-unresolved is added and the default is to return 0 if
+unresolved results occur.
 
-More information about the bug can be found in this mailing list
-discussion: https://www.spinics.net/lists/linux-input/msg59530.html
-
-Signed-off-by: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h              | 3 +++
- drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
- 2 files changed, 5 insertions(+)
+ tools/testing/selftests/ftrace/ftracetest | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index b3cc26ca375f..55afc089cb25 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1094,6 +1094,9 @@
- #define USB_DEVICE_ID_SYMBOL_SCANNER_2	0x1300
- #define USB_DEVICE_ID_SYMBOL_SCANNER_3	0x1200
- 
-+#define I2C_VENDOR_ID_SYNAPTICS     0x06cb
-+#define I2C_PRODUCT_ID_SYNAPTICS_SYNA2393   0x7a13
-+
- #define USB_VENDOR_ID_SYNAPTICS		0x06cb
- #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001
- #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 009000c5d55c..294c84e136d7 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -177,6 +177,8 @@ static const struct i2c_hid_quirks {
- 		 I2C_HID_QUIRK_BOGUS_IRQ },
- 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
- 		 I2C_HID_QUIRK_RESET_ON_RESUME },
-+	{ I2C_VENDOR_ID_SYNAPTICS, I2C_PRODUCT_ID_SYNAPTICS_SYNA2393,
-+		 I2C_HID_QUIRK_RESET_ON_RESUME },
- 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
- 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
- 	{ 0, 0 }
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 144308a757b7..19e9236dec5e 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
+ echo "		-vv        Alias of -v -v (Show all results in stdout)"
+ echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+ echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
++echo "		--fail-unresolved Treat UNRESOLVED as a failure"
+ echo "		-d|--debug Debug mode (trace all shell commands)"
+ echo "		-l|--logdir <dir> Save logs on the <dir>"
+ echo "		            If <dir> is -, all logs output in console only"
+@@ -112,6 +113,10 @@ parse_opts() { # opts
+       UNSUPPORTED_RESULT=1
+       shift 1
+     ;;
++    --fail-unresolved)
++      UNRESOLVED_RESULT=1
++      shift 1
++    ;;
+     --logdir|-l)
+       LOG_DIR=$2
+       shift 2
+@@ -176,6 +181,7 @@ KEEP_LOG=0
+ DEBUG=0
+ VERBOSE=0
+ UNSUPPORTED_RESULT=0
++UNRESOLVED_RESULT=0
+ STOP_FAILURE=0
+ # Parse command-line options
+ parse_opts $*
+@@ -280,7 +286,7 @@ eval_result() { # sigval
+     $UNRESOLVED)
+       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
+       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+-      return 1 # this is a kind of bug.. something happened.
++      return $UNRESOLVED_RESULT # depends on use case
+     ;;
+     $UNTESTED)
+       prlog "	[${color_blue}UNTESTED${color_reset}]"
 -- 
 2.25.1
 
