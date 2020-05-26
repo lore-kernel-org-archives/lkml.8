@@ -2,131 +2,251 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F218AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82684C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1357207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590512648;
-	bh=AuFDlGZ/rFo60Evf91roy2vYjYwcToc0s7UD6ERFQKs=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=of11WMIoG2h3pxieIWJ6wMHeL9rZqOuUDL0i9d4O2+U7Ukog3/WFFiZLGfNNLAPLx
-	 7T4up79nGwx4D0vQkcQc0Idi0I0Lp0e27Xhg6fLpik5J6bKS43+fhYrK1A5Jagvp1m
-	 JSHUZKVmQz3NQ4X3pENWZUa00TmzjAN390dZfLe4=
+	by mail.kernel.org (Postfix) with ESMTP id 5830F206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:06:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UdZGabkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388295AbgEZREH (ORCPT
+        id S1728731AbgEZRGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
+        Tue, 26 May 2020 13:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbgEZREE (ORCPT
+        with ESMTP id S1726930AbgEZRGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:04:04 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DB9C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:04:03 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id h7so16912352otr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:04:03 -0700 (PDT)
+        Tue, 26 May 2020 13:06:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB955C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:06:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d3so8933550pln.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:06:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=idqAGq8yEwBR+jLINoFt7Pcxj9d16RoO05tTkFIy7FU=;
-        b=GqPRtdYD4DGriNYt3Mu6pzmG4m69ZL5CVNo+NeMzIyWs8tzYNWssDmrg/ZfvbrCSHl
-         9oy+eFrp1nZVqRx97rWIQa4J/FBUM31MClVlprO+qNitxzUdogorF+vkmuDwAvpP8TnJ
-         nfFlcU6Rwdpphcy+NfTRgAJiG3qgdRXmsfn+c=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yb9QT1BIGxbozBy7yF1mKLzqcCaPwhboIB/ytOSzJpQ=;
+        b=UdZGabkJVa0wzWxrWfharb1kxzKGM4Y463N+PFR8wMMgcgEjj6hTFDfGbnZRum1uh1
+         tmAKWcBu+ylRfRSkQ+4Xx717XgyVabh4nDigz2ez38ANaT0cLrO2nqyr0H+ZUlYxHdlY
+         X8kTbaA+yRWLtdRPdVS3ogoEGYlyImGKxHc5oiCyRuWQe2QwSLQ6Op7tpFQJapMIJqss
+         nuDmpF7KnKG8sw8qAJTw04wb3H3Wg8wbpwBhtS5BhahWQdRSNG3nXd3k1L4uCyFinrS1
+         ay4UfHI4OU4HFnlGruXsqbDPbtp6Gr0WH9lL8TpJur7i1hbTqFoPaR2daJ6zn6ZxydOi
+         f91A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=idqAGq8yEwBR+jLINoFt7Pcxj9d16RoO05tTkFIy7FU=;
-        b=Bh4N2H79Wj/+G/8pvsLPzSayF0JzifOLkqzf79gb6PQ625ETIocRClPpMOZy/1H2fW
-         JjNDjY3WRZ8QMkDdU45kdWCVQNDJJSWaLRCkA1YUtlNSuiG6/YNgySSyIqviuDIz4anT
-         6k+HWj9IRcMyIfNQHKDpIyP6YtLLN7L74wxW/0Xqdlk++5K4oRgIxB2lpXQc1CtOyF1V
-         MP/2kJVOdJitZDOqC2UdQwKl/HiA3tFWEPzSNEmr86HZVtjeOQ7rK93hcCQkS06Kl0Pm
-         xj0hM2AnLCj/scOexcPE4CEYsSAXrD7dWssEmQUsKejrHD5jbb83Y9G+Ii8yiESdNO6j
-         vIAw==
-X-Gm-Message-State: AOAM531htBAlPMsO25CgMdgogxWB36HhuaGG9BxKtcbrjKG5qMQVWKqM
-        V6S0+kB86NMub3oqfDHVat2yEtib1x4=
-X-Google-Smtp-Source: ABdhPJzzrk9mKNTRt6RMN9+LJdY6+6Z5gBxWLmvGvngAcgjcT0nDemnBCIl0wVvAzwRRzbX5Ug5p1g==
-X-Received: by 2002:a9d:2f07:: with SMTP id h7mr1520572otb.32.1590512642774;
-        Tue, 26 May 2020 10:04:02 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id g6sm86463otj.6.2020.05.26.10.04.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 10:04:02 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: Update my maintainer entries to reorder
- email addresses
-To:     Joe Perches <joe@perches.com>, mchehab+huawei@kernel.org,
-        davem@davemloft.net, robh@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200523021928.67126-1-skhan@linuxfoundation.org>
- <7366c990d4352e093ff7d17953079d7f0420c3a9.camel@perches.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <661f53a3-b15c-76b0-f220-0d292b0843d5@linuxfoundation.org>
-Date:   Tue, 26 May 2020 11:04:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yb9QT1BIGxbozBy7yF1mKLzqcCaPwhboIB/ytOSzJpQ=;
+        b=d8zGnWKMuFZNBDWsOhQPNWSJszjUfI4rZIr1r4gaJlR2zEy5zabitauUwYzD6lEg7z
+         8XedcMUGIhJ2TAYZ3xPhLNHW6ej8dAoMIgmT9IC0NRGokAx5+9awXEVU7qpgUGefsnrC
+         g0TL2PXwnz652lA8kw3b+MZpJ+Db++9aKvXDiN2F9iuNsVLioOwbXB/fK3Le2aXsw7sb
+         XH8eIJGYYoo3YH9QFfaZ/kjD4cDAO+q1clb/HaENaKC2gVS2eRVgoViTr1SKSuzheeuB
+         FKEWaHmHTTCEzPztWpbI7d9o9qEmCoR1iaGxi/V0eexSZowctEQTU1YnS5zgrhyHit56
+         oh0Q==
+X-Gm-Message-State: AOAM532RALRj4ANdZgjcScJdTRAd9MlmbM9d7GTS5M5P4/S3nsqEZAB2
+        8LOcaiOVp1NAeYUcsyo4DYYsAz11AOxgk03W442LKg==
+X-Google-Smtp-Source: ABdhPJzy7oPT9Vxg1G984MIMfYj6SSHBB82uHALxBcM7F41GuoDw5r4z/56EdMdBL4gN2tY4GLHbs33jdrPBZ7Xd+Qo=
+X-Received: by 2002:a17:902:341:: with SMTP id 59mr1859397pld.119.1590512792072;
+ Tue, 26 May 2020 10:06:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7366c990d4352e093ff7d17953079d7f0420c3a9.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAK7LNASkcLx-K+W1va9WxfxZ=7H-w65QbyBt=88dzK1NrrM_PQ@mail.gmail.com>
+ <20200526170321.137238-1-ndesaulniers@google.com>
+In-Reply-To: <20200526170321.137238-1-ndesaulniers@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 26 May 2020 10:06:20 -0700
+Message-ID: <CAKwvOdng2mUJv=tdjwu8XUTckM0EZaSBpcZ_eTL-T0sTTzd_+A@mail.gmail.com>
+Subject: Re: [PATCH v4] Makefile: support compressed debug info
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blaikie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 8:26 PM, Joe Perches wrote:
-> On Fri, 2020-05-22 at 20:19 -0600, Shuah Khan wrote:
->> get_maintainer.pl picks only the first email address found in the file.
->> Reorder my email addresses so it finds my linuxfoundation.org email.
-> 
-> OK.
-> 
-> btw:  --noremove-duplicates is also an option.  For instance:
-> 
-> $ ./scripts/get_maintainer.pl -f Documentation/usb/usbip_protocol.rst
-> Valentina Manea <valentina.manea.m@gmail.com> (maintainer:USB OVER IP DRIVER)
-> Shuah Khan <shuah@kernel.org> (maintainer:USB OVER IP DRIVER)
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:USB SUBSYSTEM)
-> Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
-> linux-usb@vger.kernel.org (open list:USB OVER IP DRIVER)
-> linux-doc@vger.kernel.org (open list:DOCUMENTATION)
-> linux-kernel@vger.kernel.org (open list)
-> 
-> vs:
-> 
-> $ ./scripts/get_maintainer.pl --noremove-duplicates -f Documentation/usb/usbip_protocol.rst
-> Valentina Manea <valentina.manea.m@gmail.com> (maintainer:USB OVER IP DRIVER)
-> Shuah Khan <shuah@kernel.org> (maintainer:USB OVER IP DRIVER)
-> Shuah Khan <skhan@linuxfoundation.org> (maintainer:USB OVER IP DRIVER)
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:USB SUBSYSTEM)
-> Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
-> linux-usb@vger.kernel.org (open list:USB OVER IP DRIVER)
-> linux-doc@vger.kernel.org (open list:DOCUMENTATION)
-> linux-kernel@vger.kernel.org (open list)
-> 
+On Tue, May 26, 2020 at 10:03 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> As debug information gets larger and larger, it helps significantly save
+> the size of vmlinux images to compress the information in the debug
+> information sections. Note: this debug info is typically split off from
+> the final compressed kernel image, which is why vmlinux is what's used
+> in conjunction with GDB. Minimizing the debug info size should have no
+> impact on boot times, or final compressed kernel image size.
+>
+> All of the debug sections will have a `C` flag set.
+> $ readelf -S <object file>
+>
+> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+>     vmlinux.gcc75.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +18  [ = ]       0    [Unmapped]
+>  -73.3%  -114Ki  [ = ]       0    .debug_aranges
+>  -76.2% -2.01Mi  [ = ]       0    .debug_frame
+>  -73.6% -2.89Mi  [ = ]       0    .debug_str
+>  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+>  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+>  -70.5% -9.04Mi  [ = ]       0    .debug_line
+>  -79.3% -10.9Mi  [ = ]       0    .debug_loc
+>  -39.5% -88.6Mi  [ = ]       0    .debug_info
+>  -18.2%  -123Mi  [ = ]       0    TOTAL
+>
+> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+>     vmlinux.clang11.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +23  [ = ]       0    [Unmapped]
+>  -65.6%    -871  [ = ]       0    .debug_aranges
+>  -77.4% -1.84Mi  [ = ]       0    .debug_frame
+>  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+>  -73.1% -2.43Mi  [ = ]       0    .debug_str
+>  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+>  -65.9% -8.62Mi  [ = ]       0    .debug_line
+>  -86.2% -40.0Mi  [ = ]       0    .debug_loc
+>  -42.0% -64.1Mi  [ = ]       0    .debug_info
+>  -22.1%  -122Mi  [ = ]       0    TOTAL
+>
+> For x86_64 defconfig + LLVM=1 (before):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
+> Maximum resident set size (kbytes): 43856
+>
+> For x86_64 defconfig + LLVM=1 (after):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
+> Maximum resident set size (kbytes): 1566776
+>
+> Thanks to:
+> Nick Clifton helped us to provide the minimal binutils version.
+> Sedat Dilet found an increase in size of debug .deb package.
+>
+> Cc: Nick Clifton <nickc@redhat.com>
+> Cc: Sedat Dilek <sedat.dilek@gmail.com>
+> Suggested-by: David Blaikie <blaikie@google.com>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Changes V3 -> V4:
+> * Add thanks line to commit message as per Masahiro.
+> * Swap Sugguested-by to Cc for two lines in commit message, as per
+>   Masahiro.
+>
+> Changes V2 -> V3:
+> * Fix blaikie@'s email addr.
+> * Fix Fangrui's Reviewed-by tag as per Masahiro.
+> * Fix help text as per Masahiro.
+> * Fix -Wa$(comma)foo as per Masahiro.
+>
+> Changes V1 -> V2:
+> * rebase on linux-next.
+> * Add assembler flags as per Fangrui.
+> * Add note about KDEB_COMPRESS+scripts/package/builddeb
+>   as per Sedat and Masahiro.
+> * Add note about bintutils version requirements as per Nick C.
+> * Add note about measured increased build time and max RSS.
+>
+>  Makefile                          |  6 ++++++
+>  arch/arm64/kernel/vdso32/Makefile |  2 +-
 
-Sadly, people that don't run get_maintainer.pl, leave alone running it
-with --noremove-duplicates option. So your suggestion doesn't really
-help me.
+Sorry, I was wondering why Will and TGLX got cc'ed. My tree was dirty
+when I amended ... was carrying another patch to send, please
+disregard v4, and sorry for the noise.
 
-My preference is to get patches to both Inboxes if possible which isn't
-possible unless -noremove-duplicate is default. Having this option as
-default probably will annoy lot of people . So I am not asking for
-that.
+>  lib/Kconfig.debug                 | 17 +++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 71687bfe1cd9..be8835296754 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -822,6 +822,12 @@ DEBUG_CFLAGS       += $(call cc-option, -femit-struct-debug-baseonly) \
+>                    $(call cc-option,-fno-var-tracking)
+>  endif
+>
+> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
+> +DEBUG_CFLAGS   += -gz=zlib
+> +KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
+> +KBUILD_LDFLAGS += --compress-debug-sections=zlib
+> +endif
+> +
+>  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+>  export DEBUG_CFLAGS
+>
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 3964738ebbde..5fd7792d03fc 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -135,7 +135,7 @@ c-obj-vdso-gettimeofday := vgettimeofday.o
+>  asm-obj-vdso := sigreturn.o
+>
+>  ifneq ($(c-gettimeofday-y),)
+> -VDSO_CFLAGS_gettimeofday_o += -include $(c-gettimeofday-y)
+> +VDSO_CFLAGS_gettimeofday_o += -include $(c-gettimeofday-y) -marm
+>  endif
+>
+>  VDSO_CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index b8f023e054b9..7fc82dcf814b 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -225,6 +225,23 @@ config DEBUG_INFO_REDUCED
+>           DEBUG_INFO build and compile times are reduced too.
+>           Only works with newer gcc versions.
+>
+> +config DEBUG_INFO_COMPRESSED
+> +       bool "Compressed debugging information"
+> +       depends on DEBUG_INFO
+> +       depends on $(cc-option,-gz=zlib)
+> +       depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
+> +       depends on $(ld-option,--compress-debug-sections=zlib)
+> +       help
+> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
+> +         5.0+, binutils 2.26+, and zlib.
+> +
+> +         Users of dpkg-deb via scripts/package/builddeb may find an increase in
+> +         size of their debug .deb packages with this config set, due to the
+> +         debug info being compressed with zlib, then the object files being
+> +         recompressed with a different compression scheme. But this is still
+> +         preferable to setting $KDEB_COMPRESS to "none" which would be even
+> +         larger.
+> +
+>  config DEBUG_INFO_SPLIT
+>         bool "Produce split debuginfo in .dwo files"
+>         depends on DEBUG_INFO
+> --
+> 2.27.0.rc0.183.gde8f92d652-goog
+>
 
-That being said, I don't understand your comment. Are you recommending
-using just one email in these entries?
 
-thanks,
--- Shuah
+-- 
+Thanks,
+~Nick Desaulniers
