@@ -2,197 +2,161 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D52C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE275C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A1E207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE441207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJsqEeYq"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="eowH02iJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbgEZROs (ORCPT
+        id S1730426AbgEZROq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388723AbgEZROP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:14:15 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF090C03E96D;
-        Tue, 26 May 2020 10:14:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y18so10427385pfl.9;
-        Tue, 26 May 2020 10:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RgMIbtwZA3wzegtW83KbTmQydot3HDdtZNvy+0zgqvU=;
-        b=vJsqEeYqfFg4vxxR9HrsbzBKpqLxEHfSsm8eDEdK0aMOJjL6kApIec6+zF2Oq8yl2R
-         KtMzUaqctsJV5E4Ow1mzjY81uJI73wYeHCwJp+26Ki45hYT32vff3NR0X3vYRmHQmXj8
-         EU+F4FhpaZWnUHrCW8X+B/LFjCnh8csZoVvD+aQYCyh+JxE4N4Na8/mKmAEAbH7VQ48P
-         Urlrfr6gxJvJU7oBTIQ3iCkh1u7AOg69AXqWDJW+r82hAwdPbgfZp4/XxCQc1jimr7/T
-         7pugOhX3kOLauar7EHIG7h2IawyN3hL1AVCwXA+9AcY1E2pIVmZVTEYsjki+N5uwRhdC
-         JgBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=RgMIbtwZA3wzegtW83KbTmQydot3HDdtZNvy+0zgqvU=;
-        b=eGCFzADh1vMLaLx8JwAuJ/Np4kIDdqjdPjh8mAxTGPH7wAJ1mPNeSHV5Y6AP3ajWXa
-         K+hw1MB1eC/vn5h5842KWm6F87Rvhp+qM7WnoLjok87ldPmuZkPAJOsaiedt9jgtR+wi
-         rGgWijo1+WxhY0y2Cr98GWDqY8Kqd/1OcSx/Ornug3mm2tCH1UIMr2XUFsabiATLExzd
-         cEWuzXaHXxx8QI0I7XphXVzZay4y42d/8S5cEInTi88SjGdhk03kj6Jw7AcM268adwyd
-         sCD0u/R7QdeHieSgHCl8d1Kni1hiD7QP586E/846Nzp4mC+r1oe/fGSDWV01jwg9uRVt
-         i8mg==
-X-Gm-Message-State: AOAM533bcsMNG751YVe1CiVPo3jqM15R0vXzQWma3yOBC4MB14/Chmb6
-        hmn4C0tgwjjOPJjOSDf0dJ18z1ce
-X-Google-Smtp-Source: ABdhPJx6v+FN+vk0ToWXFuPj/ytomAuaJ5hgqDK7l1nv2spYkn1suKpxUpt0NpjZ1U+axwE2JB/eDQ==
-X-Received: by 2002:a62:780c:: with SMTP id t12mr22606915pfc.235.1590513254186;
-        Tue, 26 May 2020 10:14:14 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x191sm135184pfd.37.2020.05.26.10.14.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 10:14:13 -0700 (PDT)
-Subject: Re: linux-next: Tree for May 26 (hwmon/amd_energy.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
-References: <20200526203932.732df7c6@canb.auug.org.au>
- <f050c447-18fa-50d0-dbdd-b60820dc7ba1@infradead.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <c31504dc-9646-81f9-c262-88890556ece9@roeck-us.net>
-Date:   Tue, 26 May 2020 10:14:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 13:14:46 -0400
+Received: from mail-eopbgr80131.outbound.protection.outlook.com ([40.107.8.131]:36848
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388612AbgEZROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 13:14:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d9q9TLujYxPh4CF26CmLfUOPOToNgf7FvuitcoWsUY3HUVzAaxf8UZYpSYfzh4HX6VURXUmKIDCkeJrQKbv7yGh0FuliAkJhLR+vFsfTPpTkO57zxR3mXzogQB3Y+8DPvulwsU5pxiazvKFQPf4OOK9P8LiUQuLqacEuGheWOsAKwhB+lW8/MeJ5v3+zr1a5nHK04fRDtPmVN8uk4vNOsRunfx2iNyBQoKwu7Qtk+Eu6jFYajldvNYcRisxnJ42lyQ+sOrI8/S+lKUQrlVrIW0m/MkyNcW4I1lrOfHzOfAPz9TX854MvN5v+c1dCoQ33++EQ6U8+oLADhNNm8Yvasg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUm1aS9UUuseD4nWcf7QHncYBRxQA+2Hm6PztoMAtIA=;
+ b=e6rp5zvUY8PwFnf+dBh7JMFaWFAgZQBmRMS72wcj0UY/m4s4M4A/gD78nys91oRLYowNPh8hfx/BBVRVcM4d5bSEIe0fEh6a/ojwafE+EucoIhkS1CgAjsoDSmjCTuQ2QCVXyH5qWkzqC9N730w32FXmZBR/DDfnntsInGAP//UkipPUASk/pbbqBpti57KepSvB8M/sQjFqR6A8bG7L4LkWhPwflBTDdV4b+GUcC6nwfVsyuDJ/ihicfvcGPjOXtUiIQwnZv1xwG+ySx25UfYIGSINWFmlXBRoz87X544t9mCIjyIaq2MqZUl3iTpCyTSr0oBAd9QCvi5AGOvrTSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUm1aS9UUuseD4nWcf7QHncYBRxQA+2Hm6PztoMAtIA=;
+ b=eowH02iJ5OQMW1jolI+0oYysB+NullErXVP+JFtxUbnFPYciKjwdaDDDiiKpYQTJOppTk/dHkBfsftiMx4oGF9MtlL+rnOP5ZwMtmluqLcD2n15T63ctYAVZQnGGVCoNQ2a72zhLznAEogoJtlOqcc74KRaz+bq2e7syHynE7vU=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10)
+ by VI1P190MB0431.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:2e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
+ 2020 17:13:51 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::8149:8652:3746:574f]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::8149:8652:3746:574f%7]) with mapi id 15.20.3021.029; Tue, 26 May 2020
+ 17:13:51 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mickey Rachamim <mickeyr@marvell.com>,
+        Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [net-next RFC v3 6/6] dt-bindings: marvell,prestera: Add description for device-tree bindings
+Date:   Tue, 26 May 2020 20:13:02 +0300
+Message-Id: <20200526171302.28649-7-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526171302.28649-1-vadym.kochan@plvision.eu>
+References: <20200526171302.28649-1-vadym.kochan@plvision.eu>
+Content-Type: text/plain
+X-ClientProxiedBy: AM6P192CA0061.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:209:82::38) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 MIME-Version: 1.0
-In-Reply-To: <f050c447-18fa-50d0-dbdd-b60820dc7ba1@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6P192CA0061.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Tue, 26 May 2020 17:13:49 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3a104f7f-ed0e-4494-5e77-08d80198295f
+X-MS-TrafficTypeDiagnostic: VI1P190MB0431:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1P190MB04314F0DB6F9EEB7CEBBDA4895B00@VI1P190MB0431.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 041517DFAB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: reD6EA3Cr8Vnzs43DCM1mBCUqfvQtM+faSFwYFZhcy4fGH/h1L/fpsBcEVQ8AtA7CvP2784Mcms87sjim6xxD0RS/1UdpJbGtFKUat28EjEogZ7hMxL5AwmkEg2ED6Ja66Go1WNUwyJvA/cA4wQiG88IJZVINwCHRgawXI5wlau5c4mqHlh+p1TloJssuiK0EMU03kRRPkoCRPtxdBJ4ba+5tZEvid4RrgCDlCmIun9xgWHNXz8NZYCqOa6ta2TmlNW72GHoInSouT13cawYjbdi3QZESO78Hf7H6BOynJ7ir5hLQogzm9b0l5mMlqke6S/F6tEkNMdc+fAiI+MHEcoO0d83baXsD4SVKkPK0rjyJLSna+zsqpN41MRZ0GResBOH1//BqfaS+xIpUinV8A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(39840400004)(376002)(136003)(346002)(508600001)(16526019)(52116002)(2906002)(4326008)(36756003)(6506007)(186003)(86362001)(26005)(6486002)(8676002)(8936002)(316002)(956004)(54906003)(66476007)(2616005)(6666004)(66946007)(5660300002)(110136005)(107886003)(66556008)(44832011)(1076003)(6512007)(142933001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 3L6zQF7MLzh/MbkpkDvThRVJH7/vs9zsgw8KOyBdW46hrNeHakP/0O+WueX41Vp0YGq4p8qy7+oOkTjQAmlWgSxObi2PiARj12F9vV2YT9qBL8jIUCorjUWNi8qaskGTrIdY991/TmVGMvOKEAvo/vxPfSdaub8FHJcdjKqxHawuw31jJlA6gQKvKNr2G4GgUYLvfB15VbLUgWog/FzSGoVv+vCNAPTnZ4RCkQJzyCcueyJHBBQeYK+wg5KvimIwbwNMmuZcOQ6MlnIUj6xPU8WHEnsLwYvmQxEglheTGjISMPAOYy26XjttFJoiygZ6q54KBH8ImlyDG7Rl8uaH23KajqUjqg4hhocCzsByzVejz5heEW21eJhH7x33bVTYPROuaRTiYwYnbiikNWfAYSMU6pR3wzh1WsrL5M0pTkdPLqretbTzf3F03xtqJ2w5UHaXy4KQCMDeOibV+IHrkhBLgDxPysnkEMlRA0zDB6o=
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a104f7f-ed0e-4494-5e77-08d80198295f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 17:13:51.5147
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0hC22uUTkU/DnIzymAqUvTxJ5ogN6Zm8JGPdx5WqiubLNIngZf/f4GjP2Q+/TSYZxoWG3dx5/kpXam8u+4T8rmpl9NdRcliG0PipTNyNZbs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0431
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 9:24 AM, Randy Dunlap wrote:
-> On 5/26/20 3:39 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> News: there will be no linux-next release tomorrow.
->>
->> Changes since 20200525:
->>
-> 
-> Hi,
-> 
-> All of my drivers/hwmon/amd_energy.c builds are failing (on i386 or x86_64).
-> 
-I don't see that, neither in my hwmon-next branch (on top of v5.7-rc6)
-nor with next-20200526.
+Add brief description how to configure base mac address binding in
+device-tree.
 
-Ah yes, you must have NUMA and NEED_MULTIPLE_NODES disabled.
-With that (allnoconfig+HWMON+SENSORS_AMD_ENERGY), I see the error as well.
-The problem is:
+Describe requirement for the PCI port which is connected to the ASIC, to
+allow access to the firmware related registers.
 
-	#define cpumask_of_node(node)       ((void)node, cpu_online_mask)
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+---
+ .../bindings/net/marvell,prestera.txt         | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-The caller passes node as "channel - data->nr_cpus", which I would argue
-is perfectly valid. This is converted to
-
-	#define cpumask_of_node(node)       ((void)channel - data->nr_cpus, cpu_online_mask)
-
-which doesn't look that good and results in the error. The problem
-is the missing ( ) around node, not the amd_energy driver.
-
-Do you want to submit a patch, or do you want me to do it ?
-
-Thanks,
-Guenter
-
-> 
-> $ gcc --version
-> gcc (SUSE Linux) 7.5.0
-> 
-> 
->   CC      drivers/hwmon/amd_energy.o
-> In file included from ../arch/x86/include/asm/cpumask.h:5:0,
->                  from ../arch/x86/include/asm/msr.h:11,
->                  from ../arch/x86/include/asm/processor.h:22,
->                  from ../arch/x86/include/asm/cpu_device_id.h:16,
->                  from ../drivers/hwmon/amd_energy.c:6:
-> ../drivers/hwmon/amd_energy.c: In function 'amd_energy_read':
-> ../include/asm-generic/topology.h:51:36: error: void value not ignored as it ought to be
->      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
-> ../include/linux/cpumask.h:618:72: note: in definition of macro 'cpumask_first_and'
->  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
->                                                                         ^~~~~
-> ../drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro 'cpumask_of_node'
->       cpumask_of_node
->       ^~~~~~~~~~~~~~~
-> ../include/asm-generic/topology.h:51:46: warning: left-hand operand of comma expression has no effect [-Wunused-value]
->      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
->                                               ^
-> ../include/linux/cpumask.h:618:72: note: in definition of macro 'cpumask_first_and'
->  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
->                                                                         ^~~~~
-> ../drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro 'cpumask_of_node'
->       cpumask_of_node
->       ^~~~~~~~~~~~~~~
-> 
-> 
-> thanks.
-> 
+diff --git a/Documentation/devicetree/bindings/net/marvell,prestera.txt b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+index 83370ebf5b89..e28938ddfdf5 100644
+--- a/Documentation/devicetree/bindings/net/marvell,prestera.txt
++++ b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+@@ -45,3 +45,37 @@ dfx-server {
+ 	ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+ 	reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+ };
++
++Marvell Prestera SwitchDev bindings
++-----------------------------------
++Optional properties:
++- compatible: must be "marvell,prestera"
++- base-mac-provider: describes handle to node which provides base mac address,
++	might be a static base mac address or nvme cell provider.
++
++Example:
++
++eeprom_mac_addr: eeprom-mac-addr {
++       compatible = "eeprom,mac-addr-cell";
++       status = "okay";
++
++       nvmem = <&eeprom_at24>;
++};
++
++prestera {
++       compatible = "marvell,prestera";
++       status = "okay";
++
++       base-mac-provider = <&eeprom_mac_addr>;
++};
++
++The current implementation of Prestera Switchdev PCI interface driver requires
++that BAR2 is assigned to 0xf6000000 as base address from the PCI IO range:
++
++&cp0_pcie0 {
++	ranges = <0x81000000 0x0 0xfb000000 0x0 0xfb000000 0x0 0xf0000
++		0x82000000 0x0 0xf6000000 0x0 0xf6000000 0x0 0x2000000
++		0x82000000 0x0 0xf9000000 0x0 0xf9000000 0x0 0x100000>;
++	phys = <&cp0_comphy0 0>;
++	status = "okay";
++};
+-- 
+2.17.1
 
