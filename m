@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A147DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7816120776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738E920776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521193;
-	bh=DmrPKJdFBUauhwiCz6LXqWQZmO9spHTtVfvNF0ftHWw=;
+	s=default; t=1590521199;
+	bh=A3fRN3AR8YfQriSsm/PCZQ3OvmIXfqBFJtq7KEdnWRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vs5MEYpAhw/P7n1aA3m6AYnXXptpn5d3x579yLPKksQJKt3EFnqyVtBSokP5RFYh9
-	 GxSTqfaGNi1H6GtpNdN28Q2SJywMxbEDQ+K26+BrldGzIIEiI3/RSbxH6EZu7g/35r
-	 V4FYDOy0Bfb8Dll/5zy6iNC2oytC98JMuF33jY6U=
+	b=VLV/laAj99MCxWJEau99UgLegGW4/59gAVki6xK5Q96xMurtB9aFbTlaYCaMULR9Z
+	 JwhcTE/kaiYJEJqVS6LUI3jZYOjQENPGLk/qcqwnTbmu8qE+/Jhg2m3EzJ0DbuRw7Z
+	 LGRJv+w8zz5QZLoRPzCHRrDG9A73lX79k7wxRgs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391626AbgEZT0b (ORCPT
+        id S2391625AbgEZT0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391500AbgEZTFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:31 -0400
+        id S2390567AbgEZTF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF1B6208B3;
-        Tue, 26 May 2020 19:05:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF91020873;
+        Tue, 26 May 2020 19:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519931;
-        bh=DmrPKJdFBUauhwiCz6LXqWQZmO9spHTtVfvNF0ftHWw=;
+        s=default; t=1590519926;
+        bh=A3fRN3AR8YfQriSsm/PCZQ3OvmIXfqBFJtq7KEdnWRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oFAF/TLXHYlteOhG9l0TenptNPFBFG6fdjuK7UzConQUjoFkX4xu5LKC4xvpeJ/SH
-         cw2NXOVslZ3OgXER4kmyd8m6aQKvwL6FLCBoE5heirfEOypa3/2w/7osXZWImquuRT
-         SHvkb5LE+s49YNFfKRGy7EnBeNl4X65vw4uomS7I=
+        b=hkgk80EdMTp+DV0qXWxtJow/VtxpJIyjGJsa4XHaDHAFuFMfDuut8Wn2xj8hd1bn5
+         QPSLNTvqgBnA6x6qK87JAWMjF2kZqOFgvQtgXAtr/Dtv1EJ/wx/cyiHyJaPZSp9dUi
+         qU4hQitW9YGTBORSZKc2jAgwiEKKryBcpW3rPUQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        David Howells <dhowells@redhat.com>,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 4.19 73/81] rxrpc: Fix a memory leak in rxkad_verify_response()
-Date:   Tue, 26 May 2020 20:53:48 +0200
-Message-Id: <20200526183935.161434550@linuxfoundation.org>
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 72/81] rapidio: fix an error in get_user_pages_fast() error handling
+Date:   Tue, 26 May 2020 20:53:47 +0200
+Message-Id: <20200526183935.038966976@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,42 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit f45d01f4f30b53c3a0a1c6c1c154acb7ff74ab9f upstream.
+commit ffca476a0a8d26de767cc41d62b8ca7f540ecfdd upstream.
 
-A ticket was not released after a call of the function
-"rxkad_decrypt_ticket" failed. Thus replace the jump target
-"temporary_error_free_resp" by "temporary_error_free_ticket".
+In the case of get_user_pages_fast() returning fewer pages than
+requested, rio_dma_transfer() does not quite do the right thing.  It
+attempts to release all the pages that were requested, rather than just
+the pages that were pinned.
 
-Fixes: 8c2f826dc3631 ("rxrpc: Don't put crypto buffers on the stack")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Markus Elfring <Markus.Elfring@web.de>
+Fix the error handling so that only the pages that were successfully
+pinned are released.
+
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200517235620.205225-2-jhubbard@nvidia.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rxrpc/rxkad.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/rapidio/devices/rio_mport_cdev.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -1118,7 +1118,7 @@ static int rxkad_verify_response(struct
- 	ret = rxkad_decrypt_ticket(conn, skb, ticket, ticket_len, &session_key,
- 				   &expiry, _abort_code);
- 	if (ret < 0)
--		goto temporary_error_free_resp;
-+		goto temporary_error_free_ticket;
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -879,6 +879,11 @@ rio_dma_transfer(struct file *filp, u32
+ 				rmcd_error("pinned %ld out of %ld pages",
+ 					   pinned, nr_pages);
+ 			ret = -EFAULT;
++			/*
++			 * Set nr_pages up to mean "how many pages to unpin, in
++			 * the error handler:
++			 */
++			nr_pages = pinned;
+ 			goto err_pg;
+ 		}
  
- 	/* use the session key from inside the ticket to decrypt the
- 	 * response */
-@@ -1200,7 +1200,6 @@ protocol_error:
- 
- temporary_error_free_ticket:
- 	kfree(ticket);
--temporary_error_free_resp:
- 	kfree(response);
- temporary_error:
- 	/* Ignore the response packet if we got a temporary error such as
 
 
