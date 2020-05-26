@@ -2,202 +2,109 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6029C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B30BB2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590516528;
-	bh=imWs4ah6WzLsF7HUgbEz+ghYEeQx18mGuyl9PlBOMCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sm0G39jqFR5Axq7YMdA1g0hlMWzP5EN/HcaOKB1uhG8gE6ZVqUCSRX8P1TGvF38ap
-	 HzfgTJHSuYUwiasHIkjnOZpor+2hLXsAjFj2WPGXOtPU/Z+sLgGtkqlQKso3Hpw6pD
-	 WzxnG9FNrzSRRnDV6TGudaM1Sv4RFb85O1iTwRlc=
+	by mail.kernel.org (Postfix) with ESMTP id F02162065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:08:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHerMhrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388794AbgEZSIs (ORCPT
+        id S2388955AbgEZSIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:08:48 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39841 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbgEZSIr (ORCPT
+        Tue, 26 May 2020 14:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbgEZSIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:08:47 -0400
-Received: by mail-io1-f65.google.com with SMTP id c8so2715548iob.6;
-        Tue, 26 May 2020 11:08:45 -0700 (PDT)
+        Tue, 26 May 2020 14:08:50 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB04C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:08:49 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id v17so17136419ote.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yOePJEqzOpldNpBCP7tiQal13VtjOaSKu8Mf0AiyKEI=;
+        b=LHerMhrRjDvYSPQcdFKJwGDWO70nXCx2w6vo4xJFPsObj1NbvulOFG+pHyD9nelhm+
+         oFhF5Kc1UQ0qk6XEEY9UviM6dksasQ7oeWtIGzXqwTd/m6CIelrPhzxK75SH/FYEzp10
+         UNLNtypTCz+DotDxXL4ej6Z6N3tjkwfKcV5JLDaOqWoRIVvr5x9Vu3iMjP+8WXuJoLEb
+         +7dhYyiLkAebECLI/eQSvFX1zljc/KNYsd9Rpql7ilm5FM7jGUOnDZfw9ZW3oIVCsa/n
+         DwqyfAo4ygntvZiXRLWBnDBAFyJsrX9GJPtm9t2fPTEpORoXe8ZfWfDnFUdL+vddh6Wz
+         fOfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ShRmryyfPituzUaTF9xqzITMDWyV5MMJxj9+4c5azDc=;
-        b=C9KvwuUFntPN9VrbKhVQfdEmBoI2rw0FpghH97V6yw5WLmTMue7Iob6YgwtUUfkRiw
-         3tXPuOehPOp57Of2WnEElaRiK/fHBWkuV5+lzJ2TNT6YwJaoY0OmSAnPASYsCP3ITQWf
-         iConQqnkMMzvXE0MNNWAGqHSaCl8bv/xJYPaoRZIxkD/lcYuNOTw4f9NfkgUdzCtiwi8
-         hhOPYxJIUhnU5HSPP5aKURMIWWCrGyrIgHRssH7e5+ZaDUvXF+QXz6kYzj0fi5LFVsGi
-         qdduB1650U4d0+P1kn3uEMeVnJI/EKq6RQuzbUuE2z6wswqaot9XQerAvhrLnbm/vt8E
-         k8NQ==
-X-Gm-Message-State: AOAM532IqvSsAgHSDp4oFfc8m2FOeiAWDkeVjlqiYtkilK7MHduLsYFU
-        MPGs4Z8vEbBx8YeppO5gNA==
-X-Google-Smtp-Source: ABdhPJw3FHEFautJYIk4tPlQQMhfWPm80jnVw4i0iIIULhGB0bIvWnQ4K1CyzKMAwU5hjhBOO6TKQA==
-X-Received: by 2002:a05:6602:134d:: with SMTP id i13mr18153812iov.50.1590516525215;
-        Tue, 26 May 2020 11:08:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z13sm324592ilh.82.2020.05.26.11.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:08:44 -0700 (PDT)
-Received: (nullmailer pid 91004 invoked by uid 1000);
-        Tue, 26 May 2020 18:08:43 -0000
-Date:   Tue, 26 May 2020 12:08:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
-        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 08/10] dt-bindings: ufs: Add DT binding documentation
- for ufs
-Message-ID: <20200526180843.GA81537@bogus>
-References: <20200514003914.26052-1-alim.akhtar@samsung.com>
- <CGME20200514005309epcas5p3ccd2b44c1bf20634eea3e232d1c2b62e@epcas5p3.samsung.com>
- <20200514003914.26052-9-alim.akhtar@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yOePJEqzOpldNpBCP7tiQal13VtjOaSKu8Mf0AiyKEI=;
+        b=LF3UdXfdlOMXNroi6S9pgjVxEHhupbLaH2JAkyPBHD+AUD09iWCZHdkdlrWhsQeYSc
+         +o/4WWm252sHfOAEROY9M8sLTl1uBkchGrq+UTKZrn4U1z2q7DOmXl1gmjnvYbJu8o/a
+         /YT86kTN18VuxMTvUsur+j3iUKbUM1IB8jDO2Xn0XxlgcYAOVRNIJMmw5a9tNpRdNTXn
+         5PYrMh33KDsnx7oVd3WzJ2XmjIT5qz4ixiFPEg0W7QcAfYDWkoiMSB0dviHwajsevGug
+         jzu6WzTFVqANftign+lylgyOGB2N1xIHekr7twFzu57ayIW4tnwz9FQVYdPDHweUmsbq
+         97mQ==
+X-Gm-Message-State: AOAM533sGs7ONBB7F1vH5yoHwNZflD7bWZwOa05QiHPAfX/DM2b7Wq0e
+        VCC7YvLEH0m9qJZlBQvGyDhQm3y2kKfl6GG1rpM2kg==
+X-Google-Smtp-Source: ABdhPJxcmaAVdh0ujGCGKr1HPyMWjwhEp+FeToSzOp+e8yyxq5YqQRrbEqpSGpnZ5yZPxLPF+Bdrvd+HbqtPIbUOGUk=
+X-Received: by 2002:a9d:66d5:: with SMTP id t21mr1907974otm.231.1590516528738;
+ Tue, 26 May 2020 11:08:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514003914.26052-9-alim.akhtar@samsung.com>
+References: <6144404cb26d1f797fd7e87b124bcaf8@walle.cc> <20200526070518.107333-1-saravanak@google.com>
+ <CAGETcx-b4+a8U=Qd0mKaB9JUBaj178694QshqZVrAa_x6AgcAg@mail.gmail.com> <dac3da8b373f131e53e18083f6fac5b0@walle.cc>
+In-Reply-To: <dac3da8b373f131e53e18083f6fac5b0@walle.cc>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 26 May 2020 11:08:12 -0700
+Message-ID: <CAGETcx_iHs5xsXq81k4YRzrFxs2j01u3HzfnSNU9Vxs8ZTGGuA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Update device link status correctly for
+ SYNC_STATE_ONLY links
+To:     Michael Walle <michael@walle.cc>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:09:12AM +0530, Alim Akhtar wrote:
-> This patch adds DT binding for samsung ufs hci
+On Tue, May 26, 2020 at 4:04 AM Michael Walle <michael@walle.cc> wrote:
+>
+> Hi Saravana,
+>
+> Am 2020-05-26 09:07, schrieb Saravana Kannan:
+> >> Greg,
+> >>
+> >> I think this is the issue Michael ran into. I'd like him to test the
+> >> fix
+> >> before it's pulled in.
+> >>
+> >> Michael,
+> >>
+> >> If you can test this on the branch you saw the issue in and give a
+> >> Tested-by if it works, that'd be great.
+>
+> Unfortunately, now I'm triggering another WARN_ON() in
+> device_links_driver_bound():
+>    WARN_ON(link->status != DL_STATE_DORMANT);
+>
+> I've attached two bootlog one based on linux-next-20200525 with this
+> patch applied and another one where your previous debug printfs are
+> applied, too.
+>
+> Let me know, if you need any other debug outputs.
 
-Subject should indicate this is for Samsung in some way.
+Can you make the same debug changes I did for the other WARN and get
+me the logs?
 
-> 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
->  .../bindings/ufs/samsung,exynos-ufs.yaml      | 91 +++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-> new file mode 100644
-> index 000000000000..eaa64cc32d52
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/ufs/samsung,exynos-ufs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC series UFS host controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Alim Akhtar <alim.akhtar@samsung.com>
-> +
-> +description: |
-> +  Each Samsung UFS host controller instance should have its own node.
-> +  This binding define Samsung specific binding other then what is used
-> +  in the common ufshcd bindings
-> +  [1] Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +
-> +properties:
-> +
-> +  compatible:
-> +    enum:
-> +      - samsung,exynos7-ufs
-> +
-> +  reg:
-> +    items:
-> +     - description: HCI register
-> +     - description: vendor specific register
-> +     - description: unipro register
-> +     - description: UFS protector register
-> +
-> +  reg-names:
-> +    items:
-> +      - const: hci
-> +      - const: vs_hci
-> +      - const: unipro
-> +      - const: ufsp
-> +
-> +  clocks:
-> +    maxItems: 2
-
-maxItems is redundant.
-
-> +    items:
-> +      - description: ufs link core clock
-> +      - description: unipro main clock
-> +
-> +  clock-names:
-> +    maxItems: 2
-
-Here too.
-
-> +    items:
-> +      - const: core_clk
-> +      - const: sclk_unipro_main
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    maxItems: 1
-
-What's the name? (Though a name is kind of pointless when there is only 
-1.)
-
-With those fixed,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - phys
-> +  - phy-names
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/exynos7-clk.h>
-> +
-> +    ufs: ufs@15570000 {
-> +       compatible = "samsung,exynos7-ufs";
-> +       reg = <0x15570000 0x100>,
-> +             <0x15570100 0x100>,
-> +             <0x15571000 0x200>,
-> +             <0x15572000 0x300>;
-> +       reg-names = "hci", "vs_hci", "unipro", "ufsp";
-> +       interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-> +       clocks = <&clock_fsys1 ACLK_UFS20_LINK>,
-> +                <&clock_fsys1 SCLK_UFSUNIPRO20_USER>;
-> +       clock-names = "core_clk", "sclk_unipro_main";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
-> +       phys = <&ufs_phy>;
-> +       phy-names = "ufs-phy";
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+Thanks,
+Saravana
