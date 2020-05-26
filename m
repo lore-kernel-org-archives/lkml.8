@@ -2,103 +2,176 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54E0207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4766F207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1UPOd2v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YeTf0oyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbgEZLkB (ORCPT
+        id S2388890AbgEZLmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 07:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48404 "EHLO
+        Tue, 26 May 2020 07:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgEZLkB (ORCPT
+        with ESMTP id S1731446AbgEZLmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 07:40:01 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B433CC03E97E;
-        Tue, 26 May 2020 04:40:00 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id j198so4859579wmj.0;
-        Tue, 26 May 2020 04:40:00 -0700 (PDT)
+        Tue, 26 May 2020 07:42:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF9AAC03E97E;
+        Tue, 26 May 2020 04:42:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bg4so3290824plb.3;
+        Tue, 26 May 2020 04:42:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XNz9J6b/OZ2/1Fmez/GnqprE7eisy/1+uGqJfTQOLC4=;
-        b=I1UPOd2vABdAgPxVneTOoP6tzj7xsCGRvOyr48UXRni0gpsT73O9sUzt6bpt9joQ9c
-         qLSUnyrLyk/vOjwAhPxEsbAagm5ZeyQu0b+SQv26I6y7nz3lUI37rAijnWn2OeEA9HBI
-         CyucIRXauIONPkXv7CAJVAf7J6nx1z0aHePaD8Q0dh2PU7I9pOQrm1OGisaurBL5HDFk
-         SE8VVwXSrWfaH9+yA8xNasTY2UtUxOLd61G6D0GO3OlYxrnAVRQuUfZS5B5QDl9uMcBt
-         Ks+AvkW9VHguZwPrkcFVlheKfLq7OTeyshjqrzI/ZRIwkdSnZSkm6ABJglXylBR2NLHy
-         wQMQ==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0KbdXDZ60w99BOdUqDW8OeczOgVguCNs3xmodhMqij0=;
+        b=YeTf0oyQbfuNobEmaT0G+JfvhdSR59et4jwI+xEzEyEv2mcxorw5TsaSp59e00qdk5
+         fY9adbWlnHXxo47r2s2NUlxSf1f6JZPbRyFyLD970Otx+C+OuipskNfTPO9M2sCoohPX
+         wF2s0bO/ugME5/RBXAKRyHwmPXbGygmvGLhrtJVbIo9ZdqOF8Tx4vzIK626oyYgLq6+J
+         PZQ3XXmZSgwy4yDM4VaTWuM8+p8bOfZBFvPaK9LQp/OF9jju0hso2Hu6sKdGym5nnAha
+         LM6oRcXLVWHVQoSfEwUgPQZ6ohyy663WfPrrjdjHIcdaLxwPMXWqulolRcp9aSENRKg4
+         4NMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XNz9J6b/OZ2/1Fmez/GnqprE7eisy/1+uGqJfTQOLC4=;
-        b=nrb2JPjjTkqcItiVpuvoGnfs7y5Kig0mTpGGSodcpPJs3mbE99Yjsi2FUi8MYj574P
-         s2z6qedKJy+di3BPLv8U53xqF+sdV71+/ije+WV3cv49qjRjCt/ZMA4FsNaljQHq9kqE
-         u0dZbdy0SV4Fg18zIbZ/l7YU5yQKAnLns1nIgqojoVoJnoMq5yrRvzK7e9QUuAUIIqQO
-         7FPnbFtnCNWZIiyTvM+Rd0btmfQ0KEDagvOQCrsGw2Hr4OIXV1QpOnSt0aTZRAq4Igvo
-         ugiiiZzsEyysj79myOURwW0LRpHLed1CBTxc1uJP+cb1m8RxXZRK2lqvsQs5vJoTkHtj
-         QIKA==
-X-Gm-Message-State: AOAM532sSEDIJAQ/yy9p+c3cHe4RkdRD1jmQjQAqIEOTrRcTGeQ0cB+h
-        i36PjJ05ODG5A/U7HKr9YnuclUb5eMOQZjYE5kU=
-X-Google-Smtp-Source: ABdhPJyrNBm0FnRwRbiS9MIhci3lGQnb9jCFVoa7fhtDCFX+azNqEJP4JBuYkUlsFFtwtUsrOcdqCXJvlgMf3wA7HqU=
-X-Received: by 2002:a05:600c:2313:: with SMTP id 19mr1059849wmo.51.1590493199402;
- Tue, 26 May 2020 04:39:59 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0KbdXDZ60w99BOdUqDW8OeczOgVguCNs3xmodhMqij0=;
+        b=AuUWmoD+J9Lam5YoWnSvXRb55nlA9djLEhzMo+1fLARlK8zeeSYDLuuJVii/fCrjLQ
+         tbIDMRWTkmgcJIdhh6VjjSPwAvlg9ZwOGCG5dMBkOvrwHyNkkgYAR10YZMvFw7T9RyUN
+         WgNFn2wIBNWn5eoTzP4FtLPcCbWPhLzdr4tj2ftlDWD0rm9X3HnU5+gHZXDuiELoOqsh
+         YE62cjC0oMnY9vKgfA1VxKO0D8uK2TkmZCFDQ1SZvClYUO/QCRVXHpjTxrsKCeqsrgcE
+         AFJUz4ADIifhfQLDusgEN90ldxT2IzWGzReBx5iATvPQNceSLNa+dlD4stYday12SN3P
+         Y3qQ==
+X-Gm-Message-State: AOAM5323BbNZv2Cc/imOMwYMDnx3eA01tHo8duNQoDqSugT1MMNFbqdT
+        STwkh1dhRZLF7jrPx2WlcxcstQA2
+X-Google-Smtp-Source: ABdhPJwugSGVJtC/Tp/DSeFSxYWv+Rt6utgvtWt9esxUgmz2ihJKza0En6mww8XwJQemz22e4INQfw==
+X-Received: by 2002:a17:90a:8a08:: with SMTP id w8mr26604070pjn.53.1590493340274;
+        Tue, 26 May 2020 04:42:20 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a2sm15139192pfi.208.2020.05.26.04.42.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 04:42:19 -0700 (PDT)
+Subject: Re: [PATCH 1/2] hwmon: pwm-fan: Add profile support and add remove
+ module support
+To:     Sandipan Patra <spatra@nvidia.com>, treding@nvidia.com,
+        jonathanh@nvidia.com, u.kleine-koenig@pengutronix.de,
+        kamil@wypas.org, jdelvare@suse.com, robh+dt@kernel.org
+Cc:     bbasu@nvidia.com, bbiswas@nvidia.com, linux-pwm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <53619c02-8c0f-3eec-cccc-16e779b8c425@roeck-us.net>
+Date:   Tue, 26 May 2020 04:42:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
-In-Reply-To: <20200514155737.12160-1-martin.kepplinger@puri.sm>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 26 May 2020 14:39:48 +0300
-Message-ID: <CAEnQRZCJ_+V1+bd4JsWBqJVNu6-ETckxsD0qvkr48in9mj0J8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: Add a device tree for the Librem5 phone
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Rob Herring <robh@kernel.org>, kernel@puri.sm,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, mchehab@kernel.org,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590469565-14953-1-git-send-email-spatra@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 7:02 PM Martin Kepplinger
-<martin.kepplinger@puri.sm> wrote:
->
-> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
->
-> Add a devicetree description for the Librem 5 phone. The early batches
-> that have been sold are supported as well as the mass-produced device
-> available later this year, see https://puri.sm/products/librem-5/
->
-> This boots to a working console with working WWAN modem, wifi usdhc,
-> IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LE=
-Ds.
->
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+On 5/25/20 10:06 PM, Sandipan Patra wrote:
+> This change has 2 parts:
+> 1. Add support for profiles mode settings.
+>     This allows different fan settings for trip point temp/hyst/pwm.
+>     T194 has multiple fan-profiles support.
+> 
+> 2. Add pwm-fan remove support. This is essential since the config is
+>     tristate capable.
+> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+>  drivers/hwmon/pwm-fan.c | 112 ++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 100 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 30b7b3e..26db589 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
 
-For audio related part:
+[ ... ]
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+>  
+> +static int pwm_fan_remove(struct platform_device *pdev)
+> +{
+> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+> +	struct pwm_args args;
+> +
+> +	if (!ctx)
+> +		return -EINVAL;
+> +
+> +	if (IS_ENABLED(CONFIG_THERMAL))
+> +		thermal_cooling_device_unregister(ctx->cdev);
+> +
+> +	pwm_get_args(ctx->pwm, &args);
+> +	pwm_config(ctx->pwm, 0, args.period);
+> +	pwm_disable(ctx->pwm);
+> +
+> +	return 0;
+> +}
+> +
+
+I don't think you actually tested this. I would suggest to make
+yourself familiar with 'devm' functions and their use, and
+then resubmit.
+
+Thanks,
+Guenter
