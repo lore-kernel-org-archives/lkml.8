@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9591C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95BF7208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8C2208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520005;
-	bh=r/ZhJS3TFnJvUkfTEaJFVxbdWUpnvSUCDvWHnEm187c=;
+	s=default; t=1590520012;
+	bh=QUJlVGNioV1dIbnsMinW6SWdcfVxvx0IG1RhC0AISco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rPc8D3ffD/TzHXouhjMt8GJbXAic6Clt2IE5bz2PDaZgOjIBlj1sk8eW0JGuMTA+H
-	 hZTbe0xFZs7gldbWaeF9os2AZbBHIfB2YMpsT+cjXWKbLdvXv6pnoP3pi3cGJIQzU3
-	 9Ey5V2G8SGU2qBhfNt5nLzhe78uhxv8+9ONVB3/U=
+	b=CT5KxRD3aqILKQbqD8098y+fO2A0kCATnKXaRfMi9Xl72EqjTtgF8Xwi+RY9nkz5N
+	 p3CRqVHSPg4D662GsJPvcKjEV3aSzmgjV1xVnOmexdel3d67Oo6kLzfkXfnCJ0uX+A
+	 wwGqTrYfEs6zcex3MmjXxq7CicyvDXhDn2haCZwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390657AbgEZTGn (ORCPT
+        id S2391675AbgEZTGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34982 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403815AbgEZTGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:39 -0400
+        id S2391210AbgEZTGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C59C20873;
-        Tue, 26 May 2020 19:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E5D208B3;
+        Tue, 26 May 2020 19:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519998;
-        bh=r/ZhJS3TFnJvUkfTEaJFVxbdWUpnvSUCDvWHnEm187c=;
+        s=default; t=1590520004;
+        bh=QUJlVGNioV1dIbnsMinW6SWdcfVxvx0IG1RhC0AISco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWFyoEKShB8j7mse37uxZiz4IpO1xvYs2vGg7v7YCpyck0n1kfKkmHEi1aPy9guXn
-         6X3iPMEuTHkRtBGbSp+Z5P/G+eqU7WuEissMO39k4TF2rz2QmZZGBuyQV0iNifNv57
-         AaNwMrsPeNA0TH3R7HP0LhrxFiIcnoELZQnV2eh8=
+        b=J35OhnZLx8+DVXOoHmukyiIF3NhtIjQve6xRWiq5H9Sd0KXlYE7pyCI+Iv2/9FWZl
+         MWG5yfUJoK4gkQBh4S7vRxQac54ygrE4tdqWZP9R9aHx4npp9hg7sPHFU4jZd7Q2e1
+         pDVkljkfYDYE0rTXkPtbEIoSoTbc5NbUS9g+YDwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20 ?= 
+        <frederic.pierret@qubes-os.org>, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 019/111] net: drop_monitor: use IS_REACHABLE() to guard net_dm_hw_report()
-Date:   Tue, 26 May 2020 20:52:37 +0200
-Message-Id: <20200526183934.486055216@linuxfoundation.org>
+Subject: [PATCH 5.4 020/111] gcc-common.h: Update for GCC 10
+Date:   Tue, 26 May 2020 20:52:38 +0200
+Message-Id: <20200526183934.602470999@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,41 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
 
-[ Upstream commit 1cd9b3abf5332102d4d967555e7ed861a75094bf ]
+[ Upstream commit c7527373fe28f97d8a196ab562db5589be0d34b9 ]
 
-In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
+Remove "params.h" include, which has been dropped in GCC 10.
 
-The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
-from being 'm' when NET_DEVLINK=y.
+Remove is_a_helper() macro, which is now defined in gimple.h, as seen
+when running './scripts/gcc-plugin.sh g++ g++ gcc':
 
-With the planned Kconfig change that relaxes the 'imply', the
-combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
+In file included from <stdin>:1:
+./gcc-plugins/gcc-common.h:852:13: error: redefinition of ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’
+  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./gcc-plugins/gcc-common.h:125,
+                 from <stdin>:1:
+/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’ previously declared here
+ 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use IS_REACHABLE() to avoid the vmlinux link error for this case.
+Add -Wno-format-diag to scripts/gcc-plugins/Makefile to avoid
+meaningless warnings from error() formats used by plugins:
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+scripts/gcc-plugins/structleak_plugin.c: In function ‘int plugin_init(plugin_name_args*, plugin_gcc_version*)’:
+scripts/gcc-plugins/structleak_plugin.c:253:12: warning: unquoted sequence of 2 consecutive punctuation characters ‘'-’ in format [-Wformat-diag]
+  253 |   error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+Link: https://lore.kernel.org/r/20200407113259.270172-1-frederic.pierret@qubes-os.org
+[kees: include -Wno-format-diag for plugin builds]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/drop_monitor.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/gcc-plugins/Makefile     | 1 +
+ scripts/gcc-plugins/gcc-common.h | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/include/net/drop_monitor.h b/include/net/drop_monitor.h
-index 2ab668461463..f68bc373544a 100644
---- a/include/net/drop_monitor.h
-+++ b/include/net/drop_monitor.h
-@@ -19,7 +19,7 @@ struct net_dm_hw_metadata {
- 	struct net_device *input_dev;
- };
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index aa0d0ec6936d..9e95862f2788 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -11,6 +11,7 @@ else
+   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
+   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
+   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
++  HOST_EXTRACXXFLAGS += -Wno-format-diag
+   export HOST_EXTRACXXFLAGS
+ endif
  
--#if IS_ENABLED(CONFIG_NET_DROP_MONITOR)
-+#if IS_REACHABLE(CONFIG_NET_DROP_MONITOR)
- void net_dm_hw_report(struct sk_buff *skb,
- 		      const struct net_dm_hw_metadata *hw_metadata);
- #else
+diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
+index 17f06079a712..9ad76b7f3f10 100644
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -35,7 +35,9 @@
+ #include "ggc.h"
+ #include "timevar.h"
+ 
++#if BUILDING_GCC_VERSION < 10000
+ #include "params.h"
++#endif
+ 
+ #if BUILDING_GCC_VERSION <= 4009
+ #include "pointer-set.h"
+@@ -847,6 +849,7 @@ static inline gimple gimple_build_assign_with_ops(enum tree_code subcode, tree l
+ 	return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
+ }
+ 
++#if BUILDING_GCC_VERSION < 10000
+ template <>
+ template <>
+ inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
+@@ -860,6 +863,7 @@ inline bool is_a_helper<const greturn *>::test(const_gimple gs)
+ {
+ 	return gs->code == GIMPLE_RETURN;
+ }
++#endif
+ 
+ static inline gasm *as_a_gasm(gimple stmt)
+ {
 -- 
 2.25.1
 
