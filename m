@@ -2,112 +2,140 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28BE32068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590517925;
-	bh=n281IfLAcbTb85CPm0jqUkyIWkLnfrct5htszXNofyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C8GdhbjJ0WmetikzzFstq1ldKZ8l+0LPFJUpaOARfEAGNC7CiWbnCavosiKDstwdX
-	 c1SDK65oEvkT23qzgtbZ6yHvRiEmacFsNFY0S8HoW9/tzL9rYDyp6RJc9vict/w/nJ
-	 7Rslp4WQyp1Msd57EXO630G7HBvTGrRpzd0sOiL0=
+	by mail.kernel.org (Postfix) with ESMTP id 478632068D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="LzYeHHKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgEZScE (ORCPT
+        id S1730158AbgEZSck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:32:04 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41682 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729574AbgEZScE (ORCPT
+        Tue, 26 May 2020 14:32:40 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:59250 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728113AbgEZScj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:32:04 -0400
-Received: by mail-il1-f194.google.com with SMTP id b71so21490862ilg.8;
-        Tue, 26 May 2020 11:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ys3yTN0+ac2nWV6kQ76kCGllrYqouXUa6sUx/6wOfQY=;
-        b=lnnf5hFzNB9mmXIPcS/jXV+Wb+0opq/TFSC5gnJr5xKIYn7qXOqXe9gMrbQEpGHklM
-         XMsL4BbXo0GxQW4BY5kQAyajBxVVuVPhs/MTDoiaxbVjoxfMrGdTqErPUS+fwXPtkpuv
-         epokcma+O4hJtb0L6maZ9imtbOIqIgzBimzP/vUN4a6166Mj0QJ8PeEgHn0fwCuhIkq6
-         qMYfAqO5tjwMk/Z2liqsTs4fkqF6aVpB/jb+49vSFH4pp/UKFwFo9fPRqnX3Vk4dydYY
-         NjGlr+kG3+NC4w0BIr5HSCnSLchZUSo8mJMpwNqlsLNIUMEcz1iW2PRTxcKN+yZ6gGaJ
-         JXHQ==
-X-Gm-Message-State: AOAM532l2sStlqhWhx2nnOxtKf8Bau4b1zWDL4nrAQ0ZmJLQ88Ghula6
-        BuYYXkqJ5RSnY0sggw2usT5UCU8=
-X-Google-Smtp-Source: ABdhPJz2NnH/oN4bzaqTdkmM0QjsDMmHpgRJNYGOFD8tjeWWgs/oLbkXDGmpwX/yhqi6vu2TeQsv/Q==
-X-Received: by 2002:a92:b0d:: with SMTP id b13mr2435731ilf.225.1590517922981;
-        Tue, 26 May 2020 11:32:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p22sm55193ill.52.2020.05.26.11.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:32:02 -0700 (PDT)
-Received: (nullmailer pid 135011 invoked by uid 1000);
-        Tue, 26 May 2020 18:32:01 -0000
-Date:   Tue, 26 May 2020 12:32:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200526183201.GA134956@bogus>
-References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
- <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+        Tue, 26 May 2020 14:32:39 -0400
+Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QIHLl9015082;
+        Tue, 26 May 2020 14:32:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=smtpout1; bh=Te1mkX2H/rmHg2h5LVQwpFbnaZ6Tap4l+WBfe+VOlyA=;
+ b=LzYeHHKN0Mf1v4FQvfLjOtOm4bDmU0+teOYFx80of3tQF84Gh572LLiuLSHRdiLhhUOs
+ io5GY0JnsmHxhPpoB7z0ourkFahDrSpPnUeSSl7K5RzknPwRUAC8wCC7AFIF7i7CAlC8
+ 2wcQ4/JPX+anBjJnNLyRhovZDOU/4lSMMMw587Ij6NsmSLEdGzLYS3UnmlQarWtKQXWp
+ InxRPpxbFvsCN/onJMo2K3OSPU3S6vlMc2ylAFAq2q+92McsRjOcVPOoS26KY/kIwBbX
+ axcrpdKOslFn7WHOG4TllDq2rGbKc75agIOdhvaX2Wts0+LKBrVjbUMaumydJ+U0p5pB fQ== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 316vwurke8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 14:32:38 -0400
+Received: from pps.filterd (m0144102.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QIEXuZ016883;
+        Tue, 26 May 2020 14:32:38 -0400
+Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
+        by mx0b-00154901.pphosted.com with ESMTP id 3194yekm4x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 May 2020 14:32:38 -0400
+X-LoopCount0: from 10.173.37.130
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="552834903"
+From:   Mario Limonciello <mario.limonciello@dell.com>
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Alex Guzman <alex@guzman.io>
+Subject: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING mode"
+Date:   Tue, 26 May 2020 13:32:13 -0500
+Message-Id: <20200526183213.20720-1-mario.limonciello@dell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 cotscore=-2147483648 suspectscore=0 priorityscore=1501
+ bulkscore=0 spamscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 clxscore=1011 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005260142
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005260142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 20:22:37 +0300, Laurent Pinchart wrote:
-> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> 
-> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> Processing System Gigabit Transceiver which provides PHY capabilities to
-> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
-> Changes since v7:
-> 
-> - Switch to GPL-2.0-only OR BSD-2-Clause
-> 
-> Changes since v6:
-> 
-> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
->   property
-> - Dropped status property from example
-> - Use 4 spaces to indent example
-> 
-> Changes since v5:
-> 
-> - Document clocks and clock-names properties
-> - Document resets and reset-names properties
-> - Replace subnodes with an additional entry in the PHY cells
-> - Drop lane frequency PHY cell, replaced by reference clock phandle
-> - Convert bindings to YAML
-> - Reword the subject line
-> - Drop Rob's R-b as the bindings have significantly changed
-> - Drop resets and reset-names properties
-> ---
->  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
->  include/dt-bindings/phy/phy.h                 |   1 +
->  2 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> 
+This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This commit has caused regressions for the XPS 9560 containing
+a Nuvoton TPM.
+
+As mentioned by the reporter all TPM2 commands are failing with:
+  ERROR:tcti:src/tss2-tcti/tcti-device.c:290:tcti_device_receive()
+  Failed to read response from fd 3, got errno 1: Operation not permitted
+
+The reporter bisected this issue back to this commit which was
+backported to stable as commit 4d6ebc4.
+
+Cc: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206275
+Fixes: d23d124 ("tpm: fix invalid locking in NONBLOCKING mode")
+Reported-by: Alex Guzman <alex@guzman.io>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/char/tpm/tpm-dev-common.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 87f449340202..bc9d7c7ddc01 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -61,12 +61,6 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 
+ 	mutex_lock(&priv->buffer_mutex);
+ 	priv->command_enqueued = false;
+-	ret = tpm_try_get_ops(priv->chip);
+-	if (ret) {
+-		priv->response_length = ret;
+-		goto out;
+-	}
+-
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
+@@ -74,7 +68,6 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 		priv->response_length = ret;
+ 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
+ 	}
+-out:
+ 	mutex_unlock(&priv->buffer_mutex);
+ 	wake_up_interruptible(&priv->async_wait);
+ }
+@@ -211,7 +204,6 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
+ 	if (file->f_flags & O_NONBLOCK) {
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
+-		tpm_put_ops(priv->chip);
+ 		mutex_unlock(&priv->buffer_mutex);
+ 		return size;
+ 	}
+-- 
+2.25.1
+
