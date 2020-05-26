@@ -2,158 +2,230 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 01:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 01:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA43206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 01:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28602206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 01:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AG81D6CA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388396AbgEZBeM (ORCPT
+        id S2388433AbgEZBfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 21:34:12 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4895 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387794AbgEZBeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 21:34:12 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E4F4B5C67983534339F8;
-        Tue, 26 May 2020 09:34:09 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 26 May
- 2020 09:34:04 +0800
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: avoid inifinite loop to wait for
- flushing node pages at cp_error
-From:   Chao Yu <yuchao0@huawei.com>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200522144752.216197-1-jaegeuk@kernel.org>
- <20200522233243.GA94020@google.com> <20200525035655.GA135148@google.com>
- <565af47c-8364-d910-8d1c-93645c12e660@huawei.com>
- <20200525150608.GA55033@google.com>
- <92afae8b-2dd3-171a-562c-404a67f9aab2@huawei.com>
-Message-ID: <a44f9c2e-3859-6c5d-6f06-7c4c6b4c01c5@huawei.com>
-Date:   Tue, 26 May 2020 09:34:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 25 May 2020 21:35:21 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2191 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387794AbgEZBfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 21:35:20 -0400
+X-UUID: bf79214c38544007b56022499bd4d76b-20200526
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ueSBcAd3PluSlVN5bpFI2LrWqNDxT0TcwE09/a4ZIpc=;
+        b=AG81D6CAsb4uQJ3952Xiki9aYDaWeVe8uJQjQsOBmKEIs8Kzu6bAw7EtE2jb4+uQCqWt82sOPm2JxSYpkJo/ck+TXLUBk53A4X8Pku1RTz9A1EOxc+QkIvK4UjiqzSjJc7ICAWBE6+zvHQiAQmFmgr2c0diZhFlspj16kr2Dsz4=;
+X-UUID: bf79214c38544007b56022499bd4d76b-20200526
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1558043011; Tue, 26 May 2020 09:35:08 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 26 May 2020 09:34:55 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 26 May 2020 09:34:56 +0800
+Message-ID: <1590456895.7226.11.camel@mtksdccf07>
+Subject: Re: [PATCH v6 1/4] rcu/kasan: record and print call_rcu() call stack
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 26 May 2020 09:34:55 +0800
+In-Reply-To: <CACT4Y+Zn9eMAPwCMEo710NnsUEoXP+H7xge8a1essu2F9DeFRw@mail.gmail.com>
+References: <20200522020059.22332-1-walter-zh.wu@mediatek.com>
+         <CACT4Y+Zn9eMAPwCMEo710NnsUEoXP+H7xge8a1essu2F9DeFRw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <92afae8b-2dd3-171a-562c-404a67f9aab2@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/26 9:11, Chao Yu wrote:
-> On 2020/5/25 23:06, Jaegeuk Kim wrote:
->> On 05/25, Chao Yu wrote:
->>> On 2020/5/25 11:56, Jaegeuk Kim wrote:
->>>> Shutdown test is somtimes hung, since it keeps trying to flush dirty node pages
->>>
->>> IMO, for umount case, we should drop dirty reference and dirty pages on meta/data
->>> pages like we change for node pages to avoid potential dead loop...
->>
->> I believe we're doing for them. :P
-> 
-> Actually, I mean do we need to drop dirty meta/data pages explicitly as below:
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 3dc3ac6fe143..4c08fd0a680a 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -299,8 +299,15 @@ static int __f2fs_write_meta_page(struct page *page,
-> 
->  	trace_f2fs_writepage(page, META);
-> 
-> -	if (unlikely(f2fs_cp_error(sbi)))
-> +	if (unlikely(f2fs_cp_error(sbi))) {
-> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
-> +			ClearPageUptodate(page);
-> +			dec_page_count(sbi, F2FS_DIRTY_META);
-> +			unlock_page(page);
-> +			return 0;
-> +		}
->  		goto redirty_out;
-> +	}
->  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->  		goto redirty_out;
->  	if (wbc->for_reclaim && page->index < GET_SUM_BLOCK(sbi, 0))
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 48a622b95b76..94b342802513 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -2682,6 +2682,12 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
-> 
->  	/* we should bypass data pages to proceed the kworkder jobs */
->  	if (unlikely(f2fs_cp_error(sbi))) {
-> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
-> +			ClearPageUptodate(page);
-> +			inode_dec_dirty_pages(inode);
-> +			unlock_page(page);
-> +			return 0;
-> +		}
+T24gTW9uLCAyMDIwLTA1LTI1IGF0IDExOjU2ICswMjAwLCBEbWl0cnkgVnl1a292IHdyb3RlOg0K
+PiBPbiBGcmksIE1heSAyMiwgMjAyMCBhdCA0OjAxIEFNIFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1
+QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIGZlYXR1cmUgd2lsbCByZWNvcmQg
+dGhlIGxhc3QgdHdvIGNhbGxfcmN1KCkgY2FsbCBzdGFja3MgYW5kDQo+ID4gcHJpbnRzIHVwIHRv
+IDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiBLQVNBTiByZXBvcnQuDQo+ID4NCj4gPiBXaGVu
+IGNhbGxfcmN1KCkgaXMgY2FsbGVkLCB3ZSBzdG9yZSB0aGUgY2FsbF9yY3UoKSBjYWxsIHN0YWNr
+IGludG8NCj4gPiBzbHViIGFsbG9jIG1ldGEtZGF0YSwgc28gdGhhdCB0aGUgS0FTQU4gcmVwb3J0
+IGNhbiBwcmludCByY3Ugc3RhY2suDQo+ID4NCj4gPiBbMV1odHRwczovL2J1Z3ppbGxhLmtlcm5l
+bC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0KPiA+IFsyXWh0dHBzOi8vZ3JvdXBzLmdvb2ds
+ZS5jb20vZm9ydW0vIyFzZWFyY2hpbi9rYXNhbi1kZXYvYmV0dGVyJDIwc3RhY2skMjB0cmFjZXMk
+MjBmb3IkMjByY3UlN0Nzb3J0OmRhdGUva2FzYW4tZGV2L0tRc2pUXzg4aERFLzdyTlVacHJSQmdB
+Sg0KPiANCj4gSGkgV2FsdGVyLA0KPiANCj4gVGhlIHNlcmllcyBsb29rIGdvb2QgdG8gbWUuIFRo
+YW5rcyBmb3IgYmVhcmluZyB3aXRoIG1lLiBJIGFtIGVhZ2VyIHRvDQo+IHNlZSB0aGlzIGluIHN5
+emJvdCByZXBvcnRzLg0KPiANCj4gUmV2aWV3ZWQtYW5kLXRlc3RlZC1ieTogRG1pdHJ5IFZ5dWtv
+diA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KPiANCg0KSGkgRG1pdHJ5LA0KDQpJIGFwcHJlY2lhdGUg
+Zm9yIHlvdXIgcmVzcG9uc2UuIFRoaXMgcGF0Y2hlcyBtYWtlIEtBU0FOIHJlcG9ydCBtb3JlDQpi
+ZXR0ZXIgYW5kIGxldCBtZSBsZWFybiBhIGxvdC4gVGhhbmsgeW91IGZvciBnb29kIHN1Z2dlc3Rp
+b24gYW5kDQpkZXRhaWxlZCBleHBsYW5hdGlvbi4NCg0KV2FsdGVyDQoNCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+DQo+ID4gU3VnZ2VzdGVk
+LWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQo+ID4gQWNrZWQtYnk6IFBh
+dWwgRS4gTWNLZW5uZXkgPHBhdWxtY2tAa2VybmVsLm9yZz4NCj4gPiBDYzogQW5kcmV5IFJ5YWJp
+bmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCj4gPiBDYzogRG1pdHJ5IFZ5dWtvdiA8ZHZ5
+dWtvdkBnb29nbGUuY29tPg0KPiA+IENjOiBBbGV4YW5kZXIgUG90YXBlbmtvIDxnbGlkZXJAZ29v
+Z2xlLmNvbT4NCj4gPiBDYzogQW5kcmV3IE1vcnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9y
+Zz4NCj4gPiBDYzogSm9zaCBUcmlwbGV0dCA8am9zaEBqb3NodHJpcGxldHQub3JnPg0KPiA+IENj
+OiBNYXRoaWV1IERlc25veWVycyA8bWF0aGlldS5kZXNub3llcnNAZWZmaWNpb3MuY29tPg0KPiA+
+IENjOiBMYWkgSmlhbmdzaGFuIDxqaWFuZ3NoYW5sYWlAZ21haWwuY29tPg0KPiA+IENjOiBKb2Vs
+IEZlcm5hbmRlcyA8am9lbEBqb2VsZmVybmFuZGVzLm9yZz4NCj4gPiBDYzogQW5kcmV5IEtvbm92
+YWxvdiA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBpbmNsdWRlL2xpbnV4
+L2thc2FuLmggfCAgMiArKw0KPiA+ICBrZXJuZWwvcmN1L3RyZWUuYyAgICAgfCAgMiArKw0KPiA+
+ICBtbS9rYXNhbi9jb21tb24uYyAgICAgfCAgNCArKy0tDQo+ID4gIG1tL2thc2FuL2dlbmVyaWMu
+YyAgICB8IDIxICsrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBtbS9rYXNhbi9rYXNhbi5oICAg
+ICAgfCAxMCArKysrKysrKysrDQo+ID4gIG1tL2thc2FuL3JlcG9ydC5jICAgICB8IDI4ICsrKysr
+KysrKysrKysrKysrKysrKysrLS0tLS0NCj4gPiAgNiBmaWxlcyBjaGFuZ2VkLCA2MCBpbnNlcnRp
+b25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
+dXgva2FzYW4uaCBiL2luY2x1ZGUvbGludXgva2FzYW4uaA0KPiA+IGluZGV4IDMxMzE0Y2E3YzYz
+NS4uMjNiN2VlMDA1NzJkIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgva2FzYW4uaA0K
+PiA+ICsrKyBiL2luY2x1ZGUvbGludXgva2FzYW4uaA0KPiA+IEBAIC0xNzQsMTEgKzE3NCwxMyBA
+QCBzdGF0aWMgaW5saW5lIHNpemVfdCBrYXNhbl9tZXRhZGF0YV9zaXplKHN0cnVjdCBrbWVtX2Nh
+Y2hlICpjYWNoZSkgeyByZXR1cm4gMDsgfQ0KPiA+DQo+ID4gIHZvaWQga2FzYW5fY2FjaGVfc2hy
+aW5rKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSk7DQo+ID4gIHZvaWQga2FzYW5fY2FjaGVfc2h1
+dGRvd24oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCj4gPiArdm9pZCBrYXNhbl9yZWNvcmRf
+YXV4X3N0YWNrKHZvaWQgKnB0cik7DQo+ID4NCj4gPiAgI2Vsc2UgLyogQ09ORklHX0tBU0FOX0dF
+TkVSSUMgKi8NCj4gPg0KPiA+ICBzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fY2FjaGVfc2hyaW5r
+KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30NCj4gPiAgc3RhdGljIGlubGluZSB2b2lkIGth
+c2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30NCj4gPiArc3Rh
+dGljIGlubGluZSB2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqcHRyKSB7fQ0KPiA+
+DQo+ID4gICNlbmRpZiAvKiBDT05GSUdfS0FTQU5fR0VORVJJQyAqLw0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL2tlcm5lbC9yY3UvdHJlZS5jIGIva2VybmVsL3JjdS90cmVlLmMNCj4gPiBpbmRleCAw
+NjU0OGUyZWJiNzIuLjM2YTRmZjdmMzIwYiAxMDA2NDQNCj4gPiAtLS0gYS9rZXJuZWwvcmN1L3Ry
+ZWUuYw0KPiA+ICsrKyBiL2tlcm5lbC9yY3UvdHJlZS5jDQo+ID4gQEAgLTU3LDYgKzU3LDcgQEAN
+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NjaGVk
+L2lzb2xhdGlvbi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2NoZWQvY2xvY2suaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L2thc2FuLmg+DQo+ID4gICNpbmNsdWRlICIuLi90aW1lL3RpY2staW50
+ZXJuYWwuaCINCj4gPg0KPiA+ICAjaW5jbHVkZSAidHJlZS5oIg0KPiA+IEBAIC0yNjY4LDYgKzI2
+NjksNyBAQCBfX2NhbGxfcmN1KHN0cnVjdCByY3VfaGVhZCAqaGVhZCwgcmN1X2NhbGxiYWNrX3Qg
+ZnVuYykNCj4gPiAgICAgICAgIGhlYWQtPmZ1bmMgPSBmdW5jOw0KPiA+ICAgICAgICAgaGVhZC0+
+bmV4dCA9IE5VTEw7DQo+ID4gICAgICAgICBsb2NhbF9pcnFfc2F2ZShmbGFncyk7DQo+ID4gKyAg
+ICAgICBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKGhlYWQpOw0KPiA+ICAgICAgICAgcmRwID0gdGhp
+c19jcHVfcHRyKCZyY3VfZGF0YSk7DQo+ID4NCj4gPiAgICAgICAgIC8qIEFkZCB0aGUgY2FsbGJh
+Y2sgdG8gb3VyIGxpc3QuICovDQo+ID4gZGlmZiAtLWdpdCBhL21tL2thc2FuL2NvbW1vbi5jIGIv
+bW0va2FzYW4vY29tbW9uLmMNCj4gPiBpbmRleCAyOTA2MzU4ZTQyZjAuLjhiYzYxODI4OWJiMSAx
+MDA2NDQNCj4gPiAtLS0gYS9tbS9rYXNhbi9jb21tb24uYw0KPiA+ICsrKyBiL21tL2thc2FuL2Nv
+bW1vbi5jDQo+ID4gQEAgLTQxLDcgKzQxLDcgQEANCj4gPiAgI2luY2x1ZGUgImthc2FuLmgiDQo+
+ID4gICNpbmNsdWRlICIuLi9zbGFiLmgiDQo+ID4NCj4gPiAtc3RhdGljIGlubGluZSBkZXBvdF9z
+dGFja19oYW5kbGVfdCBzYXZlX3N0YWNrKGdmcF90IGZsYWdzKQ0KPiA+ICtkZXBvdF9zdGFja19o
+YW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNrKGdmcF90IGZsYWdzKQ0KPiA+ICB7DQo+ID4gICAgICAg
+ICB1bnNpZ25lZCBsb25nIGVudHJpZXNbS0FTQU5fU1RBQ0tfREVQVEhdOw0KPiA+ICAgICAgICAg
+dW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQo+ID4gQEAgLTU0LDcgKzU0LDcgQEAgc3RhdGljIGlu
+bGluZSBkZXBvdF9zdGFja19oYW5kbGVfdCBzYXZlX3N0YWNrKGdmcF90IGZsYWdzKQ0KPiA+ICBz
+dGF0aWMgaW5saW5lIHZvaWQgc2V0X3RyYWNrKHN0cnVjdCBrYXNhbl90cmFjayAqdHJhY2ssIGdm
+cF90IGZsYWdzKQ0KPiA+ICB7DQo+ID4gICAgICAgICB0cmFjay0+cGlkID0gY3VycmVudC0+cGlk
+Ow0KPiA+IC0gICAgICAgdHJhY2stPnN0YWNrID0gc2F2ZV9zdGFjayhmbGFncyk7DQo+ID4gKyAg
+ICAgICB0cmFjay0+c3RhY2sgPSBrYXNhbl9zYXZlX3N0YWNrKGZsYWdzKTsNCj4gPiAgfQ0KPiA+
+DQo+ID4gIHZvaWQga2FzYW5fZW5hYmxlX2N1cnJlbnQodm9pZCkNCj4gPiBkaWZmIC0tZ2l0IGEv
+bW0va2FzYW4vZ2VuZXJpYy5jIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQo+ID4gaW5kZXggNTZmZjg4
+ODVmZTJlLi44YWNmNDg4ODJiYTIgMTAwNjQ0DQo+ID4gLS0tIGEvbW0va2FzYW4vZ2VuZXJpYy5j
+DQo+ID4gKysrIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQo+ID4gQEAgLTMyNSwzICszMjUsMjQgQEAg
+REVGSU5FX0FTQU5fU0VUX1NIQURPVyhmMik7DQo+ID4gIERFRklORV9BU0FOX1NFVF9TSEFET1co
+ZjMpOw0KPiA+ICBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGY1KTsNCj4gPiAgREVGSU5FX0FTQU5f
+U0VUX1NIQURPVyhmOCk7DQo+ID4gKw0KPiA+ICt2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2so
+dm9pZCAqYWRkcikNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IHBhZ2UgKnBhZ2UgPSBrYXNh
+bl9hZGRyX3RvX3BhZ2UoYWRkcik7DQo+ID4gKyAgICAgICBzdHJ1Y3Qga21lbV9jYWNoZSAqY2Fj
+aGU7DQo+ID4gKyAgICAgICBzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSAqYWxsb2NfaW5mbzsNCj4g
+PiArICAgICAgIHZvaWQgKm9iamVjdDsNCj4gPiArDQo+ID4gKyAgICAgICBpZiAoIShwYWdlICYm
+IFBhZ2VTbGFiKHBhZ2UpKSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuOw0KPiA+ICsNCj4g
+PiArICAgICAgIGNhY2hlID0gcGFnZS0+c2xhYl9jYWNoZTsNCj4gPiArICAgICAgIG9iamVjdCA9
+IG5lYXJlc3Rfb2JqKGNhY2hlLCBwYWdlLCBhZGRyKTsNCj4gPiArICAgICAgIGFsbG9jX2luZm8g
+PSBnZXRfYWxsb2NfaW5mbyhjYWNoZSwgb2JqZWN0KTsNCj4gPiArDQo+ID4gKyAgICAgICAvKg0K
+PiA+ICsgICAgICAgICogcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3RhY2tz
+Lg0KPiA+ICsgICAgICAgICovDQo+ID4gKyAgICAgICBhbGxvY19pbmZvLT5hdXhfc3RhY2tbMV0g
+PSBhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF07DQo+ID4gKyAgICAgICBhbGxvY19pbmZvLT5hdXhf
+c3RhY2tbMF0gPSBrYXNhbl9zYXZlX3N0YWNrKEdGUF9OT1dBSVQpOw0KPiA+ICt9DQo+ID4gZGlm
+ZiAtLWdpdCBhL21tL2thc2FuL2thc2FuLmggYi9tbS9rYXNhbi9rYXNhbi5oDQo+ID4gaW5kZXgg
+ZThmMzcxOTlkODg1Li5hNzM5MWJjODMwNzAgMTAwNjQ0DQo+ID4gLS0tIGEvbW0va2FzYW4va2Fz
+YW4uaA0KPiA+ICsrKyBiL21tL2thc2FuL2thc2FuLmgNCj4gPiBAQCAtMTA0LDcgKzEwNCwxNSBA
+QCBzdHJ1Y3Qga2FzYW5fdHJhY2sgew0KPiA+DQo+ID4gIHN0cnVjdCBrYXNhbl9hbGxvY19tZXRh
+IHsNCj4gPiAgICAgICAgIHN0cnVjdCBrYXNhbl90cmFjayBhbGxvY190cmFjazsNCj4gPiArI2lm
+ZGVmIENPTkZJR19LQVNBTl9HRU5FUklDDQo+ID4gKyAgICAgICAvKg0KPiA+ICsgICAgICAgICog
+Y2FsbF9yY3UoKSBjYWxsIHN0YWNrIGlzIHN0b3JlZCBpbnRvIHN0cnVjdCBrYXNhbl9hbGxvY19t
+ZXRhLg0KPiA+ICsgICAgICAgICogVGhlIGZyZWUgc3RhY2sgaXMgc3RvcmVkIGludG8gc3RydWN0
+IGthc2FuX2ZyZWVfbWV0YS4NCj4gPiArICAgICAgICAqLw0KPiA+ICsgICAgICAgZGVwb3Rfc3Rh
+Y2tfaGFuZGxlX3QgYXV4X3N0YWNrWzJdOw0KPiA+ICsjZWxzZQ0KPiA+ICAgICAgICAgc3RydWN0
+IGthc2FuX3RyYWNrIGZyZWVfdHJhY2tbS0FTQU5fTlJfRlJFRV9TVEFDS1NdOw0KPiA+ICsjZW5k
+aWYNCj4gPiAgI2lmZGVmIENPTkZJR19LQVNBTl9TV19UQUdTX0lERU5USUZZDQo+ID4gICAgICAg
+ICB1OCBmcmVlX3BvaW50ZXJfdGFnW0tBU0FOX05SX0ZSRUVfU1RBQ0tTXTsNCj4gPiAgICAgICAg
+IHU4IGZyZWVfdHJhY2tfaWR4Ow0KPiA+IEBAIC0xNTksNiArMTY3LDggQEAgdm9pZCBrYXNhbl9y
+ZXBvcnRfaW52YWxpZF9mcmVlKHZvaWQgKm9iamVjdCwgdW5zaWduZWQgbG9uZyBpcCk7DQo+ID4N
+Cj4gPiAgc3RydWN0IHBhZ2UgKmthc2FuX2FkZHJfdG9fcGFnZShjb25zdCB2b2lkICphZGRyKTsN
+Cj4gPg0KPiA+ICtkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNrKGdmcF90IGZs
+YWdzKTsNCj4gPiArDQo+ID4gICNpZiBkZWZpbmVkKENPTkZJR19LQVNBTl9HRU5FUklDKSAmJiBc
+DQo+ID4gICAgICAgICAoZGVmaW5lZChDT05GSUdfU0xBQikgfHwgZGVmaW5lZChDT05GSUdfU0xV
+QikpDQo+ID4gIHZvaWQgcXVhcmFudGluZV9wdXQoc3RydWN0IGthc2FuX2ZyZWVfbWV0YSAqaW5m
+bywgc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCj4gPiBkaWZmIC0tZ2l0IGEvbW0va2FzYW4v
+cmVwb3J0LmMgYi9tbS9rYXNhbi9yZXBvcnQuYw0KPiA+IGluZGV4IDgwZjIzYzlkYTZiMC4uMjQy
+MWE0YmQ5MjI3IDEwMDY0NA0KPiA+IC0tLSBhL21tL2thc2FuL3JlcG9ydC5jDQo+ID4gKysrIGIv
+bW0va2FzYW4vcmVwb3J0LmMNCj4gPiBAQCAtMTA1LDE1ICsxMDUsMjAgQEAgc3RhdGljIHZvaWQg
+ZW5kX3JlcG9ydCh1bnNpZ25lZCBsb25nICpmbGFncykNCj4gPiAgICAgICAgIGthc2FuX2VuYWJs
+ZV9jdXJyZW50KCk7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgdm9pZCBwcmludF9zdGFjayhk
+ZXBvdF9zdGFja19oYW5kbGVfdCBzdGFjaykNCj4gPiArew0KPiA+ICsgICAgICAgdW5zaWduZWQg
+bG9uZyAqZW50cmllczsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBucl9lbnRyaWVzOw0KPiA+
+ICsNCj4gPiArICAgICAgIG5yX2VudHJpZXMgPSBzdGFja19kZXBvdF9mZXRjaChzdGFjaywgJmVu
+dHJpZXMpOw0KPiA+ICsgICAgICAgc3RhY2tfdHJhY2VfcHJpbnQoZW50cmllcywgbnJfZW50cmll
+cywgMCk7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyB2b2lkIHByaW50X3RyYWNrKHN0cnVj
+dCBrYXNhbl90cmFjayAqdHJhY2ssIGNvbnN0IGNoYXIgKnByZWZpeCkNCj4gPiAgew0KPiA+ICAg
+ICAgICAgcHJfZXJyKCIlcyBieSB0YXNrICV1OlxuIiwgcHJlZml4LCB0cmFjay0+cGlkKTsNCj4g
+PiAgICAgICAgIGlmICh0cmFjay0+c3RhY2spIHsNCj4gPiAtICAgICAgICAgICAgICAgdW5zaWdu
+ZWQgbG9uZyAqZW50cmllczsNCj4gPiAtICAgICAgICAgICAgICAgdW5zaWduZWQgaW50IG5yX2Vu
+dHJpZXM7DQo+ID4gLQ0KPiA+IC0gICAgICAgICAgICAgICBucl9lbnRyaWVzID0gc3RhY2tfZGVw
+b3RfZmV0Y2godHJhY2stPnN0YWNrLCAmZW50cmllcyk7DQo+ID4gLSAgICAgICAgICAgICAgIHN0
+YWNrX3RyYWNlX3ByaW50KGVudHJpZXMsIG5yX2VudHJpZXMsIDApOw0KPiA+ICsgICAgICAgICAg
+ICAgICBwcmludF9zdGFjayh0cmFjay0+c3RhY2spOw0KPiA+ICAgICAgICAgfSBlbHNlIHsNCj4g
+PiAgICAgICAgICAgICAgICAgcHJfZXJyKCIoc3RhY2sgaXMgbm90IGF2YWlsYWJsZSlcbiIpOw0K
+PiA+ICAgICAgICAgfQ0KPiA+IEBAIC0xOTIsNiArMTk3LDE5IEBAIHN0YXRpYyB2b2lkIGRlc2Ny
+aWJlX29iamVjdChzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsIHZvaWQgKm9iamVjdCwNCj4gPiAg
+ICAgICAgICAgICAgICAgZnJlZV90cmFjayA9IGthc2FuX2dldF9mcmVlX3RyYWNrKGNhY2hlLCBv
+YmplY3QsIHRhZyk7DQo+ID4gICAgICAgICAgICAgICAgIHByaW50X3RyYWNrKGZyZWVfdHJhY2ss
+ICJGcmVlZCIpOw0KPiA+ICAgICAgICAgICAgICAgICBwcl9lcnIoIlxuIik7DQo+ID4gKw0KPiA+
+ICsjaWZkZWYgQ09ORklHX0tBU0FOX0dFTkVSSUMNCj4gPiArICAgICAgICAgICAgICAgaWYgKGFs
+bG9jX2luZm8tPmF1eF9zdGFja1swXSkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBy
+X2VycigiTGFzdCBjYWxsX3JjdSgpOlxuIik7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+cHJpbnRfc3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNrWzBdKTsNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICBwcl9lcnIoIlxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiArICAg
+ICAgICAgICAgICAgaWYgKGFsbG9jX2luZm8tPmF1eF9zdGFja1sxXSkgew0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHByX2VycigiU2Vjb25kIHRvIGxhc3QgY2FsbF9yY3UoKTpcbiIpOw0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByaW50X3N0YWNrKGFsbG9jX2luZm8tPmF1eF9z
+dGFja1sxXSk7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+
+ICsgICAgICAgICAgICAgICB9DQo+ID4gKyNlbmRpZg0KPiA+ICAgICAgICAgfQ0KPiA+DQo+ID4g
+ICAgICAgICBkZXNjcmliZV9vYmplY3RfYWRkcihjYWNoZSwgb2JqZWN0LCBhZGRyKTsNCj4gPiAt
+LQ0KPiA+IDIuMTguMA0KPiA+DQo+ID4gLS0NCj4gPiBZb3UgcmVjZWl2ZWQgdGhpcyBtZXNzYWdl
+IGJlY2F1c2UgeW91IGFyZSBzdWJzY3JpYmVkIHRvIHRoZSBHb29nbGUgR3JvdXBzICJrYXNhbi1k
+ZXYiIGdyb3VwLg0KPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBncm91cCBhbmQgc3RvcCBy
+ZWNlaXZpbmcgZW1haWxzIGZyb20gaXQsIHNlbmQgYW4gZW1haWwgdG8ga2FzYW4tZGV2K3Vuc3Vi
+c2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uDQo+ID4gVG8gdmlldyB0aGlzIGRpc2N1c3Npb24gb24g
+dGhlIHdlYiB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2QvbXNnaWQva2FzYW4tZGV2
+LzIwMjAwNTIyMDIwMDU5LjIyMzMyLTEtd2FsdGVyLXpoLnd1JTQwbWVkaWF0ZWsuY29tLg0KDQo=
 
-Oh, I notice previously, we will drop non-directory inode's dirty pages directly,
-however, during umount, we'd better drop directory inode's dirty pages as well, right?
-
->  		mapping_set_error(page->mapping, -EIO);
->  		/*
->  		 * don't drop any dirty dentry pages for keeping lastest
-> 
->>
->>>
->>> Thanks,
->>>
->>>> in an inifinite loop. Let's drop dirty pages at umount in that case.
->>>>
->>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>> ---
->>>> v3:
->>>>  - fix wrong unlock
->>>>
->>>> v2:
->>>>  - fix typos
->>>>
->>>>  fs/f2fs/node.c | 9 ++++++++-
->>>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->>>> index e632de10aedab..e0bb0f7e0506e 100644
->>>> --- a/fs/f2fs/node.c
->>>> +++ b/fs/f2fs/node.c
->>>> @@ -1520,8 +1520,15 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->>>>  
->>>>  	trace_f2fs_writepage(page, NODE);
->>>>  
->>>> -	if (unlikely(f2fs_cp_error(sbi)))
->>>> +	if (unlikely(f2fs_cp_error(sbi))) {
->>>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
->>>> +			ClearPageUptodate(page);
->>>> +			dec_page_count(sbi, F2FS_DIRTY_NODES);
->>>> +			unlock_page(page);
->>>> +			return 0;
->>>> +		}
->>>>  		goto redirty_out;
->>>> +	}
->>>>  
->>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->>>>  		goto redirty_out;
->>>>
->> .
->>
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
