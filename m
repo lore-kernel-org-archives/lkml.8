@@ -2,200 +2,120 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URG_BIZ,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A05C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F27C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64379208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4149320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520458;
-	bh=nEsdctgoBHpl4HUz6UKxnPRnw8aRpNQAiRd1il2EC4k=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=YGlpia7UIPgZNG1L5PPDJXV9h1k9ROcC1Ku8t/Dqp7GVHk+I0n+xptTHqreoXowbV
-	 FRsAmhdAnhv9pDN0LZ6j0E5v1W8kI3rnkgvdqgm2ajVszsZ3sdHTeaV3udofIZp7wv
-	 XpDGV4Lqe3NB5rabkMmU8wWCUCg1g7MsB2Pr7N3s=
+	s=default; t=1590520466;
+	bh=hFig9hmtta8baLq9l4NUzE2/ChNeohb5Mi97YN1hjHw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hfmKpgEl9JljpYc70PMQwmp7NTkG/2qKo1mgnF8UVUwM9++0HL6UfO6baJJR7UGGp
+	 TAlIg+o2pXvm9y2ePRkHKcQWIQ6LArobsrYpd+wwLmXab3GjlbmX2roQMAg+A1w2ZU
+	 +in+0vDvwlkYMr0Tbgmo+d/dJ6sDX10NMj557nZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404346AbgEZTOR (ORCPT
+        id S2404378AbgEZTOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392143AbgEZTOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:09 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S2404338AbgEZTOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B9A20776;
-        Tue, 26 May 2020 19:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE297208B6;
+        Tue, 26 May 2020 19:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520448;
-        bh=nEsdctgoBHpl4HUz6UKxnPRnw8aRpNQAiRd1il2EC4k=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bIqbO9Tqwv9fc7v819nhEw6MWuw6lBcXUbnnkH5hG4VAln3xQsmaek5sA6M7oAYPO
-         btNX5BN4JFnyU6u2kjO24WL67YH5LtZ8s4J1OPwAxsqz9p+UNT84K3LxktL2JkO7jn
-         VKW0n5H2DZoX6JPSA1Fl5ePDSMeAghhb5DcsGxn8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7ACC23522A8B; Tue, 26 May 2020 12:14:08 -0700 (PDT)
-Date:   Tue, 26 May 2020 12:14:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        x86 <x86@kernel.org>
-Subject: Re: [PATCH] rcu/performance: Fix kfree_perf_init() build warning on
- 32-bit kernels
-Message-ID: <20200526191408.GN2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <158923078019.390.12609597570329519463.tip-bot2@tip-bot2>
- <20200526182744.GA3722128@gmail.com>
+        s=default; t=1590520455;
+        bh=hFig9hmtta8baLq9l4NUzE2/ChNeohb5Mi97YN1hjHw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XIOXt7c95bmHbZ8819qMrR1361QYOLMjsZXHYEFDS9j/CDtnA+tOydgptCYLBn3mJ
+         a10XEk4VeD5qU05O6nz/SW8yWaHuZuKsyzIPntXQrgPLvfjYpX4XsM7vEbabyu0/wX
+         jwB78Ca+lQZHAYjP9zALYlVfKTUkv+rDMoWXV6ps=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Bryant G. Ly" <bryangly@gmail.com>,
+        Bart van Assche <bvanassche@acm.org>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 069/126] scsi: target: Put lun_ref at end of tmr processing
+Date:   Tue, 26 May 2020 20:53:26 +0200
+Message-Id: <20200526183943.975359174@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
+References: <20200526183937.471379031@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526182744.GA3722128@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:27:44PM +0200, Ingo Molnar wrote:
-> 
-> * tip-bot2 for Joel Fernandes (Google) <tip-bot2@linutronix.de> wrote:
-> 
-> > The following commit has been merged into the core/rcu branch of tip:
-> > 
-> > Commit-ID:     f87dc808009ac86c790031627698ef1a34c31e25
-> > Gitweb:        https://git.kernel.org/tip/f87dc808009ac86c790031627698ef1a34c31e25
-> > Author:        Joel Fernandes (Google) <joel@joelfernandes.org>
-> > AuthorDate:    Mon, 16 Mar 2020 12:32:26 -04:00
-> > Committer:     Paul E. McKenney <paulmck@kernel.org>
-> > CommitterDate: Mon, 27 Apr 2020 11:02:50 -07:00
-> > 
-> > rcuperf: Add ability to increase object allocation size
-> > 
-> > This allows us to increase memory pressure dynamically using a new
-> > rcuperf boot command line parameter called 'rcumult'.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  kernel/rcu/rcuperf.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> > index a4a8d09..16dd1e6 100644
-> > --- a/kernel/rcu/rcuperf.c
-> > +++ b/kernel/rcu/rcuperf.c
-> > @@ -88,6 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
-> >  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
-> >  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
-> >  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
-> > +torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
-> >  
-> >  static char *perf_type = "rcu";
-> >  module_param(perf_type, charp, 0444);
-> > @@ -635,7 +636,7 @@ kfree_perf_thread(void *arg)
-> >  		}
-> >  
-> >  		for (i = 0; i < kfree_alloc_num; i++) {
-> > -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
-> > +			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
-> >  			if (!alloc_ptr)
-> >  				return -ENOMEM;
-> >  
-> > @@ -722,6 +723,8 @@ kfree_perf_init(void)
-> >  		schedule_timeout_uninterruptible(1);
-> >  	}
-> >  
-> > +	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
-> 
-> There's a new build warning on certain 32-bit kernel builds due to 
-> this commit:
-> 
-> In file included from ./include/linux/printk.h:7,
->                  from ./include/linux/kernel.h:15,
->                  from kernel/rcu/rcuperf.c:13:
-> kernel/rcu/rcuperf.c: In function ‘kfree_perf_init’:
-> ./include/linux/kern_levels.h:5:18: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’ [-Wformat=]
->     5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */
->       |                  ^~~~~~
-> ./include/linux/kern_levels.h:9:20: note: in expansion of macro ‘KERN_SOH’
->     9 | #define KERN_ALERT KERN_SOH "1" /* action must be taken immediately */
->       |                    ^~~~~~~~
-> ./include/linux/printk.h:295:9: note: in expansion of macro ‘KERN_ALERT’
->   295 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
->       |         ^~~~~~~~~~
-> kernel/rcu/rcuperf.c:726:2: note: in expansion of macro ‘pr_alert’
->   726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
->       |  ^~~~~~~~
-> kernel/rcu/rcuperf.c:726:32: note: format string is defined here
->   726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
->       |                              ~~^
->       |                                |
->       |                                long unsigned int
->       |                              %u
-> 
-> 
-> The reason for the warning is that both kfree_mult and sizeof() are 
-> 'int' types on 32-bit kernels, while the format string expects a long.
-> 
-> Instead of casting the type to long or tweaking the format string, the 
-> most straightforward solution is to upgrade kfree_mult to a long. 
-> Since this depends on CONFIG_RCU_PERF_TEST
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-Makes sense, and I have queued the patch below, which I am assuming
-that you want in the upcoming merge window.  If you don't tell me
-otherwise, I will send you an urgent pull request later today.
-Or, if you just put it directly into -tip yourself:
+commit f2e6b75f6ee82308ef7b00f29e71e5f1c6b3d52a upstream.
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Testing with Loopback I found that, after a Loopback LUN has executed a
+TMR, I can no longer unlink the LUN.  The rm command hangs in
+transport_clear_lun_ref() at wait_for_completion(&lun->lun_shutdown_comp)
+The reason is, that transport_lun_remove_cmd() is not called at the end of
+target_tmr_work().
 
-Either way, please let me know.
+It seems, that in other fabrics this call happens implicitly when the
+fabric drivers call transport_generic_free_cmd() during their
+->queue_tm_rsp().
 
-> BTW., could we please also rename this code from 'PERF_TEST'/'perf test'
-> to 'PERFORMANCE_TEST'/'performance test'? At first glance I always
-> mistakenly believe that it's somehow related to perf, while it isn't. =B-)
+Unfortunately Loopback seems to not comply to the common way
+of calling transport_generic_free_cmd() from ->queue_*().
+Instead it calls transport_generic_free_cmd() from its
+  ->check_stop_free() only.
 
-Fair enough, especially given that perf was there first and is also way
-more heavily used.  ;-)
+But the ->check_stop_free() is called by
+transport_cmd_check_stop_to_fabric() after it has reset the se_cmd->se_lun
+pointer.  Therefore the following transport_generic_free_cmd() skips the
+transport_lun_remove_cmd().
 
-But I am guessing that this one is OK for the v5.9 merge window.
-Either way, I will update as you say.
+So this patch re-adds the transport_lun_remove_cmd() at the end of
+target_tmr_work(), which was removed during commit 2c9fa49e100f ("scsi:
+target/core: Make ABORT and LUN RESET handling synchronous").
 
-							Thanx, Paul
+For fabrics using transport_generic_free_cmd() in the usual way the double
+call to transport_lun_remove_cmd() doesn't harm, as
+transport_lun_remove_cmd() checks for this situation and does not release
+lun_ref twice.
 
-------------------------------------------------------------------------
+Link: https://lore.kernel.org/r/20200513153443.3554-1-bstroesser@ts.fujitsu.com
+Fixes: 2c9fa49e100f ("scsi: target/core: Make ABORT and LUN RESET handling synchronous")
+Cc: stable@vger.kernel.org
+Tested-by: Bryant G. Ly <bryangly@gmail.com>
+Reviewed-by: Bart van Assche <bvanassche@acm.org>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 2fbc7d67a2ed108e3ac63296670fecb3a42fddd0
-Author: Ingo Molnar <mingo@kernel.org>
-Date:   Tue May 26 12:10:01 2020 -0700
+---
+ drivers/target/target_core_transport.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-    rcuperf: Fix kfree_mult to match printk() format
-    
-    This commit changes the type of kfree_mult from int to long in order
-    to match the printk() format on 32-bit systems.
-    
-    Reported-by: kbuild test robot <lkp@intel.com>
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index d906ca9..fb3a1f0 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -93,7 +93,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
- torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
- torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
- torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
--torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
-+torture_param(long, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+--- a/drivers/target/target_core_transport.c
++++ b/drivers/target/target_core_transport.c
+@@ -3349,6 +3349,7 @@ static void target_tmr_work(struct work_
  
- static char *perf_type = "rcu";
- module_param(perf_type, charp, 0444);
+ 	cmd->se_tfo->queue_tm_rsp(cmd);
+ 
++	transport_lun_remove_cmd(cmd);
+ 	transport_cmd_check_stop_to_fabric(cmd);
+ 	return;
+ 
+
+
