@@ -2,112 +2,121 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8858BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6032F206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590453000;
-	bh=jiUY9V1Bkztcy/8t94YHlJD2RQ8+uVmK8V+BpsmrT84=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aC4JoWYmtbK9mxsECbR0JmMIHAJ/hUYAc4849Fa97r6fVBnAWyZxy2p1GQjQesPtZ
-	 LR550oQJ+Kp4CZvSeB7dJFFblEsKPikZ9JKtJ3QaljtdHX7y/kAtws338ej8bmKPcv
-	 PVN7A11aDC1BvT2jYSRV5Bn2U8ps1hS8r9voxHvg=
+	by mail.kernel.org (Postfix) with ESMTP id E32DF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 00:31:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ZuhdvUk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388045AbgEZA37 (ORCPT
+        id S1729249AbgEZAbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 20:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgEZA37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 20:29:59 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B58E2078B
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590452998;
-        bh=jiUY9V1Bkztcy/8t94YHlJD2RQ8+uVmK8V+BpsmrT84=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BW5Enqv4WR4JyXZJdRRGLYXdZr3N6KfpHYCM4QRjtAOoLAvkGODYbq8m7cSUpYr/p
-         wz3aBLKG5OYqZsQtZL6H+G+OReE+9bkwqnvO2bg72f53fNq45Wc1OryZUwmiPv17DH
-         eOy4QFeACjU4/YCPtfDuuTM3YAJZs89XfudA510U=
-Received: by mail-lj1-f170.google.com with SMTP id q2so22390864ljm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 17:29:58 -0700 (PDT)
-X-Gm-Message-State: AOAM533nAmdVieFKlI2gft8aX2YuGrWR0VoGyPThBYGcpan1SxSSrCdt
-        hXEKc2OqjyCqbTsXFm9vU4vvBhwTT0Xvn7fabwE=
-X-Google-Smtp-Source: ABdhPJzFPVX/ZQf6wS3uG4u1AQO/qZu5mRLPhUvY8Gw1ZniByoGz0/NOLxDK7AXmEvwSyD7D/23iC3BzwLGiaZ/F7/E=
-X-Received: by 2002:a2e:160e:: with SMTP id w14mr12316006ljd.66.1590452996282;
- Mon, 25 May 2020 17:29:56 -0700 (PDT)
+        Mon, 25 May 2020 20:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgEZAbN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 20:31:13 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15846C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 17:31:12 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id p4so8709710qvr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 17:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c4nWWXi8qCXT9b5o9GmVwjoEsDaKwahe7vf3tGdNZwE=;
+        b=ZuhdvUk7sfvXRz7F/zug9z1Ai7NHAh6QTWSHAlrthly+E40qyNby2MBcN3J5zTcaJq
+         qhxLhCyDuPQM3S4wCNwm8DlOKBcLPdH/d7LCkdG4ByrcPomg2WSxYh+Iq2Si6UfKN25H
+         DKYH1/QdsGxp1B31R6qCgVWOz7P/qPTBUi0IFz5TgFfRgFEu4FbFcopVrtY/NVZb77fe
+         Dhb95g0gYo/IB3YQ87cD2gnpWvnr7UOSovzkjkWYpAeOBIxWvgmxhWm09C306C6sgJMK
+         SBAHugwgLhgR8kDfvdjYQE8T6nQNboRCt/zi64uE+qXpWPW2B+FxnR93C2/IZmS1oF2Y
+         0eog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c4nWWXi8qCXT9b5o9GmVwjoEsDaKwahe7vf3tGdNZwE=;
+        b=Y7sGduKFyKYxO2WGEtg2eEvmWoDJS5klEXG8JOTxcqFwQijzL5A6YjLAUdXehyGLyi
+         skgS0OoO0vl0wbBVEjsC/NSLWFHZOPAAgFF20EF6ankRCX39nnXn84RY8lGWZOxZtsMe
+         ZCl0/ce6u3Uo2jIHw34c3+jtE6Jn1k2a0XLL7uARnzO79zu+i07qeuh3oXk+epm2ay5X
+         c2fa86t/Gds/8m60U0zMtr4cEXR2ism1ZB3Ur3fcXCF/nrPOlwhjnzbG0adYSc+X1hbF
+         qzHRsdARjUtgQ1aGiRXTqh82b6cF0IHLe8Q9sn8jGJUi9EIgAlYFKLTJvQLu70S1Aymq
+         LCbg==
+X-Gm-Message-State: AOAM532bb3oNXMA4O8s5qzyLjBGSjJ3O1guwuH9B9wOcURVdm4CVrujh
+        izpl1VPYx+ar+ngTnQbE38wq8w==
+X-Google-Smtp-Source: ABdhPJzxmy9Zc1nX8eync6kzxizMe3npjopcMH0OSdMUFzKfRkwzMRyC1VFYMIWlBlyT3HBB07pfaw==
+X-Received: by 2002:a0c:fb0e:: with SMTP id c14mr3846688qvp.63.1590453071286;
+        Mon, 25 May 2020 17:31:11 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id v69sm11854642qkb.96.2020.05.25.17.31.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 17:31:10 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jdNUs-0001vu-5D; Mon, 25 May 2020 21:31:10 -0300
+Date:   Mon, 25 May 2020 21:31:10 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH] IB/sa: Resolving use-after-free in ib_nl_send_msg.
+Message-ID: <20200526003110.GJ744@ziepe.ca>
+References: <1589469084-15125-1-git-send-email-divya.indi@oracle.com>
+ <1589469084-15125-2-git-send-email-divya.indi@oracle.com>
 MIME-Version: 1.0
-References: <1590416306-66453-1-git-send-email-guoren@kernel.org> <20200525143648.GM2605652@cisco>
-In-Reply-To: <20200525143648.GM2605652@cisco>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 26 May 2020 08:29:45 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTS4gM39KWuksRRT9ONPhbhYuN9r1oOP_qRT8KvDga4vyA@mail.gmail.com>
-Message-ID: <CAJF2gTS4gM39KWuksRRT9ONPhbhYuN9r1oOP_qRT8KvDga4vyA@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Remove unnecessary path for syscall_trace
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     keescook@chromium.org, palmerdabbelt@google.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589469084-15125-2-git-send-email-divya.indi@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tycho,
+On Thu, May 14, 2020 at 08:11:24AM -0700, Divya Indi wrote:
+>  static void ib_nl_set_path_rec_attrs(struct sk_buff *skb,
+>  				     struct ib_sa_query *query)
+>  {
+> @@ -889,6 +904,15 @@ static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+>  		spin_lock_irqsave(&ib_nl_request_lock, flags);
+>  		list_del(&query->list);
+>  		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> +	} else {
+> +		set_bit(IB_SA_NL_QUERY_SENT, (unsigned long *)&query->flags);
+> +
+> +		/*
+> +		 * If response is received before this flag was set
+> +		 * someone is waiting to process the response and release the
+> +		 * query.
+> +		 */
+> +		wake_up(&wait_queue);
+>  	}
 
-On Mon, May 25, 2020 at 10:36 PM Tycho Andersen <tycho@tycho.ws> wrote:
->
-> On Mon, May 25, 2020 at 02:18:26PM +0000, guoren@kernel.org wrote:
-> > From: Guo Ren <guoren@linux.alibaba.com>
-> >
-> > Obviously, there is no need to recover a0-a7 in reject path.
-> >
-> > Previous modification is from commit af33d243 by Tycho, to
-> > fixup seccomp reject syscall code path.
->
-> Doesn't this suffer from the same problem, though? a7 is clobbered, so
-> the -ERESTARTSYS behavior won't work?
+As far as I can see the issue here is that the request is put into the
+ib_nl_request_list before it is really ready to be in that list, eg
+ib_nl_send_msg() has actually completed and ownership of the memory
+has been transfered.
 
-Look, the patch only affects the path of ret_from_syscall_rejected,
-and there are two possible paths:
-1. ret_from_syscall_rejected->handle_syscall_trace_exit->ret_from_exception
-2. ret_from_syscall_rejected->ret_from_exception
+It appears to me the reason for this is simply because a spinlock is
+used for the ib_nl_request_lock and it cannot be held across
+ib_nl_send_msg().
 
-All the above skip the check_syscall_nr and ignore the current a7, in
-the C function they use the pt_regs in the stack to get proper reg's
-value.
+Convert that lock to a mutex and move the list_add to after the
+success of ib_nl_send_msg() and this bug should be fixed without
+adding jaunty atomics or a wait queue.
 
-For the -ERESTARTSYS, we only process it in:
-ret_from_exception->resume_userspace->work_notifysig->do_notify_resume:
-do_signal & handle_signal:
+This is a 'racy error unwind' bug class...
 
-                switch (regs->a0) {
-                case -ERESTARTNOHAND:
-                case -ERESTARTSYS:
-                case -ERESTARTNOINTR:
-                        regs->a0 = regs->orig_a0;
-                        regs->epc -= 0x4;
-                        break;
-
-All above are done in pt_regs and when returning to userspace, a7 will
-be recovered by restore_all in entry.S.
-
-                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+Jason
