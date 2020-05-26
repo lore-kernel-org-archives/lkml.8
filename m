@@ -2,276 +2,95 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C205C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8844420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521659;
-	bh=o9X6o0lP6jd6SYFq0q1p083PCWe5KFflEkWAx35edyA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NxSJspL2+8rEYpPVU9I+LEQ/YZ/XWjZDDJ/6zBJR7iszVQOVuOcpoptlyoVbtG/nc
-	 TlvPgGYiDcOYchnMAfOYCZc3Sd7QoiATvdfXg5YCGzJyDFdkh3w1h5y2GW0GaIiXGa
-	 FgOavX4a4kFuV/isLktLcnMVBMNZywoyP8xvcFlQ=
+	by mail.kernel.org (Postfix) with ESMTP id 54B4320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aM0E67Df"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389367AbgEZSzN (ORCPT
+        id S2391654AbgEZTe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389316AbgEZSzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F89208A9;
-        Tue, 26 May 2020 18:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519308;
-        bh=o9X6o0lP6jd6SYFq0q1p083PCWe5KFflEkWAx35edyA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYDgEyb1DUXbIF9TcVgbGqr9fRWGbGvVmrXRodCiqQPIWmO7BAcuapEnyaoyV+oIR
-         WrNbdSsAhlivYgVCr4YlOiz6VxQMH/+GHO9D4xCFg+sWXWRAqQuB//DahUz5IJS4Zp
-         WoJEgjKVvwokZNU41Iy4ft/3MZ+nv9cmsxsPI+cI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <shuahkh@osg.samsung.com>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 18/65] media: fix use-after-free in cdev_put() when app exits after driver unbind
-Date:   Tue, 26 May 2020 20:52:37 +0200
-Message-Id: <20200526183912.963855505@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
-References: <20200526183905.988782958@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 26 May 2020 15:34:28 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:16303 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgEZSyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:54:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590519294; x=1622055294;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=sw3GsXgWODA02zmkjx9WwSIRN5Jis0cQ31/Ca05dRdg=;
+  b=aM0E67Dfv2LjUwmz9p2n3lClJnNPSoLBGHuLwzEZtbTDc0a8KOQzuO4E
+   RMLvNnXtaxyjOaE7bmSUNzR7I1TQzNkCoAIGWQoJ4N8UpSTCG+l8m7+MA
+   /KKwH7D/H6avRGDl17i7AFzXkE52p+fQ8uJEUJH4No6XtHX25UXYp5c9e
+   I=;
+IronPort-SDR: ts3ePCm91EG/cd8uz8c4XPtmkZtbHDMPNckvoQ+t9cj6hYusStsbojEFrsJ2/SMRCuc2l9OLqX
+ BPI/CEcEHpHg==
+X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
+   d="scan'208";a="33663270"
+Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
+Thread-Topic: [PATCH v1] PCI: controller: Remove duplicate error message
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 26 May 2020 18:22:59 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 96E9C28211C;
+        Tue, 26 May 2020 18:22:57 +0000 (UTC)
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 18:22:57 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 18:22:57 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1497.006;
+ Tue, 26 May 2020 18:22:56 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "zhengdejin5@gmail.com" <zhengdejin5@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tjoseph@cadence.com" <tjoseph@cadence.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Thread-Index: AQHWM3A7ZXCRFcozsESZq5tPMlXzIai6rncA
+Date:   Tue, 26 May 2020 18:22:56 +0000
+Message-ID: <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
+References: <20200526150954.4729-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200526150954.4729-1-zhengdejin5@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B772E1B8FC60C34D8AEBA36F4B277AEF@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <shuahkh@osg.samsung.com>
-
-commit 5b28dde51d0ccc54cee70756e1800d70bed7114a upstream.
-
-When driver unbinds while media_ioctl is in progress, cdev_put() fails with
-when app exits after driver unbinds.
-
-Add devnode struct device kobj as the cdev parent kobject. cdev_add() gets
-a reference to it and releases it in cdev_del() ensuring that the devnode
-is not deallocated as long as the application has the device file open.
-
-media_devnode_register() initializes the struct device kobj before calling
-cdev_add(). media_devnode_unregister() does cdev_del() and then deletes the
-device. devnode is released when the last reference to the struct device is
-gone.
-
-This problem is found on uvcvideo, em28xx, and au0828 drivers and fix has
-been tested on all three.
-
-kernel: [  193.599736] BUG: KASAN: use-after-free in cdev_put+0x4e/0x50
-kernel: [  193.599745] Read of size 8 by task media_device_te/1851
-kernel: [  193.599792] INFO: Allocated in __media_device_register+0x54
-kernel: [  193.599951] INFO: Freed in media_devnode_release+0xa4/0xc0
-
-kernel: [  193.601083] Call Trace:
-kernel: [  193.601093]  [<ffffffff81aecac3>] dump_stack+0x67/0x94
-kernel: [  193.601102]  [<ffffffff815359b2>] print_trailer+0x112/0x1a0
-kernel: [  193.601111]  [<ffffffff8153b5e4>] object_err+0x34/0x40
-kernel: [  193.601119]  [<ffffffff8153d9d4>] kasan_report_error+0x224/0x530
-kernel: [  193.601128]  [<ffffffff814a2c3d>] ? kzfree+0x2d/0x40
-kernel: [  193.601137]  [<ffffffff81539d72>] ? kfree+0x1d2/0x1f0
-kernel: [  193.601154]  [<ffffffff8157ca7e>] ? cdev_put+0x4e/0x50
-kernel: [  193.601162]  [<ffffffff8157ca7e>] cdev_put+0x4e/0x50
-kernel: [  193.601170]  [<ffffffff815767eb>] __fput+0x52b/0x6c0
-kernel: [  193.601179]  [<ffffffff8117743a>] ? switch_task_namespaces+0x2a
-kernel: [  193.601188]  [<ffffffff815769ee>] ____fput+0xe/0x10
-kernel: [  193.601196]  [<ffffffff81170023>] task_work_run+0x133/0x1f0
-kernel: [  193.601204]  [<ffffffff8117746e>] ? switch_task_namespaces+0x5e
-kernel: [  193.601213]  [<ffffffff8111b50c>] do_exit+0x72c/0x2c20
-kernel: [  193.601224]  [<ffffffff8111ade0>] ? release_task+0x1250/0x1250
--
--
--
-kernel: [  193.601360]  [<ffffffff81003587>] ? exit_to_usermode_loop+0xe7
-kernel: [  193.601368]  [<ffffffff810035c0>] exit_to_usermode_loop+0x120
-kernel: [  193.601376]  [<ffffffff810061da>] syscall_return_slowpath+0x16a
-kernel: [  193.601386]  [<ffffffff82848b33>] entry_SYSCALL_64_fastpath+0xa6
-
-Signed-off-by: Shuah Khan <shuahkh@osg.samsung.com>
-Tested-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/media-device.c  |  6 +++--
- drivers/media/media-devnode.c | 48 +++++++++++++++++++++--------------
- 2 files changed, 33 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index fb018fe1a8f7..5d79cd481730 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -396,16 +396,16 @@ int __must_check __media_device_register(struct media_device *mdev,
- 	devnode->release = media_device_release;
- 	ret = media_devnode_register(mdev, devnode, owner);
- 	if (ret < 0) {
-+		/* devnode free is handled in media_devnode_*() */
- 		mdev->devnode = NULL;
--		kfree(devnode);
- 		return ret;
- 	}
- 
- 	ret = device_create_file(&devnode->dev, &dev_attr_model);
- 	if (ret < 0) {
-+		/* devnode free is handled in media_devnode_*() */
- 		mdev->devnode = NULL;
- 		media_devnode_unregister(devnode);
--		kfree(devnode);
- 		return ret;
- 	}
- 
-@@ -430,6 +430,8 @@ void media_device_unregister(struct media_device *mdev)
- 	if (media_devnode_is_registered(mdev->devnode)) {
- 		device_remove_file(&mdev->devnode->dev, &dev_attr_model);
- 		media_devnode_unregister(mdev->devnode);
-+		/* devnode free is handled in media_devnode_*() */
-+		mdev->devnode = NULL;
- 	}
- }
- EXPORT_SYMBOL_GPL(media_device_unregister);
-diff --git a/drivers/media/media-devnode.c b/drivers/media/media-devnode.c
-index 000efb17b95b..45bb70d27224 100644
---- a/drivers/media/media-devnode.c
-+++ b/drivers/media/media-devnode.c
-@@ -63,13 +63,8 @@ static void media_devnode_release(struct device *cd)
- 	struct media_devnode *devnode = to_media_devnode(cd);
- 
- 	mutex_lock(&media_devnode_lock);
--
--	/* Delete the cdev on this minor as well */
--	cdev_del(&devnode->cdev);
--
- 	/* Mark device node number as free */
- 	clear_bit(devnode->minor, media_devnode_nums);
--
- 	mutex_unlock(&media_devnode_lock);
- 
- 	/* Release media_devnode and perform other cleanups as needed. */
-@@ -77,6 +72,7 @@ static void media_devnode_release(struct device *cd)
- 		devnode->release(devnode);
- 
- 	kfree(devnode);
-+	pr_debug("%s: Media Devnode Deallocated\n", __func__);
- }
- 
- static struct bus_type media_bus_type = {
-@@ -205,6 +201,8 @@ static int media_release(struct inode *inode, struct file *filp)
- 	/* decrease the refcount unconditionally since the release()
- 	   return value is ignored. */
- 	put_device(&devnode->dev);
-+
-+	pr_debug("%s: Media Release\n", __func__);
- 	return 0;
- }
- 
-@@ -250,6 +248,7 @@ int __must_check media_devnode_register(struct media_device *mdev,
- 	if (minor == MEDIA_NUM_DEVICES) {
- 		mutex_unlock(&media_devnode_lock);
- 		pr_err("could not get a free minor\n");
-+		kfree(devnode);
- 		return -ENFILE;
- 	}
- 
-@@ -259,27 +258,31 @@ int __must_check media_devnode_register(struct media_device *mdev,
- 	devnode->minor = minor;
- 	devnode->media_dev = mdev;
- 
-+	/* Part 1: Initialize dev now to use dev.kobj for cdev.kobj.parent */
-+	devnode->dev.bus = &media_bus_type;
-+	devnode->dev.devt = MKDEV(MAJOR(media_dev_t), devnode->minor);
-+	devnode->dev.release = media_devnode_release;
-+	if (devnode->parent)
-+		devnode->dev.parent = devnode->parent;
-+	dev_set_name(&devnode->dev, "media%d", devnode->minor);
-+	device_initialize(&devnode->dev);
-+
- 	/* Part 2: Initialize and register the character device */
- 	cdev_init(&devnode->cdev, &media_devnode_fops);
- 	devnode->cdev.owner = owner;
-+	devnode->cdev.kobj.parent = &devnode->dev.kobj;
- 
- 	ret = cdev_add(&devnode->cdev, MKDEV(MAJOR(media_dev_t), devnode->minor), 1);
- 	if (ret < 0) {
- 		pr_err("%s: cdev_add failed\n", __func__);
--		goto error;
-+		goto cdev_add_error;
- 	}
- 
--	/* Part 3: Register the media device */
--	devnode->dev.bus = &media_bus_type;
--	devnode->dev.devt = MKDEV(MAJOR(media_dev_t), devnode->minor);
--	devnode->dev.release = media_devnode_release;
--	if (devnode->parent)
--		devnode->dev.parent = devnode->parent;
--	dev_set_name(&devnode->dev, "media%d", devnode->minor);
--	ret = device_register(&devnode->dev);
-+	/* Part 3: Add the media device */
-+	ret = device_add(&devnode->dev);
- 	if (ret < 0) {
--		pr_err("%s: device_register failed\n", __func__);
--		goto error;
-+		pr_err("%s: device_add failed\n", __func__);
-+		goto device_add_error;
- 	}
- 
- 	/* Part 4: Activate this minor. The char device can now be used. */
-@@ -287,12 +290,15 @@ int __must_check media_devnode_register(struct media_device *mdev,
- 
- 	return 0;
- 
--error:
--	mutex_lock(&media_devnode_lock);
-+device_add_error:
- 	cdev_del(&devnode->cdev);
-+cdev_add_error:
-+	mutex_lock(&media_devnode_lock);
- 	clear_bit(devnode->minor, media_devnode_nums);
-+	devnode->media_dev = NULL;
- 	mutex_unlock(&media_devnode_lock);
- 
-+	put_device(&devnode->dev);
- 	return ret;
- }
- 
-@@ -314,8 +320,12 @@ void media_devnode_unregister(struct media_devnode *devnode)
- 
- 	mutex_lock(&media_devnode_lock);
- 	clear_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
-+	/* Delete the cdev on this minor as well */
-+	cdev_del(&devnode->cdev);
- 	mutex_unlock(&media_devnode_lock);
--	device_unregister(&devnode->dev);
-+	device_del(&devnode->dev);
-+	devnode->media_dev = NULL;
-+	put_device(&devnode->dev);
- }
- 
- /*
--- 
-2.25.1
-
-
-
+T24gVHVlLCAyMDIwLTA1LTI2IGF0IDIzOjA5ICswODAwLCBEZWppbiBaaGVuZyB3cm90ZToNCj4g
+Q0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5p
+emF0aW9uLiBEbw0KPiBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3Mg
+eW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXINCj4gYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2Fm
+ZS4NCj4gDQo+IA0KPiANCj4gSXQgd2lsbCBwcmludCBhbiBlcnJvciBtZXNzYWdlIGJ5IGl0c2Vs
+ZiB3aGVuDQo+IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZSgpIGdvZXMgd3JvbmcuIHNvIHJl
+bW92ZSB0aGUgZHVwbGljYXRlDQo+IGVycm9yIG1lc3NhZ2UuDQo+IA0KDQpJdCBzZWVtcyBsaWtl
+IHRoYXQgaW4gdGhlIGZpcnN0IGVycm9yIGNhc2UgaW4NCmRldm1fcGNpX3JlbWFwX2NmZ19yZXNv
+dXJjZSgpLCB0aGUgcHJpbnQgd2lsbCBiZSBsZXNzIGluZGljYXRpdmUuIENvdWxkDQp5b3UgcGxl
+YXNlIHNoYXJlIGFuIGV4YW1wbGUgcHJpbnQgbG9nIHdpdGggdGhlIGR1cGxpY2F0ZSBwcmludD8N
+Cg0KVGhhbmtzLA0KICAgSm9uYXRoYW4NCg==
