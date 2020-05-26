@@ -2,176 +2,357 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D585CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A29207ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A632F207ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oEtC9JqL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="j1t7+X+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388673AbgEZJW6 (ORCPT
+        id S1731797AbgEZJXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55458 "EHLO
+        Tue, 26 May 2020 05:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388636AbgEZJWx (ORCPT
+        with ESMTP id S1728735AbgEZJXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:22:53 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA27C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:22:53 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v16so23641246ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kHtMUTjIpKGUVpTGb6eXqa1GBMsHXSe04tQOYQTSzwk=;
-        b=oEtC9JqLK6JUL+a09fup+E3zmswBCXWI3NHfhAeye40YMT/bZyDqHtuU4TEwB9FFaA
-         PQyMqRt1usaUnx4ouAZuqxXbnvHXqIwQQQPVDsiNGWmZMtk4/0BiERce+XhIUzzEIG9f
-         7YLBwF5B3zkUWkw0rrxo1FMolJJWsHiFs581btuKT1U/A1xmOuhWyS/10UwH/J8G5VrU
-         lUN+3WznXNQ1n7yqOWXLAfW6fjDVbaBVuSMErOAUqdmMV3ykZ12gG3B5FLQ1VSVGngjQ
-         WLz1ev/VKjH5X8ibPWTK8CEfNUv8+zvKU/GaOOYg9qOZxC+vlFi0QQ36SuGx+ZrpOifC
-         njFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kHtMUTjIpKGUVpTGb6eXqa1GBMsHXSe04tQOYQTSzwk=;
-        b=lyDUg694/7l3EVVjaYc+g0Dep4iPR5my35o0qJ9hc35k1Fj/AyFhR6wu1Y1KENbT2k
-         6UmEyAbH+0uRt+wCNNoV/eoRlfOocK0c6ohUaqP3cvcKJ3VE5Vomz9lShQn4pqTAu+9O
-         yTjMsqLhGZG3mNh/K0zA+QWT343OGLL2bJv6+WvRYc8BfUEq8+RNcGAXL/7zELCSpgT7
-         lZwhBPavGi+hzi7Ew1Vab4ekUllOtn5N1j2WwWledMctSD05GJfkJJjMb1qh/DF4w1el
-         ARxoVv9g6qL5C+UWYPkg1y8ow3BwYGP8zx+3jtUhR8kfE4CiGgZmrvKN0/3/gOhdaUBM
-         Ca4Q==
-X-Gm-Message-State: AOAM533IIz5roacRt3bKwqHMDBUQyVrqfvII2N49FkyPuKP/YwBVi16I
-        92K2Y+OrVi+Z73pj88jCG6BnHbzUmXQpjsyJvEXuho++8bw=
-X-Google-Smtp-Source: ABdhPJym48nO1qx6Xam2hpUVXTrGYHOl37dIdmsOtBDTKVNSlX2HngDefNjA8Df4YLq2vZMNOewwm8FZbTbAdvC9Nb4=
-X-Received: by 2002:a2e:1451:: with SMTP id 17mr188903lju.30.1590484971486;
- Tue, 26 May 2020 02:22:51 -0700 (PDT)
+        Tue, 26 May 2020 05:23:01 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D86C03E97E;
+        Tue, 26 May 2020 02:23:01 -0700 (PDT)
+Received: from localhost.localdomain (unknown [142.147.94.151])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 9EB1E20CF4;
+        Tue, 26 May 2020 09:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1590484981; bh=Won1jtExROhKo2kiWFOyGzp50UUElZfp+GngZmfr3dM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j1t7+X+lIpjR/5SAzyh7on9SvG1dk2xuCC9LjMkOSGiX08Mf6V85ZU6kJadP2yMiN
+         x55cjJ+CBmPReP+KCVD2l61gamBtkcstgrhi+NzCMHAWXsvyeZ0SLepUBkQqHlB2Mv
+         nojTCVr+ijqC5HgrF3+gPcmwoRhvji6ausuOpa0r4ufhNHYkZovg0jZ4ImA8kmsfJv
+         /Y43pF9de56bqTN28LhX0aPcRrXWMdtB+LUDVmzH8RpWXcWOY5OUrNJrNC7110vIoi
+         zRwm+B22HoNyl2zj/Fxmuva/RtCbvTlSsKvUurotDaM3KiU9eqS+3BBsw6UTBPlTfn
+         Iu/a918df2Fow==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v11 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Date:   Tue, 26 May 2020 17:21:16 +0800
+Message-Id: <20200526092130.145550-6-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.27.0.rc0
+In-Reply-To: <20200526092130.145550-1-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200526092130.145550-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-References: <20200521064743.4769-1-maxim.uvarov@linaro.org>
- <20200521064743.4769-4-maxim.uvarov@linaro.org> <20200522171451.GD10319@linux.intel.com>
- <CAD8XO3bA0oTqwQOU9byb-Vk73S4uP7dTUaOZyEmUJmj6rk3UuQ@mail.gmail.com>
- <20200522200346.GB150221@linux.intel.com> <CAD8XO3bmorhde9YaEUrd07U__01NC9wAE1O6ALijASbbJudHPQ@mail.gmail.com>
-In-Reply-To: <CAD8XO3bmorhde9YaEUrd07U__01NC9wAE1O6ALijASbbJudHPQ@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 26 May 2020 14:52:39 +0530
-Message-ID: <CAFA6WYMe8xOPwsBuxoKb0e4kAhXfTjwYGVd7fNUR07hgQ_9TJg@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] tpm_ftpm_tee: register driver on TEE bus
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, jgg@ziepe.ca,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Joakim Bech <joakim.bech@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Thiru (original author), Ilias, Joakim
+We can now enable generic PCI driver in Kconfig, and remove legacy
+PCI driver code.
 
-Hi Jarkko,
+Radeon vbios quirk is moved to the platform folder to fit the
+new structure.
 
-On Mon, 25 May 2020 at 12:20, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
->
-> On Fri, 22 May 2020 at 23:03, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Fri, May 22, 2020 at 10:29:44PM +0300, Maxim Uvarov wrote:
-> > > On Fri, 22 May 2020 at 20:15, Jarkko Sakkinen
-> > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > >
-> > > > On Thu, May 21, 2020 at 09:47:43AM +0300, Maxim Uvarov wrote:
-> > > > > Register driver on TEE bus. module tee registers bus,
-> > > >
-> > > > "on the TEE bus"
-> > > >
-> > > > "The module tee"
-> > > >
-> > > > > and module optee calls optee_enumerate_devices() to scan
-> > > > > all devices on the bus. Trusted Application for this driver
-> > > >
-> > > > Looking at drivers/tee, it shows that tee and optee are in fact the same
-> > > > module as opposed to what your commit message says.
-> > > >
-> > >
-> > > In the current kernel it's 2 different modules.
-> > >
-> > > > > can be Early TA's (can be compiled into optee-os). In that
-> > > > > case it will be on OPTEE bus before linux booting. Also
-> > > > > optee-suplicant application is needed to be loaded between
-> > > > > OPTEE module and ftpm module to maintain functionality
-> > > > > for fTPM driver.
-> > > >
-> > > > Why is this needed and why things worked before having this?
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+--
+v9: Fix licenses tag
+---
+ arch/mips/Kconfig                  |   1 +
+ arch/mips/loongson64/Makefile      |   2 +-
+ arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
+ arch/mips/pci/Makefile             |   1 -
+ arch/mips/pci/fixup-loongson3.c    |  71 ------------------
+ arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
+ 6 files changed, 31 insertions(+), 189 deletions(-)
+ create mode 100644 arch/mips/loongson64/vbios_quirk.c
+ delete mode 100644 arch/mips/pci/fixup-loongson3.c
+ delete mode 100644 arch/mips/pci/ops-loongson3.c
 
-If you remembered earlier discussions when this driver was added,
-tee-supplicant dependency concern was raised at that time too. But the
-response from author [1] was to use a workaround in firmware to
-overcome the initialization issue of fTPM driver.
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 0519ca9f00f9..7a4fcc4ade1f 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -480,6 +480,7 @@ config MACH_LOONGSON64
+ 	select IRQ_MIPS_CPU
+ 	select NR_CPUS_DEFAULT_64
+ 	select USE_GENERIC_EARLY_PRINTK_8250
++	select PCI_DRIVERS_GENERIC
+ 	select SYS_HAS_CPU_LOONGSON64
+ 	select SYS_HAS_EARLY_PRINTK
+ 	select SYS_SUPPORTS_SMP
+diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
+index 6f3c2b47f66f..6f81b822aeae 100644
+--- a/arch/mips/loongson64/Makefile
++++ b/arch/mips/loongson64/Makefile
+@@ -8,5 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o dma.o \
+ obj-$(CONFIG_SMP)	+= smp.o
+ obj-$(CONFIG_NUMA)	+= numa.o
+ obj-$(CONFIG_RS780_HPET) += hpet.o
+-obj-$(CONFIG_PCI) += pci.o
+ obj-$(CONFIG_SUSPEND) += pm.o
++obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
+diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
+new file mode 100644
+index 000000000000..9a29e94d3db1
+--- /dev/null
++++ b/arch/mips/loongson64/vbios_quirk.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++#include <linux/pci.h>
++#include <loongson.h>
++
++static void pci_fixup_radeon(struct pci_dev *pdev)
++{
++	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
++
++	if (res->start)
++		return;
++
++	if (!loongson_sysconf.vgabios_addr)
++		return;
++
++	pci_disable_rom(pdev);
++	if (res->parent)
++		release_resource(res);
++
++	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
++	res->end   = res->start + 256*1024 - 1;
++	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
++		     IORESOURCE_PCI_FIXED;
++
++	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
++		 PCI_ROM_RESOURCE, res);
++}
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
++				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
+diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
+index 342ce10ef593..438f10955d89 100644
+--- a/arch/mips/pci/Makefile
++++ b/arch/mips/pci/Makefile
+@@ -35,7 +35,6 @@ obj-$(CONFIG_LASAT)		+= pci-lasat.o
+ obj-$(CONFIG_MIPS_COBALT)	+= fixup-cobalt.o
+ obj-$(CONFIG_LEMOTE_FULOONG2E)	+= fixup-fuloong2e.o ops-loongson2.o
+ obj-$(CONFIG_LEMOTE_MACH2F)	+= fixup-lemote2f.o ops-loongson2.o
+-obj-$(CONFIG_MACH_LOONGSON64)	+= fixup-loongson3.o ops-loongson3.o
+ obj-$(CONFIG_MIPS_MALTA)	+= fixup-malta.o pci-malta.o
+ obj-$(CONFIG_PMC_MSP7120_GW)	+= fixup-pmcmsp.o ops-pmcmsp.o
+ obj-$(CONFIG_PMC_MSP7120_EVAL)	+= fixup-pmcmsp.o ops-pmcmsp.o
+diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
+deleted file mode 100644
+index 8a741c2c6685..000000000000
+--- a/arch/mips/pci/fixup-loongson3.c
++++ /dev/null
+@@ -1,71 +0,0 @@
+-/*
+- * fixup-loongson3.c
+- *
+- * Copyright (C) 2012 Lemote, Inc.
+- * Author: Xiang Yu, xiangy@lemote.com
+- *         Chen Huacai, chenhc@lemote.com
+- *
+- * This program is free software; you can redistribute  it and/or modify it
+- * under  the terms of  the GNU General  Public License as published by the
+- * Free Software Foundation;  either version 2 of the  License, or (at your
+- * option) any later version.
+- *
+- * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
+- * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
+- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
+- * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
+- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+- * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
+- * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+- * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- */
+-
+-#include <linux/pci.h>
+-#include <boot_param.h>
+-
+-static void print_fixup_info(const struct pci_dev *pdev)
+-{
+-	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
+-			pdev->vendor, pdev->device, pdev->irq);
+-}
+-
+-int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+-{
+-	print_fixup_info(dev);
+-	return dev->irq;
+-}
+-
+-static void pci_fixup_radeon(struct pci_dev *pdev)
+-{
+-	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
+-
+-	if (res->start)
+-		return;
+-
+-	if (!loongson_sysconf.vgabios_addr)
+-		return;
+-
+-	pci_disable_rom(pdev);
+-	if (res->parent)
+-		release_resource(res);
+-
+-	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
+-	res->end   = res->start + 256*1024 - 1;
+-	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+-		     IORESOURCE_PCI_FIXED;
+-
+-	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
+-		 PCI_ROM_RESOURCE, res);
+-}
+-
+-DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+-				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
+-
+-/* Do platform specific device initialization at pci_enable_device() time */
+-int pcibios_plat_dev_init(struct pci_dev *dev)
+-{
+-	return 0;
+-}
+diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
+deleted file mode 100644
+index 2f6ad36bdea6..000000000000
+--- a/arch/mips/pci/ops-loongson3.c
++++ /dev/null
+@@ -1,116 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <linux/types.h>
+-#include <linux/pci.h>
+-#include <linux/kernel.h>
+-
+-#include <asm/mips-boards/bonito64.h>
+-
+-#include <loongson.h>
+-
+-#define PCI_ACCESS_READ  0
+-#define PCI_ACCESS_WRITE 1
+-
+-#define HT1LO_PCICFG_BASE      0x1a000000
+-#define HT1LO_PCICFG_BASE_TP1  0x1b000000
+-
+-static int loongson3_pci_config_access(unsigned char access_type,
+-		struct pci_bus *bus, unsigned int devfn,
+-		int where, u32 *data)
+-{
+-	unsigned char busnum = bus->number;
+-	int function = PCI_FUNC(devfn);
+-	int device = PCI_SLOT(devfn);
+-	int reg = where & ~3;
+-	void *addrp;
+-	u64 addr;
+-
+-	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
+-		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
+-		if (busnum == 0) {
+-			if (device > 31)
+-				return PCIBIOS_DEVICE_NOT_FOUND;
+-			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE | addr);
+-		} else {
+-			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE_TP1 | addr);
+-		}
+-	} else if (where < PCI_CFG_SPACE_EXP_SIZE) {  /* extended config */
+-		struct pci_dev *rootdev;
+-
+-		rootdev = pci_get_domain_bus_and_slot(0, 0, 0);
+-		if (!rootdev)
+-			return PCIBIOS_DEVICE_NOT_FOUND;
+-
+-		addr = pci_resource_start(rootdev, 3);
+-		if (!addr)
+-			return PCIBIOS_DEVICE_NOT_FOUND;
+-
+-		addr |= busnum << 20 | device << 15 | function << 12 | reg;
+-		addrp = (void *)TO_UNCAC(addr);
+-	} else {
+-		return PCIBIOS_DEVICE_NOT_FOUND;
+-	}
+-
+-	if (access_type == PCI_ACCESS_WRITE)
+-		writel(*data, addrp);
+-	else {
+-		*data = readl(addrp);
+-		if (*data == 0xffffffff) {
+-			*data = -1;
+-			return PCIBIOS_DEVICE_NOT_FOUND;
+-		}
+-	}
+-	return PCIBIOS_SUCCESSFUL;
+-}
+-
+-static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
+-				 int where, int size, u32 *val)
+-{
+-	u32 data = 0;
+-	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
+-			bus, devfn, where, &data);
+-
+-	if (ret != PCIBIOS_SUCCESSFUL)
+-		return ret;
+-
+-	if (size == 1)
+-		*val = (data >> ((where & 3) << 3)) & 0xff;
+-	else if (size == 2)
+-		*val = (data >> ((where & 3) << 3)) & 0xffff;
+-	else
+-		*val = data;
+-
+-	return PCIBIOS_SUCCESSFUL;
+-}
+-
+-static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
+-				  int where, int size, u32 val)
+-{
+-	u32 data = 0;
+-	int ret;
+-
+-	if (size == 4)
+-		data = val;
+-	else {
+-		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
+-				bus, devfn, where, &data);
+-		if (ret != PCIBIOS_SUCCESSFUL)
+-			return ret;
+-
+-		if (size == 1)
+-			data = (data & ~(0xff << ((where & 3) << 3))) |
+-			    (val << ((where & 3) << 3));
+-		else if (size == 2)
+-			data = (data & ~(0xffff << ((where & 3) << 3))) |
+-			    (val << ((where & 3) << 3));
+-	}
+-
+-	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
+-			bus, devfn, where, &data);
+-
+-	return ret;
+-}
+-
+-struct pci_ops loongson_pci_ops = {
+-	.read = loongson3_pci_pcibios_read,
+-	.write = loongson3_pci_pcibios_write
+-};
+-- 
+2.27.0.rc0
 
-Basically while using upstream OP-TEE, fTPM NV RAM is implemented via
-RPMB secure storage [2]. So any fTPM operation dependent on NV RAM may
-fail without access to RPMB secure storage.
-
-And during kernel boot, RPMB access isn't available (there were some
-prior efforts [3] around this but unfortunately didn't land in
-upstream) due to which we need to rely on user mode tee-supplicant for
-corresponding access.
-
-So we should only register fTPM device when the underlying
-infrastructure is working, which is something this patch-set addresses
-via registering fTPM device only when the tee-supplicant is up and
-running.
-
-[1] https://lkml.org/lkml/2019/7/4/779
-[2] https://optee.readthedocs.io/en/latest/architecture/secure_storage.html#rpmb-secure-storage
-[3] https://lwn.net/Articles/682276/
-
-> > > >
-> > >
-> > > Before these changes user space has to drive boot sequence. I.e.  tee
-> > > and optee modules loads, then application tee-supplicant has to start
-> > > and only then module ftpm can be loaded. The reason for that is
-> > > storage services are implemented in userspace and driver needs them.
-> >
-> > Is the TPM implementation uploaded to TEE from user space and or what
-> > storage are we talking about? Not sure how these storage services
-> > connect to the TPM.
-
-Please see my response above.
-
--Sumit
-
-> >
-> > /Jarkko
->
-> Jakko,
-> tee-supplicant application provides state machine over callbacks with
-> RPC messages.
-> https://github.com/OP-TEE/optee_client/blob/master/tee-supplicant/src/tee_supplicant.c#L614
-> It also allocates shm. Without running tee-supplicant
-> tee_client_open_session() will fail.
-> optee_open_session()->get_msg_arg()->tee_shm_alloc()->...
-> Optee team wanted to remove some dependencies from tee-supplicant with
-> moving code
-> to the kernel. But for now I think that should be out of the scope of
-> current patches due to
-> they fix driver initialization on tee bus without breaking current
-> functionality.
->
-> Maxim.
