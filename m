@@ -2,142 +2,216 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD30C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C868208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590532606;
-	bh=SoyS9n5uzrCTeisHdfFQF2I8r8kuXmqmf/eQd1xljCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B5xvNuG7+Eiu6+mLglWHVl9V8lShltNpGX3OrJzwC+/fH656gpN5YWQRR0WtEgnyo
-	 v1H13S+JrygQWHZpD2vHxxqzvvOrnDB/AkIajkphOTiC+XoW+e1UNTkz54qIgr18rm
-	 UsMlO7VeutyDbk00WFkuLGv5dhqf0prCZo5RZBrw=
+	by mail.kernel.org (Postfix) with ESMTP id 1B319208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404472AbgEZWgp (ORCPT
+        id S2392094AbgEZWi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:36:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44149 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389755AbgEZWgp (ORCPT
+        Tue, 26 May 2020 18:38:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389755AbgEZWi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:36:45 -0400
-Received: by mail-io1-f68.google.com with SMTP id p20so10448084iop.11;
-        Tue, 26 May 2020 15:36:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tj8N2mepZ2doGS8o5HvQFvU4E1JvXzOMzruiM4qqlkA=;
-        b=UoDCzV920leTmz0b5clKHCtdKhl1tG5bX0jTGsmRVpECNpLC7GgUgudy346Uy8ugs5
-         F26EF2VbvwuRs/BEjhWJ8XqCbVIqyJW5u8Au8dTEoAfIUYmBRtfaNhWq0yomnDq2Isrn
-         3K8MAtSb6a7jYi11HGKyEfcigNuANh3ndzg6/2XN0MAar1C6vhvMdxWwZ4Cs4i4trSBh
-         1I5iCrn3UzU3e19SpMQYo+K8MpbG76B1Qx6guHcWlGYxRBhGN7Zamzea9Uf0PGFOtlML
-         RoHHwQs9BpQRXwba13nr2IbOUuq8v5/tz7qLOwCIIe3CetOb85jeEnvDxrdur/5AGHlS
-         rjBQ==
-X-Gm-Message-State: AOAM530nYJPrOczTynA816lZ0ZfjrjuEahTMWZlSzf42B7KSDzF04Obz
-        orY/GNoJGv+YDv05Olj0qYFwi1Q=
-X-Google-Smtp-Source: ABdhPJwnkJMGWyVt/cg8hbEkr6MQZUJOiTQ9GhmS2gEM3rC+m3jVY0ILT9haJVEEAeAQUNbmuDB0zQ==
-X-Received: by 2002:a02:a899:: with SMTP id l25mr3122374jam.101.1590532604273;
-        Tue, 26 May 2020 15:36:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v76sm664733ill.73.2020.05.26.15.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:36:43 -0700 (PDT)
-Received: (nullmailer pid 512636 invoked by uid 1000);
-        Tue, 26 May 2020 22:36:42 -0000
-Date:   Tue, 26 May 2020 16:36:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Steve Lee <steves.lee@maximintegrated.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ryan.lee.maxim@gmail.com,
-        ryans.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: Re: [RESEND][V5 PATCH 1/2] dt-bindings: Added device tree binding
- for max98390
-Message-ID: <20200526223642.GA506893@bogus>
-References: <20200518004930.20973-1-steves.lee@maximintegrated.com>
+        Tue, 26 May 2020 18:38:27 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7EC1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:38:26 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jdiDB-00G1l6-Of; Tue, 26 May 2020 22:38:17 +0000
+Date:   Tue, 26 May 2020 23:38:17 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com,
+        x86@kernel.org
+Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
+ fill_thread_core_info()
+Message-ID: <20200526223817.GA3819674@ZenIV.linux.org.uk>
+References: <20200419100848.63472-1-glider@google.com>
+ <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
+ <202004201540.01C8F82B@keescook>
+ <20200421034249.GB23230@ZenIV.linux.org.uk>
+ <CAG_fn=VZZ7yUxtOGzuTLkr7wmfXWtKK9BHHYawj=rt9XWnCYvg@mail.gmail.com>
+ <20200512010901.GQ23230@ZenIV.linux.org.uk>
+ <20200512034400.GA1537486@ZenIV.linux.org.uk>
+ <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
+ <20200513033349.GR23230@ZenIV.linux.org.uk>
+ <20200524234535.GA23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518004930.20973-1-steves.lee@maximintegrated.com>
+In-Reply-To: <20200524234535.GA23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:49:30AM +0900, Steve Lee wrote:
-> Add documentation for DT binding of max98390 amplifier driver.
+On Mon, May 25, 2020 at 12:45:35AM +0100, Al Viro wrote:
+> On Wed, May 13, 2020 at 04:33:49AM +0100, Al Viro wrote:
 > 
-> Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
-> ---
+> > FWIW, what I'm going to do is
+> > 	* make all callers of copy_regset_to_user() pass 0 as pos
+> > (there are very few exceptions - one on arm64, three on sparc32
+> > and five on sparc64; I hadn't dealt with arm64 one yet, but all
+> > cases on sparc are handled)
 > 
+> [snip]
 > 
-> Changed since V4:
-> 	* No changes.
-> Changed since V3:
-> 	* No changes.
-> Changed since V2:
-> 	* No changes.
-> Changed since V1:
-> 	* Modified sample text in example
-
-You are obviously sending patches too quickly. Give folks a chance to 
-review.
-
+> Any of that would be easy to backport, though.  Several questions
+> regaring XSAVE and friends:
 > 
->  .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
-
-Bindings are now in DT schema format. Please convert this. See 
-Documentation/devicetree/writing-schema.rst
-
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+> * do we ever run on XSAVE/XSAVES-capable hardware with XFEATURE_FP
+> turned off?
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-> new file mode 100644
-> index 000000000000..0ddd4c6ae55e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/max98390.txt
-> @@ -0,0 +1,26 @@
-> +Maxim Integrated MAX98390 Speaker Amplifier
-> +
-> +This device supports I2C.
-> +
-> +Required properties:
-> +
-> + - compatible : "maxim,max98390"
-> +
-> + - reg : the I2C address of the device.
-> +
-> +Optional properties:
-> +
-> +- maxim,temperature_calib
-> +  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-> +
-> +- maxim,r0_calib
-> +  u32. This is r0 calibration data which was measured in factory mode.
-
-Unless these are shared already with other Maxim chips, s/_/-/.
-
-> +
-> +Example:
-> +
-> +codec: max98390@38 {
-
-amplifier@38
-
-> +	compatible = "maxim,max98390";
-> +	reg = <0x38>;
-> +	maxim,temperature_calib = <1024>;
-> +	maxim,r0_calib = <100232>;
-> +};
-> -- 
-> 2.17.1
+> * is it possible for x86 to have gaps between the state components
+> area as reported by CPUID 0x0d?  IOW, can area for feature 2
+> (XFEATURE_YMM) to start *not* at 0x200 and can area for N start
+> not right after the end of area for N-1 for some N > 2?
 > 
+> I think I have an easy-to-backport solution, but I'm really confused
+> about XFEATURE_FP situation...
+
+Folks, could you test the following?
+
+copy_xstate_to_kernel(): don't leave parts of destination uninitialized
+
+copy the corresponding pieces of init_fpstate into the gaps instead.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 32b153d38748..6a54e83d5589 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -957,18 +957,31 @@ static inline bool xfeatures_mxcsr_quirk(u64 xfeatures)
+ 	return true;
+ }
+ 
+-/*
+- * This is similar to user_regset_copyout(), but will not add offset to
+- * the source data pointer or increment pos, count, kbuf, and ubuf.
+- */
+-static inline void
+-__copy_xstate_to_kernel(void *kbuf, const void *data,
+-			unsigned int offset, unsigned int size, unsigned int size_total)
++static void fill_gap(unsigned to, void **kbuf, unsigned *pos, unsigned *count)
+ {
+-	if (offset < size_total) {
+-		unsigned int copy = min(size, size_total - offset);
++	if (*pos < to) {
++		unsigned size = to - *pos;
++
++		if (size > *count)
++			size = *count;
++		memcpy(*kbuf, (void *)&init_fpstate.xsave + *pos, size);
++		*kbuf += size;
++		*pos += size;
++		*count -= size;
++	}
++}
+ 
+-		memcpy(kbuf + offset, data, copy);
++static void copy_part(unsigned offset, unsigned size, void *from,
++			void **kbuf, unsigned *pos, unsigned *count)
++{
++	fill_gap(offset, kbuf, pos, count);
++	if (size > *count)
++		size = *count;
++	if (size) {
++		memcpy(*kbuf, from, size);
++		*kbuf += size;
++		*pos += size;
++		*count -= size;
+ 	}
+ }
+ 
+@@ -981,8 +994,9 @@ __copy_xstate_to_kernel(void *kbuf, const void *data,
+  */
+ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset_start, unsigned int size_total)
+ {
+-	unsigned int offset, size;
+ 	struct xstate_header header;
++	const unsigned off_mxcsr = offsetof(struct fxregs_state, mxcsr);
++	unsigned count = size_total;
+ 	int i;
+ 
+ 	/*
+@@ -998,46 +1012,42 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
+ 	header.xfeatures = xsave->header.xfeatures;
+ 	header.xfeatures &= ~XFEATURE_MASK_SUPERVISOR;
+ 
++	if (header.xfeatures & XFEATURE_MASK_FP)
++		copy_part(0, off_mxcsr,
++			  &xsave->i387, &kbuf, &offset_start, &count);
++	if (header.xfeatures & (XFEATURE_MASK_SSE | XFEATURE_MASK_YMM))
++		copy_part(off_mxcsr, MXCSR_AND_FLAGS_SIZE,
++			  &xsave->i387.mxcsr, &kbuf, &offset_start, &count);
++	if (header.xfeatures & XFEATURE_MASK_FP)
++		copy_part(offsetof(struct fxregs_state, st_space), 128,
++			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
++	if (header.xfeatures & XFEATURE_MASK_SSE)
++		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
++			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
++	/*
++	 * Fill xsave->i387.sw_reserved value for ptrace frame:
++	 */
++	copy_part(offsetof(struct fxregs_state, sw_reserved), 48,
++		  xstate_fx_sw_bytes, &kbuf, &offset_start, &count);
+ 	/*
+ 	 * Copy xregs_state->header:
+ 	 */
+-	offset = offsetof(struct xregs_state, header);
+-	size = sizeof(header);
+-
+-	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
++	copy_part(offsetof(struct xregs_state, header), sizeof(header),
++		  &header, &kbuf, &offset_start, &count);
+ 
+-	for (i = 0; i < XFEATURE_MAX; i++) {
++	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
+ 		/*
+ 		 * Copy only in-use xstates:
+ 		 */
+ 		if ((header.xfeatures >> i) & 1) {
+ 			void *src = __raw_xsave_addr(xsave, i);
+ 
+-			offset = xstate_offsets[i];
+-			size = xstate_sizes[i];
+-
+-			/* The next component has to fit fully into the output buffer: */
+-			if (offset + size > size_total)
+-				break;
+-
+-			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
++			copy_part(xstate_offsets[i], xstate_sizes[i],
++				  src, &kbuf, &offset_start, &count);
+ 		}
+ 
+ 	}
+-
+-	if (xfeatures_mxcsr_quirk(header.xfeatures)) {
+-		offset = offsetof(struct fxregs_state, mxcsr);
+-		size = MXCSR_AND_FLAGS_SIZE;
+-		__copy_xstate_to_kernel(kbuf, &xsave->i387.mxcsr, offset, size, size_total);
+-	}
+-
+-	/*
+-	 * Fill xsave->i387.sw_reserved value for ptrace frame:
+-	 */
+-	offset = offsetof(struct fxregs_state, sw_reserved);
+-	size = sizeof(xstate_fx_sw_bytes);
+-
+-	__copy_xstate_to_kernel(kbuf, xstate_fx_sw_bytes, offset, size, size_total);
++	fill_gap(size_total, &kbuf, &offset_start, &count);
+ 
+ 	return 0;
+ }
