@@ -2,53 +2,51 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA905C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC78208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC8E20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519343;
-	bh=6m/IfFYaFt/e5IWF5yeM6upXhY42/0Q6gHupJx6rjpY=;
+	s=default; t=1590519344;
+	bh=N6ehpuoCQv6kH0tgSy7p5WhQqA0oIC2CBTQ03EHOEN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jcdVxgH26Qj3VOqoe5ScFFd4U/rLKcuW+6vFreB1MygU1RE3jxz1fYTJQNTLDf4v/
-	 rPlHMVw/Fy2FiNPGdEeMQzHd8cyfiQ/ZEIrewZSMXBpTtE+e68uPMON7LUeDXfrUik
-	 AbeWdlDqRXIyxNjN35Fg82RTAbb54jw6oLOc7WeU=
+	b=pTOe7eAIKP/nvkj29F/QCIOEIETYwVf/DTIGKWldNS7jXNvM34QX4zwXq1EUo/TcM
+	 PnH8rYrNsbOY/9hUPBiTE/pxnoJmOhp8pxv4jQqkBK3UUik1i3HE2qCUWidyJx0sjV
+	 i4E70zaP+VQZO6w36A67NdJwEj5o3HwozQya3zVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389606AbgEZSzl (ORCPT
+        id S2389622AbgEZSzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48078 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389588AbgEZSzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:38 -0400
+        id S2389600AbgEZSzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 080BE2086A;
-        Tue, 26 May 2020 18:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7763C2084C;
+        Tue, 26 May 2020 18:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519337;
-        bh=6m/IfFYaFt/e5IWF5yeM6upXhY42/0Q6gHupJx6rjpY=;
+        s=default; t=1590519339;
+        bh=N6ehpuoCQv6kH0tgSy7p5WhQqA0oIC2CBTQ03EHOEN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzICOvwdhRwyxfxMe8P7QXvMMQL8WevHiwW+LUHqpsAZfjNXj28pCrCK8us3jXjBY
-         s0KtKVAFt1L5y5lCV8qTxFUOmk9idMmrOTQy5hLl6tM0eu4QXgZsp06uwGjEgOkO5d
-         7LkCAJ8SXnrDbflmuqgW3yfhM7nOtU5B983W3AwM=
+        b=dqgOU5BZChjyfdGOmvA/q22jscIcqRgubMi0wSdsUmsygOUw+2bWNN4SmnkOnXgQF
+         btzk/Ll08qhg+1OpCLWhz5g3G3ODYrjZ/Caw4VamUQSt74EindWEjPzOFCcVw68ARw
+         dJ7RU32DAJVRR9v9rs8jajXd0e3WNL52sbsmV3rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 29/65] padata: purge get_cpu and reorder_via_wq from padata_do_serial
-Date:   Tue, 26 May 2020 20:52:48 +0200
-Message-Id: <20200526183916.921551979@linuxfoundation.org>
+        stable@vger.kernel.org, Brent Lu <brent.lu@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 30/65] ALSA: pcm: fix incorrect hw_base increase
+Date:   Tue, 26 May 2020 20:52:49 +0200
+Message-Id: <20200526183917.346073119@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -61,68 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Brent Lu <brent.lu@intel.com>
 
-[ Upstream commit 065cf577135a4977931c7a1e1edf442bfd9773dd]
+commit e7513c5786f8b33f0c107b3759e433bc6cbb2efa upstream.
 
-With the removal of the padata timer, padata_do_serial no longer
-needs special CPU handling, so remove it.
+There is a corner case that ALSA keeps increasing the hw_ptr but DMA
+already stop working/updating the position for a long time.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In following log we can see the position returned from DMA driver does
+not move at all but the hw_ptr got increased at some point of time so
+snd_pcm_avail() will return a large number which seems to be a buffer
+underrun event from user space program point of view. The program
+thinks there is space in the buffer and fill more data.
+
+[  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
+...
+[  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+[  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+[  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
+
+This is because the hw_base will be increased by runtime->buffer_size
+frames unconditionally if the hw_ptr is not updated for over half of
+buffer time. As the hw_base increases, so does the hw_ptr increased
+by the same number.
+
+The avail value returned from snd_pcm_avail() could exceed the limit
+(buffer_size) easily becase the hw_ptr itself got increased by same
+buffer_size samples when the corner case happens. In following log,
+the buffer_size is 16368 samples but the avail is 21810 samples so
+CRAS server complains about it.
+
+[  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
+[  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
+
+cras_server[1907]: pcm_avail returned frames larger than buf_size:
+sof-glkda7219max: :0,5: 21810 > 16368
+
+By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
+the hw_base will keep the same when buffer stall happens at long as
+the interval between each HWSYNC call is shorter than half of buffer
+time.
+
+Following is a log captured by a patched kernel. The hw_base/hw_ptr
+value is fixed in this corner case and user space program should be
+aware of the buffer stall and handle it.
+
+[  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
+[  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
+[  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
+[  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+...
+[  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1589776238-23877-1-git-send-email-brent.lu@intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/padata.c | 23 +++--------------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
+ sound/core/pcm_lib.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 43b72f5dfe07..c50975f43b34 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -322,24 +322,9 @@ static void padata_serial_worker(struct work_struct *serial_work)
-  */
- void padata_do_serial(struct padata_priv *padata)
- {
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct parallel_data *pd;
--	int reorder_via_wq = 0;
--
--	pd = padata->pd;
--
--	cpu = get_cpu();
--
--	/* We need to enqueue the padata object into the correct
--	 * per-cpu queue.
--	 */
--	if (cpu != padata->cpu) {
--		reorder_via_wq = 1;
--		cpu = padata->cpu;
--	}
--
--	pqueue = per_cpu_ptr(pd->pqueue, cpu);
-+	struct parallel_data *pd = padata->pd;
-+	struct padata_parallel_queue *pqueue = per_cpu_ptr(pd->pqueue,
-+							   padata->cpu);
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -456,6 +456,7 @@ static int snd_pcm_update_hw_ptr0(struct
  
- 	spin_lock(&pqueue->reorder.lock);
- 	list_add_tail(&padata->list, &pqueue->reorder.list);
-@@ -353,8 +338,6 @@ void padata_do_serial(struct padata_priv *padata)
- 	 */
- 	smp_mb__after_atomic();
- 
--	put_cpu();
--
- 	padata_reorder(pd);
- }
- EXPORT_SYMBOL(padata_do_serial);
--- 
-2.25.1
-
+  no_delta_check:
+ 	if (runtime->status->hw_ptr == new_hw_ptr) {
++		runtime->hw_ptr_jiffies = curr_jiffies;
+ 		update_audio_tstamp(substream, &curr_tstamp, &audio_tstamp);
+ 		return 0;
+ 	}
 
 
