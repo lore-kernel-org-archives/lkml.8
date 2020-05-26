@@ -2,113 +2,106 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA78EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7E1207ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC21D20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590488167;
+	bh=DzkBbf5oeb0cdW/wBmldy6tJQZjMEl25csjKMddYnIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YZxoHaS+e4f0NeyefSpkYwH18JNHZjADqDrj32zwCBuRPaqKePM2qYdXo2wzDw1iD
+	 iZfbffQ0Wt6y4s0HE3mR2N6fOxHLO5ih1eAHE4Fy9RPSV52Itw8M0/s84Di9UW2Tfu
+	 VnFNdz3EU7GM7eh8fInZiAHmLGuShasM/0unPtV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388524AbgEZKND (ORCPT
+        id S1731815AbgEZKQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:13:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36132 "EHLO mx2.suse.de"
+        Tue, 26 May 2020 06:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388339AbgEZKNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:13:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 39E51B1C1;
-        Tue, 26 May 2020 10:13:04 +0000 (UTC)
-Subject: Re: [PATCH v3 12/19] mm: memcg/slab: use a single set of kmem_caches
- for all accounted allocations
-To:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-13-guro@fb.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <4d9e18ea-3100-8311-e969-a376096a0b60@suse.cz>
-Date:   Tue, 26 May 2020 12:12:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726944AbgEZKQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:16:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCFCC2071A;
+        Tue, 26 May 2020 10:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590488166;
+        bh=DzkBbf5oeb0cdW/wBmldy6tJQZjMEl25csjKMddYnIg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yZXVYDMwFyOehlszO1skMSh1i+h/5sEoMPwspgXHpC8k3/QQFMt3DrpNM3W3/MUmv
+         o0BjSup1f2WZNzuWf82VDHZXpDpIIfENe2npzqEclr3Rjr0gQyLdR9t98+h9OKRPtf
+         OVO/lXIBLdJ0HZkW1fVSLDuTMVO3t7jR9Hszdrkk=
+Date:   Tue, 26 May 2020 12:16:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        linux-crypto@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Gonglei <arei.gonglei@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [v2 2/2] crypto: virtio: Fix use-after-free in
+ virtio_crypto_skcipher_finalize_req()
+Message-ID: <20200526101604.GB2759907@kroah.com>
+References: <20200526031956.1897-1-longpeng2@huawei.com>
+ <20200526031956.1897-3-longpeng2@huawei.com>
+ <0248e0f6-7648-f08d-afa2-170ad2e724b7@web.de>
+ <03d3387f-c886-4fb9-e6f2-9ff8dc6bb80a@huawei.com>
+ <8aab4c6b-7d41-7767-4945-e8af1dec902b@web.de>
+ <321c79df-6397-bbf1-0047-b0b10e5af353@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422204708.2176080-13-guro@fb.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <321c79df-6397-bbf1-0047-b0b10e5af353@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 10:47 PM, Roman Gushchin wrote:
-> This is fairly big but mostly red patch, which makes all accounted
-> slab allocations use a single set of kmem_caches instead of
-> creating a separate set for each memory cgroup.
+On Tue, May 26, 2020 at 05:24:03PM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
 > 
-> Because the number of non-root kmem_caches is now capped by the number
-> of root kmem_caches, there is no need to shrink or destroy them
-> prematurely. They can be perfectly destroyed together with their
-> root counterparts. This allows to dramatically simplify the
-> management of non-root kmem_caches and delete a ton of code.
 > 
-> This patch performs the following changes:
-> 1) introduces memcg_params.memcg_cache pointer to represent the
->    kmem_cache which will be used for all non-root allocations
-> 2) reuses the existing memcg kmem_cache creation mechanism
->    to create memcg kmem_cache on the first allocation attempt
-> 3) memcg kmem_caches are named <kmemcache_name>-memcg,
->    e.g. dentry-memcg
-> 4) simplifies memcg_kmem_get_cache() to just return memcg kmem_cache
->    or schedule it's creation and return the root cache
-> 5) removes almost all non-root kmem_cache management code
->    (separate refcounter, reparenting, shrinking, etc)
-> 6) makes slab debugfs to display root_mem_cgroup css id and never
->    show :dead and :deact flags in the memcg_slabinfo attribute.
+> On 2020/5/26 17:01, Markus Elfring wrote:
+> >>>> … Thus release specific resources before
+> >>>
+> >>> Is there a need to improve also this information another bit?
+> >>>
+> >> You mean the last two paragraph is redundant ?
+> > 
+> > No.
+> > 
+> > I became curious if you would like to choose a more helpful information
+> > according to the wording “specific resources”.
+> > 
+> > Regards,
+> > Markus
+> > 
+> Hi Markus,
 > 
-> Following patches in the series will simplify the kmem_cache creation.
+> I respect your work, but please let us to focus on the code itself. I think
+> experts in this area know what these patches want to solve after look at the code.
 > 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  include/linux/memcontrol.h |   5 +-
->  include/linux/slab.h       |   5 +-
->  mm/memcontrol.c            | 163 +++-----------
->  mm/slab.c                  |  16 +-
->  mm/slab.h                  | 145 ++++---------
->  mm/slab_common.c           | 426 ++++---------------------------------
->  mm/slub.c                  |  38 +---
->  7 files changed, 128 insertions(+), 670 deletions(-)
+> I hope experts in the thread could review the code when you free, thanks :)
 
-Nice stats.
+Please note that you are responding to someone who is known to be a pain
+in patch reviews and has been blocked by many kernel
+developers/maintainers because they just waste people's time.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+I suggest you all do the same here, and just ignore them, like I do :)
 
-> @@ -548,17 +502,14 @@ static __always_inline int charge_slab_page(struct page *page,
->  					    gfp_t gfp, int order,
->  					    struct kmem_cache *s)
->  {
-> -#ifdef CONFIG_MEMCG_KMEM
+thanks,
 
-Ah, indeed. Still, less churn if ref manipulation was done in
-memcg_alloc/free_page_obj() ?
-
->  	if (!is_root_cache(s)) {
->  		int ret;
->  
->  		ret = memcg_alloc_page_obj_cgroups(page, gfp, objs_per_slab(s));
->  		if (ret)
->  			return ret;
-> -
-> -		percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
->  	}
-> -#endif
-> +
->  	mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
->  			    PAGE_SIZE << order);
->  	return 0;
+greg k-h
