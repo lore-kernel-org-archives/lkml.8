@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83996C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC45C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECAC208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9372208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519409;
-	bh=pU//SPVCifYOce6iE258HT16Y6OK29L72f/WdWMVypA=;
+	s=default; t=1590519412;
+	bh=P8L8V9kERrS6UiZtfTibSWslJtYHRXsz+aKGZ9SSlaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FP2FDmtKYlXpLlAzNLbKephvNMqtMJRtX7fmBexAY49ysDoBMvknO1/gdK5t1E/5l
-	 qFL2Xhf1xwvWPgpAT+4eWAhm6nrySmXX6r9zBB5cSpuDdBMgVkhFhBSBOQ/FUYKnJ5
-	 6XqCedttfw+JmGnS2rS9qxfKB0Lcvq0YQ7m3XlIk=
+	b=vH9AD4bqkfSR830vSTEEqrng/I0vbCrZb+o6y1ukjsRNy52ggp4tN5DqJwY7MDqUi
+	 IM0JONlq+OMsUg7wlpPknT7irhWyYh3ST6z53iqXj8fEP0Z8ioa5auefGethtUWWvf
+	 bpUuZjJ8gk5jnOz7yPmc2Tbo/USFA6JhEdSNGqKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389935AbgEZS4q (ORCPT
+        id S2389964AbgEZS4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49662 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389891AbgEZS4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:44 -0400
+        id S2389927AbgEZS4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:56:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A187020870;
-        Tue, 26 May 2020 18:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B1602084C;
+        Tue, 26 May 2020 18:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519403;
-        bh=pU//SPVCifYOce6iE258HT16Y6OK29L72f/WdWMVypA=;
+        s=default; t=1590519405;
+        bh=P8L8V9kERrS6UiZtfTibSWslJtYHRXsz+aKGZ9SSlaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPxDiTwQBetN2UG6YLl/MW4/1lWFhKD9rUWva/J6B3B5ug09eZ59rSq8qnZEQmEzA
-         WYTRE3wwxK0ltqh6m0hoj7rzYntt9TXdC0z7kAwW0uXCUrnN6arHnaycGFn/uXIOk2
-         kDbbJs9Ye1YU+irgjWQ30dwO856DHuE+ZqOsl1/g=
+        b=xzJHu0g/4d6s95lhm68nUm2tRmwK9SrCd9aaKDjyGYmVp4kfW06gXiy75dx0CEYuu
+         uDBPdwBn0jjbw4wBkEzCyz5acj0f6pk2MkVikjQeySgKUjhEONxYrXmjk6bsEPz+y1
+         QiY0MQpnajBtHQfHnfEmQQuRhM5lTMtZhwt1X7+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 56/65] l2tp: fix l2tp_eth module loading
-Date:   Tue, 26 May 2020 20:53:15 +0200
-Message-Id: <20200526183926.387988644@linuxfoundation.org>
+Subject: [PATCH 4.4 57/65] l2tp: dont register sessions in l2tp_session_create()
+Date:   Tue, 26 May 2020 20:53:16 +0200
+Message-Id: <20200526183927.129928626@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -62,142 +62,198 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 9f775ead5e570e7e19015b9e4e2f3dd6e71a5935 upstream.
+commit 3953ae7b218df4d1e544b98a393666f9ae58a78c upstream.
 
-The l2tp_eth module crashes if its netlink callbacks are run when the
-pernet data aren't initialised.
+Sessions created by l2tp_session_create() aren't fully initialised:
+some pseudo-wire specific operations need to be done before making the
+session usable. Therefore the PPP and Ethernet pseudo-wires continue
+working on the returned l2tp session while it's already been exposed to
+the rest of the system.
+This can lead to various issues. In particular, the session may enter
+the deletion process before having been fully initialised, which will
+confuse the session removal code.
 
-We should normally register_pernet_device() before the genl callbacks.
-However, the pernet data only maintain a list of l2tpeth interfaces,
-and this list is never used. So let's just drop pernet handling
-instead.
+This patch moves session registration out of l2tp_session_create(), so
+that callers can control when the session is exposed to the rest of the
+system. This is done by the new l2tp_session_register() function.
 
-Fixes: d9e31d17ceba ("l2tp: Add L2TP ethernet pseudowire support")
+Only pppol2tp_session_create() can be easily converted to avoid
+modifying its session after registration (the debug message is dropped
+in order to avoid the need for holding a reference on the session).
+
+For pppol2tp_connect() and l2tp_eth_create()), more work is needed.
+That'll be done in followup patches. For now, let's just register the
+session right after its creation, like it was done before. The only
+difference is that we can easily take a reference on the session before
+registering it, so, at least, we're sure it's not going to be freed
+while we're working on it.
+
 Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_eth.c |   51 ++-------------------------------------------------
- 1 file changed, 2 insertions(+), 49 deletions(-)
+ net/l2tp/l2tp_core.c |   21 +++++++--------------
+ net/l2tp/l2tp_core.h |    3 +++
+ net/l2tp/l2tp_eth.c  |    9 +++++++++
+ net/l2tp/l2tp_ppp.c  |   27 +++++++++++++++++++--------
+ 4 files changed, 38 insertions(+), 22 deletions(-)
 
---- a/net/l2tp/l2tp_eth.c
-+++ b/net/l2tp/l2tp_eth.c
-@@ -44,7 +44,6 @@ struct l2tp_eth {
- 	struct net_device	*dev;
- 	struct sock		*tunnel_sock;
- 	struct l2tp_session	*session;
--	struct list_head	list;
- 	atomic_long_t		tx_bytes;
- 	atomic_long_t		tx_packets;
- 	atomic_long_t		tx_dropped;
-@@ -58,17 +57,6 @@ struct l2tp_eth_sess {
- 	struct net_device	*dev;
- };
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -321,8 +321,8 @@ struct l2tp_session *l2tp_session_get_by
+ }
+ EXPORT_SYMBOL_GPL(l2tp_session_get_by_ifname);
  
--/* per-net private data for this module */
--static unsigned int l2tp_eth_net_id;
--struct l2tp_eth_net {
--	struct list_head l2tp_eth_dev_list;
--	spinlock_t l2tp_eth_lock;
--};
--
--static inline struct l2tp_eth_net *l2tp_eth_pernet(struct net *net)
--{
--	return net_generic(net, l2tp_eth_net_id);
--}
- 
- static struct lock_class_key l2tp_eth_tx_busylock;
- static int l2tp_eth_dev_init(struct net_device *dev)
-@@ -84,12 +72,6 @@ static int l2tp_eth_dev_init(struct net_
- 
- static void l2tp_eth_dev_uninit(struct net_device *dev)
+-static int l2tp_session_add_to_tunnel(struct l2tp_tunnel *tunnel,
+-				      struct l2tp_session *session)
++int l2tp_session_register(struct l2tp_session *session,
++			  struct l2tp_tunnel *tunnel)
  {
--	struct l2tp_eth *priv = netdev_priv(dev);
--	struct l2tp_eth_net *pn = l2tp_eth_pernet(dev_net(dev));
--
--	spin_lock(&pn->l2tp_eth_lock);
--	list_del_init(&priv->list);
--	spin_unlock(&pn->l2tp_eth_lock);
- 	dev_put(dev);
- }
+ 	struct l2tp_session *session_walk;
+ 	struct hlist_head *g_head;
+@@ -370,6 +370,10 @@ static int l2tp_session_add_to_tunnel(st
+ 	hlist_add_head(&session->hlist, head);
+ 	write_unlock_bh(&tunnel->hlist_lock);
  
-@@ -266,7 +248,6 @@ static int l2tp_eth_create(struct net *n
- 	struct l2tp_eth *priv;
- 	struct l2tp_eth_sess *spriv;
- 	int rc;
--	struct l2tp_eth_net *pn;
- 
- 	if (cfg->ifname) {
- 		dev = dev_get_by_name(net, cfg->ifname);
-@@ -299,7 +280,6 @@ static int l2tp_eth_create(struct net *n
- 	priv = netdev_priv(dev);
- 	priv->dev = dev;
- 	priv->session = session;
--	INIT_LIST_HEAD(&priv->list);
- 
- 	priv->tunnel_sock = tunnel->sock;
- 	session->recv_skb = l2tp_eth_dev_recv;
-@@ -320,10 +300,6 @@ static int l2tp_eth_create(struct net *n
- 	strlcpy(session->ifname, dev->name, IFNAMSIZ);
- 
- 	dev_hold(dev);
--	pn = l2tp_eth_pernet(dev_net(dev));
--	spin_lock(&pn->l2tp_eth_lock);
--	list_add(&priv->list, &pn->l2tp_eth_dev_list);
--	spin_unlock(&pn->l2tp_eth_lock);
- 
++	/* Ignore management session in session count value */
++	if (session->session_id != 0)
++		atomic_inc(&l2tp_session_count);
++
  	return 0;
  
-@@ -336,22 +312,6 @@ out:
- 	return rc;
- }
+ err_tlock_pnlock:
+@@ -379,6 +383,7 @@ err_tlock:
  
--static __net_init int l2tp_eth_init_net(struct net *net)
--{
--	struct l2tp_eth_net *pn = net_generic(net, l2tp_eth_net_id);
--
--	INIT_LIST_HEAD(&pn->l2tp_eth_dev_list);
--	spin_lock_init(&pn->l2tp_eth_lock);
--
--	return 0;
--}
--
--static struct pernet_operations l2tp_eth_net_ops = {
--	.init = l2tp_eth_init_net,
--	.id   = &l2tp_eth_net_id,
--	.size = sizeof(struct l2tp_eth_net),
--};
--
- 
- static const struct l2tp_nl_cmd_ops l2tp_eth_nl_cmd_ops = {
- 	.session_create	= l2tp_eth_create,
-@@ -365,25 +325,18 @@ static int __init l2tp_eth_init(void)
- 
- 	err = l2tp_nl_register_ops(L2TP_PWTYPE_ETH, &l2tp_eth_nl_cmd_ops);
- 	if (err)
--		goto out;
--
--	err = register_pernet_device(&l2tp_eth_net_ops);
--	if (err)
--		goto out_unreg;
-+		goto err;
- 
- 	pr_info("L2TP ethernet pseudowire support (L2TPv3)\n");
- 
- 	return 0;
- 
--out_unreg:
--	l2tp_nl_unregister_ops(L2TP_PWTYPE_ETH);
--out:
-+err:
  	return err;
  }
++EXPORT_SYMBOL_GPL(l2tp_session_register);
  
- static void __exit l2tp_eth_exit(void)
+ /* Lookup a tunnel by id
+  */
+@@ -1793,7 +1798,6 @@ EXPORT_SYMBOL_GPL(l2tp_session_set_heade
+ struct l2tp_session *l2tp_session_create(int priv_size, struct l2tp_tunnel *tunnel, u32 session_id, u32 peer_session_id, struct l2tp_session_cfg *cfg)
  {
--	unregister_pernet_device(&l2tp_eth_net_ops);
- 	l2tp_nl_unregister_ops(L2TP_PWTYPE_ETH);
+ 	struct l2tp_session *session;
+-	int err;
+ 
+ 	session = kzalloc(sizeof(struct l2tp_session) + priv_size, GFP_KERNEL);
+ 	if (session != NULL) {
+@@ -1851,17 +1855,6 @@ struct l2tp_session *l2tp_session_create
+ 
+ 		l2tp_session_inc_refcount(session);
+ 
+-		err = l2tp_session_add_to_tunnel(tunnel, session);
+-		if (err) {
+-			kfree(session);
+-
+-			return ERR_PTR(err);
+-		}
+-
+-		/* Ignore management session in session count value */
+-		if (session->session_id != 0)
+-			atomic_inc(&l2tp_session_count);
+-
+ 		return session;
+ 	}
+ 
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -262,6 +262,9 @@ struct l2tp_session *l2tp_session_create
+ 					 struct l2tp_tunnel *tunnel,
+ 					 u32 session_id, u32 peer_session_id,
+ 					 struct l2tp_session_cfg *cfg);
++int l2tp_session_register(struct l2tp_session *session,
++			  struct l2tp_tunnel *tunnel);
++
+ void __l2tp_session_unhash(struct l2tp_session *session);
+ int l2tp_session_delete(struct l2tp_session *session);
+ void l2tp_session_free(struct l2tp_session *session);
+--- a/net/l2tp/l2tp_eth.c
++++ b/net/l2tp/l2tp_eth.c
+@@ -267,6 +267,13 @@ static int l2tp_eth_create(struct net *n
+ 		goto out;
+ 	}
+ 
++	l2tp_session_inc_refcount(session);
++	rc = l2tp_session_register(session, tunnel);
++	if (rc < 0) {
++		kfree(session);
++		goto out;
++	}
++
+ 	dev = alloc_netdev(sizeof(*priv), name, NET_NAME_UNKNOWN,
+ 			   l2tp_eth_dev_setup);
+ 	if (!dev) {
+@@ -298,6 +305,7 @@ static int l2tp_eth_create(struct net *n
+ 	__module_get(THIS_MODULE);
+ 	/* Must be done after register_netdev() */
+ 	strlcpy(session->ifname, dev->name, IFNAMSIZ);
++	l2tp_session_dec_refcount(session);
+ 
+ 	dev_hold(dev);
+ 
+@@ -308,6 +316,7 @@ out_del_dev:
+ 	spriv->dev = NULL;
+ out_del_session:
+ 	l2tp_session_delete(session);
++	l2tp_session_dec_refcount(session);
+ out:
+ 	return rc;
+ }
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -737,6 +737,14 @@ static int pppol2tp_connect(struct socke
+ 			error = PTR_ERR(session);
+ 			goto end;
+ 		}
++
++		l2tp_session_inc_refcount(session);
++		error = l2tp_session_register(session, tunnel);
++		if (error < 0) {
++			kfree(session);
++			goto end;
++		}
++		drop_refcnt = true;
+ 	}
+ 
+ 	/* Associate session with its PPPoL2TP socket */
+@@ -822,7 +830,7 @@ static int pppol2tp_session_create(struc
+ 	/* Error if tunnel socket is not prepped */
+ 	if (!tunnel->sock) {
+ 		error = -ENOENT;
+-		goto out;
++		goto err;
+ 	}
+ 
+ 	/* Default MTU values. */
+@@ -837,18 +845,21 @@ static int pppol2tp_session_create(struc
+ 				      peer_session_id, cfg);
+ 	if (IS_ERR(session)) {
+ 		error = PTR_ERR(session);
+-		goto out;
++		goto err;
+ 	}
+ 
+ 	ps = l2tp_session_priv(session);
+ 	ps->tunnel_sock = tunnel->sock;
+ 
+-	l2tp_info(session, L2TP_MSG_CONTROL, "%s: created\n",
+-		  session->name);
+-
+-	error = 0;
+-
+-out:
++	error = l2tp_session_register(session, tunnel);
++	if (error < 0)
++		goto err_sess;
++
++	return 0;
++
++err_sess:
++	kfree(session);
++err:
+ 	return error;
  }
  
 
