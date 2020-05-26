@@ -2,88 +2,97 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE85C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4E9420721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590516166;
-	bh=FpAErRht9TdqgOIKx0JJHVn83d0Hgq6QodrXwgpzNtQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zbf+/xk6qEAJ7yScFzs8IZi3rSQBY3BUNf/njZ12FglZDsfqgYTGdsC7vy2PUKqFy
-	 r4LN4q+AsveCEU+BG2m/CVDMNNGmuKJAmcy9kLaMNGyUichRNNCN6usPr3tE3qQrBb
-	 Ia112+yQcebgL0WIgZGniTDv+cyg5ItMzZ0r2yYM=
+	by mail.kernel.org (Postfix) with ESMTP id 5358720721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="u/ZRPnBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgEZSCq (ORCPT
+        id S1728877AbgEZSDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:02:46 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33487 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgEZSCp (ORCPT
+        Tue, 26 May 2020 14:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbgEZSDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:02:45 -0400
-Received: by mail-il1-f195.google.com with SMTP id y17so19209851ilg.0;
-        Tue, 26 May 2020 11:02:45 -0700 (PDT)
+        Tue, 26 May 2020 14:03:15 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00895C03E96E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:03:13 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t8so116897pju.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=+3D93OdvzuNAS+/2pVk3LjUucF4nmiUUGgFK0NpFcMw=;
+        b=u/ZRPnBTRQI4xng9kUTbPBygrFkOgmR+gilKAQglT/PMcwMAIpPff2+accAg07GIPs
+         kONvnDsrwwCzXkYnYUHhkfqkGO26bQkCPaKt3/DPVWuVzasMnH7Uo9cNaU0BqcmLXj9z
+         jnBtvfYnWEx29e6l/rmHGJ7PCyNK/OYUclekxMrbUAh5Ilh8PMuEneblUHlmjWSEyMxX
+         C/9VTL/RZ9QLE7IOBg62OGhsxaT9cY9EvMBZY7crhviPo+aW9jXO8Quyl+l/wuRQwwLQ
+         HyJAX0HhbVCfEwzbUubIGUO31TL5dxqCFtUGvDLllffArudoCfOIFhiTS6JsIEnFwhDt
+         N7xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YebaOmD7Ju0D8dp8+Jh6rQ27XVMpKBTe+xY/yyi+R5c=;
-        b=lk3Gh6R/n9kXq4mPiQtOWhE7K/WYgX5w/V64GvoEHFgErUyyDb4XZKqeaQz0Onf9wX
-         DD6Pir329ADffVIxbOCZc93ZB3w00GowVjD/uNu7PjGu9aSYsA0z3hV6qqpusUHPmWdD
-         yqmIjttXyZ6h1WBlwyLy2ZC7qZ45M3TfzBeXRm3M0/WuvBHX0LwsSK8GBegr7NFMA1ng
-         ftzoqnl1tipikjZFEci394/LXqXxS7IdTYRqNzNt7KvMKX8XdHunCEAr/ajPLGAUbsmO
-         uxCGERBv+nEpRnIiuZYysgsVAu43qcl74k0lN3v3Kae6x5/tYCEAM6uy3Fq+DMFOw0pX
-         SNow==
-X-Gm-Message-State: AOAM530fbpDOOiWXDgtmFb0ecTBo7LSToOEnlOWg2CFFIMuEKWNuHucU
-        aAQGEO1RVYLcwrxmWYeMiA==
-X-Google-Smtp-Source: ABdhPJzHpsHTbs1kNcS5W7S2W7j2Tz56qjTVrOe7LVapF32Ul2j79RUmxJxaOWK3AAyJg24lmEWqow==
-X-Received: by 2002:a92:ce8e:: with SMTP id r14mr2366787ilo.265.1590516164859;
-        Tue, 26 May 2020 11:02:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j90sm339624ilg.70.2020.05.26.11.02.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:02:44 -0700 (PDT)
-Received: (nullmailer pid 76101 invoked by uid 1000);
-        Tue, 26 May 2020 18:02:43 -0000
-Date:   Tue, 26 May 2020 12:02:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo Serra <eballetbo@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-mediatek@lists.infradead.org,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v15 01/11] dt-bindings: mediatek: Add property to mt8183
- smi-common
-Message-ID: <20200526180243.GA75958@bogus>
-References: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com>
- <1590051985-29149-2-git-send-email-weiyi.lu@mediatek.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+3D93OdvzuNAS+/2pVk3LjUucF4nmiUUGgFK0NpFcMw=;
+        b=eM9ty2aMXAIiBgBRRlhQYaeQIAZ0SqqgnMt+9WmnuVhHBSH6+lbiSdCawZpyEByU9Y
+         T8y6aNzwKSNZj7ldIZs8pkDxVTimqPrpON97u2pZyuzuv3yPUggx3bJPBpNgepRF0YQx
+         otFuGg//MjaeOkjUE8woirTJRA5ZPHUKp3+H4VDrkZTBZ+KMkr92te5lgIKNrcniD/Si
+         01uQo9HmcnspywHt11yzuQ8x+YA8u0npofRzl33fY33a151mzFC4XQJ9bywi0l45E6o1
+         ecO3qh7NTVFu7X3AcKU66xYmxrd3s5oCgXiX3iLuL9gstdPUjPtvUnkB5Q4peKodOs4Y
+         yY0A==
+X-Gm-Message-State: AOAM530YBs8EMyvmueGBy5h8616n38S07qtmj3kZlX3scSwkUDro6iFv
+        okVA3erJ+gHYmhF6dOiN8eAZB/IGqZaAuw==
+X-Google-Smtp-Source: ABdhPJzQMLqb4bFrLyBbxKGDwPw9C8NipoMqeJ7xNPTsBkJi5NjPuG27JQYf1w7A/zdPoLEj/xRjMQ==
+X-Received: by 2002:a17:90a:5d06:: with SMTP id s6mr513034pji.88.1590516193211;
+        Tue, 26 May 2020 11:03:13 -0700 (PDT)
+Received: from ?IPv6:2600:380:495a:792b:6476:7a3a:9257:12c7? ([2600:380:495a:792b:6476:7a3a:9257:12c7])
+        by smtp.gmail.com with ESMTPSA id i197sm182611pfe.30.2020.05.26.11.03.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 11:03:12 -0700 (PDT)
+Subject: Re: [PATCH 6/6] io_uring: let io_req_aux_free() handle fixed files
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1590513806.git.asml.silence@gmail.com>
+ <3e06564a15ca706f5f71ed25e8e3f5ea1520117e.1590513806.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7c1727c0-43c2-b4dc-8093-55030ae49057@kernel.dk>
+Date:   Tue, 26 May 2020 12:03:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590051985-29149-2-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <3e06564a15ca706f5f71ed25e8e3f5ea1520117e.1590513806.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 17:06:14 +0800, Weiyi Lu wrote:
-> For scpsys driver using regmap based syscon driver API.
-> 
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
->  .../devicetree/bindings/memory-controllers/mediatek,smi-common.txt      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+On 5/26/20 11:34 AM, Pavel Begunkov wrote:
+> Remove duplicated code putting fixed files in io_free_req_many(),
+> __io_req_aux_free() does the same thing, let it handle them.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This one is already changed in mainline:
+
+
+> commit 9d9e88a24c1f20ebfc2f28b1762ce78c0b9e1cb3 (tag: io_uring-5.7-2020-05-15)
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Wed May 13 12:53:19 2020 -0600
+
+    io_uring: polled fixed file must go through free iteration
+
+
+-- 
+Jens Axboe
+
