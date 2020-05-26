@@ -2,108 +2,131 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C994FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A023020787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K+o+pIws"
+	by mail.kernel.org (Postfix) with ESMTP id 4D47A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731850AbgEZKH4 (ORCPT
+        id S1731858AbgEZKIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:07:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39848 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgEZKH4 (ORCPT
+        Tue, 26 May 2020 06:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbgEZKIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:07:56 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QA7ohB041436;
-        Tue, 26 May 2020 05:07:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590487670;
-        bh=/BGWhUoahct9sPexqcQmvPETdyf33wnSqtAtsBi70aw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=K+o+pIwsWpDAwYncrxj06wp1KeJnaYO+yE0eMoSAU9EEttOTGLhvFoewTYSu7oZBS
-         MgfEfxCfvqt+GvlNi+leq4+EzHf5dDz7RSporC3gG7eCgB8DH4FAX4p5BI/MQuzKRw
-         FPAQ29aQV3mT5SnGbTPckvSmX+2qzv0u7BukvtwA=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QA7oBn013718
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 05:07:50 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 05:07:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 05:07:49 -0500
-Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QA7kQr038590;
-        Tue, 26 May 2020 05:07:46 -0500
-Subject: Re: [PATCH] scsi: ufs: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200522045335.30556-1-dinghao.liu@zju.edu.cn>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <73cb87f7-52ac-1a18-364e-977080cc149c@ti.com>
-Date:   Tue, 26 May 2020 15:37:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 06:08:31 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE55C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:08:31 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jdWVZ-0002iL-3Y; Tue, 26 May 2020 12:08:29 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jdWVU-0000cb-K3; Tue, 26 May 2020 12:08:24 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH net-next v1] net: phy: at803x: add cable diagnostics support for ATH9331 and ATH8032
+Date:   Tue, 26 May 2020 12:08:23 +0200
+Message-Id: <20200526100823.2331-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200522045335.30556-1-dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add support for Atheros 100Bast-T PHYs. The only difference seems to be
+the ability to test 2 pares instead of 4 and the lack of 1000Bast-T
+specific register.
 
-On 22/05/20 10:23 am, Dinghao Liu wrote:
-> When devm_clk_get() returns an error code, a pairing
-> runtime PM usage counter decrement is needed to keep
-> the counter balanced.
-> 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
+Only ATH9331 was tested with this patch.
 
-Thanks for the patch! But this fix is incomplete, I have posted 
-a more comprehensive fix at [1].. Please take a look!
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/at803x.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-[1] https://lore.kernel.org/linux-scsi/20200526100340.15032-1-vigneshr@ti.com/T/#u
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index acd51b29a476b..4b9dd43b5b5bf 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -920,10 +920,16 @@ static int at803x_cable_test_one_pair(struct phy_device *phydev, int pair)
+ static int at803x_cable_test_get_status(struct phy_device *phydev,
+ 					bool *finished)
+ {
+-	unsigned long pair_mask = 0xf;
++	unsigned long pair_mask;
+ 	int retries = 20;
+ 	int pair, ret;
+ 
++	if (phydev->phy_id == ATH9331_PHY_ID ||
++	    phydev->phy_id == ATH8032_PHY_ID)
++		pair_mask = 0x3;
++	else
++		pair_mask = 0xf;
++
+ 	*finished = false;
+ 
+ 	/* According to the datasheet the CDT can be performed when
+@@ -958,7 +964,9 @@ static int at803x_cable_test_start(struct phy_device *phydev)
+ 	 */
+ 	phy_write(phydev, MII_BMCR, BMCR_ANENABLE);
+ 	phy_write(phydev, MII_ADVERTISE, ADVERTISE_CSMA);
+-	phy_write(phydev, MII_CTRL1000, 0);
++	if (phydev->phy_id != ATH9331_PHY_ID &&
++	    phydev->phy_id != ATH8032_PHY_ID)
++		phy_write(phydev, MII_CTRL1000, 0);
+ 
+ 	/* we do all the (time consuming) work later */
+ 	return 0;
+@@ -1032,6 +1040,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.name			= "Qualcomm Atheros AR8032",
+ 	.probe			= at803x_probe,
+ 	.remove			= at803x_remove,
++	.flags			= PHY_POLL_CABLE_TEST,
+ 	.config_init		= at803x_config_init,
+ 	.link_change_notify	= at803x_link_change_notify,
+ 	.set_wol		= at803x_set_wol,
+@@ -1041,15 +1050,20 @@ static struct phy_driver at803x_driver[] = {
+ 	/* PHY_BASIC_FEATURES */
+ 	.ack_interrupt		= at803x_ack_interrupt,
+ 	.config_intr		= at803x_config_intr,
++	.cable_test_start	= at803x_cable_test_start,
++	.cable_test_get_status	= at803x_cable_test_get_status,
+ }, {
+ 	/* ATHEROS AR9331 */
+ 	PHY_ID_MATCH_EXACT(ATH9331_PHY_ID),
+ 	.name			= "Qualcomm Atheros AR9331 built-in PHY",
+ 	.suspend		= at803x_suspend,
+ 	.resume			= at803x_resume,
++	.flags			= PHY_POLL_CABLE_TEST,
+ 	/* PHY_BASIC_FEATURES */
+ 	.ack_interrupt		= &at803x_ack_interrupt,
+ 	.config_intr		= &at803x_config_intr,
++	.cable_test_start	= at803x_cable_test_start,
++	.cable_test_get_status	= at803x_cable_test_get_status,
+ } };
+ 
+ module_phy_driver(at803x_driver);
+-- 
+2.26.2
 
->  drivers/scsi/ufs/ti-j721e-ufs.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
-> index 5216d228cdd9..f3f212f6f9a9 100644
-> --- a/drivers/scsi/ufs/ti-j721e-ufs.c
-> +++ b/drivers/scsi/ufs/ti-j721e-ufs.c
-> @@ -39,6 +39,7 @@ static int ti_j721e_ufs_probe(struct platform_device *pdev)
->  	clk = devm_clk_get(dev, NULL);
->  	if (IS_ERR(clk)) {
->  		dev_err(dev, "Cannot claim MPHY clock.\n");
-> +		pm_runtime_put_sync(dev);
->  		return PTR_ERR(clk);
->  	}
->  	clk_rate = clk_get_rate(clk);
-> 
-
-
-Regards
-Vignesh
