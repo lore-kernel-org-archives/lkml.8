@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A10C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0439FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94B4208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CACE220888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520421;
-	bh=Py3+27fq+KilaCdz5w6bUQlZKu+dOEQXm4a/GCeSecM=;
+	s=default; t=1590520425;
+	bh=KIVtMWsZYjSeXPcrFP3pyIwtXZ4XUtv5qHuAvVcJRs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=abyAOsn+NSkgomRsPvx6LQQNgCzz7uGb7kpCPu4dxZmxlbEUWll1yu0/4bUF1SPW4
-	 0vcg8OcHCTdawDT1GFGGnOenSCbRrO84vHnNq9nOvMn91zsCWEg0N1l9pbk8WZz/F7
-	 7CoU5+Degl1m0dKooFlDzguW8aAkoXkPGIgrg8mU=
+	b=n4zCrb8qRUp61AO6HKog8Bt5d+KzfMdHaY7EZI6GqGXNrGqFa9v91O+H7xsQHUNSB
+	 1ASnI8x++POvV7rsx6V52zFDAUivDqY64FrORtFuHb/TC/tdPBUJwsAFYx3MIOXHaK
+	 HY55poxBTjXDTFYo/5AJJ4ZXqz2e5DA7YkUMi9XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391985AbgEZTNl (ORCPT
+        id S2404309AbgEZTNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404298AbgEZTNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:32 -0400
+        id S2390066AbgEZTNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2B8208DB;
-        Tue, 26 May 2020 19:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AFE220888;
+        Tue, 26 May 2020 19:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520412;
-        bh=Py3+27fq+KilaCdz5w6bUQlZKu+dOEQXm4a/GCeSecM=;
+        s=default; t=1590520421;
+        bh=KIVtMWsZYjSeXPcrFP3pyIwtXZ4XUtv5qHuAvVcJRs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cwgU+lRtljrKTZxk/kM2skaYjVBEZZNMdTQPK3WwQ3x+G4feYMi7dZq3a5oLhjxJV
-         LbdZC8uPkiE5IWZriES2pva5+WUK3wrzsz06C9BPuM3RUcHDHJBn68iXHDgervxCCI
-         aqDsaBr4WlApyngY8bCBdfUMkr//VLr4Vbuh5huY=
+        b=Z44ONlvPMP/VkovVXUrjZiTgrtxVk43ByV8ejyuQ75buyuADv5PwaJrmUdKzta5Na
+         QPsR5UHs+cZys9WYUnlXjMcIaHxpOUuWLj+f9v09ZxuKqQaLFs+xISoDLQCkmZtiki
+         4kOwonbHc6ldOOWeEr4ZThnehcUJ7C13DrjEB694=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 028/126] HID: alps: ALPS_1657 is too specific; use U1_UNICORN_LEGACY instead
-Date:   Tue, 26 May 2020 20:52:45 +0200
-Message-Id: <20200526183940.110886734@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 032/126] vhost/vsock: fix packet delivery order to monitoring devices
+Date:   Tue, 26 May 2020 20:52:49 +0200
+Message-Id: <20200526183940.525116042@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,53 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 185af3e775b693f773d9a4b5a8c3cda69fc8ca0f ]
+[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
 
-HID_DEVICE_ID_ALPS_1657 PID is too specific, as there are many other
-ALPS hardware IDs using this particular touchpad.
+We want to deliver packets to monitoring devices before it is
+put in the virtqueue, to avoid that replies can appear in the
+packet capture before the transmitted packet.
 
-Rename the identifier to HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY in order
-to describe reality better.
-
-Fixes: 640e403b1fd24 ("HID: alps: Add AUI1657 device ID")
-Reported-by: Xiaojian Cao <xiaojian.cao@cn.alps.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-alps.c | 2 +-
- drivers/hid/hid-ids.h  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/vhost/vsock.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-index c2a2bd528890..b2ad319a74b9 100644
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -802,7 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 		break;
- 	case HID_DEVICE_ID_ALPS_U1_DUAL:
- 	case HID_DEVICE_ID_ALPS_U1:
--	case HID_DEVICE_ID_ALPS_1657:
-+	case HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY:
- 		data->dev_type = U1;
- 		break;
- 	default:
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 7d769ca864a7..b3cc26ca375f 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -79,9 +79,9 @@
- #define HID_DEVICE_ID_ALPS_U1_DUAL_PTP	0x121F
- #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
- #define HID_DEVICE_ID_ALPS_U1		0x1215
-+#define HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY         0x121E
- #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
- #define HID_DEVICE_ID_ALPS_1222		0x1222
--#define HID_DEVICE_ID_ALPS_1657         0x121E
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index bb3f63386b47..53294c2f8cff 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -181,14 +181,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+ 			break;
+ 		}
  
- #define USB_VENDOR_ID_AMI		0x046b
- #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
+-		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+-		added = true;
+-
+-		/* Deliver to monitoring devices all correctly transmitted
+-		 * packets.
++		/* Deliver to monitoring devices all packets that we
++		 * will transmit.
+ 		 */
+ 		virtio_transport_deliver_tap_pkt(pkt);
+ 
++		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
++		added = true;
++
+ 		pkt->off += payload_len;
+ 		total_len += payload_len;
+ 
 -- 
 2.25.1
 
