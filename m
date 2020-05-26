@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41754C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B40DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3C320873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3712C20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519743;
-	bh=Cu0VYQZsfxVZA1WqJJmbBtZ+lFPCpOyAmwNLV/tSejI=;
+	s=default; t=1590519746;
+	bh=6CTDi3al0Q/3yK2SyadCrdfzsLUV+RIHWoudrYcmdTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ck2fU4TLfGxDCmXEs/5xtjoY2Y2dHGc/dR4Z3m8V/J9IrqiXH1L+k55JxhMff5ASg
-	 nLJN7trxzMwSfo9D5YFeHGVT7XETipSPYAOW/u91EX7WSDYgY7UNUVN2bIP5dvj1xm
-	 fC3YT/lfxSrr0DUNIjN/3teNDTtHRbHiYTmQjcm0=
+	b=iihZiqadCcZa2nK9LqT3dxulToq4lJ+3MGxzRysVW2bH6G8q4Qkym5sEwUeadxVE6
+	 L9Bj9YcQhRbGZ9jpkTyeEUF+kWUKPgcrjhCt44dwDzVlRYwkoQUy8TR9VJQxOY0Taz
+	 9X7ekdlq0c3hJynX7Y/SWa2BUkw6/IFx/H5GD+JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391076AbgEZTCW (ORCPT
+        id S2390393AbgEZTCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391068AbgEZTCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:02:17 -0400
+        id S2391068AbgEZTCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 505FF20849;
-        Tue, 26 May 2020 19:02:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF550208A7;
+        Tue, 26 May 2020 19:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519736;
-        bh=Cu0VYQZsfxVZA1WqJJmbBtZ+lFPCpOyAmwNLV/tSejI=;
+        s=default; t=1590519742;
+        bh=6CTDi3al0Q/3yK2SyadCrdfzsLUV+RIHWoudrYcmdTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EaTx20TdjzwtkBEKg58/me6oMr5RUZQQzY964EkVDyu+NGKETmkC/g1P9u+2dzOTZ
-         xfKQ4LUynzHdeidYV8ULNZvCl6eNAumFOKikT4Yg+sQjkGxbjKxxg7xAAloNC9ubgi
-         I51uADPkqaMEcWI7gypJPSXUd2Urvc+Nm0IhBNnk=
+        b=WbihwtIGY/cUEAMBcrN7KzQdvr0ncmBYwnv+shR4iGE5IbczbgNpQ2XiafVAg9/s9
+         PrTXjxRj84fbqNADEBK1P1K/Ola0j0fjYRrY9SAxsz7ZEdUD0bxzf5LKMNtPLGsLNy
+         doEG42unkrKFUoh4Of2TfPP+6ZIULI95Hrr4mZbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        David Howells <dhowells@redhat.com>,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 4.14 56/59] rxrpc: Fix a memory leak in rxkad_verify_response()
-Date:   Tue, 26 May 2020 20:53:41 +0200
-Message-Id: <20200526183923.994507252@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.14 57/59] x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
+Date:   Tue, 26 May 2020 20:53:42 +0200
+Message-Id: <20200526183924.293521788@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -60,42 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit f45d01f4f30b53c3a0a1c6c1c154acb7ff74ab9f upstream.
+commit 187b96db5ca79423618dfa29a05c438c34f9e1f0 upstream.
 
-A ticket was not released after a call of the function
-"rxkad_decrypt_ticket" failed. Thus replace the jump target
-"temporary_error_free_resp" by "temporary_error_free_ticket".
+Normally, show_trace_log_lvl() scans the stack, looking for text
+addresses to print.  In parallel, it unwinds the stack with
+unwind_next_frame().  If the stack address matches the pointer returned
+by unwind_get_return_address_ptr() for the current frame, the text
+address is printed normally without a question mark.  Otherwise it's
+considered a breadcrumb (potentially from a previous call path) and it's
+printed with a question mark to indicate that the address is unreliable
+and typically can be ignored.
 
-Fixes: 8c2f826dc3631 ("rxrpc: Don't put crypto buffers on the stack")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Markus Elfring <Markus.Elfring@web.de>
+Since the following commit:
+
+  f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
+
+... for inactive tasks, show_trace_log_lvl() prints *only* unreliable
+addresses (prepended with '?').
+
+That happens because, for the first frame of an inactive task,
+unwind_get_return_address_ptr() returns the wrong return address
+pointer: one word *below* the task stack pointer.  show_trace_log_lvl()
+starts scanning at the stack pointer itself, so it never finds the first
+'reliable' address, causing only guesses to being printed.
+
+The first frame of an inactive task isn't a normal stack frame.  It's
+actually just an instance of 'struct inactive_task_frame' which is left
+behind by __switch_to_asm().  Now that this inactive frame is actually
+exposed to callers, fix unwind_get_return_address_ptr() to interpret it
+properly.
+
+Fixes: f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200522135435.vbxs7umku5pyrdbk@treble
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rxrpc/rxkad.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kernel/unwind_orc.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -1111,7 +1111,7 @@ static int rxkad_verify_response(struct
- 	ret = rxkad_decrypt_ticket(conn, skb, ticket, ticket_len, &session_key,
- 				   &expiry, _abort_code);
- 	if (ret < 0)
--		goto temporary_error_free_resp;
-+		goto temporary_error_free_ticket;
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -255,12 +255,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_addr
  
- 	/* use the session key from inside the ticket to decrypt the
- 	 * response */
-@@ -1193,7 +1193,6 @@ protocol_error:
+ unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
+ {
++	struct task_struct *task = state->task;
++
+ 	if (unwind_done(state))
+ 		return NULL;
  
- temporary_error_free_ticket:
- 	kfree(ticket);
--temporary_error_free_resp:
- 	kfree(response);
- temporary_error:
- 	/* Ignore the response packet if we got a temporary error such as
+ 	if (state->regs)
+ 		return &state->regs->ip;
+ 
++	if (task != current && state->sp == task->thread.sp) {
++		struct inactive_task_frame *frame = (void *)task->thread.sp;
++		return &frame->ret_addr;
++	}
++
+ 	if (state->sp)
+ 		return (unsigned long *)state->sp - 1;
+ 
 
 
