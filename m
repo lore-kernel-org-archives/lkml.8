@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3399C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEA0208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840A1208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519457;
-	bh=HdsLc+/2oQmiq9OsPK83xe8aK/rkwX/OMi3Atsgxbpw=;
+	s=default; t=1590519459;
+	bh=bmlsxv+N3TcFOcb7zS5XtzRbKchaHa1eCorZE2uIo0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tq9elCqngsTKOGyGOvUTDZ3K12hU9+SkWR5jBS7a8GyCWZdwxfrTTNf5T0Ju7JJ2a
-	 x/iNs4ropAAVZErmeVaOLlKT2mMCNQYy85ipX/DkuhK83fUclhXsgrA+8gKOYKYNeW
-	 RDjp1VDIqmeKP4llsjFFHOFYXouMOvbrX2rzB/yI=
+	b=URmmmZlEc0TXebhXS5nxYfRj2D09CzOz47uophPz+Y1vwZPhlvli767I7s03IsQB9
+	 lJBiyIf4a59dAGFLVcFO6FNC7GyAtVSm9lJqQ/wOTHYmciwKeb9fozmiheqZe0b9Ku
+	 Qr/kBE0rZ4zM/dFFuOpTMEHIWsbx725fVDEkz22o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390124AbgEZS5g (ORCPT
+        id S2390133AbgEZS5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50792 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389306AbgEZS5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:32 -0400
+        id S2390097AbgEZS51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BA52086A;
-        Tue, 26 May 2020 18:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3595B2084C;
+        Tue, 26 May 2020 18:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519451;
-        bh=HdsLc+/2oQmiq9OsPK83xe8aK/rkwX/OMi3Atsgxbpw=;
+        s=default; t=1590519446;
+        bh=bmlsxv+N3TcFOcb7zS5XtzRbKchaHa1eCorZE2uIo0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aM4Cm8gmwbSmpRv/UIHTh67p+d7g+xziRv2BuEmKLQMinPTBidLsqMPLr4qVIGxgg
-         BweXodbPM5q7UdlQ9NNmCjBDRtjsqD6GToa0HRTt0dXSd46Pkqy828+fJa8aRlRnTx
-         hxH1XlhZsQ4G6KwaStse1r7PB2NMkTdNMFmZMp5A=
+        b=1IuuxAlvXkvgC2BdODlhSPBBE86N+DsGDrG9Y+LuCRtulevx/Uf02Jdv248iUz7Je
+         TFQsbpa4UhrJn/XkDvyvuGI+zHDTDOt2kCi9MfTQk8DqQc9LMHqU+Vp4cWnATwxrdh
+         qAp3+DX+OGBfxerf5mUvQYCCSkf2xDp721UV74kE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 01/64] igb: use igb_adapter->io_addr instead of e1000_hw->hw_addr
-Date:   Tue, 26 May 2020 20:52:30 +0200
-Message-Id: <20200526183913.559071071@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.4 54/65] l2tp: prevent creation of sessions on terminated tunnels
+Date:   Tue, 26 May 2020 20:53:13 +0200
+Message-Id: <20200526183925.529138839@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
-References: <20200526183913.064413230@linuxfoundation.org>
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
+References: <20200526183905.988782958@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,70 +60,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cao jin <caoj.fnst@cn.fujitsu.com>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 629823b872402451b42462414da08dddd0e2c93d upstream.
+commit f3c66d4e144a0904ea9b95d23ed9f8eb38c11bfb upstream.
 
-When running as guest, under certain condition, it will oops as following.
-writel() in igb_configure_tx_ring() results in oops, because hw->hw_addr
-is NULL. While other register access won't oops kernel because they use
-wr32/rd32 which have a defense against NULL pointer.
+l2tp_tunnel_destruct() sets tunnel->sock to NULL, then removes the
+tunnel from the pernet list and finally closes all its sessions.
+Therefore, it's possible to add a session to a tunnel that is still
+reachable, but for which tunnel->sock has already been reset. This can
+make l2tp_session_create() dereference a NULL pointer when calling
+sock_hold(tunnel->sock).
 
-    [  141.225449] pcieport 0000:00:1c.0: AER: Multiple Uncorrected (Fatal)
-    error received: id=0101
-    [  141.225523] igb 0000:01:00.1: PCIe Bus Error:
-    severity=Uncorrected (Fatal), type=Unaccessible,
-    id=0101(Unregistered Agent ID)
-    [  141.299442] igb 0000:01:00.1: broadcast error_detected message
-    [  141.300539] igb 0000:01:00.0 enp1s0f0: PCIe link lost, device now
-    detached
-    [  141.351019] igb 0000:01:00.1 enp1s0f1: PCIe link lost, device now
-    detached
-    [  143.465904] pcieport 0000:00:1c.0: Root Port link has been reset
-    [  143.465994] igb 0000:01:00.1: broadcast slot_reset message
-    [  143.466039] igb 0000:01:00.0: enabling device (0000 -> 0002)
-    [  144.389078] igb 0000:01:00.1: enabling device (0000 -> 0002)
-    [  145.312078] igb 0000:01:00.1: broadcast resume message
-    [  145.322211] BUG: unable to handle kernel paging request at
-    0000000000003818
-    [  145.361275] IP: [<ffffffffa02fd38d>]
-    igb_configure_tx_ring+0x14d/0x280 [igb]
-    [  145.400048] PGD 0
-    [  145.438007] Oops: 0002 [#1] SMP
+This patch adds the .acpt_newsess field to struct l2tp_tunnel, which is
+used by l2tp_tunnel_closeall() to prevent addition of new sessions to
+tunnels. Resetting tunnel->sock is done after l2tp_tunnel_closeall()
+returned, so that l2tp_session_add_to_tunnel() can safely take a
+reference on it when .acpt_newsess is true.
 
-A similar issue & solution could be found at:
-    http://patchwork.ozlabs.org/patch/689592/
+The .acpt_newsess field is modified in l2tp_tunnel_closeall(), rather
+than in l2tp_tunnel_destruct(), so that it benefits all tunnel removal
+mechanisms. E.g. on UDP tunnels, a session could be added to a tunnel
+after l2tp_udp_encap_destroy() proceeded. This would prevent the tunnel
+from being removed because of the references held by this new session
+on the tunnel and its socket. Even though the session could be removed
+manually later on, this defeats the purpose of
+commit 9980d001cec8 ("l2tp: add udp encap socket destroy handler").
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-Acked-by: Alexander Duyck <alexander.h.duyck@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: fd558d186df2 ("l2tp: Split pppol2tp patch into separate l2tp and ppp parts")
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/intel/igb/igb_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_core.c |   41 ++++++++++++++++++++++++++++-------------
+ net/l2tp/l2tp_core.h |    4 ++++
+ 2 files changed, 32 insertions(+), 13 deletions(-)
 
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -3395,7 +3395,7 @@ void igb_configure_tx_ring(struct igb_ad
- 	     tdba & 0x00000000ffffffffULL);
- 	wr32(E1000_TDBAH(reg_idx), tdba >> 32);
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -328,13 +328,21 @@ static int l2tp_session_add_to_tunnel(st
+ 	struct hlist_head *g_head;
+ 	struct hlist_head *head;
+ 	struct l2tp_net *pn;
++	int err;
  
--	ring->tail = hw->hw_addr + E1000_TDT(reg_idx);
-+	ring->tail = adapter->io_addr + E1000_TDT(reg_idx);
- 	wr32(E1000_TDH(reg_idx), 0);
- 	writel(0, ring->tail);
+ 	head = l2tp_session_id_hash(tunnel, session->session_id);
  
-@@ -3734,7 +3734,7 @@ void igb_configure_rx_ring(struct igb_ad
- 	     ring->count * sizeof(union e1000_adv_rx_desc));
+ 	write_lock_bh(&tunnel->hlist_lock);
++	if (!tunnel->acpt_newsess) {
++		err = -ENODEV;
++		goto err_tlock;
++	}
++
+ 	hlist_for_each_entry(session_walk, head, hlist)
+-		if (session_walk->session_id == session->session_id)
+-			goto exist;
++		if (session_walk->session_id == session->session_id) {
++			err = -EEXIST;
++			goto err_tlock;
++		}
  
- 	/* initialize head and tail */
--	ring->tail = hw->hw_addr + E1000_RDT(reg_idx);
-+	ring->tail = adapter->io_addr + E1000_RDT(reg_idx);
- 	wr32(E1000_RDH(reg_idx), 0);
- 	writel(0, ring->tail);
+ 	if (tunnel->version == L2TP_HDR_VER_3) {
+ 		pn = l2tp_pernet(tunnel->l2tp_net);
+@@ -342,12 +350,21 @@ static int l2tp_session_add_to_tunnel(st
+ 						session->session_id);
  
+ 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
++
+ 		hlist_for_each_entry(session_walk, g_head, global_hlist)
+-			if (session_walk->session_id == session->session_id)
+-				goto exist_glob;
++			if (session_walk->session_id == session->session_id) {
++				err = -EEXIST;
++				goto err_tlock_pnlock;
++			}
+ 
++		l2tp_tunnel_inc_refcount(tunnel);
++		sock_hold(tunnel->sock);
+ 		hlist_add_head_rcu(&session->global_hlist, g_head);
++
+ 		spin_unlock_bh(&pn->l2tp_session_hlist_lock);
++	} else {
++		l2tp_tunnel_inc_refcount(tunnel);
++		sock_hold(tunnel->sock);
+ 	}
+ 
+ 	hlist_add_head(&session->hlist, head);
+@@ -355,12 +372,12 @@ static int l2tp_session_add_to_tunnel(st
+ 
+ 	return 0;
+ 
+-exist_glob:
++err_tlock_pnlock:
+ 	spin_unlock_bh(&pn->l2tp_session_hlist_lock);
+-exist:
++err_tlock:
+ 	write_unlock_bh(&tunnel->hlist_lock);
+ 
+-	return -EEXIST;
++	return err;
+ }
+ 
+ /* Lookup a tunnel by id
+@@ -1251,7 +1268,6 @@ static void l2tp_tunnel_destruct(struct
+ 	/* Remove hooks into tunnel socket */
+ 	sk->sk_destruct = tunnel->old_sk_destruct;
+ 	sk->sk_user_data = NULL;
+-	tunnel->sock = NULL;
+ 
+ 	/* Remove the tunnel struct from the tunnel list */
+ 	pn = l2tp_pernet(tunnel->l2tp_net);
+@@ -1261,6 +1277,8 @@ static void l2tp_tunnel_destruct(struct
+ 	atomic_dec(&l2tp_tunnel_count);
+ 
+ 	l2tp_tunnel_closeall(tunnel);
++
++	tunnel->sock = NULL;
+ 	l2tp_tunnel_dec_refcount(tunnel);
+ 
+ 	/* Call the original destructor */
+@@ -1285,6 +1303,7 @@ void l2tp_tunnel_closeall(struct l2tp_tu
+ 		  tunnel->name);
+ 
+ 	write_lock_bh(&tunnel->hlist_lock);
++	tunnel->acpt_newsess = false;
+ 	for (hash = 0; hash < L2TP_HASH_SIZE; hash++) {
+ again:
+ 		hlist_for_each_safe(walk, tmp, &tunnel->session_hlist[hash]) {
+@@ -1588,6 +1607,7 @@ int l2tp_tunnel_create(struct net *net,
+ 	tunnel->magic = L2TP_TUNNEL_MAGIC;
+ 	sprintf(&tunnel->name[0], "tunl %u", tunnel_id);
+ 	rwlock_init(&tunnel->hlist_lock);
++	tunnel->acpt_newsess = true;
+ 
+ 	/* The net we belong to */
+ 	tunnel->l2tp_net = net;
+@@ -1838,11 +1858,6 @@ struct l2tp_session *l2tp_session_create
+ 			return ERR_PTR(err);
+ 		}
+ 
+-		l2tp_tunnel_inc_refcount(tunnel);
+-
+-		/* Ensure tunnel socket isn't deleted */
+-		sock_hold(tunnel->sock);
+-
+ 		/* Ignore management session in session count value */
+ 		if (session->session_id != 0)
+ 			atomic_inc(&l2tp_session_count);
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -165,6 +165,10 @@ struct l2tp_tunnel {
+ 
+ 	struct rcu_head rcu;
+ 	rwlock_t		hlist_lock;	/* protect session_hlist */
++	bool			acpt_newsess;	/* Indicates whether this
++						 * tunnel accepts new sessions.
++						 * Protected by hlist_lock.
++						 */
+ 	struct hlist_head	session_hlist[L2TP_HASH_SIZE];
+ 						/* hashed list of sessions,
+ 						 * hashed by id */
 
 
