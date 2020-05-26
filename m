@@ -7,46 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3552BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091A4208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A3F20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521467;
-	bh=h26EgQmdrkMUUFsfCMuzV6KRqdC7/qLA91Jzl5Vrlt0=;
+	s=default; t=1590521473;
+	bh=6PeqxmiV1MiN/fs54FhFk/6krLO8JfdqfaCb9/lsmHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1r26gIxDTFUmd45PLoMiCHim0g1Ibaw7GzRjtf0bPuauE98qZZ8e9jEXOLX1NA8hw
-	 bcxAOe+RQ/vPspg9jT0n/uiMGVTIALlrdIk1pvkVInthqmx/xBks2FrX0nwQt4zSNf
-	 a3M69jrpw5sVdEuUHTrX2u4kHUz77bJKHhY7A5zk=
+	b=lMs2LqJLrh9fQF/+AGlQ0nzu40Zv5pCK9CyN6BtQ7zGlH8rwSaYYhGQ591o3gWz4Z
+	 y+LbdJS5GzJCTi7wsRzvItN2bSkMjMsuLth+HUnc4wbV9wNkK0cf8xBbiIbX7rObp/
+	 gfqKaHNDH3tqJ1o+31kJmmfh+/pAzBaJ2Kv8fisM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404471AbgEZTbG (ORCPT
+        id S2390798AbgEZTbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389936AbgEZS72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:59:28 -0400
+        id S2389843AbgEZS7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8427F2086A;
-        Tue, 26 May 2020 18:59:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA9C2084C;
+        Tue, 26 May 2020 18:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519568;
-        bh=h26EgQmdrkMUUFsfCMuzV6KRqdC7/qLA91Jzl5Vrlt0=;
+        s=default; t=1590519563;
+        bh=6PeqxmiV1MiN/fs54FhFk/6krLO8JfdqfaCb9/lsmHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyOPpGSP56OMFct1SHC6fTIHcyKFyWv2hfyouWKomURFqGqLKtCmZjQvH7uLBxvoG
-         Rgw949iE0ldGMBaKFmHsNQTU81vz8/cvtyjYJ0unUtL7QCszk1oHZOBBJ1AHGbyC1H
-         aMcq/PFn2f80zb2sNnTAdpRt8UJduM+LwwhdwWQg=
+        b=b8hfWdsHXZbiVl7scwZ6ukY6C5cIh6Scf31RzxDy4sUCoXJX909OyefGZx4Z6QQFs
+         n2blSnlOhgV7imGtKLZRiFaZLaPmHF05dLqXoRzHZRO3EdMHAsxTISdfYJwHiWieNV
+         itMbE1oWs9roezEfVlwhivMdxsoCodwxja9fcBfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>
-Subject: [PATCH 4.9 54/64] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
-Date:   Tue, 26 May 2020 20:53:23 +0200
-Message-Id: <20200526183930.850716036@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 53/64] ubsan: build ubsan.c more conservatively
+Date:   Tue, 26 May 2020 20:53:22 +0200
+Message-Id: <20200526183930.759269921@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -59,60 +71,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 98e2630284ab741804bd0713e932e725466f2f84 upstream.
+commit af700eaed0564d5d3963a7a51cb0843629d7fe3d upstream.
 
-Currently the kfree of output.pointer can be potentially freeing
-an uninitalized pointer in the case where out_data is NULL. Fix this
-by reworking the case where out_data is not-null to perform the
-ACPI status check and also the kfree of outpoint.pointer in one block
-and hence ensuring the pointer is only freed when it has been used.
+objtool points out several conditions that it does not like, depending
+on the combination with other configuration options and compiler
+variants:
 
-Also replace the if (ptr != NULL) idiom with just if (ptr).
+stack protector:
+  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
+  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
 
-Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+stackleak plugin:
+  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+
+kasan:
+  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
+  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
+
+The stackleak and kasan options just need to be disabled for this file
+as we do for other files already.  For the stack protector, we already
+attempt to disable it, but this fails on clang because the check is
+mixed with the gcc specific -fno-conserve-stack option.  According to
+Andrey Ryabinin, that option is not even needed, dropping it here fixes
+the stackprotector issue.
+
+Link: http://lkml.kernel.org/r/20190722125139.1335385-1-arnd@arndb.de
+Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
+Link: https://lore.kernel.org/lkml/20190722091050.2188664-1-arnd@arndb.de/t/
+Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/platform/x86/alienware-wmi.c |   17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ lib/Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -504,23 +504,22 @@ static acpi_status alienware_wmax_comman
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -230,6 +230,7 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string
+ obj-$(CONFIG_UBSAN) += ubsan.o
  
- 	input.length = (acpi_size) sizeof(*in_args);
- 	input.pointer = in_args;
--	if (out_data != NULL) {
-+	if (out_data) {
- 		output.length = ACPI_ALLOCATE_BUFFER;
- 		output.pointer = NULL;
- 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
- 					     command, &input, &output);
--	} else
-+		if (ACPI_SUCCESS(status)) {
-+			obj = (union acpi_object *)output.pointer;
-+			if (obj && obj->type == ACPI_TYPE_INTEGER)
-+				*out_data = (u32)obj->integer.value;
-+		}
-+		kfree(output.pointer);
-+	} else {
- 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
- 					     command, &input, NULL);
--
--	if (ACPI_SUCCESS(status) && out_data != NULL) {
--		obj = (union acpi_object *)output.pointer;
--		if (obj && obj->type == ACPI_TYPE_INTEGER)
--			*out_data = (u32) obj->integer.value;
- 	}
--	kfree(output.pointer);
- 	return status;
--
- }
+ UBSAN_SANITIZE_ubsan.o := n
+-CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++KASAN_SANITIZE_ubsan.o := n
++CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
  
- /*
+ obj-$(CONFIG_SBITMAP) += sbitmap.o
 
 
