@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E315C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC35C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC6D20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADAE20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521535;
-	bh=467r1v84mpEACB9HxeCyqDjhOTBfrxZ9oE3s2JB/Mps=;
+	s=default; t=1590521540;
+	bh=sEH7FlcbtULD/jnI/XwLJzHyZ9OSJdBrQc3iYDd0vrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfjLyt2tFnEGmZ5zJOjGtUkB1oA/bdaRYZQyuK2fMRL+rK7I+ionyzrRh3oJ8IunZ
-	 kKiDNsJwjyhIYjkdD3WLpn48D0Dx9FWNGZkuU5gJFwQ9CuRrHjGnbUYbCPz6fVsqAP
-	 5JKZcKyFIYhvA/hCI0pfA/lK/2XDt8aADo3Tn3fU=
+	b=lDfGRpwn8thnK+2WfPb1KoroSjUfJEwheZep1F4BVKxY2d0jhfjoDv3cl/ODPtr7F
+	 HGCSBk25N2SdgdrktdPbpjwvqjx+5BL9FtAlpQAPi8MLimyVqmGgaokiQit5t5voyx
+	 ydXQNvhxSiNCsH/huXf5H583tKxi0GXhhNV2nmb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390224AbgEZS56 (ORCPT
+        id S2390163AbgEZS5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389465AbgEZS5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:55 -0400
+        id S2389371AbgEZS5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1942A2084C;
-        Tue, 26 May 2020 18:57:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9DB62084C;
+        Tue, 26 May 2020 18:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519474;
-        bh=467r1v84mpEACB9HxeCyqDjhOTBfrxZ9oE3s2JB/Mps=;
+        s=default; t=1590519462;
+        bh=sEH7FlcbtULD/jnI/XwLJzHyZ9OSJdBrQc3iYDd0vrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2qMtUSYHwRR4Y9DKGjzPcOnydlI7MS4M6P1Xrwnb4HoIilmcJdcxOxgJW/rVyutN
-         r2qWtH1Aq2dqJT6mVlPHP0Rf6oD+41wPmT4Es9J0s5VOfNRqv6fDzEn5OnGM7BFOIJ
-         yuNGWytrMVvlzopVdKPKC5CsV1rV1iRZbeKhJTOc=
+        b=EwKDeeVLvpRUt+Ii2IvDzsN1tTZg+62mvOVA2ELekZFPtdKYafcXFfZBJFRzfkDrg
+         U9dtpZxi/LXm7qsuRbmyT3TtdWmDH9vEGNJ+pssgLp/8AL3aV5d29PqyISngwLv8DI
+         5BM5hYzG33G8OGmuGOd6ZxqVSN9LfxIHsOb5bfeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 18/64] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date:   Tue, 26 May 2020 20:52:47 +0200
-Message-Id: <20200526183918.966243013@linuxfoundation.org>
+Subject: [PATCH 4.9 13/64] configfs: fix config_item refcnt leak in configfs_rmdir()
+Date:   Tue, 26 May 2020 20:52:42 +0200
+Message-Id: <20200526183918.021605314@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -60,71 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
+[ Upstream commit 8aebfffacfa379ba400da573a5bf9e49634e38cb ]
 
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
+configfs_rmdir() invokes configfs_get_config_item(), which returns a
+reference of the specified config_item object to "parent_item" with
+increased refcnt.
 
-Besides not adding any extra functionality, initializing the WMI interface
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
+When configfs_rmdir() returns, local variable "parent_item" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
+The reference counting issue happens in one exception handling path of
+configfs_rmdir(). When down_write_killable() fails, the function forgets
+to decrease the refcnt increased by configfs_get_config_item(), causing
+a refcnt leak.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fix this issue by calling config_item_put() when down_write_killable()
+fails.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ fs/configfs/dir.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 0fd7e40b86a0..8137aa343706 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -561,9 +561,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
- 	.detect_quirks = asus_nb_wmi_quirks,
- };
- 
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
- 
- static int __init asus_nb_wmi_init(void)
- {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
- 
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index c2ef617d2f97..c875f246cb0e 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1537,6 +1537,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
+ 		spin_lock(&configfs_dirent_lock);
+ 		configfs_detach_rollback(dentry);
+ 		spin_unlock(&configfs_dirent_lock);
++		config_item_put(parent_item);
+ 		return -EINTR;
+ 	}
+ 	frag->frag_dead = true;
 -- 
 2.25.1
 
