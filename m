@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B515FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E78EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C693208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A132086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519463;
-	bh=i7GCNXEdmxAwxA1PHcz1D4sPvCWxebhh6uZbOn+hRMM=;
+	s=default; t=1590519468;
+	bh=nm1ATIczXGIiGta7zDSAVmr6SdgBJxCdqlek2HZTNcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUntul7iJcBVhyD9A9Gw7zK8S+37ESjOx9sRuloZzaXdWScTC9vvrEknB+fjE3UV/
-	 xBuk8/j4V4Gla74Jj3YHWJq2MJlSqy0M5VSDNLwGivPF6jZ0KpowaGWaoPWiYqts8/
-	 8BWly962T0lHMPvtoFxWyqfFjtYIB/b8Xqdw38u4=
+	b=1c4ZDxaKKPsx0vLOLHHqUahNBu029XuSVAHg89WNZYyAdk9T92wizBmHa3la8h4xX
+	 ixjq8cXJkSgu8w2rHF0egwwTfa1utDIwEoLrIWaAqBWAEaahw42A5BxVU+d+S66hP+
+	 lTGooRb1PnCpcwzBnpiiDoAxuk9oNeTyUDTaVKUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389385AbgEZS5l (ORCPT
+        id S2390179AbgEZS5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50868 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389371AbgEZS5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:38 -0400
+        id S2390160AbgEZS5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0092084C;
-        Tue, 26 May 2020 18:57:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 440E3208B6;
+        Tue, 26 May 2020 18:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519457;
-        bh=i7GCNXEdmxAwxA1PHcz1D4sPvCWxebhh6uZbOn+hRMM=;
+        s=default; t=1590519464;
+        bh=nm1ATIczXGIiGta7zDSAVmr6SdgBJxCdqlek2HZTNcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xiZ2dm4E7YosVffBywWs+TTdjlLv8mRl2etbxUls5ai50vjO+RELt3mr7RhGCoaF4
-         tUt10LlGz0AgDOpGbEoeTRZdRZYI+IX/VvEnwmJ8gc3jGjoAqe0sFmeyPtftKL48YP
-         uARVSMO+Es73LSyd32bsWsfE4XDLojQsaDR4p5j0=
+        b=Ncpl5o4ve1utfkUYOYKOFiqa/vsgjdIDvKYZtkoVQ9jWzlDFOCUcy8xJDAQl78L1I
+         7UgLmw6yJmR5s0W/ST5fjqPG4xScgFqAj/c5Z3dGV0xvB3gl8UyOwfagQjDzlBjSA5
+         naz95YjSlDpe/Wa4H33dyrhjJQkUBSgV/P8dv9uQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20 ?= 
-        <frederic.pierret@qubes-os.org>, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/64] gcc-common.h: Update for GCC 10
-Date:   Tue, 26 May 2020 20:52:40 +0200
-Message-Id: <20200526183917.620630785@linuxfoundation.org>
+Subject: [PATCH 4.9 14/64] component: Silence bind error on -EPROBE_DEFER
+Date:   Tue, 26 May 2020 20:52:43 +0200
+Message-Id: <20200526183918.259474177@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -61,85 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+From: James Hilliard <james.hilliard1@gmail.com>
 
-[ Upstream commit c7527373fe28f97d8a196ab562db5589be0d34b9 ]
+[ Upstream commit 7706b0a76a9697021e2bf395f3f065c18f51043d ]
 
-Remove "params.h" include, which has been dropped in GCC 10.
+If a component fails to bind due to -EPROBE_DEFER we should not log an
+error as this is not a real failure.
 
-Remove is_a_helper() macro, which is now defined in gimple.h, as seen
-when running './scripts/gcc-plugin.sh g++ g++ gcc':
+Fixes messages like:
+vc4-drm soc:gpu: failed to bind 3f902000.hdmi (ops vc4_hdmi_ops): -517
+vc4-drm soc:gpu: master bind failed: -517
 
-In file included from <stdin>:1:
-./gcc-plugins/gcc-common.h:852:13: error: redefinition of ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’
-  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from ./gcc-plugins/gcc-common.h:125,
-                 from <stdin>:1:
-/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’ previously declared here
- 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Add -Wno-format-diag to scripts/gcc-plugins/Makefile to avoid
-meaningless warnings from error() formats used by plugins:
-
-scripts/gcc-plugins/structleak_plugin.c: In function ‘int plugin_init(plugin_name_args*, plugin_gcc_version*)’:
-scripts/gcc-plugins/structleak_plugin.c:253:12: warning: unquoted sequence of 2 consecutive punctuation characters ‘'-’ in format [-Wformat-diag]
-  253 |   error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
-Link: https://lore.kernel.org/r/20200407113259.270172-1-frederic.pierret@qubes-os.org
-[kees: include -Wno-format-diag for plugin builds]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
+Link: https://lore.kernel.org/r/20200411190241.89404-1-james.hilliard1@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gcc-plugins/Makefile     | 1 +
- scripts/gcc-plugins/gcc-common.h | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/base/component.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index 8b29dc17c73c..2cad963c4fb7 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -9,6 +9,7 @@ else
-   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
-   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
-   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
-+  HOST_EXTRACXXFLAGS += -Wno-format-diag
-   export HOST_EXTRACXXFLAGS
- endif
+diff --git a/drivers/base/component.c b/drivers/base/component.c
+index 08da6160e94d..55f0856bd9b5 100644
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -162,7 +162,8 @@ static int try_to_bring_up_master(struct master *master,
+ 	ret = master->ops->bind(master->dev);
+ 	if (ret < 0) {
+ 		devres_release_group(master->dev, NULL);
+-		dev_info(master->dev, "master bind failed: %d\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_info(master->dev, "master bind failed: %d\n", ret);
+ 		return ret;
+ 	}
  
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 08fe09c28bd2..6792915f5174 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -31,7 +31,9 @@
- #include "ggc.h"
- #include "timevar.h"
+@@ -431,8 +432,9 @@ static int component_bind(struct component *component, struct master *master,
+ 		devres_release_group(component->dev, NULL);
+ 		devres_release_group(master->dev, NULL);
  
-+#if BUILDING_GCC_VERSION < 10000
- #include "params.h"
-+#endif
+-		dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
+-			dev_name(component->dev), component->ops, ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
++				dev_name(component->dev), component->ops, ret);
+ 	}
  
- #if BUILDING_GCC_VERSION <= 4009
- #include "pointer-set.h"
-@@ -796,6 +798,7 @@ static inline gimple gimple_build_assign_with_ops(enum tree_code subcode, tree l
- 	return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
- }
- 
-+#if BUILDING_GCC_VERSION < 10000
- template <>
- template <>
- inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-@@ -809,6 +812,7 @@ inline bool is_a_helper<const greturn *>::test(const_gimple gs)
- {
- 	return gs->code == GIMPLE_RETURN;
- }
-+#endif
- 
- static inline gasm *as_a_gasm(gimple stmt)
- {
+ 	return ret;
 -- 
 2.25.1
 
