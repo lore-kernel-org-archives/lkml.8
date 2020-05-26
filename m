@@ -1,156 +1,198 @@
-Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D947C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4636C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1442320874
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83772086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqXsTGiK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DvoIrwwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgETWAa (ORCPT
+        id S2389382AbgEZTns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
+        Tue, 26 May 2020 15:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728046AbgETWA3 (ORCPT
+        with ESMTP id S2389149AbgEZTnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:00:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278C6C061A0E;
-        Wed, 20 May 2020 15:00:28 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id n15so2001761pjt.4;
-        Wed, 20 May 2020 15:00:28 -0700 (PDT)
+        Tue, 26 May 2020 15:43:47 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7C6C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:43:47 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id i190so21822093ybg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4JmOvD2TyoQ5PlnHW0M+2Uibc7d3SIyYFIVbY6RyYR4=;
-        b=eqXsTGiKOHrK015U2Y69X7/wA962a5nOkMWhK/QYqV3Ec4k+eK/DQmXSpX/CqX6/yN
-         yuuOKMtnGf/bYh3jZOShjjLlv71HKx1JfVt4swZvykjPSpdZvapniIjP/MqnIGgZTiNA
-         Cqem/NJDSvkiQiFoK1kMzTQTFckzl4nV+qFmemtAG6Ookv4mf7mpE5eWzPY5cf33TWO2
-         h/UsrNigz28COgyfWhXekLtDmF2VOZKdFza4I0Bm6nUnA7/LM/e+Q4Ns5Dyeu7SY+XKd
-         3/O5LWa41yiDdY+xQ99xOLfw+z5J/VI91WCSusOJu0nCO7mghPAHtejqTqJBnrED78HQ
-         4rKg==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:subject:from:to:cc;
+        bh=NB9RZ9RdGXFtR3wmsPCT6ld5ryX9VoyfJ5DeVtdIcp4=;
+        b=DvoIrwwa78TAogla+2FdL0rlzEgjXB4Rktgb0EQfAjrM3lcuA3qcnO5ktM4NJonKRb
+         r/T8uZVm+rcjvnuqzBHnXluB89n/xQ+zMmkEpEa9XRatFZCfA8MZB2gsF8x/FHtHkYJJ
+         x0h0LZyuiiUZf5q8fkaq5Dyrrinm6JiQYECdF58MCZFD8RYBk7dNqFG7Yv+09E3PsukJ
+         EdGm/bUl1VEnfOl4pWIKP3OAOLtBpuAadyf9Q4Hhrz7mxDNNWRrFrDiRdE4RQUWhcyPO
+         r3prxi/Y8vIlVbJOu7n3n0ZNGXS1pcBOVycAw9PGtgZY3Na3CC1Ovk728BeQGCAHJgTM
+         Q8pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4JmOvD2TyoQ5PlnHW0M+2Uibc7d3SIyYFIVbY6RyYR4=;
-        b=L5HbOC7rdFp2N5Gl4ICqM7Y7MZ9fSsDGGi2BfDJl1GLspIrXqsc2tujAC2jE9vrA1K
-         rK3SekYqcTpsi/d3da5ulagtRBzD50VMaGBWDuGHL75GLdFgvqaa0epajNlSJIPfvEL7
-         WuGyV7v/M+V7Fy9OxFcXEa+fz1P9YldHvI7697Rjab7Ky4rpZR7xKkAvsP86O8/Rr9di
-         IMBZ6wpRI4hRpm0Wm2JZWs4SHz+gwllOYbzNbLOQzIUivf3Fe+4hWEgHx4l6MmZX7qNC
-         DmuRHkJV7kYr2jFO8ZbgSUOpau0l9D/Ce0D2trpjobaPKpZYY0Ix3LcL57GNS0QsSYaI
-         cSXA==
-X-Gm-Message-State: AOAM530h3IQqkqS/07VOk72fMHJNL1Za3jHa5EPMWTroWqmW6KrqQCpd
-        ZJyjQaAVBZ+rfBrJSvMdx5s=
-X-Google-Smtp-Source: ABdhPJze/d22doq9O8a6Meb4pDynDLvbyPjQsLlo2DAFKxSBmbXNXijOFROsXNsb7fYPLGuichLTIQ==
-X-Received: by 2002:a17:90a:a62:: with SMTP id o89mr7680765pjo.217.1590012026445;
-        Wed, 20 May 2020 15:00:26 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:200:cf67:1de0:170f:be65])
-        by smtp.gmail.com with ESMTPSA id gg8sm2760738pjb.39.2020.05.20.15.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 15:00:25 -0700 (PDT)
-Date:   Wed, 20 May 2020 15:00:23 -0700
-From:   Jonathan Nieder <jrnieder@gmail.com>
-To:     Junio C Hamano <gitster@pobox.com>
-Cc:     Jeff King <peff@peff.net>, git@vger.kernel.org,
-        Derrick Stolee <dstolee@microsoft.com>
-Subject: Protocol v2 in v2.27 (Re: Re* [ANNOUNCE] Git v2.27.0-rc1)
-Message-ID: <20200520220023.GB3648@google.com>
-References: <xmqqsgfuv2ko.fsf@gitster.c.googlers.com>
- <20200520193156.GA4700@coredump.intra.peff.net>
- <xmqq5zcquz4t.fsf_-_@gitster.c.googlers.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xmqq5zcquz4t.fsf_-_@gitster.c.googlers.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version:subject
+         :from:to:cc;
+        bh=NB9RZ9RdGXFtR3wmsPCT6ld5ryX9VoyfJ5DeVtdIcp4=;
+        b=oIgicTHaB6DYemOkZREiJYLinmr9erPX3J4Y+f6QACCCKIbnx+XsiRMW98OB9tn3RK
+         DiY0Q8ZMM6sxoEQGf7VXyUTpAJw39UOfWunZ13PRptqO1/vj6lZ4RyUr7vJgcEIbR+jS
+         5d63TBiRuPcsBH3yGsND3jOtBRiFuuGnCDcdeqMS67zZbxo5c+I+jnVKz2PkMMN23Zkf
+         Xlw95Mg4+yCoWCYRqkhmI3J6tMBodAImn3diXNkJoHjKay86QswCXL3uLhnTKtKjaMsN
+         HXEsm95Ohy9M0WARBEwYvf4xI3npKYemxUV//f7qPgtJMcQXHffZGPd0/ZJnVlF3YV3g
+         X56w==
+X-Gm-Message-State: AOAM532T+9sCLjkzh9HWSn2DIhAkrvgsYkka2O4De9CrXzWKA7Spf0pi
+        5332N6IjiktNTRghpfZHjR5KH4A6jVgCtWs=
+X-Google-Smtp-Source: ABdhPJw1fzBBUe7e46QkrW4zeZNwEH2qryRHXS1NUbIAjeMeDUYPkZVrk34n/VXE9bqbU5HulxGFA9gSaEqHbUo=
+X-Received: by 2002:a5b:14a:: with SMTP id c10mr4152627ybp.227.1590522226385;
+ Tue, 26 May 2020 12:43:46 -0700 (PDT)
+Date:   Tue, 26 May 2020 12:43:28 -0700
+In-Reply-To: <6144404cb26d1f797fd7e87b124bcaf8@walle.cc>
+Message-Id: <20200526194328.258722-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v2] driver core: Update device link status correctly for
+ SYNC_STATE_ONLY links
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Michael Walle <michael@walle.cc>, kernel-team@android.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(other lists -> bcc)
-Junio C Hamano wrote:
-> Jeff King <peff@peff.net> writes:
+When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+core: Add device link support for SYNC_STATE_ONLY flag"),
+SYNC_STATE_ONLY links were treated similar to STATELESS links in terms
+of not blocking consumer probe if the supplier hasn't probed yet.
 
->> Is it worth mentioning here the reversion of v2 as the default protocol?
->>
->> It does end up (along with the actual code fix) in the "fixes from
->> v2.26" section:
->>
->>>  * Those fetching over protocol v2 from linux-next and other kernel
->>>    repositories are reporting that v2 often fetches way too much than
->>>    needed.
->>>    (merge 11c7f2a30b jn/demote-proto2-from-default later to maint).
->>>
->>>  * The upload-pack protocol v2 gave up too early before finding a
->>>    common ancestor, resulting in a wasteful fetch from a fork of a
->>>    project.  This has been corrected to match the behaviour of v0
->>>    protocol.
->>>    (merge 2f0a093dd6 jt/v2-fetch-nego-fix later to maint).
->>
->> but that's somewhat buried. I dunno. It is not likely to introduce _new_
->> compatibility issues, but perhaps folks looking into compatibility stuff
->> may want to know about the revert.
->
-> The promotion in Git 2.26 was buried in the "performance &
-> implementation details" section and not in the backward
-> compatibility section, so it feels a bit funny to highlight the
-> reversion.  In any case, here is what I prepared (but not committed
-> yet)
+That caused a SYNC_STATE_ONLY device link's status to not get updated.
+Since SYNC_STATE_ONLY device link is no longer useful once the
+consumer probes, commit 21c27f06587d ("driver core: Fix
+SYNC_STATE_ONLY device link implementation") addresses the status
+update issue by deleting the SYNC_STATE_ONLY device link instead of
+complicating the status update code.
 
-Speaking of which, should we enable protocol v2 by default for people
-with feature.experimental enabled, like this?
+However, there are still some cases where we need to update the status
+of a SYNC_STATE_ONLY device link. This is because a SYNC_STATE_ONLY
+device link can later get converted into a normal MANAGED device link
+when a normal MANAGED device link is created between a supplier and
+consumer that already have a SYNC_STATE_ONLY device link between them.
 
-(This isn't part of the rest of the feature.experimental handling
-because those are tied to a repository object, whereas this code path
-is used for operations like "git ls-remote" that do not require a
-repository.)
+If a SYNC_STATE_ONLY device link's status isn't maintained correctly
+till it's converted to a normal MANAGED device link, then the normal
+MANAGED device link will end up with a wrong link status. This can cause
+a warning stack trace[1] when the consumer device probes successfully.
 
-Signed-off-by: Jonathan Nieder <jrnieder@gmail.com>
+This commit fixes the SYNC_STATE_ONLY device link status update issue
+where it wouldn't transition correctly from DL_STATE_DORMANT or
+DL_STATE_AVAILABLE to DL_STATE_CONSUMER_PROBE. It also resets the status
+back to DL_STATE_DORMANT or DL_STATE_AVAILABLE if the consumer probe
+fails.
 
-diff --git c/Documentation/config/protocol.txt i/Documentation/config/protocol.txt
-index 0b40141613e..c46e9b3d00a 100644
---- c/Documentation/config/protocol.txt
-+++ i/Documentation/config/protocol.txt
-@@ -48,7 +48,8 @@ protocol.version::
- 	If set, clients will attempt to communicate with a server
- 	using the specified protocol version.  If the server does
- 	not support it, communication falls back to version 0.
--	If unset, the default is `0`.
-+	If unset, the default is `0`, unless `feature.experimental`
-+	is enabled, in which case the default is `2`.
- 	Supported versions:
- +
- --
-diff --git c/protocol.c i/protocol.c
-index d390391ebac..d1dd3424bba 100644
---- c/protocol.c
-+++ i/protocol.c
-@@ -17,6 +17,7 @@ static enum protocol_version parse_protocol_version(const char *value)
- enum protocol_version get_protocol_version_config(void)
+[1] - https://lore.kernel.org/lkml/20200522204120.3b3c9ed6@apollo/
+Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
+Fixes: 21c27f06587d ("driver core: Fix SYNC_STATE_ONLY device link implementation")
+Reported-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+
+v1->v2:
+- Added code to "revert" the link status if consumer probe fails
+
+Greg,
+
+I think this is the issue Michael ran into. I'd like him to test the fix
+before it's pulled in.
+
+Michael,
+
+If you can test this on the branch you saw the issue in and give a
+Tested-by if it works, that'd be great.
+
+Thanks,
+Saravana
+
+ drivers/base/core.c | 34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 791b7530599f..a3d7e2318b5f 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -646,9 +646,17 @@ static void device_links_missing_supplier(struct device *dev)
  {
- 	const char *value;
-+	int val;
- 	const char *git_test_k = "GIT_TEST_PROTOCOL_VERSION";
- 	const char *git_test_v;
+ 	struct device_link *link;
  
-@@ -30,6 +31,9 @@ enum protocol_version get_protocol_version_config(void)
- 		return version;
+-	list_for_each_entry(link, &dev->links.suppliers, c_node)
+-		if (link->status == DL_STATE_CONSUMER_PROBE)
++	list_for_each_entry(link, &dev->links.suppliers, c_node) {
++		if (link->status != DL_STATE_CONSUMER_PROBE)
++			continue;
++
++		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+ 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
++		} else {
++			WARN_ON(!(link->status & DL_FLAG_SYNC_STATE_ONLY));
++			WRITE_ONCE(link->status, DL_STATE_DORMANT);
++		}
++	}
+ }
+ 
+ /**
+@@ -687,11 +695,11 @@ int device_links_check_suppliers(struct device *dev)
+ 	device_links_write_lock();
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+-		if (!(link->flags & DL_FLAG_MANAGED) ||
+-		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
++		if (!(link->flags & DL_FLAG_MANAGED))
+ 			continue;
+ 
+-		if (link->status != DL_STATE_AVAILABLE) {
++		if (link->status != DL_STATE_AVAILABLE &&
++		    !(link->flags & DL_FLAG_SYNC_STATE_ONLY)) {
+ 			device_links_missing_supplier(dev);
+ 			ret = -EPROBE_DEFER;
+ 			break;
+@@ -952,11 +960,21 @@ static void __device_links_no_driver(struct device *dev)
+ 		if (!(link->flags & DL_FLAG_MANAGED))
+ 			continue;
+ 
+-		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
++		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER) {
+ 			device_link_drop_managed(link);
+-		else if (link->status == DL_STATE_CONSUMER_PROBE ||
+-			 link->status == DL_STATE_ACTIVE)
++			continue;
++		}
++
++		if (link->status != DL_STATE_CONSUMER_PROBE &&
++		    link->status != DL_STATE_ACTIVE)
++			continue;
++
++		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+ 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
++		} else {
++			WARN_ON(!(link->status & DL_FLAG_SYNC_STATE_ONLY));
++			WRITE_ONCE(link->status, DL_STATE_DORMANT);
++		}
  	}
  
-+	if (!git_config_get_bool("feature.experimental", &val) && val)
-+		return protocol_v2;
-+
- 	git_test_v = getenv(git_test_k);
- 	if (git_test_v && *git_test_v) {
- 		enum protocol_version env = parse_protocol_version(git_test_v);
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
