@@ -2,112 +2,188 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E397C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD35120704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141842070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Vqh+9szH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qlNFL+6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgEZHWv (ORCPT
+        id S1731561AbgEZHXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:22:51 -0400
-Received: from mail-m972.mail.163.com ([123.126.97.2]:33580 "EHLO
-        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgEZHWu (ORCPT
+        Tue, 26 May 2020 03:23:12 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:18816 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731519AbgEZHXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:22:50 -0400
-X-Greylist: delayed 910 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 May 2020 03:22:50 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=bkSJj
-        PRUKYUDwFkyPzThVgbKD1YuAi6I43MZcpH/s8I=; b=Vqh+9szHVRs6SKbD3K4o3
-        O11U5YVtsRU8DxAs4N+AHZvRZvG2y1XxuOnULRU5qi0Hh82c2ESl7Ke/DZHYQZfu
-        FInuwilB9rNwQOy1wgQcSWsRei6YoZcY3V6bEcPcRqEKjUGGy3oKyWO6kapcfqT3
-        Rg4E0uJQYY3VZSNlFFFBoc=
-Received: from [172.20.10.2] (unknown [124.64.17.235])
-        by smtp2 (Coremail) with SMTP id GtxpCgAXauInwMxeX977Bg--.54S2;
-        Tue, 26 May 2020 15:07:28 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Fix IRQ tracing when call handle_fpe()
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     paulburton@kernel.org, chenhc@lemote.com,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liulichao@loongson.cn
-References: <20200525033123.13114-1-yuanjunqing66@163.com>
- <20200525084234.GA5057@alpha.franken.de>
-From:   yuanjunqing <yuanjunqing66@163.com>
-Message-ID: <76f2c756-0ae4-83f5-becf-6f1b3319f6fd@163.com>
-Date:   Tue, 26 May 2020 15:07:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 03:23:10 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200526072306epoutp04d8c5c97af322f8ffe8d74e783e87696e~Sgx6jUj-e1332513325epoutp04V
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:23:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200526072306epoutp04d8c5c97af322f8ffe8d74e783e87696e~Sgx6jUj-e1332513325epoutp04V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590477786;
+        bh=muDhJDlkbZ0tlCtDaGGVytLoRJDLRFQkoNGUuFxnJAQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=qlNFL+6OvSMtiJ9PHdp1UZfelCoddqpgiF6m7Czdit12hdX341od0TXXCyV1dNAhn
+         qv58yEogpUTMszItvlvYi9U5xENhXRlTqk1bye2ugMeMcBB91/BNZSlW8qVW4Rxn3S
+         hGdf7UetEccdeBjHGSSassJrTwvoTIXhA33XJAFs=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200526072305epcas1p34fce9a04cf5a4ab0c9cf4e6832dd0d07~Sgx5-i0VP1566015660epcas1p3N;
+        Tue, 26 May 2020 07:23:05 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.160]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49WQRD1tDFzMqYkl; Tue, 26 May
+        2020 07:23:04 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E2.48.04395.7D3CCCE5; Tue, 26 May 2020 16:23:03 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200526072303epcas1p2f4598250117d4718b73dd11c7adbf629~Sgx4UmWC70599605996epcas1p2r;
+        Tue, 26 May 2020 07:23:03 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200526072303epsmtrp2c4d152c159272c7de23fd1a3114836e3~Sgx4Twb8l2963929639epsmtrp2c;
+        Tue, 26 May 2020 07:23:03 +0000 (GMT)
+X-AuditID: b6c32a39-f7bff7000000112b-a0-5eccc3d7f701
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        90.F2.08382.7D3CCCE5; Tue, 26 May 2020 16:23:03 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200526072303epsmtip193c55d891e3daea8b703395b47fb81c1~Sgx4JZsJL3232332323epsmtip1W;
+        Tue, 26 May 2020 07:23:03 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200525115052.19243-3-kohada.t2@gmail.com>
+Subject: RE: [PATCH 3/4] exfat: add boot region verification
+Date:   Tue, 26 May 2020 16:23:03 +0900
+Message-ID: <00d201d6332e$7e6308a0$7b2919e0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200525084234.GA5057@alpha.franken.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID: GtxpCgAXauInwMxeX977Bg--.54S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KF1ruF4rtw4rJrWkXw4Utwb_yoW8Jw47p3
-        y8C3Z5KF4qgrWjvrW7Cwn5GrW5Kw4kArWY9Fs5tay5X3WrXF4ktF4IqwsIgryq9r1kua1f
-        KFyqg34j9FsxA3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jN739UUUUU=
-X-Originating-IP: [124.64.17.235]
-X-CM-SenderInfo: h1xd0ypxqtx0rjwwqiywtou0bp/xtbBUQowXFaD7O3HBgABsj
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQEl0VwLAqGTGno4seWfP7lwGg+RAAIXHVMxAmZLU4yp9smngA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTNY6bTgVB8lgrXYqROxEQj0FJbBwPGoNEm+kFiNOoHdQIjoN2c
+        KQY1cQkGKkHj1qgVDBpXXGqUyKKVCApWkQ9Q0RBjXHBBRRQUjVptOzXyd+95595zznuPJpRn
+        KDVdbHPygo2zMFQMebVtuja1t60zT/v69xz2e00fyX7wu0n2us9Psj3N1RTb8+cLyZ4a2U+y
+        9YFbsnly00h1h9xUvj8gN5W1n6VMTZ6nctPu+jpkGr48OZdaZckq4rkCXtDwtnx7QbGtMJtZ
+        vNQ832wwanWpukx2NqOxcVY+m1mwJDd1YbEl6IXRbOAsJUEolxNFJn1ulmAvcfKaIrvozGZ4
+        R4HFodM60kTOKpbYCtPy7dY5Oq02wxBkrrYU3e7agRzVcaW+hndR21B7TCWKpgHPgvd/eqlK
+        FEMrcSMCt3cvITVfELy83h85+YbAVTZK/hvZ01cWYfkQ1Af65VLzDsEjvxuFWBROhcCvFipU
+        q3Aa+P2SCIG3R8HpOyPBcZqOxpngakoKceJxFtw4N0CFYBKnwFCFKgQrgozACWmlAo8H/+FX
+        YRMEToaGj9WEZEgDP/pPyUKjKpwDF73REkUFR3aWh30CPkbDnTOBKIm/AKqO1kbCxMNAR71c
+        qtUwPOgLWwC8GT63RNa7ELwdzZZqPTzxXgpLEXg6eJvTJXgKNP2sQZJsHAx+rZJJWxTgKldK
+        lBTY3d0WMZAElRVD8j2I8YzJ5RmTyzMmgOe/WC0i61AC7xCthbyocxjGPvVlFP6lMzIbUXvX
+        klaEacTEKtjz9/KUMm6DuNHaioAmGJUi534QUhRwGzfxgt0slFh4sRUZgre+l1BPyLcH/7zN
+        adYZMvR6PTvLONto0DOJCnevJU+JCzknv47nHbzwby6KjlZvQ+6qwe8LG5abP3XGTT25dX37
+        YNKKF6YruxLKV7qNO/MOCt2xYvzHASwYXRfUQ7evJdYcyBl+jL42r5qPmxLWNTxHEzl5x9XO
+        7Y03W2Krkl2yN96p1nGlPmLRoWktk/bFzfyd8ezBsmu130rvip3JE9z0i7VrUPqW7hUPnx8Y
+        rYg/3s2QYhGnm0EIIvcXyywlCrsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LZdlhJTvf64TNxBtt+KFv8mHubxeLNyaks
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
+        YvT4vEkugC2KyyYlNSezLLVI3y6BK+PouRbGgjl8FXu3v2RqYDzG1cXIySEhYCIx4XYzcxcj
+        F4eQwG5Gid6bLUwQCWmJYyfOACU4gGxhicOHiyFqnjNKfNvylwWkhk1AV+Lfn/1sILaIgJ7E
+        yZPX2UCKmAWamSS+PVsCNXU7o8SdW4tYQCZxClhKdOyUBmkQFrCR2Lf6FRtImEVAVeJDuwhI
+        mBeo4t+SqYwQtqDEyZlPwDqZgea3bQQLMwvIS2x/O4cZ4kwFiZ9Pl7GClIgIOEmsW88JUSIi
+        MbuzjXkCo/AsJINmIQyahWTQLCQdCxhZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525i
+        BEeUluYOxu2rPugdYmTiYDzEKMHBrCTC63T2dJwQb0piZVVqUX58UWlOavEhRmkOFiVx3huF
+        C+OEBNITS1KzU1MLUotgskwcnFINTOFVfYcnzy2Z/H7jDskjLp77LFVN9+86rflphdTez1pN
+        v7qTolZ1RXSfWFW7b+3+1Jv6130ctq3ZybZ3QQJ72LMFPL1xvdvnpXR5GLq9NZA8OEn35Ktd
+        Z1sf6m7RnnwwvYS/rECcO+iEQfPTYxez/5yZ/Ny995NViGXgLofDv1ezmHyNn9p+SK+mW2xq
+        GI+n0K/Dv+0/sjG9Pjfzu/ZBozmP3+ytFbq1rzCovvPHrINRF4yOyjEmvboSN/dGaLH4HAUD
+        3v3L2fTP1fO43JWYIyfKeV24ZdWXGIvlqmLX/DwSEovezLZ8X3Rr7oJj0u9kj4bujTB+LC+t
+        Orm99chM667mHTNk/0hwrD96rOho5z0lluKMREMt5qLiRAD5naEiFwMAAA==
+X-CMS-MailID: 20200526072303epcas1p2f4598250117d4718b73dd11c7adbf629
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200525115119epcas1p381d6e579b478e05e007a1521c2a103f8
+References: <20200525115052.19243-1-kohada.t2@gmail.com>
+        <CGME20200525115119epcas1p381d6e579b478e05e007a1521c2a103f8@epcas1p3.samsung.com>
+        <20200525115052.19243-3-kohada.t2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2020/5/25 下午4:42, Thomas Bogendoerfer 写道:
-> On Mon, May 25, 2020 at 11:31:23AM +0800, YuanJunQing wrote:
->>  Register "a1" is unsaved in this function,
->>  when CONFIG_TRACE_IRQFLAGS is enabled,
->>  the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
->>  and this may change register "a1".
->>  The variment of register "a1" may send SIGFPE signal
->>  to task when call do_fpe(),and this may kill the task.
->>
->> Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
->> ---
->>  arch/mips/kernel/genex.S | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
->> index 8236fb291e3f..956a76429773 100644
->> --- a/arch/mips/kernel/genex.S
->> +++ b/arch/mips/kernel/genex.S
->> @@ -480,16 +480,18 @@ NESTED(nmi_handler, PT_SIZE, sp)
->>  	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
->>  	.set	mips1
->>  	SET_HARDFLOAT
->> -	cfc1	a1, fcr31
->> +	cfc1	s0, fcr31
->>  	.set	pop
->>  	CLI
->>  	TRACE_IRQS_OFF
->> +	move    a1,s0
->>  	.endm
-> do we realy need to read fcr31 that early ? Wouldn't it work to
-> just move the cfc1 below TRACE_IRQS_OFF ?
->
-> Thomas.
-
-
- yes, it can work when we just move the cfc1 below TRACE_IRQS_OFF,
- and the code is written as follows.
-
- 	CLI
- 	TRACE_IRQS_OFF
- 	.set	mips1
- 	SET_HARDFLOAT
-	cfc1	a1, fcr31
- 	.set	pop
-       .endm
+[snip]
+> +static int exfat_verify_boot_region(struct super_block *sb) {
+> +	struct buffer_head *bh = NULL;
+> +	u32 chksum = 0, *p_sig, *p_chksum;
+> +	int sn, i;
+> +
+> +	/* read boot sector sub-regions */
+> +	for (sn = 0; sn < 11; sn++) {
+> +		bh = sb_bread(sb, sn);
+> +		if (!bh)
+> +			return -EIO;
+> +
+> +		if (sn != 0 && sn <= 8) {
+> +			/* extended boot sector sub-regions */
+> +			p_sig = (u32 *)&bh->b_data[sb->s_blocksize - 4];
+> +			if (le32_to_cpu(*p_sig) != EXBOOT_SIGNATURE) {
+> +				exfat_err(sb, "no exboot-signature");
+                                exfat_warn(sb, "Invalid exboot-signature(sector = %d): 0x%08x", sn, *p_sig);
+> +				brelse(bh);
+> +				return -EINVAL;
+Don't make mount error, Just print warning message.
+> +			}
+> +		}
+> +
+> +		chksum = exfat_calc_chksum32(bh->b_data, sb->s_blocksize,
+> +			chksum, sn ? CS_DEFAULT : CS_BOOT_SECTOR);
+> +		brelse(bh);
+> +	}
+> +
+> +	/* boot checksum sub-regions */
+> +	bh = sb_bread(sb, sn);
+> +	if (!bh)
+> +		return -EIO;
+> +
+> +	for (i = 0; i < sb->s_blocksize; i += sizeof(u32)) {
+> +		p_chksum = (u32 *)&bh->b_data[i];
+> +		if (le32_to_cpu(*p_chksum) != chksum) {
+> +			exfat_err(sb, "mismatch checksum");
+Print invalid checksum value also.
+> +			brelse(bh);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +	brelse(bh);
+> +	return 0;
+> +}
+> +
+>  /* mount the file system volume */
+>  static int __exfat_fill_super(struct super_block *sb)  { @@ -498,6 +542,12 @@ static int
+> __exfat_fill_super(struct super_block *sb)
+>  		goto free_bh;
+>  	}
+> 
+> +	ret = exfat_verify_boot_region(sb);
+> +	if (ret) {
+> +		exfat_err(sb, "invalid boot region");
+> +		goto free_bh;
+> +	}
+> +
+>  	ret = exfat_create_upcase_table(sb);
+>  	if (ret) {
+>  		exfat_err(sb, "failed to load upcase table");
+> --
+> 2.25.1
 
 
