@@ -2,175 +2,81 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5673DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1724C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24D592075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:49:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cWoK90ub"
+	by mail.kernel.org (Postfix) with ESMTP id 8425D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbgEZItD (ORCPT
+        id S1731428AbgEZIvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgEZItC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:49:02 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A449CC03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:49:02 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id d191so17975773oib.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5GNEdvxv7mdO2rvUKQ7g7CQMFrgCJQETUzHF+R0Pghk=;
-        b=cWoK90ubt9Zt16ipNusgGtcCLXrJQ2KdR/4phuhXvAOBzyAjlrj1sUOBhNckRmjkFf
-         vCbJwaUvP43Z5uJjNjr99Bs3afD//vOVkLzNqQqu3XEqHOEd7YT3O1eJp/N6jbU6ZVD5
-         HYK7nHgGjnBIk5uShaJqd5S+fTE941jBuBrRly2RCz4KQfp7xW91XiCB76WmQH2i72oj
-         UQQLe/a8+HSy51vBlJA8KkrrpOp1oyfuvMdryQKkY7Y0tuoO8HBa1TlDKXBjD5snNVWH
-         WFxuMmECDi/u9csMxvBLqA0UHZuCUpf+NtuyvlNk22vp5aXTvSYN32WL7Uz3sr6wAyYl
-         SCiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5GNEdvxv7mdO2rvUKQ7g7CQMFrgCJQETUzHF+R0Pghk=;
-        b=KfwbeR15mLJwj/uD+MQ3gQns2cqt8bygZeEQbpxH7pN0Oq8qvyyuow79rUvq9/ciER
-         6KoVBktdj7Yv/sIoIOlRf4a0Uj4WqhCI07znu9puIUOZE+lCfYufvnG4BedH/7gV9cqX
-         fV5AusbqtD0XsWHtf8DyAuicqrfwKJwQjICeY0knQrLKV82KKBKn1T4viL4P9im3wQYY
-         i8Rcx4C+e7PAvH8Odw+DCaKXZDvjhSfnknf3w7X2gwR8kSeorSwK9kYCsYy3Tr8zOhs0
-         Yyv/gW5AYW9Fe3OlN4AToGpzgLiLrhiueWgB56qBmIFEZ11sVoI9djQVu1uX87uXBGrL
-         Hknw==
-X-Gm-Message-State: AOAM533hJbuXTdSaGgLj/6XAHTk8OXrIq2xGX5UUPiOF4LoGGZV0Jg/Y
-        07R+XMMtE2tthgYhWpnrk2ydwXp0euCet1aMNJv68HGp
-X-Google-Smtp-Source: ABdhPJwJA36cZMmOd8c6H2JVZPEEuXqjCAEh8p/lf7fE/+JsyAwMKd+waOHOF0SAK/M0Oi0DQDZLGizYIs16iwRvxuU=
-X-Received: by 2002:a05:6808:3dc:: with SMTP id o28mr14010604oie.149.1590482941983;
- Tue, 26 May 2020 01:49:01 -0700 (PDT)
+        Tue, 26 May 2020 04:51:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43654 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725771AbgEZIvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:51:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B95F4AB3D;
+        Tue, 26 May 2020 08:51:51 +0000 (UTC)
+Subject: Re: [PATCH] xen: move xen_setup_callback_vector() definition to
+ include/xen/hvm.h
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200520161600.361895-1-vkuznets@redhat.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <dd3925a5-b01f-9381-6711-4f912ac04fb5@suse.com>
+Date:   Tue, 26 May 2020 10:51:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200525233248.434636-1-jhubbard@nvidia.com>
-In-Reply-To: <20200525233248.434636-1-jhubbard@nvidia.com>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Tue, 26 May 2020 10:48:50 +0200
-Message-ID: <CAHUa44HUPeV6D6cYEKxJmVm68G2ADvMcgEpJ7XkKEAFuteWEHw@mail.gmail.com>
-Subject: Re: [PATCH v2] tee: convert get_user_pages() --> pin_user_pages()
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        linux-media@vger.kernel.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520161600.361895-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On 20.05.20 18:16, Vitaly Kuznetsov wrote:
+> Kbuild test robot reports the following problem on ARM:
+> 
+>>> drivers/xen/events/events_base.c:1664:6: warning: no previous prototype
+>    for 'xen_setup_callback_vector' [-Wmissing-prototypes]
+> 1664 | void xen_setup_callback_vector(void) {}
+> |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> The problem is that xen_setup_callback_vector is a x86 only thing, its
+> definition is present in arch/x86/xen/xen-ops.h but not on ARM. In
+> events_base.c we have a stub for !CONFIG_XEN_PVHVM but it is not
+> declared as 'static'.
+> 
+> On x86 the situation is hardly better: drivers/xen/events/events_base.c
+> doesn't include 'xen-ops.h' from arch/x86/xen/, it includes its namesake
+> from include/xen/ so we also get the 'no previous prototype' warning.
+> 
+> Currently, xen_setup_callback_vector() has two call sites: one in
+> drivers/xen/events_base.c and another in arch/x86/xen/suspend_hvm.c. The
+> former is placed under #ifdef CONFIG_X86 and the later is only compiled
+> in when CONFIG_XEN_PVHVM.
+> 
+> Resolve the issue by moving xen_setup_callback_vector() declaration to
+> arch neutral 'include/xen/hvm.h' as the implementation lives in arch
+> neutral drivers/xen/events/events_base.c.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-On Tue, May 26, 2020 at 1:32 AM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> This code was using get_user_pages*(), in a "Case 2" scenario
-> (DMA/RDMA), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages*() + put_page() calls to
-> pin_user_pages*() + unpin_user_pages() calls.
->
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
->
-> [1] Documentation/core-api/pin_user_pages.rst
->
-> [2] "Explicit pinning of user-space pages":
->     https://lwn.net/Articles/807108/
->
-> Cc: Jens Wiklander <jens.wiklander@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: tee-dev@lists.linaro.org
-> Cc: linux-media@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->
-> Hi,
->
-> This fixes the typo ("convert convert") in the subject line, but
-> otherwise no changes.
->
-> thanks,
-> John Hubbard
-> NVIDIA
->
->
->  drivers/tee/tee_shm.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-Looks good. I've tested this on a HiKey 620 board, no regressions. I'm
-picking up this patch.
 
-Thanks,
-Jens
-
->
-> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> index bd679b72bd05..7dffc42d8d5a 100644
-> --- a/drivers/tee/tee_shm.c
-> +++ b/drivers/tee/tee_shm.c
-> @@ -31,16 +31,13 @@ static void tee_shm_release(struct tee_shm *shm)
->
->                 poolm->ops->free(poolm, shm);
->         } else if (shm->flags & TEE_SHM_REGISTER) {
-> -               size_t n;
->                 int rc = teedev->desc->ops->shm_unregister(shm->ctx, shm);
->
->                 if (rc)
->                         dev_err(teedev->dev.parent,
->                                 "unregister shm %p failed: %d", shm, rc);
->
-> -               for (n = 0; n < shm->num_pages; n++)
-> -                       put_page(shm->pages[n]);
-> -
-> +               unpin_user_pages(shm->pages, shm->num_pages);
->                 kfree(shm->pages);
->         }
->
-> @@ -226,7 +223,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
->                 goto err;
->         }
->
-> -       rc = get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
-> +       rc = pin_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
->         if (rc > 0)
->                 shm->num_pages = rc;
->         if (rc != num_pages) {
-> @@ -271,16 +268,13 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
->         return shm;
->  err:
->         if (shm) {
-> -               size_t n;
-> -
->                 if (shm->id >= 0) {
->                         mutex_lock(&teedev->mutex);
->                         idr_remove(&teedev->idr, shm->id);
->                         mutex_unlock(&teedev->mutex);
->                 }
->                 if (shm->pages) {
-> -                       for (n = 0; n < shm->num_pages; n++)
-> -                               put_page(shm->pages[n]);
-> +                       unpin_user_pages(shm->pages, shm->num_pages);
->                         kfree(shm->pages);
->                 }
->         }
-> --
-> 2.26.2
->
+Juergen
