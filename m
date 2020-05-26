@@ -2,293 +2,148 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE97C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D24BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF56208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="iaJc4Q0d"
+	by mail.kernel.org (Postfix) with ESMTP id 51F2620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391922AbgEZWKc (ORCPT
+        id S2391933AbgEZWRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391894AbgEZWKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:10:30 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63119C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:10:29 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id e125so13267479lfd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:10:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S8Sh+DjtPEAcfjFCLlA/An7vGsa0j6xUtlJx+u0SHCo=;
-        b=iaJc4Q0dVmQB2Nw7TDPjM5G/drSQCJ1I0yTkAzs35+wOBGWa8Y7ejBHHXXwVKMTMQ+
-         NkNdap9tqvkiIP9m0q7O1axUE2lvJgI92jZ0IOXLF2XRcaUzTSo/ftuzFdVXnVzObmWy
-         0CMdIgFTfIsBa7I+hhkQf7Fal4GZRNCYXpv14mQOa8XieWI923D6i4MsqVe56fxN2ZF6
-         rHv8DGtKKWb9J8y+3Z1O0+vbmnh2k4VRBjNiHod5ZDOy54y/27IGfws3tAvpafBWD1L+
-         Yi4zJuYg5k5tLPgIEIsylRkz7gp6zK4NNvnxczcZ7BEQ7VnR3CUUIWchfSRdBsju+uqK
-         jSdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S8Sh+DjtPEAcfjFCLlA/An7vGsa0j6xUtlJx+u0SHCo=;
-        b=HEWSV6qnN5Pt7I0+x8a/eYrx4pR57PY8J1sJgs/68/bHJOR0Zyr9fIQAIZSueL364g
-         CBCI5waUdrye3MjyH/FChSb/N15FFNsSDVeLx7AVZEjpTxMr17gLZUKxkeMJxYNVMP8J
-         +WPoe8RxAX2Q8t26um8zZTQ0bqizR9jwv8hj/6bH0nnTUE9KJVw4RDuJ4wps6ln2a6R1
-         horyPMH35IMGZUxUKOmJC8rCO0m3DaD+pkLGmJKF4l5r2n3qaPHRFHsGWQoA2zKIGPGK
-         wtxNqP3UV2DMhYfWHi94NLe4o6hrXyhMa4jYtZyGgVYjs93ZpJk8EUah6x1vn9wD4bYa
-         2DRQ==
-X-Gm-Message-State: AOAM5333tUchbAlgc3jamTPd/Yzs9m8DsAhr4+WGCQqiSauvNcszCE58
-        gKhucoiAih4ziM7aBhe/7gNW0g==
-X-Google-Smtp-Source: ABdhPJwnVJa8vgBbkVQ2tVPyuo9o5O4stVIJ3HJJkVTe15rtWt8oFnTtiz5Ih+h4GOvl+rvxKsG0aQ==
-X-Received: by 2002:a19:5f4e:: with SMTP id a14mr1482768lfj.57.1590531027702;
-        Tue, 26 May 2020 15:10:27 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n2sm278570lfl.53.2020.05.26.15.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:10:27 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id D850A10230F; Wed, 27 May 2020 01:10:27 +0300 (+03)
-Date:   Wed, 27 May 2020 01:10:27 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [RFC 16/16] KVM: Unmap protected pages from direct mapping
-Message-ID: <20200526221027.ixxahg6ya2z5fppy@box>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200522125214.31348-17-kirill.shutemov@linux.intel.com>
- <20200526061638.GA48741@kernel.org>
+        Tue, 26 May 2020 18:17:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7297 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389638AbgEZWRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 18:17:40 -0400
+IronPort-SDR: L8MtWR+/i5iHSz4CbrtfAQ72Pvgc8uU2hUFyN1E9rHbkUEag+yr8k1vWGAGSymn4ol6tWEi298
+ UpxgaDrnjf6A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 15:17:39 -0700
+IronPort-SDR: LQRNBHg29mtUm+BYhW/F0JYJJY+Cx1gdDil/ex+yWAzjp61fCcXcLRRNl6lMtygMxkLl6ENDcN
+ YPLwPdtukCtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
+   d="scan'208";a="468512269"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
+  by fmsmga006.fm.intel.com with ESMTP; 26 May 2020 15:17:39 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>
+Subject: [PATCH] iommu: Relax ACS requirement for Intel RCiEP devices.
+Date:   Tue, 26 May 2020 15:17:35 -0700
+Message-Id: <1590531455-19757-1-git-send-email-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526061638.GA48741@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:16:38AM +0300, Mike Rapoport wrote:
-> On Fri, May 22, 2020 at 03:52:14PM +0300, Kirill A. Shutemov wrote:
-> > If the protected memory feature enabled, unmap guest memory from
-> > kernel's direct mappings.
-> > 
-> > Migration and KSM is disabled for protected memory as it would require a
-> > special treatment.
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/mm/pat/set_memory.c |  1 +
-> >  include/linux/kvm_host.h     |  3 ++
-> >  mm/huge_memory.c             |  9 +++++
-> >  mm/ksm.c                     |  3 ++
-> >  mm/memory.c                  | 13 +++++++
-> >  mm/rmap.c                    |  4 ++
-> >  virt/kvm/kvm_main.c          | 74 ++++++++++++++++++++++++++++++++++++
-> >  7 files changed, 107 insertions(+)
-> > 
-> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> > index 6f075766bb94..13988413af40 100644
-> > --- a/arch/x86/mm/pat/set_memory.c
-> > +++ b/arch/x86/mm/pat/set_memory.c
-> > @@ -2227,6 +2227,7 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
-> >  
-> >  	arch_flush_lazy_mmu_mode();
-> >  }
-> > +EXPORT_SYMBOL_GPL(__kernel_map_pages);
-> >  
-> >  #ifdef CONFIG_HIBERNATION
-> >  bool kernel_page_present(struct page *page)
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index b6944f88033d..e1d7762b615c 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -705,6 +705,9 @@ int kvm_protect_all_memory(struct kvm *kvm);
-> >  int kvm_protect_memory(struct kvm *kvm,
-> >  		       unsigned long gfn, unsigned long npages, bool protect);
-> >  
-> > +void kvm_map_page(struct page *page, int nr_pages);
-> > +void kvm_unmap_page(struct page *page, int nr_pages);
-> > +
-> >  int gfn_to_page_many_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
-> >  			    struct page **pages, int nr_pages);
-> >  
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index c3562648a4ef..d8a444a401cc 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -33,6 +33,7 @@
-> >  #include <linux/oom.h>
-> >  #include <linux/numa.h>
-> >  #include <linux/page_owner.h>
-> > +#include <linux/kvm_host.h>
-> 
-> This does not seem right... 
+All Intel platforms guarantee that all root complex implementations
+must send transactions up to IOMMU for address translations. Hence for
+RCiEP devices that are Vendor ID Intel, can claim exception for lack of
+ACS support.
 
-I agree. I try to find a more clean way to deal with it.
 
-> >  #include <asm/tlb.h>
-> >  #include <asm/pgalloc.h>
-> > @@ -650,6 +651,10 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
-> >  		spin_unlock(vmf->ptl);
-> >  		count_vm_event(THP_FAULT_ALLOC);
-> >  		count_memcg_events(memcg, THP_FAULT_ALLOC, 1);
-> > +
-> > +		/* Unmap page from direct mapping */
-> > +		if (vma_is_kvm_protected(vma))
-> > +			kvm_unmap_page(page, HPAGE_PMD_NR);
-> 
-> ... and neither does this.
-> 
-> I think the map/unmap primitives shoud be a part of the generic mm and
-> not burried inside KVM.
+3.16 Root-Complex Peer to Peer Considerations
+When DMA remapping is enabled, peer-to-peer requests through the
+Root-Complex must be handled
+as follows:
+• The input address in the request is translated (through first-level,
+  second-level or nested translation) to a host physical address (HPA).
+  The address decoding for peer addresses must be done only on the
+  translated HPA. Hardware implementations are free to further limit
+  peer-to-peer accesses to specific host physical address regions
+  (or to completely disallow peer-forwarding of translated requests).
+• Since address translation changes the contents (address field) of
+  the PCI Express Transaction Layer Packet (TLP), for PCI Express
+  peer-to-peer requests with ECRC, the Root-Complex hardware must use
+  the new ECRC (re-computed with the translated address) if it
+  decides to forward the TLP as a peer request.
+• Root-ports, and multi-function root-complex integrated endpoints, may
+  support additional peerto-peer control features by supporting PCI Express
+  Access Control Services (ACS) capability. Refer to ACS capability in
+  PCI Express specifications for details.
 
-Well, yes. Except, kvm_map_page() also clears the page before bringing it
-back to direct mappings. Not sure yet how to deal with it.
+Since Linux didn't give special treatment to allow this exception, certain
+RCiEP MFD devices are getting grouped in a single iommu group. This
+doesn't permit a single device to be assigned to a guest for instance.
 
-> >  	return 0;
-> > @@ -1886,6 +1891,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
-> >  			page_remove_rmap(page, true);
-> >  			VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
-> >  			VM_BUG_ON_PAGE(!PageHead(page), page);
-> > +
-> > +			/* Map the page back to the direct mapping */
-> > +			if (vma_is_kvm_protected(vma))
-> > +				kvm_map_page(page, HPAGE_PMD_NR);
-> >  		} else if (thp_migration_supported()) {
-> >  			swp_entry_t entry;
-> >  
-> > diff --git a/mm/ksm.c b/mm/ksm.c
-> > index 281c00129a2e..942b88782ac2 100644
-> > --- a/mm/ksm.c
-> > +++ b/mm/ksm.c
-> > @@ -527,6 +527,9 @@ static struct vm_area_struct *find_mergeable_vma(struct mm_struct *mm,
-> >  		return NULL;
-> >  	if (!(vma->vm_flags & VM_MERGEABLE) || !vma->anon_vma)
-> >  		return NULL;
-> > +	/* TODO */
-> 
-> Probably this is not something that should be done. For a security
-> sensitive environment that wants protected memory, KSM woudn't be
-> relevant anyway...
+In one vendor system: Device 14.x were grouped in a single IOMMU group.
 
-Hm. True.
+/sys/kernel/iommu_groups/5/devices/0000:00:14.0
+/sys/kernel/iommu_groups/5/devices/0000:00:14.2
+/sys/kernel/iommu_groups/5/devices/0000:00:14.3
 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 71aac117357f..defc33d3a124 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -51,6 +51,7 @@
-> >  #include <linux/io.h>
-> >  #include <linux/lockdep.h>
-> >  #include <linux/kthread.h>
-> > +#include <linux/pagewalk.h>
-> >  
-> >  #include <asm/processor.h>
-> >  #include <asm/ioctl.h>
-> > @@ -2718,6 +2719,72 @@ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_vcpu_mark_page_dirty);
-> >  
-> > +void kvm_map_page(struct page *page, int nr_pages)
-> > +{
-> > +	int i;
-> > +
-> > +	/* Clear page before returning it to the direct mapping */
-> > +	for (i = 0; i < nr_pages; i++) {
-> > +		void *p = map_page_atomic(page + i);
-> > +		memset(p, 0, PAGE_SIZE);
-> > +		unmap_page_atomic(p);
-> > +	}
-> > +
-> > +	kernel_map_pages(page, nr_pages, 1);
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_map_page);
-> > +
-> > +void kvm_unmap_page(struct page *page, int nr_pages)
-> > +{
-> > +	kernel_map_pages(page, nr_pages, 0);
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_unmap_page);
-> > +
-> > +static int adjust_direct_mapping_pte_range(pmd_t *pmd, unsigned long addr,
-> > +					   unsigned long end,
-> > +					   struct mm_walk *walk)
-> > +{
-> > +	bool protect = (bool)walk->private;
-> > +	pte_t *pte;
-> > +	struct page *page;
-> > +
-> > +	if (pmd_trans_huge(*pmd)) {
-> > +		page = pmd_page(*pmd);
-> > +		if (is_huge_zero_page(page))
-> > +			return 0;
-> > +		VM_BUG_ON_PAGE(total_mapcount(page) != 1, page);
-> > +		/* XXX: Would it fail with direct device assignment? */
-> > +		VM_BUG_ON_PAGE(page_count(page) != 1, page);
-> > +		kernel_map_pages(page, HPAGE_PMD_NR, !protect);
-> > +		return 0;
-> > +	}
-> > +
-> > +	pte = pte_offset_map(pmd, addr);
-> > +	for (; addr != end; pte++, addr += PAGE_SIZE) {
-> > +		pte_t entry = *pte;
-> > +
-> > +		if (!pte_present(entry))
-> > +			continue;
-> > +
-> > +		if (is_zero_pfn(pte_pfn(entry)))
-> > +			continue;
-> > +
-> > +		page = pte_page(entry);
-> > +
-> > +		VM_BUG_ON_PAGE(page_mapcount(page) != 1, page);
-> > +		/* XXX: Would it fail with direct device assignment? */
-> > +		VM_BUG_ON_PAGE(page_count(page) !=
-> > +			       total_mapcount(compound_head(page)), page);
-> > +		kernel_map_pages(page, 1, !protect);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct mm_walk_ops adjust_direct_mapping_ops = {
-> > +	.pmd_entry	= adjust_direct_mapping_pte_range,
-> > +};
-> > +
-> 
-> All this seem to me an addition to set_memory APIs rather then KVM.
+After the patch:
+/sys/kernel/iommu_groups/5/devices/0000:00:14.0
+/sys/kernel/iommu_groups/5/devices/0000:00:14.2
+/sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
 
-Emm?.. I don't think walking userspace mapping is set_memory thing.
-And kernel_map_pages() is VMM interface already.
+14.0 and 14.2 are integrated devices, but legacy end points.
+Whereas 14.3 was a PCIe compliant RCiEP.
 
+00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+
+This permits assigning this device to a guest VM.
+
+Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: iommu@lists.linux-foundation.org
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+Cc: Mark Scott <mscott@forcepoint.com>,
+Cc: Romil Sharma <rsharma@forcepoint.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+---
+ drivers/iommu/iommu.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 2b471419e26c..31b595dfedde 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1187,7 +1187,18 @@ static struct iommu_group *get_pci_function_alias_group(struct pci_dev *pdev,
+ 	struct pci_dev *tmp = NULL;
+ 	struct iommu_group *group;
+ 
+-	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
++	/*
++	 * Intel VT-d Specification Section 3.16, Root-Complex Peer to Peer
++	 * Considerations manadate that all transactions in RCiEP's and
++	 * even Integrated MFD's *must* be sent up to the IOMMU. P2P is
++	 * only possible on translated addresses. This gives enough
++	 * guarantee that such devices can be forgiven for lack of ACS
++	 * support.
++	 */
++	if (!pdev->multifunction ||
++	    (pdev->vendor == PCI_VENDOR_ID_INTEL &&
++	     pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) ||
++	     pci_acs_enabled(pdev, REQ_ACS_FLAGS))
+ 		return NULL;
+ 
+ 	for_each_pci_dev(tmp) {
 -- 
- Kirill A. Shutemov
+2.7.4
+
