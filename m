@@ -2,82 +2,149 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7554C20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52558207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="en5+07K3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgEZGTg (ORCPT
+        id S1728131AbgEZGWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:19:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20138 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726746AbgEZGTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:19:36 -0400
-IronPort-SDR: JfwWV1tovY89ASKwzuc6fDYYu35r+3zRgoRGPlJF5dJDbmr/vaw2dl0QYx/b05zNPGedAFtwMn
- ZMxGbXdGaXaQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 23:19:36 -0700
-IronPort-SDR: qXOnqWJvVvKcb/iGAXTmUtWtdmcxyX4LrERJxa+q5mfb+YCjavf2Tg8NzCIQWKL4F8c3/dJuDB
- OKhp/l5FMyJw==
-X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
-   d="scan'208";a="441964147"
-Received: from unknown (HELO [10.239.13.122]) ([10.239.13.122])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 23:19:33 -0700
-Subject: Re: [PATCH v9 0/8] KVM: Add virtualization support of split lock
- detection
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Tue, 26 May 2020 02:22:11 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19460 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgEZGWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:22:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eccb5860001>; Mon, 25 May 2020 23:21:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 25 May 2020 23:22:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 25 May 2020 23:22:10 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
+ 2020 06:22:10 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 26 May 2020 06:22:10 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.58.199]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5eccb5920003>; Mon, 25 May 2020 23:22:10 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>, peterz@infradead.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-References: <20200509110542.8159-1-xiaoyao.li@intel.com>
- <98c5ccc7-30bb-bed2-2065-59f7b7b09fbc@intel.com>
-Message-ID: <d336bc4d-55fb-d397-0a99-33d86d704f51@intel.com>
-Date:   Tue, 26 May 2020 14:19:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: [PATCH 2/2] KVM: SVM: convert get_user_pages() --> pin_user_pages()
+Date:   Mon, 25 May 2020 23:22:07 -0700
+Message-ID: <20200526062207.1360225-3-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526062207.1360225-1-jhubbard@nvidia.com>
+References: <20200526062207.1360225-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <98c5ccc7-30bb-bed2-2065-59f7b7b09fbc@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590474118; bh=tz89/U9nJLhJJR5Sd/v7QdEjaWAsrMmrR1p0WWS02cw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=en5+07K3K87dvSFosQl8nq+VlAY/WLVi2X9m15JN/jOsp2TBg7wd5uBMEAq/biCpW
+         ooihrLQ0OmJ1rFtObCiJJLgaqipnnZuUD8+7dXpAaNLAeamQDHPpSa1xpiRmVCDcQB
+         zGwQXr6EDy9MvhQmAEEMwD/2R8amSNPQbil2PvvFyQzGeEFXVWU7F1ajUbxfEcgvNf
+         S6i8MfZoTeeoaKNfhfQnjH3hnY9A1Me4seLrFIbSJRmPK8JXSUcTGhYEc5i1Fuo9lk
+         wEVIRmn5nzy/IVYlArynEoHQx7BDp7yHIiBze1LR66kR3iKe2ez2rYliTbbVJQOmWz
+         qsD6gzrlmqHSA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-On 5/18/2020 9:27 AM, Xiaoyao Li wrote:
-> On 5/9/2020 7:05 PM, Xiaoyao Li wrote:
->> This series aims to add the virtualization of split lock detection in
->> KVM.
->>
->> Due to the fact that split lock detection is tightly coupled with CPU
->> model and CPU model is configurable by host VMM, we elect to use
->> paravirt method to expose and enumerate it for guest.
-> 
-> Thomas and Paolo,
-> 
-> Do you have time to have a look at this version?
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-Does this series have any chance to meet 5.8?
+[1] Documentation/core-api/pin_user_pages.rst
 
-If not, do you plan to take a look at it after merge window?
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
-Thanks,
--Xiaoyao
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: kvm@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ arch/x86/kvm/svm/sev.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 9693db1af57c..a83f2e73bcbb 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -349,7 +349,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, un=
+signed long uaddr,
+ 		return NULL;
+=20
+ 	/* Pin the user virtual address. */
+-	npinned =3D get_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pa=
+ges);
++	npinned =3D pin_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pa=
+ges);
+ 	if (npinned !=3D npages) {
+ 		pr_err("SEV: Failure locking %lu pages.\n", npages);
+ 		goto err;
+@@ -362,7 +362,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, un=
+signed long uaddr,
+=20
+ err:
+ 	if (npinned > 0)
+-		release_pages(pages, npinned);
++		unpin_user_pages(pages, npinned);
+=20
+ 	kvfree(pages);
+ 	return NULL;
+@@ -373,7 +373,7 @@ static void sev_unpin_memory(struct kvm *kvm, struct pa=
+ge **pages,
+ {
+ 	struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
+=20
+-	release_pages(pages, npages);
++	unpin_user_pages(pages, npages);
+ 	kvfree(pages);
+ 	sev->pages_locked -=3D npages;
+ }
+--=20
+2.26.2
+
