@@ -2,105 +2,125 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A6D208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590528855;
-	bh=Da6me/OU6rQvvJsllH/U03C9LEKRWkwPCUd8auX3khw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cwvcBPH9lm6SHjcm3Rm3C1EuhH1zXSkA7ka6k9m46HHxeFwiRquSs5NuWXdOxcSar
-	 yhlzTtu9siDTeiMgyAiozZpy713Ha5ntltGl5jqdAUKke6P7QNkofGDmmU2AgGIefx
-	 Pw+6r4tdyRIMevrm1qf5BEjkdnzMkde7hEW2UgYE=
+	by mail.kernel.org (Postfix) with ESMTP id D371D20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iuLiKeXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389957AbgEZVeP (ORCPT
+        id S2389989AbgEZVgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:34:15 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34279 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388740AbgEZVeO (ORCPT
+        Tue, 26 May 2020 17:36:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388740AbgEZVgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:34:14 -0400
-Received: by mail-il1-f195.google.com with SMTP id v11so4646801ilh.1;
-        Tue, 26 May 2020 14:34:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4IGWiIO9QQ2uNyibpst11tBp9IaLJjLxoCP1PUreahE=;
-        b=bU9OOAGwtBkzAL6bMdPibQQ6XwHLD8f9CfM+kWto3+m1XS4PcQNdhbxctUlO4ovO/D
-         Sb8wXqCJU/Q4pvIgMM0REiUCDpMSpGsXoSvRPIHECFU42Fu/eT95GqvBfmrihUhhJ46Q
-         OgDELuKgACjo6NN9g97cn9yTEJwpcZhr4IdRfINFt5yvdlBx71y0T0T8o8fuzNSGQJHP
-         p8/ZuO9sMTXOOVbxZoxNflwiUsD0WPqciF3A0uuhcLK6n1nDO4bqZiZ3mItpaMPktB3C
-         aOGLzK2k+bhBY2GNuPCK7VVa+Zb9hTTKIGM6+G8xftv0YNuREJ7WwUQLSP+IoEIuN2s0
-         1QrQ==
-X-Gm-Message-State: AOAM532JOGkhVoWM3jNmmDGtGI+6U6jOMcJ7W1Hn4AGPBtc4TDBY/kXA
-        cJo4ShMp+P3E2YqrFIJZ+w==
-X-Google-Smtp-Source: ABdhPJzp0EwE7XGT6pdGkzbmHIL2nvEZ3e4SrIoV0m8LDZZ/TRFJq39YHaGw2aIXJtWbDhLLb2+Z1g==
-X-Received: by 2002:a05:6e02:1072:: with SMTP id q18mr3065200ilj.121.1590528853402;
-        Tue, 26 May 2020 14:34:13 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h10sm417843ioe.3.2020.05.26.14.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 14:34:12 -0700 (PDT)
-Received: (nullmailer pid 415156 invoked by uid 1000);
-        Tue, 26 May 2020 21:34:11 -0000
-Date:   Tue, 26 May 2020 15:34:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v7 1/7] dt-bindings: iio/adc: Convert ingenic-adc docs to
- YAML.
-Message-ID: <20200526213411.GA414898@bogus>
-References: <20200517194904.34758-1-contact@artur-rojek.eu>
+        Tue, 26 May 2020 17:36:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B238C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pPz4T1JqBnfA3eSrgPWLUIAddODK4bFj5VmukAoBfaI=; b=iuLiKeXA0OG2Ud39pacyc8ST9w
+        Cp52vIzq6HBov+mPZGS9QysSkt3nJMInXOkXbWKe8lH2hezVRnSW2s/3c/3Ua8zQCiWFRCthi2XxT
+        1cBWRa1u/eaH1xBd2uJIRZn2DMJqf3ma8yYOEoc9ciUHWnPVFqeMvN7rkP8yyHPCV2Xg5kRhbbzpQ
+        NWCpx/i6X/Itpbn5GUg1XB96lvFXNyW8mzlLg9kLLKREnj7JLvF5FdQwMhzcif+iTZUP2OXYhHtAf
+        BrdQZmc/HRmUs+/3SuSm6RnoTv3beg57NKej89Ood5/kpee+1mxjAYIrYeCAumUuVW06xVNF2c5WD
+        a/yUQILw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdhEx-0005So-Ma; Tue, 26 May 2020 21:36:03 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BA9B89834AB; Tue, 26 May 2020 23:36:01 +0200 (CEST)
+Date:   Tue, 26 May 2020 23:36:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement
+ expression
+Message-ID: <20200526213601.GF2483@worktop.programming.kicks-ass.net>
+References: <20200521142047.169334-1-elver@google.com>
+ <20200521142047.169334-10-elver@google.com>
+ <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
+ <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
+ <20200526120245.GB27166@willie-the-truck>
+ <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
+ <CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com>
+ <20200526173312.GA30240@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517194904.34758-1-contact@artur-rojek.eu>
+In-Reply-To: <20200526173312.GA30240@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 21:48:58 +0200, Artur Rojek wrote:
-> Convert the textual documentation of Device Tree bindings for the
-> Ingenic JZ47xx SoCs ADC controller to YAML.
-> 
-> The `interrupts` property is now explicitly listed and marked as
-> required. While missing from the previous textual documentation, this
-> property has been used with all the boards which probe this driver.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
->  Changes:
-> 
->  v6: new patch
-> 
->  v7: - specify `maxItems: 1` for single entry properties
->      - get rid of redundant descriptions of said properties
-> 
->  .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
->  .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
->  2 files changed, 71 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+On Tue, May 26, 2020 at 07:33:12PM +0200, Marco Elver wrote:
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 5faf68eae204..a529fa263906 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -245,7 +245,9 @@ struct ftrace_likely_data {
+>  /*
+>   * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
+>   *			       non-scalar types unchanged.
+> - *
+> + */
+> +#if defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900
+> +/*
+>   * We build this out of a couple of helper macros in a vain attempt to
+>   * help you keep your lunch down while reading it.
+>   */
+> @@ -267,6 +269,24 @@ struct ftrace_likely_data {
+>  			__pick_integer_type(x, int,				\
+>  				__pick_integer_type(x, long,			\
+>  					__pick_integer_type(x, long long, x))))))
+> +#else
+> +/*
+> + * If supported, prefer C11 _Generic for better compile-times. As above, 'char'
+> + * is not type-compatible with 'signed char', and we define a separate case.
+> + */
+> +#define __scalar_type_to_expr_cases(type)				\
+> +		type: (type)0, unsigned type: (unsigned type)0
+> +
+> +#define __unqual_scalar_typeof(x) typeof(				\
+> +		_Generic((x),						\
+> +			 __scalar_type_to_expr_cases(char),		\
+> +			 signed char: (signed char)0,			\
+> +			 __scalar_type_to_expr_cases(short),		\
+> +			 __scalar_type_to_expr_cases(int),		\
+> +			 __scalar_type_to_expr_cases(long),		\
+> +			 __scalar_type_to_expr_cases(long long),	\
+> +			 default: (x)))
+> +#endif
+>  
+>  /* Is this type a native word size -- useful for atomic operations */
+>  #define __native_word(t) \
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yeah, this shaves around 5% off of my kernel builds. The _Atomic hack is
+every so slightly faster on GCC but apparently doesn't work on clang --
+also, it's disguisting :-)
+
+Ack!
