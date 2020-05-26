@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB689C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEDBD20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826D120776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520892;
-	bh=PEqJ5eyUtSxJhYnhnCrIAr5eo6UL8Kd/34b2Bw2Fusg=;
+	s=default; t=1590520895;
+	bh=DKb0ALmsiFZedu5tthQYLY1kwwXyjwj+9xGl6d2TjXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x42pVjrqk2bcVcZJoF/G6QtYZAkSqK6lZoj++Kph+1vfFbamrmuX8qQydzSsS5Ddc
-	 xlGAbPv0rHiho7ws2QcBFiY72pNGiyUvBD1IEJrkdou4SWexaqZFNcQBHHPi6Lk1RN
-	 LlqPIJnHPGlc0+c2mH8VbBcG6d2Cxkwaa0KAZqmk=
+	b=RjrKK5UbfU2I8SxC7qwmK7UVv3iAlVdYomrcBz/LJJ2WKCWafUjTtsdq8EWc8HhZn
+	 f+qw2eOMhyFUBGO791NNtT0xfXEtZtB3LPJ/S4Zwry+umzQuaPixSFN0/Fm4Nl0xY+
+	 B6c5pC7iWE/k+QCtS/kEsxU50Ss3EUSL8nnHKBUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404199AbgEZTVc (ORCPT
+        id S2404080AbgEZTLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41018 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390092AbgEZTLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:36 -0400
+        id S2391950AbgEZTL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63FEE208A7;
-        Tue, 26 May 2020 19:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D92F20888;
+        Tue, 26 May 2020 19:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520295;
-        bh=PEqJ5eyUtSxJhYnhnCrIAr5eo6UL8Kd/34b2Bw2Fusg=;
+        s=default; t=1590520286;
+        bh=DKb0ALmsiFZedu5tthQYLY1kwwXyjwj+9xGl6d2TjXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1OVpryCH45zhYJVL2bMGKrfVaS7xyF4RamV3TU7C41GjICqt703cSGv4oy/v95eE
-         F0dOZKz5+DNk2R8NP2nvyKlqGX/nBUwJBPCCXCEZOS29z6K6CVJ/b2V0GykamTExeW
-         CtV2jx2qmobuE70diEZ7cD35zwrtPX4KrIokTE9o=
+        b=qEVom3Gfj0pWnej9s4NEpCSJsmA5dtx4lJC4GQNc4vbU5NCiDuYNGuatcimGpjjzK
+         5p5iWkoGJ5bB+jwr3tmxfDcwB72NSGHbAhhVPaBLDecdLYXgj2NO3H5Jmb809J6L0c
+         3U2loUkWfVIC3AHiO8fRh2v74jKYkAQxbbmqIksc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 003/126] ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
-Date:   Tue, 26 May 2020 20:52:20 +0200
-Message-Id: <20200526183937.776295899@linuxfoundation.org>
+Subject: [PATCH 5.6 002/126] ARC: [plat-hsdk]: fix USB regression
+Date:   Tue, 26 May 2020 20:52:19 +0200
+Message-Id: <20200526183937.694190297@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,70 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit 0014cc04e8ec077dc482f00c87dfd949cfe2b98f ]
+[ Upstream commit 4c13ca86dcf80a8c705b1f3674ff43d318e970e0 ]
 
-Commit a408e4a86b36 ("ima: open a new file instance if no read
-permissions") tries to create a new file descriptor to calculate a file
-digest if the file has not been opened with O_RDONLY flag. However, if a
-new file descriptor cannot be obtained, it sets the FMODE_READ flag to
-file->f_flags instead of file->f_mode.
+As of today the CONFIG_USB isn't explicitly present in HSDK defconfig
+as it is implicitly forcibly enabled by UDL driver which selects CONFIG_USB
+in its kconfig.
+The commit 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+reverse the dependencies between UDL and USB so UDL now depends on
+CONFIG_USB and not selects it. This introduces regression for ARC HSDK
+board as HSDK defconfig wasn't adjusted and now it misses USB support
+due to lack of CONFIG_USB enabled.
 
-This patch fixes this issue by replacing f_flags with f_mode as it was
-before that commit.
+Fix that.
 
-Cc: stable@vger.kernel.org # 4.20.x
-Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Cc: <stable@vger.kernel.org> # 5.6.x
+Fixes: 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_crypto.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7967a6904851..e8fa23cd4a6c 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -413,7 +413,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 	loff_t i_size;
- 	int rc;
- 	struct file *f = file;
--	bool new_file_instance = false, modified_flags = false;
-+	bool new_file_instance = false, modified_mode = false;
- 
- 	/*
- 	 * For consistency, fail file's opened with the O_DIRECT flag on
-@@ -433,13 +433,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 		f = dentry_open(&file->f_path, flags, file->f_cred);
- 		if (IS_ERR(f)) {
- 			/*
--			 * Cannot open the file again, lets modify f_flags
-+			 * Cannot open the file again, lets modify f_mode
- 			 * of original and continue
- 			 */
- 			pr_info_ratelimited("Unable to reopen file for reading.\n");
- 			f = file;
--			f->f_flags |= FMODE_READ;
--			modified_flags = true;
-+			f->f_mode |= FMODE_READ;
-+			modified_mode = true;
- 		} else {
- 			new_file_instance = true;
- 		}
-@@ -457,8 +457,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- out:
- 	if (new_file_instance)
- 		fput(f);
--	else if (modified_flags)
--		f->f_flags &= ~FMODE_READ;
-+	else if (modified_mode)
-+		f->f_mode &= ~FMODE_READ;
- 	return rc;
- }
- 
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 0974226fab55..aa000075a575 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -65,6 +65,7 @@ CONFIG_DRM_UDL=y
+ CONFIG_DRM_ETNAVIV=y
+ CONFIG_FB=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_HCD_PLATFORM=y
+ CONFIG_USB_OHCI_HCD=y
 -- 
 2.25.1
 
