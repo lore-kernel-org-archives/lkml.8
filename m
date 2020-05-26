@@ -2,88 +2,95 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C67C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF03C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21409208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XuxDw329"
+	by mail.kernel.org (Postfix) with ESMTP id CD5F7208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590520410;
+	bh=XvJDTNIF45o9UFGQKYua3tOzrBKSO1492EQJkze+mBE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=shnVxYg+etXHJa+ASs9nzmNEedF7FNx4WIFqhfVqmkeD3170f7r+oaErXZ04ELitl
+	 3+IS7ZXIUU5EYibNFN+sjCI/soYqGibyn0e+MWBoZrXiXX34kuklcJCbuSH4ED13hS
+	 U4cNNqvnrGubiuSh48CLHF5Eb5Y1ImA5X2jRRG2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404269AbgEZTN0 (ORCPT
+        id S2404287AbgEZTNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:13:26 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45862 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404221AbgEZTNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:20 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 675A730D677;
-        Tue, 26 May 2020 12:13:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 675A730D677
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1590520399;
-        bh=1uEdRWi0FFswR1xPl/81fxtyajYwRSzOSxZaHV+uoGo=;
+        Tue, 26 May 2020 15:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404264AbgEZTNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A93120888;
+        Tue, 26 May 2020 19:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590520404;
+        bh=XvJDTNIF45o9UFGQKYua3tOzrBKSO1492EQJkze+mBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XuxDw3295lCIdbdR7U87QzZSVgfUTD/Z7LgDHbBHUSb3HoOgNFKGtKgeTZNwb6y64
-         YqqX49sXMZlRwCQewTUtuvbgT2k1SsAh03OoIGpZc4nnG5/yDy44Utb7UAiEJtbGW+
-         TNcOxinRyj3O/ZBPzU/D4+vNUdfbsjqU4gvY+Now=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id DC71C140069;
-        Tue, 26 May 2020 12:13:17 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 01/14] PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-Date:   Tue, 26 May 2020 15:12:40 -0400
-Message-Id: <20200526191303.1492-2-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+        b=XSfo6/N/jWFQguyr9yQzeamwDTmqm+3oF3Yq27pvCjUabQ4aTpju4mWmS34qqjZtp
+         KPi01VIUXZKU0joC/nrWQZWraRKdLJ1X/yq1WA4FDuU5bGtCy8TPPGoab64aVCQqR9
+         j22It7fWQ9gX59UA2O4jkhKzHuwzkFFyM5eLVTYE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Scott Bahling <sbahling@suse.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 064/126] ALSA: iec1712: Initialize STDSP24 properly when using the model=staudio option
+Date:   Tue, 26 May 2020 20:53:21 +0200
+Message-Id: <20200526183943.534486974@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
+References: <20200526183937.471379031@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+From: Scott Bahling <sbahling@suse.com>
 
-Have PCIE_BRCMSTB depend on ARCH_BRCMSTB.  Also set the default value to
-ARCH_BRCMSTB.
+commit b0cb099062b0c18246c3a20caaab4c0afc303255 upstream.
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+The ST Audio ADCIII is an STDSP24 card plus extension box. With commit
+e8a91ae18bdc ("ALSA: ice1712: Add support for STAudio ADCIII") we
+enabled the ADCIII ports using the model=staudio option but forgot
+this part to ensure the STDSP24 card is initialized properly.
+
+Fixes: e8a91ae18bdc ("ALSA: ice1712: Add support for STAudio ADCIII")
+Signed-off-by: Scott Bahling <sbahling@suse.com>
+Cc: <stable@vger.kernel.org>
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1048934
+Link: https://lore.kernel.org/r/20200518175728.28766-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/controller/Kconfig | 3 ++-
+ sound/pci/ice1712/ice1712.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 91bfdb784829..c0f3d4d10047 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -244,9 +244,10 @@ config VMD
- 
- config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
--	depends on ARCH_BCM2835 || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
-+	default ARCH_BRCMSTB
- 	help
- 	  Say Y here to enable PCIe host controller support for
- 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
--- 
-2.17.1
+--- a/sound/pci/ice1712/ice1712.c
++++ b/sound/pci/ice1712/ice1712.c
+@@ -2332,7 +2332,8 @@ static int snd_ice1712_chip_init(struct
+ 	pci_write_config_byte(ice->pci, 0x61, ice->eeprom.data[ICE_EEP1_ACLINK]);
+ 	pci_write_config_byte(ice->pci, 0x62, ice->eeprom.data[ICE_EEP1_I2SID]);
+ 	pci_write_config_byte(ice->pci, 0x63, ice->eeprom.data[ICE_EEP1_SPDIF]);
+-	if (ice->eeprom.subvendor != ICE1712_SUBDEVICE_STDSP24) {
++	if (ice->eeprom.subvendor != ICE1712_SUBDEVICE_STDSP24 &&
++	    ice->eeprom.subvendor != ICE1712_SUBDEVICE_STAUDIO_ADCIII) {
+ 		ice->gpio.write_mask = ice->eeprom.gpiomask;
+ 		ice->gpio.direction = ice->eeprom.gpiodir;
+ 		snd_ice1712_write(ice, ICE1712_IREG_GPIO_WRITE_MASK,
+
 
