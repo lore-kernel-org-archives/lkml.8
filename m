@@ -2,102 +2,84 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C764FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6356C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9050920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:36:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQnXDtLs"
+	by mail.kernel.org (Postfix) with ESMTP id C2B7620873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389413AbgEZRgL (ORCPT
+        id S2389441AbgEZRgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389220AbgEZRfo (ORCPT
+        Tue, 26 May 2020 13:36:14 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:65094 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728339AbgEZRfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:35:44 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2C5C03E96E;
-        Tue, 26 May 2020 10:35:44 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l27so2607729ejc.1;
-        Tue, 26 May 2020 10:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=44M/lrAxl1LLe2QftqBq8tLTI0t8rZO366uKD3inpLs=;
-        b=uQnXDtLsn3G1i6JdSMW105s+/Y0LKw23IyaavSfNP84Wh+KOTLQeUqgwdFV2pTLybY
-         wUMgMyIF0aJT+/D2g1PQkOhJMk+i7jF75QggLD7Opngyv/RmZkNlQk/MJ+hT8e+sRrgy
-         cegTWVSZALylqmKNO4CSaLRR14b3dk+juXxnu8Lb7X7HnWF3y3GW0Gx/W+j51meIRzIA
-         35sXa87OgxkJGVpVe4jco7QcexPi80An8CpMaEUrFsXNhmEN6BBUJTghSGlA3snU88ul
-         +D+XHE4+rCvvhOnnzM+hFT7Zb0zdtojlNuF5w8Im0gNE5c503/5FZP9lqH/IZZNRsaUn
-         0ykw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=44M/lrAxl1LLe2QftqBq8tLTI0t8rZO366uKD3inpLs=;
-        b=adUqMxkndWQhlWUFeEoEVlSkWJ7AJAwEzRb/7MsiTEVPBDDy4CStHzxfQqdV7y+rhp
-         5S5P9ALI63tH4BF4hZgckVud4c/2PwIamz3Sd7ur6NNBpQC/87TAHS3oHplNyUD0J71P
-         TQP02b4+7vaAJJIGQoSROg5Qz26nbQkPR+fhM9FluWNEs4LhemQAhKy4B07zViYPqnHE
-         K5TWWi0Cj+imdPxR9o/v6NwpLMZjV3OY2n+O3uKQM4gvmm5/rwdYu/rIR/+n0fkdev1G
-         Yf0Hdffc7F8Na8GvhsSm7FdcIhfLdPjD2GYBg3zCKtE9nifjmgSUsjyDZSPExRVvze2Q
-         jwZg==
-X-Gm-Message-State: AOAM530tjjdRPzCtGNxmZx3MD4Xif6xT24x8GjpeK66Ayxxb9YaoIap2
-        y9bY5bUY+wxjXRT/Z9NRHak=
-X-Google-Smtp-Source: ABdhPJwATgozz3vdxhmnjTNKYmFgR58E3eQTb1NwghWVfY/bNR+aD/m/h7c/+UJB+EEp6etj4JR3IA==
-X-Received: by 2002:a17:906:4bc1:: with SMTP id x1mr2020248ejv.13.1590514542829;
-        Tue, 26 May 2020 10:35:42 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id bz8sm391326ejc.94.2020.05.26.10.35.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 10:35:42 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] io_uring: fix flush req->refs underflow
-Date:   Tue, 26 May 2020 20:34:02 +0300
-Message-Id: <be790e01cf63bc0d04bc4577e15ef50ea2c3ac53.1590513806.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1590513806.git.asml.silence@gmail.com>
-References: <cover.1590513806.git.asml.silence@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 26 May 2020 13:35:14 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 8C68B4C99; Tue, 26 May 2020 10:35:13 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH v15 07/11] pwm: sifive: Use 64-bit division macro
+Date:   Tue, 26 May 2020 10:35:07 -0700
+Message-Id: <d0c834872cc4e162b2358f801aca783f7e1cc214.1590514331.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1590514331.git.gurus@codeaurora.org>
+References: <cover.1590514331.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1590514331.git.gurus@codeaurora.org>
+References: <cover.1590514331.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In io_uring_cancel_files(), after refcount_sub_and_test() leaves 0
-req->refs, it calls io_put_req(), which would also put a ref. Call
-io_free_req() instead.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+handle a 64-bit divisor.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- fs/io_uring.c | 2 +-
+ drivers/pwm/pwm-sifive.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index bf75ac753b9d..42b5603ee410 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7534,7 +7534,7 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 			 * all we had, then we're done with this request.
- 			 */
- 			if (refcount_sub_and_test(2, &cancel_req->refs)) {
--				io_put_req(cancel_req);
-+				io_free_req(cancel_req);
- 				finish_wait(&ctx->inflight_wait, &wait);
- 				continue;
- 			}
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index cc63f9b..62de0bb 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * consecutively
+ 	 */
+ 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+-	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
++	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
+ 	/* The hardware cannot generate a 100% duty cycle */
+ 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+ 
 -- 
-2.24.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
