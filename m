@@ -2,65 +2,132 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD15CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80950C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B9E2087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D51208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590473711;
+	bh=Ur2xk8PlFAdp1SqkrrLV/Z2pOfVx2LArPwI0PTzFmSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uOpAqKLoEMEK2CEzxHUDXXlWoX+xok32Tk3VFdOaB1EZgXvp11SRJAEZXKVMrsmAJ
+	 duw/ZnNETeu+Q0SK6GVdkCMvd3nT7NcjUOTZnUgI0UdbKC60vPOSCslCxczyTbfsLl
+	 0hTh0I9Ztgyx3sMuHXaNpRHJIT4rcW7Km5tDdNyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgEZGNO (ORCPT
+        id S1727088AbgEZGPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:13:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:43248 "EHLO verein.lst.de"
+        Tue, 26 May 2020 02:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgEZGNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:13:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BE22268BEB; Tue, 26 May 2020 08:13:09 +0200 (CEST)
-Date:   Tue, 26 May 2020 08:13:09 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: clean up and streamline probe_kernel_* and friends v4
-Message-ID: <20200526061309.GA15549@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de> <20200525151912.34b20b978617e2893e484fa3@linux-foundation.org>
+        id S1725271AbgEZGPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:15:10 -0400
+Received: from kernel.org (unknown [87.70.212.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 486852087D;
+        Tue, 26 May 2020 06:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590473709;
+        bh=Ur2xk8PlFAdp1SqkrrLV/Z2pOfVx2LArPwI0PTzFmSM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x53IR6Jdx8v+FrtVJ0pEbhAPnAPzTg32Pwto6iDx+Ywedcvs89VietzhFi20djMuN
+         ej5tZ8gwm15PMi3B93btNoJ557MZ0g0SkVLmdgW4rddWFSquUFwjDQixRHA4VIeQJm
+         UePksupJX9ie1uyLj4nEt1GIV8f1CBnRdXwGjwUw=
+Date:   Tue, 26 May 2020 09:14:59 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [RFC 06/16] KVM: Use GUP instead of copy_from/to_user() to
+ access guest memory
+Message-ID: <20200526061459.GC13247@kernel.org>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+ <20200522125214.31348-7-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525151912.34b20b978617e2893e484fa3@linux-foundation.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200522125214.31348-7-kirill.shutemov@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 03:19:12PM -0700, Andrew Morton wrote:
-> hm.  Applying linux-next to this series generates a lot of rejects against
-> powerpc:
+On Fri, May 22, 2020 at 03:52:04PM +0300, Kirill A. Shutemov wrote:
+> New helpers copy_from_guest()/copy_to_guest() to be used if KVM memory
+> protection feature is enabled.
 > 
-> -rw-rw-r-- 1 akpm akpm  493 May 25 15:06 arch/powerpc/kernel/kgdb.c.rej
-> -rw-rw-r-- 1 akpm akpm 6461 May 25 15:06 arch/powerpc/kernel/trace/ftrace.c.rej
-> -rw-rw-r-- 1 akpm akpm  447 May 25 15:06 arch/powerpc/mm/fault.c.rej
-> -rw-rw-r-- 1 akpm akpm  623 May 25 15:06 arch/powerpc/perf/core-book3s.c.rej
-> -rw-rw-r-- 1 akpm akpm 1408 May 25 15:06 arch/riscv/kernel/patch.c.rej
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  include/linux/kvm_host.h |  4 +++
+>  virt/kvm/kvm_main.c      | 78 ++++++++++++++++++++++++++++++++++------
+>  2 files changed, 72 insertions(+), 10 deletions(-)
 > 
-> the arch/powerpc/kernel/trace/ftrace.c ones aren't very trivial.
-> 
-> It's -rc7.  Perhaps we should park all this until 5.8-rc1?
+>  static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+> -				 void *data, int offset, int len)
+> +				 void *data, int offset, int len,
+> +				 bool protected)
+>  {
+>  	int r;
+>  	unsigned long addr;
+> @@ -2257,7 +2297,10 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+>  	addr = gfn_to_hva_memslot_prot(slot, gfn, NULL);
+>  	if (kvm_is_error_hva(addr))
+>  		return -EFAULT;
+> -	r = __copy_from_user(data, (void __user *)addr + offset, len);
+> +	if (protected)
+> +		r = copy_from_guest(data, addr + offset, len);
+> +	else
+> +		r = __copy_from_user(data, (void __user *)addr + offset, len);
 
-As this is a pre-condition for the set_fs removal I'd really like to
-get the actual changes in.  All these conflicts seem to be about the
-last three cleanup patches just doing renaming, so can we just skip
-those three for now?  Then we can do the rename right after 5.8-rc1
-when we have the least chances for conflicts.
+Maybe always use copy_{from,to}_guest() and move the 'if (protected)'
+there?
+If kvm is added to memory slot, it cab be the passed to copy_{to,from}_guest.
+
+>  	if (r)
+>  		return -EFAULT;
+>  	return 0;
+> @@ -2268,7 +2311,8 @@ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+>  {
+>  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+>  
+> -	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+> +	return __kvm_read_guest_page(slot, gfn, data, offset, len,
+> +				     kvm->mem_protected);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_read_guest_page);
+>  
+> @@ -2277,7 +2321,8 @@ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data,
+>  {
+>  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+>  
+> -	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+> +	return __kvm_read_guest_page(slot, gfn, data, offset, len,
+> +				     vcpu->kvm->mem_protected);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_page);
+>  
+
+-- 
+Sincerely yours,
+Mike.
