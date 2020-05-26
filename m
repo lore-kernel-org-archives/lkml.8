@@ -2,109 +2,115 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF903207ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:14:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk06l/ol"
+	by mail.kernel.org (Postfix) with ESMTP id 74C74207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgEZFOG (ORCPT
+        id S1726580AbgEZFOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 01:14:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgEZFOF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 01:14:05 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C111C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 22:14:05 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id r125so11526811lff.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 22:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kuaiA4ng6JUJ2rRiSTrDIHbauCFmhUkJTDFY3YPq0vU=;
-        b=Hk06l/ol1I/EnHo1jbjmEwYWeIjuQizHeH0L3/yQiOWSaFKDRfbuTs7CxMCh/nt72O
-         uIdT4ZeBBs4EQPcwv1s5iLEt6gJ9YaZxac31fWfDPFaZOaewmmhQRV1zECBwaA10fP11
-         LW+AvyTjUS0F+HDT91ORxiKBtRMbdEZpK0QElZN4sR5TNgHWDNLbQGpxjDgYPoCkFO2D
-         RJer1zF7IVw7Y4iZoMoCchg3rNqYCuFpCzcVQYlamAldpDUy7F0GgfQpiGpdQW8TtX4T
-         PgeVornAko8KK3HvK8/0yy8NsTvpPWXlDwx+0KpXwW9SvYL/93MQKyc5WcWA51/ULE5/
-         BzwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kuaiA4ng6JUJ2rRiSTrDIHbauCFmhUkJTDFY3YPq0vU=;
-        b=oYBnvsQH8CHCXTSfNCvs4N6RWb+a4F2nV99TF+tq53zOPBkhfhzjur7Q24Jy8UzRcc
-         jCRwKNRbdPP/9RMqWltpKzH1tZsgGg42xzhPCfjcqQHzeq6PMPDwut5T4gnobWTKbxaD
-         ik0tOPqY9lcnXzSdxDhC6w0Q+X/OdGthjGKaUMOC8bjYkrMeV3yqCPXItAa+mp3gkGyr
-         /OGmJEPFxSzb/Ae3lTaExnJi5M0Iz0CdO19Z4ywIRD4yOOCNeReYOHgnyGm9M9oDCkWq
-         DpvH12tbeD+nPfj9XRrI1rwO19R1zuSDdxLVTyUc0+BTPdmu2G+0H2njJVKhSStD62Lx
-         rwPA==
-X-Gm-Message-State: AOAM533IzikH53FneSbMGkiSRyJFmfMHmS+aoxfbBux4PxyhhI0jVcHs
-        T8jAz+FRu0Q+uittIcamP+a99LAAXwoqvCsDBBA=
-X-Google-Smtp-Source: ABdhPJzykETPKwdqiXtEX6ryxAIkkSp/Zws+3iH9+YEMHTqr9Pnvhqs2Mmz1WVovwmbqW1TC7N0y8EtX0YRI33SUla8=
-X-Received: by 2002:a19:500e:: with SMTP id e14mr15950129lfb.88.1590470043532;
- Mon, 25 May 2020 22:14:03 -0700 (PDT)
+        Tue, 26 May 2020 01:14:41 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:17074 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbgEZFOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 01:14:41 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Tue, 26 May 2020 13:14:06
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.78.173]
+Date:   Tue, 26 May 2020 13:14:06 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "Kangjie Lu" <kjlu@umn.edu>, "Jonathan Cameron" <jic23@kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        "Lars-Peter Clausen" <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] iio: magnetometer: ak8974: Fix runtime PM imbalance
+ on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <CACRpkda9ENYMLZVnTzN2rn9UvsMOWpeDnOhh7zs4ttAJqgipKw@mail.gmail.com>
+References: <20200524025117.15679-1-dinghao.liu@zju.edu.cn>
+ <CACRpkda9ENYMLZVnTzN2rn9UvsMOWpeDnOhh7zs4ttAJqgipKw@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-References: <1589401396-31210-1-git-send-email-jrdr.linux@gmail.com> <20200522125349.GF22511@kadam>
-In-Reply-To: <20200522125349.GF22511@kadam>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 26 May 2020 10:43:52 +0530
-Message-ID: <CAFqt6za+svDtyJ7ADzWKvy1M4u-ky39Q-yWqXXcOLwo6D6XEug@mail.gmail.com>
-Subject: Re: [PATCH] drivers/virt/fsl_hypervisor: Correcting error handling path
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, dsterba@suse.com,
-        Arnd Bergmann <arnd@arndb.de>, Ira Weiny <ira.weiny@intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <58a22985.cfec2.1724f66f322.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgC3YXiepcxeDTEIAA--.1889W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcMBlZdtOTotgAAsK
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 6:24 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Thu, May 14, 2020 at 01:53:16AM +0530, Souptick Joarder wrote:
-> > First, when memory allocation for sg_list_unaligned failed, there
-> > is no point of calling put_pages() as we haven't pinned any pages.
-> >
-> > Second, if get_user_pages_fast() failed we should unpinned num_pinned
-> > pages, no point of checking till num_pages.
-> >
-> > This will address both.
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
->
-> If gup_flags were | FOLL_LONGTERM then this patch would fix a double
-> free because of the put_page() in __gup_longterm_locked().
->
-> mm/gup.c
->   1786                  if (check_dax_vmas(vmas_tmp, rc)) {
->   1787                          for (i = 0; i < rc; i++)
->   1788                                  put_page(pages[i]);
->                                         ^^^^^^^^^^^^^^^^^^^
-> put_page() here and also in the caller.
->
->   1789                          rc = -EOPNOTSUPP;
->   1790                          goto out;
->   1791                  }
->
-> But since this isn't FOLL_LONGTERM the patch is a nice cleanup which
-> doesn't affect run time.
->
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-Hi Andrew,
-Is it fine to take it through mm tree ?
+SGksIExpbnVzCgo+IE9uIFN1biwgTWF5IDI0LCAyMDIwIGF0IDQ6NTEgQU0gRGluZ2hhbyBMaXUg
+PGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+IHdyb3RlOgo+IAo+ID4gV2hlbiBkZXZtX3JlZ21hcF9p
+bml0X2kyYygpIHJldHVybnMgYW4gZXJyb3IgY29kZSwgYSBwYWlyaW5nCj4gPiBydW50aW1lIFBN
+IHVzYWdlIGNvdW50ZXIgZGVjcmVtZW50IGlzIG5lZWRlZCB0byBrZWVwIHRoZQo+ID4gY291bnRl
+ciBiYWxhbmNlZC4gRm9yIGVycm9yIHBhdGhzIGFmdGVyIGFrODk3NF9zZXRfcG93ZXIoKSwKPiA+
+IGFrODk3NF9kZXRlY3QoKSBhbmQgYWs4OTc0X3Jlc2V0KCksIHRoaW5ncyBhcmUgdGhlIHNhbWUu
+Cj4gPgo+ID4gSG93ZXZlciwgV2hlbiBpaW9fdHJpZ2dlcmVkX2J1ZmZlcl9zZXR1cCgpIHJldHVy
+bnMgYW4gZXJyb3IKPiA+IGNvZGUsIHdlIGRvbid0IG5lZWQgc3VjaCBhIGRlY3JlbWVudCBiZWNh
+dXNlIHRoZXJlIGlzIGFscmVhZHkKPiA+IG9uZSBiZWZvcmUgdGhpcyBjYWxsLiBUaGluZ3MgYXJl
+IHRoZSBzYW1lIGZvciBvdGhlciBlcnJvciBwYXRocwo+ID4gYWZ0ZXIgaXQuCj4gPgo+ID4gU2ln
+bmVkLW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Cj4gCj4gPiAg
+ICAgICAgIGFrODk3NC0+bWFwID0gZGV2bV9yZWdtYXBfaW5pdF9pMmMoaTJjLCAmYWs4OTc0X3Jl
+Z21hcF9jb25maWcpOwo+ID4gICAgICAgICBpZiAoSVNfRVJSKGFrODk3NC0+bWFwKSkgewo+ID4g
+ICAgICAgICAgICAgICAgIGRldl9lcnIoJmkyYy0+ZGV2LCAiZmFpbGVkIHRvIGFsbG9jYXRlIHJl
+Z2lzdGVyIG1hcFxuIik7Cj4gPiArICAgICAgICAgICAgICAgcG1fcnVudGltZV9wdXRfbm9pZGxl
+KCZpMmMtPmRldik7Cj4gPiArICAgICAgICAgICAgICAgcG1fcnVudGltZV9kaXNhYmxlKCZpMmMt
+PmRldik7Cj4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoYWs4OTc0LT5tYXApOwo+
+IAo+IFRoaXMgaXMgY29ycmVjdC4KPiAKPiA+ICAgICAgICAgcmV0ID0gYWs4OTc0X3NldF9wb3dl
+cihhazg5NzQsIEFLODk3NF9QV1JfT04pOwo+ID4gICAgICAgICBpZiAocmV0KSB7Cj4gPiAgICAg
+ICAgICAgICAgICAgZGV2X2VycigmaTJjLT5kZXYsICJjb3VsZCBub3QgcG93ZXIgb25cbiIpOwo+
+ID4gKyAgICAgICAgICAgICAgIHBtX3J1bnRpbWVfcHV0X25vaWRsZSgmaTJjLT5kZXYpOwo+ID4g
+KyAgICAgICAgICAgICAgIHBtX3J1bnRpbWVfZGlzYWJsZSgmaTJjLT5kZXYpOwo+ID4gICAgICAg
+ICAgICAgICAgIGdvdG8gcG93ZXJfb2ZmOwo+IAo+IFdoYXQgYWJvdXQganVzdCBjaGFuZ2luZyB0
+aGlzIHRvIGdvdG8gZGlzYWJsZV9wbTsKPgo+ID4gICAgICAgICByZXQgPSBhazg5NzRfZGV0ZWN0
+KGFrODk3NCk7Cj4gPiAgICAgICAgIGlmIChyZXQpIHsKPiA+ICAgICAgICAgICAgICAgICBkZXZf
+ZXJyKCZpMmMtPmRldiwgIm5laXRoZXIgQUs4OTc0IG5vciBBTUkzMHggZm91bmRcbiIpOwo+ID4g
+KyAgICAgICAgICAgICAgIHBtX3J1bnRpbWVfcHV0X25vaWRsZSgmaTJjLT5kZXYpOwo+ID4gKyAg
+ICAgICAgICAgICAgIHBtX3J1bnRpbWVfZGlzYWJsZSgmaTJjLT5kZXYpOwo+ID4gICAgICAgICAg
+ICAgICAgIGdvdG8gcG93ZXJfb2ZmOwo+IAo+IGdvdG8gZGlzYWJsZV9wbTsKPiAKPiA+IEBAIC03
+ODYsNiArNzkyLDggQEAgc3RhdGljIGludCBhazg5NzRfcHJvYmUoc3RydWN0IGkyY19jbGllbnQg
+KmkyYywKPiA+ICAgICAgICAgcmV0ID0gYWs4OTc0X3Jlc2V0KGFrODk3NCk7Cj4gPiAgICAgICAg
+IGlmIChyZXQpIHsKPiA+ICAgICAgICAgICAgICAgICBkZXZfZXJyKCZpMmMtPmRldiwgIkFLODk3
+NCByZXNldCBmYWlsZWRcbiIpOwo+ID4gKyAgICAgICAgICAgICAgIHBtX3J1bnRpbWVfcHV0X25v
+aWRsZSgmaTJjLT5kZXYpOwo+ID4gKyAgICAgICAgICAgICAgIHBtX3J1bnRpbWVfZGlzYWJsZSgm
+aTJjLT5kZXYpOwo+IAo+IGdvdG8gZGlzYWJsZV9wbTsKPiAKPiA+ICBkaXNhYmxlX3BtOgo+ID4g
+LSAgICAgICBwbV9ydW50aW1lX3B1dF9ub2lkbGUoJmkyYy0+ZGV2KTsKPiA+ICAgICAgICAgcG1f
+cnVudGltZV9kaXNhYmxlKCZpMmMtPmRldik7Cj4gPiAgICAgICAgIGFrODk3NF9zZXRfcG93ZXIo
+YWs4OTc0LCBBSzg5NzRfUFdSX09GRik7Cj4gCj4gS2VlcCB0aGUgdG9wIHBtX3J1bnRpbWVfcHV0
+X25vaWRsZSgpLgoKSSBmb3VuZCB0aGF0IHRoZXJlIHdhcyBhbHJlYWR5IGEgcG1fcnVudGltZV9w
+dXQoKSBiZWZvcmUgCmlpb190cmlnZ2VyZWRfYnVmZmVyX3NldHVwKCkgKGp1c3QgYWZ0ZXIgcG1f
+cnVudGltZV91c2VfYXV0b3N1c3BlbmQpLgpTbyBpZiB3ZSBrZWVwIHRoZSBwbV9ydW50aW1lX3B1
+dF9ub2lkbGUoKSBoZXJlLCB3ZSB3aWxsIGhhdmUKdHdvIHBtdXNhZ2UgY291bnRlciBkZWNyZW1l
+bnQuIERvIHlvdSB0aGluayB0aGlzIGlzIGEgYnVnPwoKUmVnYXJkcywKRGluZ2hhbwoKPiAKPiBU
+aGUgYWs4OTc0X3NldF9wb3dlcigpIGNhbGwgaXMgZmluZSwgdGhlIHBvd2VyIG9uIGNhbGwgZG9l
+cyBub3QKPiBuZWVkIHRvIGhhcHBlbiBpbiBiYWxhbmNlLiBTdXJlIGl0IHdpbGwgYXR0ZW1wdCB0
+byB3cml0ZSBhIHJlZ2lzdGVyCj4gYnV0IHNvIHdpbGwgdGhlIHBvd2VyIG9uIGNhbGwuCj4gCj4g
+WW91cnMsCj4gTGludXMgV2FsbGVpago=
