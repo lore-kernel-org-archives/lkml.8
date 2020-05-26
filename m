@@ -2,149 +2,199 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5388C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBCA42065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC612065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="tCp+jYFE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BifQQgy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgEZOav (ORCPT
+        id S1729051AbgEZOc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:30:51 -0400
-Received: from mout.web.de ([212.227.17.11]:39821 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgEZOau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:30:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590503436;
-        bh=LTvGnCvacsKhwxG6no99uP2zREPyYqAbT4gjHDTiCDo=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=tCp+jYFErCwPgpLGF9Ud2wj8r1st88pHYAMt51IEeCs+UnEuEBzYuazUgww7IDB0b
-         BIsJQhb0xe9A+eFfuh6VnyPSG24saZO+JJ+wBXvTlz9dKFhm3vXxiYZLCb4tnUuCK8
-         GcjYRI4M8QTJ2joGgoXTVUApWbFy0CTCBlRqYDSc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.141.233]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LudP2-1ivlUK2WIK-00zntr; Tue, 26
- May 2020 16:30:36 +0200
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Kangjie Lu <kjlu@umn.edu>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Improve exception handling in
- qcom_pcie_probe()
-To:     Qiushi Wu <wu000273@umn.edu>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c0e71850-a67b-2aac-7ddc-186f3850c087@web.de>
-Date:   Tue, 26 May 2020 16:30:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 26 May 2020 10:32:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32285 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726856AbgEZOc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:32:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590503547;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ABpC662MbprtTlQAkgM8E5X8nM5UH23rSp9Nzpyl7nM=;
+        b=BifQQgy4e5IB8gk3OweWNmpvAqc4LBI7TpTbFS8YquRzN1T3GGyjjhtGTaS95rBM5sxizc
+        R9g3CclyAZo7ik0134LUnUAKr4HLzZmeR9WukgkuEpM/GqgRo9UEow8aqaAEeERzWIkgh7
+        lzKhg/P3jKJDxyfpIH9FWX4JmYMSr/8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-H3XJY1yJN3-ObR5G8tu1EA-1; Tue, 26 May 2020 10:32:25 -0400
+X-MC-Unique: H3XJY1yJN3-ObR5G8tu1EA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C776B800053;
+        Tue, 26 May 2020 14:32:22 +0000 (UTC)
+Received: from x1.home (ovpn-114-203.phx2.redhat.com [10.3.114.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB99E78B52;
+        Tue, 26 May 2020 14:32:19 +0000 (UTC)
+Date:   Tue, 26 May 2020 08:32:18 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, cai@lca.pw,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
+ on disabled memory
+Message-ID: <20200526083218.40402f01@x1.home>
+In-Reply-To: <20200526134954.GA1125781@xz-x1>
+References: <20200523193417.GI766834@xz-x1>
+        <20200523170602.5eb09a66@x1.home>
+        <20200523235257.GC939059@xz-x1>
+        <20200525122607.GC744@ziepe.ca>
+        <20200525142806.GC1058657@xz-x1>
+        <20200525144651.GE744@ziepe.ca>
+        <20200525151142.GE1058657@xz-x1>
+        <20200525165637.GG744@ziepe.ca>
+        <3d9c1c8b-5278-1c4d-0e9c-e6f8fdb75853@nvidia.com>
+        <20200526003705.GK744@ziepe.ca>
+        <20200526134954.GA1125781@xz-x1>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uaAnp8RQwNdE+0ja7LvKxcJVKXYXo10dhh+a2vXz/p29Rlpefbb
- nJAc4jU2thbXbeSaZ61S4c+XrWPiR4iJCf9W+0LHjawrvKUqS9IXjuR6W2OkiRoS0cug3nd
- kYTYRsMedZ+EKtPJmMHTmBV5S+y/KQxrKoOuc7kHeEaBZA5KsZbu0dTtWK0sP5kC3siWYLB
- rdLQWb3B7AwMLnCrSLPcQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GVR6XjNU5JY=:eFsWbXRGNZKCp4dJ2y/Dh5
- L8XVV2KggePAQVTFbTF3twzxOk/nu1z+tADBUr78zK/dxQRKQC/qlnZFwyr/abR4WaVtcWgcb
- uw6Z1g66QMqufV30ODUTISRxzukG7EGgiNGV4gL+uejUT4hJKCsIrijWjva1K3xTa0xzvoCKQ
- VXFCQOJJwZFOqzaVRqbCxTHNl++PGrx0xrbkwxrZfrJzHIDYpm+q/owJYT+/iE14wgRlbJOae
- /tSUXtnYs5bdJAhkdYNEvY4ZmjNxjMLofHA4Q8+8L1uOwRanALYRtwBy/j4QyY5ZjbQfBaaSE
- Ej0dCl0Lve4qPw9+kvSvCobGGyxo1IqjSOMQQnJBAudvlEwIHz64w2keJqvuy8Dv8Q2auRnse
- OTHQ+GN3ZNRt+H8DV/qElbTIdGXvsez+PhkU+HMpxjkOR4D7Qvl7xTu0chue5yFxUG31rVtu6
- sYPTILckkLd7pt6FXiYL69fn5nXjTY2rnlwL+mgbQA/Bqvn7SjHjhonjI96VNMszxu8e6zn0Z
- JNdfWCFHIvoFjWi6Ly9oipOdq9gIwFy0k386/4on7KAh1Hu+Q3C23OQMRZrkNfyP2jbtXMNvT
- 39aXfVLXaanBBcMe71TpvVmlMuhK/hJfEjloiI7Wr5QZ/xjrqfviyb9Tmo34NKsQthtRNv+7l
- ArCZePXZ35k0LI0YSrQG0IH19ZttAy9P19x5Zto9x9T62/T+X3Kt19VRsf9pSGq+ZrgWwW9Zf
- HAqFByAPPWffxJ11ozekmkJCc8wyPZfd0y7wgkceTEUjjhePfu2p+kllknvTfKtfbp9vmq23p
- 32yIDA3d0Zpo8BSM/d9DL2f2Vm7I+RBS/SnVspGfQChOQ4GlJwwBQunoVFiCqL3sgNrQf5drV
- OAEC2I5+43cDoIcFs/z4nWvLTJjO/7l9ZfDP4LtO+nBOP7ek2PKQeNOCqzGEb9wgk3/AytXT3
- reEVd74w+yg94Cz4W1YtRFmCAcOHTvOXem8vzyZbYT3z22fimUXaaXrRLrIgivE628mJpd74x
- djDR0acTZkshIt6FCSy5IBvg0/W4DC9LPv+31w/6bmZt/TEycG3gWvXIIGT6y0CFga6DFbHsc
- MGcmqwfK/anUj7Nr0pVnG7+DcMfYFAhAoP4whKNI2oa53malzrMvsKH7dQYzADaKtdxzjsQgU
- GofmS9N+ac1Fm3oWH9gJ1WK201jrN13/v6fT/bkTAlaLDrc0vNCW80WEKsIhhbO5AZBGwpoqI
- lebkxjVVz4Pb+hY+W
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please avoid a typo in the patch subject (by a possible alternative?).
+On Tue, 26 May 2020 09:49:54 -0400
+Peter Xu <peterx@redhat.com> wrote:
 
+> On Mon, May 25, 2020 at 09:37:05PM -0300, Jason Gunthorpe wrote:
+> > On Mon, May 25, 2020 at 01:56:28PM -0700, John Hubbard wrote:  
+> > > On 2020-05-25 09:56, Jason Gunthorpe wrote:  
+> > > > On Mon, May 25, 2020 at 11:11:42AM -0400, Peter Xu wrote:  
+> > > > > On Mon, May 25, 2020 at 11:46:51AM -0300, Jason Gunthorpe wrote:  
+> > > > > > On Mon, May 25, 2020 at 10:28:06AM -0400, Peter Xu wrote:  
+> > > > > > > On Mon, May 25, 2020 at 09:26:07AM -0300, Jason Gunthorpe wrote:  
+> > > > > > > > On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
+> > > > > > > >   
+> > > > > > > > > For what I understand now, IMHO we should still need all those handlings of
+> > > > > > > > > FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
+> > > > > > > > > try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
+> > > > > > > > > not sure what would be the side effect of that if fault() blocked it.  E.g.,
+> > > > > > > > > the caller could be in an atomic context.  
+> > > > > > > > 
+> > > > > > > > AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
+> > > > > > > > VM_FAULT_RETRY is returned, which this doesn't do?  
+> > > > > > > 
+> > > > > > > Yes, that's why I think we should still properly return VM_FAULT_RETRY if
+> > > > > > > needed..  because IMHO it is still possible that the caller calls with
+> > > > > > > FAULT_FLAG_RETRY_NOWAIT.
+> > > > > > > 
+> > > > > > > My understanding is that FAULT_FLAG_RETRY_NOWAIT majorly means:
+> > > > > > > 
+> > > > > > >    - We cannot release the mmap_sem, and,
+> > > > > > >    - We cannot sleep  
+> > > > > > 
+> > > > > > Sleeping looks fine, look at any FS implementation of fault, say,
+> > > > > > xfs. The first thing it does is xfs_ilock() which does down_write().  
+> > > > > 
+> > > > > Yeah.  My wild guess is that maybe fs code will always be without
+> > > > > FAULT_FLAG_RETRY_NOWAIT so it's safe to sleep unconditionally (e.g., I think
+> > > > > the general #PF should be fine to sleep in fault(); gup should be special, but
+> > > > > I didn't observe any gup code called upon file systems)?  
+> > > > 
+> > > > get_user_pages is called on filesystem backed pages.
+> > > > 
+> > > > I have no idea what FAULT_FLAG_RETRY_NOWAIT is supposed to do. Maybe
+> > > > John was able to guess when he reworked that stuff?
+> > > >   
+> > > 
+> > > Although I didn't end up touching that particular area, I'm sure it's going
+> > > to come up sometime soon, so I poked around just now, and found that
+> > > FAULT_FLAG_RETRY_NOWAIT was added almost exactly 9 years ago. This flag was
+> > > intended to make KVM and similar things behave better when doing GUP on
+> > > file-backed pages that might, or might not be in memory.
+> > > 
+> > > The idea is described in the changelog, but not in the code comments or
+> > > Documentation, sigh:
+> > > 
+> > > commit 318b275fbca1ab9ec0862de71420e0e92c3d1aa7
+> > > Author: Gleb Natapov <gleb@redhat.com>
+> > > Date:   Tue Mar 22 16:30:51 2011 -0700
+> > > 
+> > >     mm: allow GUP to fail instead of waiting on a page
+> > > 
+> > >     GUP user may want to try to acquire a reference to a page if it is already
+> > >     in memory, but not if IO, to bring it in, is needed.  For example KVM may
+> > >     tell vcpu to schedule another guest process if current one is trying to
+> > >     access swapped out page.  Meanwhile, the page will be swapped in and the
+> > >     guest process, that depends on it, will be able to run again.
+> > > 
+> > >     This patch adds FAULT_FLAG_RETRY_NOWAIT (suggested by Linus) and
+> > >     FOLL_NOWAIT follow_page flags.  FAULT_FLAG_RETRY_NOWAIT, when used in
+> > >     conjunction with VM_FAULT_ALLOW_RETRY, indicates to handle_mm_fault that
+> > >     it shouldn't drop mmap_sem and wait on a page, but return VM_FAULT_RETRY
+> > >     instead.  
+> > 
+> > So, from kvm's perspective it was to avoid excessively long blocking in
+> > common paths when it could rejoin the completed IO by somehow waiting
+> > on a page itself?
+> > 
+> > It all seems like it should not be used unless the page is going to go
+> > to IO?  
+> 
+> I think NOWAIT is used as a common flag for kvm for its initial attempt to
+> fault in a normal page, however...  I just noticed another fact that actually
+> __get_user_pages() won't work with PFNMAP (check_vma_flags should fail), but
+> KVM just started to support fault() for PFNMAP from commit add6a0cd1c5b (2016)
+> using fixup_user_fault(), where nvidia seems to have a similar request to have
+> a fault handler on some mapped BARs.
+> 
+> > 
+> > Certainly there is no reason to optimize the fringe case of vfio
+> > sleeping if there is and incorrect concurrnent attempt to disable the
+> > a BAR.  
+> 
+> If fixup_user_fault() (which is always with ALLOW_RETRY && !RETRY_NOWAIT) is
+> the only path for the new fault(), then current way seems ok.  Not sure whether
+> this would worth a WARN_ON_ONCE(RETRY_NOWAIT) in the fault() to be clear of
+> that fact.
 
-> In function qcom_pcie_probe(), there are several error-handling problem.
+Thanks for the discussion over the weekend folks.  Peter, I take it
+you'd be satisfied if this patch were updated as:
 
-Wording adjustments:
-This function contained improvable implementation details according to
-exception handling.
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index aabba6439a5b..35bd7cd4e268 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -1528,6 +1528,13 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+ 	struct vfio_pci_device *vdev = vma->vm_private_data;
+ 	vm_fault_t ret = VM_FAULT_NOPAGE;
+ 
++	/*
++	 * We don't expect to be called with NOWAIT and there are conflicting
++	 * opinions on whether NOWAIT suggests we shouldn't wait for locks or
++	 * just shouldn't wait for I/O.
++	 */
++	WARN_ON_ONCE(vmf->flags & FAULT_FLAG_RETRY_NOWAIT);
++
+ 	mutex_lock(&vdev->vma_lock);
+ 	down_read(&vdev->memory_lock);
+ 
 
+Is that correct?  Thanks,
 
-> because refcount will be increased even pm_runtime_get_sync() returns
-> an error.
+Alex
 
-because the reference count will be increased despite of the failure.
-Thus add the missed function call.
-
-
-> 2. pm_runtime_disable() are called twice, =E2=80=A6
-=E2=80=A6
-Thus remove redundant function calls.
-
-Regards,
-Markus
