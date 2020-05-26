@@ -2,102 +2,198 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB78C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4677B20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520709;
-	bh=r/ZhJS3TFnJvUkfTEaJFVxbdWUpnvSUCDvWHnEm187c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MN4yGDQZUqa00roB3LSANrpwhS7vARnsMNh4D35W4N8b6XGgPD4N+ZboezT8hY3JJ
-	 UV0eRk7rCOAK+gWFzOQ62dxQEQL3xr7/Nn6uSo66b4lksohTkgbTb9I5bnn/Nm5RJB
-	 erNaDybzaewEt1ikckxFGrxbDxJ1fOnu55EuH8jk=
+	by mail.kernel.org (Postfix) with ESMTP id DDF4F20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IAaQdWNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403979AbgEZTS2 (ORCPT
+        id S2404175AbgEZTSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404009AbgEZTNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:18:30 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46230 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391846AbgEZTNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 15:13:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8C63208A7;
-        Tue, 26 May 2020 19:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520424;
-        bh=r/ZhJS3TFnJvUkfTEaJFVxbdWUpnvSUCDvWHnEm187c=;
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id BE16330D651;
+        Tue, 26 May 2020 12:13:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com BE16330D651
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520422;
+        bh=O+33eJKKKzwfVuoOuQlDtjddtvZIu0Ck8i/66RAb/gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WXkVyfP7W2BGzkHNPelHtcGiF/uhkFNq4bfPII5L9N8oY95nBBB9OPJA+HGBDEHwe
-         7ghh+qv9Jm1OJXJBMZ8ykAXRUm5Gx9GjjOc+vTi0+eIov3cv5CGxaHOHXFb8267Sx/
-         nnwSngGblbSsSP5WHUZ47Cxb2itF5jdyUjg6kjOc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 023/126] net: drop_monitor: use IS_REACHABLE() to guard net_dm_hw_report()
-Date:   Tue, 26 May 2020 20:52:40 +0200
-Message-Id: <20200526183939.637663293@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=IAaQdWNqlg4MXpfcoP6tM9wmCoFrP1jLNFn1Nsd7J4/IS6BAvofg0u3Wp4Eo2fk4Z
+         j7au5NiuOs+HPs9Ld0Rv3MVM1wPN2puK7rvLK+NmHYRVcTJ1exfRXIO9TwRlZDpyk8
+         nnhV1sddbwHm5XlYWi9LYs4H7THBaV48qO6z2ZGM=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 5370814008B;
+        Tue, 26 May 2020 12:13:41 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 11/14] PCI: brcmstb: Set internal memory viewport sizes
+Date:   Tue, 26 May 2020 15:12:50 -0400
+Message-Id: <20200526191303.1492-12-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+BrcmSTB PCIe controllers are intimately connected to the memory
+controller(s) on the SOC.  There is a "viewport" for each memory controller
+that allows inbound accesses to CPU memory.  Each viewport's size must be
+set to a power of two, and that size must be equal to or larger than the
+amount of memory each controller supports.
 
-[ Upstream commit 1cd9b3abf5332102d4d967555e7ed861a75094bf ]
-
-In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
-
-The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
-from being 'm' when NET_DEVLINK=y.
-
-With the planned Kconfig change that relaxes the 'imply', the
-combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
-
-Use IS_REACHABLE() to avoid the vmlinux link error for this case.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- include/net/drop_monitor.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 67 ++++++++++++++++++++-------
+ 1 file changed, 49 insertions(+), 18 deletions(-)
 
-diff --git a/include/net/drop_monitor.h b/include/net/drop_monitor.h
-index 2ab668461463..f68bc373544a 100644
---- a/include/net/drop_monitor.h
-+++ b/include/net/drop_monitor.h
-@@ -19,7 +19,7 @@ struct net_dm_hw_metadata {
- 	struct net_device *input_dev;
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index fa356bc149c3..338e9ed44230 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -55,6 +55,8 @@
+ #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
+ #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
+ #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
++#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
++#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
+ 
+ #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
+ #define PCIE_MEM_WIN0_LO(win)	\
+@@ -152,6 +154,7 @@
+ #define SSC_STATUS_OFFSET		0x1
+ #define SSC_STATUS_SSC_MASK		0x400
+ #define SSC_STATUS_PLL_LOCK_MASK	0x800
++#define PCIE_BRCM_MAX_MEMC		3
+ 
+ /* Rescal registers */
+ #define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
+@@ -261,6 +264,8 @@ struct brcm_pcie {
+ 	const int		*reg_field_info;
+ 	enum pcie_type		type;
+ 	struct reset_control	*rescal;
++	int			num_memc;
++	u64			memc_size[PCIE_BRCM_MAX_MEMC];
  };
  
--#if IS_ENABLED(CONFIG_NET_DROP_MONITOR)
-+#if IS_REACHABLE(CONFIG_NET_DROP_MONITOR)
- void net_dm_hw_report(struct sk_buff *skb,
- 		      const struct net_dm_hw_metadata *hw_metadata);
- #else
+ /*
+@@ -717,22 +722,40 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+ 							u64 *rc_bar2_offset)
+ {
+ 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+-	struct device *dev = pcie->dev;
+ 	struct resource_entry *entry;
++	struct device *dev = pcie->dev;
++	u64 lowest_pcie_addr = ~(u64)0;
++	int ret, i = 0;
++	u64 size = 0;
+ 
+-	entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+-	if (!entry)
+-		return -ENODEV;
++	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
++		u64 pcie_beg = entry->res->start - entry->offset;
+ 
++		size += entry->res->end - entry->res->start + 1;
++		if (pcie_beg < lowest_pcie_addr)
++			lowest_pcie_addr = pcie_beg;
++	}
+ 
+-	/*
+-	 * The controller expects the inbound window offset to be calculated as
+-	 * the difference between PCIe's address space and CPU's. The offset
+-	 * provided by the firmware is calculated the opposite way, so we
+-	 * negate it.
+-	 */
+-	*rc_bar2_offset = -entry->offset;
+-	*rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
++	ret = of_property_read_variable_u64_array(
++		pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
++		PCIE_BRCM_MAX_MEMC);
++
++	if (ret <= 0) {
++		/* Make an educated guess */
++		pcie->num_memc = 1;
++		pcie->memc_size[0] = 1 << fls64(size - 1);
++	} else {
++		pcie->num_memc = ret;
++	}
++
++	/* Each memc is viewed through a "port" that is a power of 2 */
++	for (i = 0, size = 0; i < pcie->num_memc; i++)
++		size += pcie->memc_size[i];
++
++	/* System memory starts at this address in PCIe-space */
++	*rc_bar2_offset = lowest_pcie_addr;
++	/* The sum of all memc views must also be a power of 2 */
++	*rc_bar2_size = 1ULL << fls64(size - 1);
+ 
+ 	/*
+ 	 * We validate the inbound memory view even though we should trust
+@@ -784,12 +807,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	void __iomem *base = pcie->base;
+ 	struct device *dev = pcie->dev;
+ 	struct resource_entry *entry;
+-	unsigned int scb_size_val;
+ 	bool ssc_good = false;
+ 	struct resource *res;
+ 	int num_out_wins = 0;
+ 	u16 nlw, cls, lnksta;
+-	int i, ret;
++	int i, ret, memc;
+ 	u32 tmp, aspm_support;
+ 
+ 	/* Reset the bridge */
+@@ -825,11 +847,20 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	writel(upper_32_bits(rc_bar2_offset),
+ 	       base + PCIE_MISC_RC_BAR2_CONFIG_HI);
+ 
+-	scb_size_val = rc_bar2_size ?
+-		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
+ 	tmp = readl(base + PCIE_MISC_MISC_CTRL);
+-	u32p_replace_bits(&tmp, scb_size_val,
+-			  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
++	for (memc = 0; memc < pcie->num_memc; memc++) {
++		u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
++
++		if (memc == 0)
++			u32p_replace_bits(&tmp, scb_size_val,
++					  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
++		else if (memc == 1)
++			u32p_replace_bits(&tmp, scb_size_val,
++					  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
++		else if (memc == 2)
++			u32p_replace_bits(&tmp, scb_size_val,
++					  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
++	}
+ 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
+ 
+ 	/*
 -- 
-2.25.1
-
-
+2.17.1
 
