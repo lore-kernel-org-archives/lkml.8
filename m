@@ -2,106 +2,142 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD30C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C30208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=guzman.io header.i=@guzman.io header.b="K1w2VEUJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2C868208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590532606;
+	bh=SoyS9n5uzrCTeisHdfFQF2I8r8kuXmqmf/eQd1xljCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B5xvNuG7+Eiu6+mLglWHVl9V8lShltNpGX3OrJzwC+/fH656gpN5YWQRR0WtEgnyo
+	 v1H13S+JrygQWHZpD2vHxxqzvvOrnDB/AkIajkphOTiC+XoW+e1UNTkz54qIgr18rm
+	 UsMlO7VeutyDbk00WFkuLGv5dhqf0prCZo5RZBrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404442AbgEZWfA (ORCPT
+        id S2404472AbgEZWgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404420AbgEZWfA (ORCPT
+        Tue, 26 May 2020 18:36:45 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44149 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389755AbgEZWgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:35:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC7FC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:34:59 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d10so10779692pgn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=guzman.io; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=rc0ztywtDtdFivmaKBhxTDL3VYNzhzekzPPhJ2NZpLY=;
-        b=K1w2VEUJFRCNmdKIEN6fzcAz45I8IqIXhkYy7dZoZ9CqByVri0wJpgw6ppL0Vf6shS
-         E4VaBNm/EXE17Xdh/XAts/vxCFDPtf80lqfWWmKDhXo6uMUdbnnykRrEBYka1DMDoJxW
-         Kne0gM4h8M9f1d/SLaE05gxVF4ETTfdya61DE=
+        Tue, 26 May 2020 18:36:45 -0400
+Received: by mail-io1-f68.google.com with SMTP id p20so10448084iop.11;
+        Tue, 26 May 2020 15:36:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=rc0ztywtDtdFivmaKBhxTDL3VYNzhzekzPPhJ2NZpLY=;
-        b=e1brKe5F9q2uMWbAtIGO/eHVW6N2bppPjz+69NkxAfYIVso5YXnxiv+K+7ZiEDyQ3Y
-         VfLptYVW24N3boDHLCQpuFwcMC4WlxbXuE6Mq03ODTJXUfUTgp2SY89/K/wU/6hh7HFv
-         Pk0+bj67ROC7yZYXXvTx/342KI5O8HBzpeFpwpElKapOJ0gEojI3Dmf1/NIAqriPCaJP
-         MUhD85gCTZwR4XdxIBNtKPHOpqJDvzwbrkOEz8dpNMSyc7zMHidc9xjOzUWIFltZi4+e
-         I8PHQfSzZ2ziHdnZdfMcFuIYBKtcQyPYl/4ATMKoUBuGF+QDJ1O4T1t5XcB+DJrPW//G
-         VSUg==
-X-Gm-Message-State: AOAM532Z7yGWr8mL+NVnHtawarBlkBnO/Oq2HKNRKQy5ocEJPqeNMJ3G
-        T7DPjl/U6i72btzIcNErkBmxRg==
-X-Google-Smtp-Source: ABdhPJxIlsZhEzNp6s/vSULhJkeORRxVKjicky1gfALAqUj9Gulp50o+6Cqs0SfnDwlQt9iAfHNpzA==
-X-Received: by 2002:aa7:9a96:: with SMTP id w22mr980505pfi.199.1590532498863;
-        Tue, 26 May 2020 15:34:58 -0700 (PDT)
-Received: from ?IPv6:2601:645:4000:ba:30d8:f462:8a0e:6cae? ([2601:645:4000:ba:30d8:f462:8a0e:6cae])
-        by smtp.gmail.com with ESMTPSA id s94sm507942pjb.20.2020.05.26.15.34.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tj8N2mepZ2doGS8o5HvQFvU4E1JvXzOMzruiM4qqlkA=;
+        b=UoDCzV920leTmz0b5clKHCtdKhl1tG5bX0jTGsmRVpECNpLC7GgUgudy346Uy8ugs5
+         F26EF2VbvwuRs/BEjhWJ8XqCbVIqyJW5u8Au8dTEoAfIUYmBRtfaNhWq0yomnDq2Isrn
+         3K8MAtSb6a7jYi11HGKyEfcigNuANh3ndzg6/2XN0MAar1C6vhvMdxWwZ4Cs4i4trSBh
+         1I5iCrn3UzU3e19SpMQYo+K8MpbG76B1Qx6guHcWlGYxRBhGN7Zamzea9Uf0PGFOtlML
+         RoHHwQs9BpQRXwba13nr2IbOUuq8v5/tz7qLOwCIIe3CetOb85jeEnvDxrdur/5AGHlS
+         rjBQ==
+X-Gm-Message-State: AOAM530nYJPrOczTynA816lZ0ZfjrjuEahTMWZlSzf42B7KSDzF04Obz
+        orY/GNoJGv+YDv05Olj0qYFwi1Q=
+X-Google-Smtp-Source: ABdhPJwnkJMGWyVt/cg8hbEkr6MQZUJOiTQ9GhmS2gEM3rC+m3jVY0ILT9haJVEEAeAQUNbmuDB0zQ==
+X-Received: by 2002:a02:a899:: with SMTP id l25mr3122374jam.101.1590532604273;
+        Tue, 26 May 2020 15:36:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v76sm664733ill.73.2020.05.26.15.36.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:34:57 -0700 (PDT)
-Message-ID: <1fc66c1b942e5c0855cea3445bfe33fc3a1c1ad2.camel@guzman.io>
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-From:   Alex Guzman <alex@guzman.io>
-To:     Tadeusz Struk <tstruk@gmail.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Date:   Tue, 26 May 2020 15:34:56 -0700
-In-Reply-To: <705c9df6-e8cd-2829-c579-2bf039360eec@gmail.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <f63afdc1-6c40-dc0d-bb9a-154bc51d3b95@gmail.com>
-         <1590523214.15108.4.camel@HansenPartnership.com>
-         <705c9df6-e8cd-2829-c579-2bf039360eec@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 
+        Tue, 26 May 2020 15:36:43 -0700 (PDT)
+Received: (nullmailer pid 512636 invoked by uid 1000);
+        Tue, 26 May 2020 22:36:42 -0000
+Date:   Tue, 26 May 2020 16:36:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Steve Lee <steves.lee@maximintegrated.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ryan.lee.maxim@gmail.com,
+        ryans.lee@maximintegrated.com, steves.lee.maxim@gmail.com
+Subject: Re: [RESEND][V5 PATCH 1/2] dt-bindings: Added device tree binding
+ for max98390
+Message-ID: <20200526223642.GA506893@bogus>
+References: <20200518004930.20973-1-steves.lee@maximintegrated.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518004930.20973-1-steves.lee@maximintegrated.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 14:33 -0700, Tadeusz Struk wrote:
-> On 5/26/20 1:00 PM, James Bottomley wrote:
-> > I don't think there is a root cause other than a TIS TPM is getting
-> > annoyed by us cycling localities too rapidly because we don't do an
-> > actual TPM operation between request and relinquish.  Since the
-> > first
-> > request/relinquish seems unnecessary for the async case, moving the
-> > ops
-> > get eliminates the problem.
+On Mon, May 18, 2020 at 09:49:30AM +0900, Steve Lee wrote:
+> Add documentation for DT binding of max98390 amplifier driver.
 > 
-> Could be, so maybe we could try both patches.
-> More debug info on the error path won't hurt.
-> Thanks,
-> Tadeusz
+> Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+> ---
+> 
+> 
+> Changed since V4:
+> 	* No changes.
+> Changed since V3:
+> 	* No changes.
+> Changed since V2:
+> 	* No changes.
+> Changed since V1:
+> 	* Modified sample text in example
 
-With your logging patch, I consistently see this message in dmesg when
-tpm2_getcap fails:
+You are obviously sending patches too quickly. Give folks a chance to 
+review.
 
-tpm tpm0: request_locality: failed to request locality 0 after 750 ms
+> 
+>  .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
 
+Bindings are now in DT schema format. Please convert this. See 
+Documentation/devicetree/writing-schema.rst
+
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
+> new file mode 100644
+> index 000000000000..0ddd4c6ae55e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/max98390.txt
+> @@ -0,0 +1,26 @@
+> +Maxim Integrated MAX98390 Speaker Amplifier
+> +
+> +This device supports I2C.
+> +
+> +Required properties:
+> +
+> + - compatible : "maxim,max98390"
+> +
+> + - reg : the I2C address of the device.
+> +
+> +Optional properties:
+> +
+> +- maxim,temperature_calib
+> +  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
+> +
+> +- maxim,r0_calib
+> +  u32. This is r0 calibration data which was measured in factory mode.
+
+Unless these are shared already with other Maxim chips, s/_/-/.
+
+> +
+> +Example:
+> +
+> +codec: max98390@38 {
+
+amplifier@38
+
+> +	compatible = "maxim,max98390";
+> +	reg = <0x38>;
+> +	maxim,temperature_calib = <1024>;
+> +	maxim,r0_calib = <100232>;
+> +};
+> -- 
+> 2.17.1
+> 
