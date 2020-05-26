@@ -2,198 +2,347 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C31FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5050920823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90F1206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:36:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pM/mrUGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388536AbgEZC2c (ORCPT
+        id S2388477AbgEZCg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 22:28:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5280 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388459AbgEZC2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 22:28:32 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E1699FB94B3AC18B0138;
-        Tue, 26 May 2020 10:28:28 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.90) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 26 May 2020
- 10:28:19 +0800
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-To:     Baoquan He <bhe@redhat.com>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <20200526014242.GF20045@MiWiFi-R3L-srv>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>, <dyoung@redhat.com>,
-        <robh+dt@kernel.org>, <John.p.donnelly@oracle.com>,
-        <arnd@arndb.de>, <devicetree@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <horms@verge.net.au>,
-        <guohanjun@huawei.com>, <pkushwaha@marvell.com>,
-        <linux-arm-kernel@lists.infradead.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <7b17448f-ab1d-1849-3302-2446f4eb8710@huawei.com>
-Date:   Tue, 26 May 2020 10:28:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 25 May 2020 22:36:56 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:33149 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388393AbgEZCgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 22:36:55 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200526023653epoutp04f8e2d64618dafb1dfc3c8ee324772427~Sc4A-T_UX0234202342epoutp04d
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:36:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200526023653epoutp04f8e2d64618dafb1dfc3c8ee324772427~Sc4A-T_UX0234202342epoutp04d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590460613;
+        bh=HqFaTe5NVZpXATL1Nqe7f4xt0FzgRmIzFDdvbUioCEQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=pM/mrUGoZnr08VOgiqeaOjmDmp1hbXYCHmML147ltYg1+QresDUg0PuDo0OgPMuL8
+         68WQztLpNDdOj7ppnRa/8kS+MXZE/XTbgQD1p2egbM5kTC18KGUsdLfCnHIsNWaoJO
+         oVQpx5B1oagYsEVN+MeuY1ihaiN51+hNcB9kwmjk=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200526023652epcas1p46ae28b94eab0a09936a325f58679d3e3~Sc4AhjgZz0637706377epcas1p4u;
+        Tue, 26 May 2020 02:36:52 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 49WJ4z44nxzMqYlm; Tue, 26 May
+        2020 02:36:51 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9D.1A.04392.3C08CCE5; Tue, 26 May 2020 11:36:51 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200526023651epcas1p130ad5c31ea73ae06835320f72351b46a~Sc3-P2hh83184931849epcas1p1S;
+        Tue, 26 May 2020 02:36:51 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200526023651epsmtrp15e42ae4d3079b7f33b6a7b6134451e3a~Sc3-PM7Uf3087530875epsmtrp1C;
+        Tue, 26 May 2020 02:36:51 +0000 (GMT)
+X-AuditID: b6c32a37-cabff70000001128-7a-5ecc80c3daf4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        08.1A.08382.3C08CCE5; Tue, 26 May 2020 11:36:51 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200526023651epsmtip1a26ffa8e963e4c1285c2fc89fc6fd1f6~Sc3-ELkjG1427214272epsmtip1i;
+        Tue, 26 May 2020 02:36:51 +0000 (GMT)
+From:   "Sungjong Seo" <sj1557.seo@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+Subject: RE: [PATCH] exfat: optimize dir-cache
+Date:   Tue, 26 May 2020 11:36:50 +0900
+Message-ID: <055a01d63306$82b13440$88139cc0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526014242.GF20045@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.90]
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQKbEd8GOCYeHYQBe/Vm0kX/gmqw5wMD/7F2pxe1QEA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTN6wzDQKwZStUrJtpO5ANIa4dSOhpwX6oSQ9QvPsAJTGi1m51C
+        cImimKq4S3CpgGAiRjTRGMImEANRUnFBQSDuQUKCCkGKiIBi24HI37n3nvPOPe89EpPdICJI
+        k9XJO6ycmSZC8armKJWqOfdZqqbarWS/ewpxtr7Bg7PtdUUE2z41jLPlIwU4O3b58GrCMFLU
+        EmxwFfwNNuQ9uU0YzlZWIIP3weLkoBRzgpHnMniHgrem2zJM1sxEeuuOtHVpungNo2KWs3pa
+        YeUsfCK9PilZtdFk9i1AK7I5c5avlcwJAr1sZYLDluXkFUab4EykeXuG2c5o7GqBswhZ1kx1
+        us2ygtFoYnU+5i6zsbu2Kdjerc95N3VEkov6YvJRCAlUHBRfrkf5KJSUUTUI8qpHMbEYRvC+
+        8c50MYqgoOpx0IzkRXMVIQ4aEORfvzqt70fQ8e17gEVQKujt/o35sZzaBDVlj3A/CaNeIsit
+        P477ByHUdrjbVoT8OJxSw4/Rfokf41QkTAyeD4il1HJ4W3FLIuIw8FztDWgxaglUDxRh4koK
+        eDgsrienVoB7tIwQOXK4dtIVyABUIQnuPz+QKFgPrZUNwSIOh68tldM4AvrPuaZxHoKzHzaL
+        4mMIKmqOEuJAC8Ner+8g0ucQBffqloltJdROFCPReC4M/jwd5KcAJYUTLplIWQq/hmrxGauO
+        sTeS84h2z4rmnhXNPSuC+79ZKcIr0HzeLlgyeYGxa2e/9wMU+J/R+hp0/0VSE6JIRM+Rsndb
+        U2VBXLawz9KEgMRouXTtc19LmsHt2887bGmOLDMvNCGd7+YvYBHz0m2+3251pjG6WK1Wy8bF
+        6+N1WnqBtLDLnCqjMjknv4fn7bxjRichQyJykfGAtydFGX98IKwudqXB9Xr3pVODfZMbTCln
+        nh6rv9U4d86XyLbOnJKJ9FUn9UomhnFLJsvVV2weFPcq+9zAePMW+c4Utq2vdIjqWdi19yKj
+        HIm++XHRwbChQ2Pqz9vWTLR6vDDSOI4eb9hcXLX2/p5Pleo18s6jjDO0saUkx3SRxgUjx0Rj
+        DoH7B+BoBdi1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSnO7hhjNxBj8us1m8OTmVxWLP3pMs
+        Fpd3zWGzuPz/E4vFsi+TWSx+TK93YPP4Muc4u0fb5H/sHs3HVrJ59G1ZxejxeZNcAGsUl01K
+        ak5mWWqRvl0CV8aNnYfYC26YV9z+38jUwPhMu4uRk0NCwETi3OFtbF2MXBxCArsZJfbtWc3c
+        xcgBlJCSOLhPE8IUljh8uBikXEjgOaPEy2tlIDabgK7Ekxs/mUFsEQF3iR0LD7CAjGEWuMgo
+        sW3/c1aImYsZJaYumgFWxSkQJLHmwhxGEFtYQE/i47eXTCA2i4CqxO93E8BqeAUsJW6tWs4E
+        YQtKnJz5hAXkCGag+raNYK3MAvIS29/OYYa4X0Fi96ejrBBHWEnM+raQDaJGRGJ2ZxvzBEbh
+        WUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAiOHi3NHYzb
+        V33QO8TIxMF4iFGCg1lJhNfp7Ok4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rw3ChfGCQmkJ5ak
+        ZqemFqQWwWSZODilGpg8U+p6zO6lXsk8oxf2XVa0SffGv6XVHd6Teezce6JKQ1L2v7x34OGL
+        yC3y8bPm7ug3k3kyecsS957kx2+DqvYfib9rOEW5lLuuiFeLk80l77y9+u6UZoHKbdznfdR/
+        dW2ZsZXRYrKI1cTlyQemrl3lcyApMLbzxjb2Y3dVPNepfz545QefnVtpZ3b0tDLpA3d4j9xZ
+        M6EjZuEH98f+X01ZUpKVe/6wGyhrVzao5RzXCHm82fY13yleuYSQ2Q4l5yd4fq8/dUPlbOb3
+        ltnb/ooeP/rnwL8va7W0N57eeqzNRP2yfN88kxMPqu2/hbWInJVgTRKLfnRgZ+t9P2vpggyR
+        TvMLC69GmyfprLgtLajEUpyRaKjFXFScCACfqoQYDQMAAA==
+X-CMS-MailID: 20200526023651epcas1p130ad5c31ea73ae06835320f72351b46a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61
+References: <CGME20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61@epcas1p2.samsung.com>
+        <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baoquan,
+> Optimize directory access based on exfat_entry_set_cache.
+>  - Hold bh instead of copied d-entry.
+>  - Modify bh->data directly instead of the copied d-entry.
+>  - Write back the retained bh instead of rescanning the d-entry-set.
+> And
+>  - Remove unused cache related definitions.
+> 
+> Signed-off-by: Tetsuhiro Kohada
+> <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+> ---
+>  fs/exfat/dir.c      | 197 +++++++++++++++++---------------------------
+>  fs/exfat/exfat_fs.h |  27 +++---
+>  fs/exfat/file.c     |  15 ++--
+>  fs/exfat/inode.c    |  53 +++++-------
+>  fs/exfat/namei.c    |  14 ++--
+>  5 files changed, 124 insertions(+), 182 deletions(-)
+[snip]
+> 
+> -	es->entries[0].dentry.file.checksum = cpu_to_le16(chksum);
+> +void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+> +{
+> +	int i;
+> 
+> -	while (num_entries) {
+> -		/* write per sector base */
+> -		remaining_byte_in_sector = (1 << sb->s_blocksize_bits) -
+off;
+> -		copy_entries = min_t(int,
+> -			EXFAT_B_TO_DEN(remaining_byte_in_sector),
+> -			num_entries);
+> -		bh = sb_bread(sb, sec);
+> -		if (!bh)
+> -			goto err_out;
+> -		memcpy(bh->b_data + off,
+> -			(unsigned char *)&es->entries[0] + buf_off,
+> -			EXFAT_DEN_TO_B(copy_entries));
+> -		exfat_update_bh(sb, bh, sync);
+> -		brelse(bh);
+> -		num_entries -= copy_entries;
+> -
+> -		if (num_entries) {
+> -			/* get next sector */
+> -			if (exfat_is_last_sector_in_cluster(sbi, sec)) {
+> -				clu = exfat_sector_to_cluster(sbi, sec);
+> -				if (es->alloc_flag == ALLOC_NO_FAT_CHAIN)
+> -					clu++;
+> -				else if (exfat_get_next_cluster(sb, &clu))
+> -					goto err_out;
+> -				sec = exfat_cluster_to_sector(sbi, clu);
+> -			} else {
+> -				sec++;
+> -			}
+> -			off = 0;
+> -			buf_off += EXFAT_DEN_TO_B(copy_entries);
+> -		}
+> +	for (i = 0; i < es->num_bh; i++) {
+> +		if (es->modified)
+> +			exfat_update_bh(es->sb, es->bh[i], sync);
 
+Overall, it looks good to me.
+However, if "sync" is set, it looks better to return the result of
+exfat_update_bh().
+Of course, a tiny modification for exfat_update_bh() is also required.
 
-Thanks for your suggestions.
+> +		brelse(es->bh[i]);
+>  	}
+> -
+> -	return 0;
+> -err_out:
+> -	return -EIO;
+> +	kfree(es);
+>  }
+> 
+>  static int exfat_walk_fat_chain(struct super_block *sb, @@ -820,34
+> +786,40 @@ static bool exfat_validate_entry(unsigned int type,
+>  	}
+>  }
+> 
+> +struct exfat_dentry *exfat_get_dentry_cached(
+> +	struct exfat_entry_set_cache *es, int num) {
+> +	int off = es->start_off + num * DENTRY_SIZE;
+> +	struct buffer_head *bh = es->bh[EXFAT_B_TO_BLK(off, es->sb)];
+> +	char *p = bh->b_data + EXFAT_BLK_OFFSET(off, es->sb);
 
-You are right, some details should be made in the commit log.
+In order to prevent illegal accesses to bh and dentries, it would be better
+to check validation for num and bh.
 
+> +
+> +	return (struct exfat_dentry *)p;
+> +}
+> +
+>  /*
+>   * Returns a set of dentries for a file or dir.
+>   *
+> - * Note that this is a copy (dump) of dentries so that user should
+> - * call write_entry_set() to apply changes made in this entry set
+> - * to the real device.
+> + * Note It provides a direct pointer to bh->data via
+> exfat_get_dentry_cached().
+> + * User should call exfat_get_dentry_set() after setting 'modified' to
+> + apply
+> + * changes made in this entry set to the real device.
+>   *
+>   * in:
+[snip]
+>  	/* check if the given file ID is opened */ @@ -153,12 +151,15 @@
+> int __exfat_truncate(struct inode *inode, loff_t new_size)
+>  	/* update the directory entry */
+>  	if (!evict) {
+>  		struct timespec64 ts;
+> +		struct exfat_dentry *ep, *ep2;
+> +		struct exfat_entry_set_cache *es;
+> 
+>  		es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
+> -				ES_ALL_ENTRIES, &ep);
+> +				ES_ALL_ENTRIES);
+>  		if (!es)
+>  			return -EIO;
+> -		ep2 = ep + 1;
+> +		ep = exfat_get_dentry_cached(es, 0);
+> +		ep2 = exfat_get_dentry_cached(es, 1);
+> 
+>  		ts = current_time(inode);
+>  		exfat_set_entry_time(sbi, &ts,
+> @@ -185,10 +186,8 @@ int __exfat_truncate(struct inode *inode, loff_t
+> new_size)
+>  			ep2->dentry.stream.start_clu = EXFAT_FREE_CLUSTER;
+>  		}
+> 
+> -		if (exfat_update_dir_chksum_with_entry_set(sb, es,
+> -		    inode_needs_sync(inode)))
+> -			return -EIO;
+> -		kfree(es);
+> +		exfat_update_dir_chksum_with_entry_set(es);
+> +		exfat_free_dentry_set(es, inode_needs_sync(inode));
 
-Thanks,
+It would be better to return the result of exfat_free_dentry_set().
 
-Chen Zhou
+>  	}
+> 
+>  	/* cut off from the FAT chain */
+> diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c index
+> 3f367d081cd6..ef7cf7a6d187 100644
+> --- a/fs/exfat/inode.c
+> +++ b/fs/exfat/inode.c
+> @@ -19,7 +19,6 @@
+> 
+>  static int __exfat_write_inode(struct inode *inode, int sync)  {
+> -	int ret = -EIO;
+>  	unsigned long long on_disk_size;
+>  	struct exfat_dentry *ep, *ep2;
+>  	struct exfat_entry_set_cache *es = NULL; @@ -43,11 +42,11 @@ static
+> int __exfat_write_inode(struct inode *inode, int sync)
+>  	exfat_set_vol_flags(sb, VOL_DIRTY);
+> 
+>  	/* get the directory entry of given file or directory */
+> -	es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry, ES_ALL_ENTRIES,
+> -		&ep);
+> +	es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
+> ES_ALL_ENTRIES);
+>  	if (!es)
+>  		return -EIO;
+> -	ep2 = ep + 1;
+> +	ep = exfat_get_dentry_cached(es, 0);
+> +	ep2 = exfat_get_dentry_cached(es, 1);
+> 
+>  	ep->dentry.file.attr = cpu_to_le16(exfat_make_attr(inode));
+> 
+> @@ -77,9 +76,9 @@ static int __exfat_write_inode(struct inode *inode, int
+> sync)
+>  	ep2->dentry.stream.valid_size = cpu_to_le64(on_disk_size);
+>  	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
+> 
+> -	ret = exfat_update_dir_chksum_with_entry_set(sb, es, sync);
+> -	kfree(es);
+> -	return ret;
+> +	exfat_update_dir_chksum_with_entry_set(es);
+> +	exfat_free_dentry_set(es, sync);
 
+Ditto
 
-On 2020/5/26 9:42, Baoquan He wrote:
-> On 05/21/20 at 05:38pm, Chen Zhou wrote:
->> This patch series enable reserving crashkernel above 4G in arm64.
->>
->> There are following issues in arm64 kdump:
->> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
->> when there is no enough low memory.
->> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
->> in this case, if swiotlb or DMA buffers are required, crash dump kernel
->> will boot failure because there is no low memory available for allocation.
->>
->> To solve these issues, introduce crashkernel=X,low to reserve specified
->> size low memory.
->> Crashkernel=X tries to reserve memory for the crash dump kernel under
->> 4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
->> size low memory for crash kdump kernel devices firstly and then reserve
->> memory above 4G.
->>
->> When crashkernel is reserved above 4G in memory, that is, crashkernel=X,low
->> is specified simultaneously, kernel should reserve specified size low memory
->> for crash dump kernel devices. So there may be two crash kernel regions, one
->> is below 4G, the other is above 4G.
->> In order to distinct from the high region and make no effect to the use of
->> kexec-tools, rename the low region as "Crash kernel (low)", and add DT property
->> "linux,low-memory-range" to crash dump kernel's dtb to pass the low region.
->>
->> Besides, we need to modify kexec-tools:
->> arm64: kdump: add another DT property to crash dump kernel's dtb(see [1])
->>
->> The previous changes and discussions can be retrieved from:
->>
->> Changes since [v7]
->> - Move x86 CRASH_ALIGN to 2M
->> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
-> OK, moving x86 CRASH_ALIGN to 2M is suggested by Dave. Because
-> CONFIG_PHYSICAL_ALIGN can be selected from 2M to 16M. So 2M seems good.
-> But, anyway, we should tell the reason why it need be changed in commit
-> log.
->
->
-> arch/x86/Kconfig:
-> config PHYSICAL_ALIGN
->         hex "Alignment value to which kernel should be aligned"
->         default "0x200000"
->         range 0x2000 0x1000000 if X86_32
->         range 0x200000 0x1000000 if X86_64
->
->> - Update Documentation/devicetree/bindings/chosen.txt 
->> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt suggested by Arnd.
->> - Add Tested-by from Jhon and pk
->>
->> Changes since [v6]
->> - Fix build errors reported by kbuild test robot.
->>
->> Changes since [v5]
->> - Move reserve_crashkernel_low() into kernel/crash_core.c.
->> - Delete crashkernel=X,high.
-> And the crashkernel=X,high being deleted need be told too. Otherwise
-> people reading the commit have to check why themselves. I didn't follow
-> the old version, can't see why ,high can't be specified explicitly.
->
->> - Modify crashkernel=X,low.
->> If crashkernel=X,low is specified simultaneously, reserve spcified size low
->> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
->> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
->> pass to crash dump kernel by DT property "linux,low-memory-range".
->> - Update Documentation/admin-guide/kdump/kdump.rst.
->>
->> Changes since [v4]
->> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
->>
->> Changes since [v3]
->> - Add memblock_cap_memory_ranges back for multiple ranges.
->> - Fix some compiling warnings.
->>
->> Changes since [v2]
->> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
->> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
->> patch.
->>
->> Changes since [v1]:
->> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
->> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
->> in fdt_enforce_memory_region().
->> There are at most two crash kernel regions, for two crash kernel regions
->> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
->> and then remove the memory range in the middle.
->>
->> [1]: http://lists.infradead.org/pipermail/kexec/2020-May/025128.html
->> [v1]: https://lkml.org/lkml/2019/4/2/1174
->> [v2]: https://lkml.org/lkml/2019/4/9/86
->> [v3]: https://lkml.org/lkml/2019/4/9/306
->> [v4]: https://lkml.org/lkml/2019/4/15/273
->> [v5]: https://lkml.org/lkml/2019/5/6/1360
->> [v6]: https://lkml.org/lkml/2019/8/30/142
->> [v7]: https://lkml.org/lkml/2019/12/23/411
->>
->> Chen Zhou (5):
->>   x86: kdump: move reserve_crashkernel_low() into crash_core.c
->>   arm64: kdump: reserve crashkenel above 4G for crash dump kernel
->>   arm64: kdump: add memory for devices by DT property, low-memory-range
->>   kdump: update Documentation about crashkernel on arm64
->>   dt-bindings: chosen: Document linux,low-memory-range for arm64 kdump
->>
->>  Documentation/admin-guide/kdump/kdump.rst     | 13 ++-
->>  .../admin-guide/kernel-parameters.txt         | 12 ++-
->>  Documentation/devicetree/bindings/chosen.txt  | 25 ++++++
->>  arch/arm64/kernel/setup.c                     |  8 +-
->>  arch/arm64/mm/init.c                          | 61 ++++++++++++-
->>  arch/x86/kernel/setup.c                       | 66 ++------------
->>  include/linux/crash_core.h                    |  3 +
->>  include/linux/kexec.h                         |  2 -
->>  kernel/crash_core.c                           | 85 +++++++++++++++++++
->>  kernel/kexec_core.c                           | 17 ----
->>  10 files changed, 208 insertions(+), 84 deletions(-)
->>
->> -- 
->> 2.20.1
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
->
-> .
->
+> +	return 0;
+>  }
+> 
+>  int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
+> @@ -110,8 +109,6 @@ static int exfat_map_cluster(struct inode *inode,
+> unsigned int clu_offset,
+>  	int ret, modified = false;
+>  	unsigned int last_clu;
+>  	struct exfat_chain new_clu;
+> -	struct exfat_dentry *ep;
+> -	struct exfat_entry_set_cache *es = NULL;
+>  	struct super_block *sb = inode->i_sb;
+>  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+>  	struct exfat_inode_info *ei = EXFAT_I(inode); @@ -222,34 +219,28 @@
+> static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+>  		num_clusters += num_to_be_allocated;
+>  		*clu = new_clu.dir;
+> 
+[snip]
+> -
+> -			if (exfat_update_dir_chksum_with_entry_set(sb, es,
+> -			    inode_needs_sync(inode)))
+> -				return -EIO;
+> -			kfree(es);
+> +			ep->dentry.stream.flags = ei->flags;
+> +			ep->dentry.stream.start_clu =
+> +				cpu_to_le32(ei->start_clu);
+> +			ep->dentry.stream.valid_size =
+> +				cpu_to_le64(i_size_read(inode));
+> +			ep->dentry.stream.size =
+> +				ep->dentry.stream.valid_size;
+> +
+> +			exfat_update_dir_chksum_with_entry_set(es);
+> +			exfat_free_dentry_set(es, inode_needs_sync(inode));
+
+Ditto
+
+> 
+>  		} /* end of if != DIR_DELETED */
+> 
+[snip]
+> --
+> 2.25.0
 
 
