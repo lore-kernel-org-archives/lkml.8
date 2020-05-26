@@ -2,154 +2,191 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5057C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A60C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C175220870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590474555;
-	bh=1bi6tm/grFse4a4MPlt1A7X1cCrCLhJ1NkOLAEX78B4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tUdXwpLdxrBiQKeyM8UElrBdFDniX3wqChLPu/1PhwkWVuyGDsj/VdFFOt36U4a/f
-	 vALvQX1hyk9BS/HfHp8x4a2Q1RETKUfXdGoYPTJ+SByCtmyeGAxS1AX0DT6T1/VfXb
-	 aImypMbLfyUs4rgqND7blYgAwNTgcO3uWrEY5raQ=
+	by mail.kernel.org (Postfix) with ESMTP id CF9812073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:31:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k6zLAtug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgEZG3O (ORCPT
+        id S1730107AbgEZGbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbgEZG3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:29:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 26 May 2020 02:31:24 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21061 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726750AbgEZGbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 02:31:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590474681; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Z3frdJL/Om4AQkZCuaqLndOFOJJ7lNBDzBIioM+V9gs=;
+ b=k6zLAtugZ2c2epg0NID/kbmNF0OzJRz5oMN+c2Lfrsre2x+ddnq9QU3TZExryzQ6gG+vJRu/
+ 9Ra8trumNxKTYiyvbvCpeihjpgEuCdGowOnV5bDXE+lzJLhWlMq+aDHnQMs/pi+1EyrINO0F
+ AoFOvqyI2cWgQtDSWzk+4POR5aM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eccb7af.7f93aff7bab0-smtp-out-n04;
+ Tue, 26 May 2020 06:31:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A510AC433CA; Tue, 26 May 2020 06:31:11 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16BB720776;
-        Tue, 26 May 2020 06:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590474553;
-        bh=1bi6tm/grFse4a4MPlt1A7X1cCrCLhJ1NkOLAEX78B4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CEuTqWd4htM5rnZTZTTs7KjKExi5VbYKBm7qjorcqYoryx9oIiphApHho10cGGRx1
-         Agdy03TJrym0qVFbxxU2kgMBIDkJOHcnJgvbjQZYdBkFwW6o+19JoZVo6t3t9emwV5
-         or6ZS+9iyvwILaw2rAQlwIx6oF1sf7bVQ4nh8a5M=
-Date:   Tue, 26 May 2020 08:29:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sanjay R Mehta <sanmehta@amd.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Sanjay R Mehta <Sanju.Mehta@amd.com>,
-        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
-        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
-        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dmaengine: ptdma: Initial driver for the AMD
- PTDMA controller
-Message-ID: <20200526062911.GA2578492@kroah.com>
-References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
- <1588108416-49050-2-git-send-email-Sanju.Mehta@amd.com>
- <20200504055539.GJ1375924@vkoul-mobl>
- <f016a02b-ebc4-6280-dff4-25e189ff2d49@amd.com>
+        (Authenticated sender: dikshita)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D0DEFC433C6;
+        Tue, 26 May 2020 06:31:10 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f016a02b-ebc4-6280-dff4-25e189ff2d49@amd.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 26 May 2020 12:01:10 +0530
+From:   dikshita@codeaurora.org
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        Hans Verkuil <hverkuil@xs4all.nl>, sakari.ailus@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org,
+        linux-media-owner@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] METADATA design using V4l2 Request API
+In-Reply-To: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
+References: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
+Message-ID: <66208196d7668fe184f6c9d8c6c69c8b@codeaurora.org>
+X-Sender: dikshita@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:35:02AM +0530, Sanjay R Mehta wrote:
-> Apologies for my delayed response.
+Hi,
+
+A gentle reminder for the review.
+
+On 2020-05-08 11:51, Dikshita Agarwal wrote:
+> There are many commercialized video use cases which needs metadata info
+> to be circulated between v4l2 client and v4l2 driver.
 > 
-> >> +#include <linux/module.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/pci.h>
-> >> +#include <linux/dma-mapping.h>
-> >> +#include <linux/interrupt.h>
-> >> +
-> >> +#include "ptdma.h"
-> >> +
-> >> +static int cmd_queue_length = 32;
-> >> +module_param(cmd_queue_length, uint, 0644);
-> >> +MODULE_PARM_DESC(cmd_queue_length,
-> >> +              " length of the command queue, a power of 2 (2 <= val <= 128)");
-> > 
-> > Any reason for this as module param? who will configure this and how?
-> > 
-> The command queue length can be from 2 to 64K command.
-> Therefore added as module parameter to allow the length of the queue to be specified at load time.
-
-Please no, this is not the 1990's.  No one can use them easily, make
-this configurable on a per-device basis if you really need to be able to
-change this.
-
-But step back, why do you need to change this at all?  Why do you have a
-limit and why can you not just do this dynamically?  The goal here
-should not have any user-changable options at all, it should "just
-work".
-
-> >> + * List of PTDMAs, PTDMA count, read-write access lock, and access functions
-> >> + *
-> >> + * Lock structure: get pt_unit_lock for reading whenever we need to
-> >> + * examine the PTDMA list. While holding it for reading we can acquire
-> >> + * the RR lock to update the round-robin next-PTDMA pointer. The unit lock
-> >> + * must be acquired before the RR lock.
-> >> + *
-> >> + * If the unit-lock is acquired for writing, we have total control over
-> >> + * the list, so there's no value in getting the RR lock.
-> >> + */
-> >> +static DEFINE_RWLOCK(pt_unit_lock);
-> >> +static LIST_HEAD(pt_units);
-> >> +
-> >> +static struct pt_device *pt_rr;
-> > 
-> > why do we need these globals and not in driver context?
-> > 
-> The AMD SOC has multiple PT controller's with the same PCI device ID and hence the same driver is probed for each instance.
-> The driver stores the pt_device context of each PT controller in this global list.
-
-That's horrid and not needed at all.  No driver should have a static
-list anymore, again, this isn't the 1990's :)
-
-> >> +static void pt_add_device(struct pt_device *pt)
-> >> +{
-> >> +     unsigned long flags;
-> >> +
-> >> +     write_lock_irqsave(&pt_unit_lock, flags);
-> >> +     list_add_tail(&pt->entry, &pt_units);
-> >> +     if (!pt_rr)
-> >> +             /*
-> >> +              * We already have the list lock (we're first) so this
-> >> +              * pointer can't change on us. Set its initial value.
-> >> +              */
-> >> +             pt_rr = pt;
-> >> +     write_unlock_irqrestore(&pt_unit_lock, flags);
-> >> +}
-> > 
-> > Can you please explain what do you mean by having a list of devices and
-> > why are we adding/removing dynamically?
-> > 
-> Since AMD SOC has many PT controller's with the same PCI device ID and
-> hence the same driver probed for initialization of each PT controller device instance.
-
-That's fine, PCI drivers should all work on a per-device basis and not
-care if there are 1, or 1000 of the same device in the system.
-
-> Also, the number of PT controller varies for different AMD SOC's.
-
-Again, that's fine.
-
-> Therefore the dynamic adding/removing of each PT controller context to global device list implemented.
-
-Such a list should never be needed, unless you are doing something
-really wrong.  Please remove it and use the proper PCI device driver
-apis for your individual instances instead.
-
-thanks,
-
-greg k-h
+> METADATA has following requirements associated:
+> •Metadata is an optional info available for a buffer. It is not
+> mandatorily for every buffer.
+>  For ex. consider metadata ROI (Region Of Interest). ROI is specified
+> by clients to indicate
+>  the region where enhanced quality is desired. This metadata is given
+> as an input information
+>  to encoder output plane. Client may or may not specify the ROI for a
+> frame during encode as
+>  an input metadata. Also if the client has not provided ROI metadata
+> for a given frame,
+>  it would be incorrect to take the metadata from previous frame. If the 
+> data and
+>  metadata is asynchronous, it would be difficult for hardware to decide 
+> if it
+>  needs to wait for metadata buffer or not before processing the input
+> frame for encoding.
+> •Synchronize the buffer requirement across both the video node/session
+>  (incase metadata is being processed as a separate v4l2 video 
+> node/session).
+>  This is to avoid buffer starvation.
+> •Associate the metadata buffer with the data buffer without adding any
+> pipeline delay
+>  in waiting for each other. This is applicable both at the hardware
+> side (the processing end)
+>  and client side (the receiving end).
+> •Low latency usecases like WFD/split rendering/game streaming/IMS have
+> sub-50ms e2e latency
+>  requirements, and it is not practical to stall the pipeline due to
+> inherent framework latencies.
+>  High performance usecase like high-frame rate playback/record can
+> lead to frame loss during any pipeline latency.
+> 
+> To address all above requirements, we used v4l2 Request API as 
+> interlace.
+> 
+> As an experiment, We have introduced new control
+> V4L2_CID_MPEG_VIDEO_VENUS_METADATA
+> to contain the METADATA info. Exact controls can be finalized once the
+> interface is discussed.
+> 
+> For setting metadata from userspace to kernel, let say on encode output 
+> plane,
+> following code sequence was followed
+> 1. Video driver is registering for media device and creating a media
+> node in /dev
+> 2. Request fd is allocated by calling MEDIA_IOC_REQUEST_ALLOC IOCTL on 
+> media fd.
+> 3. METADATA configuration is being applied on request fd using
+> VIDIOC_S_EXT_CTRLS IOCTL
+>    and the same request fd is added to buf structure structure before
+> calling VIDIOC_QBUF on video fd.
+> 4. The same request is queued through MEDIA_REQUEST_IOC_QUEUE IOCTL to
+> driver then, as a result
+>    to which METADATA control will be applied to buffer through S_CTRL.
+> 5. Once control is applied and request is completed,
+> MEDIA_REQUEST_IOC_REINIT IOCTL is called
+>    to re-initialize the request.
+> 
+> We could achieve the same on capture plane as well by removing few
+> checks present currently
+> in v4l2 core which restrict the implementation to only output plane.
+> 
+> We profiled below data with this implementation :
+> 1. Total time taken ( round trip ) for setting up control data on video 
+> driver
+>    with VIDIOC_S_EXT_CTRLS, QBUF and Queue Request: 737us
+> 2. Time taken for first QBUF on Output plane to reach driver with
+> REQUEST API enabled (One way): 723us
+> 3. Time taken for first QBUF on Output plane to reach driver without
+> REQUEST API (One way) : 250us
+> 4. Time taken by each IOCTL to complete ( round trip ) with REQUEST
+> API enabled :
+>     a. VIDIOC_S_EXT_CTRLS : 201us
+>     b. VIDIOC_QBUF : 92us
+>     c. MEDIA_REQUEST_IOC_QUEUE: 386us
+> 
+> Kindly share your feedback/comments on the design/call sequence.
+> Also as we experimented and enabled the metadata on capture plane as
+> well, please comment if any issue in
+> allowing the metadata exchange on capture plane as well.
+> 
+> Reference for client side implementation can be found at [1].
+> 
+> Thanks,
+> Dikshita
+> 
+> [1]
+> https://git.linaro.org/people/stanimir.varbanov/v4l2-encode.git/log/?h=dikshita/request-api
+> 
+> Dikshita Agarwal (3):
+>   Register for media device
+>     - Initialize and register for media device
+>     - define venus_m2m_media_ops
+>     - Implement APIs to register/unregister media controller.
+>   Enable Request API for output buffers
+>     - Add dependency on MEDIA_CONTROLLER_REQUEST_API in Kconfig.
+>     - Initialize vb2 ops buf_out_validate and buf_request_complete.
+>     - Add support for custom Metadata control
+> V4L2_CID_MPEG_VIDEO_VENUS_METADATA
+>     - Implemeted/Integrated APIs for Request setup/complete.
+>   Enable Request API for Capture Buffers
+> 
+>  drivers/media/common/videobuf2/videobuf2-v4l2.c |   4 +-
+>  drivers/media/platform/Kconfig                  |   2 +-
+>  drivers/media/platform/qcom/venus/core.h        |  36 ++++
+>  drivers/media/platform/qcom/venus/helpers.c     | 247 
+> +++++++++++++++++++++++-
+>  drivers/media/platform/qcom/venus/helpers.h     |  15 ++
+>  drivers/media/platform/qcom/venus/venc.c        |  63 +++++-
+>  drivers/media/platform/qcom/venus/venc_ctrls.c  |  61 +++++-
+>  drivers/media/v4l2-core/v4l2-ctrls.c            |  10 +
+>  drivers/media/v4l2-core/v4l2-mem2mem.c          |  17 +-
+>  include/media/v4l2-ctrls.h                      |   1 +
+>  include/media/venus-ctrls.h                     |  22 +++
+>  11 files changed, 465 insertions(+), 13 deletions(-)
+>  create mode 100644 include/media/venus-ctrls.h
