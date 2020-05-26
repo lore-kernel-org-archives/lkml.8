@@ -2,52 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9066C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F51C20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAC220873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520130;
-	bh=Pb3w8EfsuE0U2OZBSl6Xdlzscep5epzAj1g46ZuRWZs=;
+	s=default; t=1590520133;
+	bh=XFGAr/yVdP6a32+0QjjFLnsP3iMu2ZOO/HMkOvz2H2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OSSqxMlrWC6M63JP9u3V+KB7KKvLdFKSFxb359lr9tXqjzsKHmDjGl0FtTWYb/iSE
-	 C0uEGskD5fnpyt/jC61053CG6vM4AP7zND83O65DJq7usC+aBd65//wfYTA3bDN/16
-	 SvotE9bvclhtPqyrorAp7o1PwYSxG5EVNT1RfGPw=
+	b=HifWck3h/L5JLID+j8IFQBv46mLMkctS9fU7/eBpo4BvL4WbadkDOE+MtoN1cNMjV
+	 mQAOBaWYS50i+FhLuqed5jLPcaP8zWZFquDFHpVM0iWpTw+frfXT6XeC+4r/uBFPLX
+	 darxZE9LnfVz/5290q+FDrijUROxobitH+kULu0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391033AbgEZTIu (ORCPT
+        id S2403928AbgEZTIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391806AbgEZTIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:08:45 -0400
+        id S2403914AbgEZTIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C8D20776;
-        Tue, 26 May 2020 19:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADFB320873;
+        Tue, 26 May 2020 19:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520125;
-        bh=Pb3w8EfsuE0U2OZBSl6Xdlzscep5epzAj1g46ZuRWZs=;
+        s=default; t=1590520128;
+        bh=XFGAr/yVdP6a32+0QjjFLnsP3iMu2ZOO/HMkOvz2H2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IuFaiC7vmQj6z+mhYuzWds/vnuUO0dMKLXr0yIFzl6ZpbegtUGZRrXkX4mU6K63RQ
-         jMKgEmpdyFfzOIzM4YPAoYJn078VgUHS0OfiLJFMNUbtyEf6QVkhP81up3zBltHe7N
-         /rfRk5ZzHiXDONAyfg88dO8PkGtuoxEyJ9+W1a0o=
+        b=a+HDDuknKw8kWUBfArTlNFiA3/aNLWRsqGiuQGdQbqgz0EaZg76ECSfwSO25xFS4+
+         j4XPgsKsmU1+s4mbiOEJli4DBP7Ay9lDZxHo5DOUXLgApGU8loT9VBXyB1e+6VB3Pg
+         /tMltBfhuq8cJgAw6OpsE5JPB6u072vVk1/8S9Fg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 5.4 067/111] apparmor: fix potential label refcnt leak in aa_change_profile
-Date:   Tue, 26 May 2020 20:53:25 +0200
-Message-Id: <20200526183939.201163831@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 032/111] HID: i2c-hid: reset Synaptics SYNA2393 on resume
+Date:   Tue, 26 May 2020 20:52:50 +0200
+Message-Id: <20200526183935.860166811@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,51 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
 
-commit a0b845ffa0d91855532b50fc040aeb2d8338dca4 upstream.
+[ Upstream commit 538f67407e2c0e5ed2a46e7d7ffa52f2e30c7ef8 ]
 
-aa_change_profile() invokes aa_get_current_label(), which returns
-a reference of the current task's label.
+On the Dell XPS 9570, the Synaptics SYNA2393 touchpad generates spurious
+interrupts after resuming from suspend until it receives some input or
+is reset. Add it to the quirk I2C_HID_QUIRK_RESET_ON_RESUME so that it
+is reset when resuming from suspend.
 
-According to the comment of aa_get_current_label(), the returned
-reference must be put with aa_put_label().
-However, when the original object pointed by "label" becomes
-unreachable because aa_change_profile() returns or a new object
-is assigned to "label", reference count increased by
-aa_get_current_label() is not decreased, causing a refcnt leak.
+More information about the bug can be found in this mailing list
+discussion: https://www.spinics.net/lists/linux-input/msg59530.html
 
-Fix this by calling aa_put_label() before aa_change_profile() return
-and dropping unnecessary aa_get_current_label().
-
-Fixes: 9fcf78cca198 ("apparmor: update domain transitions that are subsets of confinement at nnp")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Daniel Playfair Cal <daniel.playfair.cal@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/domain.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/hid/hid-ids.h              | 3 +++
+ drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
+ 2 files changed, 5 insertions(+)
 
---- a/security/apparmor/domain.c
-+++ b/security/apparmor/domain.c
-@@ -1334,6 +1334,7 @@ int aa_change_profile(const char *fqname
- 		ctx->nnp = aa_get_label(label);
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 48eba9c4f39a..3341133df3a8 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1089,6 +1089,9 @@
+ #define USB_DEVICE_ID_SYMBOL_SCANNER_2	0x1300
+ #define USB_DEVICE_ID_SYMBOL_SCANNER_3	0x1200
  
- 	if (!fqname || !*fqname) {
-+		aa_put_label(label);
- 		AA_DEBUG("no profile name");
- 		return -EINVAL;
- 	}
-@@ -1352,8 +1353,6 @@ int aa_change_profile(const char *fqname
- 			op = OP_CHANGE_PROFILE;
- 	}
- 
--	label = aa_get_current_label();
--
- 	if (*fqname == '&') {
- 		stack = true;
- 		/* don't have label_parse() do stacking */
++#define I2C_VENDOR_ID_SYNAPTICS     0x06cb
++#define I2C_PRODUCT_ID_SYNAPTICS_SYNA2393   0x7a13
++
+ #define USB_VENDOR_ID_SYNAPTICS		0x06cb
+ #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001
+ #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 479934f7d241..b525b2715e07 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -179,6 +179,8 @@ static const struct i2c_hid_quirks {
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_RESET_ON_RESUME },
++	{ I2C_VENDOR_ID_SYNAPTICS, I2C_PRODUCT_ID_SYNAPTICS_SYNA2393,
++		 I2C_HID_QUIRK_RESET_ON_RESUME },
+ 	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
+ 		I2C_HID_QUIRK_BAD_INPUT_SIZE },
+ 	{ 0, 0 }
+-- 
+2.25.1
+
 
 
