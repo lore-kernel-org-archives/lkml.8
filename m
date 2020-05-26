@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7178CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2931C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52CB6208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84661208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520445;
-	bh=h3nanM41ukwymtF8exi7HnqTu4nfJo7K4MCWXtWxfmo=;
+	s=default; t=1590520450;
+	bh=kQNd34cmik6TcoAVHlkHhkO1e2MtsAltfeIAfLZeifU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1t8AnKItZz3Sk4McV40skr3O9PQwD8voP/r0GoL9BUquC8M1xH1rF/Rlmkm8HEhvP
-	 Ov+n/eymsNk4htHiPMnLKJT1r8FljOCewDOH2Y7fkr7car29S535vQdD4Xj0b0nKp1
-	 GEPzUMf0TyF6vnpTwDbG0W6L5OqTvnfRl9gOnAbw=
+	b=TyF6dL7YAtRF+aJDvjZOKID+ydK0YsDNmQLNBvV8JB63SToeJHe4kCbDeGQ0uHuJ4
+	 IYoJtPeTsNhw85qtwjIfV4uMvQuBsudQoU5plIuDFivbdcz7Tge8cn2EU8aWRrHZaO
+	 mrVhS/9RvJFY2sIdwOzIcWq13m0UIpWUAz8kPBMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404321AbgEZTOE (ORCPT
+        id S2392144AbgEZTOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44598 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392021AbgEZTOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:00 -0400
+        id S2392026AbgEZTOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CD65208B3;
-        Tue, 26 May 2020 19:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8560F208B8;
+        Tue, 26 May 2020 19:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520439;
-        bh=h3nanM41ukwymtF8exi7HnqTu4nfJo7K4MCWXtWxfmo=;
+        s=default; t=1590520442;
+        bh=kQNd34cmik6TcoAVHlkHhkO1e2MtsAltfeIAfLZeifU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xdcG01f27C7YVI/zibMQQb52Yr034yyMgSv74CuvCVOh+Dkm3QNjhjRVYcCNRmZSf
-         vM+rt0cSgOL8+1bA4aE2LupCmRUjTauke+KH4M4dgxIdgnlbeQpa1wwyqwMPAjaA9B
-         md068o2fM7HsUtJlHYIpmClhGRpn87YOARgV5iHY=
+        b=lj+UKqLujONiQuQXsWupvvedgmX00pPnn2hccHHUiIu2CWcQ3DpDovoaiAsgJIXV3
+         ZLHRtHPizZATjvsW11bkdHTEdHgdRiCqFOtLQNDpaXw4DtK6iVXbJYUCyPGiZwxr75
+         nsXMs2wDI7sEQsVs/1VSksQaNE1o+vDI1HJuAspY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.6 081/126] dmaengine: owl: Use correct lock in owl_dma_get_pchan()
-Date:   Tue, 26 May 2020 20:53:38 +0200
-Message-Id: <20200526183944.910317337@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 082/126] vsprintf: dont obfuscate NULL and error pointers
+Date:   Tue, 26 May 2020 20:53:39 +0200
+Message-Id: <20200526183944.975389852@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -62,98 +63,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit f8f482deb078389b42768b2193e050a81aae137d upstream.
+commit 7bd57fbc4a4ddedc664cad0bbced1b469e24e921 upstream.
 
-When the kernel is built with lockdep support and the owl-dma driver is
-used, the following message is shown:
+I don't see what security concern is addressed by obfuscating NULL
+and IS_ERR() error pointers, printed with %p/%pK.  Given the number
+of sites where %p is used (over 10000) and the fact that NULL pointers
+aren't uncommon, it probably wouldn't take long for an attacker to
+find the hash that corresponds to 0.  Although harder, the same goes
+for most common error values, such as -1, -2, -11, -14, etc.
 
-[    2.496939] INFO: trying to register non-static key.
-[    2.501889] the code is fine but needs lockdep annotation.
-[    2.507357] turning off the locking correctness validator.
-[    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-[    2.519084] Hardware name: Generic DT based system
-[    2.523878] Workqueue: events_freezable mmc_rescan
-[    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-[    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-[    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-[    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-[    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-[    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-[    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-[    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-[    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-[    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-[    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-[    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-[    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-[    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-[    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-[    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-[    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-[    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-[    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-[    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-[    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-[    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+The NULL part actually fixes a regression: NULL pointers weren't
+obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
+dereferencing invalid pointers") which went into 5.2.  I'm tacking
+the IS_ERR() part on here because error pointers won't leak kernel
+addresses and printing them as pointers shouldn't be any different
+from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
+debugging based on existing pr_debug and friends excruciating.
 
-The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+Note that the "always print 0's for %pK when kptr_restrict == 2"
+behaviour which goes way back is left as is.
 
-However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-'owl_dma_terminate_pchan()'.
+Example output with the patch applied:
 
-Therefore, this patch substitutes 'pchan->lock' with 'od->lock' and
-removes the 'lock' attribute in 'owl_dma_pchan' struct.
+                             ptr         error-ptr              NULL
+ %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
+ %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
+ %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
+ %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
+ %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
 
-Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA driver")
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Andreas Färber <afaerber@suse.de>
-Link: https://lore.kernel.org/r/c6e6cdaca252b5364bd294093673951036488cf0.1588439073.git.cristian.ciocaltea@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/owl-dma.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ lib/test_printf.c |   19 ++++++++++++++++++-
+ lib/vsprintf.c    |    7 +++++++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -175,13 +175,11 @@ struct owl_dma_txd {
-  * @id: physical index to this channel
-  * @base: virtual memory base for the dma channel
-  * @vchan: the virtual channel currently being served by this physical channel
-- * @lock: a lock to use when altering an instance of this struct
-  */
- struct owl_dma_pchan {
- 	u32			id;
- 	void __iomem		*base;
- 	struct owl_dma_vchan	*vchan;
--	spinlock_t		lock;
- };
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -214,6 +214,7 @@ test_string(void)
+ #define PTR_STR "ffff0123456789ab"
+ #define PTR_VAL_NO_CRNG "(____ptrval____)"
+ #define ZEROS "00000000"	/* hex 32 zero bits */
++#define ONES "ffffffff"		/* hex 32 one bits */
  
- /**
-@@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get
- 	for (i = 0; i < od->nr_pchans; i++) {
- 		pchan = &od->pchans[i];
+ static int __init
+ plain_format(void)
+@@ -245,6 +246,7 @@ plain_format(void)
+ #define PTR_STR "456789ab"
+ #define PTR_VAL_NO_CRNG "(ptrval)"
+ #define ZEROS ""
++#define ONES ""
  
--		spin_lock_irqsave(&pchan->lock, flags);
-+		spin_lock_irqsave(&od->lock, flags);
- 		if (!pchan->vchan) {
- 			pchan->vchan = vchan;
--			spin_unlock_irqrestore(&pchan->lock, flags);
-+			spin_unlock_irqrestore(&od->lock, flags);
- 			break;
- 		}
+ static int __init
+ plain_format(void)
+@@ -330,14 +332,28 @@ test_hashed(const char *fmt, const void
+ 	test(buf, fmt, p);
+ }
  
--		spin_unlock_irqrestore(&pchan->lock, flags);
-+		spin_unlock_irqrestore(&od->lock, flags);
- 	}
++/*
++ * NULL pointers aren't hashed.
++ */
+ static void __init
+ null_pointer(void)
+ {
+-	test_hashed("%p", NULL);
++	test(ZEROS "00000000", "%p", NULL);
+ 	test(ZEROS "00000000", "%px", NULL);
+ 	test("(null)", "%pE", NULL);
+ }
  
- 	return pchan;
++/*
++ * Error pointers aren't hashed.
++ */
++static void __init
++error_pointer(void)
++{
++	test(ONES "fffffff5", "%p", ERR_PTR(-11));
++	test(ONES "fffffff5", "%px", ERR_PTR(-11));
++	test("(efault)", "%pE", ERR_PTR(-11));
++}
++
+ #define PTR_INVALID ((void *)0x000000ab)
+ 
+ static void __init
+@@ -649,6 +665,7 @@ test_pointer(void)
+ {
+ 	plain();
+ 	null_pointer();
++	error_pointer();
+ 	invalid_pointer();
+ 	symbol_ptr();
+ 	kernel_ptr();
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -794,6 +794,13 @@ static char *ptr_to_id(char *buf, char *
+ 	unsigned long hashval;
+ 	int ret;
+ 
++	/*
++	 * Print the real pointer value for NULL and error pointers,
++	 * as they are not actual addresses.
++	 */
++	if (IS_ERR_OR_NULL(ptr))
++		return pointer_string(buf, end, ptr, spec);
++
+ 	/* When debugging early boot use non-cryptographically secure hash. */
+ 	if (unlikely(debug_boot_weak_hash)) {
+ 		hashval = hash_long((unsigned long)ptr, 32);
 
 
