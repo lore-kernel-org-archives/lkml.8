@@ -2,111 +2,97 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC40C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A81C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97AF120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520829;
-	bh=JaCI0EjPvxTb7zB7hY+YRwycZ6E2oVyJSR+v7NnznEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CkAHN5xf1yeC2+WP4caoBigK7RcuUrtg6+YPN+gUR7q3CW+E9qJ3nrBDjvsUbLFJn
-	 CRCKNsMZRh+2heks0KbHdVVe+7Bq1d+iB021JxWpMHJ7J47Vv4t+s+3yWw95CtuYU7
-	 Aew0qV7dhBKIIvI8oVlJ/kcJX/qjaLqA1QcjtDqA=
+	by mail.kernel.org (Postfix) with ESMTP id CAAB9208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gsPtEcFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391591AbgEZTM3 (ORCPT
+        id S2392455AbgEZTUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392074AbgEZTMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DEFD208A7;
-        Tue, 26 May 2020 19:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520344;
-        bh=JaCI0EjPvxTb7zB7hY+YRwycZ6E2oVyJSR+v7NnznEY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xgwrx0aKJQZjQqyi96wbxJhQMFcfSxndgG9a7Z1NM0IemQZMTOaqc+7x9xbhh28eF
-         /Qtd3YN7hZwEtW8ymqs/bzbrvsU+vvPklBLPVcu+hDFew8leSdqI3VLAR5dxSJEvQQ
-         m4GeeQIkhgEU9ejYUxTctkwdPtrLyU+vSmFhv3e4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 025/126] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Tue, 26 May 2020 20:52:42 +0200
-Message-Id: <20200526183939.830939599@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 26 May 2020 15:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392115AbgEZTUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:20:36 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095D0C03E96E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:20:36 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w10so26006303ljo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=JfF6l7LMx459ERvdO2nN2IW/+d2ZQx/5sEZb/9TJPe4=;
+        b=gsPtEcFyaZ2rKhAoYUQ6j60QBCgFTXEiJEAUvn6qAIaSzREiIsPnFBLajsfwmrMLDo
+         nxMGvK23w72VOgMobqIQk9bZ8LKvoCWGeUrmjFpyXjQJ8yP/UpQy5dDHwWKXXqWpAi/s
+         Ywk6oawv1Pf58xHRhPLJiT9ciOw2Hq1yrbqh7ze/AQF805r4TIpw5kKn5R/aFnWbaRY/
+         JO5EHJXnga7X2q5ipf0v/QGA+75vcNty9uLqyjLVcBe3F0td8Rw9uyeG9DzfB9q09IDI
+         4EEFt3FyUfteoAnyM7Tisk8CuiMuWUudyEJpwDy5+kisRbsqcmNokxeV1nletpSoFEm/
+         r8mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JfF6l7LMx459ERvdO2nN2IW/+d2ZQx/5sEZb/9TJPe4=;
+        b=mw1HDg5v5cJLdsMKO82OQnxc+rpuntS2zZI7EYXremx7sqktQ9A5cD2juuboD8xee2
+         X8+NxpGUCHDEmKGRnv+Mf6AGgpL+/0sBHNG4W4L4s15bmLhrSw0TR6B0ak9L/LNyiYt7
+         0tzxU3nZ8gcNhkmo7sn8CgoSMO9LszSMYKc7xOQfyMZLna4t1arzdKPCORxZNh7xi9Il
+         HshOU212uQ6H/FWKrPanBqQCmyB3YjQHM4MYp/1eeFObZXy4o3x3KODu+Oor0t2QleHf
+         EvvE+iPzY0fQIzrUhPfH/MJ+gX62+c4tPFHJ9c/8y9dqjmRvkn53NBfIGYgh/LSRIk+P
+         3n4A==
+X-Gm-Message-State: AOAM532TOE7zdiEH+znrrO75+9LMb67BiMHnYRKMLBs3r8iPeii1Vpzy
+        ScGdl6LoqadSBvqLKEPaygHWUqgLMvA=
+X-Google-Smtp-Source: ABdhPJzBG2M9RQOiO6jFCVOTGmhqxnYhcD27yu9YfRo3sjWafwiiyZ9QsdRlW49fl7rDD4rQ5Q3gxA==
+X-Received: by 2002:a2e:b5cf:: with SMTP id g15mr1210420ljn.212.1590520834156;
+        Tue, 26 May 2020 12:20:34 -0700 (PDT)
+Received: from localhost.localdomain ([176.59.41.83])
+        by smtp.gmail.com with ESMTPSA id i8sm180483lfo.62.2020.05.26.12.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 12:20:33 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv4 0/3] optee: register drivers on optee bus
+Date:   Tue, 26 May 2020 22:20:26 +0300
+Message-Id: <20200526192029.863-1-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
+    - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
+v3: - support tee-suppicant restart (Jens Wiklander)
+    - description and comments (Jarkko Sakkinen)
+    - do not name optee drivers by index in sysfs (Sumit Garg)
+v2: - write TEE with capital letters.
+    - declare __optee_enumerate_device() as static.
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+Maxim Uvarov (3):
+  optee: do drivers initialization before and after tee-supplicant run
+  optee: use uuid for sysfs driver entry
+  tpm_ftpm_tee: register driver on TEE bus
 
-Add support for P80H84 touchscreen from eGalaxy:
+ .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
+ MAINTAINERS                                   |  2 +
+ drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
+ drivers/tee/optee/core.c                      | 28 +++++++-
+ drivers/tee/optee/device.c                    | 23 +++---
+ drivers/tee/optee/optee_private.h             | 10 ++-
+ 6 files changed, 118 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
 
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 9f2213426556..309510a72c5e 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -385,6 +385,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
- 
- #define USB_VENDOR_ID_ELAN		0x04f3
- #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W	0x0401
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 362805ddf377..03c720b47306 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1922,6 +1922,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
 -- 
-2.25.1
-
-
+2.17.1
 
