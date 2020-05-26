@@ -2,52 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71914208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD27020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519934;
-	bh=BWfUhi6QYQqiecRQFU7Lv31BU1wSKaNQc+VwZW0cAFw=;
+	s=default; t=1590519937;
+	bh=zL1ncFwqIrkyxwUfDGOmJpigKvrIf1byzCxY4Qi79oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBm3JfQOfsbxnnOUnQATvbdNSvAdVyWQFeryM5ioE+DEW5rjdzQyRC7HYVvqA2L3L
-	 VYnJcvfFRttOysYFnoU0djiuZM7/+91c3UfQDjHDLotTez9t3mxSayEN3UFvp61xjk
-	 ffN1RXrZnAgT2KU4LO64YespEbz45ocyFhCwNR3Q=
+	b=ZCPd8gDJUIuyTmz5RrJ+WlEUpZCuWEPD0aXJzDPnJ1nXU3l6UTKze6tvcqpwh1Vc8
+	 4ipBq/E31g0g5l/aH1EhmaNtPeTo4iIJiOt14KDfwvFlhml1vdBfsk12tgscRtyfLS
+	 eXPBqB8eTHweEKPHVrk5hRmPd2QCZNgCJ9ExNeWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391509AbgEZTFd (ORCPT
+        id S2391508AbgEZTFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33328 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:05:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391501AbgEZTFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:23 -0400
+        id S2391504AbgEZTF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA76420776;
-        Tue, 26 May 2020 19:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4262A208A7;
+        Tue, 26 May 2020 19:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519923;
-        bh=BWfUhi6QYQqiecRQFU7Lv31BU1wSKaNQc+VwZW0cAFw=;
+        s=default; t=1590519928;
+        bh=zL1ncFwqIrkyxwUfDGOmJpigKvrIf1byzCxY4Qi79oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmp1CtZlDF7+QEe249B8zECTycbyCx4/d+sqPghBTZUYwk9BJFreny7Kjchqw55uo
-         DTg4hVKf2O3Lov7DOjalNtISByuqZIHssXbDeBc8keCjJ56I6hSb7KsZVK2uFqGt9c
-         6pYmKy2EkJqF2yYTPeKSEbWfkao2kMsdQ6usphGo=
+        b=RlCrTlPP2F+cgpfEsHf75sRRccO36H5uYu8R4ZCgFogmJ7PvCrryf9tdw7fwPiweB
+         TgKlppTaR95HhFfgTf3B0CvzjXnP4BCoGeQIIuOfVyiFHgj4tYrxoxKZQiefxgjapH
+         kxad7qqVPUttyj2OLBUBG9jp7xOrxSPKUtq5fahE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>
-Subject: [PATCH 4.19 71/81] ipack: tpci200: fix error return code in tpci200_register()
-Date:   Tue, 26 May 2020 20:53:46 +0200
-Message-Id: <20200526183934.932044758@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 55/81] thunderbolt: Drop duplicated get_switch_at_route()
+Date:   Tue, 26 May 2020 20:53:30 +0200
+Message-Id: <20200526183933.179031466@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,34 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 133317479f0324f6faaf797c4f5f3e9b1b36ce35 upstream.
+[ Upstream commit 8f965efd215a09c20b0b5e5bb4e20009a954472e ]
 
-Fix to return negative error code -ENOMEM from the ioremap() error handling
-case instead of 0, as done elsewhere in this function.
+tb_switch_find_by_route() does the same already so use it instead and
+remove duplicated get_switch_at_route().
 
-Fixes: 43986798fd50 ("ipack: add error handling for ioremap_nocache")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Samuel Iglesias Gonsalvez <siglesias@igalia.com>
-Link: https://lore.kernel.org/r/20200507094237.13599-1-weiyongjun1@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ipack/carriers/tpci200.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/thunderbolt/icm.c    | 12 ++++++++----
+ drivers/thunderbolt/switch.c | 18 ------------------
+ drivers/thunderbolt/tb.c     |  9 ++++++---
+ drivers/thunderbolt/tb.h     |  1 -
+ 4 files changed, 14 insertions(+), 26 deletions(-)
 
---- a/drivers/ipack/carriers/tpci200.c
-+++ b/drivers/ipack/carriers/tpci200.c
-@@ -309,6 +309,7 @@ static int tpci200_register(struct tpci2
- 			"(bn 0x%X, sn 0x%X) failed to map driver user space!",
- 			tpci200->info->pdev->bus->number,
- 			tpci200->info->pdev->devfn);
-+		res = -ENOMEM;
- 		goto out_release_mem8_space;
- 	}
+diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+index 8490a1b6b615..2b83d8b02f81 100644
+--- a/drivers/thunderbolt/icm.c
++++ b/drivers/thunderbolt/icm.c
+@@ -801,9 +801,11 @@ icm_fr_xdomain_connected(struct tb *tb, const struct icm_pkg_header *hdr)
+ 	 * connected another host to the same port, remove the switch
+ 	 * first.
+ 	 */
+-	sw = get_switch_at_route(tb->root_switch, route);
+-	if (sw)
++	sw = tb_switch_find_by_route(tb, route);
++	if (sw) {
+ 		remove_switch(sw);
++		tb_switch_put(sw);
++	}
  
+ 	sw = tb_switch_find_by_link_depth(tb, link, depth);
+ 	if (!sw) {
+@@ -1146,9 +1148,11 @@ icm_tr_xdomain_connected(struct tb *tb, const struct icm_pkg_header *hdr)
+ 	 * connected another host to the same port, remove the switch
+ 	 * first.
+ 	 */
+-	sw = get_switch_at_route(tb->root_switch, route);
+-	if (sw)
++	sw = tb_switch_find_by_route(tb, route);
++	if (sw) {
+ 		remove_switch(sw);
++		tb_switch_put(sw);
++	}
+ 
+ 	sw = tb_switch_find_by_route(tb, get_parent_route(route));
+ 	if (!sw) {
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 42d90ceec279..010a50ac4881 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -664,24 +664,6 @@ int tb_switch_reset(struct tb *tb, u64 route)
+ 	return res.err;
+ }
+ 
+-struct tb_switch *get_switch_at_route(struct tb_switch *sw, u64 route)
+-{
+-	u8 next_port = route; /*
+-			       * Routes use a stride of 8 bits,
+-			       * eventhough a port index has 6 bits at most.
+-			       * */
+-	if (route == 0)
+-		return sw;
+-	if (next_port > sw->config.max_port_number)
+-		return NULL;
+-	if (tb_is_upstream_port(&sw->ports[next_port]))
+-		return NULL;
+-	if (!sw->ports[next_port].remote)
+-		return NULL;
+-	return get_switch_at_route(sw->ports[next_port].remote->sw,
+-				   route >> TB_ROUTE_SHIFT);
+-}
+-
+ /**
+  * tb_plug_events_active() - enable/disable plug events on a switch
+  *
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index 1424581fd9af..146f261bf2c3 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -258,7 +258,7 @@ static void tb_handle_hotplug(struct work_struct *work)
+ 	if (!tcm->hotplug_active)
+ 		goto out; /* during init, suspend or shutdown */
+ 
+-	sw = get_switch_at_route(tb->root_switch, ev->route);
++	sw = tb_switch_find_by_route(tb, ev->route);
+ 	if (!sw) {
+ 		tb_warn(tb,
+ 			"hotplug event from non existent switch %llx:%x (unplug: %d)\n",
+@@ -269,14 +269,14 @@ static void tb_handle_hotplug(struct work_struct *work)
+ 		tb_warn(tb,
+ 			"hotplug event from non existent port %llx:%x (unplug: %d)\n",
+ 			ev->route, ev->port, ev->unplug);
+-		goto out;
++		goto put_sw;
+ 	}
+ 	port = &sw->ports[ev->port];
+ 	if (tb_is_upstream_port(port)) {
+ 		tb_warn(tb,
+ 			"hotplug event for upstream port %llx:%x (unplug: %d)\n",
+ 			ev->route, ev->port, ev->unplug);
+-		goto out;
++		goto put_sw;
+ 	}
+ 	if (ev->unplug) {
+ 		if (port->remote) {
+@@ -306,6 +306,9 @@ static void tb_handle_hotplug(struct work_struct *work)
+ 			tb_activate_pcie_devices(tb);
+ 		}
+ 	}
++
++put_sw:
++	tb_switch_put(sw);
+ out:
+ 	mutex_unlock(&tb->lock);
+ 	kfree(ev);
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index 7a0ee9836a8a..d927cf7b14d2 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -397,7 +397,6 @@ void tb_switch_suspend(struct tb_switch *sw);
+ int tb_switch_resume(struct tb_switch *sw);
+ int tb_switch_reset(struct tb *tb, u64 route);
+ void tb_sw_set_unplugged(struct tb_switch *sw);
+-struct tb_switch *get_switch_at_route(struct tb_switch *sw, u64 route);
+ struct tb_switch *tb_switch_find_by_link_depth(struct tb *tb, u8 link,
+ 					       u8 depth);
+ struct tb_switch *tb_switch_find_by_uuid(struct tb *tb, const uuid_t *uuid);
+-- 
+2.25.1
+
 
 
