@@ -2,57 +2,58 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4991DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F2A20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAA320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520788;
-	bh=r40xR9yky9ysUsIA1cklADwENJSC421HPJ2x8zP4sZ0=;
+	s=default; t=1590520794;
+	bh=aDrwgCU8ouEkJ6ABWOC/pRvB0wx0ZNVgq5yd+DrmsL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YjtIw+0dsKB14OJx51usN+YGWDm8pNZE2bqMwcgKcxKLr0h3mEpHyCXBcWxltdzul
-	 Ge8cK9kR5f+Ns74t+vjI3bWYQNNXjWJLYhm4bSmi4S1lGOgY0m79YUeHnHNSnPZuzC
-	 AsBTIP22UzgGDChIyXQWDaM1+Sx8tLf8d5cBZOak=
+	b=aeJ/gWttDl5WQYKz+qXz/UnJFTjGUHi3gISiymVF2xJNqZIil1YigsjwfbpRuTHvg
+	 3nvA2heoX+YnJL7hANDBYMRTZ7VgqcYkInv7oitMa9o4vGPX02vgJjfY8Ag5mkmCEE
+	 fhQBbsEMCThBYxPd1WUjZ6HAn2XkYT0ySQV9CBuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392454AbgEZTTr (ORCPT
+        id S2391899AbgEZTNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42898 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404209AbgEZTNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:10 -0400
+        id S2391996AbgEZTK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A2920776;
-        Tue, 26 May 2020 19:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3788C208A7;
+        Tue, 26 May 2020 19:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520389;
-        bh=r40xR9yky9ysUsIA1cklADwENJSC421HPJ2x8zP4sZ0=;
+        s=default; t=1590520257;
+        bh=aDrwgCU8ouEkJ6ABWOC/pRvB0wx0ZNVgq5yd+DrmsL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mMM+z/15zoeqOzduHCAiOMTXCFT5I8+asQOMIW52QfJvBM9TZzeKyNaErDJ2/U9Ze
-         q92YQfsBOOgvs5mJJgxke15Ijd8VAKukdFhaA1ZqZC2dfNPfPnHaFF48iRorxCy5jA
-         wqcSK4k4F1cQR89FDt0v/fPQ7bBBofIWsg2u8yWA=
+        b=ri/vA+HdC6Qk+F6grEbRfoPoT9vxFd/g9lu4NfdsQ2duWMIZiP14qPDgGb8EjJI3W
+         /NBvH6Q1UhtBLR3Fhf0O++w1D+J9MPEx5JFkCt9SQAI1s5+sDNdLouf/P9l6Px2A6t
+         Y+OTHTW/uaqTlbCZxf9MExhvRKttPO+d/PF+wW2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 059/126] ALSA: hda/realtek - Enable headset mic of ASUS GL503VM with ALC295
-Date:   Tue, 26 May 2020 20:53:16 +0200
-Message-Id: <20200526183943.095354809@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 5.6 001/126] i2c: dev: Fix the race between the release of i2c_dev and cdev
+Date:   Tue, 26 May 2020 20:52:18 +0200
+Message-Id: <20200526183937.602930995@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,68 +62,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-[ Upstream commit 9e43342b464f1de570a3ad8256ac77645749ef45 ]
+commit 1413ef638abae4ab5621901cf4d8ef08a4a48ba6 upstream.
 
-The ASUS laptop GL503VM with ALC295 can't detect the headset microphone.
-The headset microphone does not work until pin 0x19 is enabled for it.
+The struct cdev is embedded in the struct i2c_dev. In the current code,
+we would free the i2c_dev struct directly in put_i2c_dev(), but the
+cdev is manged by a kobject, and the release of it is not predictable.
+So it is very possible that the i2c_dev is freed before the cdev is
+entirely released. We can easily get the following call trace with
+CONFIG_DEBUG_KOBJECT_RELEASE and CONFIG_DEBUG_OBJECTS_TIMERS enabled.
+  ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x38
+  WARNING: CPU: 19 PID: 1 at lib/debugobjects.c:325 debug_print_object+0xb0/0xf0
+  Modules linked in:
+  CPU: 19 PID: 1 Comm: swapper/0 Tainted: G        W         5.2.20-yocto-standard+ #120
+  Hardware name: Marvell OcteonTX CN96XX board (DT)
+  pstate: 80c00089 (Nzcv daIf +PAN +UAO)
+  pc : debug_print_object+0xb0/0xf0
+  lr : debug_print_object+0xb0/0xf0
+  sp : ffff00001292f7d0
+  x29: ffff00001292f7d0 x28: ffff800b82151788
+  x27: 0000000000000001 x26: ffff800b892c0000
+  x25: ffff0000124a2558 x24: 0000000000000000
+  x23: ffff00001107a1d8 x22: ffff0000116b5088
+  x21: ffff800bdc6afca8 x20: ffff000012471ae8
+  x19: ffff00001168f2c8 x18: 0000000000000010
+  x17: 00000000fd6f304b x16: 00000000ee79de43
+  x15: ffff800bc0e80568 x14: 79616c6564203a74
+  x13: 6e6968207473696c x12: 5f72656d6974203a
+  x11: ffff0000113f0018 x10: 0000000000000000
+  x9 : 000000000000001f x8 : 0000000000000000
+  x7 : ffff0000101294cc x6 : 0000000000000000
+  x5 : 0000000000000000 x4 : 0000000000000001
+  x3 : 00000000ffffffff x2 : 0000000000000000
+  x1 : 387fc15c8ec0f200 x0 : 0000000000000000
+  Call trace:
+   debug_print_object+0xb0/0xf0
+   __debug_check_no_obj_freed+0x19c/0x228
+   debug_check_no_obj_freed+0x1c/0x28
+   kfree+0x250/0x440
+   put_i2c_dev+0x68/0x78
+   i2cdev_detach_adapter+0x60/0xc8
+   i2cdev_notifier_call+0x3c/0x70
+   notifier_call_chain+0x8c/0xe8
+   blocking_notifier_call_chain+0x64/0x88
+   device_del+0x74/0x380
+   device_unregister+0x54/0x78
+   i2c_del_adapter+0x278/0x2d0
+   unittest_i2c_bus_remove+0x3c/0x80
+   platform_drv_remove+0x30/0x50
+   device_release_driver_internal+0xf4/0x1c0
+   driver_detach+0x58/0xa0
+   bus_remove_driver+0x84/0xd8
+   driver_unregister+0x34/0x60
+   platform_driver_unregister+0x20/0x30
+   of_unittest_overlay+0x8d4/0xbe0
+   of_unittest+0xae8/0xb3c
+   do_one_initcall+0xac/0x450
+   do_initcall_level+0x208/0x224
+   kernel_init_freeable+0x2d8/0x36c
+   kernel_init+0x18/0x108
+   ret_from_fork+0x10/0x1c
+  irq event stamp: 3934661
+  hardirqs last  enabled at (3934661): [<ffff00001009fa04>] debug_exception_exit+0x4c/0x58
+  hardirqs last disabled at (3934660): [<ffff00001009fb14>] debug_exception_enter+0xa4/0xe0
+  softirqs last  enabled at (3934654): [<ffff000010081d94>] __do_softirq+0x46c/0x628
+  softirqs last disabled at (3934649): [<ffff0000100b4a1c>] irq_exit+0x104/0x118
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Link: https://lore.kernel.org/r/20200512061525.133985-1-jian-hong@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is a common issue when using cdev embedded in a struct.
+Fortunately, we already have a mechanism to solve this kind of issue.
+Please see commit 233ed09d7fda ("chardev: add helper function to
+register char devs with a struct device") for more detail.
+
+In this patch, we choose to embed the struct device into the i2c_dev,
+and use the API provided by the commit 233ed09d7fda to make sure that
+the release of i2c_dev and cdev are in sequence.
+
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/pci/hda/patch_realtek.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/i2c/i2c-dev.c |   48 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b377aca71cbf..f92cd420e98d 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6096,6 +6096,7 @@ enum {
- 	ALC285_FIXUP_HP_MUTE_LED,
- 	ALC236_FIXUP_HP_MUTE_LED,
- 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
-+	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -40,7 +40,7 @@
+ struct i2c_dev {
+ 	struct list_head list;
+ 	struct i2c_adapter *adap;
+-	struct device *dev;
++	struct device dev;
+ 	struct cdev cdev;
  };
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -7259,6 +7260,15 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{ }
- 		},
- 	},
-+	[ALC295_FIXUP_ASUS_MIC_NO_PRESENCE] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x01a1913c }, /* use as headset mic, without its own jack detect */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_HEADSET_MODE
-+	},
- };
+@@ -84,12 +84,14 @@ static struct i2c_dev *get_free_i2c_dev(
+ 	return i2c_dev;
+ }
  
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -8040,6 +8050,14 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
- 		{0x21, 0x03211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
-+		{0x12, 0x90a60130},
-+		{0x17, 0x90170110},
-+		{0x21, 0x03211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
-+		{0x12, 0x90a60130},
-+		{0x17, 0x90170110},
-+		{0x21, 0x03211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x04211020}),
--- 
-2.25.1
-
+-static void put_i2c_dev(struct i2c_dev *i2c_dev)
++static void put_i2c_dev(struct i2c_dev *i2c_dev, bool del_cdev)
+ {
+ 	spin_lock(&i2c_dev_list_lock);
+ 	list_del(&i2c_dev->list);
+ 	spin_unlock(&i2c_dev_list_lock);
+-	kfree(i2c_dev);
++	if (del_cdev)
++		cdev_device_del(&i2c_dev->cdev, &i2c_dev->dev);
++	put_device(&i2c_dev->dev);
+ }
+ 
+ static ssize_t name_show(struct device *dev,
+@@ -628,6 +630,14 @@ static const struct file_operations i2cd
+ 
+ static struct class *i2c_dev_class;
+ 
++static void i2cdev_dev_release(struct device *dev)
++{
++	struct i2c_dev *i2c_dev;
++
++	i2c_dev = container_of(dev, struct i2c_dev, dev);
++	kfree(i2c_dev);
++}
++
+ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
+ {
+ 	struct i2c_adapter *adap;
+@@ -644,27 +654,23 @@ static int i2cdev_attach_adapter(struct
+ 
+ 	cdev_init(&i2c_dev->cdev, &i2cdev_fops);
+ 	i2c_dev->cdev.owner = THIS_MODULE;
+-	res = cdev_add(&i2c_dev->cdev, MKDEV(I2C_MAJOR, adap->nr), 1);
+-	if (res)
+-		goto error_cdev;
+-
+-	/* register this i2c device with the driver core */
+-	i2c_dev->dev = device_create(i2c_dev_class, &adap->dev,
+-				     MKDEV(I2C_MAJOR, adap->nr), NULL,
+-				     "i2c-%d", adap->nr);
+-	if (IS_ERR(i2c_dev->dev)) {
+-		res = PTR_ERR(i2c_dev->dev);
+-		goto error;
++
++	device_initialize(&i2c_dev->dev);
++	i2c_dev->dev.devt = MKDEV(I2C_MAJOR, adap->nr);
++	i2c_dev->dev.class = i2c_dev_class;
++	i2c_dev->dev.parent = &adap->dev;
++	i2c_dev->dev.release = i2cdev_dev_release;
++	dev_set_name(&i2c_dev->dev, "i2c-%d", adap->nr);
++
++	res = cdev_device_add(&i2c_dev->cdev, &i2c_dev->dev);
++	if (res) {
++		put_i2c_dev(i2c_dev, false);
++		return res;
+ 	}
+ 
+ 	pr_debug("i2c-dev: adapter [%s] registered as minor %d\n",
+ 		 adap->name, adap->nr);
+ 	return 0;
+-error:
+-	cdev_del(&i2c_dev->cdev);
+-error_cdev:
+-	put_i2c_dev(i2c_dev);
+-	return res;
+ }
+ 
+ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
+@@ -680,9 +686,7 @@ static int i2cdev_detach_adapter(struct
+ 	if (!i2c_dev) /* attach_adapter must have failed */
+ 		return 0;
+ 
+-	cdev_del(&i2c_dev->cdev);
+-	put_i2c_dev(i2c_dev);
+-	device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
++	put_i2c_dev(i2c_dev, true);
+ 
+ 	pr_debug("i2c-dev: adapter [%s] unregistered\n", adap->name);
+ 	return 0;
 
 
