@@ -2,305 +2,178 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8885EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34165C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E602088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuwxUqpi"
+	by mail.kernel.org (Postfix) with ESMTP id 1083A208C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590531847;
+	bh=bXODFjp8Ywv103gRNHs84HK8k9PGXpcMXjSq7DT/7fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QyB2FhXgA3Lbf2NbneOCX0e5/vYQSAToBqnBJA1xjtgAuwnw3tjhUFBuT/vH0Ct5F
+	 VcJXtBNEqL20SvD499YxSJtNKX/7Dmadg7y3pu5Rn8pvP+oG805HZvhR4OP4kg5xK2
+	 q/HHP3LEoGi241qzqnssDKvPhSULZmf3ZNrPXWjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391955AbgEZWXd (ORCPT
+        id S2404106AbgEZWYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389382AbgEZWXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:23:32 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB357C061A0F;
-        Tue, 26 May 2020 15:23:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z26so10821745pfk.12;
-        Tue, 26 May 2020 15:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g70fzYswEC8HrYqT6MEAf4OLxXoMz4BqVHGqp/tb5jI=;
-        b=QuwxUqpiqAKsubBszgvzAdntvuvl+6RVP4dlKUG5jZQktdEmErRwK6l+F5VjwxVq6P
-         44A0tu4Dk5sX3Krp+K9vzk+IJoMPQ6WkOxCE+FfNz3alARAadkV+4UDE0rhT+5RQONgm
-         DZjfbcS9YprBlOH4LEw8w/M+j1qFBXpgf7RCD1/zzS1bAsav/P48luhNo4MFbisNlk6E
-         K47Db7YuA52V+mAL3HoOcJfKPF1pzEhNJy+Ga39Y1C5N6qiE0ILTQhv3BBD5YTcuCkiV
-         l1HfvO93JsxAR6vPfislP/JMFVoLNVzQlbrW7UNRlbMDlEuK+899rKRQ387zFOXaqlp3
-         LAoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g70fzYswEC8HrYqT6MEAf4OLxXoMz4BqVHGqp/tb5jI=;
-        b=ezElZzMczHHpbSQgBRMf48nnzweuzdsbd/IjZh7hPBj42AenO85nWOYOx0Oow5qDOo
-         SeXxyaUvE6MWiED/KIgDKWf+L7s5/jwBqTmWE+NIAgN1r+0fXXlzsgnrXZhBN5JIWwK/
-         1evchYfiwn6P+JuRTYdHuMgiQexpIHGLks3OkORP03ePfJ7XAcKbSOx6me901PKvb6AK
-         qrFYC0sJiwI7jWC+RMDbQngEFs3XqIxSqIVlIryz+AIFNVTVlVWPHHrEOPokxyGqPAGW
-         iNVlnqz+7PVA2r80fzkLvKfpUgFctyy2Wyc9TZti+j0psqdvkUlylcTF1ltM4NKmORr+
-         NXlg==
-X-Gm-Message-State: AOAM532v2NmjQV9r4yziYyTZhCsdPf66cyLYuCt5riGeMwpBGvEIzg3U
-        ddx6O5nBKQAGvGbA3KropzQsz92ciVc=
-X-Google-Smtp-Source: ABdhPJz/MfMI3dIM8HjADVKC8SJmSd++dFtFBjajoAEp1B8ZfQAylAu+XKAPph7dj2hODmA788+hdA==
-X-Received: by 2002:a63:504d:: with SMTP id q13mr985857pgl.330.1590531809784;
-        Tue, 26 May 2020 15:23:29 -0700 (PDT)
-Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id y18sm443907pfr.100.2020.05.26.15.23.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 15:23:29 -0700 (PDT)
-Subject: Re: Some -serious- BPF-related litmus tests
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     luc.maranget@inria.fr, Andrii Nakryiko <andriin@fb.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
-        will@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
- <20200522094407.GK325280@hirez.programming.kicks-ass.net>
- <20200522143201.GB32434@rowland.harvard.edu>
- <20200522174352.GJ2869@paulmck-ThinkPad-P72>
- <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
- <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
- <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com>
- <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com>
- <CAEf4BzajE6jCkbBQ+f0cG=Y+vAEPWGNhfOMFVVhoDZWjNV-oGA@mail.gmail.com>
- <d1113b47-a920-c0e4-9aa4-88781368a26f@gmail.com>
- <CAEf4BzZ0mCmUomn0poLk_ADJs9J-fZ0Um6QEqwg1TUL86TtgUg@mail.gmail.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <ce622dcb-9527-8450-6cc3-ed068a5313c3@gmail.com>
-Date:   Wed, 27 May 2020 07:23:24 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 18:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389382AbgEZWYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 18:24:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C7AA2088E;
+        Tue, 26 May 2020 22:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590531844;
+        bh=bXODFjp8Ywv103gRNHs84HK8k9PGXpcMXjSq7DT/7fs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j4eKyEpL1PC9SI+vCPEhpXKks0e85FglRbYocyOQmR74KWkcCEL57g+UrOFObQPnA
+         /YZfuGkJpViiBQzZ7C/dcpGVtZInnjlmRzhKGmMp5qm+TCiHxLEzCfWMxQQgn543XQ
+         KY0Cg1S3lN/p4ZAwkGzRulMSOLJWsF/nCsIGMAlM=
+Date:   Wed, 27 May 2020 00:24:02 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Alexander Graf <graf@amazon.de>
+Cc:     Andra Paraschiv <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+Message-ID: <20200526222402.GC179549@kroah.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-8-andraprs@amazon.com>
+ <20200526065133.GD2580530@kroah.com>
+ <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
+ <20200526123300.GA2798@kroah.com>
+ <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
+ <20200526131708.GA9296@kroah.com>
+ <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzZ0mCmUomn0poLk_ADJs9J-fZ0Um6QEqwg1TUL86TtgUg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 13:15:49 -0700, Andrii Nakryiko wrote:
-> On Tue, May 26, 2020 at 3:50 AM Akira Yokosawa <akiyks@gmail.com> wrote=
-:
->>
->> On Mon, 25 May 2020 16:31:05 -0700, Andrii Nakryiko wrote:
->>> On Mon, May 25, 2020 at 3:01 PM Akira Yokosawa <akiyks@gmail.com> wro=
-te:
->>>>
->> [...]
->>>> Yes, that should work.
->>>
->>> Ok, assigning to zero didn't work (it still complained about
->>> uninitialized read), but using a separate int *lenFail to assign to
->>> rLenPtr worked. Curiously, if I used rLenPtr =3D len1; in error case,=
- it
->>> actually takes a bit more time to verify.
->>>
->>> So I've converted everything else as you suggested. I compiled latest=
+On Tue, May 26, 2020 at 03:44:30PM +0200, Alexander Graf wrote:
+> 
+> 
+> On 26.05.20 15:17, Greg KH wrote:
+> > 
+> > On Tue, May 26, 2020 at 02:44:18PM +0200, Alexander Graf wrote:
+> > > 
+> > > 
+> > > On 26.05.20 14:33, Greg KH wrote:
+> > > > 
+> > > > On Tue, May 26, 2020 at 01:42:41PM +0200, Alexander Graf wrote:
+> > > > > 
+> > > > > 
+> > > > > On 26.05.20 08:51, Greg KH wrote:
+> > > > > > 
+> > > > > > On Tue, May 26, 2020 at 01:13:23AM +0300, Andra Paraschiv wrote:
+> > > > > > > +#define NE "nitro_enclaves: "
+> > > > > > 
+> > > > > > Again, no need for this.
+> > > > > > 
+> > > > > > > +#define NE_DEV_NAME "nitro_enclaves"
+> > > > > > 
+> > > > > > KBUILD_MODNAME?
+> > > > > > 
+> > > > > > > +#define NE_IMAGE_LOAD_OFFSET (8 * 1024UL * 1024UL)
+> > > > > > > +
+> > > > > > > +static char *ne_cpus;
+> > > > > > > +module_param(ne_cpus, charp, 0644);
+> > > > > > > +MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclaves");
+> > > > > > 
+> > > > > > Again, please do not do this.
+> > > > > 
+> > > > > I actually asked her to put this one in specifically.
+> > > > > 
+> > > > > The concept of this parameter is very similar to isolcpus= and maxcpus= in
+> > > > > that it takes CPUs away from Linux and instead donates them to the
+> > > > > underlying hypervisor, so that it can spawn enclaves using them.
+> > > > > 
+> > > > >   From an admin's point of view, this is a setting I would like to keep
+> > > > > persisted across reboots. How would this work with sysfs?
+> > > > 
+> > > > How about just as the "initial" ioctl command to set things up?  Don't
+> > > > grab any cpu pools until asked to.  Otherwise, what happens when you
+> > > > load this module on a system that can't support it?
+> > > 
+> > > That would give any user with access to the enclave device the ability to
+> > > remove CPUs from the system. That's clearly a CAP_ADMIN task in my book.
+> > 
+> > Ok, what's wrong with that?
+> 
+> Would you want random users to get the ability to hot unplug CPUs from your
+> system? At unlimited quantity? I don't :).
 
->>> herd7 and it doesn't produce any warnings. But it's also extremely
->>> slow, compared to the herd7 that I get by default. Validating simple
->>> 1p1c cases takes about 2.5x times longer (0.03s vs 0.07), but trying
->>> to validate 2p1c case, which normally validates in 42s (unbounded) an=
-d
->>> 110s (bounded), it took more than 20 minutes and hasn't finished,
->>> before I gave up. So I don't know what's going on there...
->>
->> herdtools7 has recently been heavily restructured.
->> On the performance regression, I must defer to Luc.
->>
->> Luc, do you have any idea?
->>
->>>
->>> As for klitmus7, I managed to generate everything without warnings,
->>> but couldn't make it build completely due to:
->>>
->>> $ make
->>> make -C /lib/modules/5.6.13-01802-g938d64da97c6/build/
->>
->> So you are on Linux 5.6.x which requires cutting-edge klitmus7.
->>
->=20
-> Right, so I retried with the klitmus7 built from sources:
->=20
-> $ klitmus7 -version
->=20
->                                     7.55+01(dev)
->=20
-> Still can't compile, though task_struct problem went away, proc_ops
-> error is still present:
->=20
-> $ make
-> grep: /lib/modules/5.7.0-rc5-02014-gb16540c748e9/build/include/linux/pr=
-oc_fs.h:
-> No such file or directory
+A random user, no, but one with admin rights, why not?  They can do that
+already today on your system, this isn't new.
 
-Hmm, have you installed kernel-headers on your system?
-You are now on Linux 5.7-rc5 based system...
+> > > Hence this whole split: The admin defines the CPU Pool, users can safely
+> > > consume this pool to spawn enclaves from it.
+> > 
+> > But having the admin define that at module load / boot time, is a major
+> > pain.  What tools do they have that allow them to do that easily?
+> 
+> The normal toolbox: editing /etc/default/grub, adding an /etc/modprobe.d/
+> file.
 
-        Thanks, Akira
+Editing grub files is horrid, come on...
 
-> make -C /lib/modules/5.7.0-rc5-02014-gb16540c748e9/build/
-> M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules module=
-s
-> make[1]: Entering directory `/data/users/andriin/linux-build/fb-config'=
+> When but at module load / boot time would you define it? I really don't want
+> to have a device node that in theory "the world" can use which then allows
+> any user on the system to hot unplug every CPU but 0 from my system.
 
-> make[2]: Entering directory `/data/users/andriin/linux-build/default-x8=
-6_64'
-> grep: /lib/modules/5.7.0-rc5-02014-gb16540c748e9/build/include/linux/pr=
-oc_fs.h:
-> No such file or directory
->   CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodules/=
-litmus000.o
-> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
-c:
-> In function =E2=80=98litmus_init=E2=80=99:
-> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
-c:621:67:
-> error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from incompa=
-tible pointer
-> type [-Werror=3Dincompatible-pointer-types]
->    struct proc_dir_entry *litmus_pde =3D
-> proc_create("litmus",0,NULL,&litmus_proc_ops);
->=20
-> ^~~~~~~~~~~~~~~~
-> In file included from
-> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus000.=
-c:15:
-> /data/users/andriin/linux/include/linux/proc_fs.h:79:24: note:
-> expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is of t=
-ype =E2=80=98const
-> struct file_operations *=E2=80=99
->  struct proc_dir_entry *proc_create(const char *name, umode_t mode,
-> struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
->                         ^~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodu=
-les/litmus000.o]
-> Error 1
-> make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymodu=
-les]
-> Error 2
-> make[2]: Leaving directory `/data/users/andriin/linux-build/default-x86=
-_64'
-> make[1]: *** [sub-make] Error 2
-> make[1]: Leaving directory `/data/users/andriin/linux-build/fb-config'
-> make: *** [all] Error 2
->=20
-> Don't know if I'm missing some headers or whatever.
->=20
->>> M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules modu=
-les
->>> make[1]: Entering directory `/data/users/andriin/linux-build/fb-confi=
-g'
->>> make[2]: Entering directory `/data/users/andriin/linux-build/default-=
-x86_64'
->>>   CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodule=
-s/litmus000.o
->>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus00=
-0.c:
->>> In function =E2=80=98zyva=E2=80=99:
->>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus00=
-0.c:507:12:
->>> warning: ISO C90 forbids variable length array =E2=80=98th=E2=80=99 [=
--Wvla]
->>>      struct task_struct *th[nth];
->>>             ^~~~~~~~~~~
->>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus00=
-0.c:
->>> In function =E2=80=98litmus_init=E2=80=99:
->>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus00=
-0.c:605:67:
->>> error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from incom=
-patible pointer
->>> type [-Werror=3Dincompatible-pointer-types]
->>>    struct proc_dir_entry *litmus_pde =3D
->>> proc_create("litmus",0,NULL,&litmus_proc_fops);
->>>
->>> ^~~~~~~~~~~~~~~~~
->>> In file included from
->>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus00=
-0.c:15:
->>> /data/users/andriin/linux-fb/include/linux/proc_fs.h:64:24: note:
->>> expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is of=
- type =E2=80=98const
->>> struct file_operations *=E2=80=99
->>>  struct proc_dir_entry *proc_create(const char *name, umode_t mode,
->>> struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
->>>                         ^~~~~~~~~~~
->>> cc1: some warnings being treated as errors
->>> make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymo=
-dules/litmus000.o]
->>> Error 1
->>> make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mymo=
-dules]
->>> Error 2
->>> make[2]: Leaving directory `/data/users/andriin/linux-build/default-x=
-86_64'
->>> make[1]: *** [sub-make] Error 2
->>> make[1]: Leaving directory `/data/users/andriin/linux-build/fb-config=
-'
->>> make: *** [all] Error 2
->>>
->>
->> These errors suggest the klitmus7 you used is version 7.52 or some suc=
-h.
->> You said you have built herd7 from the source.  Have you also built kl=
-itmus7?
->=20
-> I did, but it wasn't in the PATH. I retried with latest klitmus7 and
-> still run into problems.
->=20
->>
->> The up-to-date klitmus7 should generate code compatible with Linux 5.6=
-=2Ex.
->>
->> Could you try with the latest one?
->>
->>         Thanks, Akira
->>
->>>
->>> But at least it doesn't complain about atomic_t anymore. So anyways,
->>> I'm going to post updated litmus tests separately from BPF ringbuf
->>> patches, because Documentation/litmus-tests is not yet present in
->>> bpf-next.
->>>
->>>>
->>>> You can find a basic introduction of klitmus7 in tools/memory-model/=
-README.
->>>>
->>>>         Thanks, Akira
->>>>
->>>>>
->>>>>>
->>>>>> Please note that if you are on Linux 5.6 (or later), you need an u=
-p-to-date
->>>>>> klitmus7 due to a change in kernel API.
->>>>>>
->>>>>> Any question is welcome!
->>>>>>
->>>>>>         Thanks, Akira
->>>>>>
->>>
->>> [...]
->>>
->>
+But you have that already when the PCI device is found, right?  What is
+the initial interface to the driver?  What's wrong with using that?
 
+Or am I really missing something as to how this all fits together with
+the different pieces?  Seeing the patches as-is doesn't really provide a
+good overview, sorry.
+
+> > > So I really don't think an ioctl would be a great user experience. Same for
+> > > a sysfs file - although that's probably slightly better than the ioctl.
+> > 
+> > You already are using ioctls to control this thing, right?  What's wrong
+> > with "one more"? :)
+> 
+> So what we *could* do is add an ioctl to set the pool size which then does a
+> CAP_ADMIN check. That however means you now are in priority hell:
+> 
+> A user that wants to spawn an enclave as part of an nginx service would need
+> to create another service to set the pool size and indicate the dependency
+> in systemd control files.
+> 
+> Is that really better than a module parameter?
+
+module parameters are hard to change, and manage control over who really
+is changing them.
+
+thanks,
+
+greg k-h
