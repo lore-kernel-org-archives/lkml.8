@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A6320776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CA8208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520170;
-	bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
+	s=default; t=1590520174;
+	bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eVTxrs1nXksBwrFhk3vNFjtGbpSyqewYdbKpzb2DM7cP745Uw9bn++fOwlo1nrCE9
-	 f/RJ4fIPGj/e1Qs3QTJtqPT9r7SJDbyX1oz+MkyK4/apKFRWUZ5hIClrw0kEayjJMZ
-	 Vi4Ne+bSdQYGBmJ8LmoFRIH9fzVA2S5AAZzbYB/E=
+	b=VbAp9sX9p/fImZafRSyVPTSpncA3cKzRn0h0YQZ591YIo4hjUgaF69SiQiIUlqBCt
+	 fvnFolXzhNKpVIvjOO87eokrGUuc7edSxKwinJ2+iZ5lLcCrf4EZFASWdHIhuhcCke
+	 KsivK7um53hJ4p8TwfkFconTjpjMgj33tPl9YIyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391861AbgEZTJ3 (ORCPT
+        id S2391882AbgEZTJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38556 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391862AbgEZTJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:25 -0400
+        id S2391868AbgEZTJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59102208A7;
-        Tue, 26 May 2020 19:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C689820776;
+        Tue, 26 May 2020 19:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520164;
-        bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
+        s=default; t=1590520167;
+        bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVBsWBxnQAfguqmq4rvtVKEF4LhCWddSWuo4dQRdh7fVUJI3xeilj5+FxT4I2IBt4
-         YVahPmvFodLA4ZiT5Vf4LzA5035HcC6RuhBmzgcW1h2bF50fxylJ9QXOKFC9PyJLl0
-         4BYSQgR+/YRsUtcakIYsRMkQUfpITnemZv/f3ei0=
+        b=G/OxFyUFflEontY/hnTq0brIbaVxdkjEmRvm7DuPkUrvN2FTQOy99Fp7OepVSxYNV
+         Z8SW9hGo+4uu0w0Vr5m3zufXWRtcc6JPBkQrEGBHvaA2hmNMUFEANfo/Fdj750R0ZN
+         nlV1PC3HE1/Ub7Y5gNy/Rf4ht3TJ7gvIEvG+HCbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH 5.4 084/111] staging: greybus: Fix uninitialized scalar variable
-Date:   Tue, 26 May 2020 20:53:42 +0200
-Message-Id: <20200526183940.881819668@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 085/111] iio: sca3000: Remove an erroneous get_device()
+Date:   Tue, 26 May 2020 20:53:43 +0200
+Message-Id: <20200526183940.972381398@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -58,42 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Carter <oscar.carter@gmx.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
+commit 928edefbc18cd8433f7df235c6e09a9306e7d580 upstream.
 
-In the "gb_tty_set_termios" function the "newline" variable is declared
-but not initialized. So the "flow_control" member is not initialized and
-the OR / AND operations with itself results in an undefined value in
-this member.
+This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
+call.
+Remove it.
 
-The purpose of the code is to set the flow control type, so remove the
-OR / AND self operator and set the value directly.
+While at it add a missing \n at the end of the message.
 
-Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
-Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
+Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/uart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/accel/sca3000.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/greybus/uart.c
-+++ b/drivers/staging/greybus/uart.c
-@@ -537,9 +537,9 @@ static void gb_tty_set_termios(struct tt
+--- a/drivers/iio/accel/sca3000.c
++++ b/drivers/iio/accel/sca3000.c
+@@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3
+ 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
+ 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+ 	if (ret) {
+-		dev_err(get_device(&st->us->dev), "problem reading register");
++		dev_err(&st->us->dev, "problem reading register\n");
+ 		return ret;
  	}
  
- 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
--		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
- 	else
--		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = 0;
- 
- 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
- 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
 
 
