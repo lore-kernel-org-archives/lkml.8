@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2096C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24953C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 961922084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F076020849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519392;
-	bh=PsZMyEVsnmA+8lMfdg6ZeOYEB6yVg7J3KMTxk2v4tUA=;
+	s=default; t=1590519395;
+	bh=HuOdOjWhh7v+oy4B89jHnnSfzG+CFqbTWXFEPAFgzas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMcvDrngxGPWz3M/k5bB7UsA929pZ9ZXct5TpS9wp/9oDWnVFowY43rrfzXZuD4P0
-	 x6FMt3lcm8nzQUQvlFu7BnCj6A8W7qB0lUn2Ay6f9F+vdrJ6vu1gRrsmD9T42U1Wy9
-	 sG9Mxxo5FJDfRZ4S5prevP3YJk9NsFj36QB+NKZ4=
+	b=DdDicNtTU36KwDdNqx3U2gBclvaEPWjx7aVEQQpfgz0o799YaT5Ttfu2nV0su8oQ1
+	 VRQ4HsbsAabANopSeUTK+NvyAwRBaHWTEsBIPNHVdsFnVAecLLrNyxGa9IEsrOFX4v
+	 adZZvFKToVTPRII4Ly4iuxBPfm/15hg9H6/HkC8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389864AbgEZS4c (ORCPT
+        id S2389872AbgEZS4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:56:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49334 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389847AbgEZS42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:28 -0400
+        id S2388211AbgEZS4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:56:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8357E20849;
-        Tue, 26 May 2020 18:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F5020849;
+        Tue, 26 May 2020 18:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519388;
-        bh=PsZMyEVsnmA+8lMfdg6ZeOYEB6yVg7J3KMTxk2v4tUA=;
+        s=default; t=1590519390;
+        bh=HuOdOjWhh7v+oy4B89jHnnSfzG+CFqbTWXFEPAFgzas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQvRupNkiXbqSTd//HGJKDJSWll943WAQ0D9MFZJhhezbFZkkEGhPclfW34XhGHLW
-         0iT/Y5Fv69Tww8ERvkfoAupK5m3Pm7s/iFHfTnHXBhWxOaxzxDhC/OPtKqQfIxosPm
-         h4c4S2cKxaHPjmve02KioIRZ0JDq8egykQC1qwNQ=
+        b=c0whXinoq+cCIXYA3UMHtcGYYyK2kgsPbYS2NnzkS+pJNrNBj2B7QHC8fL7CCpy40
+         3URXZ/hAIzRU/1RNHBEH3ZAPHpR7nsWSr17THvQl3T5A3gP/8yo6pYOduJXPSt43eX
+         iwYAII0VSDGSsmtfRDZjabdwNerrwTmN4Dq08Lbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 08/65] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Tue, 26 May 2020 20:52:27 +0200
-Message-Id: <20200526183909.415148810@linuxfoundation.org>
+        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 09/65] ceph: fix double unlock in handle_cap_export()
+Date:   Tue, 26 May 2020 20:52:28 +0200
+Message-Id: <20200526183909.708689116@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -60,51 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
 
-Add support for P80H84 touchscreen from eGalaxy:
+If the ceph_mdsc_open_export_target_session() return fails, it will
+do a "goto retry", but the session mutex has already been unlocked.
+Re-lock the mutex in that case to ensure that we don't unlock it
+twice.
 
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
+ fs/ceph/caps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index e1807296a1a0..33d2b5948d7f 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -319,6 +319,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index efdf81ea3b5f..3d0497421e62 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -3293,6 +3293,7 @@ retry:
+ 		WARN_ON(1);
+ 		tsession = NULL;
+ 		target = -1;
++		mutex_lock(&session->s_mutex);
+ 	}
+ 	goto retry;
  
- #define USB_VENDOR_ID_ELAN		0x04f3
- 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 9de379c1b3fd..56c4a81d3ea2 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1300,6 +1300,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
 -- 
 2.25.1
 
