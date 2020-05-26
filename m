@@ -2,135 +2,112 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3250C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9508D20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BE32068D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590517915;
-	bh=PcBDaM5aceqkX7fvSzO0h7Yd9xAYtumquZkhqZPi6D0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SvjGeLSC5oyo/VkyXbWib3YvuCIYAoE5sRWErQbR1RrrhQ4u6opd2MHMcWTW+lnNh
-	 PB36ObV56gR85MlByNzSKktkFcvbBTDiRDuVXpgcOeKOMlpuPoVjcXGBRXz/8FXJMc
-	 kDlpFJpf7Au7JfE16tqk2B+otJZL6sVRcVauZdZQ=
+	s=default; t=1590517925;
+	bh=n281IfLAcbTb85CPm0jqUkyIWkLnfrct5htszXNofyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C8GdhbjJ0WmetikzzFstq1ldKZ8l+0LPFJUpaOARfEAGNC7CiWbnCavosiKDstwdX
+	 c1SDK65oEvkT23qzgtbZ6yHvRiEmacFsNFY0S8HoW9/tzL9rYDyp6RJc9vict/w/nJ
+	 7Rslp4WQyp1Msd57EXO630G7HBvTGrRpzd0sOiL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgEZSbz (ORCPT
+        id S1729984AbgEZScE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728067AbgEZSby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:31:54 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E298F2068D;
-        Tue, 26 May 2020 18:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590517914;
-        bh=PcBDaM5aceqkX7fvSzO0h7Yd9xAYtumquZkhqZPi6D0=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=i8itfqPLREwNNI/VKdXo5BFXbl3rdAnJRvKw1LHH7KVeLqD1OFQc+ClOAiW1zbpvx
-         ktKrib/m79kOTTw5cicXicVLVo6iMlIvOxFx7/mGCYN0UzYADObzCud9OpI7lJej4P
-         cBd+s6nNpXZ0Pr2dmpQhYyn4CkJYrvxOfUk2mmEE=
-Date:   Tue, 26 May 2020 20:31:50 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@fb.com>
-cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH] block/floppy: fix contended case in floppy_queue_rq()
-In-Reply-To: <nycvar.YFH.7.76.2005261146420.25812@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.2005262031160.25812@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.2005261146420.25812@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 26 May 2020 14:32:04 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41682 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729574AbgEZScE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:32:04 -0400
+Received: by mail-il1-f194.google.com with SMTP id b71so21490862ilg.8;
+        Tue, 26 May 2020 11:32:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ys3yTN0+ac2nWV6kQ76kCGllrYqouXUa6sUx/6wOfQY=;
+        b=lnnf5hFzNB9mmXIPcS/jXV+Wb+0opq/TFSC5gnJr5xKIYn7qXOqXe9gMrbQEpGHklM
+         XMsL4BbXo0GxQW4BY5kQAyajBxVVuVPhs/MTDoiaxbVjoxfMrGdTqErPUS+fwXPtkpuv
+         epokcma+O4hJtb0L6maZ9imtbOIqIgzBimzP/vUN4a6166Mj0QJ8PeEgHn0fwCuhIkq6
+         qMYfAqO5tjwMk/Z2liqsTs4fkqF6aVpB/jb+49vSFH4pp/UKFwFo9fPRqnX3Vk4dydYY
+         NjGlr+kG3+NC4w0BIr5HSCnSLchZUSo8mJMpwNqlsLNIUMEcz1iW2PRTxcKN+yZ6gGaJ
+         JXHQ==
+X-Gm-Message-State: AOAM532l2sStlqhWhx2nnOxtKf8Bau4b1zWDL4nrAQ0ZmJLQ88Ghula6
+        BuYYXkqJ5RSnY0sggw2usT5UCU8=
+X-Google-Smtp-Source: ABdhPJz2NnH/oN4bzaqTdkmM0QjsDMmHpgRJNYGOFD8tjeWWgs/oLbkXDGmpwX/yhqi6vu2TeQsv/Q==
+X-Received: by 2002:a92:b0d:: with SMTP id b13mr2435731ilf.225.1590517922981;
+        Tue, 26 May 2020 11:32:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p22sm55193ill.52.2020.05.26.11.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 11:32:02 -0700 (PDT)
+Received: (nullmailer pid 135011 invoked by uid 1000);
+        Tue, 26 May 2020 18:32:01 -0000
+Date:   Tue, 26 May 2020 12:32:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200526183201.GA134956@bogus>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-[ forgot to CC Omar, fixing ]
-
-On Tue, 26 May 2020, Jiri Kosina wrote:
-
-> From: Jiri Kosina <jkosina@suse.cz>
+On Wed, 13 May 2020 20:22:37 +0300, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 > 
-> Since the switch of floppy driver to blk-mq, the contended (fdc_busy) case 
-> in floppy_queue_rq() is not handled correctly.
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
 > 
-> In case we reach floppy_queue_rq() with fdc_busy set (i.e. with the floppy 
-> locked due to another request still being in-flight), we put the request 
-> on the list of requests and return BLK_STS_OK to the block core, without 
-> actually scheduling delayed work / doing further processing of the 
-> request. This means that processing of this request is postponed until 
-> another request comes and passess uncontended.
-> 
-> Which in some cases might actually never happen and we keep waiting 
-> indefinitely. The simple testcase is
-> 
-> 	for i in `seq 1 2000`; do echo -en $i '\r'; blkid --info /dev/fd0 2> /dev/null; done
-> 
-> run in quemu. That reliably causes blkid eventually indefinitely hanging 
-> in __floppy_read_block_0() waiting for completion, as the BIO callback 
-> never happens, and no further IO is ever submitted on the (non-existent) 
-> floppy device. This was observed reliably on qemu-emulated device.
-> 
-> Fix that by not queuing the request in the contended case, and return 
-> BLK_STS_RESOURCE instead, so that blk core handles the request 
-> rescheduling and let it pass properly non-contended later.
-> 
-> Fixes: a9f38e1dec107a ("floppy: convert to blk-mq")
-> Cc: stable@vger.kernel.org
-> Tested-by: Libor Pechacek <lpechacek@suse.cz>
-> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
->  drivers/block/floppy.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> Changes since v7:
 > 
-> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-> index c3daa64cb52c..975cd0a6baa1 100644
-> --- a/drivers/block/floppy.c
-> +++ b/drivers/block/floppy.c
-> @@ -2938,17 +2938,17 @@ static blk_status_t floppy_queue_rq(struct blk_mq_hw_ctx *hctx,
->  		 (unsigned long long) current_req->cmd_flags))
->  		return BLK_STS_IOERR;
->  
-> -	spin_lock_irq(&floppy_lock);
-> -	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
-> -	spin_unlock_irq(&floppy_lock);
-> -
->  	if (test_and_set_bit(0, &fdc_busy)) {
->  		/* fdc busy, this new request will be treated when the
->  		   current one is done */
->  		is_alive(__func__, "old request running");
-> -		return BLK_STS_OK;
-> +		return BLK_STS_RESOURCE;
->  	}
->  
-> +	spin_lock_irq(&floppy_lock);
-> +	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
-> +	spin_unlock_irq(&floppy_lock);
-> +
->  	command_status = FD_COMMAND_NONE;
->  	__reschedule_timeout(MAXTIMEOUT, "fd_request");
->  	set_fdc(0);
+> - Switch to GPL-2.0-only OR BSD-2-Clause
 > 
-> -- 
-> Jiri Kosina
-> SUSE Labs
+> Changes since v6:
 > 
+> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+>   property
+> - Dropped status property from example
+> - Use 4 spaces to indent example
+> 
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
 > 
 
--- 
-Jiri Kosina
-SUSE Labs
-
+Reviewed-by: Rob Herring <robh@kernel.org>
