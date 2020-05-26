@@ -2,89 +2,120 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B99BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47DD2208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590481076;
-	bh=FSwmFkxuSzNUR+zuH7Zn3DAi6cLT2fFo8dtMDocf8cM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o/kTqcWj00oItc6fK3ijSx1MsL2tsTgyY8hR9xSwo37TUKcbLUIHKuqN9dcvMUSfz
-	 khmgZ6SupHbJVbejrZabwq2lfMxeREder/QqNRzW6VG22HcU1DDvRRncRYxG5vUDvc
-	 uHb692UpYgObC+eeqR+eNAKvWTYhcqNYe0MC86mo=
+	by mail.kernel.org (Postfix) with ESMTP id 999D720787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pzWZOeYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgEZIRz (ORCPT
+        id S1731354AbgEZIR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgEZIRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:17:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF0B320776;
-        Tue, 26 May 2020 08:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590481075;
-        bh=FSwmFkxuSzNUR+zuH7Zn3DAi6cLT2fFo8dtMDocf8cM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=quWEouPkVJ9Znhpt/F+1qts9DS26VXpGDAS6hvdCF87TyIXFu3qLUDZ8st7rXVf8m
-         0JHpATuvZsGTQgfwvYLv7aCyoR8v8CV72nNPAq8RDa5zWut82u4sXHwLCZQyz2gscC
-         h87tfCpsU+JOXvXlDsVqkhIAaRZDuWNX3ZQCnjMI=
-Date:   Tue, 26 May 2020 10:17:52 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        sashal@kernel.org, Andi Kleen <ak@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
-Message-ID: <20200526081752.GA2650351@kroah.com>
-References: <20200526052848.605423-1-andi@firstfloor.org>
- <20200526065618.GC2580410@kroah.com>
- <20200526075736.GH317569@hirez.programming.kicks-ass.net>
+        Tue, 26 May 2020 04:17:59 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:6767 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZIR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590481076; x=1622017076;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=YuHwdN8HqSyt2rwlrNv4QewZD9qbjngQahz+l0HDz1U=;
+  b=pzWZOeYx0tFeZO+kfYlaWI6UJNrhBfUb34vzIDXxWt1QwTuh5MWKrZSv
+   cuNL8v68TtO/TpyTEASMYQzqvOjtPFcNVId+z3c8vUz1RMzA5GrLtyfvX
+   kxONLvfgdlmHTOHHYwC7hzY13eos5cC4EPco4iHs/11fVVvkrNSuXDoa7
+   4=;
+IronPort-SDR: YEJC/bEhVyt+dqxhDujvHJzh0YafG1QvIz3nMyXnoKJvII3+YlbO87+LK9KEyaPG5MC3ywvXay
+ 69bTv0HtyLSg==
+X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
+   d="scan'208";a="37619369"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 26 May 2020 08:17:54 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 283CBA18BE;
+        Tue, 26 May 2020 08:17:53 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 08:17:52 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 08:17:43 +0000
+Subject: Re: [PATCH v2 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
+ <20200522062946.28973-8-andraprs@amazon.com>
+ <20200522070708.GC771317@kroah.com>
+ <fa3a72ef-ba0a-ada9-48bf-bd7cef0a8174@amazon.com>
+ <20200526064243.GB2580410@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <e4d48349-ff54-77e3-8a87-8f320d702d7f@amazon.com>
+Date:   Tue, 26 May 2020 11:17:38 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526075736.GH317569@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200526064243.GB2580410@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D37UWC001.ant.amazon.com (10.43.162.33) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:57:36AM +0200, Peter Zijlstra wrote:
-> On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
-> > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
-> > > From: Andi Kleen <ak@linux.intel.com>
-> > > 
-> > > Since there seem to be kernel modules floating around that set
-> > > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
-> > > CR4 pinning just checks that bits are set, this also checks
-> > > that the FSGSBASE bit is not set, and if it is clears it again.
-> > 
-> > So we are trying to "protect" ourselves from broken out-of-tree kernel
-> > modules now?  Why stop with this type of check, why not just forbid them
-> > entirely if we don't trust them?  :)
-> 
-> Oh, I have a bunch of patches pending for that :-)
+CgpPbiAyNi8wNS8yMDIwIDA5OjQyLCBHcmVnIEtIIHdyb3RlOgo+IE9uIE1vbiwgTWF5IDI1LCAy
+MDIwIGF0IDExOjQ5OjUwUE0gKzAzMDAsIFBhcmFzY2hpdiwgQW5kcmEtSXJpbmEgd3JvdGU6Cj4+
+Cj4+IE9uIDIyLzA1LzIwMjAgMTA6MDcsIEdyZWcgS0ggd3JvdGU6Cj4+PiBPbiBGcmksIE1heSAy
+MiwgMjAyMCBhdCAwOToyOTozNUFNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+Pj4g
+K3N0YXRpYyBjaGFyICpuZV9jcHVzOwo+Pj4+ICttb2R1bGVfcGFyYW0obmVfY3B1cywgY2hhcnAs
+IDA2NDQpOwo+Pj4+ICtNT0RVTEVfUEFSTV9ERVNDKG5lX2NwdXMsICI8Y3B1LWxpc3Q+IC0gQ1BV
+IHBvb2wgdXNlZCBmb3IgTml0cm8gRW5jbGF2ZXMiKTsKPj4+IFRoaXMgaXMgbm90IHRoZSAxOTkw
+J3MsIGRvbid0IHVzZSBtb2R1bGUgcGFyYW1ldGVycyBpZiB5b3UgY2FuIGhlbHAgaXQuCj4+PiBX
+aHkgaXMgdGhpcyBuZWVkZWQsIGFuZCB3aGVyZSBpcyBpdCBkb2N1bWVudGVkPwo+PiBUaGlzIGlz
+IGEgQ1BVIHBvb2wgdGhhdCBjYW4gYmUgc2V0IGJ5IHRoZSByb290IHVzZXIgYW5kIHRoYXQgaW5j
+bHVkZXMgQ1BVcwo+PiBzZXQgYXNpZGUgdG8gYmUgdXNlZCBmb3IgdGhlIGVuY2xhdmUocykgc2V0
+dXA7IHRoZXNlIENQVXMgYXJlIG9mZmxpbmVkLiBGcm9tCj4+IHRoaXMgQ1BVIHBvb2wsIHRoZSBr
+ZXJuZWwgbG9naWMgY2hvb3NlcyB0aGUgQ1BVcyB0aGF0IGFyZSBzZXQgZm9yIHRoZQo+PiBjcmVh
+dGVkIGVuY2xhdmUocykuCj4+Cj4+IFRoZSBjcHUtbGlzdCBmb3JtYXQgaXMgbWF0Y2hpbmcgdGhl
+IHNhbWUgdGhhdCBpcyBkb2N1bWVudGVkIGhlcmU6Cj4+Cj4+IGh0dHBzOi8vd3d3Lmtlcm5lbC5v
+cmcvZG9jL2h0bWwvbGF0ZXN0L2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLmh0bWwKPj4K
+Pj4gSSd2ZSBhbHNvIHRob3VnaHQgb2YgaGF2aW5nIGEgc3lzZnMgZW50cnkgZm9yIHRoZSBzZXR1
+cCBvZiB0aGlzIGVuY2xhdmUgQ1BVCj4+IHBvb2wuCj4gT2ssIGJ1dCBhZ2FpbiwgZG8gbm90IHVz
+ZSBhIG1vZHVsZSBwYXJhbWV0ZXIsIHRoZXkgYXJlIGhhcmQgdG8gdXNlLAo+IHRvdWdoIHRvIGRv
+Y3VtZW50LCBhbmQgZ2xvYmFsLiAgQWxsIHRoaW5ncyB3ZSBtb3ZlZCBhd2F5IGZyb20gYSBsb25n
+Cj4gdGltZSBhZ28uICBQbGVhc2UgdXNlIHNvbWV0aGluZyBlbHNlIGZvciB0aGlzIChzeXNmcywg
+Y29uZmlnZnMsIGV0Yy4pCj4gaW5zdGVhZC4KCkFscmlnaHQsIGdvdCBpdCwgd2lsbCBtb3ZlIG9u
+IHRoZW4gd2l0aCB0aGUgb3RoZXIgb3B0aW9uIGZvciB2NC4KClRoYW5rIHlvdS4KCkFuZHJhCgoK
+CgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBv
+ZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENv
+dW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlv
+biBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
 
-Ah, I thought I had seen something like that go by a while ago.
-
-It's sad that we have to write a "don't do stupid things" checker for
-kernel modules now :(
-
-> It will basically decode the module text and refuse to load the module
-> for most CPL0 instruction.
-
-Ok, so why would Andi's patch even be needed then?  Andi, why post this?
-
-thanks,
-
-greg k-h
