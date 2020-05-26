@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA59AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5392084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D8E2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519694;
-	bh=ixT+xyhnmjq0jPoZhX8b/v+1/Caxq23mw4srXvPfX3w=;
+	s=default; t=1590519697;
+	bh=14eDN6iWkvLygluEYtdkN4nLLdQl8xArd15UGUNLXjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vweLipqWv2m8teCN2OD0xd1Jp552WkzXGVJRlZVY2THle86gWgvXad9gSG2VbYgec
-	 XEqwosUgbnI9UyUi48LsXurFmC4bSBvcA9IjCoBSU0dYQfzCK3gPePhOlY4qy3FRVv
-	 VmCWaZA6eXW0O3Hq+jtcQ+V0dkBTPgFjhD4JMHSs=
+	b=V1DWAAKyQozTcg2HCpEWk7zKHbtZknOMfjTLUMoe9ylWaQDckWrbLnKKXsJ+NmK0p
+	 UbBvxJOf5JC+f2lhtSt+FwZ9Xqrpk1IukeJcoey1LygkpIed1gtGhVtKCZVt9ZQyyR
+	 AfV+VnSDScHnsjezr6+FT6H3EVzeLevb5/ghDlJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389904AbgEZTBe (ORCPT
+        id S2403771AbgEZTBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390204AbgEZTB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:27 -0400
+        id S2390958AbgEZTB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B5A20849;
-        Tue, 26 May 2020 19:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FDE20873;
+        Tue, 26 May 2020 19:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519686;
-        bh=ixT+xyhnmjq0jPoZhX8b/v+1/Caxq23mw4srXvPfX3w=;
+        s=default; t=1590519688;
+        bh=14eDN6iWkvLygluEYtdkN4nLLdQl8xArd15UGUNLXjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vh7NUHJLXEjRvIEzghTKHBC6nmayoYnGGEoKS1QU/cM/ZNRPpgIsA6XeUBunybkoQ
-         PsLFnaqjjB+xhpbYhLrd+8tOpPyFNZeO+NwGo0Aixd7IJFT7K98E4Ozoa6MnGSxwXH
-         UWNe5ELCfEnk29VvN9a4j1RhiB0XsXpmVqBl19CE=
+        b=Fdg+5a03pjCViFC0oix+qbKpg7cxqCs1auMfaCCpibo1gkr7Gvg1Rmsuk9yODxa+B
+         RhzUacsdEDErXooufnrfV71LaYruBLKKtG/O9m6Hhib2M5r9oGoO2HxdaY5Xpf20Ow
+         x8f0B3WuUgJyMTqLP+KMErIlOx0wJ5FgUFGiwpyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 4.14 37/59] apparmor: Fix aa_label refcnt leak in policy_update
-Date:   Tue, 26 May 2020 20:53:22 +0200
-Message-Id: <20200526183919.409222748@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.14 38/59] dmaengine: tegra210-adma: Fix an error handling path in tegra_adma_probe()
+Date:   Tue, 26 May 2020 20:53:23 +0200
+Message-Id: <20200526183919.642744121@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -60,53 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit c6b39f070722ea9963ffe756bfe94e89218c5e63 upstream.
+commit 3a5fd0dbd87853f8bd2ea275a5b3b41d6686e761 upstream.
 
-policy_update() invokes begin_current_label_crit_section(), which
-returns a reference of the updated aa_label object to "label" with
-increased refcount.
+Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
+has moved some code in the probe function and reordered the error handling
+path accordingly.
+However, a goto has been missed.
 
-When policy_update() returns, "label" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
+Fix it and goto the right label if 'dma_async_device_register()' fails, so
+that all resources are released.
 
-The reference counting issue happens in one exception handling path of
-policy_update(). When aa_may_manage_policy() returns not NULL, the
-refcnt increased by begin_current_label_crit_section() is not decreased,
-causing a refcnt leak.
-
-Fix this issue by jumping to "end_section" label when
-aa_may_manage_policy() returns not NULL.
-
-Fixes: 5ac8c355ae00 ("apparmor: allow introspecting the loaded policy pre internal transform")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20200516214205.276266-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/apparmor/apparmorfs.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/tegra210-adma.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -426,7 +426,7 @@ static ssize_t policy_update(u32 mask, c
- 	 */
- 	error = aa_may_manage_policy(label, ns, mask);
- 	if (error)
--		return error;
-+		goto end_section;
- 
- 	data = aa_simple_write_to_buffer(buf, size, size, pos);
- 	error = PTR_ERR(data);
-@@ -434,6 +434,7 @@ static ssize_t policy_update(u32 mask, c
- 		error = aa_replace_profiles(ns, label, mask, data);
- 		aa_put_loaddata(data);
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -793,7 +793,7 @@ static int tegra_adma_probe(struct platf
+ 	ret = dma_async_device_register(&tdma->dma_dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
+-		goto irq_dispose;
++		goto rpm_put;
  	}
-+end_section:
- 	end_current_label_crit_section(label);
  
- 	return error;
+ 	ret = of_dma_controller_register(pdev->dev.of_node,
 
 
