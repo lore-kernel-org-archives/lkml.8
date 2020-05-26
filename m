@@ -2,178 +2,90 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34165C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1083A208C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334282088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590531847;
-	bh=bXODFjp8Ywv103gRNHs84HK8k9PGXpcMXjSq7DT/7fs=;
+	s=default; t=1590531872;
+	bh=+/z0/+hnPJaoiqbXkh+HK+ZmZS+ELK7quhDJ0OM1D2Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QyB2FhXgA3Lbf2NbneOCX0e5/vYQSAToBqnBJA1xjtgAuwnw3tjhUFBuT/vH0Ct5F
-	 VcJXtBNEqL20SvD499YxSJtNKX/7Dmadg7y3pu5Rn8pvP+oG805HZvhR4OP4kg5xK2
-	 q/HHP3LEoGi241qzqnssDKvPhSULZmf3ZNrPXWjw=
+	b=oG6vGr1MF40ptRRE9QE1Ppfa9oHvrWQjdOAmwIu5IpBX2iJOf5KUEvLE8T3mOiQdC
+	 jTVLl39VLdK1hyaswL9YiEcm2j2Jnfue9/KGeYciep8SU0lqOY4e/PKLF5N9ebyzeH
+	 RaAsif+dg9nXlUWwG7XY0DCxEuiuSFIj8RjJzz2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404106AbgEZWYG (ORCPT
+        id S2391969AbgEZWYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:24:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389382AbgEZWYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:24:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C7AA2088E;
-        Tue, 26 May 2020 22:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590531844;
-        bh=bXODFjp8Ywv103gRNHs84HK8k9PGXpcMXjSq7DT/7fs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j4eKyEpL1PC9SI+vCPEhpXKks0e85FglRbYocyOQmR74KWkcCEL57g+UrOFObQPnA
-         /YZfuGkJpViiBQzZ7C/dcpGVtZInnjlmRzhKGmMp5qm+TCiHxLEzCfWMxQQgn543XQ
-         KY0Cg1S3lN/p4ZAwkGzRulMSOLJWsF/nCsIGMAlM=
-Date:   Wed, 27 May 2020 00:24:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alexander Graf <graf@amazon.de>
-Cc:     Andra Paraschiv <andraprs@amazon.com>,
-        linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-Message-ID: <20200526222402.GC179549@kroah.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-8-andraprs@amazon.com>
- <20200526065133.GD2580530@kroah.com>
- <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
- <20200526123300.GA2798@kroah.com>
- <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
- <20200526131708.GA9296@kroah.com>
- <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
+        Tue, 26 May 2020 18:24:31 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36784 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390051AbgEZWYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 18:24:30 -0400
+Received: by mail-io1-f67.google.com with SMTP id y18so3409610iow.3;
+        Tue, 26 May 2020 15:24:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b+tWQ04Ezy413BCxEPkyaWDBFIHzDQJRTdPoSP1wkus=;
+        b=afpSXc7cYfecOkCLF0rVkDLaqoHg8RaCOvWoAPKbPIT+hrCOz5gm8mhvI0IlfgLsI7
+         cdIdHbSJofv2nPyp67e6UONkSpBQuwhqIv8X+Wk0RJFSCNd7lhujXQjOAEc6KjjKuth2
+         FND60Q/ftTPjzNUy70Iw6zL0O+RnyPMSX19jxtovEMJvgb6yeCRKKvJBtTqgQeLiRjSe
+         dB/LvTGA7ybhRFWub82pSyC51II/zqTL/E4QV7j9UJ2FniSofpIp/0ncg7pGfdcRZdkR
+         VAhmDcKiE4b304t4MX2GuHg4pdCXv/SBx63hBM+JPEak0BfbO+jY9p1Tkd93Xe8I/rjV
+         KCNA==
+X-Gm-Message-State: AOAM531TdGR7ORZWY6VpArknqAGqmGWa7yo4ds2GxDrDdALNqS48Mdf/
+        C0K6TTjsM43/1JIBtY6WIEA/UAk=
+X-Google-Smtp-Source: ABdhPJxs6wqH9u8vn+Z/jIYH604XOlL8g4F6C/yPbBYo2wCXlkbZFk5Q4dd/j7YdMhjb3QR4GcqTdQ==
+X-Received: by 2002:a5d:9d03:: with SMTP id j3mr5630889ioj.176.1590531869094;
+        Tue, 26 May 2020 15:24:29 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r17sm657002ilc.33.2020.05.26.15.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 15:24:28 -0700 (PDT)
+Received: (nullmailer pid 492521 invoked by uid 1000);
+        Tue, 26 May 2020 22:24:27 -0000
+Date:   Tue, 26 May 2020 16:24:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v6 1/5] dt-bindings: iio: magnetometer: ak8975: reword
+ gpios, add interrupts, fix style
+Message-ID: <20200526222427.GA492338@bogus>
+References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
+ <20200525151117.32540-2-jonathan.albrieux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
+In-Reply-To: <20200525151117.32540-2-jonathan.albrieux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 03:44:30PM +0200, Alexander Graf wrote:
+On Mon, 25 May 2020 17:10:35 +0200, Jonathan Albrieux wrote:
+> Reword gpios documentation, add interrupt documentation and fix styles.
+> Update example to use interrupts instead of gpios.
 > 
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> ---
+>  .../bindings/iio/magnetometer/ak8975.txt      | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
 > 
-> On 26.05.20 15:17, Greg KH wrote:
-> > 
-> > On Tue, May 26, 2020 at 02:44:18PM +0200, Alexander Graf wrote:
-> > > 
-> > > 
-> > > On 26.05.20 14:33, Greg KH wrote:
-> > > > 
-> > > > On Tue, May 26, 2020 at 01:42:41PM +0200, Alexander Graf wrote:
-> > > > > 
-> > > > > 
-> > > > > On 26.05.20 08:51, Greg KH wrote:
-> > > > > > 
-> > > > > > On Tue, May 26, 2020 at 01:13:23AM +0300, Andra Paraschiv wrote:
-> > > > > > > +#define NE "nitro_enclaves: "
-> > > > > > 
-> > > > > > Again, no need for this.
-> > > > > > 
-> > > > > > > +#define NE_DEV_NAME "nitro_enclaves"
-> > > > > > 
-> > > > > > KBUILD_MODNAME?
-> > > > > > 
-> > > > > > > +#define NE_IMAGE_LOAD_OFFSET (8 * 1024UL * 1024UL)
-> > > > > > > +
-> > > > > > > +static char *ne_cpus;
-> > > > > > > +module_param(ne_cpus, charp, 0644);
-> > > > > > > +MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclaves");
-> > > > > > 
-> > > > > > Again, please do not do this.
-> > > > > 
-> > > > > I actually asked her to put this one in specifically.
-> > > > > 
-> > > > > The concept of this parameter is very similar to isolcpus= and maxcpus= in
-> > > > > that it takes CPUs away from Linux and instead donates them to the
-> > > > > underlying hypervisor, so that it can spawn enclaves using them.
-> > > > > 
-> > > > >   From an admin's point of view, this is a setting I would like to keep
-> > > > > persisted across reboots. How would this work with sysfs?
-> > > > 
-> > > > How about just as the "initial" ioctl command to set things up?  Don't
-> > > > grab any cpu pools until asked to.  Otherwise, what happens when you
-> > > > load this module on a system that can't support it?
-> > > 
-> > > That would give any user with access to the enclave device the ability to
-> > > remove CPUs from the system. That's clearly a CAP_ADMIN task in my book.
-> > 
-> > Ok, what's wrong with that?
-> 
-> Would you want random users to get the ability to hot unplug CPUs from your
-> system? At unlimited quantity? I don't :).
 
-A random user, no, but one with admin rights, why not?  They can do that
-already today on your system, this isn't new.
-
-> > > Hence this whole split: The admin defines the CPU Pool, users can safely
-> > > consume this pool to spawn enclaves from it.
-> > 
-> > But having the admin define that at module load / boot time, is a major
-> > pain.  What tools do they have that allow them to do that easily?
-> 
-> The normal toolbox: editing /etc/default/grub, adding an /etc/modprobe.d/
-> file.
-
-Editing grub files is horrid, come on...
-
-> When but at module load / boot time would you define it? I really don't want
-> to have a device node that in theory "the world" can use which then allows
-> any user on the system to hot unplug every CPU but 0 from my system.
-
-But you have that already when the PCI device is found, right?  What is
-the initial interface to the driver?  What's wrong with using that?
-
-Or am I really missing something as to how this all fits together with
-the different pieces?  Seeing the patches as-is doesn't really provide a
-good overview, sorry.
-
-> > > So I really don't think an ioctl would be a great user experience. Same for
-> > > a sysfs file - although that's probably slightly better than the ioctl.
-> > 
-> > You already are using ioctls to control this thing, right?  What's wrong
-> > with "one more"? :)
-> 
-> So what we *could* do is add an ioctl to set the pool size which then does a
-> CAP_ADMIN check. That however means you now are in priority hell:
-> 
-> A user that wants to spawn an enclave as part of an nginx service would need
-> to create another service to set the pool size and indicate the dependency
-> in systemd control files.
-> 
-> Is that really better than a module parameter?
-
-module parameters are hard to change, and manage control over who really
-is changing them.
-
-thanks,
-
-greg k-h
+Reviewed-by: Rob Herring <robh@kernel.org>
