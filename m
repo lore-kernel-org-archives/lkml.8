@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0325C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD81C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1EF3208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2105208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520662;
-	bh=GR4XF5IayHHOWsrG6kqSq2PX5IKhSrpqsMZUsiFItGw=;
+	s=default; t=1590520667;
+	bh=6s0esmbuhORqW3ghCADkZDwb2rfkAM/yLBfDpUl9yg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CiV5PVlq5uNE9o/0CqNJ8tH09qx7pKELuxgtx+zJ2RUG6ngmdvoJyrWHhkqesURb4
-	 VoLGmP7pDE5adyKHYlF9Td3eEnhyvtA53ZfS6CAKvlTrKsFSf0ix0IHt02pT23RE31
-	 2QsJm32aLeOWGgaBRAxTDp24z+LJksyX+6oK2kdg=
+	b=SBB8YBdWEILKxxcaztjijiVGFgoj64c8o6iYQ1ZpZN+00ZG2RXh6sSmuKKjcU9cv0
+	 R34S2athfOIi42UOyZgGKYIZh09BY+rwSuE5mg9/YlQKtW2zM/h3slt9V+nHaVp7/M
+	 UdzWhxiRQrbxdqfC2a0uP95jMP7expKF3BrIBqV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404356AbgEZTOV (ORCPT
+        id S2392336AbgEZTRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44842 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391491AbgEZTOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:11 -0400
+        id S2404352AbgEZTOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EBA208C3;
-        Tue, 26 May 2020 19:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A407208B6;
+        Tue, 26 May 2020 19:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520450;
-        bh=GR4XF5IayHHOWsrG6kqSq2PX5IKhSrpqsMZUsiFItGw=;
+        s=default; t=1590520460;
+        bh=6s0esmbuhORqW3ghCADkZDwb2rfkAM/yLBfDpUl9yg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmY6+2QoZX5/dp+eGpEK/Sw2TEEQ9vUCo7W9963EMwYZbFC8k6ZSFdlhy/PUCuuhr
-         2cbywhaQj8YQ5t09xYjS7FRpH6wNeTkoXcpZuhI/NO+Nbc45IMMDDmzyvPHjQp9im5
-         HjOpxh9rRE2WUhIUpIHHz2jiQebRWQ42efJDySc8=
+        b=fBn0Ip0NzVdauRNE2j5JULxu1W+4bIWT+5ocTxfMOnzZW73u8aV2pVAdzLDfD2lMN
+         qDVarjyyP4c2MwL6koXeLX4EY5stjjoqvakL2Gf2DawgWWpfXmyHzXYnDA3uuLPws3
+         m/4j4e34pKYTZE9dTq45FuOxv41+1LHwXtLvrbWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 085/126] Revert "gfs2: Dont demote a glock until its revokes are written"
-Date:   Tue, 26 May 2020 20:53:42 +0200
-Message-Id: <20200526183945.170356478@linuxfoundation.org>
+Subject: [PATCH 5.6 088/126] tools/bootconfig: Fix apply_xbc() to return zero on success
+Date:   Tue, 26 May 2020 20:53:45 +0200
+Message-Id: <20200526183945.367638554@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,46 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
+[ Upstream commit 9d82ccda2bc5c148060543d249d54f8703741bb4 ]
 
-This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
+The return of apply_xbc() returns the result of the last write() call, which
+is not what is expected. It should only return zero on success.
 
-This patch fixes a regression: patch df5db5f9ee112 allowed function
-run_queue() to bypass its call to do_xmote() if revokes were queued for
-the glock. That's wrong because its call to do_xmote() is what is
-responsible for calling the go_sync() glops functions to sync both
-the ail list and any revokes queued for it. By bypassing the call,
-gfs2 could get into a stand-off where the glock could not be demoted
-until its revokes are written back, but the revokes would not be
-written back because do_xmote() was never called.
+Link: https://lore.kernel.org/r/20200508093059.GF9365@kadam
 
-It "sort of" works, however, because there are other mechanisms like
-the log flush daemon (logd) that can sync the ail items and revokes,
-if it deems it necessary. The problem is: without file system pressure,
-it might never deem it necessary.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Fixes: 8842604446d1 ("tools/bootconfig: Fix resource leak in apply_xbc()")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/bootconfig/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 19ebc6cd0f2b..d0eceaff3cea 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -645,9 +645,6 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
--		smp_mb();
--		if (atomic_read(&gl->gl_revokes) != 0)
--			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 5dbe893cf00c..37fb2e85de12 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -310,6 +310,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 		pr_err("Failed to apply a boot config magic: %d\n", ret);
+ 		goto out;
+ 	}
++	ret = 0;
+ out:
+ 	close(fd);
+ 	free(data);
 -- 
 2.25.1
 
