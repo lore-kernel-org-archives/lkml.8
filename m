@@ -2,150 +2,88 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF51C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64832078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1062075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590533587;
+	bh=xsGmzS5AjN6haAWaWevKp0V7RkemTOAW9eXLR0Ipw6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZNMARRWySXIL5TDIcwpm8yq3rbPwYA8eCnTp+oy5VAG1dnrsTLPYIgKqrfEujDgTT
+	 3LDXpC+GwlRNmPefJQAn4X98CfVkpgs8R3RJCErfIYpWimth1C49B+W7BYXGbWihfc
+	 oPfuQv2H38LGzdRlQD7a415wRGTypqF8+HdoTsgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392276AbgEZWwa (ORCPT
+        id S2392297AbgEZWxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:52:30 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60272 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404570AbgEZWvp (ORCPT
+        Tue, 26 May 2020 18:53:06 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42446 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390428AbgEZWxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:51:45 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 64E5C8030877;
-        Tue, 26 May 2020 22:51:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id g1jr_e4QOzSc; Wed, 27 May 2020 01:51:40 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 04/10] dmaengine: Introduce max SG list entries capability
-Date:   Wed, 27 May 2020 01:50:15 +0300
-Message-ID: <20200526225022.20405-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 26 May 2020 18:53:06 -0400
+Received: by mail-io1-f65.google.com with SMTP id d5so14404184ios.9;
+        Tue, 26 May 2020 15:53:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kF+vRBfnhOkmQvA5KLQ4cDaPOVZ28rGc0O0qwy5RLx8=;
+        b=P32b7cIs61bWGQKO+vQfRMx78GBXXufAz5+lymJb8v/BLQiAw3GLKhroiWOh7g6vKJ
+         ICdZbXcu62p6ev8/3dXEwFcfmwj9mRoCzBd0+a58xQBN8C7S8vYCPmGHdimDigWb3h9D
+         fM2K38PLu4zAqEJJrmWoDfhzhGwfF8Hv1ZC0tWnoLFRQfgmVyAGY4jIjHR/NluUL80YH
+         IyKjL8lOFZZTkrpdTjzGiBGlfRKhoG4Lb3gTDe1jhC7vk4pn5yYMIJlDws6H2yBUy/sP
+         bmGTrlE/WvCW5ojFM1YX21Yc3WFwPzfMV1j11qwU/L2CfWNyZOscVyks2AmwHkebHWix
+         qdcw==
+X-Gm-Message-State: AOAM530ySfiiCluWycmTP3K8+2WJUnOwNWRAZQB4zlwp0Rpe/qi7cTbJ
+        rOq8Y4/3GdT2/wp7p3rLCw==
+X-Google-Smtp-Source: ABdhPJyeoVtuZCUkjCMNR8Y6ccXH320ipxK5P3DJiUPsweubOQS/CFyKLVhwUqzve4pZavKBpEp3dg==
+X-Received: by 2002:a02:93a1:: with SMTP id z30mr3149527jah.25.1590533583588;
+        Tue, 26 May 2020 15:53:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p1sm632821ilq.67.2020.05.26.15.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 15:53:03 -0700 (PDT)
+Received: (nullmailer pid 538555 invoked by uid 1000);
+        Tue, 26 May 2020 22:53:02 -0000
+Date:   Tue, 26 May 2020 16:53:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH v5 06/14] dt-bindings: PCI: cadence: Remove "mem" from
+ reg binding
+Message-ID: <20200526225302.GA538495@bogus>
+References: <20200522033631.32574-1-kishon@ti.com>
+ <20200522033631.32574-7-kishon@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522033631.32574-7-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices may lack the support of the hardware accelerated SG list
-entries automatic walking through and execution. In this case a burden of
-the SG list traversal and DMA engine re-initialization lies on the
-DMA engine driver (normally implemented by using a DMA transfer completion
-IRQ to recharge the DMA device with a next SG list entry). But such
-solution may not be suitable for some DMA consumers. In particular SPI
-devices need both Tx and Rx DMA channels work synchronously in order
-to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
-some time while the Tx DMA channel works implicitly pulling data into the
-Rx FIFO, the later will be eventually overflown, which will cause the data
-loss. So if SG list entries aren't automatically fetched by the DMA
-engine, but are one-by-one manually selected for execution in the
-ISRs/deferred work/etc., such problem will eventually happen due to the
-non-deterministic latencies of the service execution.
+On Fri, 22 May 2020 09:06:23 +0530, Kishon Vijay Abraham I wrote:
+> "mem" is not a memory resource and it overlaps with PCIe config space
+> and memory region. Removve "mem" from reg binding.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml      | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
 
-In order to let the DMA consumer know about the DMA device capabilities
-regarding the hardware accelerated SG list traversal we introduce the
-max_sg_list capability. It is supposed to be initialized by the DMA engine
-driver with 0 if there is no limitation for the number of SG entries
-atomically executed and with non-zero value if there is such constraints,
-so the upper limit is determined by the number set to the property.
-
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-
----
-
-Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
----
- drivers/dma/dmaengine.c   | 1 +
- include/linux/dmaengine.h | 8 ++++++++
- 2 files changed, 9 insertions(+)
-
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index b332ffe52780..ad56ad58932c 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	caps->directions = device->directions;
- 	caps->min_burst = device->min_burst;
- 	caps->max_burst = device->max_burst;
-+	caps->max_sg_nents = device->max_sg_nents;
- 	caps->residue_granularity = device->residue_granularity;
- 	caps->descriptor_reuse = device->descriptor_reuse;
- 	caps->cmd_pause = !!device->device_pause;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 0c7403b27133..6801200c76b6 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -467,6 +467,9 @@ enum dma_residue_granularity {
-  *	should be checked by controller as well
-  * @min_burst: min burst capability per-transfer
-  * @max_burst: max burst capability per-transfer
-+ * @max_sg_nents: max number of SG list entries executed in a single atomic
-+ *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
-+ *	value means unlimited number if entries.
-  * @cmd_pause: true, if pause is supported (i.e. for reading residue or
-  *	       for resume later)
-  * @cmd_resume: true, if resume is supported
-@@ -481,6 +484,7 @@ struct dma_slave_caps {
- 	u32 directions;
- 	u32 min_burst;
- 	u32 max_burst;
-+	u32 max_sg_nents;
- 	bool cmd_pause;
- 	bool cmd_resume;
- 	bool cmd_terminate;
-@@ -773,6 +777,9 @@ struct dma_filter {
-  *	should be checked by controller as well
-  * @min_burst: min burst capability per-transfer
-  * @max_burst: max burst capability per-transfer
-+ * @max_sg_nents: max number of SG list entries executed in a single atomic
-+ *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
-+ *	value means unlimited number if entries.
-  * @residue_granularity: granularity of the transfer residue reported
-  *	by tx_status
-  * @device_alloc_chan_resources: allocate resources and return the
-@@ -844,6 +851,7 @@ struct dma_device {
- 	u32 directions;
- 	u32 min_burst;
- 	u32 max_burst;
-+	u32 max_sg_nents;
- 	bool descriptor_reuse;
- 	enum dma_residue_granularity residue_granularity;
- 
--- 
-2.26.2
-
+Reviewed-by: Rob Herring <robh@kernel.org>
