@@ -2,55 +2,55 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14604C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F64208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C2720849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521552;
-	bh=E5gepei49UVhAh6Fb77bky09GX64a6eEvd/goBsZUV4=;
+	s=default; t=1590521555;
+	bh=qZOa3QCG6Q7VYmQ5DXa9APsPepPjLcBPZrx7nlr/bxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6Vjag6F1vuUCLBwgBpFYdPBEsaM2HtdrMwpgDZNVSLJbL5X34rvlwoziuxGRmaLQ
-	 Gli5E3noJHCI1nBlzxrGAnw9lvQ416BuK0mrslnwxu9Iv8L7SXCP9FGQDqcJPUUzKo
-	 WDIiDWt3U2TuzbzquLCvy0Ei58fDySZKKuuhsEuI=
+	b=GnqJo8wOBG1sOcPi6kU/vaGiRVaEuyUBsQBxMD7n1IL5mDmbommH9koZPIWRK2gKG
+	 gudK775GJr65f43TaucdUcVCvkYcv7pGtEgJGr4YJupKfHid9H4iYlBFU+OAoZ63bu
+	 7ar23UHwO+Xn4m+0fER1t8tgC79gAfW9pDZra2b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbgEZS5f (ORCPT
+        id S2391329AbgEZTcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389284AbgEZS5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:57:30 -0400
+        id S2390114AbgEZS5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A327420849;
-        Tue, 26 May 2020 18:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2049920849;
+        Tue, 26 May 2020 18:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519449;
-        bh=E5gepei49UVhAh6Fb77bky09GX64a6eEvd/goBsZUV4=;
+        s=default; t=1590519454;
+        bh=qZOa3QCG6Q7VYmQ5DXa9APsPepPjLcBPZrx7nlr/bxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TaPqnscfH9joBP5uPjRlXOKCTN2ySoi9C21k2i7I90QBCwHAhxDtJg2kBGQZAgPci
-         jm8ghD3ofcq4h0tipp7TAdpAsV6aPDNelVDLPFXArB3y6LZYEiHgh6IVWvwvrpXsp+
-         TROHYMGz6zY1asCCY+d6TG5H3WhDKEpmI3QRuUJg=
+        b=Myfq9dL1xUjIZK9be66pW/cDJcUdCtDdNV/gevSV58nyAS1ujj1glLGYco4NWM5a2
+         ByPf/L1S52EsXX3dN6cF6c6/yVRkVqcVK20kQLJolUreNgeDgDgZQE4TnUSvhNQGUg
+         SZcslVenHJCIvDkpxOZtbn0g5O5FiludUOiGNkXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, greg@kroah.com
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 45/65] l2tp: remove l2tp_session_find()
-Date:   Tue, 26 May 2020 20:53:04 +0200
-Message-Id: <20200526183921.591461247@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 10/64] i2c: mux: demux-pinctrl: Fix an error handling path in i2c_demux_pinctrl_probe()
+Date:   Tue, 26 May 2020 20:52:39 +0200
+Message-Id: <20200526183917.502540404@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
-References: <20200526183905.988782958@linuxfoundation.org>
+In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
+References: <20200526183913.064413230@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,99 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 55a3ce3b9d98f752df9e2cfb1cba7e715522428a upstream.
+[ Upstream commit e9d1a0a41d4486955e96552293c1fcf1fce61602 ]
 
-This function isn't used anymore.
+A call to 'i2c_demux_deactivate_master()' is missing in the error handling
+path, as already done in the remove function.
 
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_core.c |   51 +--------------------------------------------------
- net/l2tp/l2tp_core.h |    3 ---
- 2 files changed, 1 insertion(+), 53 deletions(-)
+ drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -216,27 +216,6 @@ static void l2tp_tunnel_sock_put(struct
- 	sock_put(sk);
- }
- 
--/* Lookup a session by id in the global session list
-- */
--static struct l2tp_session *l2tp_session_find_2(struct net *net, u32 session_id)
--{
--	struct l2tp_net *pn = l2tp_pernet(net);
--	struct hlist_head *session_list =
--		l2tp_session_id_hash_2(pn, session_id);
--	struct l2tp_session *session;
--
--	rcu_read_lock_bh();
--	hlist_for_each_entry_rcu(session, session_list, global_hlist) {
--		if (session->session_id == session_id) {
--			rcu_read_unlock_bh();
--			return session;
--		}
--	}
--	rcu_read_unlock_bh();
--
--	return NULL;
--}
--
- /* Session hash list.
-  * The session_id SHOULD be random according to RFC2661, but several
-  * L2TP implementations (Cisco and Microsoft) use incrementing
-@@ -249,35 +228,7 @@ l2tp_session_id_hash(struct l2tp_tunnel
- 	return &tunnel->session_hlist[hash_32(session_id, L2TP_HASH_BITS)];
- }
- 
--/* Lookup a session by id
-- */
--struct l2tp_session *l2tp_session_find(struct net *net, struct l2tp_tunnel *tunnel, u32 session_id)
--{
--	struct hlist_head *session_list;
--	struct l2tp_session *session;
--
--	/* In L2TPv3, session_ids are unique over all tunnels and we
--	 * sometimes need to look them up before we know the
--	 * tunnel.
--	 */
--	if (tunnel == NULL)
--		return l2tp_session_find_2(net, session_id);
--
--	session_list = l2tp_session_id_hash(tunnel, session_id);
--	read_lock_bh(&tunnel->hlist_lock);
--	hlist_for_each_entry(session, session_list, hlist) {
--		if (session->session_id == session_id) {
--			read_unlock_bh(&tunnel->hlist_lock);
--			return session;
--		}
--	}
--	read_unlock_bh(&tunnel->hlist_lock);
--
--	return NULL;
--}
--EXPORT_SYMBOL_GPL(l2tp_session_find);
--
--/* Like l2tp_session_find() but takes a reference on the returned session.
-+/* Lookup a session. A new reference is held on the returned session.
-  * Optionally calls session->ref() too if do_ref is true.
-  */
- struct l2tp_session *l2tp_session_get(struct net *net,
---- a/net/l2tp/l2tp_core.h
-+++ b/net/l2tp/l2tp_core.h
-@@ -237,9 +237,6 @@ out:
- struct l2tp_session *l2tp_session_get(struct net *net,
- 				      struct l2tp_tunnel *tunnel,
- 				      u32 session_id, bool do_ref);
--struct l2tp_session *l2tp_session_find(struct net *net,
--				       struct l2tp_tunnel *tunnel,
--				       u32 session_id);
- struct l2tp_session *l2tp_session_get_nth(struct l2tp_tunnel *tunnel, int nth,
- 					  bool do_ref);
- struct l2tp_session *l2tp_session_get_by_ifname(struct net *net, char *ifname,
+diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+index 3e6fe1760d82..a86c511c29e0 100644
+--- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
++++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+@@ -270,6 +270,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
+ err_rollback_available:
+ 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
+ err_rollback:
++	i2c_demux_deactivate_master(priv);
+ 	for (j = 0; j < i; j++) {
+ 		of_node_put(priv->chan[j].parent_np);
+ 		of_changeset_destroy(&priv->chan[j].chgset);
+-- 
+2.25.1
+
 
 
