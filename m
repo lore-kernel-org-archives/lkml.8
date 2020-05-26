@@ -2,92 +2,136 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DATE_IN_FUTURE_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1365AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0448A206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E627E206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388501AbgEZCJA (ORCPT
+        id S2388549AbgEZCJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 22:09:00 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:48817 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388417AbgEZCI7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 22:08:59 -0400
-X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 May 2020 22:08:58 EDT
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="35733622"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 26 May 2020 09:59:17 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(20966:0:AUTH_RELAY)
-        (envelope-from <jingle.wu@emc.com.tw>); Tue, 26 May 2020 09:59:16 +0800 (CST)
-Received: from 49.216.87.26
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2480:0:AUTH_LOGIN)
-        (envelope-from <jingle.wu@emc.com.tw>); Tue, 26 May 2020 09:59:15 +0800 (CST)
-From:   "Jingle.Wu" <jingle.wu@emc.com.tw>
-To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com
-Cc:     phoenix@emc.com.tw, dave.wang@emc.com.tw, josh.chen@emc.com.tw,
-        "Jingle.Wu" <jingle.wu@emc.com.tw>
-Subject: [PATCH] Input: elantench - Remove read registers in attr Signed-off-by: Jingle Wu <jingle.wu@emc.com.tw>
-Date:   Wed, 27 May 2020 01:59:40 +0800
-Message-Id: <20200526175940.4298-1-jingle.wu@emc.com.tw>
-X-Mailer: git-send-email 2.17.1
+        Mon, 25 May 2020 22:09:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46804 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388351AbgEZCJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 22:09:12 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F30B0F64F7B95E6413C3;
+        Tue, 26 May 2020 10:09:10 +0800 (CST)
+Received: from [10.173.221.230] (10.173.221.230) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 26 May 2020 10:09:04 +0800
+Subject: Re: [RFC PATCH 0/7] kvm: arm64: Support stage2 hardware DBM
+To:     Marc Zyngier <maz@kernel.org>
+References: <20200525112406.28224-1-zhukeqian1@huawei.com>
+ <4b8a939172395bf38e581634abecf925@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        <wanghaibin.wang@huawei.com>, <zhengxiang9@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <66deb797-726f-242b-82fb-0ddee975ef15@huawei.com>
+Date:   Tue, 26 May 2020 10:08:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <4b8a939172395bf38e581634abecf925@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- drivers/input/mouse/elantech.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hi Marc,
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 2d8434b7b623..5bdf2b19118e 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1280,7 +1280,7 @@ static ssize_t elantech_set_int_attr(struct psmouse *psmouse,
- 			    elantech_show_int_attr,			       \
- 			    elantech_set_int_attr)
- 
--ELANTECH_INT_ATTR(reg_07, 0x07);
-+/*ELANTECH_INT_ATTR(reg_07, 0x07);
- ELANTECH_INT_ATTR(reg_10, 0x10);
- ELANTECH_INT_ATTR(reg_11, 0x11);
- ELANTECH_INT_ATTR(reg_20, 0x20);
-@@ -1289,13 +1289,13 @@ ELANTECH_INT_ATTR(reg_22, 0x22);
- ELANTECH_INT_ATTR(reg_23, 0x23);
- ELANTECH_INT_ATTR(reg_24, 0x24);
- ELANTECH_INT_ATTR(reg_25, 0x25);
--ELANTECH_INT_ATTR(reg_26, 0x26);
-+ELANTECH_INT_ATTR(reg_26, 0x26);*/
- ELANTECH_INFO_ATTR(debug);
- ELANTECH_INFO_ATTR(paritycheck);
- ELANTECH_INFO_ATTR(crc_enabled);
- 
- static struct attribute *elantech_attrs[] = {
--	&psmouse_attr_reg_07.dattr.attr,
-+	/*&psmouse_attr_reg_07.dattr.attr,
- 	&psmouse_attr_reg_10.dattr.attr,
- 	&psmouse_attr_reg_11.dattr.attr,
- 	&psmouse_attr_reg_20.dattr.attr,
-@@ -1304,7 +1304,7 @@ static struct attribute *elantech_attrs[] = {
- 	&psmouse_attr_reg_23.dattr.attr,
- 	&psmouse_attr_reg_24.dattr.attr,
- 	&psmouse_attr_reg_25.dattr.attr,
--	&psmouse_attr_reg_26.dattr.attr,
-+	&psmouse_attr_reg_26.dattr.attr,*/
- 	&psmouse_attr_debug.dattr.attr,
- 	&psmouse_attr_paritycheck.dattr.attr,
- 	&psmouse_attr_crc_enabled.dattr.attr,
--- 
-2.17.1
+On 2020/5/25 23:44, Marc Zyngier wrote:
+> On 2020-05-25 12:23, Keqian Zhu wrote:
+>> This patch series add support for stage2 hardware DBM, and it is only
+>> used for dirty log for now.
+>>
+>> It works well under some migration test cases, including VM with 4K
+>> pages or 2M THP. I checked the SHA256 hash digest of all memory and
+>> they keep same for source VM and destination VM, which means no dirty
+>> pages is missed under hardware DBM.
+>>
+>> However, there are some known issues not solved.
+>>
+>> 1. Some mechanisms that rely on "write permission fault" become invalid,
+>>    such as kvm_set_pfn_dirty and "mmap page sharing".
+>>
+>>    kvm_set_pfn_dirty is called in user_mem_abort when guest issues write
+>>    fault. This guarantees physical page will not be dropped directly when
+>>    host kernel recycle memory. After using hardware dirty management, we
+>>    have no chance to call kvm_set_pfn_dirty.
+> 
+> Then you will end-up with memory corruption under memory pressure.
+> This also breaks things like CoW, which we depend on.
+>
+Yes, these problems looks knotty. But I think x86 PML support will face these
+problems too. I believe there must be some methods to solve them.
+>>
+>>    For "mmap page sharing" mechanism, host kernel will allocate a new
+>>    physical page when guest writes a page that is shared with other page
+>>    table entries. After using hardware dirty management, we have no chance
+>>    to do this too.
+>>
+>>    I need to do some survey on how stage1 hardware DBM solve these problems.
+>>    It helps if anyone can figure it out.
+>>
+>> 2. Page Table Modification Races: Though I have found and solved some data
+>>    races when kernel changes page table entries, I still doubt that there
+>>    are data races I am not aware of. It's great if anyone can figure them out.
+>>
+>> 3. Performance: Under Kunpeng 920 platform, for every 64GB memory, KVM
+>>    consumes about 40ms to traverse all PTEs to collect dirty log. It will
+>>    cause unbearable downtime for migration if memory size is too big. I will
+>>    try to solve this problem in Patch v1.
+> 
+> This, in my opinion, is why Stage-2 DBM is fairly useless.
+> From a performance perspective, this is the worse possible
+> situation. You end up continuously scanning page tables, at
+> an arbitrary rate, without a way to evaluate the fault rate.
+> 
+> One thing S2-DBM would be useful for is SVA, where a device
+> write would mark the S2 PTs dirty as they are shared between
+> CPU and SMMU. Another thing is SPE, which is essentially a DMA
+> agent using the CPU's PTs.
+> 
+> But on its own, and just to log the dirty pages, S2-DBM is
+> pretty rubbish. I wish arm64 had something like Intel's PML,
+> which looks far more interesting for the purpose of tracking
+> accesses.
 
+Sure, PML is a better solution on hardware management of dirty state.
+However, compared to optimizing hardware, optimizing software is with
+shorter cycle time.
+
+Here I have an optimization in mind to solve it. Scanning page tables
+can be done parallel, which can greatly reduce time consumption. For there
+is no communication between parallel CPUs, we can achieve high speedup
+ratio.
+
+
+> 
+> Thanks,
+> 
+>         M.
+Thanks,
+Keqian
