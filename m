@@ -2,112 +2,347 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01AC220870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RzxPeQ0v"
+	by mail.kernel.org (Postfix) with ESMTP id 70D82207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590528314;
+	bh=ejcrEfkDfRiMmmqLziuP7NOwHGOIhP8G74gEluZBAdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i+fodZ8cC4Ss2rO2YZLtYcjwrlaiojrZjhpmm6N1pN7cfRCMfiVNSaiUlk0g0U/74
+	 wHX/4igcX/iQ3MlUaJ6bpLkpNIpOSs+D34px7b6amPg7JqlLcqP3fxuUPzFAIBqVEX
+	 ZXLXGxFT24bCwZm4YtxrH34KZSqt1XK69xZdMMEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391455AbgEZVZF (ORCPT
+        id S2391083AbgEZVZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389572AbgEZVZF (ORCPT
+        Tue, 26 May 2020 17:25:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45612 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389572AbgEZVZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:25:05 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAE4C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:25:04 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b190so10749543pfg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2n60coN9bjuKWZ7OQA8PSocCTivwq7csYmNh/W9qIfI=;
-        b=RzxPeQ0v7/FLRl3mH/hFjWrEzNESOz5HCnDli0t+fd22H/myq7BeEM7YTrpi3PBw/B
-         UMoqs2iNwTp3GcHHcWBT+DbrhIFoXVG39XIvmwLKgTveNslXPgn4NtHNEjA3Vc3X4bOo
-         zeIhjOSiV30DZQ7+gss+QKzItujzwihgO33lwx3kg8OaOvxbFDisQ5ukPGi8l4t9zQS+
-         gNPYh3kF/ZfUKtlpzmtqurYiK2B2Gy2V/txZaR3tOWIGFxzwvsYcctJykeueIX7CDLsh
-         OPGxaKrVngqTpx01V3EJW1Q6Tv/15yubLm6U3eZ+cGwem56F54MkX/hDnDBjaOATwrgS
-         fHsA==
+        Tue, 26 May 2020 17:25:11 -0400
+Received: by mail-io1-f68.google.com with SMTP id y5so866646iob.12;
+        Tue, 26 May 2020 14:25:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2n60coN9bjuKWZ7OQA8PSocCTivwq7csYmNh/W9qIfI=;
-        b=JKJ/nrMWECb0x1uTvtQgKLaaoo+BzY7hGxx85znuysws7NG03ngAxknZ6JsSJ/BTH6
-         gpjZ2whTtSWoG1IdHs7/SjS68H+29uJB3pPWFWTzzeF74h3ktaeNiSUo3e/rOyC/OrZ8
-         4k5m/FLNI0BJEqQg0XHXhhxLvhlpA60HWa8II8T34YmEwuxHqCqHC0GcylwJobi3hWTd
-         NE0blUxYf4pRzNqFAIIfYHegxgtXsp08OlvzlWfpbpAZb3x5HPa3DWHcGJOUtxHqdjeG
-         BLVUALoxB15mhRUALmRnBPuI3b6vqW5i7vkqwxNi856sTxmCj1PB0FAi/QOSOOKnTJqb
-         Nnaw==
-X-Gm-Message-State: AOAM531/23k+9d/5biSA1DdeorNNvdXF8LtR2Ray2TY2djipBn2qKCec
-        Eii8VJBuiD6HgXCzH0rESJJ07g==
-X-Google-Smtp-Source: ABdhPJyzHwDWVyjnBZZecAiczyU803aGF7aueXA4vAnHg14vp1Op2xKRb8JF0VcsAczlBZgtH0J0OQ==
-X-Received: by 2002:a63:ce14:: with SMTP id y20mr791257pgf.186.1590528304421;
-        Tue, 26 May 2020 14:25:04 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:94bb:59d2:caf6:70e1? ([2605:e000:100e:8c61:94bb:59d2:caf6:70e1])
-        by smtp.gmail.com with ESMTPSA id l3sm355790pjb.39.2020.05.26.14.25.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 14:25:03 -0700 (PDT)
-Subject: Re: [PATCH] block/floppy: fix contended case in floppy_queue_rq()
-To:     Jiri Kosina <jikos@kernel.org>, Denis Efremov <efremov@linux.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Libor Pechacek <lpechacek@suse.cz>
-References: <nycvar.YFH.7.76.2005261146420.25812@cbobk.fhfr.pm>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5c1b4104-ca52-4e72-f1e2-f63f6904a713@kernel.dk>
-Date:   Tue, 26 May 2020 15:25:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KSkD63/vcI32dSMycYFm6FZ8EI5PKclKuyDOUF9HyqY=;
+        b=U6oa/i2YSufhY91osBB/XlXeuSYK/D1lbx1xc14IepiTAs5Sdf+rs5hpBQlfo6q+iy
+         BYNiGFYiMJxzHg+TLLnjAsqeM8t3o32lAVsI9u8xxCLoscZBLCYXN2mZqBFt0nNcJw+R
+         ghxYa8gCyQpPPvzk9qCJRMwUxSha6FnWFeBBTWwVsqvtrPFROJKWacRiL86RV0XtOrIf
+         RSjxMGDhbcm7GwSKWZoc/ZI/qlTvZ7KuZNJR3v+C9nya3/kLRbtS0P04BuJsJPu6CzPy
+         vxB9En0ZgGJFZU4LrD42eLjTy/jkIpYiqjoJMrO8/Cvxjbt8ePPgV5C0AGMmYjI4CbX4
+         KjBA==
+X-Gm-Message-State: AOAM533ZVSo9Xuo1cm//dMUrs4WDsEKYo8G2ZdXLAyBMOMmn8L8Pr9De
+        aUElz/CL+n0GNYvrMn8c7c9OxGk=
+X-Google-Smtp-Source: ABdhPJzklkvdtiYvFvgWoa8Tvr8CWzYLmIKWi1Eh31AtbHwWT+Y2PyfxbFHHrLtKPurf3y1AMW9Ubg==
+X-Received: by 2002:a02:ce8a:: with SMTP id y10mr2937552jaq.136.1590528309742;
+        Tue, 26 May 2020 14:25:09 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j9sm554887ilr.18.2020.05.26.14.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 14:25:08 -0700 (PDT)
+Received: (nullmailer pid 401022 invoked by uid 1000);
+        Tue, 26 May 2020 21:25:07 -0000
+Date:   Tue, 26 May 2020 15:25:07 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] dt-bindings: phy: qcom,qmp-usb3-dp: Add dt
+ bindings for USB3 DP PHY
+Message-ID: <20200526212507.GA391427@bogus>
+References: <1589510358-3865-1-git-send-email-sanm@codeaurora.org>
+ <1589510358-3865-3-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <nycvar.YFH.7.76.2005261146420.25812@cbobk.fhfr.pm>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589510358-3865-3-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 3:49 AM, Jiri Kosina wrote:
-> From: Jiri Kosina <jkosina@suse.cz>
+On Fri, May 15, 2020 at 08:09:16AM +0530, Sandeep Maheswaram wrote:
+> Split out the dt bindings for USB3 DP PHY from qcom,qmp bindings
+> for modularity.
 > 
-> Since the switch of floppy driver to blk-mq, the contended (fdc_busy) case 
-> in floppy_queue_rq() is not handled correctly.
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |  51 +++-----
+>  .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml         | 135 +++++++++++++++++++++
+>  2 files changed, 150 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
 > 
-> In case we reach floppy_queue_rq() with fdc_busy set (i.e. with the floppy 
-> locked due to another request still being in-flight), we put the request 
-> on the list of requests and return BLK_STS_OK to the block core, without 
-> actually scheduling delayed work / doing further processing of the 
-> request. This means that processing of this request is postponed until 
-> another request comes and passess uncontended.
-> 
-> Which in some cases might actually never happen and we keep waiting 
-> indefinitely. The simple testcase is
-> 
-> 	for i in `seq 1 2000`; do echo -en $i '\r'; blkid --info /dev/fd0 2> /dev/null; done
-> 
-> run in quemu. That reliably causes blkid eventually indefinitely hanging 
-> in __floppy_read_block_0() waiting for completion, as the BIO callback 
-> never happens, and no further IO is ever submitted on the (non-existent) 
-> floppy device. This was observed reliably on qemu-emulated device.
-> 
-> Fix that by not queuing the request in the contended case, and return 
-> BLK_STS_RESOURCE instead, so that blk core handles the request 
-> rescheduling and let it pass properly non-contended later.
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> index dcdb014..973b2d1 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> @@ -27,21 +27,13 @@ properties:
+>        - qcom,sdm845-qhp-pcie-phy
+>        - qcom,sdm845-qmp-pcie-phy
+>        - qcom,sdm845-qmp-ufs-phy
+> -      - qcom,sdm845-qmp-usb3-phy
+>        - qcom,sdm845-qmp-usb3-uni-phy
+>        - qcom,sm8150-qmp-ufs-phy
+>        - qcom,sm8250-qmp-ufs-phy
+>  
+>    reg:
+> -    minItems: 1
+>      items:
+>        - description: Address and length of PHY's common serdes block.
+> -      - description: Address and length of the DP_COM control block.
+> -
+> -  reg-names:
+> -    items:
+> -      - const: reg-base
+> -      - const: dp_com
+>  
+>    "#clock-cells":
+>       enum: [ 1, 2 ]
+> @@ -110,7 +102,6 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> -              - qcom,sdm845-qmp-usb3-phy
+>                - qcom,sdm845-qmp-usb3-uni-phy
+>      then:
+>        properties:
+> @@ -284,51 +275,39 @@ allOf:
+>          reset-names:
+>            items:
+>              - const: phy
+> -  - if:
+> -      properties:
+> -        compatible:
+> -          contains:
+> -            const: qcom,sdm845-qmp-usb3-phy
+> -    then:
+> -      required:
+> -        - reg-names
+>  
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> -    usb_1_qmpphy: phy-wrapper@88e9000 {
+> -        compatible = "qcom,sdm845-qmp-usb3-phy";
+> -        reg = <0 0x088e9000 0 0x18c>,
+> -              <0 0x088e8000 0 0x10>;
+> -        reg-names = "reg-base", "dp_com";
+> +    usb_2_qmpphy: phy-wrapper@88eb000 {
+> +        compatible = "qcom,sdm845-qmp-usb3-uni-phy";
+> +        reg = <0 0x088eb000 0 0x18c>;
+>          #clock-cells = <1>;
+>          #address-cells = <2>;
+>          #size-cells = <2>;
+>  
+> -        clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+> +        clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK >,
+>                   <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+> -                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+> -                 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+> +                 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
+> +                 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
+>          clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+>  
+> -        resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
+> -                 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
+> +        resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
+> +                 <&gcc GCC_USB3_PHY_SEC_BCR>;
+>          reset-names = "phy", "common";
+>  
+>          vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+>          vdda-pll-supply = <&vdda_usb2_ss_core>;
+>  
+> -        usb_1_ssphy: phy@88e9200 {
+> -                reg = <0 0x088e9200 0 0x128>,
+> -                      <0 0x088e9400 0 0x200>,
+> -                      <0 0x088e9c00 0 0x218>,
+> -                      <0 0x088e9600 0 0x128>,
+> -                      <0 0x088e9800 0 0x200>,
+> -                      <0 0x088e9a00 0 0x100>;
+> +        usb_2_ssphy: phy@88eb200 {
+> +                reg = <0 0x088eb200 0 0x128>,
+> +                      <0 0x088eb400 0 0x1fc>,
+> +                      <0 0x088eb800 0 0x218>,
+> +                      <0 0x088eb600 0 0x70>;
+>                  #clock-cells = <0>;
+>                  #phy-cells = <0>;
+> -                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+> +                clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+>                  clock-names = "pipe0";
+> -                clock-output-names = "usb3_phy_pipe_clk_src";
+> +                clock-output-names = "usb3_uni_phy_pipe_clk_src";
+>              };
+>          };
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+> new file mode 100644
+> index 0000000..6055786
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qmp-usb3-dp-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm QMP USB3 DP PHY controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +properties:
+> +  compatible:
+> +    const:
+> +      qcom,sdm845-qmp-usb3-phy
+> +  reg:
+> +    items:
+> +      - description: Address and length of PHY's common serdes block.
+> +      - description: Address and length of the DP_COM control block.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: reg-base
+> +      - const: dp_com
+> +
+> +  "#clock-cells":
+> +     enum: [ 1, 2 ]
+> +
+> +  "#address-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  clocks:
+> +    items:
+> +      - description: Phy aux clock.
+> +      - description: Phy config clock.
+> +      - description: 19.2 MHz ref clk.
+> +      - description: Phy common block aux clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aux
+> +      - const: cfg_ahb
+> +      - const: ref
+> +      - const: com_aux
+> +
+> +  resets:
+> +    items:
+> +      - description: reset of phy block.
+> +      - description: phy common block reset.
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +      - const: common
+> +
+> +  vdda-phy-supply:
+> +    description:
+> +        Phandle to a regulator supply to PHY core block.
+> +
+> +  vdda-pll-supply:
+> +    description:
+> +        Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +
+> +  vddp-ref-clk-supply:
+> +    description:
+> +        Phandle to a regulator supply to any specific refclk
+> +        pll block.
+> +
+> +#Required nodes:
+> +patternProperties:
+> +  "^phy@[0-9a-f]+$":
+> +    type: object
+> +    description:
+> +      Each device node of QMP phy is required to have as many child nodes as
+> +      the number of lanes the PHY has.
 
-Applied, thanks.
+Probably not a new problem, but where are the child node properties 
+documented? They need to be added before you duplicate this problem.
 
--- 
-Jens Axboe
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - "#clock-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - vdda-phy-supply
+> +  - vdda-pll-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +    usb_1_qmpphy: phy-wrapper@88e9000 {
+> +        compatible = "qcom,sdm845-qmp-usb3-phy";
+> +        reg = <0 0x088e9000 0 0x18c>,
+> +              <0 0x088e8000 0 0x10>;
+> +        reg-names = "reg-base", "dp_com";
+> +        #clock-cells = <1>;
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+
+You're missing 'ranges', so the child addresses are not translatable.
+
+You could also reduce everything to 1 cell as they are contained within 
+the parent's range.
+
+> +
+> +        clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+> +                 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+> +                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+> +                 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+> +        clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+> +
+> +        resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
+> +                 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
+> +        reset-names = "phy", "common";
+> +
+> +        vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+> +        vdda-pll-supply = <&vdda_usb2_ss_core>;
+> +
+> +        usb_1_ssphy: phy@88e9200 {
+> +                reg = <0 0x088e9200 0 0x128>,
+> +                      <0 0x088e9400 0 0x200>,
+> +                      <0 0x088e9c00 0 0x218>,
+> +                      <0 0x088e9600 0 0x128>,
+> +                      <0 0x088e9800 0 0x200>,
+> +                      <0 0x088e9a00 0 0x100>;
+> +                #clock-cells = <0>;
+> +                #phy-cells = <0>;
+> +                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+> +                clock-names = "pipe0";
+> +                clock-output-names = "usb3_phy_pipe_clk_src";
+> +            };
+> +        };
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
 
