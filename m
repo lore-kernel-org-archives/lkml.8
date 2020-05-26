@@ -2,54 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A93208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D261208C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519321;
-	bh=K997vUReKo1Eu7O2mp1JLzaOpovFSgasgP9aL7NtB+g=;
+	s=default; t=1590519325;
+	bh=dVy0LRePgbkEtZhtYdBgh1mFB0WuQl4IXpOliByWPYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kq88MGU0ZdHXMTGlezBnPXakmUIFpH/ILja8jspRGtw3epjPNNxi2doB0IN9xAFD5
-	 jp4v4Vf57MM3y/WkUy25qJgcI++4d4KPBNJSjOpqUDkAnxKNgqaYb21SloWiYdrJHX
-	 TH6Z0B3mbdyozpxvAtmTa++uk3Yhg4lxEyfdT2pU=
+	b=nsOKy+jf/bScC9u6gJ2DbAttEi30y4gPm2UEThv32brYThQcHebl1LYBYF65/d+9k
+	 SaT7l9gch+i7ORrHiLHug2GvwvkqduQ0ijpWI/xeJYbSL8ENnalk7b4vZTm3CIVvM+
+	 pEQ13Yr1dXv75ehnWxFn7R6I7+6/VGBePdS7o7r0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389452AbgEZSzU (ORCPT
+        id S2389478AbgEZSzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389398AbgEZSzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:16 -0400
+        id S2389451AbgEZSzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E7EF208C3;
-        Tue, 26 May 2020 18:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE341208C3;
+        Tue, 26 May 2020 18:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519315;
-        bh=K997vUReKo1Eu7O2mp1JLzaOpovFSgasgP9aL7NtB+g=;
+        s=default; t=1590519320;
+        bh=dVy0LRePgbkEtZhtYdBgh1mFB0WuQl4IXpOliByWPYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3PRGKScyKupNgRntLWzDv5HK48gz3XRiaBBDAUCgT+giABNVXxKM8KzbAVGW3Ts+
-         nyPZyHVMkvXq/Z7GsKGkB1NpE38qlx57ZEoKbBjmQylaLgQROzpTiS2rIVXrfgAHTg
-         d3jGmubKeVhzM4HBmn7HfatbT2hVUh0jx0ZfnPM0=
+        b=TPEp2+GsV24bx5CrEsTDFbkJh+hMWynfxGUb+hum8P/l80t9FD2IjTdpWFUkwFNre
+         ZEytKS15IfFV29arns3pgYpd4xs9EZsqTeFyXNRFDIgv6+E1DZ2f1HZZR7RReFbEA6
+         b617oGhBKRii6s1//+JHCCw9aOajSMoonRh38YVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 03/65] padata: get_next is never NULL
-Date:   Tue, 26 May 2020 20:52:22 +0200
-Message-Id: <20200526183907.627545971@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 22/65] i2c: dev: use after free in detach
+Date:   Tue, 26 May 2020 20:52:41 +0200
+Message-Id: <20200526183914.507467866@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -62,61 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 69b348449bda0f9588737539cfe135774c9939a7 upstream.
+commit e6be18f6d62c1d3b331ae020b76a29c2ccf6b0bf upstream.
 
-Per Dan's static checker warning, the code that returns NULL was removed
-in 2010, so this patch updates the comments and fixes the code
-assumptions.
+The call to put_i2c_dev() frees "i2c_dev" so there is a use after
+free when we call cdev_del(&i2c_dev->cdev).
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d6760b14d4a1 ('i2c: dev: switch from register_chrdev to cdev API')
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/i2c/i2c-dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -155,8 +155,6 @@ EXPORT_SYMBOL(padata_do_parallel);
-  * A pointer to the control struct of the next object that needs
-  * serialization, if present in one of the percpu reorder queues.
-  *
-- * NULL, if all percpu reorder queues are empty.
-- *
-  * -EINPROGRESS, if the next object that needs serialization will
-  *  be parallel processed by another cpu and is not yet present in
-  *  the cpu's reorder queue.
-@@ -183,8 +181,6 @@ static struct padata_priv *padata_get_ne
- 	cpu = padata_index_to_cpu(pd, next_index);
- 	next_queue = per_cpu_ptr(pd->pqueue, cpu);
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index 382c66d5a470..e5cd307ebfc9 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -599,9 +599,9 @@ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
+ 	if (!i2c_dev) /* attach_adapter must have failed */
+ 		return 0;
  
--	padata = NULL;
--
- 	reorder = &next_queue->reorder;
++	cdev_del(&i2c_dev->cdev);
+ 	put_i2c_dev(i2c_dev);
+ 	device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
+-	cdev_del(&i2c_dev->cdev);
  
- 	spin_lock(&reorder->lock);
-@@ -236,12 +232,11 @@ static void padata_reorder(struct parall
- 		padata = padata_get_next(pd);
- 
- 		/*
--		 * All reorder queues are empty, or the next object that needs
--		 * serialization is parallel processed by another cpu and is
--		 * still on it's way to the cpu's reorder queue, nothing to
--		 * do for now.
-+		 * If the next object that needs serialization is parallel
-+		 * processed by another cpu and is still on it's way to the
-+		 * cpu's reorder queue, nothing to do for now.
- 		 */
--		if (!padata || PTR_ERR(padata) == -EINPROGRESS)
-+		if (PTR_ERR(padata) == -EINPROGRESS)
- 			break;
- 
- 		/*
+ 	pr_debug("i2c-dev: adapter [%s] unregistered\n", adap->name);
+ 	return 0;
+-- 
+2.25.1
+
 
 
