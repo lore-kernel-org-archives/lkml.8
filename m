@@ -2,189 +2,112 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A42C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B48C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36B502073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:34:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OJHulCff"
+	by mail.kernel.org (Postfix) with ESMTP id B08D520787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgEZQeB (ORCPT
+        id S1729123AbgEZQhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37794 "EHLO
+        Tue, 26 May 2020 12:37:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388447AbgEZQdn (ORCPT
+        with ESMTP id S1726930AbgEZQhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:33:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DA5C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:33:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id h4so152212wmb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sWEW3WlniXpG51wWswVmYGNyCPa8cDkW5Yfe1j0NFdU=;
-        b=OJHulCffT3ruBfvHd9SEc+9Txcjt3lQLkYzB8VZ4Ly5FjtzUoowlahdPAXYFkbKNTP
-         3TKt/XeT4Ok+xHE/FND2NiTLG1RCx4FSVSG5MRFzhb2YLP9VqW5rsDnzNw3uYcRAUaJL
-         KLOzC7W7DuCP6phTmYMhs4wZbJORByuv/Xx9w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sWEW3WlniXpG51wWswVmYGNyCPa8cDkW5Yfe1j0NFdU=;
-        b=SY0OzIfYqUPZ/b2zL4ah8v4AOl27aWEkOW1WQDdHYSqlgQ1a9B5It5rtQHJHXDDCqz
-         P8fHNXAdWeriscuvKNCt120Xclo0NAj8eQmdm6WiYZluhBeG0PZFBlBJn0gbRetgpNJu
-         O7hY2BzTw8nKnjlrlJloXkXQfGUjlXp7xurdW4WkddRoGbFG/VWF1OQQPraI83fVSk33
-         9mWY3NFDBO3VlF6uqLtfT112VQyLea/AVQeDLFcwOB1uzCAwwDmQs9Ugcvn3au5YL4bv
-         mpoXpFbHkIuKWI77VndBM/xhk17wkCWMCzrobxiW0wUOWSwVRtn7zca91CFAA4o5+vcM
-         44Bw==
-X-Gm-Message-State: AOAM531/trc92xeGf4qLGvrl/UKCl5naTb29uvWfAfISArl2P5ocY5r7
-        LXkJNmS6gMgclRTdWrX9obWcO3/SQ9M=
-X-Google-Smtp-Source: ABdhPJwFCjwCW+QKk6mRvbi8i9/QCbA0M9NZTRlpz1u4B6kn5XIh14q2bhdwwZJRPDCX+1hkrnG9AA==
-X-Received: by 2002:a1c:f712:: with SMTP id v18mr63514wmh.27.1590510821258;
-        Tue, 26 May 2020 09:33:41 -0700 (PDT)
-Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id k17sm48654wmj.15.2020.05.26.09.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 09:33:40 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next 3/4] bpf: Allow local storage to be used from LSM programs
-Date:   Tue, 26 May 2020 18:33:35 +0200
-Message-Id: <20200526163336.63653-4-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-In-Reply-To: <20200526163336.63653-1-kpsingh@chromium.org>
-References: <20200526163336.63653-1-kpsingh@chromium.org>
+        Tue, 26 May 2020 12:37:38 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DACC03E96D;
+        Tue, 26 May 2020 09:37:38 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jdca4-0006ac-9Y; Tue, 26 May 2020 18:37:32 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DAEC51C00FA;
+        Tue, 26 May 2020 18:37:31 +0200 (CEST)
+Date:   Tue, 26 May 2020 16:37:31 -0000
+From:   "tip-bot2 for Jens Axboe" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/fair: Don't NUMA balance for kthreads
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
+References: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159051105169.17951.7766343551502727932.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+The following commit has been merged into the sched/urgent branch of tip:
 
-Adds support for both bpf_{sk, inode}_storage_{get, delete} to be used
-in LSM programs. These helpers are not used for tracing programs
-(currently) as their usage is tied to the life-cycle of the object and
-should only be used where the owning object won't be freed. Thus, they
-are safe to use in LSM hooks, but can only be enabled in tracing
-programs using a whitelist based approach.
+Commit-ID:     18f855e574d9799a0e7489f8ae6fd8447d0dd74a
+Gitweb:        https://git.kernel.org/tip/18f855e574d9799a0e7489f8ae6fd8447d0dd74a
+Author:        Jens Axboe <axboe@kernel.dk>
+AuthorDate:    Tue, 26 May 2020 09:38:31 -06:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 May 2020 18:34:58 +02:00
 
-Since the UAPI helper signature for bpf_sk_storage expect a bpf_sock,
-it, leads to a compilation warning for LSM programs, it's also updated
-to accept a void * pointer instead.
+sched/fair: Don't NUMA balance for kthreads
 
-Signed-off-by: KP Singh <kpsingh@google.com>
+Stefano reported a crash with using SQPOLL with io_uring:
+
+  BUG: kernel NULL pointer dereference, address: 00000000000003b0
+  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+  RIP: 0010:task_numa_work+0x4f/0x2c0
+  Call Trace:
+   task_work_run+0x68/0xa0
+   io_sq_thread+0x252/0x3d0
+   kthread+0xf9/0x130
+   ret_from_fork+0x35/0x40
+
+which is task_numa_work() oopsing on current->mm being NULL.
+
+The task work is queued by task_tick_numa(), which checks if current->mm is
+NULL at the time of the call. But this state isn't necessarily persistent,
+if the kthread is using use_mm() to temporarily adopt the mm of a task.
+
+Change the task_tick_numa() check to exclude kernel threads in general,
+as it doesn't make sense to attempt ot balance for kthreads anyway.
+
+Reported-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
 ---
- include/linux/bpf_local_storage.h |  2 ++
- kernel/bpf/bpf_local_storage.c    | 22 ++++++++++++++++++++++
- kernel/bpf/bpf_lsm.c              | 20 +++++++++++++++++++-
- 3 files changed, 43 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/bpf_local_storage.h b/include/linux/bpf_local_storage.h
-index c6837e7838fc..8982c0c69332 100644
---- a/include/linux/bpf_local_storage.h
-+++ b/include/linux/bpf_local_storage.h
-@@ -9,6 +9,8 @@ void bpf_sk_storage_free(struct sock *sk);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 538ba5d..da3e5b5 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2908,7 +2908,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	/*
+ 	 * We don't care about NUMA placement if we don't have memory.
+ 	 */
+-	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
++	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
  
- extern const struct bpf_func_proto bpf_sk_storage_get_proto;
- extern const struct bpf_func_proto bpf_sk_storage_delete_proto;
-+extern const struct bpf_func_proto sk_storage_get_btf_proto;
-+extern const struct bpf_func_proto sk_storage_delete_btf_proto;
- extern const struct bpf_func_proto bpf_inode_storage_get_proto;
- extern const struct bpf_func_proto bpf_inode_storage_delete_proto;
- 
-diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
-index bf807cfe3a73..07e02d32feb0 100644
---- a/kernel/bpf/bpf_local_storage.c
-+++ b/kernel/bpf/bpf_local_storage.c
-@@ -1305,6 +1305,28 @@ const struct bpf_func_proto bpf_inode_storage_delete_proto = {
- 	.btf_id		= bpf_inode_storage_delete_btf_ids,
- };
- 
-+static int sk_storage_get_btf_ids[4];
-+const struct bpf_func_proto sk_storage_get_btf_proto = {
-+	.func		= bpf_sk_storage_get,
-+	.gpl_only	= false,
-+	.ret_type	= RET_PTR_TO_MAP_VALUE_OR_NULL,
-+	.arg1_type	= ARG_CONST_MAP_PTR,
-+	.arg2_type	= ARG_PTR_TO_BTF_ID,
-+	.arg3_type	= ARG_PTR_TO_MAP_VALUE_OR_NULL,
-+	.arg4_type	= ARG_ANYTHING,
-+	.btf_id		= sk_storage_get_btf_ids,
-+};
-+
-+static int sk_storage_delete_btf_ids[2];
-+const struct bpf_func_proto sk_storage_delete_btf_proto = {
-+	.func		= bpf_sk_storage_delete,
-+	.gpl_only	= false,
-+	.ret_type	= RET_INTEGER,
-+	.arg1_type	= ARG_CONST_MAP_PTR,
-+	.arg2_type	= ARG_PTR_TO_BTF_ID,
-+	.btf_id		= sk_storage_delete_btf_ids,
-+};
-+
- struct bpf_sk_storage_diag {
- 	u32 nr_maps;
- 	struct bpf_map *maps[];
-diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-index 19636703b24e..fce0a11b63ca 100644
---- a/kernel/bpf/bpf_lsm.c
-+++ b/kernel/bpf/bpf_lsm.c
-@@ -11,6 +11,7 @@
- #include <linux/bpf_lsm.h>
- #include <linux/kallsyms.h>
- #include <linux/bpf_verifier.h>
-+#include <linux/bpf_local_storage.h>
- 
- /* For every LSM hook that allows attachment of BPF programs, declare a nop
-  * function where a BPF program can be attached.
-@@ -45,10 +46,27 @@ int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
- 	return 0;
- }
- 
-+static const struct bpf_func_proto *
-+bpf_lsm_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-+{
-+	switch (func_id) {
-+	case BPF_FUNC_inode_storage_get:
-+		return &bpf_inode_storage_get_proto;
-+	case BPF_FUNC_inode_storage_delete:
-+		return &bpf_inode_storage_delete_proto;
-+	case BPF_FUNC_sk_storage_get:
-+		return &sk_storage_get_btf_proto;
-+	case BPF_FUNC_sk_storage_delete:
-+		return &sk_storage_delete_btf_proto;
-+	default:
-+		return bpf_tracing_func_proto(func_id, prog);
-+	}
-+}
-+
- const struct bpf_prog_ops lsm_prog_ops = {
- };
- 
- const struct bpf_verifier_ops lsm_verifier_ops = {
--	.get_func_proto = bpf_tracing_func_proto,
-+	.get_func_proto = bpf_lsm_func_proto,
- 	.is_valid_access = btf_ctx_access,
- };
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+ 	/*
