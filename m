@@ -2,53 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D30C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2B820721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F76820776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521308;
-	bh=2LUm7Ij2gIyRjTkio4BUtMbWDnxu6JhIsryrUp6uBq0=;
+	s=default; t=1590521316;
+	bh=2dV8kWIG71SiZs/1feT2OKCo8EG/g/GDwpQxqM/As9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G/OXkgrOVmo+WmvnUKxt3okch7Kkp9OMi0n5tLc9KW0x6ezK92Qf2+rm1m1OpA58h
-	 mVxqMj7erQz9r62b/pyeO0Fz3HSlb1jd70LuepZ9rpllWIaHWrV2tx55rSs7/ajkGD
-	 bmSPH1/nZ+Y0yj2ausum0J+xwbaq6I+4u5OA8hq4=
+	b=CcV5qJS6nig3B12xpF3bfX9cKeihWAgZioPwjJe9+f9mcaV4BNyWoJYJyQ+vBFjry
+	 UjcTC0BElsBJrSoxmsMIDeK3T+tn/5Uc5BA42vSzUA/0I7yi0tvgtQW0Zp+80nj6SG
+	 vlPAYnE9wN8bPhy9/M6ZrkyRh4RFWrZOhi0+6NJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390395AbgEZT21 (ORCPT
+        id S2392591AbgEZT2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390609AbgEZTDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:10 -0400
+        id S2390174AbgEZTC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597752086A;
-        Tue, 26 May 2020 19:03:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FB5D2086A;
+        Tue, 26 May 2020 19:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519789;
-        bh=2LUm7Ij2gIyRjTkio4BUtMbWDnxu6JhIsryrUp6uBq0=;
+        s=default; t=1590519777;
+        bh=2dV8kWIG71SiZs/1feT2OKCo8EG/g/GDwpQxqM/As9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvqqdD7Drxa+iY23g2JsN7DNI+qsQBjxY2MqXpmfVAvM9VcSu8wSBdZNFXbYO3NhJ
-         sIH10v9IVJSm1XMPYol7zlWqlXZ3olHghT6kQ10RzRNvsXhP9qeIcLEWrXPLabidmq
-         lL9WblLGTfteVnCWN/S9+Bay0CjZWpUBW9nKUrJk=
+        b=ef54Y5gj0GfxdNhWAS3W/7FN8X4VYeRHJlWGsR5KQnpeZ9eiIui37DhIWwus2QC3y
+         DrHgVOt3pe48EO9mMdwmQVPJIi/zmZ6Xtg/T/8QsptFLMXEf9GTC0IZ0RitT1oY+K8
+         1rKlyatwTk7mdHmplw3JCx+3C98TsJqh+PBuQbMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thiago Macieira <thiago.macieira@intel.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, stable@kernel.org
-Subject: [PATCH 4.19 10/81] fix multiplication overflow in copy_fdtable()
-Date:   Tue, 26 May 2020 20:52:45 +0200
-Message-Id: <20200526183926.518841230@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        Yash Shah <yash.shah@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH 4.19 05/81] riscv: set max_pfn to the PFN of the last page
+Date:   Tue, 26 May 2020 20:52:40 +0200
+Message-Id: <20200526183924.534086347@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,40 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-[ Upstream commit 4e89b7210403fa4a8acafe7c602b6212b7af6c3b ]
+commit c749bb2d554825e007cbc43b791f54e124dadfce upstream.
 
-cpy and set really should be size_t; we won't get an overflow on that,
-since sysctl_nr_open can't be set above ~(size_t)0 / sizeof(void *),
-so nr that would've managed to overflow size_t on that multiplication
-won't get anywhere near copy_fdtable() - we'll fail with EMFILE
-before that.
+The current max_pfn equals to zero. In this case, I found it caused users
+cannot get some page information through /proc such as kpagecount in v5.6
+kernel because of new sanity checks. The following message is displayed by
+stress-ng test suite with the command "stress-ng --verbose --physpage 1 -t
+1" on HiFive unleashed board.
 
-Cc: stable@kernel.org # v2.6.25+
-Fixes: 9cfe015aa424 (get rid of NR_OPEN and introduce a sysctl_nr_open)
-Reported-by: Thiago Macieira <thiago.macieira@intel.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ # stress-ng --verbose --physpage 1 -t 1
+ stress-ng: debug: [109] 4 processors online, 4 processors configured
+ stress-ng: info: [109] dispatching hogs: 1 physpage
+ stress-ng: debug: [109] cache allocate: reducing cache level from L3 (too high) to L0
+ stress-ng: debug: [109] get_cpu_cache: invalid cache_level: 0
+ stress-ng: info: [109] cache allocate: using built-in defaults as no suitable cache found
+ stress-ng: debug: [109] cache allocate: default cache size: 2048K
+ stress-ng: debug: [109] starting stressors
+ stress-ng: debug: [109] 1 stressor spawned
+ stress-ng: debug: [110] stress-ng-physpage: started [110] (instance 0)
+ stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd34de000 in /proc/kpagecount, errno=0 (Success)
+ stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd32db078 in /proc/kpagecount, errno=0 (Success)
+ ...
+ stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd32db078 in /proc/kpagecount, errno=0 (Success)
+ stress-ng: debug: [110] stress-ng-physpage: exited [110] (instance 0)
+ stress-ng: debug: [109] process [110] terminated
+ stress-ng: info: [109] successful run completed in 1.00s
+ #
+
+After applying this patch, the kernel can pass the test.
+
+ # stress-ng --verbose --physpage 1 -t 1
+ stress-ng: debug: [104] 4 processors online, 4 processors configured stress-ng: info: [104] dispatching hogs: 1 physpage
+ stress-ng: info: [104] cache allocate: using defaults, can't determine cache details from sysfs
+ stress-ng: debug: [104] cache allocate: default cache size: 2048K
+ stress-ng: debug: [104] starting stressors
+ stress-ng: debug: [104] 1 stressor spawned
+ stress-ng: debug: [105] stress-ng-physpage: started [105] (instance 0) stress-ng: debug: [105] stress-ng-physpage: exited [105] (instance 0) stress-ng: debug: [104] process [105] terminated
+ stress-ng: info: [104] successful run completed in 1.01s
+ #
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Reviewed-by: Yash Shah <yash.shah@sifive.com>
+Tested-by: Yash Shah <yash.shah@sifive.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+[Palmer: back-ported to 4.19]
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/setup.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/file.c b/fs/file.c
-index 780d29e58847..3762a3f136fd 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -70,7 +70,7 @@ static void copy_fd_bitmaps(struct fdtable *nfdt, struct fdtable *ofdt,
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -19,6 +19,7 @@
+  * to the Free Software Foundation, Inc.,
   */
- static void copy_fdtable(struct fdtable *nfdt, struct fdtable *ofdt)
- {
--	unsigned int cpy, set;
-+	size_t cpy, set;
  
- 	BUG_ON(nfdt->max_fds < ofdt->max_fds);
++#include <linux/bootmem.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/memblock.h>
+@@ -187,6 +188,7 @@ static void __init setup_bootmem(void)
  
--- 
-2.25.1
-
+ 	set_max_mapnr(PFN_DOWN(mem_size));
+ 	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
++	max_pfn = max_low_pfn;
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	setup_initrd();
 
 
