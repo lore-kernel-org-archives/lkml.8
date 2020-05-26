@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E966CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC7C208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEB0208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519996;
-	bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
+	s=default; t=1590519998;
+	bh=7aRW87m6EIHEtIfH685cdeFH9ykaBvHaUsl8sCOyeJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DkE150h3vlRZPflVNczWYyeTcVfyLFjHLY/+lZyBqp7Gu3E/V2L9odTExqNCzb74c
-	 VW83sWbfdz4+q3QAWF4TUloww8WMO4kPdXmoWuJhovwV8Ld4hkWxwvagQL2Hkb+LTA
-	 oF010wiko4fPLT4WWKGQs8cNvE1K/vuZZvblgoT4=
+	b=JScc522HT9tblTUN6ysKjoUL3ytboVTxdKIKZGhDw682vCWBb/COMPeKT1s8HnrkD
+	 hsGZL7jJE6iHjWkwjYOsVOR+ptXc2q2O9jOhhMFUn/LQpcP8cc2eqRYoZHWWIVOW9+
+	 5Ih06N9G/Rg9HeUPW8ci9loXJmAk81PEVf3SOY18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391189AbgEZTGf (ORCPT
+        id S2391657AbgEZTGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391559AbgEZTG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:27 -0400
+        id S2391615AbgEZTG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1126F20873;
-        Tue, 26 May 2020 19:06:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CB63208A7;
+        Tue, 26 May 2020 19:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519986;
-        bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
+        s=default; t=1590519989;
+        bh=7aRW87m6EIHEtIfH685cdeFH9ykaBvHaUsl8sCOyeJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxUJtBYENcpG+Br5QfSpPZm5NjFNcIPwEHGt2BlnLQr1oLgy6nnMmZE/RV6fu/fg1
-         odMOgYOm/O1Tmhx1hTKasWPWCBU642/KBfPDWL02xDE+j+6txBEkn0D9ZT9XsVrF9O
-         VJPwEhYbmG2+3SWWkHhE6MxKruFrdN4TudatLfP0=
+        b=QKi7yNUm9B39AwRItpoDA3ye1dxlAENtFWhnlKef/y8hgvH2Eeps26XlPlfb5fbhF
+         FT6kuGV/PBV0VIoeslfljOZwWV4WfX7RiaCeOdUtqTgWAv0pnEGn9XQtbLFpUNUlpE
+         Aa3LbPad1nl8M9np8n2OekcQ9ClKmaOlGilunTy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/111] i2c: mux: demux-pinctrl: Fix an error handling path in i2c_demux_pinctrl_probe()
-Date:   Tue, 26 May 2020 20:52:32 +0200
-Message-Id: <20200526183933.933884548@linuxfoundation.org>
+        stable@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 015/111] ubi: Fix seq_file usage in detailed_erase_block_info debugfs file
+Date:   Tue, 26 May 2020 20:52:33 +0200
+Message-Id: <20200526183934.037307639@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,33 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Richard Weinberger <richard@nod.at>
 
-[ Upstream commit e9d1a0a41d4486955e96552293c1fcf1fce61602 ]
+[ Upstream commit 0e7572cffe442290c347e779bf8bd4306bb0aa7c ]
 
-A call to 'i2c_demux_deactivate_master()' is missing in the error handling
-path, as already done in the remove function.
+3bfa7e141b0b ("fs/seq_file.c: seq_read(): add info message about buggy .next functions")
+showed that we don't use seq_file correctly.
+So make sure that our ->next function always updates the position.
 
-Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: 7bccd12d27b7 ("ubi: Add debugfs file for tracking PEB state")
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/ubi/debug.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-index 0e16490eb3a1..5365199a31f4 100644
---- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
-+++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-@@ -272,6 +272,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
- err_rollback_available:
- 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
- err_rollback:
-+	i2c_demux_deactivate_master(priv);
- 	for (j = 0; j < i; j++) {
- 		of_node_put(priv->chan[j].parent_np);
- 		of_changeset_destroy(&priv->chan[j].chgset);
+diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
+index a1dff92ceedf..8a83072401a7 100644
+--- a/drivers/mtd/ubi/debug.c
++++ b/drivers/mtd/ubi/debug.c
+@@ -392,9 +392,6 @@ static void *eraseblk_count_seq_start(struct seq_file *s, loff_t *pos)
+ {
+ 	struct ubi_device *ubi = s->private;
+ 
+-	if (*pos == 0)
+-		return SEQ_START_TOKEN;
+-
+ 	if (*pos < ubi->peb_count)
+ 		return pos;
+ 
+@@ -408,8 +405,6 @@ static void *eraseblk_count_seq_next(struct seq_file *s, void *v, loff_t *pos)
+ {
+ 	struct ubi_device *ubi = s->private;
+ 
+-	if (v == SEQ_START_TOKEN)
+-		return pos;
+ 	(*pos)++;
+ 
+ 	if (*pos < ubi->peb_count)
+@@ -431,11 +426,8 @@ static int eraseblk_count_seq_show(struct seq_file *s, void *iter)
+ 	int err;
+ 
+ 	/* If this is the start, print a header */
+-	if (iter == SEQ_START_TOKEN) {
+-		seq_puts(s,
+-			 "physical_block_number\terase_count\tblock_status\tread_status\n");
+-		return 0;
+-	}
++	if (*block_number == 0)
++		seq_puts(s, "physical_block_number\terase_count\n");
+ 
+ 	err = ubi_io_is_bad(ubi, *block_number);
+ 	if (err)
 -- 
 2.25.1
 
