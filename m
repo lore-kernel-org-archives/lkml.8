@@ -2,88 +2,41 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1794BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9B3E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590501534;
-	bh=46DlyYeRMc1Y1HkqQhwUSrFF/HgsXBGPaEM/hbCSiMc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=b7U78qpTvmWwCXEUg/DTYH/O0Sht4DlY4IOMJZQI7eTuH5zl8Et3j96KZ+xLbN3Cu
-	 ydJ+3PwUv2VAhwdF60/TBUg7XXZJYfFY+MmBkF9ygiuIevfpgsQsNKQzqbdKUNPRdj
-	 xqRf9JwLmj4zQugYYZY4oKZq4bnSHJH+/bAGaa1E=
+	by mail.kernel.org (Postfix) with ESMTP id C1F49208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgEZN6x (ORCPT
+        id S1731442AbgEZN73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbgEZN6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:58:52 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F004C03E96E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:58:52 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id d7so16312950ote.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XWqm20ortSoNX+nbX7a42upA+Vp64e+AVN09KF9Ad8M=;
-        b=dH/zxctH3oJeLyU5L+BqkAe7IuarlhEZvNhoE61BAaOVZQYyWBIx6XMKPEj9Q2xMWP
-         ZsEFnhvFyiLx3H8BBdfGDHVnBXtNyuTxECLTFxOv9e6JXEKggaRuPijgIy8jOBVnTLmg
-         810kGA3cnWAe5bxBSO7qekFipcvZXgBSCLPGE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XWqm20ortSoNX+nbX7a42upA+Vp64e+AVN09KF9Ad8M=;
-        b=IJdp01KSYkHaIFrjKgdi5fLWzk/8dAq+R7RVvNIVXd010F1tiPpUWtAQ/cJZgWtCo3
-         cJl0cCq6T8LcjPIVlnYAiaPJ5N84fn07XSYuiyKrxEy1Wvr/+caSeRp2OGuC9RHDyZx6
-         p45uuxFrLN8Px4+yJRUBqGA1U6udC6J8zVqzXcxaoDWl2yACxdwu4Bzlz97furWoCAR9
-         maIY98ecfgfqw9BokzW1WG7rUPn6+ESu6jZTx1xImVvfDwxU+pSOflcV6ZfQ7IwFj1iR
-         zIvqgGYKNnLc08bmgH8ceprzMcVVhgcGpxB+A2BxI4oIbDLDoTaz9PwhoZdV40jg6QBG
-         Cpfw==
-X-Gm-Message-State: AOAM5310tOwL2wijM+NFeO6nG7lsq6fqO2SM6Cy3okDIgZiBDTZ37yI3
-        z3S835N0Q8Pcaw+6zehmwBxgGxkg0Tg=
-X-Google-Smtp-Source: ABdhPJz+/zK5moeWMtUn69a8IIKjkkhGLNDtnmG2OwfD8yave3Ngp7r9TvkVF/HxgAP9kKH0Uj/a2A==
-X-Received: by 2002:a9d:2da8:: with SMTP id g37mr932324otb.293.1590501531610;
-        Tue, 26 May 2020 06:58:51 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id d19sm10979ooa.48.2020.05.26.06.58.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 06:58:50 -0700 (PDT)
-Subject: Re: [RESEND] kunit: use --build_dir=.kunit as default
-To:     Vitor Massaru Iha <vitor@massaru.org>, shuah <shuah@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        David Gow <davidgow@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200414230950.83665-1-vitor@massaru.org>
- <CAFd5g47CaeEBiJsiSUtihHQF+OGpfCg76dS2ys2mwy2qn_L5-w@mail.gmail.com>
- <c035d65b-7e93-f948-22f9-73a56193ec36@kernel.org>
- <b04934ab91fd57e6df35279ad8a2619afb00b452.camel@massaru.org>
- <6403abc0c60fcb5069e1cdea0bb7f25b6dc8070f.camel@massaru.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <5599cbd7-2c2d-7035-deea-25e6e0da407e@linuxfoundation.org>
-Date:   Tue, 26 May 2020 07:58:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 09:59:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:51254 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728558AbgEZN72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 09:59:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D719E1FB;
+        Tue, 26 May 2020 06:59:27 -0700 (PDT)
+Received: from [10.37.8.5] (unknown [10.37.8.5])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13CD43F6C4;
+        Tue, 26 May 2020 06:59:25 -0700 (PDT)
+Subject: Re: [PATCH V2] arm64/cpufeature: Add get_arm64_ftr_reg_nowarn()
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        broonie@kernel.org, linux-kernel@vger.kernel.org
+References: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <0726a5b9-fff6-a15c-e705-db7abd4b1abd@arm.com>
+Date:   Tue, 26 May 2020 15:04:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <6403abc0c60fcb5069e1cdea0bb7f25b6dc8070f.camel@massaru.org>
+In-Reply-To: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -92,60 +45,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 8:27 PM, Vitor Massaru Iha wrote:
-> On Mon, 2020-05-25 at 22:52 -0300, Vitor Massaru Iha wrote:
->> Hi Shuah,
->>
->> On Fri, 2020-05-22 at 16:40 -0600, shuah wrote:
->>> On 4/16/20 5:11 PM, Brendan Higgins wrote:
->>>> On Tue, Apr 14, 2020 at 4:09 PM Vitor Massaru Iha <
->>>> vitor@massaru.org> wrote:
->>>>> To make KUnit easier to use, and to avoid overwriting object
->>>>> and
->>>>> .config files, the default KUnit build directory is set to
->>>>> .kunit
->>>>>
->>>>>    * Related bug:
->>>>> https://bugzilla.kernel.org/show_bug.cgi?id=205221
->>>>>
->>>>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
->>>>
->>>> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
->>>>
->>>
->>> Applied the patch to kselftest/kunit on top of
->>>
->>> 45ba7a893ad89114e773b3dc32f6431354c465d6
->>> kunit: kunit_tool: Separate out config/build/exec/parse
->>>
->>> from David's work resolving merge conflicts. Please check if it is
->>> sane.
->>>
->>> thanks,
->>> -- Shuah
->>
->> The kunit branch had some problems related to identation. KUnit's
->> code
->> has mixed identation, and with that, in conflict correction, it ended
->> up breaking python.
->>
-
-Thanks for sanity checking my merge.
-
->> In addition I found a bug: related to the creation of the
->> .kunitconfig
->> file inside the default build directory.
+On 05/26/2020 02:39 PM, Anshuman Khandual wrote:
+> There is no way to proceed when requested register could not be searched in
+> arm64_ftr_reg[]. Requesting for a non present register would be an error as
+> well. Hence lets just WARN_ON() when search fails in get_arm64_ftr_reg()
+> rather than checking for return value and doing a BUG_ON() instead in some
+> individual callers. But there are also caller instances that dont error out
+> when register search fails. Add a new helper get_arm64_ftr_reg_nowarn() for
+> such cases.
 > 
-> This is actually related to the other patch "kunit: use KUnit defconfig
-> by default"
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V2:
 > 
+> - Added get_arm64_ftr_reg_nowarn() per Will
+> - read_sanitised_ftr_reg() returns 0 when register search fails per Catalin
 > 
->>   Should I send the patch again?
->> Or do I make a bugfix patch?
->>
+> Changes in V1: (https://patchwork.kernel.org/patch/11559083/)
+> 
+>   arch/arm64/kernel/cpufeature.c | 42 +++++++++++++++++++++++-----------
+>   1 file changed, 29 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index bc5048f152c1..f4555b9d145c 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -548,16 +548,16 @@ static int search_cmp_ftr_reg(const void *id, const void *regp)
+>   }
+>   
 
-Please send the fix.
+...
 
-thanks,
--- Shuah
+>   static u64 arm64_ftr_set_value(const struct arm64_ftr_bits *ftrp, s64 reg,
+>   			       s64 ftr_val)
+>   {
+> @@ -632,8 +654,6 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
+>   	const struct arm64_ftr_bits *ftrp;
+>   	struct arm64_ftr_reg *reg = get_arm64_ftr_reg(sys_reg);
+>   
+> -	BUG_ON(!reg);
+> -
+>   	for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
+>   		u64 ftr_mask = arm64_ftr_mask(ftrp);
+>   		s64 ftr_new = arm64_ftr_value(ftrp, new);
+> @@ -762,7 +782,6 @@ static int check_update_ftr_reg(u32 sys_id, int cpu, u64 val, u64 boot)
+>   {
+>   	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+>   
+> -	BUG_ON(!regp);
+>   	update_cpu_ftr_reg(regp, val);
+>   	if ((boot & regp->strict_mask) == (val & regp->strict_mask))
+>   		return 0;
+> @@ -776,9 +795,6 @@ static void relax_cpu_ftr_reg(u32 sys_id, int field)
+>   	const struct arm64_ftr_bits *ftrp;
+>   	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+>   
+> -	if (WARN_ON(!regp))
+> -		return;
+> -
 
+You need to return here, on !regp. Rest looks fine to me.
+
+Suzuki
