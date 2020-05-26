@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94514C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A0520776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A62208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520545;
-	bh=Oqu2yOvrwuOCvuThZiTy/2R+0TTTq6zMYRIblVN+r5c=;
+	s=default; t=1590520555;
+	bh=SCfhZTIaHqAp/kDN9R0eV/qpGB7J/zlJUu4kD5LbpR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O7gVHG1SxfiE0XkcAUdWlnc6cutNpo1aMUJ/8rFQgQ52btSV/NpmnQJpIBAtUEg+2
-	 yVkGbWbg48Wbx1tbaWU86xyt8jyYSzFuowjoPbIuWgkjPLCZLj9qMCYiEm1zn+zGIH
-	 pkjJI4Vm4vvq19sNifHbc4UQ27lQnwyjA5RGQKDc=
+	b=W/kNs9Qggn30zaFoiYhDDuVaUm8k3QOvlu+e5GssH7/4XLI91xkXyS3fddSu3PuW6
+	 8abjEiNFrVZvGDXbQY67/qv6EKkFZw0c0iPsPxJTeEH1rsKfj0InzkWiFii3fdrK00
+	 nARF3Cf52KpgkgEU4PUsCkHelFFTqAi8QBkWnzco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392053AbgEZTPp (ORCPT
+        id S2404585AbgEZTPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392008AbgEZTPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:42 -0400
+        id S2404470AbgEZTPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEB2120776;
-        Tue, 26 May 2020 19:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D691D20776;
+        Tue, 26 May 2020 19:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520541;
-        bh=Oqu2yOvrwuOCvuThZiTy/2R+0TTTq6zMYRIblVN+r5c=;
+        s=default; t=1590520546;
+        bh=SCfhZTIaHqAp/kDN9R0eV/qpGB7J/zlJUu4kD5LbpR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NE+8B0KZoT/dlLad8bvpCw2f5eI2sIa8htJqhb1235g2xWPf/TwAmw6IYmNTeXapo
-         8GUtBL5V/4ELrrcJ0OuJ3y1DJIGttukE/4fJlhySdnOlNEEBO0C9CxNpzmAyUl3UcV
-         IL1/BbH8PIbAdi33vhfR0jIXA2/tAfpY9x8vB5rs=
+        b=fV9Wki0ROEZVoDxOUiqdUHkUJ9mLuzpinmfeDpIrOLQ4LLSAUxrHAdQFYaykRe85j
+         Lh/8vJreYHrBt7PjpPzN3Q47mx98OqFy+Wkgqzb3Bj0XhBHA1r7wWOvoBf3dhbd3us
+         Yf5XD0kAtxpje325Jen8IV3zdvfS3E0vQ+vHkX8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 121/126] rxrpc: Trace discarded ACKs
-Date:   Tue, 26 May 2020 20:54:18 +0200
-Message-Id: <20200526183947.534926009@linuxfoundation.org>
+Subject: [PATCH 5.6 123/126] bpf: Prevent mmap()ing read-only maps as writable
+Date:   Tue, 26 May 2020 20:54:20 +0200
+Message-Id: <20200526183947.664403627@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,98 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit d1f129470e6cb79b8b97fecd12689f6eb49e27fe ]
+[ Upstream commit dfeb376dd4cb2c5004aeb625e2475f58a5ff2ea7 ]
 
-Add a tracepoint to track received ACKs that are discarded due to being
-outside of the Tx window.
+As discussed in [0], it's dangerous to allow mapping BPF map, that's meant to
+be frozen and is read-only on BPF program side, because that allows user-space
+to actually store a writable view to the page even after it is frozen. This is
+exacerbated by BPF verifier making a strong assumption that contents of such
+frozen map will remain unchanged. To prevent this, disallow mapping
+BPF_F_RDONLY_PROG mmap()'able BPF maps as writable, ever.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+  [0] https://lore.kernel.org/bpf/CAEf4BzYGWYhXdp6BJ7_=9OQPJxQpgug080MMjdSB72i9R+5c6g@mail.gmail.com/
+
+Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
+Suggested-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Jann Horn <jannh@google.com>
+Link: https://lore.kernel.org/bpf/20200519053824.1089415-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h | 35 +++++++++++++++++++++++++++++++++++
- net/rxrpc/input.c            | 12 ++++++++++--
- 2 files changed, 45 insertions(+), 2 deletions(-)
+ kernel/bpf/syscall.c                          | 17 ++++++++++++++---
+ tools/testing/selftests/bpf/prog_tests/mmap.c | 13 ++++++++++++-
+ tools/testing/selftests/bpf/progs/test_mmap.c |  8 ++++++++
+ 3 files changed, 34 insertions(+), 4 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index ab75f261f04a..ba9efdc848f9 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1541,6 +1541,41 @@ TRACE_EVENT(rxrpc_notify_socket,
- 		      __entry->serial)
- 	    );
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index e04ea4c8f935..c0ab9bfdf28a 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -629,9 +629,20 @@ static int bpf_map_mmap(struct file *filp, struct vm_area_struct *vma)
  
-+TRACE_EVENT(rxrpc_rx_discard_ack,
-+	    TP_PROTO(unsigned int debug_id, rxrpc_serial_t serial,
-+		     rxrpc_seq_t first_soft_ack, rxrpc_seq_t call_ackr_first,
-+		     rxrpc_seq_t prev_pkt, rxrpc_seq_t call_ackr_prev),
-+
-+	    TP_ARGS(debug_id, serial, first_soft_ack, call_ackr_first,
-+		    prev_pkt, call_ackr_prev),
-+
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int,	debug_id	)
-+		    __field(rxrpc_serial_t,	serial		)
-+		    __field(rxrpc_seq_t,	first_soft_ack)
-+		    __field(rxrpc_seq_t,	call_ackr_first)
-+		    __field(rxrpc_seq_t,	prev_pkt)
-+		    __field(rxrpc_seq_t,	call_ackr_prev)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->debug_id		= debug_id;
-+		    __entry->serial		= serial;
-+		    __entry->first_soft_ack	= first_soft_ack;
-+		    __entry->call_ackr_first	= call_ackr_first;
-+		    __entry->prev_pkt		= prev_pkt;
-+		    __entry->call_ackr_prev	= call_ackr_prev;
-+			   ),
-+
-+	    TP_printk("c=%08x r=%08x %08x<%08x %08x<%08x",
-+		      __entry->debug_id,
-+		      __entry->serial,
-+		      __entry->first_soft_ack,
-+		      __entry->call_ackr_first,
-+		      __entry->prev_pkt,
-+		      __entry->call_ackr_prev)
-+	    );
-+
- #endif /* _TRACE_RXRPC_H */
+ 	mutex_lock(&map->freeze_mutex);
  
- /* This part must be outside protection */
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index e438bfd3fdf5..2f22f082a66c 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -866,8 +866,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+-	if ((vma->vm_flags & VM_WRITE) && map->frozen) {
+-		err = -EPERM;
+-		goto out;
++	if (vma->vm_flags & VM_WRITE) {
++		if (map->frozen) {
++			err = -EPERM;
++			goto out;
++		}
++		/* map is meant to be read-only, so do not allow mapping as
++		 * writable, because it's possible to leak a writable page
++		 * reference and allows user-space to still modify it after
++		 * freezing, while verifier will assume contents do not change
++		 */
++		if (map->map_flags & BPF_F_RDONLY_PROG) {
++			err = -EACCES;
++			goto out;
++		}
+ 	}
  
- 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
- 	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq))
-+	    before(prev_pkt, call->ackr_prev_seq)) {
-+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+					   first_soft_ack, call->ackr_first_seq,
-+					   prev_pkt, call->ackr_prev_seq);
- 		return;
+ 	/* set default open/close callbacks */
+diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
+index b0e789678aa4..5495b669fccc 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mmap.c
++++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
+@@ -19,7 +19,7 @@ void test_mmap(void)
+ 	const size_t map_sz = roundup_page(sizeof(struct map_data));
+ 	const int zero = 0, one = 1, two = 2, far = 1500;
+ 	const long page_size = sysconf(_SC_PAGE_SIZE);
+-	int err, duration = 0, i, data_map_fd;
++	int err, duration = 0, i, data_map_fd, rdmap_fd;
+ 	struct bpf_map *data_map, *bss_map;
+ 	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp1, *tmp2;
+ 	struct test_mmap__bss *bss_data;
+@@ -36,6 +36,17 @@ void test_mmap(void)
+ 	data_map = skel->maps.data_map;
+ 	data_map_fd = bpf_map__fd(data_map);
+ 
++	rdmap_fd = bpf_map__fd(skel->maps.rdonly_map);
++	tmp1 = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, rdmap_fd, 0);
++	if (CHECK(tmp1 != MAP_FAILED, "rdonly_write_mmap", "unexpected success\n")) {
++		munmap(tmp1, 4096);
++		goto cleanup;
 +	}
++	/* now double-check if it's mmap()'able at all */
++	tmp1 = mmap(NULL, 4096, PROT_READ, MAP_SHARED, rdmap_fd, 0);
++	if (CHECK(tmp1 == MAP_FAILED, "rdonly_read_mmap", "failed: %d\n", errno))
++		goto cleanup;
++
+ 	bss_mmaped = mmap(NULL, bss_sz, PROT_READ | PROT_WRITE, MAP_SHARED,
+ 			  bpf_map__fd(bss_map), 0);
+ 	if (CHECK(bss_mmaped == MAP_FAILED, "bss_mmap",
+diff --git a/tools/testing/selftests/bpf/progs/test_mmap.c b/tools/testing/selftests/bpf/progs/test_mmap.c
+index 6239596cd14e..4eb42cff5fe9 100644
+--- a/tools/testing/selftests/bpf/progs/test_mmap.c
++++ b/tools/testing/selftests/bpf/progs/test_mmap.c
+@@ -7,6 +7,14 @@
  
- 	buf.info.rxMTU = 0;
- 	ioffset = offset + nr_acks + 3;
-@@ -879,8 +883,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ char _license[] SEC("license") = "GPL";
  
- 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
- 	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq))
-+	    before(prev_pkt, call->ackr_prev_seq)) {
-+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+					   first_soft_ack, call->ackr_first_seq,
-+					   prev_pkt, call->ackr_prev_seq);
- 		goto out;
-+	}
- 	call->acks_latest_ts = skb->tstamp;
- 
- 	call->ackr_first_seq = first_soft_ack;
++struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__uint(max_entries, 4096);
++	__uint(map_flags, BPF_F_MMAPABLE | BPF_F_RDONLY_PROG);
++	__type(key, __u32);
++	__type(value, char);
++} rdonly_map SEC(".maps");
++
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_ARRAY);
+ 	__uint(max_entries, 512 * 4); /* at least 4 pages of data */
 -- 
 2.25.1
 
