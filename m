@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5209C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8600AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24FB20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5972020721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521118;
-	bh=sfEmZzYhPeVOloIwz/2tq/ZwALlDcCqLPWzA6mRKkUc=;
+	s=default; t=1590521125;
+	bh=nDTVYaIqHLJyc3NSS823UpCWM75ENhoLTpYp/70/aQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6EeisU3AD8xzGTucCoiVq4ytUKMDNbAK91Ef4e4/IJ7IX2v6PFIxT7U3OqHCaWrW
-	 6Xznx4YkL5bliyHphTYuo29CJSeeBXOVvv/6qmhDyPmd0ho/Kxqxkf3GIe1gIX4KcI
-	 ha719yrUSnmYa6lmJBK41FrbfWVxBJY9pd9eaOi8=
+	b=fCfDXNwXniZlPRoypT8ZDURVtiaaCrFh7LGjVeCj22gplG/ZCxnfzCFWw+aUSY66I
+	 dgJ0b8aeLiovFYPsX7oY7EnTUj+Q8euLqyXHuJ1RufLS0mHgGqOqAz7U0nuvVOhwak
+	 Ni5YmBGlWhThI/GCAGqepuOzHH+AB9CkCw5sVAEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392555AbgEZTZR (ORCPT
+        id S2391228AbgEZTZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391691AbgEZTHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:01 -0400
+        id S2391679AbgEZTGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036BE208A7;
-        Tue, 26 May 2020 19:07:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 884B9208B6;
+        Tue, 26 May 2020 19:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520021;
-        bh=sfEmZzYhPeVOloIwz/2tq/ZwALlDcCqLPWzA6mRKkUc=;
+        s=default; t=1590520014;
+        bh=nDTVYaIqHLJyc3NSS823UpCWM75ENhoLTpYp/70/aQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YRCQk5LEIkComvvvm+RuWnhBoVshRlDiLvexxzM23LAB6SqFN7+O6v/16C9i3i8lC
-         TwMYjqV1AO8eqW8FreyAk26YpxaFwDjKPQQ74i+mXtVCthWpZQlR/nwyh1cFnOpqFn
-         pl+0tAz4g8LR3/cdDSRBmRHUMgU3enTj92HG6+Lw=
+        b=T/0Z0of0kqeO2MMN+Ql3okkVBJJ7l+C2Zby3n+DVBS4Ewgt7VWji8puUOoMzD14fF
+         8DPb0ez+ry57uBZ5tPSqPepU+bk/qGSunw8T1RNI4URvNuYzHmPz4wy7bKCXzgaZQo
+         4PnKHYiAOslNb6Yvu0CX2APi9VQ1UDFeqSwz1y2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Arun Easi <aeasi@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/111] vhost/vsock: fix packet delivery order to monitoring devices
-Date:   Tue, 26 May 2020 20:52:45 +0200
-Message-Id: <20200526183935.318980223@linuxfoundation.org>
+Subject: [PATCH 5.4 024/111] scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
+Date:   Tue, 26 May 2020 20:52:42 +0200
+Message-Id: <20200526183935.024328652@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,45 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
+[ Upstream commit 45a76264c26fd8cfd0c9746196892d9b7e2657ee ]
 
-We want to deliver packets to monitoring devices before it is
-put in the virtqueue, to avoid that replies can appear in the
-packet capture before the transmitted packet.
+In NPIV environment, a NPIV host may use a queue pair created by base host
+or other NPIVs, so the check for a queue pair created by this NPIV is not
+correct, and can cause an abort to fail, which in turn means the NVME
+command not returned.  This leads to hang in nvme_fc layer in
+nvme_fc_delete_association() which waits for all I/Os to be returned, which
+is seen as hang in the application.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200331104015.24868-3-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index 6c089f655707..ca68a27b98ed 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -181,14 +181,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 			break;
- 		}
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 1ef8907314e5..62a16463f025 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3117,7 +3117,7 @@ qla24xx_abort_command(srb_t *sp)
+ 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
+ 	    "Entered %s.\n", __func__);
  
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
--		added = true;
--
--		/* Deliver to monitoring devices all correctly transmitted
--		 * packets.
-+		/* Deliver to monitoring devices all packets that we
-+		 * will transmit.
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
-+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-+		added = true;
-+
- 		pkt->off += payload_len;
- 		total_len += payload_len;
- 
+-	if (vha->flags.qpairs_available && sp->qpair)
++	if (sp->qpair)
+ 		req = sp->qpair->req;
+ 	else
+ 		return QLA_FUNCTION_FAILED;
 -- 
 2.25.1
 
