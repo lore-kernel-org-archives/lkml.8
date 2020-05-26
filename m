@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11403C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48C96208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE3D20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520299;
-	bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
+	s=default; t=1590520302;
+	bh=iBUom3UexuJtoL9Ox33IMnAZayXMsAmGh1AfuUlcV8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E18ypS3VWr91K2tIJKD6UEri6698chkuNP8G8K2ftbSQj6lPefjrezoOAZJ7dY7r0
-	 XERiAWTTfavggDXvs3qBGmStOFw0e1Kem8a8ZcGDHWwe7uHAlmuG591g0UXV6CDaGG
-	 kPchHZNh135CkyvFVf5ZNJAyKCYYdUeukOz8uCEQ=
+	b=AhVnu+57ofVsnN4tGbdUyZ0nwNUSGf0VOn37FSqQSvopqSbHbpfNhvJz6EyS4itQh
+	 01apXsqE8Qi9s7CetrG749iM7Q02TWUiZom8DzBR9vEIccQVA9Q4w9HbtyTQ5+KfZ7
+	 rir4BpxK++XD8XZ/JIKfIa21arxn+duaihEfVhrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390494AbgEZTLh (ORCPT
+        id S2391947AbgEZTLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404081AbgEZTLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:34 -0400
+        id S2391544AbgEZTLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9CC1208A7;
-        Tue, 26 May 2020 19:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBAD820888;
+        Tue, 26 May 2020 19:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520293;
-        bh=X0wVzPGBBfCgruGOk9Ig/HOfpcycEG6Cjs2f9qVZl+I=;
+        s=default; t=1590520298;
+        bh=iBUom3UexuJtoL9Ox33IMnAZayXMsAmGh1AfuUlcV8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WkUzu5gaN+Sot9HZq/1vYTNIQPXkwzLjFsmYSlhDiiT/WGv2NhzLeAM1jAgMxRbPd
-         UsddypYzs97rMsvorwNZzwY0iB2tQZoyPwsXsUuid1SRTcbgcRjB86liAWvNw6aB3r
-         gQuM8ZqRGLbGqkFMlMk+jZDeRbGShVQsQN//q2G8=
+        b=q3Hb/W73i1gCgu1ukd8EdKOixenga+i5bPAvIArA+XsWEcPLY48xEB6ZuYHvFjyzl
+         8QxvgNCBOIZJa/TxdUVF0BA1F4DVjD66vMHYruyRgiwSyE3buk6sOkUDPE3KUFu7zW
+         E/xl69YSLVb8U8067Tve0Nu4ACTPjdUcUImfme4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 022/126] kbuild: avoid concurrency issue in parallel building dtbs and dtbs_check
-Date:   Tue, 26 May 2020 20:52:39 +0200
-Message-Id: <20200526183939.539216647@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 004/126] evm: Check also if *tfm is an error pointer in init_desc()
+Date:   Tue, 26 May 2020 20:52:21 +0200
+Message-Id: <20200526183937.860467687@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,84 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-[ Upstream commit b5154bf63e5577faaaca1d942df274f7de91dd2a ]
+[ Upstream commit 53de3b080d5eae31d0de219617155dcc34e7d698 ]
 
-'make dtbs_check' checks the shecma in addition to building *.dtb files,
-in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
-So, you do not have to do 'make dtbs dtbs_check', but I want to keep
-the build system as robust as possible in any use.
+This patch avoids a kernel panic due to accessing an error pointer set by
+crypto_alloc_shash(). It occurs especially when there are many files that
+require an unsupported algorithm, as it would increase the likelihood of
+the following race condition:
 
-Currently, 'dtbs' and 'dtbs_check' are independent of each other.
-In parallel building, two threads descend into arch/*/boot/dts/,
-one for dtbs and the other for dtbs_check, then end up with building
-the same DTB simultaneously.
+Task A: *tfm = crypto_alloc_shash() <= error pointer
+Task B: if (*tfm == NULL) <= *tfm is not NULL, use it
+Task B: rc = crypto_shash_init(desc) <= panic
+Task A: *tfm = NULL
 
-This commit fixes the concurrency issue. Otherwise, I see build errors
-like follows:
+This patch uses the IS_ERR_OR_NULL macro to determine whether or not a new
+crypto context must be created.
 
-$ make ARCH=arm64 defconfig
-$ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
-  <snip>
-  DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
-  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
-  DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
-  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
-  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
-  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
-  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
-  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
-  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
-  CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
-fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
-make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
-make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
-make[2]: *** Waiting for unfinished jobs....
-  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
-  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
-  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
-  DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
-fixdep: parse error; no targets found
-make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
-make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
-make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
-make[1]: *** Waiting for unfinished jobs....
-  DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: d46eb3699502b ("evm: crypto hash replaced by shash")
+Co-developed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ security/integrity/evm/evm_crypto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 713f93cceffe..d00e14219e27 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1248,11 +1248,15 @@ ifneq ($(dtstree),)
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+index d485f6fc908e..302adeb2d37b 100644
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -93,7 +93,7 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
+ 		algo = hash_algo_name[hash_algo];
+ 	}
  
- PHONY += dtbs dtbs_install dtbs_check
--dtbs dtbs_check: include/config/kernel.release scripts_dtc
-+dtbs: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
- 
-+ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
-+dtbs: dt_binding_check
-+endif
-+
- dtbs_check: export CHECK_DTBS=1
--dtbs_check: dt_binding_check
-+dtbs_check: dtbs
- 
- dtbs_install:
- 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
+-	if (*tfm == NULL) {
++	if (IS_ERR_OR_NULL(*tfm)) {
+ 		mutex_lock(&mutex);
+ 		if (*tfm)
+ 			goto out;
 -- 
 2.25.1
 
