@@ -2,168 +2,140 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D63C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F81C2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="dJTpzIFF"
+	by mail.kernel.org (Postfix) with ESMTP id D0BC62084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388748AbgEZK5k (ORCPT
+        id S2388794AbgEZK6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:57:40 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:55673 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388501AbgEZK5k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:57:40 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id dXH3jUV2pDazBdXH7jedKB; Tue, 26 May 2020 12:57:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1590490657; bh=BEnD5x3xB5pJSyKvH1XnWppcjRqrzc5QQ4+zSWB6AkU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=dJTpzIFFcCQYRFWASY+Rr1JBZGV9VR+n+qYfCVI6lsB3ay8zpo22UKNwimtGCLiP6
-         IrIShwzIWozo4uqNm+r7WWhSUriXTUfgZ//23rTLT+Yxfg+J20PHddwvuKxTVfy4f4
-         xNyIGQziBF+3Y6PTPcMkNHFTYeoF1b2OhHwbneLfHyXyzgTYB8T7Be5Ix+N4+73Y1E
-         +9/ntFN4Ivk93RGgouHXQFFIjYGJhAZN5UVY1AXJLNZxGOATMpP5Hdbco1/b9CXJUo
-         Q7Cc+m8wROVwJ8l8WWux1hLFmIoG436+MgSBKpxvUnqhkC2yN0OH2UJnSlQ9YOGBby
-         Zp4R/oYyNx4zw==
-Subject: Re: [RFC] METADATA design using V4l2 Request API
-To:     Dikshita Agarwal <dikshita@codeaurora.org>,
-        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org
-References: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d1179bc1-662b-615f-0f9b-67693fe8c906@xs4all.nl>
-Date:   Tue, 26 May 2020 12:57:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 26 May 2020 06:58:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:49196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388501AbgEZK6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:58:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1942F31B;
+        Tue, 26 May 2020 03:58:13 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 358A93F6C4;
+        Tue, 26 May 2020 03:58:10 -0700 (PDT)
+Date:   Tue, 26 May 2020 11:58:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maz@kernel.org, will@kernel.org,
+        catalin.marinas@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
+        aarcange@redhat.com, shan.gavin@gmail.com
+Subject: Re: [PATCH RFCv2 6/9] kvm/arm64: Export kvm_handle_user_mem_abort()
+ with prefault mode
+Message-ID: <20200526105807.GE1363@C02TD0UTHF1T.local>
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-7-gshan@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfBRzDLzNYPz6xVRXX8MhgbHye9OlKdNwwZUTO2Zbx3O6JjMPx89rJ6u6ZFesv5twpIHRTgMIazU1pgbortxJFjvZbS5CHxKDaju+rW3aLylccvBI1/Lx
- PvZEl7r3Eo5Kje8ziphSs5rruVhf8jGZJFNWGAItE77YjbCgETWq3oFvd/NQsAMxe76ZY9+Te62rdj2KUTdw1GShVFw9jYwdULAhCOpRafWMzslxxmMlQaZp
- 5D44hKTF2Q+JSWXPDqzOfwxOvoG3Cr/vU+2tLVwxbS1iL4qeYV7+rfCRUSxtXj4iXKAR1i9BEfiWzD3tAdo0xLGg0UukiybKuylLFLhfLXCeNb2k+0rmj7tj
- qaAArHQHD8yN5/Am+FV9VtXI7jWQdJ54xtXMmxV3YS2F20hZNrBY+qC984l7v8zM9KtKzOQEESLVPziRw7Zv7s5TUIUsqQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508032919.52147-7-gshan@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dikshita,
-
-My apologies for the delay, this was (mostly) due to various vacation days.
-
-On 08/05/2020 08:21, Dikshita Agarwal wrote:
-> There are many commercialized video use cases which needs metadata info
-> to be circulated between v4l2 client and v4l2 driver.
+On Fri, May 08, 2020 at 01:29:16PM +1000, Gavin Shan wrote:
+> This renames user_mem_abort() to kvm_handle_user_mem_abort(), and
+> then export it. The function will be used in asynchronous page fault
+> to populate a page table entry once the corresponding page is populated
+> from the backup device (e.g. swap partition):
 > 
-> METADATA has following requirements associated:
-> •Metadata is an optional info available for a buffer. It is not mandatorily for every buffer.
->  For ex. consider metadata ROI (Region Of Interest). ROI is specified by clients to indicate
->  the region where enhanced quality is desired. This metadata is given as an input information
->  to encoder output plane. Client may or may not specify the ROI for a frame during encode as
->  an input metadata. Also if the client has not provided ROI metadata for a given frame,
->  it would be incorrect to take the metadata from previous frame. If the data and
->  metadata is asynchronous, it would be difficult for hardware to decide if it
->  needs to wait for metadata buffer or not before processing the input frame for encoding.
-> •Synchronize the buffer requirement across both the video node/session
->  (incase metadata is being processed as a separate v4l2 video node/session).
->  This is to avoid buffer starvation.
-> •Associate the metadata buffer with the data buffer without adding any pipeline delay
->  in waiting for each other. This is applicable both at the hardware side (the processing end)
->  and client side (the receiving end).
-> •Low latency usecases like WFD/split rendering/game streaming/IMS have sub-50ms e2e latency
->  requirements, and it is not practical to stall the pipeline due to inherent framework latencies.
->  High performance usecase like high-frame rate playback/record can lead to frame loss during any pipeline latency.
+>    * Parameter @fault_status is replace by @esr.
+>    * The parameters are reorder based on their importance.
+
+It seems like multiple changes are going on here, and it would be
+clearer with separate patches.
+
+Passing the ESR rather than the extracted fault status seems fine, but
+for clarirty it's be nicer to do this in its own patch.
+
+Why is it necessary to re-order the function parameters? Does that align
+with other function prototypes?
+
+What exactly is the `prefault` parameter meant to do? It doesn't do
+anything currently, so it'd be better to introduce it later when logic
+using it is instroduced, or where callers will pass distinct values.
+
+Thanks,
+Mark.
+
+> 
+> This shouldn't cause any functional changes.
+> 
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> ---
+>  arch/arm64/include/asm/kvm_host.h |  4 ++++
+>  virt/kvm/arm/mmu.c                | 14 ++++++++------
+>  2 files changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 32c8a675e5a4..f77c706777ec 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -437,6 +437,10 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
+>  			      struct kvm_vcpu_events *events);
 >  
-> To address all above requirements, we used v4l2 Request API as interlace.
+>  #define KVM_ARCH_WANT_MMU_NOTIFIER
+> +int kvm_handle_user_mem_abort(struct kvm_vcpu *vcpu, unsigned int esr,
+> +			      struct kvm_memory_slot *memslot,
+> +			      phys_addr_t fault_ipa, unsigned long hva,
+> +			      bool prefault);
+>  int kvm_unmap_hva_range(struct kvm *kvm,
+>  			unsigned long start, unsigned long end);
+>  int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index e462e0368fd9..95aaabb2b1fc 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1656,12 +1656,12 @@ static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
+>  	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
+>  }
+>  
+> -static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+> -			  struct kvm_memory_slot *memslot, unsigned long hva,
+> -			  unsigned long fault_status)
+> +int kvm_handle_user_mem_abort(struct kvm_vcpu *vcpu, unsigned int esr,
+> +			      struct kvm_memory_slot *memslot,
+> +			      phys_addr_t fault_ipa, unsigned long hva,
+> +			      bool prefault)
+>  {
+> -	int ret;
+> -	u32 esr = kvm_vcpu_get_esr(vcpu);
+> +	unsigned int fault_status = kvm_vcpu_trap_get_fault_type(esr);
+>  	bool write_fault, writable, force_pte = false;
+>  	bool exec_fault, needs_exec;
+>  	unsigned long mmu_seq;
+> @@ -1674,6 +1674,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  	pgprot_t mem_type = PAGE_S2;
+>  	bool logging_active = memslot_is_logging(memslot);
+>  	unsigned long vma_pagesize, flags = 0;
+> +	int ret;
+>  
+>  	write_fault = kvm_is_write_fault(esr);
+>  	exec_fault = kvm_vcpu_trap_is_iabt(esr);
+> @@ -1995,7 +1996,8 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		goto out_unlock;
+>  	}
+>  
+> -	ret = user_mem_abort(vcpu, fault_ipa, memslot, hva, fault_status);
+> +	ret = kvm_handle_user_mem_abort(vcpu, esr, memslot,
+> +					fault_ipa, hva, false);
+>  	if (ret == 0)
+>  		ret = 1;
+>  out:
+> -- 
+> 2.23.0
 > 
-> As an experiment, We have introduced new control V4L2_CID_MPEG_VIDEO_VENUS_METADATA
-> to contain the METADATA info. Exact controls can be finalized once the interface is discussed.
-> 
-> For setting metadata from userspace to kernel, let say on encode output plane,
-> following code sequence was followed
-> 1. Video driver is registering for media device and creating a media node in /dev
-> 2. Request fd is allocated by calling MEDIA_IOC_REQUEST_ALLOC IOCTL on media fd.
-> 3. METADATA configuration is being applied on request fd using VIDIOC_S_EXT_CTRLS IOCTL
->    and the same request fd is added to buf structure structure before calling VIDIOC_QBUF on video fd.
-> 4. The same request is queued through MEDIA_REQUEST_IOC_QUEUE IOCTL to driver then, as a result
->    to which METADATA control will be applied to buffer through S_CTRL.
-> 5. Once control is applied and request is completed, MEDIA_REQUEST_IOC_REINIT IOCTL is called
->    to re-initialize the request.
-
-This is fine and should work well. It's what the Request API is for, so no problems here.
-
-> 
-> We could achieve the same on capture plane as well by removing few checks present currently
-> in v4l2 core which restrict the implementation to only output plane.
-
-Why do you need the Request API for the capture side in a memory-to-memory driver? It is not
-clear from this patch series what the use-case is. There are reasons why this is currently
-not allowed. So I need to know more about this.
-
-Regards,
-
-	Hans
-
-> 
-> We profiled below data with this implementation :
-> 1. Total time taken ( round trip ) for setting up control data on video driver
->    with VIDIOC_S_EXT_CTRLS, QBUF and Queue Request: 737us
-> 2. Time taken for first QBUF on Output plane to reach driver with REQUEST API enabled (One way): 723us
-> 3. Time taken for first QBUF on Output plane to reach driver without REQUEST API (One way) : 250us
-> 4. Time taken by each IOCTL to complete ( round trip ) with REQUEST API enabled :
->     a. VIDIOC_S_EXT_CTRLS : 201us
->     b. VIDIOC_QBUF : 92us
->     c. MEDIA_REQUEST_IOC_QUEUE: 386us
-> 
-> Kindly share your feedback/comments on the design/call sequence.
-> Also as we experimented and enabled the metadata on capture plane as well, please comment if any issue in
-> allowing the metadata exchange on capture plane as well.
-> 
-> Reference for client side implementation can be found at [1].
-> 
-> Thanks,
-> Dikshita
-> 
-> [1] https://git.linaro.org/people/stanimir.varbanov/v4l2-encode.git/log/?h=dikshita/request-api
-> 
-> Dikshita Agarwal (3):
->   Register for media device     
->     - Initialize and register for media device     
->     - define venus_m2m_media_ops     
->     - Implement APIs to register/unregister media controller.
->   Enable Request API for output buffers     
->     - Add dependency on MEDIA_CONTROLLER_REQUEST_API in Kconfig.     
->     - Initialize vb2 ops buf_out_validate and buf_request_complete.     
->     - Add support for custom Metadata control V4L2_CID_MPEG_VIDEO_VENUS_METADATA     
->     - Implemeted/Integrated APIs for Request setup/complete.
->   Enable Request API for Capture Buffers
-> 
->  drivers/media/common/videobuf2/videobuf2-v4l2.c |   4 +-
->  drivers/media/platform/Kconfig                  |   2 +-
->  drivers/media/platform/qcom/venus/core.h        |  36 ++++
->  drivers/media/platform/qcom/venus/helpers.c     | 247 +++++++++++++++++++++++-
->  drivers/media/platform/qcom/venus/helpers.h     |  15 ++
->  drivers/media/platform/qcom/venus/venc.c        |  63 +++++-
->  drivers/media/platform/qcom/venus/venc_ctrls.c  |  61 +++++-
->  drivers/media/v4l2-core/v4l2-ctrls.c            |  10 +
->  drivers/media/v4l2-core/v4l2-mem2mem.c          |  17 +-
->  include/media/v4l2-ctrls.h                      |   1 +
->  include/media/venus-ctrls.h                     |  22 +++
->  11 files changed, 465 insertions(+), 13 deletions(-)
->  create mode 100644 include/media/venus-ctrls.h
-> 
-
