@@ -2,134 +2,112 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3376E20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F4F20704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l5g1bYIT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XkwRM41V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbgEZRsS (ORCPT
+        id S2389156AbgEZRsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:48:18 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38200 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgEZRsS (ORCPT
+        Tue, 26 May 2020 13:48:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:24478 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389134AbgEZRsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:48:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmCBk033300;
-        Tue, 26 May 2020 12:48:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590515292;
-        bh=2WPRrdT9w8zDCVHBZqeCHpQW4EnwADnt8oLLDTr2XxI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=l5g1bYITzSyPQnkWcHhX1xrW0MdQ2UjtYwF3K2LD5MfsRmvMQCTAHadJhL64eDWau
-         J9otJ50cYlH0eiCBiVnOC+nmwNA80GacjxMmggUvVzgK5Y1rS7s+WFSj6mB69f8m66
-         atoj7/YW9UgaTtbCrygmw1AjHbfwdJMJtjYSTU1Q=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHmCeq124373
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 12:48:12 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 12:48:12 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 12:48:12 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmCkL088235;
-        Tue, 26 May 2020 12:48:12 -0500
-Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200522122534.3353-1-dmurphy@ti.com>
- <20200522122534.3353-5-dmurphy@ti.com>
- <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
- <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
- <20200523150951.GK610998@lunn.ch>
- <a59412a5-7cc6-dc70-b851-c7d65c1635b7@ti.com>
- <20200523220741.GO610998@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b8648d0d-6064-f481-6ecf-6151736f1899@ti.com>
-Date:   Tue, 26 May 2020 12:48:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 13:48:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590515302; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=7keFiYQqaL3DuPDgQ1CTQxclwRsZANwrQiftoCTSuPc=;
+ b=XkwRM41VQoE2z6WPeVMUcXAEE1zpSYS9Cm5Dq9A0decz072TXMvKy7nKOr2QyFJZCnhGr1u4
+ v4jhL6Xil5BrXsr3We8giWGvUEWMQr8WjYMQc7MqbkzMOwXMr1e/SwknTad881JagOklEFVk
+ kktJZg1nYrbjspXJ9bjIaguslXc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ecd5665cb04586933a7b976 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 17:48:21
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6262DC433AD; Tue, 26 May 2020 17:48:20 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 73091C433C6;
+        Tue, 26 May 2020 17:48:19 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200523220741.GO610998@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 26 May 2020 23:18:19 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
+        bjorn.andersson@linaro.org, saravanak@google.com, mka@chromium.org,
+        nm@ti.com, agross@kernel.org, david.brown@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com
+Subject: Re: [PATCH v4 06/12] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+In-Reply-To: <8fc5b72c9af6fd6a707a280cfc678677@codeaurora.org>
+References: <20200504202243.5476-1-sibis@codeaurora.org>
+ <20200504202243.5476-7-sibis@codeaurora.org>
+ <20200505045012.zfx2e6chqo5f3e4n@vireshk-i7>
+ <8fc5b72c9af6fd6a707a280cfc678677@codeaurora.org>
+Message-ID: <b7e184b2da5b780a4e7e6ee47963f9b4@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On 2020-05-05 12:49, Sibi Sankar wrote:
+> On 2020-05-05 10:20, Viresh Kumar wrote:
+>> On 05-05-20, 01:52, Sibi Sankar wrote:
+>>> Add support to parse optional OPP table attached to the cpu node when
+>>> the OPP bandwidth values are populated. This allows for scaling of
+>>> DDR/L3 bandwidth levels with frequency change.
+>>> 
+>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> 
+>> What about using opp_set_rate instead ?
+> 
+> I can't use opp_set_rate since
+> the cpu dev does not have a
+> clock associated with it and the
+> scaling is done through writing
+> on perf state register.
 
-On 5/23/20 5:07 PM, Andrew Lunn wrote:
->>> Any why is your PHY special, in that is does care about out of range
->>> delays, when others using new the new core helper don't?
->> We are not rounding to nearest here.  Basically the helper works to find the
->> best match
->>
->> If the delay passed in is less than or equal to the smallest delay then
->> return the smallest delay index
->>
->> If the delay passed in is greater then the largest delay then return the max
->> delay index
-> +               /* Find an approximate index by looking up the table */
-> +               if (delay > delay_values[i - 1] &&
-> +                   delay < delay_values[i]) {
-> +                       if (delay - delay_values[i - 1] < delay_values[i] - delay)
-> +                               return i - 1;
-> +                       else
-> +                               return i;
->
-> This appears to round to the nearest value when it is not an exact
-> match.
->
-> The documentation is a hint to the DT developer what value to put in
-> DT. By saying it rounders, the developer does not need to go digging
-> through the source code to find an exact value, otherwise -EINVAL will
-> be returned. They can just use the value the HW engineer suggested,
-> and the PHY will pick whatever is nearest.
->
->> Not sure what you mean about this PHY being special.  This helper is
->> not PHY specific.
-> As you said, if out of range, the helper returns the top/bottom
-> value. Your PHY is special, the top/bottom value is not good enough,
-> you throw an error.
->
-> The point of helpers is to give uniform behaviour. We have one line
-> helpers, simply because they give uniform behaviour, rather than have
-> each driver do it subtlety different. But it also means drivers should
-> try to not add additional constraints over what the helper already
-> has, unless it is actually required by the hardware.
->
->> After I think about this more I am thinking a helper may be over kill here
->> and the delay to setting should be done within the PHY driver itself
-> The helper is useful, it will result in uniform handling of rounding
-> between DT values and what the PHY can actually do. But please also
-> move your range check and error message inside the helper.
+Viresh,
 
+https://patchwork.kernel.org/cover/11548479/
+GPU driver uses Georgi's series
+for scaling and will need a way to
+remove the icc votes in the suspend
+path, (this looks like a pattern
+that might be used by other clients
+as well) I could probably update
+opp_set_bw to support removing bw
+when NULL opp is specified. Similarly
+opp_set_rate will need to support
+set bw to 0 when set_rate is passed
+0 as target freq for the same use case.
 
-I re-worked v3 to be a bit more of a helper and incorporated Florian's 
-and you comments
-
-Dan
-
-
->       Andrew
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
