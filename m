@@ -2,184 +2,91 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7537AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1433C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5395820704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC7420704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:35:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSRk60Z5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389219AbgEZRfm (ORCPT
+        id S2389248AbgEZRfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:35:42 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:65094 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388784AbgEZRfP (ORCPT
+        Tue, 26 May 2020 13:35:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388784AbgEZRfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:35:15 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 May 2020 10:35:14 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 26 May 2020 10:35:13 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 7DE394C9C; Tue, 26 May 2020 10:35:13 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v15 06/11] pwm: imx27: Use 64-bit division macro and function
-Date:   Tue, 26 May 2020 10:35:06 -0700
-Message-Id: <848494725fd1240ed877d0a1471dd11ccea01ff5.1590514331.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1590514331.git.gurus@codeaurora.org>
-References: <cover.1590514331.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1590514331.git.gurus@codeaurora.org>
-References: <cover.1590514331.git.gurus@codeaurora.org>
+        Tue, 26 May 2020 13:35:43 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA8AC03E96D;
+        Tue, 26 May 2020 10:35:42 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l21so24730596eji.4;
+        Tue, 26 May 2020 10:35:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vcMNbORvIjJ2la5oap9DjFcpa/YIWrMblMOSotFUClk=;
+        b=eSRk60Z5I56xBZBdTUOJ4envTL5Y2lMwiTIgL3XrXP55VyO69IGkjPTk3A2j28qsls
+         WxDRQHHyqrRmj4zaTjZpWvMXu70IX2Vn4G32CRw/BDz90FS2TKchSp0zUMio8tS2pJMr
+         JyJHt7ArONILqWOmA3/NHq0lN6QOxuZYQBp/kRqi41D7m7Kr78WSodKMNODAtijMrl3d
+         b5+V0hxU2Cs/Fje9MyjVUlpyS/RBOW9cmjMTIn22l3/OLzbklxTJ6VslXi01IHWPSXkT
+         XhcgWQJl+tUZVzcXWnX5U0+ydAaWif7uuzysOw3Vp2bDo7v27HF4+uvaGjn8TgZj1DLr
+         PJuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vcMNbORvIjJ2la5oap9DjFcpa/YIWrMblMOSotFUClk=;
+        b=lVDJgcGgaiA/fIxi2exF4KbFR+AD5iMhFr6+SEC2ax5FTXlcm57l/4q0pADXgycpzt
+         f7VAAGfa8MF2B9n6ovBPtaQk1/WZOpNVsdaI+0a1vtoZDKPrhfW7yD6GFKSVTVZDapBn
+         aRF1lJb2areeudQuWjlUdS9LHHfguIEnzhPi3/6bUPBmtmaIPDfK+k6kSC5P58RWzd1Y
+         ZddTeTzp1n0X1uPWTCUGyBCIwsl5C2iXSmtZ4xQ3toCC4l7T1uQtTXFSiSyccjOAGfee
+         aMBWMx5yoEyTFWcb8/hZpBhkg9E9gKPGrSZR1bJHC+6f5emtIa4IsIgThAFRfLeMMopP
+         HP9g==
+X-Gm-Message-State: AOAM5330Y+lUcWPgJpT0hz54+lK294FC67lTCdYfwEB0MzGH3f4+ZUFX
+        XdQWNAvfvPmZAj/waI6217c=
+X-Google-Smtp-Source: ABdhPJyK0sQ6Non1RS6u11ZqHLO9HSHJJemplDjJkxZGjagrE5vFaLeEv/X6XvyHlterzThMRcBJ/g==
+X-Received: by 2002:a17:906:4088:: with SMTP id u8mr2156486ejj.444.1590514541446;
+        Tue, 26 May 2020 10:35:41 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id bz8sm391326ejc.94.2020.05.26.10.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 10:35:40 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] random patches for 5.8
+Date:   Tue, 26 May 2020 20:34:01 +0300
+Message-Id: <cover.1590513806.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's
-datatype to u64, prepare for this transition by using
-DIV_ROUND_UP_ULL to handle a 64-bit dividend, and div64_u64 to handle a
-64-bit divisor.
+Nothing insteresting in particular, just start flushing stashed patches.
+Ones in this series are pretty easy and short.
 
-Also handle a possible overflow in the calculation of period_cycles when
-both clk_rate and period are large numbers. This logic was unit-tested
-out by calculating period_cycles using both the existing logic and the
-proposed one, and the results are as below.
+Pavel Begunkov (6):
+  io_uring: fix flush req->refs underflow
+  io_uring: simplify io_timeout locking
+  io_uring: don't re-read sqe->off in timeout_prep()
+  io_uring: separate DRAIN flushing into a cold path
+  io_uring: get rid of manual punting in io_close
+  io_uring: let io_req_aux_free() handle fixed files
 
-----------------------------------------------------------------------------
- clk_rate            period           existing            proposed
-----------------------------------------------------------------------------
-1000000000   18446744073709551615    18446744072    18446744073000000000
-                   (U64_MAX)
-----------------------------------------------------------------------------
-1000000000        4294967291         4294967291         4294967291
-----------------------------------------------------------------------------
+ fs/io_uring.c | 64 ++++++++++++++++++++-------------------------------
+ 1 file changed, 25 insertions(+), 39 deletions(-)
 
-Overflow occurs in the first case with the existing logic, whereas the
-proposed logic handles it better, sacrificing some precision in a best-effort
-attempt to handle overflow. As for the second case where there are
-more typical values of period, the proposed logic handles that correctly
-too.
-
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/pwm-imx27.c | 53 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 45 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index a6e40d4..164cb65 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -203,7 +203,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
- 
-@@ -213,6 +213,45 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	}
- }
- 
-+static int pwm_imx27_calc_period_cycles(const struct pwm_state *state,
-+					unsigned long clk_rate,
-+					unsigned long *period_cycles)
-+{
-+	u64 c = 0, c1, c2;
-+
-+	c1 = clk_rate;
-+	c2 = state->period;
-+	if (c2 > c1) {
-+		c2 = c1;
-+		c1 = state->period;
-+	}
-+
-+	if (!c1 || !c2) {
-+		pr_err("clk rate and period should be nonzero\n");
-+		return -EINVAL;
-+	}
-+
-+	if (c2 <= div64_u64(U64_MAX, c1)) {
-+		c = c1 * c2;
-+		do_div(c, 1000000000);
-+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
-+		do_div(c1, 1000);
-+		c = c1 * c2;
-+		do_div(c, 1000000);
-+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
-+		do_div(c1, 1000000);
-+		c = c1 * c2;
-+		do_div(c, 1000);
-+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
-+		do_div(c1, 1000000000);
-+		c = c1 * c2;
-+	}
-+
-+	*period_cycles = c;
-+
-+	return 0;
-+}
-+
- static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
-@@ -225,18 +264,16 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	pwm_get_state(pwm, &cstate);
- 
--	c = clk_get_rate(imx->clk_per);
--	c *= state->period;
--
--	do_div(c, 1000000000);
--	period_cycles = c;
-+	ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
-+					   &period_cycles);
-+	if (ret)
-+		return ret;
- 
- 	prescale = period_cycles / 0x10000 + 1;
- 
- 	period_cycles /= prescale;
- 	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
--	duty_cycles = c;
-+	duty_cycles = div64_u64(c, state->period);
- 
- 	/*
- 	 * according to imx pwm RM, the real period value should be PERIOD
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.0
 
